@@ -4,5 +4,10 @@
   "label": "UpdateSpriteSlots_NoHandler",
   "reason": "A bare ret reached only through the jump table; entered alone it returns to the probe at once, and from the loop it would jump into the slot bytes, so no meaningful probe exists."
  },
+ "10:4E58": {
+  "evidence": "E-0376",
+  "label": "ScriptCommand6C",
+  "reason": "its effect is a created monster record; the only probe checked wScriptStartRequest, which does not test the note (integrator)"
+ },
  "_comment": "Probe-scope routines (tools/probe_scope.py) not probed, with the reader's reason (D-012)."
 }

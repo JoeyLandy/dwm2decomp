@@ -4,18 +4,26 @@
 SECTION "Bank 10", ROMX[$4000], BANK[$10]
     db $10
 
-; one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand (E-0038)
+; One frame of the event-script engine: FetchScriptCommand (fetches opcodes from wScriptPointerLo/Hi
+; when wScriptStartRequest bit 7 is set), then ExecuteScriptCommand (runs one frame of the command
+; in wScriptCommandType). Far-called from bank $02. (C2, E-0376)
+; one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand
 RunEventScriptFrame::
     call FetchScriptCommand
     call ExecuteScriptCommand
     ret
 
+; Does nothing during a fade (wFadeState non-zero) or unless wScriptStartRequest bit 7 is set;
+; otherwise clears that bit (the low bits stay), sets wScriptRunning = 1 and falls into
+; FetchScriptCommand_NextOpcode, which fetches opcodes from wScriptPointerLo/Hi until one starts a
+; command or $FF ends the script. A command asks for the next fetch by setting wScriptStartRequest =
+; $80. Far-called from banks $02 and $07 and called by RunEventScriptFrame. (C2, E-0376)
 ; does nothing during a fade or unless wScriptStartRequest bit 7 is set (then it clears that bit and
 ; sets wScriptRunning); reads the opcode at wScriptPointer (through ReadWordFromDataBank when
 ; wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script
 ; (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when
 ; wMapType bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance
-; wScriptPointer (E-0038)
+; wScriptPointer
 FetchScriptCommand::
     ld a, [wFadeState]
     or a
@@ -30,7 +38,7 @@ FetchScriptCommand::
 
 ; Reads the next script opcode (from the data bank when wScriptInDataBank is set): $FF ends the
 ; script (clears the running, command and data-bank flags; mode state 0, or 5 in a key world); any
-; other opcode runs its fetch handler (ScriptOpcodeHandlers). (C1, E-0357)
+; other opcode runs its fetch handler (ScriptOpcodeHandlers). (C2, E-0357; probed E-0376)
 FetchScriptCommand_NextOpcode::
     ld a, [wScriptPointerLo]
     ld l, a
@@ -76,22 +84,22 @@ FetchScriptCommand_NextOpcode::
 ; own arguments from the script pointer); a zero word is an unused opcode (E-0039, C1)
 ; record: fetch handler for this script byte (opcode)
 ScriptOpcodeHandlers::
-    dw ScriptFetch00 ; entry 0
-    dw ScriptFetch01 ; entry 1
-    dw ScriptFetch02 ; entry 2
-    dw ScriptFetch03 ; entry 3
-    dw ScriptFetch04 ; entry 4
-    dw ScriptFetch05 ; entry 5
-    dw ScriptFetch06 ; entry 6
-    dw ScriptFetch07 ; entry 7
+    dw ScriptFetchMessage ; entry 0
+    dw ScriptFetchWalk ; entry 1
+    dw ScriptFetchWalkFast ; entry 2
+    dw ScriptFetchWait ; entry 3
+    dw ScriptFetchHoldDpad ; entry 4
+    dw ScriptFetchFace ; entry 5
+    dw ScriptFetchSkipIfNo ; entry 6
+    dw ScriptFetchJump ; entry 7
     dw $0000 ; entry 8
     dw $0000 ; entry 9
-    dw ScriptFetch0A ; entry 10
-    dw ScriptFetch0B ; entry 11
-    dw ScriptFetch0C ; entry 12
-    dw ScriptFetch0D ; entry 13
-    dw ScriptFetch0E ; entry 14
-    dw ScriptFetch0F ; entry 15
+    dw ScriptFetchSetFlag ; entry 10
+    dw ScriptFetchSlideY ; entry 11
+    dw ScriptFetchHideObject ; entry 12
+    dw ScriptFetchEncounter ; entry 13
+    dw ScriptFetchAddGold ; entry 14
+    dw ScriptFetchSound ; entry 15
     dw $0000 ; entry 16
     dw ScriptFetchGeneric ; entry 17
     dw ScriptFetchGeneric ; entry 18
@@ -304,13 +312,13 @@ ScriptOpcodeHandlers::
     dw ScriptFetchE1 ; entry 225
     dw ScriptFetchE2 ; entry 226
     dw ScriptFetchE3 ; entry 227
-    dw ScriptFetchE4 ; entry 228
+    dw ScriptFetchChoiceJump ; entry 228
     dw ScriptFetchE5 ; entry 229
     dw ScriptFetchE6 ; entry 230
-    dw ScriptFetchE7 ; entry 231
+    dw ScriptFetchJumpDataBank ; entry 231
     dw ScriptFetchE8 ; entry 232
     dw ScriptFetchE9 ; entry 233
-    dw ScriptFetchEA ; entry 234
+    dw ScriptFetchMessageUnlessFlag0 ; entry 234
     dw ScriptFetchEB ; entry 235
     dw ScriptFetchEC ; entry 236
     dw ScriptFetchED ; entry 237
@@ -321,20 +329,27 @@ ScriptOpcodeHandlers::
     dw ScriptFetchF2 ; entry 242
     dw ScriptFetchF3 ; entry 243
     dw ScriptFetchF4 ; entry 244
-    dw ScriptFetchF5 ; entry 245
+    dw ScriptFetchMessageByScreen ; entry 245
     dw ScriptFetchF6 ; entry 246
     dw ScriptFetchF7 ; entry 247
     dw ScriptFetchF8 ; entry 248
 
-; the same five instructions as ScriptFetchGeneric, used by 30 opcodes (E-0039)
+; Fetch handler of the opcodes $80, $82, $84, $85, $87-$96 and $98-$A1 (ScriptOpcodeHandlers entries
+; 128-161 except 129, 131, 134 and the unused 151): the same code as ScriptFetchGeneric: pops the
+; script pointer (just after the opcode), makes the opcode byte wScriptCommandType and calls
+; BeginScriptCommand, which clears the command work bytes and stores the pointer. (C2, E-0376)
+; the same five instructions as ScriptFetchGeneric, used by 30 opcodes
 ScriptFetchGeneric2::
     pop hl
     dec hl
     ld a, [hli]
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $81 (SCRIPT_AREA_ITEM): wScriptCommandType = $81; clears wScriptStep,
+; wMessageIndex, wMessageGroup and wMessageState but, unlike BeginScriptCommand, keeps wScriptParam0
+; and wScriptParam1; stores the pointer after the opcode in wScriptPointerLo/Hi. (C2, E-0376)
 ; fetch handler for script opcode 81 (entry 129 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch81::
     pop hl
@@ -351,12 +366,15 @@ ScriptFetch81::
     ld [wScriptPointerHi], a
     ret
 
+; Fetch handler of opcode $83 (SCRIPT_FIELD_SCENE_01): starts command $83 (BeginScriptCommand), then
+; sets wScriptParam1, the variant FieldScene01 runs: 2 when wMapSpriteKind & 3 is not 1, otherwise 3
+; when hPlayerStateFlags bit 3 is set, else 1. (C2, E-0376)
 ; fetch handler for script opcode 83 (entry 131 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch83::
     pop hl
     ld a, $83
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ld a, [wMapSpriteKind]
     and $03
     dec a
@@ -378,6 +396,9 @@ ScriptFetch83::
     ld [wScriptParam1], a
     ret
 
+; Fetch handler of opcode $86 (SCRIPT_KEY_WORLD_DOOR_ITEM): the same code as ScriptFetch81 with type
+; $86: clears wScriptStep and the message word and state, keeps wScriptParam0/1 and stores the
+; pointer after the opcode. (C2, E-0376)
 ; fetch handler for script opcode 86 (entry 134 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch86::
     pop hl
@@ -394,8 +415,12 @@ ScriptFetch86::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 00 (entry 0 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch00::
+; Fetch handler of opcode $00 (script_message): wScriptCommandType = 1 (the message command,
+; ScriptCommand01); wScriptParam0 = the low byte of the message word (the message) and wScriptParam1
+; = the high byte (group and box flags), read through ReadWordFromDataBank when wScriptInDataBank is
+; set; clears wScriptStep and stores the pointer past the word. wMessageIndex/Group/State are left
+; alone. (C2, E-0376)
+ScriptFetchMessage::
     pop hl
     ld a, [wScriptInDataBank]
     and a
@@ -428,21 +453,27 @@ ScriptFetch00::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 01 (entry 1 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch01::
+; Fetch handler of opcode $01 (script_walk object, direction, tiles): wScriptCommandType = 2
+; (ScriptCommand02, one ScriptStepObject a frame), then ScriptFetch02_ReadOperands: wScriptParam0 =
+; object | direction << 4, wScriptParam1 = tiles, wScriptStep = 0, pointer past the three bytes.
+; (C2, E-0376)
+ScriptFetchWalk::
     ld a, $02
     ld [wScriptCommandType], a
     jr ScriptFetch02_ReadOperands
 
-; fetch handler for script opcode 02 (entry 2 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch02::
+; Fetch handler of opcode $02 (script_walk_fast): wScriptCommandType = 3 (ScriptCommand03 runs
+; ScriptStepObject twice a frame) and falls into ScriptFetch02_ReadOperands for the same three
+; operands as script_walk. (C2, E-0376)
+ScriptFetchWalkFast::
     ld a, $03
     ld [wScriptCommandType], a
 
 ; Shared tail of script opcodes 01 and 02 (the caller sets wScriptCommandType 2 or 3): pops the
 ; script pointer and reads three operand bytes from the current bank (no wScriptInDataBank check):
 ; wScriptParam0 = byte 0 OR byte 1 with its nibbles swapped, wScriptParam1 = byte 2; clears
-; wScriptStep and stores the pointer past them in wScriptPointerLo/wScriptPointerHi. (C1, E-0370)
+; wScriptStep and stores the pointer past them in wScriptPointerLo/wScriptPointerHi. (C2, E-0370;
+; probed E-0376)
 ScriptFetch02_ReadOperands::
     pop hl
     ld a, [hli]
@@ -461,8 +492,10 @@ ScriptFetch02_ReadOperands::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 03 (entry 3 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch03::
+; Fetch handler of opcode $03 (script_wait frames): wScriptCommandType = 4 (ScriptWaitFrames);
+; wScriptParam0/1 = the 16-bit frame count (low, high); stores the pointer past it. wScriptStep is
+; not cleared here. (C2, E-0376)
+ScriptFetchWait::
     pop hl
     ld a, $04
     ld [wScriptCommandType], a
@@ -476,8 +509,10 @@ ScriptFetch03::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 04 (entry 4 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch04::
+; Fetch handler of opcode $04 (script_hold_dpad direction, frames): wScriptCommandType = 5
+; (ScriptCommand05_Run); wScriptParam0 = direction, wScriptParam1 = frames; clears wScriptStep and
+; hPlayerTurnDelay; pointer past them. (C2, E-0376)
+ScriptFetchHoldDpad::
     pop hl
     ld a, $05
     ld [wScriptCommandType], a
@@ -494,8 +529,10 @@ ScriptFetch04::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 05 (entry 5 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch05::
+; Fetch handler of opcode $05 (script_face target, direction): wScriptCommandType = 6
+; (ScriptSetDirection); wScriptParam0 = target (0 the player, n follower record n, $80 + n object
+; n), wScriptParam1 = direction; pointer past them. wScriptStep is not cleared here. (C2, E-0376)
+ScriptFetchFace::
     pop hl
     ld a, $06
     ld [wScriptCommandType], a
@@ -509,6 +546,9 @@ ScriptFetch05::
     ld [wScriptPointerHi], a
     ret
 
+; Copies C bytes from HL to DE (both advance, C ends 0), waiting before each byte until rSTAT bit 1
+; is clear so VRAM can be written. A bank $10 copy of CopyCBytesToVRAMWaitSTAT; its only caller is
+; ScriptFetchSkipIfNo. (C1, E-0376)
 ; the same 13 bytes as CopyCBytesToVRAMWaitSTAT (CopyCBytesToVRAMWaitSTAT) (E-0090)
 CopyCBytesToVRAMWaitSTAT_Bank10::
     ldh a, [rSTAT]
@@ -521,8 +561,12 @@ CopyCBytesToVRAMWaitSTAT_Bank10::
     jr nz, CopyCBytesToVRAMWaitSTAT_Bank10
     ret
 
-; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch06::
+; Fetch handler of opcode $06 (script_skip_if_no offset): first copies the two saved tiles
+; wScriptTileBuf0 and wScriptTileBuf1 to VRAM $8EE0 and $8EF0 (CopyCBytesToVRAMWaitSTAT_Bank10);
+; then, when wTextYesNoResult is 0, adds the offset byte to the pointer past it (a forward jump),
+; otherwise just steps over the offset (read through ReadWordFromDataBank in data-bank mode); stores
+; the pointer and fetches the next opcode at once. (C1, E-0376)
+ScriptFetchSkipIfNo::
     push bc
     push de
     ld hl, wScriptTileBuf0
@@ -581,8 +625,10 @@ ScriptFetch06::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_NextOpcode
 
-; fetch handler for script opcode 07 (entry 7 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch07::
+; Fetch handler of opcode $07 (script_jump address): sets wScriptPointerLo/Hi to the word after the
+; opcode (read through ReadWordFromDataBank in data-bank mode) and fetches the opcode there at once.
+; (C2, E-0376)
+ScriptFetchJump::
     pop hl
     ld a, [wScriptInDataBank]
     and a
@@ -602,8 +648,10 @@ ScriptFetch07::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_NextOpcode
 
-; fetch handler for script opcode 0A (entry 10 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch0A::
+; Fetch handler of opcode $0A (script_set_flag flag): reads the flag word, stores the pointer past
+; it, sets that story flag (SetFlagBit) and fetches the next opcode at once. It reads the operand
+; from the mapped bank even in data-bank mode. (C2, E-0376)
+ScriptFetchSetFlag::
     pop hl
     ld a, [hli]
     ld e, a
@@ -616,8 +664,10 @@ ScriptFetch0A::
     call SetFlagBit
     jp FetchScriptCommand_NextOpcode
 
-; fetch handler for script opcode 0B (entry 11 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch0B::
+; Fetch handler of opcode $0B (script_slide_y target): wScriptCommandType = $0C
+; (ScriptSlideObjectY); wScriptParam1 = target, wScriptParam0 = 0; pointer past it. wScriptStep is
+; not cleared here. (C2, E-0376)
+ScriptFetchSlideY::
     pop hl
     ld a, $0c
     ld [wScriptCommandType], a
@@ -631,8 +681,10 @@ ScriptFetch0B::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 0C (entry 12 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch0C::
+; Fetch handler of opcode $0C (script_hide_object n): writes $E0 to byte $C (the Y) of sprite slot n
+; (wSpriteSlots + $C + 16 n), stores the pointer past n and fetches the next opcode at once. (C2,
+; E-0376)
+ScriptFetchHideObject::
     pop hl
     ld a, [hli]
     swap a
@@ -651,8 +703,10 @@ ScriptFetch0C::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_NextOpcode
 
-; fetch handler for script opcode 0D (entry 13 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch0D::
+; Fetch handler of opcode $0D (script_encounter n): wScriptCommandType = $0E (ScriptCommand0E_Run);
+; wScriptParam0 = n (the ScriptedEncounterTable record); clears wScriptStep; pointer past it. (C2,
+; E-0376)
+ScriptFetchEncounter::
     pop hl
     ld a, $0e
     ld [wScriptCommandType], a
@@ -666,8 +720,10 @@ ScriptFetch0D::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 0E (entry 14 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch0E::
+; Fetch handler of opcode $0E (script_add_gold amount): hTemp0/hTemp1 = the amount word, stores the
+; pointer past it, adds it to the gold (AddGoldCapped, capped at 99,999) and fetches the next opcode
+; at once. (C2, E-0376)
+ScriptFetchAddGold::
     pop hl
     ld a, [hli]
     ldh [hTemp0], a
@@ -680,8 +736,10 @@ ScriptFetch0E::
     farcall AddGoldCapped
     jp FetchScriptCommand_NextOpcode
 
-; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetch0F::
+; Fetch handler of opcode $0F (script_sound id): stores the pointer past the id; $FF restarts the
+; map music (RestartMapMusic), ids below $60 are queued as music (QueueMusic), the rest as sound
+; effects (QueueSoundEffect); then fetches the next opcode at once. (C1, E-0376)
+ScriptFetchSound::
     pop hl
     ld a, [hli]
     push af
@@ -705,16 +763,23 @@ ScriptFetch0F::
     farcall RestartMapMusic
     jp FetchScriptCommand_NextOpcode
 
-; fetch handler shared by 123 opcodes: wScriptCommandType = the opcode byte, then StartEventScript
-; with the pointer just after it; the command reads its own arguments from the script (E-0039)
+; Fetch handler of 123 opcodes ($11-$7F except $1C, $1D, $23 and $62, and $C0-$CF): pops the pointer
+; just after the opcode, makes the opcode byte wScriptCommandType and calls BeginScriptCommand; the
+; command reads its own arguments from the script. (C2, E-0376)
+; fetch handler shared by 123 opcodes: wScriptCommandType = the opcode byte, then BeginScriptCommand
+; with the pointer just after it; the command reads its own arguments from the script
 ScriptFetchGeneric::
     pop hl
     dec hl
     ld a, [hli]
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $1C (SCRIPT_SCENE_WARUBOU_WARNING): turns the first follower away from the
+; facing of the player ((hPlayerFacing + 2) & 3), starts command $1C (BeginScriptCommand), then
+; starts message $0088 (Tara: 'Oh, wow. This is terrible.'), or the Cobi line $0087 when
+; EVENT_NEVER_SET is set, through wMessageIndex/wMessageGroup and wMessageState = 0. (C2, E-0376)
 ; fetch handler for script opcode 1C (entry 28 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch1C::
     pop hl
@@ -725,7 +790,7 @@ ScriptFetch1C::
     ld [wFollowerRecords], a
     ld a, $1c
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .set_message_index
@@ -748,12 +813,15 @@ ScriptFetch1C::
     ld [wMessageState], a
     ret
 
+; Fetch handler of opcode $1D (SCRIPT_SCENE_LONG_FACES): starts command $1D (BeginScriptCommand),
+; then message $0097 kept open (MSG_KEEP_OPEN), the question SceneLongFaces_Answer answers, or the
+; Cobi line $008D when EVENT_NEVER_SET is set. (C2, E-0376)
 ; fetch handler for script opcode 1D (entry 29 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch1D::
     pop hl
     ld a, $1d
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .set_message_index
@@ -776,6 +844,8 @@ ScriptFetch1D::
     ld [wMessageState], a
     ret
 
+; Fetch handler of opcode $23 (SCRIPT_SCENE_WATER_SHORTAGE): sets bit 2 of story byte $61 and starts
+; command $23 (BeginScriptCommand). (C2, E-0376)
 ; fetch handler for script opcode 23 (entry 35 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch23::
     pop hl
@@ -784,9 +854,12 @@ ScriptFetch23::
     ld [wStoryFlags + $61], a
     ld a, $23
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $62 (SCRIPT_PERSONALITY_MESSAGE): starts the command of the opcode byte
+; like ScriptFetchGeneric but saves wScriptParam1 around BeginScriptCommand, so the value set before
+; the fetch survives. (C2, E-0376)
 ; fetch handler for script opcode 62 (entry 98 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch62::
     pop hl
@@ -795,157 +868,214 @@ ScriptFetch62::
     ld [wScriptCommandType], a
     ld a, [wScriptParam1]
     push af
-    call StartEventScript
+    call BeginScriptCommand
     pop af
     ld [wScriptParam1], a
     ret
 
+; Fetch handler of opcode $E0 (SCRIPT_INN): wScriptCommandType = $E0 and BeginScriptCommand with the
+; pointer after the opcode (work bytes cleared); ScriptCommandE0 then runs InnMenu each frame. (C2,
+; E-0376)
 ; fetch handler for script opcode E0 (entry 224 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE0::
     pop hl
     ld a, $e0
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $E1 (SCRIPT_INN_CLOSE): wScriptCommandType = $E1 and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandE1 then runs CloseInnMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode E1 (entry 225 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE1::
     pop hl
     ld a, $e1
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $E2 (SCRIPT_SHOP): wScriptCommandType = $E2 and BeginScriptCommand with
+; the pointer after the opcode (work bytes cleared); ScriptCommandE2 then runs ShopMenu each frame.
+; (C2, E-0376)
 ; fetch handler for script opcode E2 (entry 226 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE2::
     pop hl
     ld a, $e2
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $E3 (SCRIPT_SHOP_CLOSE): wScriptCommandType = $E3 and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandE3 then runs CloseShopMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode E3 (entry 227 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE3::
     pop hl
     ld a, $e3
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $E5 (SCRIPT_VAULT): wScriptCommandType = $E5 and BeginScriptCommand with
+; the pointer after the opcode (work bytes cleared); ScriptCommandE5 then runs VaultMenu each frame.
+; (C2, E-0376)
 ; fetch handler for script opcode E5 (entry 229 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE5::
     pop hl
     ld a, $e5
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $E6 (SCRIPT_VAULT_CLOSE): wScriptCommandType = $E6 and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandE6 then runs CloseVaultMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode E6 (entry 230 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE6::
     pop hl
     ld a, $e6
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $E8 (SCRIPT_SWAP_MONSTERS): wScriptCommandType = $E8 and
+; BeginScriptCommand with the pointer after the opcode (work bytes cleared); ScriptCommandE8 then
+; runs SwapMonstersMenu each frame. (C2, E-0376)
 ; fetch handler for script opcode E8 (entry 232 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE8::
     pop hl
     ld a, $e8
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $E9 (SCRIPT_MENU_CLOSE): wScriptCommandType = $E9 and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandE9 then runs CloseMenuE9 each
+; frame. (C2, E-0376)
 ; fetch handler for script opcode E9 (entry 233 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE9::
     pop hl
     ld a, $e9
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $EB (SCRIPT_HIBERNATE): wScriptCommandType = $EB and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandEB then runs HibernateMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode EB (entry 235 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEB::
     pop hl
     ld a, $eb
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $EC (SCRIPT_HIBERNATE_CLOSE): wScriptCommandType = $EC and
+; BeginScriptCommand with the pointer after the opcode (work bytes cleared); ScriptCommandEC then
+; runs CloseHibernateMenu each frame. (C2, E-0376)
 ; fetch handler for script opcode EC (entry 236 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEC::
     pop hl
     ld a, $ec
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $ED (SCRIPT_BREED): wScriptCommandType = $ED and BeginScriptCommand with
+; the pointer after the opcode (work bytes cleared); ScriptCommandED then runs BreedMenu each frame.
+; (C2, E-0376)
 ; fetch handler for script opcode ED (entry 237 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchED::
     pop hl
     ld a, $ed
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $EE (SCRIPT_BREED_CLOSE): wScriptCommandType = $EE and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandEE then runs CloseBreedMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode EE (entry 238 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEE::
     pop hl
     ld a, $ee
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $EF (SCRIPT_EGG_SERVICE): wScriptCommandType = $EF and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandEF then runs EggServiceMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode EF (entry 239 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEF::
     pop hl
     ld a, $ef
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $F0 (SCRIPT_RENAME): wScriptCommandType = $F0 and BeginScriptCommand with
+; the pointer after the opcode (work bytes cleared); ScriptCommandF0 then runs RenameMenu each
+; frame. (C2, E-0376)
 ; fetch handler for script opcode F0 (entry 240 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF0::
     pop hl
     ld a, $f0
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $F1 (SCRIPT_RENAME_CLOSE): wScriptCommandType = $F1 and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandF1 then runs CloseRenameMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode F1 (entry 241 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF1::
     pop hl
     ld a, $f1
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $F2 (SCRIPT_KEY_APPRAISAL): wScriptCommandType = $F2 and
+; BeginScriptCommand with the pointer after the opcode (work bytes cleared); ScriptCommandF2 then
+; runs KeyAppraisalMenu each frame. (C2, E-0376)
 ; fetch handler for script opcode F2 (entry 242 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF2::
     pop hl
     ld a, $f2
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $F3 (SCRIPT_MEDAL_PRIZES): wScriptCommandType = $F3 and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandF3 then runs MedalPrizeMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode F3 (entry 243 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF3::
     pop hl
     ld a, $f3
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $F4 (SCRIPT_NPC_BREED): wScriptCommandType = $F4 and BeginScriptCommand
+; with the pointer after the opcode (work bytes cleared); ScriptCommandF4 then runs NpcBreedMenu
+; each frame. (C2, E-0376)
 ; fetch handler for script opcode F4 (entry 244 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF4::
     pop hl
     ld a, $f4
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
-; fetch handler for script opcode F5 (entry 245 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetchF5::
+; Fetch handler of opcode $F5 (script_message_by_screen): command type 1 (the message command);
+; wScriptParam0/1 = the message word (through ReadWordFromDataBank in data-bank mode), then
+; wScriptParam0 += 16 * wScreenTableIndex as a byte (no carry into the group); clears wScriptStep;
+; pointer past the word. (C2, E-0376)
+ScriptFetchMessageByScreen::
     pop hl
     ld a, [wScriptInDataBank]
     and a
@@ -989,32 +1119,44 @@ ScriptFetchF5::
     ld [wScriptPointerHi], a
     ret
 
+; Fetch handler of opcode $F6 (SCRIPT_LIBRARY): wScriptCommandType = $F6 and BeginScriptCommand with
+; the pointer after the opcode (work bytes cleared); ScriptCommandF6 then runs LibraryMenu each
+; frame. (C2, E-0376)
 ; fetch handler for script opcode F6 (entry 246 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF6::
     pop hl
     ld a, $f6
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $F7 (SCRIPT_ARENA): wScriptCommandType = $F7 and BeginScriptCommand with
+; the pointer after the opcode (work bytes cleared); ScriptCommandF7 then runs ArenaMenu each frame.
+; (C2, E-0376)
 ; fetch handler for script opcode F7 (entry 247 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF7::
     pop hl
     ld a, $f7
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
+; Fetch handler of opcode $F8 (SCRIPT_PRIEST): wScriptCommandType = $F8 and BeginScriptCommand with
+; the pointer after the opcode (work bytes cleared); ScriptCommandF8 then runs PriestMenu each
+; frame. (C2, E-0376)
 ; fetch handler for script opcode F8 (entry 248 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF8::
     pop hl
     ld a, $f8
     ld [wScriptCommandType], a
-    call StartEventScript
+    call BeginScriptCommand
     ret
 
-; fetch handler for script opcode EA (entry 234 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetchEA::
+; Fetch handler of opcode $EA (script_message_unless_flag0): command type 1 (the message command);
+; wScriptParam0/1 = the message word (through ReadWordFromDataBank in data-bank mode), and
+; wScriptParam0 += $20 (a byte add) unless EVENT_NEVER_SET is set; clears wScriptStep; pointer past
+; the word. (C2, E-0376)
+ScriptFetchMessageUnlessFlag0::
     pop hl
     ld a, [wScriptInDataBank]
     and a
@@ -1057,8 +1199,10 @@ ScriptFetchEA::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode E7 (entry 231 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetchE7::
+; Fetch handler of opcode $E7 (script_jump_data_bank address): sets wScriptInDataBank = 1, makes the
+; word after the opcode (read from the mapped bank) the script pointer and fetches the opcode there
+; at once, from now on from the bank in wDataBank. (C2, E-0376)
+ScriptFetchJumpDataBank::
     pop hl
     ld a, $01
     ld [wScriptInDataBank], a
@@ -1073,8 +1217,11 @@ ScriptFetchE7::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_NextOpcode
 
-; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers) (E-0039)
-ScriptFetchE4::
+; Fetch handler of opcode $E4 (script_choice_jump offsets): skips wTwoChoiceCursor offset bytes,
+; reads the chosen offset (through ReadWordFromDataBank in data-bank mode) and sets
+; wScriptPointerLo/Hi to the byte after it plus the offset; then fetches the opcode there at once.
+; (C2, E-0376)
+ScriptFetchChoiceJump::
     pop hl
     ld a, [wTwoChoiceCursor]
     ld c, a
@@ -1110,9 +1257,13 @@ ScriptFetchE4::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_NextOpcode
 
+; HL = script pointer: clears wScriptParam0, wScriptParam1, wScriptStep, wMessageIndex,
+; wMessageGroup and wMessageState and stores HL in wScriptPointerLo/Hi. Called only by the fetch
+; handlers of bank $10 (28 sites) to begin a command, with HL just after its opcode; it does not set
+; wScriptStartRequest or start a script. (C2, E-0376)
 ; HL = script address: clears wScriptParam0-wMessageState (parameters and step) and stores HL in
-; wScriptPointer; the script is run by RunEventScriptFrame (28 call sites) (E-0038)
-StartEventScript::
+; wScriptPointer; the script is run by RunEventScriptFrame (28 call sites)
+BeginScriptCommand::
     xor a
     ld [wScriptParam0], a
     ld [wScriptParam1], a
@@ -1126,8 +1277,11 @@ StartEventScript::
     ld [wScriptPointerHi], a
     ret
 
+; Does nothing during a fade (wFadeState non-zero) or while wScriptCommandType is 0; otherwise jumps
+; through ScriptCommandHandlers[wScriptCommandType - 1] to run one frame of the current command.
+; Called by RunEventScriptFrame. (C2, E-0376)
 ; does nothing during a fade or while wScriptCommandType is 0; otherwise jumps through
-; ScriptCommandHandlers[wScriptCommandType - 1] to run one frame of the current command (E-0038)
+; ScriptCommandHandlers[wScriptCommandType - 1] to run one frame of the current command
 ExecuteScriptCommand::
     ld a, [wFadeState]
     or a
@@ -1392,200 +1546,363 @@ ScriptCommandHandlers::
     dw ScriptCommandF7 ; entry 246
     dw ScriptCommandF8 ; entry 247
 
+; Script command $9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE), entry 157 of ScriptCommandHandlers: one frame
+; of the command, a far call of KeyWorldFloorBattle. (C1, E-0376)
 ; runs one frame of script command type 9E (entry 157 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9E::
     farcall KeyWorldFloorBattle
     ret
 
+; Script command $9D (SCRIPT_COUNTDOWN_MESSAGE), entry 156 of ScriptCommandHandlers: one frame of
+; the command, a far call of CountdownMessage. (C1, E-0376)
 ; runs one frame of script command type 9D (entry 156 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9D::
     farcall CountdownMessage
     ret
 
+; Script command $9C (SCRIPT_ENCOUNTER_MESSAGE), entry 155 of ScriptCommandHandlers: one frame of
+; the command, a far call of EncounterCounterMessage. (C1, E-0376)
 ; runs one frame of script command type 9C (entry 155 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9C::
     farcall EncounterCounterMessage
     ret
 
+; Script command $9B (SCRIPT_HEAL_PARTY), entry 154 of ScriptCommandHandlers: one frame of the
+; command, a far call of HealPartyEvent. (C1, E-0376)
 ; runs one frame of script command type 9B (entry 154 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9B::
     farcall HealPartyEvent
     ret
 
+; Script command $9A (SCRIPT_RANDOM_BATTLE), entry 153 of ScriptCommandHandlers: one frame of the
+; command, a far call of RandomBattleEvent. (C1, E-0376)
 ; runs one frame of script command type 9A (entry 153 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9A::
     farcall RandomBattleEvent
     ret
 
+; Script command $99 (SCRIPT_OBJECT_PATH_1C), entry 152 of ScriptCommandHandlers: one frame of the
+; command, a far call of ObjectPath1C. (C1, E-0376)
 ; runs one frame of script command type 99 (entry 152 of ScriptCommandHandlers) (E-0038)
 ScriptCommand99::
     farcall ObjectPath1C
     ret
 
+; Script command $98 (SCRIPT_OBJECT_PATH_1B), entry 151 of ScriptCommandHandlers: one frame of the
+; command, a far call of ObjectPath1B. (C1, E-0376)
 ; runs one frame of script command type 98 (entry 151 of ScriptCommandHandlers) (E-0038)
 ScriptCommand98::
     farcall ObjectPath1B
     ret
 
+; Script command $95 (SCRIPT_ARENA_GRID_BATTLE), entry 148 of ScriptCommandHandlers: one frame of
+; the command, a far call of ArenaGridBattle. (C1, E-0376)
 ; runs one frame of script command type 95 (entry 148 of ScriptCommandHandlers) (E-0038)
 ScriptCommand95::
     farcall ArenaGridBattle
     ret
 
+; Script command $96 (SCRIPT_ARENA_ROUNDS), entry 149 of ScriptCommandHandlers: one frame of the
+; command, a far call of ArenaRounds. (C1, E-0376)
 ; runs one frame of script command type 96 (entry 149 of ScriptCommandHandlers) (E-0038)
 ScriptCommand96::
     farcall ArenaRounds
     ret
 
+; Script command $90 (SCRIPT_FOLLOWERS_STEP_10), entry 143 of ScriptCommandHandlers: one frame of
+; the command, a far call of FollowersStep10. (C1, E-0376)
 ; runs one frame of script command type 90 (entry 143 of ScriptCommandHandlers) (E-0038)
 ScriptCommand90::
     farcall FollowersStep10
     ret
 
+; Script command $91 (SCRIPT_FOLLOWERS_STEP_11), entry 144 of ScriptCommandHandlers: one frame of
+; the command, a far call of FollowersStep11 (by wScriptStep: the player faces down with sound $65,
+; walks down two pixels a frame to Y $60 with the followers, then waits for the last follower and
+; resumes the script). (C2, E-0376)
 ; runs one frame of script command type 91 (entry 144 of ScriptCommandHandlers) (E-0038)
 ScriptCommand91::
     farcall FollowersStep11
     ret
 
+; Script command $92 (SCRIPT_PLAYER_AND_FOLLOWERS_STEP), entry 145 of ScriptCommandHandlers: one
+; frame of the command, a far call of PlayerAndFollowersStep. (C1, E-0376)
 ; runs one frame of script command type 92 (entry 145 of ScriptCommandHandlers) (E-0038)
 ScriptCommand92::
     farcall PlayerAndFollowersStep
     ret
 
+; Script command $93 (SCRIPT_WARP_WITH_FOLLOWERS), entry 146 of ScriptCommandHandlers: one frame of
+; the command, a far call of WarpWithFollowers. (C1, E-0376)
 ; runs one frame of script command type 93 (entry 146 of ScriptCommandHandlers) (E-0038)
 ScriptCommand93::
     farcall WarpWithFollowers
     ret
 
+; Script command $94 (SCRIPT_FOLLOWERS_STEP_14), entry 147 of ScriptCommandHandlers: one frame of
+; the command, a far call of FollowersStep14 (by wScriptStep: the player faces down with sound $65,
+; walks down two pixels a frame to Y $80 with the followers, then waits for the last follower and
+; resumes the script). (C2, E-0376)
 ; runs one frame of script command type 94 (entry 147 of ScriptCommandHandlers) (E-0038)
 ScriptCommand94::
     farcall FollowersStep14
     ret
 
+; Script command $8D (SCRIPT_BREED_CHILD_SCENE), entry 140 of ScriptCommandHandlers: one frame of
+; the command, a far call of BreedChildScene. (C1, E-0376)
 ; runs one frame of script command type 8D (entry 140 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8D::
     farcall BreedChildScene
     ret
 
+; Script command $8C (SCRIPT_BREED_CHILD_SPRITE), entry 139 of ScriptCommandHandlers: one frame of
+; the command, a far call of BreedChildSprite. (C1, E-0376)
 ; runs one frame of script command type 8C (entry 139 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8C::
     farcall BreedChildSprite
     ret
 
+; Script command $8B (SCRIPT_BREED_FADE), entry 138 of ScriptCommandHandlers: one frame of the
+; command, a far call of BreedFade. (C1, E-0376)
 ; runs one frame of script command type 8B (entry 138 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8B::
     farcall BreedFade
     ret
 
+; Script command $8F (SCRIPT_NPC_BREED_WARP), entry 142 of ScriptCommandHandlers: one frame of the
+; command, a far call of NpcBreedWarp. (C1, E-0376)
 ; runs one frame of script command type 8F (entry 142 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8F::
     farcall NpcBreedWarp
     ret
 
+; Script command $9F (SCRIPT_LINK_MESSAGE), entry 158 of ScriptCommandHandlers: one frame of the
+; command, a far call of LinkMessageEvent. (C1, E-0376)
 ; runs one frame of script command type 9F (entry 158 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9F::
     farcall LinkMessageEvent
     ret
 
+; Script command $A0 (SCRIPT_PLAYER_SPRITE_FLASH), entry 159 of ScriptCommandHandlers: one frame of
+; the command, a far call of PlayerSpriteFlash. (C1, E-0376)
 ; runs one frame of script command type A0 (entry 159 of ScriptCommandHandlers) (E-0038)
 ScriptCommandA0::
     farcall PlayerSpriteFlash
     ret
 
+; Script command $A1 (SCRIPT_PLAYER_SPRITE_MESSAGE), entry 160 of ScriptCommandHandlers: one frame
+; of the command, a far call of PlayerSpriteMessage. (C1, E-0376)
 ; runs one frame of script command type A1 (entry 160 of ScriptCommandHandlers) (E-0038)
 ScriptCommandA1::
     farcall PlayerSpriteMessage
     ret
 
+; Script command $8E (entry 141 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $8E): calls MapLinkWarp in bank $12 and returns.
+; MapLinkWarp runs stage wScriptStep of its 2 stages (WarpScene_LiftPartyFor90Calls first,
+; MapLinkWarp_SelectDestination last). Its only script is Script_MapLinkWarp, the one-command script
+; that Talk_MapLinkWarp (field talk 8) starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 8E (entry 141 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8E::
     farcall MapLinkWarp
     ret
 
+; Script command $8A (entry 137 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $8A): calls MapExitWarp in bank $12 and returns.
+; MapExitWarp runs stage wScriptStep of its 2 stages (WarpScene_LiftPartyFor90Calls first,
+; MapExitWarp_StartFade last). Its only script is Script_MapExitWarp, the one-command script that
+; Talk_MapExitWarp (field talk 7) starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 8A (entry 137 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8A::
     farcall MapExitWarp
     ret
 
+; Script command $80 (entry 127 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $80): calls StepTriggerReward in bank $12 and
+; returns. StepTriggerReward runs stage wScriptStep of its 6 stages (StepTriggerReward_ShowMessage
+; first, StepTriggerReward_SetScriptStartRequestTo80 last). Its only script is
+; Script_StepTriggerReward, the one-command script that Talk_StepTriggerReward (field talk 15)
+; starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 80 (entry 127 of ScriptCommandHandlers) (E-0038)
 ScriptCommand80::
     farcall StepTriggerReward
     ret
 
+; Script command $81 (entry 128 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $81): calls AreaItemEvent in bank $12 and returns.
+; AreaItemEvent runs stage wScriptStep of its 3 stages (AreaItemEvent_ShowItemMessage first,
+; AreaItemEvent_GiveItem last). Its only script is Script_AreaItem, the one-command script that
+; Talk_AreaItem (field talk 14) starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 81 (entry 128 of ScriptCommandHandlers) (E-0038)
 ScriptCommand81::
     farcall AreaItemEvent
     ret
 
+; Script command $86 (entry 133 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $86): calls KeyWorldDoorItem in bank $12 and
+; returns. KeyWorldDoorItem runs stage wScriptStep of its 5 stages (KeyWorldDoorItem_ShowItemMessage
+; first, KeyWorldDoorItem_OpenDoor last). Its only script is Script_KeyWorldDoorItem, the
+; one-command script that Talk_KeyWorldDoorItem (field talks 11-13) starts (StartScriptAtHL_B04).
+; (C1, E-0376)
 ; runs one frame of script command type 86 (entry 133 of ScriptCommandHandlers) (E-0038)
 ScriptCommand86::
     farcall KeyWorldDoorItem
     ret
 
+; Script command $82 (entry 129 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $82): calls TravelerEvents in bank $73 and
+; returns. TravelerEvents jumps by wPendingFieldEvent & $0F to one of 16 traveler handlers
+; (TravelerEvents_Healer first; entries 12-15 are all TravelerEvents_Thief). Its only script is
+; Script_TravelerEvent, the one-command script that Talk_TravelerEvent starts (StartScriptAtHL_B13).
+; (C1, E-0376)
 ; runs one frame of script command type 82 (entry 129 of ScriptCommandHandlers) (E-0038)
 ScriptCommand82::
     farcall TravelerEvents
     ret
 
+; Script command $83 (entry 130 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $83): calls FieldScene01 in bank $12 and returns.
+; FieldScene01 picks by wScriptParam1: 1 runs FieldScene01_Variant1, 2 FieldScene01_Variant2,
+; anything else FieldScene01_GetOff; ScriptFetch83 sets wScriptParam1 when the command starts (2
+; unless wMapSpriteKind & 3 is 1, then 3 with hPlayerStateFlags bit 3 set, else 1). Its only script
+; is Script_FieldScene01, the one-command script that Talk_FieldScene01 (field talk 1) starts
+; (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 83 (entry 130 of ScriptCommandHandlers) (E-0038)
 ScriptCommand83::
     farcall FieldScene01
     ret
 
+; Script command $84 (entry 131 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $84): calls RandomGoldOrItem in bank $12 and
+; returns. RandomGoldOrItem clears wJoypadHeld and wJoypadPressed unless wScriptStep is 7, then runs
+; stage wScriptStep of its 9 stages (SetupScriptSpriteInFrontOfPlayer first, RandomGoldOrItem_Give
+; last). Its only script is Script_RandomGoldOrItem, the one-command script that
+; Talk_RandomGoldOrItem (field talk 2) starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 84 (entry 131 of ScriptCommandHandlers) (E-0038)
 ScriptCommand84::
     farcall RandomGoldOrItem
     ret
 
+; Script command $85 (entry 132 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $85): calls KeyWorldBossBattle in bank $12 and
+; returns. KeyWorldBossBattle runs stage wScriptStep of its 8 stages (KeyWorldBossBattle_ShowMessage
+; first, KeyWorldBossBattle_MarkCleared last). Its only script is Script_KeyWorldBossBattle, the
+; one-command script that Talk_KeyWorldBossBattle (key world talk 0) starts (StartScriptAtHL_B04).
+; (C1, E-0376)
 ; runs one frame of script command type 85 (entry 132 of ScriptCommandHandlers) (E-0038)
 ScriptCommand85::
     farcall KeyWorldBossBattle
     ret
 
+; Script command $87 (entry 134 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $87): calls PartyDefeatedReturn in bank $12 and
+; returns. PartyDefeatedReturn runs stage wScriptStep of its 9 stages
+; (PartyDefeatedReturn_CountMarked first, PartyDefeatedReturn_ShowReturnMessage last). Its only
+; script is Script_PartyDefeatedReturn, the one-command script that Talk_PartyDefeatedReturn (field
+; talk 4) starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 87 (entry 134 of ScriptCommandHandlers) (E-0038)
 ScriptCommand87::
     farcall PartyDefeatedReturn
     ret
 
+; Script command $88 (entry 135 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $88): calls ReturnMessage in bank $12 and returns.
+; ReturnMessage runs stage wScriptStep of its 6 stages (ReturnMessage_SetGoldAndShow first,
+; HealPartyEvent_WaitAndResume last). Its only script is Script_ReturnMessage, the one-command
+; script that Talk_ReturnMessage (field talk 5) starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 88 (entry 135 of ScriptCommandHandlers) (E-0038)
 ScriptCommand88::
     farcall ReturnMessage
     ret
 
+; Script command $89 (entry 136 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $89): calls ReturnWarp in bank $12 and returns.
+; ReturnWarp runs stage wScriptStep of its 8 stages (WarpScene_LiftPartyFor90Calls first,
+; HealPartyEvent_WaitAndResume last). Its only script is Script_ReturnWarp, the one-command script
+; that Talk_ReturnWarp (field talk 6) starts (StartScriptAtHL_B04). (C1, E-0376)
 ; runs one frame of script command type 89 (entry 136 of ScriptCommandHandlers) (E-0038)
 ScriptCommand89::
     farcall ReturnWarp
     ret
 
+; Script command $06 (entry 5 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $06): calls ScriptSetDirection in bank $5F and
+; returns. ScriptSetDirection stores wScriptParam1 at the target that wScriptParam0 picks: 0 =
+; hPlayerFacing, n = the first byte of the n-th 5-byte record at wFollowerRecords, $80 + n = byte 7
+; of the 16-byte object entry n at wSpriteSlots; then wScriptStartRequest = $80, so the next script
+; byte is read on the next frame (wScriptCommandType is not cleared). Scripts write it as
+; script_face (opcode $05; ScriptFetchFace sets type $06 and the two parameters). (C2, E-0376)
 ; runs one frame of script command type 06 (entry 5 of ScriptCommandHandlers) (E-0038)
 ScriptCommand06::
     farcall ScriptSetDirection
     ret
 
+; Script command $05 (entry 4 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $05): calls ScriptCommand05_Run in bank $5F and
+; returns. ScriptCommand05_Run clears wJoypadHeld and wJoypadPressed; while a field action is
+; pending (wFieldActionRequest bit 7) or a step is in progress (hPlayerStateFlags bit 0) it does
+; nothing more. Otherwise, with wScriptParam1 = 0 it sets wScriptStartRequest = $80 (the command
+; ends when the next byte is fetched); else it decrements wScriptParam1 and sets the D-pad bit of
+; direction wScriptParam0 in wJoypadHeld (0 down bit 7, 1 right bit 4, 2 up bit 6, any other value
+; left bit 5). Scripts write it as script_hold_dpad (opcode $04; ScriptFetchHoldDpad sets type $05,
+; the parameters, wScriptStep = 0 and hPlayerTurnDelay = 0). (C2, E-0376)
 ; runs one frame of script command type 05 (entry 4 of ScriptCommandHandlers) (E-0038)
 ScriptCommand05::
     farcall ScriptCommand05_Run
     ret
 
+; Script command $04 (entry 3 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $04): calls ScriptWaitFrames in bank $5F and
+; returns. ScriptWaitFrames decrements the 16-bit count wScriptParam0 (low)/wScriptParam1 (high);
+; when it reaches 0 it clears wScriptCommandType and sets wScriptStartRequest = $80. Scripts write
+; it as script_wait (opcode $03; ScriptFetchWait sets type $04 and the count). (C2, E-0376)
 ; runs one frame of script command type 04 (entry 3 of ScriptCommandHandlers) (E-0038)
 ScriptCommand04::
     farcall ScriptWaitFrames
     ret
 
+; Script command $03 (entry 2 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $03): calls ScriptStepObject in bank $5F, then
+; falls into ScriptCommand02 (there is no ret), which calls it again and returns. ScriptStepObject
+; moves the object one pixel per call (see ScriptCommand02), so the object moves two pixels a frame
+; and a tile takes 8 frames; the tile count reaches 0 on the second call of a frame, so the extra
+; call never overshoots. Scripts write it as script_walk_fast (opcode $02; ScriptFetchWalkFast sets
+; type $03). (C2, E-0376)
 ; runs one frame of script command type 03 (entry 2 of ScriptCommandHandlers) (E-0038)
 ScriptCommand03::
     farcall ScriptStepObject
 
+; Script command $02 (entry 1 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $02): calls ScriptStepObject in bank $5F and
+; returns. ScriptStepObject moves object wScriptParam0 & $0F (the 16-byte entry at wSpriteSlots) one
+; pixel in direction wScriptParam0 >> 4 (0 Y + 1, 1 X + 1, 2 Y - 1, 3 X - 1), sets bit 2 of its
+; flags (byte $D) and stores the direction in byte 7; every 16 calls (wScriptStep) it decrements the
+; tile count wScriptParam1, and at 0 clears bit 2, clears wScriptCommandType and sets
+; wScriptStartRequest = $80. Scripts write it as script_walk (opcode $01; ScriptFetchWalk sets type
+; $02). (C2, E-0376)
 ; runs one frame of script command type 02 (entry 1 of ScriptCommandHandlers) (E-0038)
 ScriptCommand02::
     farcall ScriptStepObject
     ret
 
+; Script command $0A (entry 9 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $0A): calls RunOneTimeTreasure in bank $5F and
+; returns. RunOneTimeTreasure runs stage wScriptStep of its 5 stages
+; (RunOneTimeTreasure_PrepareMessage first, RunOneTimeTreasure_RedrawChest last). No script opcode
+; sets type $0A: StartTreasureFlagDE_B04 and StartTreasureFlagDE_B13 start it directly for the
+; chest, vase and barrel handlers, with the story flag of the treasure in
+; wMessageIndex/wMessageGroup. (C1, E-0376)
 ; runs one frame of script command type 0A (entry 9 of ScriptCommandHandlers) (E-0038)
 ScriptCommand0A::
     farcall RunOneTimeTreasure
     ret
 
+; Script command $09 (entry 8 of ScriptCommandHandlers): the one-message talk reply.
+; StartMessageCommand09HL_B04, StartMessageCommand09HL_B13 and other talk code of bank $13 start it
+; directly with the message word in wScriptParam0 (low) and wScriptParam1 (high); no script opcode
+; sets type $09. It jumps by wScriptStep: 0 ScriptCommand09_OpenWindow, 1 ScriptCommand09_ShowText,
+; 2 ScriptCommand09_CloseWindow, 3 ScriptCommand09_Finish, which ends the whole script
+; (wScriptRunning = 0, wModeState = 0) instead of asking for the next script byte. (C1, E-0376)
 ; runs one frame of script command type 09 (entry 8 of ScriptCommandHandlers) (E-0038)
 ScriptCommand09::
     ld a, [wScriptStep]
@@ -1596,7 +1913,7 @@ ScriptCommand09::
     dw ScriptCommand09_Finish
 
 ; Command 09, step 3: once the window has closed, unfreezes the player and objects and ends the
-; script (mode state 0). (C1, E-0357)
+; script (mode state 0). (C2, E-0357; probed E-0376)
 ScriptCommand09_Finish::
     ld a, [wTextWindowState]
     and $03
@@ -1610,6 +1927,15 @@ ScriptCommand09_Finish::
     ld [wModeState], a
     ret
 
+; Script command $01 (entries 0, 233 and 244 of ScriptCommandHandlers): a message inside a script.
+; ScriptFetchMessage (script_message), ScriptFetchMessageUnlessFlag0 (script_message_unless_flag0)
+; and ScriptFetchMessageByScreen (script_message_by_screen) all set type $01 with the message word
+; in wScriptParam0 (low) and wScriptParam1 (high; bit 7 = the window is already open, bit 6 = keep
+; it open), so entries 233 ($EA) and 244 ($F5) are reached only if something stores those types, and
+; no store in src does. It jumps by wScriptStep through the first three steps of command $09
+; (ScriptCommand09_OpenWindow, ScriptCommand09_ShowText, ScriptCommand09_CloseWindow), then
+; ScriptCommand01_CloseWindow, which ends the command and asks for the next script byte
+; (wScriptStartRequest = $80). (C1, E-0376)
 ; runs one frame of script command type 01 (entry 0 of ScriptCommandHandlers) (E-0038)
 ScriptCommand01::
     ld a, [wScriptStep]
@@ -1673,7 +1999,7 @@ ScriptCommand09_ShowText::
     ret
 
 ; Command 09, step 2: waits for the text; unless wScriptParam1 bit 6 (keep the window open), plays
-; sound $69 and starts closing it; next step. (C1, E-0357)
+; sound $69 and starts closing it; next step. (C2, E-0357; probed E-0376)
 ScriptCommand09_CloseWindow::
     ld a, [wTextFlags]
     bit 0, a
@@ -1702,7 +2028,7 @@ ScriptCommand09_CloseWindow::
 
 ; Command 01, step 3: unless wScriptParam1 bit 6, waits for the window to close and unfreezes the
 ; player and objects; then ends the command and asks for the next one (wScriptStartRequest $80).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 ScriptCommand01_CloseWindow::
     ld a, [wScriptParam1]
     bit 6, a
@@ -1884,646 +2210,1382 @@ StartMessageForGroup_KeyWorld::
     farcall BeginStringDisplay_Bank8A
     ret
 
+; Script command $0C (entry 11 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $0C): calls ScriptSlideObjectY in bank $5F and
+; returns. ScriptSlideObjectY adds ScriptSlideObjectY_Data[wScriptParam0 / 2] to the Y byte of the
+; target that wScriptParam1 picks (0 = hPlayerY, n = byte 2 of the n-th 5-byte record at
+; wFollowerRecords, $80 + n = byte $C of object entry n) and increments wScriptParam0; at $20 (32
+; frames) it clears wScriptCommandType and sets wScriptStartRequest = $80. Scripts write it as
+; script_slide_y (opcode $0B; ScriptFetchSlideY sets type $0C, wScriptParam1 = the target and
+; wScriptParam0 = 0). (C2, E-0376)
 ; runs one frame of script command type 0C (entry 11 of ScriptCommandHandlers) (E-0038)
 ScriptCommand0C::
     farcall ScriptSlideObjectY
     ret
 
+; Script command $0E (entry 13 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $0E): calls ScriptCommand0E_Run in bank $5F and
+; returns. ScriptCommand0E_Run: at stage 0 it starts scripted encounter wScriptParam0
+; (StartScriptedEncounterTemp0) and moves to stage 1; the next call (after the battle) clears
+; wScriptCommandType, sets wScriptStartRequest = $80 and jumps by wScriptParam0 through a 51-entry
+; table, whose entry $1E is ScriptCommand0E_Run_HideSprites (wSpriteSlotCount = 0) and all others
+; ScriptCommand0E_Run_DoNothing. Scripts write it as script_encounter (opcode $0D;
+; ScriptFetchEncounter sets type $0E, wScriptParam0 = the encounter and wScriptStep = 0). (C1,
+; E-0376)
 ; runs one frame of script command type 0E (entry 13 of ScriptCommandHandlers) (E-0038)
 ScriptCommand0E::
     farcall ScriptCommand0E_Run
     ret
 
+; Script command $11 (entry 16 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $11): calls SceneFarmKids in bank $73 and returns.
+; SceneFarmKids has 2 stages by wScriptStep: SceneFarmKids_ShowObject shows wObject5 at ($40, $30)
+; for 60 frames; SceneFarmKids_SinkObject lowers it on a 16-frame hop, hides it and sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_FARM_KIDS: Script_YouMustBeThe
+; (after 'You must be the farm...'). (C2, E-0376)
 ; runs one frame of script command type 11 (entry 16 of ScriptCommandHandlers) (E-0038)
 ScriptCommand11::
     farcall SceneFarmKids
     ret
 
+; Script command $12 (entry 17 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $12): calls SceneLearnQuick in bank $73 and
+; returns. SceneLearnQuick runs stage wScriptStep of its 6 stages (SceneLearnQuick_StartLegs first,
+; SceneLearnQuick_SpinUntilStopped last); stage 0 sets wMessageIndex = 1 and wMessageGroup = 0 and
+; moves on. Scripts start it with SCRIPT_SCENE_LEARN_QUICK: Script_OhIt. (C2, E-0376)
 ; runs one frame of script command type 12 (entry 17 of ScriptCommandHandlers) (E-0038)
 ScriptCommand12::
     farcall SceneLearnQuick
     ret
 
+; Script command $13 (entry 18 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $13): calls SceneSpinning in bank $73 and returns.
+; SceneSpinning runs stage wScriptStep of its 17 stages (SceneSpinning_PlaceObjects first,
+; SceneSpinning_WalkUpOff last). Scripts start it with SCRIPT_SCENE_SPINNING: Script_SceneSpinning.
+; (C1, E-0376)
 ; runs one frame of script command type 13 (entry 18 of ScriptCommandHandlers) (E-0038)
 ScriptCommand13::
     farcall SceneSpinning
     ret
 
+; Script command $14 (entry 19 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $14): calls SceneWarubouSmells in bank $73 and
+; returns. SceneWarubouSmells runs stage wScriptStep of its 4 stages; stage 0
+; (SceneWarubouSmells_WalkObject2Right) moves object 2 right one pixel a frame until X = $40, and
+; the last (SceneWarubouSmells_Wait) waits 60 frames and sets wScriptStartRequest = $80. Scripts
+; start it with SCRIPT_SCENE_WARUBOU_SMELLS: Script_WarubouWhaISmell (before 'Warubou: What is this?
+; Food? Perfect!'). (C2, E-0376)
 ; runs one frame of script command type 14 (entry 19 of ScriptCommandHandlers) (E-0038)
 ScriptCommand14::
     farcall SceneWarubouSmells
     ret
 
+; Script command $15 (entry 20 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $15): calls SceneWarubouFood in bank $73 and
+; returns. SceneWarubouFood runs stage wScriptStep of its 11 stages (SceneWarubouFood_WalkPlayer
+; first); the last, SceneWarubouFood_WalkObjects, walks objects 1 and 2 right two pixels a frame
+; toward X = $50, moving each off screen (X = $E0) on arrival, then sets wScriptStartRequest = $80.
+; Scripts start it with SCRIPT_SCENE_WARUBOU_FOOD: Script_WarubouWhaISmell (after 'Warubou: What is
+; this? Food? Perfect!'). (C2, E-0376)
 ; runs one frame of script command type 15 (entry 20 of ScriptCommandHandlers) (E-0038)
 ScriptCommand15::
     farcall SceneWarubouFood
     ret
 
+; Script command $16 (entry 21 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $16): calls SceneWarubouFood2 in bank $73 and
+; returns. SceneWarubouFood2 runs stage wScriptStep of its 29 stages (ScriptStepSetObjectBit2AndWait
+; first, SceneWarubouFood2_WalkPlayerLeft last). Scripts start it with SCRIPT_SCENE_WARUBOU_FOOD_2:
+; Script_WarubouCalmDownAnd (before 'Warubou: Calm down and listen! What...'). (C1, E-0376)
 ; runs one frame of script command type 16 (entry 21 of ScriptCommandHandlers) (E-0038)
 ScriptCommand16::
     farcall SceneWarubouFood2
     ret
 
+; Script command $17 (entry 22 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $17): calls ScenePackage in bank $73 and returns.
+; ScenePackage: at stage 0 it shows wObject5 at the position of the player; then each call moves it
+; one pixel by the position of the player (X + 1 at hPlayerX $30, X - 1 at $50, otherwise Y + 1 at
+; hPlayerY $20, else Y - 1) on a 16-frame hop (ScriptApplyStepDeltaAtDE_Bank73), then hides it and
+; sets wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_PACKAGE: Script_DidYouGetThe
+; (after 'Did you get the package...'). (C2, E-0376)
 ; runs one frame of script command type 17 (entry 22 of ScriptCommandHandlers) (E-0038)
 ScriptCommand17::
     farcall ScenePackage
     ret
 
+; Script command $18 (entry 23 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $18): calls SceneGreatlogKey in bank $85 and
+; returns. SceneGreatlogKey runs stage wScriptStep of its 5 stages
+; (SceneGreatlogKey_ShowWarubouWaheyForgotSomething first, SceneGreatlogKey_FlyOff last). Scripts
+; start it with SCRIPT_SCENE_GREATLOG_KEY: Script_HeroReceivedTheGreatLog (before '0 received the
+; GreatLog Key.'). (C1, E-0376)
 ; runs one frame of script command type 18 (entry 23 of ScriptCommandHandlers) (E-0038)
 ScriptCommand18::
     farcall SceneGreatlogKey
     ret
 
+; Script command $19 (entry 24 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $19): calls SceneWarubouMagicKey in bank $73 and
+; returns. SceneWarubouMagicKey: at stage 0 it shows wObject5 (byte 0 = $80); then it raises it one
+; pixel a frame on a 16-frame hop and sets wScriptStartRequest = $80, leaving it shown. Scripts
+; start it with SCRIPT_SCENE_WARUBOU_MAGIC_KEY: Script_WarubouWaHeyGood_2 (between 'Warubou: Wa-hey!
+; Good, good, good! In...' and 'Warubou: This here is a Magic...'). (C2, E-0376)
 ; runs one frame of script command type 19 (entry 24 of ScriptCommandHandlers) (E-0038)
 ScriptCommand19::
     farcall SceneWarubouMagicKey
     ret
 
+; Script command $1A (entry 25 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $1A): calls SceneOasisKey in bank $73 and returns.
+; SceneOasisKey moves wObject5 by the position of the player (X + 1 and Y + 1 at hPlayerX $50, X - 1
+; and Y + 1 at $30, otherwise Y + 2 unless hPlayerY is $20) on a 16-frame hop; then it hides it,
+; puts it back at ($40, $30) and sets wScriptStartRequest = $80. Scripts start it with
+; SCRIPT_SCENE_OASIS_KEY: Script_WarubouWaHeyGood_2 (between 'Warubou: This here is a Magic...' and
+; '0 received the Oasis Key.'). (C2, E-0376)
 ; runs one frame of script command type 1A (entry 25 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1A::
     farcall SceneOasisKey
     ret
 
+; Script command $1B (entry 26 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $1B): calls SceneWarubouLeaves in bank $85 and
+; returns. SceneWarubouLeaves runs stage wScriptStep of its 4 stages (SceneWarubouLeaves_WalkObjects
+; first); the last, SceneWarubouLeaves_WalkOff, walks objects 1 and 2 left toward X = $E0 and sets
+; wScriptStartRequest = $80 when object 2 arrives. Scripts start it with
+; SCRIPT_SCENE_WARUBOU_LEAVES: Script_HehSoTheseAre. (C2, E-0376)
 ; runs one frame of script command type 1B (entry 26 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1B::
     farcall SceneWarubouLeaves
     ret
 
+; Script command $1C (entry 27 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $1C): calls SceneWarubouWarning in bank $0F and
+; returns. SceneWarubouWarning runs stage wScriptStep of its 5 stages (SceneWarubouWarning_Warp
+; first, PersonalityMessage_WaitForMessage last). Scripts start it with
+; SCRIPT_SCENE_WARUBOU_WARNING: Script_HeroReceivedTheGreatLog (between 'Warubou: Dangerous are
+; other worlds! So...' and 'Slash: Hey, why the long faces?'). (C1, E-0376)
 ; runs one frame of script command type 1C (entry 27 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1C::
     farcall SceneWarubouWarning
     ret
 
+; Script command $1D (entry 28 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $1D): calls SceneLongFaces in bank $0F and
+; returns. SceneLongFaces runs stage wScriptStep of its 13 stages (SceneHomecoming_WaitMessage
+; first, SceneLongFaces_Finish last). Scripts start it with SCRIPT_SCENE_LONG_FACES:
+; Script_HeroReceivedTheGreatLog (after 'Slash: Hey, why the long faces?'). (C1, E-0376)
 ; runs one frame of script command type 1D (entry 28 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1D::
     farcall SceneLongFaces
     ret
 
+; Script command $1E (entry 29 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $1E): calls CheckItem in bank $73 and returns.
+; CheckItem looks for items $19, $1A, $1B and $1C in that order (FindTemp0InInventoryList); the
+; first one found is replaced by item $30, wInventorySortFlags bit 6 is set and wScriptStartRequest
+; = $80. With none of them it returns without ending, so the command runs again next frame. Scripts
+; start it with SCRIPT_CHECK_ITEM: Script_HeroHandedOverSome (after 'That will help you for...').
+; (C2, E-0376)
 ; runs one frame of script command type 1E (entry 29 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1E::
     farcall CheckItem
     ret
 
+; Script command $1F (entry 30 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $1F): calls SceneMonsterInspection in bank $0F and
+; returns. SceneMonsterInspection runs stage wScriptStep of its 10 stages
+; (SceneMonsterInspection_ShowAndThatWasThe first, SceneMonsterInspection_Finish last). Scripts
+; start it with SCRIPT_SCENE_MONSTER_INSPECTION: Script_DidYouSayYes and
+; Script_AhThreeHealthyMonsters (between 'Did you say yes? Yes,...' and 'Very good show! That
+; was...'). (C1, E-0376)
 ; runs one frame of script command type 1F (entry 30 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1F::
     farcall SceneMonsterInspection
     ret
 
+; Script command $20 (entry 31 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $20): calls ScriptCommand20_Run in bank $73 and
+; returns. ScriptCommand20_Run runs stage wScriptStep of its 4 stages: stage 0 sets wScriptParam0 =
+; 0 when the second follower record is at ($40, $20), else 1; the last,
+; ScriptCommand20_Run_FaceAndSetFlag, after 60 frames plays sound $72, turns object 0 (wSpriteSlots
+; + 7 = (hPlayerFacing + 2) & 3, X = $40), sets EVENT_SCRIPT_COMMAND20_TURNED and
+; wScriptStartRequest = $80. No script_command in src names type $20. (C2, E-0376)
 ; runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers) (E-0038)
 ScriptCommand20::
     farcall ScriptCommand20_Run
     ret
 
+; Script command $21 (entry 32 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $21): calls SceneKingAudience in bank $73 and
+; returns. SceneKingAudience runs stage wScriptStep of its 2 stages (SceneKingAudience_Wait first,
+; SceneKingAudience_HideObject last). Scripts start it with SCRIPT_SCENE_KING_AUDIENCE:
+; Script_KingYouWishTo (between 'King: You wish to see our...' and 'King: I see. This is what...').
+; (C1, E-0376)
 ; runs one frame of script command type 21 (entry 32 of ScriptCommandHandlers) (E-0038)
 ScriptCommand21::
     farcall SceneKingAudience
     ret
 
+; Script command $22 (entry 33 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $22): calls SceneCanalGate in bank $85 and
+; returns. SceneCanalGate runs stage wScriptStep of its 7 stages (SceneCanalGate_Hop first,
+; SceneCanalGate_RaiseGate last). Scripts start it with SCRIPT_SCENE_CANAL_GATE:
+; Script_WhatOpenTheCanal (after 'What? Open the Canal Gate...'). (C1, E-0376)
 ; runs one frame of script command type 22 (entry 33 of ScriptCommandHandlers) (E-0038)
 ScriptCommand22::
     farcall SceneCanalGate
     ret
 
+; Script command $23 (entry 34 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $23): calls SceneWaterShortage in bank $0F and
+; returns. SceneWaterShortage runs stage wScriptStep of its 5 stages (SceneWaterShortage_WalkPlayer
+; first, SceneWaterShortage_Finish last). Scripts start it with SCRIPT_SCENE_WATER_SHORTAGE:
+; Script_KingTheTown (before 'King: Wha-what? What happened?'). (C1, E-0376)
 ; runs one frame of script command type 23 (entry 34 of ScriptCommandHandlers) (E-0038)
 ScriptCommand23::
     farcall SceneWaterShortage
     ret
 
+; Script command $24 (entry 35 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $24): calls SceneTreasureTheft in bank $85 and
+; returns. SceneTreasureTheft runs stage wScriptStep of its 9 stages
+; (SceneTreasureTheft_ShowKingTheHideoutOf first, SceneTreasureTheft_WalkOff last). Scripts start it
+; with SCRIPT_SCENE_TREASURE_THEFT: Script_KingTheTown (between 'King: What? Arrrrgh! Round up
+; all...' and 'King: I apologize, but my treasures...'). (C1, E-0376)
 ; runs one frame of script command type 24 (entry 35 of ScriptCommandHandlers) (E-0038)
 ScriptCommand24::
     farcall SceneTreasureTheft
     ret
 
+; Script command $25 (entry 36 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $25): calls SceneWaterSolved in bank $73 and
+; returns. SceneWaterSolved runs stage wScriptStep of its 2 stages (SceneWaterSolved_Warp first,
+; SceneWaterSolved_SetScriptStartRequestTo80 last). Scripts start it with SCRIPT_SCENE_WATER_SOLVED:
+; Script_I_13 (between 'You will? So we can...' and 'King: This should solve the water...'). (C1,
+; E-0376)
 ; runs one frame of script command type 25 (entry 36 of ScriptCommandHandlers) (E-0038)
 ScriptCommand25::
     farcall SceneWaterSolved
     ret
 
+; Script command $26 (entry 37 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $26): calls SceneMonstersInTow in bank $73 and
+; returns. SceneMonstersInTow runs stage wScriptStep of its 4 stages
+; (SceneMonstersInTow_SavePalettes first, SceneMonstersInTow_SetScriptStartRequestTo80 last).
+; Scripts start it with SCRIPT_SCENE_MONSTERS_IN_TOW: Script_SceneMonstersInTow. (C1, E-0376)
 ; runs one frame of script command type 26 (entry 37 of ScriptCommandHandlers) (E-0038)
 ScriptCommand26::
     farcall SceneMonstersInTow
     ret
 
+; Script command $27 (entry 38 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $27): calls SceneRivalDefeated in bank $0F and
+; returns. SceneRivalDefeated runs stage wScriptStep of its 36 stages (SceneRivalDefeated_BlinkOut
+; first, SceneRivalDefeated_GiveKey last). Scripts start it with SCRIPT_SCENE_RIVAL_DEFEATED:
+; Script_HehYouHaveMonsters and Script_YouAgainYou. (C1, E-0376)
 ; runs one frame of script command type 27 (entry 38 of ScriptCommandHandlers) (E-0038)
 ScriptCommand27::
     farcall SceneRivalDefeated
     ret
 
+; Script command $28 (entry 39 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $28): calls ShakeScreen in bank $0F and returns.
+; ShakeScreen runs stage wScriptStep of its 3 stages (ShakeScreen_Start first, ShakeScreen_Finish
+; last). Scripts start it with SCRIPT_SHAKE_SCREEN: Script_TheBirdsAreNoisy. (C1, E-0376)
 ; runs one frame of script command type 28 (entry 39 of ScriptCommandHandlers) (E-0038)
 ScriptCommand28::
     farcall ShakeScreen
     ret
 
+; Script command $29 (entry 40 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $29): calls SceneWhoAreYou in bank $0F and
+; returns. SceneWhoAreYou runs stage wScriptStep of its 10 stages (SceneWhoAreYou_MoveDown first,
+; SceneWhoAreYou_KeepInStep last). Scripts start it with SCRIPT_SCENE_WHO_ARE_YOU:
+; Script_SceneWhoAreYou. (C1, E-0376)
 ; runs one frame of script command type 29 (entry 40 of ScriptCommandHandlers) (E-0038)
 ScriptCommand29::
     farcall SceneWhoAreYou
     ret
 
+; Script command $2A (entry 41 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $2A): calls SceneWatchOut in bank $85 and returns.
+; SceneWatchOut runs stage wScriptStep of its 19 stages (SceneWatchOut_ShowHmYouAreQuite first,
+; SceneWatchOut_BackToStep14 last). Scripts start it with SCRIPT_SCENE_WATCH_OUT:
+; Script_WhoAreYouThis, Script_YouCanKeepTrying and Script_SceneWatchOut (after 'Who are you? This
+; is...'). (C1, E-0376)
 ; runs one frame of script command type 2A (entry 41 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2A::
     farcall SceneWatchOut
     ret
 
+; Script command $2B (entry 42 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $2B): calls SceneMermaidSong in bank $73 and
+; returns. SceneMermaidSong runs stage wScriptStep of its 13 stages (SceneMermaidSong2_WalkPlayer
+; first, SceneMermaidSong_MoveOff last). Scripts start it with SCRIPT_SCENE_MERMAID_SONG:
+; Script_ThenI_2. (C1, E-0376)
 ; runs one frame of script command type 2B (entry 42 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2B::
     farcall SceneMermaidSong
     ret
 
+; Script command $2C (entry 43 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $2C): calls SceneDancing in bank $73 and returns.
+; SceneDancing runs stage wScriptStep of its 9 stages (the first five shared with
+; SceneMermaidSong2); the last, SceneDancing_SetScriptStartRequestTo80, only sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_DANCING: Script_ThenI. (C2, E-0376)
 ; runs one frame of script command type 2C (entry 43 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2C::
     farcall SceneDancing
     ret
 
+; Script command $2D (entry 44 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $2D): calls SceneMermaidSong2 in bank $73 and
+; returns. SceneMermaidSong2 runs stage wScriptStep of its 11 stages (SceneMermaidSong2_WalkPlayer
+; first, SceneMermaidSong2_SetScriptStartRequestTo80 last). Scripts start it with
+; SCRIPT_SCENE_MERMAID_SONG_2: Script_ThenI_3. (C1, E-0376)
 ; runs one frame of script command type 2D (entry 44 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2D::
     farcall SceneMermaidSong2
     ret
 
+; Script command $2E (entry 45 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $2E): calls WarpMap41 in bank $73 and returns.
+; WarpMap41: at stage 0 it calls WarpToMap41 (map $41, screen (0, 1), position ($70, $30),
+; transition kind 1, ScriptStartFadeAndAdvanceStep, sets EVENT_IN_THE_PAST_MERMAIDS_ARE); a later
+; call sets wScriptStartRequest = $80. Scripts start it with SCRIPT_WARP_MAP41:
+; Script_CloseYourEyesA (after 'Close your eyes a little...'). (C1, E-0376)
 ; runs one frame of script command type 2E (entry 45 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2E::
     farcall WarpMap41
     ret
 
+; Script command $2F (entry 46 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $2F): calls SceneTentacles in bank $73 and
+; returns. SceneTentacles: at stage 0 it sets a warp to map $3C, screen (0, 0), position ($50, $40),
+; transition kind 4 and starts it (ScriptStartFadeAndAdvanceStep: palette fade, wModeState = 4, next
+; stage); a later call sets wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_TENTACLES:
+; Script_CloseYourEyesFor (after 'Close your eyes for a...'). (C1, E-0376)
 ; runs one frame of script command type 2F (entry 46 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2F::
     farcall SceneTentacles
     ret
 
+; Script command $30 (entry 47 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $30): calls SceneSailorRing in bank $73 and
+; returns. SceneSailorRing runs stage wScriptStep of its 2 stages (SceneSailorRing_Warp first,
+; SceneSailorRing_SetScriptStartRequestTo80 last). Scripts start it with SCRIPT_SCENE_SAILOR_RING:
+; Script_SceneSailorRing. (C1, E-0376)
 ; runs one frame of script command type 30 (entry 47 of ScriptCommandHandlers) (E-0038)
 ScriptCommand30::
     farcall SceneSailorRing
     ret
 
+; Script command $31 (entry 48 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $31): calls ScenePirateGhosts in bank $85 and
+; returns. ScenePirateGhosts runs stage wScriptStep of its 3 stages (ScenePirateGhosts_CrateHint
+; first, ScenePirateGhosts_BlinkOut last). Scripts start it with SCRIPT_SCENE_PIRATE_GHOSTS:
+; Script_HowCouldWeDie, Script_TheTreasuresAreOurs and Script_ItNagsAndNags (after 'How could we die
+; before...'). (C1, E-0376)
 ; runs one frame of script command type 31 (entry 48 of ScriptCommandHandlers) (E-0038)
 ScriptCommand31::
     farcall ScenePirateGhosts
     ret
 
+; Script command $32 (entry 49 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $32): calls GiveItemBlink in bank $0F and returns.
+; GiveItemBlink has one stage: it blinks object 0 at Y $20 (or $40 when EVENT_GIVE_ITEM_BLINK is
+; set) for 120 frames (ScriptStepBlinkObjectTemp0); after a blink at $40 it adds item $33
+; (AppendItemStepPtrLoToInventory) when EVENT_YOU_WILL_THANK_YOU_LET is set; then it hides the
+; sprites (wSpriteSlotCount = 0) and sets wScriptStartRequest = $80. Scripts start it with
+; SCRIPT_GIVE_ITEM_BLINK: Script_WhoDisturbsUsIn, Script_YouSeemToNot, Script_YouStartledMeI,
+; Script_YouStartledMeI_2, Script_YouWillThankYou, Script_YouStartledMeI_3, Script_IDon_2,
+; Script_IDon_3, Script_YouWillThankYou_3 and Script_IDon_4 (between 'You will? Thank you! Let...'
+; and '0 obtained YunaSoul.'). (C2, E-0376)
 ; runs one frame of script command type 32 (entry 49 of ScriptCommandHandlers) (E-0038)
 ScriptCommand32::
     farcall GiveItemBlink
     ret
 
+; Script command $33 (entry 50 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $33): calls SceneCrate in bank $73 and returns.
+; SceneCrate runs stage wScriptStep of its 9 stages (SceneCrate_Warp first,
+; ScriptStepBlinkSpritesThenEnd last). Scripts start it with SCRIPT_SCENE_CRATE:
+; Script_HeroCheckedTheTreasure (after '0 checked the treasure chest. 0...'). (C1, E-0376)
 ; runs one frame of script command type 33 (entry 50 of ScriptCommandHandlers) (E-0038)
 ScriptCommand33::
     farcall SceneCrate
     ret
 
+; Script command $34 (entry 51 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $34): calls SetTilesFlag310 in bank $73 and
+; returns. SetTilesFlag310 writes tiles $58-$5B into wScreenTileBuffer + $AA, $AB, $BE and $BF,
+; redraws the screen (DrawFullScreenBufferAtScroll), sets wStoryFlags + $62 bit 0 (story flag $310)
+; and sets wScriptStartRequest = $80. Scripts start it with SCRIPT_SET_TILES_FLAG_310:
+; Script_HeroCheckedTheCrate (after '0 checked the crate. There was...'). (C1, E-0376)
 ; runs one frame of script command type 34 (entry 51 of ScriptCommandHandlers) (E-0038)
 ScriptCommand34::
     farcall SetTilesFlag310
     ret
 
+; Script command $35 (entry 52 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $35): calls SceneKamehaEscape in bank $73 and
+; returns. SceneKamehaEscape runs stage wScriptStep of its 22 stages (SceneKamehaEscape_PlayMusic
+; first, SceneKamehaEscape_SetScriptStartRequestTo80 last). Scripts start it with
+; SCRIPT_SCENE_KAMEHA_ESCAPE: Script_SceneKamehaEscape. (C1, E-0376)
 ; runs one frame of script command type 35 (entry 52 of ScriptCommandHandlers) (E-0038)
 ScriptCommand35::
     farcall SceneKamehaEscape
     ret
 
+; Script command $36 (entry 53 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $36): calls SceneKamehaCaught in bank $0F and
+; returns. SceneKamehaCaught has 2 stages: SceneKamehaCaught_StartMoving sets bit 2 of the flags of
+; objects 0-2 and clears wScriptParam0; SceneKamehaCaught_MoveOff moves objects 0-2 up two pixels a
+; frame (skipping any at Y $E0) and, once object 2 is at $E0, sets wSpriteSlotCount = 0 and
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_KAMEHA_CAUGHT:
+; Script_KamehaWahahahahThanksFor (after 'Kameha: Wahahahah! Thanks for guiding me...'). (C2,
+; E-0376)
 ; runs one frame of script command type 36 (entry 53 of ScriptCommandHandlers) (E-0038)
 ScriptCommand36::
     farcall SceneKamehaCaught
     ret
 
+; Script command $37 (entry 54 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $37): calls SceneCrewFollows in bank $0F and
+; returns. SceneCrewFollows runs stage wScriptStep of its 4 stages (SceneCrewFollows_MoveRight
+; first, SceneCrewFollows_TurnObjects last). Scripts start it with SCRIPT_SCENE_CREW_FOLLOWS:
+; Script_KamehaUrkHowYou. (C1, E-0376)
 ; runs one frame of script command type 37 (entry 54 of ScriptCommandHandlers) (E-0038)
 ScriptCommand37::
     farcall SceneCrewFollows
     ret
 
+; Script command $38 (entry 55 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $38): calls SceneKamehaFlees in bank $0F and
+; returns. SceneKamehaFlees runs stage wScriptStep of its 13 stages (SceneKamehaFlees_Gather first,
+; SceneKamehaFlees_BobObjectOff last). Scripts start it with SCRIPT_SCENE_KAMEHA_FLEES:
+; Script_KamehaArrrrhClearThe. (C1, E-0376)
 ; runs one frame of script command type 38 (entry 55 of ScriptCommandHandlers) (E-0038)
 ScriptCommand38::
     farcall SceneKamehaFlees
     ret
 
+; Script command $39 (entry 56 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $39): calls SceneMermaidKingdom in bank $0F and
+; returns. SceneMermaidKingdom runs stage wScriptStep of its 50 stages
+; (SceneMermaidKingdom_WalkPlayerLeftAndFaceDown first, SceneMermaidKingdom_GiveKey last); command
+; $3B runs the same routine. Scripts start it with SCRIPT_SCENE_MERMAID_KINGDOM:
+; Script_SceneMermaidKingdom. (C1, E-0376)
 ; runs one frame of script command type 39 (entry 56 of ScriptCommandHandlers) (E-0038)
 ScriptCommand39::
     farcall SceneMermaidKingdom
     ret
 
+; Script command $3A (entry 57 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $3A): calls SceneMasterThanks in bank $73 and
+; returns. SceneMasterThanks runs stage wScriptStep of its 12 stages (SceneMasterThanks_FindMaster
+; first, SceneMasterThanks_Hop last). Scripts start it with SCRIPT_SCENE_MASTER_THANKS:
+; Script_RReallyWowThank. (C1, E-0376)
 ; runs one frame of script command type 3A (entry 57 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3A::
     farcall SceneMasterThanks
     ret
 
+; Script command $3B (entry 58 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $3B): calls SceneMermaidKingdom in bank $0F and
+; returns. This is the same work as command $39 (ScriptCommand39): SceneMermaidKingdom runs stage
+; wScriptStep of its 50 stages. No script command constant in macros.inc has the value $3B, so no
+; script_command in src names it. (C1, E-0376)
 ; runs one frame of script command type 3B (entry 58 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3B::
     farcall SceneMermaidKingdom
     ret
 
+; Script command $3C (entry 59 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $3C): calls RewardItemOrKey in bank $73 and
+; returns. RewardItemOrKey runs stage wScriptStep of its 20 stages (RewardItemOrKey_FindDigger
+; first, RewardItemOrKey_GiveReward last). Scripts start it with SCRIPT_REWARD_ITEM_OR_KEY:
+; Script_GreatHeroThanksA, Script_GreatHeroThanksA_2 and Script_GreatHeroThanksA_3 (between 'Great,
+; 0! Thanks a lot!' and 'Here, 0! You need this!'). (C1, E-0376)
 ; runs one frame of script command type 3C (entry 59 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3C::
     farcall RewardItemOrKey
     ret
 
+; Script command $3D (entry 60 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $3D): calls RewardItemOrKey2 in bank $73 and
+; returns. RewardItemOrKey2 runs stage wScriptStep of its 10 stages (RewardItemOrKey2_FindDigger
+; first, RewardItemOrKey2_GiveReward last). Scripts start it with SCRIPT_REWARD_ITEM_OR_KEY_2:
+; Script_FantasticICanOpen, Script_FantasticICanOpen_2 and Script_FantasticICanOpen_3 (between
+; 'Fantastic! I can open my...' and 'I like you to have...'). (C1, E-0376)
 ; runs one frame of script command type 3D (entry 60 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3D::
     farcall RewardItemOrKey2
     ret
 
+; Script command $3E (entry 61 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $3E): calls SceneStrongestMaster in bank $73 and
+; returns. SceneStrongestMaster runs stage wScriptStep of its 4 stages
+; (SceneStrongestMaster_SetUpSprite first, SceneStrongestMaster_DrawBlock last). Scripts start it
+; with SCRIPT_SCENE_STRONGEST_MASTER: Script_SceneStrongestMaster. (C1, E-0376)
 ; runs one frame of script command type 3E (entry 61 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3E::
     farcall SceneStrongestMaster
     ret
 
+; Script command $3F (entry 62 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $3F): calls BlinkSprites in bank $73 and returns.
+; BlinkSprites sets wSpriteSlotCount to 1 while wFrameCounterLo bit 2 is set and to 2 otherwise, and
+; moves object 1 down one pixel; at Y $70 it leaves wSpriteSlotCount = 2 and sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_BLINK_SPRITES: Script_YouWillNoWords
+; (after 'You will? No words of...'). (C2, E-0376)
 ; runs one frame of script command type 3F (entry 62 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3F::
     farcall BlinkSprites
     ret
 
+; Script command $40 (entry 63 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $40): calls SceneSpiritEnvoy in bank $0F and
+; returns. SceneSpiritEnvoy runs stage wScriptStep of its 11 stages (SceneReportToKing_WalkUp first,
+; SceneSpiritEnvoy_ResumeScript last). Scripts start it with SCRIPT_SCENE_SPIRIT_ENVOY:
+; Script_AhYouAreThe. (C1, E-0376)
 ; runs one frame of script command type 40 (entry 63 of ScriptCommandHandlers) (E-0038)
 ScriptCommand40::
     farcall SceneSpiritEnvoy
     ret
 
+; Script command $41 (entry 64 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $41): calls SceneExplosion in bank $0F and
+; returns. SceneExplosion runs stage wScriptStep of its 10 stages (SceneExplosion_Start first,
+; SceneExplosion_DropObject last). Scripts start it with SCRIPT_SCENE_EXPLOSION:
+; Script_WhatWhatWasThat and Script_WhatWhatWasThat_2 (before 'What? What was that explosion?').
+; (C1, E-0376)
 ; runs one frame of script command type 41 (entry 64 of ScriptCommandHandlers) (E-0038)
 ScriptCommand41::
     farcall SceneExplosion
     ret
 
+; Script command $42 (entry 65 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $42): calls SceneReportToKing in bank $0F and
+; returns. SceneReportToKing runs stage wScriptStep of its 18 stages (SceneReportToKing_WalkUp
+; first, SceneReportToKing_WalkDown last). Scripts start it with SCRIPT_SCENE_REPORT_TO_KING:
+; Script_WeReportedToThe (after 'We reported to the King...'). (C1, E-0376)
 ; runs one frame of script command type 42 (entry 65 of ScriptCommandHandlers) (E-0038)
 ScriptCommand42::
     farcall SceneReportToKing
     ret
 
+; Script command $43 (entry 66 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $43): calls SceneWallExit in bank $0F and returns.
+; SceneWallExit runs stage wScriptStep of its 13 stages (SceneWallExit_Start first,
+; SceneWallExit_WalkObject1Down last). Scripts start it with SCRIPT_SCENE_WALL_EXIT:
+; Script_HeroTappedOnThe and Script_HeroTappedOnThe_2 (after '0 tapped on the wall. The...'). (C1,
+; E-0376)
 ; runs one frame of script command type 43 (entry 66 of ScriptCommandHandlers) (E-0038)
 ScriptCommand43::
     farcall SceneWallExit
     ret
 
+; Script command $44 (entry 67 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $44): calls SceneRealKing in bank $73 and returns.
+; SceneRealKing runs stage wScriptStep of its 3 stages (SceneRealKing_Separate first,
+; SceneRealKing_Restore last). Scripts start it with SCRIPT_SCENE_REAL_KING: Script_I_14. (C1,
+; E-0376)
 ; runs one frame of script command type 44 (entry 67 of ScriptCommandHandlers) (E-0038)
 ScriptCommand44::
     farcall SceneRealKing
     ret
 
+; Script command $45 (entry 68 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $45): calls ScenePlanRuined in bank $0F and
+; returns. ScenePlanRuined runs stage wScriptStep of its 4 stages (ScenePlanRuined_Start first,
+; ScenePlanRuined_BlinkOut last). Scripts start it with SCRIPT_SCENE_PLAN_RUINED: Script_ArrghYou
+; and Script_ItAlmostWorkedTo (after 'It almost worked to perfection!'). (C1, E-0376)
 ; runs one frame of script command type 45 (entry 68 of ScriptCommandHandlers) (E-0038)
 ScriptCommand45::
     farcall ScenePlanRuined
     ret
 
+; Script command $46 (entry 69 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $46): calls SceneCheerYuna in bank $0F and
+; returns. SceneCheerYuna runs stage wScriptStep of its 17 stages (SceneCheerYuna_Dance first,
+; SceneCheerYuna_FaceUp last). Scripts start it with SCRIPT_SCENE_CHEER_YUNA:
+; Script_KingMagnificentDon. (C1, E-0376)
 ; runs one frame of script command type 46 (entry 69 of ScriptCommandHandlers) (E-0038)
 ScriptCommand46::
     farcall SceneCheerYuna
     ret
 
+; Script command $47 (entry 70 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $47): calls SceneSpiritEnvoy2 in bank $73 and
+; returns. SceneSpiritEnvoy2 has 2 stages: SceneSpiritEnvoy2_Float sets bit 1 of the flags of object
+; 0 for 30 frames, then clears its byte 7 and sets EVENT_SCENE_SPIRIT_ENVOY2 (or
+; EVENT_SCENE_SPIRIT_ENVOY2_099 when that is already set); SceneSpiritEnvoy2_BlinkAway lowers object
+; 0 on odd counts and blinks the sprites out (ScriptStepBlinkSpritesThenEnd). Scripts start it with
+; SCRIPT_SCENE_SPIRIT_ENVOY_2: Script_SceneSpiritEnvoy2. (C2, E-0376)
 ; runs one frame of script command type 47 (entry 70 of ScriptCommandHandlers) (E-0038)
 ScriptCommand47::
     farcall SceneSpiritEnvoy2
     ret
 
+; Script command $48 (entry 71 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $48): calls ScenePrincessMedicine in bank $0F and
+; returns. ScenePrincessMedicine runs stage wScriptStep of its 13 stages
+; (ScenePrincessMedicine_Start first, PersonalityMessage_WaitForMessage last). Scripts start it with
+; SCRIPT_SCENE_PRINCESS_MEDICINE: Script_Message and Script_Message_2 (after 'FOOLHARDY. BRAVE BUT
+; FOOLISH.'). (C1, E-0376)
 ; runs one frame of script command type 48 (entry 71 of ScriptCommandHandlers) (E-0038)
 ScriptCommand48::
     farcall ScenePrincessMedicine
     ret
 
+; Script command $49 (entry 72 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $49): calls SceneMedicineGiven in bank $0F and
+; returns. SceneMedicineGiven runs stage wScriptStep of its 4 stages (SceneMedicineGiven_WalkUp
+; first, SceneMedicineGiven_WalkObject1Back last). Scripts start it with
+; SCRIPT_SCENE_MEDICINE_GIVEN: Script_PardonMeYouHave (after 'Pardon me? You have medicine?'). (C1,
+; E-0376)
 ; runs one frame of script command type 49 (entry 72 of ScriptCommandHandlers) (E-0038)
 ScriptCommand49::
     farcall SceneMedicineGiven
     ret
 
+; Script command $4A (entry 73 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $4A): calls SceneShield in bank $0F and returns.
+; SceneShield runs stage wScriptStep of its 12 stages (SceneShield_ShowTchObstinateAndFoolish first,
+; PersonalityMessage_WaitForMessage last). Scripts start it with SCRIPT_SCENE_SHIELD:
+; Script_HeroCheckedTheShield_2 and Script_SceneShield (after '0 checked the shield.'). (C1, E-0376)
 ; runs one frame of script command type 4A (entry 73 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4A::
     farcall SceneShield
     ret
 
+; Script command $4B (entry 74 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $4B): calls SceneShield2 in bank $0F and returns.
+; SceneShield2 runs stage wScriptStep of its 23 stages (SceneShield2_ShowObject first,
+; SceneShield2_GiveKey last). Scripts start it with SCRIPT_SCENE_SHIELD_2: Script_SceneShield2. (C1,
+; E-0376)
 ; runs one frame of script command type 4B (entry 74 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4B::
     farcall SceneShield2
     ret
 
+; Script command $4C (entry 75 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $4C): calls ScriptCommand4C_Run in bank $73 and
+; returns. ScriptCommand4C_Run runs stage wScriptStep of its 2 stages
+; (ScriptCommand4C_Run_PlaceObject, ScriptCommand4C_Run_RaiseObject). No script_command in src names
+; type $4C. (C1, E-0376)
 ; runs one frame of script command type 4C (entry 75 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4C::
     farcall ScriptCommand4C_Run
     ret
 
+; Script command $4D (entry 76 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $4D): calls SceneWaterReward in bank $85 and
+; returns. SceneWaterReward runs stage wScriptStep of its 19 stages
+; (SceneWaterReward_ShowCoohIHeardFrom first, SceneWatchOut_BackToStep14 last). Scripts start it
+; with SCRIPT_SCENE_WATER_REWARD: Script_SceneWaterReward. (C1, E-0376)
 ; runs one frame of script command type 4D (entry 76 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4D::
     farcall SceneWaterReward
     ret
 
+; Script command $4E (entry 77 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $4E): calls SceneGrave in bank $0F and returns.
+; SceneGrave runs stage wScriptStep of its 5 stages (SceneGrave_Flicker first, SceneGrave_BlinkOut
+; last). Scripts start it with SCRIPT_SCENE_GRAVE: Script_HeroCheckedTheGrave and
+; Script_HeroCheckedTheGrave_2 (after '0 checked the grave. There was...'). (C1, E-0376)
 ; runs one frame of script command type 4E (entry 77 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4E::
     farcall SceneGrave
     ret
 
+; Script command $4F (entry 78 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $4F): calls SetTilesD2 in bank $73 and returns.
+; SetTilesD2 writes tiles $68-$6B into wScreenTileBuffer + $D2, $D3, $E6 and $E7, redraws the screen
+; (DrawFullScreenBufferAtScroll) and sets wScriptStartRequest = $80. Scripts start it with
+; SCRIPT_SET_TILES_D2: Script_FineYou. (C1, E-0376)
 ; runs one frame of script command type 4F (entry 78 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4F::
     farcall SetTilesD2
     ret
 
+; Script command $50 (entry 79 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $50): calls SceneMadcondor in bank $73 and
+; returns. SceneMadcondor runs stage wScriptStep of its 3 stages; stage 0 (SceneMadcondor_Start)
+; waits 60 frames, then sets bit 2 of the flags of object 0 and wMessageIndex/wMessageGroup = $03C0
+; and moves on. Scripts start it with SCRIPT_SCENE_MADCONDOR: Script_Kweeeeh (after 'Look! A
+; MadCondor! It has something!'). (C2, E-0376)
 ; runs one frame of script command type 50 (entry 79 of ScriptCommandHandlers) (E-0038)
 ScriptCommand50::
     farcall SceneMadcondor
     ret
 
+; Script command $51 (entry 80 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $51): calls SceneMadcondorCry in bank $73 and
+; returns. SceneMadcondorCry runs stage wScriptStep of its 6 stages (SceneMadcondorCry_Start first,
+; SceneWizstone_WaitMessage last). Scripts start it with SCRIPT_SCENE_MADCONDOR_CRY: Script_Kweeeeeh
+; (after 'Kweeeeeh!'). (C1, E-0376)
 ; runs one frame of script command type 51 (entry 80 of ScriptCommandHandlers) (E-0038)
 ScriptCommand51::
     farcall SceneMadcondorCry
     ret
 
+; Script command $52 (entry 81 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $52): calls SceneSmallHole in bank $73 and
+; returns. SceneSmallHole: at stage 0 it sets a warp to map $82, screen (1, 2), position ($40, $80),
+; transition kind 3 and starts it (ScriptStartFadeAndAdvanceStep); a later call sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_SMALL_HOLE:
+; Script_HeroCheckedTheSmall (after '0 checked the small hole. It...'). (C1, E-0376)
 ; runs one frame of script command type 52 (entry 81 of ScriptCommandHandlers) (E-0038)
 ScriptCommand52::
     farcall SceneSmallHole
     ret
 
+; Script command $53 (entry 82 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $53): calls SceneJustice in bank $73 and returns.
+; SceneJustice moves tile blocks of wScreenTileBuffer chosen by the position of the player
+; (SceneJustice_AnimateTileBlock); once the blocks at + $52, $60, $F2 and $100 all read $10 it plays
+; sound $66, writes tiles $46-$4B at + $30 and + $44, and sets wStoryFlags + $64 bit 0 and
+; EVENT_SCENE_JUSTICE. Every call redraws the screen and sets wScriptStartRequest = $80. Scripts
+; start it with SCRIPT_SCENE_JUSTICE: Script_SceneJustice. (C1, E-0376)
 ; runs one frame of script command type 53 (entry 82 of ScriptCommandHandlers) (E-0038)
 ScriptCommand53::
     farcall SceneJustice
     ret
 
+; Script command $54 (entry 83 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $54): calls SceneGravestone in bank $73 and
+; returns. SceneGravestone runs stage wScriptStep of its 5 stages (SceneGravestone_StartPush first,
+; SceneGravestone_Open last). Scripts start it with SCRIPT_SCENE_GRAVESTONE: Script_SceneGravestone.
+; (C1, E-0376)
 ; runs one frame of script command type 54 (entry 83 of ScriptCommandHandlers) (E-0038)
 ScriptCommand54::
     farcall SceneGravestone
     ret
 
+; Script command $55 (entry 84 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $55): calls SetFlag322 in bank $73 and returns.
+; SetFlag322 sets wStoryFlags + $64 bit 2 (story flag $322) and wScriptStartRequest = $80. Scripts
+; start it with SCRIPT_SET_FLAG_322: Script_ADoorOpenedSomewhere. (C2, E-0376)
 ; runs one frame of script command type 55 (entry 84 of ScriptCommandHandlers) (E-0038)
 ScriptCommand55::
     farcall SetFlag322
     ret
 
+; Script command $56 (entry 85 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $56): calls SceneBeatenFairly in bank $73 and
+; returns. SceneBeatenFairly: it blinks object 0 at Y $30 for 120 frames
+; (ScriptStepBlinkObjectTemp0: hidden at Y $E0 in the off phases), then sets wSpriteSlotCount = 0
+; and wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_BEATEN_FAIRLY:
+; Script_YouOvercameTheTraps and Script_WahahahahHereAgainAre. (C2, E-0376)
 ; runs one frame of script command type 56 (entry 85 of ScriptCommandHandlers) (E-0038)
 ScriptCommand56::
     farcall SceneBeatenFairly
     ret
 
+; Script command $57 (entry 86 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $57): calls SceneThreeItemsBattle in bank $73 and
+; returns. SceneThreeItemsBattle runs stage wScriptStep of its 4 stages
+; (SceneThreeItemsBattle_StartBattle first, SceneThreeItemsBattle_BlinkOut last). Scripts start it
+; with SCRIPT_SCENE_THREE_ITEMS_BATTLE: Script_AhSoGoodOf and Script_FwahahahaDon (after 'Good. You
+; have brought the...'). (C1, E-0376)
 ; runs one frame of script command type 57 (entry 86 of ScriptCommandHandlers) (E-0038)
 ScriptCommand57::
     farcall SceneThreeItemsBattle
     ret
 
+; Script command $58 (entry 87 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $58): calls SceneThreeItems in bank $0F and
+; returns. SceneThreeItems runs stage wScriptStep of its 44 stages
+; (SceneThreeItems_RedrawSideColumns first, SceneThreeItems_GiveKeys last). Scripts start it with
+; SCRIPT_SCENE_THREE_ITEMS: Script_KamehaSoItWas (after 'Kameha: If the three items that...'). (C1,
+; E-0376)
 ; runs one frame of script command type 58 (entry 87 of ScriptCommandHandlers) (E-0038)
 ScriptCommand58::
     farcall SceneThreeItems
     ret
 
+; Script command $59 (entry 88 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $59): calls SceneSawKameha in bank $73 and
+; returns. SceneSawKameha runs stage wScriptStep of its 3 stages (SceneSawKameha_WalkUp first,
+; SceneSawKameha_AddKey last). Scripts start it with SCRIPT_SCENE_SAW_KAMEHA: Script_What and
+; Script_What_2 (before 'Sire, this child claims to...'). (C1, E-0376)
 ; runs one frame of script command type 59 (entry 88 of ScriptCommandHandlers) (E-0038)
 ScriptCommand59::
     farcall SceneSawKameha
     ret
 
+; Script command $5A (entry 89 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $5A): calls SceneSawKameha in bank $73 and
+; returns. SceneSawKameha runs stage wScriptStep of its 3 stages (SceneSawKameha_WalkUp first,
+; SceneSawKameha_AddKey last). Scripts start it with SCRIPT_SCENE_KAMEHA_BACK:
+; Script_IfTheIslandSink and Script_PeopleHaveBeenSaying (before 'Prince Kameha came back!
+; What...'). (C1, E-0376)
 ; runs one frame of script command type 5A (entry 89 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5A::
     farcall SceneSawKameha
     ret
 
+; Script command $5B (entry 90 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $5B): calls SceneLimbo in bank $85 and returns.
+; SceneLimbo runs stage wScriptStep of its 16 stages (SceneLimbo_PlaceItem first,
+; SceneLimbo_AddItems last). Scripts start it with SCRIPT_SCENE_LIMBO: Script_WarubouWaHeyTake_2
+; (after 'Warubou: Wa-hey! Take the treasures that...'). (C1, E-0376)
 ; runs one frame of script command type 5B (entry 90 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5B::
     farcall SceneLimbo
     ret
 
+; Script command $5C (entry 91 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $5C): calls TakeItem in bank $73 and returns.
+; TakeItem blinks object 1 between Y $20 and $E0 for 120 frames, counting in wScriptParam0; then it
+; removes items $36, $37 and $38 from the inventory (FindTemp0InInventoryList,
+; RemoveInventorySlotShiftDown) and sets wScriptStartRequest = $80. A missing item is not checked:
+; RemoveInventorySlotShiftDown then gets slot $FF. Scripts start it with SCRIPT_TAKE_ITEM:
+; Script_SurprisinglyObedientAreYou (between '0 handed over the TidalBell. 0...' and 'Take these to
+; Lord Darck...'). (C2, E-0376)
 ; runs one frame of script command type 5C (entry 91 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5C::
     farcall TakeItem
     ret
 
+; Script command $5D (entry 92 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $5D): calls SceneDarckTaunt in bank $73 and
+; returns. SceneDarckTaunt (the same code as SceneBeatenFairly): it blinks object 0 at Y $30 for 120
+; frames (ScriptStepBlinkObjectTemp0: hidden at Y $E0 in the off phases), then sets wSpriteSlotCount
+; = 0 and wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_DARCK_TAUNT:
+; Script_SurprisinglyObedientAreYou and Script_YouSeemToStill. (C2, E-0376)
 ; runs one frame of script command type 5D (entry 92 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5D::
     farcall SceneDarckTaunt
     ret
 
+; Script command $5E (entry 93 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $5E): calls SceneDarckDefeated in bank $0F and
+; returns. SceneDarckDefeated runs stage wScriptStep of its 149 stages (SceneDarckDefeated_BlinkOut
+; first, PersonalityMessage_WaitForMessage last). Scripts start it with SCRIPT_SCENE_DARCK_DEFEATED:
+; Script_DarckFawahahahYouChased and Script_DarckFwahahahahBravoSplendid. (C1, E-0376)
 ; runs one frame of script command type 5E (entry 93 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5E::
     farcall SceneDarckDefeated
     ret
 
+; Script command $5F (entry 94 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $5F): calls SceneHomecoming in bank $0F and
+; returns. SceneHomecoming runs stage wScriptStep of its 45 stages (SceneHomecoming_PlaceObject
+; first, SceneHomecoming_SetScriptStartRequestTo80 last). Scripts start it with
+; SCRIPT_SCENE_HOMECOMING: Script_CobiHeroCongratulationsI and Script_TaraHeroCongratulationsI
+; (after 'Hehehe, no need to worry...'). (C1, E-0376)
 ; runs one frame of script command type 5F (entry 94 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5F::
     farcall SceneHomecoming
     ret
 
+; Script command $60 (entry 95 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $60): calls ScriptCommand60_Run in bank $73 and
+; returns. ScriptCommand60_Run runs stage wScriptStep of its 5 stages
+; (ScriptCommand60_Run_ShowObject first, ScriptCommand60_Run_TakeMedal last). No script_command in
+; src names type $60. (C1, E-0376)
 ; runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers) (E-0038)
 ScriptCommand60::
     farcall ScriptCommand60_Run
     ret
 
+; Script command $61 (entry 96 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $61): calls SceneKamehaStole in bank $73 and
+; returns. SceneKamehaStole runs stage wScriptStep of its 7 stages (SceneKamehaStole_GatherFollowers
+; first, SceneKamehaStole_DrawBlocks last). Scripts start it with SCRIPT_SCENE_KAMEHA_STOLE:
+; Script_SceneKamehaStole. (C1, E-0376)
 ; runs one frame of script command type 61 (entry 96 of ScriptCommandHandlers) (E-0038)
 ScriptCommand61::
     farcall SceneKamehaStole
     ret
 
+; Script command $62 (entry 97 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $62): calls PersonalityMessage in bank $0F and
+; returns. PersonalityMessage runs stage wScriptStep of its 2 stages (PersonalityMessage_PickMessage
+; first, PersonalityMessage_WaitForMessage last). Scripts start it with SCRIPT_PERSONALITY_MESSAGE:
+; Script_PersonalityMessage. (C1, E-0376)
 ; runs one frame of script command type 62 (entry 97 of ScriptCommandHandlers) (E-0038)
 ScriptCommand62::
     farcall PersonalityMessage
     ret
 
+; Script command $63 (entry 98 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $63): calls SceneRivalFade in bank $73 and
+; returns. SceneRivalFade: at stage 0 it sets a warp to map $28, screen (0, 1), position ($40, $80),
+; transition kind 3, starts it (ScriptStartFadeAndAdvanceStep) and starts palette fade 4; a later
+; call sets wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_RIVAL_FADE:
+; Script_SceneRivalFade. (C1, E-0376)
 ; runs one frame of script command type 63 (entry 98 of ScriptCommandHandlers) (E-0038)
 ScriptCommand63::
     farcall SceneRivalFade
     ret
 
+; Script command $64 (entry 99 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $64): calls GatherFollowers in bank $73 and
+; returns. GatherFollowers has 4 stages: stages 0-2 set wMapSpriteKind = $10 and run
+; ScriptStepMoveFollowersToLeader (which sets the follower targets, steps the followers for 16
+; frames and moves to the next stage); stage 3 sets wScriptStartRequest = $80. Scripts start it with
+; SCRIPT_GATHER_FOLLOWERS: Script_HeroReadTheSign. (C2, E-0376)
 ; runs one frame of script command type 64 (entry 99 of ScriptCommandHandlers) (E-0038)
 ScriptCommand64::
     farcall GatherFollowers
     ret
 
+; Script command $65 (entry 100 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $65): calls GrowthLimitInfo in bank $85 and
+; returns. GrowthLimitInfo runs stage wScriptStep of its 3 stages (GrowthLimitInfo_ShowGrowthLimit
+; first, GrowthLimitInfo_NextMember last). Scripts start it with SCRIPT_GROWTH_LIMIT_INFO:
+; Script_OnceAMonsterReaches (before 'Once a monster reaches its growth...'). (C1, E-0376)
 ; runs one frame of script command type 65 (entry 100 of ScriptCommandHandlers) (E-0038)
 ScriptCommand65::
     farcall GrowthLimitInfo
     ret
 
+; Script command $66 (entry 101 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $66): calls SceneShieldGuardian in bank $0F and
+; returns. SceneShieldGuardian runs stage wScriptStep of its 16 stages
+; (SceneShieldGuardian_ShowIWishYouWouldnt first, PersonalityMessage_WaitForMessage last). Scripts
+; start it with SCRIPT_SCENE_SHIELD_GUARDIAN: Script_SceneShieldGuardian and
+; Script_SceneShieldGuardian_2. (C1, E-0376)
 ; runs one frame of script command type 66 (entry 101 of ScriptCommandHandlers) (E-0038)
 ScriptCommand66::
     farcall SceneShieldGuardian
     ret
 
+; Script command $67 (entry 102 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $67): calls SceneJustice2 in bank $73 and returns.
+; SceneJustice2: it blinks object 0 at Y $20 ($50 when hMapId is not $8C and hMapScreenX is 1) for
+; 120 frames (ScriptStepBlinkObjectTemp0: hidden at Y $E0 in the off phases), then sets
+; wSpriteSlotCount = 0, wScriptStartRequest = $80 and story flag $C5 on map $8C, else $C6 on screen
+; column 0, else $C7. Scripts start it with SCRIPT_SCENE_JUSTICE_2: Script_LetThePowerOf (after 'Let
+; the power of justice...'). (C2, E-0376)
 ; runs one frame of script command type 67 (entry 102 of ScriptCommandHandlers) (E-0038)
 ScriptCommand67::
     farcall SceneJustice2
     ret
 
+; Script command $68 (entry 103 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $68): calls SceneFoundMe in bank $73 and returns.
+; SceneFoundMe walks object 0 one pixel a frame (StepObjectTowardCoord): right to X = $60 when
+; hPlayerX is $40 or a follower record is at ($40, $40); left to X = $40 when hPlayerX is $60, a
+; record is at ($60, $40) or none matches. On arrival it sets wScriptStartRequest = $80. Scripts
+; start it with SCRIPT_SCENE_FOUND_ME: Script_I_17. (C2, E-0376)
 ; runs one frame of script command type 68 (entry 103 of ScriptCommandHandlers) (E-0038)
 ScriptCommand68::
     farcall SceneFoundMe
     ret
 
+; Script command $69 (entry 104 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $69): calls SceneFoundMeBattle in bank $85 and
+; returns. SceneFoundMeBattle runs stage wScriptStep of its 6 stages (SceneFoundMeBattle_ShowMessage
+; first, SceneFoundMeBattle_SetGuardFlag last). Scripts start it with SCRIPT_SCENE_FOUND_ME_BATTLE:
+; Script_SceneFoundMeBattle. (C1, E-0376)
 ; runs one frame of script command type 69 (entry 104 of ScriptCommandHandlers) (E-0038)
 ScriptCommand69::
     farcall SceneFoundMeBattle
     ret
 
+; Script command $6A (entry 105 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $6A): calls SceneHorsingAround in bank $0F and
+; returns. SceneHorsingAround runs stage wScriptStep of its 4 stages, each moving the player two
+; pixels a frame round a six-leg loop (SceneHorsingAround_StepPlayerAlongLoop); the last,
+; SceneHorsingAround_HopObject0, also hops object 0 for 16 frames, then clears hPlayerStateFlags bit
+; 2 and sets wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_HORSING_AROUND:
+; Script_ListenYouTwoQuit (before 'Listen you two! Quit your...'). (C2, E-0376)
 ; runs one frame of script command type 6A (entry 105 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6A::
     farcall SceneHorsingAround
     ret
 
+; Script command $6B (entry 106 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $6B): calls SceneVaultSettled in bank $0F and
+; returns. SceneVaultSettled runs stage wScriptStep of its 3 stages (SceneVaultSettled_HopFollower
+; first, PersonalityMessage_WaitForMessage last). Scripts start it with SCRIPT_SCENE_VAULT_SETTLED:
+; Script_You_3. (C1, E-0376)
 ; runs one frame of script command type 6B (entry 106 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6B::
     farcall SceneVaultSettled
     ret
 
+; Script command $6C (entry 107 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $6C): calls GiveMonster in bank $85 and returns.
+; GiveMonster creates a monster record (CreateMonsterRecordOfKindTemp1 with hTemp1 = 1, hTemp2 =
+; wArg5, hTemp3 = 1) and sets wScriptStartRequest = $80. Scripts start it with SCRIPT_GIVE_MONSTER:
+; Script_You_8. (C1, E-0376)
 ; runs one frame of script command type 6C (entry 107 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6C::
     farcall GiveMonster
     ret
 
+; Script command $6D (entry 108 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $6D): calls SceneLimboMonster in bank $85 and
+; returns. SceneLimboMonster runs stage wScriptStep of its 15 stages
+; (SceneLimboMonster_ShowWarubouWaheyIHave first, SceneWatchOut_Resume last). Scripts start it with
+; SCRIPT_SCENE_LIMBO_MONSTER: Script_SceneLimboMonster. (C1, E-0376)
 ; runs one frame of script command type 6D (entry 108 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6D::
     farcall SceneLimboMonster
     ret
 
+; Script command $6E (entry 109 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $6E): calls SceneLimboMonster2 in bank $85 and
+; returns. SceneLimboMonster2 runs stage wScriptStep of its 16 stages
+; (SceneLimboMonster2_ShowWarubouWaheyIWas first, SceneLimboMonster2_WalkOffAndCreate last). Scripts
+; start it with SCRIPT_SCENE_LIMBO_MONSTER_2: Script_SceneLimboMonster2. (C1, E-0376)
 ; runs one frame of script command type 6E (entry 109 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6E::
     farcall SceneLimboMonster2
     ret
 
+; Script command $6F (entry 110 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $6F): calls DeskKey in bank $85 and returns.
+; DeskKey: at stage 0 it moves object 1 down on a 16-frame hop, then sets wSpriteSlotCount = 1 and
+; moves on; a later call sets wScriptStartRequest = $80. Scripts start it with SCRIPT_DESK_KEY:
+; Script_HeroCheckedTheDesk, Script_HeroCheckedTheDesk_2, Script_HeroCheckedTheDesk_3 and
+; Script_HeroCheckedTheDesk_4 (between '0 checked the desk.' and '0 obtained the Brawn Key.'). (C2,
+; E-0376)
 ; runs one frame of script command type 6F (entry 110 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6F::
     farcall DeskKey
     ret
 
+; Script command $70 (entry 111 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $70): calls SceneTerry in bank $85 and returns.
+; SceneTerry: at stage 0 it sets a warp to screen (0, 0), Y $80, transition kind 3: map $0F at X $20
+; when hPlayerX is $20; otherwise X $70 and map $0F with EVENT_THANKS_FOR_COMING_BY_025 set, else
+; map $10. It starts it (ScriptStartFadeAndAdvanceStep) with palette fade 4; a later call sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_TERRY: Script_SceneTerry. (C1,
+; E-0376)
 ; runs one frame of script command type 70 (entry 111 of ScriptCommandHandlers) (E-0038)
 ScriptCommand70::
     farcall SceneTerry
     ret
 
+; Script command $71 (entry 112 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $71): calls SceneKamehaKeyBattle in bank $85 and
+; returns. SceneKamehaKeyBattle runs stage wScriptStep of its 5 stages
+; (SceneKamehaKeyBattle_StartBattle first, SceneWatchOut_Resume last). Scripts start it with
+; SCRIPT_SCENE_KAMEHA_KEY_BATTLE: Script_KamehaSoYou. (C1, E-0376)
 ; runs one frame of script command type 71 (entry 112 of ScriptCommandHandlers) (E-0038)
 ScriptCommand71::
     farcall SceneKamehaKeyBattle
     ret
 
+; Script command $72 (entry 113 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $72): calls SceneKamehaKeyBattle2 in bank $85 and
+; returns. SceneKamehaKeyBattle2 runs stage wScriptStep of its 5 stages
+; (SceneKamehaKeyBattle2_StartBattle first, SceneWatchOut_Resume last). Scripts start it with
+; SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2: Script_KamehaSoYou_2. (C1, E-0376)
 ; runs one frame of script command type 72 (entry 113 of ScriptCommandHandlers) (E-0038)
 ScriptCommand72::
     farcall SceneKamehaKeyBattle2
     ret
 
+; Script command $73 (entry 114 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $73): calls FollowerFacePlayer in bank $85 and
+; returns. FollowerFacePlayer copies hPlayerFacing to the first byte of wFollowerRecords and sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_FOLLOWER_FACE_PLAYER: Script_I_5 (after
+; 'Monster masters are those people...'). (C2, E-0376)
 ; runs one frame of script command type 73 (entry 114 of ScriptCommandHandlers) (E-0038)
 ScriptCommand73::
     farcall FollowerFacePlayer
     ret
 
+; Script command $74 (entry 115 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $74): calls SetFlagRedraw in bank $85 and returns.
+; SetFlagRedraw looks up the X of the tile in front of the player (hPlayerX, + $10 when facing 1, -
+; $10 when facing 3) in SetFlagRedraw_Data ($20, $40, $50, $80; no end check) and sets story flag
+; $1CF + its index; then ApplyMapScreenFlagEvents, a redraw (DrawFullScreenBufferAtScroll) and
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SET_FLAG_REDRAW:
+; Script_HeroCheckedTheTreasure_3 (after '0 checked the treasure chest. The...'). (C1, E-0376)
 ; runs one frame of script command type 74 (entry 115 of ScriptCommandHandlers) (E-0038)
 ScriptCommand74::
     farcall SetFlagRedraw
     ret
 
+; Script command $75 (entry 116 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $75): calls SceneAtSea in bank $0F and returns.
+; SceneAtSea runs stage wScriptStep of its 4 stages (SceneAtSea_Warp first, SceneAtSea_MoveObject3
+; last). Scripts start it with SCRIPT_SCENE_AT_SEA: Script_InTheMiddleOf and Script_InTheMiddleOf_2
+; (between 'In the middle of the sea...' and 'Tara: There you are, big brother!'). (C1, E-0376)
 ; runs one frame of script command type 75 (entry 116 of ScriptCommandHandlers) (E-0038)
 ScriptCommand75::
     farcall SceneAtSea
     ret
 
+; Script command $76 (entry 117 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $76): calls SceneIslandSinking in bank $0F and
+; returns. SceneIslandSinking runs stage wScriptStep of its 4 stages
+; (SceneIslandSinking_ShowTheIslandIsSinking twice, SceneHomecoming_WaitMessage,
+; ScriptCommand76_Run_PlaceFollower). No script_command in src names type $76. (C1, E-0376)
 ; runs one frame of script command type 76 (entry 117 of ScriptCommandHandlers) (E-0038)
 ScriptCommand76::
-    farcall ScriptCommand76_Run
+    farcall SceneIslandSinking
     ret
 
+; Script command $77 (entry 118 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $77): calls SceneLandHo in bank $0F and returns.
+; SceneLandHo runs stage wScriptStep of its 15 stages (SceneLandHo_Warp first, SceneLandHo_StartTalk
+; last). Scripts start it with SCRIPT_SCENE_LAND_HO: Script_TaraBigBrotherGreatLog and
+; Script_CobiHeroTheySaid. (C1, E-0376)
 ; runs one frame of script command type 77 (entry 118 of ScriptCommandHandlers) (E-0038)
 ScriptCommand77::
     farcall SceneLandHo
     ret
 
+; Script command $78 (entry 119 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $78): calls SaveScreen in bank $85 and returns.
+; SaveScreen runs stage wScriptStep of its 2 stages (SaveScreen_OpenGiftMenu first,
+; SaveScreen_SetScriptStartRequestTo80 last). Scripts start it with SCRIPT_SAVE_SCREEN:
+; Script_WhatWillYouGive and Script_YHasBeenGiven (after 'What will you give to the...'). (C1,
+; E-0376)
 ; runs one frame of script command type 78 (entry 119 of ScriptCommandHandlers) (E-0038)
 ScriptCommand78::
     farcall SaveScreen
     ret
 
+; Script command $79 (entry 120 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $79): calls ScenePoorChurch in bank $85 and
+; returns. ScenePoorChurch runs stage wScriptStep of its 4 stages (ScenePoorChurch_WalkUp first,
+; ScenePoorChurch_TurnRandomly last). Scripts start it with SCRIPT_SCENE_POOR_CHURCH:
+; Script_ScenePoorChurch. (C1, E-0376)
 ; runs one frame of script command type 79 (entry 120 of ScriptCommandHandlers) (E-0038)
 ScriptCommand79::
     farcall ScenePoorChurch
     ret
 
+; Script command $7A (entry 121 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $7A): calls SceneKamehaMissing in bank $85 and
+; returns. SceneKamehaMissing: at stage 0 it runs field command 5 (RunFieldCommandTemp0), puts
+; wObject5 at ($50, $10) and moves on; then after 40 frames it hides wObject5 and sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_KAMEHA_MISSING:
+; Script_PrinceKamehaHasBeen_2 (before 'Prince Kameha has been missing...'). (C1, E-0376)
 ; runs one frame of script command type 7A (entry 121 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7A::
     farcall SceneKamehaMissing
     ret
 
+; Script command $7B (entry 122 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $7B): calls SceneArenaChallenge in bank $85 and
+; returns. SceneArenaChallenge runs stage wScriptStep of its 3 stages
+; (SceneArenaChallenge_StartBattle first, SceneWatchOut_Resume last). Scripts start it with
+; SCRIPT_SCENE_ARENA_CHALLENGE: Script_ReallyLet. (C1, E-0376)
 ; runs one frame of script command type 7B (entry 122 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7B::
     farcall SceneArenaChallenge
     ret
 
+; Script command $7C (entry 123 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $7C): calls SceneTerryBattle in bank $85 and
+; returns. SceneTerryBattle runs stage wScriptStep of its 3 stages (SceneTerryBattle_Start first,
+; SceneWatchOut_Resume last). Scripts start it with SCRIPT_SCENE_TERRY_BATTLE:
+; Script_TerryHumphConfidentHuh. (C1, E-0376)
 ; runs one frame of script command type 7C (entry 123 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7C::
     farcall SceneTerryBattle
     ret
 
+; Script command $7D (entry 124 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $7D): calls SceneThisWay in bank $85 and returns.
+; SceneThisWay sets wScriptStartRequest = $80 at once; unless hMapScreenY is 2, it copies the
+; $FF-ended list at SceneThisWay_Data1 (screen row 0) or SceneThisWay_Data2 (other rows) + 4 *
+; hMapScreenX into byte 7 of objects 0, 1, ... (wSpriteSlots + 7, every 16 bytes). Scripts start it
+; with SCRIPT_SCENE_THIS_WAY: Script_ThisWayHereHere. (C2, E-0376)
 ; runs one frame of script command type 7D (entry 124 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7D::
     farcall SceneThisWay
     ret
 
+; Script command $7E (entry 125 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $7E): calls SceneGotTo in bank $85 and returns.
+; SceneGotTo blinks wObject5 (byte 0 = $80 shown, 0 hidden) for 120 frames, counting in
+; wScriptParam0, then hides it and sets wScriptStartRequest = $80. Scripts start it with
+; SCRIPT_SCENE_GOT_TO: Script_WhatWhatWasThat and Script_WhatWhatWasThat_2. (C2, E-0376)
 ; runs one frame of script command type 7E (entry 125 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7E::
     farcall SceneGotTo
     ret
 
+; Script command $7F (entry 126 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $7F): calls SceneChestServant in bank $85 and
+; returns. SceneChestServant runs stage wScriptStep of its 6 stages (SceneChestServant_HidePlayer
+; first, SceneChestServant_SetScriptStartRequestTo80 last). Scripts start it with
+; SCRIPT_SCENE_CHEST_SERVANT: Script_SceneChestServant. (C1, E-0376)
 ; runs one frame of script command type 7F (entry 126 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7F::
     farcall SceneChestServant
     ret
 
+; Script command $C0 (entry 191 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C0): calls SceneRoltElder in bank $73 and
+; returns. SceneRoltElder runs stage wScriptStep of its 4 stages: stage 0 walks objects 1 and 2 up
+; until object 1 reaches Y $60, then sets its state (byte 7) to 1; the last,
+; SceneRoltElder_WalkUpTogether, walks both up until object 1 reaches Y $50, clears bit 2 of their
+; flags and sets wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_ROLT_ELDER:
+; Script_WellWellAHuman and Script_I_18 (between 'Well, well, a human here...' and 'Rolt: That was
+; fast, 0. I...'). (C2, E-0376)
 ; runs one frame of script command type C0 (entry 191 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC0::
     farcall SceneRoltElder
     ret
 
+; Script command $C1 (entry 192 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C1): calls SceneTooStrong in bank $73 and
+; returns. SceneTooStrong runs stage wScriptStep of its 4 stages (SceneTooStrong_BlinkOut first,
+; SceneTooStrong_JumpOff last). Scripts start it with SCRIPT_SCENE_TOO_STRONG: Script_That_3 and
+; Script_You_11. (C1, E-0376)
 ; runs one frame of script command type C1 (entry 192 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC1::
     farcall SceneTooStrong
     ret
 
+; Script command $C2 (entry 193 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C2): calls SceneGiveBackCyal in bank $85 and
+; returns. SceneGiveBackCyal runs stage wScriptStep of its 11 stages (SceneGiveBackCyal_DropObject
+; first, SceneGiveBackCyal_SetScriptStartRequestTo80 last). Scripts start it with
+; SCRIPT_SCENE_GIVE_BACK_CYAL: Script_RoltI (after 'Rolt: Shut up! Give back Cyal!'). (C1, E-0376)
 ; runs one frame of script command type C2 (entry 193 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC2::
     farcall SceneGiveBackCyal
     ret
 
+; Script command $C3 (entry 194 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C3): calls KeyBossBeaten in bank $73 and returns.
+; KeyBossBeaten: it blinks object 0 at Y $30 for 120 frames (ScriptStepBlinkObjectTemp0: hidden at Y
+; $E0 in the off phases), then marks key entry kind 7 (MarkKeyEntryKindTemp0Bit6) and sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_KEY_BOSS_BEATEN: Script_TheHumanInThe and
+; Script_WhatYouAgainRude. (C2, E-0376)
 ; runs one frame of script command type C3 (entry 194 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC3::
     farcall KeyBossBeaten
     ret
 
+; Script command $C6 (entry 197 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C6): calls SceneCyalRolt in bank $73 and returns.
+; SceneCyalRolt: at stage 0 it sets a warp to map $A9, screen (1, 0), position ($60, $10),
+; transition kind 2 and starts it (ScriptStartFadeAndAdvanceStep); a later call sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_CYAL_ROLT: Script_TheHumanInThe and
+; Script_WhatYouAgainRude. (C1, E-0376)
 ; runs one frame of script command type C6 (entry 197 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC6::
     farcall SceneCyalRolt
     ret
 
+; Script command $C4 (entry 195 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C4): calls SceneBarrel in bank $85 and returns.
+; SceneBarrel runs stage wScriptStep of its 10 stages (SceneBarrel_CountBarrel first,
+; SceneWatchOut_Resume last). Scripts start it with SCRIPT_SCENE_BARREL: Script_HeroPeeredIntoThe_4
+; (after '0 peered into the barrel. There...'). (C1, E-0376)
 ; runs one frame of script command type C4 (entry 195 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC4::
     farcall SceneBarrel
     ret
 
+; Script command $C5 (entry 196 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C5): calls SceneWizstone in bank $73 and returns.
+; SceneWizstone runs stage wScriptStep of its 10 stages (SceneWizstone_Start first,
+; SceneWizstone_WaitMessage last). Scripts start it with SCRIPT_SCENE_WIZSTONE: Script_KiralAhBackIs
+; (after 'Kiral: This stone, the WizStone, it...'). (C1, E-0376)
 ; runs one frame of script command type C5 (entry 196 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC5::
     farcall SceneWizstone
     ret
 
+; Script command $C7 (entry 198 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C7): calls ScenePendantSeller in bank $0F and
+; returns. ScenePendantSeller runs stage wScriptStep of its 4 stages; stage 0
+; (ScenePendantSeller_RaiseObject) raises object 1 one pixel every other frame to Y $30, then sets
+; bit 2 of its flags and moves on. Scripts start it with SCRIPT_SCENE_PENDANT_SELLER:
+; Script_ThisPendantIsYours and Script_WhatWhereIGet (after 'This pendant is yours for...'). (C2,
+; E-0376)
 ; runs one frame of script command type C7 (entry 198 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC7::
     farcall ScenePendantSeller
     ret
 
+; Script command $C8 (entry 199 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C8): calls SceneMercy in bank $73 and returns.
+; SceneMercy puts object 2 at Y $10, clears byte 7 of objects 0 and 1, sets bit 2 of their flags and
+; moves object 0 down two pixels a frame with object 1 at the same Y; at Y $B0 it sets
+; wScriptStartRequest = $80. Scripts start it with SCRIPT_SCENE_MERCY: Script_You_12 and Script_We
+; (after 'Please! Mercy! Spare us! Take...'). (C2, E-0376)
 ; runs one frame of script command type C8 (entry 199 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC8::
     farcall SceneMercy
     ret
 
+; Script command $C9 (entry 200 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $C9): calls SceneMilayouForest in bank $73 and
+; returns. SceneMilayouForest has 2 stages: SceneChestBattle_StartSprite, then
+; SceneMilayouForest_MoveSprite, which adds wScriptParam1 to the X of object 0 for 16 frames, then
+; clears its byte 7 and flag bit 2 and sets wScriptStartRequest = $80. Scripts start it with
+; SCRIPT_SCENE_MILAYOU_FOREST: Script_MilayouIThoughtThis (after 'Milayou: I thought this forest
+; looked...'). (C2, E-0376)
 ; runs one frame of script command type C9 (entry 200 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC9::
     farcall SceneMilayouForest
     ret
 
+; Script command $CA (entry 201 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $CA): calls KeyBossBeaten2 in bank $73 and
+; returns. KeyBossBeaten2: it blinks object 0 at Y $20 for 120 frames (ScriptStepBlinkObjectTemp0:
+; hidden at Y $E0 in the off phases), then marks key entry kind 9 (MarkKeyEntryKindTemp0Bit6), sets
+; wStoryFlags + $68 bit 1, puts object 1 at ($50, $70) and sets wScriptStartRequest = $80. Scripts
+; start it with SCRIPT_KEY_BOSS_BEATEN_2: Script_WhatIsItYou and Script_WhatIsItYou_2 (before
+; 'Milayou: You are really special. I...'). (C2, E-0376)
 ; runs one frame of script command type CA (entry 201 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCA::
     farcall KeyBossBeaten2
     ret
 
+; Script command $CB (entry 202 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $CB): calls SceneChestBattle in bank $73 and
+; returns. SceneChestBattle runs stage wScriptStep of its 11 stages
+; (SceneChestBattle_ShowPreBattleMessage first, SceneChestBattle_SetChestFlag last). Scripts start
+; it with SCRIPT_SCENE_CHEST_BATTLE: Script_SceneChestBattle. (C1, E-0376)
 ; runs one frame of script command type CB (entry 202 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCB::
     farcall SceneChestBattle
     ret
 
+; Script command $CC (entry 203 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $CC): calls SceneCyalShine in bank $73 and
+; returns. SceneCyalShine runs stage wScriptStep of its 2 stages (SceneCyalShine_LoadObject5 first,
+; SceneCyalShine_Wait last). Scripts start it with SCRIPT_SCENE_CYAL_SHINE: Script_SceneCyalShine.
+; (C1, E-0376)
 ; runs one frame of script command type CC (entry 203 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCC::
     farcall SceneCyalShine
     ret
 
+; Script command $CD (entry 204 of ScriptCommandHandlers, run once per script frame by
+; ExecuteScriptCommand while wScriptCommandType = $CD): calls SceneYouDidIt in bank $85 and returns.
+; SceneYouDidIt runs stage wScriptStep of its 2 stages (SceneYouDidIt_ShowMessage first,
+; SceneWatchOut_Resume last). Scripts start it with SCRIPT_SCENE_YOU_DID_IT:
+; Script_HeroCheckedTheTreasure_4 (after '0 checked the treasure chest. It...'). (C1, E-0376)
 ; runs one frame of script command type CD (entry 204 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCD::
     farcall SceneYouDidIt
     ret
 
+; Script command type CE (SCRIPT_HIDE_SPRITES), entry 205 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls HideSprites in bank $85,
+; which sets wSpriteSlotCount = 0 and wScriptStartRequest = $80 so the next script command is
+; fetched. (C2, E-0376)
 ; runs one frame of script command type CE (entry 205 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCE::
     farcall HideSprites
     ret
 
+; Script command type CF (SCRIPT_SCENE_KEY_SHOP), entry 206 of ScriptCommandHandlers: far-calls
+; SceneKeyShop in bank $85 once per frame. That scene steps by wScriptStep: step 0 advances to step
+; 1 and, unless object 0 (wSpriteSlots + $B) is at X $50, requests the next script command at once
+; (wScriptStartRequest = $80); step 1 walks object 0 to X $60 (StepObjectTowardCoord), then clears
+; wSpriteSlots + $7 and requests the next command. (C2, E-0376)
 ; runs one frame of script command type CF (entry 206 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCF::
     farcall SceneKeyShop
@@ -5561,111 +6623,189 @@ Script_WarubouWaHeySo::
     script_jump_data_bank Script_Priest
     db $ff
 
+; Script command type E0 (SCRIPT_INN), entry 223 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls InnMenu in bank $1C, the
+; inn, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type E0 (entry 223 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE0::
     farcall InnMenu
     ret
 
+; Script command type E1 (SCRIPT_INN_CLOSE), entry 224 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls CloseInnMenu in bank
+; $1C, which ends the inn session and clears wMessageMode, once per frame while this command is
+; current, and returns. (C1, E-0376)
 ; runs one frame of script command type E1 (entry 224 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE1::
     farcall CloseInnMenu
     ret
 
+; Script command type E2 (SCRIPT_SHOP), entry 225 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls ShopMenu in bank $1C,
+; the shop, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type E2 (entry 225 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE2::
     farcall ShopMenu
     ret
 
+; Script command type E3 (SCRIPT_SHOP_CLOSE), entry 226 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls CloseShopMenu in bank
+; $1C, which ends the shop session and clears wMessageMode, once per frame while this command is
+; current, and returns. (C1, E-0376)
 ; runs one frame of script command type E3 (entry 226 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE3::
     farcall CloseShopMenu
     ret
 
+; Script command type E5 (SCRIPT_VAULT), entry 228 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls VaultMenu in bank $1C,
+; the item Vault, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type E5 (entry 228 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE5::
     farcall VaultMenu
     ret
 
+; Script command type E6 (SCRIPT_VAULT_CLOSE), entry 229 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls CloseVaultMenu in bank
+; $1C, which ends the Vault session (it runs the code of CloseShopMenu), once per frame while this
+; command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type E6 (entry 229 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE6::
     farcall CloseVaultMenu
     ret
 
+; Script command type E8 (SCRIPT_SWAP_MONSTERS), entry 231 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls SwapMonstersMenu in bank
+; $1E, the swap of party and farm monsters, once per frame while this command is current, and
+; returns. (C1, E-0376)
 ; runs one frame of script command type E8 (entry 231 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE8::
     farcall SwapMonstersMenu
     ret
 
+; Script command type E9 (SCRIPT_MENU_CLOSE), entry 232 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls CloseMenuE9 in bank $1E,
+; which ends a menu session (it runs the code of CloseBreedMenu), once per frame while this command
+; is current, and returns. (C1, E-0376)
 ; runs one frame of script command type E9 (entry 232 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE9::
     farcall CloseMenuE9
     ret
 
+; Script command type EB (SCRIPT_HIBERNATE), entry 234 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls HibernateMenu in bank
+; $14, monster hibernation, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type EB (entry 234 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEB::
     farcall HibernateMenu
     ret
 
+; Script command type EC (SCRIPT_HIBERNATE_CLOSE), entry 235 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls CloseHibernateMenu in
+; bank $14, which ends the hibernation session and clears wMessageMode, once per frame while this
+; command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type EC (entry 235 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEC::
     farcall CloseHibernateMenu
     ret
 
+; Script command type ED (SCRIPT_BREED), entry 236 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls BreedMenu in bank $15,
+; breeding, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type ED (entry 236 of ScriptCommandHandlers) (E-0038)
 ScriptCommandED::
     farcall BreedMenu
     ret
 
+; Script command type EE (SCRIPT_BREED_CLOSE), entry 237 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls CloseBreedMenu in bank
+; $15, which ends the breeding session and clears wMessageMode, once per frame while this command is
+; current, and returns. (C1, E-0376)
 ; runs one frame of script command type EE (entry 237 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEE::
     farcall CloseBreedMenu
     ret
 
+; Script command type EF (SCRIPT_EGG_SERVICE), entry 238 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls EggServiceMenu in bank
+; $0D, egg appraisal and blessing, once per frame while this command is current, and returns. (C1,
+; E-0376)
 ; runs one frame of script command type EF (entry 238 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEF::
     farcall EggServiceMenu
     ret
 
+; Script command type F0 (SCRIPT_RENAME), entry 239 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls RenameMenu in bank $0D,
+; the renaming of a monster, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type F0 (entry 239 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF0::
     farcall RenameMenu
     ret
 
+; Script command type F1 (SCRIPT_RENAME_CLOSE), entry 240 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls CloseRenameMenu in bank
+; $0D, which ends the renaming session (it runs the code of CloseBreedMenu), once per frame while
+; this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type F1 (entry 240 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF1::
     farcall CloseRenameMenu
     ret
 
+; Script command type F2 (SCRIPT_KEY_APPRAISAL), entry 241 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls KeyAppraisalMenu in bank
+; $0D, Magic Key appraisal, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type F2 (entry 241 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF2::
     farcall KeyAppraisalMenu
     ret
 
+; Script command type F3 (SCRIPT_MEDAL_PRIZES), entry 242 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls MedalPrizeMenu in bank
+; $0D, the TinyMedal prize exchange, once per frame while this command is current, and returns. (C1,
+; E-0376)
 ; runs one frame of script command type F3 (entry 242 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF3::
     farcall MedalPrizeMenu
     ret
 
+; Script command type F4 (SCRIPT_NPC_BREED), entry 243 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls NpcBreedMenu in bank
+; $0D, breeding with the monster of a townsperson picked by wScreenTableIndex, once per frame while
+; this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type F4 (entry 243 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF4::
     farcall NpcBreedMenu
     ret
 
+; Far-calls ScriptCommandE9_RunFar in bank $0D, which far-calls CloseMenuE9 in bank $1E (the
+; SCRIPT_MENU_CLOSE handler), and returns. Nothing in src/ refers to it: it sits where a type F5
+; handler would be, between ScriptCommandF4 and ScriptCommandF6, but entry 244 (type F5) of
+; ScriptCommandHandlers points to ScriptCommand01. (C1, E-0376)
 ; far-calls ScriptCommandE9_RunFar (E-0126)
 CallScriptCommandE9Far::
     farcall ScriptCommandE9_RunFar
     ret
 
+; Script command type F6 (SCRIPT_LIBRARY), entry 245 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls LibraryMenu in bank $0C,
+; the monster library, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type F6 (entry 245 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF6::
     farcall LibraryMenu
     ret
 
+; Script command type F7 (SCRIPT_ARENA), entry 246 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls ArenaMenu in bank $0C,
+; the arena, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type F7 (entry 246 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF7::
     farcall ArenaMenu
     ret
 
+; Script command type F8 (SCRIPT_PRIEST), entry 247 of ScriptCommandHandlers, which
+; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls PriestMenu in bank $24,
+; the priest, once per frame while this command is current, and returns. (C1, E-0376)
 ; runs one frame of script command type F8 (entry 247 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF8::
     farcall PriestMenu

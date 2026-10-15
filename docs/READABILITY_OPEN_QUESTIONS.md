@@ -1005,3 +1005,53 @@ reading itself. Labels are as named when the batch was applied; later renames ar
 - `CountDownTalkCountdownThenDispatchTalkEvent` (0A:43B5): What does talk event group $1E do at the end of the countdown that field skill 14 starts?
 - `TickRandomEncounterCounter` (0A:43EC): What does talk event group $1D do when wEncounterDelay runs out?
 - `LoadEncounterIdsForScreenCell` (0A:5057): The current name only numbers a copy of ReadMapCellWordForScreenXY; the proposal names what it loads.
+
+## E-0376
+
+- `DrawThreeMetaSpritePartsAtGridCursor` (0C:4FC2): What hSpriteSubIndex 0, 4 and 2 select in the meta-sprite set (three parts of one picture, or frames).
+- `RedrawFullScreenBoxes_0C` (0C:6FCB): Which screen areas the offsets $1CC, $104 and $168 hold in the arena layout.
+- `PickTableEntryByPartyLevelTotal` (0C:724F): No caller found; whether this is reached through a computed jump or is unused.
+- `EggServiceMenu_ChooseAndPay` (0D:4710): Steps 0-5, 7-11, 13 and 14 do nothing here; the RunChooseEggStep note says BreedMenu runs them, which the body (a lone ret) does not show.
+- `DrawC5BEC6AtScrollOffsetDE_Bank0D` (0D:4EA4): What the three tiles $C5, $BE, $C6 show (the page indicator frame or a slash).
+- `ClampKeyListPageCursor` (0D:5C87): The page index is moved back only in the evenly divided case; a page index past the end otherwise is not corrected.
+- `DrawKeyListPageMarks` (0D:5D26): What bit 6 of a key's byte 0 records (the mark $CA).
+- `ScriptStepCheckKeyListFull` (0D:6A80): Unreferenced; whether a key prize existed or this is reached through a computed jump.
+- `MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom` (0D:6B45): Is it reached at all? No jump table or call names it; it may be the key-prize counterpart of MedalPrizeMenu_ChoosePrize_GivePrize_CheckItemRoom left unused.
+- `KeyListHasFreeSlot` (0D:6D22): No caller names it; what it served (a 12-key limit?) is unknown.
+- `WriteTileBAtCursorListCursor` (0D:6DA7): What tile $BB shows (a cursor mark?) is not checked.
+- `ScriptCommandE9_RunFar` (0D:7115): Neither this routine nor CallScriptCommandE9Far has a caller in src/; probably unused.
+- `NpcBreedMenu` (0D:711C): The earlier note quoted 'Who will breed with my SpikyBoy?' and 'mode 8, message bank $0E, + 16 * wScreenTableIndex'; that text was not found in the ROM text (Message_09_46 asks 'would you like to breed something with my SpikyBoy?') and the message arithmetic is not in this routine.
+- `CopyStringToBuffer_Bank0E` (0E:4016): Nothing calls it; whether any string-copy dispatcher reaches it by a computed bank is not known.
+- `ComputeBreedingChild` (0E:5688): No FamilyPairResultTable entry found holds $FExx, so the incompatible branch may be unused.
+- `AdjustStatForRecordBufAAndBItems` (0E:59E1): Which items these are (stat-raising accessories whose bonus is taken out?) is not checked.
+- `RefreshRecordResistancesFromSpecies` (0E:5C50): Unused, or reached through a table not yet found?
+- `TestResistanceEntry` (0E:5DCD): Read as: a level of 2 that comes from the held item does not count; which items these are is not checked.
+- `SceneDarckDefeated_WalkObjectsApartAgain` (0F:487C): The note reads OBJ_STATE 0 as stopping; StepObjectTowardCoord stores the walking direction in this byte (0 down, 1 right, 2 up, 3 left), so 0 may mean facing down.
+- `SceneDarckDefeated_WalkObjectsTogether` (0F:490E): The note reads OBJ_STATE 0 as stopping; StepObjectTowardCoord stores the walking direction in this byte (0 down, 1 right, 2 up, 3 left), so 0 may mean facing down.
+- `SceneDarckDefeated_WalkObjects34Up` (0F:4AE3): The note reads OBJ_STATE 0 as stopping; StepObjectTowardCoord stores the walking direction in this byte (0 down, 1 right, 2 up, 3 left), so 0 may mean facing down.
+- `SceneDarckDefeated_DriftObject2` (0F:4E15): The note reads OBJ_STATE 0 as stopping; StepObjectTowardCoord stores the walking direction in this byte (0 down, 1 right, 2 up, 3 left), so 0 may mean facing down.
+- `SceneShieldGuardian` (0F:5AF3): Step 0 removes inventory slot hTemp0 without checking that item $34 was found; with the item absent RemoveInventorySlotShiftDown gets slot $FF and shifts bytes past the inventory.
+- `SceneExplosion_Shake` (0F:61BC): hScrollX is left offset by up to 2 pixels after this step; whether a later step or the battle start resets it is not traced.
+- `SceneMermaidKingdom` (0F:67BA): Which script, if any, uses script command type $3B (ScriptCommand3B also runs this scene); no SCRIPT_ constant names it.
+- `GiveItemBlink` (0F:7093): The ghost scripts (Script_WhoDisturbsUsIn, Script_YouSeemToNot) set EVENT_GIVE_ITEM_BLINK only after the command, so their blink is at Y $20; the Yuna scripts run it later at Y $40. Whether that split is intended is not checked.
+- `SceneIslandSinking` (0F:7CA5): no script in src/ was found that uses command $76
+- `SceneIslandSinking` (0F:7CA5): the name SceneIslandSinking comes from message $0076, as the other scene commands are named after their messages
+- `ScriptStepDeltaThenRequestFetch` (0F:7F42): no caller found in src/ or build/listing/bank0f.asm; possibly unused in bank $0F
+- `RotateDirectionAtDEEvery32_Bank0F` (0F:7F5C): no caller found in bank $0F; possibly unused here
+- `ScriptFetch81` (10:4252): which code sets wScriptParam0/1 before this command starts was not traced
+- `ScriptFetch86` (10:4297): which code sets wScriptParam0/1 before this command starts was not traced
+- `ScriptFetchSkipIfNo` (10:4367): the macro calls it skip_if_no, yet wTextYesNoResult 0 is the first choice in SceneLongFaces_Answer; which answer 0 is was not checked
+- `ScriptFetchSkipIfNo` (10:4367): why the two tiles are restored here (the choice box arrow?) was not traced
+- `ScriptFetch62` (10:450D): which code sets wScriptParam1 before opcode $62 was not traced
+- `ScriptCommand20` (10:4C44): Which script starts command type $20 (no script_command in src names it; a script in a data bank may)?
+- `ScriptCommand3B` (10:4D01): Is type $3B used by any script (none in src), or is it a spare entry that repeats $39?
+- `ScriptCommand4C` (10:4D78): Which script starts command type $4C (none in src)?
+- `ScriptCommand60` (10:4E04): Which script starts command type $60 (none in src)?
+- `ScriptCommand76` (10:4E9E): Which script starts command type $76 (none in src)?
+- `CallScriptCommandE9Far` (10:663D): Is CallScriptCommandE9Far reached at all (a computed jump, or an older handler-table layout)? Nothing in src/ or the listing refers to it.
+- `CheckWarpAtPlayer` (11:4002): wWarpDestFacing receives the screen-nibble byte 1 for a facing entry; how the transition code uses that value is not read here.
+- `CheckWarpsAtPlayerPosition` (11:4130): Why the exception on map $30 screen (5,5) at ($40,$50) keeps hPlayerStateFlags bit 7 is not established.
+- `ScriptStepAnimateSpriteBySteps` (12:5B9A): Frame 2 is never selected because the stored 2 is overwritten; is sub-index 2 of metasprite set $23 drawn anywhere else?
+- `DrawScriptMetaSpriteAtScrollOffset` (12:5BD9): The dead wMapSpriteKind read suggests set $23 + kind - 1 was intended; no evidence beyond the code shape.
+- `SetupScriptSpriteInFrontOfPlayer` (12:5C31): What does Gfx7E_7 show (the sprite of the RandomGoldOrItem find and of the strongest-master scene)?
+- `SpawnScriptSpriteInFrontOfPlayer` (12:5C3F): Is SpawnScriptSpriteInFrontOfPlayer reached through a computed jump, or is it unused?

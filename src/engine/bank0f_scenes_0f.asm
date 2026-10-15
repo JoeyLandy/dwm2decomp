@@ -4,6 +4,12 @@
 SECTION "Bank 0F", ROMX[$4000], BANK[$0F]
     db $0f
 
+; Script command type C7 (SCRIPT_SCENE_PENDANT_SELLER), run each frame through ScriptCommandC7 in
+; bank $10 by Script_ThisPendantIsYours and Script_WhatWhereIGet. By wScriptStep: 0
+; ScenePendantSeller_RaiseObject (object 1 rises to Y $30), 1 ScenePendantSeller_WalkObjectDown
+; (object 1 walks down to Y $40), 2 ScenePendantSeller_WalkPlayerDown (the player walks down to Y
+; $80), 3 ScenePendantSeller_KeepInStep (the followers catch up for $1E frames, then the script
+; resumes). (C2, E-0376)
 ; implements script command type C7 (SCRIPT_SCENE_PENDANT_SELLER): a cutscene step named after the
 ; scene its only script shows: 'This pendant is yours for 38,000G' ... 'You're going to regret
 ; seeing us.'; reached through ScriptCommandC7 in bank $10 (E-0038, E-0245)
@@ -16,7 +22,8 @@ ScenePendantSeller::
     dw ScenePendantSeller_KeepInStep
 
 ; Pendant seller scene, step 3: keeps the followers in step for $1E frames, then restarts the
-; player's animation (hPlayerStateFlags bit 1 cleared) and resumes the script. (C1, E-0357)
+; player's animation (hPlayerStateFlags bit 1 cleared) and resumes the script. (C2, E-0357; probed
+; E-0376)
 ScenePendantSeller_KeepInStep::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
@@ -35,7 +42,7 @@ ScenePendantSeller_KeepInStep::
     ret
 
 ; Pendant seller scene, step 2: walks the player down two pixels per frame (followers following) to
-; Y $80. (C1, E-0357)
+; Y $80. (C2, E-0357; probed E-0376)
 ScenePendantSeller_WalkPlayerDown::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
@@ -57,7 +64,7 @@ ScenePendantSeller_WalkPlayerDown::
 
 ; Pendant seller scene, step 1: walks object 1 down two pixels a frame to Y $40
 ; (StepObjectTowardCoord); on arrival freezes the player's animation (bit 1) and plays sound $63.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 ScenePendantSeller_WalkObjectDown::
     ld a, $01
     ld [wStepPtrHi], a
@@ -79,7 +86,7 @@ ScenePendantSeller_WalkObjectDown::
     ret
 
 ; Pendant seller scene, step 0: moves object 1 up one pixel every other frame to Y $30, then sets
-; its moving flag. (C1, E-0357)
+; its moving flag. (C2, E-0357; probed E-0376)
 ScenePendantSeller_RaiseObject::
     ld a, [wScriptParam0]
     inc a
@@ -99,6 +106,11 @@ ScenePendantSeller_RaiseObject::
     inc [hl]
     ret
 
+; Script command type 62 (SCRIPT_PERSONALITY_MESSAGE), run each frame through ScriptCommand62 in
+; bank $10 (Script_PersonalityMessage). By wScriptStep: 0 PersonalityMessage_PickMessage starts a
+; group-5 message chosen by the family and personality of party monster wScriptParam1; 1
+; PersonalityMessage_WaitForMessage waits for the message box to close and resumes the script
+; (wScriptStartRequest = $80). (C1, E-0376)
 ; implements script command type 62 (SCRIPT_PERSONALITY_MESSAGE): shows a message chosen by a party
 ; monster's personality (PersonalityIndexOfRecord); reached through ScriptCommand62 in bank $10
 ; (E-0038, E-0245)
@@ -110,7 +122,7 @@ PersonalityMessage::
 
 ; A follower's personality message: picks a message in group 5 from the follower's family
 ; (PersonalityMessage_PickMessage_Data) plus its personality grade (PersonalityIndexOfRecord) and
-; starts it. (C1, E-0357)
+; starts it. (C2, E-0357; probed E-0376)
 PersonalityMessage_PickMessage::
     ld a, $0a
     ld [rRAMG], a
@@ -146,6 +158,13 @@ PersonalityMessage_PickMessage::
 PersonalityMessage_PickMessage_Data::
     db $94, $af, $ca, $af, $94, $ca, $af, $94, $ca, $ca, $e5
 
+; Script command type 5F (SCRIPT_SCENE_HOMECOMING), run each frame through ScriptCommand5F in bank
+; $10 by Script_CobiHeroCongratulationsI; a 45-step jump table on wScriptStep. Steps 0-6 bring in
+; the scene object and Warubou (messages $0548, $0549); 7 fades and requests game mode 0 at state 8;
+; 8-37 move objects 1 and 2, the player and the followers with hops and walks around messages
+; $0DB0-$0DBA (SceneHomecoming_WaitMessage waits after each); 38-40 hop, walk and fade out; 41 shows
+; 'THE END' and sets wGameCompleted; 42 counts a delay; 43 moves to map 6 in game mode 2 at
+; wModeState $0B; 44 resumes the script. (C2, E-0376)
 ; implements script command type 5F (SCRIPT_SCENE_HOMECOMING): a cutscene step named after the scene
 ; its only script shows: 'Hehehe, no need to worry there!' ... 'Tara 0, congratulations! I was sad';
 ; reached through ScriptCommand5F in bank $10 (E-0038, E-0245)
@@ -198,14 +217,14 @@ SceneHomecoming::
     dw SceneHomecoming_GoToMap6
     dw SceneHomecoming_SetScriptStartRequestTo80
 
-; Homecoming scene, step 44: resumes the script. (C1, E-0357)
+; Homecoming scene, step 44: resumes the script. (C2, E-0357; probed E-0376)
 SceneHomecoming_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
 ; Homecoming scene, step 43: moves the player to map 6, screen (0, 0) and switches to game mode 2 at
-; wModeState $0B (the pages after the ending). (C1, E-0357)
+; wModeState $0B (the pages after the ending). (C2, E-0357; probed E-0376)
 SceneHomecoming_GoToMap6::
     ld a, $06
     ldh [hMapId], a
@@ -226,7 +245,8 @@ SceneHomecoming_GoToMap6::
     inc [hl]
     ret
 
-; Homecoming scene, step 42: counts down the 16-bit delay in wScriptParam0/1. (C1, E-0357)
+; Homecoming scene, step 42: counts down the 16-bit delay in wScriptParam0/1. (C2, E-0357; probed
+; E-0376)
 SceneHomecoming_CountDelay::
     ld a, [wScriptParam0]
     ld l, a
@@ -355,7 +375,7 @@ SceneHomecoming_ShowTHEEND::
 OBJPaletteBufferPlus20Init_2::
     db $de, $67, $1f, $33, $3c, $12, $00, $00 ; entry 0
 
-; Homecoming scene, step 40: waits for the fade to finish. (C1, E-0357)
+; Homecoming scene, step 40: waits for the fade to finish. (C2, E-0357; probed E-0376)
 SceneHomecoming_FinishFinalFade::
     ld a, [wFadeState]
     or a
@@ -373,7 +393,7 @@ SceneHomecoming_StartFinalFade::
     ret
 
 ; Homecoming scene, step 38: makes the scene object hop and walks object 2 left two pixels per frame
-; to X $40, then hides the first sprite slot. (C1, E-0357)
+; to X $40, then hides the first sprite slot. (C2, E-0357; probed E-0376)
 SceneHomecoming_HopAndWalk::
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -394,7 +414,7 @@ SceneHomecoming_HopAndWalk::
     ret
 
 ; Homecoming scene, step 33: makes the second follower hop; when the hop ends shows message $0DBA.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneHomecoming_HopFollower::
     ld de, wFollowerRecords + $2
     call ScriptApplyStepDeltaAtDE
@@ -408,8 +428,8 @@ SceneHomecoming_HopFollower::
     inc [hl]
     ret
 
-; Homecoming scene, step 32: walks the first follower left to X $78 and turns it to face up. (C1,
-; E-0357)
+; Homecoming scene, step 32: walks the first follower left to X $78 and turns it to face up. (C2,
+; E-0357; probed E-0376)
 SceneHomecoming_WalkFirstFollowerLeft::
     ld a, [wFollowerRecords + $1]
     dec a
@@ -423,7 +443,8 @@ SceneHomecoming_WalkFirstFollowerLeft::
     inc [hl]
     ret
 
-; Homecoming scene, step 30: Warubou's 'Wahey, I have ...' (message $0DB8). (C1, E-0357)
+; Homecoming scene, step 30: Warubou's 'Wahey, I have ...' (message $0DB8). (C2, E-0357; probed
+; E-0376)
 SceneHomecoming_Msg0DB8_WarubouWaheyIHave::
     ld hl, $0db8 ; 'Warubou: Wa-hey… I have seen this…'
     call StartMessageHL_B0F
@@ -432,7 +453,7 @@ SceneHomecoming_Msg0DB8_WarubouWaheyIHave::
     ret
 
 ; Homecoming scene, step 29: moves object 2, the player and the scene object back by the negated
-; amounts of the step-28 table. (C1, E-0357)
+; amounts of the step-28 table. (C2, E-0357; probed E-0376)
 SceneHomecoming_MoveBack::
     ld a, [wScriptParam0]
     ld hl, SceneHomecoming_MoveBack_Data
@@ -444,7 +465,8 @@ SceneHomecoming_MoveBack::
     jr SceneHomecoming_AddToX
 
 ; Homecoming scene, step 28: sets object 2 walking and moves it, the player and the scene object
-; together by the per-frame amounts of SceneHomecoming_MoveBack_Data for $40 frames. (C1, E-0357)
+; together by the per-frame amounts of SceneHomecoming_MoveBack_Data for $40 frames. (C2, E-0357;
+; probed E-0376)
 SceneHomecoming_MoveTogether::
     ld a, $01
     ld [wObject2 + OBJ_STATE], a
@@ -454,8 +476,8 @@ SceneHomecoming_MoveTogether::
     ld a, [hl]
     ld c, a
 
-; Adds C to the X of object 2, the player and the scene object; after $40 frames moves on. (C1,
-; E-0357)
+; Adds C to the X of object 2, the player and the scene object; after $40 frames moves on. (C2,
+; E-0357; probed E-0376)
 SceneHomecoming_AddToX::
     ld a, [wObject2 + OBJ_X]
     add c
@@ -484,7 +506,8 @@ SceneHomecoming_MoveBack_Data::
     db $01, $00, $01, $00, $00, $01, $01, $01, $00, $00, $ff, $00, $00, $00, $ff, $01
     db $ff, $00, $00, $01, $ff, $ff, $ff, $00, $00, $00, $ff, $00, $00, $ff, $ff, $00
 
-; Homecoming scene, step 27: walks the player up to Y $30, then left to X $78. (C1, E-0357)
+; Homecoming scene, step 27: walks the player up to Y $30, then left to X $78. (C2, E-0357; probed
+; E-0376)
 SceneHomecoming_WalkPlayer::
     ld a, [wScriptParam0]
     or a
@@ -515,7 +538,7 @@ SceneHomecoming_WalkPlayer::
     ret
 
 ; Homecoming scene, step 25: makes object 2 hop; then Kameha's 'No one's taking ...' (message
-; $0DB7). (C1, E-0357)
+; $0DB7). (C2, E-0357; probed E-0376)
 SceneHomecoming_ShowKamehaNoOnesTaking::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -527,7 +550,7 @@ SceneHomecoming_ShowKamehaNoOnesTaking::
     ret
 
 ; Homecoming scene, step 23: walks object 1 down (two pixels a frame) to Y $40, then left to X $58;
-; then sets the objects' states and shows message $0DB6. (C1, E-0357)
+; then sets the objects' states and shows message $0DB6. (C2, E-0357; probed E-0376)
 SceneHomecoming_WalkObject1::
     ld a, $01
     ld [wStepPtrHi], a
@@ -567,7 +590,8 @@ SceneHomecoming_WalkObject1::
     inc [hl]
     ret
 
-; Homecoming scene, step 22: both objects hop together; at the end object 1 faces left. (C1, E-0357)
+; Homecoming scene, step 22: both objects hop together; at the end object 1 faces left. (C2, E-0357;
+; probed E-0376)
 SceneHomecoming_HopObjects::
     ld a, $01
     ld [wObject1 + OBJ_STATE], a
@@ -588,7 +612,7 @@ SceneHomecoming_HopObjects::
     ret
 
 ; Homecoming scene, step 20: stops both objects and walks the player left to X $80; then message
-; $0DB5. (C1, E-0357)
+; $0DB5. (C2, E-0357; probed E-0376)
 SceneHomecoming_WalkPlayerLeft::
     ld hl, wObject1 + OBJ_FLAGS
     call ClearBit2AtHL_Bank0F
@@ -610,7 +634,7 @@ SceneHomecoming_WalkPlayerLeft::
     ret
 
 ; Homecoming scene, step 18: makes object 2 hop; then Kameha's 'You're a glutton' (message $0DB3).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneHomecoming_ShowKamehaYoureAGlutton::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -622,7 +646,7 @@ SceneHomecoming_ShowKamehaYoureAGlutton::
     ret
 
 ; Homecoming scene, step 16: makes object 1 hop; then Warubou's 'WAHEY! Some prince ...' (message
-; $0DB2). (C1, E-0357)
+; $0DB2). (C2, E-0357; probed E-0376)
 SceneHomecoming_ShowWarubouWAHEYSomePrince::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -634,7 +658,7 @@ SceneHomecoming_ShowWarubouWAHEYSomePrince::
     ret
 
 ; Homecoming scene, step 13: makes object 2 hop; then Kameha's 'I went and ...' (message $0DB1).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneHomecoming_ShowKamehaIWentAnd::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -646,7 +670,7 @@ SceneHomecoming_ShowKamehaIWentAnd::
     ret
 
 ; Homecoming scene, step 10: makes object 1 hop; then Warubou's 'Wahey, I was ...' (message $0DB0).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneHomecoming_ShowWarubouWaheyIWas::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -659,7 +683,8 @@ SceneHomecoming_ShowWarubouWaheyIWas::
 
 ; Homecoming scene, step 9: runs ScriptStepSetObjectBit2AndWait (bank $73): sets bit 2 of OBJ_FLAGS
 ; of objects 1 and 2, shows the scene object (wObject5 = $80), shifts the objects by
-; ShiftObjectsYByTable each frame and moves on once wScriptParam0 is back to 0. (C1, E-0369)
+; ShiftObjectsYByTable each frame and moves on once wScriptParam0 is back to 0. (C2, E-0369; probed
+; E-0376)
 SceneHomecoming_ShiftObjects::
     farcall ScriptStepSetObjectBit2AndWait
     ret
@@ -695,7 +720,7 @@ SceneHomecoming_FadeAndChangeMode::
     inc [hl]
     ret
 
-; Homecoming scene, step 6: the player faces up for $78 frames. (C1, E-0357)
+; Homecoming scene, step 6: the player faces up for $78 frames. (C2, E-0357; probed E-0376)
 SceneHomecoming_FaceUp::
     ld a, $01
     ldh [hPlayerFacing], a
@@ -707,7 +732,7 @@ SceneHomecoming_FaceUp::
     ret
 
 ; Homecoming scene, step 4: shows the scene object rising with a hop; then Warubou's 'No one knows
-; ...' (message $0549). (C1, E-0357)
+; ...' (message $0549). (C2, E-0357; probed E-0376)
 SceneHomecoming_ShowWarubouNoOneKnows::
     ld a, $80
     ld [wObject5], a
@@ -723,7 +748,7 @@ SceneHomecoming_ShowWarubouNoOneKnows::
     ret
 
 ; Homecoming scene, step 2: the player faces left; the player and object 2 hop for $20 frames; then
-; Warubou's 'Wahey, instead of ...' (message $0548). (C1, E-0357)
+; Warubou's 'Wahey, instead of ...' (message $0548). (C2, E-0357; probed E-0376)
 SceneHomecoming_ShowWarubouWaheyInsteadOf::
     ld a, $03
     ldh [hPlayerFacing], a
@@ -753,7 +778,8 @@ SceneHomecoming_ShowWarubouWaheyInsteadOf::
     ret
 
 ; Homecoming scene, step 1: object 3 flies in an arc (a 16-bit vertical speed growing by $18 per
-; frame) moving right two pixels per frame to X $40, then lands at Y $40. (C1, E-0357)
+; frame) moving right two pixels per frame to X $40, then lands at Y $40. (C2, E-0357; probed
+; E-0376)
 SceneHomecoming_FlyArc::
     ld de, $0018
     ld a, [wScriptParam0]
@@ -806,6 +832,14 @@ SceneHomecoming_PlaceObject::
     inc [hl]
     ret
 
+; Script command type 5E (SCRIPT_SCENE_DARCK_DEFEATED), run each frame through ScriptCommand5E in
+; bank $10 by Script_DarckFawahahahYouChased; a 149-step jump table on wScriptStep. It blinks Darck
+; out (setting EVENT_SCENE_DARCK_DEFEATED), walks the player, shows messages $055A, $055B, $0533,
+; $0DF7, $0537, $0538, $0539 and $053A, most followed by SceneHomecoming_WaitMessage, runs
+; BossWinScene and screen shakes, then visits maps $26, $2F, $33, $41, $49, $60, $71 and 3 in turn
+; (SceneDarckDefeated_StartMapChange), each with object walks and hops and the scene object rising
+; (SceneDarckDefeated_RaiseSceneObject); last it warps to the king (map $19), shows messages $053B
+; and $053C and ends with PersonalityMessage_WaitForMessage. (C2, E-0376)
 ; implements script command type 5E (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the
 ; scene its only script shows: 'Darck Wha What? How could I' ... 'Darck Fwahahahah! Bravo!
 ; Splendid!'; reached through ScriptCommand5E in bank $10 (E-0038, E-0245)
@@ -941,10 +975,10 @@ SceneDarckDefeated::
     dw SceneDarckDefeated_WarpToMap71
     dw SceneDarckDefeated_PlaceObjectLeftAgain
     dw SceneDarckDefeated_Wait
-    dw ScriptStepMoveObjects2And3To0340
-    dw ScriptStepFlickerObjectCB9B
-    dw ScriptStepDeltaObject2CThenCopy
-    dw ScriptStepMoveObjects2And3To81B0
+    dw SceneDarckDefeated_WalkObjects23Left
+    dw SceneDarckDefeated_FlickerObject1
+    dw SceneDarckDefeated_HopObjects23
+    dw SceneDarckDefeated_WalkObjects23Right
     dw SceneDarckDefeated_RaiseSceneObject
     dw SceneDarckDefeated_Wait
     dw SceneDarckDefeated_Wait
@@ -963,7 +997,7 @@ SceneDarckDefeated::
     dw PersonalityMessage_WaitForMessage
 
 ; Darck defeated scene, step 147: the king's 'Even though the ...' (message $053C) and marks the
-; first key of kind 6 (MarkKeyEntryKindTemp0Bit6). (C1, E-0357)
+; first key of kind 6 (MarkKeyEntryKindTemp0Bit6). (C2, E-0357; probed E-0376)
 SceneDarckDefeated_ShowKingEvenThoughThe::
     ld hl, $053c ; 'King: Even though the island's crisis'
     call StartMessageHL_B0F
@@ -998,7 +1032,8 @@ SceneDarckDefeated_PlaySound::
     inc [hl]
     ret
 
-; Darck defeated scene, step 144: the king's 'I thank you ...' (message $053B). (C1, E-0357)
+; Darck defeated scene, step 144: the king's 'I thank you ...' (message $053B). (C2, E-0357; probed
+; E-0376)
 SceneDarckDefeated_Msg053B_KingIThankYou::
     ld hl, $053b ; 'King: I thank you all for'
     call StartMessageHL_B0F
@@ -1029,7 +1064,7 @@ SceneDarckDefeated_WarpToKing::
     call StartPaletteFade
     ret
 
-; Darck defeated scene, step 140: hides the scene object. (C1, E-0357)
+; Darck defeated scene, step 140: hides the scene object. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HideSceneObject::
     xor a
     ld [wObject5], a
@@ -1068,9 +1103,13 @@ SceneDarckDefeated_WarpToMap03::
     call SceneDarckDefeated_StartMapChange
     ret
 
+; Darck defeated scene, step 132: moves objects 2 and 3 right two pixels a frame
+; (StepObjectTowardCoord with wStepTarget = $81: direction 1, two pixels) toward X $B0 and X $C0;
+; wScriptStep + 1 when object 3 arrives (only the second call sets the tested wStepArrived). The $81
+; in the old name is the step target, not a coordinate. (C2, E-0376)
 ; steps objects 2 and 3 toward ($81, $B0) and ($81, $C0) (StepObjectTowardCoord); advances
 ; wScriptStep once they arrive (E-0124)
-ScriptStepMoveObjects2And3To81B0::
+SceneDarckDefeated_WalkObjects23Right::
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $b0
@@ -1092,10 +1131,13 @@ ScriptStepMoveObjects2And3To81B0::
     inc [hl]
     ret
 
+; Darck defeated scene, step 131: object 2 hops (ScriptApplyStepDeltaAtDE on its OBJ_Y) and object 3
+; copies its Y each frame, so both hop together; when the hop ends (16 frames, carry) wScriptStep +
+; 1. (C2, E-0376)
 ; ScriptApplyStepDeltaAtDE on wObject2 + $C, copies wObject2 + $C to wObject3 + $C, and when the
 ; move finishes (carry) wScriptStep += 1 (E-0119) (E-0340: the address in its name read as its RAM
-; name; was ScriptStepDeltaObject2CThenCopy)
-ScriptStepDeltaObject2CThenCopy::
+; name; was SceneDarckDefeated_HopObjects23)
+SceneDarckDefeated_HopObjects23::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     push af
@@ -1107,9 +1149,13 @@ ScriptStepDeltaObject2CThenCopy::
     inc [hl]
     ret
 
+; Darck defeated scene, step 130: flickers object 1 by setting its OBJ_Y to $40 (shown) or $E0
+; (hidden) from a bit of the count wScriptParam0: bit 1 below $1E, bit 2 below $3C, then bit 3, so
+; it switches every 2, then 4, then 8 frames. After $78 frames (StepScriptParam0Counter_Bank0F) Y =
+; $40 and wScriptStep + 1. (C2, E-0376)
 ; alternates wObject1 + $C between $E0 and $40 at a rate that slows with wScriptParam0; after $78
 ; frames sets $40 and advances wScriptStep (E-0125)
-ScriptStepFlickerObjectCB9B::
+SceneDarckDefeated_FlickerObject1::
     ld a, [wScriptParam0]
     cp $1e
     jr nc, .cp_3C
@@ -1148,9 +1194,12 @@ ScriptStepFlickerObjectCB9B::
     inc [hl]
     ret
 
+; Darck defeated scene, step 129: moves objects 2 and 3 left one pixel a frame
+; (StepObjectTowardCoord with wStepTarget = 3) toward X $40 and X $50; wScriptStep + 1 when object 3
+; arrives. The 03 in the old name is the direction, not a coordinate. (C2, E-0376)
 ; steps objects 2 and 3 toward ($03, $40) and ($03, $50); advances wScriptStep once they arrive
 ; (E-0124)
-ScriptStepMoveObjects2And3To0340::
+SceneDarckDefeated_WalkObjects23Left::
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $40
@@ -1203,7 +1252,7 @@ SceneDarckDefeated_WarpToMap71::
     call SceneDarckDefeated_StartMapChange
     ret
 
-; Darck defeated scene, step 121: walks object 0 down to Y $60. (C1, E-0357)
+; Darck defeated scene, step 121: walks object 0 down to Y $60. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject0DownLast::
     ld a, $00
     ld [wStepPtrHi], a
@@ -1220,7 +1269,7 @@ SceneDarckDefeated_WalkObject0DownLast::
     ret
 
 ; Darck defeated scene, step 120: walks object 1 left to X $30 and object 2 right to X $60, then
-; stops them. (C1, E-0357)
+; stops them. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObjectsApartAgain::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1246,8 +1295,8 @@ SceneDarckDefeated_WalkObjectsApartAgain::
     inc [hl]
     ret
 
-; Darck defeated scene, step 118: walks object 0 down to Y $50, then objects 1 and 2 face up. (C1,
-; E-0357)
+; Darck defeated scene, step 118: walks object 0 down to Y $50, then objects 1 and 2 face up. (C2,
+; E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject0DownAgain::
     ld a, $00
     ld [wStepPtrHi], a
@@ -1266,7 +1315,7 @@ SceneDarckDefeated_WalkObject0DownAgain::
     inc [hl]
     ret
 
-; Darck defeated scene, step 117: walks object 4 left to X $40. (C1, E-0357)
+; Darck defeated scene, step 117: walks object 4 left to X $40. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject4Left::
     ld a, $40
     ld [wStepPtrLo], a
@@ -1274,14 +1323,14 @@ SceneDarckDefeated_WalkObject4Left::
     ld [wStepTarget], a
     jr SceneDarckDefeated_WalkObject4ToTarget
 
-; Darck defeated scene, step 115: walks object 4 right to X $50. (C1, E-0357)
+; Darck defeated scene, step 115: walks object 4 right to X $50. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject4Right::
     ld a, $50
     ld [wStepPtrLo], a
     ld a, $01
     ld [wStepTarget], a
 
-; Walks object 4 toward the target set, then it faces up. (C1, E-0357)
+; Walks object 4 toward the target set, then it faces up. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject4ToTarget::
     ld a, $04
     ld [wStepPtrHi], a
@@ -1296,7 +1345,7 @@ SceneDarckDefeated_WalkObject4ToTarget::
     ret
 
 ; Darck defeated scene, step 113: walks object 1 right to X $40 and object 2 left to X $50 (two
-; pixels a frame), then stops them. (C1, E-0357)
+; pixels a frame), then stops them. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObjectsTogether::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1322,7 +1371,7 @@ SceneDarckDefeated_WalkObjectsTogether::
     inc [hl]
     ret
 
-; Darck defeated scene, step 112: walks object 4 up to Y $70. (C1, E-0357)
+; Darck defeated scene, step 112: walks object 4 up to Y $70. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject4Up::
     ld a, $04
     ld [wStepPtrHi], a
@@ -1371,7 +1420,7 @@ SceneDarckDefeated_WarpToMap60::
 
 ; Darck defeated scene, step 104: makes a sprite flicker for $78 frames (shown at Y $30 or hidden at
 ; $E0, switching every 2 frames, then every 4 from frame $1E and every 8 from $3C), then leaves it
-; shown. (C1, E-0357)
+; shown. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_FlickerSprite::
     ld a, [wScriptParam0]
     cp $1e
@@ -1412,7 +1461,7 @@ SceneDarckDefeated_FlickerSprite::
     ret
 
 ; Darck defeated scene, step 102: walks objects 3 and 4 down (two pixels a frame) to Y $B0, off the
-; screen. (C1, E-0357)
+; screen. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObjects34Off::
     ld a, $03
     ld [wStepPtrHi], a
@@ -1437,7 +1486,7 @@ SceneDarckDefeated_WalkObjects34Off::
 
 ; Darck defeated scene, step 101: walks object 2 left (two pixels a frame) to X $40 with object 1
 ; following it, then sets the objects' states; then walks object 2 down to Y $C0 with object 1
-; riding 8 pixels above it. (C1, E-0357)
+; riding 8 pixels above it. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject2Left::
     ld a, [wScriptParam0]
     or a
@@ -1488,7 +1537,7 @@ SceneDarckDefeated_WalkObject2Left::
     ret
 
 ; Darck defeated scene, step 99: object 1 drifts up and right while hopping for $20 frames, then
-; faces left. (C1, E-0357)
+; faces left. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_DriftObject1::
     ld a, [wScriptParam0]
     and $03
@@ -1523,7 +1572,8 @@ SceneDarckDefeated_DriftObject1::
     inc [hl]
     ret
 
-; Darck defeated scene, step 98: walks object 1 down to Y $70, then it faces right. (C1, E-0357)
+; Darck defeated scene, step 98: walks object 1 down to Y $70, then it faces right. (C2, E-0357;
+; probed E-0376)
 SceneDarckDefeated_WalkObject1DownRight::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1541,7 +1591,7 @@ SceneDarckDefeated_WalkObject1DownRight::
     inc [hl]
     ret
 
-; Darck defeated scene, step 96: makes object 1 hop once (16 frames). (C1, E-0357)
+; Darck defeated scene, step 96: makes object 1 hop once (16 frames). (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopObject1Again::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -1550,8 +1600,8 @@ SceneDarckDefeated_HopObject1Again::
     inc [hl]
     ret
 
-; Darck defeated scene, step 95: walks objects 3 and 4 up to Y $80, then stops object 1. (C1,
-; E-0357)
+; Darck defeated scene, step 95: walks objects 3 and 4 up to Y $80, then stops object 1. (C2,
+; E-0357; probed E-0376)
 SceneDarckDefeated_WalkObjects34Up::
     ld a, $03
     ld [wStepPtrHi], a
@@ -1603,7 +1653,7 @@ SceneDarckDefeated_WarpToMap49::
     ret
 
 ; Darck defeated scene, step 86: objects 1-3 hop together while turning every four frames (and a
-; sprite 48 pixels above them); then they face up (state 2). (C1, E-0357)
+; sprite 48 pixels above them); then they face up (state 2). (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopObjects::
     ld a, [wScriptParam0]
     and $03
@@ -1641,7 +1691,7 @@ SceneDarckDefeated_HopObjects::
     ret
 
 ; Darck defeated scene, step 85: moves objects 1-3 right one pixel every four frames, 16 pixels
-; apart, until object 3 reaches X $60. (C1, E-0357)
+; apart, until object 3 reaches X $60. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_MoveObjectsRight::
     ld a, [wScriptParam0]
     inc a
@@ -1664,7 +1714,7 @@ SceneDarckDefeated_MoveObjectsRight::
     ret
 
 ; Darck defeated scene, step 84: objects 1-3 hop together while turning; then they face right (state
-; 1). (C1, E-0357)
+; 1). (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopObjectsAndFace::
     ld a, [wScriptParam0]
     and $03
@@ -1694,7 +1744,7 @@ SceneDarckDefeated_HopObjectsAndFace::
     ret
 
 ; Darck defeated scene, step 83: objects 1-3 face left and move left one pixel every four frames
-; until object 3 reaches X $50. (C1, E-0357)
+; until object 3 reaches X $50. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_MoveObjectsLeft::
     ld a, $03
     ld [wObject1 + OBJ_STATE], a
@@ -1746,7 +1796,7 @@ SceneDarckDefeated_WarpToMap41::
     call SceneDarckDefeated_StartMapChange
     ret
 
-; Darck defeated scene, step 75: makes object 3 hop once. (C1, E-0357)
+; Darck defeated scene, step 75: makes object 3 hop once. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopObject3::
     ld de, wObject3 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -1755,9 +1805,12 @@ SceneDarckDefeated_HopObject3::
     inc [hl]
     ret
 
-; Darck defeated scene, step 74: in three sub-steps walks objects 2 and 1 up to Y $60; then object 1
-; left to X $20 while object 2 finishes going up and then left; then object 2 left to X $20 and
-; object 1 up to Y $50. Then object 3 stops and object 2 faces down. (C1, E-0357)
+; Darck defeated scene, step 74, in three phases by wScriptParam0 (one pixel a frame,
+; StepObjectTowardCoord): 0 walks objects 2 and 1 up to Y $60; 1 walks object 1 left to X $20 while
+; object 2 first finishes going up to Y $60 and then goes left; 2 walks object 2 left to X $20 and
+; object 1 up to Y $50. Each phase ends when object 1 arrives. Then object 3 gets OBJ_STATE 0 and
+; object 2 OBJ_STATE 2 (the direction value StepObjectTowardCoord stores for moving up),
+; wScriptParam0 = 0 and wScriptStep + 1. The earlier reading said object 2 faces down. (C2, E-0376)
 SceneDarckDefeated_WalkObjectsUp::
     ld a, [wScriptParam0]
     or a
@@ -1848,7 +1901,7 @@ SceneDarckDefeated_WalkObjectsUp::
     ret
 
 ; Darck defeated scene, step 72: walks object 1 down to Y $60, right to X $40, then down to Y $B0
-; (two pixels a frame), off the screen. (C1, E-0357)
+; (two pixels a frame), off the screen. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject1Off::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1897,7 +1950,7 @@ SceneDarckDefeated_WalkObject1Off::
     inc [hl]
     ret
 
-; Darck defeated scene, step 69: makes object 1 hop once. (C1, E-0357)
+; Darck defeated scene, step 69: makes object 1 hop once. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopObject1::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -1906,8 +1959,8 @@ SceneDarckDefeated_HopObject1::
     inc [hl]
     ret
 
-; Darck defeated scene, step 67: walks object 1 up to Y $60, left to X $20, then up to Y $50. (C1,
-; E-0357)
+; Darck defeated scene, step 67: walks object 1 up to Y $60, left to X $20, then up to Y $50. (C2,
+; E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject1Around::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1985,7 +2038,7 @@ SceneDarckDefeated_WarpToMap33::
     ret
 
 ; Darck defeated scene, step 60: object 2 faces left and drifts left while hopping once, then stops.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneDarckDefeated_DriftObject2::
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
@@ -2002,7 +2055,7 @@ SceneDarckDefeated_DriftObject2::
     ret
 
 ; Darck defeated scene, step 59: walks object 2 down (two pixels a frame) to Y $60, then turns the
-; first sprite. (C1, E-0357)
+; first sprite. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject2Down::
     ld a, $02
     ld [wStepPtrHi], a
@@ -2011,7 +2064,7 @@ SceneDarckDefeated_WalkObject2Down::
     jr SceneDarckDefeated_WalkDownAndTurnObject0Left
 
 ; Darck defeated scene, step 58: walks object 0 left to X $E0 (two pixels a frame) while object 1
-; drifts right and hops; then puts object 2 at Y $30. (C1, E-0357)
+; drifts right and hops; then puts object 2 at Y $30. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject0Off::
     ld a, $00
     ld [wStepPtrHi], a
@@ -2035,8 +2088,8 @@ SceneDarckDefeated_WalkObject0Off::
     inc [hl]
     ret
 
-; Darck defeated scene, step 57: walks object 0 left to X $E0 and object 1 down to Y $60. (C1,
-; E-0357)
+; Darck defeated scene, step 57: walks object 0 left to X $E0 and object 1 down to Y $60. (C2,
+; E-0357; probed E-0376)
 SceneDarckDefeated_WalkObjectsApart::
     ld a, $00
     ld [wStepPtrHi], a
@@ -2052,7 +2105,7 @@ SceneDarckDefeated_WalkObjectsApart::
     jr SceneDarckDefeated_WalkDownAndTurnObject0Left
 
 ; Darck defeated scene, step 56: the first sprite drifts left while hopping; then object 1 is put at
-; Y $30. (C1, E-0357)
+; Y $30. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_DriftSprite::
     ld hl, wSpriteSlots + $b
     dec [hl]
@@ -2065,7 +2118,8 @@ SceneDarckDefeated_DriftSprite::
     inc [hl]
     ret
 
-; Darck defeated scene, step 55: walks object 0 down (two pixels a frame) to Y $60. (C1, E-0357)
+; Darck defeated scene, step 55: walks object 0 down (two pixels a frame) to Y $60. (C2, E-0357;
+; probed E-0376)
 SceneDarckDefeated_WalkObject0DownFar::
     ld a, $00
     ld [wStepPtrHi], a
@@ -2077,7 +2131,7 @@ SceneDarckDefeated_WalkObject0DownFar::
 ; with wStepPtrHi = the object and wStepPtrLo = the target Y set by the caller, sets wStepTarget =
 ; $80 (down, two pixels a frame) and steps the object (StepObjectTowardCoord); on arrival sets
 ; direction 3 (left) at wSpriteSlots + $7, object 0's slot whichever object walked, and advances
-; wScriptStep. (C1, E-0369)
+; wScriptStep. (C2, E-0369; probed E-0376)
 SceneDarckDefeated_WalkDownAndTurnObject0Left::
     ld a, $80
     ld [wStepTarget], a
@@ -2091,7 +2145,8 @@ SceneDarckDefeated_WalkDownAndTurnObject0Left::
     inc [hl]
     ret
 
-; Darck defeated scene, step 54: waits $5A frames, then puts the first sprite at Y $30. (C1, E-0357)
+; Darck defeated scene, step 54: waits $5A frames, then puts the first sprite at Y $30. (C2, E-0357;
+; probed E-0376)
 SceneDarckDefeated_WaitAndPlaceSprite::
     ld b, $5a
     call StepScriptParam0Counter_Bank0F
@@ -2130,7 +2185,7 @@ SceneDarckDefeated_WarpToMap2F::
     ret
 
 ; Darck defeated scene, step 49: the scene object rises one pixel every other frame for $40 frames,
-; then is hidden. (C1, E-0357)
+; then is hidden. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_RaiseSceneObject::
     ld a, $80
     ld [wObject5], a
@@ -2155,7 +2210,7 @@ SceneDarckDefeated_RaiseSceneObject::
     ret
 
 ; Darck defeated scene, step 47: object 2 hops while objects 3 and 4 turn every eight frames; then
-; objects 3 and 4 face up. (C1, E-0357)
+; objects 3 and 4 face up. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopObject2::
     ld a, [wScriptParam0]
     and $07
@@ -2177,7 +2232,8 @@ SceneDarckDefeated_HopObject2::
     inc [hl]
     ret
 
-; Darck defeated scene, step 46: objects 3 and 4 turn every four frames for $96 frames. (C1, E-0357)
+; Darck defeated scene, step 46: objects 3 and 4 turn every four frames for $96 frames. (C2, E-0357;
+; probed E-0376)
 SceneDarckDefeated_TurnObjects::
     ld a, [wScriptParam0]
     and $03
@@ -2239,8 +2295,8 @@ SceneDarckDefeated_StartMapChange::
     ld [wObject5], a
     ret
 
-; Darck defeated scene, step 41: Warubou's 'Wahey! Great Log's life ...' (message $053A). (C1,
-; E-0357)
+; Darck defeated scene, step 41: Warubou's 'Wahey! Great Log's life ...' (message $053A). (C2,
+; E-0357; probed E-0376)
 SceneDarckDefeated_ShowWarubouWaheyGreatLogsLife::
     ld a, $01
     ld [wFieldEventArg], a
@@ -2271,7 +2327,7 @@ SceneDarckDefeated_ShowWarubouWaheyGetGoing::
     ret
 
 ; Darck defeated scene, step 35: walks the player down to Y $40, then right to X $80, then faces
-; left. (C1, E-0357)
+; left. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkPlayerDown::
     xor a
     ld [wFieldEventArg], a
@@ -2297,7 +2353,7 @@ SceneDarckDefeated_WalkPlayerDown::
     ret
 
 ; Darck defeated scene, step 33: Warubou's 'Wahey! That's it ...' (message $0538); restores the
-; party count from wScriptTemp4 and shows the field sprites again. (C1, E-0357)
+; party count from wScriptTemp4 and shows the field sprites again. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_ShowWarubouWaheyThatsIt::
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -2313,7 +2369,7 @@ SceneDarckDefeated_ShowWarubouWaheyThatsIt::
     inc [hl]
     ret
 
-; Darck defeated scene, step 27: walks object 0 down to Y $40. (C1, E-0357)
+; Darck defeated scene, step 27: walks object 0 down to Y $40. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject0Down::
     ld a, $00
     ld [wStepPtrHi], a
@@ -2329,7 +2385,7 @@ SceneDarckDefeated_WalkObject0Down::
     inc [hl]
     ret
 
-; Darck defeated scene, step 26: walks object 0 up to Y $20. (C1, E-0357)
+; Darck defeated scene, step 26: walks object 0 up to Y $20. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_WalkObject0Up::
     ld a, $00
     ld [wStepPtrHi], a
@@ -2346,7 +2402,7 @@ SceneDarckDefeated_WalkObject0Up::
     ret
 
 ; Darck defeated scene, step 24: makes the player hop, then moves on (ScriptStepDeltaThenNextStep).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopPlayer::
     xor a
     ld [wFieldEventArg], a
@@ -2354,7 +2410,8 @@ SceneDarckDefeated_HopPlayer::
     call ScriptStepDeltaThenNextStep
     ret
 
-; Darck defeated scene, step 22: Warubou's 'Wawahey! We were ...' (message $0537). (C1, E-0357)
+; Darck defeated scene, step 22: Warubou's 'Wawahey! We were ...' (message $0537). (C2, E-0357;
+; probed E-0376)
 SceneDarckDefeated_ShowWarubouWawaheyWeWere::
     ld a, $01
     ld [wFieldEventArg], a
@@ -2365,14 +2422,14 @@ SceneDarckDefeated_ShowWarubouWawaheyWeWere::
     ret
 
 ; Darck defeated scene, step 19: starts field event $0C (the scroll shake) and falls into clearing
-; the event argument. (C1, E-0357)
+; the event argument. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_StartScrollShake::
     ld a, $0c
     ld [wFieldEventKind], a
     xor a
     ld [wFieldEventTimer], a
 
-; Clears the field event argument and moves on. (C1, E-0357)
+; Clears the field event argument and moves on. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_ClearEventArg::
     xor a
     ld [wFieldEventArg], a
@@ -2380,7 +2437,8 @@ SceneDarckDefeated_ClearEventArg::
     inc [hl]
     ret
 
-; Darck defeated scene, step 16: Warubou's 'Wahey! Feel that ...' (message $0DF7). (C1, E-0357)
+; Darck defeated scene, step 16: Warubou's 'Wahey! Feel that ...' (message $0DF7). (C2, E-0357;
+; probed E-0376)
 SceneDarckDefeated_ShowWarubouWaheyFeelThat::
     xor a
     ld [wFieldEventArg], a
@@ -2390,7 +2448,8 @@ SceneDarckDefeated_ShowWarubouWaheyFeelThat::
     inc [hl]
     ret
 
-; Darck defeated scene, step 15: shakes the screen ($0F, ScriptStepShakeScreen). (C1, E-0357)
+; Darck defeated scene, step 15: shakes the screen ($0F, ScriptStepShakeScreen). (C2, E-0357; probed
+; E-0376)
 SceneDarckDefeated_ShakeScreen::
     ld b, $0f
     call ScriptStepShakeScreen
@@ -2437,7 +2496,8 @@ SceneDarckDefeated_ShowWarubouWaheyYouDid::
     ld [wScriptSubStep], a
     ret
 
-; Darck defeated scene, step 9: 'Wahey! Can you hear ...' (message $055B). (C1, E-0357)
+; Darck defeated scene, step 9: 'Wahey! Can you hear ...' (message $055B). (C2, E-0357; probed
+; E-0376)
 SceneDarckDefeated_Msg055B_WaheyCanYouHear::
     ld hl, $055b ; '*: Wa-hey! can you hear me,'
     call StartMessageHL_B0F
@@ -2445,7 +2505,8 @@ SceneDarckDefeated_Msg055B_WaheyCanYouHear::
     inc [hl]
     ret
 
-; Darck defeated scene, step 7: 'A voice echoed from ...' (message $055A). (C1, E-0357)
+; Darck defeated scene, step 7: 'A voice echoed from ...' (message $055A). (C2, E-0357; probed
+; E-0376)
 SceneDarckDefeated_Msg055A_AVoiceEchoedFrom::
     ld hl, $055a ; 'A voice echoed from nowhere…'
     call StartMessageHL_B0F
@@ -2453,12 +2514,16 @@ SceneDarckDefeated_Msg055A_AVoiceEchoedFrom::
     inc [hl]
     ret
 
-; increments the Y byte of sprite slot 0 (wSpriteSlots + $C) (E-0305)
+; Darck defeated scene, step 6: adds 1 to the Y of the first sprite slot (wSpriteSlots + $C) and
+; falls into SceneDarckDefeated_HopSprite, which adds the hop delta to the same byte; so the sprite
+; hops while sinking one pixel a frame, 16 pixels over the 16-frame hop, and wScriptStep + 1 when
+; the hop ends. (C2, E-0376)
+; increments the Y byte of sprite slot 0 (wSpriteSlots + $C)
 SceneDarckDefeated_MoveSprite0Down::
     ld hl, wSpriteSlots + $c
     inc [hl]
 
-; Darck defeated scene, step 3: makes the first sprite hop once. (C1, E-0357)
+; Darck defeated scene, step 3: makes the first sprite hop once. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_HopSprite::
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE
@@ -2496,7 +2561,7 @@ SceneDarckDefeated_WalkPlayer::
     inc [hl]
     ret
 
-; Darck defeated scene, step 1: waits $3C frames. (C1, E-0357)
+; Darck defeated scene, step 1: waits $3C frames. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_Wait::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
@@ -2506,7 +2571,8 @@ SceneDarckDefeated_Wait::
     ret
 
 ; Darck defeated scene, step 0: blinks object 1 out (ScriptStepBlinkObjectTemp0); when done keeps
-; one sprite, sets EVENT_SCENE_DARCK_DEFEATED and bit 0 of story byte $65. (C1, E-0357)
+; one sprite, sets EVENT_SCENE_DARCK_DEFEATED and bit 0 of story byte $65. (C2, E-0357; probed
+; E-0376)
 SceneDarckDefeated_BlinkOut::
     ld a, $01
     ldh [hTemp0], a
@@ -2528,7 +2594,7 @@ SceneDarckDefeated_BlinkOut::
     ret
 
 ; Darck defeated scene, step 138: shows the scene object and runs one of two phases by
-; wScriptParam1: moving along a path, then counting the passes. (C1, E-0357)
+; wScriptParam1: moving along a path, then counting the passes. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_MoveSceneObjectAgain::
     xor a
     ld [wFieldEventArg], a
@@ -2542,7 +2608,7 @@ SceneDarckDefeated_MoveSceneObjectAgain::
 
 ; Moves the scene object backwards along its path (SceneDarckDefeated_ObjectPath, the row chosen by
 ; wScriptParam1 bits 4-6), one point every other frame, shifted 16 pixels right; after $17 points
-; the next phase. (C1, E-0357)
+; the next phase. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_MovePathBackward::
     ld a, [wScriptSubStep]
     bit 0, a
@@ -2590,7 +2656,7 @@ SceneDarckDefeated_MovePathBackward::
     ret
 
 ; Counts the path passes: hides the scene object and moves to the next row; after the eighth the
-; scene goes on. (C1, E-0357)
+; scene goes on. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_CountPathPasses::
     xor a
     ld [wObject5], a
@@ -2610,7 +2676,7 @@ SceneDarckDefeated_CountPathPasses::
     ret
 
 ; Darck defeated scene, step 40: shows the scene object and runs one of two phases by wScriptParam1:
-; moving along a path, then counting the passes. (C1, E-0357)
+; moving along a path, then counting the passes. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_MoveSceneObject::
     xor a
     ld [wFieldEventArg], a
@@ -2623,7 +2689,7 @@ SceneDarckDefeated_MoveSceneObject::
     dw SceneDarckDefeated_CountPathPasses2
 
 ; Moves the scene object forwards along its path (the row chosen by wScriptParam1 bits 4-6), one
-; point every other frame; after $17 points the next phase. (C1, E-0357)
+; point every other frame; after $17 points the next phase. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_MovePathForward::
     ld a, [wScriptSubStep]
     bit 0, a
@@ -2665,7 +2731,7 @@ SceneDarckDefeated_MovePathForward::
     inc [hl]
     ret
 
-; Counts the path passes: after the eighth row the scene goes on. (C1, E-0357)
+; Counts the path passes: after the eighth row the scene goes on. (C2, E-0357; probed E-0376)
 SceneDarckDefeated_CountPathPasses2::
     ld a, [wScriptParam1]
     add $10
@@ -2704,6 +2770,15 @@ SceneDarckDefeated_ObjectPath::
     db $fe, $76, $00, $74, $02, $71, $04, $6e, $06, $6c, $08, $69, $0a, $67, $0c, $64, $0e, $62, $10, $5f, $12, $5d, $14, $5a ; id 7
     db $16, $58, $18, $55, $1a, $53, $1c, $50, $1e, $4e, $20, $4c, $22, $4a, $24, $48, $26, $46, $28, $44, $2a, $42, $2c, $40
 
+; Three items scene, run each frame by ScriptCommand58 (script command type $58,
+; SCRIPT_SCENE_THREE_ITEMS): jumps on wScriptStep through 44 steps. Steps 0-19: the BG columns are
+; redrawn and the screen shakes, Kameha and Darck talk, step 12 takes the answer to the question of
+; Darck (SceneThreeItems_ShowDarckIImagineThat) and step 16 is 'received the Limbo Key'; steps
+; 20-29: the palettes are saved, a negative flash, story flags and an in-place transition, then
+; Kameha and the voice of Warubou; steps 30-43: the warp to map 5, the party heal (step 34), a
+; second shake, the last messages, and step 43 (SceneThreeItems_GiveKeys) marks the keys and resumes
+; the script. Each message step is followed by SceneHomecoming_WaitMessage, which waits for the box
+; to close. (C1, E-0376)
 ; implements script command type 58 (SCRIPT_SCENE_THREE_ITEMS): a cutscene step named after the
 ; scene its only script shows: 'Kameha If the three items that...'; reached through ScriptCommand58
 ; in bank $10 (E-0038, E-0245)
@@ -2779,7 +2854,7 @@ SceneThreeItems_GiveKeys::
     ret
 
 ; Three items scene, step 42: the player hops (ScriptStepDeltaThenMessage on hPlayerY), then message
-; $0A7E, Warubou's 'Wa-hey, we don't have the time to be in shock'. (C1, E-0369)
+; $0A7E, Warubou's 'Wa-hey, we don't have the time to be in shock'. (C2, E-0369; probed E-0376)
 SceneThreeItems_PlayerHopThenWarubouWeDontHave::
     ld de, hPlayerY
     ld hl, $0a7e
@@ -2811,7 +2886,8 @@ SceneThreeItems_ShowWarubouWaheyThereIs::
     inc [hl]
     ret
 
-; Three items scene, step 38: Kameha's 'I... I have ...' (message $0A7C). (C1, E-0357)
+; Three items scene, step 38: Kameha's 'I... I have ...' (message $0A7C). (C2, E-0357; probed
+; E-0376)
 SceneThreeItems_Msg0A7C_KamehaIIHave::
     ld hl, $0a7c ; 'Kameha: I… I have to go'
     call StartMessageHL_B0F
@@ -2857,7 +2933,7 @@ SceneThreeItems_ShowWarubouWaheyHeroAnd::
     call StartMessageHL_B0F
     ret
 
-; Three items scene, step 28: 'Wahey! Can you hear ...' (message $0491). (C1, E-0357)
+; Three items scene, step 28: 'Wahey! Can you hear ...' (message $0491). (C2, E-0357; probed E-0376)
 SceneThreeItems_Msg0491_WaheyCanYouHear::
     ld hl, $0491 ; '*: Wa-hey! Can you hear me,'
     call StartMessageHL_B0F
@@ -2865,7 +2941,7 @@ SceneThreeItems_Msg0491_WaheyCanYouHear::
     inc [hl]
     ret
 
-; Three items scene, step 26: 'A voice echoed from ...' (message $0490). (C1, E-0357)
+; Three items scene, step 26: 'A voice echoed from ...' (message $0490). (C2, E-0357; probed E-0376)
 SceneThreeItems_Msg0490_AVoiceEchoedFrom::
     ld hl, $0490 ; 'A voice echoed from nowhere…'
     call StartMessageHL_B0F
@@ -2874,7 +2950,7 @@ SceneThreeItems_Msg0490_AVoiceEchoedFrom::
     ret
 
 ; Three items scene, step 24: object 2 hops (ScriptStepDeltaThenMessage on wObject2 + OBJ_Y), then
-; message $048F, Kameha's 'Our treasures!'. (C1, E-0369)
+; message $048F, Kameha's 'Our treasures!'. (C2, E-0369; probed E-0376)
 SceneThreeItems_Object2HopThenKamehaOurTreasures::
     ld de, wObject2 + OBJ_Y
     ld hl, $048f
@@ -2882,7 +2958,7 @@ SceneThreeItems_Object2HopThenKamehaOurTreasures::
     ret
 
 ; Three items scene, step 23: object 0 faces right and left in turn every 64 frames for $B4 frames,
-; then faces down. (C1, E-0357)
+; then faces down. (C2, E-0357; probed E-0376)
 SceneThreeItems_TurnObject0::
     ld a, [wScriptParam0]
     swap a
@@ -2926,25 +3002,25 @@ SceneThreeItems_SetFlags::
     ret
 
 ; Three items scene, step 21: draws one sprite slot only, then falls into the negative screen flash
-; below. (C1, E-0357)
+; below. (C2, E-0357; probed E-0376)
 SceneThreeItems_LimitSpritesAndFlash::
     ld a, $01
     ld [wSpriteSlotCount], a
 
 ; Three items scene, step 33, also reached from step 21 (SceneThreeItems_LimitSpritesAndFlash): runs
-; the negative screen flash (ScriptStepFlashScreenNegative). (C1, E-0369)
+; the negative screen flash (ScriptStepFlashScreenNegative). (C2, E-0369; probed E-0376)
 SceneThreeItems_FlashScreenNegative::
     farcall ScriptStepFlashScreenNegative
     ret
 
-; Three items scene, step 32: plays sound $7A, then falls into saving the palettes below. (C1,
-; E-0357)
+; Three items scene, step 32: plays sound $7A, then falls into saving the palettes below. (C2,
+; E-0357; probed E-0376)
 SceneThreeItems_PlaySound::
     ld a, $7a
     call QueueSoundEffect
 
 ; Three items scene, step 20: on the GBC saves the 64-byte background palette buffer in
-; wBGPaletteCopy (for the flash to restore), then moves on. (C1, E-0357)
+; wBGPaletteCopy (for the flash to restore), then moves on. (C2, E-0357; probed E-0376)
 SceneThreeItems_SavePalettes::
     ld a, [wIsCGB]
     or a
@@ -2959,7 +3035,8 @@ SceneThreeItems_SavePalettes::
     inc [hl]
     ret
 
-; Three items scene, step 18: Darck's 'I will be readying a ...' (message $048E). (C1, E-0357)
+; Three items scene, step 18: Darck's 'I will be readying a ...' (message $048E). (C2, E-0357;
+; probed E-0376)
 SceneThreeItems_Msg048E_DarckIWillBe::
     ld hl, $048e ; 'Darck: I will be readying a'
     call StartMessageHL_B0F
@@ -2967,7 +3044,8 @@ SceneThreeItems_Msg048E_DarckIWillBe::
     inc [hl]
     ret
 
-; Three items scene, step 16: '<hero> received the Limbo Key.' (message $048D). (C1, E-0357)
+; Three items scene, step 16: '<hero> received the Limbo Key.' (message $048D). (C2, E-0357; probed
+; E-0376)
 SceneThreeItems_Msg048D_HeroReceivedTheLimbo::
     ld hl, $048d ; '0 received the Limbo Key.'
     call StartMessageHL_B0F
@@ -2977,7 +3055,7 @@ SceneThreeItems_Msg048D_HeroReceivedTheLimbo::
 
 ; Three items scene, step 14: the scene object flashes (every 4 frames) while falling one pixel a
 ; frame to the player's Y; then it is hidden and Darck says 'That key will bring you ...' (message
-; $048C). (C1, E-0357)
+; $048C). (C2, E-0357; probed E-0376)
 SceneThreeItems_DropObject::
     ld a, [wFrameCounterLo]
     bit 2, a
@@ -3034,7 +3112,7 @@ SceneThreeItems_ShowDarckIImagineThat::
     ret
 
 ; Three items scene, step 10: Darck's 'Well, for me, anything that ...' (message $0487, the box kept
-; open). (C1, E-0357)
+; open). (C2, E-0357; probed E-0376)
 SceneThreeItems_Msg0487_DarckWellForMe::
     ld hl, MSG_KEEP_OPEN | $0487 ; 'Darck: Well, for me, anything that'
     call StartMessageHL_B0F
@@ -3043,14 +3121,15 @@ SceneThreeItems_Msg0487_DarckWellForMe::
     ret
 
 ; Three items scene, step 8: object 0 hops (ScriptStepDeltaThenMessage on wSpriteSlots + $C), then
-; message $0486, Kameha's 'What? Why do you do that?'. (C1, E-0369)
+; message $0486, Kameha's 'What? Why do you do that?'. (C2, E-0369; probed E-0376)
 SceneThreeItems_Object0HopThenKamehaWhatWhy::
     ld de, wSpriteSlots + $c
     ld hl, $0486
     call ScriptStepDeltaThenMessage
     ret
 
-; Three items scene, step 6: 'Greetings! I am Darck, the ...' (message $0485). (C1, E-0357)
+; Three items scene, step 6: 'Greetings! I am Darck, the ...' (message $0485). (C2, E-0357; probed
+; E-0376)
 SceneThreeItems_Msg0485_GreetingsIAmDarck::
     ld hl, $0485 ; '*: Greetings! I am Darck, the'
     call StartMessageHL_B0F
@@ -3061,7 +3140,7 @@ SceneThreeItems_Msg0485_GreetingsIAmDarck::
 ; Three items scene, step 4: starts music $1F on the first frame, puts object 3 at Y $18 and
 ; flickers object 1 (Y $10 shown, $C0 hidden; every 2 frames, then 4 from frame $1E, 8 from $3C) for
 ; $78 frames; then object 0 faces up and Kameha says 'Who are you to disturb ...' (message $0484).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneThreeItems_PlayMusic::
     ld a, [wScriptParam0]
     or a
@@ -3112,7 +3191,8 @@ SceneThreeItems_PlayMusic::
     inc [hl]
     ret
 
-; Three items scene, step 2: Kameha's 'Wha-wha whaaaat? ...' (message $0483). (C1, E-0357)
+; Three items scene, step 2: Kameha's 'Wha-wha whaaaat? ...' (message $0483). (C2, E-0357; probed
+; E-0376)
 SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat::
     ld hl, $0483 ; 'Kameha: Wha-wha whaaaat? What just happened'
     call StartMessageHL_B0F
@@ -3121,7 +3201,7 @@ SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat::
     ret
 
 ; Three items scene, steps 1 and 37: shakes the screen for $78 frames (ScriptStepShakeScreen), then
-; moves on. (C1, E-0369)
+; moves on. (C2, E-0369; probed E-0376)
 SceneThreeItems_ShakeScreen::
     ld b, $78
     call ScriptStepShakeScreen
@@ -3135,6 +3215,11 @@ SceneThreeItems_RedrawSideColumns::
     inc [hl]
     ret
 
+; Grave scene, run each frame by ScriptCommand4E (script command type $4E, SCRIPT_SCENE_GRAVE):
+; jumps on wScriptStep through 5 steps: 0 object 1 flickers and the voice speaks by story progress
+; (SceneGrave_Flicker, which goes on to step 1 for a question or jumps to step 3), 1 waits for the
+; box, 2 takes the answer (SceneGrave_ShowAhYoullDoIt), 3 waits for the box, 4 blinks object 1 out
+; and resumes the script. (C1, E-0376)
 ; implements script command type 4E (SCRIPT_SCENE_GRAVE): a cutscene step named after the scene its
 ; only script shows: '0 checked the grave.' ... 'Fine! You've done well...'; reached through
 ; ScriptCommand4E in bank $10 (E-0038, E-0245)
@@ -3147,7 +3232,8 @@ SceneGrave::
     dw SceneHomecoming_WaitMessage
     dw SceneGrave_BlinkOut
 
-; Grave scene, step 4: blinks object 1 (at Y $40) out; when done resumes the script. (C1, E-0357)
+; Grave scene, step 4: blinks object 1 (at Y $40) out; when done resumes the script. (C2, E-0357;
+; probed E-0376)
 SceneGrave_BlinkOut::
     ld a, $40
     ldh [hTemp1], a
@@ -3163,7 +3249,7 @@ SceneGrave_BlinkOut::
 
 ; Grave scene, step 2: the answer: the first choice shows message $0416 'Ah, you'll do it?
 ; Excellent!' in the open box and sets EVENT_SCENE_GRAVE_0A6; another choice shows message $0417 and
-; sets EVENT_SCENE_GRAVE_0A5. (C1, E-0357)
+; sets EVENT_SCENE_GRAVE_0A5. (C2, E-0357; probed E-0376)
 SceneGrave_ShowAhYoullDoIt::
     ld hl, wScriptStep
     inc [hl]
@@ -3188,7 +3274,7 @@ SceneGrave_ShowAhYoullDoIt::
 ; $0452 'The Change Staff will open' after EVENT_HERO_CHECKED_BEHIND_THE, $0416 once agreed (0A6),
 ; the question again ($0419) after a refusal (0A5); after EVENT_SCENE_MADCONDOR the question ($0418,
 ; or $0415 before EVENT_SCENE_GRAVE); otherwise $040D or $040C. Questions go on to step 1, the rest
-; end at step 3. (C1, E-0357)
+; end at step 3. (C2, E-0357; probed E-0376)
 SceneGrave_Flicker::
     ld a, $40
     ld [wObject1 + OBJ_Y], a
@@ -3304,6 +3390,13 @@ SceneGrave_Flicker::
     ld [wScriptStep], a
     ret
 
+; Shield scene 2, run each frame by ScriptCommand4B (script command type $4B,
+; SCRIPT_SCENE_SHIELD_2): jumps on wScriptStep through 23 steps: the scene object rises from the
+; player and message $0DCA (0-4), waits and fades with warps to maps $48 and $49 (5-10), object 2
+; flickers, message $0A07, then object 0 sinks and the hero receives the Sky Shield (11-13), the
+; voice of Warubou and the warp to map 5 (14-17), the shared boss-win sequence (18), the scene
+; object falls onto the player (19-21), and SceneShield2_GiveKey resumes the script (22). (C1,
+; E-0376)
 ; implements script command type 4B (SCRIPT_SCENE_SHIELD_2): a cutscene step named after the scene
 ; its only script shows: after '0 checked the shield.'; reached through ScriptCommand4B in bank $10
 ; (E-0038, E-0245)
@@ -3335,7 +3428,8 @@ SceneShield2::
     dw SceneShield2_GiveKey
 
 ; Shield scene 2, step 22: sets EVENT_SCENE_SHIELD2_023, marks the key of kind 4
-; (MarkKeyEntryKindTemp0Bit6), sets bit 3 of story byte $60 and resumes the script. (C1, E-0357)
+; (MarkKeyEntryKindTemp0Bit6), sets bit 3 of story byte $60 and resumes the script. (C2, E-0357;
+; probed E-0376)
 SceneShield2_GiveKey::
     ld de, EVENT_SCENE_SHIELD2_023
     call SetFlagBit
@@ -3350,7 +3444,8 @@ SceneShield2_GiveKey::
     ret
 
 ; Shield scene 2, step 20: the scene object falls one pixel a frame to the player's Y and is hidden;
-; then Warubou's 'Wa-hey, you can now fly ...' (message $0DCB) and EVENT_SCENE_SHIELD2. (C1, E-0357)
+; then Warubou's 'Wa-hey, you can now fly ...' (message $0DCB) and EVENT_SCENE_SHIELD2. (C2, E-0357;
+; probed E-0376)
 SceneShield2_ShowWarubouWaheyYouCan::
     ldh a, [hPlayerY]
     ld c, a
@@ -3451,7 +3546,7 @@ SceneShield2_ShowAVoiceEchoedFrom::
     ret
 
 ; Shield scene 2, step 13: object 0 sinks with a hop; then it is hidden, '<hero> received the Sky
-; Shield.' (message $0A08) and EVENT_SCENE_SHIELD2_1E5. (C1, E-0357)
+; Shield.' (message $0A08) and EVENT_SCENE_SHIELD2_1E5. (C2, E-0357; probed E-0376)
 SceneShield2_ShowHeroReceivedTheSky::
     ld hl, wSpriteSlots + $c
     inc [hl]
@@ -3469,7 +3564,8 @@ SceneShield2_ShowHeroReceivedTheSky::
     ret
 
 ; Shield scene 2, step 11: puts object 2 at Y $18 and flickers it (3 or 2 sprite slots drawn,
-; slowing) for $78 frames; then 'The Kingdoms should return to ...' (message $0A07). (C1, E-0357)
+; slowing) for $78 frames; then 'The Kingdoms should return to ...' (message $0A07). (C2, E-0357;
+; probed E-0376)
 SceneShield2_Flicker::
     ld a, $18
     ld [wObject2 + OBJ_Y], a
@@ -3553,7 +3649,7 @@ SceneShield2_WarpIn::
     ret
 
 ; Shield scene 2, step 3: the scene object rises one pixel a frame with a hop; then it is hidden and
-; 'Let me show you my ...' (message $0DCA). (C1, E-0357)
+; 'Let me show you my ...' (message $0DCA). (C2, E-0357; probed E-0376)
 SceneShield2_ShowLetMeShowYou::
     ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
@@ -3568,7 +3664,8 @@ SceneShield2_ShowLetMeShowYou::
     inc [hl]
     ret
 
-; Shield scene 2, step 2: waits $3C frames. (C1, E-0357)
+; Shield scene 2, steps 2, 5, 7 and 9: waits $3C frames (StepScriptParam0Counter_Bank0F on
+; wScriptParam0), then the next step. (C2, E-0376)
 SceneShield2_Wait::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
@@ -3577,7 +3674,8 @@ SceneShield2_Wait::
     inc [hl]
     ret
 
-; Shield scene 2, step 1: the scene object rises one pixel a frame with a hop. (C1, E-0357)
+; Shield scene 2, step 1: the scene object rises one pixel a frame with a hop. (C2, E-0357; probed
+; E-0376)
 SceneShield2_RaiseObject::
     ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
@@ -3604,6 +3702,12 @@ SceneShield2_ShowObject::
     inc [hl]
     ret
 
+; Shield scene, run each frame by ScriptCommand4A (script command type $4A, SCRIPT_SCENE_SHIELD):
+; jumps on wScriptStep through 12 steps: 0 tells the first visit from a repeat (EVENT_SCENE_SHIELD;
+; a repeat jumps to the battle at step 5), 1 a negative screen flash, 2 object 1 flickers and a
+; question, 4 the answer (a refusal ends at step $0B), 5 scripted battle $19, 6-10 the messages
+; after the battle with object 1 blinking out and EVENT_SCENE_SHIELD_1E4, and 11
+; (PersonalityMessage_WaitForMessage) waits for the box and resumes the script. (C1, E-0376)
 ; implements script command type 4A (SCRIPT_SCENE_SHIELD): a cutscene step named after the scene its
 ; only script shows: after '0 checked the shield.' (starts a scripted encounter); reached through
 ; ScriptCommand4A in bank $10 (E-0038, E-0245)
@@ -3623,8 +3727,8 @@ SceneShield::
     dw SceneShield_ShowIBoreWitnessTo
     dw PersonalityMessage_WaitForMessage
 
-; Shield scene, step 10: 'I bore witness to it ...' (message $0A05) and EVENT_SCENE_SHIELD_1E4. (C1,
-; E-0357)
+; Shield scene, step 10: 'I bore witness to it ...' (message $0A05) and EVENT_SCENE_SHIELD_1E4. (C2,
+; E-0357; probed E-0376)
 SceneShield_ShowIBoreWitnessTo::
     ld hl, $0a05 ; '*: I bore witness to it'
     call StartMessageHL_B0F
@@ -3635,7 +3739,7 @@ SceneShield_ShowIBoreWitnessTo::
     ret
 
 ; Shield scene, step 8: blinks object 1 (at the Y saved in step 6) out; then 'A beautiful voice
-; echoed...' (message $0DDF). (C1, E-0357)
+; echoed...' (message $0DDF). (C2, E-0357; probed E-0376)
 SceneShield_ShowABeautifulVoiceEchoed::
     ld a, [wScriptParam1]
     ldh [hTemp1], a
@@ -3652,7 +3756,7 @@ SceneShield_ShowABeautifulVoiceEchoed::
     ret
 
 ; Shield scene, step 6: 'Wha... No! My monsters! It ...' (message $0A04); saves object 1's Y in
-; wScriptParam1. (C1, E-0357)
+; wScriptParam1. (C2, E-0357; probed E-0376)
 SceneShield_ShowWhaNoMyMonsters::
     ld hl, $0a04 ; '*: Wha… No! My monsters! It'
     call StartMessageHL_B0F
@@ -3675,7 +3779,7 @@ SceneShield_StartBattle::
     ret
 
 ; Shield scene, step 4: the answer: the first choice shows message $0DD0 in the open box and goes on
-; to the battle; another shows $0DD1 and ends at step $0B. (C1, E-0357)
+; to the battle; another shows $0DD1 and ends at step $0B. (C2, E-0357; probed E-0376)
 SceneShield_ShowImpetuousFoolIllShow::
     ld a, [wTextYesNoResult]
     or a
@@ -3694,7 +3798,8 @@ SceneShield_ShowImpetuousFoolIllShow::
     ret
 
 ; Shield scene, step 2: object 1 flickers (Y $20 shown, $E0 hidden, slowing) for $78 frames; then
-; 'So it was you holding ...' (message $0A02, kept open for the question). (C1, E-0357)
+; 'So it was you holding ...' (message $0A02, kept open for the question). (C2, E-0357; probed
+; E-0376)
 SceneShield_Flicker::
     ld a, [wScriptParam0]
     cp $1e
@@ -3736,14 +3841,14 @@ SceneShield_Flicker::
     inc [hl]
     ret
 
-; Shield scene, step 1: runs the negative screen flash. (C1, E-0357)
+; Shield scene, step 1: runs the negative screen flash. (C2, E-0357; probed E-0376)
 SceneShield_FlashScreen::
     farcall ScriptStepFlashScreenNegative
     ret
 
 ; Shield scene, step 0: after a refusal (EVENT_SCENE_SHIELD set) 'Tch, obstinate and foolish ...'
 ; (message $0A03) and straight to the battle (step 5); the first time saves the GBC background
-; palettes, sets EVENT_SCENE_SHIELD and moves on. (C1, E-0357)
+; palettes, sets EVENT_SCENE_SHIELD and moves on. (C2, E-0357; probed E-0376)
 SceneShield_ShowTchObstinateAndFoolish::
     ld de, EVENT_SCENE_SHIELD
     call TestFlagBit
@@ -3774,6 +3879,12 @@ SceneShield_ShowTchObstinateAndFoolish::
     inc [hl]
     ret
 
+; Shield guardian scene, run each frame by ScriptCommand66 (script command type $66,
+; SCRIPT_SCENE_SHIELD_GUARDIAN): jumps on wScriptStep through 16 steps: 0 on the first visit removes
+; item $34 (ITEM_SLEEPHERB) and sets EVENT_SCENE_SHIELD_GUARDIAN, a repeat jumps to the battle at
+; step 5; 2 object 2 flickers and a question; 4 the answer (a refusal ends at step $0F); 5 scripted
+; battle 4; 6-14 the messages after the battle, with object 2 blinking out, object 0 becoming sprite
+; $0F and EVENT_SCENE_SHIELD_GUARDIAN_1E2; 15 waits for the box and resumes the script. (C1, E-0376)
 ; implements script command type 66 (SCRIPT_SCENE_SHIELD_GUARDIAN): a cutscene step named after the
 ; scene its only script shows: before '0 checked the shield.' (encounter); reached through
 ; ScriptCommand66 in bank $10 (E-0038, E-0245)
@@ -3798,7 +3909,7 @@ SceneShieldGuardian::
     dw PersonalityMessage_WaitForMessage
 
 ; Shield guardian scene, step 14: object 0 faces down; Helen's 'I put you through trouble...'
-; (message $0AF5) and EVENT_SCENE_SHIELD_GUARDIAN_1E2. (C1, E-0357)
+; (message $0AF5) and EVENT_SCENE_SHIELD_GUARDIAN_1E2. (C2, E-0357; probed E-0376)
 SceneShieldGuardian_ShowHelenIPutYou::
     xor a
     ld [wSpriteSlots + $7], a
@@ -3810,7 +3921,8 @@ SceneShieldGuardian_ShowHelenIPutYou::
     inc [hl]
     ret
 
-; Shield guardian scene, step 12: object 1 faces up and hops; then message $0AF4. (C1, E-0357)
+; Shield guardian scene, step 12: object 1 faces up and hops; then message $0AF4. (C2, E-0357;
+; probed E-0376)
 SceneShieldGuardian_HopObject1::
     ld a, $02
     ld [wObject1 + OBJ_STATE], a
@@ -3839,7 +3951,7 @@ SceneShieldGuardian_ShowThatWasALovely::
     ret
 
 ; Shield guardian scene, step 8: blinks object 2 (at Y $20) out; then two sprite slots, object 1
-; faces left and 'Oh, my goodness! Thank you!' (message $0AF2). (C1, E-0357)
+; faces left and 'Oh, my goodness! Thank you!' (message $0AF2). (C2, E-0357; probed E-0376)
 SceneShieldGuardian_ShowOhMyGoodnessThank::
     ld a, $02
     ldh [hTemp0], a
@@ -3859,7 +3971,8 @@ SceneShieldGuardian_ShowOhMyGoodnessThank::
     inc [hl]
     ret
 
-; Shield guardian scene, step 6: 'What? Lose to a child's ...' (message $0AF0). (C1, E-0357)
+; Shield guardian scene, step 6: 'What? Lose to a child's ...' (message $0AF0). (C2, E-0357; probed
+; E-0376)
 SceneShieldGuardian_Msg0AF0_WhatLoseToA::
     ld hl, $0af0 ; '*: What? Lose to a child's'
     call StartMessageHL_B0F
@@ -3880,7 +3993,7 @@ SceneShieldGuardian_StartBattle::
     ret
 
 ; Shield guardian scene, step 4: the answer: the first choice shows message $0DCE in the open box
-; and goes on to the battle; another shows $0DCF and ends at step $0F. (C1, E-0357)
+; and goes on to the battle; another shows $0DCF and ends at step $0F. (C2, E-0357; probed E-0376)
 SceneShieldGuardian_ShowISeeButI::
     ld a, [wTextYesNoResult]
     or a
@@ -3900,7 +4013,7 @@ SceneShieldGuardian_ShowISeeButI::
 
 ; Shield guardian scene, step 2: puts object 2 at Y $20 and flickers it (3 or 2 sprite slots,
 ; slowing) for $78 frames; then 'Our plan called for chaos ...' (message $0AEE, kept open for the
-; question). (C1, E-0357)
+; question). (C2, E-0357; probed E-0376)
 SceneShieldGuardian_Flicker::
     ld a, $20
     ld [wObject2 + OBJ_Y], a
@@ -3947,7 +4060,7 @@ SceneShieldGuardian_Flicker::
 ; Shield guardian scene, step 0: the first time 'I wish you wouldn't do ...' (message $0AED),
 ; removes item $34 from the inventory (without checking it was found) and sets
 ; EVENT_SCENE_SHIELD_GUARDIAN; again 'Heh, such a show of ...' (message $0AEF) and straight to the
-; battle (step 5). (C1, E-0357)
+; battle (step 5). (C2, E-0357; probed E-0376)
 SceneShieldGuardian_ShowIWishYouWouldnt::
     ld de, EVENT_SCENE_SHIELD_GUARDIAN
     call TestFlagBit
@@ -3971,6 +4084,11 @@ SceneShieldGuardian_ShowIWishYouWouldnt::
     ld [wScriptStep], a
     ret
 
+; Medicine given scene, run each frame by ScriptCommand49 (script command type $49,
+; SCRIPT_SCENE_MEDICINE_GIVEN): jumps on wScriptStep through 4 steps: 0 object 0 and the player walk
+; left and up and a scroll to the screen above starts, 1 runs the scroll until the field action
+; ends, 2 object 1 and the player walk into place, 3 they walk on, face up and the script resumes.
+; (C1, E-0376)
 ; implements script command type 49 (SCRIPT_SCENE_MEDICINE_GIVEN): a cutscene step named after the
 ; scene its only script shows: after 'Pardon me? You have medicine?'; reached through
 ; ScriptCommand49 in bank $10 (E-0038, E-0245)
@@ -3983,7 +4101,8 @@ SceneMedicineGiven::
     dw SceneMedicineGiven_WalkObject1Back
 
 ; Medicine given scene, step 3: object 1 walks up to Y $40, then right to X $50; the player walks up
-; to Y $40, then right to X $40, then faces up with object 1, and the script resumes. (C1, E-0357)
+; to Y $40, then right to X $40, then faces up with object 1, and the script resumes. (C2, E-0357;
+; probed E-0376)
 SceneMedicineGiven_WalkObject1Back::
     ld a, [wObject1 + OBJ_Y]
     cp $40
@@ -4030,7 +4149,7 @@ SceneMedicineGiven_WalkObject1Back::
     ret
 
 ; Medicine given scene, step 2: object 1 walks left to X $30, then up to Y $40; the player walks up
-; to Y $70, then left to X $30. (C1, E-0357)
+; to Y $70, then left to X $30. (C2, E-0357; probed E-0376)
 SceneMedicineGiven_WalkObject1::
     ld a, [wObject1 + OBJ_X]
     cp $30
@@ -4146,6 +4265,14 @@ SceneMedicineGiven_WalkUp::
     inc [hl]
     ret
 
+; Princess medicine scene, run each frame by ScriptCommand48 (script command type $48,
+; SCRIPT_SCENE_PRINCESS_MEDICINE): jumps on wScriptStep through 13 steps: 0 checks that object 1 is
+; at ($80, $10) (otherwise straight to the battle at step 6), 1 object 1 hops away and object 2
+; takes its place, 2 object 0 hops with message $0AD2 the first time
+; (EVENT_SCENE_PRINCESS_MEDICINE), 4 removes item $33 (ITEM_YUNASOUL) and takes the answer (a
+; refusal ends at step $0C), 6 scripted battle $18, 7-11 the messages after the battle with object 2
+; blinking out and EVENT_SCENE_PRINCESS_MEDICINE_09D, 12 waits for the box and resumes the script.
+; (C1, E-0376)
 ; implements script command type 48 (SCRIPT_SCENE_PRINCESS_MEDICINE): a cutscene step named after
 ; the scene its only script shows: 'STOP DON'T MEDDLE' ... 'Pardon me? You have medicine?'
 ; (encounter, removes an item); reached through ScriptCommand48 in bank $10 (E-0038, E-0245)
@@ -4167,7 +4294,7 @@ ScenePrincessMedicine::
     dw PersonalityMessage_WaitForMessage
 
 ; Princess medicine scene, step 11: 'I've finally remembered. I'm Yuna, ...' (message $0AD5) and
-; EVENT_SCENE_PRINCESS_MEDICINE_09D. (C1, E-0357)
+; EVENT_SCENE_PRINCESS_MEDICINE_09D. (C2, E-0357; probed E-0376)
 ScenePrincessMedicine_ShowIveFinallyRememberedIm::
     ld hl, $0ad5 ; '*: I've finally remembered. I'm Yuna,'
     call StartMessageHL_B0F
@@ -4178,7 +4305,7 @@ ScenePrincessMedicine_ShowIveFinallyRememberedIm::
     ret
 
 ; Princess medicine scene, step 9: blinks object 2 (at Y $30) out, drops one sprite slot and shows
-; 'Yuna's soul filled her body.' (message $0AD0). (C1, E-0357)
+; 'Yuna's soul filled her body.' (message $0AD0). (C2, E-0357; probed E-0376)
 ScenePrincessMedicine_ShowYunasSoulFilledHer::
     ld a, $02
     ldh [hTemp0], a
@@ -4196,7 +4323,8 @@ ScenePrincessMedicine_ShowYunasSoulFilledHer::
     inc [hl]
     ret
 
-; Princess medicine scene, step 7: 'H-HOW... BUT I... THIS ISN'T...' (message $0AD4). (C1, E-0357)
+; Princess medicine scene, step 7: 'H-HOW... BUT I... THIS ISN'T...' (message $0AD4). (C2, E-0357;
+; probed E-0376)
 ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS::
     ld hl, $0ad4 ; '*: H-HOW… BUT I… THIS ISN'T……'
     call StartMessageHL_B0F
@@ -4214,7 +4342,8 @@ ScenePrincessMedicine_StartBattle::
     ret
 
 ; Princess medicine scene, step 4: removes item $33 from the inventory when present; the first
-; choice shows message $0DCC in the open box, another shows $0DCD and ends at step $0C. (C1, E-0357)
+; choice shows message $0DCC in the open box, another shows $0DCD and ends at step $0C. (C2, E-0357;
+; probed E-0376)
 ScenePrincessMedicine_TakeItem::
     ld a, $33
     ldh [hTemp0], a
@@ -4243,7 +4372,8 @@ ScenePrincessMedicine_TakeItem::
 
 ; Princess medicine scene, step 2: object 0 hops while moving up (wScriptParam1 = 0) or down a pixel
 ; a frame; then the first time 'NEVER DID I EXPECT YUNA'S ...' (message $0AD2, kept open) and
-; EVENT_SCENE_PRINCESS_MEDICINE, otherwise straight to the battle (step 6). (C1, E-0357)
+; EVENT_SCENE_PRINCESS_MEDICINE, otherwise straight to the battle (step 6). (C2, E-0357; probed
+; E-0376)
 ScenePrincessMedicine_HopObject0::
     ld a, [wScriptParam1]
     or a
@@ -4277,9 +4407,11 @@ ScenePrincessMedicine_HopObject0::
     ret
 
 ; Princess medicine scene, step 1: object 1 moves left and down a pixel a frame with a hop, turning
-; every four frames, for $20 frames; then object 2 takes its place and facing, object 1 is hidden
-; and sound $63 plays; wScriptParam1 picks step 2's direction (down when the player is at Y $20, or
-; away from Y $40 with a follower whose byte 7 is $20). (C1, E-0357)
+; every four frames, for $20 frames; then objects 1 and 2 both take the facing of object 0, object 2
+; takes the place of object 1, object 1 is hidden (X $E0), sound $63 plays and the next step starts.
+; wScriptParam1 picks the direction of step 2 (1 = down): 1 when the player is at Y $20, 0 at Y $40,
+; otherwise 1 only when the party has more than one monster and the second follower
+; (wFollowerRecords + 7) is at Y $20. (C2, E-0376)
 ScenePrincessMedicine_HopObject1::
     ld hl, wObject1 + OBJ_X
     dec [hl]
@@ -4340,7 +4472,7 @@ ScenePrincessMedicine_HopObject1::
     ret
 
 ; Princess medicine scene, step 0: with object 1 at ($80, $10) plays sound $65 and moves on;
-; otherwise skips to the battle (step 6). (C1, E-0357)
+; otherwise skips to the battle (step 6). (C2, E-0357; probed E-0376)
 ScenePrincessMedicine_Start::
     ld a, [wObject1 + OBJ_X]
     cp $80
@@ -4359,6 +4491,12 @@ ScenePrincessMedicine_Start::
     ld [wScriptStep], a
     ret
 
+; Cheer Yuna scene, run each frame by ScriptCommand46 (script command type $46,
+; SCRIPT_SCENE_CHEER_YUNA): jumps on wScriptStep through 17 steps: object 2 dances, hops and turns
+; (0-6), says message $03A0, hops and walks off down (7-10), the player walks to X $40 and up to Y
+; $40 for message $03A1 of the King (11-13), the followers perform (14-15,
+; SceneCheerYuna_FollowersPerform), and step 16 turns the player up and resumes the script. (C1,
+; E-0376)
 ; implements script command type 46 (SCRIPT_SCENE_CHEER_YUNA): a cutscene step named after the scene
 ; its only script shows: 'You're here to cheer Lady Yuna.' ... 'King Magnificent!'; reached through
 ; ScriptCommand46 in bank $10 (E-0038, E-0245)
@@ -4383,7 +4521,7 @@ SceneCheerYuna::
     dw SceneCheerYuna_FollowersPerform
     dw SceneCheerYuna_FaceUp
 
-; Cheer Yuna scene, step 16: the player faces up and the script resumes. (C1, E-0357)
+; Cheer Yuna scene, step 16: the player faces up and the script resumes. (C2, E-0357; probed E-0376)
 SceneCheerYuna_FaceUp::
     ld a, $02
     ldh [hPlayerFacing], a
@@ -4400,7 +4538,7 @@ SceneCheerYuna_FollowersPerform::
     ret
 
 ; Cheer Yuna scene, step 14: clears wScriptSubStep and wScriptParam0 for the walking sub-steps of
-; step 15 (SceneCheerYuna_FollowersPerform) and moves on. (C1, E-0370)
+; step 15 (SceneCheerYuna_FollowersPerform) and moves on. (C2, E-0370; probed E-0376)
 SceneCheerYuna_PrepareFollowers::
     xor a
     ld [wScriptSubStep], a
@@ -4411,7 +4549,7 @@ SceneCheerYuna_PrepareFollowers::
     ret
 
 ; Cheer Yuna scene, step 12: walks the player up to Y $40; then the King's 'I am the King. What ...'
-; (message $03A1). (C1, E-0357)
+; (message $03A1). (C2, E-0357; probed E-0376)
 SceneCheerYuna_ShowIAmTheKing::
     ld a, $40
     ld [wStepPtrLo], a
@@ -4426,7 +4564,7 @@ SceneCheerYuna_ShowIAmTheKing::
     ret
 
 ; Cheer Yuna scene, step 11: walks the player one pixel a frame toward X $40, facing the way it
-; goes, with the followers following. (C1, E-0357)
+; goes, with the followers following. (C2, E-0357; probed E-0376)
 SceneCheerYuna_WalkPlayerAcross::
     ldh a, [hPlayerX]
     cp $40
@@ -4474,14 +4612,14 @@ SceneCheerYuna_WalkOff::
     inc [hl]
     ret
 
-; Cheer Yuna scene, step 9: object 2 hops, then the next step. (C1, E-0357)
+; Cheer Yuna scene, step 9: object 2 hops, then the next step. (C2, E-0357; probed E-0376)
 SceneCheerYuna_HopInPlace::
     ld de, wObject2 + OBJ_Y
     call ScriptStepDeltaThenNextStep
     ret
 
 ; Cheer Yuna scene, step 7: object 2 faces up, clears its flag bit 2 and 'Enough... Enough of that
-; dancing!' (message $03A0). (C1, E-0357)
+; dancing!' (message $03A0). (C2, E-0357; probed E-0376)
 SceneCheerYuna_ShowEnoughEnoughOfThat::
     ld a, $02
     ld [wObject2 + OBJ_STATE], a
@@ -4493,8 +4631,8 @@ SceneCheerYuna_ShowEnoughEnoughOfThat::
     inc [hl]
     ret
 
-; Cheer Yuna scene, step 4: after $4B frames object 2 faces right and clears its flag bit 1. (C1,
-; E-0357)
+; Cheer Yuna scene, steps 4 and 6: after $4B frames object 2 faces right and clears its flag bit 1,
+; then the next step. (C2, E-0376)
 SceneCheerYuna_FaceRight::
     ld b, $4b
     call StepScriptParam0Counter_Bank0F
@@ -4507,8 +4645,8 @@ SceneCheerYuna_FaceRight::
     inc [hl]
     ret
 
-; Cheer Yuna scene, step 3: sets object 2's flag bit 2; after $1E frames sets its flag bit 1. (C1,
-; E-0357)
+; Cheer Yuna scene, steps 3 and 5: sets flag bit 2 of object 2 every frame; after $1E frames sets
+; its flag bit 1 and moves on. (C2, E-0376)
 SceneCheerYuna_Pause::
     ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B0F
@@ -4521,8 +4659,8 @@ SceneCheerYuna_Pause::
     inc [hl]
     ret
 
-; Cheer Yuna scene, step 2: after $4B frames object 2 faces left and clears its flag bit 1. (C1,
-; E-0357)
+; Cheer Yuna scene, step 2: after $4B frames object 2 faces left and clears its flag bit 1. (C2,
+; E-0357; probed E-0376)
 SceneCheerYuna_FaceLeft::
     ld b, $4b
     call StepScriptParam0Counter_Bank0F
@@ -4536,7 +4674,8 @@ SceneCheerYuna_FaceLeft::
     ret
 
 ; Cheer Yuna scene, step 1: object 2 hops while moving right one pixel every other frame and turning
-; every eight frames, for $20 frames; then faces down and sets its flag bit 1. (C1, E-0357)
+; every eight frames, for $20 frames; then faces down and sets its flag bit 1. (C2, E-0357; probed
+; E-0376)
 SceneCheerYuna_Hop::
     ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B0F
@@ -4575,7 +4714,7 @@ SceneCheerYuna_Hop::
     ret
 
 ; Cheer Yuna scene, step 0: object 2 dances: walks right to X $70, left to X $20, then right to X
-; $40, turning every four frames. (C1, E-0357)
+; $40, turning every four frames. (C2, E-0357; probed E-0376)
 SceneCheerYuna_Dance::
     ld a, [wScriptParam0]
     or a
@@ -4631,7 +4770,7 @@ SceneCheerYuna_Dance::
     inc [hl]
     ret
 
-; Turns object 2 every four frames (its state = frame counter bits 2-3). (C1, E-0357)
+; Turns object 2 every four frames (its state = frame counter bits 2-3). (C2, E-0357; probed E-0376)
 SceneCheerYuna_Dance_TurnObject2::
     ld a, [wFrameCounterLo]
     srl a
@@ -4640,6 +4779,13 @@ SceneCheerYuna_Dance_TurnObject2::
     ld [wObject2 + OBJ_STATE], a
     ret
 
+; Explosion scene, run each frame by ScriptCommand41 (script command type $41,
+; SCRIPT_SCENE_EXPLOSION): jumps on wScriptStep through 10 steps: 0 on the first visit sets
+; EVENT_SCENE_EXPLOSION (a repeat shows message $0347 and jumps to step 3), 1 object 0 walks down, 2
+; the screen shakes while the party hops down and message $0346, 3 scripted battle 3, 4-5 message
+; $0348 'Darn! Take this! SACRIFICE!', 6 the party walks down to Y $40, 7-8 object 0 is hidden, the
+; screen flashes and shakes, 9 the scene object drops, object 2 becomes sprite $52 and the script
+; resumes. (C1, E-0376)
 ; implements script command type 41 (SCRIPT_SCENE_EXPLOSION): a cutscene step named after the scene
 ; its only script shows: 'What? What was that explosion?' (screen shake and flash); reached through
 ; ScriptCommand41 in bank $10 (E-0038, E-0245)
@@ -4690,13 +4836,14 @@ SceneExplosion_DropObject::
     ld [wScriptStartRequest], a
     ret
 
-; Explosion scene, step 8: shakes the screen for $0F frames. (C1, E-0357)
+; Explosion scene, step 8: shakes the screen for $0F frames. (C2, E-0357; probed E-0376)
 SceneExplosion_ShakeAfterFlash::
     ld b, $0f
     call ScriptStepShakeScreen
     ret
 
-; Explosion scene, step 7: hides object 0 (X $E0) and runs the negative screen flash. (C1, E-0357)
+; Explosion scene, step 7: hides object 0 (X $E0) and runs the negative screen flash. (C2, E-0357;
+; probed E-0376)
 SceneExplosion_Flash::
     ld a, $e0
     ld [wSpriteSlots + $b], a
@@ -4744,7 +4891,8 @@ SceneExplosion_WalkDown::
     inc [hl]
     ret
 
-; Explosion scene, step 4: 'Darn! Take this! SACRIFICE!' (message $0348). (C1, E-0357)
+; Explosion scene, step 4: 'Darn! Take this! SACRIFICE!' (message $0348). (C2, E-0357; probed
+; E-0376)
 SceneExplosion_Msg0348_DarnTakeThisSACRIFICE::
     ld hl, $0348 ; '*: Darn! Take this! SACRIFICE!'
     call StartMessageHL_B0F
@@ -4764,9 +4912,11 @@ SceneExplosion_StartBattle::
     inc [hl]
     ret
 
-; Explosion scene, step 2: shakes the screen while the player and the followers move down a pixel a
-; frame with a hop, for $20 frames; then 'Don't you touch that. If ...' (message $0346). (C1,
-; E-0357)
+; Explosion scene, step 2: shakes the screen (ScriptStepShakeScreen with B = $3C) while the player
+; and the three followers move down a pixel a frame with a hop. The shake and this step both count
+; wScriptParam0, so it rises by 2 a frame: after 16 frames it reaches $20, message $0346 starts,
+; wScriptParam0 = 0 and the next step begins. The shake never reaches its own $3C end, so hScrollX
+; is not reset here. (C2, E-0376)
 SceneExplosion_Shake::
     ld b, $3c
     call ScriptStepShakeScreen
@@ -4815,8 +4965,8 @@ SceneExplosion_Shake::
     inc [hl]
     ret
 
-; Explosion scene, step 1: walks object 0 down (two pixels a frame) to Y $20; then sound $66. (C1,
-; E-0357)
+; Explosion scene, step 1: walks object 0 down (two pixels a frame) to Y $20; then sound $66. (C2,
+; E-0357; probed E-0376)
 SceneExplosion_WalkObject0Down::
     ld a, $20
     ld [wStepPtrLo], a
@@ -4855,6 +5005,11 @@ SceneExplosion_Start::
     ld [wScriptStep], a
     ret
 
+; Plan ruined scene, run each frame by ScriptCommand45 (script command type $45,
+; SCRIPT_SCENE_PLAN_RUINED): jumps on wScriptStep through 4 steps: 0 objects 0 and 2 swap places in
+; a $78-frame flicker (skipped to step 2 when EVENT_SCENE_PLAN_RUINED is set), 1 waits $1E frames
+; and sets EVENT_SCENE_PLAN_RUINED, 2 starts scripted battle $0C, 3 blinks object 0 out and resumes
+; the script. (C1, E-0376)
 ; implements script command type 45 (SCRIPT_SCENE_PLAN_RUINED): a cutscene step named after the
 ; scene its only script shows: 'Arrgh, you've ruined my plan' ... 'Bravo! We're saved!' (starts a
 ; scripted encounter); reached through ScriptCommand45 in bank $10 (E-0038, E-0245)
@@ -4866,8 +5021,8 @@ ScenePlanRuined::
     dw ScenePlanRuined_StartBattle
     dw ScenePlanRuined_BlinkOut
 
-; Plan ruined scene, step 3: blinks object 0 (at Y $40) out, hides it and resumes the script. (C1,
-; E-0357)
+; Plan ruined scene, step 3: blinks object 0 (at Y $40) out, hides it and resumes the script. (C2,
+; E-0357; probed E-0376)
 ScenePlanRuined_BlinkOut::
     ld a, $00
     ldh [hTemp0], a
@@ -4892,7 +5047,8 @@ ScenePlanRuined_StartBattle::
     inc [hl]
     ret
 
-; Plan ruined scene, step 1: waits $1E frames, then sets EVENT_SCENE_PLAN_RUINED. (C1, E-0357)
+; Plan ruined scene, step 1: waits $1E frames, then sets EVENT_SCENE_PLAN_RUINED. (C2, E-0357;
+; probed E-0376)
 ScenePlanRuined_Wait::
     ld b, $1e
     call StepScriptParam0Counter_Bank0F
@@ -4905,8 +5061,8 @@ ScenePlanRuined_Wait::
 
 ; Plan ruined scene, step 0: when EVENT_SCENE_PLAN_RUINED is set skips to the battle (step 2);
 ; otherwise object 0 takes object 2's facing and the two swap places on screen (one at Y $40, the
-; other hidden; every 2 frames, slowing to 4 and 8) for $78 frames, ending with object 0 shown. (C1,
-; E-0357)
+; other hidden; every 2 frames, slowing to 4 and 8) for $78 frames, ending with object 0 shown. (C2,
+; E-0357; probed E-0376)
 ScenePlanRuined_Start::
     ld de, EVENT_SCENE_PLAN_RUINED
     call TestFlagBit
@@ -4964,6 +5120,13 @@ ScenePlanRuined_Start::
     inc [hl]
     ret
 
+; Wall exit scene, run each frame by ScriptCommand43 (script command type $43,
+; SCRIPT_SCENE_WALL_EXIT): jumps on wScriptStep through 13 steps: the scene object appears at ($30,
+; $40), step 1 saves the player X in wScriptParam1 and Kameha speaks (0-2), the player steps aside
+; and the followers gather (3-6), object 1 moves right to the saved X and up, is lowered, then walks
+; up off the top (7-9); step 10 opens the exit when the saved X was $30 (bit 0 of story byte $63,
+; tiles $38-$3B) and resumes the script, otherwise it shows message $0362 and step 12 walks object 1
+; back down before the script resumes. (C1, E-0376)
 ; implements script command type 43 (SCRIPT_SCENE_WALL_EXIT): a cutscene step named after the scene
 ; its only script shows: '0 tapped on the wall.' ... 'Kameha That's it! That's the exit!'; reached
 ; through ScriptCommand43 in bank $10 (E-0038, E-0245)
@@ -4985,7 +5148,8 @@ SceneWallExit::
     dw SceneWallExit_WalkObject1Down
 
 ; Wall exit scene, step 12: walks object 1 down (two pixels a frame) to Y $50, then moves it left
-; two pixels a frame to X $30; then it faces right, stops and the script resumes. (C1, E-0357)
+; two pixels a frame to X $30; then it faces right, stops and the script resumes. (C2, E-0357;
+; probed E-0376)
 SceneWallExit_WalkObject1Down::
     ld a, [wObject1 + OBJ_Y]
     cp $50
@@ -5070,7 +5234,7 @@ SceneWallExit_ShowKamehaHeroThatWasnt::
     ret
 
 ; Wall exit scene, step 9: walks object 1 up (two pixels a frame) to Y 0; then plays sound $66 when
-; the player stood at X $30, $63 otherwise. (C1, E-0357)
+; the player stood at X $30, $63 otherwise. (C2, E-0357; probed E-0376)
 SceneWallExit_WalkObject1::
     ld a, $00
     ld [wStepPtrLo], a
@@ -5096,7 +5260,8 @@ SceneWallExit_WalkObject1::
     call QueueSoundEffect
     ret
 
-; Wall exit scene, step 8: object 1 moves down one pixel every eight frames to Y $30. (C1, E-0357)
+; Wall exit scene, step 8: object 1 moves down one pixel every eight frames to Y $30. (C2, E-0357;
+; probed E-0376)
 SceneWallExit_LowerObject1::
     ld a, [wScriptParam0]
     inc a
@@ -5115,7 +5280,7 @@ SceneWallExit_LowerObject1::
     ret
 
 ; Wall exit scene, step 7: object 1 moves right two pixels a frame (facing right) to the player's
-; saved X, then up to Y $20, then stops. (C1, E-0357)
+; saved X, then up to Y $20, then stops. (C2, E-0357; probed E-0376)
 SceneWallExit_MoveObject1::
     ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B0F
@@ -5150,7 +5315,7 @@ SceneWallExit_MoveObject1::
 
 ; Wall exit scene, step 3: walks the player (fast animation, bit 2) one pixel a frame for 16 frames
 ; (right when the saved X is below $40, left otherwise, the followers following); then turns it
-; around and lets it go. (C1, E-0357)
+; around and lets it go. (C2, E-0357; probed E-0376)
 SceneWallExit_WalkPlayer::
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B0F
@@ -5193,7 +5358,8 @@ SceneWallExit_WalkPlayer::
     ret
 
 ; Wall exit scene, step 1: waits $3C frames, hides the scene object, saves the player's X in
-; wScriptParam1 and shows Kameha's 'So that's where the exit ...' (message $0361). (C1, E-0357)
+; wScriptParam1 and shows Kameha's 'So that's where the exit ...' (message $0361). (C2, E-0357;
+; probed E-0376)
 SceneWallExit_ShowKamehaSoThatsWhere::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
@@ -5223,6 +5389,13 @@ SceneWallExit_Start::
     inc [hl]
     ret
 
+; Report to king scene, run each frame by ScriptCommand42 (script command type $42,
+; SCRIPT_SCENE_REPORT_TO_KING): jumps on wScriptStep through 18 steps: object 1 and the player walk
+; up and the screen scrolls up (0-1), object 1 walks into place, messages $0322 and $035A, a hop and
+; message $035B as object 1 walks off (2-7), tile $6A is drawn and the player and the followers are
+; hidden one by one while the followers gather (8-14; a smaller party skips to step $0F), a warp to
+; map $4D (15), and the party drops in from above the screen and the script resumes (16-17). (C1,
+; E-0376)
 ; implements script command type 42 (SCRIPT_SCENE_REPORT_TO_KING): a cutscene step named after the
 ; scene its only script shows: 'We reported to the King that...'; reached through ScriptCommand42 in
 ; bank $10 (E-0038, E-0245)
@@ -5250,7 +5423,7 @@ SceneReportToKing::
 
 ; Report to king scene, step 17: the player and the followers walk down two pixels a frame to Y $40;
 ; once the player is there objects 0 and 1 hop; when the last follower arrives the player's
-; animation restarts (bit 1) and the script resumes. (C1, E-0357)
+; animation restarts (bit 1) and the script resumes. (C2, E-0357; probed E-0376)
 SceneReportToKing_WalkDown::
     ld a, [wScriptParam1]
     or a
@@ -5315,7 +5488,7 @@ SceneReportToKing_WalkDown::
     ret
 
 ; Report to king scene, step 16: freezes the player's animation (bit 1), puts the followers above
-; the screen (Y $D0, $C0, $B0) and plays sound $65. (C1, E-0357)
+; the screen (Y $D0, $C0, $B0) and plays sound $65. (C2, E-0357; probed E-0376)
 SceneReportToKing_HideParty::
     ld hl, hPlayerStateFlags
     call SetBit1AtHL_Bank0F
@@ -5357,7 +5530,8 @@ SceneReportToKing_Warp::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; Report to king scene, step 14: hides the third follower too (hFieldDrawFlags $0F). (C1, E-0357)
+; Report to king scene, step 14: hides the third follower too (hFieldDrawFlags $0F). (C2, E-0357;
+; probed E-0376)
 SceneReportToKing_HideThirdFollower::
     ld a, $0f
     ldh [hFieldDrawFlags], a
@@ -5366,7 +5540,7 @@ SceneReportToKing_HideThirdFollower::
     ret
 
 ; Report to king scene, step 12: hides the second follower too (hFieldDrawFlags 7); with two party
-; monsters skips to step $0F. (C1, E-0357)
+; monsters skips to step $0F. (C2, E-0357; probed E-0376)
 SceneReportToKing_HideSecondFollower::
     ld hl, wScriptStep
     inc [hl]
@@ -5381,7 +5555,7 @@ SceneReportToKing_HideSecondFollower::
     ret
 
 ; Report to king scene, step 10: hides the first follower too (hFieldDrawFlags 3); with one party
-; monster skips to step $0F. (C1, E-0357)
+; monster skips to step $0F. (C2, E-0357; probed E-0376)
 SceneReportToKing_HideFollower::
     ld hl, wScriptStep
     inc [hl]
@@ -5412,7 +5586,7 @@ SceneReportToKing_DrawTiles::
     ret
 
 ; Report to king scene, step 6: walks object 1 right (two pixels a frame) to X $40, then down to Y
-; $A0; then 'You're no envoy of the ...' (message $035B). (C1, E-0357)
+; $A0; then 'You're no envoy of the ...' (message $035B). (C2, E-0357; probed E-0376)
 SceneReportToKing_WalkObject1Off::
     ld a, [wObject1 + OBJ_X]
     cp $40
@@ -5443,7 +5617,8 @@ SceneReportToKing_WalkObject1Off::
     inc [hl]
     ret
 
-; Report to king scene, step 5: object 1 faces up and hops, then the next step. (C1, E-0357)
+; Report to king scene, step 5: object 1 faces up and hops, then the next step. (C2, E-0357; probed
+; E-0376)
 SceneReportToKing_HopObject1::
     ld a, $02
     ld [wObject1 + OBJ_STATE], a
@@ -5451,7 +5626,8 @@ SceneReportToKing_HopObject1::
     call ScriptStepDeltaThenNextStep
     ret
 
-; Report to king scene, step 3: 'What is it, you whelp!?' (message $035A). (C1, E-0357)
+; Report to king scene, step 3: 'What is it, you whelp!?' (message $035A). (C2, E-0357; probed
+; E-0376)
 SceneReportToKing_Msg035A_WhatIsItYou::
     ld hl, $035a ; '*: What is it, you whelp!?'
     call StartMessageHL_B0F
@@ -5459,6 +5635,11 @@ SceneReportToKing_Msg035A_WhatIsItYou::
     inc [hl]
     ret
 
+; Spirit envoy scene, run each frame by ScriptCommand40 (script command type $40,
+; SCRIPT_SCENE_SPIRIT_ENVOY): jumps on wScriptStep through 11 steps; steps 0-2 are those of
+; SceneReportToKing (walk up, scroll, object 1 into place and message $0322), then the player walks
+; down and the screen scrolls down (4-5), the player walks to Y $10 (6), the followers gather (7-9)
+; and step 10 resumes the script. (C1, E-0376)
 ; implements script command type 40 (SCRIPT_SCENE_SPIRIT_ENVOY): a cutscene step named after the
 ; scene its only script shows: 'Ah, you are the spirit's envoy.' ... 'We reported to the King
 ; that...'; reached through ScriptCommand40 in bank $10 (E-0038, E-0245)
@@ -5475,15 +5656,15 @@ SceneSpiritEnvoy::
     dw SceneWallExit_GatherFollowers
     dw SceneWallExit_GatherFollowers
     dw SceneWallExit_GatherFollowers
-    dw SceneSpiritEnvoy_SetScriptStartRequestTo80
+    dw SceneSpiritEnvoy_ResumeScript
 
-; Spirit envoy scene, step 10: resumes the script. (C1, E-0357)
-SceneSpiritEnvoy_SetScriptStartRequestTo80::
+; Spirit envoy scene, step 10: resumes the script. (C2, E-0357; probed E-0376)
+SceneSpiritEnvoy_ResumeScript::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; Spirit envoy scene, step 6: walks the player down to Y $10. (C1, E-0357)
+; Spirit envoy scene, step 6: walks the player down to Y $10. (C2, E-0357; probed E-0376)
 SceneSpiritEnvoy_WalkPlayerDown::
     ld a, $10
     ld [wStepPtrLo], a
@@ -5524,8 +5705,9 @@ SceneSpiritEnvoy_WalkDownAndScroll::
     inc [hl]
     ret
 
-; Report to king scene, step 2: object 1 walks up to Y $60, then left to X $30 and faces right; the
-; player walks up to Y $40; then 'You're the envoy? ...Well, no ...' (message $0322). (C1, E-0357)
+; Step 2 of both SceneReportToKing and SceneSpiritEnvoy: object 1 walks up to Y $60, then left to X
+; $30 and faces right, one pixel a frame; the player walks up to Y $40; then message $0322 and the
+; next step. (C2, E-0376)
 SceneReportToKing_WalkObject1::
     ld a, [wObject1 + OBJ_Y]
     cp $60
@@ -5618,11 +5800,21 @@ SceneReportToKing_WalkUp::
     inc [hl]
     ret
 
+; Mermaid kingdom scene, run each frame by ScriptCommand39 and by ScriptCommand3B
+; (SCRIPT_SCENE_MERMAID_KINGDOM is type $39; no constant names type $3B): jumps on wScriptStep
+; through 50 steps: the player walks to X $40 and the followers gather (0-3; a player already there
+; skips to 4), objects walk and Kameha speaks (4-10), the scene object rises and objects 0 and 1 get
+; new sprites (11-19), object 2 hops five times with screen shakes (20-29), story flags and an
+; in-place transition (30), objects 1 and 2 turn and the scene object rises (31-32), the player
+; walks and Kameha speaks (33-35), object 0 walks off and the player walks left (36-37), the scene
+; object drifts away and a voice calls (38-43), the warp to map 5, the shared boss-win sequence and
+; the scene object falling onto the player (44-48), and SceneMermaidKingdom_GiveKey resumes the
+; script (49). (C1, E-0376)
 ; implements script command type 39 (also 3B); reached through ScriptCommand39 in bank $10 (E-0038)
 SceneMermaidKingdom::
     ld a, [wScriptStep]
     jumptable
-    dw SceneMermaidKingdom_WalkPlayerLeft2
+    dw SceneMermaidKingdom_WalkPlayerLeftAndFaceDown
     dw SceneWallExit_GatherFollowers
     dw SceneWallExit_GatherFollowers
     dw SceneWallExit_GatherFollowers
@@ -5675,7 +5867,7 @@ SceneMermaidKingdom::
 
 ; Mermaid kingdom scene, step 49: sets EVENT_SCENE_MERMAID_KINGDOM_022, marks the key of kind 3
 ; (MarkKeyEntryKindTemp0Bit6), sets bit 2 of story byte $60 and wFarmLevel 2, and resumes the
-; script. (C1, E-0357)
+; script. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_GiveKey::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call SetFlagBit
@@ -5693,7 +5885,7 @@ SceneMermaidKingdom_GiveKey::
 
 ; Mermaid kingdom scene, step 47: the scene object falls one pixel a frame to the player's Y and is
 ; hidden; then Warubou's 'Wa-hey, you can now crush ...' (message $0DC1) and
-; EVENT_SCENE_MERMAID_KINGDOM. (C1, E-0357)
+; EVENT_SCENE_MERMAID_KINGDOM. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_ShowWarubouWaheyYouCan::
     ldh a, [hPlayerY]
     ld c, a
@@ -5777,7 +5969,8 @@ SceneMermaidKingdom_ShowWarubouWaheyYouDid::
     ldh [hPlayerStateFlags], a
     ret
 
-; Mermaid kingdom scene, step 42: '...Wa-hey! <hero>, hear me? I ...' (message $0873). (C1, E-0357)
+; Mermaid kingdom scene, step 42: '...Wa-hey! <hero>, hear me? I ...' (message $0873). (C2, E-0357;
+; probed E-0376)
 SceneMermaidKingdom_Msg0873_WaheyHeroHearMe::
     ld hl, $0873 ; '*: …Wa-hey! 0, hear me? I'
     call StartMessageHL_B0F
@@ -5786,7 +5979,7 @@ SceneMermaidKingdom_Msg0873_WaheyHeroHearMe::
     ret
 
 ; Mermaid kingdom scene, step 40: the scene object sinks with a hop and is hidden; then 'A voice
-; echoed from nowhere...' (message $0872). (C1, E-0357)
+; echoed from nowhere...' (message $0872). (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_ShowAVoiceEchoedFrom::
     ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
@@ -5801,7 +5994,7 @@ SceneMermaidKingdom_ShowAVoiceEchoedFrom::
     inc [hl]
     ret
 
-; Mermaid kingdom scene, step 39: waits $1E frames. (C1, E-0357)
+; Mermaid kingdom scene, step 39: waits $1E frames. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_Wait::
     ld b, $1e
     call StepScriptParam0Counter_Bank0F
@@ -5811,7 +6004,7 @@ SceneMermaidKingdom_Wait::
     ret
 
 ; Mermaid kingdom scene, step 38: the scene object moves up and right a pixel a frame with a hop.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_DriftObject::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
@@ -5825,7 +6018,7 @@ SceneMermaidKingdom_DriftObject::
     ret
 
 ; Mermaid kingdom scene, step 37: walks the player left to X $50, then sets
-; EVENT_SCENE_MERMAID_KINGDOM_05F. (C1, E-0357)
+; EVENT_SCENE_MERMAID_KINGDOM_05F. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_WalkPlayerLeft::
     ld a, $50
     ld [wStepPtrLo], a
@@ -5922,7 +6115,7 @@ SceneMermaidKingdom_ShowKamehaIWasStupid::
     ret
 
 ; Mermaid kingdom scene, step 33: walks the player down to Y $10, right to X $80, then down to Y
-; $30. (C1, E-0357)
+; $30. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_WalkPlayerDown::
     ld a, [wScriptParam0]
     or a
@@ -5964,7 +6157,7 @@ SceneMermaidKingdom_WalkPlayerDown::
     ret
 
 ; Mermaid kingdom scene, step 32: the scene object rises two pixels a frame with a hop; then sound
-; $65 and one sprite slot. (C1, E-0357)
+; $65 and one sprite slot. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_RaiseObject::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     dec a
@@ -5983,7 +6176,7 @@ SceneMermaidKingdom_RaiseObject::
 
 ; Mermaid kingdom scene, step 31: objects 1 and 2 face opposite ways, swapping between right and
 ; left every 16 frames, for $78 frames; then shows the scene object, plays sound $65 and hides
-; object 1. (C1, E-0357)
+; object 1. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_TurnObjects::
     ld a, [wScriptParam0]
     inc a
@@ -6037,13 +6230,15 @@ SceneMermaidKingdom_SetFlags::
 
 ; Mermaid kingdom scene, steps 21, 23, 25, 27 and 29 (each after a hop of object 2,
 ; SceneMermaidKingdom_HopObject2): shakes the screen for $0F frames (ScriptStepShakeScreen), then
-; the next step. (C1, E-0370)
+; the next step. (C2, E-0370; probed E-0376)
 SceneMermaidKingdom_Shake::
     ld b, $0f
     call ScriptStepShakeScreen
     ret
 
-; Mermaid kingdom scene, step 20: object 2 hops; then sound $63. (C1, E-0357)
+; Mermaid kingdom scene, steps 20, 22, 24, 26 and 28 (each followed by SceneMermaidKingdom_Shake):
+; object 2 hops (ScriptApplyStepDeltaAtDE, 16 frames); then sound $63 and the next step. (C2,
+; E-0376)
 SceneMermaidKingdom_HopObject2::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
@@ -6055,14 +6250,15 @@ SceneMermaidKingdom_HopObject2::
     ret
 
 ; Mermaid kingdom scene, step 18: object 2 hops; then Kameha's 'Urrrggh... You tricked me!' (message
-; $0870). (C1, E-0370)
+; $0870). (C2, E-0370; probed E-0376)
 SceneMermaidKingdom_ShowKamehaUrrrggh::
     ld de, wObject2 + OBJ_Y
     ld hl, $0870
     call ScriptStepDeltaThenMessage
     ret
 
-; Mermaid kingdom scene, step 17: the scene object sinks with a hop and is hidden. (C1, E-0357)
+; Mermaid kingdom scene, step 17: the scene object sinks with a hop and is hidden. (C2, E-0357;
+; probed E-0376)
 SceneMermaidKingdom_SinkObject::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     inc a
@@ -6077,7 +6273,7 @@ SceneMermaidKingdom_SinkObject::
     ret
 
 ; Mermaid kingdom scene, step 15: object 0 (wSpriteSlots + $c) hops; then 'This is what it means,
-; nincompoop!' (message $086F). (C1, E-0370)
+; nincompoop!' (message $086F). (C2, E-0370; probed E-0376)
 SceneMermaidKingdom_ShowThisIsWhatIt::
     ld de, wSpriteSlots + $c
     ld hl, $086f
@@ -6128,7 +6324,7 @@ SceneMermaidKingdom_LoadSprites::
     ret
 
 ; Mermaid kingdom scene, step 12: the scene object rises two pixels a frame with a hop; then
-; 'Kahahaha...' (message $086E). (C1, E-0357)
+; 'Kahahaha...' (message $086E). (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_ShowKahahaha::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     dec a
@@ -6178,7 +6374,7 @@ SceneMermaidKingdom_WalkDown::
     ret
 
 ; Mermaid kingdom scene, step 9: object 2 hops; then Kameha's 'What?! What is this?' (message
-; $086D). (C1, E-0370)
+; $086D). (C2, E-0370; probed E-0376)
 SceneMermaidKingdom_ShowKamehaWhatIsThis::
     ld de, wObject2 + OBJ_Y
     ld hl, $086d
@@ -6186,7 +6382,7 @@ SceneMermaidKingdom_ShowKamehaWhatIsThis::
     ret
 
 ; Mermaid kingdom scene, step 8: object 2 moves right two pixels a frame up to X $80 while $3C
-; frames pass. (C1, E-0357)
+; frames pass. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_MoveObject2::
     ld a, [wObject2 + OBJ_X]
     cp $80
@@ -6204,7 +6400,7 @@ SceneMermaidKingdom_MoveObject2::
     ret
 
 ; Mermaid kingdom scene, step 7: object 1 moves left one pixel every four frames to X $30, then
-; right two pixels a frame to X $40; then sound $63. (C1, E-0357)
+; right two pixels a frame to X $40; then sound $63. (C2, E-0357; probed E-0376)
 SceneMermaidKingdom_MoveObject1::
     ld a, [wScriptParam1]
     or a
@@ -6383,14 +6579,14 @@ SceneMermaidKingdom_ShowKamehaGaspHackI::
 ; Shared scene step (SceneWallExit steps 4-6, SceneReportToKing steps 9, 11 and 13, SceneSpiritEnvoy
 ; steps 7-9, SceneMermaidKingdom steps 1-3): runs ScriptStepMoveFollowersToLeader, which sets the
 ; follower targets from the leader on the first frame, then steps the followers until the
-; wScriptParam0 counter reaches $11 and advances wScriptStep. (C1, E-0370)
+; wScriptParam0 counter reaches $11 and advances wScriptStep. (C2, E-0370; probed E-0376)
 SceneWallExit_GatherFollowers::
     farcall ScriptStepMoveFollowersToLeader
     ret
 
 ; Mermaid kingdom scene, step 0: walks the player left to X $40 and turns it down; a player already
-; at X $40 skips to step 4. (C1, E-0357)
-SceneMermaidKingdom_WalkPlayerLeft2::
+; at X $40 skips to step 4. (C2, E-0357; probed E-0376)
+SceneMermaidKingdom_WalkPlayerLeftAndFaceDown::
     ldh a, [hPlayerX]
     cp $40
     jr nz, .set_step_ptr_lo_to_40
@@ -6411,6 +6607,12 @@ SceneMermaidKingdom_WalkPlayerLeft2::
     inc [hl]
     ret
 
+; Kameha flees scene, run each frame by ScriptCommand38 (script command type $38,
+; SCRIPT_SCENE_KAMEHA_FLEES): jumps on wScriptStep through 13 steps: the followers gather while
+; objects 0-2 are set moving (0-2), objects 0-2 move up and the player walks up behind them (3-7),
+; they move up and left and the scene object drops (8-9), objects 0-2 hop while the screen shakes
+; sideways (10), they walk off right (11), and the scene object bobs on to X $A0, which sets
+; EVENT_SCENE_KAMEHA_FLEES and resumes the script (12). (C1, E-0376)
 ; implements script command type 38 (SCRIPT_SCENE_KAMEHA_FLEES): a cutscene step named after the
 ; scene its only script shows: 'Kameha Arrrrh, clear the way!' ... 'Kameha Aiyeeeeeh'; reached
 ; through ScriptCommand38 in bank $10 (E-0038, E-0245)
@@ -6432,14 +6634,15 @@ SceneKamehaFlees::
     dw SceneKamehaFlees_BobObjectOff
 
 ; Kameha flees scene, step 12: moves the scene object on (SceneKamehaFlees_BobObjectRight) until it
-; reaches X $A0, which sets EVENT_SCENE_KAMEHA_FLEES and resumes the script. (C1, E-0370)
+; reaches X $A0, which sets EVENT_SCENE_KAMEHA_FLEES and resumes the script. (C2, E-0370; probed
+; E-0376)
 SceneKamehaFlees_BobObjectOff::
     call SceneKamehaFlees_BobObjectRight
     ret
 
 ; Moves the scene object right one pixel a frame, bobbing by the eight Y values of
 ; SceneKamehaFlees_BobObjectRight_Data; at X $A0 sets EVENT_SCENE_KAMEHA_FLEES and resumes the
-; script. (C1, E-0357)
+; script. (C2, E-0357; probed E-0376)
 SceneKamehaFlees_BobObjectRight::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
@@ -6465,7 +6668,7 @@ SceneKamehaFlees_BobObjectRight_Data::
     db $40, $3f, $40, $3f, $40, $3e, $40, $41
 
 ; Kameha flees scene, step 11: moves the scene object as above while objects 0-2 walk right (two
-; pixels a frame) to X $A0; then draws no sprite slots. (C1, E-0357)
+; pixels a frame) to X $A0; then draws no sprite slots. (C2, E-0357; probed E-0376)
 SceneKamehaFlees_WalkRight::
     call SceneKamehaFlees_BobObjectRight
     ld a, $00
@@ -6500,7 +6703,7 @@ SceneKamehaFlees_WalkRight::
 
 ; Kameha flees scene, step 10: objects 0-2 hop while the screen shakes sideways (2 pixels every
 ; other frame) for $20 frames; then the scroll is rounded to a whole tile, sound $7D plays and every
-; field sprite is shown again. (C1, E-0357)
+; field sprite is shown again. (C2, E-0357; probed E-0376)
 SceneKamehaFlees_ShakeAndHop::
     ld de, wSpriteSlots + $c
     ld a, e
@@ -6625,7 +6828,8 @@ SceneKamehaFlees_MoveObjectsUp::
     inc [hl]
     ret
 
-; Kameha flees scene, step 3: waits $3C frames, then sets objects 0-2 moving. (C1, E-0357)
+; Kameha flees scene, steps 3 and 7: waits $3C frames, then sets flag bit 2 of objects 0-2 (moving)
+; and moves on. (C2, E-0376)
 SceneKamehaFlees_Wait::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
@@ -6641,7 +6845,7 @@ SceneKamehaFlees_Wait::
     ret
 
 ; Kameha flees scene, step 6: keeps the followers in step for $1E frames, then restarts the player's
-; animation (bit 1). (C1, E-0357)
+; animation (bit 1). (C2, E-0357; probed E-0376)
 SceneKamehaFlees_KeepInStep::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
@@ -6661,7 +6865,7 @@ SceneKamehaFlees_KeepInStep::
     ret
 
 ; Kameha flees scene, step 5: walks the player up two pixels a frame (the followers following) to Y
-; $30. (C1, E-0357)
+; $30. (C2, E-0357; probed E-0376)
 SceneKamehaFlees_WalkPlayerUp::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
@@ -6681,7 +6885,7 @@ SceneKamehaFlees_WalkPlayerUp::
 
 ; Kameha flees scene, step 4: the player faces down while objects 0-2 move up two pixels a frame
 ; until object 0 reaches Y $70; then they stop, the player's animation is frozen (bit 1) and sound
-; $63 plays. (C1, E-0357)
+; $63 plays. (C2, E-0357; probed E-0376)
 SceneKamehaFlees_MoveUp::
     xor a
     ldh [hPlayerFacing], a
@@ -6713,8 +6917,10 @@ SceneKamehaFlees_MoveUp::
     inc [hl]
     ret
 
-; Kameha flees scene, step 0: moves the followers to the leader and sets objects 0-2 moving. (C1,
-; E-0357)
+; Shared scene step (SceneKamehaFlees steps 0-2, SceneRivalDefeated steps 4-6): runs
+; ScriptStepMoveFollowersToLeader (the follower targets are set from the leader on the first frame,
+; then the followers step until the wScriptParam0 counter reaches $11 and wScriptStep advances) and
+; sets flag bit 2 of objects 0-2 (moving) every frame. (C2, E-0376)
 SceneKamehaFlees_Gather::
     farcall ScriptStepMoveFollowersToLeader
     ld hl, wSpriteSlots + $d
@@ -6725,6 +6931,11 @@ SceneKamehaFlees_Gather::
     call SetBit2AtHL_B0F
     ret
 
+; Crew follows scene, run each frame by ScriptCommand37 (script command type $37,
+; SCRIPT_SCENE_CREW_FOLLOWS): jumps on wScriptStep through 4 steps: 0 objects 0-2 move right until
+; object 0 is at X $60, 1 a sideways screen shake ending with EVENT_SCENE_CREW_FOLLOWS_07D, bit 2 of
+; story byte $62 and an in-place transition, 2 sets objects 0-2 moving, 3 turns them for $78 frames
+; and resumes the script. (C1, E-0376)
 ; implements script command type 37 (SCRIPT_SCENE_CREW_FOLLOWS): a cutscene step named after the
 ; scene its only script shows: 'Aye, aye, sir! Right behind you!'; reached through ScriptCommand37
 ; in bank $10 (E-0038, E-0245)
@@ -6737,7 +6948,8 @@ SceneCrewFollows::
     dw SceneCrewFollows_TurnObjects
 
 ; Crew follows scene, step 3: objects 0 and 2 face one way and object 1 the other, swapping between
-; left and right every 16 frames, for $78 frames; then the script resumes. (C1, E-0357)
+; left and right every 16 frames, for $78 frames; then the script resumes. (C2, E-0357; probed
+; E-0376)
 SceneCrewFollows_TurnObjects::
     ld a, [wScriptParam0]
     inc a
@@ -6765,7 +6977,8 @@ SceneCrewFollows_TurnObjects::
     ld [wScriptStartRequest], a
     ret
 
-; Crew follows scene, step 2: sets objects 0-2 moving and clears the counter. (C1, E-0357)
+; Crew follows scene, step 2: sets objects 0-2 moving and clears the counter. (C2, E-0357; probed
+; E-0376)
 SceneCrewFollows_StartMoving::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
@@ -6821,7 +7034,7 @@ SceneCrewFollows_ShakeScreen::
     ret
 
 ; Crew follows scene, step 0: objects 0-2 move right two pixels a frame until object 0 reaches X
-; $60; then they stop and sound $7D plays. (C1, E-0357)
+; $60; then they stop and sound $7D plays. (C2, E-0357; probed E-0376)
 SceneCrewFollows_MoveRight::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
@@ -6856,6 +7069,11 @@ SceneCrewFollows_MoveRight::
     inc [hl]
     ret
 
+; Kameha caught scene, run each frame by ScriptCommand36 (script command type $36,
+; SCRIPT_SCENE_KAMEHA_CAUGHT): jumps on wScriptStep: step 0 (SceneKamehaCaught_StartMoving) sets
+; flag bit 2 of objects 0-2, clears wScriptParam0 and moves on; step 1 (SceneKamehaCaught_MoveOff)
+; moves them up two pixels a frame off the screen (Y $E0), then draws no sprite slots and resumes
+; the script. (C2, E-0376)
 ; implements script command type 36 (SCRIPT_SCENE_KAMEHA_CAUGHT): a cutscene step named after the
 ; scene its only script shows: 'Kameha Wahahahah! Thanks for guiding me' ... 'Kameha Urk! How you
 ; catch up?'; reached through ScriptCommand36 in bank $10 (E-0038, E-0245)
@@ -6865,7 +7083,8 @@ SceneKamehaCaught::
     dw SceneKamehaCaught_StartMoving
     dw SceneKamehaCaught_MoveOff
 
-; Kameha caught scene, step 0: sets objects 0-2 moving and clears the counter. (C1, E-0357)
+; Kameha caught scene, step 0: sets objects 0-2 moving and clears the counter. (C2, E-0357; probed
+; E-0376)
 SceneKamehaCaught_StartMoving::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
@@ -6880,7 +7099,7 @@ SceneKamehaCaught_StartMoving::
     ret
 
 ; Kameha caught scene, step 1: objects 0-2 move up two pixels a frame off the screen (Y $E0); then
-; draws no sprite slots and resumes the script. (C1, E-0357)
+; draws no sprite slots and resumes the script. (C2, E-0357; probed E-0376)
 SceneKamehaCaught_MoveOff::
     ld b, $03
     ld hl, wSpriteSlots + $c
@@ -6907,6 +7126,12 @@ SceneKamehaCaught_MoveOff::
     ld [wScriptStartRequest], a
     ret
 
+; Item-giving blink, run each frame by ScriptCommand32 (script command type $32,
+; SCRIPT_GIVE_ITEM_BLINK): a one-entry jump table on wScriptStep whose only step is
+; GiveItemBlink_BlinkAndGive: object 0 blinks out (at Y $40 when EVENT_GIVE_ITEM_BLINK is set, else
+; at Y $20) and, when both EVENT_GIVE_ITEM_BLINK and EVENT_YOU_WILL_THANK_YOU_LET are set, item $33
+; (ITEM_YUNASOUL) is added to the first empty inventory slot; then no sprite slots are drawn and the
+; script resumes. (C2, E-0376)
 ; implements script command type 32 (SCRIPT_GIVE_ITEM_BLINK): adds item wStepPtrLo to the inventory
 ; (AppendItemStepPtrLoToInventory) and blinks object hTemp0; '0 obtained YunaSoul.'; reached through
 ; ScriptCommand32 in bank $10 (E-0038, E-0245)
@@ -6917,7 +7142,7 @@ GiveItemBlink::
 
 ; Item-giving blink, step 0: with EVENT_GIVE_ITEM_BLINK set blinks object 0 (at Y $40) out and, when
 ; EVENT_YOU_WILL_THANK_YOU_LET is set, adds item $33 to the inventory; otherwise blinks object 0 (at
-; Y $20) out. Then draws no sprite slots and resumes the script. (C1, E-0357)
+; Y $20) out. Then draws no sprite slots and resumes the script. (C2, E-0357; probed E-0376)
 GiveItemBlink_BlinkAndGive::
     ld de, EVENT_GIVE_ITEM_BLINK
     call TestFlagBit
@@ -6959,6 +7184,11 @@ GiveItemBlink_BlinkAndGive::
     ld [wScriptStartRequest], a
     ret
 
+; Who are you scene, run each frame by ScriptCommand29 (script command type $29,
+; SCRIPT_SCENE_WHO_ARE_YOU): jumps on wScriptStep through 10 steps: objects 0-2 move down to Y $40
+; and message $0831, then message $0832 (0-2), object 0 hops and walks down for message $0833 of
+; Kameha (3-5), object 0 walks into place and the player walks right to X $70 (6-8), and step 9
+; keeps the followers in step, sets EVENT_SCENE_WHO_ARE_YOU and resumes the script. (C1, E-0376)
 ; implements script command type 29 (SCRIPT_SCENE_WHO_ARE_YOU): a cutscene step named after the
 ; scene its only script shows: after a sound and a 140-frame wait, before 'Who are you? This is
 ; our...' and 'Zzz Zzz Huh! Watch out!'; reached through ScriptCommand29 in bank $10 (E-0038,
@@ -6978,7 +7208,8 @@ SceneWhoAreYou::
     dw SceneWhoAreYou_KeepInStep
 
 ; Who are you scene, step 9: keeps the followers in step for $1E frames, restarts the player's
-; animation (bit 1), sets EVENT_SCENE_WHO_ARE_YOU and resumes the script. (C1, E-0357)
+; animation (bit 1), sets EVENT_SCENE_WHO_ARE_YOU and resumes the script. (C2, E-0357; probed
+; E-0376)
 SceneWhoAreYou_KeepInStep::
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
@@ -6999,7 +7230,7 @@ SceneWhoAreYou_KeepInStep::
     ret
 
 ; Who are you scene, step 8: walks the player right two pixels a frame (the followers following) to
-; X $70. (C1, E-0357)
+; X $70. (C2, E-0357; probed E-0376)
 SceneWhoAreYou_WalkPlayerRight::
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
@@ -7021,7 +7252,7 @@ SceneWhoAreYou_WalkPlayerRight::
 
 ; Who are you scene, step 7: object 0 moves left one pixel every four frames to X $20, then right
 ; (two pixels a frame) to X $30; then freezes the player's animation (bit 1) and plays sound $63.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneWhoAreYou_MoveObject0::
     ld a, [wScriptParam1]
     or a
@@ -7063,7 +7294,7 @@ SceneWhoAreYou_MoveObject0::
     ret
 
 ; Who are you scene, step 6: walks object 0 left to X $30, then down to Y $70; then object 0 faces
-; right and the player left. (C1, E-0357)
+; right and the player left. (C2, E-0357; probed E-0376)
 SceneWhoAreYou_WalkObject0::
     ld a, [wSpriteSlots + $b]
     cp $30
@@ -7097,7 +7328,7 @@ SceneWhoAreYou_WalkObject0::
     ret
 
 ; Who are you scene, step 4: objects 1 and 2 face down; object 0 walks down to Y $60; then Kameha's
-; 'Hey! You're <hero>, the farmer!' (message $0833). (C1, E-0357)
+; 'Hey! You're <hero>, the farmer!' (message $0833). (C2, E-0357; probed E-0376)
 SceneWhoAreYou_ShowKamehaHeyYoureHero::
     xor a
     ld [wObject1 + OBJ_STATE], a
@@ -7118,7 +7349,7 @@ SceneWhoAreYou_ShowKamehaHeyYoureHero::
     inc [hl]
     ret
 
-; Who are you scene, step 3: object 0 hops, then the next step. (C1, E-0357)
+; Who are you scene, step 3: object 0 hops, then the next step. (C2, E-0357; probed E-0376)
 SceneWhoAreYou_HopObject0::
     ld de, wSpriteSlots + $c
     call ScriptStepDeltaThenNextStep
@@ -7139,8 +7370,8 @@ SceneWhoAreYou_ShowTchMadeMeWaste::
     ret
 
 ; Who are you scene, step 0: objects 0-2 move down a pixel a frame (moving) until object 0 reaches Y
-; $40; then they stop, object 2 faces left and 'Heh, that old man, he ...' (message $0831). (C1,
-; E-0357)
+; $40; then they stop, object 2 faces left and 'Heh, that old man, he ...' (message $0831). (C2,
+; E-0357; probed E-0376)
 SceneWhoAreYou_MoveDown::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
@@ -7176,6 +7407,10 @@ SceneWhoAreYou_MoveDown::
     inc [hl]
     ret
 
+; Script command $28 (SCRIPT_SHAKE_SCREEN), run each frame by ScriptCommand28 in bank $10 (far
+; call): wScriptStep picks the step: 0 ShakeScreen_Start (redraws the columns beside the screen,
+; sound $7D), 1 ShakeScreen_Shake (shakes the screen for $78 frames), 2 ShakeScreen_Finish (sound 0,
+; then wScriptStartRequest = $80 resumes the script). (C1, E-0376)
 ; implements script command type 28 (SCRIPT_SHAKE_SCREEN): shakes the screen (ScriptStepShakeScreen)
 ; with a sound effect; reached through ScriptCommand28 in bank $10 (E-0038, E-0245)
 ShakeScreen::
@@ -7194,13 +7429,13 @@ ShakeScreen_Start::
     inc [hl]
     ret
 
-; Screen shake, step 1: shakes the screen for $78 frames. (C1, E-0357)
+; Screen shake, step 1: shakes the screen for $78 frames. (C2, E-0357; probed E-0376)
 ShakeScreen_Shake::
     ld b, $78
     call ScriptStepShakeScreen
     ret
 
-; Screen shake, step 2: plays sound 0 and resumes the script. (C1, E-0357)
+; Screen shake, step 2: plays sound 0 and resumes the script. (C2, E-0357; probed E-0376)
 ShakeScreen_Finish::
     ld a, $00
     call QueueSoundEffect
@@ -7209,11 +7444,17 @@ ShakeScreen_Finish::
     ret
 
 ; Shakes the screen for wStepPtrLo frames: puts the count in B and falls into ScriptStepShakeScreen.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 ShakeScreenForStepCount::
     ld a, [wStepPtrLo]
     ld b, a
 
+; B = frame count. Shakes the 16-bit horizontal scroll hScrollX/hScrollXHi by the frame counter:
+; when wFrameCounterLo & 3 is 0 it subtracts 2, when it is 2 it adds 2, odd frames leave it. Then
+; counts wScriptParam0 up (StepScriptParam0Counter_Bank0F with B); when the count reaches B the
+; scroll is reset to 0 and wScriptStep += 1. Carry is clear on return either way (the xor that
+; clears the scroll clears it). Used by ShakeScreen_Shake ($78 frames), ShakeScreenForStepCount
+; (falls into it) and six other scene steps of this bank. (C2, E-0376)
 ; shakes hScrollX left and right with the frame counter until the wScriptParam0 counter expires,
 ; then resets the scroll and advances wScriptStep (E-0125)
 ScriptStepShakeScreen::
@@ -7255,6 +7496,14 @@ ScriptStepShakeScreen::
     inc [hl]
     ret
 
+; Script command $27 (SCRIPT_SCENE_RIVAL_DEFEATED), run each frame by ScriptCommand27 in bank $10
+; (far call); wScriptStep picks one of 36 steps. In order: object 0 blinks out; objects walk up and
+; the King speaks (messages $0199, $019A); sounds and the two pleas $019B and $019C; objects are
+; placed and walk off; the King and the 'TidalBell' ($019D-$019F, the party count held at 2
+; meanwhile); $01A0; a voice from nowhere ($01A1, $01A2); a warp to map 5 and Warubou ($0125); the
+; shared boss-win sequence (BossWinScene); Warubou again ($0DC0); last SceneRivalDefeated_GiveKey,
+; which resumes the script. Steps 2, 8, 11, 14, 18, 21, 23, 25, 27, 29 and 34 wait for the message
+; box (SceneHomecoming_WaitMessage); steps 4-6 run SceneKamehaFlees_Gather. (C1, E-0376)
 ; implements script command type 27 (SCRIPT_SCENE_RIVAL_DEFEATED): a cutscene step named after the
 ; scene its only script shows: 'You defeated my monster? Urggh' ... 'You again! You're determined!';
 ; reached through ScriptCommand27 in bank $10 (E-0038, E-0245)
@@ -7300,7 +7549,7 @@ SceneRivalDefeated::
 
 ; Rival defeated scene, step 35: sets EVENT_SCENE_RIVAL_DEFEATED_021, marks the key of kind 2
 ; (MarkKeyEntryKindTemp0Bit6), sets bit 1 of story byte $60 and wFarmLevel 1, and resumes the
-; script. (C1, E-0357)
+; script. (C2, E-0357; probed E-0376)
 SceneRivalDefeated_GiveKey::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call SetFlagBit
@@ -7318,7 +7567,7 @@ SceneRivalDefeated_GiveKey::
 
 ; Rival defeated scene, step 33: the scene object falls one pixel a frame to the player's Y and is
 ; hidden; then Warubou's 'Wa-hey, the ability to cross ...' (message $0DC0) and
-; EVENT_SCENE_RIVAL_DEFEATED. (C1, E-0357)
+; EVENT_SCENE_RIVAL_DEFEATED. (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowWarubouWaheyTheAbility::
     ldh a, [hPlayerY]
     ld c, a
@@ -7393,7 +7642,8 @@ SceneRivalDefeated_ShowWarubouWaheyYouDid::
     ld [wScriptSubStep], a
     ret
 
-; Rival defeated scene, step 28: '...Wa-hey! Can you hear me?' (message $01A2). (C1, E-0357)
+; Rival defeated scene, step 28: '...Wa-hey! Can you hear me?' (message $01A2). (C2, E-0357; probed
+; E-0376)
 SceneRivalDefeated_Msg01A2_WaheyCanYouHear::
     ld hl, $01a2 ; '*: …Wa-hey! Can you hear me?'
     call StartMessageHL_B0F
@@ -7402,7 +7652,7 @@ SceneRivalDefeated_Msg01A2_WaheyCanYouHear::
     ret
 
 ; Rival defeated scene, step 26: walks object 0 down to Y $A0; then draws no sprite slots and shows
-; 'A voice echoed from nowhere...' (message $01A1). (C1, E-0357)
+; 'A voice echoed from nowhere...' (message $01A1). (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowAVoiceEchoedFrom::
     ld a, $00
     ld [wStepPtrHi], a
@@ -7422,8 +7672,8 @@ SceneRivalDefeated_ShowAVoiceEchoedFrom::
     inc [hl]
     ret
 
-; Rival defeated scene, step 24: the King's 'I've been a burden to ...' (message $01A0). (C1,
-; E-0357)
+; Rival defeated scene, step 24: the King's 'I've been a burden to ...' (message $01A0). (C2,
+; E-0357; probed E-0376)
 SceneRivalDefeated_Msg01A0_KingIveBeenA::
     ld hl, $01a0 ; 'King: I've been a burden to'
     call StartMessageHL_B0F
@@ -7433,7 +7683,7 @@ SceneRivalDefeated_Msg01A0_KingIveBeenA::
 
 ; Rival defeated scene, step 22: the scene object moves left and down with a hop; then '<hero>
 ; obtained the TidalBell.' (message $019F), the object is hidden and put back at ($50, $30), and the
-; party count is restored from wScriptTemp4. (C1, E-0357)
+; party count is restored from wScriptTemp4. (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowHeroObtainedTheTidalBell::
     ld hl, wObject5 + SCRIPTOBJ_X
     dec [hl]
@@ -7457,7 +7707,7 @@ SceneRivalDefeated_ShowHeroObtainedTheTidalBell::
     ret
 
 ; Rival defeated scene, step 20: the scene object rises with a hop; then the King's 'This is the
-; TidalBell. It's ...' (message $019E). (C1, E-0357)
+; TidalBell. It's ...' (message $019E). (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowKingThisIsThe::
     ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
@@ -7471,7 +7721,7 @@ SceneRivalDefeated_ShowKingThisIsThe::
     ret
 
 ; Rival defeated scene, step 19: shows the scene object at ($40, $20); saves the party count in
-; wScriptTemp4 and lowers a count of 3 to 2 for the scene. (C1, E-0357)
+; wScriptTemp4 and lowers a count of 3 to 2 for the scene. (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowObject5::
     ld a, $40
     ld [wObject5 + SCRIPTOBJ_X], a
@@ -7492,7 +7742,7 @@ SceneRivalDefeated_ShowObject5::
     ret
 
 ; Rival defeated scene, step 17: walks object 0 down to Y $20; then the King's 'Wahah! We've bagged
-; the lot!' (message $019D) and object 0 faces left. (C1, E-0357)
+; the lot!' (message $019D) and object 0 faces left. (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowKingWahahWeveBagged::
     ld a, $00
     ld [wStepPtrHi], a
@@ -7576,7 +7826,8 @@ SceneRivalDefeated_PlaceObjects::
     inc [hl]
     ret
 
-; Rival defeated scene, step 13: 'Urgah! Mercy! I surrender!' (message $019C). (C1, E-0357)
+; Rival defeated scene, step 13: 'Urgah! Mercy! I surrender!' (message $019C). (C2, E-0357; probed
+; E-0376)
 SceneRivalDefeated_Msg019C_UrgahMercyISurrender::
     ld hl, $019c ; '*: Urgah! Mercy! I surrender!'
     call StartMessageHL_B0F
@@ -7584,7 +7835,8 @@ SceneRivalDefeated_Msg019C_UrgahMercyISurrender::
     inc [hl]
     ret
 
-; Rival defeated scene, step 10: 'Aiyeeh! Help me, boss!' (message $019B). (C1, E-0357)
+; Rival defeated scene, step 10: 'Aiyeeh! Help me, boss!' (message $019B). (C2, E-0357; probed
+; E-0376)
 SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss::
     ld hl, $019b ; '*: Aiyeeh! Help me, boss!'
     call StartMessageHL_B0F
@@ -7593,7 +7845,7 @@ SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss::
     ret
 
 ; Rival defeated scene, step 9: plays sound $7C at once and $81 at frame $3C, and waits $78 frames.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneRivalDefeated_PlaySounds::
     ld a, [wScriptParam0]
     or a
@@ -7621,7 +7873,7 @@ SceneRivalDefeated_PlaySounds::
     ret
 
 ; Rival defeated scene, step 7: walks objects 1-3 up off the screen; then the King's 'Surrender and
-; live!' (message $019A). (C1, E-0357)
+; live!' (message $019A). (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowKingSurrenderAndLive::
     ld a, $02
     ld [wStepTarget], a
@@ -7645,7 +7897,8 @@ SceneRivalDefeated_ShowKingSurrenderAndLive::
     inc [hl]
     ret
 
-; Rival defeated scene, step 3: walks the player left to X $30 and turns it right. (C1, E-0357)
+; Rival defeated scene, step 3: walks the player left to X $30 and turns it right. (C2, E-0357;
+; probed E-0376)
 SceneRivalDefeated_WalkPlayerLeft::
     ld a, $30
     ld [wStepPtrLo], a
@@ -7660,7 +7913,7 @@ SceneRivalDefeated_WalkPlayerLeft::
     ret
 
 ; Rival defeated scene, step 1: walks objects 3, 2 and 1 up to Y $40; then the player faces down and
-; the King says 'You thieves! There's no escape!' (message $0199). (C1, E-0357)
+; the King says 'You thieves! There's no escape!' (message $0199). (C2, E-0357; probed E-0376)
 SceneRivalDefeated_ShowKingYouThievesTheres::
     ld a, $02
     ld [wStepTarget], a
@@ -7687,7 +7940,7 @@ SceneRivalDefeated_ShowKingYouThievesTheres::
     ret
 
 ; Rival defeated scene, step 0: blinks object 0 (at Y $10) out; then sets bit 5 of story byte $61
-; and EVENT_SCENE_RIVAL_DEFEATED_05A. (C1, E-0357)
+; and EVENT_SCENE_RIVAL_DEFEATED_05A. (C2, E-0357; probed E-0376)
 SceneRivalDefeated_BlinkOut::
     xor a
     ldh [hTemp0], a
@@ -7706,6 +7959,12 @@ SceneRivalDefeated_BlinkOut::
     inc [hl]
     ret
 
+; Script command $23 (SCRIPT_SCENE_WATER_SHORTAGE), run each frame by ScriptCommand23 in bank $10;
+; ScriptFetch23 sets bit 2 of story byte $61 when the command starts. wScriptStep picks: 0
+; SceneWaterShortage_WalkPlayer (left to X $40, down to Y $80), 1 SceneWaterShortage_Warp (map $25),
+; 2 SceneWaterShortage_WalkDown (the player and object 0 walk), 3 SceneWaterShortage_WalkAndWarp
+; (map $2E), 4 SceneWaterShortage_Finish (resumes the script). It shows no message itself. (C1,
+; E-0376)
 ; implements script command type 23 (SCRIPT_SCENE_WATER_SHORTAGE): a cutscene step named after the
 ; scene its only script shows: 'King The town's water shortage seems...' ... 'King Wha-what? What
 ; happened?'; reached through ScriptCommand23 in bank $10 (E-0038, E-0245)
@@ -7716,10 +7975,10 @@ SceneWaterShortage::
     dw SceneWaterShortage_Warp
     dw SceneWaterShortage_WalkDown
     dw SceneWaterShortage_WalkAndWarp
-    dw SceneWaterShortage_SetScriptStartRequestTo80
+    dw SceneWaterShortage_Finish
 
-; Water shortage scene, step 4: resumes the script. (C1, E-0357)
-SceneWaterShortage_SetScriptStartRequestTo80::
+; Water shortage scene, step 4: resumes the script. (C2, E-0357; probed E-0376)
+SceneWaterShortage_Finish::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -7751,7 +8010,7 @@ SceneWaterShortage_WalkAndWarp::
 
 ; Water shortage scene, step 2: the player walks down to Y $60, then left to X $30, while object 0
 ; walks down to Y $60, then left to X $20 (wScriptParam0's low and high nibbles track the two legs);
-; when object 0 arrives it is hidden. (C1, E-0357)
+; when object 0 arrives it is hidden. (C2, E-0357; probed E-0376)
 SceneWaterShortage_WalkDown::
     ld a, [wScriptParam0]
     and $0f
@@ -7826,7 +8085,8 @@ SceneWaterShortage_Warp::
     call QueueSoundEffect
     ret
 
-; Water shortage scene, step 0: walks the player left to X $40, then down to Y $80. (C1, E-0357)
+; Water shortage scene, step 0: walks the player left to X $40, then down to Y $80. (C2, E-0357;
+; probed E-0376)
 SceneWaterShortage_WalkPlayer::
     ldh a, [hPlayerX]
     cp $40
@@ -7847,6 +8107,12 @@ SceneWaterShortage_WalkPlayer::
     inc [hl]
     ret
 
+; Script command $1F (SCRIPT_SCENE_MONSTER_INSPECTION), run each frame by ScriptCommand1F in bank
+; $10; wScriptStep picks one of 10 steps: 0 moves to map $25 with message $0151, 1 sound $6D after
+; the box closes, 2 waits $B4 frames then message $0152, 3 waits for the box, 4 walks up and moves
+; to map $26, 5 walks up to Y $40, 6 waits $B4 frames, 7 the followers perform (RunScriptSubStep), 8
+; walks down and warps back to map $25, 9 plays the map music, sets bit 0 of story byte $61 and
+; resumes the script. (C1, E-0376)
 ; implements script command type 1F (SCRIPT_SCENE_MONSTER_INSPECTION): a cutscene step named after
 ; the scene its only script shows: 'Ah, three healthy monsters! Very well' ... 'Very good show! That
 ; was splendid'; reached through ScriptCommand1F in bank $10 (E-0038, E-0245)
@@ -7935,7 +8201,7 @@ SceneMonsterInspection_WalkUpAndWarp::
     ret
 
 ; Monster inspection scene, step 5: walks the player up to Y $40; then ends its fast animation (bit
-; 2), faces it up and plays sound $6D. (C1, E-0357)
+; 2), faces it up and plays sound $6D. (C2, E-0357; probed E-0376)
 SceneMonsterInspection_WalkUp::
     ld a, $40
     ld [wStepPtrLo], a
@@ -8027,6 +8293,13 @@ SceneMonsterInspection_Finish::
     ld [wScriptStartRequest], a
     ret
 
+; Script command $1D (SCRIPT_SCENE_LONG_FACES), run each frame by ScriptCommand1D in bank $10;
+; ScriptFetch1D starts it with the question $0097 kept open (the Cobi line $008D behind
+; EVENT_NEVER_SET). wScriptStep picks one of 13 steps: 0 waits for the box, 1 SceneLongFaces_Answer,
+; 2 SceneLongFaces_AskAgain (back to step 1), 3 waits, 4 object 0 walks, 5 object 0 hops and Slash
+; speaks ($0090), 6 waits, 7 object 0 walks, then $0091, 8 Tara ($009A), 9 the player hops, 10 Slash
+; ($0093), 11 a fade with the party count set to 1 and EVENT_SCENE_LONG_FACES_002, 12 sets bit 0 of
+; story byte $60 and resumes the script. (C1, E-0376)
 ; implements script command type 1D (SCRIPT_SCENE_LONG_FACES): a cutscene step named after the scene
 ; its only script shows: 'Slash Hey, why the long faces?'; reached through ScriptCommand1D in bank
 ; $10 (E-0038, E-0245)
@@ -8047,7 +8320,8 @@ SceneLongFaces::
     dw SceneLongFaces_Fade
     dw SceneLongFaces_Finish
 
-; Long faces scene, step 12: sets bit 0 of story byte $60 and resumes the script. (C1, E-0357)
+; Long faces scene, step 12: sets bit 0 of story byte $60 and resumes the script. (C2, E-0357;
+; probed E-0376)
 SceneLongFaces_Finish::
     ld a, [wStoryFlags + $60]
     set 0, a
@@ -8086,7 +8360,7 @@ SceneLongFaces_ShowSlashThatsSettledThen::
     ret
 
 ; Long faces scene, step 9: the player hops (the first follower at the same height); then the player
-; faces right and the follower left. (C1, E-0357)
+; faces right and the follower left. (C2, E-0357; probed E-0376)
 SceneLongFaces_HopPlayer::
     ld de, hPlayerY
     call ScriptApplyStepDeltaAtDE
@@ -8126,7 +8400,7 @@ SceneLongFaces_ShowTaraThenItsYour::
     ret
 
 ; Long faces scene, step 7: walks object 0 left to X $70 and turns it down; then Slash's 'And <hero>
-; has potential, I ...' (message $0091). (C1, E-0357)
+; has potential, I ...' (message $0091). (C2, E-0357; probed E-0376)
 SceneLongFaces_ShowSlashAndHeroHas::
     ld a, $00
     ld [wStepPtrHi], a
@@ -8149,7 +8423,8 @@ SceneLongFaces_ShowSlashAndHeroHas::
     ret
 
 ; Long faces scene, step 5: object 0 hops for $20 frames; then the player and the first follower
-; face up and Slash says 'Don't worry! I'm riding along!' (message $0090). (C1, E-0357)
+; face up and Slash says 'Don't worry! I'm riding along!' (message $0090). (C2, E-0357; probed
+; E-0376)
 SceneLongFaces_ShowSlashDontWorryIm::
     ld de, wSpriteSlots + $c
     ld a, e
@@ -8174,7 +8449,7 @@ SceneLongFaces_ShowSlashDontWorryIm::
     ret
 
 ; Long faces scene, step 4: walks object 0 left to X $60, up to Y $40, then right to X $78, and
-; turns it down. (C1, E-0357)
+; turns it down. (C2, E-0357; probed E-0376)
 SceneLongFaces_WalkObject0::
     ld a, [wScriptParam0]
     or a
@@ -8247,7 +8522,7 @@ SceneLongFaces_AskAgain::
 ; Long faces scene, step 1: the answer to the question in wMessageIndex/wMessageGroup: the first
 ; choice shows the message two after it in the open box and skips to step 3; another shows the next
 ; one in the open box, kept open, and goes on to step 2 (the flags are written back into
-; wMessageGroup). (C1, E-0357)
+; wMessageGroup). (C2, E-0357; probed E-0376)
 SceneLongFaces_Answer::
     ld a, [wTextYesNoResult]
     or a
@@ -8286,6 +8561,12 @@ SceneLongFaces_Answer::
     inc [hl]
     ret
 
+; Script command $1C (SCRIPT_SCENE_WARUBOU_WARNING), run each frame by ScriptCommand1C in bank $10;
+; ScriptFetch1C starts it with the first follower facing away from the player and message $0088 (the
+; Cobi line $0087 behind EVENT_NEVER_SET). wScriptStep picks: 0 after the box closes moves to map 6,
+; 1 the follower walks right and Tara asks ($0094, kept open), 2 waits for the box, 3
+; SceneWarubouWarning_Answer, 4 waits for the box and resumes the script
+; (PersonalityMessage_WaitForMessage). (C1, E-0376)
 ; implements script command type 1C (SCRIPT_SCENE_WARUBOU_WARNING): a cutscene step named after the
 ; scene its only script shows: 'Warubou Dangerous are other worlds!' ... 'Slash Hey, why the long
 ; faces?'; reached through ScriptCommand1C in bank $10 (E-0038, E-0245)
@@ -8298,8 +8579,11 @@ SceneWarubouWarning::
     dw SceneWarubouWarning_Answer
     dw PersonalityMessage_WaitForMessage
 
-; Warubou warning scene, step 3: the answer: the first choice shows the message after the current
-; one, another the one after that, both with the box kept open. (C1, E-0357)
+; Warubou warning scene, step 3: wScriptStep += 1 first; then answers the question in
+; wMessageIndex/wMessageGroup ($0094 or $0089, kept open): the first choice (wTextYesNoResult 0)
+; starts the next message, another the one after that. Both add $40 to the group byte, which turns
+; MSG_KEEP_OPEN into MSG_ALREADY_OPEN, so the answer shows in the box that is already open and the
+; box closes after it. (C2, E-0376)
 SceneWarubouWarning_Answer::
     ld hl, wScriptStep
     inc [hl]
@@ -8338,7 +8622,8 @@ SceneWarubouWarning_Answer::
 
 ; Warubou warning scene, step 1: the first follower faces right and walks right one pixel a frame to
 ; X $80; then the player faces right, the follower left, and Tara says 'If we don't go find ...'
-; (message $0094, kept open); Cobi's line $0089 is behind EVENT_NEVER_SET. (C1, E-0357)
+; (message $0094, kept open); Cobi's line $0089 is behind EVENT_NEVER_SET. (C2, E-0357; probed
+; E-0376)
 SceneWarubouWarning_ShowTaraIfWeDont::
     ld a, $01
     ld [wFollowerRecords], a
@@ -8385,6 +8670,12 @@ SceneWarubouWarning_Warp::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
+; Script command $77 (SCRIPT_SCENE_LAND_HO), run each frame by ScriptCommand77 in bank $10;
+; wScriptStep picks one of 15 steps: 0 moves to map $1C with the player off the screen, 1 waits $3C
+; frames and loads the map screen above, 2 object 0 rises to Y $50, 3-8 SceneLandHo_ScrollUp six
+; times, 9-10 the row-by-row scroll (SceneLandHo_PrepareScrollRows, SceneLandHo_ScrollRows), 11
+; waits $78 frames then message $0014, 12 waits for the box, 13 warps to map 0 and sets
+; EVENT_SCENE_LAND_HO, 14 starts talk event $0A of group 2 (DispatchTalkEvent). (C1, E-0376)
 ; implements script command type 77 (SCRIPT_SCENE_LAND_HO): a cutscene step named after the scene
 ; its only script shows: 'Land ho! There's GreatLog!'; reached through ScriptCommand77 in bank $10
 ; (E-0038, E-0245)
@@ -8442,7 +8733,7 @@ SceneLandHo_WarpHome::
     ret
 
 ; Land ho scene, step 11: waits $78 frames, then 'This is a tale of children ...' (message $0014).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0376)
 SceneLandHo_ShowThisIsATale::
     ld b, $78
     call StepScriptParam0Counter_Bank0F
@@ -8455,7 +8746,7 @@ SceneLandHo_ShowThisIsATale::
 
 ; Land ho scene, step 10: every four frames scrolls up one pixel and copies a 20-tile row of
 ; wScreenTileBuffer (row $11 - wFieldActionStep / 8) into the background row above the screen; after
-; $90 steps aligns the scroll to a whole tile. (C1, E-0357)
+; $90 steps aligns the scroll to a whole tile. (C2, E-0357; probed E-0376)
 SceneLandHo_ScrollRows::
     ld a, [wScriptParam0]
     inc a
@@ -8545,7 +8836,7 @@ SceneLandHo_ScrollRows::
     ret
 
 ; Queues a 20-tile background row write at DE from HL (wBGWriteData) and, on the GBC, its attributes
-; from WRAM bank 2 at HL + $0E68 (low three bits, the palette). (C1, E-0357)
+; from WRAM bank 2 at HL + $0E68 (low three bits, the palette). (C2, E-0357; probed E-0376)
 QueueBGMapRow::
     ld a, e
     ld [wBGWriteDestLo], a
@@ -8601,7 +8892,7 @@ QueueBGMapRow::
     ret
 
 ; Land ho scene, step 9: clears wFieldActionStep, which step 10 (SceneLandHo_ScrollRows) uses as its
-; row counter up to $90, and moves on. (C1, E-0370)
+; row counter up to $90, and moves on. (C2, E-0370; probed E-0376)
 SceneLandHo_PrepareScrollRows::
     xor a
     ld [wFieldActionStep], a
@@ -8609,8 +8900,10 @@ SceneLandHo_PrepareScrollRows::
     inc [hl]
     ret
 
-; Land ho scene, step 3: scrolls the view up one pixel every four frames for 16 pixels, then resets
-; the scroll to 0. (C1, E-0357)
+; Land ho scene, steps 3-8: counts wScriptParam0 up each frame; every fourth frame scrolls the view
+; up one pixel (hScrollY - 1, then ComputeSpriteScrollOffsets); on the 16th such frame
+; (wScriptParam0 = $40) it instead clears wScriptParam0, hScrollY and hScrollYHi and advances
+; wScriptStep: 15 one-pixel steps, then the scroll snaps back to 0. (C2, E-0376)
 SceneLandHo_ScrollUp::
     ld a, [wScriptParam0]
     inc a
@@ -8637,7 +8930,8 @@ SceneLandHo_ScrollUp::
     inc [hl]
     ret
 
-; Land ho scene, step 2: object 0 (moving) rises one pixel every four frames to Y $50. (C1, E-0357)
+; Land ho scene, step 2: object 0 (moving) rises one pixel every four frames to Y $50. (C2, E-0357;
+; probed E-0376)
 SceneLandHo_RaiseObject::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
@@ -8688,17 +8982,24 @@ SceneLandHo_Warp::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
+; Script command $76 (no script command constant names it), run each frame by ScriptCommand76 in
+; bank $10; wScriptStep picks: 0 and 1 SceneIslandSinking_ShowTheIslandIsSinking (object 3 hops,
+; then message $0076 'The island is sinking? Hahah, no worries!' when EVENT_IN_THE_MIDDLE_OF_THE is
+; set, otherwise message $0078), 2 waits for the box, 3 ScriptCommand76_Run_PlaceFollower (sound
+; $76, EVENT_SCENE_LAND_HO, the first follower placed, script resumed). Because steps 0 and 1 run
+; the same routine, object 3 hops twice and the message is started twice before step 2 runs the box.
+; (C1, E-0376)
 ; implements script command type 76; reached through ScriptCommand76 in bank $10 (E-0038)
-ScriptCommand76_Run::
+SceneIslandSinking::
     ld a, [wScriptStep]
     jumptable
-    dw ScriptCommand76_Run_ShowTheIslandIsSinking
-    dw ScriptCommand76_Run_ShowTheIslandIsSinking
+    dw SceneIslandSinking_ShowTheIslandIsSinking
+    dw SceneIslandSinking_ShowTheIslandIsSinking
     dw SceneHomecoming_WaitMessage
     dw ScriptCommand76_Run_PlaceFollower
 
 ; Script command $76, step 3: plays sound $76, sets EVENT_SCENE_LAND_HO, puts the first follower
-; facing left at ($60, $50), hides object 3 and resumes the script. (C1, E-0357)
+; facing left at ($60, $50), hides object 3 and resumes the script. (C2, E-0357; probed E-0376)
 ScriptCommand76_Run_PlaceFollower::
     ld a, $76
     call QueueSoundEffect
@@ -8718,8 +9019,8 @@ ScriptCommand76_Run_PlaceFollower::
 
 ; Script command $76, step 0: object 3 hops; then 'The island is sinking? Hahah, ...' (message
 ; $0076) with EVENT_IN_THE_MIDDLE_OF_THE set, otherwise 'It's pointless if you're dead.' (message
-; $0078). (C1, E-0357)
-ScriptCommand76_Run_ShowTheIslandIsSinking::
+; $0078). (C2, E-0357; probed E-0376)
+SceneIslandSinking_ShowTheIslandIsSinking::
     ld de, wObject3 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -8739,6 +9040,10 @@ ScriptCommand76_Run_ShowTheIslandIsSinking::
     call StartMessageHL_B0F
     ret
 
+; Script command $75 (SCRIPT_SCENE_AT_SEA), run each frame by ScriptCommand75 in bank $10;
+; wScriptStep picks: 0 moves to map $1D with player sprite mode 1, 1 waits $5A frames, 2 object 3
+; moves down to Y $30 and faces left, 3 object 3 hops left and down, then the script resumes. (C1,
+; E-0376)
 ; implements script command type 75 (SCRIPT_SCENE_AT_SEA): a cutscene step named after the scene its
 ; only script shows: after 'In the middle of the sea'; reached through ScriptCommand75 in bank $10
 ; (E-0038, E-0245)
@@ -8751,7 +9056,7 @@ SceneAtSea::
     dw SceneAtSea_MoveObject3
 
 ; At sea scene, step 3: object 3 moves left and down a pixel a frame with a hop; then the script
-; resumes. (C1, E-0357)
+; resumes. (C2, E-0357; probed E-0376)
 SceneAtSea_MoveObject3::
     ld hl, wObject3 + OBJ_X
     dec [hl]
@@ -8764,7 +9069,8 @@ SceneAtSea_MoveObject3::
     ld [wScriptStartRequest], a
     ret
 
-; At sea scene, step 2: object 3 moves down two pixels a frame to Y $30 and faces left. (C1, E-0357)
+; At sea scene, step 2: object 3 moves down two pixels a frame to Y $30 and faces left. (C2, E-0357;
+; probed E-0376)
 SceneAtSea_MoveObject3Down::
     ld a, [wObject3 + OBJ_Y]
     inc a
@@ -8778,7 +9084,7 @@ SceneAtSea_MoveObject3Down::
     inc [hl]
     ret
 
-; At sea scene, step 1: waits $5A frames. (C1, E-0357)
+; At sea scene, step 1: waits $5A frames. (C2, E-0357; probed E-0376)
 SceneAtSea_Wait::
     ld b, $5a
     call StepScriptParam0Counter_Bank0F
@@ -8807,6 +9113,10 @@ SceneAtSea_Warp::
     ldh [hPlayerSpriteMode], a
     ret
 
+; Script command $6B (SCRIPT_SCENE_VAULT_SETTLED), run each frame by ScriptCommand6B in bank $10;
+; wScriptStep picks: 0 the first follower takes the facing of the player and hops, 1 Tara speaks
+; ($0021; the Cobi line $001F behind EVENT_NEVER_SET), 2 waits for the box and resumes the script
+; (PersonalityMessage_WaitForMessage). (C1, E-0376)
 ; implements script command type 6B (SCRIPT_SCENE_VAULT_SETTLED): a cutscene step named after the
 ; scene its only script shows: 'You've come at the right...' ... 'Good, that's settled then. The
 ; Vault...'; reached through ScriptCommand6B in bank $10 (E-0038, E-0245)
@@ -8818,7 +9128,7 @@ SceneVaultSettled::
     dw PersonalityMessage_WaitForMessage
 
 ; Vault settled scene, step 1: Tara's 'We'll be OK! I'm going ...' (message $0021); Cobi's line
-; $001F is behind EVENT_NEVER_SET. (C1, E-0357)
+; $001F is behind EVENT_NEVER_SET. (C2, E-0357; probed E-0376)
 SceneVaultSettled_ShowTaraWellBeOK::
     ld hl, wScriptStep
     inc [hl]
@@ -8834,7 +9144,8 @@ SceneVaultSettled_ShowTaraWellBeOK::
     call StartMessageHL_B0F
     ret
 
-; Vault settled scene, step 0: the first follower faces the player's way and hops. (C1, E-0357)
+; Vault settled scene, step 0: the first follower faces the player's way and hops. (C2, E-0357;
+; probed E-0376)
 SceneVaultSettled_HopFollower::
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
@@ -8845,6 +9156,11 @@ SceneVaultSettled_HopFollower::
     inc [hl]
     ret
 
+; Script command $6A (SCRIPT_SCENE_HORSING_AROUND), run each frame by ScriptCommand6A in bank $10;
+; wScriptStep picks: 0 the player walks its loop for $140 frames, 1 object 0 walks down to Y $50 and
+; faces right, 2 $20 more frames, 3 object 0 hops, then the script resumes. Every step first moves
+; the player two pixels along its six-leg loop (SceneHorsingAround_StepPlayerAlongLoop). (C2,
+; E-0376)
 ; implements script command type 6A (SCRIPT_SCENE_HORSING_AROUND): a cutscene step named after the
 ; scene its only script shows: before 'Listen you two! Quit your horsing...'; reached through
 ; ScriptCommand6A in bank $10 (E-0038, E-0245)
@@ -8857,7 +9173,7 @@ SceneHorsingAround::
     dw SceneHorsingAround_HopObject0
 
 ; Horsing around scene, step 3: the player keeps walking its loop while object 0 hops; then the fast
-; animation ends (bit 2) and the script resumes. (C1, E-0357)
+; animation ends (bit 2) and the script resumes. (C2, E-0357; probed E-0376)
 SceneHorsingAround_HopObject0::
     call SceneHorsingAround_StepPlayerAlongLoop
     ld de, wSpriteSlots + $c
@@ -8870,7 +9186,7 @@ SceneHorsingAround_HopObject0::
     ret
 
 ; Horsing around scene, step 2: the player keeps walking its loop for $20 frames (counted in
-; wMessageIndex). (C1, E-0357)
+; wMessageIndex). (C2, E-0357; probed E-0376)
 SceneHorsingAround_WalkLoopMore::
     call SceneHorsingAround_StepPlayerAlongLoop
     ld a, [wMessageIndex]
@@ -8885,7 +9201,7 @@ SceneHorsingAround_WalkLoopMore::
     ret
 
 ; Horsing around scene, step 1: the player keeps walking its loop while object 0 walks down to Y
-; $50; then object 0 faces right. (C1, E-0357)
+; $50; then object 0 faces right. (C2, E-0357; probed E-0376)
 SceneHorsingAround_WalkObject0::
     call SceneHorsingAround_StepPlayerAlongLoop
     ld a, $00
@@ -8905,7 +9221,7 @@ SceneHorsingAround_WalkObject0::
     ret
 
 ; Horsing around scene, step 0: the player walks its loop for $140 frames (counted in
-; wMessageIndex/wMessageGroup). (C1, E-0357)
+; wMessageIndex/wMessageGroup). (C2, E-0357; probed E-0376)
 SceneHorsingAround_WalkLoop::
     call SceneHorsingAround_StepPlayerAlongLoop
     ld a, [wMessageIndex]
@@ -8932,7 +9248,7 @@ SceneHorsingAround_WalkLoop::
 
 ; Walks the player two pixels a frame around a six-leg loop (left to X $40, down to Y $80, right to
 ; X $80, up to Y $60, left to X $70, up to Y $50), going on to the next leg (wScriptParam1, wrapping
-; after 5) on each arrival. (C1, E-0357)
+; after 5) on each arrival. (C2, E-0357; probed E-0376)
 SceneHorsingAround_StepPlayerAlongLoop::
     ld a, [wScriptParam1]
     or a
@@ -8999,8 +9315,11 @@ SceneHorsingAround_StepPlayerAlongLoop::
     ld [wScriptParam1], a
     ret
 
+; B = limit: wScriptParam0 += 1; when it then equals B it is reset to 0 and carry is set, otherwise
+; carry is clear (Z set). A = 0 either way. The frame counter behind the timed waits of this bank (B
+; = $78, $B4, $5A, ...); the same 18 bytes appear in 3 banks. (C2, E-0376)
 ; wScriptParam0 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear;
-; returns A = 0 either way (the same 18 bytes appear in 3 banks) (E-0353)
+; returns A = 0 either way (the same 18 bytes appear in 3 banks)
 StepScriptParam0Counter_Bank0F::
     ld a, [wScriptParam0]
     inc a
@@ -9016,34 +9335,48 @@ StepScriptParam0Counter_Bank0F::
     scf
     ret
 
-; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; [HL] |= $02 (sets bit 1, which stops the animation counter in OBJ_FLAGS and hPlayerStateFlags); A
+; = the new byte. Callers pass wObject2 + OBJ_FLAGS or hPlayerStateFlags; the same 5 bytes appear in
+; 4 banks. (C2, E-0376)
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
 SetBit1AtHL_Bank0F::
     ld a, [hl]
     or $02
     ld [hl], a
     ret
 
-; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; [HL] &= $FD (clears bit 1, letting the animation counter run again); A = the new byte. Callers
+; pass wObject2 + OBJ_FLAGS or hPlayerStateFlags; the same 5 bytes appear in 4 banks. (C2, E-0376)
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
 ClearBit1AtHL_Bank0F::
     ld a, [hl]
     and $fd
     ld [hl], a
     ret
 
-; sets bit 2 of the byte at [HL]; only A is clobbered (E-0353)
+; [HL] |= $04 (sets bit 2, the moving bit of OBJ_FLAGS and hPlayerStateFlags); A = the new byte.
+; Callers pass wSpriteSlots + $D, wObject1/wObject2 + OBJ_FLAGS or hPlayerStateFlags. (C2, E-0376)
+; sets bit 2 of the byte at [HL]; only A is clobbered
 SetBit2AtHL_B0F::
     ld a, [hl]
     or $04
     ld [hl], a
     ret
 
-; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; [HL] &= $FB (clears bit 2, the moving bit); A = the new byte. Callers pass wSpriteSlots + $D,
+; wObject1/wObject2 + OBJ_FLAGS or hPlayerStateFlags; the same 5 bytes appear in 4 banks. (C2,
+; E-0376)
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
 ClearBit2AtHL_Bank0F::
     ld a, [hl]
     and $fb
     ld [hl], a
     ret
 
+; A = the moving coordinate of the player (hPlayerX or hPlayerY at every caller): when A & $0F is 0
+; (a 16-pixel boundary) it first far-calls SetFollowerTargetsFromLeader (each follower targets the
+; position of the one ahead); then always far-calls StepFollowersTowardTargets. The same 17 bytes
+; appear in 3 banks. (C2, E-0376)
 ; A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls
 ; SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093) (the same
 ; 17 bytes appear in 3 banks)
@@ -9056,6 +9389,11 @@ UpdateFollowersOnStep_Bank0F::
     farcall StepFollowersTowardTargets
     ret
 
+; DE = address of a coordinate byte: stores DE in wStepPtrLo/wStepPtrHi and adds the step delta for
+; wScriptParam0 (AddStepDeltaToPointedByte: entry wScriptParam0 / 2 of a 16-byte table that sums to
+; 0, a hop up and back down); then wScriptParam0 += 2; when it reaches $20 it is reset to 0 and
+; carry is set, otherwise A = 0 and carry clear. So a hop takes 16 calls; scene steps call it each
+; frame with an object, follower or player Y. (C2, E-0376)
 ; DE = address of a byte: adds the step delta for wScriptParam0 (AddStepDeltaToPointedByte), then
 ; wScriptParam0 += 2; when it reaches $20 it is reset to 0 and carry is set, otherwise A = 0 and
 ; carry is clear (16 calls per move) (E-0062)
@@ -9080,6 +9418,10 @@ ScriptApplyStepDeltaAtDE::
     scf
     ret
 
+; DE = address of a coordinate byte: adds the step delta for wScriptParam0
+; (AddStepDeltaToPointedByte through wStepPtrLo/wStepPtrHi), then counts wScriptParam0 up by one
+; (StepScriptParam0Counter_Bank0F with B = $20), so each delta is used twice and the hop takes 32
+; frames; when the counter wraps, wScriptStep += 1. (C2, E-0376)
 ; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wStepPtrLo/wStepPtrHi)
 ; and counts wScriptParam0 up (StepScriptParam0Counter_Bank0F with B = $20); when the counter wraps,
 ; wScriptStep += 1 (E-0117)
@@ -9096,6 +9438,10 @@ ScriptStepDeltaThenNextStep::
     inc [hl]
     ret
 
+; DE = address of a coordinate byte, HL = message word: the same 32-frame hop as
+; ScriptStepDeltaThenNextStep (AddStepDeltaToPointedByte, StepScriptParam0Counter_Bank0F with B =
+; $20); when the counter wraps it starts message HL (StartMessageHL_B0F) and wScriptStep += 1. (C2,
+; E-0376)
 ; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wStepPtrLo/wStepPtrHi)
 ; and counts wScriptParam0 up (StepScriptParam0Counter_Bank0F with B = $20); when the counter wraps,
 ; StartMessageHL_B0F with the caller's HL and wScriptStep += 1 (E-0117)
@@ -9115,6 +9461,10 @@ ScriptStepDeltaThenMessage::
     inc [hl]
     ret
 
+; DE = address of a coordinate byte: the same 32-frame hop as ScriptStepDeltaThenNextStep
+; (AddStepDeltaToPointedByte, StepScriptParam0Counter_Bank0F with B = $20); when the counter wraps,
+; wScriptStartRequest = $80 (the script fetches its next command). No caller in src/ names it. (C2,
+; E-0376)
 ; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wStepPtrLo/wStepPtrHi)
 ; and counts wScriptParam0 up (StepScriptParam0Counter_Bank0F with B = $20); when the counter wraps,
 ; wScriptStartRequest = $80 (E-0117)
@@ -9131,6 +9481,10 @@ ScriptStepDeltaThenRequestFetch::
     ld [wScriptStartRequest], a
     ret
 
+; DE = address of a direction byte: when wScriptParam0 & $1F is 0, [DE] = ([DE] + 1) & 3, the next
+; of four directions, and A = that; otherwise returns at once with A = wScriptParam0 & $1F. It does
+; not change wScriptParam0. No caller in this bank names it; the copies in banks $73 and $85 are
+; called. (C2, E-0376)
 ; when wScriptParam0 & $1F = 0: [DE] = ([DE] + 1) & 3, the next of four directions; otherwise
 ; returns with A = wScriptParam0 & $1F (E-0064) (the same 12 bytes appear in 3 banks)
 RotateDirectionAtDEEvery32_Bank0F::
@@ -9143,7 +9497,11 @@ RotateDirectionAtDEEvery32_Bank0F::
     ld [de], a
     ret
 
-; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0353)
+; HL = message word (low byte the message, high byte its group and the MSG_KEEP_OPEN /
+; MSG_ALREADY_OPEN flags): stores it in wMessageIndex (low) and wMessageGroup (high) and sets
+; wMessageState = 0, so the next RunMessageBox call opens the box and shows it. The scene steps of
+; this bank start every message this way. (C2, E-0376)
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0
 StartMessageHL_B0F::
     ld a, l
     ld [wMessageIndex], a
@@ -9153,6 +9511,11 @@ StartMessageHL_B0F::
     ld [wMessageState], a
     ret
 
+; A = argument kept in wStepPtrLo for RunMessageBox (0 also freezes the field animation while the
+; box opens and releases it when it closes): far-calls RunMessageBox for one step of the message
+; box, then returns carry set when wMessageState is $FF (no message running), else A = 0 and carry
+; clear. Every caller in this bank passes A = 0 (SceneHomecoming_WaitMessage and the other scene
+; waits). The same 20 bytes appear in 4 banks. (C1, E-0376)
 ; wStepPtrLo = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A =
 ; 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 RunMessageBoxFar_Bank0F::

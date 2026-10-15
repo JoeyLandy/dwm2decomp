@@ -4,15 +4,25 @@
 SECTION "Bank 0B", ROMX[$4000], BANK[$0B]
     db $0b
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Loads DE = BeginStringDisplay_Bank0B_StringCategories (this bank string table: category 0 the
+; library talk and short strings such as '???' and 'Welcome to the library.', 1 the monster
+; descriptions, 2 the family names such as 'Slime') and calls BeginStringDisplay, which starts the
+; text printer on string wStringIndex of category wStringCategory. Reached with farcall from the
+; debug menu (bank $01) and called by ShowString_Bank0B. The 7 bytes after its ret are an unlabelled
+; second copy of the same ld de / call / ret. (C1, E-0376)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank0B::
     ld de, BeginStringDisplay_Bank0B_StringCategories
     call BeginStringDisplay
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9
 
+; Shows a bank $0B string at once: BeginStringDisplay_Bank0B (string wStringIndex of category
+; wStringCategory) and then RunStringDisplayToEnd, which prints the whole string in one go instead
+; of a glyph per frame. The library far-calls it six times (LibraryMenu_ShowMonsterEntry_DrawEntry,
+; the pedigree and description steps, and LibraryMenu_DrawSeenNames), after setting
+; wTextWindowTileLo/Hi and the window size. (C1, E-0376)
 ; BeginStringDisplay_Bank0B (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_Bank0B::
     call BeginStringDisplay_Bank0B
     call RunStringDisplayToEnd

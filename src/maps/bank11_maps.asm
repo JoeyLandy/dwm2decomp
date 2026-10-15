@@ -4,10 +4,24 @@
 SECTION "Bank 11", ROMX[$4000], BANK[$11]
     db $11, $c9
 
+; Far-called by UpdatePlayerMovement (bank $02) after it has stepped hMapScreenX or hMapScreenY to
+; the next screen; returns C = 1 when it started a warp, otherwise C = 0. A special map (wMapType
+; bit 7) hands over to CheckWarpAtPlayer_SpecialMap. Otherwise it walks the 9-byte entries of
+; MapWarpTable[hMapId] up to the $80 end, skipping $FD entries: an entry whose byte 0 equals
+; hPlayerFacing matches when the nibbles of byte 1 equal (hMapScreenX, hMapScreenY) and bytes 2-3
+; equal (hPlayerX, hPlayerY); a $FE or $FF entry matches when bytes 2-3 equal (hMapScreenX,
+; hMapScreenY), at any position. On a match: wWarpPending = 1, sound $60, hMapId = byte 4,
+; hMapScreenX/Y = low nibbles of bytes 5/6, wWarpDestFacing = byte 1 (or the $FE/$FF byte); the
+; destination is (byte 7 low nibble x 16, byte 8 low nibble x 16), but for $FF it is (hPlayerX +
+; byte 7, hPlayerY + byte 8); byte 5 bit 7 adds 8 to wWarpDestY and sets hPlayerStateFlags bit 6,
+; byte 5 bits 4-5 go to wLastWarpIndex unless they are 3, the high nibble of byte 6 goes to
+; wFieldTransitionKind; then palette fade 4, wFieldInitStage + 1, wModeState = 4,
+; wFieldTransitionStep = 0, hPlayerStateFlags bit 7 set and ClearPendingFieldEventIfBit7AndNot6.
+; (C2, E-0376)
 ; unless a special mode is set (wMapType bit 7 hands over to CheckWarpAtPlayer_SpecialMap): walks
 ; the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its
 ; screen nibbles starts a map change: wWarpPending = 1, sound effect $60 is queued, and the entry's
-; new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored (E-0036)
+; new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored
 CheckWarpAtPlayer::
     ld a, [wMapType]
     bit 7, a
@@ -205,6 +219,18 @@ CheckWarpAtPlayer::
     ld c, $01
     ret
 
+; The per-step warp check, far-called by FieldState_StepChecks, UpdatePlayerMovement_AdvanceStep and
+; RunFieldActionRequestActionIfBit7_StepChecks; returns C = 1 when it started a warp. Special maps
+; (wMapType bit 7) use CheckWarpsByMapType. Otherwise CheckMapExitTable runs first and a warp there
+; ends the check. Then only the $FD entries of MapWarpTable[hMapId] are tested: the nibbles of byte
+; 1 against (hMapScreenX, hMapScreenY), byte 2 against hPlayerX and byte 3 against hPlayerY or
+; hPlayerY - 8. A match while hPlayerStateFlags bit 7 is set returns C = 0 without warping;
+; otherwise it warps as CheckWarpAtPlayer does for a facing entry (map byte 4, screen from the low
+; nibbles of bytes 5/6, position from the low nibbles of bytes 7/8 x 16, byte 5 bit 7 adding 8 to Y
+; and setting flag bit 6, wLastWarpIndex, wFieldTransitionKind, fade 4, wModeState = 4, flag bit 7
+; set) and also clears wFieldReturnPhase and wJoypadPressed. With no match it clears
+; hPlayerStateFlags bit 7 and returns C = 0, except on map $30 screen (5,5) at ($40,$50) while
+; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD is set and EVENT_SCENE_CRATE is not. (C2, E-0376)
 ; special maps use CheckWarpsByMapType; otherwise checks the map exit table, then the warp list
 ; MapWarpTable[hMapId] against the player position and warps on a match (E-0131)
 CheckWarpsAtPlayerPosition::
@@ -406,6 +432,14 @@ CheckWarpsAtPlayerPosition::
     ld c, $01
     ret
 
+; Far-called by UpdatePlayerMovement (bank $02) when CheckWarpAtPlayer finds nothing after the
+; player steps down to the next screen, and by CallFOnScreenY1 (bank $61); returns C = 1 when it
+; warped, otherwise C = 0. Special maps go to WarpToLinkedMapForCurrentMap_SpecialMap (only map type
+; $87 warps). Otherwise hMapId is looked up in WarpToLinkedMapForCurrentMap_Data1 ($FF ends it; a
+; miss returns C = 0); entry N of the 3-byte WarpToLinkedMapForCurrentMap_Data2 gives the new hMapId
+; and a packed position byte and screen byte, which WarpToLinkedMapForCurrentMap_StartWarp turns
+; into the warp. When a key world is active and wKeyWorldKey - 1 equals N, the position and screen
+; bytes come from wKeyWorldGoal instead; the map id still comes from the table. (C2, E-0376)
 ; unless bit 7 of wMapType is set, looks hMapId up in WarpToLinkedMapForCurrentMap_Data1; when
 ; listed, sets the linked map from WarpToLinkedMapForCurrentMap_Data2 and warps (using wKeyWorldGoal
 ; when wKeyWorldKey selects it), C = 1; otherwise C = 0 (E-0125)
@@ -447,15 +481,15 @@ WarpToLinkedMapForCurrentMap::
     ldh [hMapId], a
     ld a, [wKeyWorldActive]
     or a
-    jr z, .call_script_warp_to_map_from_bytes_at_de
+    jr z, .call_warp_to_linked_map_for_current_map_start
     ld a, [wKeyWorldKey]
     dec a
     cp b
-    jr nz, .call_script_warp_to_map_from_bytes_at_de
+    jr nz, .call_warp_to_linked_map_for_current_map_start
     ld de, wKeyWorldGoal
 
-.call_script_warp_to_map_from_bytes_at_de:
-    call ScriptWarpToMapFromBytesAtDE
+.call_warp_to_linked_map_for_current_map_start:
+    call WarpToLinkedMapForCurrentMap_StartWarp
     ld c, $01
     ret
 
@@ -526,10 +560,17 @@ WarpToLinkedMapForCurrentMap_SpecialMap::
     ld c, $01
     ret
 
+; The warp helper of WarpToLinkedMapForCurrentMap (its only caller), not a script command. DE points
+; at two packed bytes: wWarpDestX = byte 0 & $F0, wWarpDestY = (byte 0 & $0F) x 16, hMapScreenX/Y =
+; high/low nibble of byte 1. Sets wWarpPending = 1, queues sound $60, wFieldTransitionKind = 1,
+; starts palette fade 4, wFieldInitStage + 1, wModeState = 4, wFieldTransitionStep = 0, sets
+; hPlayerStateFlags bit 5 and clears bit 7, far-calls ClearPendingFieldEventIfBit7AndNot6 and sets C
+; = 1; it does not write hMapId. It ends with pop de, which drops its own return address, so ret
+; goes straight back to the caller of WarpToLinkedMapForCurrentMap with C = 1. (C1, E-0376)
 ; script command: plays sound $60 and reads a warp destination at DE (wWarpDestX/9 from the nibbles
 ; of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wFieldInitStage += 1, wModeState =
 ; 4, updates hPlayerStateFlags and returns C = 1 (E-0121)
-ScriptWarpToMapFromBytesAtDE::
+WarpToLinkedMapForCurrentMap_StartWarp::
     ld a, $01
     ld [wWarpPending], a
     ld a, $60
@@ -569,6 +610,11 @@ ScriptWarpToMapFromBytesAtDE::
     ld c, $01
     ret
 
+; Starts the warp of WarpToLinkedMapForCurrentMap_SpecialMap (its only caller, from both branches)
+; after the destination is set: wWarpDestFacing = $F0, queues sound $60, palette fade 4, wModeState
+; = 4, wFieldTransitionStep = 0, sets hPlayerStateFlags bit 5 and clears bits 7 and 0,
+; wFieldTransitionKind = 1. Unlike the other warp starters it does not set wWarpPending or advance
+; wFieldInitStage. (C2, E-0376)
 ; wWarpDestFacing = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears
 ; wFieldTransitionStep, updates hPlayerStateFlags and sets wFieldTransitionKind = 1 (E-0124)
 StartWarpTransition::
@@ -593,6 +639,13 @@ StartWarpTransition::
     ld [wFieldTransitionKind], a
     ret
 
+; Called by CheckWarpsAtPlayerPosition before its warp list; returns C = 1 when it warped. Maps
+; below $20, and maps not in the 4-byte records of CheckMapExitTable_Data (map id, position byte,
+; screen byte, link number; $FF ends it), clear hPlayerStateFlags bit 5 and return C = 0. For the
+; map found as record N it runs CheckMapExitEntry on bytes 1-3 of the record, or on wKeyWorldGoal
+; when a key world is active and wKeyWorldKey - 1 equals N; that entry warps to map
+; CheckMapExitEntry_Data[link - 1], screen (0,0) at ($40,$80), when the player stands on its
+; position and screen and bit 5 is clear. (C2, E-0376)
 ; for maps from $20 looks hMapId up in the 4-byte table CheckMapExitTable_Data and runs
 ; CheckMapExitEntry with its entry (or wKeyWorldGoal); unlisted maps clear bit 5 of
 ; hPlayerStateFlags and return C = 0 (E-0125) (E-0344: the address in its name dropped or read as

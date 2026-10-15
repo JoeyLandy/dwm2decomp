@@ -21,6 +21,11 @@ BeginMessageDisplay_Bank0E::
     call BeginStringDisplay
     ret
 
+; Copies message wStringIndex of message bank $0E to the address in wStringDestLo/wStringDestHi, its
+; $F0 terminator included: below $88 through CopyStringToBuffer with the table MessageStrings_Bank0E
+; of this bank (wStringBank = $0E); from $88 on it far-calls CopyStringToBuffer_Bank0E_Overflow in
+; bank $96, which subtracts $88 from wStringIndex and copies from MessageStrings_Bank0E_Overflow. No
+; caller was found in src/. (C2, E-0376)
 ; message bank $0E: when wStringIndex < $88, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank0E; otherwise far-calls CopyStringToBuffer_Bank0E_Overflow (E-0080)
 CopyStringToBuffer_Bank0E::
@@ -678,15 +683,23 @@ MessageBank0E_87::
     db "a monster.<WAIT>"
     db "@"
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Starts showing string wStringIndex of category wStringCategory from the breeding text table
+; BeginStringDisplay_Bank0E_StringCategories (Text_ReadyToStartBreeding, Text_YouRefusedBreeding,
+; Text_PleaseWait and the rest) by calling BeginStringDisplay with DE at that table.
+; ShowString_Bank0E, the debug menu, the link breeding code (bank $37) and a bank-$F1 screen call
+; it. The seven bytes after its ret are an unreachable copy of the same call shape. (C1, E-0376)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank0E::
     ld de, BeginStringDisplay_Bank0E_StringCategories
     call BeginStringDisplay
     ret
     db $11, $85, $53, $cd, $fe, $25, $c9
 
+; Shows a breeding text at once: BeginStringDisplay_Bank0E (string wStringIndex of the table
+; BeginStringDisplay_Bank0E_StringCategories), then RunStringDisplayToEnd, which runs the text
+; printer until the whole string is printed. Called from the link breeding code (bank $37) and the
+; bank-$F1 and $F2 screens. (C1, E-0376)
 ; BeginStringDisplay_Bank0E (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_Bank0E::
     call BeginStringDisplay_Bank0E
     call RunStringDisplayToEnd
@@ -828,6 +841,24 @@ Text_AccessoriesWillBeIn::
     db "be in the Vault.<WAIT>"
     db "@"
 
+; Builds the bred child in wChildRecord (cleared first) from parents wRecordBufA and wRecordBufB;
+; wArg1 = kind (0 farm breeding, 1 a townsperson, 2 link breeding). The species comes from the first
+; match of: BreedSpeciesRuleTable[A species] (mate species, with $FD moving to the next result,
+; $FE/$FC needing B / A plus at least the low byte and both parents of one species, $FB acting like
+; $FD for kind 2 and ending the list otherwise) giving BreedSpeciesResultTable;
+; BreedFamilyRuleTable[A species] (mate families) giving BreedFamilyResultTable;
+; FamilyBreedRuleTable[A family] giving FamilyBreedResultTable; else FamilyPairResultTable[A
+; family][B family], where $FFxx means parent A species and $FExx ends with wArg6/7 = $FFFF and
+; wNameEntryState = 6. Then MON_FAMILY = FamilyForSpeciesIdArg6 OR (bit 0 of A MON_SEX) << 4;
+; MON_STATE, MON_LEVEL and MON_EGG = 1; MON_MASTER_ID = wPlayerId; the parent names, master names,
+; species and pluses and the player name are copied; HP, max HP, MP, max MP, ATK, DEF, AGL and INT
+; become (A + B) / 4 of the max HP, max MP, ATK, DEF, AGL and INT words
+; (AdjustStatForRecordBufAAndBItems first); each personality byte is the 8-bit (A + B) / 2. MON_PLUS
+; = A plus (kind non-zero) or the larger plus, + 1 to 5 by the level sum (40, 60, 76, 100), capped
+; at 99; MON_MAX_LEVEL = SPECIES_MAX_LEVEL + 3 * plus, capped at 99. Last it runs
+; RollChildSexFromSpecies, ApplyBreedingBonusToChildStats,
+; RollChildResistancesToChildRecordResistances and BuildChildRecordSkillListCandidateList, adds 1 to
+; wNameEntryState and sets wArg5 = $FF; the species is left in wArg6/wArg7. (C2, E-0376)
 ; clears the child record wChildRecord and fills it from the two parents (wRecordBufA + $B,
 ; wRecordBufB + $B): species from the breeding table BreedSpeciesRuleTable, then names, skills,
 ; resistances and stat bonuses (E-0131) (C2 from E-0328: in BreedMenu's preview, base Gulpple
@@ -1415,6 +1446,13 @@ ComputeBreedingChild::
     ld [wArg5], a
     ret
 
+; C = stat index 0-7 (in the order of ComputeBreedingChild_Data), DE = parent A stat word, HL =
+; parent B stat word: when the MON_ITEM of wRecordBufA is in the list
+; AdjustStatForRecordBufAAndBItems_Data1[C] (items 1-2 for stats 0-1, 3-4 for 2-3, 5-6 for 4, 7, 8
+; and $14 for 5, 9-$A for 6, $B-$C for 7) it subtracts AdjustStatForRecordBufAAndBItems_Data2[item]
+; (30, 80, 10, 50, 5 and so on) from DE, and the same for the item of wRecordBufB and HL. A value
+; with high byte 3 or more and low byte $E7 or more (999) is not reduced; the 16-bit subtraction
+; does not stop at 0. C is kept. (C2, E-0376)
 ; when wRecordBufA + $A4 or wRecordBufB + $A4 is set and listed for stat C
 ; (AdjustStatForRecordBufAAndBItems_Data1), subtracts AdjustStatForRecordBufAAndBItems_Data2[value]
 ; from DE (unless it is at 999) (E-0130) (E-0340: the address in its name read as its RAM name; was
@@ -1574,6 +1612,12 @@ AdjustStatForRecordBufAAndBItems_Data2::
     db $00, $1e, $50, $1e, $50, $0a, $32, $0a, $32, $0a, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
 
+; Fills the MON_SKILLS of wChildRecord with $FF and builds its 25-byte MON_SKILL_LIST: the three
+; natural skills (species bytes 8-10, LoadSpeciesBytes8To10FromHL) of the child, parent A and parent
+; B species, then the eight MON_SKILLS bytes of wRecordBufA and of wRecordBufB. It maps each through
+; SkillLineBaseTable (MapChildRecordSkillListEntriesThroughTable), turns zeros and repeats into $FF
+; (ClearDuplicateChildSkills), moves the rest to the front (CompactChildRecordSkillListRemovingFF)
+; and clears repeats again. (C2, E-0376)
 ; fills wChildRecord + $34 with $FF, appends species bytes 8-10 of wChildRecord + $B, wRecordBufA +
 ; $B and wRecordBufB + $B and eight bytes each from wRecordBufA + $34 and wRecordBufB + $34 to
 ; wChildRecord + $3C, maps them through SkillLineBaseTable and compacts the list (E-0124) (E-0340:
@@ -1611,6 +1655,9 @@ BuildChildRecordSkillListCandidateList::
     call ClearDuplicateChildSkills
     ret
 
+; Replaces each of the 25 ($19) bytes of the MON_SKILL_LIST of wChildRecord other than $FF by
+; SkillLineBaseTable[byte], the first skill of its line (1-3 become 1, 4-6 become 4). The table has
+; 176 entries (skills 0-$AF); a larger byte would read past it. (C2, E-0376)
 ; replaces each of the $19 bytes at wChildRecord + $3C (other than $FF) by SkillLineBaseTable[byte]
 ; (E-0124) (E-0340: the address in its name read as its RAM name; was
 ; MapChildRecordSkillListEntriesThroughTable) (E-0344: the address in its name dropped or read as
@@ -1657,6 +1704,10 @@ SkillLineBaseTable::
     db $90, $91, $92, $93, $94, $95, $96, $97, $97, $99, $99, $9b, $9c, $9d, $9e, $9f ; id 9
     db $a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af ; id 10
 
+; Moves the bytes other than $FF of the 25-byte MON_SKILL_LIST of wChildRecord to its front, in
+; order. The places after them are not refilled, so they keep their old bytes (a moved skill can
+; appear again further on); BuildChildRecordSkillListCandidateList runs ClearDuplicateChildSkills
+; afterwards to clear those. (C2, E-0376)
 ; moves the non-$FF bytes of the $19-byte list at wChildRecord + $3C to its front (E-0124) (E-0340:
 ; the address in its name read as its RAM name; was CompactChildRecordSkillListRemovingFF)
 CompactChildRecordSkillListRemovingFF::
@@ -1685,7 +1736,7 @@ CompactChildRecordSkillListRemovingFF::
 ; or $FF becomes $FF, and for every other byte each later byte equal to it is set to $FF, so each
 ; skill stays only at its first place. No inputs; clobbers A, BC, DE, HL.
 ; BuildChildRecordSkillListCandidateList calls it before and after
-; CompactChildRecordSkillListRemovingFF. (C1, E-0372)
+; CompactChildRecordSkillListRemovingFF. (C2, E-0372; probed E-0376)
 ; in the child's skill list (wChildRecord + MON_SKILL_LIST, 25 entries) turns zeros and repeated
 ; skills into $FF (E-0340: the address in its name read as its RAM name; was
 ; ClearDuplicateChildSkills)
@@ -1740,6 +1791,9 @@ ClearDuplicateChildSkills::
     jr c, .loop
     ret
 
+; Copies 8 bytes from DE to HL; DE and HL end past them, C = 0, A = the last byte.
+; BuildChildRecordSkillListCandidateList uses it to append the MON_SKILLS of both parents to the
+; skill list of the child. (C2, E-0376)
 ; copies 8 bytes from DE to HL (E-0122)
 CopyEightBytesDEToHL::
     ld c, $08
@@ -1752,6 +1806,8 @@ CopyEightBytesDEToHL::
     jr nz, .loop
     ret
 
+; Stores B, C and A at HL, HL + 1 and HL + 2 and leaves HL past them; A and the flags are kept.
+; BuildChildRecordSkillListCandidateList stores three natural skills with it. (C2, E-0376)
 ; stores B, C and A at HL onward; HL += 3; AF kept (E-0114)
 StoreBCAAtHL::
     push af
@@ -1763,6 +1819,9 @@ StoreBCAAtHL::
     ld [hli], a
     ret
 
+; HL = address of a monster id word: sets wSpeciesIdLo/Hi from it, far-calls LoadSpeciesRecord and
+; returns B, C and A = SPECIES_SKILLS bytes 0, 1 and 2 of wSpeciesRecord (the three natural skills).
+; (C2, E-0376)
 ; monster id = the word at HL: LoadSpeciesRecord, then B = species byte 8, C = byte 9, A = byte 10
 ; (wSpeciesRecord + $8-wSpeciesRecord + $A) (E-0117)
 LoadSpeciesBytes8To10FromHL::
@@ -1778,6 +1837,9 @@ LoadSpeciesBytes8To10FromHL::
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ret
 
+; Monster id = wArg1 (low) / wArg2 (high): far-calls LoadSpeciesRecord and copies its three natural
+; skills (SPECIES_SKILLS) to wArg5, wArg6 and wArg7. Called from the library code in bank $0C. (C2,
+; E-0376)
 ; monster id = wArg1/wArg2: LoadSpeciesRecord, then copies species bytes 8-10 to wArg5-wArg7
 ; (E-0117)
 LoadSpeciesBytes8To10ToArg5::
@@ -1794,6 +1856,10 @@ LoadSpeciesBytes8To10ToArg5::
     ld [wArg7], a
     ret
 
+; With SRAM enabled (bank 0), for each of the 30 records from sRecords whose MON_STATE is not 0:
+; loads its species record (wSpeciesIdLo/Hi and wArg2/wArg3 = its MON_SPECIES) and writes the 27
+; base resistance levels of the species (LoadSpeciesResistanceArg4, low two bits) to its
+; MON_RESISTANCES. Ends with rRAMG = 0. No caller was found in src/. (C1, E-0376)
 ; for each of the 30 SRAM records stores the 27 two-bit resistance levels of its species at record +
 ; $73 (E-0127)
 RefreshRecordResistancesFromSpecies::
@@ -1852,8 +1918,14 @@ RefreshRecordResistancesFromSpecies::
     ld [rRAMG], a
     ret
 
+; Loads the species record of the child (MON_SPECIES of wChildRecord) and, for each of the 27
+; resistances, takes its base level (LoadSpeciesResistanceArg4 into wArg5). A level of 3 is kept. A
+; level of 2 rolls RollResistanceGainForLevel2 when the two parent levels
+; (SumRecordBufAAndBResistanceTests) add up to 5 or more; a level of 0 or 1 rolls
+; RollResistanceGainForLowLevel when they add up to 3 or more. The result (low two bits of wArg5)
+; goes to the MON_RESISTANCES of wChildRecord. (C2, E-0376)
 ; for each of the 27 resistances of species wChildRecord + $B: levels below 3 may rise by the parent
-; rolls (RollChildRecordPlusForCaseB or 5D77); stores the result at wChildRecord + $73 (E-0127)
+; rolls (RollResistanceGainForLowLevel or 5D77); stores the result at wChildRecord + $73 (E-0127)
 ; (E-0340: the address in its name read as its RAM name; was
 ; RollChildResistancesToChildRecordResistances)
 RollChildResistancesToChildRecordResistances::
@@ -1886,7 +1958,7 @@ RollChildResistancesToChildRecordResistances::
     ld a, b
     cp $ff
     jr z, .restore
-    call RollChildRecordPlusForCaseB
+    call RollResistanceGainForLowLevel
     jr .restore
 
 .call_sum_record_buf_a_and_b_resistance_tests:
@@ -1895,7 +1967,7 @@ RollChildResistancesToChildRecordResistances::
     ld a, b
     cp $ff
     jr z, .restore
-    call RollChildRecordPlusForCaseB_2
+    call RollResistanceGainForLevel2
 
 .restore:
     pop bc
@@ -1915,11 +1987,16 @@ RollChildResistancesToChildRecordResistances::
     jr nz, .loop
     ret
 
+; B = sum of the two parent levels (3 or more), wArg5 = the base level 0 or 1 of a child resistance:
+; nothing when the MON_PLUS of wChildRecord is 0. Otherwise it rolls
+; RollChildRecordPlusChanceOrIncArg5 with factor 1 for B = 3 and 3 for B = 4; for B = 5 factor 10
+; and, only when that raised wArg5, factor 3 once more; for B of 6 or more it first adds 1 to wArg5
+; and then rolls factor 5. BC is kept. (C2, E-0376)
 ; when wChildRecord + $6D is set rolls RollChildRecordPlusChanceOrIncArg5 with factor 1, 3 or 10
 ; (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125) (E-0340: the address in its name
-; read as its RAM name; was RollChildRecordPlusForCaseB) (E-0344: the address in its name dropped or
-; read as the label there; was RollChildRecordPlusForCaseB)
-RollChildRecordPlusForCaseB::
+; read as its RAM name; was RollResistanceGainForLowLevel) (E-0344: the address in its name dropped
+; or read as the label there; was RollResistanceGainForLowLevel)
+RollResistanceGainForLowLevel::
     push bc
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -1963,6 +2040,10 @@ RollChildRecordPlusForCaseB::
     jr z, .loop
     jr .skip3
 
+; A = factor: chance = factor * the MON_PLUS of wChildRecord. When the chance is 100 or more, or a
+; random value 0-99 (the quotient of RandomModulo29 with B = $0F) is not above it, it adds 1 to
+; wArg5 and returns A = 0; when the random value is above the chance it returns A = $FF and leaves
+; wArg5. The earlier reading had the two outcomes swapped. (C2, E-0376)
 ; chance = A * wChildRecord + $6D; if below 100 and a random value is below it, A = $FF; otherwise
 ; wArg5 += 1 and A = 0 (E-0124) (E-0340: the address in its name read as its RAM name; was
 ; RollChildRecordPlusChanceOrIncArg5)
@@ -1995,11 +2076,16 @@ RollChildRecordPlusChanceOrIncArg5::
     xor a
     ret
 
+; B = sum of the two parent levels (5 or more), wArg5 = the base level 2 of a child resistance:
+; nothing when the MON_PLUS of wChildRecord is 0. For B = 5 it draws a random value 0-199
+; (RandomModulo29 with B = $1F, the quotient) and, when it is not above the plus, adds 1 to wArg5 (A
+; = 0), else A = $FF; for other B it rolls RollChildRecordPlusChanceOrIncArg5 with factor 2. BC is
+; kept. (C2, E-0376)
 ; when wChildRecord + $6D is set: B = 5 rolls a random value against wChildRecord + $6D (A = $FF on
 ; success), other values roll factor 2 (E-0125) (E-0340: the address in its name read as its RAM
-; name; was RollChildRecordPlusForCaseB_2) (E-0344: the address in its name dropped or read as the
-; label there; was RollChildRecordPlusForCaseB_2)
-RollChildRecordPlusForCaseB_2::
+; name; was RollResistanceGainForLevel2) (E-0344: the address in its name dropped or read as the
+; label there; was RollResistanceGainForLevel2)
+RollResistanceGainForLevel2::
     push bc
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -2044,6 +2130,9 @@ RollChildRecordPlusForCaseB_2::
     pop bc
     ret
 
+; C = resistance index, B = least sum: TestResistanceEntry for the MON_RESISTANCES of wRecordBufA
+; and of wRecordBufB; when neither returns $FF and their sum is at least B, returns B = A = the sum,
+; otherwise B = $FF. (C2, E-0376)
 ; B = TestResistanceEntry(wRecordBufA + $73) + TestResistanceEntry(wRecordBufB + $73) when both are
 ; valid and the sum is at least B; otherwise B = $FF (E-0124) (E-0340: the address in its name read
 ; as its RAM name; was SumRecordBufAAndBResistanceTests) (E-0345: $C9F9 and $CA9E are the
@@ -2068,6 +2157,9 @@ SumRecordBufAAndBResistanceTests::
     ld b, $ff
     ret
 
+; HL = the MON_RESISTANCES of a parent record, C = resistance index: returns A = the level at HL +
+; C, except that a level of 2 returns $FF when the record MON_ITEM (HL + $31) is 1-$1B and
+; TestResistanceEntry_Data[item - 1] equals C. HL is kept. (C2, E-0376)
 ; (E-0345: was TestResistanceEntry) for entry C: when it is 2 and the byte $31 later is 1-$1B and
 ; its table byte equals C, returns $FF (E-0340: the address in its name read as its RAM name; was
 ; TestResistanceEntry)
@@ -2114,6 +2206,8 @@ TestResistanceEntry_Data::
     db $00, $01, $02, $03, $04, $05, $06, $0e, $0f, $07, $10, $11, $12, $13, $14, $08
     db $09, $0a, $0b, $15, $16, $17, $18, $19, $1a, $0c, $0d
 
+; wArg4 = resistance index: returns wArg5 = A = byte wArg4 of the resistance levels
+; (SPECIES_RESISTANCES) of the species record in wSpeciesRecord; HL ends at that byte. (C2, E-0376)
 ; wArg5 = the byte at wSpeciesRecord + $12 + wArg4 (E-0114) (E-0340: the address in its name read as
 ; its RAM name; was LoadSpeciesResistanceArg4) (E-0345: reads wSpeciesRecord + $12
 ; (SPECIES_RESISTANCES): the resistance in arg 4; was LoadSpeciesResistanceArg4)
@@ -2125,6 +2219,11 @@ LoadSpeciesResistanceArg4::
     ld [wArg5], a
     ret
 
+; Copies the species words and pluses of the parents into wChildRecord: with bit 4 of its MON_FAMILY
+; clear, the MON_SPECIES and MON_PLUS of wRecordBufA go to MON_PARENT1_SPECIES and MON_PARENT1_PLUS
+; and those of wRecordBufB to MON_PARENT2_SPECIES and MON_PARENT2_PLUS; with bit 4 set
+; (ComputeBreedingChild puts bit 0 of the parent A MON_SEX there) the two parents swap. The
+; addresses are byte lists in CopySixBytesByChildRecordFamilyBit4Table_Data1-3. (C2, E-0376)
 ; copies six bytes from the addresses in CopySixBytesByChildRecordFamilyBit4Table_Data1 (or 5E6D
 ; when bit 4 of wChildRecord + $D is set) to the addresses in
 ; CopySixBytesByChildRecordFamilyBit4Table_Data3 (E-0125) (E-0340: the address in its name read as
@@ -2181,6 +2280,8 @@ CopySixBytesByChildRecordFamilyBit4Table_Data2::
 CopySixBytesByChildRecordFamilyBit4Table_Data3::
     db $ea, $ca, $eb, $ca, $ec, $ca, $ed, $ca, $68, $cb, $73, $cb
 
+; Copies the ten bytes of wPlayerName to the MON_MASTER_NAME of wChildRecord (the player becomes the
+; master of the child). (C2, E-0376)
 ; copies the 10-byte player name wPlayerName to wChildRecord + $F (E-0122) (E-0340: the address in
 ; its name read as its RAM name; was CopyPlayerNameToChildRecordMasterName)
 CopyPlayerNameToChildRecordMasterName::
@@ -2196,6 +2297,10 @@ CopyPlayerNameToChildRecordMasterName::
     jr nz, .loop
     ret
 
+; Copies four 10-byte names into wChildRecord: with bit 4 of its MON_FAMILY clear, the MON_NAME and
+; MON_MASTER_NAME of wRecordBufA go to MON_PARENT1_NAME and MON_PARENT1_MASTER and those of
+; wRecordBufB to MON_PARENT2_NAME and MON_PARENT2_MASTER; with bit 4 set the two parents swap. The
+; addresses come from CopyFourNamesByChildRecordFamilyBit4Table_Data1-3. (C2, E-0376)
 ; copies four 10-byte names from the addresses in CopyFourNamesByChildRecordFamilyBit4Table_Data1
 ; (or 5ED8 with bit 4 of wChildRecord + $D) to the addresses in
 ; CopyFourNamesByChildRecordFamilyBit4Table_Data3 (E-0125) (E-0340: the address in its name read as
@@ -2260,6 +2365,12 @@ CopyFourNamesByChildRecordFamilyBit4Table_Data2::
 CopyFourNamesByChildRecordFamilyBit4Table_Data3::
     db $5e, $cb, $69, $cb, $ee, $ca, $f9, $ca
 
+; Adds a percentage bonus to the stats of wChildRecord: 5 when PersonalityPairValueToArg5 gives 0, 5
+; when both parents have MON_LEVEL equal to MON_MAX_LEVEL, 2 when both parents have MON_PLUS 5 or
+; more with an even sum, 3 when wArg1 (the breeding kind) is not 0. With a total of 0 it returns;
+; otherwise each of the eight words HP, max HP, MP, max MP, ATK, DEF, AGL and INT (offsets in
+; ApplyBreedingBonusToChildStats_Data) gains word * total / 100 rounded up, capped at 999. (C2,
+; E-0376)
 ; computes a bonus from personality compatibility, matching parent fields and wArg1, and adds it to
 ; the child stats at wChildRecord (offsets ApplyBreedingBonusToChildStats_Data) (E-0130)
 ApplyBreedingBonusToChildStats::
@@ -2392,6 +2503,11 @@ ApplyBreedingBonusToChildStats::
 ApplyBreedingBonusToChildStats_Data::
     db $5b, $5d, $5f, $61, $63, $65, $67, $69
 
+; wArg5 = the two-bit value of PersonalityPairMatrix for the combined personality indexes
+; (CombinedPersonalityLevelIndexOfRecord) of wRecordBufA (row, 8 bytes each) and wRecordBufB
+; (column: byte index / 4, bits picked by PersonalityPairValueToArg5_Data[index & 3], highest pair
+; first). Returns A = the index of parent A. ApplyBreedingBonusToChildStats adds 5% when the value
+; is 0; a bank-$F1 screen also calls it. (C2, E-0376)
 ; wArg5 = the 2-bit entry of the matrix PersonalityPairMatrix for the combined personality indexes
 ; of wRecordBufA and wRecordBufB (E-0128)
 PersonalityPairValueToArg5::
@@ -2467,6 +2583,9 @@ PersonalityPairValueToArg5::
     pop af
     ret
 
+; HL = a monster record: returns A = 9 * grade(byte $6F) + 3 * grade(byte $72) + grade(byte $70),
+; each grade from GradeTemp0_Bank0E (0 for $C0 or more, 1 for $40-$BF, 2 below $40), so 0-26. Byte
+; $71 is not used. Compare CombinedPersonalityLevelIndex. (C2, E-0376)
 ; for the record at HL returns 9 * grade(field $6F) + 3 * grade(field $72) + grade(field $70)
 ; (GradeTemp0_Bank0E); compare CombinedPersonalityLevelIndex (E-0121)
 CombinedPersonalityLevelIndexOfRecord::
@@ -2501,6 +2620,9 @@ CombinedPersonalityLevelIndexOfRecord::
     add b
     ret
 
+; Grades the byte in hTemp0: returns C = 0 when it is $C0 or more, 1 when it is $40-$BF and 2 below
+; $40; A = the byte. A bank-$0E copy of GradeTemp0; CombinedPersonalityLevelIndexOfRecord grades
+; three personality bytes with it. (C2, E-0376)
 ; the same 13 bytes as GradeTemp0 (GradeTemp0) (E-0353)
 GradeTemp0_Bank0E::
     ldh a, [hTemp0]
@@ -2550,6 +2672,11 @@ PersonalityPairMatrix::
 PersonalityPairValueToArg5_Data::
     db $c0, $30, $0c, $03
 
+; B = mask: steps the table random number (NextTableByte), sets L = wRandomLo and H = (wRandomLo
+; rotated left through carry) AND B, and divides HL by $29 (41) with DivideHLByA: HL = the quotient
+; and A = the remainder. With B = $0F the quotient is 0-99 and with B = $1F 0-199; the callers
+; RollChildRecordPlusChanceOrIncArg5, RollResistanceGainForLevel2 and RollChildSexFromSpecies use
+; the quotient in L, not the remainder. (C2, E-0376)
 ; NextTableByte; L = wRandomLo, H = (wRandomLo rotated left through carry) & B; returns A = HL mod
 ; $29 (E-0117)
 RandomModulo29::
@@ -2565,6 +2692,11 @@ RandomModulo29::
     call DivideHLByA
     ret
 
+; C = SRAM record index, wArg5 = field offset: loads that word of the record (LoadSRAMRecordWord
+; into hTemp0/hTemp1; the caller enables SRAM) and falls into DrawSpeciesAndFamilyIconForTemp0,
+; which takes it as a species id and loads its family icon tile into tile wArg4.
+; LoadRecordWordFieldAndContinue in bank $1E calls it for the parent species fields ($1A, $1C)
+; listed by DrawRecordFamilyEntries_Data1/2. (C1, E-0376)
 ; loads word field wArg5 of record A (LoadSRAMRecordWord) and falls into
 ; DrawSpeciesAndFamilyIconForTemp0 (E-0126)
 LoadRecordWordFieldArg5AndShowIcon::
@@ -2575,6 +2707,10 @@ LoadRecordWordFieldArg5AndShowIcon::
     pop af
     call LoadSRAMRecordWord
 
+; hTemp0/hTemp1 = monster id: copies it to wArg6/wArg7, gets its family (FamilyForSpeciesIdArg6 into
+; wArg5) and far-calls LoadFamilyIconTileForWorkBuf with wWorkBuf = the family (low four bits) and
+; wWorkBuf + 1 = wArg4, the tile to write. Reached from LoadRecordWordFieldArg5AndShowIcon and from
+; DrawSpeciesIconForRecordBufBEntry in bank $F2. (C1, E-0376)
 ; wArg6/7 = hTemp0/7, runs FamilyForSpeciesIdArg6, then loads the family icon tile for wArg5 & $0F
 ; into tile wArg4 (E-0126)
 DrawSpeciesAndFamilyIconForTemp0::
@@ -2591,6 +2727,10 @@ DrawSpeciesAndFamilyIconForTemp0::
     farcall LoadFamilyIconTileForWorkBuf
     ret
 
+; wArg6/wArg7 = monster id (low, high): sets wArg5 = its family from the id ranges: below $1B 0,
+; $1B-$42 1, $43-$66 2, $67-$84 3, $85-$A7 4, $A8-$C9 5, $CA-$F0 6, $F1-$110 7, $111-$138 8,
+; $139-$15B 9, from $15C 10. A high byte other than 1 is treated as 0 (only the low byte is
+; compared). (C2, E-0376)
 ; wArg5 = the family (0-10) of species id wArg6/7 by id ranges (< $1B, $43, $67, $85, $A8, $CA, $F1,
 ; $111, $139, $15C, or more) (E-0128)
 FamilyForSpeciesIdArg6::
@@ -2674,6 +2814,11 @@ FamilyForSpeciesIdArg6::
     ld [wArg5], a
     ret
 
+; Loads the species record of MON_SPECIES of wChildRecord (LoadSpeciesRecordWord0). When its
+; SPECIES_SEX_RATIO byte is 0 the child is male (MON_SEX = 0); otherwise it draws a random value
+; 0-99 (RandomModulo29 with B = $0F, the quotient) and sets MON_SEX = 1 (female) when it is not
+; above SexChanceByClass[byte & 3] (0, 10, 50, 90), else 0. Called by ComputeBreedingChild and by
+; MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster for a prize monster. (C2, E-0376)
 ; loads the child's species record; when species byte 1 (SPECIES_SEX_RATIO) is non-zero, sets the
 ; child's MON_SEX to 1 (female) when a random value is not above SexChanceByClass[byte & 3] (0, 10,
 ; 50, 90), else 0 (male); byte 1 = 0 gives male (E-0311)

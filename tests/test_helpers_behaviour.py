@@ -79,7 +79,7 @@ class SmallHelpers(unittest.TestCase):
     def test_inventory_counters(self):
         inv = [0x2C, 0x05, 0x2C, 0x01] + [0xFF] * 20
         mem = {wInventory + i: v for i, v in enumerate(inv)}
-        self.assertEqual(call(0x0D, 0x6DD0, mem=mem).a, 2)        # MedalPrizeMenu_CountItem2C
+        self.assertEqual(call(0x0D, 0x6DD0, mem=mem).a, 2)        # MedalPrizeMenu_CountTinyMedalItems
         self.assertEqual(call(0x0D, 0x6D09, mem=mem).a, 0)        # a free ($FF) slot exists
         full = {wInventory + i: 0x05 for i in range(24)}
         self.assertEqual(call(0x0D, 0x6DD0, mem=full).a, 0xFF)    # no $2C at all

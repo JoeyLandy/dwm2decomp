@@ -2431,6 +2431,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0376 — Readability batch 8: 910 routines in banks $0A-$12 read or probed (727 probed, 1,266 probes)
+
+- Date: 2026-10-15. Kind: REVIEW and OBSERVATION (static readings C1; probed claims C2 on tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit f57a421 (E-0375).
+- **Method.** The combined queue in six slices of 150-154 (the cap). Every draft was applied only after its worker reported done. The workers wrote 481 notes and probed 727 routines (1,266 probes, all passing again; config/probes/E-0376.json). The integrator read 90 entries (10% of each draft) against the code: all correct, 0% rejection.
+- **Integrator changes.** ScriptCommand6C had a probe that checked only wScriptStartRequest while its note is about the monster record it creates: the probe was dropped and the reason recorded in config/probe_exclusions.json. Three C2 claims without a probe were set to C1, and the two scene dispatchers SceneHomecoming and SceneDarckDefeated, which had passing probes, were marked probed. The derived tile lists of EggServiceMenu_DrawPrice_LoadTiles became EggPriceGlyphDestList and EggPriceGlyphSrcList.
+- **Earlier readings corrected** (with passing probes): SceneWarubouWarning_Answer turns MSG_KEEP_OPEN into MSG_ALREADY_OPEN, so the box closes after the answer; SceneLandHo_ScrollUp makes 15 one-pixel steps; SceneExplosion_Shake runs 16 frames (wScriptParam0 climbs by two); MedalPrizeMenu_DrawPrices draws two digits; MedalPrizeMenu_RemoveItem2C clears every $2C slot unless B is 1; the key appraisal looks for the next unappraised key ($FE kind byte), not an end mark; RollChildRecordPlusChanceOrIncArg5 had its outcomes swapped; KeyWorldBossBattle_MarkCleared sets bit 6 of byte 0 of the key entry; ScriptStepAnimateSpriteBySteps gives 3 for counts 12-17; StartEventScript only sets up a script command (BeginScriptCommand); ScriptCommand03 falls into ScriptCommand02 (two pixels a frame for script_walk_fast).
+- **Open questions** are in [READABILITY_OPEN_QUESTIONS.md](READABILITY_OPEN_QUESTIONS.md) under E-0376 (stale names in macros.inc comments; unreachable script command types; SceneShieldGuardian removing an item it did not find).
+- **Checks.** build/run626 PASS (approved size and SHA-256, zero differing bytes); no stale name; parallel suite build/logs/par626.log OK (393 tests, 3 skipped; 4,055 probes). Queue: unread 3,275 to 2,809; hand readings 7,013.
+
 ### E-0375 — Readability batch 7: 816 routines in banks $00-$0A read or probed (768 probed, 1,803 probes)
 
 - Date: 2026-10-15. Kind: REVIEW and OBSERVATION (static readings C1; probed claims C2 on tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit eee8846 (E-0374).

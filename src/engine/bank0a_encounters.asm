@@ -2889,15 +2889,15 @@ RunBattleTransitionStep_StartBattle::
 ; Battle transition step 1, the screen effect, by wBattleTransitionSubStep (set as the battle
 ; starts: 0 or 2 at random by TickRandomEncounterCounter, 1 by StartScriptedEncounterTemp0): 0
 ; RunBattleTransitionStep_CheckStage (columns closing from both sides), 1
-; RunBattleTransitionStep_StagedSteps_Spiral (the spiral) and 2 RunBattleTransitionStep_SetCounts.
-; (C1, E-0375)
+; RunBattleTransitionStep_StagedSteps_Spiral (the spiral) and 2
+; RunBattleTransitionStep_StagedSteps_Stripes. (C1, E-0375)
 ; by its sub-step: CheckStage, the transition counter, SetCounts
 RunBattleTransitionStep_StagedSteps::
     ld a, [wBattleTransitionSubStep]
     jumptable
     dw RunBattleTransitionStep_CheckStage
     dw RunBattleTransitionStep_StagedSteps_Spiral
-    dw RunBattleTransitionStep_SetCounts
+    dw RunBattleTransitionStep_StagedSteps_Stripes
 
 ; The closing-columns transition (sub-step 0 of RunBattleTransitionStep_StagedSteps), by
 ; wTransitionCounter: 0 RunBattleTransitionStep_CheckStage_CloseColumns (20 stages, one column
@@ -2976,6 +2976,11 @@ RunBattleTransitionStep_CheckStage_End::
     inc [hl]
     ret
 
+; Blanks one tile of a battle transition. HL = the offset from the transition origin (row in the
+; high bits, column in L & $1F); WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate turns it into the
+; BG map address, WriteVRAMByte writes tile $C4 there and, when wIsCGB is non-zero, attribute 0 at
+; the same address in VRAM bank 1 (rVBK 1, then back to 0). Returns HL = that BG map address; BC
+; kept. Every closing-columns, spiral and stripe transition stage calls it per tile. (C1, E-0376)
 ; writes tile $C4 at the BG map address from WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate and,
 ; on CGB, attribute 0 in VRAM bank 1 (E-0122)
 WriteTileC4AtTransitionBGPtrLoAndClearAttr::
@@ -2994,7 +2999,7 @@ WriteTileC4AtTransitionBGPtrLoAndClearAttr::
     ret
 
 ; Moves HL to the BG map position of offset L from the transition origin: row by the high bits, then
-; L & $1F columns to the right with wrapping. (C1, E-0357)
+; L & $1F columns to the right with wrapping. (C2, E-0357; probed E-0376)
 WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate::
     push bc
     ld b, l
@@ -3016,8 +3021,11 @@ WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate::
     pop bc
     ret
 
+; HL = the next BG map entry to the right inside the same 32-entry row: L = (L & $E0) | ((L + 1) &
+; $1F), so the last column wraps to column 0 of that row; H is unchanged and AF is kept.
+; WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate calls it once per column. (C2, E-0376)
 ; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping
-; at the row end; keeps AF (the same 15 bytes appear in 2 banks) (E-0353)
+; at the row end; keeps AF (the same 15 bytes appear in 2 banks)
 NextBGMapColumn_Bank0A::
     push af
     ld a, l
@@ -3033,6 +3041,10 @@ NextBGMapColumn_Bank0A::
     pop af
     ret
 
+; HL = wTransitionBGPtrLo/wTransitionBGPtrHi + HL, with the sum high byte cut to its low 2 bits and
+; the upper 6 bits taken from wTransitionBGPtrHi, so the result wraps inside the 1 KB BG map the
+; pointer is in. Used by WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate for the row part of a
+; transition offset. (C2, E-0376)
 ; HL = wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper
 ; 6 bits kept from wTransitionBGPtrHi (stays inside one 1 KB BG map) (E-0117)
 AddHLToTransitionBGPtrLoInBGMap::
@@ -3254,15 +3266,21 @@ SpiralTransition_NextStage::
     jp nz, RunBattleTransitionStep_StagedSteps_SpiralPass
     ret
 
-; Ends the spiral transition: next transition step. (C1, E-0357)
+; Ends the spiral transition: next transition step. (C2, E-0357; probed E-0376)
 SpiralTransition_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
-; (E-0345: was RunBattleTransitionStep_SetCounts) sets the transition counts from the stage record,
-; then advances
-RunBattleTransitionStep_SetCounts::
+; The stripe transition (sub-step 2 of RunBattleTransitionStep_StagedSteps), by wTransitionCounter:
+; 0 StripeTransition_BlankStripes (blanks one rectangular ring of tiles per stage, outermost first,
+; nine stages, and moves wTransitionCounter on), 1 StripeTransition_IdleFrame (moves
+; wTransitionCounter back to 0, so a ring is drawn every other frame) and 2 StripeTransition_End
+; (after the ninth ring: moves wBattleTransitionStep on). The old reading 'sets the transition
+; counts from the stage record' was wrong. (C1, E-0376)
+; (E-0345: was RunBattleTransitionStep_StagedSteps_Stripes) sets the transition counts from the
+; stage record, then advances
+RunBattleTransitionStep_StagedSteps_Stripes::
     ld a, [wTransitionCounter]
     jumptable
     dw StripeTransition_BlankStripes
@@ -3393,23 +3411,29 @@ StripeTransition_BlankStripes::
     inc [hl]
     ret
 
-; The stripe transition's wait step: goes back one pass. (C1, E-0357)
+; The stripe transition's wait step: goes back one pass. (C2, E-0357; probed E-0376)
 StripeTransition_IdleFrame::
     ld hl, wTransitionCounter
     dec [hl]
     ret
 
-; Ends the stripe transition: next transition step. (C1, E-0357)
+; Ends the stripe transition: next transition step. (C2, E-0357; probed E-0376)
 StripeTransition_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
+; Jumps to the address stored at HL (HL = the word at HL, then jp hl); the target returns to the
+; caller of this routine. StripeTransition_BlankStripes calls it with HL at the stage entry of
+; TransitionRowStepTable. (C1, E-0376)
 ; HL = the word at HL, then jp hl (E-0114)
 JumpToWordAtHL_Bank0A::
     deref_hl
     jp hl
 
+; Entry 0 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 0: DE += $0220
+; (17 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 00 (entry 0 of TransitionRowStepTable) (E-0202)
 TransitionRowStep00::
     ld a, e
@@ -3422,6 +3446,9 @@ TransitionRowStep00::
     ld h, d
     ret
 
+; Entry 1 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 1: DE += $01E0
+; (15 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 01 (entry 1 of TransitionRowStepTable) (E-0202)
 TransitionRowStep01::
     ld a, e
@@ -3434,6 +3461,9 @@ TransitionRowStep01::
     ld h, d
     ret
 
+; Entry 2 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 2: DE += $01A0
+; (13 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 02 (entry 2 of TransitionRowStepTable) (E-0202)
 TransitionRowStep02::
     ld a, e
@@ -3446,6 +3476,9 @@ TransitionRowStep02::
     ld h, d
     ret
 
+; Entry 3 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 3: DE += $0160
+; (11 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 03 (entry 3 of TransitionRowStepTable) (E-0202)
 TransitionRowStep03::
     ld a, e
@@ -3458,6 +3491,9 @@ TransitionRowStep03::
     ld h, d
     ret
 
+; Entry 4 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 4: DE += $0120
+; (9 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 04 (entry 4 of TransitionRowStepTable) (E-0202)
 TransitionRowStep04::
     ld a, e
@@ -3470,6 +3506,9 @@ TransitionRowStep04::
     ld h, d
     ret
 
+; Entry 5 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 5: DE += $00E0
+; (7 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 05 (entry 5 of TransitionRowStepTable) (E-0202)
 TransitionRowStep05::
     ld a, e
@@ -3482,6 +3521,9 @@ TransitionRowStep05::
     ld h, d
     ret
 
+; Entry 6 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 6: DE += $00A0
+; (5 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 06 (entry 6 of TransitionRowStepTable) (E-0202)
 TransitionRowStep06::
     ld a, e
@@ -3494,6 +3536,9 @@ TransitionRowStep06::
     ld h, d
     ret
 
+; Entry 7 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 7: DE += $0060
+; (3 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 07 (entry 7 of TransitionRowStepTable) (E-0202)
 TransitionRowStep07::
     ld a, e
@@ -3506,6 +3551,9 @@ TransitionRowStep07::
     ld h, d
     ret
 
+; Entry 8 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 8: DE += $0020
+; (1 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
+; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
 ; handler 08 (entry 8 of TransitionRowStepTable) (E-0202)
 TransitionRowStep08::
     ld a, e
@@ -3540,6 +3588,12 @@ TransitionRowStepTable::
     dw TransitionRowStep07 ; id 7
     dw TransitionRowStep08 ; id 8
 
+; Counts one field step (bank $02 calls it after each step), unless wScriptRunning is non-zero or
+; wEncounterRate & $7F is 0: wStepCounterLo/Hi += 1, wrapping from 1000 to 0. Every 100th step it
+; enables SRAM and walks the 30 records at sRecords: a record in MON_STATE 1 (kept) that is not an
+; egg (MON_EGG 0) gains 1 MON_WLD on the 1000th step only, up to 999; a record in any other non-zero
+; state (2, in the party) loses 1 MON_WLD down to 0. SRAM is disabled again; hTemp0 is clobbered
+; (bit 0 the 100-step tick, bit 1 the 1000-step tick). (C2, E-0376)
 ; counts steps in wStepCounterLo (wrapping at 1000); every 100 steps and at 1000 updates the stored
 ; SRAM records by their state byte and field $6E (E-0130)
 AdvanceStepCounterAndUpdateStoredRecords::
@@ -3677,7 +3731,7 @@ AdvanceStepCounterAndUpdateStoredRecords::
 
 ; Each step after the long-faces scene (EVENT_SCENE_LONG_FACES_002), outside scripts and with
 ; encounters on: a standing party member holding item $1B regains 1 HP, one holding item $1C regains
-; 1 MP, up to the maximum. (C1, E-0357)
+; 1 MP, up to the maximum. (C2, E-0357; probed E-0376)
 UpdatePlayerMovement_HeldItemRegen::
     ld a, [wEncounterRate]
     and $7f

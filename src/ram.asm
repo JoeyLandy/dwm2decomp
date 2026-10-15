@@ -433,7 +433,7 @@ DEF wMapObjectCount EQU $CC47 ; number of 8-byte map objects at wMapObjects (E-0
 DEF wMapObjects EQU $CC48 ; map objects (8 bytes each) of town and key-world maps (E-0134)
 DEF wNameBufPlaceholder EQU $CCCD ; name buffer picked when a name starts with the $98 placeholder (PickNameBufferForFirstByte) (E-0345, C1: named from its users; was wNameBufUnknown) (E-0137; E-0345)
 DEF wScreenTriggerCount EQU $CCE9 ; number of 4-byte screen trigger entries at wScreenTriggers (FindTriggerEntryForCurrentScreen_ScreenTriggers) (E-0135)
-DEF wWarpPending EQU $CCEA ; set by the warp routines (CheckWarpAtPlayer, ScriptWarpToMapFromBytesAtDE); read by the transition state (E-0135)
+DEF wWarpPending EQU $CCEA ; set by the warp routines (CheckWarpAtPlayer, WarpToLinkedMapForCurrentMap_StartWarp); read by the transition state (E-0135)
 DEF wScreenTriggers EQU $CCEB ; screen trigger entries (4 bytes each: flags, cell, ...) (E-0135)
 DEF wKeyWorldMonsterBands EQU $CCF7 ; $FF-terminated list of monster band indexes for the key world (LoadKeyWorldParamsForCurrentKeyIndex) (E-0135)
 DEF wKeyWorldBandAdjust EQU $CD02 ; band adjustment from the key world level (LoadKeyWorldParamsForCurrentKeyIndex) (E-0135)

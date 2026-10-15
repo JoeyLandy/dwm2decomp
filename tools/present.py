@@ -44,7 +44,7 @@ THIN_NOTE = re.compile(r"^(?:unless .{0,40}?, )?runs the (?:routine|field comman
 GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
 # E-0365: a hand-written reading of the whole routine (config/annotations.json) answers such a gap itself;
 # E-0368: the readability batches from E-0369 on write such readings too (tools/apply_drafts.py)
-HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370", "E-0371", "E-0372", "E-0373", "E-0374", "E-0375")
+HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370", "E-0371", "E-0372", "E-0373", "E-0374", "E-0375", "E-0376")
 # D-012: "(C2, E-0357; probed E-0374)"; a wrapped comment may break the line at any of its spaces (" ;")
 HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")(?:;(?: ;)? probed(?: ;)? E-\d{4})?\)")
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")

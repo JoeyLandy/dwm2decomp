@@ -2837,7 +2837,7 @@
   },
   "CCEA": {
     "name": "wWarpPending",
-    "note": "set by the warp routines (CheckWarpAtPlayer, ScriptWarpToMapFromBytesAtDE); read by the transition state",
+    "note": "set by the warp routines (CheckWarpAtPlayer, WarpToLinkedMapForCurrentMap_StartWarp); read by the transition state",
     "evidence": "E-0135"
   },
   "CCEB": {

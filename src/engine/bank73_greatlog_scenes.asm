@@ -5198,11 +5198,11 @@ SceneStrongestMaster_PlaySound::
     ret
 
 ; Strongest master, step 0: map sprite kind $10 and its script sprite
-; (SetupScriptSpriteFromMapSpriteKind). (C1, E-0357)
+; (SetupScriptSpriteInFrontOfPlayer). (C1, E-0357)
 SceneStrongestMaster_SetUpSprite::
     ld a, $10
     ld [wMapSpriteKind], a
-    farcall SetupScriptSpriteFromMapSpriteKind
+    farcall SetupScriptSpriteInFrontOfPlayer
     ret
 
 ; Gather followers, step 0: map sprite kind $10, then moves the followers onto the leader

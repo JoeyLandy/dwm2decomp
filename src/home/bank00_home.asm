@@ -1963,8 +1963,8 @@ OrFromBankWaitVRAM::
 
 ; HL = address in the ROM bank held in wDataBank: maps that bank, reads B = [HL] and C = [HL + 1]
 ; (the first byte goes to B), leaves HL unchanged and maps the calling bank back; A = the calling
-; bank number. 31 call sites (CopyMonsterNameToBuffer_B01, DrawKeyListPageNames, ScriptFetchF5 and
-; others). (C2, E-0373)
+; bank number. 31 call sites (CopyMonsterNameToBuffer_B01, DrawKeyListPageNames,
+; ScriptFetchMessageByScreen and others). (C2, E-0373)
 ReadWordFromDataBank::
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -8650,8 +8650,8 @@ OpenTextChoice_DrawWindow::
 ; Saves the two tiles at vTiles1 + $6E0 and + $6F0 into wScriptTileBuf0 and wScriptTileBuf1 (16
 ; bytes each, CopyCBytesToVRAMWaitSTAT copies from HL = VRAM to DE = the buffer). Only caller:
 ; OpenTextChoice_DrawWindow, which then loads the choice tiles from bank $1F over those two tiles;
-; ScriptFetch06 copies the saved tiles back to VRAM. The earlier reading (tiles copied from the
-; buffers to VRAM) had the direction reversed. (C2, E-0373)
+; ScriptFetchSkipIfNo copies the saved tiles back to VRAM. The earlier reading (tiles copied from
+; the buffers to VRAM) had the direction reversed. (C2, E-0373)
 ; copies the 16-byte tiles at wScriptTileBuf0 and wScriptTileBuf1 to vTiles1 + $6E0 and + $6F0
 ; (CopyCBytesToVRAMWaitSTAT) (E-0117)
 SaveTwoTilesToScriptTileBuf::
