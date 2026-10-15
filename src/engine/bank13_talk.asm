@@ -134,50 +134,50 @@ DispatchTalkEvent::
 .read_talk_event_index:
     ld a, [wTalkEventIndex]
     jumptable
-    dw DispatchTalkEvent_ToFieldTalkEvents
+    dw DispatchTalkEvent_Field
     dw GreatLogTalkEvents
-    dw DispatchTalkEvent_ToKalkaTalkEvents
-    dw DispatchTalkEvent_ToYoldTalkEvents
+    dw DispatchTalkEvent_Kalka
+    dw DispatchTalkEvent_Yold
     dw NordenTalkEvents
     dw FhuntTalkEvents
-    dw DispatchTalkEvent_ToDarckTalkEvents
-    dw DispatchTalkEvent_ToElvenVillageTalkEvents
+    dw DispatchTalkEvent_Darck
+    dw DispatchTalkEvent_ElvenVillage
     dw Talk_TravelerEvent
-    dw DispatchTalkEvent_ToKeyWorldTalkEvents
-    dw DispatchTalkEvent_ToReadableTalkEvents
+    dw DispatchTalkEvent_KeyWorld
+    dw DispatchTalkEvent_Readable
 
 ; Talk category 0: the field events (FieldTalkEvents). (C1, E-0357)
-DispatchTalkEvent_ToFieldTalkEvents::
+DispatchTalkEvent_Field::
     farcall FieldTalkEvents
     ret
 
 ; Talk category $0A: notices and bookshelves (ReadableTalkEvents). (C1, E-0357)
-DispatchTalkEvent_ToReadableTalkEvents::
+DispatchTalkEvent_Readable::
     farcall ReadableTalkEvents
     ret
 
 ; Talk category 7: the Elven village world (ElvenVillageTalkEvents). (C1, E-0357)
-DispatchTalkEvent_ToElvenVillageTalkEvents::
+DispatchTalkEvent_ElvenVillage::
     farcall ElvenVillageTalkEvents
     ret
 
 ; Talk category 9: the key worlds (KeyWorldTalkEvents). (C1, E-0357)
-DispatchTalkEvent_ToKeyWorldTalkEvents::
+DispatchTalkEvent_KeyWorld::
     farcall KeyWorldTalkEvents
     ret
 
 ; Talk category 6: Darck's talk (DarckTalkEvents). (C1, E-0357)
-DispatchTalkEvent_ToDarckTalkEvents::
+DispatchTalkEvent_Darck::
     farcall DarckTalkEvents
     ret
 
 ; Talk category 2: the Kalka oasis world (KalkaTalkEvents). (C1, E-0357)
-DispatchTalkEvent_ToKalkaTalkEvents::
+DispatchTalkEvent_Kalka::
     farcall KalkaTalkEvents
     ret
 
 ; Talk category 3: Yold, Polona and Port Ritz (YoldTalkEvents). (C1, E-0357)
-DispatchTalkEvent_ToYoldTalkEvents::
+DispatchTalkEvent_Yold::
     farcall YoldTalkEvents
     ret
 
@@ -199,7 +199,7 @@ FhuntTalkEvents::
     dw TalkMsg040A_TheTopOfTheTowerCollapsed
     dw Talk_HowMayWeServeYourMortal
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone
-    dw FhuntTalkEvents_TestFlagBit
+    dw FhuntTalkEvents_Grave
     dw Talk_WelcomeToOurInn
     dw FhuntTalkEvents_ShowBeGoneIfYour
     dw ChestItem_ExitBell_Flag00A1
@@ -260,7 +260,7 @@ FhuntTalkEvents::
     dw FhuntTalkEvents_ShowHeroCheckedTheSmall
     dw ChestItem_SilvrCape_Flag00AB
     dw ChestItem_Heaven
-    dw FhuntTalkEvents_TestFlagBit_YouCanTakeThis
+    dw FhuntTalkEvents_YouCanTakeThis
     dw ChestItem_Heaven_Flag00AF
     dw FhuntTalkEvents_PowerOfJustice
     dw TalkMsg0462_HeroCheckedTheNoticeLayThe
@@ -270,8 +270,8 @@ FhuntTalkEvents::
     dw Talk_SceneGravestone
     dw TalkMsg0463_HeroCheckedTheNoticeFollow
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone_13
-    dw FhuntTalkEvents_TestFlagBit_HeroCheckedTheGravestone
-    dw FhuntTalkEvents_TestFlagBit_YouOvercameTheTraps
+    dw FhuntTalkEvents_GravestoneButton
+    dw FhuntTalkEvents_YouOvercameTheTraps
     dw ChestItem_Heaven_Flag00B5
     dw TalkMsg046D_TheMonsterArmysGeneralIs
     dw TalkMsg046E_OurKingsCastleIsAnInvincible
@@ -447,8 +447,12 @@ TalkMsg040E_HeroCheckedTheGraveTheTombstone::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $0D (wTalkEventGroup): checking the grave starts Script_HeroCheckedTheGrave ('0
+; checked the grave. There was', SCRIPT_SCENE_GRAVE, then sets EVENT_SCENE_GRAVE) the first time,
+; and Script_HeroCheckedTheGrave_2 (the same message and scene without the flag) once
+; EVENT_SCENE_GRAVE is set. (C1, E-0370)
 ; starts Script_HeroCheckedTheGrave: '0 checked the grave. There was' (E-0248)
-FhuntTalkEvents_TestFlagBit::
+FhuntTalkEvents_Grave::
     ld de, EVENT_SCENE_GRAVE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -1317,8 +1321,12 @@ ChestItem_Heaven::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk group $4A: before EVENT_YOU_CAN_TAKE_THIS_TREASURE starts Script_YouCanTakeThis ('You
+; can take this treasure,' and sets that flag), afterwards Script_I_16 ('I'm up for your
+; challenge'); both go on to scripted encounter 6, 'Heh, you're not half bad!', two walks of object
+; 0, hiding it, EVENT_HEH_YOU and SCRIPT_HIDE_SPRITES. (C1, E-0370)
 ; starts Script_YouCanTakeThis: '*: You can take this treasure,' (E-0248)
-FhuntTalkEvents_TestFlagBit_YouCanTakeThis::
+FhuntTalkEvents_YouCanTakeThis::
     ld de, EVENT_YOU_CAN_TAKE_THIS_TREASURE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -1421,8 +1429,14 @@ TalkMsg040E_HeroCheckedTheGraveTheTombstone_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $54: before EVENT_SET_FLAG_322 starts Script_HeroCheckedTheGravestone ('0 checked
+; the gravestone. There was a round button. Press it?' with a choice: one answer runs
+; Script_ADoorOpenedSomewhere, which plays sound $66, waits 60 frames, shows 'A door opened
+; somewhere...', runs SCRIPT_SET_FLAG_322 and sets EVENT_SET_FLAG_322; the other shows '0 released
+; the grave's button.'); afterwards shows message $040E ('0 checked the grave. The tombstone was
+; covered in moss.') with StartMessageCommand09HL_B13. (C1, E-0370)
 ; starts Script_HeroCheckedTheGravestone: '0 checked the gravestone. There was' (E-0248)
-FhuntTalkEvents_TestFlagBit_HeroCheckedTheGravestone::
+FhuntTalkEvents_GravestoneButton::
     ld de, EVENT_SET_FLAG_322
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -1435,8 +1449,13 @@ FhuntTalkEvents_TestFlagBit_HeroCheckedTheGravestone::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $55: before EVENT_YOU_OVERCAME_THE_TRAPS_I starts Script_YouOvercameTheTraps
+; ('You overcame the traps I' and sets that flag), afterwards Script_WahahahahHereAgainAre
+; ('Wahahahah! Here again, are you?'); both go on to scripted encounter 8, 'You've beaten me
+; fairly... Take', SCRIPT_SCENE_BEATEN_FAIRLY and the flags EVENT_SCENE_BEATEN_FAIRLY and
+; EVENT_SCENE_BEATEN_FAIRLY_0C5 to EVENT_SCENE_BEATEN_FAIRLY_0C7. (C1, E-0370)
 ; starts Script_YouOvercameTheTraps: '*: You overcame the traps I' (E-0248)
-FhuntTalkEvents_TestFlagBit_YouOvercameTheTraps::
+FhuntTalkEvents_YouOvercameTheTraps::
     ld de, EVENT_YOU_OVERCAME_THE_TRAPS_I
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -1885,7 +1904,7 @@ NordenTalkEvents::
     dw VaseItem_TinyMedal_Flag01E6
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt
     dw TalkMsg0314_HeroTriedToOpenTheChest_13
-    dw NordenTalkEvents_StartScriptAtHL_B13
+    dw NordenTalkEvents_Inn
     dw TalkMsg0315_TheBorderIsClosedSoI
     dw NordenTalkEvents_Shield
     dw TalkMsg031E_HisMajestyHasBeenCrankyIs
@@ -1921,7 +1940,7 @@ NordenTalkEvents::
     dw TalkMsg0336_SighIsntThatScholarAppealing
     dw TalkMsg0337_ICameFromTheEasternKingdom
     dw TalkMsg0ABF_HeroPeeredIntoTheBarrelIt
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn
+    dw NordenTalkEvents_SecondInn
     dw TalkMsg0338_TheKingOfTheWestIs
     dw TalkMsg0339_ThisIsTheBorderWeShare
     dw TalkMsg033A_TheBorderHasBeenSealedBy
@@ -1961,7 +1980,7 @@ NordenTalkEvents::
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_13
     dw BarrelItem_TinyMedal_Flag01E7
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_13_2
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_2
+    dw NordenTalkEvents_ThirdInn
     dw NordenTalkEvents_Shop0B
     dw TalkMsg038C_TheLakeIsFrozenSoI
     dw TalkMsg038D_ThisIsWestaniaCastleWestania
@@ -2001,7 +2020,7 @@ NordenTalkEvents::
     dw Talk_HowMayOurChurchServeYou_13_2
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_13_3
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_13_2
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3
+    dw NordenTalkEvents_FourthInn
     dw TalkMsg03B8_IWantToReturnToThe
     dw TalkMsg03AC_ThereIsASpringInThe
     dw TalkMsg0396_ItsAMeanOldWorldOut
@@ -2025,7 +2044,7 @@ NordenTalkEvents::
     dw TalkMsg0A16_MyMaidIsAngryThatI
     dw NordenTalkEvents_BlueFlower
     dw ChestMagicKey_Flag01E0
-    dw NordenTalkEvents_SetObject2Plus7
+    dw NordenTalkEvents_FaceObject2Down
     dw Talk_SceneShield
     dw NordenTalkEvents_ShowHeroCheckedTheTreasure
     dw NordenTalkEvents_SecondShieldScene
@@ -2279,8 +2298,10 @@ TalkMsg0314_HeroTriedToOpenTheChest_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 18, an inn: starts Script_WelcomeToOurInn_5 ('Welcome to our inn!', then a jump to the
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
 ; starts Script_WelcomeToOurInn_5: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13::
+NordenTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn_5 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -2807,8 +2828,10 @@ TalkMsg0ABF_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 54, an inn: starts Script_WelcomeToOurInn_6 ('Welcome to our inn!', then a jump to the
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
 ; starts Script_WelcomeToOurInn_6: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn::
+NordenTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_6 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -3466,8 +3489,10 @@ TalkMsg0313_HeroPeeredIntoTheOvenIt_13_2::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 94, an inn: starts Script_WelcomeToOurInn_7 ('Welcome to our inn!', then a jump to the
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
 ; starts Script_WelcomeToOurInn_7: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_2::
+NordenTalkEvents_ThirdInn::
     ld hl, Script_WelcomeToOurInn_7 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -4102,8 +4127,10 @@ TalkMsg0312_HeroPeeredIntoTheBarrelIt_13_2::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 134, an inn: starts Script_WelcomeToOurInn_8 ('Welcome to our inn!', then a jump to
+; the inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
 ; starts Script_WelcomeToOurInn_8: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3::
+NordenTalkEvents_FourthInn::
     ld hl, Script_WelcomeToOurInn_8 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -4545,8 +4572,12 @@ ChestMagicKey_Flag01E0::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 158: sets wObject2 + OBJ_STATE = 0, the facing value other readings take as down
+; (hPlayerFacing 0 moves the interaction check 16 pixels down), and starts no message or script. The
+; generated comment above it ('starts Script_SceneShield') belongs to the next entry,
+; Talk_SceneShield. (C1, E-0370)
 ; starts Script_SceneShield (E-0248)
-NordenTalkEvents_SetObject2Plus7::
+NordenTalkEvents_FaceObject2Down::
     xor a
     ld [wObject2 + OBJ_STATE], a
     ret
@@ -4716,7 +4747,7 @@ Talk_TravelerEvent::
 GreatLogTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
-    dw GreatLogTalkEvents_Return
+    dw GreatLogTalkEvents_NoEvent
     dw Talk_SceneTerry
     dw GreatLogTalkEvents_Mama
     dw TalkMsg0023_HeroCheckedTheBookshelfBehavior
@@ -4792,7 +4823,7 @@ GreatLogTalkEvents::
     dw TalkMsg04C7_HeroCheckedTheBookshelfHandbook
     dw TalkMsg08C0_WeGetMoreAndMoreStubborn
     dw GreatLogTalkEvents_ShowHeresThatTinyMedalWait
-    dw GreatLogTalkEvents_TestFlagBit
+    dw GreatLogTalkEvents_Hibernation
     dw TalkMsg0A50_ZzzzYawnHuhIsItMorning
     dw TalkMsg0A52_OurKindAlwaysStaysNearWater
     dw TalkMsg0A53_ZzzZzzZzzWhoopsWasI
@@ -4817,7 +4848,7 @@ GreatLogTalkEvents::
     dw TalkMsg0296_HeroPeeredIntoTheVaseIt
     dw VaseItem_TinyMedal_Flag010C
     dw TalkMsg027A_ListenThisIsASecretTheres
-    dw GreatLogTalkEvents_ClearArenaData_Here
+    dw GreatLogTalkEvents_ArenaClassChoice
     dw GreatLogTalkEvents_Breeder
     dw TalkMsg04B5_DoYouKnowAllTheKinds
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
@@ -4947,7 +4978,7 @@ GreatLogTalkEvents::
     dw GreatLogTalkEvents_ShowEgg
     dw GreatLogTalkEvents_Egg
     dw GreatLogTalkEvents_SpeciesPreset
-    dw GreatLogTalkEvents_SetGreatLogEventFlag
+    dw GreatLogTalkEvents_ResetKeyShopTalk
     dw $0000 ; unused index (E-0207)
     dw TalkMsg029B_IFoundAKey
     dw Talk0DE3_TheSeaIsHuge
@@ -4964,8 +4995,10 @@ GreatLogTalkEvents::
     dw SetFlagsCBAndCCFrom35And36
     dw IfFlag0021StartScript
 
+; Great Log talk 0: returns at once; this entry starts nothing. The generated comment above it
+; ('starts Script_SceneTerry') belongs to the next entry, Talk_SceneTerry. (C1, E-0370)
 ; starts Script_SceneTerry (E-0248)
-GreatLogTalkEvents_Return::
+GreatLogTalkEvents_NoEvent::
     ret
 
 ; starts Script_SceneTerry (StartScriptAtHL_B13) (E-0271; was Talk_SceneTerry) (E-0344: the address
@@ -4980,10 +5013,10 @@ Talk_SceneTerry::
 ; Great Log talk, Mama: by story progress: after EVENT_THANKS_FOR_COMING_BY_025 'you were so busy'
 ; ($0D91) once (only after the errands began and before the LoveWater), then 'The weather is
 ; beautiful again.' ($0B00); after the three items scene $0500; after the rival is defeated the
-; errands (GreatLogTalkEvents_Mama_TestFlagBit); after the long faces scene an Herb (item 1) with
-; 'Are you going out to ...' when the bag has room, then $0102; after Warubou's food scene the
-; package script once, with field command 1, then $006C; after the vault scene $0022; otherwise
-; 'You've come at the right ...'. (C1, E-0357)
+; errands (GreatLogTalkEvents_Mama_Errands); after the long faces scene an Herb (item 1) with 'Are
+; you going out to ...' when the bag has room, then $0102; after Warubou's food scene the package
+; script once, with field command 1, then $006C; after the vault scene $0022; otherwise 'You've come
+; at the right ...'. (C1, E-0357)
 GreatLogTalkEvents_Mama::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -4999,7 +5032,7 @@ GreatLogTalkEvents_Mama::
     jp c, .skip
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
-    jr c, .call_great_log_talk_events_mama_test_flag_bit
+    jr c, .call_great_log_talk_events_mama_errands
     ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     jr c, .call_test_flag_bit2
@@ -5054,15 +5087,15 @@ GreatLogTalkEvents_Mama::
     call StartScriptAtHL_B13
     ret
 
-.call_great_log_talk_events_mama_test_flag_bit:
-    call GreatLogTalkEvents_Mama_TestFlagBit
+.call_great_log_talk_events_mama_errands:
+    call GreatLogTalkEvents_Mama_Errands
     ret
 
 .skip:
-    jr .call_great_log_talk_events_mama_test_flag_bit
+    jr .call_great_log_talk_events_mama_errands
 
 .skip2:
-    jr .call_great_log_talk_events_mama_test_flag_bit
+    jr .call_great_log_talk_events_mama_errands
 
 .call_start_message_command09_hl_b134:
     ld hl, $0500 ; '*: 0… There have been frequent'
@@ -5090,12 +5123,20 @@ GreatLogTalkEvents_Mama::
     call StartMessageCommand09HL_B13
     ret
 
-; Great Log talk, Mama's errands: the LoveWater (item 2), then the errands of
-; EVENT_MAMA_HANDED_OVER_400_G (item 4), 600 G (item $1B) and 1,200 G (item $1C, Sirloin), each 'Oh?
-; You'll run another errand?' to start, a reminder ($0202, $08A5, $08AA, $0A27) until the item is
-; carried, then taking it with thanks; between them $0214 and $0205, and $0A2A when none are left.
-; (C1, E-0357)
-GreatLogTalkEvents_Mama_TestFlagBit::
+; Great Log talk, the errands of Mama (called from GreatLogTalkEvents_Mama after the rival is
+; defeated). First ITEM_LOVEWATER: Script_You_4 once (setting EVENT_YOUVE_BEEN_GOING_OUT_A and
+; EVENT_YOUVE_BEEN_GOING_OUT_A_180), the reminder $0202 until the item is carried, then
+; Script_OhYouBoughtThe takes it (EVENT_OH_YOU_BOUGHT_THE_LOVE) and the next talk says $0214
+; (EVENT_ILL_GET_YOU_TO_RUN). Then two errands, ITEM_POTION (until
+; EVENT_HERO_HANDED_OVER_THE_POTION; reminder $08A5) and ITEM_RIB (until
+; EVENT_HERO_HANDED_OVER_THE_RIB; reminder $08AA), each asked by Script_OhYou or Script_OhYou_3
+; until EVENT_MAMA_HANDED_OVER_400_G or EVENT_MAMA_HANDED_OVER_600_G is set and finished by
+; Script_OhYou_2 or Script_OhYou_4 taking the item. After those, $0205 until
+; EVENT_SCENE_MERMAID_KINGDOM_022; then the ITEM_SIRLOIN errand: Script_IWasGoingTo (or
+; Script_IWasGoingTo_2 behind EVENT_NEVER_SET) until EVENT_MAMA_HANDED_OVER_1_200, the reminder
+; $0A27, Script_TheyDidn when the item is taken, and $0A2A once EVENT_HERO_HANDED_OVER_THE_SIRLOIN
+; is set. (C1, E-0370)
+GreatLogTalkEvents_Mama_Errands::
     ld de, EVENT_ILL_GET_YOU_TO_RUN
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -7574,8 +7615,13 @@ GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 76, hibernation: the first time starts Script_HelloHeroWelcomeThis ('Hello, 0,
+; welcome! This is') and sets EVENT_HELLO_HERO_WELCOME_THIS_IS; afterwards starts
+; Script_HelloHeroWelcomeWant ('Hello, 0, welcome! Want to'). Both scripts jump to Script_Hibernate
+; in the data bank (script command SCRIPT_HIBERNATE, HibernateMenu), so it sets wDataBank = $1D.
+; (C1, E-0370)
 ; starts Script_HelloHeroWelcomeThis: '*: Hello, 0, welcome! This is' (E-0248)
-GreatLogTalkEvents_TestFlagBit::
+GreatLogTalkEvents_Hibernation::
     ld de, EVENT_HELLO_HERO_WELCOME_THIS_IS
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -7913,7 +7959,7 @@ TalkMsg027A_ListenThisIsASecretTheres::
 ; Arena! Masters ...'; rank 1 the class choice ('Welcome to the Arena! The ...' once, then 'Hello,
 ; which Class will it ...'); rank 5 'Welcome! Do you wish to ...'; other ranks first hand over the
 ; prize key (GenerateNewKeyEntry into wArenaOutcome, 'Here's the Magic Key you ...'). (C1, E-0357)
-GreatLogTalkEvents_ClearArenaData_Here::
+GreatLogTalkEvents_ArenaClassChoice::
     ld a, $0c
     ld [wDataBank], a
     xor a
@@ -10085,11 +10131,11 @@ TalkMsg024A_HeroCheckedThePlushDollIt::
     call StartMessageCommand09HL_B13
     ret
 
-; Great Log talk 204: far-calls GreatLogTalkEvents_Talk204_WriteTemp1, which clears hTemp1, so the
+; Great Log talk 204: far-calls GreatLogTalkEvents_Talk204_PassCheck, which clears hTemp1, so the
 ; bit-7 test never returns early: sets the tile action to 0 and runs the strongest-master scene
 ; script. (C1, E-0357)
 GreatLogTalkEvents_Talk204::
-    farcall GreatLogTalkEvents_Talk204_WriteTemp1
+    farcall GreatLogTalkEvents_Talk204_PassCheck
     ldh a, [hTemp1]
     bit 7, a
     ret nz
@@ -10633,8 +10679,11 @@ GreatLogTalkEvents_SpeciesPreset::
     farcall LoadSpeciesFlagsPresetC
     ret
 
-; Great Log talk: clears wGreatLogEventFlag. (C1, E-0357)
-GreatLogTalkEvents_SetGreatLogEventFlag::
+; Great Log talk 231: clears wGreatLogEventFlag, the byte KeyAppraisalMenu_ChooseKey_PayAndAppraise
+; sets to 1 after the save that follows an appraisal; while it is 1,
+; GreatLogTalkEvents_ShowItsExcitingToThink only shows message $0DC2 instead of opening the Key
+; Shop. (C1, E-0370)
+GreatLogTalkEvents_ResetKeyShopTalk::
     xor a
     ld [wGreatLogEventFlag], a
     ret

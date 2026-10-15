@@ -52,11 +52,14 @@ class ConstantsTest(unittest.TestCase):
         self.assertIn("DEF ACTION_CF EQU $CF ; a battle action whose StringTable_SkillNames entry only repeats 'LoveRain'", inc)
 
     def test_indexed_cases_sit_at_their_id(self):
-        """E-0342: ApplyEquipmentEffect_<Item> is entry (item id - $40) of ApplyEquipmentEffectKeepA_ByItem."""
+        """E-0342: RemoveEquipmentBonus_<Item> (ApplyEquipmentEffect_<Item> before E-0370) is entry (item id - $40) of RemoveEquipmentBonus."""
         text = next(ROOT.glob("src/*/bank*_items_battle_end.asm")).read_text(encoding="utf-8")
-        m = re.search(r"^ApplyEquipmentEffectKeepA_ByItem::\n(?:.*\n)*?\s+jumptable\n((?:\s+dw \w+\n)+)", text, re.M)
+        m = re.search(r"^RemoveEquipmentBonus::\n(?:.*\n)*?\s+jumptable\n((?:\s+dw \w+\n)+)", text, re.M)
         entries = re.findall(r"dw (\w+)", m.group(1))
-        named = [(k, e) for k, e in enumerate(entries) if e.startswith("ApplyEquipmentEffect_")]
+        import json
+        given = {v["name"] for v in json.loads((ROOT / "config/names.json").read_text(encoding="utf-8")).values()
+                 if isinstance(v, dict) and "name" in v}  # cases named from a reading (E-0370: _Capes, _LastItem)
+        named = [(k, e) for k, e in enumerate(entries) if e.startswith("RemoveEquipmentBonus_") and e not in given]
         self.assertGreaterEqual(len(named), 10)
         for k, e in named:
             want = re.sub(r"[^A-Za-z0-9]", "", self.c["ITEM"][0x40 + k][1]).upper()

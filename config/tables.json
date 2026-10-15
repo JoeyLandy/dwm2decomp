@@ -8411,7 +8411,7 @@
         }
       ],
       "record": "32 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList0 in DE, to SwapMonstersMenu_WriteGlyphListPos, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList0 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8444,7 +8444,7 @@
         }
       ],
       "record": "9 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList1 in DE, to SwapMonstersMenu_WriteGlyphListPos, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList1 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8477,7 +8477,7 @@
         }
       ],
       "record": "10 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList2 in DE, to SwapMonstersMenu_WriteGlyphListPos, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList2 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8510,7 +8510,7 @@
         }
       ],
       "record": "6 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList3 in DE, to SwapMonstersMenu_WriteGlyphListPos, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList3 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8543,7 +8543,7 @@
         }
       ],
       "record": "32 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList4 in DE, to SwapMonstersMenu_WriteGlyphListPos, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList4 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8576,7 +8576,7 @@
         }
       ],
       "record": "15 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList5 in DE, to SwapMonstersMenu_WriteGlyphListPos, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList5 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -12769,7 +12769,7 @@
         ],
         "record": "24-bit number"
       },
-      "note": "E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ShopMenu_Buy_ReadFarPointerAtDEInBankB) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed)."
+      "note": "E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ShopMenu_Buy_ApplyGoldPass) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed)."
     },
     {
       "bank": "00",
@@ -14373,7 +14373,7 @@
         }
       ],
       "record": "17 position words (one per key column) for a keyboard row",
-      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2 reads row $22 * wNameEntryCursorY from $61E2, then the word for wNameEntryCursorX; 5 rows)."
+      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_ShowKeyCursor reads row $22 * wNameEntryCursorY from $61E2, then the word for wNameEntryCursorX; 5 rows)."
     },
     {
       "bank": "14",
@@ -14501,7 +14501,7 @@
         }
       ],
       "record": "99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F",
-      "note": "E-0226 (C1: VaultMenu_Store_WaitForVRAMAccess copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState = 3))."
+      "note": "E-0226 (C1: VaultMenu_Store_WriteWindowMap copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState = 3))."
     },
     {
       "bank": "1D",
@@ -14536,7 +14536,7 @@
         }
       ],
       "record": "99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F",
-      "note": "E-0226 (C1: VaultMenu_Store_WaitForVRAMAccess copies bytes from $4547 to vBGMap1 + $300 until $7F (any other wScreenState))."
+      "note": "E-0226 (C1: VaultMenu_Store_WriteWindowMap copies bytes from $4547 to vBGMap1 + $300 until $7F (any other wScreenState))."
     },
     {
       "bank": "1D",
@@ -18741,7 +18741,7 @@
           "name": "one CGB OBJ palette: 4 BGR555 colours"
         }
       ],
-      "note": "E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_DecompressToVRAM with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes)."
+      "note": "E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_LoadGfxPalette4 with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes)."
     },
     {
       "bank": "12",
@@ -19578,7 +19578,7 @@
         }
       ],
       "record": "graphics stream, bank; palette offset; two bytes",
-      "note": "E-0239 (C1: RandomGoldOrItem_DecompressToVRAM reads the 6-byte record at $71E8 + 6 * wTriggerKind, decompresses the far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8 bytes at 7E:$4BBD + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is TriggerSpriteRecord0)."
+      "note": "E-0239 (C1: LoadTriggerMarkerGraphics reads the 6-byte record at $71E8 + 6 * wTriggerKind, decompresses the far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8 bytes at 7E:$4BBD + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is TriggerSpriteRecord0)."
     },
     {
       "bank": "12",
@@ -19593,7 +19593,7 @@
           "name": "record 0 of the trigger sprite records: all zero"
         }
       ],
-      "note": "E-0239 (C1: record 0 of the 6-byte records RandomGoldOrItem_DecompressToVRAM reads at $71E8 + 6 * wTriggerKind (TriggerSpriteTable holds 1-10); all six bytes are zero)."
+      "note": "E-0239 (C1: record 0 of the 6-byte records LoadTriggerMarkerGraphics reads at $71E8 + 6 * wTriggerKind (TriggerSpriteTable holds 1-10); all six bytes are zero)."
     },
     {
       "bank": "A2",

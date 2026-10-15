@@ -3077,7 +3077,7 @@ LinkRecordScreen::
     ld a, [wScreenStep]
     jumptable
     dw LinkRecordScreen_Clear
-    dw LinkRecordScreen_WriteScreenStep
+    dw LinkRecordScreen_CopyGlyphTiles
     dw LinkRecordScreen_OrGlyphs
     dw LinkRecordScreen_ClearText
     dw LinkRecordScreen_DrawPedigreeFrame
@@ -3138,11 +3138,15 @@ ClearBGMapAtScrollAndResetScroll_BankF0::
     ld [wScreenStep], a
     ret
 
-; The record screen, step 1: copies the glyph tiles from its tile lists. (C1, E-0357)
-LinkRecordScreen_WriteScreenStep::
-    ld hl, LinkRecordScreen_WriteScreenStep_TileCopyDestList
-    ld de, LinkRecordScreen_WriteScreenStep_TileCopySrcList
-    call LinkRecordScreen_WriteGlyphListPos
+; The record screen (LinkRecordScreen, entry 1 of its jumptable on wScreenStep): copies 31 glyph
+; tiles from bank $1F (sources in LinkRecordScreen_CopyGlyphTiles_TileCopySrcList) to vTiles2 + $20
+; through + $1F0 and to vTiles2 + $6F0 (LinkRecordScreen_CopyGlyphTiles_TileCopyDestList, ended by
+; $FFFF) through SwapMonstersMenu_CopyGlyphTiles_BankF0, then wScreenStep += 1, on to
+; LinkRecordScreen_OrGlyphs. (C1, E-0370)
+LinkRecordScreen_CopyGlyphTiles::
+    ld hl, LinkRecordScreen_CopyGlyphTiles_TileCopyDestList
+    ld de, LinkRecordScreen_CopyGlyphTiles_TileCopySrcList
+    call SwapMonstersMenu_CopyGlyphTiles_BankF0
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3241,7 +3245,7 @@ LinkRecordScreen_DrawParents::
     call GetListEntriesCell4Address_BankF0
     ld a, [hl]
     ld e, a
-    farcall LinkRecordScreen_DrawParents_DrawRecordParentNames
+    farcall LinkRecordScreen_DrawParents_DrawNamesAndFamily
     ld a, $f0
     ldh [hSpriteHideTile], a
     call BGMapAddressAtScroll_BankF0
@@ -3435,7 +3439,7 @@ LinkRecordScreen_ClearTiles::
 LinkRecordScreen_CopyGlyphs::
     ld hl, LinkRecordScreen_CopyGlyphs_TileCopyDestList
     ld de, LinkRecordScreen_CopyGlyphs_TileCopySrcList
-    call LinkRecordScreen_WriteGlyphListPos
+    call SwapMonstersMenu_CopyGlyphTiles_BankF0
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3446,7 +3450,7 @@ LinkRecordScreen_CopyGlyphs::
 LinkRecordScreen_ShowInfoOK::
     ld hl, LinkRecordScreen_ShowInfoOK_TileCopyDestList
     ld de, LinkRecordScreen_ShowInfoOK_TileCopySrcList
-    call LinkRecordScreen_WriteGlyphListPos
+    call SwapMonstersMenu_CopyGlyphTiles_BankF0
     xor a
     ld [wStringCategory], a
     ld a, $1e
@@ -3698,7 +3702,8 @@ DrawRect6x6FromAtScroll41_BankF0::
 
 ; Copies glyph tiles from a pair of tile lists (destinations at HL, sources at DE, bank $1F) to VRAM
 ; until the list ends ($FF), then clears wGlyphListPos. (C1, E-0357)
-LinkRecordScreen_WriteGlyphListPos::
+; the same 58 bytes as SwapMonstersMenu_CopyGlyphTiles (SwapMonstersMenu_CopyGlyphTiles) (E-0370)
+SwapMonstersMenu_CopyGlyphTiles_BankF0::
     ld b, $00
 
 .skip:
@@ -4062,14 +4067,14 @@ CopyScreenBufferRectWithAttrs_F0::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-LinkRecordScreen_WriteScreenStep_TileCopyDestList::
+LinkRecordScreen_CopyGlyphTiles_TileCopyDestList::
     dw vTiles2 + $20, vTiles2 + $30, vTiles2 + $40, vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90 ; entry 0
     dw vTiles2 + $a0, vTiles2 + $b0, vTiles2 + $c0, vTiles2 + $d0, vTiles2 + $e0, vTiles2 + $f0, vTiles2 + $100, vTiles2 + $110
     dw vTiles2 + $120, vTiles2 + $130, vTiles2 + $140, vTiles2 + $150, vTiles2 + $160, vTiles2 + $170, vTiles2 + $180, vTiles2 + $190
     dw vTiles2 + $1a0, vTiles2 + $1b0, vTiles2 + $1c0, vTiles2 + $1d0, vTiles2 + $1e0, vTiles2 + $1f0, vTiles2 + $6f0, rIE
 
 ; record: bank-$1F tile sources
-LinkRecordScreen_WriteScreenStep_TileCopySrcList::
+LinkRecordScreen_CopyGlyphTiles_TileCopySrcList::
     dw $42d0, $42b0, $4300, $44c0, $4400, $4ab0, $4310, $43f0 ; entry 0
     dw $42e0, $42f0, $42a0, $4320, $4260, $4390, $47b0, $4680
     dw $46b0, $49d0, $42b0, $43e0, $4890, $4790, $4880, $4440

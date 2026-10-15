@@ -82,9 +82,22 @@ reading probed or listed with why not; ROADMAP marked complete; final commit wit
 - Count floors that only guarded against a vacuous test of generated names (tests/test_step_names.py's 150) are
   replaced by an upper-bound ratchet on instruction-named, over-60 and `Etc` labels (tests/test_doc_coverage.py),
   since the batches remove generated names by design.
+- From E-0371 on, the parallel runner is the final suite check before a commit: it agreed with the serial suite test
+  by test on three separate trees (E-0368 suite604/par604, E-0369 suite606/par606b, E-0370 suite610/par610b). A
+  serial run is repeated whenever the test files' set or the runner changes, and at the end of the goal.
 - The parallel runner (tools/run_tests.py) is used for the scoped and intermediate runs; the serial
   `python -I -m unittest discover -s tests` stays the final check before every commit until the two have agreed on
   three separate trees.
+
+**Decision D-012 (2026-10-15): what "a C1 reading a probe can check" means.** A probe runs one routine of the
+reference ROM on tools/sm83.py from a chosen register, RAM and SRAM state until it returns, and compares registers,
+flags, RAM and SRAM with the note (tools/probe.py; probes in config/probes/*.json, run by tests/test_probes.py). A
+reading is probe-checkable when tools/probe_scope.py finds that the routine and everything it reaches (calls, jumps,
+far calls, jump-table entries, fall-through) touch only CPU registers, WRAM, HRAM, SRAM and the memory-bank
+registers, with no halt/stop/ei/di and no computed `jp hl`. The rest are listed by category with the reason: their
+effect is on the display, sound, serial link or joypad (what they do is seen there, not in RAM), or depends on
+interrupt timing, or jumps through a computed address. A passing probe raises the mechanical part of a note to C2
+(the project's emulator, not hardware); what a routine is for stays C1.
 
 **Cycle timing (E-0368 tree).** Regenerate 3m50s-3m58s (`python -I -u tools/disasm_all.py`); build and identity
 12.8s; full serial suite 25m54s (377 tests); parallel suite 8m04s wall (32 processes; bounded by
@@ -103,6 +116,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | --- | --- | --- | --- | --- | --- | --- |
 | E-0368 (finish E-0367 continuation, tools) | E-0368 | - | 591 names | - | PASS build/run604 | suite604 OK (377, 3 skipped); par604 identical |
 | 1: instruction-named, banks $00-$0F (6 slices of 80-109, plus 18 derived) | E-0369 | 547 | 547 (5 names withheld: helper families) | 0 (54 spot checks, all correct) | PASS build/run606 | suite606 OK; par606b identical |
+| 2: instruction-named, banks $0F-$31 (6 slices of 80-118, 10 derived, 7 renumbered siblings, 2 parents) | E-0370 | 553 | 553 (equipment table renamed as a whole) | 0 (60 spot checks, all correct) | PASS build/run610 | suite610 OK (387, 4 skipped); par610b identical (agreement 3 of 3) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
@@ -116,7 +130,16 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-14, E-0369)
+## Current handoff (2026-10-15, E-0370)
+
+Batch 2 (E-0370) named 553 more instruction-named routines (banks $0F-$31), 0 rejected; the equipment table is
+RemoveEquipmentBonus (it takes back a given-up item's bonus). Probe tools exist (tools/probe.py,
+tools/probe_scope.py, tests/test_probes.py; D-012). Queue after E-0370: instruction 655, long 587, over 60: 108,
+unread 4,535, reader-only data 525, assets 155; probe scope 5,694 code labels (4,124 hardware, 3 interrupts, 1
+unresolved). Next: batch E-0371, the remaining instruction-named labels in six slices of up to 120 (slice size grown
+by half after two batches at 0% rejection).
+
+## Prior handoff (2026-10-14, E-0369)
 
 Batch 1 (E-0369) named 547 instruction-named routines in banks $00-$0F from readings by six read-only workers
 (0 rejected) and corrected about 40 earlier notes. Binary identity: **PASS**, `build/run606/report.json`.

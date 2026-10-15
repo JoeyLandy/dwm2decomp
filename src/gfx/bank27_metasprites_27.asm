@@ -13,7 +13,7 @@ DrawMetaSpriteSet_Bank27::
     ld hl, MetaSprites27Attrs
     add hl, de
     bit 0, [hl]
-    jr z, .call_draw_meta_sprite_set_bank27_wait_oam
+    jr z, .call_draw_meta_sprite_set_bank27_build_oam
     ld a, [hl]
     and $f0
     ld e, a
@@ -21,9 +21,9 @@ DrawMetaSpriteSet_Bank27::
     or e
     ldh [hSpriteAttrXor], a
 
-.call_draw_meta_sprite_set_bank27_wait_oam:
+.call_draw_meta_sprite_set_bank27_build_oam:
     ld de, MetaSprites27Table
-    call DrawMetaSpriteSet_Bank27_WaitOamNextEntry
+    call DrawMetaSpriteSet_Bank27_BuildOam
     ret
 
 ; DrawMetaSpriteSet_Bank27 passes DE = $MetaSprites27Table to the builder, which takes the word at
@@ -292,12 +292,17 @@ MetaSprites27Attrs::
     db $01 ; id 126
     db $00
 
-; Builds the meta-sprite into OAM (unless 39 entries are used): origin plus sprite scroll, the frame
-; from the set and sub-index tables; writes each entry (Y, X, tile + hSpriteTileOffset, attributes
-; XOR hSpriteAttrXor; $80 ends) and skips those off screen; attribute bit 5 mirrors X; with
-; hSpriteWindowClipMode it also hides entries behind the text window (mode 1 above Y $34, mode 2
-; from Y $71) and over sprite-hide tiles; stops at 40 entries. (C1, E-0357)
-DrawMetaSpriteSet_Bank27_WaitOamNextEntry::
+; DE = a table of meta-sprite set pointers (DrawMetaSpriteSet_Bank27 passes MetaSprites27Table):
+; returns at once when hOamNextEntry is $27 or more; otherwise adds the sprite scroll words to the
+; origin (hMetaSpriteYLo/Hi, hMetaSpriteXLo/Hi, and X - 8 in hMetaSpriteXFlipLo/Hi), takes the set
+; at DE + 2 * hSpriteSetIndex and the frame at set + 2 * hSpriteSubIndex, and writes each 4-byte
+; entry (Y, X, tile + hSpriteTileOffset, attribute XOR hSpriteAttrXor; $80 ends the frame) to
+; wShadowOAM at hOamNextEntry, skipping entries off screen and stopping at 40 entries. Bit 5 of
+; hSpriteAttrXor mirrors the X offsets. With hSpriteWindowClipMode set it also drops entries above Y
+; $34 (mode 1) or from Y $71 (mode 2), and entries whose BG tile
+; (BGTileUnderPointIsSpriteHideTile_Bank27) is hSpriteHideTile or above. The same code as
+; DrawMetaSpriteAt in bank $7F. (C1, E-0370)
+DrawMetaSpriteSet_Bank27_BuildOam::
     ldh a, [hOamNextEntry]
     cp $27
     ret nc

@@ -836,7 +836,7 @@ DEF EVENT_THE_PIRATES_WERE_SWALLOWED_BY EQU $07A ; set by YoldTalkEvents_KamehaE
 DEF EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING EQU $07B ; set by YoldTalkEvents_KamehaThanks
 DEF EVENT_SCENE_CREW_FOLLOWS EQU $07C ; set by Script_KamehaUrkHowYou
 DEF EVENT_SCENE_CREW_FOLLOWS_07D EQU $07D ; set by SceneCrewFollows_ShakeScreen
-DEF EVENT_SCENE_KAMEHA_FLEES EQU $07E ; set by SceneKamehaFlees_SetFlagBit
+DEF EVENT_SCENE_KAMEHA_FLEES EQU $07E ; set by SceneKamehaFlees_BobObjectRight
 DEF EVENT_SCENE_MERMAID_KINGDOM_07F EQU $07F ; set by SceneMermaidKingdom_SetFlags
 DEF EVENT_HERO_CHECKED_THE_TREASURE_CHEST EQU $080 ; set by Script_HeroCheckedTheTreasure_2
 DEF EVENT_WHAT_IS_THAT_DIRTY_MEDAL EQU $081 ; set by Script_WhatIsThatDirty
@@ -920,13 +920,13 @@ DEF EVENT_IT_SEEMS_TO_ME_THAT EQU $100 ; set by TalkMsg0016_ItSeemsToMeThatThe
 DEF EVENT_IT_SEEMS_TO_ME_THAT_101 EQU $101 ; set by TalkMsg0016_ItSeemsToMeThatThe
 DEF EVENT_COBI_HI_I EQU $102 ; set by Script_CobiHiI, Script_TaraI
 DEF EVENT_OH_HI_GOOD_TO EQU $103 ; set by Script_OhHiGoodTo
-DEF EVENT_YOUVE_BEEN_GOING_OUT_A EQU $104 ; set by GreatLogTalkEvents_Mama_TestFlagBit
+DEF EVENT_YOUVE_BEEN_GOING_OUT_A EQU $104 ; set by GreatLogTalkEvents_Mama_Errands
 DEF EVENT_COBI_HERO_WHAT_WAS EQU $105 ; set by Script_CobiHeroWhatWas, Script_TaraBigBrotherHave
 DEF EVENT_THE_KING_IS_TOO_LENIENT_106 EQU $106 ; set by TalkMsg0035_TheKingIsTooLenientOn
 DEF EVENT_TAKE_THIS_SLIDE_AS_A EQU $107 ; set by GreatLogTalkEvents_Slide
 DEF EVENT_WELCOME_TO_THE_LIBRARY EQU $108 ; set by Script_WelcomeToTheLibrary
 DEF EVENT_COBI_HERO_WHAT_WAS_109 EQU $109 ; set by Script_CobiHeroWhatWas_2, Script_TaraBigBrotherTell
-DEF EVENT_HELLO_HERO_WELCOME_THIS_IS EQU $10A ; set by GreatLogTalkEvents_TestFlagBit
+DEF EVENT_HELLO_HERO_WELCOME_THIS_IS EQU $10A ; set by GreatLogTalkEvents_Hibernation
 DEF EVENT_THAT_WEIRD_APE_THING_IS EQU $10B ; set by TalkMsg003A_ThatWeirdApeThingIsWarubou
 DEF EVENT_I_LOST_AGAIN_I_NEED EQU $10D ; no setter found; tested by GreatLogTalkEvents_Breeder
 DEF EVENT_WHEN_YOU_BREED_THE_OFFSPRING EQU $10E ; named by reading (config/story_flags.json); used by GreatLogTalkEvents_Breeder
@@ -1000,9 +1000,9 @@ DEF EVENT_THIS_IS_THE_BAFFLE EQU $173 ; set by ElvenVillageTalkEvents_ShowThisIs
 DEF EVENT_MAP_D3_OBJECT_REMOVED EQU $174 ; no setter found; tested by ObjSelector_MapD3_1
 DEF EVENT_MAP_D4_OBJECT_REMOVED EQU $178 ; no setter found; tested by ObjSelector_MapD4_1
 DEF EVENT_MAP_D5_OBJECT_REMOVED EQU $17C ; no setter found; tested by ObjSelector_MapD5_1
-DEF EVENT_YOUVE_BEEN_GOING_OUT_A_180 EQU $180 ; set by GreatLogTalkEvents_Mama_TestFlagBit
-DEF EVENT_OH_YOU_BOUGHT_THE_LOVE EQU $181 ; set by GreatLogTalkEvents_Mama_TestFlagBit
-DEF EVENT_ILL_GET_YOU_TO_RUN EQU $182 ; set by GreatLogTalkEvents_Mama_TestFlagBit
+DEF EVENT_YOUVE_BEEN_GOING_OUT_A_180 EQU $180 ; set by GreatLogTalkEvents_Mama_Errands
+DEF EVENT_OH_YOU_BOUGHT_THE_LOVE EQU $181 ; set by GreatLogTalkEvents_Mama_Errands
+DEF EVENT_ILL_GET_YOU_TO_RUN EQU $182 ; set by GreatLogTalkEvents_Mama_Errands
 DEF EVENT_MAMA_HANDED_OVER_400_G EQU $183 ; set by Script_MyWhatHasGotten
 DEF EVENT_HERO_HANDED_OVER_THE_POTION EQU $184 ; set by Script_OhYou_2
 DEF EVENT_MAMA_HANDED_OVER_600_G EQU $185 ; set by Script_WellCouldYouGo

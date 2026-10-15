@@ -4270,12 +4270,25 @@ SetupMap0BMonsterObjects_Data2::
     db $06, $07, $08, $09, $0a, $0b, $0c, $0d, $10, $11, $12, $13, $14, $15, $16, $1a
     db $1b, $1c, $1d, $21, $24, $25, $26, $28, $29, $2a, $2e, $2f, $33, $38, $39, $3d
 
-; Random gold or item: with no trigger, no pending field event and a free 24th inventory slot, one
-; chance in 32 of a find: for map sprite kind 1 the marker flags are $80 on a 0-98 roll below 5,
-; otherwise $80 | (the party's strength + a random -16..15, at least 1), with wScriptParam1 $2C; for
-; other kinds a tier 0-5 from a 0-98 roll (below 50, 70, 80, 90, 95, or above) and the rest;
-; otherwise the script resumes with no find. (C1, E-0357)
-RandomGoldOrItem_NextRandomSeed::
+; The body of step 4 of RandomGoldOrItem (far-called by RandomGoldOrItem_PickFind). A find needs
+; wTriggerKind $FF (no trigger), bit 7 of wPendingFieldEvent clear, the 24th bag slot (wInventory +
+; $17) $FF or 0, and wRandomLo & $1F = 0 (the NextRandomSeed call just before advances
+; wKeyRandomLo/Hi, not wRandomLo); otherwise it clears wTriggerMarkerFlags and sets
+; wScriptStartRequest to $80, so the script resumes with no find. For map sprite kind 1
+; (wMapSpriteKind high nibble) a 0-98 roll (RandomGoldOrItem_PickFind_RollFind_RandomUnder99) below
+; 5 gives ITEM_TINYMEDAL (marker flags $80, no gold), otherwise gold: flags $80 | (wPartyStrength
+; from ComputePartyStrengthLevelPartyStrength + a random -16..15 from wKeyRandomHi, made 1 when bit
+; 7 is set; a sum of exactly 0 leaves no gold, so the medal is given), with wScriptParam1 =
+; ITEM_TINYMEDAL either way. For any other kind the flags are $80 and a 0-98 roll picks tier 0-5
+; (below 50, 70, 80, 90, 95, or above) in row ((kind - 2) & 1) of
+; RandomGoldOrItem_PickFind_RollFind_Data1 (row 0 ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB, ITEM_RIB,
+; ITEM_SIRLOIN, ITEM_TINYMEDAL; row 1 ITEM_HERB, ITEM_MOONHERB, ITEM_WARP, ITEM_MIST,
+; ITEM_WORLDLEAF, ITEM_TINYMEDAL) into wScriptParam1. Then wTriggerKind =
+; RandomGoldOrItem_PickFind_RollFind_Data2[wScriptParam1] (no find when 0; every id these rows give
+; has a nonzero entry), LoadTriggerMarkerGraphics, wTriggerCell = wMessageIndex, wTriggerIndex =
+; wMessageGroup, wScriptParam0 = 0 and wScriptStep += 1, on to RandomGoldOrItem_HopMarker. (C1,
+; E-0370)
+RandomGoldOrItem_PickFind_RollFind::
     ld a, [wTriggerKind]
     cp $ff
     jr nz, .loop
@@ -4307,7 +4320,7 @@ RandomGoldOrItem_NextRandomSeed::
     and $0f
     dec a
     jr nz, .set_trigger_marker_flags_to_80
-    call RandomGoldOrItem_NextRandomSeed_2
+    call RandomGoldOrItem_PickFind_RollFind_RandomUnder99
     cp $05
     jr nc, .call_compute_party_strength_level_party
     ld a, $80
@@ -4338,7 +4351,7 @@ RandomGoldOrItem_NextRandomSeed::
     push af
     ld a, $80
     ld [wTriggerMarkerFlags], a
-    call RandomGoldOrItem_NextRandomSeed_2
+    call RandomGoldOrItem_PickFind_RollFind_RandomUnder99
     cp $32
     jr nc, .cp_46
     ld a, $00
@@ -4380,19 +4393,19 @@ RandomGoldOrItem_NextRandomSeed::
     add a
     add a
     add c
-    ld hl, RandomGoldOrItem_NextRandomSeed_Data1
+    ld hl, RandomGoldOrItem_PickFind_RollFind_Data1
     add_a_to_hl
     ld a, [hl]
 
 .set_script_param1:
     ld [wScriptParam1], a
-    ld hl, RandomGoldOrItem_NextRandomSeed_Data2
+    ld hl, RandomGoldOrItem_PickFind_RollFind_Data2
     add_a_to_hl
     ld a, [hl]
     or a
     jp z, .loop
     ld [wTriggerKind], a
-    farcall RandomGoldOrItem_DecompressToVRAM
+    farcall LoadTriggerMarkerGraphics
     ld a, [wMessageIndex]
     ld [wTriggerCell], a
     ld a, [wMessageGroup]
@@ -4403,20 +4416,22 @@ RandomGoldOrItem_NextRandomSeed::
     inc [hl]
     ret
 
-; A = a random number 0-98 (rerolling 99-127). (C1, E-0357)
-RandomGoldOrItem_NextRandomSeed_2::
+; Returns A = a random number 0-98 for RandomGoldOrItem_PickFind_RollFind (its only caller, twice):
+; advances NextRandomSeed and takes wKeyRandomLo & $7F, rerolling while it is 99 or more. (C1,
+; E-0370)
+RandomGoldOrItem_PickFind_RollFind_RandomUnder99::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $7f
     cp $63
-    jr nc, RandomGoldOrItem_NextRandomSeed_2
+    jr nc, RandomGoldOrItem_PickFind_RollFind_RandomUnder99
     ret
 
-; data read by RandomGoldOrItem_NextRandomSeed (16 bytes) (E-0347)
-RandomGoldOrItem_NextRandomSeed_Data1::
+; data read by RandomGoldOrItem_PickFind_RollFind (16 bytes) (E-0347)
+RandomGoldOrItem_PickFind_RollFind_Data1::
     db $19, $1a, $1b, $1b, $1c, $2c, $00, $00, $01, $07, $28, $22, $0c, $2c, $00, $00
 
-RandomGoldOrItem_NextRandomSeed_Data2::
+RandomGoldOrItem_PickFind_RollFind_Data2::
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
     db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0a, $06, $00, $01

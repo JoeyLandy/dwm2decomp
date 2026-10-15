@@ -200,7 +200,7 @@ ItemUsable_WorldDew::
     ld h, a
     ld a, h
     or l
-    jr nz, .call_item_usable_world_dew_sram_record
+    jr nz, .call_item_usable_world_dew_count_healable
 
 .check_party_count:
     ld a, [wPartyCount]
@@ -227,7 +227,7 @@ ItemUsable_WorldDew::
     ld h, a
     ld a, h
     or l
-    jr nz, .call_item_usable_world_dew_sram_record
+    jr nz, .call_item_usable_world_dew_count_healable
 
 .check_party_count2:
     ld a, [wPartyCount]
@@ -254,21 +254,21 @@ ItemUsable_WorldDew::
     ld h, a
     ld a, h
     or l
-    jr nz, .call_item_usable_world_dew_sram_record
+    jr nz, .call_item_usable_world_dew_count_healable
 
 .set_item_id_to_FF:
     ld a, $ff
     ld [wItemId], a
     ret
 
-.call_item_usable_world_dew_sram_record:
+.call_item_usable_world_dew_count_healable:
     ld d, $00
     ld a, $00
-    call ItemUsable_WorldDew_SRAMRecordAddressMapped
+    call ItemUsable_WorldDew_CountHealable
     ld a, $01
-    call ItemUsable_WorldDew_SRAMRecordAddressMapped
+    call ItemUsable_WorldDew_CountHealable
     ld a, $02
-    call ItemUsable_WorldDew_SRAMRecordAddressMapped
+    call ItemUsable_WorldDew_CountHealable
     ld a, $27
     add d
     ld [wItemUseMessage], a
@@ -277,7 +277,7 @@ ItemUsable_WorldDew::
 ; WorldDew check for party member A: skips one that is not in the party, has fallen (MON_STATUS bit
 ; 7) or is at full HP; otherwise copies its name (five glyphs and marks) into wTextBuf3 at 16 x D
 ; and counts it (D + 1). (C1, E-0357)
-ItemUsable_WorldDew_SRAMRecordAddressMapped::
+ItemUsable_WorldDew_CountHealable::
     ld [wTargetRecord], a
     ld hl, wPartyCount
     cp [hl]
@@ -1355,17 +1355,17 @@ ItemApply_Herb::
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew (E-0089)
 ItemApply_WorldDew::
     ld a, $00
-    call ItemApply_WorldDew_CheckTargetRecordFlag55Bit7
+    call ItemApply_WorldDew_HealMember
     ld a, $01
-    call ItemApply_WorldDew_CheckTargetRecordFlag55Bit7
+    call ItemApply_WorldDew_HealMember
     ld a, $02
-    call ItemApply_WorldDew_CheckTargetRecordFlag55Bit7
+    call ItemApply_WorldDew_HealMember
     call ConsumeSelectedItemByChance
     ret
 
 ; WorldDew effect for party member A: unless it is not in the party or has fallen
 ; (CheckTargetRecordFlag55Bit7), sets its HP to its maximum. (C1, E-0357)
-ItemApply_WorldDew_CheckTargetRecordFlag55Bit7::
+ItemApply_WorldDew_HealMember::
     ld hl, wPartyCount
     cp [hl]
     ret nc
@@ -1496,7 +1496,7 @@ ItemApply_ATKseed::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_ATKseed_MapIndexViaPartyListKeepHL
+    call ItemApply_ATKseed_RaiseATK
     call ConsumeSelectedItemByChance
     ret
 
@@ -1508,7 +1508,7 @@ ItemApply_DEFseed::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_DEFseed_MapIndexViaPartyListKeepHL
+    call ItemApply_DEFseed_RaiseDEF
     call ConsumeSelectedItemByChance
     ret
 
@@ -1520,7 +1520,7 @@ ItemApply_AGLseed::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_AGLseed_MapIndexViaPartyListKeepHL
+    call ItemApply_AGLseed_RaiseAGL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1532,7 +1532,7 @@ ItemApply_INTseed::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_INTseed_MapIndexViaPartyListKeepHL
+    call ItemApply_INTseed_RaiseINT
     call ConsumeSelectedItemByChance
     ret
 
@@ -1544,7 +1544,7 @@ ItemApply_LifeAcorn::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL
+    call ItemApply_LifeAcorn_RaiseMaxHP
     call ConsumeSelectedItemByChance
     ret
 
@@ -1556,7 +1556,7 @@ ItemApply_MysticNut::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_MysticNut_MapIndexViaPartyListKeepHL
+    call ItemApply_MysticNut_RaiseMaxMP
     call ConsumeSelectedItemByChance
     ret
 
@@ -1568,7 +1568,7 @@ ItemApply_Quest::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Quest_MapIndexViaPartyListKeepHL
+    call ItemApply_Quest_RaiseFirstAxis
     call ConsumeSelectedItemByChance
     ret
 
@@ -1580,7 +1580,7 @@ ItemApply_Horror::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Horror_MapIndexViaPartyListKeepHL
+    call ItemApply_Horror_LowerFirstAxis
     call ConsumeSelectedItemByChance
     ret
 
@@ -1592,7 +1592,7 @@ ItemApply_BeNice::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_BeNice_MapIndexViaPartyListKeepHL
+    call ItemApply_BeNice_RaiseSecondAxis
     call ConsumeSelectedItemByChance
     ret
 
@@ -1604,7 +1604,7 @@ ItemApply_Cheater::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Cheater_MapIndexViaPartyListKeepHL
+    call ItemApply_Cheater_LowerSecondAxis
     call ConsumeSelectedItemByChance
     ret
 
@@ -1616,7 +1616,7 @@ ItemApply_Smart::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Smart_MapIndexViaPartyListKeepHL
+    call ItemApply_Smart_RaiseFourthAxis
     call ConsumeSelectedItemByChance
     ret
 
@@ -1628,7 +1628,7 @@ ItemApply_Comedy::
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Comedy_MapIndexViaPartyListKeepHL
+    call ItemApply_Comedy_LowerFourthAxis
     call ConsumeSelectedItemByChance
     ret
 
@@ -2011,7 +2011,7 @@ EquipItemOnRecordTargetRecord::
     push af
     call CompactInventory
     pop af
-    call ApplyEquipmentEffectKeepA
+    call RemoveEquipmentBonusKeepA
     ld l, a
     ld h, $05
     ld de, wTextBuf3
@@ -2020,160 +2020,205 @@ EquipItemOnRecordTargetRecord::
     ldh [hTemp0], a
     ret
 
+; Preserving A, takes back the stat bonus of equipment item A (ids $40-$62) from the record in
+; wTargetRecord by running RemoveEquipmentBonus. EquipItemOnRecordTargetRecord calls it with the
+; item a monster gives up when it is given another one. (C1, E-0370)
 ; preserving A, runs the routine for item A - $40 (a jump table over the equipment items;
 ; EquipItemOnRecordTargetRecord calls it) (E-0122, E-0259)
-ApplyEquipmentEffectKeepA::
+RemoveEquipmentBonusKeepA::
     push af
-    call ApplyEquipmentEffectKeepA_ByItem
+    call RemoveEquipmentBonus
     pop af
     ret
 
+; A = equipment item id ($40-$62): jumps by A - $40 to the step that takes that item's bonus back,
+; lowering one or two stat words of the record (RemoveEquipmentBonus_VITbelt and the others; a
+; negative result becomes 1, a word at 999 is left), or to a step that changes nothing (the capes,
+; whose resistances are applied when a battle loads, and the items read at level up). (C1, E-0370)
 ; jumps by (item id - $40) to a step that subtracts A from one or two record words with a floor of
-; 1, or returns (E-0288)
-ApplyEquipmentEffectKeepA_ByItem::
+; 1, or returns
+RemoveEquipmentBonus::
     sub $40
     jumptable
-    dw ApplyEquipmentEffect_VITbelt
-    dw ApplyEquipmentEffect_DracoBelt
-    dw ApplyEquipmentEffect_MagicBelt
-    dw ApplyEquipmentEffect_OddBelt
-    dw ApplyEquipmentEffect_StoneFang
-    dw ApplyEquipmentEffect_SteelFang
-    dw ApplyEquipmentEffect_MermScale
-    dw ApplyEquipmentEffect_DrakScale
-    dw ApplyEquipmentEffect_AGL
-    dw ApplyEquipmentEffect_Starry
-    dw ApplyEquipmentEffect_Smart
-    dw ApplyEquipmentEffect_Wise
-    dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffect_DScale
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_2
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_2
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_2
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_2
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_2
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_2
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_3
-    dw ApplyEquipmentEffectKeepA_ByItem_Return_4
+    dw RemoveEquipmentBonus_VITbelt
+    dw RemoveEquipmentBonus_DracoBelt
+    dw RemoveEquipmentBonus_MagicBelt
+    dw RemoveEquipmentBonus_OddBelt
+    dw RemoveEquipmentBonus_StoneFang
+    dw RemoveEquipmentBonus_SteelFang
+    dw RemoveEquipmentBonus_MermScale
+    dw RemoveEquipmentBonus_DrakScale
+    dw RemoveEquipmentBonus_AGL
+    dw RemoveEquipmentBonus_Starry
+    dw RemoveEquipmentBonus_Smart
+    dw RemoveEquipmentBonus_Wise
+    dw RemoveEquipmentBonus_Capes
+    dw RemoveEquipmentBonus_Capes
+    dw RemoveEquipmentBonus_Capes
+    dw RemoveEquipmentBonus_Capes
+    dw RemoveEquipmentBonus_Capes
+    dw RemoveEquipmentBonus_Capes
+    dw RemoveEquipmentBonus_Capes
+    dw RemoveEquipmentBonus_DScale
+    dw RemoveEquipmentBonus_NoneItems
+    dw RemoveEquipmentBonus_NoneItems
+    dw RemoveEquipmentBonus_NoneItems
+    dw RemoveEquipmentBonus_NoneItems
+    dw RemoveEquipmentBonus_NoneItems
+    dw RemoveEquipmentBonus_NoneItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LevelUpItems
+    dw RemoveEquipmentBonus_LastItem
 
-; Removing the VITbelt: max HP and HP down by 30 (each at least 1). (C1, E-0357)
-ApplyEquipmentEffect_VITbelt::
+; Removing ITEM_VITBELT (item $40, entry 0 of RemoveEquipmentBonus): unless the max HP of record
+; wTargetRecord is 999, lowers it (MON_MAX_HP) and the HP word before it by 30
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
+; E-0370)
+RemoveEquipmentBonus_VITbelt::
     ld a, $1e
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; Removing the DracoBelt: max HP and HP down by 80 (each at least 1). (C1, E-0357)
-ApplyEquipmentEffect_DracoBelt::
+; Removing ITEM_DRACOBELT (item $41, entry 1 of RemoveEquipmentBonus): unless the max HP of record
+; wTargetRecord is 999, lowers it (MON_MAX_HP) and the HP word before it by 80
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
+; E-0370)
+RemoveEquipmentBonus_DracoBelt::
     ld a, $50
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; Removing the MagicBelt: max MP and MP down by 30 (each at least 1). (C1, E-0357)
-ApplyEquipmentEffect_MagicBelt::
+; Removing ITEM_MAGICBELT (item $42, entry 2 of RemoveEquipmentBonus): unless the max MP of record
+; wTargetRecord is 999, lowers it (MON_MAX_MP) and the MP word before it by 30
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
+; E-0370)
+RemoveEquipmentBonus_MagicBelt::
     ld a, $1e
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; Removing the OddBelt: max MP and MP down by 80 (each at least 1). (C1, E-0357)
-ApplyEquipmentEffect_OddBelt::
+; Removing ITEM_ODDBELT (item $43, entry 3 of RemoveEquipmentBonus): unless the max MP of record
+; wTargetRecord is 999, lowers it (MON_MAX_MP) and the MP word before it by 80
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
+; E-0370)
+RemoveEquipmentBonus_OddBelt::
     ld a, $50
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; Removing the StoneFang: ATK down by 10 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_StoneFang::
+; Removing ITEM_STONEFANG (item $44, entry 4 of RemoveEquipmentBonus): unless the ATK of record
+; wTargetRecord is 999, lowers it (MON_ATK) by 10 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_StoneFang::
     ld a, $0a
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
-; Removing the SteelFang: ATK down by 50 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_SteelFang::
+; Removing ITEM_STEELFANG (item $45, entry 5 of RemoveEquipmentBonus): unless the ATK of record
+; wTargetRecord is 999, lowers it (MON_ATK) by 50 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_SteelFang::
     ld a, $32
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
-; Removing the MermScale: DEF down by 10 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_MermScale::
+; Removing ITEM_MERMSCALE (item $46, entry 6 of RemoveEquipmentBonus): unless the DEF of record
+; wTargetRecord is 999, lowers it (MON_DEF) by 10 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_MermScale::
     ld a, $0a
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-; Removing the DrakScale: DEF down by 50 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_DrakScale::
+; Removing ITEM_DRAKSCALE (item $47, entry 7 of RemoveEquipmentBonus): unless the DEF of record
+; wTargetRecord is 999, lowers it (MON_DEF) by 50 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_DrakScale::
     ld a, $32
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-; Removing the AGL item: AGL down by 10 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_AGL::
+; Removing ITEM_AGL (item $48, entry 8 of RemoveEquipmentBonus): unless the AGL of record
+; wTargetRecord is 999, lowers it (MON_AGL) by 10 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_AGL::
     ld a, $0a
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
-; Removing the Starry item: AGL down by 50 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_Starry::
+; Removing ITEM_STARRY (item $49, entry 9 of RemoveEquipmentBonus): unless the AGL of record
+; wTargetRecord is 999, lowers it (MON_AGL) by 50 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_Starry::
     ld a, $32
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
-; Removing the Smart item: INT down by 50 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_Smart::
+; Removing ITEM_SMART_4A (item $4A, entry 10 of RemoveEquipmentBonus): unless the INT of record
+; wTargetRecord is 999, lowers it (MON_INT) by 50 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_Smart::
     ld a, $32
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
-; Removing the Wise item: INT down by 100 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_Wise::
+; Removing ITEM_WISE (item $4B, entry 11 of RemoveEquipmentBonus): unless the INT of record
+; wTargetRecord is 999, lowers it (MON_INT) by 100 (SubtractAFromRecordWordFloor1); a result below
+; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+RemoveEquipmentBonus_Wise::
     ld a, $64
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
-; Equipment with no stat change on removal: returns. (C1, E-0357)
-ApplyEquipmentEffectKeepA_ByItem_Return::
+; Removing a cape (items $4C-$52, ITEM_MAGICCAPE to ITEM_BRAVECAPE; entries 12-18 of
+; RemoveEquipmentBonus): returns with no stat change. Their equipped values $0D-$13 (item - $3F in
+; MON_ITEM) are read when a battle loads instead, where GameMode4_Init_CopyPartyToBattlers_Member
+; raises listed resistance bytes of the battler record by one, up to 3
+; (ApplyIncrementOffsetRows19ForA0DTo13). (C1, E-0370)
+RemoveEquipmentBonus_Capes::
     ret
 
-; Removing the DScale: DEF down by 5 (at least 1). (C1, E-0357)
-ApplyEquipmentEffect_DScale::
+; Removing the DScale (item $53, ITEM_DSCALE; entry 19 of RemoveEquipmentBonus): DEF down by 5, at
+; least 1 (SubtractAFromRecordWordFloor1 with C = MON_DEF). (C1, E-0370)
+RemoveEquipmentBonus_DScale::
     ld a, $05
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-; Equipment with no stat change on removal: returns. (C1, E-0357)
-ApplyEquipmentEffectKeepA_ByItem_Return_2::
+; Removing an item $54-$59 (ITEM_NONE to ITEM_NONE_59, entries 20-25 of RemoveEquipmentBonus):
+; returns with no change. (C1, E-0370)
+RemoveEquipmentBonus_NoneItems::
     ret
 
-; Equipment with no stat change on removal: returns. (C1, E-0357)
-ApplyEquipmentEffectKeepA_ByItem_Return_3::
+; Removing an item $5A-$61 (ITEM_LIFE to ITEM_CLERIC, entries 26-33 of RemoveEquipmentBonus):
+; returns with no stat change. The equipped values of War to Cleric ($1D-$22 in MON_ITEM) are read
+; at level up instead (ComputeLevelUpStatGainsForBattleArg1_ItemBonus); no reader of the Life and
+; Divine values ($1B, $1C) was found in this reading. (C1, E-0370)
+RemoveEquipmentBonus_LevelUpItems::
     ret
 
-; Equipment with no stat change on removal: returns. (C1, E-0357)
-ApplyEquipmentEffectKeepA_ByItem_Return_4::
+; Removing item $62 (ITEM_62, entry 34, the last of RemoveEquipmentBonus): returns with no change.
+; (C1, E-0370)
+RemoveEquipmentBonus_LastItem::
     ret
 
 ; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: the word there += A,
@@ -3274,13 +3319,13 @@ FieldSkillEffect::
     dw FieldSkillEffect_Revive
     dw FieldSkillEffect_CurePoison
     dw FieldSkillEffect_CurePartyPoison
-    dw FieldSkillEffect_SetDataBankSave
+    dw FieldSkillEffect_Whistle
     dw FieldSkillEffect_SetNewRecordFamily
-    dw FieldSkillEffect_SetTalkCountdown
-    dw FieldSkillEffect_SetDataBankSave_SetDataBankSave
+    dw FieldSkillEffect_StartTalkCountdown
+    dw FieldSkillEffect_LeaveDungeon
     dw FieldSkillEffect_SetItemMessageTo0B
     dw FieldSkillEffect_DrawRandomItem
-    dw FieldSkillEffect_SetWorldMapByFieldSkill
+    dw FieldSkillEffect_SenseTreasure
     dw FieldSkillEffect_MapAroundPlayer
 
 ; Field skill 0: heals the target 10-40 HP (HealRecordHPByRandomAmount, amount 10 and range 30);
@@ -3497,8 +3542,11 @@ ClearPartyRecordFlag55Bit0::
     res 0, [hl]
     ret
 
-; Field skill 12: sets wDataBankSave to 1 and ends with no message. (C1, E-0357)
-FieldSkillEffect_SetDataBankSave::
+; Field skill 12 (its first message is '<name> whistled!'): sets the field's return action
+; wDataBankSave to 1, which RunFieldReturnPhase_RunReturnAction turns into talk event group $19 (the
+; ShinyHarp sets the same value); wItemMessage and wItemId = $FF, so no result message follows and
+; PauseMenu_Skills_UseFieldSkill_Finish leaves for the field. (C1, E-0370)
+FieldSkillEffect_Whistle::
     ld a, $01
     ld [wDataBankSave], a
     ld a, $ff
@@ -3526,8 +3574,10 @@ FieldSkillEffect_SetNewRecordFamily::
     ld [wItemId], a
     ret
 
-; Field skill 14: sets the talk countdown to 200 (wTalkCountdown $C8); no message. (C1, E-0357)
-FieldSkillEffect_SetTalkCountdown::
+; Field skill 14: wTalkCountdown = 200 ($C8), which CountDownTalkCountdownThenDispatchTalkEvent
+; counts down before dispatching talk event group $1E (the countdown message); wItemMessage and
+; wItemId = $FF (no result message). (C1, E-0370)
+FieldSkillEffect_StartTalkCountdown::
     ld a, $c8
     ld [wTalkCountdown], a
     ld a, $ff
@@ -3536,8 +3586,11 @@ FieldSkillEffect_SetTalkCountdown::
     ld [wItemId], a
     ret
 
-; Field skill 15: sets wDataBankSave to 4 (leaving the dungeon); no message. (C1, E-0357)
-FieldSkillEffect_SetDataBankSave_SetDataBankSave::
+; Field skill 15 (usable where the ExitBell is, FieldSkillUsable_LeaveDungeon): sets the field's
+; return action wDataBankSave to 4, the ExitBell's value, which RunFieldReturnPhase_RunReturnAction
+; runs as talk event group 7 after ResetFollowersToPlayer, music 2 and sound $67; wItemMessage and
+; wItemId = $FF (no result message). (C1, E-0370)
+FieldSkillEffect_LeaveDungeon::
     ld a, $04
     ld [wDataBankSave], a
     ld a, $ff
@@ -3657,8 +3710,11 @@ FieldSkillEffect_DrawRandomItem::
     ld [wItemMessage], a
     ret
 
-; Field skill 18: sets wWorldMapByFieldSkill; message $11. (C1, E-0357)
-FieldSkillEffect_SetWorldMapByFieldSkill::
+; Field skill 18 (first message '<name> scanned the area sharply.'; FieldSkillUsable_Warp refuses
+; with 'There are no treasures nearby.' when no map object lacks bit 7): sets wWorldMapByFieldSkill
+; to 1, which RunWorldMapState_WaitWorldMapByFieldSkill reads to mark the map objects on the world
+; map; message $11 ('<name> sensed a treasure nearby.'); wItemId = $FF. (C1, E-0370)
+FieldSkillEffect_SenseTreasure::
     ld a, $01
     ld [wWorldMapByFieldSkill], a
     ld a, $11
@@ -3927,7 +3983,7 @@ AddHLToRecordMPCapped::
     ret
 
 ; ATKseed: party member's ATK up (AddToRecordFieldWordCapped, cap 999). (C1, E-0357)
-ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
+ItemApply_ATKseed_RaiseATK::
     call MapIndexViaPartyListKeepHL
     ld c, MON_ATK
     ld de, $03e7
@@ -3935,7 +3991,7 @@ ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
     ret
 
 ; DEFseed: party member's DEF up (cap 999). (C1, E-0357)
-ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
+ItemApply_DEFseed_RaiseDEF::
     call MapIndexViaPartyListKeepHL
     ld c, MON_DEF
     ld de, $03e7
@@ -3943,7 +3999,7 @@ ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
     ret
 
 ; AGLseed: party member's AGL up (cap 999). (C1, E-0357)
-ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
+ItemApply_AGLseed_RaiseAGL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_AGL
     ld de, $03e7
@@ -3951,7 +4007,7 @@ ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
     ret
 
 ; INTseed: party member's INT up (cap 999). (C1, E-0357)
-ItemApply_INTseed_MapIndexViaPartyListKeepHL::
+ItemApply_INTseed_RaiseINT::
     call MapIndexViaPartyListKeepHL
     ld c, MON_INT
     ld de, $03e7
@@ -3959,7 +4015,7 @@ ItemApply_INTseed_MapIndexViaPartyListKeepHL::
     ret
 
 ; LifeAcorn: party member's max HP up (cap 999). (C1, E-0357)
-ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
+ItemApply_LifeAcorn_RaiseMaxHP::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_HP
     ld de, $03e7
@@ -3967,7 +4023,7 @@ ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
     ret
 
 ; MysticNut: party member's max MP up (cap 999). (C1, E-0357)
-ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
+ItemApply_MysticNut_RaiseMaxMP::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_MP
     ld de, $03e7
@@ -3975,7 +4031,7 @@ ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
     ret
 
 ; Quest: the first personality axis up (MON_PERSONALITY, cap 255). (C1, E-0357)
-ItemApply_Quest_MapIndexViaPartyListKeepHL::
+ItemApply_Quest_RaiseFirstAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
     ld e, $ff
@@ -3983,7 +4039,7 @@ ItemApply_Quest_MapIndexViaPartyListKeepHL::
     ret
 
 ; Horror: the first personality axis down (floor 0). (C1, E-0357)
-ItemApply_Horror_MapIndexViaPartyListKeepHL::
+ItemApply_Horror_LowerFirstAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
     ld e, $00
@@ -3991,7 +4047,7 @@ ItemApply_Horror_MapIndexViaPartyListKeepHL::
     ret
 
 ; BeNice: the second personality axis up (cap 255). (C1, E-0357)
-ItemApply_BeNice_MapIndexViaPartyListKeepHL::
+ItemApply_BeNice_RaiseSecondAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
     ld e, $ff
@@ -3999,7 +4055,7 @@ ItemApply_BeNice_MapIndexViaPartyListKeepHL::
     ret
 
 ; Cheater: the second personality axis down (floor 0). (C1, E-0357)
-ItemApply_Cheater_MapIndexViaPartyListKeepHL::
+ItemApply_Cheater_LowerSecondAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
     ld e, $00
@@ -4007,7 +4063,7 @@ ItemApply_Cheater_MapIndexViaPartyListKeepHL::
     ret
 
 ; Smart: the fourth personality axis up (cap 255). (C1, E-0357)
-ItemApply_Smart_MapIndexViaPartyListKeepHL::
+ItemApply_Smart_RaiseFourthAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
     ld e, $ff
@@ -4015,7 +4071,7 @@ ItemApply_Smart_MapIndexViaPartyListKeepHL::
     ret
 
 ; Comedy: the fourth personality axis down (floor 0). (C1, E-0357)
-ItemApply_Comedy_MapIndexViaPartyListKeepHL::
+ItemApply_Comedy_LowerFourthAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
     ld e, $00
@@ -4615,9 +4671,11 @@ CountSpeciesPerFamilyFlaggedOrListed::
     jr c, .loop
     ret
 
-; Counts the species seen per family for the battle end: clears 11 bytes of wWorkBuf, then for every
-; species $0000-$0174 adds 1 to its family's byte when its species flag is set. (C1, E-0357)
-BattleEnd_Step3_LoadSpeciesFamily::
+; Clears the 11 per-family counters at wWorkBuf, then for every monster id $0000-$0174 that has a
+; family (LoadSpeciesFamily; $FF is skipped) adds 1 to wWorkBuf + family when its wSpeciesFlags bit
+; is set (TestSpeciesFlag); leaves wSpeciesIdLo/Hi = $0175. CountSpeciesPerFamilyFlaggedOrListed is
+; the same loop that also counts ids listed at wMonsterLibraryBuf. (C1, E-0370)
+BattleEnd_Step3_ShapeJoiner_CountFlaggedSpecies::
     xor a
     ld hl, wWorkBuf
     ld bc, $000b
@@ -4899,7 +4957,7 @@ BattleEnd_AskToJoin::
     ld a, [wBattleSubStep]
     jumptable
     dw BattleEnd_AskToJoin_Start
-    dw BattleEnd_AskToJoin_WaitTextFlags
+    dw BattleEnd_AskToJoin_Finish
     dw BattleEnd_AskToJoin_ShowHeroGotUpLooking
     dw BattleEnd_AskToJoin_DrawYesNo
     dw BattleEnd_AskToJoin_ShowHeroDepartedSadly
@@ -4917,16 +4975,16 @@ BattleEnd_AskToJoin::
     dw BattleEnd_AskToJoin_OpenPickStats
     dw BattleEnd_AskToJoin_RedrawAfterStats
     dw BattleEnd_AskToJoin_CheckRelease
-    dw BattleEnd_AskToJoin_AdvanceBattleSubStep
+    dw BattleEnd_AskToJoin_ReleaseAllowed
     dw BattleEnd_AskToJoin_ShowGWasSetFree
-    dw BattleEnd_AskToJoin_WaitTextFlags_SetArg1
+    dw BattleEnd_AskToJoin_ReleaseMonster
     dw BattleEnd_AskToJoin_ShowChooseAnEggTo
     dw BattleEnd_AskToJoin_EggListCursor
     dw BattleEnd_AskToJoin_MarkEgg
     dw BattleEnd_AskToJoin_PickEggOption
     dw BattleEnd_AskToJoin_OpenEggStats
     dw BattleEnd_AskToJoin_RedrawEggsAfterStats
-    dw BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2
+    dw BattleEnd_AskToJoin_AbandonEgg
 
 ; Asking to join, step 0: copies the foe's name (with its letter) into wTextBuf0; in battle kinds 8
 ; and up, or an odd kind where KeyWorldAreaEncounterIndex returns 0, shows '<name> got up, looking
@@ -4965,7 +5023,7 @@ BattleEnd_AskToJoin_Start::
 
 ; Asking to join, step 1: once the text has finished, ends this battle-end step (wBattleStep + 1).
 ; (C1, E-0357)
-BattleEnd_AskToJoin_WaitTextFlags::
+BattleEnd_AskToJoin_Finish::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5446,8 +5504,9 @@ BattleEnd_AskToJoin_CheckRelease::
     inc [hl]
     ret
 
-; Asking to join, step 19: moves on. (C1, E-0357)
-BattleEnd_AskToJoin_AdvanceBattleSubStep::
+; Asking to join, step 19: reached only when BattleEnd_AskToJoin_CheckRelease lets the picked
+; monster go; moves straight on to step 20 (BattleEnd_AskToJoin_ShowGWasSetFree). (C1, E-0370)
+BattleEnd_AskToJoin_ReleaseAllowed::
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -5464,7 +5523,7 @@ BattleEnd_AskToJoin_ShowGWasSetFree::
 ; Asking to join, step 21: once the text has finished deletes the released monster's record
 ; (DeleteSRAMRecordAndCompact), rebuilds the party list ($FF for empty places) and the battle slots
 ; (RunForPartyMembers), and moves on two sub-phases to add the new monster. (C1, E-0357)
-BattleEnd_AskToJoin_WaitTextFlags_SetArg1::
+BattleEnd_AskToJoin_ReleaseMonster::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5806,7 +5865,7 @@ BattleEnd_AskToJoin_RedrawEggsAfterStats::
 
 ; Asking to join, step 28: once the text has finished deletes the egg's record and moves on two
 ; sub-phases to add the new monster. (C1, E-0357)
-BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2::
+BattleEnd_AskToJoin_AbandonEgg::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -6423,8 +6482,8 @@ ShowRecordNamesListFromHL::
     ret
 
 ; for the four entries of wListEntries page wListPage runs
-; DrawFourListEntriesForPageListPage_SRAMRecordAddress with wBattleArg0 = 0-3, draws the page digit,
-; then restores the default window (E-0121)
+; DrawFourListEntriesForPageListPage_DrawEgg with wBattleArg0 = 0-3, draws the page digit, then
+; restores the default window (E-0121)
 DrawFourListEntriesForPageListPage::
     ld hl, $0901
     ld a, l
@@ -6442,19 +6501,19 @@ DrawFourListEntriesForPageListPage::
     add_a_to_hl
     ld a, $00
     ld [wBattleArg0], a
-    call DrawFourListEntriesForPageListPage_SRAMRecordAddress
+    call DrawFourListEntriesForPageListPage_DrawEgg
     inc hl
     ld a, $01
     ld [wBattleArg0], a
-    call DrawFourListEntriesForPageListPage_SRAMRecordAddress
+    call DrawFourListEntriesForPageListPage_DrawEgg
     inc hl
     ld a, $02
     ld [wBattleArg0], a
-    call DrawFourListEntriesForPageListPage_SRAMRecordAddress
+    call DrawFourListEntriesForPageListPage_DrawEgg
     inc hl
     ld a, $03
     ld [wBattleArg0], a
-    call DrawFourListEntriesForPageListPage_SRAMRecordAddress
+    call DrawFourListEntriesForPageListPage_DrawEgg
     xor a
     ld [rRAMG], a
     call DrawListPageDigitIfLong
@@ -6472,12 +6531,12 @@ DrawFourListEntriesForPageListPage::
 
 ; Draws one egg-list entry: its species name; an appraised egg (MON_EGG 2) gets its sex mark ($CC +
 ; sex), an unappraised one mark $C9; an empty entry is blanked. (C1, E-0357)
-DrawFourListEntriesForPageListPage_SRAMRecordAddress::
+DrawFourListEntriesForPageListPage_DrawEgg::
     ld a, [hl]
     cp $ff
     jr z, .call_show_string_bc_at_tile_row_battle_arg0
     push hl
-    call DrawFourListEntriesForPageListPage_SRAMRecordAddress_2
+    call DrawFourListEntriesForPageListPage_ShowSpecies
     pop hl
     ld a, [hl]
     push hl
@@ -6503,7 +6562,7 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress::
 .read_battle_arg02:
     ld c, a
     ld a, [wBattleArg0]
-    ld hl, DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data
+    ld hl, DrawFourListEntriesForPageListPage_DrawEgg_Data
     add a
     add_a_to_hl
     deref_hl
@@ -6516,7 +6575,7 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress::
     ld bc, $0200
     call ShowStringBCAtTileRowBattleArg0
     ld a, [wBattleArg0]
-    ld hl, DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data
+    ld hl, DrawFourListEntriesForPageListPage_DrawEgg_Data
     add a
     add_a_to_hl
     deref_hl
@@ -6524,9 +6583,10 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress::
     pop hl
     ret
 
-; Points BC at the species name of the record at HL (its MON_SPECIES word + $200: the species-name
-; strings). (C1, E-0357)
-DrawFourListEntriesForPageListPage_SRAMRecordAddress_2::
+; A = record index: BC = its MON_SPECIES word with $200 added (C = string index, B = string
+; category, the species name), then falls into ShowStringBCAtTileRowBattleArg0, which shows that
+; string at $9400 + 256 * wBattleArg0. (C1, E-0370)
+DrawFourListEntriesForPageListPage_ShowSpecies::
     ld c, MON_SPECIES
     call SRAMRecordAddress
     ld c, [hl]
@@ -6554,7 +6614,7 @@ ShowStringBCAtTileRowBattleArg0::
     ret
 
 ; data read by DrawFourListEntriesForPageListPage (8 bytes) (E-0347)
-DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data::
+DrawFourListEntriesForPageListPage_DrawEgg_Data::
     db $43, $c2, $83, $c2, $c3, $c2, $03, $c3
 
 ; when wListCount is 5 or more: wWindowTileBuffer + $20 = $E1 + wListPage (the page number tile)
@@ -6767,7 +6827,7 @@ RunBattleEndStep5SubSteps::
     dw RunBattleEndStep5SubSteps_ShowPleaseNameHero
     dw RunBattleEndStep5SubSteps_SetUpNameEntry
     dw RunBattleEndStep5SubSteps_EnterName
-    dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
+    dw RunBattleEndStep5SubSteps_NameDone
     dw RunBattleEndStep5SubSteps_StoreOnFarm
 
 ; Naming the new monster, step 0: 'Please name <name>.' (string $14). (C1, E-0357)
@@ -6898,8 +6958,9 @@ RunBattleEndStep5SubSteps_EnterName::
     inc [hl]
     ret
 
-; Naming the new monster, step 3: moves on. (C1, E-0357)
-RunBattleEndStep5SubSteps_AdvanceBattleSubStep::
+; Naming the new monster, step 3: only moves on to step 4 (RunBattleEndStep5SubSteps_StoreOnFarm),
+; one call after RunBattleEndStep5SubSteps_EnterName copied the name. (C1, E-0370)
+RunBattleEndStep5SubSteps_NameDone::
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -6992,7 +7053,7 @@ CopyBBytesDEToHL_Bank16::
 ; status bit 5 when flag bit 0 is set (E-0118)
 InitSlotFromRecordFlags::
     bit 7, [hl]
-    jr nz, SetBit0AtHL_Skip
+    jr nz, InitSlotFromRecordFlags_MarkOut
     ld d, [hl]
     ld a, c
     ld hl, wBattleSlotOut
@@ -7019,7 +7080,7 @@ SetBit0AtHL::
     ret
 
 ; Marks battle slot C as out (wBattleSlotOut + C = 1). (C1, E-0357)
-SetBit0AtHL_Skip::
+InitSlotFromRecordFlags_MarkOut::
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -7035,7 +7096,7 @@ BattleEnd_AddJoinedMonster::
     dw BattleEnd_AddJoinedMonster_DrawYesNo
     dw BattleEnd_AddJoinedMonster_ReadAnswer
     dw BattleEnd_AddJoinedMonster_ShowHeroWasSentTo
-    dw BattleEnd_AddJoinedMonster_SetBattleStep
+    dw BattleEnd_AddJoinedMonster_Finish
     dw BattleEnd_AddJoinedMonster_Join
     dw BattleEnd_AddJoinedMonster_AddToParty
     dw BattleEnd_AddJoinedMonster_DrawScreen
@@ -7048,9 +7109,9 @@ BattleEnd_AddJoinedMonster::
     dw BattleEnd_AddJoinedMonster_RunStatsScreen
     dw BattleEnd_AddJoinedMonster_RedrawPickOptions
     dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero
-    dw BattleEnd_AddJoinedMonster_ChooseTheMonsterTo
+    dw BattleEnd_AddJoinedMonster_BackToList
     dw BattleEnd_AddJoinedMonster_SendPickToFarm
-    dw BattleEnd_AddJoinedMonster_WillYouTakeHero
+    dw BattleEnd_AddJoinedMonster_AskAgain
 
 ; Adding the new monster, step 0: redraws the battle screen, lists the party and the new monster (in
 ; wBattleArg0 on), copies its name into wTextBuf0 and asks 'Will you take <name> with you?' (string
@@ -7174,7 +7235,7 @@ BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
     ret
 
 ; Adding the new monster, step 4: ends this battle-end step. (C1, E-0357)
-BattleEnd_AddJoinedMonster_SetBattleStep::
+BattleEnd_AddJoinedMonster_Finish::
     ld hl, wBattleStep
     inc [hl]
     xor a
@@ -7541,9 +7602,11 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     ld [wBattleSubStep], a
     ret
 
-; Adding the new monster, step 17: redraws the list and 'Choose the monster to send home.' (step 9).
-; (C1, E-0357)
-BattleEnd_AddJoinedMonster_ChooseTheMonsterTo::
+; Adding the new monster, step 17 (B at the pick's options in
+; BattleEnd_AddJoinedMonster_PickOption): redraws the four monsters
+; (CopyRectAndDrawBattleArg0Values), puts the cursor tile back, clears wMenuSelectedMember, shows
+; 'Choose the monster to send home.' (string $1C) and returns to step 9. (C1, E-0370)
+BattleEnd_AddJoinedMonster_BackToList::
     call CopyRectAndDrawBattleArg0Values
     ld hl, wScreenTileBuffer + $12f
     ld [hl], $bc
@@ -7597,9 +7660,10 @@ BattleEnd_AddJoinedMonster_SendPickToFarm::
     ld [wBattleSubStep], a
     ret
 
-; Adding the new monster, step 19: redraws and asks 'Will you take <name> with you?' again (step 1).
-; (C1, E-0357)
-BattleEnd_AddJoinedMonster_WillYouTakeHero::
+; Adding the new monster, step 19 (B in the monster list, BattleEnd_AddJoinedMonster_ListCursor):
+; redraws the battle screen and asks 'Will you take <name> with you?' (string $19) again at step 1,
+; with wMenuState 0. (C1, E-0370)
+BattleEnd_AddJoinedMonster_AskAgain::
     call BuildBattleMenuScreen
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -7693,8 +7757,8 @@ SetRecordState2::
     ld [rRAMG], a
     ret
 
-; with SRAM enabled runs RunForPartyMembers_SRAMRecordAddress for each of the first one to three
-; party records (E-0124) (E-0344: the address in its name dropped or read as the label there; was
+; with SRAM enabled runs RunForPartyMembers_SetBattleSlot for each of the first one to three party
+; records (E-0124) (E-0344: the address in its name dropped or read as the label there; was
 ; RunForPartyMembers)
 RunForPartyMembers::
     ld a, $0a
@@ -7703,29 +7767,31 @@ RunForPartyMembers::
     ld [rRAMB], a
     ld c, $00
     ld a, [wPartyList]
-    call RunForPartyMembers_SRAMRecordAddress
+    call RunForPartyMembers_SetBattleSlot
     ld a, [wPartyCount]
     cp $01
     jr z, .done
     ld c, $01
     ld a, [wPartyList + $1]
-    call RunForPartyMembers_SRAMRecordAddress
+    call RunForPartyMembers_SetBattleSlot
     ld a, [wPartyCount]
     cp $02
     jr z, .done
     ld c, $02
     ld a, [wPartyList + $2]
-    call RunForPartyMembers_SRAMRecordAddress
+    call RunForPartyMembers_SetBattleSlot
 
 .done:
     xor a
     ld [rRAMG], a
     ret
 
-; Sets battle slot C from party record HL: level, HP and MP into wBattleLevel/wBattleHP/wBattleMP; a
-; fallen monster (MON_STATUS bit 7) marks the slot out; otherwise clears its battle status and
-; carries MON_STATUS bit 0 to status bit 5 and bit 2 (poison) to bit 0. (C1, E-0357)
-RunForPartyMembers_SRAMRecordAddress::
+; A = SRAM record, C = battle slot (from RunForPartyMembers, SRAM enabled): copies MON_LEVEL to
+; wBattleLevel + C and the MON_HP and MON_MP words to slot C's wBattleHP and wBattleMP words, and
+; marks the slot present (wBattleSlotOut + C = 0); a fallen monster (MON_STATUS bit 7) marks it out
+; (1) instead; otherwise clears its first wBattleStatus byte (9 per slot) and carries MON_STATUS bit
+; 0 to status bit 5 and bit 2 (poison) to bit 0. (C1, E-0370)
+RunForPartyMembers_SetBattleSlot::
     push bc
     ld c, MON_LEVEL
     call SRAMRecordAddress
@@ -8283,11 +8349,15 @@ BuildBattleMenuScreen::
     farcall CopyRectRecordToScreenBuffer
     ret
 
-; Shapes a joining foe's record in wRecordBufA: its level changes by a random -2 to +2 (not in
-; battle kind 2), kept within 1-99, and its level cap becomes at least that level; outside kind 2
-; each stat (HP and MP with their maxima, ATK, DEF and the rest) is lowered by a random part of up
-; to 20% (BattleEnd_Step3_Multiply8By16). (C1, E-0357)
-BattleEnd_Step3_NextTableByte::
+; Shapes the joining foe's record in wRecordBufA: its level changes by a random -2 to +2 (by 0 in
+; battle kind 2) and is kept within 1-99, and MON_MAX_LEVEL becomes the larger of SPECIES_MAX_LEVEL
+; and that level; outside kind 2 max HP (with HP) goes through BattleEnd_Step3_ShapeJoiner_LowerHP
+; and max MP (with MP), ATK, DEF, AGL, INT and wRecordBufAPersonality3 through
+; BattleEnd_Step3_ShapeJoiner_LowerStat. Then MON_WLD = 25 x level minus a value from the number of
+; flagged species (BattleEnd_Step3_ShapeJoiner_CountFlaggedSpecies summed over the 11 families: 0
+; below 21, 50 below 41, 100 below 61, 150 below 81, 200 below 101, 250 below 121, 300 below 141,
+; else 400), kept within 0-999. (C1, E-0370)
+BattleEnd_Step3_ShapeJoiner::
     ld a, [wBattleKind]
     cp $02
     jr nz, .call_next_table_byte
@@ -8343,12 +8413,12 @@ BattleEnd_Step3_NextTableByte::
     ld [wRecordBufA + MON_MAX_LEVEL], a
     ld a, [wBattleKind]
     cp $02
-    jp z, .call_battle_end_step3_load_species_family
+    jp z, .call_battle_end_step3_shape_joiner_count
     ld a, [wRecordBufA + MON_MAX_HP]
     ld c, a
     ld a, [wRecordBufA + MON_MAX_HP + 1]
     ld b, a
-    call BattleEnd_Step3_Multiply8By16_2
+    call BattleEnd_Step3_ShapeJoiner_LowerHP
     ld a, l
     ld [wRecordBufA + MON_MAX_HP], a
     ld a, h
@@ -8361,7 +8431,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_MAX_MP + 1]
     ld b, a
-    call BattleEnd_Step3_Multiply8By16
+    call BattleEnd_Step3_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_MAX_MP], a
     ld a, h
@@ -8374,7 +8444,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_ATK + 1]
     ld b, a
-    call BattleEnd_Step3_Multiply8By16
+    call BattleEnd_Step3_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_ATK], a
     ld a, h
@@ -8383,7 +8453,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_DEF + 1]
     ld b, a
-    call BattleEnd_Step3_Multiply8By16
+    call BattleEnd_Step3_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_DEF], a
     ld a, h
@@ -8392,7 +8462,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_AGL + 1]
     ld b, a
-    call BattleEnd_Step3_Multiply8By16
+    call BattleEnd_Step3_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_AGL], a
     ld a, h
@@ -8401,7 +8471,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_INT + 1]
     ld b, a
-    call BattleEnd_Step3_Multiply8By16
+    call BattleEnd_Step3_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_INT], a
     ld a, h
@@ -8409,12 +8479,12 @@ BattleEnd_Step3_NextTableByte::
     ld a, [wRecordBufAPersonality3]
     ld c, a
     ld b, $00
-    call BattleEnd_Step3_Multiply8By16
+    call BattleEnd_Step3_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufAPersonality3], a
 
-.call_battle_end_step3_load_species_family:
-    call BattleEnd_Step3_LoadSpeciesFamily
+.call_battle_end_step3_shape_joiner_count:
+    call BattleEnd_Step3_ShapeJoiner_CountFlaggedSpecies
     ld hl, wWorkBuf
     ld b, $0b
     ld de, $0000
@@ -8492,7 +8562,7 @@ BattleEnd_Step3_NextTableByte::
 
 ; Lowers stat BC (capped at 999) by a random amount: random mod (20% of the stat, low byte); returns
 ; the result in HL. (C1, E-0357)
-BattleEnd_Step3_Multiply8By16::
+BattleEnd_Step3_ShapeJoiner_LowerStat::
     ld hl, $03e7
     ld a, l
     sub c
@@ -8535,7 +8605,7 @@ BattleEnd_Step3_Multiply8By16::
     ret
 
 ; As the routine before for HP, then adds 8 unless the result's high byte is 3. (C1, E-0357)
-BattleEnd_Step3_Multiply8By16_2::
+BattleEnd_Step3_ShapeJoiner_LowerHP::
     ld hl, $03e7
     ld a, l
     sub c
@@ -8895,11 +8965,11 @@ BuildRecordSummaryForWorkBuf_ClearAndCopy::
 .return:
     ret
 
-; far-calls DecompressGraphicsA4ToTiles0 and continues at
-; DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary (E-0127)
+; far-calls DecompressGraphicsA4ToTiles0 and continues at DrawTitleSaveSummaryScreen_DrawSummary
+; (E-0127)
 DecompressA4GraphicsAndContinue::
     farcall DecompressGraphicsA4ToTiles0
-    jr DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary
+    jr DrawTitleSaveSummaryScreen_DrawSummary
 
 ; loads the summary graphics and palette, the save file summary, and draws the player name, party
 ; icons, names, levels and key name on the title screen (E-0131)
@@ -8910,7 +8980,7 @@ DrawTitleSaveSummaryScreen::
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a
-    jr z, DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary
+    jr z, DrawTitleSaveSummaryScreen_DrawSummary
     ld de, DrawTitleSaveSummaryScreen_OBJPaletteBufferData
     ld b, $7e
     ld hl, wOBJPaletteBuffer
@@ -8919,10 +8989,14 @@ DrawTitleSaveSummaryScreen::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
 
-; The title's save summary: with no save data blanks the box and shows string $0A of category 8;
-; otherwise shows the player's name, play time and the rest (positions differ in game mode 5). (C1,
-; E-0357)
-DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary::
+; The title's save summary (reached by falling out of DrawTitleSaveSummaryScreen or from
+; DecompressA4GraphicsAndContinue): runs LoadSaveFileSummary; when wBattlerRecords is still 0 it
+; blanks the box and shows 'Not in use.' (string $0A of category 8); otherwise shows the player's
+; name (wTitlePlayerName), the play time (wTitlePlayHoursLo/Hi, wTitlePlayMinutes), three party
+; entries (DrawSaveSummaryPartyEntryC) and the key name (ShowKeyNameOrStringForTitleKeyFlag). In
+; game mode 5 everything sits two rows lower; the default text window is restored at the end. (C1,
+; E-0370)
+DrawTitleSaveSummaryScreen_DrawSummary::
     call LoadSaveFileSummary
     ld a, [wBattlerRecords]
     or a
@@ -9266,7 +9340,7 @@ ShowKeyNameOrStringForTitleKeyFlag::
 .check_title_key_byte3:
     ld a, [wTitleKeyByte3]
     bit 7, a
-    jr nz, CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry
+    jr nz, ShowKeyNameOrStringForTitleKeyFlag_KeyEntryName
     ld de, wTextBuf0
     ld a, [wTitleKeyWord1]
     inc a
@@ -9290,8 +9364,10 @@ CopyKeyNameWordToDE_Bank16::
     call CopyKeyNameWordToDE
     ret
 
-; Shows the name of the title's key entry (string wTitleKeyEntry & $3F of category 6). (C1, E-0357)
-CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry::
+; Reached from ShowKeyNameOrStringForTitleKeyFlag when wTitleKeyFlag and wTitleKeyByte3 both have
+; bit 7 set: shows string wTitleKeyEntry & $3F of category 6 (ShowString_Bank09) in the window that
+; routine set up. (C1, E-0370)
+ShowKeyNameOrStringForTitleKeyFlag_KeyEntryName::
     ld a, [wTitleKeyEntry]
     and $3f
     ld [wStringIndex], a
@@ -9384,7 +9460,7 @@ LoadTileForRecordFamily::
 .skip:
     ld b, $10
     pop af
-    jr WriteBytesToVRAMTileWorkBuf1_Skip
+    jr WriteBytesToVRAMTile
 
 ; writes B bytes from DE to VRAM tile wWorkBuf + $1 ($8000 + 16 * index; indices below $80 use the
 ; $9000 area) (E-0124) (E-0340: the address in its name read as its RAM name; was
@@ -9394,7 +9470,7 @@ WriteBytesToVRAMTileWorkBuf1::
 
 ; Writes B bytes from DE into VRAM tile A in the signed numbering ($00-$7F at $9000, $80-$FF at
 ; $8800). (C1, E-0357)
-WriteBytesToVRAMTileWorkBuf1_Skip::
+WriteBytesToVRAMTile::
     swap a
     ld h, a
     and $f0

@@ -2431,9 +2431,9 @@ MonsterArgOrderTable::
     db $00, $01, $02 ; id 383 ?
 
 ; ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex;
-; ShopMenu_Buy_DrawPrices.skip adds 3 * entry (after ShopMenu_Buy_ReadFarPointerAtDEInBankB) and
-; shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously
-; to ReturnStub_3; read as prices, which is not confirmed (E-0208, C1)
+; ShopMenu_Buy_DrawPrices.skip adds 3 * entry (after ShopMenu_Buy_ApplyGoldPass) and shows the
+; 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to
+; ReturnStub_3; read as prices, which is not confirmed (E-0208, C1)
 ; record: list of 24-bit numbers for this wScreenTableIndex
 ScreenNumberListTable::
     dw ScreenNumberList000 ; id 0
@@ -3831,19 +3831,22 @@ CopyFlaggedKeys::
     jr nz, .loop
     ret
 
-; in state 3 continues at VaultMenu_Store_MapItemsToInventory_Skip; otherwise runs
+; in state 3 continues at RunUnlessScreenStateIs3_ToggleBagOrder; otherwise runs
 ; RunUnlessScreenStateIs3_WriteCounterPtr0Lo (E-0126) (E-0344: the address in its name dropped or
 ; read as the label there; was RunUnlessScreenStateIs3)
 RunUnlessScreenStateIs3::
     ld a, [wScreenState]
     cp $03
-    jr z, VaultMenu_Store_MapItemsToInventory_Skip
+    jr z, RunUnlessScreenStateIs3_ToggleBagOrder
     call RunUnlessScreenStateIs3_WriteCounterPtr0Lo
     ret
 
-; Clears 24 bytes of wWorkBuf and records the bag place of each item in the current order list
-; (ItemOrderListB when wCounterPtr0Lo is 0, otherwise ItemOrderListA). (C1, E-0357)
-VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
+; Far-called by VaultMenu_Store_MoveItems after an item has been stored (wScreenState 3): clears 24
+; bytes of wWorkBuf and rebuilds wItemGrid in the current order, ItemOrderListA when wCounterPtr0Lo
+; is nonzero and ItemOrderListB when it is 0, through VaultMenu_Store_MapItemsToInventory. That
+; routine walks the list up to its $FF and appends each id found among the 24 wInventory bytes, so
+; wItemGrid holds each item id in the bag once, in list order, padded with 0. (C1, E-0370)
+VaultMenu_Store_MoveItems_RebuildBagGrid::
     ld hl, wWorkBuf
     ld b, $18
 
@@ -3865,9 +3868,14 @@ VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     call VaultMenu_Store_MapItemsToInventory
     ret
 
-; Clears 24 bytes of wWorkBuf and switches the order list (A and wCounterPtr0Lo = 1 when it was 0,
-; otherwise B and 0), then continues the bag sort. (C1, E-0357)
-VaultMenu_Store_MapItemsToInventory_Skip::
+; The storing branch of RunUnlessScreenStateIs3 (reached by jr when wScreenState is 3): clears 24
+; bytes of wWorkBuf, switches the item order (ItemOrderListA with wCounterPtr0Lo = 1 when it was 0,
+; otherwise ItemOrderListB with wCounterPtr0Lo = 0) and falls through into
+; VaultMenu_Store_MapItemsToInventory, which rebuilds wItemGrid as the item ids in the bag
+; (wInventory), each once, in that list's order, padded with 0. Select on the storing item cursor
+; (VaultMenu_Store_ItemCursor) toggles the order this way; VaultMenu_Store_AfterStoring_Finish flips
+; wCounterPtr0Lo first, so its call keeps the order. (C1, E-0370)
+RunUnlessScreenStateIs3_ToggleBagOrder::
     ld hl, wWorkBuf
     ld b, $18
 
@@ -3943,9 +3951,9 @@ VaultMenu_Store_MapItemsToInventory::
     jr nz, .loop2
     ret
 
-; Sorts storage: switches the order list as VaultMenu_Store_MapItemsToInventory_Skip, rebuilds the
-; 100 two-byte entries of wItemStorage in the list's order in wWorkBuf (entries whose item is not in
-; the list are not copied) and copies them back. (C1, E-0357)
+; Sorts storage: switches the order list as RunUnlessScreenStateIs3_ToggleBagOrder, rebuilds the 100
+; two-byte entries of wItemStorage in the list's order in wWorkBuf (entries whose item is not in the
+; list are not copied) and copies them back. (C1, E-0357)
 RunUnlessScreenStateIs3_WriteCounterPtr0Lo::
     ld hl, wWorkBuf
     ld b, $c8

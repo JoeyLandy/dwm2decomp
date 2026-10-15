@@ -31,7 +31,7 @@ FetchScriptCommand::
 ; Reads the next script opcode (from the data bank when wScriptInDataBank is set): $FF ends the
 ; script (clears the running, command and data-bank flags; mode state 0, or 5 in a key world); any
 ; other opcode runs its fetch handler (ScriptOpcodeHandlers). (C1, E-0357)
-FetchScriptCommand_ReadScriptPointerLo::
+FetchScriptCommand_NextOpcode::
     ld a, [wScriptPointerLo]
     ld l, a
     ld a, [wScriptPointerHi]
@@ -432,17 +432,18 @@ ScriptFetch00::
 ScriptFetch01::
     ld a, $02
     ld [wScriptCommandType], a
-    jr ScriptFetch02_Restore
+    jr ScriptFetch02_ReadOperands
 
 ; fetch handler for script opcode 02 (entry 2 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch02::
     ld a, $03
     ld [wScriptCommandType], a
 
-; Opcode 02's operands: wScriptParam0 = the first byte OR the second's low nibble moved up,
-; wScriptParam1 = the third byte; resets the step and moves the script pointer past them. (C1,
-; E-0357)
-ScriptFetch02_Restore::
+; Shared tail of script opcodes 01 and 02 (the caller sets wScriptCommandType 2 or 3): pops the
+; script pointer and reads three operand bytes from the current bank (no wScriptInDataBank check):
+; wScriptParam0 = byte 0 OR byte 1 with its nibbles swapped, wScriptParam1 = byte 2; clears
+; wScriptStep and stores the pointer past them in wScriptPointerLo/wScriptPointerHi. (C1, E-0370)
+ScriptFetch02_ReadOperands::
     pop hl
     ld a, [hli]
     ld c, a
@@ -554,7 +555,7 @@ ScriptFetch06::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 .next:
     inc hl
@@ -570,7 +571,7 @@ ScriptFetch06::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 .set_script_pointer_lo2:
     inc hl
@@ -578,7 +579,7 @@ ScriptFetch06::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; fetch handler for script opcode 07 (entry 7 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch07::
@@ -592,14 +593,14 @@ ScriptFetch07::
     ld a, c
     ld [wScriptPointerHi], a
     inc hl
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 .set_script_pointer_lo:
     ld a, [hli]
     ld [wScriptPointerLo], a
     ld a, [hl]
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; fetch handler for script opcode 0A (entry 10 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0A::
@@ -613,7 +614,7 @@ ScriptFetch0A::
     ld a, h
     ld [wScriptPointerHi], a
     call SetFlagBit
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; fetch handler for script opcode 0B (entry 11 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0B::
@@ -648,7 +649,7 @@ ScriptFetch0C::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; fetch handler for script opcode 0D (entry 13 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0D::
@@ -677,7 +678,7 @@ ScriptFetch0E::
     ld a, h
     ld [wScriptPointerHi], a
     farcall AddGoldCapped
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0F::
@@ -694,15 +695,15 @@ ScriptFetch0F::
     cp $60
     jr c, .call_queue_music
     call QueueSoundEffect
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 .call_queue_music:
     call QueueMusic
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 .call_restart_map_music:
     farcall RestartMapMusic
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; fetch handler shared by 123 opcodes: wScriptCommandType = the opcode byte, then StartEventScript
 ; with the pointer just after it; the command reads its own arguments from the script (E-0039)
@@ -1070,7 +1071,7 @@ ScriptFetchE7::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE4::
@@ -1098,7 +1099,7 @@ ScriptFetchE4::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 .skip2:
     ld a, [hli]
@@ -1107,7 +1108,7 @@ ScriptFetchE4::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp FetchScriptCommand_ReadScriptPointerLo
+    jp FetchScriptCommand_NextOpcode
 
 ; HL = script address: clears wScriptParam0-wMessageState (parameters and step) and stores HL in
 ; wScriptPointer; the script is run by RunEventScriptFrame (28 call sites) (E-0038)
@@ -1719,8 +1720,8 @@ ScriptCommand01_CloseWindow::
     ret
 
 ; Starts message L of group H (bits 0-5): with a message mode set (wMessageMode) through that mode's
-; far routine from the table (rst $10), otherwise by group (StartMessageForGroup_Data_CheckMapType).
-; (C1, E-0357)
+; far routine from the table (rst $10), otherwise by group (StartMessageForGroup_ByGroup). (C1,
+; E-0357)
 StartMessageForGroup::
     ld a, h
     and $3f
@@ -1728,7 +1729,7 @@ StartMessageForGroup::
     push hl
     ld a, [wMessageMode]
     and a
-    jr z, StartMessageForGroup_Data_CheckMapType
+    jr z, StartMessageForGroup_ByGroup
     dec a
     ld c, a
     sla a
@@ -1765,16 +1766,18 @@ StartMessageForGroup_Data::
     db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d
     db $24
 
-; Starts message L by group H: groups 0-13 use banks $28, $29, $2A, $2B, $2C, $2D, $2E, $2E, $7C,
-; $80, $80, $82, $86 and $89; in a key world (wMapType bit 7, but not exactly $80)
-; StartMessageForGroup_ToBeginStringDisplay_Bank89_Skip decides instead. (C1, E-0357)
-StartMessageForGroup_Data_CheckMapType::
+; Starts message L of group H (HL pushed by StartMessageForGroup, which comes here when wMessageMode
+; is 0): in a key world (wMapType bit 7 set but not exactly $80) StartMessageForGroup_KeyWorld
+; decides instead; otherwise sets wStringIndex = L, wStringCategory = 0 and jumps by H to the
+; group's bank: groups 0-13 use banks $28, $29, $2A, $2B, $2C, $2D, $2E, $2E, $7C, $80, $80, $82,
+; $86 and $89 (no bounds check). (C1, E-0370)
+StartMessageForGroup_ByGroup::
     pop hl
     ld a, [wMapType]
     cp $80
     jr z, .set_string_index
     bit 7, a
-    jp nz, StartMessageForGroup_ToBeginStringDisplay_Bank89_Skip
+    jp nz, StartMessageForGroup_KeyWorld
 
 .set_string_index:
     ld a, l
@@ -1783,84 +1786,84 @@ StartMessageForGroup_Data_CheckMapType::
     ld [wStringCategory], a
     ld a, h
     jumptable
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank28
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank29
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank2A
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank2B
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank2C
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank2D
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank2E
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank2E
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank7C
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank80
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank80
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank82
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank86
-    dw StartMessageForGroup_ToBeginStringDisplay_Bank89
+    dw StartMessageForGroup_Group00
+    dw StartMessageForGroup_Group01
+    dw StartMessageForGroup_Group02
+    dw StartMessageForGroup_Group03
+    dw StartMessageForGroup_Group04
+    dw StartMessageForGroup_Group05
+    dw StartMessageForGroup_Groups06And07
+    dw StartMessageForGroup_Groups06And07
+    dw StartMessageForGroup_Group08
+    dw StartMessageForGroup_Groups09And0A
+    dw StartMessageForGroup_Groups09And0A
+    dw StartMessageForGroup_Group0B
+    dw StartMessageForGroup_Group0C
+    dw StartMessageForGroup_Group0D
 
 ; Group 0: bank $28's strings (BeginStringDisplay_Bank28). (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank28::
+StartMessageForGroup_Group00::
     farcall BeginStringDisplay_Bank28
     ret
 
 ; Group 1: bank $29's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank29::
+StartMessageForGroup_Group01::
     farcall BeginStringDisplay_Bank29
     ret
 
 ; Group 2: bank $2A's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank2A::
+StartMessageForGroup_Group02::
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; Group 3: bank $2B's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank2B::
+StartMessageForGroup_Group03::
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; Group 4: bank $2C's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank2C::
+StartMessageForGroup_Group04::
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; Group 5: bank $2D's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank2D::
+StartMessageForGroup_Group05::
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; Groups 6 and 7: bank $2E's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank2E::
+StartMessageForGroup_Groups06And07::
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; Group 8: bank $7C's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank7C::
+StartMessageForGroup_Group08::
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; Groups 9 and 10: bank $80's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank80::
+StartMessageForGroup_Groups09And0A::
     farcall BeginStringDisplay_Bank80
     ret
 
 ; Group 11: bank $82's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank82::
+StartMessageForGroup_Group0B::
     farcall BeginStringDisplay_Bank82
     ret
 
 ; Group 12: bank $86's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank86::
+StartMessageForGroup_Group0C::
     farcall BeginStringDisplay_Bank86
     ret
 
 ; Group 13: bank $89's strings. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank89::
+StartMessageForGroup_Group0D::
     farcall BeginStringDisplay_Bank89
     ret
 
 ; Key-world messages: group 0 with an index of $20 or more uses bank $83; other messages use bank
 ; $8A. (C1, E-0357)
-StartMessageForGroup_ToBeginStringDisplay_Bank89_Skip::
+StartMessageForGroup_KeyWorld::
     ld a, h
     or a
     jr nz, .set_string_index

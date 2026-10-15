@@ -1977,7 +1977,7 @@ FieldState_WalkAMenu::
     jr z, .call_draw_field_sprites
     call FieldState_WalkAMenu_CheckAButtonExit
     farcall CheckTriggerCellOnA
-    farcall FieldState_WalkAMenu_WaitTextWindowState
+    farcall FieldState_WalkAMenu_CheckKeyWorldItemOnA
     farcall CheckMapInteractionOnA
     call CheckTileInFrontOnA
     xor a

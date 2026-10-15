@@ -161,7 +161,7 @@ OBJPaletteBufferPlus8Data::
     dw $0000, $6bff, $7ec5, $0800 ; id 20
 
 ; copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD +
-; $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_DecompressToVRAM
+; $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_LoadGfxPalette4
 ; with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes
 ; (E-0238, C1)
 LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData::

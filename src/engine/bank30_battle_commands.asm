@@ -15,7 +15,7 @@ RunBattleCommandEntry::
     jumptable
     dw RunBattleCommandEntry_Start
     dw RunBattleCommandEntry_NextActor
-    dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
+    dw RunBattleCommandEntry_ChooseAction
     dw RunBattleCommandEntry_ChooseTarget
     dw RunBattleCommandEntry_ListSpeeds
     dw RunBattleCommandEntry_SortBySpeed
@@ -161,7 +161,7 @@ RunBattleCommandEntry_NextActor::
     ret
 
 ; Turn order, step 2: the command entry for the actor (RunCommandEntryResolveStep). (C1, E-0357)
-RunBattleCommandEntry_ToRunCommandEntryResolveStep::
+RunBattleCommandEntry_ChooseAction::
     call RunCommandEntryResolveStep
     ret
 
@@ -233,9 +233,9 @@ ChooseTargetForActor::
     ret
 
 ; Turn order, step 4: clears the action queue and the speed list, lists every present slot marked 2
-; with a speed (RunBattleCommandEntry_ListSpeeds_AdvanceRandom plus the action's bonus,
-; AddActionSpeedBonus), adds the item entry (RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget);
-; next step. (C1, E-0357)
+; with a speed (RunBattleCommandEntry_ListSpeeds_RollSpeed plus the action's bonus,
+; AddActionSpeedBonus), adds the item entry (RunBattleCommandEntry_ListSpeeds_AddItemEntry); next
+; step. (C1, E-0357)
 RunBattleCommandEntry_ListSpeeds::
     ld hl, wActionQueue
     ld bc, $0009
@@ -270,7 +270,7 @@ RunBattleCommandEntry_ListSpeeds::
     cp $02
     jr nz, .next
     ld a, e
-    call RunBattleCommandEntry_ListSpeeds_AdvanceRandom
+    call RunBattleCommandEntry_ListSpeeds_RollSpeed
     call AddActionSpeedBonus
     ld hl, wBattleTempPtrLo
     deref_hl
@@ -292,13 +292,13 @@ RunBattleCommandEntry_ListSpeeds::
     inc e
     dec d
     jp nz, .loop
-    call RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget
+    call RunBattleCommandEntry_ListSpeeds_AddItemEntry
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
 ; BC = a random speed for slot E between 3/10 of its agility and its agility. (C1, E-0357)
-RunBattleCommandEntry_ListSpeeds_AdvanceRandom::
+RunBattleCommandEntry_ListSpeeds_RollSpeed::
     push de
     call AdvanceRandom
     ld a, e
@@ -413,7 +413,7 @@ AddActionSpeedBonus::
 
 ; When an item is being used (wBattleItemTarget not $FF), lists entry $10 with speed 2,010, ahead of
 ; every turn but the 3,000 ones. (C1, E-0357)
-RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget::
+RunBattleCommandEntry_ListSpeeds_AddItemEntry::
     ld a, [wBattleItemTarget]
     cp $ff
     ret z
@@ -664,7 +664,7 @@ RunCommandEntryResolveStep_Start::
 ; the tactic's byte / 4 + the personality weight with wBattleExtraStat / 16 + random 0-63; when the
 ; first is lower it acts on its own (tactic bit 6 set, action $FF, wSideControl bit 7, message $28
 ; unless slot 3 or 7) and goes to step 3; otherwise clears bit 6 and its action byte; both adjust
-; the personality (RunCommandEntryResolveStep_CheckObeys_WaitLinkMode). (C1, E-0357)
+; the personality (AdjustActorPersonality). (C1, E-0357)
 RunCommandEntryResolveStep_CheckObeys::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -701,8 +701,8 @@ RunCommandEntryResolveStep_CheckObeys::
     jr z, .call_get_actor_slot_tactic_low2
     cp $01
     jr z, .call_get_actor_slot_tactic_low22
-    call RunCommandEntryResolveStep_CheckObeys_ReadBattleActor
-    call RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2
+    call RunCommandEntryResolveStep_CheckObeys_AddTrait
+    call RunCommandEntryResolveStep_CheckObeys_AddTactic
     call AddPersonalityWeightToBattleArg0
     call AddActorBattleWordArray3FDiv16ToBattleArg2
     call AddRandom0To63ToBattleArg2
@@ -724,7 +724,7 @@ RunCommandEntryResolveStep_CheckObeys::
     ld hl, wActorActionBytes
     add_a_to_hl
     ld [hl], $00
-    call RunCommandEntryResolveStep_CheckObeys_WaitLinkMode
+    call AdjustActorPersonality
     jr .return
 
 .call_get_actor_slot_tactic_low22:
@@ -744,8 +744,8 @@ RunCommandEntryResolveStep_CheckObeys::
     ld hl, wSideControl
     add_a_to_hl
     set 7, [hl]
-    call RunCommandEntryResolveStep_CheckObeys_WaitLinkMode
-    call RunCommandEntryResolveStep_CheckObeys_IncBIfActorEntryBelow40
+    call AdjustActorPersonality
+    call RunCommandEntryResolveStep_CheckObeys_SelfAction
     ld a, $03
     ld [wBattleResolveStep], a
     ld a, [wBattleActor]
@@ -778,29 +778,29 @@ ActorBattleWordArray3FBand::
 .return:
     ret
 
-; Adds the actor's wSlotTrait byte / 4 to wBattleArg0
-; (RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor). (C1, E-0357)
-RunCommandEntryResolveStep_CheckObeys_ReadBattleActor::
+; Adds the actor's wSlotTrait byte / 4 to the word wBattleArg0 (jumps to
+; RunCommandEntryResolveStep_CheckObeys_AddSlotByte). (C1, E-0370)
+RunCommandEntryResolveStep_CheckObeys_AddTrait::
     ld hl, wSlotTrait
-    jr RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor
+    jr RunCommandEntryResolveStep_CheckObeys_AddSlotByte
 
-; Unless the actor's tactic is 3, adds its byte from the tactic's array
-; (RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2's table) / 4 to wBattleArg0. (C1,
-; E-0357)
-RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2::
+; Unless the actor's tactic (GetActorSlotTacticLow2) is 3, adds the actor's byte of
+; wSlotPersonalityHi, wSlotPersonalityMid or wSlotPersonalityLo (tactic 0, 1 or 2, through the
+; three-word table after it) / 4 to the word wBattleArg0. (C1, E-0370)
+RunCommandEntryResolveStep_CheckObeys_AddTactic::
     call GetActorSlotTacticLow2
     cp $03
     ret z
-    ld hl, RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_Data
+    ld hl, RunCommandEntryResolveStep_CheckObeys_AddTactic_Data
     call ReadBattleWordFromArray_Bank30
-    jr RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor
+    jr RunCommandEntryResolveStep_CheckObeys_AddSlotByte
 
 ; data read by RunCommandEntryResolveStep (6 bytes) (E-0347)
-RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_Data::
+RunCommandEntryResolveStep_CheckObeys_AddTactic_Data::
     db $68, $d9, $70, $d9, $78, $d9
 
 ; The word wBattleArg0 += the byte at HL + actor, / 4. (C1, E-0357)
-RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor::
+RunCommandEntryResolveStep_CheckObeys_AddSlotByte::
     ld a, [wBattleActor]
     add_a_to_hl
     ld a, [hl]
@@ -850,7 +850,7 @@ AddActorBattleWordArray3FDiv16ToBattleArg2::
     rr l
     srl h
     rr l
-    jr AddRandom0To63ToBattleArg2_ReadBattleArg2
+    jr AddHLToBattleArg2
 
 ; adds a random value 0-63 (wRandomLo & $3F) to the word wBattleArg2 (E-0122)
 AddRandom0To63ToBattleArg2::
@@ -859,10 +859,10 @@ AddRandom0To63ToBattleArg2::
     and $3f
     ld l, a
     ld h, $00
-    jr AddRandom0To63ToBattleArg2_ReadBattleArg2
+    jr AddHLToBattleArg2
 
 ; The word wBattleArg2 += HL. (C1, E-0357)
-AddRandom0To63ToBattleArg2_ReadBattleArg2::
+AddHLToBattleArg2::
     ld a, [wBattleArg2]
     add l
     ld [wBattleArg2], a
@@ -1692,7 +1692,7 @@ UseAIScoreTableB::
     ld [wBattleExpAward], a
     ld a, h
     ld [wBattleExpAward + $1], a
-    jr ScoreActionsWithAIScoreTableA_CheckBattleActor
+    jr ScoreActorActionsForAI
 
 ; sets wBattleExpAward/C to AIScoreRoutineTableA; for AI-controlled actors estimates damage, scores
 ; the eight skills, attack (0) and $AC into wAIWeights, and doubles the weight of the preferred kind
@@ -1709,7 +1709,7 @@ ScoreActionsWithAIScoreTableA::
 ; whose category is the first choice), the attack (doubled when the first choice is 1) and action
 ; $AC (quartered for foes and slots 3/7, doubled when the first choice is 3), and takes the highest.
 ; (C1, E-0357)
-ScoreActionsWithAIScoreTableA_CheckBattleActor::
+ScoreActorActionsForAI::
     ld a, [wBattleActor]
     and $03
     cp $03
@@ -2040,8 +2040,8 @@ EstimateDamageVsEachFoeToAIDamageEstimates::
     ret
 
 ; A = skill number: when the word at $55F3 + 2 * A (a per-skill weight table in this bank) is
-; non-zero it is added to the word at DE and AddSkillBaseWeightAndLoadSkill_AdvanceRandom adds a
-; random adjustment; then the skill record is loaded (wRecordBuffer = A, wRecordBuffer + $1 = 0,
+; non-zero it is added to the word at DE and AddSkillBaseWeightAndLoadSkill_AddRandom adds a random
+; adjustment; then the skill record is loaded (wRecordBuffer = A, wRecordBuffer + $1 = 0,
 ; LoadSkillRecord); A and DE kept (E-0083)
 AddSkillBaseWeightAndLoadSkill::
     push de
@@ -2067,7 +2067,7 @@ AddSkillBaseWeightAndLoadSkill::
     ld a, [de]
     adc [hl]
     ld [de], a
-    call AddSkillBaseWeightAndLoadSkill_AdvanceRandom
+    call AddSkillBaseWeightAndLoadSkill_AddRandom
 
 .set_record_buffer:
     pop af
@@ -2081,7 +2081,7 @@ AddSkillBaseWeightAndLoadSkill::
     ret
 
 ; Adds a random 0-63 to the word ending at DE. (C1, E-0357)
-AddSkillBaseWeightAndLoadSkill_AdvanceRandom::
+AddSkillBaseWeightAndLoadSkill_AddRandom::
     push af
     dec de
     call AdvanceRandom
@@ -2469,7 +2469,7 @@ FlagBitHandlerTable::
 RollPersonalityHiHighFlag01::
     ld hl, wSlotPersonalityHi
     ld de, $0001
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom
+    jr RollPersonalityActForHighValue
 
 ; AI trait roll with mask DE = $02: when the actor's value is below $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 1 of the actor's wPersonalityActs;
@@ -2477,7 +2477,7 @@ RollPersonalityHiHighFlag01::
 RollPersonalityHiLowFlag02::
     ld hl, wSlotPersonalityHi
     ld de, $0002
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom2
+    jr RollPersonalityActForLowValue
 
 ; AI trait roll with mask DE = $04: when the actor's value is at least $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 2 of the actor's wPersonalityActs;
@@ -2485,7 +2485,7 @@ RollPersonalityHiLowFlag02::
 RollPersonalityMidHighFlag04::
     ld hl, wSlotPersonalityMid
     ld de, $0004
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom
+    jr RollPersonalityActForHighValue
 
 ; AI trait roll with mask DE = $08: when the actor's value is below $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (E-0337: sets bit 3 of wPersonalityActs; forced, it showed no
@@ -2493,7 +2493,7 @@ RollPersonalityMidHighFlag04::
 RollPersonalityMidLowFlag08::
     ld hl, wSlotPersonalityMid
     ld de, $0008
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom2
+    jr RollPersonalityActForLowValue
 
 ; AI trait roll with mask DE = $10: when the actor's value is at least $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 4 of the actor's wPersonalityActs;
@@ -2501,7 +2501,7 @@ RollPersonalityMidLowFlag08::
 RollPersonalityLoHighFlag10::
     ld hl, wSlotPersonalityLo
     ld de, $0010
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom
+    jr RollPersonalityActForHighValue
 
 ; AI trait roll with mask DE = $20: when the actor's value is below $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 5 of the actor's wPersonalityActs;
@@ -2509,7 +2509,7 @@ RollPersonalityLoHighFlag10::
 RollPersonalityLoLowFlag20::
     ld hl, wSlotPersonalityLo
     ld de, $0020
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom2
+    jr RollPersonalityActForLowValue
 
 ; AI trait roll with mask DE = $40: when the actor's value is at least $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 6 of the actor's wPersonalityActs;
@@ -2517,7 +2517,7 @@ RollPersonalityLoLowFlag20::
 RollSlotTraitHighFlag40::
     ld hl, wSlotTrait
     ld de, $0040
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom
+    jr RollPersonalityActForHighValue
 
 ; AI trait roll with mask DE = $80: when the actor's wSlotTrait value is below $80 rolls a chance
 ; that grows with its distance from $80 (E-0125) (C2 from E-0337: sets bit 7 of the actor's
@@ -2525,13 +2525,16 @@ RollSlotTraitHighFlag40::
 RollSlotTraitLowFlag80::
     ld hl, wSlotTrait
     ld de, $0080
-    jr RollSlotTraitLowFlag80_CallAdvanceRandom2
+    jr RollPersonalityActForLowValue
     db $af, $c9
 
-; Trait roll for a high trait ($80 or more): a chance of 1/256 below $A2, 2/256 below $C3, 4/256
-; below $E4, otherwise 8/256; on success ORs DE into wPersonalityActs[actor] and returns carry. (C1,
-; E-0357)
-RollSlotTraitLowFlag80_CallAdvanceRandom::
+; HL = a per-slot personality array, DE = the act bit (from the high-value rolls
+; RollPersonalityHiHighFlag01, RollPersonalityMidHighFlag04, RollPersonalityLoHighFlag10,
+; RollSlotTraitHighFlag40): advances the random value; when the actor's byte is $80 or more, rolls a
+; chance of 1/256 below $A2, 2/256 below $C3, 4/256 below $E4, otherwise 8/256
+; (RollPersonalityActChance). When the byte is below $80 it returns with carry set and sets nothing,
+; which stops RunHandlersForSetBitsInBC as a success would. (C1, E-0370)
+RollPersonalityActForHighValue::
     call AdvanceRandom
     ld a, [wRandomLo]
     ld b, a
@@ -2541,16 +2544,19 @@ RollSlotTraitLowFlag80_CallAdvanceRandom::
     cp $80
     ret c
     cp $a2
-    jr c, RollSlotTraitLowFlag80_Skip2
+    jr c, RollPersonalityActOneIn256
     cp $c3
-    jr c, RollSlotTraitLowFlag80_Skip3
+    jr c, RollPersonalityActOneIn128
     cp $e4
-    jr c, RollSlotTraitLowFlag80_Skip4
-    jr RollSlotTraitLowFlag80_Skip
+    jr c, RollPersonalityActOneIn64
+    jr RollPersonalityActOneIn32
 
-; Trait roll for a low trait (below $80): a chance of 1/256 from $60, 2/256 from $3F, 4/256 from
-; $1E, otherwise 8/256; on success as RollSlotTraitLowFlag80_CallAdvanceRandom. (C1, E-0357)
-RollSlotTraitLowFlag80_CallAdvanceRandom2::
+; The low-value form of RollPersonalityActForHighValue (from RollPersonalityHiLowFlag02,
+; RollPersonalityMidLowFlag08, RollPersonalityLoLowFlag20, RollSlotTraitLowFlag80): when the actor's
+; byte is below $80, rolls a chance of 1/256 from $60, 2/256 from $3F, 4/256 from $1E, otherwise
+; 8/256 (falls into RollPersonalityActOneIn32); a byte of $80 or more returns with carry clear. (C1,
+; E-0370)
+RollPersonalityActForLowValue::
     call AdvanceRandom
     ld a, [wRandomLo]
     ld b, a
@@ -2560,34 +2566,34 @@ RollSlotTraitLowFlag80_CallAdvanceRandom2::
     cp $80
     ret nc
     cp $60
-    jr nc, RollSlotTraitLowFlag80_Skip2
+    jr nc, RollPersonalityActOneIn256
     cp $3f
-    jr nc, RollSlotTraitLowFlag80_Skip3
+    jr nc, RollPersonalityActOneIn128
     cp $1e
-    jr nc, RollSlotTraitLowFlag80_Skip4
+    jr nc, RollPersonalityActOneIn64
 
 ; C = 8 (chance 8/256), then the roll. (C1, E-0357)
-RollSlotTraitLowFlag80_Skip::
+RollPersonalityActOneIn32::
     ld c, $08
-    jr RollSlotTraitLowFlag80_Skip5
+    jr RollPersonalityActChance
 
 ; C = 1 (chance 1/256), then the roll. (C1, E-0357)
-RollSlotTraitLowFlag80_Skip2::
+RollPersonalityActOneIn256::
     ld c, $01
-    jr RollSlotTraitLowFlag80_Skip5
+    jr RollPersonalityActChance
 
 ; C = 2 (chance 2/256), then the roll. (C1, E-0357)
-RollSlotTraitLowFlag80_Skip3::
+RollPersonalityActOneIn128::
     ld c, $02
-    jr RollSlotTraitLowFlag80_Skip5
+    jr RollPersonalityActChance
 
 ; C = 4 (chance 4/256), then the roll. (C1, E-0357)
-RollSlotTraitLowFlag80_Skip4::
+RollPersonalityActOneIn64::
     ld c, $04
 
 ; Succeeds when the random byte is below C: ORs DE into the actor's wPersonalityActs word and
 ; returns carry. (C1, E-0357)
-RollSlotTraitLowFlag80_Skip5::
+RollPersonalityActChance::
     ld a, b
     cp c
     ret nc
@@ -2608,7 +2614,7 @@ RollSlotTraitLowFlag80_Skip5::
 ; below $40; action $AC unless Hi is the largest; otherwise its strongest usable skill (enough MP,
 ; of the kinds in IsSkillForSelfAction, the highest record byte 0), or the attack (0) when there is
 ; none. (C1, E-0357)
-RunCommandEntryResolveStep_CheckObeys_IncBIfActorEntryBelow40::
+RunCommandEntryResolveStep_CheckObeys_SelfAction::
     ld b, $00
     ld hl, wSlotPersonalityHi
     call IncBIfActorEntryBelow40
@@ -2647,11 +2653,11 @@ RunCommandEntryResolveStep_CheckObeys_IncBIfActorEntryBelow40::
     ld a, [wPauseMenuStep]
     cp $ff
     jr z, .call_actor_action_choice_address3
-    call RunCommandEntryResolveStep_CheckObeys_IsSkillForSelfAction
+    call KeepSelfActionSkills
     ld a, [wTemp0]
     cp $ff
     jr z, .call_actor_action_choice_address3
-    call RunCommandEntryResolveStep_CheckObeys_LoadSkillRecordPart
+    call PickCostliestListedSkill
     call ActorActionChoiceAddress
     ld [hl], c
     ret
@@ -2816,11 +2822,12 @@ FilterSkillListByMP::
     call FillBytes
     ld hl, wTemp0
     ld de, wPauseMenuStep
-    jr RunCommandEntryResolveStep_CheckObeys_Skip
+    jr CompactSkillList
 
-; Keeps only the listed skills of the kinds in IsSkillForSelfAction and packs them to the front of
-; wTemp0. (C1, E-0357)
-RunCommandEntryResolveStep_CheckObeys_IsSkillForSelfAction::
+; Walks the eight-entry skill list at wPauseMenuStep (left there by FilterSkillListByMP) up to its
+; first $FF and replaces each skill that IsSkillForSelfAction rejects with $FF; then fills wTemp0
+; with eight $FF and packs the remaining skills into it (falls into CompactSkillList). (C1, E-0370)
+KeepSelfActionSkills::
     ld hl, wPauseMenuStep
     ld b, $08
     ld c, $00
@@ -2856,8 +2863,10 @@ RunCommandEntryResolveStep_CheckObeys_IsSkillForSelfAction::
     ld hl, wPauseMenuStep
     ld de, wTemp0
 
-; Copies the entries at HL that are not $FF to DE (eight entries). (C1, E-0357)
-RunCommandEntryResolveStep_CheckObeys_Skip::
+; HL = an eight-entry list, DE = destination: copies the entries that are not $FF to DE, packed to
+; the front. FilterSkillListByMP jumps here to copy wTemp0 into wPauseMenuStep, and
+; KeepSelfActionSkills falls into it to copy wPauseMenuStep back into wTemp0. (C1, E-0370)
+CompactSkillList::
     ld b, $08
 
 .loop:
@@ -2907,9 +2916,10 @@ IsSkillForSelfAction::
     scf
     ret
 
-; C = the listed skill (wTemp0 onward) with the highest record byte 0; a later one wins ties. (C1,
-; E-0357)
-RunCommandEntryResolveStep_CheckObeys_LoadSkillRecordPart::
+; C = the skill of the wTemp0 list (up to eight, ending at the first $FF) whose record byte 0, the
+; MP cost that FilterSkillListByMP compares with the MP, is highest; a later skill wins ties. Each
+; record is loaded with LoadSkillRecordPart into wRecordBufferData. (C1, E-0370)
+PickCostliestListedSkill::
     ld a, [wTemp0]
     ld [wRecordBuffer], a
     ld a, $00
@@ -3013,11 +3023,13 @@ ForcedActionForActorStatus::
 .return:
     ret
 
-; Outside link battles, for party slots 0-2: picks the personality changes for the actor from
-; TacticOffsetTable by tactic, level band (below 10, 20, 30, or 30 and over) and trait ($97 or
-; more), and applies them (RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_2). (C1,
-; E-0357)
-RunCommandEntryResolveStep_CheckObeys_WaitLinkMode::
+; Outside link battles, for party slots 0-2 only: picks a 4-byte record of TacticOffsetTable by the
+; actor's tactic, its level band (wBattleLevel below 10, 20, 30, or 30 and over: records 0-3) and
+; trait (wSlotTrait $97 or more: records 4-7), copies it to hTemp0-hTemp3, negated when bit 6 of the
+; actor's tactic byte is set (CopyFourBytesNegatedByActorSlotTactic), and applies it
+; (AdjustActorPersonality_Apply). RunCommandEntryResolveStep_CheckObeys calls it whether or not the
+; actor obeys. (C1, E-0370)
+AdjustActorPersonality::
     ld a, [wLinkMode]
     or a
     ret nz
@@ -3071,7 +3083,7 @@ RunCommandEntryResolveStep_CheckObeys_WaitLinkMode::
     add hl, de
     add hl, bc
     call CopyFourBytesNegatedByActorSlotTactic
-    call RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_2
+    call AdjustActorPersonality_Apply
     ret
 
 ; copies four bytes from HL to hTemp0, negating each when bit 6 of the actor's wSlotTactic byte is
@@ -3105,10 +3117,12 @@ CopyByteNegateIfCBit6::
     ld [de], a
     ret
 
-; Negates the change for wCommandEntryMonster's byte when the actor acted on its own (tactic bit 6),
-; then adds the four signed changes to the actor's personality Hi, Mid, Lo and trait, clamped. (C1,
-; E-0357)
-RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_2::
+; When bit 6 of the actor's tactic byte is set, negates the change at hTemp0 + wCommandEntryMonster
+; again, so that one keeps the table's sign while the other three stay negated; then adds the four
+; signed changes in hTemp0-hTemp3 to the actor's wSlotPersonalityHi, wSlotPersonalityMid,
+; wSlotPersonalityLo and wSlotTrait bytes, each clamped to 0-$FF
+; (AddSignedEToByteAtHLClampedForActorEntryOfHL). (C1, E-0370)
+AdjustActorPersonality_Apply::
     ld a, [wCommandEntryMonster]
     ld c, a
     ld b, $00
@@ -3150,10 +3164,10 @@ AddSignedEToByteAtHLClampedForActorEntryOfHL::
     call AddSignedEToByteAtHLClamped
     ret
 
-; the code at RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.call_get_actor_slot_tactic_low2
-; indexes it with GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else
-; 0) and C (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies
-; the four bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set (E-0234, C1)
+; the code at AdjustActorPersonality.call_get_actor_slot_tactic_low2 indexes it with
+; GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else 0) and C
+; (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies the four
+; bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set (E-0234, C1)
 ; record: block of eight 4-byte records for this tactic
 TacticOffsetTable::
     dw TacticOffsets0 ; id 0
@@ -3163,7 +3177,7 @@ TacticOffsetTable::
 
 ; block 0 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; AdjustActorPersonality.read_battle_actor2 (E-0234, C1)
 ; record: four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is
 ; set)
 TacticOffsets0::
@@ -3178,7 +3192,7 @@ TacticOffsets0::
 
 ; block 1 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; AdjustActorPersonality.read_battle_actor2 (E-0234, C1)
 TacticOffsets1::
     db $00, $07, $fe, $03 ; id 0
     db $00, $05, $fe, $02 ; id 1
@@ -3191,7 +3205,7 @@ TacticOffsets1::
 
 ; block 2 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; AdjustActorPersonality.read_battle_actor2 (E-0234, C1)
 TacticOffsets2::
     db $fe, $00, $07, $03 ; id 0
     db $fe, $00, $05, $02 ; id 1
@@ -3204,7 +3218,7 @@ TacticOffsets2::
 
 ; block 3 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; AdjustActorPersonality.read_battle_actor2 (E-0234, C1)
 TacticOffsets3::
     db $00, $00, $00, $ff ; id 0
     db $00, $00, $00, $fe ; id 1
@@ -3257,14 +3271,14 @@ AddSignedEToByteAtHLClamped::
     ret
 
 ; wPersonalityIndex = PersonalityIndexOfSlot_Bank30(actor); resets the AI workspace
-; (AIChooseActionForActor_AddCommandWeightToAIChoiceWeights); with wAIFlag = 1 runs the routine for
-; the actor's AI mode (AIModeRoutineTable indexed by wSlotAIMode[actor], JumpToHL) and stores its
-; result B as the actor's chosen action; runs RunActorActionHandlersForAISlots; wAIFlag = 0 (E-0120)
+; (AIChooseActionForActor_InitChoiceWeights); with wAIFlag = 1 runs the routine for the actor's AI
+; mode (AIModeRoutineTable indexed by wSlotAIMode[actor], JumpToHL) and stores its result B as the
+; actor's chosen action; runs RunActorActionHandlersForAISlots; wAIFlag = 0 (E-0120)
 AIChooseActionForActor::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_Bank30
     ld [wPersonalityIndex], a
-    call AIChooseActionForActor_AddCommandWeightToAIChoiceWeights
+    call AIChooseActionForActor_InitChoiceWeights
     ld a, $01
     ld [wAIFlag], a
     ld a, [wBattleActor]
@@ -3284,7 +3298,7 @@ AIChooseActionForActor::
 ; Sets up the three choice weights (cleared, order 1, 2, 3), adds the skill-kind, command,
 ; personality, status and HP, side-HP and random weights, and sorts them (ties at random). (C1,
 ; E-0357)
-AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
+AIChooseActionForActor_InitChoiceWeights::
     ld hl, wAIWeights
     ld bc, $0014
     xor a
@@ -3301,11 +3315,11 @@ AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
     ld [wAIChoiceOrder + $2], a
     ld a, $03
     ld [wAIChoiceIndex], a
-    call AIChooseActionForActor_ReadRecordBufferData
+    call AIChooseActionForActor_AddSkillKindWeight
     call AddCommandWeightToAIChoiceWeights
     call AddActorPersonalityTensToAIChoiceWeights
     call AddStatusAndHPWeightsToAI
-    call AIChooseActionForActor_WriteAIChoiceWeights
+    call AIChooseActionForActor_AddHPWeights
     call AddRandomPersonalityWeights
     call SortThreeAIWeightsRandomTies
     ld a, $00
@@ -3314,7 +3328,7 @@ AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
 
 ; Adds 10 to choice weight 0, 1 or 2 by the high nibble (1, 2 or 3) of skill record byte 3. (C1,
 ; E-0357)
-AIChooseActionForActor_ReadRecordBufferData::
+AIChooseActionForActor_AddSkillKindWeight::
     ld a, [wRecordBufferData + $3]
     and $f0
     cp $10
@@ -3344,10 +3358,13 @@ AIChooseActionForActor_ReadRecordBufferData::
 .return:
     ret
 
-; Compares the sides' HP totals with those saved at the turn start (wBattleCommandArgs): when twice
-; the actor's side's HP is below one, choice weight 2 + 20; when three times the other side's HP is
-; below the other, choice weight 0 + 20. (C1, E-0357)
-AIChooseActionForActor_WriteAIChoiceWeights::
+; Adds HP weights from the totals RunBattleCommandEntry_TotalHP saved in wBattleCommandArgs (party
+; slots 0-2: the HP word, then the max HP word). For an actor in slots 0-3: when twice its side's HP
+; (slots 0-2) is below the saved max HP, wAIChoiceWeights + 2 gets 20; when three times the foes' HP
+; (slots 4-6) is below the saved HP, wAIChoiceWeights gets 20. For an actor in slots 4-7 the tests
+; are twice its own side's HP (slots 4-6) against the saved HP, and three times the party's HP
+; against the saved max HP. (C1, E-0370)
+AIChooseActionForActor_AddHPWeights::
     ld a, [wBattleActor]
     rrca
     and $02
@@ -3489,7 +3506,7 @@ PersonalityTacticWeights::
     db $05, $05, $05, $00 ; id 26
 
 ; AddSkillBaseWeightAndLoadSkill (from ScoreSkillForAI) adds the word at $55F3 + 2 * skill to the
-; score at DE when it is non-zero, then AddSkillBaseWeightAndLoadSkill_AdvanceRandom adds a random
+; score at DE when it is non-zero, then AddSkillBaseWeightAndLoadSkill_AddRandom adds a random
 ; adjustment; 201 words end at the far-pointer table at $5785; most weights are 50-110 (E-0208, C1)
 ; record: base weight (0 = none)
 SkillAIBaseWeightTable::

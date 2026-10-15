@@ -368,7 +368,7 @@ Script_GWasReleasedIn::
 
 ; Storing or taking out, step 0: writes the item window's tile map into BG map 1 at $9F00 (to the
 ; $7F end), the bag's (state 3) or the storage's version. (C1, E-0357)
-VaultMenu_Store_WaitForVRAMAccess::
+VaultMenu_Store_WriteWindowMap::
     ld a, [wScreenState]
     cp $03
     jr z, .skip
@@ -399,8 +399,8 @@ VaultMenu_Store_WaitForVRAMAccess::
     ld [wScreenStep], a
     ret
 
-; VaultMenu_Store_WaitForVRAMAccess copies bytes from $44E3 to vBGMap1 + $300 until $7F
-; (wScreenState = 3) (E-0226, C1)
+; VaultMenu_Store_WriteWindowMap copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState =
+; 3) (E-0226, C1)
 ; record: 99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F
 BGMap1TileRun::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $a6, $cf, $a5, $a7, $df, $eb, $ad, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9 ; entry 0
@@ -409,7 +409,7 @@ BGMap1TileRun::
     db $b4, $b4, $b5
     db $7f ; end
 
-; VaultMenu_Store_WaitForVRAMAccess copies bytes from $4547 to vBGMap1 + $300 until $7F (any other
+; VaultMenu_Store_WriteWindowMap copies bytes from $4547 to vBGMap1 + $300 until $7F (any other
 ; wScreenState) (E-0226, C1)
 BGMap1TileRun_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $ea, $eb, $ad, $ed, $ee, $ef, $ab, $ac, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9 ; entry 0
@@ -715,7 +715,7 @@ VaultMenu_BlinkCursorBlinkEF_Bank1D::
     bit 7, a
     jr nz, .call_draw_blank_tile_c3_bank1_d2
     bit 0, a
-    jr nz, .call_vault_menu_bg_map_address_at_scroll
+    jr nz, .call_vault_menu_blink_cursor_blink_ef_bank1_d
     bit 1, a
     jp nz, .return_02
     call BlinkCursorBlinkEF_Bank1D
@@ -753,8 +753,8 @@ VaultMenu_BlinkCursorBlinkEF_Bank1D::
     inc a
     jr .set_vault_mode2
 
-.call_vault_menu_bg_map_address_at_scroll:
-    call VaultMenu_BGMapAddressAtScroll_Bank1D
+.call_vault_menu_blink_cursor_blink_ef_bank1_d:
+    call VaultMenu_BlinkCursorBlinkEF_Bank1D_MarkChosen
     ld a, $69
     call QueueSoundEffect
     ld a, $01
@@ -785,23 +785,23 @@ BlinkCursorBlinkEF_Bank1D::
 ; or read as the label there; was DrawCursorTileBB_Bank1D)
 DrawCursorTileBB_Bank1D::
     ld b, $bb
-    jr VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode
+    jr VaultMenu_DrawChoiceCursorTile
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1D)
 DrawBlankTileC3_Bank1D::
     ld b, $c3
-    jr VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode
+    jr VaultMenu_DrawChoiceCursorTile
 
 ; B = the chosen tile ($BC) for the vault choice. (C1, E-0357)
-VaultMenu_BGMapAddressAtScroll_Bank1D::
+VaultMenu_BlinkCursorBlinkEF_Bank1D_MarkChosen::
     ld b, $bc
 
 ; Writes tile B at vault choice wVaultMode's place. (C1, E-0357)
-VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode::
+VaultMenu_DrawChoiceCursorTile::
     ld a, [wVaultMode]
     add a
-    ld hl, VaultMenu_BGMapAddressAtScroll_Bank1D_Data
+    ld hl, VaultMenu_DrawChoiceCursorTile_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -818,7 +818,7 @@ VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode::
     ret
 
 ; data read by VaultMenu (6 bytes) (E-0347)
-VaultMenu_BGMapAddressAtScroll_Bank1D_Data::
+VaultMenu_DrawChoiceCursorTile_Data::
     db $61, $00, $a1, $00, $e1, $00
 
 ; draws rect $0088 (9 x 12) at vBGMap1 + $370 (SaveBGMapRectWithAttrs) and wScreenStep += 1 (E-0122)
@@ -853,10 +853,10 @@ DrawRect0140AtBGMap13E0AndStep::
 
 ; Storing, step 7: draws the 12 x 9 item window (with page brackets when two or more pages) and on
 ; the GBC clears its attributes. (C1, E-0357)
-VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
+VaultMenu_Store_DrawListWindow::
     ld a, $01
     ld [wArg1], a
-    call VaultMenu_Store_VaultMenu_CountItems
+    call VaultMenu_Store_CountListRows
     ld a, [wSavedSpriteSlotCount]
     cp $02
     jr c, .call_bg_map_address_at_scroll_bank1_d
@@ -864,7 +864,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld de, $0088
     add hl, de
     lb bc, $0c, $09
-    ld de, VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect
+    ld de, VaultMenu_Store_DrawListWindow_TileRect
     push hl
     call DrawRectSetTextCursorLoPlus21_Bank1D
     jr .check_is_cgb
@@ -874,7 +874,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld de, $0088
     add hl, de
     lb bc, $0c, $09
-    ld de, VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_2
+    ld de, VaultMenu_Store_DrawListWindow_TileRect_2
     push hl
     call DrawRectSetTextCursorLoPlus21_Bank1D
 
@@ -934,7 +934,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 9 tiles, one row per line
-VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect::
+VaultMenu_Store_DrawListWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c7, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -945,7 +945,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect::
     db $b6, $c3, $d8, $d9, $da, $db, $dc, $dd, $de, $aa, $ca, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $c5, $c3, $c3, $be, $c3, $c3, $c6, $b5 ; id 8
 
-VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_2::
+VaultMenu_Store_DrawListWindow_TileRect_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c7, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -958,10 +958,10 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_2::
 
 ; Storing, step 8: with two or more pages draws the page numbers (page / pages, a leading blank for
 ; one digit). (C1, E-0357)
-VaultMenu_Store_HLToDecimalDigits::
+VaultMenu_Store_DrawPageNumbers::
     xor a
     ld [wArg1], a
-    call VaultMenu_Store_VaultMenu_CountItems
+    call VaultMenu_Store_CountListRows
     call HLToDecimalDigits
     ld a, [wDigits + $1]
     and a
@@ -1101,25 +1101,27 @@ BlinkCursorSelectedRecord_Bank1D::
     cp $10
     jr c, .skip
     cp $18
-    jr c, VaultMenu_Store_ReadItemGridX
+    jr c, VaultMenu_Store_EraseItemCursor
     xor a
     ld [wSelectedRecord], a
 
 .skip:
     ld b, $bb
-    jr VaultMenu_Store_ReadItemGridX_ReadItemGridX
+    jr VaultMenu_Store_PutItemCursorTile
 
-; Draws the blank tile ($C3) at item cursor wItemGridX. (C1, E-0357)
-VaultMenu_Store_ReadItemGridX::
+; Draws the blank tile ($C3) at item cursor wItemGridX (VaultMenu_Store_PutItemCursorTile).
+; VaultMenu_Store_CountListRows calls it, and BlinkCursorSelectedRecord_Bank1D, which has no caller
+; in src/, jumps to it. Two unreached bytes follow ($06 $BC, ld b, $BC). (C1, E-0370)
+VaultMenu_Store_EraseItemCursor::
     ld b, $c3
-    jr VaultMenu_Store_ReadItemGridX_ReadItemGridX
+    jr VaultMenu_Store_PutItemCursorTile
     db $06, $bc
 
 ; Writes tile B at item cursor wItemGridX's place. (C1, E-0357)
-VaultMenu_Store_ReadItemGridX_ReadItemGridX::
+VaultMenu_Store_PutItemCursorTile::
     ld a, [wItemGridX]
     add a
-    ld hl, VaultMenu_Store_ReadItemGridX_Data
+    ld hl, VaultMenu_Store_PutItemCursorTile_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1136,7 +1138,7 @@ VaultMenu_Store_ReadItemGridX_ReadItemGridX::
     ret
 
 ; data read by VaultMenu (8 bytes) (E-0347)
-VaultMenu_Store_ReadItemGridX_Data::
+VaultMenu_Store_PutItemCursorTile_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
 ; Storing, step 10: draws the count beside the chosen item: in the bag the number of copies held, in
@@ -1313,7 +1315,7 @@ VaultMenu_Store_DrawCount_Data::
 
 ; Storing, step 11: the item cursor: Select (RunUnlessScreenStateIs3) back four steps; Right/Left
 ; turn the page; Up/Down move; A picks; B leaves with answer 2 and resumes the script. (C1, E-0357)
-VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
+VaultMenu_Store_ItemCursor::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
     jr nz, .call_run_unless_screen_state_is3
@@ -1441,7 +1443,7 @@ VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D
+    call VaultMenu_Store_ItemCursor_MarkChosen
     ld a, [wScreenState]
     cp $04
     jr z, .check_screen_step
@@ -1517,24 +1519,24 @@ BlinkCursorSelectedRecord_Bank1D_2::
 ; or read as the label there; was DrawCursorTileBB_Bank1D_2)
 DrawCursorTileBB_Bank1D_2::
     ld b, $bb
-    jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX
+    jr VaultMenu_Store_ItemCursor_DrawTile
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1D_2)
 DrawBlankTileC3_Bank1D_2::
     ld b, $c3
-    jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX
+    jr VaultMenu_Store_ItemCursor_DrawTile
 
 ; B = the chosen tile ($BC) for the item cursor. (C1, E-0357)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D::
+VaultMenu_Store_ItemCursor_MarkChosen::
     ld b, $bc
 
-; Writes tile B at item cursor wItemGridX's place
-; (VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data). (C1, E-0357)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
+; Writes tile B at item cursor wItemGridX's place (VaultMenu_Store_ItemCursor_DrawTile_Data). (C1,
+; E-0357)
+VaultMenu_Store_ItemCursor_DrawTile::
     ld a, [wItemGridX]
     add a
-    ld hl, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data
+    ld hl, VaultMenu_Store_ItemCursor_DrawTile_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1551,7 +1553,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
     ret
 
 ; data read by VaultMenu (8 bytes) (E-0347)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data::
+VaultMenu_Store_ItemCursor_DrawTile_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
 ; For the chosen bag item: 0 when storage has room for it (a slot with fewer than 99, or a free
@@ -1602,20 +1604,20 @@ VaultMenu_Store_CheckRoom::
 ; Storing, step 13: the quantity entry: B clears the box and returns to the item cursor (answer 2,
 ; step $0B); Right/Left move between the digits; Up/Down change the digit, at most the count
 ; available (wCountTens/wCountOnes); A goes on; the digit cursor blinks. (C1, E-0357)
-VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
+VaultMenu_Store_EnterQuantity::
     ld a, [wJoypadPressedRepeat]
     bit 1, a
     jr nz, .set_two_choice_cursor_to_02
     bit 4, a
-    jr nz, .call_vault_menu_store_bg_map_address_at
+    jr nz, .call_vault_menu_store_enter_quantity_show
     bit 5, a
-    jr nz, .call_vault_menu_store_bg_map_address_at2
+    jr nz, .call_vault_menu_store_enter_quantity_show2
     bit 6, a
     jp nz, .call_queue_sound_effect
     bit 7, a
     jp nz, .call_queue_sound_effect2
     bit 0, a
-    jp nz, .call_vault_menu_store_bg_map_address_at3
+    jp nz, .call_vault_menu_store_enter_quantity_show3
     call BlinkCursorBlinkCD_Bank1D
     ret
 
@@ -1639,8 +1641,8 @@ VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
-.call_vault_menu_store_bg_map_address_at:
-    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
+.call_vault_menu_store_enter_quantity_show:
+    call VaultMenu_Store_EnterQuantity_ShowDigit
     ld a, [wNumberEditPos]
     cp $01
     jr nz, .set_number_edit_pos
@@ -1657,8 +1659,8 @@ VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
     call QueueSoundEffect
     ret
 
-.call_vault_menu_store_bg_map_address_at2:
-    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
+.call_vault_menu_store_enter_quantity_show2:
+    call VaultMenu_Store_EnterQuantity_ShowDigit
     ld a, [wNumberEditPos]
     and a
     jr nz, .skip
@@ -1840,8 +1842,8 @@ VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
     call BlinkCursorBlinkCD_Bank1D
     ret
 
-.call_vault_menu_store_bg_map_address_at3:
-    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
+.call_vault_menu_store_enter_quantity_show3:
+    call VaultMenu_Store_EnterQuantity_ShowDigit
     ld a, [wNumberTens]
     and a
     jr nz, .call_queue_sound_effect3
@@ -1892,19 +1894,19 @@ VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
 BlinkCursorBlinkCD_Bank1D::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
+    jr c, VaultMenu_Store_EnterQuantity_ShowDigit
     ld a, [wCursorBlinkCD]
     inc a
     ld [wCursorBlinkCD], a
     cp $10
-    jr c, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
+    jr c, VaultMenu_Store_EnterQuantity_ShowDigit
     cp $18
-    jr c, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_Skip
+    jr c, VaultMenu_Store_EnterQuantity_ShowEditCursor
     xor a
     ld [wCursorBlinkCD], a
 
 ; Draws the edited quantity digit ($E0 + tens or ones) at its place. (C1, E-0357)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2::
+VaultMenu_Store_EnterQuantity_ShowDigit::
     ld a, [wNumberEditPos]
     and a
     jr nz, .read_number_ones
@@ -1917,17 +1919,17 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2::
 .skip:
     add $e0
     ld b, a
-    jr VaultMenu_Store_ReadNumberEditPos
+    jr VaultMenu_Store_EnterQuantity_DrawDigitTile
 
 ; B = the digit cursor tile ($CB). (C1, E-0357)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_Skip::
+VaultMenu_Store_EnterQuantity_ShowEditCursor::
     ld b, $cb
 
 ; Writes tile B at digit place wNumberEditPos. (C1, E-0357)
-VaultMenu_Store_ReadNumberEditPos::
+VaultMenu_Store_EnterQuantity_DrawDigitTile::
     ld a, [wNumberEditPos]
     add a
-    ld hl, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_2
+    ld hl, VaultMenu_Store_EnterQuantity_DrawDigitTile_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1943,8 +1945,8 @@ VaultMenu_Store_ReadNumberEditPos::
     ei
     ret
 
-; data read by VaultMenu_Store_ReadNumberEditPos (4 bytes) (E-0347)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_2::
+; data read by VaultMenu (4 bytes) (E-0347)
+VaultMenu_Store_EnterQuantity_DrawDigitTile_Data::
     db $61, $01, $62, $01
 
 ; writes wNumberTens and wNumberOnes as digit tiles ($E0 + n) at BGMapAddressAtScroll_Bank1D + $161
@@ -2060,7 +2062,7 @@ VaultMenu_Store_AddToStorage::
 ; Taking out the quantity of the chosen stored item: takes it from its slot (clearing the slot at 0)
 ; and puts the copies in the bag's free places; then answers 0 when the bag is full, 1 when storage
 ; is empty, otherwise 2. (C1, E-0357)
-VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
+VaultMenu_Store_MoveItems_TakeOut::
     ld hl, wItemStorage
     ld a, [wItemGridY]
     ld e, a
@@ -2126,7 +2128,7 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     jr c, .check_saved_sprite_clip_mode
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_Finish
 
 .check_saved_sprite_clip_mode:
     ld a, [wSavedSpriteClipMode]
@@ -2134,12 +2136,12 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     jr nz, .set_two_choice_cursor_to_02
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_Finish
 
 .set_two_choice_cursor_to_02:
     ld a, $02
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_Finish
 
 ; After storing: answers 0 when the bag is empty, 1 when storage holds 9,900 or more items in all,
 ; otherwise 2; then the next step. (C1, E-0357)
@@ -2163,7 +2165,7 @@ VaultMenu_Store_AfterStoring::
     jr c, .loop
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_Finish
 
 .skip:
     ld hl, wItemStorage
@@ -2192,7 +2194,7 @@ VaultMenu_Store_AfterStoring::
     jr c, .skip2
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jr VaultMenu_Store_AfterStoring_ClearTextCounter1
+    jr VaultMenu_Store_AfterStoring_Finish
 
 .skip2:
     ld hl, wItemStorage
@@ -2225,7 +2227,7 @@ VaultMenu_Store_AfterStoring::
 
 ; Clears the counters, toggles wCounterPtr0Lo, refreshes the lists (RunUnlessScreenStateIs3) and
 ; goes on. (C1, E-0357)
-VaultMenu_Store_AfterStoring_ClearTextCounter1::
+VaultMenu_Store_AfterStoring_Finish::
     xor a
     ld [wTextCounter1], a
     ld [wTextCounter3], a
@@ -2325,9 +2327,9 @@ DrawRect0147AndResetNumberEditPos::
 
 ; Draws the banked gold (six digits, leading blanks) in its 9 x 3 box at the screen's row 10, column
 ; 11. (C1, E-0357)
-VaultMenu_Store_Number24ToPackedBCD::
+VaultMenu_Store_DrawBankedGold::
     ld hl, wScreenList
-    ld de, VaultMenu_Store_Number24ToPackedBCD_Data
+    ld de, VaultMenu_Store_DrawBankedGold_Data
     ld c, $00
 
 .loop:
@@ -2469,16 +2471,16 @@ VaultMenu_Store_Number24ToPackedBCD::
     ret
 
 ; data read by VaultMenu (27 bytes) (E-0347)
-VaultMenu_Store_Number24ToPackedBCD_Data::
+VaultMenu_Store_DrawBankedGold_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
 ; Storing gold, step 20: draws the amount box with the three digits of the amount (wThreeDigits);
 ; for depositing the limit is the gold in hand, for withdrawing the banked gold (at most 99,900,
 ; shown as 999). (C1, E-0357)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
+VaultMenu_Store_DrawAmountBox::
     ld hl, wScreenList
-    ld de, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3
+    ld de, VaultMenu_Store_DrawAmountBox_Data
     ld c, $00
 
 .loop:
@@ -2578,8 +2580,8 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
     ld [wItemGrid], a
     jp .check_screen_step
 
-; data read by VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3 (16 bytes) (E-0347)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3::
+; data read by VaultMenu (16 bytes) (E-0347)
+VaultMenu_Store_DrawAmountBox_Data::
     db $b6, $bf, $c3, $c3, $c3, $e0, $e0, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
 ; Storing gold, step 21: the amount entry (VaultMenu_EnterThreeDigits); B goes on with answer 2; on
@@ -2878,7 +2880,7 @@ VaultMenu_EnterThreeDigits::
     jp nz, .call_queue_sound_effect4
     bit 5, a
     jp nz, .call_queue_sound_effect5
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     ret
 
 .call_queue_sound_effect:
@@ -2945,8 +2947,8 @@ VaultMenu_EnterThreeDigits::
 .set_three_digits:
     inc a
     ld [wThreeDigits], a
-    call VaultMenu_EnterThreeDigits_WriteThreeDigits
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_CapAtLimit
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -2961,15 +2963,15 @@ VaultMenu_EnterThreeDigits::
     jr c, .loop
     xor a
     ld [wThreeDigits + $1], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
 .loop:
     inc a
     ld [wThreeDigits + $1], a
-    call VaultMenu_EnterThreeDigits_WriteThreeDigits
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_CapAtLimit
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -3005,7 +3007,7 @@ VaultMenu_EnterThreeDigits::
     jr c, .set_three_digits2
     ld a, b
     ld [wThreeDigits + $2], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -3015,14 +3017,14 @@ VaultMenu_EnterThreeDigits::
     jr c, .set_three_digits2
     xor a
     ld [wThreeDigits + $2], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
 .set_three_digits2:
     inc a
     ld [wThreeDigits + $2], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -3053,7 +3055,7 @@ VaultMenu_EnterThreeDigits::
 .set_three_digits3:
     dec a
     ld [wThreeDigits], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -3088,14 +3090,14 @@ VaultMenu_EnterThreeDigits::
     jr nz, .set_three_digits4
     ld a, $09
     ld [wThreeDigits + $1], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
 .set_three_digits4:
     dec a
     ld [wThreeDigits + $1], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -3115,7 +3117,7 @@ VaultMenu_EnterThreeDigits::
     jr nz, .set_three_digits5
     ld a, [wItemGrid]
     ld [wThreeDigits + $2], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -3125,14 +3127,14 @@ VaultMenu_EnterThreeDigits::
     jr nz, .set_three_digits5
     ld a, $09
     ld [wThreeDigits + $2], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
 .set_three_digits5:
     dec a
     ld [wThreeDigits + $2], a
-    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_BlinkCursor
     xor a
     ret
 
@@ -3185,7 +3187,7 @@ VaultMenu_EnterThreeDigits::
 
 ; Blinks the amount cursor once the pad has been still for 20 frames: the digit for 16 counts, the
 ; cursor tile $CB for 8; drawn at digit place wNumberEditPos. (C1, E-0357)
-VaultMenu_EnterThreeDigits_WriteCursorBlinkCD::
+VaultMenu_EnterThreeDigits_BlinkCursor::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, .read_number_edit_pos
@@ -3214,7 +3216,7 @@ VaultMenu_EnterThreeDigits_WriteCursorBlinkCD::
 .read_number_edit_pos3:
     ld a, [wNumberEditPos]
     add a
-    ld hl, VaultMenu_EnterThreeDigits_WriteCursorBlinkCD_Data
+    ld hl, VaultMenu_EnterThreeDigits_BlinkCursor_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3231,7 +3233,7 @@ VaultMenu_EnterThreeDigits_WriteCursorBlinkCD::
     ret
 
 ; data read by VaultMenu (6 bytes) (E-0347)
-VaultMenu_EnterThreeDigits_WriteCursorBlinkCD_Data::
+VaultMenu_EnterThreeDigits_BlinkCursor_Data::
     db $6e, $00, $6f, $00, $70, $00
 
 ; writes the three bytes at wThreeDigits as digit tiles ($E0 + digit) at the BG map entry
@@ -3596,7 +3598,7 @@ TenTimesNumberTensPlusNumberOnes::
 
 ; Caps the three-digit amount at the limit digits (wCountTens, wCountOnes, wItemGrid) and redraws it
 ; when it was over. (C1, E-0357)
-VaultMenu_EnterThreeDigits_WriteThreeDigits::
+VaultMenu_EnterThreeDigits_CapAtLimit::
     ld a, [wCountTens]
     ld b, a
     ld a, [wThreeDigits]
@@ -3629,10 +3631,14 @@ VaultMenu_EnterThreeDigits_WriteThreeDigits::
 .return:
     ret
 
-; After a change to the item lists: counts the entries (the bag's, or storage's in state 3) into
-; rows of four, sets the row count, and pulls the item cursor back within the last row when it is
-; past the end. (C1, E-0357)
-VaultMenu_Store_VaultMenu_CountItems::
+; Recounts the list on screen in rows of four: in state 3 (storing) the bag's distinct items in
+; wItemGrid (CountNonZeroItemGridBytes), otherwise the stored items (wSavedSpriteClipMode;
+; VaultMenu_CountItems runs in both cases). Sets wSavedSpriteSlotCount and HL to the row count,
+; rounded up. When wItemGridY is on or past the last row and that row is not full, wMenuChoice =
+; that row's last column and a cursor past it is erased (unless wArg1 is non-zero) and pulled back
+; into wItemGridX; when the last row is full and wItemGridY is past it, wItemGridY steps back one
+; row; otherwise wMenuChoice = 3. (C1, E-0370)
+VaultMenu_Store_CountListRows::
     ld a, [wScreenState]
     cp $03
     jr z, .call_vault_menu_count_items
@@ -3690,7 +3696,7 @@ VaultMenu_Store_VaultMenu_CountItems::
     ld a, [wArg1]
     and a
     jr nz, .restore
-    call VaultMenu_Store_ReadItemGridX
+    call VaultMenu_Store_EraseItemCursor
 
 .restore:
     pop hl
@@ -3912,8 +3918,8 @@ DrawListEntriesCell5SpeciesSprite::
     ret
 
 ; with SRAM bank 0 enabled reads the record at wListEntries cell 5 and continues at
-; HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf (E-0126) (E-0344: the address in its
-; name dropped or read as the label there; was LoadListEntriesCell5RecordAndContinue)
+; CopyRecordNameToTextBuf0 (E-0126) (E-0344: the address in its name dropped or read as the label
+; there; was LoadListEntriesCell5RecordAndContinue)
 LoadListEntriesCell5RecordAndContinue::
     call SetArg5ToListEntriesCell5
     ld a, $0a
@@ -3921,20 +3927,26 @@ LoadListEntriesCell5RecordAndContinue::
     xor a
     ld [rRAMB], a
     ld a, [hl]
-    jr HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf
+    jr CopyRecordNameToTextBuf0
 
-; Copies the selected SRAM record's name into wTextBuf0 ($F0-terminated, at most 10 letters) for the
-; message (SRAM enabled around the read). (C1, E-0357)
-HibernateMenu_ChooseRecords_ReadSwapAnswer_CopyRecordNameToNameGlyphBuf::
+; Enables SRAM bank 0 (rRAMG2, rRAMB = 0) and copies the name (MON_NAME) of SRAM record
+; wSelectedRecord into wTextBuf0, at most 10 letters and $F0-terminated, by falling into
+; CopyRecordNameToTextBuf0. Far-called by HibernateMenu_ChooseRecords_ReadSwapAnswer when the swap
+; is answered yes. (C1, E-0370)
+CopySelectedRecordNameToTextBuf0::
     ld a, $0a
     ld [rRAMG2], a
     xor a
     ld [rRAMB], a
     ld a, [wSelectedRecord]
 
-; The name copy of HibernateMenu_ChooseRecords_ReadSwapAnswer_CopyRecordNameToNameGlyphBuf:
-; CopyRecordNameToNameGlyphBuf, then up to 10 bytes to wTextBuf0 and the $F0 end. (C1, E-0357)
-HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf::
+; A = SRAM record (SRAM enabled by the caller): copies its MON_NAME into wNameGlyphBuf
+; (CopyRecordNameToNameGlyphBuf, which writes the placeholder bytes $98, $98, $98, $90, $90 for a
+; record whose first name byte is $FF), stores $F0 at wNameGlyphBuf + $A, disables SRAM (rRAMG2 =
+; 0), then copies bytes from wNameGlyphBuf to wTextBuf0 up to the first $F0 or 10 bytes and ends
+; wTextBuf0 with $F0. Entered by CopySelectedRecordNameToTextBuf0 falling through and by a jump from
+; LoadListEntriesCell5RecordAndContinue (which has no direct caller). (C1, E-0370)
+CopyRecordNameToTextBuf0::
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $f0
@@ -5190,7 +5202,7 @@ SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_MarkMonstersOrEggs
     ld a, $ff
     ld [wMenuInputResult], a
     ret
@@ -5254,25 +5266,29 @@ BlinkCursorBlinkB8_Bank1D::
 ; or read as the label there; was DrawCursorTileBB_Bank1D_3)
 DrawCursorTileBB_Bank1D_3::
     ld b, $bb
-    jr SwapMonstersMenu_ReadMenuChoice
+    jr SwapMonstersMenu_DrawMonstersOrEggsTile
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1D_3)
 DrawBlankTileC3_Bank1D_3::
     ld b, $c3
-    jr SwapMonstersMenu_ReadMenuChoice
+    jr SwapMonstersMenu_DrawMonstersOrEggsTile
 
-; B = the chosen-cursor tile ($BC), then SwapMonstersMenu_ReadMenuChoice. (C1, E-0357)
-SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap::
+; B = the chosen tile $BC, then falls into SwapMonstersMenu_DrawMonstersOrEggsTile: marks the
+; confirmed choice when A is pressed on the Monsters / Eggs cursor
+; (SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D). (C1, E-0370)
+SwapMonstersMenu_MarkMonstersOrEggs::
     ld b, $bc
 
-; Writes tile B at choice wMenuChoice's place
-; (SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data), allowing for the scroll wrap. (C1,
-; E-0357)
-SwapMonstersMenu_ReadMenuChoice::
+; Writes tile B at the place of choice wMenuChoice (0 Monsters, 1 Eggs) of the Monsters / Eggs
+; cursor: the BG map offset from the 4-byte word table after it ($128, $168) is added to
+; BGMapAddressAtScroll_Bank1D_2, wrapped by StepBGMapAddressBackOnScrollWrap and written with
+; interrupts off after WaitForVRAMAccess. Shared by DrawCursorTileBB_Bank1D_3 ($BB),
+; DrawBlankTileC3_Bank1D_3 ($C3) and SwapMonstersMenu_MarkMonstersOrEggs ($BC). (C1, E-0370)
+SwapMonstersMenu_DrawMonstersOrEggsTile::
     ld a, [wMenuChoice]
     add a
-    ld hl, SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, SwapMonstersMenu_DrawMonstersOrEggsTile_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5290,7 +5306,7 @@ SwapMonstersMenu_ReadMenuChoice::
     ret
 
 ; data read by SwapMonstersMenu (4 bytes) (E-0347)
-SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data::
+SwapMonstersMenu_DrawMonstersOrEggsTile_Data::
     db $28, $01, $68, $01
 
 ; up/down moves wListCursor over wListCount entries ($FD), A selects ($FF, sound $69), B cancels
@@ -5453,27 +5469,27 @@ BlinkTwoChoiceCursor::
     xor a
     ld [wScreenCounter], a
 
-; writes tile $BB at the position of wTwoChoiceCursor (DrawTwoChoiceCursorConfirmed_Data offset from
+; writes tile $BB at the position of wTwoChoiceCursor (DrawTileAtTwoChoiceCursor_Data offset from
 ; BGMapAddressAtScroll_Bank1D, StepBGMapAddressBackOnScrollWrap) (E-0068)
 DrawTwoChoiceCursor::
     ld b, $bb
-    jr DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor
+    jr DrawTileAtTwoChoiceCursor
 
 ; writes tile $C3 at the position of wTwoChoiceCursor (E-0068)
 EraseTwoChoiceCursor::
     ld b, $c3
-    jr DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor
+    jr DrawTileAtTwoChoiceCursor
 
 ; writes tile $BC at the position of wTwoChoiceCursor (E-0068)
 DrawTwoChoiceCursorConfirmed::
     ld b, $bc
 
-; Writes tile B at yes/no place wTwoChoiceCursor (DrawTwoChoiceCursorConfirmed_Data), allowing for
-; the scroll wrap. (C1, E-0357)
-DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor::
+; Writes tile B at yes/no place wTwoChoiceCursor (DrawTileAtTwoChoiceCursor_Data), allowing for the
+; scroll wrap. (C1, E-0357)
+DrawTileAtTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     add a
-    ld hl, DrawTwoChoiceCursorConfirmed_Data
+    ld hl, DrawTileAtTwoChoiceCursor_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5490,8 +5506,8 @@ DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor::
     ei
     ret
 
-; data read by DrawTwoChoiceCursorConfirmed (4 bytes) (E-0347)
-DrawTwoChoiceCursorConfirmed_Data::
+; data read by DrawTileAtTwoChoiceCursor (4 bytes) (E-0347)
+DrawTileAtTwoChoiceCursor_Data::
     db $2f, $01, $6f, $01
 
 ; list cursor over wListCount entries: Up/Down move wListCursor with wrap, erase and redraw the
@@ -5501,21 +5517,21 @@ DrawTwoChoiceCursorConfirmed_Data::
 UpdateListCursorListCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_update_list_cursor_list_cursor_read_list
+    jr nz, .call_update_list_cursor_list_cursor_hide
     bit 7, a
-    jr nz, .call_update_list_cursor_list_cursor_read_list2
+    jr nz, .call_update_list_cursor_list_cursor_hide2
     ld a, [wJoypadPressed]
     bit 0, a
     jr nz, .call_queue_sound_effect
     bit 1, a
     jr nz, .set_menu_input_result_to_FE
-    call UpdateListCursorListCursor_WriteListCursorAux
+    call UpdateListCursorListCursor_Blink
     xor a
     ld [wMenuInputResult], a
     ret
 
-.call_update_list_cursor_list_cursor_read_list:
-    call UpdateListCursorListCursor_ReadListCursor_2
+.call_update_list_cursor_list_cursor_hide:
+    call UpdateListCursorListCursor_Hide
     ld a, [wListCursor]
     and a
     jr nz, .set_list_cursor
@@ -5529,8 +5545,8 @@ UpdateListCursorListCursor::
     ld [wListCursor], a
     jr .clear_list_cursor_aux
 
-.call_update_list_cursor_list_cursor_read_list2:
-    call UpdateListCursorListCursor_ReadListCursor_2
+.call_update_list_cursor_list_cursor_hide2:
+    call UpdateListCursorListCursor_Hide
     ld a, [wListCount]
     dec a
     ld b, a
@@ -5548,7 +5564,7 @@ UpdateListCursorListCursor::
 .clear_list_cursor_aux:
     xor a
     ld [wListCursorAux], a
-    call UpdateListCursorListCursor_ReadListCursor
+    call UpdateListCursorListCursor_Show
     ld a, $69
     call QueueSoundEffect
     ld a, $fd
@@ -5558,7 +5574,7 @@ UpdateListCursorListCursor::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap
+    call UpdateListCursorListCursor_Mark
     ld a, $ff
     ld [wMenuInputResult], a
     ret
@@ -5568,42 +5584,43 @@ UpdateListCursorListCursor::
     ld [wMenuInputResult], a
     ret
 
-; Blinks the list cursor once the pad has been still for 20 frames: the cursor tile $BB for 16
-; counts, a blank for 8. (C1, E-0357)
-UpdateListCursorListCursor_WriteListCursorAux::
+; Blinks the list cursor at row wListCursor: while wJoypadRepeatTimer is below $14 the cursor tile
+; $BB is drawn; from $14 on, wListCursorAux counts up each call, $00-$0F drawing $BB and $10-$17 the
+; blank $C3, and restarts at 0 after $17. (C1, E-0370)
+UpdateListCursorListCursor_Blink::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, UpdateListCursorListCursor_ReadListCursor
+    jr c, UpdateListCursorListCursor_Show
     ld a, [wListCursorAux]
     inc a
     ld [wListCursorAux], a
     cp $10
-    jr c, UpdateListCursorListCursor_ReadListCursor
+    jr c, UpdateListCursorListCursor_Show
     cp $18
-    jr c, UpdateListCursorListCursor_ReadListCursor_2
+    jr c, UpdateListCursorListCursor_Hide
     xor a
     ld [wListCursorAux], a
 
 ; B = the cursor tile ($BB), then the draw at row wListCursor. (C1, E-0357)
-UpdateListCursorListCursor_ReadListCursor::
+UpdateListCursorListCursor_Show::
     ld b, $bb
-    jr UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
+    jr UpdateListCursorListCursor_DrawTile
 
 ; B = the blank tile ($C3), then the draw at row wListCursor. (C1, E-0357)
-UpdateListCursorListCursor_ReadListCursor_2::
+UpdateListCursorListCursor_Hide::
     ld b, $c3
-    jr UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
+    jr UpdateListCursorListCursor_DrawTile
 
 ; B = the chosen-cursor tile ($BC), then the draw at row wListCursor. (C1, E-0357)
-UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap::
+UpdateListCursorListCursor_Mark::
     ld b, $bc
 
-; Writes tile B at list row wListCursor's place (UpdateListCursorListCursor_Data), allowing for the
-; scroll wrap. (C1, E-0357)
-UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor::
+; Writes tile B at list row wListCursor's place (UpdateListCursorListCursor_DrawTile_Data), allowing
+; for the scroll wrap. (C1, E-0357)
+UpdateListCursorListCursor_DrawTile::
     ld a, [wListCursor]
     add a
-    ld hl, UpdateListCursorListCursor_Data
+    ld hl, UpdateListCursorListCursor_DrawTile_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5621,7 +5638,7 @@ UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor::
     ret
 
 ; data read by UpdateListCursorListCursor (8 bytes) (E-0347)
-UpdateListCursorListCursor_Data::
+UpdateListCursorListCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00
 
 ; row wListCursor runs 0..wListLastRow and page wListPageIndex runs 0..wListPages - 1, both
@@ -5642,10 +5659,10 @@ UpdatePagedListCursor::
     jp nz, .call_update_paged_list_cursor_draw_blank_tile2
     ld a, [wJoypadPressed]
     bit 0, a
-    jp nz, .call_update_paged_list_cursor_bg_map_address
+    jp nz, .call_update_paged_list_cursor_draw_chosen
     bit 1, a
     jp nz, .set_menu_input_result_to_FE
-    call UpdatePagedListCursor_WriteListCursorAux
+    call UpdatePagedListCursor_Blink
     xor a
     ld [wMenuInputResult], a
     ret
@@ -5660,7 +5677,7 @@ UpdatePagedListCursor::
     ld a, [wListPages]
     cp $01
     jr nz, .clear_list_page_index
-    call UpdatePagedListCursor_WriteListCursorAux
+    call UpdatePagedListCursor_Blink
     xor a
     ld [wMenuInputResult], a
     ret
@@ -5686,7 +5703,7 @@ UpdatePagedListCursor::
     ld a, [wListPages]
     cp $01
     jr nz, .skip
-    call UpdatePagedListCursor_WriteListCursorAux
+    call UpdatePagedListCursor_Blink
     xor a
     ld [wMenuInputResult], a
     ret
@@ -5707,7 +5724,7 @@ UpdatePagedListCursor::
     ld a, [wListLastRow]
     and a
     jr nz, .set_list_cursor
-    call UpdatePagedListCursor_WriteListCursorAux
+    call UpdatePagedListCursor_Blink
     xor a
     ld [wMenuInputResult], a
     ret
@@ -5731,7 +5748,7 @@ UpdatePagedListCursor::
     ld a, [wListLastRow]
     and a
     jr nz, .clear_list_cursor
-    call UpdatePagedListCursor_WriteListCursorAux
+    call UpdatePagedListCursor_Blink
     xor a
     ld [wMenuInputResult], a
     ret
@@ -5755,8 +5772,8 @@ UpdatePagedListCursor::
     ld [wMenuInputResult], a
     ret
 
-.call_update_paged_list_cursor_bg_map_address:
-    call UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2
+.call_update_paged_list_cursor_draw_chosen:
+    call UpdatePagedListCursor_DrawChosenTile
     ld a, $69
     call QueueSoundEffect
     ld a, $ff
@@ -5770,7 +5787,7 @@ UpdatePagedListCursor::
 
 ; Blinks the paged-list cursor once the pad has been still for 20 frames: the cursor tile for 16
 ; counts, a blank for 8. (C1, E-0357)
-UpdatePagedListCursor_WriteListCursorAux::
+UpdatePagedListCursor_Blink::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, UpdatePagedListCursor_DrawCursorTile
@@ -5787,27 +5804,30 @@ UpdatePagedListCursor_WriteListCursorAux::
 ; B = the cursor tile ($BB), then the draw. (C1, E-0357)
 UpdatePagedListCursor_DrawCursorTile::
     ld b, $bb
-    jr UpdatePagedListCursor_ReadMenuInputResult
+    jr UpdatePagedListCursor_DrawTile
 
 ; B = the blank tile ($C3), then the draw. (C1, E-0357)
 UpdatePagedListCursor_DrawBlankTile::
     ld b, $c3
-    jr UpdatePagedListCursor_ReadMenuInputResult
+    jr UpdatePagedListCursor_DrawTile
 
 ; B = the chosen-cursor tile ($BC), then the draw. (C1, E-0357)
-UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2::
+UpdatePagedListCursor_DrawChosenTile::
     ld b, $bc
 
-; Writes tile B at row wListCursor of layout wMenuInputResult (a table of five rows per layout),
-; allowing for the scroll wrap. (C1, E-0357)
-UpdatePagedListCursor_ReadMenuInputResult::
+; Writes tile B at row wListCursor of layout wMenuInputResult: the BG map offset is the word at 10 *
+; layout + 2 * row of the 60-byte table after it (six layouts of five rows), added to
+; BGMapAddressAtScroll_Bank1D_2 with the scroll wrap and written after WaitForVRAMAccess. The
+; callers of UpdatePagedListCursor store the layout (0-5) in wMenuInputResult before the call, and
+; every draw happens before UpdatePagedListCursor overwrites it with its answer. (C1, E-0370)
+UpdatePagedListCursor_DrawTile::
     ld a, [wMenuInputResult]
     ld c, a
     add a
     add a
     add c
     add a
-    ld hl, UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_Data
+    ld hl, UpdatePagedListCursor_DrawTile_Data
     add_a_to_hl
     ld a, [wListCursor]
     add a
@@ -5828,7 +5848,7 @@ UpdatePagedListCursor_ReadMenuInputResult::
     ret
 
 ; data read by UpdatePagedListCursor (60 bytes) (E-0347)
-UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_Data::
+UpdatePagedListCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $28, $00, $68, $00, $a8, $00
     db $e8, $00, $28, $01, $a8, $00, $e8, $00, $28, $01, $68, $01, $a8, $01, $a6, $00
     db $e6, $00, $26, $01, $66, $01, $a6, $01, $a4, $00, $e4, $00, $24, $01, $64, $01
@@ -6200,12 +6220,12 @@ DrawSpeciesMetaSpriteAtScrollOffset::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
-; Sets the sprite attribute bits from wArg6 and draws the meta-sprite
-; (DrawSpritePart9000At88_28_SetAttrs_ReadArg3). (C1, E-0357)
+; Sets the sprite attribute bits from wArg6 and draws the meta-sprite (DrawMetaSpriteSetFromArgs).
+; (C1, E-0357)
 DrawThreeMetaSpritePartsAtGridCursor_SetAttrs::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
-    jr DrawSpritePart9000At88_28_SetAttrs_ReadArg3
+    jr DrawMetaSpriteSetFromArgs
 
 ; C = 0, then falls into the sprite part draw (DrawThreeMetaSpritePartsAtGridCursor_SetAttrs body)
 ; (E-0122)
@@ -6213,8 +6233,7 @@ DrawMetaSpritePartC0::
     ld c, $00
 
 ; Sets the attribute bits from wArg6; with C = 0 the frame alternates every 16 frames
-; (wFrameCounterLo bit 4), otherwise frame 0; then draws
-; (DrawSpritePart9000At88_28_SetAttrs_ReadArg3). (C1, E-0357)
+; (wFrameCounterLo bit 4), otherwise frame 0; then draws (DrawMetaSpriteSetFromArgs). (C1, E-0357)
 DrawSpritePart9000At88_28_SetAttrs::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
@@ -6227,7 +6246,7 @@ DrawSpritePart9000At88_28_SetAttrs::
     and $01
     add c
     ldh [hSpriteSubIndex], a
-    jr DrawSpritePart9000At88_28_SetAttrs_ReadArg3
+    jr DrawMetaSpriteSetFromArgs
 
 .clear_sprite_sub_index:
     xor a
@@ -6235,7 +6254,7 @@ DrawSpritePart9000At88_28_SetAttrs::
 
 ; Draws meta-sprite set wArg1 (bit 7 chooses bank $26 over $25; a non-zero wArg2 chooses bank $27)
 ; with tile offset wArg3 at screen position (wArg4, wArg5) plus the scroll. (C1, E-0357)
-DrawSpritePart9000At88_28_SetAttrs_ReadArg3::
+DrawMetaSpriteSetFromArgs::
     ld a, [wArg3]
     ldh [hSpriteTileOffset], a
     ld a, [wArg4]
@@ -6367,11 +6386,17 @@ MarkPartyMembersInRecordListPage_Data1::
 MarkPartyMembersInRecordListPage_Data2::
     db $20, $00, $60, $00, $a0, $00, $e0, $00, $20, $01
 
-; Swap menu, state 3: sets the text window, then by wGridCursorX: 0 lists the party (fewer than 2
-; goes to step $10); 1 lists the farm records that are not eggs (none returns to state 1, step 3),
-; with a full party (3 or more) going to step $1E; 2 and 3 take their own lists; starts the script.
-; (C1, E-0357)
-SwapMonstersMenu_ListParty_ListPartyRecordsWithState2ToListEntries::
+; Swap menu, state 3 (far-called by SwapMonstersMenu_ListParty): sets the text window to vTiles1
+; with rows $02 and width $12, then by the chosen option wGridCursorX: 0 (Drop off) lists the party
+; (ListPartyRecordsWithState2ToListEntries), clears wListPageIndex and goes to state 4
+; (SwapMonstersMenu_MoveRecords), at step $10 with wTwoChoiceCursor 0 when fewer than two are
+; listed, else step 0 with wTwoChoiceCursor 1; 1 (Pick up) lists the farm records that are not eggs
+; (ListRecordsState1NotEggs): none returns to state 1, step 3 with wTwoChoiceCursor and
+; wScreenSubStep 0, otherwise state 5 (SwapMonstersMenu_ChooseFromFarm) at step $1E with
+; wTwoChoiceCursor 1 when wPartyCount is 3 or more, else step 0 with wTwoChoiceCursor 2; 2 (Check)
+; goes to state 6 and 3 (Release) to state 7 without listing anything. Every case starts the script
+; (wScriptStartRequest = $80). (C1, E-0370)
+SwapMonstersMenu_ListParty_StartOption::
     ld hl, wTextWindowTileLo
     xor a
     ld [hli], a
@@ -6581,8 +6606,8 @@ CopyTileBytesToVRAM_Bank1D::
     ret
 
 ; HL = CloseHibernateMenu_RestoreGlyphs_Data, wArg1/2 = $9C/0, DE = vBGMap1, wGlyphListPos = 0, then
-; continues at LoadTileListSixPerFrame_Loop (E-0126) (E-0344: the address in its name dropped or
-; read as the label there; was SetupTileMapAtBGMap1)
+; continues at CopyListedTilesSixPerFrame (E-0126) (E-0344: the address in its name dropped or read
+; as the label there; was SetupTileMapAtBGMap1)
 SetupTileMapAtBGMap1::
     ld hl, CloseHibernateMenu_RestoreGlyphs_Data
     ld a, $9c
@@ -6592,7 +6617,7 @@ SetupTileMapAtBGMap1::
     ld de, vBGMap1
     xor a
     ld [wGlyphListPos], a
-    jr LoadTileListSixPerFrame_Loop
+    jr CopyListedTilesSixPerFrame
 
 ; copies tiles listed in LoadTileListSixPerFrame_Data to vBGMap1 + $200 onward six per call; at the
 ; $FF end resets the counters and wScreenStep += 1 (E-0127) (E-0344: the address in its name dropped
@@ -6607,10 +6632,14 @@ LoadTileListSixPerFrame::
     xor a
     ld [wGlyphListPos], a
 
-; Copies up to six tiles a call from the list (the pointers at wGlyphListStart) to the destination
-; wArg1:wArg2 + 16 x the entry; at the $FF end clears the counters and goes to the next step. (C1,
-; E-0357)
-LoadTileListSixPerFrame_Loop::
+; HL = list of VRAM tile addresses ending in $FF (the low byte is tested), wArg1/wArg2 = destination
+; base (high, low): copies the 16-byte tile at list entry wGlyphListStart to base + 16 *
+; wGlyphListStart (CopyTileBytesToVRAM_Bank1D), advancing wGlyphListStart, at most six per call
+; (counted in wGlyphListPos); at the $FF end it clears both counters and increments wScreenStep.
+; Entered by SetupTileMapAtBGMap1 (CloseHibernateMenu_RestoreGlyphs_Data to $9C00) and
+; LoadTileListSixPerFrame (LoadTileListSixPerFrame_Data to $9E00); the DE they set is not used. (C1,
+; E-0370)
+CopyListedTilesSixPerFrame::
     push hl
     push de
     ld a, [wGlyphListStart]
@@ -6651,7 +6680,7 @@ LoadTileListSixPerFrame_Loop::
     inc a
     ld [wGlyphListPos], a
     cp $06
-    jr c, LoadTileListSixPerFrame_Loop
+    jr c, CopyListedTilesSixPerFrame
     ret
 
 .restore:
@@ -6875,10 +6904,20 @@ PackRecordFieldsToBank1Slot::
     ld [rRAMG2], a
     ld [rRAMB], a
 
-; Packs text field wPackFieldIndex of SRAM record wArg1 into the compact slot in SRAM bank wArg2:
-; each letter goes across, the marks $8D and $8E become 1 and 2 against the letter before
-; (wPackFields), and $F0 ends the field. (C1, E-0357)
-PackRecordFieldsToBank1Slot_Skip::
+; Packs name field wPackFieldIndex (0-5) of SRAM record wArg1 into the compact slot (address in
+; wArg3/wArg4, SRAM bank wArg2): clears the five wPackFields bytes, then reads the field at record
+; offset PackRecordFieldsToBank1Slot_PackName_Data[field] (MON_NAME, MON_MASTER_NAME,
+; MON_PARENT1_MASTER, MON_PARENT2_MASTER, MON_PARENT1_NAME, MON_PARENT2_NAME) and writes each letter
+; from slot offset 3 + 5 * field on, clearing its wPackFields entry; a mark byte $8D or $8E sets the
+; previous letter's wPackFields entry to 1 or 2 instead; $F0 ends the field and is stored only when
+; fewer than five letters were written. Otherwise reading stops once five letters and ten bytes have
+; been taken. Then jumps to the field's mark step (PackRecordFieldsToBank1Slot_NameMarks,
+; PackRecordFieldsToBank1Slot_MasterNameMarks, PackRecordFieldsToBank1Slot_Parent1MasterMarks,
+; PackRecordFieldsToBank1Slot_Parent2MasterMarks, PackRecordFieldsToBank1Slot_Parent1NameMarks or
+; PackRecordFieldsToBank1Slot_Parent2NameMarks for fields 0-5). Entered from
+; PackRecordFieldsToBank1Slot (whose cleared wPackWork starts it at field 0) and from the mark steps
+; of fields 0-4. (C1, E-0370)
+PackRecordFieldsToBank1Slot_PackName::
     ld hl, wPackFields
     ld c, $00
 
@@ -6902,7 +6941,7 @@ PackRecordFieldsToBank1Slot_Skip::
     call EnableSRAMBank0
     push hl
     ld a, [wPackFieldIndex]
-    ld hl, PackRecordFieldsToBank1Slot_Data
+    ld hl, PackRecordFieldsToBank1Slot_PackName_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -7001,24 +7040,26 @@ PackRecordFieldsToBank1Slot_Skip::
 .check_pack_field_index:
     ld a, [wPackFieldIndex]
     and a
-    jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1
+    jp z, PackRecordFieldsToBank1Slot_NameMarks
     cp $01
-    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg12
+    jp z, PackRecordFieldsToBank1Slot_MasterNameMarks
     cp $02
-    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg13
+    jp z, PackRecordFieldsToBank1Slot_Parent1MasterMarks
     cp $03
-    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg14
+    jp z, PackRecordFieldsToBank1Slot_Parent2MasterMarks
     cp $04
-    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg15
-    jp PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg16
+    jp z, PackRecordFieldsToBank1Slot_Parent1NameMarks
+    jp PackRecordFieldsToBank1Slot_Parent2NameMarks
 
 ; data read by PackRecordFieldsToBank1Slot (6 bytes) (E-0347)
-PackRecordFieldsToBank1Slot_Data::
+PackRecordFieldsToBank1Slot_PackName_Data::
     db $01, $0f, $1e, $29, $8e, $99
 
-; Field 0's marks: packs four wPackFields entries into one byte at slot offset $21 and wPackValue's
-; two bits into the top of offset $27; next field. (C1, E-0357)
-PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
+; Mark step of field 0 (MON_NAME): stores Pack2BitFieldsFromPackFields (the marks of letters 1-4) at
+; slot offset $21 and the fifth letter's mark (wPackValue & 3) as bits 7-6 of offset $27,
+; overwriting that byte (fields 1-3 OR theirs in below it); disables SRAM, increments
+; wPackFieldIndex and goes back to PackRecordFieldsToBank1Slot_PackName. (C1, E-0370)
+PackRecordFieldsToBank1Slot_NameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $21
     add_a_to_hl
@@ -7045,10 +7086,15 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
     ld a, [wPackFieldIndex]
     inc a
     ld [wPackFieldIndex], a
-    jp PackRecordFieldsToBank1Slot_Skip
+    jp PackRecordFieldsToBank1Slot_PackName
 
-; Field 1's marks: packs into slot offset $22 and bits 4-5 of offset $27; next field. (C1, E-0357)
-PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg12::
+; Mark step of field 1 (MON_MASTER_NAME), jumped to from PackRecordFieldsToBank1Slot_PackName when
+; wPackFieldIndex is 1: with rRAMB = wArg2 stores Pack2BitFieldsFromPackFields (the marks of letters
+; 1-4) at slot offset $22 (slot address wArg3/wArg4, through SRAMRecordAddressOfArg1) and ORs the
+; fifth letter's mark (wPackValue & 3) into bits 5-4 of offset $27. Then disables SRAM (rRAMG2 = 0,
+; rRAMB = 0), increments wPackFieldIndex and goes back to PackRecordFieldsToBank1Slot_PackName for
+; field 2. (C1, E-0370)
+PackRecordFieldsToBank1Slot_MasterNameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $22
     add_a_to_hl
@@ -7076,10 +7122,10 @@ PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg12::
     ld a, [wPackFieldIndex]
     inc a
     ld [wPackFieldIndex], a
-    jp PackRecordFieldsToBank1Slot_Skip
+    jp PackRecordFieldsToBank1Slot_PackName
 
 ; Field 2's marks: packs into slot offset $23 and bits 2-3 of offset $27; next field. (C1, E-0357)
-PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg13::
+PackRecordFieldsToBank1Slot_Parent1MasterMarks::
     call SRAMRecordAddressOfArg1
     ld a, $23
     add_a_to_hl
@@ -7108,10 +7154,10 @@ PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg13::
     ld a, [wPackFieldIndex]
     inc a
     ld [wPackFieldIndex], a
-    jp PackRecordFieldsToBank1Slot_Skip
+    jp PackRecordFieldsToBank1Slot_PackName
 
 ; Field 3's marks: packs into slot offset $24 and bits 0-1 of offset $27; next field. (C1, E-0357)
-PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg14::
+PackRecordFieldsToBank1Slot_Parent2MasterMarks::
     call SRAMRecordAddressOfArg1
     ld a, $24
     add_a_to_hl
@@ -7139,11 +7185,11 @@ PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg14::
     ld a, [wPackFieldIndex]
     inc a
     ld [wPackFieldIndex], a
-    jp PackRecordFieldsToBank1Slot_Skip
+    jp PackRecordFieldsToBank1Slot_PackName
 
 ; Field 4's marks: packs into slot offset $25 and the top two bits of offset $28; next field. (C1,
 ; E-0357)
-PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg15::
+PackRecordFieldsToBank1Slot_Parent1NameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $25
     add_a_to_hl
@@ -7171,12 +7217,11 @@ PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg15::
     ld a, [wPackFieldIndex]
     inc a
     ld [wPackFieldIndex], a
-    jp PackRecordFieldsToBank1Slot_Skip
+    jp PackRecordFieldsToBank1Slot_PackName
 
 ; Field 5's marks: packs into slot offset $26 and bits 4-5 of offset $28; then clears the field
-; number and packs the two-bit values (Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1).
-; (C1, E-0357)
-PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg16::
+; number and packs the two-bit values (PackRecordFieldsToBank1Slot_PackOtherFields). (C1, E-0357)
+PackRecordFieldsToBank1Slot_Parent2NameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $26
     add_a_to_hl
@@ -7202,7 +7247,7 @@ PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg16::
     ld [rRAMG2], a
     ld [rRAMB], a
     ld [wPackFieldIndex], a
-    jp Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1
+    jp PackRecordFieldsToBank1Slot_PackOtherFields
 
 ; B = (wPackFields & 3) << 6 | (wPackFields + $1 & 3) << 4 | (wPackFields + $2 & 3) << 2 |
 ; (wPackFields + $3 & 3), the opposite of unpacking a byte into four 2-bit fields (E-0104)
@@ -7230,10 +7275,17 @@ Pack2BitFieldsFromPackFields::
     ld b, a
     ret
 
-; Packs the two-bit values from SRAM record byte $73 on into the compact slot from offset $28: two
-; into its low bits, then four to a byte for six bytes, and one in the top bits; then the record
-; fields from offset $1A on. (C1, E-0357)
-Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1::
+; Jumped to from field 5's mark step: packs the rest of SRAM record wArg1 into the compact slot
+; (wArg3/wArg4, SRAM bank wArg2), switching rRAMB between 0 (record) and wArg2 (slot) per byte: the
+; 27 two-bit MON_RESISTANCES into offsets $28 (bits 3-0, ORed in) to $2F (bits 7-6); bit 0 of the
+; high bytes of MON_PARENT1_SPECIES and MON_PARENT2_SPECIES into bits 1 and 0 of $2F and their low
+; bytes into $30 and $31; MON_MASTER_ID, MON_UNUSED_28 and MON_UNUSED_33 into $32-$34; the 34 bytes
+; from MON_SKILLS into $35-$56; the eight words MON_HP to MON_INT as low bytes with a byte of their
+; 2-bit high parts after each group of four ($57-$60); MON_WLD's low byte at $61 and its high bits
+; as bit 7 of $62 and $63, which hold MON_LEVEL and MON_MAX_LEVEL in bits 6-0; MON_EXP at $64-$66;
+; MON_PERSONALITY at $67-$6A; MON_PLUS, MON_PARENT1_PLUS, MON_PARENT2_PLUS and MON_ITEM at $6B-$6E.
+; Ends with SRAM disabled, wPackFieldIndex and wPackWork 0 and wArg5 = $FF. (C1, E-0370)
+PackRecordFieldsToBank1Slot_PackOtherFields::
     call SRAMRecordAddressOfArg1
     ld a, $28
     add_a_to_hl
@@ -8023,7 +8075,7 @@ UnpackRecordFromBank1Slot::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    jp CopyTenBytesThenSelectSRAMBank0_CallSRAMRecordAddressOfArg1
+    jp UnpackRecordFromBank1Slot_UnpackOtherFields
 
 ; copies 10 bytes from HL to DE, selecting SRAM bank 0 (rRAMB = 0) after each byte is read; HL and
 ; DE advance (E-0106)
@@ -8045,10 +8097,16 @@ CopyTenBytesThenSelectSRAMBank0::
     jr c, .loop
     ret
 
-; Unpacks the compact slot back into the record: the two-bit values from slot offset $28 into record
-; bytes from $73, one per byte (the reverse of
-; Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1), and onward. (C1, E-0357)
-CopyTenBytesThenSelectSRAMBank0_CallSRAMRecordAddressOfArg1::
+; Jumped to from UnpackRecordFromBank1Slot after the six names: the reverse of
+; PackRecordFieldsToBank1Slot_PackOtherFields, from the compact slot (wArg3/wArg4, SRAM bank wArg2)
+; back into SRAM record wArg1: offsets $28-$2F to MON_RESISTANCES one value per byte; $30/$31 to the
+; low bytes of MON_PARENT1_SPECIES/MON_PARENT2_SPECIES with bits 1/0 of $2F as their high bytes (a
+; high bit of 1 with a low byte of $FF is restored as $FF, so a $FFFF word survives); $32-$34 to
+; MON_MASTER_ID, MON_UNUSED_28 and MON_UNUSED_33; $35-$56 to the 34 bytes from MON_SKILLS; the eight
+; words MON_HP to MON_INT (UnpackByteAtHLTo2BitFieldsArg5 gives their high bytes); then MON_WLD,
+; MON_LEVEL, MON_MAX_LEVEL, MON_EXP, MON_PERSONALITY, MON_PLUS, MON_PARENT1_PLUS, MON_PARENT2_PLUS
+; and MON_ITEM. Ends with SRAM disabled, wPackWork 0 and wArg5 = $FF. (C1, E-0370)
+UnpackRecordFromBank1Slot_UnpackOtherFields::
     call SRAMRecordAddressOfArg1
     call EnableSRAMBank0
     ld a, $28

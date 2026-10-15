@@ -4,13 +4,15 @@
 SECTION "Bank 19", ROMX[$4000], BANK[$19]
     db $19
 
-; Battle start: keeps the battle kind, clears the effect and battle variables and saves the data
-; bank; resets the battle arrays (GameMode4_Init_FillBytes_2); outside link battles clears 512 work
-; bytes, copies the party's records into the battler records (GameMode4_Init_ReadBattlePartyCount),
-; loads the foes (GameMode4_Init_LoadMonsterAndSpeciesForListEntryC) and copies foe slots 4-6's join
-; classes; then the battle slots, the screen, the pictures, the music and the slot marks. (C1,
-; E-0357)
-GameMode4_Init_FillBytes::
+; Battle start (GameMode4_Init far-calls it): keeps wBattleKind while clearing $303 bytes from
+; wEffectAnimState, 8 from wBattlePhase and 8 from wListPageSize, saves wDataBank in wDataBankSave
+; and resets the battle arrays (GameMode4_Init_ResetBattleArrays); outside link battles clears 512
+; bytes of wWorkBuf, copies the party's records into the battler records
+; (GameMode4_Init_CopyPartyToBattlers), loads the foes (GameMode4_Init_LoadFoes) and copies foe
+; slots 4-6's BATTLER_JOIN_CLASS to wFoeJoinClass1-3; then the battle slots
+; (GameMode4_Init_LoadBattleSlots), the screen, the foe pictures (GameMode4_Init_LoadFoePictures),
+; the music (GameMode4_Init_PlayBattleMusic) and the slot marks. (C1, E-0370)
+GameMode4_Init_SetUpBattle::
     ld a, [wBattleKind]
     push af
     ld hl, wEffectAnimState
@@ -29,7 +31,7 @@ GameMode4_Init_FillBytes::
     call FillBytes
     pop af
     ld [wBattleKind], a
-    call GameMode4_Init_FillBytes_2
+    call GameMode4_Init_ResetBattleArrays
     ld a, [wLinkMode]
     or a
     jr nz, .call_game_mode4_init_load_battle_slots
@@ -41,8 +43,8 @@ GameMode4_Init_FillBytes::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    call GameMode4_Init_ReadBattlePartyCount
-    call GameMode4_Init_LoadMonsterAndSpeciesForListEntryC
+    call GameMode4_Init_CopyPartyToBattlers
+    call GameMode4_Init_LoadFoes
     ld a, [wBattlerRecordSlot4 + BATTLER_JOIN_CLASS]
     ld [wFoeJoinClass1], a
     ld a, [wBattlerRecordSlot5 + BATTLER_JOIN_CLASS]
@@ -56,8 +58,8 @@ GameMode4_Init_FillBytes::
 .call_game_mode4_init_load_battle_slots:
     call GameMode4_Init_LoadBattleSlots
     call GameMode4_Init_BuildBattleScreen
-    call GameMode4_Init_LoadMonsterPicture
-    call GameMode4_Init_QueueMusic
+    call GameMode4_Init_LoadFoePictures
+    call GameMode4_Init_PlayBattleMusic
     call GameMode4_Init_SetSlotMarks
     ret
 
@@ -66,7 +68,7 @@ GameMode4_Init_FillBytes::
 ; bytes $FF; side control $80; battle meter 10; turn 0, scene 0. Outside link battles takes the
 ; party count, the foe count (wEncounterKind + 1), the setup byte and the text speed; in link
 ; battles text speed 3 and the counts from the battler records by link role. (C1, E-0357)
-GameMode4_Init_FillBytes_2::
+GameMode4_Init_ResetBattleArrays::
     ld a, [wBattleKind]
     cp $04
     jr z, .set_command_menu_state_to_01
@@ -221,49 +223,50 @@ GameMode4_Init_BuildBattleScreen::
 
 ; Loads the foes' pictures (the link follower's foes are slots 0-2, otherwise 4-6) into vTiles2 +
 ; $140, $380 and $5C0 with palettes 1, 3 and 5, as many as there are foes. (C1, E-0357)
-GameMode4_Init_LoadMonsterPicture::
+GameMode4_Init_LoadFoePictures::
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
-    jr z, .call_game_mode4_init_load_monster_picture_2
+    jr z, .call_game_mode4_init_load_foe_pictures_load
     ld de, wBattlerRecords + BATTLER_SPECIES
 
-.call_game_mode4_init_load_monster_picture_2:
+.call_game_mode4_init_load_foe_pictures_load:
     ld hl, vTiles2 + $140
     ld c, $01
-    call GameMode4_Init_LoadMonsterPicture_2
+    call GameMode4_Init_LoadFoePictures_LoadOne
     ld a, [wBattleFoeCount]
     cp $01
     jr z, .return
     ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
-    jr z, .call_game_mode4_init_load_monster_picture_22
+    jr z, .call_game_mode4_init_load_foe_pictures_load2
     ld de, wBattlerRecordSlot1 + BATTLER_SPECIES
 
-.call_game_mode4_init_load_monster_picture_22:
+.call_game_mode4_init_load_foe_pictures_load2:
     ld hl, vTiles2 + $380
     ld c, $03
-    call GameMode4_Init_LoadMonsterPicture_2
+    call GameMode4_Init_LoadFoePictures_LoadOne
     ld a, [wBattleFoeCount]
     cp $02
     jr z, .return
     ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
-    jr z, .call_game_mode4_init_load_monster_picture_23
+    jr z, .call_game_mode4_init_load_foe_pictures_load3
     ld de, wBattlerRecordSlot2 + BATTLER_SPECIES
 
-.call_game_mode4_init_load_monster_picture_23:
+.call_game_mode4_init_load_foe_pictures_load3:
     ld hl, vTiles2 + $5c0
     ld c, $05
-    call GameMode4_Init_LoadMonsterPicture_2
+    call GameMode4_Init_LoadFoePictures_LoadOne
 
 .return:
     ret
 
-; Loads the picture of the monster id at DE (LoadMonsterPicture). (C1, E-0357)
-GameMode4_Init_LoadMonsterPicture_2::
+; DE = address of a BATTLER_SPECIES word, HL = VRAM destination, C = palette slot: loads that
+; monster's picture (LoadMonsterPicture with DE = the id). (C1, E-0370)
+GameMode4_Init_LoadFoePictures_LoadOne::
     ld a, [de]
     push af
     inc de
@@ -289,7 +292,7 @@ GameMode4_Init_LoadBattleSlots::
     ld b, a
 
 .loop:
-    call GameMode4_Init_LoadBattleSlots_LoadBattleSlotFromBattlerRecord
+    call GameMode4_Init_LoadBattleSlots_LoadSlot
     inc c
     dec b
     jr nz, .loop
@@ -303,7 +306,7 @@ GameMode4_Init_LoadBattleSlots::
     ld b, a
 
 .loop2:
-    call GameMode4_Init_LoadBattleSlots_LoadBattleSlotFromBattlerRecord
+    call GameMode4_Init_LoadBattleSlots_LoadSlot
     inc c
     dec b
     jr nz, .loop2
@@ -903,7 +906,7 @@ ScaleHLToEightTenths_Bank19::
     ret
 
 ; Battle music: $0F for battle kinds 0 and 1, otherwise $13. (C1, E-0357)
-GameMode4_Init_QueueMusic::
+GameMode4_Init_PlayBattleMusic::
     ld a, [wBattleKind]
     or a
     jr z, .skip
@@ -921,9 +924,10 @@ GameMode4_Init_QueueMusic::
     call QueueMusic
     ret
 
-; Copies the fields of each party member's SRAM record into its battler record
-; (GameMode4_Init_SRAMRecordAddressMapped). (C1, E-0357)
-GameMode4_Init_ReadBattlePartyCount::
+; With SRAM enabled by the caller, copies each of the wBattlePartyCount party members' SRAM records
+; into consecutive $4E-byte battler records from wBattlerRecords
+; (GameMode4_Init_CopyPartyToBattlers_Member). (C1, E-0370)
+GameMode4_Init_CopyPartyToBattlers::
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
@@ -931,16 +935,20 @@ GameMode4_Init_ReadBattlePartyCount::
 
 .loop:
     push bc
-    call GameMode4_Init_SRAMRecordAddressMapped
+    call GameMode4_Init_CopyPartyToBattlers_Member
     pop bc
     inc c
     dec b
     jr nz, .loop
     ret
 
-; Copies the battle fields of party member C's SRAM record (name, stats, skills and the rest) into
-; the battler record at DE. (C1, E-0357)
-GameMode4_Init_SRAMRecordAddressMapped::
+; Copies party member C's SRAM record (SRAMRecordAddressMapped) into the battler record at DE in
+; battler order: MON_NAME, MON_SPECIES, MON_FAMILY, MON_SEX, MON_SKILLS, MON_STATUS, MON_LEVEL,
+; MON_EXP through MON_WLD, MON_PERSONALITY, MON_RESISTANCES and MON_ITEM; for an item value $0D-$13
+; (the capes) it then raises listed BATTLER_RESISTANCES bytes by one, up to 3
+; (ApplyIncrementOffsetRows19ForA0DTo13), and the last byte (BATTLER_JOIN_CLASS) is $FF. DE ends
+; past the record. (C1, E-0370)
+GameMode4_Init_CopyPartyToBattlers_Member::
     ld a, c
     ld c, MON_NAME
     call SRAMRecordAddressMapped
@@ -1138,9 +1146,12 @@ IncrementOffsetRows_19::
     db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-; Battle end, step 3: reloads the monster record of foe slot 4 or 5 (by wDisplaySlot) into its
-; battler record, keeping its byte $0D. (C1, E-0357)
-BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
+; Reloads the battler record of foe slot 4 (wDisplaySlot 4) or 5 (wDisplaySlot 5) from its
+; wEncounterMonsters entry (LoadMonsterAndSpeciesForListEntryC with C = 0 or 1), keeping the
+; record's byte $0D (after BATTLER_FAMILY, copied from MON_SEX). BattleEnd_Step3_ReplaceSpecialFoe
+; reaches it through BattleEnd_Step3_ReplaceSpecialFoe_SetMonster after writing the next form's
+; monster id into that entry. (C1, E-0370)
+BattleEnd_Step3_ReloadFoeBattler::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
     and $03
@@ -1176,7 +1187,7 @@ BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
 ; Loads the foes: in battle kind 5 or an even kind from their monster records
 ; (LoadMonsterAndSpeciesForListEntryC); in odd kinds other than 5 builds each from its species
 ; (GameMode4_Init_BuildFoeRecord), $4E bytes apart. (C1, E-0357)
-GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
+GameMode4_Init_LoadFoes::
     ld a, [wBattleFoeCount]
     ld b, a
     ld c, $00
@@ -1458,13 +1469,13 @@ ScaleStatAndCapByBattleKind::
     ld a, [wBattleIntroFlag]
     cp $01
     ld a, $05
-    jr z, ScaleWordBy6Or12Capped10000_CallMultiply24By8
+    jr z, ScaleStatAndCapByBattleKind_ApplyMultiplier
     ld a, [wBattleArg1]
     cp $01
     ld a, $02
-    jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
+    jr nz, ScaleStatAndCapByBattleKind_ApplyMultiplier
     ld a, $05
-    jr ScaleWordBy6Or12Capped10000_CallMultiply24By8
+    jr ScaleStatAndCapByBattleKind_ApplyMultiplier
 
 .check_battle_arg0:
     ld a, [wBattleArg0]
@@ -1499,7 +1510,7 @@ ScaleStatAndCapByBattleKind::
 .skip2:
     ld a, e
     or a
-    jr nz, ScaleWordBy6Or12Capped10000_Restore
+    jr nz, ScaleStatAndCapByBattleKind_UseCap
     push bc
     ld a, c
     sub l
@@ -1508,9 +1519,9 @@ ScaleStatAndCapByBattleKind::
     sbc h
     ld b, a
     bit 7, b
-    jr nz, ScaleWordBy6Or12Capped10000_Restore
+    jr nz, ScaleStatAndCapByBattleKind_UseCap
     pop bc
-    jr ScaleWordBy6Or12Capped10000_SetTemp2
+    jr ScaleStatAndCapByBattleKind_Store
 
 ; multiplies by 6 (or 12 when wBattleArg1 = 1) and caps the result at 10000, then stores the word at
 ; [HL+] (E-0127)
@@ -1518,26 +1529,35 @@ ScaleWordBy6Or12Capped10000::
     ld a, [wBattleArg1]
     cp $01
     ld a, $06
-    jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
+    jr nz, ScaleStatAndCapByBattleKind_ApplyMultiplier
     ld a, $0c
 
-; After the multiply: a product above 65,535 becomes 10,000; then stores it. (C1, E-0357)
-ScaleWordBy6Or12Capped10000_CallMultiply24By8::
+; A = multiplier, E:H:L = value: multiplies (Multiply24By8); a product above 65,535 becomes HL =
+; 10,000; then stores HL (ScaleStatAndCapByBattleKind_Store). ScaleStatAndCapByBattleKind jumps here
+; in battle kind 3 for wBattleArg0 = 1 (the first growth stat, stored as HP and max HP) with A = 5
+; when wBattleIntroFlag or wBattleArg1 is 1, else 2; ScaleWordBy6Or12Capped10000 falls in with A = 6
+; or 12. (C1, E-0370)
+ScaleStatAndCapByBattleKind_ApplyMultiplier::
     call Multiply24By8
     ld a, d
     or e
-    jr z, ScaleWordBy6Or12Capped10000_SetTemp2
+    jr z, ScaleStatAndCapByBattleKind_Store
     ld hl, $2710
-    jr ScaleWordBy6Or12Capped10000_SetTemp2
+    jr ScaleStatAndCapByBattleKind_Store
 
-; HL = the unscaled value (BC), then stores it. (C1, E-0357)
-ScaleWordBy6Or12Capped10000_Restore::
+; Pops BC into HL: from the cap test of ScaleStatAndCapByBattleKind this is the cap it pushed (the
+; 101% value was above it), so the stat becomes the cap; then stores it
+; (ScaleStatAndCapByBattleKind_Store). The other jump here, taken when the 101% value does not fit
+; in 16 bits (E non-zero), has pushed nothing, so it would pop the caller's saved HL instead and
+; unbalance the stack. (C1, E-0370)
+ScaleStatAndCapByBattleKind_UseCap::
     pop bc
     ld l, c
     ld h, b
 
-; Stores the word in HL at [HL+] (through hTemp2/hTemp3) and restores the registers. (C1, E-0357)
-ScaleWordBy6Or12Capped10000_SetTemp2::
+; Stores HL in hTemp2/hTemp3, pops the HL, DE, BC and AF that ScaleStatAndCapByBattleKind pushed,
+; then writes the word to [HL] and advances HL by 2. (C1, E-0370)
+ScaleStatAndCapByBattleKind_Store::
     ld a, l
     ldh [hTemp2], a
     ld a, h
@@ -2003,9 +2023,11 @@ SetBattlerFamilyAndSex::
     pop bc
     ret
 
-; Loads battle slot C from its battler record (foe slots outside link battles through
-; LoadBattleSlotFromBattlerRecord_2) and clears the species record buffer. (C1, E-0357)
-GameMode4_Init_LoadBattleSlots_LoadBattleSlotFromBattlerRecord::
+; Loads battle slot C from its battler record: in link battles it goes straight to
+; LoadBattleSlotFromBattlerRecord; otherwise slots below 4 use LoadBattleSlotFromBattlerRecord and
+; foe slots LoadBattleSlotFromBattlerRecord_2, and then the species record buffer is cleared
+; (ClearSpeciesRecordBuffer_Bank19). (C1, E-0370)
+GameMode4_Init_LoadBattleSlots_LoadSlot::
     ld a, [wLinkMode]
     or a
     jr nz, LoadBattleSlotFromBattlerRecord

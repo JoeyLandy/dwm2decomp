@@ -1934,7 +1934,7 @@ FindNewlyLearnableSkills::
 .loop2:
     ld a, [de]
     cp c
-    jr z, FindNewlyLearnableSkills_Skip
+    jr z, FindNewlyLearnableSkills_FromSkillList
     inc de
     dec b
     jr nz, .loop2
@@ -1961,7 +1961,7 @@ FindNewlyLearnableSkills::
 .call_find_byte_then_continue:
     call FindByteThenContinue
     jr nz, .restore
-    jr FindNewlyLearnableSkills_ReadTemp6
+    jr FindNewlyLearnableSkills_Upgrade
 
 .next:
     inc hl
@@ -1973,22 +1973,22 @@ FindNewlyLearnableSkills::
     inc hl
     ld a, [hl]
     cp $ff
-    jr z, FindNewlyLearnableSkills_Restore
+    jr z, FindNewlyLearnableSkills_Devised
     call FindByteThenContinue
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
-    jr z, FindNewlyLearnableSkills_Restore
+    jr z, FindNewlyLearnableSkills_Devised
     call FindByteThenContinue
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
-    jr z, FindNewlyLearnableSkills_Restore
+    jr z, FindNewlyLearnableSkills_Devised
     call FindByteThenContinue
     jr nz, .restore
-    jr FindNewlyLearnableSkills_Restore
+    jr FindNewlyLearnableSkills_Devised
 
 .restore:
     pop bc
@@ -2009,13 +2009,16 @@ FindNewlyLearnableSkills::
     ld a, $ff
     ldh [hTemp4], a
 
-; Returns. (C1, E-0357)
-FindNewlyLearnableSkills_Return::
+; The shared exit of FindNewlyLearnableSkills: it ends here after all 170 skills with hTemp3 =
+; hTemp4 = $FF (nothing new), and its three result paths and FindByteThenContinue jump here to
+; return. (C1, E-0370)
+FindNewlyLearnableSkills_Done::
     ret
 
-; Ends the found list with $FF; hTemp3 = skill C, result hTemp4 = 0 (a new skill: 'At Lv<n>, <name>
-; learned <skill>!' in bank $2F's category 5). (C1, E-0357)
-FindNewlyLearnableSkills_Skip::
+; Result 0: skill C meets the level and stat requirements and is in the record's 25-byte
+; MON_SKILL_LIST; that entry is overwritten with $FF, hTemp3 = C and hTemp4 = 0 ('At Lv<n>, <name>
+; learned <skill>!'). (C1, E-0370)
+FindNewlyLearnableSkills_FromSkillList::
     ld a, $ff
     ld [de], a
     pop de
@@ -2026,11 +2029,12 @@ FindNewlyLearnableSkills_Skip::
     ldh [hTemp3], a
     ld a, $00
     ldh [hTemp4], a
-    jr FindNewlyLearnableSkills_Return
+    jr FindNewlyLearnableSkills_Done
 
-; hTemp5 = the skill it replaces (hTemp6); hTemp3 = skill C, result hTemp4 = 1 ('<name>'s <old
-; skill> became <skill>!'). (C1, E-0357)
-FindNewlyLearnableSkills_ReadTemp6::
+; Result 1: skill C (not $3D) meets the requirements, is not in MON_SKILL_LIST, and the first
+; prerequisite byte of its row is among the record's MON_SKILLS: hTemp5 = that skill (from hTemp6),
+; hTemp3 = C and hTemp4 = 1 ('<name>'s <old skill> became <skill>!'). (C1, E-0370)
+FindNewlyLearnableSkills_Upgrade::
     ldh a, [hTemp6]
     ldh [hTemp5], a
     pop bc
@@ -2040,11 +2044,13 @@ FindNewlyLearnableSkills_ReadTemp6::
     ldh [hTemp3], a
     ld a, $01
     ldh [hTemp4], a
-    jr FindNewlyLearnableSkills_Return
+    jr FindNewlyLearnableSkills_Done
 
-; hTemp3 = skill C, result hTemp4 = 2 ('<name> devised <skill> from the skills it knows!'). (C1,
-; E-0357)
-FindNewlyLearnableSkills_Restore::
+; Result 2: skill C meets the requirements, its row's first prerequisite byte is $FF (or, for skill
+; $3D, a known skill), and the further prerequisite bytes up to a $FF (at least one) are all among
+; the record's MON_SKILLS: hTemp3 = C and hTemp4 = 2 ('<name> devised <skill> from the skills it
+; knows!'). (C1, E-0370)
+FindNewlyLearnableSkills_Devised::
     pop bc
     pop hl
     pop de
@@ -2052,16 +2058,16 @@ FindNewlyLearnableSkills_Restore::
     ldh [hTemp3], a
     ld a, $02
     ldh [hTemp4], a
-    jr FindNewlyLearnableSkills_Return
+    jr FindNewlyLearnableSkills_Done
 
 ; runs FindByteAtHLInEightAtDE_Bank1A_2 (DE preserved) and continues at
-; FindNewlyLearnableSkills_Return (E-0126) (E-0344: the address in its name dropped or read as the
+; FindNewlyLearnableSkills_Done (E-0126) (E-0344: the address in its name dropped or read as the
 ; label there; was FindByteThenContinue)
 FindByteThenContinue::
     push de
     call FindByteAtHLInEightAtDE_Bank1A_2
     pop de
-    jr FindNewlyLearnableSkills_Return
+    jr FindNewlyLearnableSkills_Done
 
 ; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B
 ; = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
@@ -2094,11 +2100,12 @@ FindCInWorkBuf38::
     inc b
     ret
 
-; After a battle, rebuilds record A's skill list: each of its species' three skills goes in when
-; BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill lets it through as it is, otherwise the skill
-; BattleEnd_Step3_FindSkillInTable finds for it; the 25-entry MON_SKILL_LIST is cleared and the
-; entries that are not $FF are packed into it. (C1, E-0357)
-BattleEnd_Step3_LoadSpeciesRecord::
+; Rebuilds wRecordBufA's MON_SKILL_LIST from its species' three SPECIES_SKILLS: each skill is kept
+; when BattleEnd_Step3_BuildSkillList_SkillIsNew returns Z (neither it nor any skill of its
+; SkillPrerequisitePointers list is among the record's MON_SKILLS), otherwise its entry is $FF
+; (BattleEnd_Step3_FindSkillInTable is called then but returns A unchanged); the 25-byte list is
+; filled with $FF and the kept skills are packed into it. (C1, E-0370)
+BattleEnd_Step3_BuildSkillList::
     ld hl, wWorkBuf
     ld bc, $0019
     ld a, $ff
@@ -2119,7 +2126,7 @@ BattleEnd_Step3_LoadSpeciesRecord::
 .loop:
     ld a, [de]
     inc de
-    call BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill
+    call BattleEnd_Step3_BuildSkillList_SkillIsNew
     jr z, .skip
     call BattleEnd_Step3_FindSkillInTable
 
@@ -2151,10 +2158,11 @@ BattleEnd_Step3_LoadSpeciesRecord::
     jr nz, .loop3
     ret
 
-; For species skill A: $C8 gives $FF (and one more pass of the caller's loop); a skill record A
-; already knows, or one with a known skill in its prerequisite list (SkillPrerequisitePointers, $FF
-; ends), returns NZ; otherwise Z with A = the skill. (C1, E-0357)
-BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
+; A = a species skill: $C8 gives A = $FF with NZ; a skill already among wRecordBufA's MON_SKILLS
+; (BattleEnd_Step3_RecordKnowsSkill), or one whose $FF-terminated SkillPrerequisitePointers list
+; holds a known skill, also gives A = $FF with NZ; otherwise Z with A = the skill. HL and BC are
+; kept. (C1, E-0370)
+BattleEnd_Step3_BuildSkillList_SkillIsNew::
     push hl
     push bc
     cp $c8
@@ -2533,7 +2541,7 @@ ComputeLevelUpStatGainsForBattleArg1::
     cp [hl]
     jr nc, .return
     ld d, a
-    call ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress
+    call ComputeLevelUpStatGainsForBattleArg1_ItemBonus
     ld a, [wSpeciesRecord + SPECIES_GROWTH]
     call ReadStatGrowthGain
     ld b, $00
@@ -2569,11 +2577,13 @@ ComputeLevelUpStatGainsForBattleArg1::
 .return:
     ret
 
-; A level-up stat bonus: when the record's MON_ITEM byte is $1D-$22, wGrowthTemp0 = that byte - $1D
-; (the stat), and wGrowthTemp1 = that stat's wLevelUpGains entry + half the number of eight record
-; bytes and the name's letter count (marks $8D/$8E not counted) whose bit 0 matches bit 0 of a ninth
-; record byte; otherwise wGrowthTemp0 = $FF and wGrowthTemp1 = 0. (C1, E-0357)
-ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress::
+; For record wBattleArg1 with MON_ITEM $1D-$22 (items $5C-$61, War to Cleric): wGrowthTemp0 =
+; MON_ITEM - $1D (the stat 0-5) and wGrowthTemp1 = that stat's wLevelUpGains entry (cleared by the
+; caller) + half the count of values whose bit 0 matches bit 0 of MON_PLUS: MON_LEVEL, the low bytes
+; of MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL, MON_INT and MON_WLD, and the name's length
+; (MON_NAME bytes before $F0, marks $8D/$8E not counted). Otherwise wGrowthTemp0 = $FF and
+; wGrowthTemp1 = 0. DE is kept. (C1, E-0370)
+ComputeLevelUpStatGainsForBattleArg1_ItemBonus::
     push de
     ld a, [wBattleArg1]
     ld c, MON_ITEM

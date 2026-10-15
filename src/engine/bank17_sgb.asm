@@ -4,11 +4,13 @@
 SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
-; When the Super Game Boy is active, sends the packet (wSGBPacketBuffer, or the table entry
-; wSGBPacketIndex): its low three bits give the number of 16-byte packets, each sent bit by bit
-; through the joypad register (a reset pulse, then $10 for 1 and $20 for 0, a stop bit), with a
-; delay between packets. (C1, E-0357)
-SendSGBPaletteSetPacket_WaitSGBActive::
+; When wSGBActive is set, sends a packet set through rP1 (ldh [c] with C = 0): wSGBPacketBuffer when
+; wSGBPacketIndex is $FF, else the pointer in SendSGBPaletteSetPacket_SendPacketSet_Data; the first
+; byte's low three bits give the number of 16-byte packets, each sent as a reset pulse, 128 bits
+; ($10 for 1, $20 for 0, each followed by $30) and a stop bit, with SpinDelay between packets. The
+; same instructions as SendSGBPacketSet in bank $1F with this bank's own table; its only caller,
+; SendSGBPaletteSetPacket, sets wSGBPacketIndex to $FF first. (C1, E-0370)
+SendSGBPaletteSetPacket_SendPacketSet::
     ld a, [wSGBActive]
     or a
     ret z
@@ -22,7 +24,7 @@ SendSGBPaletteSetPacket_WaitSGBActive::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, SendSGBPaletteSetPacket_WaitSGBActive_Data
+    ld de, SendSGBPaletteSetPacket_SendPacketSet_Data
     add hl, de
     ld e, [hl]
     inc hl
@@ -76,7 +78,7 @@ SendSGBPaletteSetPacket_WaitSGBActive::
     jr .skip3
 
 ; data read by SendSGBPaletteSetPacket (4 bytes, 19 words) (E-0347)
-SendSGBPaletteSetPacket_WaitSGBActive_Data::
+SendSGBPaletteSetPacket_SendPacketSet_Data::
     db $ff, $40, $0f, $41
     dw PointerRun_Entry00
     dw PointerRun_Entry01
@@ -196,7 +198,7 @@ SendSGBPaletteSetPacket::
     call LoadSGBObjectPalettesFromPointers
     ld a, $ff
     ld [wSGBPacketIndex], a
-    farcall_b SendSGBPaletteSetPacket_WaitSGBActive
+    farcall_b SendSGBPaletteSetPacket_SendPacketSet
     call SpinDelay
     ret
 

@@ -1878,9 +1878,9 @@ RunNameEntryStateWhenNotFading_DrawYesNo_TileRect::
     db $b6, $c3, $13, $36, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24 sets wArg1/wArg2 = $720D +
-; (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls
-; DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375 (E-0187, C1)
+; GameMode6_Init_DrawPictureRow sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20,
+; wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three
+; panels fill $720D-$7375 (E-0187, C1)
 ; record: one 20 x 6 tile panel (wScreenByteBD selects it)
 GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $00, $01, $02, $03, $04, $05, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1: row 0

@@ -3328,7 +3328,7 @@ SceneShield2::
     dw SceneShield2_ShowWaheyHeroCanYou
     dw SceneHomecoming_WaitMessage
     dw SceneShield2_ShowWarubouWaheyYouDid
-    dw SceneShield2_ToBossWinScene
+    dw SceneShield2_PlayBossWin
     dw SceneShield2_ShowObject2
     dw SceneShield2_ShowWarubouWaheyYouCan
     dw SceneHomecoming_WaitMessage
@@ -3393,8 +3393,9 @@ SceneShield2_ShowObject2::
     inc [hl]
     ret
 
-; Shield scene 2, step 18: runs the scene's script sub-step (BossWinScene). (C1, E-0357)
-SceneShield2_ToBossWinScene::
+; Shield scene 2, step 18: plays the shared boss-win sequence (BossWinScene, run by wScriptSubStep:
+; sprites, flash, party heal, hops and shakes); its last sub-step advances wScriptStep. (C1, E-0370)
+SceneShield2_PlayBossWin::
     farcall BossWinScene
     ret
 
@@ -3610,7 +3611,7 @@ SceneShield::
     ld a, [wScriptStep]
     jumptable
     dw SceneShield_ShowTchObstinateAndFoolish
-    dw SceneShield_ToScriptStepFlashScreenNegative
+    dw SceneShield_FlashScreen
     dw SceneShield_Flicker
     dw SceneHomecoming_WaitMessage
     dw SceneShield_ShowImpetuousFoolIllShow
@@ -3736,7 +3737,7 @@ SceneShield_Flicker::
     ret
 
 ; Shield scene, step 1: runs the negative screen flash. (C1, E-0357)
-SceneShield_ToScriptStepFlashScreenNegative::
+SceneShield_FlashScreen::
     farcall ScriptStepFlashScreenNegative
     ret
 
@@ -4157,7 +4158,7 @@ ScenePrincessMedicine::
     dw SceneHomecoming_WaitMessage
     dw ScenePrincessMedicine_TakeItem
     dw SceneHomecoming_WaitMessage
-    dw ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep
+    dw ScenePrincessMedicine_StartBattle
     dw ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS
     dw SceneHomecoming_WaitMessage
     dw ScenePrincessMedicine_ShowYunasSoulFilledHer
@@ -4204,7 +4205,7 @@ ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS::
     ret
 
 ; Princess medicine scene, step 6: starts scripted battle $18. (C1, E-0357)
-ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep::
+ScenePrincessMedicine_StartBattle::
     ld a, $18
     ldh [hTemp0], a
     farcall StartScriptedEncounterTemp0
@@ -4373,13 +4374,13 @@ SceneCheerYuna::
     dw SceneCheerYuna_FaceRight
     dw SceneCheerYuna_ShowEnoughEnoughOfThat
     dw SceneHomecoming_WaitMessage
-    dw SceneCheerYuna_ToScriptStepDeltaThenNextStep
+    dw SceneCheerYuna_HopInPlace
     dw SceneCheerYuna_WalkOff
-    dw SceneCheerYuna_WritePlayerFacing
+    dw SceneCheerYuna_WalkPlayerAcross
     dw SceneCheerYuna_ShowIAmTheKing
     dw SceneHomecoming_WaitMessage
-    dw SceneCheerYuna_SetScriptSubStep
-    dw SceneCheerYuna_ToRunScriptSubStep
+    dw SceneCheerYuna_PrepareFollowers
+    dw SceneCheerYuna_FollowersPerform
     dw SceneCheerYuna_FaceUp
 
 ; Cheer Yuna scene, step 16: the player faces up and the script resumes. (C1, E-0357)
@@ -4390,13 +4391,17 @@ SceneCheerYuna_FaceUp::
     ld [wScriptStartRequest], a
     ret
 
-; Cheer Yuna scene, step 15: runs the script sub-step (RunScriptSubStep). (C1, E-0357)
-SceneCheerYuna_ToRunScriptSubStep::
+; Cheer Yuna scene, step 15: runs the walking sub-steps (RunScriptSubStep, by wScriptSubStep: the
+; followers catch up and spread out, object 5 hops, the followers run round the player, everyone
+; faces down and stands, object 5 sinks, the followers return); the last sub-step advances
+; wScriptStep. (C1, E-0370)
+SceneCheerYuna_FollowersPerform::
     farcall RunScriptSubStep
     ret
 
-; Cheer Yuna scene, step 14: clears the sub-step and counter and moves on. (C1, E-0357)
-SceneCheerYuna_SetScriptSubStep::
+; Cheer Yuna scene, step 14: clears wScriptSubStep and wScriptParam0 for the walking sub-steps of
+; step 15 (SceneCheerYuna_FollowersPerform) and moves on. (C1, E-0370)
+SceneCheerYuna_PrepareFollowers::
     xor a
     ld [wScriptSubStep], a
     xor a
@@ -4422,7 +4427,7 @@ SceneCheerYuna_ShowIAmTheKing::
 
 ; Cheer Yuna scene, step 11: walks the player one pixel a frame toward X $40, facing the way it
 ; goes, with the followers following. (C1, E-0357)
-SceneCheerYuna_WritePlayerFacing::
+SceneCheerYuna_WalkPlayerAcross::
     ldh a, [hPlayerX]
     cp $40
     jr nz, .skip
@@ -4470,7 +4475,7 @@ SceneCheerYuna_WalkOff::
     ret
 
 ; Cheer Yuna scene, step 9: object 2 hops, then the next step. (C1, E-0357)
-SceneCheerYuna_ToScriptStepDeltaThenNextStep::
+SceneCheerYuna_HopInPlace::
     ld de, wObject2 + OBJ_Y
     call ScriptStepDeltaThenNextStep
     ret
@@ -4582,7 +4587,7 @@ SceneCheerYuna_Dance::
     ld a, $70
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    call SceneCheerYuna_Dance_WriteObject2
+    call SceneCheerYuna_Dance_TurnObject2
     ld a, [wStepArrived]
     or a
     ret z
@@ -4600,7 +4605,7 @@ SceneCheerYuna_Dance::
     ld a, $20
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    call SceneCheerYuna_Dance_WriteObject2
+    call SceneCheerYuna_Dance_TurnObject2
     ld a, [wStepArrived]
     or a
     ret z
@@ -4616,7 +4621,7 @@ SceneCheerYuna_Dance::
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    call SceneCheerYuna_Dance_WriteObject2
+    call SceneCheerYuna_Dance_TurnObject2
     ld a, [wStepArrived]
     or a
     ret z
@@ -4627,7 +4632,7 @@ SceneCheerYuna_Dance::
     ret
 
 ; Turns object 2 every four frames (its state = frame counter bits 2-3). (C1, E-0357)
-SceneCheerYuna_Dance_WriteObject2::
+SceneCheerYuna_Dance_TurnObject2::
     ld a, [wFrameCounterLo]
     srl a
     srl a
@@ -4649,7 +4654,7 @@ SceneExplosion::
     dw SceneHomecoming_WaitMessage
     dw SceneExplosion_WalkDown
     dw SceneExplosion_Flash
-    dw SceneExplosion_ToScriptStepShakeScreen
+    dw SceneExplosion_ShakeAfterFlash
     dw SceneExplosion_DropObject
 
 ; Explosion scene, step 9: the scene object falls two pixels a frame to Y $10; then sound $72,
@@ -4686,7 +4691,7 @@ SceneExplosion_DropObject::
     ret
 
 ; Explosion scene, step 8: shakes the screen for $0F frames. (C1, E-0357)
-SceneExplosion_ToScriptStepShakeScreen::
+SceneExplosion_ShakeAfterFlash::
     ld b, $0f
     call ScriptStepShakeScreen
     ret
@@ -4858,7 +4863,7 @@ ScenePlanRuined::
     jumptable
     dw ScenePlanRuined_Start
     dw ScenePlanRuined_Wait
-    dw ScenePlanRuined_StartScriptedEncounterTemp0AndStep
+    dw ScenePlanRuined_StartBattle
     dw ScenePlanRuined_BlinkOut
 
 ; Plan ruined scene, step 3: blinks object 0 (at Y $40) out, hides it and resumes the script. (C1,
@@ -4879,7 +4884,7 @@ ScenePlanRuined_BlinkOut::
     ret
 
 ; Plan ruined scene, step 2: starts scripted battle $0C. (C1, E-0357)
-ScenePlanRuined_StartScriptedEncounterTemp0AndStep::
+ScenePlanRuined_StartBattle::
     ld a, $0c
     ldh [hTemp0], a
     farcall StartScriptedEncounterTemp0
@@ -4969,9 +4974,9 @@ SceneWallExit::
     dw SceneWallExit_ShowKamehaSoThatsWhere
     dw SceneHomecoming_WaitMessage
     dw SceneWallExit_WalkPlayer
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_GatherFollowers
+    dw SceneWallExit_GatherFollowers
+    dw SceneWallExit_GatherFollowers
     dw SceneWallExit_MoveObject1
     dw SceneWallExit_LowerObject1
     dw SceneWallExit_WalkObject1
@@ -5233,12 +5238,12 @@ SceneReportToKing::
     dw SceneReportToKing_WalkObject1Off
     dw SceneHomecoming_WaitMessage
     dw SceneReportToKing_DrawTiles
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_GatherFollowers
     dw SceneReportToKing_HideFollower
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_GatherFollowers
     dw SceneReportToKing_HideSecondFollower
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneReportToKing_WriteFieldDrawFlags
+    dw SceneWallExit_GatherFollowers
+    dw SceneReportToKing_HideThirdFollower
     dw SceneReportToKing_Warp
     dw SceneReportToKing_HideParty
     dw SceneReportToKing_WalkDown
@@ -5353,7 +5358,7 @@ SceneReportToKing_Warp::
     ret
 
 ; Report to king scene, step 14: hides the third follower too (hFieldDrawFlags $0F). (C1, E-0357)
-SceneReportToKing_WriteFieldDrawFlags::
+SceneReportToKing_HideThirdFollower::
     ld a, $0f
     ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
@@ -5467,9 +5472,9 @@ SceneSpiritEnvoy::
     dw SceneSpiritEnvoy_WalkDownAndScroll
     dw SceneReportToKing_Scroll
     dw SceneSpiritEnvoy_WalkPlayerDown
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_GatherFollowers
+    dw SceneWallExit_GatherFollowers
+    dw SceneWallExit_GatherFollowers
     dw SceneSpiritEnvoy_SetScriptStartRequestTo80
 
 ; Spirit envoy scene, step 10: resumes the script. (C1, E-0357)
@@ -5618,35 +5623,35 @@ SceneMermaidKingdom::
     ld a, [wScriptStep]
     jumptable
     dw SceneMermaidKingdom_WalkPlayerLeft2
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_GatherFollowers
+    dw SceneWallExit_GatherFollowers
+    dw SceneWallExit_GatherFollowers
     dw SceneMermaidKingdom_ShowKamehaGaspHackI
     dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_WalkObject1
     dw SceneMermaidKingdom_MoveObject1
     dw SceneMermaidKingdom_MoveObject2
-    dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage
+    dw SceneMermaidKingdom_ShowKamehaWhatIsThis
     dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_WalkDown
     dw SceneMermaidKingdom_ShowKahahaha
     dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_LoadSprites
-    dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_3
+    dw SceneMermaidKingdom_ShowThisIsWhatIt
     dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_SinkObject
-    dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_2
+    dw SceneMermaidKingdom_ShowKamehaUrrrggh
     dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_HopObject2
-    dw SceneMermaidKingdom_ToScriptStepShakeScreen
+    dw SceneMermaidKingdom_Shake
     dw SceneMermaidKingdom_HopObject2
-    dw SceneMermaidKingdom_ToScriptStepShakeScreen
+    dw SceneMermaidKingdom_Shake
     dw SceneMermaidKingdom_HopObject2
-    dw SceneMermaidKingdom_ToScriptStepShakeScreen
+    dw SceneMermaidKingdom_Shake
     dw SceneMermaidKingdom_HopObject2
-    dw SceneMermaidKingdom_ToScriptStepShakeScreen
+    dw SceneMermaidKingdom_Shake
     dw SceneMermaidKingdom_HopObject2
-    dw SceneMermaidKingdom_ToScriptStepShakeScreen
+    dw SceneMermaidKingdom_Shake
     dw SceneMermaidKingdom_SetFlags
     dw SceneMermaidKingdom_TurnObjects
     dw SceneMermaidKingdom_RaiseObject
@@ -5662,7 +5667,7 @@ SceneMermaidKingdom::
     dw SceneMermaidKingdom_Msg0873_WaheyHeroHearMe
     dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_ShowWarubouWaheyYouDid
-    dw SceneMermaidKingdom_ToBossWinScene
+    dw SceneMermaidKingdom_PlayBossWin
     dw SceneMermaidKingdom_ShowObject
     dw SceneMermaidKingdom_ShowWarubouWaheyYouCan
     dw SceneHomecoming_WaitMessage
@@ -5731,8 +5736,10 @@ SceneMermaidKingdom_ShowObject::
     inc [hl]
     ret
 
-; Mermaid kingdom scene, step 45: runs the scene's script sub-step (BossWinScene). (C1, E-0357)
-SceneMermaidKingdom_ToBossWinScene::
+; Mermaid kingdom scene, step 45: plays the shared boss-win sequence (BossWinScene, run by
+; wScriptSubStep: sprites, flash, party heal, hops and shakes); its last sub-step advances
+; wScriptStep. (C1, E-0370)
+SceneMermaidKingdom_PlayBossWin::
     farcall BossWinScene
     ret
 
@@ -6028,8 +6035,10 @@ SceneMermaidKingdom_SetFlags::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; Mermaid kingdom scene, step 21: shakes the screen for $0F frames. (C1, E-0357)
-SceneMermaidKingdom_ToScriptStepShakeScreen::
+; Mermaid kingdom scene, steps 21, 23, 25, 27 and 29 (each after a hop of object 2,
+; SceneMermaidKingdom_HopObject2): shakes the screen for $0F frames (ScriptStepShakeScreen), then
+; the next step. (C1, E-0370)
+SceneMermaidKingdom_Shake::
     ld b, $0f
     call ScriptStepShakeScreen
     ret
@@ -6045,8 +6054,9 @@ SceneMermaidKingdom_HopObject2::
     inc [hl]
     ret
 
-; Mermaid kingdom scene, step 18: object 2 hops; then message $0870. (C1, E-0357)
-SceneMermaidKingdom_ToScriptStepDeltaThenMessage_2::
+; Mermaid kingdom scene, step 18: object 2 hops; then Kameha's 'Urrrggh... You tricked me!' (message
+; $0870). (C1, E-0370)
+SceneMermaidKingdom_ShowKamehaUrrrggh::
     ld de, wObject2 + OBJ_Y
     ld hl, $0870
     call ScriptStepDeltaThenMessage
@@ -6066,8 +6076,9 @@ SceneMermaidKingdom_SinkObject::
     inc [hl]
     ret
 
-; Mermaid kingdom scene, step 15: object 0 hops; then message $086F. (C1, E-0357)
-SceneMermaidKingdom_ToScriptStepDeltaThenMessage_3::
+; Mermaid kingdom scene, step 15: object 0 (wSpriteSlots + $c) hops; then 'This is what it means,
+; nincompoop!' (message $086F). (C1, E-0370)
+SceneMermaidKingdom_ShowThisIsWhatIt::
     ld de, wSpriteSlots + $c
     ld hl, $086f
     call ScriptStepDeltaThenMessage
@@ -6166,8 +6177,9 @@ SceneMermaidKingdom_WalkDown::
     inc [hl]
     ret
 
-; Mermaid kingdom scene, step 9: object 2 hops; then message $086D. (C1, E-0357)
-SceneMermaidKingdom_ToScriptStepDeltaThenMessage::
+; Mermaid kingdom scene, step 9: object 2 hops; then Kameha's 'What?! What is this?' (message
+; $086D). (C1, E-0370)
+SceneMermaidKingdom_ShowKamehaWhatIsThis::
     ld de, wObject2 + OBJ_Y
     ld hl, $086d
     call ScriptStepDeltaThenMessage
@@ -6368,9 +6380,11 @@ SceneMermaidKingdom_ShowKamehaGaspHackI::
     inc [hl]
     ret
 
-; Wall exit scene, step 4: moves the followers to the leader (ScriptStepMoveFollowersToLeader). (C1,
-; E-0357)
-SceneWallExit_ToScriptStepMoveFollowersToLeader::
+; Shared scene step (SceneWallExit steps 4-6, SceneReportToKing steps 9, 11 and 13, SceneSpiritEnvoy
+; steps 7-9, SceneMermaidKingdom steps 1-3): runs ScriptStepMoveFollowersToLeader, which sets the
+; follower targets from the leader on the first frame, then steps the followers until the
+; wScriptParam0 counter reaches $11 and advances wScriptStep. (C1, E-0370)
+SceneWallExit_GatherFollowers::
     farcall ScriptStepMoveFollowersToLeader
     ret
 
@@ -6415,24 +6429,25 @@ SceneKamehaFlees::
     dw SceneKamehaFlees_DropObject
     dw SceneKamehaFlees_ShakeAndHop
     dw SceneKamehaFlees_WalkRight
-    dw SceneKamehaFlees_ToSceneKamehaFlees_SetFlagBit
+    dw SceneKamehaFlees_BobObjectOff
 
-; Kameha flees scene, step 12: moves the scene object (below). (C1, E-0357)
-SceneKamehaFlees_ToSceneKamehaFlees_SetFlagBit::
-    call SceneKamehaFlees_SetFlagBit
+; Kameha flees scene, step 12: moves the scene object on (SceneKamehaFlees_BobObjectRight) until it
+; reaches X $A0, which sets EVENT_SCENE_KAMEHA_FLEES and resumes the script. (C1, E-0370)
+SceneKamehaFlees_BobObjectOff::
+    call SceneKamehaFlees_BobObjectRight
     ret
 
 ; Moves the scene object right one pixel a frame, bobbing by the eight Y values of
-; SceneKamehaFlees_SetFlagBit_Data; at X $A0 sets EVENT_SCENE_KAMEHA_FLEES and resumes the script.
-; (C1, E-0357)
-SceneKamehaFlees_SetFlagBit::
+; SceneKamehaFlees_BobObjectRight_Data; at X $A0 sets EVENT_SCENE_KAMEHA_FLEES and resumes the
+; script. (C1, E-0357)
+SceneKamehaFlees_BobObjectRight::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
     ld a, [wScriptParam0]
     inc a
     and $07
     ld [wScriptParam0], a
-    ld hl, SceneKamehaFlees_SetFlagBit_Data
+    ld hl, SceneKamehaFlees_BobObjectRight_Data
     add_a_to_hl
     ld a, [hl]
     ld [wObject5 + SCRIPTOBJ_Y], a
@@ -6446,13 +6461,13 @@ SceneKamehaFlees_SetFlagBit::
     ret
 
 ; data read by SceneKamehaFlees (8 bytes) (E-0347)
-SceneKamehaFlees_SetFlagBit_Data::
+SceneKamehaFlees_BobObjectRight_Data::
     db $40, $3f, $40, $3f, $40, $3e, $40, $41
 
 ; Kameha flees scene, step 11: moves the scene object as above while objects 0-2 walk right (two
 ; pixels a frame) to X $A0; then draws no sprite slots. (C1, E-0357)
 SceneKamehaFlees_WalkRight::
-    call SceneKamehaFlees_SetFlagBit
+    call SceneKamehaFlees_BobObjectRight
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $81
@@ -6954,7 +6969,7 @@ SceneWhoAreYou::
     dw SceneWhoAreYou_MoveDown
     dw SceneWhoAreYou_ShowTchMadeMeWaste
     dw SceneHomecoming_WaitMessage
-    dw SceneWhoAreYou_ToScriptStepDeltaThenNextStep
+    dw SceneWhoAreYou_HopObject0
     dw SceneWhoAreYou_ShowKamehaHeyYoureHero
     dw SceneHomecoming_WaitMessage
     dw SceneWhoAreYou_WalkObject0
@@ -7104,7 +7119,7 @@ SceneWhoAreYou_ShowKamehaHeyYoureHero::
     ret
 
 ; Who are you scene, step 3: object 0 hops, then the next step. (C1, E-0357)
-SceneWhoAreYou_ToScriptStepDeltaThenNextStep::
+SceneWhoAreYou_HopObject0::
     ld de, wSpriteSlots + $c
     call ScriptStepDeltaThenNextStep
     ret
@@ -7166,12 +7181,12 @@ SceneWhoAreYou_MoveDown::
 ShakeScreen::
     ld a, [wScriptStep]
     jumptable
-    dw ShakeScreen_RedrawColumnsBesideScreenAndStep
-    dw ShakeScreen_ToScriptStepShakeScreen
+    dw ShakeScreen_Start
+    dw ShakeScreen_Shake
     dw ShakeScreen_Finish
 
 ; Screen shake, step 0: redraws the columns beside the screen and plays sound $7D. (C1, E-0357)
-ShakeScreen_RedrawColumnsBesideScreenAndStep::
+ShakeScreen_Start::
     farcall RedrawColumnsBesideScreen
     ld a, $7d
     call QueueSoundEffect
@@ -7180,7 +7195,7 @@ ShakeScreen_RedrawColumnsBesideScreenAndStep::
     ret
 
 ; Screen shake, step 1: shakes the screen for $78 frames. (C1, E-0357)
-ShakeScreen_ToScriptStepShakeScreen::
+ShakeScreen_Shake::
     ld b, $78
     call ScriptStepShakeScreen
     ret
@@ -7277,7 +7292,7 @@ SceneRivalDefeated::
     dw SceneRivalDefeated_Msg01A2_WaheyCanYouHear
     dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_ShowWarubouWaheyYouDid
-    dw SceneRivalDefeated_ToBossWinScene
+    dw SceneRivalDefeated_PlayBossWin
     dw SceneRivalDefeated_ShowObject
     dw SceneRivalDefeated_ShowWarubouWaheyTheAbility
     dw SceneHomecoming_WaitMessage
@@ -7346,8 +7361,10 @@ SceneRivalDefeated_ShowObject::
     inc [hl]
     ret
 
-; Rival defeated scene, step 31: runs the scene's script sub-step (BossWinScene). (C1, E-0357)
-SceneRivalDefeated_ToBossWinScene::
+; Rival defeated scene, step 31: plays the shared boss-win sequence (BossWinScene, run by
+; wScriptSubStep: sprites, flash, party heal, hops and shakes); its last sub-step advances
+; wScriptStep. (C1, E-0370)
+SceneRivalDefeated_PlayBossWin::
     farcall BossWinScene
     ret
 
@@ -7843,7 +7860,7 @@ SceneMonsterInspection::
     dw SceneMonsterInspection_WalkUpAndWarp
     dw SceneMonsterInspection_WalkUp
     dw SceneMonsterInspection_Wait
-    dw SceneMonsterInspection_ToRunScriptSubStep
+    dw SceneMonsterInspection_FollowersPerform
     dw SceneMonsterInspection_WalkDownAndWarp
     dw SceneMonsterInspection_Finish
 
@@ -7951,8 +7968,11 @@ SceneMonsterInspection_Wait::
     inc [hl]
     ret
 
-; Monster inspection scene, step 7: runs the script sub-step (RunScriptSubStep). (C1, E-0357)
-SceneMonsterInspection_ToRunScriptSubStep::
+; Monster inspection scene, step 7 (step 6 cleared wScriptSubStep): runs the walking sub-steps
+; (RunScriptSubStep, by wScriptSubStep: the followers catch up and spread out, object 5 hops, the
+; followers run round the player, everyone faces down and stands, object 5 sinks, the followers
+; return); the last sub-step advances wScriptStep. (C1, E-0370)
+SceneMonsterInspection_FollowersPerform::
     farcall RunScriptSubStep
     ret
 
@@ -8380,7 +8400,7 @@ SceneLandHo::
     dw SceneLandHo_ScrollUp
     dw SceneLandHo_ScrollUp
     dw SceneLandHo_ScrollUp
-    dw SceneLandHo_SetFieldActionStep
+    dw SceneLandHo_PrepareScrollRows
     dw SceneLandHo_ScrollRows
     dw SceneLandHo_ShowThisIsATale
     dw SceneHomecoming_WaitMessage
@@ -8580,8 +8600,9 @@ QueueBGMapRow::
     jr nz, .loop2
     ret
 
-; Land ho scene, step 9: clears wFieldActionStep and moves on. (C1, E-0357)
-SceneLandHo_SetFieldActionStep::
+; Land ho scene, step 9: clears wFieldActionStep, which step 10 (SceneLandHo_ScrollRows) uses as its
+; row counter up to $90, and moves on. (C1, E-0370)
+SceneLandHo_PrepareScrollRows::
     xor a
     ld [wFieldActionStep], a
     ld hl, wScriptStep
@@ -8726,7 +8747,7 @@ SceneAtSea::
     jumptable
     dw SceneAtSea_Warp
     dw SceneAtSea_Wait
-    dw SceneAtSea_WriteObject3
+    dw SceneAtSea_MoveObject3Down
     dw SceneAtSea_MoveObject3
 
 ; At sea scene, step 3: object 3 moves left and down a pixel a frame with a hop; then the script
@@ -8744,7 +8765,7 @@ SceneAtSea_MoveObject3::
     ret
 
 ; At sea scene, step 2: object 3 moves down two pixels a frame to Y $30 and faces left. (C1, E-0357)
-SceneAtSea_WriteObject3::
+SceneAtSea_MoveObject3Down::
     ld a, [wObject3 + OBJ_Y]
     inc a
     inc a
@@ -8832,13 +8853,13 @@ SceneHorsingAround::
     jumptable
     dw SceneHorsingAround_WalkLoop
     dw SceneHorsingAround_WalkObject0
-    dw SceneHorsingAround_WriteMessageIndex
+    dw SceneHorsingAround_WalkLoopMore
     dw SceneHorsingAround_HopObject0
 
 ; Horsing around scene, step 3: the player keeps walking its loop while object 0 hops; then the fast
 ; animation ends (bit 2) and the script resumes. (C1, E-0357)
 SceneHorsingAround_HopObject0::
-    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
+    call SceneHorsingAround_StepPlayerAlongLoop
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -8850,8 +8871,8 @@ SceneHorsingAround_HopObject0::
 
 ; Horsing around scene, step 2: the player keeps walking its loop for $20 frames (counted in
 ; wMessageIndex). (C1, E-0357)
-SceneHorsingAround_WriteMessageIndex::
-    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
+SceneHorsingAround_WalkLoopMore::
+    call SceneHorsingAround_StepPlayerAlongLoop
     ld a, [wMessageIndex]
     inc a
     ld [wMessageIndex], a
@@ -8866,7 +8887,7 @@ SceneHorsingAround_WriteMessageIndex::
 ; Horsing around scene, step 1: the player keeps walking its loop while object 0 walks down to Y
 ; $50; then object 0 faces right. (C1, E-0357)
 SceneHorsingAround_WalkObject0::
-    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
+    call SceneHorsingAround_StepPlayerAlongLoop
     ld a, $00
     ld [wStepTarget], a
     ld a, $00
@@ -8886,7 +8907,7 @@ SceneHorsingAround_WalkObject0::
 ; Horsing around scene, step 0: the player walks its loop for $140 frames (counted in
 ; wMessageIndex/wMessageGroup). (C1, E-0357)
 SceneHorsingAround_WalkLoop::
-    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
+    call SceneHorsingAround_StepPlayerAlongLoop
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -8912,7 +8933,7 @@ SceneHorsingAround_WalkLoop::
 ; Walks the player two pixels a frame around a six-leg loop (left to X $40, down to Y $80, right to
 ; X $80, up to Y $60, left to X $70, up to Y $50), going on to the next leg (wScriptParam1, wrapping
 ; after 5) on each arrival. (C1, E-0357)
-SceneHorsingAround_StepPlayerLeftTowardStepPtrLo::
+SceneHorsingAround_StepPlayerAlongLoop::
     ld a, [wScriptParam1]
     or a
     jr nz, .skip

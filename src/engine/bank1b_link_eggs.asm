@@ -23,14 +23,14 @@ RunLinkSession::
     ld a, [wLinkSession]
     jumptable
     dw RunLinkSession_FindPartner
-    dw RunLinkSession_1Exchange
-    dw RunLinkSession_2Exchange
-    dw RunLinkSession_3Exchange
-    dw RunLinkSession_4Exchange
-    dw RunLinkSession_5Exchange
-    dw RunLinkSession_6Exchange
-    dw RunLinkSession_7Exchange
-    dw RunLinkSession_8Exchange
+    dw RunLinkSession_Battle
+    dw RunLinkSession_Breeding
+    dw RunLinkSession_KeyTrade
+    dw RunLinkSession_BattleSetup
+    dw RunLinkSession_WonderlandBreeding
+    dw RunLinkSession_TeamMode
+    dw RunLinkSession_BattleWhenTextIdle
+    dw RunLinkSession_EggExchange
 
 ; Link session 0, finding a partner: waits for the serial byte and reads the partner's choice. A
 ; leader code ($F5, $F6, $B7, $DC, $E0, or $F1 with wLinkSetting) or a follower code ($FA, $FB, $FC,
@@ -535,7 +535,7 @@ SendLinkByteForMenuOption_Bank1B_Data::
     db $f4, $f4, $fa, $fb, $fc, $dd, $e1, $f3
 
 ; Link session 1 (battle): while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_1Exchange::
+RunLinkSession_Battle::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -551,11 +551,11 @@ RunLinkSession_1Exchange::
 RunLinkSession1Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession1Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession1Exchange_Send
     dw RunLinkSession1Exchange_Receive
 
 ; Link session 1, exchange state 0: sends one byte (LinkSendStepWithBuffer). (C1, E-0357)
-RunLinkSession1Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession1Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -574,7 +574,7 @@ RunLinkSession1Exchange_Receive::
     ret
 
 ; Link session 2: while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_2Exchange::
+RunLinkSession_Breeding::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -590,11 +590,11 @@ RunLinkSession_2Exchange::
 RunLinkSession2Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession2Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession2Exchange_Send
     dw RunLinkSession2Exchange_Receive
 
 ; Link session 2, exchange state 0: sends one byte. (C1, E-0357)
-RunLinkSession2Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession2Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -613,7 +613,7 @@ RunLinkSession2Exchange_Receive::
     ret
 
 ; Link session 3 (the key trade): while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_3Exchange::
+RunLinkSession_KeyTrade::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -629,11 +629,11 @@ RunLinkSession_3Exchange::
 RunLinkSession3Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession3Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession3Exchange_Send
     dw RunLinkSession3Exchange_Receive
 
 ; Link session 3, exchange state 0: sends one byte. (C1, E-0357)
-RunLinkSession3Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession3Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -652,7 +652,7 @@ RunLinkSession3Exchange_Receive::
     ret
 
 ; Link session 4: while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_4Exchange::
+RunLinkSession_BattleSetup::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -668,11 +668,11 @@ RunLinkSession_4Exchange::
 RunLinkSession4Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession4Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession4Exchange_Send
     dw RunLinkSession4Exchange_Receive
 
 ; Link session 4, exchange state 0: sends one byte. (C1, E-0357)
-RunLinkSession4Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession4Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -691,7 +691,7 @@ RunLinkSession4Exchange_Receive::
     ret
 
 ; Link session 5: while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_5Exchange::
+RunLinkSession_WonderlandBreeding::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -709,11 +709,11 @@ RunLinkSession_5Exchange::
 RunLinkSession5Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession5Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession5Exchange_Send
     dw RunLinkSession5Exchange_Receive
 
 ; Link session 5, exchange state 0: sends one byte. (C1, E-0357)
-RunLinkSession5Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession5Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -732,7 +732,7 @@ RunLinkSession5Exchange_Receive::
     ret
 
 ; Link session 6: while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_6Exchange::
+RunLinkSession_TeamMode::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -748,11 +748,11 @@ RunLinkSession_6Exchange::
 RunLinkSession6Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession6Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession6Exchange_Send
     dw RunLinkSession6Exchange_Receive
 
 ; Link session 6, exchange state 0: sends one byte. (C1, E-0357)
-RunLinkSession6Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession6Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -771,7 +771,7 @@ RunLinkSession6Exchange_Receive::
     ret
 
 ; Link session 7 (battle): while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_7Exchange::
+RunLinkSession_BattleWhenTextIdle::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -787,11 +787,11 @@ RunLinkSession_7Exchange::
 RunLinkSession7Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession7Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession7Exchange_Send
     dw RunLinkSession7Exchange_Receive
 
 ; Link session 7, exchange state 0: sends one byte. (C1, E-0357)
-RunLinkSession7Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession7Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -810,7 +810,7 @@ RunLinkSession7Exchange_Receive::
     ret
 
 ; Link session 8: while linked as the active role runs its exchange. (C1, E-0357)
-RunLinkSession_8Exchange::
+RunLinkSession_EggExchange::
     ld a, [wLinkMode]
     or a
     jr z, .return
@@ -830,11 +830,11 @@ RunLinkSession_8Exchange::
 RunLinkSession8Exchange::
     ld a, [wLinkExchangeState]
     jumptable
-    dw RunLinkSession8Exchange_ToLinkSendStepWithBuffer
+    dw RunLinkSession8Exchange_Send
     dw RunLinkSession8Exchange_Receive
 
 ; Link session 8, exchange state 0: sends one byte. (C1, E-0357)
-RunLinkSession8Exchange_ToLinkSendStepWithBuffer::
+RunLinkSession8Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
@@ -866,7 +866,7 @@ LinkExchangeJoypadByte::
 .check_v_blank_flags:
     ld a, [wVBlankFlags]
     bit 1, a
-    jr nz, LinkExchangeJoypadByte_Skip
+    jr nz, LinkExchangeJoypadByte_SendResync
     ldh a, [rSB]
     ld [wSerialReceived], a
     ld a, [wLinkJoypadHeld]
@@ -882,7 +882,7 @@ LinkExchangeJoypadByte::
 
 ; Joypad exchange, after a short wait: sets wVBlankFlags bit 2, exchange state 1 and sends $F3 (the
 ; resync byte). (C1, E-0357)
-LinkExchangeJoypadByte_Skip::
+LinkExchangeJoypadByte_SendResync::
     ld a, $20
 
 .loop:
@@ -907,7 +907,7 @@ LinkReceiveJoypadByte::
     ldh a, [rSB]
     ld [wSerialReceived], a
     cp $f3
-    jp z, LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld
+    jp z, LinkReceiveJoypadByte_Resync
     jr .read_link_joypad_held
 
 .set_serial_received:
@@ -931,7 +931,7 @@ LinkReceiveJoypadByte::
 
 ; Joypad exchange, the $F3 resync: restores the saved joypad state; when no byte was queued ($FF)
 ; counts down the link timeout; back to exchange state 0 with the resync flag (bit 7). (C1, E-0357)
-LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld::
+LinkReceiveJoypadByte_Resync::
     ld a, [wLinkSavedJoypadHeld]
     ld [wJoypadHeld], a
     ld a, [wLinkSavedJoypadHeldPrev]
@@ -958,7 +958,7 @@ LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld::
 LinkHandshakeSendFAOrFB::
     ld hl, wVBlankFlags
     bit 2, [hl]
-    jr nz, LinkHandshakeSendFAOrFB_Skip
+    jr nz, LinkHandshakeSendFAOrFB_SendFB
     set 1, [hl]
     xor a
     ld [wLinkExchangeState], a
@@ -971,7 +971,7 @@ LinkHandshakeSendFAOrFB::
 
 ; Handshake, the second half: clears wVBlankFlags bit 2, sends $FB and sets the resync flag. (C1,
 ; E-0357)
-LinkHandshakeSendFAOrFB_Skip::
+LinkHandshakeSendFAOrFB_SendFB::
     ld hl, wVBlankFlags
     res 2, [hl]
     xor a
@@ -996,7 +996,7 @@ LinkSendStepWithBuffer::
 .check_v_blank_flags:
     ld a, [wVBlankFlags]
     bit 1, a
-    jp nz, LinkExchangeJoypadByte_Skip
+    jp nz, LinkExchangeJoypadByte_SendResync
     ld a, [wLinkSendByte]
     cp $ff
     jr z, .skip
@@ -1075,7 +1075,7 @@ LinkReceiveStepWithBuffer::
     ldh a, [rSB]
     ld [wSerialReceived], a
     cp $f3
-    jp z, LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld
+    jp z, LinkReceiveJoypadByte_Resync
     jr .check_link_send_byte
 
 .set_serial_received:
@@ -1134,7 +1134,7 @@ LinkReceiveStepWithBuffer::
 .skip2:
     ld hl, wVBlankFlags
     bit 2, [hl]
-    jp nz, LinkHandshakeSendFAOrFB_Skip
+    jp nz, LinkHandshakeSendFAOrFB_SendFB
     set 1, [hl]
     xor a
     ld [wLinkExchangeState], a
@@ -1833,7 +1833,7 @@ LinkKeyTrade_Start::
     dw LinkKeyTrade_Start_SaveScreen
     dw LinkKeyTrade_Start_ShowStartingKeyTrade
     dw LinkKeyTrade_Start_ShowPleaseWait
-    dw LinkKeyTrade_Start_WaitTextFlags
+    dw LinkKeyTrade_Start_SignalReady
     dw LinkKeyTrade_Start_ShowPleaseChooseTheKey
 
 ; Key trade start, step 0: saves the screen to the window buffer and loads two box tiles. (C1,
@@ -1894,7 +1894,7 @@ LinkKeyTrade_Start_ShowPleaseWait::
     ret
 
 ; Key trade start, step 3: once the text has finished sends 1 (ready). (C1, E-0357)
-LinkKeyTrade_Start_WaitTextFlags::
+LinkKeyTrade_Start_SignalReady::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1939,10 +1939,10 @@ LinkKeyTrade::
     dw LinkKeyTrade_ShowPleaseChooseTheKey
     dw LinkKeyTrade_EraseMarks
     dw LinkKeyTrade_KeyCannotBeTraded
-    dw LinkKeyTrade_WaitTextFlags
+    dw LinkKeyTrade_SignalReady
     dw LinkKeyTrade_WaitPartnerAnswer
     dw LinkKeyTrade_ExchangeKeys
-    dw LinkKeyTrade_WaitLinkMessage
+    dw LinkKeyTrade_EndKeyExchange
     dw LinkKeyTrade_CheckPartnerKey
     dw LinkKeyTrade_KeysSameName
     dw LinkKeyTrade_ShowIsItOKTo
@@ -1951,19 +1951,19 @@ LinkKeyTrade::
     dw LinkKeyTrade_DrawYesNo
     dw LinkKeyTrade_ReadAnswer3
     dw LinkKeyTrade_DrawYesNoAndBack
-    dw LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep
-    dw LinkKeyTrade_WaitTextFlags
+    dw LinkKeyTrade_ConfirmPleaseWait
+    dw LinkKeyTrade_SignalReady
     dw LinkKeyTrade_WaitPartnerAnswer
-    dw LinkKeyTrade_ReadyingTradePleaseWait
+    dw LinkKeyTrade_ShowReadyingTrade
     dw LinkKeyTrade_SendReady
     dw LinkKeyTrade_CopyKeyWorldRecord
     dw LinkKeyTrade_SendRecord
-    dw LinkKeyTrade_WaitLinkMessage_SetLinkReady
-    dw LinkKeyTrade_WaitLinkMessage_SetWorkBuf
+    dw LinkKeyTrade_EndRecordPart
+    dw LinkKeyTrade_SendNextRecordPart
     dw LinkKeyTrade_SwapKeys
     dw LinkKeyTrade_ShowPleaseWait
-    dw LinkKeyTrade_WaitTextFlags_SetLinkSendByte
-    dw LinkKeyTrade_WaitLinkMessage_SetLinkSendByte
+    dw LinkKeyTrade_SignalSaveDone
+    dw LinkKeyTrade_ExitToTitleMenu
 
 ; Key trade, step 0: draws the key box, builds the key list (BuildKeyListIndexListEntries) and its
 ; heading (string $0E), redraws and resets the cursor. (C1, E-0357)
@@ -2204,9 +2204,9 @@ LinkKeyTrade_WaitForPartner::
     jumptable
     dw LinkKeyTrade_WaitForPartner_ShowStopReason
     dw LinkKeyTrade_WaitForPartner_ShowPleaseWait
-    dw LinkKeyTrade_WaitForPartner_WaitTextFlags
-    dw LinkKeyTrade_WaitForPartner_WaitLinkMessage
-    dw LinkKeyTrade_WaitForPartner_WaitTextFlags_2
+    dw LinkKeyTrade_WaitForPartner_SignalReady
+    dw LinkKeyTrade_WaitForPartner_PartnerReady
+    dw LinkKeyTrade_WaitForPartner_ExitToTitleMenu
 
 ; Waiting for the partner, sub-step 0: on $FD or $FE from the partner shows why the trade stops
 ; (string 2, or 3 when this side cancelled or leads) and goes on. (C1, E-0357)
@@ -2254,7 +2254,7 @@ LinkKeyTrade_WaitForPartner_ShowPleaseWait::
     ret
 
 ; Waiting for the partner, sub-step 2: once the text has finished sends 1. (C1, E-0357)
-LinkKeyTrade_WaitForPartner_WaitTextFlags::
+LinkKeyTrade_WaitForPartner_SignalReady::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2266,7 +2266,7 @@ LinkKeyTrade_WaitForPartner_WaitTextFlags::
     ret
 
 ; Waiting for the partner, sub-step 3: when the partner answers 1, goes on. (C1, E-0357)
-LinkKeyTrade_WaitForPartner_WaitLinkMessage::
+LinkKeyTrade_WaitForPartner_PartnerReady::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -2277,9 +2277,10 @@ LinkKeyTrade_WaitForPartner_WaitLinkMessage::
     ld [wScreenSubStep], a
     ret
 
-; Waiting for the partner, sub-step 4: once the text has finished clears the menu state and returns
-; to game mode 5, state 1 (the link menu). (C1, E-0357)
-LinkKeyTrade_WaitForPartner_WaitTextFlags_2::
+; Waiting for the partner, sub-step 4: once bit 0 of wTextFlags is clear, zeroes $6F bytes from
+; wScreenState and requests a change to game mode 5 with wModeState 1 (wModeChangeRequest = 1), the
+; title menu start-up GameMode5_Init_TitleMenu. (C1, E-0370)
+LinkKeyTrade_WaitForPartner_ExitToTitleMenu::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -2383,7 +2384,7 @@ LinkKeyTrade_ReadAnswer::
 
 ; Key trade, step 9: redraws and 'Please choose the key to trade.' (string 6). (C1, E-0357)
 LinkKeyTrade_ShowPleaseChooseTheKey::
-    call LinkKeyTrade_CopyRectTo20ByteRows
+    call LinkKeyTrade_RestoreYesNoArea
     ld a, $06 ; 'Please choose the key to trade.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
@@ -2409,10 +2410,10 @@ LinkKeyTrade_KeyCannotBeTraded::
     ld a, [wScreenSubStep]
     jumptable
     dw LinkKeyTrade_KeyCannotBeTraded_Check
-    dw LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags
+    dw LinkKeyTrade_KeyCannotBeTraded_AskAgain
 
 ; Key trade refusal, sub-step 1: once the text has finished goes back two steps. (C1, E-0357)
-LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags::
+LinkKeyTrade_KeyCannotBeTraded_AskAgain::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2574,7 +2575,7 @@ LinkKeyTrade_KeyCannotBeTraded_Check::
     jp .call_begin_string_bank1_b_cat0
 
 ; Key trade, step 12: once the text has finished sends 1. (C1, E-0357)
-LinkKeyTrade_WaitTextFlags::
+LinkKeyTrade_SignalReady::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2672,7 +2673,7 @@ LinkKeyTrade_ExchangeKeys::
     ret
 
 ; Key trade, step 35: once the text has finished sends 5. (C1, E-0357)
-LinkKeyTrade_WaitTextFlags_SetLinkSendByte::
+LinkKeyTrade_SignalSaveDone::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2684,7 +2685,7 @@ LinkKeyTrade_WaitTextFlags_SetLinkSendByte::
     ret
 
 ; Key trade, step 15: when the exchange ends ($F0) goes on. (C1, E-0357)
-LinkKeyTrade_WaitLinkMessage::
+LinkKeyTrade_EndKeyExchange::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -2704,7 +2705,7 @@ LinkKeyTrade_CheckPartnerKey::
     call LinkKeyTrade_HasLikeKey
     cp $ff
     jr z, .check_screen_step2
-    call LinkKeyTrade_CheckPartnerKey_ReadRandomSeed2Lo
+    call LinkKeyTrade_CheckPartnerKey_CountGeneratedKeys
     ld a, c
     cp $14
     jr z, .check_screen_step
@@ -2805,7 +2806,7 @@ LinkKeyTrade_HasLikeKey::
 
 ; Counts the generated keys (kind $FE or byte 3 bit 7 clear) into C; at 20 or more C drops by one
 ; when the chosen key is generated or the partner's is a story key (a place frees up). (C1, E-0357)
-LinkKeyTrade_CheckPartnerKey_ReadRandomSeed2Lo::
+LinkKeyTrade_CheckPartnerKey_CountGeneratedKeys::
     ld hl, wKeyList
     ld b, $20
     ld c, $00
@@ -2867,7 +2868,7 @@ LinkKeyTrade_KeysSameName::
     dw LinkKeyTrade_KeysSameName_SendResult
     dw LinkKeyTrade_KeysSameName_WaitResult
     dw LinkKeyTrade_KeysSameName_Decide
-    dw LinkKeyTrade_KeysSameName_WaitTextFlags
+    dw LinkKeyTrade_KeysSameName_EndRefusalText
     dw LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey
 
 ; Same-name check, sub-step 0: sends this side's result (2 fine, 3 already held, 4 no room). (C1,
@@ -2972,7 +2973,7 @@ LinkKeyTrade_KeysSameName_Decide::
     ret
 
 ; Same-name check, sub-step 3: waits for the text. (C1, E-0357)
-LinkKeyTrade_KeysSameName_WaitTextFlags::
+LinkKeyTrade_KeysSameName_EndRefusalText::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2984,7 +2985,7 @@ LinkKeyTrade_KeysSameName_WaitTextFlags::
 ; Same-name check, sub-step 4: redraws and 'Please choose the key to trade.' and returns to step
 ; $0A. (C1, E-0357)
 LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey::
-    call LinkKeyTrade_CopyRectTo20ByteRows
+    call LinkKeyTrade_RestoreYesNoArea
     ld a, $06 ; 'Please choose the key to trade.'
     call BeginString_Bank1B_Cat0
     xor a
@@ -3220,7 +3221,7 @@ LinkKeyTrade_DrawYesNoAndBack::
     ret
 
 ; Key trade, step 24: 'Please wait.' (string 7). (C1, E-0357)
-LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
+LinkKeyTrade_ConfirmPleaseWait::
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
@@ -3229,7 +3230,7 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
     ret
 
 ; Key trade, step 27: 'Readying trade... Please wait.' (string $0B). (C1, E-0357)
-LinkKeyTrade_ReadyingTradePleaseWait::
+LinkKeyTrade_ShowReadyingTrade::
     ld a, $0b ; 'Readying trade… Please wait.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
@@ -3338,7 +3339,7 @@ LinkKeyTrade_SendRecord::
     ret
 
 ; Key trade, step 31: when a part's exchange ends ($F0) sends 1. (C1, E-0357)
-LinkKeyTrade_WaitLinkMessage_SetLinkReady::
+LinkKeyTrade_EndRecordPart::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -3353,7 +3354,7 @@ LinkKeyTrade_WaitLinkMessage_SetLinkReady::
 
 ; Key trade, step 32: when the partner answers 1 sends the next part (back one step) until the
 ; record is sent. (C1, E-0357)
-LinkKeyTrade_WaitLinkMessage_SetWorkBuf::
+LinkKeyTrade_SendNextRecordPart::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -3625,9 +3626,10 @@ LinkKeyTrade_ShowPleaseWait::
     call BeginString_Bank1B_Cat0
     ret
 
-; Key trade, step 36: when the partner answers 5, clears the menu state and returns to game mode 5,
-; state 1. (C1, E-0357)
-LinkKeyTrade_WaitLinkMessage_SetLinkSendByte::
+; Key trade, step 36: when the partner answers 5, clears wLinkSendByte, zeroes $6F bytes from
+; wScreenState, clears hDecompressLock and requests a change to game mode 5 with wModeState 1
+; (wModeChangeRequest = 1), the title menu start-up GameMode5_Init_TitleMenu. (C1, E-0370)
+LinkKeyTrade_ExitToTitleMenu::
     ld a, [wLinkMessage]
     cp $05
     ret nz
@@ -3711,7 +3713,7 @@ LinkKeyTrade_WritePartnerKeyName::
 .check_random_seed2_lo:
     ld a, [wRandomSeed2Lo]
     bit 7, a
-    jp nz, CopyDataBankStringToTextBuf0_CheckLinkPartnerName
+    jp nz, LinkKeyTrade_WriteStoryKeyName
     ld a, $09
     ld [wDataBank], a
     ld a, [wLinkPartnerByte1]
@@ -3815,9 +3817,13 @@ CopyDataBankStringToTextBuf0::
     call CopyFromBankWaitVRAM
     ret
 
-; A story key's name: string wLinkPartnerName & $3F of category $0C in bank $09 (16 glyphs into
-; wNameGlyphBuf), then the end mark; 46 unreached bytes follow the jump. (C1, E-0357)
-CopyDataBankStringToTextBuf0_CheckLinkPartnerName::
+; Reached by a jump from LinkKeyTrade_WritePartnerKeyName for a story key (bit 7 of wRandomSeed2Lo,
+; the partner key's fourth byte): copies string wLinkPartnerName & $3F of category $0C in bank $09
+; (16 glyphs) into wNameGlyphBuf, puts $F0 at wNameGlyphBuf + $D, scans to the first $F0 and jumps
+; to LinkKeyTrade_EndKeyName. The scan leaves HL one byte past that $F0, so the mark $5B is written
+; after the end byte and LinkKeyTrade_ShowKeyName, which copies up to the first $F0, shows the name
+; without the mark. 46 unreached bytes follow the jump. (C1, E-0370)
+LinkKeyTrade_WriteStoryKeyName::
     ld a, [wLinkPartnerName]
     and $3f
     ld l, a
@@ -3937,20 +3943,25 @@ DrawThreeTilesAtBGMap20FFromDE::
 RunScreenCounterStep::
     ld a, [wScreenCounter]
     jumptable
-    dw RunScreenCounterStep_WriteScreenCounter
-    dw WriteTileBAtBGMap20FPlusGlyphListStartWithBBC
-    dw RunScreenCounterStep_WriteScreenCounter
-    dw WriteTileBAtBGMap20FPlusGlyphListStartWithBBC
-    dw RunScreenCounterStep_WriteScreenCounter
+    dw RunScreenCounterStep_DrawBlankDot
+    dw RunScreenCounterStep_DrawDot
+    dw RunScreenCounterStep_DrawBlankDot
+    dw RunScreenCounterStep_DrawDot
+    dw RunScreenCounterStep_DrawBlankDot
     dw RunScreenCounterStep_AnimateDots
 
-; The waiting animation, counter 0: draws the blank tile ($C3) at the current dot. (C1, E-0357)
-RunScreenCounterStep_WriteScreenCounter::
+; The waiting animation, counters 0, 2 and 4 (three entries of the RunScreenCounterStep jumptable):
+; draws the blank tile ($C3) at the current dot through WriteTileBAtBGMap20FPlusGlyphListStart,
+; which also advances wScreenCounter. (C1, E-0370)
+RunScreenCounterStep_DrawBlankDot::
     ld b, $c3
     jr WriteTileBAtBGMap20FPlusGlyphListStart
 
-; The waiting animation, counter 1: draws the chosen tile ($BC) at the current dot. (C1, E-0357)
-WriteTileBAtBGMap20FPlusGlyphListStartWithBBC::
+; The waiting animation, counters 1 and 3 (two entries of the RunScreenCounterStep jumptable on
+; wScreenCounter): draws tile $BC at the current dot (vBGMap0 + $20F + wGlyphListStart) by falling
+; through into WriteTileBAtBGMap20FPlusGlyphListStart, which also advances wScreenCounter. (C1,
+; E-0370)
+RunScreenCounterStep_DrawDot::
     ld b, $bc
 
 ; writes B at vBGMap0 + $20F + wGlyphListStart (WaitForVRAMAccess, interrupts off), then
@@ -3995,9 +4006,12 @@ BeginString_Bank1B_Cat0::
     farcall BeginStringDisplay_Bank1B
     ret
 
-; Restores the yes/no box area (six bytes wide, five rows, with attributes) and draws its top row,
-; then redraws the screen. (C1, E-0357)
-LinkKeyTrade_CopyRectTo20ByteRows::
+; Restores the area under the yes/no box from the saved screen: copies five rows of six bytes from
+; wScreenTileBuffer + $AE to wScreenTileBuffer + $27A (the same place as wWindowTileBuffer + $112,
+; where the box is drawn), with their GBC attributes (LinkKeyTrade_RestoreYesNoArea_CopyRows); puts
+; back the key box's right edge there, a one-tile column of $B7 four times and the corner $B5; then
+; redraws 13 rows of the screen (DrawScreenBufferRectToBGMap_1B). (C1, E-0370)
+LinkKeyTrade_RestoreYesNoArea::
     ld b, $00
     ld c, $05
     ld hl, $027a
@@ -4006,8 +4020,8 @@ LinkKeyTrade_CopyRectTo20ByteRows::
     ld [wArg1], a
     ld a, $06
     ld [wArg2], a
-    call LinkKeyTrade_CopyBytesDEToHL_Bank1B
-    ld de, LinkKeyTrade_CopyRectTo20ByteRows_TileRect
+    call LinkKeyTrade_RestoreYesNoArea_CopyRows
+    ld de, LinkKeyTrade_RestoreYesNoArea_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $01, $05
     call CopyRectTo20ByteRows
@@ -4295,9 +4309,11 @@ CopyTileBytesToVRAM_Bank1B::
     jr c, .loop
     ret
 
-; Copies C rows of wArg1:wArg2 bytes from offset DE to offset HL within the screen buffer (with the
-; GBC attributes), rows 20 bytes apart. (C1, E-0357)
-LinkKeyTrade_CopyBytesDEToHL_Bank1B::
+; Copies rows B up to C - 1 (its one caller passes B = 0, C = 5) of wArg1:wArg2 bytes each (a 16-bit
+; count) from offset DE to offset HL, both inside wScreenTileBuffer, rows 20 bytes apart; on the GBC
+; it also copies the same rows inside wScreenAttrBuffer (CopyLow3BitsToWRAMBank2_Bank1B). (C1,
+; E-0370)
+LinkKeyTrade_RestoreYesNoArea_CopyRows::
     push bc
     push hl
     push de
@@ -4359,7 +4375,7 @@ LinkKeyTrade_CopyBytesDEToHL_Bank1B::
     inc b
     ld a, b
     cp c
-    jr c, LinkKeyTrade_CopyBytesDEToHL_Bank1B
+    jr c, LinkKeyTrade_RestoreYesNoArea_CopyRows
     ret
 
 ; the same instructions as UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers:
@@ -4371,21 +4387,21 @@ LinkKeyTrade_CopyBytesDEToHL_Bank1B::
 UpdateTwoChoiceCursor_Bank1B::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_update_two_choice_cursor_bank1_b_read
+    jr nz, .call_update_two_choice_cursor_bank1_b_hide
     bit 7, a
-    jr nz, .call_update_two_choice_cursor_bank1_b_read2
+    jr nz, .call_update_two_choice_cursor_bank1_b_hide2
     ld a, [wJoypadPressed]
     bit 0, a
-    jr nz, .call_update_two_choice_cursor_bank1_b_step_bg
+    jr nz, .call_update_two_choice_cursor_bank1_b_mark
     bit 1, a
     jr nz, .set_menu_input_result_to_FE
-    call UpdateTwoChoiceCursor_Bank1B_WriteScreenCounter
+    call UpdateTwoChoiceCursor_Bank1B_Blink
     xor a
     ld [wMenuInputResult], a
     ret
 
-.call_update_two_choice_cursor_bank1_b_read:
-    call UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_2
+.call_update_two_choice_cursor_bank1_b_hide:
+    call UpdateTwoChoiceCursor_Bank1B_Hide
     ld a, [wTwoChoiceCursor]
     and a
     jr nz, .set_two_choice_cursor
@@ -4398,8 +4414,8 @@ UpdateTwoChoiceCursor_Bank1B::
     ld [wTwoChoiceCursor], a
     jr .clear_screen_counter
 
-.call_update_two_choice_cursor_bank1_b_read2:
-    call UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_2
+.call_update_two_choice_cursor_bank1_b_hide2:
+    call UpdateTwoChoiceCursor_Bank1B_Hide
     ld a, [wTwoChoiceCursor]
     cp $01
     jr c, .set_two_choice_cursor2
@@ -4414,15 +4430,15 @@ UpdateTwoChoiceCursor_Bank1B::
 .clear_screen_counter:
     xor a
     ld [wScreenCounter], a
-    call UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor
+    call UpdateTwoChoiceCursor_Bank1B_Show
     ld a, $69
     call QueueSoundEffect
     ld a, $fd
     ld [wMenuInputResult], a
     ret
 
-.call_update_two_choice_cursor_bank1_b_step_bg:
-    call UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap
+.call_update_two_choice_cursor_bank1_b_mark:
+    call UpdateTwoChoiceCursor_Bank1B_MarkChosen
     ld a, $69
     call QueueSoundEffect
     ld a, $ff
@@ -4436,40 +4452,40 @@ UpdateTwoChoiceCursor_Bank1B::
 
 ; Blinks the yes/no cursor: after $14 frames of the repeat timer, shown for 16 counts and hidden for
 ; 8. (C1, E-0357)
-UpdateTwoChoiceCursor_Bank1B_WriteScreenCounter::
+UpdateTwoChoiceCursor_Bank1B_Blink::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor
+    jr c, UpdateTwoChoiceCursor_Bank1B_Show
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
     cp $10
-    jr c, UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor
+    jr c, UpdateTwoChoiceCursor_Bank1B_Show
     cp $18
-    jr c, UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_2
+    jr c, UpdateTwoChoiceCursor_Bank1B_Hide
     xor a
     ld [wScreenCounter], a
 
 ; Draws the cursor tile ($BB) at the yes/no cursor. (C1, E-0357)
-UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor::
+UpdateTwoChoiceCursor_Bank1B_Show::
     ld b, $bb
-    jr UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
+    jr UpdateTwoChoiceCursor_Bank1B_DrawTile
 
 ; Draws the blank tile ($C3) at the yes/no cursor. (C1, E-0357)
-UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_2::
+UpdateTwoChoiceCursor_Bank1B_Hide::
     ld b, $c3
-    jr UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
+    jr UpdateTwoChoiceCursor_Bank1B_DrawTile
 
 ; Draws the chosen tile ($BC) at the yes/no cursor. (C1, E-0357)
-UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap::
+UpdateTwoChoiceCursor_Bank1B_MarkChosen::
     ld b, $bc
 
-; Writes tile B at the yes/no cursor's place (UpdateTwoChoiceCursor_Bank1B_Data), stepping back on a
-; scroll wrap, waiting for VRAM access. (C1, E-0357)
-UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
+; Writes tile B at the yes/no cursor's place (UpdateTwoChoiceCursor_Bank1B_DrawTile_Data), stepping
+; back on a scroll wrap, waiting for VRAM access. (C1, E-0357)
+UpdateTwoChoiceCursor_Bank1B_DrawTile::
     ld a, [wTwoChoiceCursor]
     sla a
-    ld hl, UpdateTwoChoiceCursor_Bank1B_Data
+    ld hl, UpdateTwoChoiceCursor_Bank1B_DrawTile_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -4487,9 +4503,8 @@ UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCurso
     ei
     ret
 
-; data read by UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor (4
-; bytes) (E-0347)
-UpdateTwoChoiceCursor_Bank1B_Data::
+; data read by UpdateTwoChoiceCursor_Bank1B_DrawTile (4 bytes) (E-0347)
+UpdateTwoChoiceCursor_Bank1B_DrawTile_Data::
     db $2d, $01, $6d, $01
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
@@ -4518,7 +4533,7 @@ LinkKeyTrade_DrawListBox_TileRect::
     db $c3, $c3, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a ; id 6
 
 ; record: 1 x 5 tiles, one row per line
-LinkKeyTrade_CopyRectTo20ByteRows_TileRect::
+LinkKeyTrade_RestoreYesNoArea_TileRect::
     db $b7 ; id 0
     db $b7 ; id 1
     db $b7 ; id 2
@@ -4615,9 +4630,9 @@ LinkBattleSetupMenu::
     ld a, [wScreenState]
     jumptable
     dw LinkBattleSetupMenu_Init
-    dw LinkBattleSetupMenu_WaitTextFlags
+    dw LinkBattleSetupMenu_EndIntroText
     dw EggServiceMenu_Bank1B_WaitForPartner
-    dw LinkBattleSetupMenu_AdvanceScreenState
+    dw LinkBattleSetupMenu_EnterPickRecords
     dw EggServiceMenu_Bank1B_PickRecords
     dw EggServiceMenu_Bank1B_StartLinkBattle
     dw LinkBattleSetupMenu_RunStatsScreen
@@ -4647,7 +4662,7 @@ LinkBattleSetupMenu_Init::
     ret
 
 ; Link battle setup, state 1: once the text has finished goes on two states. (C1, E-0357)
-LinkBattleSetupMenu_WaitTextFlags::
+LinkBattleSetupMenu_EndIntroText::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -4661,14 +4676,14 @@ LinkBattleSetupMenu_WaitTextFlags::
 EggServiceMenu_Bank1B_WaitForPartner::
     ld a, [wScreenStep]
     jumptable
-    dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage
+    dw EggServiceMenu_Bank1B_WaitForPartner_PalRefused
     dw EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait
-    dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags
-    dw EggServiceMenu_Bank1B_WaitForPartner_SetLinkSendByte
-    dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_2
+    dw EggServiceMenu_Bank1B_WaitForPartner_SignalReady
+    dw EggServiceMenu_Bank1B_WaitForPartner_PartnerReady
+    dw EggServiceMenu_Bank1B_WaitForPartner_ExitToTitle
 
 ; Waiting for the partner, step 0: when the partner sends $FE, goes on. (C1, E-0357)
-EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage::
+EggServiceMenu_Bank1B_WaitForPartner_PalRefused::
     ld a, [wLinkMessage]
     cp $fe
     ret nz
@@ -4692,7 +4707,7 @@ EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait::
     ret
 
 ; Waiting for the partner, step 2: once the text has finished sends 1. (C1, E-0357)
-EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
+EggServiceMenu_Bank1B_WaitForPartner_SignalReady::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -4704,7 +4719,7 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
     ret
 
 ; Waiting for the partner, step 3: when the partner answers 1, goes on. (C1, E-0357)
-EggServiceMenu_Bank1B_WaitForPartner_SetLinkSendByte::
+EggServiceMenu_Bank1B_WaitForPartner_PartnerReady::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -4715,9 +4730,10 @@ EggServiceMenu_Bank1B_WaitForPartner_SetLinkSendByte::
     ld [wScreenStep], a
     ret
 
-; Waiting for the partner, step 4: once the text has finished clears the menu state and returns to
-; game mode 5, state 1 (the link menu). (C1, E-0357)
-EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_2::
+; Waiting for the partner, step 4: once bit 0 of wTextFlags is clear, zeroes $6F bytes from
+; wScreenState and requests a change to game mode 5 with wModeState 1 (wModeChangeRequest = 1), the
+; title menu start-up GameMode5_Init_TitleMenu. (C1, E-0370)
+EggServiceMenu_Bank1B_WaitForPartner_ExitToTitle::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -4740,7 +4756,7 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_2::
     ret
 
 ; Link battle setup, state 3: moves on. (C1, E-0357)
-LinkBattleSetupMenu_AdvanceScreenState::
+LinkBattleSetupMenu_EnterPickRecords::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -4763,7 +4779,7 @@ EggServiceMenu_Bank1B_PickRecords::
     dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo
     dw LinkBattleSetupMenu_EraseMarks
     dw LinkBattleSetupMenu_CountPick
-    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo_2
+    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2
 
 ; Picking members, step 1: once the text has finished runs the record list's steps (BreedMenu). (C1,
 ; E-0357)
@@ -4816,7 +4832,7 @@ DrawRecordListPageIndicators_1B::
 
 ; for the record at wListEntries cell 5: draws its graphics (LoadFamilyIconTileForRecordB_Bank1B
 ; with wArg1 = $C7), copies two rectangles to wWindowTileBuffer + $134 and wWindowTileBuffer + $140,
-; draws its details at wWindowTileBuffer + $143 (DrawListEntriesCell5RecordPanel_HLToDecimalDigits)
+; draws its details at wWindowTileBuffer + $143 (DrawListEntriesCell5RecordPanel_DrawLevelAndSex)
 ; and wScreenStep += 1 (E-0121)
 DrawListEntriesCell5RecordPanel::
     farcall SetArg5ToListEntriesCell5
@@ -4845,7 +4861,7 @@ DrawListEntriesCell5RecordPanel::
     ld [wArg2], a
     ld a, h
     ld [wArg3], a
-    call DrawListEntriesCell5RecordPanel_HLToDecimalDigits
+    call DrawListEntriesCell5RecordPanel_DrawLevelAndSex
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5013,7 +5029,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo::
     ret
 
 .call_egg_service_menu_bank1_b_pick_records:
-    call EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5
+    call EggServiceMenu_Bank1B_PickRecords_RecordPick
     call CheckPickAgainstLinkRules
     cp $ff
     jr z, .read_list_cursor
@@ -5141,11 +5157,11 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo::
     ret
 
 .call_egg_service_menu_bank1_b_pick_records:
-    call EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5
+    call EggServiceMenu_Bank1B_PickRecords_RecordPick
     ld a, [wPickCount]
     cp $03
     jr c, .check_screen_step2
-    call EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5_2
+    call EggServiceMenu_Bank1B_PickRecords_CursorInParty
     cp $ff
     jr nz, .call_set_arg5_to_list_entries_cell5
     ret
@@ -5160,7 +5176,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo::
     ld [wLinkSceneArg], a
     ld a, $04
     ld [wPickCount], a
-    call EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B
+    call EggServiceMenu_Bank1B_PickRecords_MarkPrize
     xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
@@ -5187,10 +5203,12 @@ LinkBattleSetupMenu_EraseMarks::
     ld c, $05
     ld hl, LinkBattleSetupMenu_ShowCursorMark_Data
     call EraseCEntriesOfWordTable_Bank1B
-    jr EggServiceMenu_CallLinkBattleSetupMenu_DrawYesNoBox
+    jr LinkBattleSetupMenu_RedrawBoxAndStepBack
 
-; Erases the five marks and marks the cursor entry. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B::
+; Erases the five marks (EraseCEntriesOfWordTable_Bank1B), marks the cursor entry with the chosen
+; tile ($BC) and falls into LinkBattleSetupMenu_RedrawBoxAndStepBack. Its one caller, picking step
+; 10 once the prize monster is chosen, then sets wScreenStep to 0 itself. (C1, E-0370)
+EggServiceMenu_Bank1B_PickRecords_MarkPrize::
     ld c, $05
     ld hl, LinkBattleSetupMenu_ShowCursorMark_Data
     call EraseCEntriesOfWordTable_Bank1B
@@ -5200,7 +5218,7 @@ EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B::
     call StoreBAtWordTableEntry_Bank1B
 
 ; Draws the box by the rules and goes back three steps. (C1, E-0357)
-EggServiceMenu_CallLinkBattleSetupMenu_DrawYesNoBox::
+LinkBattleSetupMenu_RedrawBoxAndStepBack::
     call LinkBattleSetupMenu_DrawYesNoBox
     call BGMapAddressAtScroll_Bank1B
     lb bc, $14, $0d
@@ -5234,7 +5252,7 @@ LinkBattleSetupMenu_CountPick::
 
 ; Picking members, step 13: the partner's refusal stops as before; otherwise runs its sub-steps
 ; (another member, the prize question, waiting). (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo_2::
+EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .read_screen_sub_step
@@ -5254,12 +5272,12 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo_2::
     jumptable
     dw EggServiceMenu_Bank1B_PickRecords_ShowChooseOneMoreMember
     dw LinkBattleSetupMenu_DrawYesNo
-    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2
-    dw EggServiceMenu_Bank1B_PickRecords_WaitTextFlags
-    dw EggServiceMenu_Bank1B_PickRecords_ShowPleaseWait
-    dw EggServiceMenu_Bank1B_PickRecords_PleaseWait
+    dw EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowYourPalRefusedTo
+    dw EggServiceMenu_Bank1B_PickRecords_BackToPicking
+    dw EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowPleaseWait
+    dw EggServiceMenu_Bank1B_PickRecords_FinishPicks
     dw LinkBattleSetupMenu_DrawYesNo
-    dw EggServiceMenu_Bank1B_PickRecords_YourPalRefusedTo
+    dw EggServiceMenu_Bank1B_PickRecords_AnswerPrize
 
 ; Choosing another member: below three picks and with members left asks 'Choose one more member for
 ; battle?' (string 3); otherwise skips to the prize sub-step. (C1, E-0357)
@@ -5320,7 +5338,7 @@ LinkBattleSetupMenu_DrawYesNo::
 
 ; The answer to another member: yes clears the box and returns to picking (string 0); no goes on two
 ; sub-steps. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2::
+EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
@@ -5366,7 +5384,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2::
     ret
 
 ; Once the text has finished returns to picking (step 0). (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_WaitTextFlags::
+EggServiceMenu_Bank1B_PickRecords_BackToPicking::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -5378,7 +5396,7 @@ EggServiceMenu_Bank1B_PickRecords_WaitTextFlags::
 ; The prize: without the prize rule (wLinkRules + 9 bit 7) 'Please wait.' and the picks are
 ; finished; with it, no farm monsters gives 'You have no monsters on the ...' (string 5), otherwise
 ; 'Will you put up a prize?' (string 4); the picks are padded to three. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_ShowPleaseWait::
+EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowPleaseWait::
     ld a, [wLinkRules + $9]
     bit 7, a
     jr nz, .call_list_records_state1_not_eggs
@@ -5416,7 +5434,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowPleaseWait::
     ret
 
 ; Once the text has finished finishes the picks and shows 'Please wait.'. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_PleaseWait::
+EggServiceMenu_Bank1B_PickRecords_FinishPicks::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -5427,7 +5445,7 @@ EggServiceMenu_Bank1B_PickRecords_PleaseWait::
 
 ; The prize answer: no clears the prize ($FF) and goes back two sub-steps; yes asks 'Select a
 ; monster as the prize.' (string 6). (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_YourPalRefusedTo::
+EggServiceMenu_Bank1B_PickRecords_AnswerPrize::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
@@ -5482,29 +5500,29 @@ EggServiceMenu_Bank1B_StartLinkBattle::
     jumptable
     dw LinkBattleSetupMenu_DrawPickedMembers
     dw LinkBattleSetupMenu_CopyPrizeRecord
-    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
     dw LinkBattleSetupMenu_ExchangePrizes
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep
-    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_RetryChoice
+    dw EggServiceMenu_Bank1B_StartLinkBattle_PleaseWait
+    dw EggServiceMenu_Bank1B_StartLinkBattle_TextDone
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_2
     dw LinkBattleSetupMenu_PackMembers
-    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage
-    dw EggServiceMenu_Bank1B_StartLinkBattle_SetLinkReady
-    dw EggServiceMenu_Bank1B_StartLinkBattle_StartingBattle
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep
-    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SendMembers
+    dw EggServiceMenu_Bank1B_StartLinkBattle_EndExchange
+    dw EggServiceMenu_Bank1B_StartLinkBattle_Announce
+    dw EggServiceMenu_Bank1B_StartLinkBattle_TextDone
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
     dw LinkBattleSetupMenu_StartBattle
 
 ; Starting the battle, step 17: 'Starting battle...' (string 9). (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_StartingBattle::
+EggServiceMenu_Bank1B_StartLinkBattle_Announce::
     ld a, $09 ; 'Starting battle…'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
@@ -5513,7 +5531,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_StartingBattle::
     ret
 
 ; Starting the battle, step 9: 'Please wait.'. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep::
+EggServiceMenu_Bank1B_StartLinkBattle_PleaseWait::
     ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
@@ -5522,7 +5540,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep::
     ret
 
 ; Starting the battle, step 10: once the text has finished goes on. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep::
+EggServiceMenu_Bank1B_StartLinkBattle_TextDone::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -5586,7 +5604,7 @@ LinkBattleSetupMenu_CopyPrizeRecord::
     ret
 
 ; Starting the battle, step 2: sends 1. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep::
+EggServiceMenu_Bank1B_StartLinkBattle_SignalReady::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5649,7 +5667,7 @@ LinkBattleSetupMenu_ExchangePrizes::
     ret
 
 ; Starting the battle, step 16: when the exchange ends ($F0), goes on. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_SetLinkReady::
+EggServiceMenu_Bank1B_StartLinkBattle_EndExchange::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -5814,7 +5832,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo::
     ret
 
 ; Starting the battle, step 8: once the text has finished goes back to the choice. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags::
+EggServiceMenu_Bank1B_StartLinkBattle_RetryChoice::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -5896,7 +5914,7 @@ LinkBattleSetupMenu_PackMembers::
 
 ; Starting the battle, step 15: on the partner's 1 starts the $EA-byte exchange of the battler
 ; records. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage::
+EggServiceMenu_Bank1B_StartLinkBattle_SendMembers::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -5971,9 +5989,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords::
     dw LinkBattleSetupMenu_DrawListBox
     dw LinkBattleSetupMenu_ListMembers
     dw LinkBattleSetupMenu_DrawPageNames
-    dw EggServiceMenu_ToDrawListEntriesCell5RecordPanel
+    dw LinkBattleSetupMenu_DrawCursorPanel
     dw EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780
-    dw EggServiceMenu_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
+    dw LinkBattleSetupMenu_DrawPicksBox
     dw EggServiceMenu_ShowBattlePrizeExit
     dw LinkBattleSetupMenu_LeaveList
 
@@ -6014,9 +6032,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords2::
     dw LinkBattleSetupMenu_DrawListBox
     dw LinkBattleSetupMenu_ListMembers
     dw LinkBattleSetupMenu_DrawPageNames
-    dw EggServiceMenu_ToDrawListEntriesCell5RecordPanel
+    dw LinkBattleSetupMenu_DrawCursorPanel
     dw EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780
-    dw EggServiceMenu_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
+    dw LinkBattleSetupMenu_DrawPicksBox
     dw EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN
     dw LinkBattleSetupMenu_LeaveList
 
@@ -6069,7 +6087,7 @@ LinkBattleSetupMenu_DrawPageNames::
     ret
 
 ; Listing members, step 3: draws the panel of the monster under the cursor. (C1, E-0357)
-EggServiceMenu_ToDrawListEntriesCell5RecordPanel::
+LinkBattleSetupMenu_DrawCursorPanel::
     call DrawListEntriesCell5RecordPanel
     ret
 
@@ -6078,8 +6096,11 @@ EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780::
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; Listing members, step 5: draws the rule box (by the link rules' turn limit). (C1, E-0357)
-EggServiceMenu_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7::
+; Listing members, step 5: draws the picks box (DrawRuleBoxByLinkRuleTurnLimit1Bit7, which advances
+; wScreenStep): three numbered rows, and a fourth row when bit 7 of wLinkRules + $9 is set, the same
+; bit that turns on the prize questions
+; (EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowPleaseWait). (C1, E-0370)
+LinkBattleSetupMenu_DrawPicksBox::
     call DrawRuleBoxByLinkRuleTurnLimit1Bit7
     ret
 
@@ -6365,7 +6386,7 @@ ClearRecordPanelTiles::
     ret
 
 ; Returns $FF when the monster under the cursor is in the party. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5_2::
+EggServiceMenu_Bank1B_PickRecords_CursorInParty::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -6704,8 +6725,10 @@ LoadFamilyIconTileForRecordB_Bank1B::
     ld [rRAMG2], a
     ret
 
-; Draws record wArg1's level (two digits) and sex mark ($CC + sex) at HL (wArg2/wArg3). (C1, E-0357)
-DrawListEntriesCell5RecordPanel_HLToDecimalDigits::
+; Draws SRAM record wArg1's level as two digit tiles (a leading zero blanked by
+; BlankLeadingZeroDigits_F) at HL = wArg3:wArg2, and its sex mark (tile $CC + (MON_SEX & 1)) seven
+; bytes further on. (C1, E-0370)
+DrawListEntriesCell5RecordPanel_DrawLevelAndSex::
     ld a, [wArg1]
     ld b, a
     ld a, [wArg2]
@@ -6921,7 +6944,7 @@ DrawListEntriesCell5RecordNameAtTiles1780::
     ret
 
 ; Records the monster under the cursor as the next pick (wPickedRecords + wPickCount). (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5::
+EggServiceMenu_Bank1B_PickRecords_RecordPick::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a

@@ -13,7 +13,7 @@ DrawMetaSpriteSet_Bank25::
     ld hl, MetaSprites25Attrs
     add hl, de
     bit 0, [hl]
-    jr z, .call_draw_meta_sprite_set_bank25_wait_oam
+    jr z, .call_draw_meta_sprite_set_bank25_build_oam
     ld a, [hl]
     and $f0
     ld e, a
@@ -21,9 +21,9 @@ DrawMetaSpriteSet_Bank25::
     or e
     ldh [hSpriteAttrXor], a
 
-.call_draw_meta_sprite_set_bank25_wait_oam:
+.call_draw_meta_sprite_set_bank25_build_oam:
     ld de, MetaSprites25Table
-    call DrawMetaSpriteSet_Bank25_WaitOamNextEntry
+    call DrawMetaSpriteSet_Bank25_BuildOam
     ret
 
 ; DrawMetaSpriteSet_Bank25 passes DE = $MetaSprites25Table to the builder, which takes the word at
@@ -293,9 +293,11 @@ MetaSprites25Attrs::
     db $01 ; id 126
     db $00 ; id 127
 
-; Builds the meta-sprite into OAM; the same code as DrawMetaSpriteSet_Bank27_WaitOamNextEntry with
-; this bank's frames. (C1, E-0357)
-DrawMetaSpriteSet_Bank25_WaitOamNextEntry::
+; DE = a table of meta-sprite set pointers (DrawMetaSpriteSet_Bank25 passes MetaSprites25Table):
+; builds the meta-sprite into wShadowOAM. The same code as DrawMetaSpriteSet_Bank27_BuildOam and
+; DrawMetaSpriteAt (bank $7F), except that it calls this bank's
+; BGTileUnderPointIsSpriteHideTile_Bank25. (C1, E-0370)
+DrawMetaSpriteSet_Bank25_BuildOam::
     ldh a, [hOamNextEntry]
     cp $27
     ret nc

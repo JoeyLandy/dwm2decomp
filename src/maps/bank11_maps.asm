@@ -412,7 +412,7 @@ CheckWarpsAtPlayerPosition::
 WarpToLinkedMapForCurrentMap::
     ld a, [wMapType]
     bit 7, a
-    jp nz, WarpToLinkedMapForCurrentMap_Data2_Cp87
+    jp nz, WarpToLinkedMapForCurrentMap_SpecialMap
     ldh a, [hMapId]
     ld c, a
     ld b, $00
@@ -468,10 +468,13 @@ WarpToLinkedMapForCurrentMap_Data2::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00
 
-; Map $87's linked warp goes to the key world's goal: the goal cell and position when the active
-; key's slot matches, otherwise wKeyWorldGoalScreen at wKeyWorldGoalPos; starts the warp (C = 1).
-; Other maps: no warp (C = 0). (C1, E-0357)
-WarpToLinkedMapForCurrentMap_Data2_Cp87::
+; The special-map branch of WarpToLinkedMapForCurrentMap (entered with A = wMapType, bit 7 set):
+; only map type $87 warps, to the key world's goal: when wKeyWorldActive is set, wKeyWorldKey bit 7
+; is set and its low bits equal wKeyWorldSlot, to wKeyWorldGoal (X = high nibble, Y = low nibble x
+; 16) on screen wKeyWorldGoalCell; otherwise to (wKeyWorldGoalPos, wKeyWorldGoalPos2) on screen
+; wKeyWorldGoalScreen; starts the warp (StartWarpTransition) and returns C = 1. Other map types: no
+; warp (C = 0). (C1, E-0370)
+WarpToLinkedMapForCurrentMap_SpecialMap::
     cp $87
     jr z, .check_key_world_active
     ld c, $00

@@ -3626,9 +3626,9 @@ KeyWorldBossBattle::
     dw KeyWorldBossBattle_ShowMessage
     dw KeyWorldBossBattle_StartBattle
     dw KeyWorldBossBattle_SavePalettes
-    dw KeyWorldBossBattle_ToScriptStepFlashScreenNegative
+    dw KeyWorldBossBattle_FlashScreen
     dw KeyWorldBossBattle_ShowWarubouWaheyNoGood
-    dw KeyWorldBossBattle_WriteScriptParam0
+    dw KeyWorldBossBattle_RunMessageToEnd
     dw KeyWorldBossBattle_FlickerBoss
     dw KeyWorldBossBattle_MarkCleared
 
@@ -3709,10 +3709,12 @@ KeyWorldBossBattle_FlickerBoss::
     inc [hl]
     ret
 
-; Key world boss battle, step 5: waits for the message box to close. (C1, E-0357)
-KeyWorldBossBattle_WriteScriptParam0::
+; Key world boss battle step 5 and floor battle step 3 (KeyWorldFloorBattle): runs the key world's
+; message box each frame (KeyWorldBossBattle_RunMessageBox with A = 0, so the animation is frozen
+; while it is open) until it is idle, then clears wScriptParam0 and moves on. (C1, E-0370)
+KeyWorldBossBattle_RunMessageToEnd::
     xor a
-    call KeyWorldBossBattle_ReadMessageState_2
+    call KeyWorldBossBattle_RunMessageBox
     ret nc
     xor a
     ld [wScriptParam0], a
@@ -3729,7 +3731,7 @@ KeyWorldBossBattle_ShowWarubouWaheyNoGood::
     ret
 
 ; Key world boss battle, step 3: runs the negative screen flash. (C1, E-0357)
-KeyWorldBossBattle_ToScriptStepFlashScreenNegative::
+KeyWorldBossBattle_FlashScreen::
     farcall ScriptStepFlashScreenNegative
     ret
 
@@ -3840,13 +3842,13 @@ KeyWorldFloorBattle::
     dw KeyWorldFloorBattle_ShowMessage
     dw KeyWorldFloorBattle_StartBattle
     dw KeyWorldFloorBattle_ShowWarubouWaheyThatWas
-    dw KeyWorldBossBattle_WriteScriptParam0
+    dw KeyWorldBossBattle_RunMessageToEnd
     dw KeyWorldBossBattle_FlickerBoss
-    dw KeyWorldFloorBattle_WriteScriptStartRequest
+    dw KeyWorldFloorBattle_MarkCleared
 
 ; Key world floor battle, step 5: marks the floor's entry of wKeyWorldEncounterTable done (byte 3 =
 ; 1) and resumes the script. (C1, E-0357)
-KeyWorldFloorBattle_WriteScriptStartRequest::
+KeyWorldFloorBattle_MarkCleared::
     ld a, [wKeyWorldFloor]
     and $7f
     add a
@@ -3926,7 +3928,7 @@ RandomGoldOrItem::
     dw PlaySound83AndAdvanceScriptStep
     dw ScriptStepAnimateSpriteBySteps
     dw RandomGoldOrItem_ReplaceTiles
-    dw RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed
+    dw RandomGoldOrItem_PickFind
     dw RandomGoldOrItem_HopMarker
     dw RandomGoldOrItem_ShowMessage
     dw RandomGoldOrItem_UseUpTrigger
@@ -4020,10 +4022,10 @@ RandomGoldOrItem_HopMarker::
     inc [hl]
     ret
 
-; Random gold or item, step 4: picks the gold or item at random (RandomGoldOrItem_NextRandomSeed).
-; (C1, E-0357)
-RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed::
-    farcall RandomGoldOrItem_NextRandomSeed
+; Random gold or item, step 4: picks the gold or item at random
+; (RandomGoldOrItem_PickFind_RollFind). (C1, E-0357)
+RandomGoldOrItem_PickFind::
+    farcall RandomGoldOrItem_PickFind_RollFind
     ret
 
 ; Random gold or item, step 3: replaces the 2x2 tiles at the trigger's spot (wMessageGroup and
@@ -4225,14 +4227,14 @@ PlaySound83AndAdvanceScriptStep::
     ret
 
 ; A = wMapSpriteKind >> 4, DE = KeyWorldBossBattle_ShowMessage, B = $7E, then continues at
-; SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM (E-0126)
+; SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace (E-0126)
 SetupScriptSpriteFromMapSpriteKind::
     ld a, [wMapSpriteKind]
     swap a
     and $0f
     ld de, KeyWorldBossBattle_ShowMessage
     ld b, $7e
-    jr SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM
+    jr SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace
 
 ; decompresses sprite graphics from bank $7E to vTiles0 + $700 (with a CGB palette), places it 16
 ; pixels in front of the player and advances wScriptStep (E-0129)
@@ -4241,16 +4243,19 @@ SpawnScriptSpriteInFrontOfPlayer::
     jr nz, .skip
     ld de, SpawnScriptSpriteInFrontOfPlayer_Data
     ld b, $7e
-    jr SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM
+    jr SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace
 
 .skip:
     ld de, Tiles0Plus700Gfx_4
     ld b, $7e
 
-; Decompresses the sprite to VRAM $8700 (on the GBC with its palette from bank $7E; a load of
-; wMapSpriteKind is overwritten at once by $10), puts its position 16 pixels in front of the player
-; in wMessageIndex/wMessageGroup and turns the followers the player's way. (C1, E-0357)
-SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM::
+; DE = compressed sprite graphics, B = their bank: decompresses them to vTiles0 + $700; on the GBC
+; copies eight palette bytes from bank $7E ($4BBD + 8 * $23 every time, since the wMapSpriteKind
+; load is overwritten by $10) into OBJ palette 7 (wOBJPaletteBuffer + $38) and requests the upload;
+; puts the sprite's position 16 pixels in front of the player by hPlayerFacing (X in wMessageIndex,
+; Y in wMessageGroup), turns the three followers (wFollowerRecords) the player's way, clears
+; wScriptParam0 and advances wScriptStep. (C1, E-0370)
+SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace::
     ld hl, vTiles0 + $700
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -4683,7 +4688,7 @@ FieldScene01_Variant2::
     dw FieldScene01_HopAndSpin
     dw FieldScene01_FlickerSprite
     dw FieldScene01_HopOnSprite2
-    dw FieldScene01_Variant2_WaitFieldActionRequest
+    dw FieldScene01_Variant2_RideUntilLand
     dw FieldScene01_EnableTriggers
 
 ; Field scene 1, step 4: waits $1E frames. (C1, E-0357)
@@ -4797,7 +4802,7 @@ FieldScene01_EnableTriggers::
 ; tile on, within the screen); when the tiles there are above wMaxBlockingTile the player gets off
 ; (sprite mode 0, lifted 8 pixels, next step); when they block, or object 0 stands there, the player
 ; turns around; tiles at or below wMapTallTileMin let it go on. (C1, E-0357)
-FieldScene01_Variant2_WaitFieldActionRequest::
+FieldScene01_Variant2_RideUntilLand::
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -5852,7 +5857,7 @@ RunMessageBox_Bank12::
     dw RunMessageBox_Bank12_Open
     dw RunMessageBox_Bank12_ShowText
     dw RunMessageBox_Bank12_Close
-    dw RunMessageBox_Bank12_WriteMessageState
+    dw RunMessageBox_Bank12_Finish
 
 ; Bank-$12 message box, state 0: unless the flag on the stack is set, freezes the player's and
 ; objects' animation (SetBit1OfPlayerAndObjectFlags); unless wMessageGroup bit 7 says the box is
@@ -5948,9 +5953,11 @@ RunMessageBox_Bank12_Close::
     inc [hl]
     ret
 
-; Bank-$12 message box, state 3: once the window is closed, unfreezes the animation (unless the flag
-; is set) and goes idle ($FF). (C1, E-0357)
-RunMessageBox_Bank12_WriteMessageState::
+; Final state (3) shared by the bank-$12 message runners (RunMessageBox_Bank12,
+; RunMessageBoxStateIfActive_Bank12 and KeyWorldBossBattle_RunMessageBoxState): once the window is
+; closed (wTextWindowState low bits 0), unfreezes the animation unless the flag on the stack is set
+; and sets wMessageState to $FF (idle). (C1, E-0370)
+RunMessageBox_Bank12_Finish::
     ld a, [wTextWindowState]
     and $03
     jr z, .restore
@@ -5983,7 +5990,7 @@ RunMessageBoxStateIfActive_Bank12::
     dw RunMessageBoxStateIfActive_Bank12_Open
     dw RunMessageBoxStateIfActive_Bank12_ShowText
     dw RunMessageBoxStateIfActive_Bank12_Close
-    dw RunMessageBox_Bank12_WriteMessageState
+    dw RunMessageBox_Bank12_Finish
 
 ; Bank-$12 short message box, state 0: as the message box's state 0, with the box-open flag in
 ; wMessageIndex bit 7. (C1, E-0357)
@@ -6075,7 +6082,7 @@ RunMessageBoxStateIfActive_Bank12_Close::
 
 ; The key world's message box: unless idle, runs its state (four states: open, text from bank $8A,
 ; close, finish) by wMessageState. (C1, E-0357)
-KeyWorldBossBattle_ReadMessageState::
+KeyWorldBossBattle_RunMessageBoxState::
     push af
     ld a, [wMessageState]
     cp $ff
@@ -6088,7 +6095,7 @@ KeyWorldBossBattle_ReadMessageState::
     dw KeyWorldBossBattle_OpenMessageBox
     dw KeyWorldBossBattle_StartMessageText
     dw KeyWorldBossBattle_CloseMessageBox
-    dw RunMessageBox_Bank12_WriteMessageState
+    dw RunMessageBox_Bank12_Finish
 
 ; Key world message box, state 0: freezes the animation unless the flag is set, clears the box tiles
 ; and opens the window (at the top when the player is low), with no sound. (C1, E-0357)
@@ -6202,7 +6209,7 @@ RunMessageBoxCarryWhenIdle_Bank12::
 
 ; Returns carry when the message box is idle (wMessageState $FF), otherwise A = 0 and no carry. (C1,
 ; E-0357)
-RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState::
+RunMessageBoxCarryWhenIdle_Bank12_CheckIdle::
     ld a, [wMessageState]
     cp $ff
     jr z, .return_carry
@@ -6214,16 +6221,16 @@ RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState::
     ret
 
 ; runs RunMessageBoxStateIfActive_Bank12, then continues at
-; RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState (E-0126) (E-0344: the address in its name
-; dropped or read as the label there; was RunMessageBoxThenContinue)
+; RunMessageBoxCarryWhenIdle_Bank12_CheckIdle (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was RunMessageBoxThenContinue)
 RunMessageBoxThenContinue::
     call RunMessageBoxStateIfActive_Bank12
-    jr RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState
+    jr RunMessageBoxCarryWhenIdle_Bank12_CheckIdle
 
 ; Runs the key world message box, then returns carry when it is idle. (C1, E-0357)
-KeyWorldBossBattle_ReadMessageState_2::
-    call KeyWorldBossBattle_ReadMessageState
-    jr RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState
+KeyWorldBossBattle_RunMessageBox::
+    call KeyWorldBossBattle_RunMessageBoxState
+    jr RunMessageBoxCarryWhenIdle_Bank12_CheckIdle
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries);
 ; copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and
@@ -6264,12 +6271,12 @@ ReadTileBuffer2x2AtPixel_Bank12_2::
     ld [wTilesUnderPoint + $3], a
     ret
 
-; runs DrawTriggerMarkerSprite and RunDrawTriggerMarkerSprite_WaitFieldActionRequest; shared by the
-; field mode states (E-0122) (E-0344: the address in its name dropped or read as the label there;
-; was RunDrawTriggerMarkerSprite)
+; runs DrawTriggerMarkerSprite and RunDrawTriggerMarkerSprite_DrawSceneObject; shared by the field
+; mode states (E-0122) (E-0344: the address in its name dropped or read as the label there; was
+; RunDrawTriggerMarkerSprite)
 RunDrawTriggerMarkerSprite::
     call DrawTriggerMarkerSprite
-    call RunDrawTriggerMarkerSprite_WaitFieldActionRequest
+    call RunDrawTriggerMarkerSprite_DrawSceneObject
     ret
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing
@@ -6794,7 +6801,7 @@ DrawAnimatedMetaSprite1B_Data::
 RunFieldCommandTemp0::
     ldh a, [hTemp0]
     jumptable
-    dw RunFieldCommandTemp0_WriteObject5
+    dw RunFieldCommandTemp0_LoadSceneObject0
     dw RunFieldCommandTemp0_LoadSceneObject1
     dw RunFieldCommandTemp0_LoadSceneObject2
     dw RunFieldCommandTemp0_LoadSceneObject3
@@ -6807,13 +6814,13 @@ RunFieldCommandTemp0::
     dw RunFieldCommandTemp0_LoadSceneObject10
     dw RunFieldCommandTemp0_LoadSceneObject11
     dw RunFieldCommandTemp0_LoadSceneObject12
-    dw RunFieldCommandTemp0_WriteObject5_SetObject5_2
-    dw RunFieldCommandTemp0_WriteObject5_SetObject5_2
+    dw RunFieldCommandTemp0_LoadSceneObject13
+    dw RunFieldCommandTemp0_LoadSceneObject13
     dw RunFieldCommandTemp0_LoadSceneObject15
     dw RunFieldCommandTemp0_LoadSceneObject16
     dw RunFieldCommandTemp0_LoadSceneObject17
     dw RunFieldCommandTemp0_LoadSceneObject18
-    dw RunFieldCommandTemp0_WriteObject5_SetObject5
+    dw RunFieldCommandTemp0_LoadSceneObject19
     dw RunFieldCommandTemp0_LoadSceneObject20
     dw RunFieldCommandTemp0_LoadSceneObject20
 
@@ -6821,7 +6828,7 @@ RunFieldCommandTemp0::
 ; ($40, $40), shown, its animation reset. (C1, E-0357)
 ; (renamed from RunFieldCommandTemp0_ShowSceneObject from its E-0357 note, E-0367)
 RunFieldCommandTemp0_LoadSceneObject20::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -6843,11 +6850,10 @@ RunFieldCommandTemp0_LoadSceneObject20::
     ld [wObject5 + $7], a
     ret
 
-; Field command 19: the scene object gets the command's sprite at tile $30 with palette 3
-; (RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest), hidden, position left as it
-; was. (C1, E-0357)
-RunFieldCommandTemp0_WriteObject5_SetObject5::
-    call RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest
+; Field command 19: the scene object (wObject5) gets the command's sprite at tile $30 with palette 3
+; (RunFieldCommandTemp0_LoadGfxPalette3), hidden, position left as it was. (C1, E-0370)
+RunFieldCommandTemp0_LoadSceneObject19::
+    call RunFieldCommandTemp0_LoadGfxPalette3
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $30
@@ -6864,7 +6870,7 @@ RunFieldCommandTemp0_WriteObject5_SetObject5::
 ; position left as it was, its animation reset. (C1, E-0357)
 ; (renamed from RunFieldCommandTemp0_LoadSceneObject from its E-0357 note, E-0367)
 RunFieldCommandTemp0_LoadSceneObject18::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -6885,7 +6891,7 @@ RunFieldCommandTemp0_LoadSceneObject18::
 ; Field command 17: the scene object gets the command's sprite (tile $40, palette 4), hidden,
 ; position left as it was, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject17::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -6906,7 +6912,7 @@ RunFieldCommandTemp0_LoadSceneObject17::
 ; Field command 16: the scene object gets the command's sprite (tile $40, palette 4) at ($30, $40),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject16::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -6926,7 +6932,7 @@ RunFieldCommandTemp0_LoadSceneObject16::
 ; Field command 15: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject15::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -6947,8 +6953,8 @@ RunFieldCommandTemp0_LoadSceneObject15::
 ; tile offset $30, sprite-set selector from returned A, attributes 3 and position ($50,$3C). Show it
 ; with byte 0 = $80 and clear the final two object bytes. Graphics differ by the incoming command
 ; even though placement is shared. (C1, E-0360)
-RunFieldCommandTemp0_WriteObject5_SetObject5_2::
-    call RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest
+RunFieldCommandTemp0_LoadSceneObject13::
+    call RunFieldCommandTemp0_LoadGfxPalette3
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $30
@@ -6975,7 +6981,7 @@ RunFieldCommandTemp0_WriteObject5_SetObject5_2::
 ; Field command 12: the scene object gets the command's sprite (tile $40, palette 4) at ($78, $50),
 ; hidden, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject12::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7002,7 +7008,7 @@ RunFieldCommandTemp0_LoadSceneObject12::
 ; Field command 11: the scene object gets the command's sprite (tile $40, palette 4) at the player's
 ; position, hidden, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject11::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7029,7 +7035,7 @@ RunFieldCommandTemp0_LoadSceneObject11::
 ; Field command 10: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject10::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7049,7 +7055,7 @@ RunFieldCommandTemp0_LoadSceneObject10::
 ; Field command 9: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
 ; shown (above the screen until moved). (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject9::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7069,7 +7075,7 @@ RunFieldCommandTemp0_LoadSceneObject9::
 ; Field command 8: the scene object gets the command's sprite (tile $40, palette 4) at ($50, $30),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject8::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7089,7 +7095,7 @@ RunFieldCommandTemp0_LoadSceneObject8::
 ; Field command 7: the scene object gets the command's sprite (tile $40, palette 4) at ($30, $E0),
 ; shown (above the screen until moved). (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject7::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7109,7 +7115,7 @@ RunFieldCommandTemp0_LoadSceneObject7::
 ; Field command 6: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $70),
 ; shown, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject6::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7134,7 +7140,7 @@ RunFieldCommandTemp0_LoadSceneObject6::
 ; Field command 5: the scene object gets the command's sprite (tile $40, palette 4) at ($40, 0),
 ; shown. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject5::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7154,7 +7160,7 @@ RunFieldCommandTemp0_LoadSceneObject5::
 ; Field command 4: the scene object gets the command's sprite (tile $40, palette 4) at ($50, $30),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject4::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7174,7 +7180,7 @@ RunFieldCommandTemp0_LoadSceneObject4::
 ; Field command 3: the scene object gets the command's sprite (tile $40, palette 4), hidden,
 ; position left as it was. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject3::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7190,7 +7196,7 @@ RunFieldCommandTemp0_LoadSceneObject3::
 ; Field command 2: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $30),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject2::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7210,7 +7216,7 @@ RunFieldCommandTemp0_LoadSceneObject2::
 ; Field command 1: the scene object gets the command's sprite (tile $40, palette 4), hidden,
 ; position left as it was. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject1::
-    call RunFieldCommandTemp0_DecompressToVRAM
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7225,8 +7231,8 @@ RunFieldCommandTemp0_LoadSceneObject1::
 
 ; Field command 0: the scene object gets the command's sprite (tile $40, palette 4) at ($60, $40),
 ; shown. (C1, E-0357)
-RunFieldCommandTemp0_WriteObject5::
-    call RunFieldCommandTemp0_DecompressToVRAM
+RunFieldCommandTemp0_LoadSceneObject0::
+    call RunFieldCommandTemp0_LoadGfxPalette4
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
@@ -7248,7 +7254,7 @@ RunFieldCommandTemp0_WriteObject5::
 ; bytes indexed by record byte 2 low seven bits into object palette slot 4 and request upload.
 ; Return complete record byte 2 in A, just like the $8300/slot-3 variant; the trailing record byte
 ; is not consumed by either reader. (C1, E-0360)
-RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_LoadGfxPalette4::
     ldh a, [hTemp0]
     and $7f
     add a
@@ -7303,7 +7309,7 @@ RunFieldCommandTemp0_DecompressToVRAM::
 ; $8300. On CGB use record byte 2 low seven bits to select eight palette bytes at $7E:$4BBD +
 ; 8*index, copy them to object palette slot 3 and request upload. Return the complete record byte 2
 ; in A for the caller's sprite-set selector. (C1, E-0360)
-RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest::
+RunFieldCommandTemp0_LoadGfxPalette3::
     ldh a, [hTemp0]
     and $7f
     add a
@@ -7353,9 +7359,10 @@ RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest::
     ld a, [hl]
     ret
 
-; Draws the scene object's trigger marker: unless a field action is pending, draws wObject5 when its
-; bit 6 is set (through DrawFieldSprites' entry drawing). (C1, E-0357)
-RunDrawTriggerMarkerSprite_WaitFieldActionRequest::
+; Unless wFieldActionRequest bit 7 is set, draws the scene object (wObject5) when its bit 6 is set,
+; through DrawFieldSprites' entry drawing (DrawFieldSprites_DrawEntry with DE = wObject5); runs each
+; field frame after DrawTriggerMarkerSprite. (C1, E-0370)
+RunDrawTriggerMarkerSprite_DrawSceneObject::
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -7363,7 +7370,7 @@ RunDrawTriggerMarkerSprite_WaitFieldActionRequest::
     ld a, [de]
     bit 6, a
     ret z
-    jr DrawFieldSprites_SetSpriteTileOffset
+    jr DrawFieldSprites_DrawEntry
 
 ; unless the map is loading or wObject5 bit 7 is clear: reads the sprite entries starting at
 ; wObject5 (tile offset, set index with bit 7 selecting a sub index, attribute, position bytes),
@@ -7380,7 +7387,7 @@ DrawFieldSprites::
 
 ; Draws one sprite entry at DE: its tile offset, sprite set (with an animated sub-index when bit 7
 ; is set), attribute bits, and the origin at its position plus (8, 16) and the scroll. (C1, E-0357)
-DrawFieldSprites_SetSpriteTileOffset::
+DrawFieldSprites_DrawEntry::
     inc de
     ld a, [de]
     ldh [hSpriteTileOffset], a
@@ -7391,7 +7398,7 @@ DrawFieldSprites_SetSpriteTileOffset::
     ld a, [de]
     bit 7, a
     jr z, .clear_sprite_sub_index
-    call DrawFieldSprites_WriteSpriteSubIndex
+    call DrawFieldSprites_AnimateSubIndex
     jr .set_sprite_attr_xor
 
 .clear_sprite_sub_index:
@@ -7427,9 +7434,13 @@ DrawFieldSprites_SetSpriteTileOffset::
     farcall DrawMetaSprite
     ret
 
-; Picks the animated sub-index of the scene object for sprite sets $13, $1A, $17, $1F, $1E and the
-; rest, stepping each set's frame table (wObject5 + 6 counts frames, + 7 is the frame). (C1, E-0357)
-DrawFieldSprites_WriteSpriteSubIndex::
+; A = the entry's sprite-set byte (bit 7 set): wObject5 + $6 (frame counter) += 1, then by set (A &
+; $7F): sets $13, $1A, $17, $1E and $18 step their looping duration lists
+; (DrawFieldSprites_StepFrameLoop) and use the frame wObject5 + $7 as hSpriteSubIndex; set $1F steps
+; its list and maps the frame through DrawFieldSprites_AnimateSubIndex_Data5; set $20 steps the
+; (sub-index, duration) pairs of DrawFieldSprites_AnimateSubIndex_Data8
+; (DrawFieldSprites_StepFramePairs); any other set leaves hSpriteSubIndex unchanged. (C1, E-0370)
+DrawFieldSprites_AnimateSubIndex::
     push af
     ld hl, wObject5 + $6
     inc [hl]
@@ -7437,8 +7448,8 @@ DrawFieldSprites_WriteSpriteSubIndex::
     and $7f
     cp $13
     jr nz, .cp_1A
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data1
-    call DrawFieldSprites_WriteObject5
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data1
+    call DrawFieldSprites_StepFrameLoop
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -7446,8 +7457,8 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_1A:
     cp $1a
     jr nz, .cp_17
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data2
-    call DrawFieldSprites_WriteObject5
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data2
+    call DrawFieldSprites_StepFrameLoop
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -7455,8 +7466,8 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_17:
     cp $17
     jr nz, .cp_1F
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data3
-    call DrawFieldSprites_WriteObject5
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data3
+    call DrawFieldSprites_StepFrameLoop
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -7464,10 +7475,10 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_1F:
     cp $1f
     jr nz, .cp_1E
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data4
-    call DrawFieldSprites_WriteObject5
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data4
+    call DrawFieldSprites_StepFrameLoop
     ld a, [wObject5 + $7]
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data5
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data5
     add_a_to_hl
     ld a, [hl]
     ldh [hSpriteSubIndex], a
@@ -7476,8 +7487,8 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_1E:
     cp $1e
     jr nz, .cp_18
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data6
-    call DrawFieldSprites_WriteObject5
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data6
+    call DrawFieldSprites_StepFrameLoop
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -7485,8 +7496,8 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_18:
     cp $18
     jr nz, .cp_20
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data7
-    call DrawFieldSprites_WriteObject5
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data7
+    call DrawFieldSprites_StepFrameLoop
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -7494,8 +7505,8 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_20:
     cp $20
     jr nz, .return
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data8
-    call DrawFieldSprites_WriteObject5_2
+    ld hl, DrawFieldSprites_AnimateSubIndex_Data8
+    call DrawFieldSprites_StepFramePairs
     ldh [hSpriteSubIndex], a
     ret
 
@@ -7504,7 +7515,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
 
 ; Steps a frame-duration list: when the counter reaches the current frame's duration it restarts and
 ; the frame advances, wrapping to 0 at $FF. (C1, E-0357)
-DrawFieldSprites_WriteObject5::
+DrawFieldSprites_StepFrameLoop::
     ld a, [wObject5 + $7]
     add_a_to_hl
     ld a, [hl]
@@ -7532,7 +7543,7 @@ DrawFieldSprites_WriteObject5::
 
 ; Steps a list of (sub-index, duration) pairs, holding on the last frame at $FF; returns the current
 ; sub-index. (C1, E-0357)
-DrawFieldSprites_WriteObject5_2::
+DrawFieldSprites_StepFramePairs::
     push hl
     ld a, [wObject5 + $7]
     add a
@@ -7564,29 +7575,29 @@ DrawFieldSprites_WriteObject5_2::
     ld a, [hl]
     ret
 
-; data read by DrawFieldSprites_WriteSpriteSubIndex (5 bytes) (E-0347)
-DrawFieldSprites_WriteSpriteSubIndex_Data1::
+; data read by DrawFieldSprites_AnimateSubIndex (5 bytes) (E-0347)
+DrawFieldSprites_AnimateSubIndex_Data1::
     db $08, $08, $08, $08, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data2::
+DrawFieldSprites_AnimateSubIndex_Data2::
     db $08, $08, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data3::
+DrawFieldSprites_AnimateSubIndex_Data3::
     db $07, $07, $09, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data4::
+DrawFieldSprites_AnimateSubIndex_Data4::
     db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $36, $0e, $0e, $0e, $40, $ff, $ff, $ff, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data5::
+DrawFieldSprites_AnimateSubIndex_Data5::
     db $00, $01, $02, $01, $02, $01, $02, $00, $03, $04, $05, $06, $ff, $ff, $ff, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data6::
+DrawFieldSprites_AnimateSubIndex_Data6::
     db $04, $07, $07, $04, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data7::
+DrawFieldSprites_AnimateSubIndex_Data7::
     db $20, $20, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data8::
+DrawFieldSprites_AnimateSubIndex_Data8::
     db $00, $1e, $00, $05, $01, $04, $02, $05, $01, $04, $00, $05, $01, $04, $02, $05
     db $03, $04, $04, $05, $03, $04, $02, $05, $05, $04, $06, $05, $05, $04, $02, $05
     db $01, $04, $00, $05, $ff, $ff
@@ -7711,7 +7722,7 @@ FindTriggerEntryForCurrentScreen::
     ld a, [wMapObjectCount]
     sub b
     ld [wTriggerIndex], a
-    jr FindTriggerEntryForCurrentScreen_SetTriggerCell
+    jr FindTriggerEntryForCurrentScreen_StoreTrigger
 
 ; on maps from $30 (or special map $85) finds the wScreenTriggers entry for the current screen and
 ; sets wTriggerIndex, wTriggerCell and wTriggerKind from it (E-0128)
@@ -7774,12 +7785,13 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers::
     ld a, [wScreenTriggerCount]
     sub b
     ld [wTriggerIndex], a
-    jr FindTriggerEntryForCurrentScreen_SetTriggerCell
+    jr FindTriggerEntryForCurrentScreen_StoreTrigger
 
-; The end of the trigger search: stores the trigger's cell and its kind (the entry's low two bits,
-; or for 0 a kind from FindTriggerEntryForCurrentScreen_ScreenTriggers_Data by the next byte);
-; returns when the kind is 0. (C1, E-0357)
-FindTriggerEntryForCurrentScreen_SetTriggerCell::
+; The end of the trigger search (the found entry's address on the stack, HL past its first byte):
+; stores the next byte in wTriggerCell and the kind in wTriggerKind (the entry's low two bits, or
+; for 0 a kind from FindTriggerEntryForCurrentScreen_ScreenTriggers_Data by the entry's next byte);
+; returns when the kind is 0, otherwise falls into LoadTriggerMarkerGraphics. (C1, E-0370)
+FindTriggerEntryForCurrentScreen_StoreTrigger::
     inc hl
     ld a, [hl]
     ld [wTriggerCell], a
@@ -7789,7 +7801,7 @@ FindTriggerEntryForCurrentScreen_SetTriggerCell::
     jr nz, .skip
     inc hl
     ld a, [hl]
-    ld hl, FindTriggerEntryForCurrentScreen_ScreenTriggers_Data
+    ld hl, FindTriggerEntryForCurrentScreen_StoreTrigger_Data
     add_a_to_hl
     ld a, [hl]
 
@@ -7799,8 +7811,12 @@ FindTriggerEntryForCurrentScreen_SetTriggerCell::
     ld [wTriggerKind], a
 
 ; Loads the trigger marker's sprite: the graphics of TriggerSpriteRecord0 + 6 x wTriggerKind
-; (pointer and bank) to VRAM $8400 and, on the GBC, its palette into OBJ palette 4. (C1, E-0357)
-RandomGoldOrItem_DecompressToVRAM::
+; (pointer and bank) to VRAM $8400 and, on the GBC, eight palette bytes from bank $7E
+; (LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData + the record's next byte) into OBJ
+; palette 4, with an upload request. Reached by falling through from
+; FindTriggerEntryForCurrentScreen_StoreTrigger and by far call from
+; RandomGoldOrItem_NextRandomSeed. (C1, E-0370)
+LoadTriggerMarkerGraphics::
     ld a, [wTriggerKind]
     ld c, a
     add a
@@ -7840,21 +7856,21 @@ RandomGoldOrItem_DecompressToVRAM::
     ret
 
 ; data read by FindTriggerEntryForCurrentScreen (45 bytes) (E-0347)
-FindTriggerEntryForCurrentScreen_ScreenTriggers_Data::
+FindTriggerEntryForCurrentScreen_StoreTrigger_Data::
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
     db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0a, $06, $00, $01
 
-; record 0 of the 6-byte records RandomGoldOrItem_DecompressToVRAM reads at $71E8 + 6 * wTriggerKind
+; record 0 of the 6-byte records LoadTriggerMarkerGraphics reads at $71E8 + 6 * wTriggerKind
 ; (TriggerSpriteTable holds 1-10); all six bytes are zero (E-0239, C1)
 ; record: record 0 of the trigger sprite records: all zero
 TriggerSpriteRecord0::
     db $00, $00, $00, $00, $00, $00 ; id 0
 
-; RandomGoldOrItem_DecompressToVRAM reads the 6-byte record at $71E8 + 6 * wTriggerKind,
-; decompresses the far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8
-; bytes at 7E:$4BBD + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is
-; TriggerSpriteRecord0 (E-0239, C1)
+; LoadTriggerMarkerGraphics reads the 6-byte record at $71E8 + 6 * wTriggerKind, decompresses the
+; far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8 bytes at 7E:$4BBD
+; + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is TriggerSpriteRecord0 (E-0239,
+; C1)
 ; record: graphics stream, bank; palette offset; two bytes
 TriggerSpriteTable::
     dfar Gfx_FieldCommandSpriteTable_16 ; id 1: compressed sprite graphics
@@ -8163,10 +8179,10 @@ CheckStepTriggerAndDispatchTalk::
 
 ; Field state 5's A button in a key world: when idle and A is pressed on map type $85, a treasure
 ; tile $2C in front starts talk event group $0E (the area item) with a pointer to whichever of the
-; floor's item records belongs to this screen (FieldState_WalkAMenu_WaitTextWindowState_Data), tile
+; floor's item records belongs to this screen (FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data), tile
 ; $2E starts it with no item; on map type $86 tile $1A starts group $0D (the door item) with the
 ; floor's wKeyWorldMenuFlag, tile $1C group $0E with no item. (C1, E-0357)
-FieldState_WalkAMenu_WaitTextWindowState::
+FieldState_WalkAMenu_CheckKeyWorldItemOnA::
     ld a, [wTextWindowState]
     and $03
     ret nz
@@ -8269,7 +8285,7 @@ FieldState_WalkAMenu_WaitTextWindowState::
     inc hl
     inc hl
     ld a, [hl]
-    ld de, FieldState_WalkAMenu_WaitTextWindowState_Data
+    ld de, FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data
     add e
     ld e, a
     jr nc, .skip4
@@ -8305,7 +8321,7 @@ FieldState_WalkAMenu_WaitTextWindowState::
     inc hl
     inc hl
     ld a, [hl]
-    ld de, FieldState_WalkAMenu_WaitTextWindowState_Data
+    ld de, FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data
     add e
     ld e, a
     jr nc, .skip5
@@ -8357,8 +8373,8 @@ FieldState_WalkAMenu_WaitTextWindowState::
     ld [wJoypadPressed], a
     ret
 
-; data read by FieldState_WalkAMenu_WaitTextWindowState (8 bytes) (E-0347)
-FieldState_WalkAMenu_WaitTextWindowState_Data::
+; data read by FieldState_WalkAMenu_CheckKeyWorldItemOnA (8 bytes) (E-0347)
+FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data::
     db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wTriggerCell (or its
@@ -9455,10 +9471,10 @@ ClearPendingFieldEventIfBit7AndNot6::
     ld [wTownEventTimer], a
     ret
 
-; returns unless ClearPendingFieldEventWhenFieldIdle_TestFlagBit is 0, wTriggerKind is $FF and no
+; returns unless ClearPendingFieldEventWhenFieldIdle_BeforeCrate is 0, wTriggerKind is $FF and no
 ; script runs; then, unless bit 7 of wMapType is set, wPendingFieldEvent = 0 (E-0122)
 ClearPendingFieldEventWhenFieldIdle::
-    call ClearPendingFieldEventWhenFieldIdle_TestFlagBit
+    call ClearPendingFieldEventWhenFieldIdle_BeforeCrate
     or a
     ret nz
     ld a, [wTriggerKind]
@@ -9469,7 +9485,7 @@ ClearPendingFieldEventWhenFieldIdle::
     ret nz
     ld a, [wMapType]
     bit 7, a
-    jr nz, RunPendingFieldEventPendingFieldEvent_Skip
+    jr nz, RunPendingFieldEventPendingFieldEvent_IfKeyWorld
     xor a
     ld [wPendingFieldEvent], a
     ret
@@ -9483,39 +9499,43 @@ RunPendingFieldEventPendingFieldEvent::
     jr z, .clear_pending_field_event
     ldh a, [hMapId]
     cp $20
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
     cp $30
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
     cp $48
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
     cp $70
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
     cp $a8
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
     cp $b0
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
     cp $b8
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
     cp $c8
-    jr z, RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent
+    jr z, RunPendingFieldEventPendingFieldEvent_PlaceSprite
 
 .clear_pending_field_event:
     xor a
     ld [wPendingFieldEvent], a
     ret
 
-; Returns unless A has no bits set besides bit 7, then falls into the check below. (C1, E-0357)
-RunPendingFieldEventPendingFieldEvent_Skip::
+; Entered from ClearPendingFieldEventWhenFieldIdle with A = wMapType (bit 7 set): returns unless A
+; is exactly $80 (the key world), then falls into RunPendingFieldEventPendingFieldEvent_PlaceSprite.
+; (C1, E-0370)
+RunPendingFieldEventPendingFieldEvent_IfKeyWorld::
     and $7f
     ret nz
 
-; Places the pending town event's visitor: with bit 6 (the first stage) cancels kinds 1, 3, 4, 5 and
-; 7 when the last inventory slot is taken (resetting wTownEventTimer to $63 and trying the other
-; events), otherwise puts sprite slot 0 at one of four random spots
-; (RunPendingFieldEventPendingFieldEvent_Data2) unless the tiles there forbid it
-; (RollFieldEventOnTallTiles), and clears bit 6; then draws one slot with the kind's sprite
-; (RunPendingFieldEventPendingFieldEvent_Data1) loaded to VRAM $8500. (C1, E-0357)
-RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent::
+; Places the pending field event's sprite: returns unless wPendingFieldEvent bit 7 is set. With bit
+; 6 (the first stage): for kinds 1, 3, 4, 5 and 7, when the last inventory slot is taken it clears
+; wPendingFieldEvent, sets wTownEventTimer to $63 and runs RunPeriodicFieldEventChecks, then goes on
+; anyway; it puts sprite slot 0 at one of four random spots
+; (RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data2), returns when RollFieldEventOnTallTiles
+; reports a blocking tile there, otherwise sets up the slot and clears bit 6. Then one sprite slot
+; is drawn with the kind's sprite (RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data1) loaded
+; to VRAM $8500. (C1, E-0370)
+RunPendingFieldEventPendingFieldEvent_PlaceSprite::
     ld a, [wPendingFieldEvent]
     bit 7, a
     ret z
@@ -9552,7 +9572,7 @@ RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent::
     ld a, [wRandomHi]
     and $03
     add a
-    ld hl, RunPendingFieldEventPendingFieldEvent_Data2
+    ld hl, RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data2
     add_a_to_hl
     ld a, [hli]
     ld [wSpriteSlots + $4], a
@@ -9597,7 +9617,7 @@ RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent::
     ld [wSpriteSlotCount], a
     ld a, [wPendingFieldEvent]
     and $0f
-    ld hl, RunPendingFieldEventPendingFieldEvent_Data1
+    ld hl, RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wSpriteSlots + $2], a
@@ -9695,16 +9715,16 @@ RollFieldEventOnTallTiles::
     ld a, $01
     ret
 
-; data read by RunPendingFieldEventPendingFieldEvent (16 bytes) (E-0347)
-RunPendingFieldEventPendingFieldEvent_Data1::
+; data read by RunPendingFieldEventPendingFieldEvent_PlaceSprite (16 bytes) (E-0347)
+RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data1::
     db $12, $15, $3d, $3e, $10, $11, $17, $15, $14, $13, $57, $12, $15, $12, $14, $10
 
-RunPendingFieldEventPendingFieldEvent_Data2::
+RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data2::
     db $20, $20, $70, $60, $20, $60, $70, $20
 
 ; Returns A = 1, clearing the pending town event, on map $30 screen (5, 5) outside key worlds after
 ; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD but before EVENT_SCENE_CRATE; otherwise A = 0. (C1, E-0357)
-ClearPendingFieldEventWhenFieldIdle_TestFlagBit::
+ClearPendingFieldEventWhenFieldIdle_BeforeCrate::
     ld a, [wMapType]
     bit 7, a
     jp nz, .return_0
@@ -9909,8 +9929,9 @@ FindPartyMemberWithSkill76To7DOr92::
     ld [rRAMG], a
     ret
 
-; Clears hTemp1. (C1, E-0357)
-GreatLogTalkEvents_Talk204_WriteTemp1::
+; Clears hTemp1 and returns. GreatLogTalkEvents_Talk204 far-calls it and returns early only when
+; hTemp1 bit 7 is set, so its test always passes. (C1, E-0370)
+GreatLogTalkEvents_Talk204_PassCheck::
     xor a
     ldh [hTemp1], a
     ret

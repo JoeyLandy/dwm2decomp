@@ -123,8 +123,8 @@ RunBankE1Routine::
 RunBankE1Routine_Data::
     db $3c, $5d
 
-; Builds the meta-sprite into OAM; the same code as DrawMetaSpriteSet_Bank27_WaitOamNextEntry with
-; this bank's frames. (C1, E-0357)
+; Builds the meta-sprite into OAM; the same code as DrawMetaSpriteSet_Bank27_BuildOam with this
+; bank's frames. (C1, E-0357)
 RunBankE1Routine_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27
