@@ -698,7 +698,7 @@ TileRect_ScreenBlockTable_45::
 ; Game mode 5, state 5 frame: exchanges the joypad over the link and, on the link screens, draws the
 ; monster sprites (in screen state $0C the list entry's or the party's at steps $15/$20, in state
 ; $0D the partner's monster's). (C1, E-0357)
-GameMode5_Update_LinkExchangeJoypadPerFrame_4::
+GameMode5_Update_LinkExchangeJoypadPerFrame::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
     or a
@@ -751,26 +751,26 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_4::
 ; Link session 6's screen (Team Mode): before the menu starts, the fee steps by
 ; wTitleScreenSubState; afterwards, once no fade runs, the screen states (waiting, the list, the
 ; info screens, the swap menu and the record panels). (C1, E-0357)
-RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
+RunLinkSession6Exchange_Receive_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ld a, [wTitleScreenState]
     or a
     jr nz, .check_fade_state
     ld a, [wTitleScreenSubState]
     jumptable
-    dw RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep
-    dw RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14
-    dw RunLinkSession6Exchange_ShowForTeamMode1Hero
-    dw RunLinkSession6Exchange_ShowYourPalRefusedThe
-    dw RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc
-    dw RunLinkSession6Exchange_SetLinkSendByte_2
+    dw RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep
+    dw RunLinkSession6Exchange_DrawTeamGold
+    dw RunLinkSession6Exchange_Receive_ShowForTeamMode1Hero
+    dw RunLinkSession6Exchange_Receive_ShowYourPalRefusedThe
+    dw RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc
+    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_2
     dw RunLinkSession6Exchange_ChooseTeamMonster
-    dw RunLinkSession6Exchange_ShowYouRefusedToPay
-    dw RunLinkSession6Exchange_BackTitleScreenSubState
-    dw RunLinkSession6Exchange_2
-    dw RunLinkSession6Exchange_SetLinkSendByte
-    dw RunLinkSession6Exchange_ShowYourPalRefusedTo
+    dw RunLinkSession6Exchange_Receive_ShowYouRefusedToPay
+    dw RunLinkSession6Exchange_Receive_BackTitleScreenSubState
+    dw RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_2
+    dw RunLinkSession6Exchange_Receive_SetLinkSendByte
+    dw RunLinkSession6Exchange_Receive_ShowYourPalRefusedTo
     dw RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc
-    dw RunLinkSession6Exchange_3
+    dw RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_3
 
 .check_fade_state:
     ld a, [wFadeState]
@@ -778,31 +778,31 @@ RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ret nz
     ld a, [wScreenState]
     jumptable
-    dw RunLinkSession6Exchange_AdvanceScreenState
-    dw RunLinkSession6Exchange_AdvanceScreenState_2
-    dw RunLinkSession6Exchange_PleaseWaitSteps
-    dw RunLinkSession6Exchange_AdvanceScreenState_3
-    dw RunLinkSession6Exchange_BreedMenuSteps
-    dw RunLinkSession6Exchange_FightInfoExSteps
-    dw RunLinkSession6Exchange_SwapMonstersMenu
-    dw RunLinkSession6Exchange_SwapMonstersMenu
-    dw RunLinkSession6Exchange_SwapMonstersMenu
-    dw RunLinkSession6Exchange_SwapMonstersMenu
-    dw RunLinkSession6Exchange_SwapMonstersMenu
-    dw RunLinkSession6Exchange_SwapMonstersMenu
-    dw RunLinkSession6Exchange_SwapMonstersMenu
-    dw RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1
-    dw RunLinkSession6Exchange_ClearRecordPanelTilesSteps
-    dw RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2
+    dw RunLinkSession6Exchange_Receive_AdvanceScreenState
+    dw RunLinkSession6Exchange_Receive_AdvanceScreenState_2
+    dw RunLinkSession6Exchange_Receive_2
+    dw RunLinkSession6Exchange_Receive_AdvanceScreenState_3
+    dw RunLinkSession6Exchange_Pick
+    dw RunLinkSession6Exchange_FightInfo
+    dw RunLinkSession6Exchange_RunStatsScreen
+    dw RunLinkSession6Exchange_RunStatsScreen
+    dw RunLinkSession6Exchange_RunStatsScreen
+    dw RunLinkSession6Exchange_RunStatsScreen
+    dw RunLinkSession6Exchange_RunStatsScreen
+    dw RunLinkSession6Exchange_RunStatsScreen
+    dw RunLinkSession6Exchange_RunStatsScreen
+    dw RunLinkSession6Exchange_RunRecordScreens
+    dw RunLinkSession6Exchange_BackFromStats
+    dw RunLinkSession6Exchange_BackFromOwnStats
 
 ; Team Mode, step 0: draws the frame and the player's name and heading (string 0 of category 1) and
 ; sets the default text window. (C1, E-0357)
-RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
-    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect
+RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep::
+    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_TileRect
     ld hl, wScreenTileBuffer + $c
     lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank33
-    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
+    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wScreenTileBuffer
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -814,7 +814,7 @@ RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
 
 ; Team Mode, step 1: draws the gold and four numbers into the screen buffer and copies it to the BG
 ; map. (C1, E-0357)
-RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
+RunLinkSession6Exchange_DrawTeamGold::
     xor a
     ld [wLinkSendByte], a
     call WriteGoldDigitsToScreenTileBufferRow1Col14
@@ -831,7 +831,7 @@ RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
 
 ; Team Mode, step 2: after the fade 'For Team Mode, 1000G is charged.' (category 5, string $19).
 ; (C1, E-0357)
-RunLinkSession6Exchange_ShowForTeamMode1Hero::
+RunLinkSession6Exchange_Receive_ShowForTeamMode1Hero::
     ld a, [wFadeState]
     or a
     ret nz
@@ -847,7 +847,7 @@ RunLinkSession6Exchange_ShowForTeamMode1Hero::
 ; side's no gives 'You refused the Team Mode.' ($09); otherwise below 1000 gold 'Not enough money.
 ; Please wait.' (string 0) and sends $10; with enough pays 1000 gold, 'Please wait.' and sends 1.
 ; (C1, E-0357)
-RunLinkSession6Exchange_ShowYourPalRefusedThe::
+RunLinkSession6Exchange_Receive_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .check_text_flags
@@ -914,7 +914,7 @@ RunLinkSession6Exchange_ShowYourPalRefusedThe::
 ; Team Mode, step 4: the partner's refusal as above; the partner's 1 gives 'You paid the 1000G
 ; battle fee.' (string 7); its $10 gives "Your pal doesn't have enough gold." (string 1) and the
 ; offer to pay for both (three steps on). (C1, E-0357)
-RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
+RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -956,7 +956,7 @@ RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
     ret
 
 ; Team Mode, step 5: clears the send byte and the screen flag. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_2::
+RunLinkSession6Exchange_Receive_SetLinkSendByte_2::
     xor a
     ld [wLinkSendByte], a
     ld hl, wTitleScreenSubState
@@ -1021,7 +1021,7 @@ RunLinkSession6Exchange_SetTitleScreenSubState::
 ; Team Mode, step 7 (paying for both): no gives 'You refused to pay the battle ...' (string 5, sends
 ; $40); below 1000 gold 'Insufficient gold for Team Mode.' (string 4, sends $30); otherwise pays
 ; 1000 more, 'You paid for both combatants.' (string 2, sends $20). (C1, E-0357)
-RunLinkSession6Exchange_ShowYouRefusedToPay::
+RunLinkSession6Exchange_Receive_ShowYouRefusedToPay::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -1074,7 +1074,7 @@ RunLinkSession6Exchange_ShowYouRefusedToPay::
 
 ; Team Mode, step 8: the partner's refusal ends; on its $20 goes back two steps (to choosing the
 ; monster). (C1, E-0357)
-RunLinkSession6Exchange_BackTitleScreenSubState::
+RunLinkSession6Exchange_Receive_BackTitleScreenSubState::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1098,7 +1098,7 @@ RunLinkSession6Exchange_BackTitleScreenSubState::
     ret
 
 ; Team Mode, step 9: the partner's refusal ends; on its $30 or $40 goes on. (C1, E-0357)
-RunLinkSession6Exchange_2::
+RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_2::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1124,7 +1124,7 @@ RunLinkSession6Exchange_2::
     ret
 
 ; Team Mode, step 10: gives up (sends $FE, screen state 2). (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte::
+RunLinkSession6Exchange_Receive_SetLinkSendByte::
     ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
@@ -1138,7 +1138,7 @@ RunLinkSession6Exchange_SetLinkSendByte::
 ; Team Mode, step 11 (waiting for the partner who pays): its $10 or $30 gives 'Insufficient gold for
 ; Team Mode.', $20 'Your pal paid your battle fee.' (string 3), $40 'Your pal refused to pay the
 ; ...' (string 6), echoing the byte. (C1, E-0357)
-RunLinkSession6Exchange_ShowYourPalRefusedTo::
+RunLinkSession6Exchange_Receive_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1226,7 +1226,7 @@ RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
 
 ; Team Mode, step 13: on the partner's $10, $30, $40 or $FE gives up (sends $FE, screen state 2).
 ; (C1, E-0357)
-RunLinkSession6Exchange_3::
+RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_3::
     ld a, [wLinkMessage]
     cp $10
     jr z, .set_link_send_byte_to_FE
@@ -1257,13 +1257,13 @@ BeginString_Bank07_Cat5::
     ret
 
 ; Session 6, screen state 0: the next state. (C1, E-0357)
-RunLinkSession6Exchange_AdvanceScreenState::
+RunLinkSession6Exchange_Receive_AdvanceScreenState::
     ld hl, wScreenState
     inc [hl]
     ret
 
 ; Session 6, screen state 1: after the text skips a state. (C1, E-0357)
-RunLinkSession6Exchange_AdvanceScreenState_2::
+RunLinkSession6Exchange_Receive_AdvanceScreenState_2::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1273,17 +1273,17 @@ RunLinkSession6Exchange_AdvanceScreenState_2::
     ret
 
 ; Session 6, screen state 2 (leaving): its five waiting steps. (C1, E-0357)
-RunLinkSession6Exchange_PleaseWaitSteps::
+RunLinkSession6Exchange_Receive_2::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_SetLinkSendByte_3
-    dw RunLinkSession6Exchange_PleaseWait
-    dw RunLinkSession6Exchange_SetLinkSendByte_4
-    dw RunLinkSession6Exchange_SetLinkSendByte_5
-    dw RunLinkSession6Exchange_AdvanceModeChangeRequest
+    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_3
+    dw RunLinkSession6Exchange_Receive_PleaseWait
+    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_4
+    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_5
+    dw RunLinkSession6Exchange_Receive_3
 
 ; Leaving, step 0: on the partner's $FE goes on. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_3::
+RunLinkSession6Exchange_Receive_SetLinkSendByte_3::
     ld a, [wLinkMessage]
     cp $fe
     ret nz
@@ -1295,7 +1295,7 @@ RunLinkSession6Exchange_SetLinkSendByte_3::
     ret
 
 ; Leaving, step 1: after the text 'Please wait.'. (C1, E-0357)
-RunLinkSession6Exchange_PleaseWait::
+RunLinkSession6Exchange_Receive_PleaseWait::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1306,7 +1306,7 @@ RunLinkSession6Exchange_PleaseWait::
     ret
 
 ; Leaving, step 2: after the text sends 1. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_4::
+RunLinkSession6Exchange_Receive_SetLinkSendByte_4::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1317,7 +1317,7 @@ RunLinkSession6Exchange_SetLinkSendByte_4::
     ret
 
 ; Leaving, step 3: on the partner's 1 goes on. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_5::
+RunLinkSession6Exchange_Receive_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -1329,7 +1329,7 @@ RunLinkSession6Exchange_SetLinkSendByte_5::
 
 ; Leaving, step 4: after the text clears $6F bytes of screen state and returns to game mode 5, state
 ; 1 (the link menu). (C1, E-0357)
-RunLinkSession6Exchange_AdvanceModeChangeRequest::
+RunLinkSession6Exchange_Receive_3::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1356,35 +1356,35 @@ RunLinkSession6Exchange_AdvanceModeChangeRequest::
     ret
 
 ; Session 6, screen state 3: the next state. (C1, E-0357)
-RunLinkSession6Exchange_AdvanceScreenState_3::
+RunLinkSession6Exchange_Receive_AdvanceScreenState_3::
     ld hl, wScreenState
     inc [hl]
     ret
 
 ; Session 6, screen state 4 (picking the team monster): sixteen steps: the list, the panel, the
 ; cursor, 'Info / OK', waiting and the record exchange. (C1, E-0357)
-RunLinkSession6Exchange_BreedMenuSteps::
+RunLinkSession6Exchange_Pick::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_BreedMenu
-    dw RunLinkSession6Exchange_BreedMenu
-    dw RunLinkSession6Exchange_DrawRecordListPageIndicators_1B
-    dw RunLinkSession6Exchange_BreedMenu
+    dw RunLinkSession6Exchange_Pick_RunList
+    dw RunLinkSession6Exchange_Pick_RunList
+    dw RunLinkSession6Exchange_Pick_ListMonsters
+    dw RunLinkSession6Exchange_Pick_RunList
     dw CallDrawListEntriesCell5RecordPanel
     dw CallClearAndDrawListEntriesCell5Name
     dw CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
-    dw RunLinkSession6Exchange_RunFourTimes
-    dw RunLinkSession6Exchange_YourPalRefusedThe
-    dw RunLinkSession6Exchange_InfoOKYesN
-    dw RunLinkSession6Exchange_YourPalRefusedThe_2
-    dw RunLinkSession6Exchange_ChooseAMonsterFor
-    dw RunLinkSession6Exchange_PleaseWait_2
-    dw RunLinkSession6Exchange_SetLinkTimeoutLo
-    dw RunLinkSession6Exchange_YourPalRefusedThe_3
-    dw RunLinkSession6Exchange_AdvanceScreenState_4
+    dw RunLinkSession6Exchange_Pick_MarkCursor
+    dw RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe
+    dw RunLinkSession6Exchange_Pick_ShowInfoOKYesN
+    dw RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe_YourPalRefusedThe
+    dw RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor
+    dw RunLinkSession6Exchange_Pick_ShowPleaseWait
+    dw RunLinkSession6Exchange_Pick_CopyRecord
+    dw RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe_2
+    dw RunLinkSession6Exchange_Pick_WaitLinkMessage
 
 ; Picking, steps 0, 1 and 3: after the text the list's steps (BreedMenu). (C1, E-0357)
-RunLinkSession6Exchange_BreedMenu::
+RunLinkSession6Exchange_Pick_RunList::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1392,7 +1392,7 @@ RunLinkSession6Exchange_BreedMenu::
     ret
 
 ; Picking, step 2: lists the monsters that may be picked and draws the page indicator. (C1, E-0357)
-RunLinkSession6Exchange_DrawRecordListPageIndicators_1B::
+RunLinkSession6Exchange_Pick_ListMonsters::
     farcall DrawRecordListPageIndicators_1B
     ret
 
@@ -1406,13 +1406,14 @@ CallClearAndDrawListEntriesCell5Name::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; copies the 10 x 11 rectangle RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
-; into wWindowTileBuffer + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119)
-; (E-0340: the address in its name read as its RAM name; was
-; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep) (E-0344: the address in its name dropped or
-; read as the label there; was CopyRectToWindowTileBufferRow5Col10AndIncScreenStep)
+; copies the 10 x 11 rectangle
+; RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2 into wWindowTileBuffer
+; + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119) (E-0340: the address in its
+; name read as its RAM name; was CopyRectToWindowTileBufferRow5Col10AndIncScreenStep) (E-0344: the
+; address in its name dropped or read as the label there; was
+; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep)
 CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
-    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
+    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1422,13 +1423,13 @@ CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
 
 ; Picking, step 7: after the text marks the cursor, draws four numbers into the window and redraws,
 ; then clears the mark. (C1, E-0357)
-RunLinkSession6Exchange_RunFourTimes::
+RunLinkSession6Exchange_Pick_MarkCursor::
     ld a, [wTextFlags]
     and a
     ret nz
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, RunLinkSession6Exchange_Data
+    ld hl, RunLinkSession6Exchange_Pick_MarkCursor_Data
     call StoreBAtWordTableEntry_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
@@ -1439,7 +1440,7 @@ RunLinkSession6Exchange_RunFourTimes::
     call DrawScreenBufferRectToBGMap_33
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, RunLinkSession6Exchange_Data
+    ld hl, RunLinkSession6Exchange_Pick_MarkCursor_Data
     call StoreBAtWordTableEntry_Bank33
     call SetDefaultStringWindow_Bank33
     ld a, [wScreenStep]
@@ -1451,7 +1452,7 @@ RunLinkSession6Exchange_RunFourTimes::
 ; list cursor: a page change back seven steps, $FD back four, B 'You refused the Team Mode.' (to
 ; leaving), A records the pick, marks it and asks 'Pick <name> for the team?' (bank-$1B string 2).
 ; (C1, E-0357)
-RunLinkSession6Exchange_YourPalRefusedThe::
+RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .clear_menu_input_result
@@ -1513,7 +1514,7 @@ RunLinkSession6Exchange_YourPalRefusedThe::
     call StoreListEntriesCell5RecordInPickedRecords
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, RunLinkSession6Exchange_Data
+    ld hl, RunLinkSession6Exchange_Pick_MarkCursor_Data
     call StoreBAtWordTableEntry_Bank33
     call CopyListEntriesCell5NameToTextBuf0_Bank33
     ld hl, wScreenStep
@@ -1524,7 +1525,7 @@ RunLinkSession6Exchange_YourPalRefusedThe::
 
 ; Picking, step 9: after the text shows 'Info / OK' (bank-$1B string $1E) with sound $6C in its 8 x
 ; 5 box. (C1, E-0357)
-RunLinkSession6Exchange_InfoOKYesN::
+RunLinkSession6Exchange_Pick_ShowInfoOKYesN::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1545,7 +1546,7 @@ RunLinkSession6Exchange_InfoOKYesN::
     farcall ShowString_Bank1B
     ld a, $6c
     call QueueSoundEffect
-    ld de, RunLinkSession6Exchange_InfoOKYesN_TileRect
+    ld de, RunLinkSession6Exchange_Pick_ShowInfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1562,7 +1563,7 @@ RunLinkSession6Exchange_InfoOKYesN::
 
 ; Picking, step 10: the partner's refusal as before; the Info / OK choice: B goes on; Info opens the
 ; stats screen (state $0C); OK records the pick and goes on two steps. (C1, E-0357)
-RunLinkSession6Exchange_YourPalRefusedThe_2::
+RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe_YourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .clear_arg5
@@ -1619,12 +1620,12 @@ RunLinkSession6Exchange_YourPalRefusedThe_2::
 
 ; Picking, step 11: clears the five marks, redraws and asks 'Choose a monster for the Team ...'
 ; again (three steps back). (C1, E-0357)
-RunLinkSession6Exchange_ChooseAMonsterFor::
+RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor::
     ld a, [wTextFlags]
     and a
     ret nz
     ld c, $05
-    ld hl, RunLinkSession6Exchange_Data
+    ld hl, RunLinkSession6Exchange_Pick_MarkCursor_Data
     call WriteC3AtWordTableEntries_Bank33
     call DrawBoxAndKeyRows
     call BGMapAddressAtScroll_Bank33
@@ -1640,7 +1641,7 @@ RunLinkSession6Exchange_ChooseAMonsterFor::
 
 ; Picking, step 12: redraws, counts the pick, 'Please wait.' and finishes the picks
 ; (FinishPickedRecordsEntryAndStep_33). (C1, E-0357)
-RunLinkSession6Exchange_PleaseWait_2::
+RunLinkSession6Exchange_Pick_ShowPleaseWait::
     call DrawBoxAndKeyRows
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -1655,7 +1656,7 @@ RunLinkSession6Exchange_PleaseWait_2::
 
 ; Picking, step 13: copies the picked SRAM record into wRecordBufA for the exchange (into
 ; wRecordBufB), clears the link scene and sends 1. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkTimeoutLo::
+RunLinkSession6Exchange_Pick_CopyRecord::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -1693,7 +1694,7 @@ RunLinkSession6Exchange_SetLinkTimeoutLo::
 
 ; Picking, step 14: on the partner's 1 starts the $A5-byte record exchange; on $FE 'Your pal refused
 ; the Team Mode.'. (C1, E-0357)
-RunLinkSession6Exchange_YourPalRefusedThe_3::
+RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe_2::
     ld a, [wLinkMessage]
     cp $01
     jr z, .set_link_buffer_count_lo
@@ -1725,7 +1726,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_3::
     ret
 
 ; Picking, step 15: when the exchange ends the next screen state. (C1, E-0357)
-RunLinkSession6Exchange_AdvanceScreenState_4::
+RunLinkSession6Exchange_Pick_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1736,30 +1737,30 @@ RunLinkSession6Exchange_AdvanceScreenState_4::
     ret
 
 ; Session 6, screen state 5 (the fight info): its eighteen steps. (C1, E-0357)
-RunLinkSession6Exchange_FightInfoExSteps::
+RunLinkSession6Exchange_FightInfo::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_AdvanceScreenStep
-    dw RunLinkSession6Exchange_SetLinkSendByte_6
-    dw RunLinkSession6Exchange_SetLinkTimeoutLo_2
-    dw RunLinkSession6Exchange_SetLinkSendByte_7
-    dw RunLinkSession6Exchange_FightInfoEx
-    dw RunLinkSession6Exchange_BattleInTeamMode
-    dw RunLinkSession6Exchange_YourPalRefusedThe_4
-    dw RunLinkSession6Exchange_TheBattleResultsWill
-    dw RunLinkSession6Exchange_YourPalRefusedThe_5
-    dw RunLinkSession6Exchange_PleaseWait_3
-    dw RunLinkSession6Exchange_AdvanceScreenStep_2
-    dw RunLinkSession6Exchange_YourPalRefusedThe_6
-    dw RunLinkSession6Exchange_VerifySaveChecksum
-    dw RunLinkSession6Exchange_SetArg5ToListEntriesCell5
-    dw RunLinkSession6Exchange_SetScreenStep
-    dw RunLinkSession6Exchange_SetLinkSendByte_8
-    dw RunLinkSession6Exchange_SetScreenStep_2
-    dw RunLinkSession6Exchange_SetLinkSendByte_9
+    dw RunLinkSession6Exchange_FightInfo_Pack
+    dw RunLinkSession6Exchange_FightInfo_SetLinkSendByte
+    dw RunLinkSession6Exchange_FightInfo_WaitLinkMessage
+    dw RunLinkSession6Exchange_FightInfo_WaitLinkMessage_SetLinkSendByte
+    dw RunLinkSession6Exchange_FightInfo_DrawWindow
+    dw RunLinkSession6Exchange_FightInfo_ShowBattleInTeamMode
+    dw RunLinkSession6Exchange_FightInfo_ShowYourPalRefusedThe
+    dw RunLinkSession6Exchange_FightInfo_ShowTheBattleResultsWill
+    dw RunLinkSession6Exchange_FightInfo_YourPalRefusedThe
+    dw RunLinkSession6Exchange_FightInfo_ShowPleaseWait
+    dw RunLinkSession6Exchange_FightInfo_WaitTextFlags
+    dw RunLinkSession6Exchange_WriteLinkSendByteAndScreenStateEtc
+    dw RunLinkSession6Exchange_FightInfo_Save
+    dw RunLinkSession6Exchange_FightInfo_KeepPartner
+    dw RunLinkSession6Exchange_WriteScreenStepAndBattleSetupFlagsLoEtc
+    dw RunLinkSession6Exchange_FightInfo_WaitLinkMessage_2
+    dw RunLinkSession6Exchange_FightInfo_SetScreenStep
+    dw RunLinkSession6Exchange_FightInfo_WaitLinkMessage_3
 
 ; Fight info, step 0: packs this side's key bytes and the player's name to send. (C1, E-0357)
-RunLinkSession6Exchange_AdvanceScreenStep::
+RunLinkSession6Exchange_FightInfo_Pack::
     ld hl, wScreenStep
     inc [hl]
     xor a
@@ -1783,7 +1784,7 @@ CopyBBytesThenMark1::
     ret
 
 ; Fight info, step 1: sends 1. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_6::
+RunLinkSession6Exchange_FightInfo_SetLinkSendByte::
     ld a, $01
     ld [wLinkSendByte], a
     ld hl, wScreenStep
@@ -1792,7 +1793,7 @@ RunLinkSession6Exchange_SetLinkSendByte_6::
 
 ; Fight info, step 2: on the partner's 1 starts a 16-byte exchange into wLinkPartnerName. (C1,
 ; E-0357)
-RunLinkSession6Exchange_SetLinkTimeoutLo_2::
+RunLinkSession6Exchange_FightInfo_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -1815,7 +1816,7 @@ RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     ret
 
 ; Fight info, step 3: when the exchange ends goes on. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_7::
+RunLinkSession6Exchange_FightInfo_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1827,8 +1828,8 @@ RunLinkSession6Exchange_SetLinkSendByte_7::
 
 ; Fight info, step 4: draws the 10 x 11 info window with the partner's name and four numbers, 'Fight
 ; / Info / Ex' (bank-$1B string $20) in its 9 x 7 box and string 1 of category 1. (C1, E-0357)
-RunLinkSession6Exchange_FightInfoEx::
-    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
+RunLinkSession6Exchange_FightInfo_DrawWindow::
+    ld de, RunLinkSession6Exchange_FightInfo_DrawWindow_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1871,7 +1872,7 @@ RunLinkSession6Exchange_FightInfoEx::
     ld a, $20
     ld [wStringIndex], a ; 'FightInfoEx'
     farcall ShowString_Bank1B
-    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect_2
+    ld de, RunLinkSession6Exchange_FightInfo_DrawWindow_TileRect_2
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1895,7 +1896,7 @@ RunLinkSession6Exchange_FightInfoEx::
     ret
 
 ; Fight info, step 5: redraws and asks 'Battle in Team Mode?' (category 5, string $0D). (C1, E-0357)
-RunLinkSession6Exchange_BattleInTeamMode::
+RunLinkSession6Exchange_FightInfo_ShowBattleInTeamMode::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -1911,7 +1912,7 @@ RunLinkSession6Exchange_BattleInTeamMode::
 ; Fight info, step 6: the partner's refusal ends; the three-way choice: Fight goes on, Info opens
 ; the partner's monster's stats (state $0D, keeping the list place), Ex or B 'You refused the Team
 ; Mode.' (to leaving). (C1, E-0357)
-RunLinkSession6Exchange_YourPalRefusedThe_4::
+RunLinkSession6Exchange_FightInfo_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_handle_three_choice_cursor_input_f1
@@ -1982,7 +1983,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_4::
 
 ; Fight info, step 7: saves the window into the screen buffer and 'The battle results will be
 ; recorded.' (string $0E). (C1, E-0357)
-RunLinkSession6Exchange_TheBattleResultsWill::
+RunLinkSession6Exchange_FightInfo_ShowTheBattleResultsWill::
     ld de, wScreenTileBuffer
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
@@ -1997,7 +1998,7 @@ RunLinkSession6Exchange_TheBattleResultsWill::
 
 ; Fight info, step 8: the partner's refusal ends; after the text, no asks 'Battle in Team Mode?'
 ; again (two steps back); yes goes on. (C1, E-0357)
-RunLinkSession6Exchange_YourPalRefusedThe_5::
+RunLinkSession6Exchange_FightInfo_YourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .check_text_flags
@@ -2033,7 +2034,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_5::
     ret
 
 ; Fight info, step 9: 'Please wait.'. (C1, E-0357)
-RunLinkSession6Exchange_PleaseWait_3::
+RunLinkSession6Exchange_FightInfo_ShowPleaseWait::
     ld hl, wScreenStep
     inc [hl]
     ld a, $0c ; 'Please wait.'
@@ -2041,7 +2042,7 @@ RunLinkSession6Exchange_PleaseWait_3::
     ret
 
 ; Fight info, step 10: after the text sends 1. (C1, E-0357)
-RunLinkSession6Exchange_AdvanceScreenStep_2::
+RunLinkSession6Exchange_FightInfo_WaitTextFlags::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2053,7 +2054,7 @@ RunLinkSession6Exchange_AdvanceScreenStep_2::
 
 ; Fight info, step 11: on the partner's 1 'Saving... Please wait.' (string $1A); on $FE 'Your pal
 ; refused the Team Mode.'. (C1, E-0357)
-RunLinkSession6Exchange_YourPalRefusedThe_6::
+RunLinkSession6Exchange_WriteLinkSendByteAndScreenStateEtc::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_screen_state_to_02
@@ -2084,7 +2085,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_6::
 
 ; Fight info, step 12: after the text checks the save (VerifySaveChecksum, keeping the gold) and
 ; saves, then sends 5. (C1, E-0357)
-RunLinkSession6Exchange_VerifySaveChecksum::
+RunLinkSession6Exchange_FightInfo_Save::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2110,7 +2111,7 @@ RunLinkSession6Exchange_VerifySaveChecksum::
 
 ; Fight info, step 13: on the partner's 5 keeps the partner's name (wLinkSeedCopy) and the picked
 ; record number. (C1, E-0357)
-RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
+RunLinkSession6Exchange_FightInfo_KeepPartner::
     ld a, [wLinkMessage]
     cp $05
     ret nz
@@ -2133,7 +2134,7 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
     ret
 
 ; Fight info, step 14: starts a 2-byte exchange of the random seed. (C1, E-0357)
-RunLinkSession6Exchange_SetScreenStep::
+RunLinkSession6Exchange_WriteScreenStepAndBattleSetupFlagsLoEtc::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2163,7 +2164,7 @@ RunLinkSession6Exchange_SetScreenStep::
 
 ; Fight info, step 15: when it ends both sides use one seed: the leader its own, the follower (link
 ; role bit 1) the leader's. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_8::
+RunLinkSession6Exchange_FightInfo_WaitLinkMessage_2::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -2193,7 +2194,7 @@ RunLinkSession6Exchange_SetLinkSendByte_8::
     ret
 
 ; Fight info, step 16: sends $D2. (C1, E-0357)
-RunLinkSession6Exchange_SetScreenStep_2::
+RunLinkSession6Exchange_FightInfo_SetScreenStep::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2203,7 +2204,7 @@ RunLinkSession6Exchange_SetScreenStep_2::
 
 ; Fight info, step 17: on the partner's $D2 switches to game mode 7 (the Team Mode battle) with link
 ; session 7. (C1, E-0357)
-RunLinkSession6Exchange_SetLinkSendByte_9::
+RunLinkSession6Exchange_FightInfo_WaitLinkMessage_3::
     ld a, [wLinkMessage]
     cp $d2
     ret nz
@@ -2229,7 +2230,7 @@ RunLinkSession6Exchange_SetLinkSendByte_9::
 
 ; Session 6, screen states 6-12: runs the stats screen until its step $0A, then three states on.
 ; (C1, E-0357)
-RunLinkSession6Exchange_SwapMonstersMenu::
+RunLinkSession6Exchange_RunStatsScreen::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -2244,7 +2245,7 @@ RunLinkSession6Exchange_SwapMonstersMenu::
 
 ; Session 6, screen state 13: runs the record screens (RunScreenStateWhenNotFading_F1); back in
 ; state $0E restores the list place. (C1, E-0357)
-RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
+RunLinkSession6Exchange_RunRecordScreens::
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
     cp $0e
@@ -2256,23 +2257,23 @@ RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     ret
 
 ; Session 6, screen state 14 (back from the partner's stats): its eight steps. (C1, E-0357)
-RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
+RunLinkSession6Exchange_BackFromStats::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_ClearRecordPanelTiles
-    dw RunLinkSession6Exchange_AdvanceScreenStep_3
-    dw RunLinkSession6Exchange_AdvanceScreenStep_3
-    dw RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2
-    dw RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780
-    dw RunLinkSession6Exchange_RunFourTimes_2
-    dw RunLinkSession6Exchange_FightInfoEx_2
-    dw RunLinkSession6Exchange_SetSpriteHideTile
+    dw RunLinkSession6Exchange_BackFromStats_DrawInfo
+    dw RunLinkSession6Exchange_BackFromStats_AdvanceScreenStep
+    dw RunLinkSession6Exchange_BackFromStats_AdvanceScreenStep
+    dw RunLinkSession6Exchange_BackFromStats_DrawPanel
+    dw RunLinkSession6Exchange_BackFromStats_DrawName
+    dw RunLinkSession6Exchange_BackFromStats_DrawInfoWindows
+    dw RunLinkSession6Exchange_BackFromStats_ShowFightInfoEx
+    dw RunLinkSession6Exchange_BackFromStats_Return
 
 ; Back from stats, step 0: clears the record panel tiles, draws the info window, the name and
 ; heading and string 1 of category 1. (C1, E-0357)
-RunLinkSession6Exchange_ClearRecordPanelTiles::
+RunLinkSession6Exchange_BackFromStats_DrawInfo::
     farcall ClearRecordPanelTiles
-    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
+    ld de, RunLinkSession6Exchange_FightInfo_DrawWindow_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2298,14 +2299,14 @@ RunLinkSession6Exchange_ClearRecordPanelTiles::
     ret
 
 ; Back from stats, steps 1 and 2: move on. (C1, E-0357)
-RunLinkSession6Exchange_AdvanceScreenStep_3::
+RunLinkSession6Exchange_BackFromStats_AdvanceScreenStep::
     ld hl, wScreenStep
     inc [hl]
     ret
 
 ; Back from stats, step 3: draws the picked monster's family icon, level and sex mark in its 13 x 2
 ; panel. (C1, E-0357)
-RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
+RunLinkSession6Exchange_BackFromStats_DrawPanel::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -2331,7 +2332,7 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
     farcall LoadFamilyIconTileForWorkBuf
     xor a
     ld [rRAMG2], a
-    ld de, RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2_TileRect
+    ld de, RunLinkSession6Exchange_BackFromStats_DrawPanel_TileRect
     ld hl, wWindowTileBuffer + $140
     lb bc, $0d, $02
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2396,26 +2397,26 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 2 tiles, one row per line
-RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2_TileRect::
+RunLinkSession6Exchange_BackFromStats_DrawPanel_TileRect::
     db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
 
 ; Back from stats, step 4: draws the picked monster's name. (C1, E-0357)
-RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
+RunLinkSession6Exchange_BackFromStats_DrawName::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
 ; Back from stats, step 5: draws both info windows with their four numbers and the partner's name.
 ; (C1, E-0357)
-RunLinkSession6Exchange_RunFourTimes_2::
-    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
+RunLinkSession6Exchange_BackFromStats_DrawInfoWindows::
+    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
     call RunFourTimes
-    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
+    ld de, RunLinkSession6Exchange_FightInfo_DrawWindow_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2447,7 +2448,7 @@ RunLinkSession6Exchange_RunFourTimes_2::
 
 ; Back from stats, step 6: shows 'Fight / Info / Ex' in its box with the cursor on Info. (C1,
 ; E-0357)
-RunLinkSession6Exchange_FightInfoEx_2::
+RunLinkSession6Exchange_BackFromStats_ShowFightInfoEx::
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2463,7 +2464,7 @@ RunLinkSession6Exchange_FightInfoEx_2::
     ld a, $20
     ld [wStringIndex], a ; 'FightInfoEx'
     farcall ShowString_Bank1B
-    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect_2
+    ld de, RunLinkSession6Exchange_FightInfo_DrawWindow_TileRect_2
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2478,7 +2479,7 @@ RunLinkSession6Exchange_FightInfoEx_2::
 
 ; Back from stats, step 7: redraws, restores hide tile $70 and returns to the saved state and step.
 ; (C1, E-0357)
-RunLinkSession6Exchange_SetSpriteHideTile::
+RunLinkSession6Exchange_BackFromStats_Return::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -2501,29 +2502,29 @@ RunLinkSession6Exchange_SetSpriteHideTile::
     ret
 
 ; Session 6, screen state 15 (back from this side's stats): its eight steps. (C1, E-0357)
-RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
+RunLinkSession6Exchange_BackFromOwnStats::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_ClearRecordPanelTiles_2
-    dw RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33
-    dw RunLinkSession6Exchange_DrawRecordListPageNames
-    dw RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel
-    dw RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name
-    dw RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
-    dw RunLinkSession6Exchange_InfoOKYesN_2
-    dw RunLinkSession6Exchange_SetSpriteHideTile_2
+    dw RunLinkSession6Exchange_BackFromOwnStats_DrawListBox
+    dw RunLinkSession6Exchange_BackFromOwnStats_ListMonsters
+    dw RunLinkSession6Exchange_BackFromOwnStats_DrawNames
+    dw RunLinkSession6Exchange_BackFromOwnStats_DrawPanel
+    dw RunLinkSession6Exchange_BackFromOwnStats_DrawCursorName
+    dw RunLinkSession6Exchange_BackFromOwnStats_DrawInfo
+    dw RunLinkSession6Exchange_BackFromOwnStats_ShowInfoOKYesN
+    dw RunLinkSession6Exchange_BackFromOwnStats_Return
 
 ; Back from this side's stats, step 0: clears the record panel tiles, draws the list box with the
 ; cursor mark and the name and heading. (C1, E-0357)
-RunLinkSession6Exchange_ClearRecordPanelTiles_2::
+RunLinkSession6Exchange_BackFromOwnStats_DrawListBox::
     farcall ClearRecordPanelTiles
-    ld de, RunLinkSession6Exchange_ClearRecordPanelTiles_2_TileRect
+    ld de, RunLinkSession6Exchange_BackFromOwnStats_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, RunLinkSession6Exchange_Data
+    ld hl, RunLinkSession6Exchange_Pick_MarkCursor_Data
     call StoreBAtWordTableEntry_Bank33
     call DrawPlayerNameAndString0Category1
     ld a, [wScreenStep]
@@ -2532,13 +2533,13 @@ RunLinkSession6Exchange_ClearRecordPanelTiles_2::
     ret
 
 ; Back from this side's stats, step 3: draws the record panel. (C1, E-0357)
-RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
+RunLinkSession6Exchange_BackFromOwnStats_DrawPanel::
     call CallDrawListEntriesCell5RecordPanel
     ret
 
 ; Back from this side's stats, step 1: lists the monsters that may be picked, clamps the page cursor
 ; of five and draws the page indicator. (C1, E-0357)
-RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
+RunLinkSession6Exchange_BackFromOwnStats_ListMonsters::
     call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -2561,7 +2562,7 @@ RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
 
 ; Back from this side's stats, step 2: draws the page's names and marks the party members. (C1,
 ; E-0357)
-RunLinkSession6Exchange_DrawRecordListPageNames::
+RunLinkSession6Exchange_BackFromOwnStats_DrawNames::
     farcall DrawRecordListPageNames
     xor a
     ld [wArg1], a
@@ -2569,18 +2570,18 @@ RunLinkSession6Exchange_DrawRecordListPageNames::
     ret
 
 ; Back from this side's stats, step 4: draws the cursor entry's name. (C1, E-0357)
-RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name::
+RunLinkSession6Exchange_BackFromOwnStats_DrawCursorName::
     call CallClearAndDrawListEntriesCell5Name
     ret
 
 ; Back from this side's stats, step 5: draws the info window. (C1, E-0357)
-RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
+RunLinkSession6Exchange_BackFromOwnStats_DrawInfo::
     call CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
     ret
 
 ; Back from this side's stats, step 6: shows 'Info / OK' and the pick question (bank-$1B string
 ; $12), the four numbers and the choice box. (C1, E-0357)
-RunLinkSession6Exchange_InfoOKYesN_2::
+RunLinkSession6Exchange_BackFromOwnStats_ShowInfoOKYesN::
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2605,7 +2606,7 @@ RunLinkSession6Exchange_InfoOKYesN_2::
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
     call RunFourTimes
-    ld de, RunLinkSession6Exchange_InfoOKYesN_TileRect
+    ld de, RunLinkSession6Exchange_Pick_ShowInfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2618,7 +2619,7 @@ RunLinkSession6Exchange_InfoOKYesN_2::
 
 ; Back from this side's stats, step 7: redraws, restores hide tile $70 and returns to the saved
 ; state and step. (C1, E-0357)
-RunLinkSession6Exchange_SetSpriteHideTile_2::
+RunLinkSession6Exchange_BackFromOwnStats_Return::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -3236,13 +3237,13 @@ StoreC5BEC6AtHLStride2_Bank33::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
-RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect::
+RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 10 x 11 tiles, one row per line
-RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2::
+RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $00, $01, $02, $03, $04, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -3255,7 +3256,7 @@ RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2::
     db $b6, $13, $14, $15, $c3, $17, $ed, $c3, $c3, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-RunLinkSession6Exchange_FightInfoEx_TileRect::
+RunLinkSession6Exchange_FightInfo_DrawWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $05, $06, $07, $08, $09, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -3276,18 +3277,18 @@ DrawBoxAndKeyRows_TileRect::
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-RunLinkSession6Exchange_InfoOKYesN_TileRect::
+RunLinkSession6Exchange_Pick_ShowInfoOKYesN_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $74, $75, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-RunLinkSession6Exchange_Data::
+RunLinkSession6Exchange_Pick_MarkCursor_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
 ; record: 9 x 7 tiles, one row per line
-RunLinkSession6Exchange_FightInfoEx_TileRect_2::
+RunLinkSession6Exchange_FightInfo_DrawWindow_TileRect_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3299,7 +3300,7 @@ RunLinkSession6Exchange_FightInfoEx_TileRect_2::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
-RunLinkSession6Exchange_ClearRecordPanelTiles_2_TileRect::
+RunLinkSession6Exchange_BackFromOwnStats_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2

@@ -2432,10 +2432,9 @@ MonsterArgOrderTable::
     db $00, $01, $02 ; id 383 ?
 
 ; ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex;
-; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_2.skip adds 3 * entry (after
-; ShopMenu_Buy_ReadFarPointerAtDEInBankB) and shows the 24-bit number there in digits (wDigits,
-; Number24ToPackedBCD); the lists run contiguously to ReturnStub_3; read as prices, which is not
-; confirmed (E-0208, C1)
+; ShopMenu_Buy_DrawPrices.skip adds 3 * entry (after ShopMenu_Buy_ReadFarPointerAtDEInBankB) and
+; shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously
+; to ReturnStub_3; read as prices, which is not confirmed (E-0208, C1)
 ; record: list of 24-bit numbers for this wScreenTableIndex
 ScreenNumberListTable::
     dw ScreenNumberList000 ; id 0
@@ -3627,10 +3626,10 @@ ReturnStub_3::
     db $cd, $55, $63, $cd, $46, $63, $c9
 
 ; Choosing a key, Select: reorders the key list
-; (KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf), copies it back (CopyWorkBuf1ToKeyList)
+; (KeyAppraisalMenu_ChooseKey_ListCursor_CopyFlaggedKeys), copies it back (CopyWorkBuf1ToKeyList)
 ; and returns to step 0. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList::
-    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf
+KeyAppraisalMenu_ChooseKey_ListCursor_CopyWorkBuf1ToKeyList::
+    call KeyAppraisalMenu_ChooseKey_ListCursor_CopyFlaggedKeys
     call CopyWorkBuf1ToKeyList
     xor a
     ld [wScreenStep], a
@@ -3654,7 +3653,7 @@ CopyWorkBuf1ToKeyList::
 ; Reorders the 32 keys (4 bytes each) into wWorkBuf + 1, alternating with each press (wWorkBuf 0 or
 ; 1): the keys whose byte 3 has bit 7 set and kind below 7 first, then the others, or the other way
 ; round; each moved key's seed goes to wKeyGenList (count wKeyGenCount). (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
+KeyAppraisalMenu_ChooseKey_ListCursor_CopyFlaggedKeys::
     ld hl, wWorkBuf + $1
     ld c, $c0
 
@@ -3672,9 +3671,9 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2
+    call CopyFlaggedKeys
     ld hl, wKeyList
-    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount
+    call CopyUnflaggedKeys
     ret
 
 .clear_work_buf:
@@ -3682,23 +3681,23 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount
+    call CopyUnflaggedKeys
     ld hl, wKeyList
-    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2
+    call CopyFlaggedKeys
     ret
 
-; Copies the keys that do not have byte 3 bit 7 with a kind below 7
-; (KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop loop over 32 entries). (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_WriteKeyGenCount::
+; Copies the keys that do not have byte 3 bit 7 with a kind below 7 (CopyUnflaggedKeys_Loop loop
+; over 32 entries). (C1, E-0357)
+CopyUnflaggedKeys::
     ld b, $00
     ld c, $20
 
 ; For each of the 32 key entries ($FF skips): copies it and its seed (wKeySeeds) onward unless byte
 ; 3 bit 7 is set with a kind (byte 0 & $3F) below 7. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop::
+CopyUnflaggedKeys_Loop::
     ld a, [hl]
     cp $ff
-    jr z, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip
+    jr z, CopyUnflaggedKeys_Skip
     push hl
     inc hl
     inc hl
@@ -3757,23 +3756,23 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop::
     pop hl
 
 ; Steps to the next 4-byte key entry; loops over the 32. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip::
+CopyUnflaggedKeys_Skip::
     ld a, $04
     add_a_to_hl
     inc b
     dec c
-    jr nz, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop
+    jr nz, CopyUnflaggedKeys_Loop
     ret
 
 ; Copies the keys whose byte 3 has bit 7 set and kind below 7, with their seeds. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2::
+CopyFlaggedKeys::
     ld b, $00
     ld c, $20
 
 .loop:
     ld a, [hl]
     cp $ff
-    jr z, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip
+    jr z, CopyUnflaggedKeys_Skip
     push hl
     inc hl
     inc hl

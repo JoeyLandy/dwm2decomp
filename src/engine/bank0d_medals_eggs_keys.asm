@@ -266,10 +266,10 @@ String_0D_00_2E::
 EggServiceMenu::
     ld a, [wScreenState]
     jumptable
-    dw EggServiceMenu_CopyBytesDEToHL_Bank0D
+    dw EggServiceMenu_Init
     dw EggServiceMenu_DrawPrice
-    dw EggServiceMenu_HandleThreeOptionMenuInput_15
-    dw EggServiceMenu_ListRecordsInUseEggs
+    dw EggServiceMenu_ChooseOption
+    dw EggServiceMenu_ListEggs
     dw EggServiceMenu_Return
     dw EggServiceMenu_ChooseAndPay
     dw EggServiceMenu_Return_2
@@ -279,7 +279,7 @@ EggServiceMenu::
     dw EggServiceMenu_Return_2
     dw EggServiceMenu_Return_2
     dw EggServiceMenu_Return_2
-    dw EggServiceMenu_SwapMonstersMenu
+    dw EggServiceMenu_RunDetailsScreen
     dw EggServiceMenu_Return_2
     dw EggServiceMenu_DrawListAndPrice
 
@@ -289,7 +289,7 @@ EggServiceMenu_Return_2::
 
 ; Egg service, state 0: clears the service's state, copies the screen to the window buffer and sets
 ; message mode 6 for its messages. (C1, E-0357)
-EggServiceMenu_CopyBytesDEToHL_Bank0D::
+EggServiceMenu_Init::
     ld hl, wScreenState
     ld bc, $006f
 
@@ -329,8 +329,8 @@ EggServiceMenu_DrawPrice::
     ld a, [wScreenStep]
     jumptable
     dw DrawPairAndStep
-    dw EggServiceMenu_DrawPrice_Number24ToPackedBCD
-    dw EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D
+    dw EggServiceMenu_DrawPrice_DrawGoldBox
+    dw EggServiceMenu_DrawPrice_DrawChoiceBox
 
 ; runs CopyGlyphTileListFromBank1F for DrawPairAndStep_TileCopyDestList and
 ; DrawPairAndStep_TileCopySrcList, then wScreenStep += 1 (E-0122) (E-0344: the address in its name
@@ -345,8 +345,8 @@ DrawPairAndStep::
     ret
 
 ; Egg service price display, step 1: draws the gold box with the five digits of wGold. (C1, E-0357)
-EggServiceMenu_DrawPrice_Number24ToPackedBCD::
-    ld de, EggServiceMenu_DrawPrice_Number24ToPackedBCD_TileRect
+EggServiceMenu_DrawPrice_DrawGoldBox::
+    ld de, EggServiceMenu_DrawPrice_DrawGoldBox_TileRect
     ld hl, wWindowTileBuffer + $70
     lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank0D
@@ -377,8 +377,8 @@ EggServiceMenu_DrawPrice_Number24ToPackedBCD::
     ret
 
 ; Egg service price display, step 2: draws the service's choice box and moves on. (C1, E-0357)
-EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D::
-    ld de, EggServiceMenu_DrawPrice_TileRect
+EggServiceMenu_DrawPrice_DrawChoiceBox::
+    ld de, EggServiceMenu_DrawPrice_DrawChoiceBox_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0b, $07
     call CopyRectTo20ByteRows_Bank0D
@@ -395,7 +395,7 @@ EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D::
 
 ; Egg service, state 2: the three-option menu (appraise, bless, cancel) through
 ; HandleThreeOptionMenuInput_15. (C1, E-0357)
-EggServiceMenu_HandleThreeOptionMenuInput_15::
+EggServiceMenu_ChooseOption::
     ld a, $01
     ld [wThreeOptionResult], a
     farcall HandleThreeOptionMenuInput_15
@@ -404,7 +404,7 @@ EggServiceMenu_HandleThreeOptionMenuInput_15::
 ; Egg service, state 3: lists the stored eggs (ListRecordsInUseEggs; wSharedMenuWork 0 for
 ; appraisal, 1 for blessing); with none it returns to the menu with a message, otherwise moves on
 ; with the sprites hidden. (C1, E-0357)
-EggServiceMenu_ListRecordsInUseEggs::
+EggServiceMenu_ListEggs::
     ld a, [wGridCursorX]
     and a
     jr z, .clear_shared_menu_work
@@ -464,19 +464,19 @@ EggServiceMenu_ChooseAndPay::
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
-    dw EggServiceMenu_ChooseAndPay_UpdatePagedListCursor
+    dw EggServiceMenu_ChooseAndPay_ListCursor
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
-    dw EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D
+    dw EggServiceMenu_ChooseAndPay_Confirm
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
     dw EggServiceMenu_ChooseAndPay_ToBreedMenu
-    dw EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold
+    dw EggServiceMenu_ChooseAndPay_CheckPrice
     dw DrawBoxWithPageIndicator
-    dw EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay
+    dw EggServiceMenu_ChooseAndPay_RedrawMarks
+    dw EggServiceMenu_Appraise
 
 ; Choosing an egg, step 0: runs the breeding list's steps (BreedMenu) to show the eggs. (C1, E-0357)
 EggServiceMenu_ChooseAndPay_ToBreedMenu::
@@ -485,7 +485,7 @@ EggServiceMenu_ChooseAndPay_ToBreedMenu::
 
 ; Choosing an egg, step 6: the paged egg list cursor: page changes step back to redraw; A picks the
 ; egg (asking to confirm); B cancels. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_UpdatePagedListCursor::
+EggServiceMenu_ChooseAndPay_ListCursor::
     ld a, $02
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
@@ -537,7 +537,7 @@ EggServiceMenu_ChooseAndPay_UpdatePagedListCursor::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, EggServiceMenu_ChooseAndPay_UpdatePagedListCursor_Data
+    ld hl, EggServiceMenu_ChooseAndPay_ListCursor_Data
     call StoreBAtWordTableEntry_Bank0D
     ld a, [wSharedMenuWork]
     and a
@@ -599,7 +599,7 @@ EggServiceMenu_ChooseAndPay_UpdatePagedListCursor::
 
 ; Choosing an egg, step 12: the confirmation: yes opens the egg's details screen (SwapMonstersMenu
 ; at state $0D, returning to state 5, step 12); no or B goes back. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D::
+EggServiceMenu_ChooseAndPay_Confirm::
     xor a
     ld [wArg5], a
     call HandleTwoChoiceCursorInput_0D
@@ -660,7 +660,7 @@ EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D::
 ; Choosing an egg, step 15: checks the price: 20 gold for an appraisal; for a blessing 20 * (plus
 ; value + 1) (EggServiceMenu_SetArg5ToListEntriesCell4). With enough gold it pays and moves on;
 ; otherwise it refuses. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold::
+EggServiceMenu_ChooseAndPay_CheckPrice::
     ld a, [wSharedMenuWork]
     and a
     jr nz, .call_egg_service_menu_set_arg5_to_list
@@ -780,7 +780,7 @@ DrawBoxWithPageIndicator::
 
 ; Choosing an egg, step 17: redraws the egg list marks and returns to the list (step 7). (C1,
 ; E-0357)
-EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks::
+EggServiceMenu_ChooseAndPay_RedrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
@@ -803,20 +803,21 @@ EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks::
     ret
 
 ; by wScreenSubStep: reads bytes of the chosen record (LoadSRAMRecordByte/Word, MON_SEX), divides,
-; and subtracts 20 gold (SubtractArg1AmountFromGold) (E-0304)
-EggServiceMenu_ChooseAndPay_CheckAndPay::
+; and subtracts 20 gold (SubtractArg1AmountFromGold) (renamed from
+; EggServiceMenu_ChooseAndPay_CheckAndPay from its E-0357 note, E-0367)
+EggServiceMenu_Appraise::
     ld a, [wScreenSubStep]
     jumptable
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay_2
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay_3
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay_4
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay_5
-    dw EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold
+    dw EggServiceMenu_Appraise_ClearResult
+    dw EggServiceMenu_Appraise_RateStats
+    dw EggServiceMenu_Appraise_RateSkills
+    dw EggServiceMenu_Appraise_RateMaxLevel
+    dw EggServiceMenu_Appraise_NameTrait
+    dw EggServiceMenu_Appraise_ShowSex
+    dw EggServiceMenu_Appraise_PayAndMark
 
 ; Appraisal, sub-step 0: clears the result and moves on. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep::
+EggServiceMenu_Appraise_ClearResult::
     xor a
     ld [wTwoChoiceCursor], a
     call EndScriptCommandAndIncScreenSubStep
@@ -825,7 +826,7 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep::
 ; Appraisal, sub-step 1: rates the egg's stats: the average of six stat words (fields from
 ; EggServiceMenu_ChooseAndPay_CheckAndPay_Data), reduced to a rating 0-3 for the message. (C1,
 ; E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM::
+EggServiceMenu_Appraise_RateStats::
     call GetListEntriesCell4AddressWithSRAM
     ld c, $00
     ld de, $0000
@@ -835,7 +836,7 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM::
     push bc
     push de
     ld a, c
-    ld de, EggServiceMenu_ChooseAndPay_CheckAndPay_Data
+    ld de, EggServiceMenu_Appraise_RateStats_Data
     add e
     ld e, a
     jr nc, .skip
@@ -869,7 +870,7 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM::
 
 .loop2:
     ld a, $03
-    jr EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jr EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip2:
     ld a, l
@@ -880,18 +881,18 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM::
     cp $33
     jr nc, .skip4
     xor a
-    jr EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jr EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip3:
     ld a, $02
-    jr EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jr EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip4:
     ld a, $01
 
 ; Stores the appraisal result in wTwoChoiceCursor (it picks the message), closes SRAM and moves to
 ; the next appraisal step. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor::
+EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     xor a
     ld [rRAMG2], a
@@ -899,12 +900,12 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor::
     ret
 
 ; data read by EggServiceMenu (6 bytes) (E-0347)
-EggServiceMenu_ChooseAndPay_CheckAndPay_Data::
+EggServiceMenu_Appraise_RateStats_Data::
     db $5d, $61, $63, $65, $67, $69
 
 ; Appraisal, sub-step 2: rates the number of skills the egg can learn (entries of MON_SKILL_LIST):
 ; below 6 is 0, below 11 is 1, below 16 is 2, otherwise 3. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_2::
+EggServiceMenu_Appraise_RateSkills::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
     ld c, MON_SKILL_LIST
@@ -933,23 +934,23 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_2::
     cp $10
     jr c, .skip3
     ld a, $03
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip:
     xor a
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip2:
     ld a, $01
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip3:
     ld a, $02
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 ; Appraisal, sub-step 3: rates the egg's maximum level: below 41 is 0, below 61 is 1, below 81 is 2,
 ; otherwise 3. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_3::
+EggServiceMenu_Appraise_RateMaxLevel::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
     ld c, MON_MAX_LEVEL
@@ -962,23 +963,23 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_3::
     cp $51
     jr c, .skip3
     ld a, $03
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip:
     xor a
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip2:
     ld a, $01
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 .skip3:
     ld a, $02
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 ; Appraisal, sub-step 4: names the egg's strongest personality trait: the largest of its personality
 ; bytes (MON_PERSONALITY onward). (C1, E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_4::
+EggServiceMenu_Appraise_NameTrait::
     call GetListEntriesCell4AddressWithSRAM
     ld b, $00
     push hl
@@ -1045,21 +1046,21 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_4::
 
 .skip:
     ld a, b
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 ; Appraisal, sub-step 5: the egg's sex (MON_SEX bit 0). (C1, E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_5::
+EggServiceMenu_Appraise_ShowSex::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
     ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and $01
-    jp EggServiceMenu_ChooseAndPay_CheckAndPay_SetTwoChoiceCursor
+    jp EggServiceMenu_Appraise_RateStats_SetTwoChoiceCursor
 
 ; Appraisal, sub-step 6: pays the 20-gold fee, sets the egg's MON_EGG byte to 2 (appraised, as read
 ; here) and moves to the closing step. (C1, E-0357)
-EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold::
+EggServiceMenu_Appraise_PayAndMark::
     ld a, $14
     ld [wArg1], a
     xor a
@@ -1119,7 +1120,7 @@ EndScriptCommandAndIncScreenSubStep::
 
 ; Egg service, state 13: runs the monster details screen (SwapMonstersMenu) until it finishes (step
 ; $0A), then skips a state. (C1, E-0357)
-EggServiceMenu_SwapMonstersMenu::
+EggServiceMenu_RunDetailsScreen::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -1138,18 +1139,18 @@ EggServiceMenu_SwapMonstersMenu::
 EggServiceMenu_DrawListAndPrice::
     ld a, [wScreenStep]
     jumptable
-    dw EggServiceMenu_DrawListAndPrice_DecompressToVRAM
-    dw EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F
-    dw EggServiceMenu_DrawListAndPrice_FillTilesBxC
-    dw EggServiceMenu_DrawListAndPrice_DrawBoxWithPageIndicator
-    dw EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames
-    dw EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks
-    dw EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D
-    dw EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD
-    dw EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics
+    dw EggServiceMenu_DrawListAndPrice_LoadTiles
+    dw EggServiceMenu_DrawListAndPrice_LoadGlyphs
+    dw EggServiceMenu_DrawListAndPrice_ClearNameTiles
+    dw EggServiceMenu_DrawListAndPrice_DrawListBox
+    dw EggServiceMenu_DrawListAndPrice_DrawSpeciesNames
+    dw EggServiceMenu_DrawListAndPrice_DrawMarks
+    dw EggServiceMenu_DrawListAndPrice_MarkEntry
+    dw EggServiceMenu_DrawListAndPrice_ShowPrice
+    dw EggServiceMenu_DrawListAndPrice_RestoreSprites
 
 ; Egg list screen, step 0: decompresses map $0A's tiles and loads its palettes. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_DecompressToVRAM::
+EggServiceMenu_DrawListAndPrice_LoadTiles::
     ld hl, vTiles2
     ld de, Map0ATileset
     ld b, $49
@@ -1167,15 +1168,15 @@ EggServiceMenu_DrawListAndPrice_DecompressToVRAM::
     ret
 
 ; Egg list screen, step 1: copies the glyph tiles and draws the frame pair. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F::
-    ld hl, EggServiceMenu_DrawListAndPrice_TileCopyDestList
-    ld de, EggServiceMenu_DrawListAndPrice_TileCopySrcList
+EggServiceMenu_DrawListAndPrice_LoadGlyphs::
+    ld hl, EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopyDestList
+    ld de, EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopySrcList
     call CopyGlyphTileListFromBank1F
     call DrawPairAndStep
     ret
 
 ; Egg list screen, step 2: clears the name and number tiles and sets the text window. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_FillTilesBxC::
+EggServiceMenu_DrawListAndPrice_ClearNameTiles::
     ld hl, vTiles1 + $400
     ld bc, $0301
     call FillTilesBxC
@@ -1202,11 +1203,11 @@ EggServiceMenu_DrawListAndPrice_FillTilesBxC::
     ret
 
 ; Egg list screen, step 3: draws the list box with its page indicator. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_DrawBoxWithPageIndicator::
+EggServiceMenu_DrawListAndPrice_DrawListBox::
     call DrawBoxWithPageIndicator
 
 ; Egg list screen, step 4: draws the species names of the page. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames::
+EggServiceMenu_DrawListAndPrice_DrawSpeciesNames::
     ld a, $01
     ld [wArg5], a
     farcall DrawRecordListPageSpeciesNames
@@ -1216,7 +1217,7 @@ EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames::
     ret
 
 ; Egg list screen, step 5: draws the page's marks. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks::
+EggServiceMenu_DrawListAndPrice_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
@@ -1232,12 +1233,12 @@ EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks::
     ret
 
 ; Egg list screen, step 6: marks the chosen entry and draws the price box frame. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D::
+EggServiceMenu_DrawListAndPrice_MarkEntry::
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, EggServiceMenu_ChooseAndPay_UpdatePagedListCursor_Data
+    ld hl, EggServiceMenu_ChooseAndPay_ListCursor_Data
     call StoreBAtWordTableEntry_Bank0D
-    ld de, EggServiceMenu_DrawListAndPrice_TileRect
+    ld de, EggServiceMenu_DrawListAndPrice_MarkEntry_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -1248,7 +1249,7 @@ EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D::
 
 ; Egg list screen, step 7: shows the price (for a blessing the computed amount as digits without
 ; leading zeros in the text buffer, message 8; for an appraisal message 3). (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD::
+EggServiceMenu_DrawListAndPrice_ShowPrice::
     ld a, [wSharedMenuWork]
     and a
     jr z, .set_string_index_to_03
@@ -1316,7 +1317,7 @@ EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD::
 
 ; Egg list screen, step 8: reloads the player's sprites, redraws the screen and returns to the saved
 ; state and step. (C1, E-0357)
-EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics::
+EggServiceMenu_DrawListAndPrice_RestoreSprites::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
@@ -1864,13 +1865,13 @@ DrawPairAndStep_TileCopySrcList::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
-EggServiceMenu_DrawPrice_Number24ToPackedBCD_TileRect::
+EggServiceMenu_DrawPrice_DrawGoldBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 11 x 7 tiles, one row per line
-EggServiceMenu_DrawPrice_TileRect::
+EggServiceMenu_DrawPrice_DrawChoiceBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $a4, $a5, $a6, $a7, $a8, $a6, $a9, $aa, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -1891,23 +1892,23 @@ DrawBoxWithPageIndicator_TileRect::
     db $b6, $c3, $c0, $c1, $c2, $c7, $c8, $c9, $ca, $cb, $fc, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-EggServiceMenu_ChooseAndPay_UpdatePagedListCursor_Data::
+EggServiceMenu_ChooseAndPay_ListCursor_Data::
     db $d0, $c3, $f8, $c3, $20, $c4, $48, $c4
 
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-EggServiceMenu_DrawListAndPrice_TileCopyDestList::
+EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopyDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 ; record: bank-$1F tile sources
-EggServiceMenu_DrawListAndPrice_TileCopySrcList::
+EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopySrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
-EggServiceMenu_DrawListAndPrice_TileRect::
+EggServiceMenu_DrawListAndPrice_MarkEntry_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $70, $71, $72, $73, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -1920,7 +1921,7 @@ CloseRenameMenu::
     ld a, [wScreenList]
     jumptable
     dw CloseRenameMenu_ToCloseBreedMenu
-    dw CloseRenameMenu_LoadRecordListNameTiles
+    dw CloseRenameMenu_ReloadTilesAndFinish
     dw CloseRenameMenu_ToCloseBreedMenu
     dw CloseRenameMenu_ToCloseBreedMenu
 
@@ -1931,7 +1932,7 @@ CloseRenameMenu_ToCloseBreedMenu::
 
 ; Closing the renaming, step 1: reloads the name tiles and three frame tiles, clears the list state
 ; and lets the script continue. (C1, E-0357)
-CloseRenameMenu_LoadRecordListNameTiles::
+CloseRenameMenu_ReloadTilesAndFinish::
     call LoadRecordListNameTiles
     ld de, Tiles2Plus710Tiles_3
     ld hl, vTiles1 + $700
@@ -1981,10 +1982,10 @@ RenameMenu::
     jumptable
     dw RenameMenu_ToEggServiceMenu
     dw RenameMenu_DrawFrame
-    dw RenameMenu_UpdateTwoChoiceCursor_Bank1D
+    dw RenameMenu_ReadAnswer
     dw RenameMenu_DrawNameList
     dw RenameMenu_ToRenameMenu_WriteTwoChoiceCursorAndScreenStateEtc
-    dw RenameMenu_LoadSRAMRecordByte
+    dw RenameMenu_EnterName
     dw RenameMenu_PickMonster
 
 ; Renaming, state 0: runs the egg service's first state (EggServiceMenu) to set up the screen. (C1,
@@ -1998,7 +1999,7 @@ RenameMenu_DrawFrame::
     ld a, [wScreenStep]
     jumptable
     dw LoadFourFrameTilesAndStep
-    dw RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D
+    dw RenameMenu_DrawFrame_DrawYesNo
 
 ; copies four tiles from bank $1F to vTiles1 + $700-$730, then wScreenStep += 1 (E-0124)
 LoadFourFrameTilesAndStep::
@@ -2028,8 +2029,8 @@ LoadFourFrameTilesAndStep::
     ret
 
 ; Renaming frame, step 1: draws the yes/no box and plays sound $6C. (C1, E-0357)
-RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D::
-    ld de, RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D_TileRect
+RenameMenu_DrawFrame_DrawYesNo::
+    ld de, RenameMenu_DrawFrame_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -2048,7 +2049,7 @@ RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D::
     ret
 
 ; Renaming, state 2: the yes/no answer: yes moves on to choosing the monster; no ends. (C1, E-0357)
-RenameMenu_UpdateTwoChoiceCursor_Bank1D::
+RenameMenu_ReadAnswer::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -2087,13 +2088,13 @@ RenameMenu_UpdateTwoChoiceCursor_Bank1D::
 RenameMenu_DrawNameList::
     ld a, [wScreenStep]
     jumptable
-    dw RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D
+    dw RenameMenu_DrawNameList_DrawFrame
     dw ClearStringWindowAt1500AndIncScreenStep
-    dw RenameMenu_DrawNameList_LoadRecordListNameTiles
+    dw RenameMenu_DrawNameList_DrawList
 
 ; Renaming name list, step 0: draws the party list frame. (C1, E-0357)
-RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D::
-    ld de, RenameMenu_DrawNameList_TileRect
+RenameMenu_DrawNameList_DrawFrame::
+    ld de, RenameMenu_DrawNameList_DrawFrame_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $09
     call CopyRectTo20ByteRows_Bank0D
@@ -2134,9 +2135,9 @@ ClearStringWindowAt1500AndIncScreenStep::
     ret
 
 ; Renaming name list, step 2: loads the name tiles, draws the list and moves on. (C1, E-0357)
-RenameMenu_DrawNameList_LoadRecordListNameTiles::
+RenameMenu_DrawNameList_DrawList::
     call LoadRecordListNameTiles
-    ld de, RenameMenu_DrawNameList_LoadRecordListNameTiles_TileRect
+    ld de, RenameMenu_DrawNameList_DrawList_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $09
     call CopyRectTo20ByteRows_Bank0D
@@ -2159,7 +2160,7 @@ RenameMenu_ToRenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
 
 ; Renaming, state 5: runs the name entry for the chosen party member (mode 3, with its sex, family
 ; and species); when it finishes moves on. (C1, E-0357)
-RenameMenu_LoadSRAMRecordByte::
+RenameMenu_EnterName::
     ld a, [wGridCursorX]
     ld hl, wPartyList
     add_a_to_hl
@@ -2210,20 +2211,20 @@ RenameMenu_LoadSRAMRecordByte::
 RenameMenu_PickMonster::
     ld a, [wScreenStep]
     jumptable
-    dw RenameMenu_PickMonster_DecompressToVRAM
-    dw RenameMenu_PickMonster_LoadFourFrameTilesAndStep
-    dw RenameMenu_PickMonster_SRAMRecordAddress
+    dw RenameMenu_PickMonster_LoadTiles
+    dw RenameMenu_PickMonster_LoadFrameTiles
+    dw RenameMenu_PickMonster_WriteName
     dw RenameMenu_PickMonster_ShowPickTheMonsterTo
-    dw RenameMenu_PickMonster_LoadPlayerAndFollowerSpriteGraphics
+    dw RenameMenu_PickMonster_ReloadSprites
 
 ; Choosing the monster to rename, step 0: decompresses map $13's tiles and palettes. (C1, E-0357)
-RenameMenu_PickMonster_DecompressToVRAM::
+RenameMenu_PickMonster_LoadTiles::
     ld hl, vTiles2
     ld de, Map13Tileset
     ld b, $49
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, RenameMenu_PickMonster_DecompressToVRAM_BGPaletteBufferData
+    ld de, RenameMenu_PickMonster_LoadTiles_BGPaletteBufferData
     ld b, $49
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -2235,7 +2236,7 @@ RenameMenu_PickMonster_DecompressToVRAM::
     ret
 
 ; Choosing the monster, step 1: loads four frame tiles and clears the name tiles. (C1, E-0357)
-RenameMenu_PickMonster_LoadFourFrameTilesAndStep::
+RenameMenu_PickMonster_LoadFrameTiles::
     call LoadFourFrameTilesAndStep
     call ClearStringWindowAt1500AndIncScreenStep
     ld a, $02
@@ -2244,7 +2245,7 @@ RenameMenu_PickMonster_LoadFourFrameTilesAndStep::
 
 ; Choosing the monster, step 2: writes the name just entered (wNameGlyphBuf, up to 10 glyphs) into
 ; the chosen member's record and reloads the name tiles. (C1, E-0357)
-RenameMenu_PickMonster_SRAMRecordAddress::
+RenameMenu_PickMonster_WriteName::
     ld a, [wGridCursorX]
     ld hl, wPartyList
     add_a_to_hl
@@ -2308,7 +2309,7 @@ RenameMenu_PickMonster_ShowPickTheMonsterTo::
 
 ; Choosing the monster, step 4: reloads the sprites, redraws the screen and goes to the party cursor
 ; (state 4). (C1, E-0357)
-RenameMenu_PickMonster_LoadPlayerAndFollowerSpriteGraphics::
+RenameMenu_PickMonster_ReloadSprites::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
@@ -2500,7 +2501,7 @@ RenameMenu_BGMapAddressAtScroll_Bank0D_Data::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D_TileRect::
+RenameMenu_DrawFrame_DrawYesNo_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -2509,7 +2510,7 @@ RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D_TileRect::
     db $a1, $c3, $c9, $c3, $f1, $c3
 
 ; record: 8 x 9 tiles, one row per line
-RenameMenu_DrawNameList_TileRect::
+RenameMenu_DrawNameList_DrawFrame_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $f1, $f2, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -2520,7 +2521,7 @@ RenameMenu_DrawNameList_TileRect::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-RenameMenu_DrawNameList_LoadRecordListNameTiles_TileRect::
+RenameMenu_DrawNameList_DrawList_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $f1, $f2, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -2539,14 +2540,14 @@ RenameMenu_DrawNameList_LoadRecordListNameTiles_TileRect::
 KeyAppraisalMenu::
     ld a, [wScreenState]
     jumptable
-    dw KeyAppraisalMenu_CopyBytesDEToHL_Bank0D
+    dw KeyAppraisalMenu_Init
     dw KeyAppraisalMenu_DrawGoldBox
-    dw KeyAppraisalMenu_UpdateTwoChoiceCursor_Bank1D
+    dw KeyAppraisalMenu_ReadAnswer
     dw KeyAppraisalMenu_ChooseKey
 
 ; Key appraisal, state 0: clears the state, copies the screen to the window buffer, sets message
 ; mode 7, hides the field sprites and loads the frame and choice tiles. (C1, E-0357)
-KeyAppraisalMenu_CopyBytesDEToHL_Bank0D::
+KeyAppraisalMenu_Init::
     ld hl, wScreenState
     ld bc, $006f
 
@@ -2602,12 +2603,12 @@ KeyAppraisalMenu_DrawGoldBox::
     ld a, [wScreenStep]
     jumptable
     dw DrawGoldBoxAndStep
-    dw KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D
+    dw KeyAppraisalMenu_DrawGoldBox_DrawYesNo
 
-; copies box EggServiceMenu_DrawPrice_Number24ToPackedBCD_TileRect to wWindowTileBuffer + $70 and
-; writes the gold as five digit tiles at wWindowTileBuffer + $86, then wScreenStep += 1 (E-0124)
+; copies box EggServiceMenu_DrawPrice_DrawGoldBox_TileRect to wWindowTileBuffer + $70 and writes the
+; gold as five digit tiles at wWindowTileBuffer + $86, then wScreenStep += 1 (E-0124)
 DrawGoldBoxAndStep::
-    ld de, EggServiceMenu_DrawPrice_Number24ToPackedBCD_TileRect
+    ld de, EggServiceMenu_DrawPrice_DrawGoldBox_TileRect
     ld hl, wWindowTileBuffer + $70
     lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank0D
@@ -2638,8 +2639,8 @@ DrawGoldBoxAndStep::
     ret
 
 ; Key appraisal gold box, step 1: draws the yes/no box and plays sound $6C. (C1, E-0357)
-KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D::
-    ld de, KeyAppraisalMenu_DrawGoldBox_TileRect
+KeyAppraisalMenu_DrawGoldBox_DrawYesNo::
+    ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -2659,7 +2660,7 @@ KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D::
 
 ; Key appraisal, state 2: the yes/no answer: yes with at least one key moves on to choosing a key;
 ; yes with none, or no, ends (with the matching message). (C1, E-0357)
-KeyAppraisalMenu_UpdateTwoChoiceCursor_Bank1D::
+KeyAppraisalMenu_ReadAnswer::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -2743,29 +2744,29 @@ KeyAppraisalMenu_HasAnyKey::
 KeyAppraisalMenu_ChooseKey::
     ld a, [wScreenStep]
     jumptable
-    dw KeyAppraisalMenu_ChooseKey_BuildKeyListIndexListEntries
-    dw KeyAppraisalMenu_ChooseKey_FillTilesFromRequest
-    dw KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor
-    dw KeyAppraisalMenu_ChooseKey_DrawKeyListPageNames
-    dw KeyAppraisalMenu_ChooseKey_BGMapAddressAtScroll_Bank0D
-    dw KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor
-    dw KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D
-    dw KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D
-    dw KeyAppraisalMenu_ChooseKey_EraseCEntriesOfWordTable_Bank0D
+    dw KeyAppraisalMenu_ChooseKey_BuildList
+    dw KeyAppraisalMenu_ChooseKey_ClearTiles
+    dw KeyAppraisalMenu_ChooseKey_DrawListBox
+    dw KeyAppraisalMenu_ChooseKey_DrawKeyNames
+    dw KeyAppraisalMenu_ChooseKey_RedrawScreen
+    dw KeyAppraisalMenu_ChooseKey_ListCursor
+    dw KeyAppraisalMenu_ChooseKey_DrawYesNo
+    dw KeyAppraisalMenu_ChooseKey_ConfirmPrice
+    dw KeyAppraisalMenu_ChooseKey_EraseMarks
     dw KeyAppraisalMenu_ToCopyRectToWindowTileBufferRow5AndDrawAndStep
-    dw KeyAppraisalMenu_ChooseKey_ShowSaveFileInfoWindow
-    dw KeyAppraisalMenu_ChooseKey_DrawBottomBoxForLinkAndSetScreenSubStep
-    dw KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D
-    dw KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D_WriteRAMG2AndRAMB
-    dw KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_2
-    dw KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw
-    dw KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_CopyScreenBufferRectWithAttrs_0D
+    dw KeyAppraisalMenu_ChooseKey_ShowSaveInfo
+    dw KeyAppraisalMenu_ChooseKey_ShowLinkMessage
+    dw KeyAppraisalMenu_ChooseKey_DrawYesNo
+    dw KeyAppraisalMenu_ChooseKey_AskSave
+    dw KeyAppraisalMenu_ChooseKey_PayAndAppraise
+    dw KeyAppraisalMenu_ChooseKey_PrepareResult
+    dw KeyAppraisalMenu_ChooseKey_RestoreScreen
     dw KeyAppraisalMenu_ChooseKey_CountKeys_SetTwoChoiceCursor
-    dw KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics
+    dw KeyAppraisalMenu_ChooseKey_Refuse
 
 ; Choosing a key, step 18: reloads the player's sprites and ends with the refusal message. (C1,
 ; E-0357)
-KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics::
+KeyAppraisalMenu_ChooseKey_Refuse::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
@@ -2779,8 +2780,8 @@ KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics::
 
 ; Choosing a key, step 0: draws the key list frame and builds the list of keys owned
 ; (BuildKeyListIndexListEntries). (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_BuildKeyListIndexListEntries::
-    ld de, KeyAppraisalMenu_ChooseKey_TileRect
+KeyAppraisalMenu_ChooseKey_BuildList::
+    ld de, KeyAppraisalMenu_ChooseKey_BuildList_TileRect
     ld hl, wWindowTileBuffer + $b8
     lb bc, $10, $09
     call CopyRectTo20ByteRows_Bank0D
@@ -2795,7 +2796,7 @@ KeyAppraisalMenu_ChooseKey_BuildKeyListIndexListEntries::
     ret
 
 ; Choosing a key, step 1: clears the name and message tiles. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_FillTilesFromRequest::
+KeyAppraisalMenu_ChooseKey_ClearTiles::
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2847,8 +2848,8 @@ KeyAppraisalMenu_ChooseKey_FillTilesFromRequest::
 
 ; Choosing a key, step 2: draws the list box, clamps the page and cursor, draws the page indicator
 ; when there are several pages and the cursor. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor::
-    ld de, KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_TileRect
+KeyAppraisalMenu_ChooseKey_DrawListBox::
+    ld de, KeyAppraisalMenu_ChooseKey_DrawListBox_TileRect
     ld hl, wWindowTileBuffer + $ce
     lb bc, $0d, $07
     call CopyRectTo20ByteRows_Bank0D
@@ -2878,7 +2879,7 @@ KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_Data
+    ld hl, KeyAppraisalMenu_ChooseKey_DrawListBox_Data
     call StoreBAtWordTableEntry_Bank0D
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
@@ -2890,7 +2891,7 @@ KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor::
     ret
 
 ; Choosing a key, step 3: draws the names and marks of the keys on the page. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_DrawKeyListPageNames::
+KeyAppraisalMenu_ChooseKey_DrawKeyNames::
     xor a
     ld [wArg5], a
     call DrawKeyListPageNames
@@ -2904,14 +2905,14 @@ KeyAppraisalMenu_ChooseKey_DrawKeyListPageNames::
 
 ; Choosing a key, step 4: draws the screen and hides the cursor (it blinks in the next step). (C1,
 ; E-0357)
-KeyAppraisalMenu_ChooseKey_BGMapAddressAtScroll_Bank0D::
+KeyAppraisalMenu_ChooseKey_RedrawScreen::
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0D
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_Data
+    ld hl, KeyAppraisalMenu_ChooseKey_DrawListBox_Data
     call StoreBAtWordTableEntry_Bank0D
     ld a, [wScreenStep]
     inc a
@@ -2919,12 +2920,12 @@ KeyAppraisalMenu_ChooseKey_BGMapAddressAtScroll_Bank0D::
     ret
 
 ; Choosing a key, step 5: the paged key cursor: Select copies a key list back
-; (KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList); page changes redraw; A picks the key and asks
-; to confirm the price; B cancels. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor::
+; (KeyAppraisalMenu_ChooseKey_ListCursor_CopyWorkBuf1ToKeyList); page changes redraw; A picks the
+; key and asks to confirm the price; B cancels. (C1, E-0357)
+KeyAppraisalMenu_ChooseKey_ListCursor::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
-    jr nz, .call_key_appraisal_menu_choose_key_copy_work
+    jr nz, .call_key_appraisal_menu_choose_key_list
     ld a, $03
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
@@ -2941,8 +2942,8 @@ KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor::
     jr z, .call_set_arg5_to_list_entries_cell4
     ret
 
-.call_key_appraisal_menu_choose_key_copy_work:
-    farcall KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList
+.call_key_appraisal_menu_choose_key_list:
+    farcall KeyAppraisalMenu_ChooseKey_ListCursor_CopyWorkBuf1ToKeyList
     ret
 
 .read_screen_step:
@@ -3001,7 +3002,7 @@ KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_Data
+    ld hl, KeyAppraisalMenu_ChooseKey_DrawListBox_Data
     call StoreBAtWordTableEntry_Bank0D
     ld de, wTextBuf0
     ld a, $01
@@ -3030,7 +3031,7 @@ KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor::
 ; Choosing a key, step 7: the price confirmation: yes checks the gold against the price (10 * (key
 ; level + 1)) and, with enough, skips to the result window; without enough gold it ends with the
 ; refusal; no redraws the list. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D::
+KeyAppraisalMenu_ChooseKey_ConfirmPrice::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -3042,7 +3043,7 @@ KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 .loop:
-    call KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D
+    call KeyAppraisalMenu_ChooseKey_ConfirmPrice_StoreC5BEC6AtHLStride2_Bank0D
     ld a, $02
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3079,7 +3080,7 @@ KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D::
     farcall IsAmountInArg1AboveGold
     ld a, [wArg1]
     cp $ff
-    jr nz, .call_key_appraisal_menu_choose_key_store_c5
+    jr nz, .call_key_appraisal_menu_choose_key_confirm
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a
@@ -3088,8 +3089,8 @@ KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
-.call_key_appraisal_menu_choose_key_store_c5:
-    call KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D
+.call_key_appraisal_menu_choose_key_confirm:
+    call KeyAppraisalMenu_ChooseKey_ConfirmPrice_StoreC5BEC6AtHLStride2_Bank0D
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3115,8 +3116,8 @@ KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 ; Redraws the key list box with its page indicator. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D::
-    ld de, KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D_TileRect
+KeyAppraisalMenu_ChooseKey_ConfirmPrice_StoreC5BEC6AtHLStride2_Bank0D::
+    ld de, KeyAppraisalMenu_ChooseKey_ConfirmPrice_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -3149,7 +3150,7 @@ KeyAppraisalMenu_ToCopyRectToWindowTileBufferRow5AndDrawAndStep::
     ret
 
 ; Choosing a key, step 10: shows the save details window (ShowSaveFileInfoWindow). (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_ShowSaveFileInfoWindow::
+KeyAppraisalMenu_ChooseKey_ShowSaveInfo::
     farcall ShowSaveFileInfoWindow
     xor a
     ld [wStringCategory], a
@@ -3160,7 +3161,7 @@ KeyAppraisalMenu_ChooseKey_ShowSaveFileInfoWindow::
 
 ; Choosing a key, step 11: in link mode draws the bottom box; then shows message $0B and, after it,
 ; moves on. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_DrawBottomBoxForLinkAndSetScreenSubStep::
+KeyAppraisalMenu_ChooseKey_ShowLinkMessage::
     call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
     ld a, [wScreenSubStep]
     cp $02
@@ -3205,9 +3206,9 @@ KeyAppraisalMenu_ChooseKey_DrawBottomBoxForLinkAndSetScreenSubStep::
     ret
 
 ; Choosing a key, step 6: draws the yes/no box (sound $6C) and moves on. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D::
+KeyAppraisalMenu_ChooseKey_DrawYesNo::
     call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
-    ld de, KeyAppraisalMenu_DrawGoldBox_TileRect
+    ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -3226,9 +3227,9 @@ KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D::
     ret
 
 ; Choosing a key, step 8: erases the cursor marks and returns to the cursor (step 5). (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_EraseCEntriesOfWordTable_Bank0D::
+KeyAppraisalMenu_ChooseKey_EraseMarks::
     ld c, $04
-    ld hl, KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_Data
+    ld hl, KeyAppraisalMenu_ChooseKey_DrawListBox_Data
     call EraseCEntriesOfWordTable_Bank0D
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
@@ -3244,7 +3245,7 @@ KeyAppraisalMenu_ChooseKey_EraseCEntriesOfWordTable_Bank0D::
 
 ; Choosing a key, step 13: the save question: yes moves on to saving, no skips five steps. (C1,
 ; E-0357)
-KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D_WriteRAMG2AndRAMB::
+KeyAppraisalMenu_ChooseKey_AskSave::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     cp $fe
@@ -3282,7 +3283,7 @@ KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D_WriteRAMG2AndRAMB::
 ; Choosing a key, step 14: on the first call clears a byte of the chosen key's 4-byte entry (marking
 ; it appraised, as read here) and pays the price (10 * (level + 1)); on later calls saves the game
 ; in stages (RunSaveGameSteps_2); when done sets wGreatLogEventFlag and moves on. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_2::
+KeyAppraisalMenu_ChooseKey_PayAndAppraise::
     call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
     ld a, [wScreenSubStep]
     and a
@@ -3343,7 +3344,7 @@ KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_2::
 
 ; Choosing a key, step 15: blanks two tile pairs and puts the key's name in the text buffer for the
 ; result message. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw::
+KeyAppraisalMenu_ChooseKey_PrepareResult::
     call BlankTwoTilePairsAndDraw
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -3360,7 +3361,7 @@ KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw::
 
 ; Choosing a key, step 16: reloads the player's sprites, restores the screen and redraws the gold
 ; box. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_CopyScreenBufferRectWithAttrs_0D::
+KeyAppraisalMenu_ChooseKey_RestoreScreen::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
@@ -4236,7 +4237,7 @@ KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-KeyAppraisalMenu_DrawGoldBox_TileRect::
+KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4244,7 +4245,7 @@ KeyAppraisalMenu_DrawGoldBox_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 16 x 9 tiles, one row per line
-KeyAppraisalMenu_ChooseKey_TileRect::
+KeyAppraisalMenu_ChooseKey_BuildList_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4256,7 +4257,7 @@ KeyAppraisalMenu_ChooseKey_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 13 x 7 tiles, one row per line
-KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_TileRect::
+KeyAppraisalMenu_ChooseKey_DrawListBox_TileRect::
     db $c3, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $fa, $fb ; id 2
@@ -4265,14 +4266,14 @@ KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $ad, $ae, $af, $fd, $fe, $ff, $70, $71, $72, $73, $74, $75 ; id 6
 
-KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D_TileRect::
+KeyAppraisalMenu_ChooseKey_ConfirmPrice_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $ab, $ac, $ee, $ef, $fc, $b7 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $71, $72, $73, $74, $75, $b7 ; id 3
     db $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_Data::
+KeyAppraisalMenu_ChooseKey_DrawListBox_Data::
     db $ce, $c3, $f6, $c3, $1e, $c4, $46, $c4
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4339,11 +4340,11 @@ Script_WhichMagicKeyShould_2::
 MedalPrizeMenu::
     ld a, [wScreenState]
     jumptable
-    dw MedalPrizeMenu_CopyBytesDEToHL_Bank0D
+    dw MedalPrizeMenu_Init
     dw MedalPrizeMenu_CountItem2C_2
     dw MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc
     dw MedalPrizeMenu_DrawCountBox
-    dw MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D
+    dw MedalPrizeMenu_ReadAnswer
     dw MedalPrizeMenu_ChoosePrize
 
 ; Medal prizes, state 2: with fewer than 3 tiny medals ends with the refusal; otherwise writes the
@@ -4552,7 +4553,7 @@ MedalPrizeMenu_RemoveItem2C::
 ; Medal prizes, state 0: clears the state, copies the screen, sets message mode 7, hides the
 ; sprites; with medal items ($2C) in the inventory moves on to count them, otherwise skips. (C1,
 ; E-0357)
-MedalPrizeMenu_CopyBytesDEToHL_Bank0D::
+MedalPrizeMenu_Init::
     ld hl, wScreenState
     ld bc, $006f
 
@@ -4609,12 +4610,12 @@ MedalPrizeMenu_CopyBytesDEToHL_Bank0D::
 MedalPrizeMenu_DrawCountBox::
     ld a, [wScreenStep]
     jumptable
-    dw MedalPrizeMenu_DrawCountBox_CopyFromBankWaitVRAM
+    dw MedalPrizeMenu_DrawCountBox_LoadTiles
     dw DrawTinyMedalCountBoxAndStep
-    dw MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D
+    dw MedalPrizeMenu_DrawCountBox_DrawYesNo
 
 ; Medal count box, step 0: loads the box and digit tiles from bank $1F. (C1, E-0357)
-MedalPrizeMenu_DrawCountBox_CopyFromBankWaitVRAM::
+MedalPrizeMenu_DrawCountBox_LoadTiles::
     ld de, Tiles2Plus240Tiles
     ld hl, vTiles1 + $2d0
     ld b, $1f
@@ -4688,8 +4689,8 @@ DrawTinyMedalCountBoxAndStep::
     ret
 
 ; Medal count box, step 2: draws the yes/no box (sound $6C) and moves on. (C1, E-0357)
-MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D::
-    ld de, KeyAppraisalMenu_DrawGoldBox_TileRect
+MedalPrizeMenu_DrawCountBox_DrawYesNo::
+    ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -4709,7 +4710,7 @@ MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D::
 
 ; Medal prizes, state 4: the yes/no answer: yes closes the box and moves on to the prize list; no
 ; ends. (C1, E-0357)
-MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D::
+MedalPrizeMenu_ReadAnswer::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -4763,29 +4764,29 @@ MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D::
 MedalPrizeMenu_ChoosePrize::
     ld a, [wScreenStep]
     jumptable
-    dw MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D
-    dw MedalPrizeMenu_ChoosePrize_FillTilesFromRequest
-    dw MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor
+    dw MedalPrizeMenu_ChoosePrize_DrawFrame
+    dw MedalPrizeMenu_ChoosePrize_ClearTiles
+    dw MedalPrizeMenu_ChoosePrize_DrawListBox
     dw MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep
-    dw MedalPrizeMenu_ChoosePrize_BGMapAddressAtScroll_Bank0D
-    dw MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor
-    dw MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_2
+    dw MedalPrizeMenu_ChoosePrize_RedrawScreen
+    dw MedalPrizeMenu_ChoosePrize_ShowDescription
+    dw MedalPrizeMenu_ChoosePrize_WaitDescription
     dw MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc
-    dw MedalPrizeMenu_ChoosePrize_SetTwoChoiceCursor
-    dw MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D
-    dw MedalPrizeMenu_ChoosePrize_EraseCEntriesOfWordTable_Bank0D
+    dw MedalPrizeMenu_ChoosePrize_DrawYesNo
+    dw MedalPrizeMenu_ChoosePrize_ConfirmPrice
+    dw MedalPrizeMenu_ChoosePrize_EraseMarks
     dw MedalPrizeMenu_WriteScreenStepAndScriptCommandTypeEtc
-    dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4
-    dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_2
-    dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
+    dw MedalPrizeMenu_ChoosePrize_CheckRoom
+    dw MedalPrizeMenu_ChoosePrize_PayMedals
+    dw MedalPrizeMenu_ChoosePrize_GivePrize
 
 ; Choosing a prize, step 0: draws the prize list frame and sets the list count. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D::
-    ld de, MedalPrizeMenu_ChoosePrize_TileRect
+MedalPrizeMenu_ChoosePrize_DrawFrame::
+    ld de, MedalPrizeMenu_ChoosePrize_DrawFrame_TileRect
     ld hl, wWindowTileBuffer + $b7
     lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0D
-    call MedalPrizeMenu_ChoosePrize_WriteListCount
+    call MedalPrizeMenu_ChoosePrize_DrawFrame_WriteListCount
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
     ld de, $01cc
@@ -4796,7 +4797,7 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D::
     ret
 
 ; Choosing a prize, step 1: clears the name and message tiles. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_FillTilesFromRequest::
+MedalPrizeMenu_ChoosePrize_ClearTiles::
     ld hl, vTiles1 + $240
     ld a, l
     ld [wTextWindowTileLo], a
@@ -4837,22 +4838,22 @@ MedalPrizeMenu_ChoosePrize_FillTilesFromRequest::
 
 ; Choosing a prize, step 2: draws the list box for the page (the second page's box depends on
 ; whether the game was completed), the page indicator and the cursor. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
+MedalPrizeMenu_ChoosePrize_DrawListBox::
     ld a, [wListPageIndex]
     and a
     jr nz, .check_game_completed
-    ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data1
+    ld de, MedalPrizeMenu_ChoosePrize_DrawListBox_Data1
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .loop:
-    ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data2
+    ld de, MedalPrizeMenu_ChoosePrize_DrawListBox_Data2
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .check_game_completed:
     ld a, [wGameCompleted]
     and a
     jr nz, .loop
-    ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_TileRect
+    ld de, MedalPrizeMenu_ChoosePrize_DrawListBox_TileRect
 
 .call_copy_rect_to20_byte_rows_bank0_d:
     ld hl, wWindowTileBuffer + $cc
@@ -4869,7 +4870,7 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
+    ld hl, MedalPrizeMenu_ChoosePrize_DrawListBox_Data3
     call StoreBAtWordTableEntry_Bank0D
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
@@ -4892,14 +4893,14 @@ MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep::
     ret
 
 ; Choosing a prize, step 4: draws the screen and hides the cursor. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_BGMapAddressAtScroll_Bank0D::
+MedalPrizeMenu_ChoosePrize_RedrawScreen::
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0D
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
+    ld hl, MedalPrizeMenu_ChoosePrize_DrawListBox_Data3
     call StoreBAtWordTableEntry_Bank0D
     ld a, [wScreenStep]
     inc a
@@ -4908,7 +4909,7 @@ MedalPrizeMenu_ChoosePrize_BGMapAddressAtScroll_Bank0D::
 
 ; Choosing a prize, step 5: shows the description of the prize under the cursor (string $22 +
 ; entry), or for entry 0 the following lines' text. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor::
+MedalPrizeMenu_ChoosePrize_ShowDescription::
     ld b, $bb
     call WriteTileBAtCursorListCursor
     farcall SetArg5ToListEntriesCell4
@@ -5008,7 +5009,7 @@ MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor::
 
 ; Choosing a prize, step 6: while the description shows, remembers a direction pressed (Up, Down,
 ; Right, Left as 1-4) so the cursor can move at once; A or B end the description. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_2::
+MedalPrizeMenu_ChoosePrize_WaitDescription::
     ld b, $bb
     call WriteTileBAtCursorListCursor
     ld a, [wJoypadPressedRepeat]
@@ -5162,7 +5163,7 @@ MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
+    ld hl, MedalPrizeMenu_ChoosePrize_DrawListBox_Data3
     call StoreBAtWordTableEntry_Bank0D
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5210,8 +5211,8 @@ MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
     ret
 
 ; Choosing a prize, step 8: draws the yes/no box (sound $6C) and moves on. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_SetTwoChoiceCursor::
-    ld de, KeyAppraisalMenu_DrawGoldBox_TileRect
+MedalPrizeMenu_ChoosePrize_DrawYesNo::
+    ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -5232,7 +5233,7 @@ MedalPrizeMenu_ChoosePrize_SetTwoChoiceCursor::
 ; Choosing a prize, step 9: the confirmation: yes checks the medals against the prize's price
 ; (MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data) and trades them;
 ; no redraws the list. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D::
+MedalPrizeMenu_ChoosePrize_ConfirmPrice::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -5244,7 +5245,7 @@ MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 .loop:
-    call MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2
+    call MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -5309,7 +5310,7 @@ MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D::
 
 ; Redraws the prize list box (by page and game completion), the prices and the page indicator. (C1,
 ; E-0357)
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2::
+MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D::
     ld a, [wListPageIndex]
     and a
     jr nz, .check_game_completed
@@ -5324,7 +5325,7 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2::
     ld a, [wGameCompleted]
     and a
     jr nz, .loop
-    ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2_TileRect
+    ld de, MedalPrizeMenu_ChoosePrize_TileRect
 
 .call_copy_rect_to20_byte_rows_bank0_d:
     ld hl, wWindowTileBuffer + $112
@@ -5340,9 +5341,9 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2::
 
 ; Choosing a prize, step 10: erases the cursor marks and returns to the cursor (step 5). (C1,
 ; E-0357)
-MedalPrizeMenu_ChoosePrize_EraseCEntriesOfWordTable_Bank0D::
+MedalPrizeMenu_ChoosePrize_EraseMarks::
     ld c, $04
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
+    ld hl, MedalPrizeMenu_ChoosePrize_DrawListBox_Data3
     call EraseCEntriesOfWordTable_Bank0D
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
@@ -5358,7 +5359,7 @@ MedalPrizeMenu_ChoosePrize_EraseCEntriesOfWordTable_Bank0D::
 
 ; Choosing a prize, step 11: redraws the list box and steps back one step. (C1, E-0357)
 MedalPrizeMenu_WriteScreenStepAndScriptCommandTypeEtc::
-    call MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2
+    call MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
@@ -5372,7 +5373,7 @@ MedalPrizeMenu_WriteScreenStepAndScriptCommandTypeEtc::
 ; free inventory slot, a monster prize a free SRAM record slot
 ; (MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB); without room it steps back with the matching
 ; refusal (1 or 3). (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4::
+MedalPrizeMenu_ChoosePrize_CheckRoom::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
@@ -5383,7 +5384,7 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4::
     jr z, MedalPrizeMenu_CallMedalPrizeMenu_ChoosePrize_InventoryHasF
     call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
     cp $ff
-    jr nz, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop
+    jr nz, MedalPrizeMenu_ChoosePrize_CheckRoom_Loop
     ld a, $03
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -5396,7 +5397,7 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4::
     ret
 
 ; There is room: clears the result and moves on to the trade. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop::
+MedalPrizeMenu_ChoosePrize_CheckRoom_Loop::
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -5413,7 +5414,7 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop::
 MedalPrizeMenu_CallMedalPrizeMenu_ChoosePrize_InventoryHasF::
     call MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot
     cp $ff
-    jr nz, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop
+    jr nz, MedalPrizeMenu_ChoosePrize_CheckRoom_Loop
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -5427,13 +5428,13 @@ MedalPrizeMenu_CallMedalPrizeMenu_ChoosePrize_InventoryHasF::
 
 ; if the key list is full (FindFreeKeySlotToTemp0 returns bit 7), wTwoChoiceCursor = 2, steps
 ; wScreenStep back and requests script $80; otherwise continues at
-; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop (E-0126) (E-0344: the address in its
-; name dropped or read as the label there; was ScriptStepCheckKeyListFull)
+; MedalPrizeMenu_ChoosePrize_CheckRoom_Loop (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was ScriptStepCheckKeyListFull)
 ScriptStepCheckKeyListFull::
     farcall FindFreeKeySlotToTemp0
     ldh a, [hTemp0]
     bit 7, a
-    jr z, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop
+    jr z, MedalPrizeMenu_ChoosePrize_CheckRoom_Loop
     ld a, $02
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -5448,7 +5449,7 @@ ScriptStepCheckKeyListFull::
 ; Choosing a prize, step 13: trades the medals: subtracts the prize's price (from the price table by
 ; entry) from wTinyMedals, redraws the count, and sets the message by prize kind (item or monster).
 ; (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_2::
+MedalPrizeMenu_ChoosePrize_PayMedals::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
@@ -5497,9 +5498,9 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_2::
     ret
 
 ; Choosing a prize, step 14: gives the prize: item entry 0 puts item $1E in a free inventory slot; a
-; monster prize creates its record (MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_3); then,
-; if no room is left for another, steps back with the refusal. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB::
+; monster prize creates its record (MedalPrizeMenu_ChoosePrize_GivePrize_SetArg5ToListEntriesCell4);
+; then, if no room is left for another, steps back with the refusal. (C1, E-0357)
+MedalPrizeMenu_ChoosePrize_GivePrize::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
@@ -5510,7 +5511,7 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_
     and a
     jr z, .call_medal_prize_menu_choose_prize_inventory
     call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
-    call MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_3
+    call MedalPrizeMenu_ChoosePrize_GivePrize_SetArg5ToListEntriesCell4
     jr .restore
 
 .call_medal_prize_menu_choose_prize_inventory:
@@ -5526,16 +5527,16 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_
     jr z, MedalPrizeMenu_ChoosePrize_CallMedalPrizeMenu_ChoosePrize_InventoryHasF
     call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
     cp $ff
-    jr nz, MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop
+    jr nz, MedalPrizeMenu_ChoosePrize_GivePrize_Loop
     ld a, $03
-    jr MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor
+    jr MedalPrizeMenu_ChoosePrize_GivePrize_SetTwoChoiceCursor
 
 ; Clears the result before stepping back. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop::
+MedalPrizeMenu_ChoosePrize_GivePrize_Loop::
     xor a
 
 ; Sets the result (A) and steps back three steps to the list. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor::
+MedalPrizeMenu_ChoosePrize_GivePrize_SetTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
     sub $03
@@ -5551,27 +5552,27 @@ MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor::
 MedalPrizeMenu_ChoosePrize_CallMedalPrizeMenu_ChoosePrize_InventoryHasF::
     call MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot
     cp $ff
-    jr nz, MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop
+    jr nz, MedalPrizeMenu_ChoosePrize_GivePrize_Loop
     ld a, $01
-    jr MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor
+    jr MedalPrizeMenu_ChoosePrize_GivePrize_SetTwoChoiceCursor
 
 ; if the key list is full, continues with A = 2 at
-; MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor; otherwise at
-; MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop (E-0126) (E-0344: the address in its name
-; dropped or read as the label there; was ScriptStepCheckKeyListFull_2)
+; MedalPrizeMenu_ChoosePrize_GivePrize_SetTwoChoiceCursor; otherwise at
+; MedalPrizeMenu_ChoosePrize_GivePrize_Loop (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was ScriptStepCheckKeyListFull_2)
 ScriptStepCheckKeyListFull_2::
     farcall FindFreeKeySlotToTemp0
     ldh a, [hTemp0]
     bit 7, a
-    jr z, MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop
+    jr z, MedalPrizeMenu_ChoosePrize_GivePrize_Loop
     ld a, $02
-    jr MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor
+    jr MedalPrizeMenu_ChoosePrize_GivePrize_SetTwoChoiceCursor
 
 ; Creates a prize monster's record: from MonsterTable entry $179 + prize (LoadMonsterRecord) and its
 ; species (LoadSpeciesRecord, marked seen with SetSpeciesFlag), builds a new record in wRecordBufA
 ; (state 1, blank name, species, family and the rest) and stores it in a free SRAM slot. (C1,
 ; E-0357)
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_3::
+MedalPrizeMenu_ChoosePrize_GivePrize_SetArg5ToListEntriesCell4::
     push hl
     ld hl, wRecordBufA
     ld b, $a5
@@ -6038,7 +6039,7 @@ MedalPrizeMenu_CountItem2C::
 
 ; Fills the prize list with entries 0-5, or 0-6 after the game is completed, and sets wListCount.
 ; (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteListCount::
+MedalPrizeMenu_ChoosePrize_DrawFrame_WriteListCount::
     ld a, [wGameCompleted]
     and a
     jr nz, .skip
@@ -6178,7 +6179,7 @@ DrawTinyMedalCountBoxAndStep_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 17 x 9 tiles, one row per line
-MedalPrizeMenu_ChoosePrize_TileRect::
+MedalPrizeMenu_ChoosePrize_DrawFrame_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6189,7 +6190,7 @@ MedalPrizeMenu_ChoosePrize_TileRect::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data1::
+MedalPrizeMenu_ChoosePrize_DrawListBox_Data1::
     db $c3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $fd
     ds $14, $c3
     db $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $fd
@@ -6199,7 +6200,7 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data1::
     db $d9, $da, $db, $dc, $dd, $de, $f9, $fa, $fb, $fd, $c3, $c3, $c3, $c3
 
 ; record: 15 x 7 tiles, one row per line
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_TileRect::
+MedalPrizeMenu_ChoosePrize_DrawListBox_TileRect::
     db $c3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $fd, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $fd, $c3, $c3, $c3, $c3 ; id 2
@@ -6208,7 +6209,7 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $d9, $da, $db, $dc, $dd, $de, $f9, $fa, $fb, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data2::
+MedalPrizeMenu_ChoosePrize_DrawListBox_Data2::
     db $c3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $fd
     ds $14, $c3
     db $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $fd
@@ -6226,14 +6227,14 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Data2::
     db $c3, $b7, $c3, $c3, $c3, $c3, $c3, $b7, $b4, $b4, $b4, $b4, $b4, $b5
 
 ; record: 6 x 5 tiles, one row per line
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2_TileRect::
+MedalPrizeMenu_ChoosePrize_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3::
+MedalPrizeMenu_ChoosePrize_DrawListBox_Data3::
     db $cc, $c3, $f4, $c3, $1c, $c4, $44, $c4
 
 MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data::
@@ -6250,7 +6251,7 @@ ScriptCommandE9_RunFar::
 NpcBreedMenu::
     ld a, [wScreenState]
     jumptable
-    dw NpcBreedMenu_SwapMonstersMenu
+    dw NpcBreedMenu_Init
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
@@ -6262,7 +6263,7 @@ NpcBreedMenu::
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
-    dw NpcBreedMenu_SwapMonstersMenu_SetScreenStep
+    dw NpcBreedMenu_RunMonsterScreen
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
@@ -6271,7 +6272,7 @@ NpcBreedMenu::
 
 ; Breeding with a townsperson's monster, state 0: runs the monster screen set-up (SwapMonstersMenu),
 ; sets message mode 8 and skips to state 3. (C1, E-0357)
-NpcBreedMenu_SwapMonstersMenu::
+NpcBreedMenu_Init::
     farcall SwapMonstersMenu
     ld a, $08
     ld [wMessageMode], a
@@ -6293,7 +6294,7 @@ NpcBreedMenu_ChooseAndBreed::
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
-    dw NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5
+    dw NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
@@ -6301,22 +6302,22 @@ NpcBreedMenu_ChooseAndBreed::
     dw NpcBreedMenu_ChooseAndBreed_SetTwoChoiceCursor
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
-    dw NpcBreedMenu_ChooseAndBreed_BreedMenu
+    dw NpcBreedMenu_ChooseAndBreed_RunRecordList
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw CopyScreenBufferRectAt0278AndStep_0D
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
-    dw NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_SetTwoChoiceCursor
-    dw NpcBreedMenu_ChooseAndBreed_PrepareCounterPtr0LoCountersAndRequestScript
+    dw NpcBreedMenu_ChooseAndBreed_CheckPick
+    dw NpcBreedMenu_ChooseAndBreed_StartCountingScript
     dw NpcBreedMenu_ChooseAndBreed_WriteScreenStep
-    dw NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild
-    dw NpcBreedMenu_ChooseAndBreed_QueueSoundEffect
-    dw NpcBreedMenu_ChooseAndBreed_UpdateTwoChoiceCursor_Bank1D
+    dw NpcBreedMenu_ChooseAndBreed_ComputeChild
+    dw NpcBreedMenu_ChooseAndBreed_DrawYesNo
+    dw NpcBreedMenu_ChooseAndBreed_ReadAnswer
     dw NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc
     dw NpcBreedMenu_ToRedrawFullScreenBoxes_0CAndStep
-    dw NpcBreedMenu_ChooseAndBreed_DispatchTalkEvent
+    dw NpcBreedMenu_ChooseAndBreed_StartResultTalk
     dw NpcBreedMenu_ToRestorePlayerPositionState_Bank0DAndStep
-    dw NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D
+    dw NpcBreedMenu_ChooseAndBreed_RestoreScreen
 
 ; Choosing a parent, step 0: runs the breeding list's steps (BreedMenu). (C1, E-0357)
 NpcBreedMenu_ChooseAndBreed_ToBreedMenu::
@@ -6325,7 +6326,7 @@ NpcBreedMenu_ChooseAndBreed_ToBreedMenu::
 
 ; Choosing a parent, step 12: runs the breeding list's steps and reloads two frame tiles. (C1,
 ; E-0357)
-NpcBreedMenu_ChooseAndBreed_BreedMenu::
+NpcBreedMenu_ChooseAndBreed_RunRecordList::
     farcall BreedMenu
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
@@ -6341,7 +6342,7 @@ NpcBreedMenu_ChooseAndBreed_BreedMenu::
 
 ; Choosing a parent, step 4: draws the family icon and the sex mark and level of the monster under
 ; the cursor. (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5::
+NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -6353,7 +6354,7 @@ NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5::
     ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank0D
-    ld de, NpcBreedMenu_ChooseAndBreed_TileRect
+    ld de, NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -6401,7 +6402,7 @@ CopyScreenBufferRectAt0278AndStep_0D::
 ; Choosing a parent, step 17: checks the chosen monster: below level 10 it steps back with refusal
 ; 2; the only party member cannot be chosen; otherwise it continues (the following lines check
 ; more). (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
+NpcBreedMenu_ChooseAndBreed_CheckPick::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -6487,7 +6488,7 @@ NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
 ; Choosing a parent, step 18: copies the chosen record into wRecordBufA and starts the counting
 ; script (PrepareCounterPtr0LoCountersAndRequestScript); on the next call closes the box. (C1,
 ; E-0357)
-NpcBreedMenu_ChooseAndBreed_PrepareCounterPtr0LoCountersAndRequestScript::
+NpcBreedMenu_ChooseAndBreed_StartCountingScript::
     ld a, [wScreenSubStep]
     and a
     jr nz, .clear_screen_sub_step
@@ -6547,7 +6548,7 @@ NpcBreedMenu_ChooseAndBreed_WriteScreenStep::
 
 ; Breeding, step 20: computes the child (ComputeBreedingChild, kind 1); when done, checks whether
 ; the child is new to the library and moves on. (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild::
+NpcBreedMenu_ChooseAndBreed_ComputeChild::
     ld a, $01
     ld [wArg1], a
     farcall ComputeBreedingChild
@@ -6557,7 +6558,7 @@ NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    call NpcBreedMenu_ChooseAndBreed_TestBitInFieldAtArg3
+    call NpcBreedMenu_ChooseAndBreed_ComputeChild_TestBitInFieldAtArg3
     xor a
     ld [wScriptCommandType], a
     ld a, $80
@@ -6567,7 +6568,7 @@ NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild::
     ret
 
 ; Breeding, step 21: plays sound $6C, loads the box tiles and draws the yes/no box. (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_QueueSoundEffect::
+NpcBreedMenu_ChooseAndBreed_DrawYesNo::
     ld a, $6c
     call QueueSoundEffect
     ld de, Tiles2Plus700Tiles
@@ -6592,7 +6593,7 @@ NpcBreedMenu_ChooseAndBreed_QueueSoundEffect::
     call CopyFromBankWaitVRAM
     xor a
     ld [wTwoChoiceCursor], a
-    ld de, NpcBreedMenu_ChooseAndBreed_QueueSoundEffect_TileRect
+    ld de, NpcBreedMenu_ChooseAndBreed_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -6607,7 +6608,7 @@ NpcBreedMenu_ChooseAndBreed_QueueSoundEffect::
 
 ; Breeding, step 22: the yes/no answer: yes moves on to the breeding, no leaves the decision to the
 ; script. (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_UpdateTwoChoiceCursor_Bank1D::
+NpcBreedMenu_ChooseAndBreed_ReadAnswer::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -6741,7 +6742,7 @@ NpcBreedMenu_ToRedrawFullScreenBoxes_0CAndStep::
 
 ; Breeding, step 25: starts talk event group $20 (the result), saving the script position to return
 ; to. (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_DispatchTalkEvent::
+NpcBreedMenu_ChooseAndBreed_StartResultTalk::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
@@ -6773,7 +6774,7 @@ NpcBreedMenu_ToRestorePlayerPositionState_Bank0DAndStep::
 
 ; Breeding, step 27: restores the field screen from the window buffer and lets the script continue.
 ; (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D::
+NpcBreedMenu_ChooseAndBreed_RestoreScreen::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
@@ -6815,7 +6816,7 @@ NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D::
 
 ; Townsperson breeding, state 12: runs the monster screen (SwapMonstersMenu) until it finishes, then
 ; skips five states. (C1, E-0357)
-NpcBreedMenu_SwapMonstersMenu_SetScreenStep::
+NpcBreedMenu_RunMonsterScreen::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -6833,14 +6834,14 @@ NpcBreedMenu_SwapMonstersMenu_SetScreenStep::
 NpcBreedMenu_RedrawListScreen::
     ld a, [wScreenStep]
     jumptable
-    dw NpcBreedMenu_RedrawListScreen_DecompressToVRAM
-    dw NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F
+    dw NpcBreedMenu_RedrawListScreen_LoadTiles
+    dw NpcBreedMenu_RedrawListScreen_LoadGlyphs
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
-    dw NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5
-    dw NpcBreedMenu_RedrawListScreen_FillTilesFromRequest
-    dw NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5
+    dw NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel
+    dw NpcBreedMenu_RedrawListScreen_ClearNameTiles
+    dw NpcBreedMenu_RedrawListScreen_DrawNameAndSpecies
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
 
@@ -6851,13 +6852,13 @@ NpcBreedMenu_RedrawListScreen_ToBreedMenu::
 
 ; Redrawing the breeding list, step 0: decompresses the townsperson's map tiles and palettes (by
 ; wScreenTableIndex). (C1, E-0357)
-NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
+NpcBreedMenu_RedrawListScreen_LoadTiles::
     ld a, [wScreenTableIndex]
     ld b, a
     sla a
     add b
     push af
-    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data1
+    ld hl, NpcBreedMenu_RedrawListScreen_LoadTiles_Data1
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -6868,7 +6869,7 @@ NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
     ld hl, vTiles2
     call DecompressToVRAM
     pop af
-    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data2
+    ld hl, NpcBreedMenu_RedrawListScreen_LoadTiles_Data2
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -6886,21 +6887,21 @@ NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
     ld [wScreenStep], a
     ret
 
-; data read by NpcBreedMenu_RedrawListScreen_DecompressToVRAM (48 bytes) (E-0347)
-NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data1::
+; data read by NpcBreedMenu_RedrawListScreen_LoadTiles (48 bytes) (E-0347)
+NpcBreedMenu_RedrawListScreen_LoadTiles_Data1::
     db $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9
     db $49, $48, $a9, $49, $48, $a9, $49, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b
     db $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48
 
-NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data2::
+NpcBreedMenu_RedrawListScreen_LoadTiles_Data2::
     db $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87
     db $4c, $48, $87, $4c, $48, $87, $4c, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f
     db $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48
 
 ; Redrawing the breeding list, step 1: copies the glyph tiles and two frame tiles. (C1, E-0357)
-NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F::
-    ld hl, NpcBreedMenu_RedrawListScreen_TileCopyDestList
-    ld de, NpcBreedMenu_RedrawListScreen_TileCopySrcList
+NpcBreedMenu_RedrawListScreen_LoadGlyphs::
+    ld hl, NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopyDestList
+    ld de, NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopySrcList
     call CopyGlyphTileListFromBank1F
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
@@ -6918,7 +6919,7 @@ NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F::
     ret
 
 ; Redrawing the breeding list, step 6: clears the name tiles and sets the text window. (C1, E-0357)
-NpcBreedMenu_RedrawListScreen_FillTilesFromRequest::
+NpcBreedMenu_RedrawListScreen_ClearNameTiles::
     ld hl, vTiles1 + $270
     ld a, l
     ld [wTextWindowTileLo], a
@@ -6957,7 +6958,7 @@ NpcBreedMenu_RedrawListScreen_FillTilesFromRequest::
 
 ; Redrawing the breeding list, step 7: draws the name and species name of the monster under the
 ; cursor. (C1, E-0357)
-NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5::
+NpcBreedMenu_RedrawListScreen_DrawNameAndSpecies::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -6973,16 +6974,16 @@ NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5::
     ret
 
 ; Checks whether the child is new: when its species is in the list at
-; NpcBreedMenu_ChooseAndBreed_TestBitInFieldAtArg3_Data and the library list but not yet seen
+; NpcBreedMenu_ChooseAndBreed_ComputeChild_Data and the library list but not yet seen
 ; (TestSpeciesFlag), wTwoChoiceCursor = 1 (the 'new monster' message); otherwise 0. (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_TestBitInFieldAtArg3::
+NpcBreedMenu_ChooseAndBreed_ComputeChild_TestBitInFieldAtArg3::
     ld a, [wArg6]
     ld [wArg1], a
     ld [wSpeciesIdLo], a
     ld a, [wArg7]
     ld [wArg2], a
     ld [wSpeciesIdHi], a
-    ld de, NpcBreedMenu_ChooseAndBreed_TestBitInFieldAtArg3_Data
+    ld de, NpcBreedMenu_ChooseAndBreed_ComputeChild_Data
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -7184,7 +7185,7 @@ NpcBreedMenu_ChooseAndBreed_Multiply8::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
-NpcBreedMenu_ChooseAndBreed_TileRect::
+NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7194,17 +7195,17 @@ NpcBreedMenu_ChooseAndBreed_TileRect::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-NpcBreedMenu_RedrawListScreen_TileCopyDestList::
+NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopyDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 ; record: bank-$1F tile sources
-NpcBreedMenu_RedrawListScreen_TileCopySrcList::
+NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopySrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-NpcBreedMenu_ChooseAndBreed_QueueSoundEffect_TileRect::
+NpcBreedMenu_ChooseAndBreed_DrawYesNo_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2

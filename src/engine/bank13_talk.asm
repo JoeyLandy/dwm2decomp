@@ -208,7 +208,7 @@ FhuntTalkEvents::
     dw ChestMagicKey
     dw Talk_Kweeeeh
     dw FhuntTalkEvents_ShowHeroCheckedBehindThe
-    dw FhuntTalkEvents_TestFlagBit_2
+    dw FhuntTalkEvents_Sleeper
     dw TalkMsg041E_ThisIsTheTownOfPei
     dw TalkMsg041F_NyaTravelersThatsRare
     dw TalkMsg0420_ToTheWestIsAMountain
@@ -217,17 +217,17 @@ FhuntTalkEvents::
     dw TalkMsg0423_SomeTimeAgoAHumanChild
     dw TalkMsg0424_ThereWasntAMonsterKingFor
     dw TalkMsg0425_TheNewMonsterKingMakesOthers
-    dw FhuntTalkEvents_StartScriptAtHL_B13_2
+    dw FhuntTalkEvents_AreYouAMonster
     dw TalkMsg042A_ThisIsJustARumorBut
     dw TalkMsg042B_TheTunnelInTheWestWill
     dw TalkMsg042C_AreYouLookingForSomething
     dw Talk_HowMayWeServeYourMortal_2
-    dw FhuntTalkEvents_StartScriptAtHL_B13
+    dw FhuntTalkEvents_Shop
     dw TalkMsg0430_HeroPeeredIntoTheVaseIt
     dw TalkMsg04AA_HeroReadTheSignDetermine
     dw TalkMsg0DD3_InnDownstairsRoomsAvailable
     dw Talk_WelcomeToTheTravelersInn
-    dw FhuntTalkEvents_TestFlagBit_Kweeeeeh
+    dw FhuntTalkEvents_GiantBird
     dw FhuntTalkEvents_ShowWhenIPassedToo
     dw TalkMsg0436_HeroOpenedTheTreasureChest
     dw ChestItem_WorldDew_Flag00AA
@@ -238,13 +238,13 @@ FhuntTalkEvents::
     dw TalkMsg043E_TheCaveToTheSouthThat
     dw TalkMsg043F_TheNewMonsterKingIsSaid
     dw TalkMsg0440_HardlyNoOneHasSeenThe
-    dw FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList
-    dw FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_2
+    dw FhuntTalkEvents_SoldierThreeItems
+    dw FhuntTalkEvents_SoldierThreeItems2
     dw TalkMsg0445_IfYouHaveTheLightOrbYou
     dw TalkMsg0446_IfIHadTheLightOrbEven
     dw Talk_WantToKnowTheMostFundamental
     dw TalkMsg044A_HearMeOutIfYouWish
-    dw FhuntTalkEvents_StartScriptAtHL_B13_WelcomeHowMayI
+    dw FhuntTalkEvents_Shop2
     dw Talk_HowMayOurChurchHelpYou
     dw TalkMsg044D_HeroReadTheSignTheFinder
     dw TalkMsg0450_HeroPeeredIntoTheVaseA
@@ -262,7 +262,7 @@ FhuntTalkEvents::
     dw ChestItem_Heaven
     dw FhuntTalkEvents_TestFlagBit_YouCanTakeThis
     dw ChestItem_Heaven_Flag00AF
-    dw FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf
+    dw FhuntTalkEvents_PowerOfJustice
     dw TalkMsg0462_HeroCheckedTheNoticeLayThe
     dw Talk_SceneJustice
     dw TalkMsg04A8_WhereIsMyCasketWhereRing
@@ -276,7 +276,7 @@ FhuntTalkEvents::
     dw TalkMsg046D_TheMonsterArmysGeneralIs
     dw TalkMsg046E_OurKingsCastleIsAnInvincible
     dw TalkMsg046F_WhatYouveGotTheThree
-    dw FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_3
+    dw FhuntTalkEvents_Mayor
     dw VaseItem_TinyMedal_Flag0200
     dw Talk_SceneFoundMeBattle
     dw Talk_Kweeeeeh
@@ -289,15 +289,15 @@ FhuntTalkEvents::
     dw ChestItem_Thief_Flag00BD
     dw ChestItem_Bolt
     dw ChestItem_SteelFang_Flag00BF
-    dw FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_4
+    dw FhuntTalkEvents_Fwahahaha
     dw Talk_KamehaSoItWasYouWho
     dw Talk_ThisWayHereHere
-    dw FhuntTalkEvents_StartScriptAtHL_B13_3
+    dw FhuntTalkEvents_Sound
     dw TalkMsg04A6_IWasTakingAWalkOutside
     dw TalkMsg04A4_SouthBeyondTheMountainsIs
     dw TalkMsg04A5_SeveralAncientRuinsRemain
-    dw FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_2
-    dw FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_3
+    dw FhuntTalkEvents_PowerOfJustice2
+    dw FhuntTalkEvents_PowerOfJustice3
     dw TalkMsg0413_HeroCheckedTheTreasureChest_13
     dw $0000 ; unused index (E-0207)
     dw ToggleMapBetween7FAnd92
@@ -585,7 +585,7 @@ FhuntTalkEvents_ShowHeroCheckedBehindThe::
 ; monster (hPlayerSpriteOverride bit 7, bit 0 clear) standing at X $50 'Hm? You're from the
 ; village!' ($041D), elsewhere the script of that name, which sets the flag; otherwise 'Hm? You're a
 ; stranger!' ($041C). (C1, E-0357)
-FhuntTalkEvents_TestFlagBit_2::
+FhuntTalkEvents_Sleeper::
     ld de, EVENT_HM_YOURE_FROM_THE_VILLAGE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
@@ -720,7 +720,7 @@ TalkMsg0425_TheNewMonsterKingMakesOthers::
 
 ; Fhunt talk 31: 'You... Are you a monster?' in one of two scripts, the second for a player
 ; disguised as a monster. (C1, E-0357)
-FhuntTalkEvents_StartScriptAtHL_B13_2::
+FhuntTalkEvents_AreYouAMonster::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr z, .call_start_script_at_hl_b13
@@ -774,7 +774,7 @@ Talk_HowMayWeServeYourMortal_2::
 
 ; Fhunt talk 36, a shop: shop $0D (wScreenTableIndex) with scripts in bank $10, 'Good day. How may I
 ; ...'. (C1, E-0357)
-FhuntTalkEvents_StartScriptAtHL_B13::
+FhuntTalkEvents_Shop::
     ld a, $0d
     ld [wScreenTableIndex], a
     ld a, $10
@@ -820,13 +820,13 @@ Talk_WelcomeToTheTravelersInn::
     ret
 
 ; Fhunt talk 41, the giant bird: after EVENT_SCENE_MADCONDOR, 'Kweeeeeh!' when the player is
-; disguised as a monster listed in TalkEvent29WordList (FhuntTalkEvents_WriteTemp0AndRAMG),
-; otherwise nothing. (C1, E-0357)
-FhuntTalkEvents_TestFlagBit_Kweeeeeh::
+; disguised as a monster listed in TalkEvent29WordList
+; (FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG), otherwise nothing. (C1, E-0357)
+FhuntTalkEvents_GiantBird::
     ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
     ret nc
-    farcall FhuntTalkEvents_WriteTemp0AndRAMG
+    farcall FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG
     ldh a, [hTemp0]
     or a
     ret z
@@ -967,7 +967,7 @@ TalkMsg0440_HardlyNoOneHasSeenThe::
 ; Fhunt talk 52, a soldier: after EVENT_SCENE_THREE_ITEMS_0C2 'Where has our King gone?' ($0499);
 ; carrying all three of items $39-$3B the script 'What? You have the three ...'; otherwise $0441, or
 ; $0442 after EVENT_SCENE_MADCONDOR_CRY. (C1, E-0357)
-FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
+FhuntTalkEvents_SoldierThreeItems::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -1017,7 +1017,7 @@ FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
 ; Fhunt talk 53: after EVENT_SCENE_THREE_ITEMS_0C2 $049A; after EVENT_WHAT_YOU_HAVE_THE_THREE_0B7
 ; $046C; carrying items $39-$3B 'What? You have the three ...' ($046B), setting that flag; otherwise
 ; $0443, or 'Give away the LightOrb?' ($0444) after EVENT_SCENE_MADCONDOR_CRY. (C1, E-0357)
-FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_2::
+FhuntTalkEvents_SoldierThreeItems2::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b134
@@ -1127,7 +1127,7 @@ TalkMsg044A_HearMeOutIfYouWish::
 
 ; Fhunt talk 58, a shop: shop $0E with scripts in bank $10, 'Welcome! How may I serve ...'. (C1,
 ; E-0357)
-FhuntTalkEvents_StartScriptAtHL_B13_WelcomeHowMayI::
+FhuntTalkEvents_Shop2::
     ld a, $0e
     ld [wScreenTableIndex], a
     ld a, $10
@@ -1267,11 +1267,11 @@ TalkMsg0459_ThoseInsideTheHauntedCastle::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 71, the small hole: by FhuntTalkEvents_TestFlagBit_3's answer (the player's monster
-; disguise listed in TalkEvent47WordList): message $045B, $045C, or the script 'checked the small
-; hole. It ...'. (C1, E-0357)
+; Fhunt talk 71, the small hole: by FhuntTalkEvents_IsDisguisedAsListedMonster's answer (the
+; player's monster disguise listed in TalkEvent47WordList): message $045B, $045C, or the script
+; 'checked the small hole. It ...'. (C1, E-0357)
 FhuntTalkEvents_ShowHeroCheckedTheSmall::
-    farcall FhuntTalkEvents_TestFlagBit_3
+    farcall FhuntTalkEvents_IsDisguisedAsListedMonster
     ldh a, [hTemp0]
     or a
     jr nz, .skip
@@ -1344,10 +1344,11 @@ ChestItem_Heaven_Flag00AF::
     call StartTreasureFlagDE_B13
     ret
 
-; Fhunt talk 76: 'Let the power of justice ...' unless FhuntTalkEvents_WriteTemp0AndTemp1 says
-; otherwise (by the player's disguise), then 'Step once on each of ...' ($0461). (C1, E-0357)
-FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf::
-    farcall FhuntTalkEvents_WriteTemp0AndTemp1
+; Fhunt talk 76: 'Let the power of justice ...' unless
+; FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1 says otherwise (by the player's disguise), then
+; 'Step once on each of ...' ($0461). (C1, E-0357)
+FhuntTalkEvents_PowerOfJustice::
+    farcall FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
@@ -1499,7 +1500,7 @@ TalkMsg046F_WhatYouveGotTheThree::
 ; Fhunt talk 90, the mayor: after EVENT_SCENE_THREE_ITEMS_0C2 $049E; after EVENT_SCENE_FOUND_ME
 ; $0472; carrying items $39-$3B the script 'I'm surprised anyone managed to ...'; otherwise 'Hm? How
 ; did you get ...' ($0470). (C1, E-0357)
-FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_3::
+FhuntTalkEvents_Mayor::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
@@ -1672,7 +1673,7 @@ ChestItem_SteelFang_Flag00BF::
 ; Fhunt talk 103: after EVENT_GOOD_YOU_HAVE_BROUGHT_THE the script 'Fwahahaha! Don't you ever give
 ; ...'; carrying items $39-$3B takes all three and runs 'Ah, so good of you ...'; otherwise message
 ; $0479. (C1, E-0357)
-FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_4::
+FhuntTalkEvents_Fwahahaha::
     ld de, EVENT_GOOD_YOU_HAVE_BROUGHT_THE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -1743,7 +1744,7 @@ Talk_ThisWayHereHere::
 
 ; Fhunt talk 106: object 1 faces down; unless the player stands at Y $70, runs Script_Sound. (C1,
 ; E-0357)
-FhuntTalkEvents_StartScriptAtHL_B13_3::
+FhuntTalkEvents_Sound::
     xor a
     ld [wObject1 + OBJ_STATE], a
     ldh a, [hPlayerY]
@@ -1777,10 +1778,11 @@ TalkMsg04A5_SeveralAncientRuinsRemain::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 110: 'Let the power of justice ...' unless FhuntTalkEvents_WriteTemp0AndTemp1 says
-; otherwise, then 'The castle's lord summons monsters...' ($04A0). (C1, E-0357)
-FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_2::
-    farcall FhuntTalkEvents_WriteTemp0AndTemp1
+; Fhunt talk 110: 'Let the power of justice ...' unless
+; FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1 says otherwise, then 'The castle's lord summons
+; monsters...' ($04A0). (C1, E-0357)
+FhuntTalkEvents_PowerOfJustice2::
+    farcall FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
@@ -1793,10 +1795,11 @@ FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_2::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 111: 'Let the power of justice ...' unless FhuntTalkEvents_WriteTemp0AndTemp1 says
-; otherwise, then 'A button hides behind a ...' ($04A1). (C1, E-0357)
-FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_3::
-    farcall FhuntTalkEvents_WriteTemp0AndTemp1
+; Fhunt talk 111: 'Let the power of justice ...' unless
+; FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1 says otherwise, then 'A button hides behind a
+; ...' ($04A1). (C1, E-0357)
+FhuntTalkEvents_PowerOfJustice3::
+    farcall FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
@@ -1880,18 +1883,18 @@ NordenTalkEvents::
     dw TalkMsg030C_ItsBecomeMuchColderWeMay
     dw NordenTalkEvents_ShowHisMajestyIsIn
     dw TalkMsg030F_TheMineOnTheWesternBorder
-    dw NordenTalkEvents_StartScriptAtHL_B13
+    dw NordenTalkEvents_Shop
     dw TalkMsg0311_HeroPeeredIntoTheVaseIt
     dw VaseItem_TinyMedal_Flag01E6
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt
     dw TalkMsg0314_HeroTriedToOpenTheChest_13
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn
+    dw NordenTalkEvents_StartScriptAtHL_B13
     dw TalkMsg0315_TheBorderIsClosedSoI
-    dw NordenTalkEvents_TestFlagBit
+    dw NordenTalkEvents_Shield
     dw TalkMsg031E_HisMajestyHasBeenCrankyIs
     dw TalkMsg031F_AfterTheGoldDiscoveryOur
     dw TalkMsg0320_IRememberTheKingToBe
-    dw NordenTalkEvents_TestFlagBit_AhYouAreThe
+    dw NordenTalkEvents_TwoKings
     dw TalkMsg0ABD_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABE_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt
@@ -1908,9 +1911,9 @@ NordenTalkEvents::
     dw TalkMsg032E_DoYouKnowLadyYunaOf
     dw TalkMsg032F_TheScholarInTheTavernSaid
     dw TalkMsg0330_DontYouThinkItsTooExpensive
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeWhatCanI
-    dw NordenTalkEvents_StartScriptAtHL_B13_GreetingsHowShallI
-    dw NordenTalkEvents_StartScriptAtHL_B13_HelloHaveALook
+    dw NordenTalkEvents_Shop0A
+    dw NordenTalkEvents_Shop08
+    dw NordenTalkEvents_Shop09
     dw Talk_HowMayOurChurchServeYou_2
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt
     dw TalkMsg0D3B_Whinny
@@ -1921,7 +1924,7 @@ NordenTalkEvents::
     dw TalkMsg0336_SighIsntThatScholarAppealing
     dw TalkMsg0337_ICameFromTheEasternKingdom
     dw TalkMsg0ABF_HeroPeeredIntoTheBarrelIt
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_2
+    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn
     dw TalkMsg0338_TheKingOfTheWestIs
     dw TalkMsg0339_ThisIsTheBorderWeShare
     dw TalkMsg033A_TheBorderHasBeenSealedBy
@@ -1961,8 +1964,8 @@ NordenTalkEvents::
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_13
     dw BarrelItem_TinyMedal_Flag01E7
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_13_2
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3
-    dw NordenTalkEvents_StartScriptAtHL_B13_HelloHowMayI
+    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_2
+    dw NordenTalkEvents_Shop0B
     dw TalkMsg038C_TheLakeIsFrozenSoI
     dw TalkMsg038D_ThisIsWestaniaCastleWestania
     dw TalkMsg038E_NobodyFailsToBeImpressed
@@ -1971,7 +1974,7 @@ NordenTalkEvents::
     dw TalkMsg0391_IHurlKnivesWithIncredible
     dw TalkMsg0392_PleaseLineUpAndQuitPushing
     dw TalkMsg0393_OhLadyYunaToThinkThat
-    dw NordenTalkEvents_TestFlagBit_HeroReadTheSign
+    dw NordenTalkEvents_Sign
     dw TalkMsg0397_TheCastleIsInAnUproar
     dw TalkMsg0398_LadyYunaUsedToBeVery
     dw TalkMsg0399_InTheEastLivesAnOld
@@ -1981,7 +1984,7 @@ NordenTalkEvents::
     dw NordenTalkEvents_ShowYoureHereToCheer
     dw Talk_KingMagnificentDontYouAgree
     dw TalkMsg03A4_KingSighNotEvenThisYou
-    dw NordenTalkEvents_TestFlagBit_2
+    dw NordenTalkEvents_Yuna
     dw TalkMsg03A6_ThisIsTheCastleOfEstria
     dw TalkMsg03A7_QueenHelenCameByAWhile
     dw TalkMsg03A8_TheSpiritsSpringHasFrozen
@@ -1992,7 +1995,7 @@ NordenTalkEvents::
     dw TalkMsg03AD_IHeardThisOnTheSly
     dw TalkMsg03AF_AroundThesePartsThereAre
     dw NordenTalkEvents_ShowThisIsNoPlace
-    dw NordenTalkEvents_StartScriptAtHL_B13_HelloWhatMayI
+    dw NordenTalkEvents_Shop0C
     dw TalkMsg03B4_ABotanistDoesLiveHereBut
     dw Talk_IRetiredAsATeacher
     dw Talk_HowMayOurChurchServeYou_3
@@ -2001,7 +2004,7 @@ NordenTalkEvents::
     dw Talk_HowMayOurChurchServeYou_13_2
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_13_3
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_13_2
-    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_4
+    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3
     dw TalkMsg03B8_IWantToReturnToThe
     dw TalkMsg03AC_ThereIsASpringInThe
     dw TalkMsg0396_ItsAMeanOldWorldOut
@@ -2020,15 +2023,15 @@ NordenTalkEvents::
     dw TalkMsg0AC1_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt_13
     dw Talk_SceneSpiritEnvoy2
-    dw NordenTalkEvents_TestFlagBit_YouStartledMeI
+    dw NordenTalkEvents_Startled
     dw NordenTalkEvents_ShowHeroCheckedTheMarionette
     dw TalkMsg0A16_MyMaidIsAngryThatI
-    dw NordenTalkEvents_TestFlagBit_3
+    dw NordenTalkEvents_BlueFlower
     dw ChestMagicKey_Flag01E0
     dw NordenTalkEvents_SetObject2Plus7
     dw Talk_SceneShield
     dw NordenTalkEvents_ShowHeroCheckedTheTreasure
-    dw NordenTalkEvents_FindTemp0InInventoryList
+    dw NordenTalkEvents_SecondShieldScene
     dw ChestItem_Bolt_Flag01E9
     dw ChestItem_DracoBelt
     dw ChestItem_BraveCape_Flag01EB
@@ -2231,7 +2234,7 @@ TalkMsg030F_TheMineOnTheWesternBorder::
 
 ; Norden talk 13, a shop: shop 7 with scripts in bank $10, 'Welcome! How may I serve ...'. (C1,
 ; E-0357)
-NordenTalkEvents_StartScriptAtHL_B13::
+NordenTalkEvents_Shop::
     ld a, $07
     ld [wScreenTableIndex], a
     ld a, $10
@@ -2280,7 +2283,7 @@ TalkMsg0314_HeroTriedToOpenTheChest_13::
     ret
 
 ; starts Script_WelcomeToOurInn_5: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn::
+NordenTalkEvents_StartScriptAtHL_B13::
     ld hl, Script_WelcomeToOurInn_5 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -2299,7 +2302,7 @@ TalkMsg0315_TheBorderIsClosedSoI::
 ; (wJoypadHeld/wJoypadPressed = 1); after EVENT_SCENE_SHIELD_GUARDIAN_1E2 the shield scene script,
 ; or 'checked the shield.' before EVENT_SCENE_SHIELD; after EVENT_BLINK_SPRITES 'If you restore this
 ; world's ...' ($031B); otherwise 'checked the shield. A beautiful ...'. (C1, E-0357)
-NordenTalkEvents_TestFlagBit::
+NordenTalkEvents_Shield::
     ld de, EVENT_SCENE_SHIELD_1E4
     call TestFlagBit
     jr c, .set_joypad_held
@@ -2412,7 +2415,7 @@ TalkMsg0320_IRememberTheKingToBe::
 ; two ...' ($0ABB) after EVENT_SCENE_REPORT_TO_KING, 'We reported to the King ...' after
 ; EVENT_SCENE_GOT_TO, 'His Majesty is furious ...' ($0323) after EVENT_SCENE_SPIRIT_ENVOY, else 'Ah,
 ; you are the spirit's ...'. (C1, E-0357)
-NordenTalkEvents_TestFlagBit_AhYouAreThe::
+NordenTalkEvents_TwoKings::
     ld de, EVENT_SCENE_PLAN_RUINED_094
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
@@ -2649,7 +2652,7 @@ TalkMsg0330_DontYouThinkItsTooExpensive::
 
 ; Norden talk 41, a shop: shop $0A with scripts in bank $10, 'Welcome! What can I do ...'. (C1,
 ; E-0357)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeWhatCanI::
+NordenTalkEvents_Shop0A::
     ld a, $0a
     ld [wScreenTableIndex], a
     ld a, $10
@@ -2660,7 +2663,7 @@ NordenTalkEvents_StartScriptAtHL_B13_WelcomeWhatCanI::
 
 ; Norden talk 42, a shop: shop 8 with scripts in bank $10, 'Greetings! How shall I serve ...'. (C1,
 ; E-0357)
-NordenTalkEvents_StartScriptAtHL_B13_GreetingsHowShallI::
+NordenTalkEvents_Shop08::
     ld a, $08
     ld [wScreenTableIndex], a
     ld a, $10
@@ -2670,7 +2673,7 @@ NordenTalkEvents_StartScriptAtHL_B13_GreetingsHowShallI::
     ret
 
 ; Norden talk 43, a shop: shop 9 with scripts in bank $10, 'Hello! Have a look at ...'. (C1, E-0357)
-NordenTalkEvents_StartScriptAtHL_B13_HelloHaveALook::
+NordenTalkEvents_Shop09::
     ld a, $09
     ld [wScreenTableIndex], a
     ld a, $10
@@ -2808,7 +2811,7 @@ TalkMsg0ABF_HeroPeeredIntoTheBarrelIt::
     ret
 
 ; starts Script_WelcomeToOurInn_6: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_2::
+NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn::
     ld hl, Script_WelcomeToOurInn_6 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -3467,7 +3470,7 @@ TalkMsg0313_HeroPeeredIntoTheOvenIt_13_2::
     ret
 
 ; starts Script_WelcomeToOurInn_7: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3::
+NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_2::
     ld hl, Script_WelcomeToOurInn_7 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -3476,7 +3479,7 @@ NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3::
 
 ; Norden talk 95, a shop: shop $0B with scripts in bank $10, 'Hello! How may I serve ...'. (C1,
 ; E-0357)
-NordenTalkEvents_StartScriptAtHL_B13_HelloHowMayI::
+NordenTalkEvents_Shop0B::
     ld a, $0b
     ld [wScreenTableIndex], a
     ld a, $10
@@ -3596,7 +3599,7 @@ TalkMsg0393_OhLadyYunaToThinkThat::
 
 ; Norden talk 104, the sign: 'Lady Yuna ...' ($0ADF) after EVENT_SCENE_PRINCESS_MEDICINE_09D; 'Come
 ; all ...' as message $0394 after EVENT_GATHER_FOLLOWERS, otherwise as a script. (C1, E-0357)
-NordenTalkEvents_TestFlagBit_HeroReadTheSign::
+NordenTalkEvents_Sign::
     ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -3794,7 +3797,7 @@ TalkMsg03A4_KingSighNotEvenThisYou::
 ; next target is Queen ...' ($0AD7) after the medicine scene's end, the medicine script once
 ; EVENT_SCENE_PRINCESS_MEDICINE is set; after EVENT_YOU_WILL_THANK_YOU_LET and carrying item $33
 ; (YunaSoul) the script '............!', otherwise '............' ($03A3). (C1, E-0357)
-NordenTalkEvents_TestFlagBit_2::
+NordenTalkEvents_Yuna::
     ld de, EVENT_SCENE_SHIELD2_1E5
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -4003,7 +4006,7 @@ NordenTalkEvents_ShowThisIsNoPlace::
 
 ; Norden talk 121, a shop: shop $0C with scripts in bank $10, 'Hello! What may I do ...'. (C1,
 ; E-0357)
-NordenTalkEvents_StartScriptAtHL_B13_HelloWhatMayI::
+NordenTalkEvents_Shop0C::
     ld a, $0c
     ld [wScreenTableIndex], a
     ld a, $10
@@ -4103,7 +4106,7 @@ TalkMsg0312_HeroPeeredIntoTheBarrelIt_13_2::
     ret
 
 ; starts Script_WelcomeToOurInn_8: '*: Welcome to our inn!' (E-0248)
-NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_4::
+NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3::
     ld hl, Script_WelcomeToOurInn_8 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
@@ -4432,7 +4435,7 @@ Talk_SceneSpiritEnvoy2::
 ; Norden talk 127: before EVENT_GIVE_ITEM_BLINK_09A 'You startled me...' and after it 'I don't
 ; remember who I ...', each in three scripts: before EVENT_SCENE_CHEER_YUNA, then with or without
 ; room in the bag. (C1, E-0357)
-NordenTalkEvents_TestFlagBit_YouStartledMeI::
+NordenTalkEvents_Startled::
     ld de, EVENT_GIVE_ITEM_BLINK_09A
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -4503,7 +4506,7 @@ TalkMsg0A16_MyMaidIsAngryThatI::
 ; Norden talk 134, the blue flower: gives item $34 (SleepHerb) when the bag has room and sets
 ; EVENT_HERO_CHECKED_THE_BLUE_FLOWER ($0AE7), says it cannot be carried ($0AE9), or after the flag
 ; $0AE8. (C1, E-0357)
-NordenTalkEvents_TestFlagBit_3::
+NordenTalkEvents_BlueFlower::
     ld de, EVENT_HERO_CHECKED_THE_BLUE_FLOWER
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -4580,7 +4583,7 @@ NordenTalkEvents_ShowHeroCheckedTheTreasure::
 
 ; Norden talk 136: takes item $32 from the inventory and runs the second shield scene script. (C1,
 ; E-0357)
-NordenTalkEvents_FindTemp0InInventoryList::
+NordenTalkEvents_SecondShieldScene::
     ld a, $32
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
@@ -4718,7 +4721,7 @@ GreatLogTalkEvents::
     jumptable
     dw GreatLogTalkEvents_Return
     dw Talk_SceneTerry
-    dw GreatLogTalkEvents_TestFlagBit
+    dw GreatLogTalkEvents_Mama
     dw TalkMsg0023_HeroCheckedTheBookshelfBehavior
     dw TalkMsg001B_ThisHayIsPrettyGoodMaybe
     dw TalkMsg0026_HeroCheckedTheOvenItSmelled
@@ -4729,7 +4732,7 @@ GreatLogTalkEvents::
     dw TalkMsg0032_HelloThereYouMustBeThe
     dw TalkMsg003C_YoureTheKidsFromTheNew
     dw TalkMsg0040_OnThisIslandEveryDayGoes
-    dw GreatLogTalkEvents_InventoryHasFreeSlotCheck_Bank13
+    dw GreatLogTalkEvents_GiveTinyMedal
     dw TalkMsg0034_TheHorridPrinceAndThatElemental
     dw TalkMsg020F_ThereAreSomeItemsThatCan
     dw TalkMsg003A_ThatWeirdApeThingIsWarubou
@@ -4741,21 +4744,21 @@ GreatLogTalkEvents::
     dw TalkMsg003F_InsideTheWellIsTheLogs
     dw GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit
     dw GreatLogTalkEvents_ShowImPrinceKamehaOf
-    dw GreatLogTalkEvents_TestFlagBit_3
+    dw GreatLogTalkEvents_WarubouInCastle
     dw TalkMsg001A_IAccidentallyWentOutside
     dw GreatLogTalkEvents_ShowCobiHeroWhileYoure
     dw GreatLogTalkEvents_ShowTaraBigBrotherWhile
     dw TalkMsg011E_IfYourPartyIsWipedOut
     dw TalkMsg021F_DoYouKnowAboutLogTwigIts
     dw TalkMsg04D0_HeroReadTheSignMonsterArena
-    dw GreatLogTalkEvents_TestFlagBit_4
-    dw GreatLogTalkEvents_TestFlagBit_TakeThisSlideAs
+    dw GreatLogTalkEvents_Guide
+    dw GreatLogTalkEvents_Slide
     dw TalkMsg021C_MonstersHateBeingAwayFrom
     dw TalkMsg0221_HelloThereYoungsterTakeThese
     dw TalkMsg0222_HeyALittleBittyMasterHi
-    dw GreatLogTalkEvents_TestFlagBit_5
+    dw GreatLogTalkEvents_Grandparent
     dw TalkMsg0224_TakeCareToFindTinyMedals
-    dw GreatLogTalkEvents_TestFlagBit_SetTemp0
+    dw GreatLogTalkEvents_Master
     dw TalkMsg0D8C_WataWataTerryBattledInThe
     dw TalkMsg0D8D_FwahahahahaHowAmusingEven
     dw TalkMsg022D_WarpWingReturnsYouInstantly
@@ -4763,10 +4766,10 @@ GreatLogTalkEvents::
     dw TalkMsg022C_ThereAreBooksThatChangeYour
     dw TalkMsg0005_YouFolksRunAMonsterFarm
     dw TalkMsg0006_TheresASpiritInGreatLogThats
-    dw GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13
+    dw GreatLogTalkEvents_OnTheShip
     dw Talk_SailingIsSureExhilarating
     dw TalkMsg000A_WellSoonBeReachingGreatLog
-    dw GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13_2
+    dw GreatLogTalkEvents_EditionChoice
     dw GreatLogTalkEvents_ShowTheFarmIsFull
     dw GreatLogTalkEvents_ShowTheFarmIsFull
     dw GreatLogTalkEvents_ShowTheFarmIsFull
@@ -4778,21 +4781,21 @@ GreatLogTalkEvents::
     dw TalkMsg0243_HeroCheckedTheBookshelfBookmark
     dw TalkMsg0244_HeroCheckedTheBookshelfJournal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt
-    dw GreatLogTalkEvents_TestFlagBit_HeyLetMeAsk
+    dw GreatLogTalkEvents_LetMeAsk
     dw TalkMsg0249_HeroCheckedTheBookshelfDiary
     dw TalkMsg0256_HeroCheckedTheDresserItWas
     dw TalkMsg02B0_HeroPeeredIntoTheBarrelIt
-    dw GreatLogTalkEvents_TestFlagBit_DidYouKnowThat
+    dw GreatLogTalkEvents_DidYouKnow
     dw TalkMsg025A_HeroCheckedTheDresserItWas
     dw TalkMsg025B_HeroCheckedTheBookshelfThis
     dw IfFlag134Msg0314_HeroTriedToOpenTheChest
-    dw GreatLogTalkEvents_TestFlagBit_WelcomeI
+    dw GreatLogTalkEvents_Christener
     dw TalkMsg04C5_HeroCheckedTheBookshelfHandbook
     dw TalkMsg04C6_HeroCheckedTheBookshelfHandbook
     dw TalkMsg04C7_HeroCheckedTheBookshelfHandbook
     dw TalkMsg08C0_WeGetMoreAndMoreStubborn
     dw GreatLogTalkEvents_ShowHeresThatTinyMedalWait
-    dw GreatLogTalkEvents_TestFlagBit_HelloHeroWelcomeThis
+    dw GreatLogTalkEvents_TestFlagBit
     dw TalkMsg0A50_ZzzzYawnHuhIsItMorning
     dw TalkMsg0A52_OurKindAlwaysStaysNearWater
     dw TalkMsg0A53_ZzzZzzZzzWhoopsWasI
@@ -4813,16 +4816,16 @@ GreatLogTalkEvents::
     dw TalkMsg0294_IfYouWinAnArenaTourney
     dw TalkMsg0290_SirloinIsTheTopsHarrumph
     dw TalkMsg0291_IIDidntFallForAny
-    dw GreatLogTalkEvents_TestFlagBit_OhACuteLittle
+    dw GreatLogTalkEvents_ArenaReceptionist
     dw TalkMsg0296_HeroPeeredIntoTheVaseIt
     dw VaseItem_TinyMedal_Flag010C
     dw TalkMsg027A_ListenThisIsASecretTheres
     dw GreatLogTalkEvents_ClearArenaData_Here
-    dw GreatLogTalkEvents_SaveScreenBufferToBGMap1
+    dw GreatLogTalkEvents_Breeder
     dw TalkMsg04B5_DoYouKnowAllTheKinds
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
-    dw GreatLogTalkEvents_TestFlagBit_UmI
-    dw GreatLogTalkEvents_WelcomeToTheStarry
+    dw GreatLogTalkEvents_EggEvaluator
+    dw GreatLogTalkEvents_StarryShrine
     dw Talk_ImTheProfsAssistantDoYou
     dw TalkMsg08D8_HeroCheckedTheBookshelfBreeding
     dw TalkMsg08D9_HeroCheckedTheBookshelfBreeding
@@ -4830,7 +4833,7 @@ GreatLogTalkEvents::
     dw TalkMsg02DC_GreatLogsStarryShrineWasnt
     dw TalkMsg0DD4_IfYouBreedTheParentsGo
     dw TalkMsg02DD_ParentsPassOnAbilitiesTo
-    dw GreatLogTalkEvents_TestFlagBit_YouCanCallMe
+    dw GreatLogTalkEvents_YouCanCallMe
     dw TalkMsg0A6F_MyHusbandLovesToCollectThings
     dw TalkMsg0A75_HeroCheckedTheDresserItOverflowed
     dw TalkMsg0A76_HeroCheckedTheDresserItOverflowed
@@ -4843,7 +4846,7 @@ GreatLogTalkEvents::
     dw TalkMsg0A33_HaveYouBeenToTheStarry
     dw TalkMsg020A_ImChoppingSomeTreesDownTo
     dw TalkMsg08BF_MasterOnlyMakesMeChargeIt
-    dw GreatLogTalkEvents_TestFlagBit_SetFlagBit
+    dw GreatLogTalkEvents_Shopkeeper
     dw TalkMsg0A39_TheManHereHasRareKeys
     dw TalkMsg0A3C_KingIfYouSee
     dw TalkMsg0A3E_YoureFreeToGo
@@ -4865,9 +4868,9 @@ GreatLogTalkEvents::
     dw GreatLogTalkEvents_ShowItsExcitingToThink
     dw TalkMsg0299_ImApprenticingUnderTheBoss
     dw TalkMsg029A_DayAfterDayIExamineKeys
-    dw GreatLogTalkEvents_Return_2
-    dw GreatLogTalkEvents_Return_2
-    dw GreatLogTalkEvents_Return_2
+    dw GreatLogTalkEvents_NothingToSay
+    dw GreatLogTalkEvents_NothingToSay
+    dw GreatLogTalkEvents_NothingToSay
     dw TalkMsg0504_IfTheIslandSink
     dw TalkMsg0512_KamehaYoHeroThanks
     dw ChestItem_LifeAcorn_Flag011B
@@ -4880,9 +4883,9 @@ GreatLogTalkEvents::
     dw TalkMsg0025_HeroCheckedTheDresserItSmelled
     dw TalkMsg001D_HeroPeeredIntoTheBarrelIt
     dw TalkMsg001C_HeroCheckedThePumpItsRusted
-    dw GreatLogTalkEvents_FullyHealParty
+    dw GreatLogTalkEvents_Healer
     dw TalkMsg0037_HeroTriedToOpenTheChest_13
-    dw GreatLogTalkEvents_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_Shop
     dw GreatLogTalkEvents_ShowTerryHereJustTake
     dw TalkMsg0D4E_ImDiggingHereBecauseIThink
     dw Talk0043_HeroCheckedTheOdd
@@ -4894,7 +4897,7 @@ GreatLogTalkEvents::
     dw TalkMsg022F_EvenICanCastSpellsIf
     dw TalkMsg0242_MyDadsAFamousMonsterMaster
     dw TalkMsg02B1_HeroPeeredIntoTheOvenIt
-    dw GreatLogTalkEvents_TestFlagBit_WantToKnowHow
+    dw GreatLogTalkEvents_WantToKnowHow
     dw TalkMsg02A6_PuttingUpABridgeIsEasy
     dw TalkMsg0209_DidYouKnowYouCanRecord
     dw TalkMsg0A51_WhenAAppearsByAMonsters
@@ -4920,7 +4923,7 @@ GreatLogTalkEvents::
     dw TalkMsg0225_HeroPeeredIntoTheVaseThere
     dw VaseItem_TinyMedal_Flag0130
     dw TalkMsg024A_HeroCheckedThePlushDollIt
-    dw GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1
+    dw GreatLogTalkEvents_Talk204
     dw GreatLogTalkEvents_ShowHereItIstheTinyMedal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt_13
     dw Talk00FC_YouHaveToEat
@@ -4944,9 +4947,9 @@ GreatLogTalkEvents::
     dw TalkMsg051E_TheGreatLogTreeAppearedTo
     dw TalkMsg055E_HeroCheckedTheBookshelfMagic
     dw TalkMsg0DD5_MonsterSkillsArePassedOn
-    dw GreatLogTalkEvents_RunFieldCommandTemp0
-    dw GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive
-    dw GreatLogTalkEvents_StartMessageCommand09HL_B13
+    dw GreatLogTalkEvents_ShowEgg
+    dw GreatLogTalkEvents_Egg
+    dw GreatLogTalkEvents_SpeciesPreset
     dw GreatLogTalkEvents_SetGreatLogEventFlag
     dw $0000 ; unused index (E-0207)
     dw TalkMsg029B_IFoundAKey
@@ -4980,11 +4983,11 @@ Talk_SceneTerry::
 ; Great Log talk, Mama: by story progress: after EVENT_THANKS_FOR_COMING_BY_025 'you were so busy'
 ; ($0D91) once (only after the errands began and before the LoveWater), then 'The weather is
 ; beautiful again.' ($0B00); after the three items scene $0500; after the rival is defeated the
-; errands (GreatLogTalkEvents_TestFlagBit_2); after the long faces scene an Herb (item 1) with 'Are
-; you going out to ...' when the bag has room, then $0102; after Warubou's food scene the package
-; script once, with field command 1, then $006C; after the vault scene $0022; otherwise 'You've come
-; at the right ...'. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit::
+; errands (GreatLogTalkEvents_Mama_TestFlagBit); after the long faces scene an Herb (item 1) with
+; 'Are you going out to ...' when the bag has room, then $0102; after Warubou's food scene the
+; package script once, with field command 1, then $006C; after the vault scene $0022; otherwise
+; 'You've come at the right ...'. (C1, E-0357)
+GreatLogTalkEvents_Mama::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jp c, .call_test_flag_bit3
@@ -4999,7 +5002,7 @@ GreatLogTalkEvents_TestFlagBit::
     jp c, .skip
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
-    jr c, .call_great_log_talk_events_test_flag_bit_2
+    jr c, .call_great_log_talk_events_mama_test_flag_bit
     ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     jr c, .call_test_flag_bit2
@@ -5054,15 +5057,15 @@ GreatLogTalkEvents_TestFlagBit::
     call StartScriptAtHL_B13
     ret
 
-.call_great_log_talk_events_test_flag_bit_2:
-    call GreatLogTalkEvents_TestFlagBit_2
+.call_great_log_talk_events_mama_test_flag_bit:
+    call GreatLogTalkEvents_Mama_TestFlagBit
     ret
 
 .skip:
-    jr .call_great_log_talk_events_test_flag_bit_2
+    jr .call_great_log_talk_events_mama_test_flag_bit
 
 .skip2:
-    jr .call_great_log_talk_events_test_flag_bit_2
+    jr .call_great_log_talk_events_mama_test_flag_bit
 
 .call_start_message_command09_hl_b134:
     ld hl, $0500 ; '*: 0… There have been frequent'
@@ -5095,7 +5098,7 @@ GreatLogTalkEvents_TestFlagBit::
 ; You'll run another errand?' to start, a reminder ($0202, $08A5, $08AA, $0A27) until the item is
 ; carried, then taking it with thanks; between them $0214 and $0205, and $0A2A when none are left.
 ; (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_2::
+GreatLogTalkEvents_Mama_TestFlagBit::
     ld de, EVENT_ILL_GET_YOU_TO_RUN
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -5845,7 +5848,7 @@ TalkMsg0040_OnThisIslandEveryDayGoes::
 
 ; Great Log talk: gives item $2C when the bag has room, with 'Hey, that's mine! <hero> obtained ...'
 ; ($00FD). (C1, E-0357)
-GreatLogTalkEvents_InventoryHasFreeSlotCheck_Bank13::
+GreatLogTalkEvents_GiveTinyMedal::
     call InventoryHasFreeSlotCheck_Bank13
     jr c, .read_inventory_sort_flags
     ret
@@ -6384,7 +6387,7 @@ GreatLogTalkEvents_ShowImPrinceKamehaOf::
 ; total of species seen (TotalSpeciesFlaggedOrListed: 250-289 the first, 290 or more the second,
 ; fewer 'How are you? Still ...' $0B26), or Petibou's $0BA8. Seven unreached bytes after one branch
 ; decode as ld hl, $537B / call $4049 / ret. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_3::
+GreatLogTalkEvents_WarubouInCastle::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jp c, .call_test_flag_bit5
@@ -6850,7 +6853,7 @@ TalkMsg04D0_HeroReadTheSignMonsterArena::
 ; master?' ($0071) after Warubou's food scene, 'This leads to GreatLog Castle!' ($021B) after the
 ; rival is defeated; after the second shield 'Prince Kameha has been missing ...' once, then $0A3D;
 ; after the three items 'If the island sink, is ...' once, then $0A3D. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_4::
+GreatLogTalkEvents_Guide::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_test_flag_bit2
@@ -6905,7 +6908,7 @@ GreatLogTalkEvents_TestFlagBit_4::
 
 ; Great Log talk: the slide: 'Take this slide as a ...' the first time, then 'It's easy to get down,
 ; ...' ($021E); at the end 'The rope in the farm ...' ($0B10). (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_TakeThisSlideAs::
+GreatLogTalkEvents_Slide::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -7000,7 +7003,7 @@ TalkMsg0222_HeyALittleBittyMasterHi::
 
 ; Great Log talk, a grandparent: 'I like my grandchildren to ...' ($0543) after Darck's defeat until
 ; the end, otherwise 'Well, you're a mighty lively ...' ($0223). (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_5::
+GreatLogTalkEvents_Grandparent::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -7029,7 +7032,7 @@ TalkMsg0224_TakeCareToFindTinyMedals::
 ; Great Log talk, a master: 'I became a master because ...' at the end; after the three items $0D32
 ; or $0528; after the master's thanks $0267; otherwise 'Oh... You're so lucky to ...', as a script
 ; when a species-2 monster is in a party of two or more. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_SetTemp0::
+GreatLogTalkEvents_Master::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .call_start_script_at_hl_b132
@@ -7147,7 +7150,7 @@ TalkMsg0006_TheresASpiritInGreatLogThats::
 ; Great Log talk on the ship: message $0004 before EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED; after it
 ; Tara's 'Big brother! GreatLog will be ...'; Cobi's script sits behind a constant test (ld a, 1 /
 ; or a) for the other edition. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13::
+GreatLogTalkEvents_OnTheShip::
     ld de, EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED
     call TestFlagBit
     jr c, .skip
@@ -7200,7 +7203,7 @@ TalkMsg000A_WellSoonBeReachingGreatLog::
 ; Great Log talk on the ship: message $000B (the constant $02 & 1 + $0B: the edition choice) the
 ; first time, setting EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED, then 'When our farm gets established
 ; ...' ($000D). (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13_2::
+GreatLogTalkEvents_EditionChoice::
     ld de, EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -7360,7 +7363,7 @@ TalkMsg0245_HeroPeeredIntoTheVaseIt::
 
 ; Great Log talk: 'Hey, let me ask you ...' (script), 'If GreatLog were to sink, ...' ($0526) after
 ; the three items, 'The girl next door? Well, ...' ($0B42) at the end. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_HeyLetMeAsk::
+GreatLogTalkEvents_LetMeAsk::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -7409,7 +7412,7 @@ TalkMsg02B0_HeroPeeredIntoTheBarrelIt::
 ; after the three items; at the end a gift monster of kind 2 ('The way you saved GreatLog ...',
 ; $0B43, or $0B44 when the farm is full) once, then 'Our monsters left on a ...' ($0B45). (C1,
 ; E-0357)
-GreatLogTalkEvents_TestFlagBit_DidYouKnowThat::
+GreatLogTalkEvents_DidYouKnow::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -7485,7 +7488,7 @@ IfFlag134Msg0314_HeroTriedToOpenTheChest::
 
 ; Great Log talk, the Christener (scripts in bank $96): 'Welcome. I'm the Christener. I ...' the
 ; first time, then '... Do ...'. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_WelcomeI::
+GreatLogTalkEvents_Christener::
     ld a, $96
     ld [wDataBank], a
     ld de, EVENT_WELCOME_IM_THE_CHRISTENER_I
@@ -7575,7 +7578,7 @@ GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
     ret
 
 ; starts Script_HelloHeroWelcomeThis: '*: Hello, 0, welcome! This is' (E-0248)
-GreatLogTalkEvents_TestFlagBit_HelloHeroWelcomeThis::
+GreatLogTalkEvents_TestFlagBit::
     ld de, EVENT_HELLO_HERO_WELCOME_THIS_IS
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -7790,7 +7793,7 @@ TalkMsg0291_IIDidntFallForAny::
 ; Great Log talk, the arena receptionist: by wArenaRank 'Oh, a cute little master!', then 'Oh,
 ; you're the Kids/C/B/A Class ...' (each in a second script behind EVENT_NEVER_SET), or 'You have to
 ; pay an ...' ($0B78) above A class. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_OhACuteLittle::
+GreatLogTalkEvents_ArenaReceptionist::
     ld a, [wArenaRank]
     or a
     jr nz, .skip
@@ -7974,7 +7977,7 @@ GreatLogTalkEvents_ClearArenaData_Here::
 ; Great Log talk, the breeder (scripts in bank $0E): saves the screen and the player's position; 'I
 ; lost again. I need ...' in two versions, or 'When you breed, the offspring ...' ($04B4) after
 ; EVENT_WHEN_YOU_BREED_THE_OFFSPRING. (C1, E-0357)
-GreatLogTalkEvents_SaveScreenBufferToBGMap1::
+GreatLogTalkEvents_Breeder::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld de, EVENT_WHEN_YOU_BREED_THE_OFFSPRING
@@ -8074,7 +8077,7 @@ TalkMsg04B6_IfYouEatAnyBadMeatLike::
 ; Great Log talk, the Egg Evaluator (scripts in bank $96): 'Um... I'm the Egg Evaluator.' the first
 ; time, then 'I'm the Egg Evaluator. May ...'; at the end 'Oh, the savior of GreatLog.' once. (C1,
 ; E-0357)
-GreatLogTalkEvents_TestFlagBit_UmI::
+GreatLogTalkEvents_EggEvaluator::
     ld a, $96
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
@@ -8103,7 +8106,7 @@ GreatLogTalkEvents_TestFlagBit_UmI::
 ; Great Log talk, the Starry Shrine (scripts in bank $15): saves the screen and the player's
 ; position; 'Welcome to the Starry Shrine.' in two versions; at the end 'Aren't you GreatLog's
 ; savior?' once. (C1, E-0357)
-GreatLogTalkEvents_WelcomeToTheStarry::
+GreatLogTalkEvents_StarryShrine::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld a, $15
@@ -8191,7 +8194,7 @@ TalkMsg02DD_ParentsPassOnAbilitiesTo::
 
 ; Great Log talk (scripts in bank $0C): 'You can call me the ...' in two versions; at the end 'Well,
 ; who would have thought ...' once. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_YouCanCallMe::
+GreatLogTalkEvents_YouCanCallMe::
     ld a, $0c
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
@@ -8405,7 +8408,7 @@ TalkMsg08BF_MasterOnlyMakesMeChargeIt::
 ; in a party of two or more 'Wait! Could I get you ...' in three scripts, otherwise 'I want to open
 ; up ...' ($08C5); after it shop 1 opens: 'ArmyAnt helped me get my ...' once, then 'Welcome! How
 ; may I serve ...', or $0D25 unless object 1 is at X $10 after the second shield. (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_SetFlagBit::
+GreatLogTalkEvents_Shopkeeper::
     ld de, EVENT_REWARD_ITEM_OR_KEY_2
     call TestFlagBit
     jr c, .set_screen_table_index_to_01
@@ -9210,7 +9213,7 @@ TalkMsg029A_DayAfterDayIExamineKeys::
     ret
 
 ; Returns at once (a Great Log talk with nothing to say). (C1, E-0357)
-GreatLogTalkEvents_Return_2::
+GreatLogTalkEvents_NothingToSay::
     ret
 
 ; tests story flags in turn (flag $0025 set: jp to
@@ -9522,7 +9525,7 @@ TalkMsg001C_HeroCheckedThePumpItsRusted::
 
 ; Great Log talk, a healer: fully heals the party, moves fallen members to the back and reloads the
 ; names and sprites. (C1, E-0357)
-GreatLogTalkEvents_FullyHealParty::
+GreatLogTalkEvents_Healer::
     farcall FullyHealParty
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
@@ -9543,7 +9546,7 @@ TalkMsg0037_HeroTriedToOpenTheChest_13::
 
 ; Great Log talk, a shop: shop $17 with scripts in bank $10, 'Hello! What can I do ...'. (C1,
 ; E-0357)
-GreatLogTalkEvents_StartScriptAtHL_B13::
+GreatLogTalkEvents_Shop::
     ld a, $17
     ld [wScreenTableIndex], a
     ld a, $10
@@ -9724,7 +9727,7 @@ TalkMsg02B1_HeroPeeredIntoTheOvenIt::
 
 ; Great Log talk: 'Want to know how the ...' in three scripts by progress (after the rival, after
 ; the mermaid kingdom). (C1, E-0357)
-GreatLogTalkEvents_TestFlagBit_WantToKnowHow::
+GreatLogTalkEvents_WantToKnowHow::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
     jr c, .call_start_script_at_hl_b132
@@ -10085,11 +10088,11 @@ TalkMsg024A_HeroCheckedThePlushDollIt::
     call StartMessageCommand09HL_B13
     ret
 
-; Great Log talk 204: far-calls GreatLogTalkEvents_WriteTemp1, which clears hTemp1, so the bit-7
-; test never returns early: sets the tile action to 0 and runs the strongest-master scene script.
-; (C1, E-0357)
-GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1::
-    farcall GreatLogTalkEvents_WriteTemp1
+; Great Log talk 204: far-calls GreatLogTalkEvents_Talk204_WriteTemp1, which clears hTemp1, so the
+; bit-7 test never returns early: sets the tile action to 0 and runs the strongest-master scene
+; script. (C1, E-0357)
+GreatLogTalkEvents_Talk204::
+    farcall GreatLogTalkEvents_Talk204_WriteTemp1
     ldh a, [hTemp1]
     bit 7, a
     ret nz
@@ -10575,7 +10578,7 @@ TalkMsg0DD5_MonsterSkillsArePassedOn::
 
 ; Great Log talk: when the egg receives gifts (wGiftRecord 1) and the scene object is free, shows
 ; the egg (field command $14). (C1, E-0357)
-GreatLogTalkEvents_RunFieldCommandTemp0::
+GreatLogTalkEvents_ShowEgg::
     ld a, [wGiftRecord]
     cp $01
     ret nz
@@ -10589,7 +10592,7 @@ GreatLogTalkEvents_RunFieldCommandTemp0::
 
 ; Great Log talk, the egg: when it receives gifts, 'What will you give to the ...' with no gift
 ; pending, otherwise '<item> has been given to the ...' with the pending item's name. (C1, E-0357)
-GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive::
+GreatLogTalkEvents_Egg::
     ld a, [wGiftRecord]
     cp $01
     ret nz
@@ -10609,7 +10612,7 @@ GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive::
 
 ; Great Log talk: by the player's X ($30, $40 or other) message $0D66, $0D67 or $0D68 and the
 ; matching species-flag preset 0, 1 or 2 (LoadSpeciesFlagsPresetC). (C1, E-0357)
-GreatLogTalkEvents_StartMessageCommand09HL_B13::
+GreatLogTalkEvents_SpeciesPreset::
     ldh a, [hPlayerX]
     cp $30
     jr nz, .cp_40

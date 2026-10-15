@@ -14,12 +14,12 @@ RunBattleCommandEntry::
     ld a, [wBattleSubPhase]
     jumptable
     dw RunBattleCommandEntry_WriteCommandEntryMonster
-    dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
+    dw RunBattleCommandEntry_NextActor
     dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
-    dw RunBattleCommandEntry_ChooseTargetForActor
-    dw RunBattleCommandEntry_SetActionQueuePos
-    dw RunBattleCommandEntry_CompareHLToBC
-    dw RunBattleCommandEntry_AddWordAtHLToBC_Bank30
+    dw RunBattleCommandEntry_ChooseTarget
+    dw RunBattleCommandEntry_ListSpeeds
+    dw RunBattleCommandEntry_SortBySpeed
+    dw RunBattleCommandEntry_TotalHP
 
 ; Turn order, step 0: next step; outside link battles, sets wCommandEntryMonster to whichever of the
 ; party's summed personality bytes is largest (0 Hi, 1 Mid, 2 Lo, 3 trait; an earlier one wins
@@ -37,14 +37,14 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
     ld c, $00
     ld hl, wSlotPersonalityHi
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
     ld hl, wSlotPersonalityMid
     push de
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     pop hl
     ld a, l
     sub e
@@ -63,7 +63,7 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
     ld c, $00
     ld hl, wSlotPersonalityLo
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     pop hl
     ld a, l
     sub e
@@ -82,7 +82,7 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
     ld c, $00
     ld hl, wSlotTrait
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     pop hl
     ld a, l
     sub e
@@ -97,7 +97,7 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
 
 ; DE += the byte at HL for each of B slots from slot C that is present (HL steps per slot). (C1,
 ; E-0357)
-RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
+RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
@@ -112,13 +112,13 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
     inc hl
     inc c
     dec b
-    jr nz, RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
+    jr nz, RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
 ; Turn order, step 1: advances the second random stream in link battles; walks wBattleActor to the
 ; next slot marked 1 that is present and goes to its command entry (step 2); after slot 7 skips to
 ; step 4. (C1, E-0357)
-RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleCommandEntry_NextActor::
     ld a, [wLinkMode]
     or a
     call nz, NextTableByteSecondStream
@@ -167,7 +167,7 @@ RunBattleCommandEntry_ToRunCommandEntryResolveStep::
 
 ; Turn order, step 3: chooses the actor's target (ChooseTargetForActor), marks the slot done (2) and
 ; returns to step 1 with the next actor. (C1, E-0357)
-RunBattleCommandEntry_ChooseTargetForActor::
+RunBattleCommandEntry_ChooseTarget::
     call ChooseTargetForActor
     ld a, [wBattleActor]
     ld hl, wSlotMarks
@@ -233,10 +233,10 @@ ChooseTargetForActor::
     ret
 
 ; Turn order, step 4: clears the action queue and the speed list, lists every present slot marked 2
-; with a speed (RunBattleCommandEntry_AdvanceRandom plus the action's bonus,
-; RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc), adds the item entry
-; (RunBattleCommandEntry_WaitBattleItemTarget); next step. (C1, E-0357)
-RunBattleCommandEntry_SetActionQueuePos::
+; with a speed (RunBattleCommandEntry_ListSpeeds_AdvanceRandom plus the action's bonus,
+; RunBattleCommandEntry_ListSpeeds_WriteRecordBufferAndBattleArg0Etc), adds the item entry
+; (RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget); next step. (C1, E-0357)
+RunBattleCommandEntry_ListSpeeds::
     ld hl, wActionQueue
     ld bc, $0009
     ld a, $ff
@@ -270,8 +270,8 @@ RunBattleCommandEntry_SetActionQueuePos::
     cp $02
     jr nz, .next
     ld a, e
-    call RunBattleCommandEntry_AdvanceRandom
-    call RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc
+    call RunBattleCommandEntry_ListSpeeds_AdvanceRandom
+    call RunBattleCommandEntry_ListSpeeds_WriteRecordBufferAndBattleArg0Etc
     ld hl, wBattleTempPtrLo
     deref_hl
     ld a, c
@@ -292,13 +292,13 @@ RunBattleCommandEntry_SetActionQueuePos::
     inc e
     dec d
     jp nz, .loop
-    call RunBattleCommandEntry_WaitBattleItemTarget
+    call RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
 ; BC = a random speed for slot E between 3/10 of its agility and its agility. (C1, E-0357)
-RunBattleCommandEntry_AdvanceRandom::
+RunBattleCommandEntry_ListSpeeds_AdvanceRandom::
     push de
     call AdvanceRandom
     ld a, e
@@ -323,7 +323,7 @@ RunBattleCommandEntry_AdvanceRandom::
 ; Adds the action's speed bonus to BC: actions $62 and $D8 add 3,000 (they go first); a skill whose
 ; record byte 5 has bit 2 set adds 1,000, others 10; action $69 instead gives a random speed of 1 to
 ; 9 (random mod 9 + 1). Bank $A1's copy adds 2,000 for the bit-2 skills. (C1, E-0357)
-RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
+RunBattleCommandEntry_ListSpeeds_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
     ld hl, wBattleActionChoice
@@ -413,7 +413,7 @@ RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
 
 ; When an item is being used (wBattleItemTarget not $FF), lists entry $10 with speed 2,010, ahead of
 ; every turn but the 3,000 ones. (C1, E-0357)
-RunBattleCommandEntry_WaitBattleItemTarget::
+RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget::
     ld a, [wBattleItemTarget]
     cp $ff
     ret z
@@ -431,7 +431,7 @@ RunBattleCommandEntry_WaitBattleItemTarget::
 
 ; Turn order, step 5: sorts the listed entries by speed, fastest first (swapping neighbours, eight
 ; passes), and copies the order into wActionQueue; next step. (C1, E-0357)
-RunBattleCommandEntry_CompareHLToBC::
+RunBattleCommandEntry_SortBySpeed::
     ld d, $08
 
 .loop:
@@ -528,8 +528,9 @@ RunBattleCommandEntry_CompareHLToBC::
 
 ; Turn order, step 6: totals the HP and the max HP of slots 0-2 into wBattleCommandArgs, clears the
 ; resolve counters, saves the action choices (SaveActionChoicesAndPickFormations) and marks berserk
-; actors (RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3); next battle step. (C1, E-0357)
-RunBattleCommandEntry_AddWordAtHLToBC_Bank30::
+; actors (RunBattleCommandEntry_TotalHP_CarryUnlessBattleSlotOutSlotEmpty); next battle step. (C1,
+; E-0357)
+RunBattleCommandEntry_TotalHP::
     ld hl, wBattleHP
     ld bc, $0000
     call AddWordAtHLToBC_Bank30
@@ -557,7 +558,7 @@ RunBattleCommandEntry_AddWordAtHLToBC_Bank30::
     ld bc, $0005
     call FillBytes
     farcall SaveActionChoicesAndPickFormations
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3
+    call RunBattleCommandEntry_TotalHP_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks) (E-0353)
@@ -571,7 +572,7 @@ AddWordAtHLToBC_Bank30::
     ret
 
 ; Sets BSTAT6_BERSERK for every present slot whose chosen action is $6E. (C1, E-0357)
-RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3::
+RunBattleCommandEntry_TotalHP_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $00
     ld b, $08
 
@@ -603,15 +604,15 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3::
 RunCommandEntryResolveStep::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30
-    dw RunCommandEntryResolveStep_AddAx9ToHL
+    dw RunCommandEntryResolveStep_Start
+    dw RunCommandEntryResolveStep_CheckObeys
     dw AIChooseActionResolveStep
-    dw RunCommandEntryResolveStep_RunActorActionHandlersForAISlots
+    dw RunCommandEntryResolveStep_RunAIHandlers
 
 ; Command entry, step 0: works out the actor's personality index; a status that forces an action
 ; skips to step 2; otherwise with battle command 1 (from wMenuState, or the link's wSlotCommands)
 ; goes to step 1, other commands to step 2. (C1, E-0357)
-RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
+RunCommandEntryResolveStep_Start::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_Bank30
     ld [wPersonalityIndex], a
@@ -664,8 +665,8 @@ RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
 ; the tactic's byte / 4 + the personality weight with wBattleExtraStat / 16 + random 0-63; when the
 ; first is lower it acts on its own (tactic bit 6 set, action $FF, wSideControl bit 7, message $28
 ; unless slot 3 or 7) and goes to step 3; otherwise clears bit 6 and its action byte; both adjust
-; the personality (RunCommandEntryResolveStep_WaitLinkMode). (C1, E-0357)
-RunCommandEntryResolveStep_AddAx9ToHL::
+; the personality (RunCommandEntryResolveStep_CheckObeys_WaitLinkMode). (C1, E-0357)
+RunCommandEntryResolveStep_CheckObeys::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
@@ -701,8 +702,8 @@ RunCommandEntryResolveStep_AddAx9ToHL::
     jr z, .call_get_actor_slot_tactic_low2
     cp $01
     jr z, .call_get_actor_slot_tactic_low22
-    call RunCommandEntryResolveStep_ReadBattleActor
-    call RunCommandEntryResolveStep_GetActorSlotTacticLow2
+    call RunCommandEntryResolveStep_CheckObeys_ReadBattleActor
+    call RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2
     call AddPersonalityWeightToBattleArg0
     call AddActorBattleWordArray3FDiv16ToBattleArg2
     call AddRandom0To63ToBattleArg2
@@ -724,7 +725,7 @@ RunCommandEntryResolveStep_AddAx9ToHL::
     ld hl, wActorActionBytes
     add_a_to_hl
     ld [hl], $00
-    call RunCommandEntryResolveStep_WaitLinkMode
+    call RunCommandEntryResolveStep_CheckObeys_WaitLinkMode
     jr .return
 
 .call_get_actor_slot_tactic_low22:
@@ -744,8 +745,8 @@ RunCommandEntryResolveStep_AddAx9ToHL::
     ld hl, wSideControl
     add_a_to_hl
     set 7, [hl]
-    call RunCommandEntryResolveStep_WaitLinkMode
-    call RunCommandEntryResolveStep_IncBIfActorEntryBelow40
+    call RunCommandEntryResolveStep_CheckObeys_WaitLinkMode
+    call RunCommandEntryResolveStep_CheckObeys_IncBIfActorEntryBelow40
     ld a, $03
     ld [wBattleResolveStep], a
     ld a, [wBattleActor]
@@ -779,27 +780,28 @@ ActorBattleWordArray3FBand::
     ret
 
 ; Adds the actor's wSlotTrait byte / 4 to wBattleArg0
-; (RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor). (C1, E-0357)
-RunCommandEntryResolveStep_ReadBattleActor::
+; (RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor). (C1, E-0357)
+RunCommandEntryResolveStep_CheckObeys_ReadBattleActor::
     ld hl, wSlotTrait
-    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor
+    jr RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor
 
 ; Unless the actor's tactic is 3, adds its byte from the tactic's array
-; (RunCommandEntryResolveStep_GetActorSlotTacticLow2's table) / 4 to wBattleArg0. (C1, E-0357)
-RunCommandEntryResolveStep_GetActorSlotTacticLow2::
+; (RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2's table) / 4 to wBattleArg0. (C1,
+; E-0357)
+RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2::
     call GetActorSlotTacticLow2
     cp $03
     ret z
-    ld hl, RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data
+    ld hl, RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_Data
     call ReadBattleWordFromArray_Bank30
-    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor
+    jr RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor
 
 ; data read by RunCommandEntryResolveStep (6 bytes) (E-0347)
-RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data::
+RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_Data::
     db $68, $d9, $70, $d9, $78, $d9
 
 ; The word wBattleArg0 += the byte at HL + actor, / 4. (C1, E-0357)
-RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor::
+RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_ReadBattleActor::
     ld a, [wBattleActor]
     add_a_to_hl
     ld a, [hl]
@@ -2100,7 +2102,7 @@ AddSkillBaseWeightAndLoadSkill_AdvanceRandom::
 
 ; Command entry, step 3: runs the action handlers of the computer-controlled slots, then the next
 ; turn-order step. (C1, E-0357)
-RunCommandEntryResolveStep_RunActorActionHandlersForAISlots::
+RunCommandEntryResolveStep_RunAIHandlers::
     call RunActorActionHandlersForAISlots
     ld hl, wBattleSubPhase
     inc [hl]
@@ -2606,9 +2608,9 @@ RollSlotTraitLowFlag80_Skip5::
 
 ; Picks the action of a monster acting on its own: action $AB when all three personality bytes are
 ; below $40; action $AC unless Hi is the largest; otherwise its strongest usable skill (enough MP,
-; of the kinds in RunCommandEntryResolveStep_Cp01, the highest record byte 0), or the attack (0)
-; when there is none. (C1, E-0357)
-RunCommandEntryResolveStep_IncBIfActorEntryBelow40::
+; of the kinds in IsSkillForSelfAction, the highest record byte 0), or the attack (0) when there is
+; none. (C1, E-0357)
+RunCommandEntryResolveStep_CheckObeys_IncBIfActorEntryBelow40::
     ld b, $00
     ld hl, wSlotPersonalityHi
     call IncBIfActorEntryBelow40
@@ -2631,7 +2633,7 @@ RunCommandEntryResolveStep_IncBIfActorEntryBelow40::
     ld bc, $0008
     ld a, $ff
     call FillBytes
-    call RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc
+    call RunCommandEntryResolveStep_CheckObeys_WriteRecordBufferAndBattleArg0Etc
     ld a, [wBattleActor]
     ld hl, wSlotPersonalityHi
     add_a_to_hl
@@ -2647,11 +2649,11 @@ RunCommandEntryResolveStep_IncBIfActorEntryBelow40::
     ld a, [wPauseMenuStep]
     cp $ff
     jr z, .call_actor_action_choice_address3
-    call RunCommandEntryResolveStep_FillBytes
+    call RunCommandEntryResolveStep_CheckObeys_IsSkillForSelfAction
     ld a, [wTemp0]
     cp $ff
     jr z, .call_actor_action_choice_address3
-    call RunCommandEntryResolveStep_LoadSkillRecordPart
+    call RunCommandEntryResolveStep_CheckObeys_LoadSkillRecordPart
     call ActorActionChoiceAddress
     ld [hl], c
     ret
@@ -2701,7 +2703,7 @@ CountIfActorPersonalityHiAtLeastHLEntry::
 
 ; Lists the actor's skills into wTemp0, leaving out those whose record byte 3 has kind 2. (C1,
 ; E-0357)
-RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc::
+RunCommandEntryResolveStep_CheckObeys_WriteRecordBufferAndBattleArg0Etc::
     ld a, [wBattleActor]
     swap a
     ld hl, wBattleSkills
@@ -2816,11 +2818,11 @@ FilterSkillListByMP::
     call FillBytes
     ld hl, wTemp0
     ld de, wPauseMenuStep
-    jr RunCommandEntryResolveStep_FillBytes_Skip
+    jr RunCommandEntryResolveStep_CheckObeys_Skip
 
-; Keeps only the listed skills of the kinds in RunCommandEntryResolveStep_Cp01 and packs them to the
-; front of wTemp0. (C1, E-0357)
-RunCommandEntryResolveStep_FillBytes::
+; Keeps only the listed skills of the kinds in IsSkillForSelfAction and packs them to the front of
+; wTemp0. (C1, E-0357)
+RunCommandEntryResolveStep_CheckObeys_IsSkillForSelfAction::
     ld hl, wPauseMenuStep
     ld b, $08
     ld c, $00
@@ -2829,7 +2831,7 @@ RunCommandEntryResolveStep_FillBytes::
     ld a, [hl]
     cp $ff
     jr z, .skip2
-    call RunCommandEntryResolveStep_Cp01
+    call IsSkillForSelfAction
     jr c, .next
     ld a, c
     ld de, wPauseMenuStep
@@ -2857,7 +2859,7 @@ RunCommandEntryResolveStep_FillBytes::
     ld de, wTemp0
 
 ; Copies the entries at HL that are not $FF to DE (eight entries). (C1, E-0357)
-RunCommandEntryResolveStep_FillBytes_Skip::
+RunCommandEntryResolveStep_CheckObeys_Skip::
     ld b, $08
 
 .loop:
@@ -2876,7 +2878,7 @@ RunCommandEntryResolveStep_FillBytes_Skip::
 
 ; Carry for skills $01-$15, $3D-$67 and $6B-$70 (the kinds a monster acting on its own may use).
 ; (C1, E-0357)
-RunCommandEntryResolveStep_Cp01::
+IsSkillForSelfAction::
     cp $01
     jr c, .done
     cp $16
@@ -2909,7 +2911,7 @@ RunCommandEntryResolveStep_Cp01::
 
 ; C = the listed skill (wTemp0 onward) with the highest record byte 0; a later one wins ties. (C1,
 ; E-0357)
-RunCommandEntryResolveStep_LoadSkillRecordPart::
+RunCommandEntryResolveStep_CheckObeys_LoadSkillRecordPart::
     ld a, [wTemp0]
     ld [wRecordBuffer], a
     ld a, $00
@@ -3015,8 +3017,9 @@ ForcedActionForActorStatus::
 
 ; Outside link battles, for party slots 0-2: picks the personality changes for the actor from
 ; TacticOffsetTable by tactic, level band (below 10, 20, 30, or 30 and over) and trait ($97 or
-; more), and applies them (RunCommandEntryResolveStep_GetActorSlotTacticLow2_2). (C1, E-0357)
-RunCommandEntryResolveStep_WaitLinkMode::
+; more), and applies them (RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_2). (C1,
+; E-0357)
+RunCommandEntryResolveStep_CheckObeys_WaitLinkMode::
     ld a, [wLinkMode]
     or a
     ret nz
@@ -3070,7 +3073,7 @@ RunCommandEntryResolveStep_WaitLinkMode::
     add hl, de
     add hl, bc
     call CopyFourBytesNegatedByActorSlotTactic
-    call RunCommandEntryResolveStep_GetActorSlotTacticLow2_2
+    call RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_2
     ret
 
 ; copies four bytes from HL to hTemp0, negating each when bit 6 of the actor's wSlotTactic byte is
@@ -3107,7 +3110,7 @@ CopyByteNegateIfCBit6::
 ; Negates the change for wCommandEntryMonster's byte when the actor acted on its own (tactic bit 6),
 ; then adds the four signed changes to the actor's personality Hi, Mid, Lo and trait, clamped. (C1,
 ; E-0357)
-RunCommandEntryResolveStep_GetActorSlotTacticLow2_2::
+RunCommandEntryResolveStep_CheckObeys_GetActorSlotTacticLow2_2::
     ld a, [wCommandEntryMonster]
     ld c, a
     ld b, $00
@@ -3149,10 +3152,10 @@ AddSignedEToByteAtHLClampedForActorEntryOfHL::
     call AddSignedEToByteAtHLClamped
     ret
 
-; the code at RunCommandEntryResolveStep_WaitLinkMode.call_get_actor_slot_tactic_low2 indexes it
-; with GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else 0) and C
-; (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies the four
-; bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set (E-0234, C1)
+; the code at RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.call_get_actor_slot_tactic_low2
+; indexes it with GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else
+; 0) and C (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies
+; the four bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set (E-0234, C1)
 ; record: block of eight 4-byte records for this tactic
 TacticOffsetTable::
     dw TacticOffsets0 ; id 0
@@ -3162,7 +3165,7 @@ TacticOffsetTable::
 
 ; block 0 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 ; record: four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is
 ; set)
 TacticOffsets0::
@@ -3177,7 +3180,7 @@ TacticOffsets0::
 
 ; block 1 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 TacticOffsets1::
     db $00, $07, $fe, $03 ; id 0
     db $00, $05, $fe, $02 ; id 1
@@ -3190,7 +3193,7 @@ TacticOffsets1::
 
 ; block 2 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 TacticOffsets2::
     db $fe, $00, $07, $03 ; id 0
     db $fe, $00, $05, $02 ; id 1
@@ -3203,7 +3206,7 @@ TacticOffsets2::
 
 ; block 3 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_CheckObeys_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 TacticOffsets3::
     db $00, $00, $00, $ff ; id 0
     db $00, $00, $00, $fe ; id 1

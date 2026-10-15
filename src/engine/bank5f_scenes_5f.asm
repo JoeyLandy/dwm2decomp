@@ -277,16 +277,16 @@ RunMessageBox::
 
 .skip:
     jumptable
-    dw RunMessageBox_SetBit1OfPlayerAndObjectFlags
-    dw RunMessageBox_ShowMessageFromMessageIndex
-    dw RunMessageBox_QueueSoundEffect
+    dw RunMessageBox_Open
+    dw RunMessageBox_ShowText
+    dw RunMessageBox_Close
     dw RunMessageBox_WriteMessageState
 
 ; Message step 0: unless a step pointer is set, freezes the player and objects (bit 1); unless
 ; wMessageGroup bit 7, clears the window tiles, plays sound $69 and opens the text window at the
 ; bottom, or at the top when the player is low on the screen (hPlayerY $48 or more); next step. (C1,
 ; E-0357)
-RunMessageBox_SetBit1OfPlayerAndObjectFlags::
+RunMessageBox_Open::
     ld a, [wStepPtrLo]
     or a
     jr nz, .check_message_group
@@ -323,7 +323,7 @@ RunMessageBox_SetBit1OfPlayerAndObjectFlags::
 
 ; Message step 1: once the window has opened (or at once with wMessageGroup bit 7), starts message
 ; wMessageIndex of group wMessageGroup; next step. (C1, E-0357)
-RunMessageBox_ShowMessageFromMessageIndex::
+RunMessageBox_ShowText::
     ld a, [wMessageGroup]
     bit 7, a
     jr nz, .call_show_message_from_message_index
@@ -340,7 +340,7 @@ RunMessageBox_ShowMessageFromMessageIndex::
 ; Message step 2: waits for the text to finish (wTextFlags bit 0); unless wMessageGroup bit 6, plays
 ; sound $69 and starts closing the window (at the top when the player is low); next step. (C1,
 ; E-0357)
-RunMessageBox_QueueSoundEffect::
+RunMessageBox_Close::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1193,7 +1193,7 @@ SceneDancing_DanceSteps::
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords
-    dw SceneDancing_DanceSteps_AddStepDeltaToPointedByte
+    dw SceneDancing_DanceSteps_HopAll
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
@@ -1255,14 +1255,14 @@ SceneMermaidSong2_MoveSteps::
     jumptable
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable
-    dw SceneMermaidSong2_MoveSteps_AddStepDeltaToPointedByte
+    dw SceneMermaidSong2_MoveSteps_StepPair
+    dw SceneMermaidSong2_MoveSteps_HopFollowers
     dw SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_AddStepDeltaToPointedByte
+    dw SceneDancing_DanceSteps_HopAll
     dw SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
@@ -1280,7 +1280,7 @@ SceneDancing_DanceSteps_WritePlayerStateFlags::
 
 ; Dance step 12: moves the player and the three followers up and down by the hop table
 ; (AddStepDeltaToPointedByte on each Y) over 16 frames; next step. (C1, E-0357)
-SceneDancing_DanceSteps_AddStepDeltaToPointedByte::
+SceneDancing_DanceSteps_HopAll::
     ld de, hPlayerY
     ld a, e
     ld [wStepPtrLo], a
@@ -1414,7 +1414,7 @@ SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
 
 ; Mermaid song, step 3: moves followers 2 and 3 up and down by the hop table, then joins step 2.
 ; (C1, E-0357)
-SceneMermaidSong2_MoveSteps_AddStepDeltaToPointedByte::
+SceneMermaidSong2_MoveSteps_HopFollowers::
     ld de, wFollowerRecords + $7
     ld a, e
     ld [wStepPtrLo], a
@@ -1444,7 +1444,7 @@ SceneDancing_DanceSteps_WriteScriptParam0::
 ; Mermaid song, step 2: every eight frames turns the player and the first follower and steps them
 ; one pixel together; moves followers 2 and 3 by the table (ScriptStepMoveTwoObjectsByTable). (C1,
 ; E-0357)
-SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable::
+SceneMermaidSong2_MoveSteps_StepPair::
     ld a, [wScriptParam0]
     and $07
     jr nz, .call_script_step_move_two_objects_by_table
@@ -1527,13 +1527,13 @@ SceneMermaidSong2_MoveSteps_Data::
 RunScriptSubStep::
     ld a, [wScriptSubStep]
     jumptable
-    dw RunScriptSubStep_UpdateFollowersOnStep_Bank5F
+    dw RunScriptSubStep_FollowersCatchUp
     dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc
-    dw RunScriptSubStep_AddStepDeltaToPointedByte
+    dw RunScriptSubStep_HopObject5
     dw RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc
     dw RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc
     dw RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc
-    dw RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo
+    dw RunScriptSubStep_SinkObject5
     dw RunScriptSubStep_SetFollowerRecords
 
 ; Walking step 7: the first follower walks right, the second down every other frame, and the third
@@ -1583,7 +1583,7 @@ RunScriptSubStep_SetFollowerRecords::
 
 ; Walking step 6: object 5 hops along by the table, sinking a pixel a frame for 16 frames; then it
 ; is hidden, the player faces up, and the next step. (C1, E-0357)
-RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
+RunScriptSubStep_SinkObject5::
     ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
@@ -1802,7 +1802,7 @@ RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc::
 
 ; Walking step 2: shows object 5 and hops it up by the table, rising a pixel a frame, for 16 frames;
 ; next step. (C1, E-0357)
-RunScriptSubStep_AddStepDeltaToPointedByte::
+RunScriptSubStep_HopObject5::
     ld a, $80
     ld [wObject5], a
     ld de, wObject5 + SCRIPTOBJ_Y
@@ -1879,7 +1879,7 @@ RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc::
 
 ; Walking step 0: holds the player (bit 2) and lets the followers catch up
 ; (UpdateFollowersOnStep_Bank5F) for 60 frames; next step. (C1, E-0357)
-RunScriptSubStep_UpdateFollowersOnStep_Bank5F::
+RunScriptSubStep_FollowersCatchUp::
     ldh a, [hPlayerStateFlags]
     or $04
     ldh [hPlayerStateFlags], a
@@ -1896,31 +1896,32 @@ RunScriptSubStep_UpdateFollowersOnStep_Bank5F::
     inc [hl]
     ret
 
-; runs the routine for wScriptSubStep (jump table of eighteen) (E-0124)
-RunSceneScriptSubStep::
+; runs the routine for wScriptSubStep (jump table of eighteen) (E-0124) (renamed from
+; RunSceneScriptSubStep from its E-0357 note, E-0367)
+BossWinScene::
     ld a, [wScriptSubStep]
     jumptable
-    dw RunSceneScriptSubStep_LoadSpriteGraphics7EToTiles0
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F
-    dw RunSceneScriptSubStep_CopyBytes
-    dw RunSceneScriptSubStep_FullyHealParty
-    dw RunSceneScriptSubStep_SetObject5
-    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_4
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
-    dw RunSceneScriptSubStep_NextTableByte
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_3
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_2
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B
-    dw RunSceneScriptSubStep_SetScriptParam0
-    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_2
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
-    dw RunSceneScriptSubStep_AdvanceScriptStep
+    dw BossWinScene_LoadSprites
+    dw BossWinScene_WaitMessage
+    dw BossWinScene_Flash
+    dw BossWinScene_HealParty
+    dw BossWinScene_ShowObject5
+    dw BossWinScene_HopObject5
+    dw BossWinScene_LoadSprite2
+    dw BossWinScene_HopPlayer
+    dw BossWinScene_HopObject5Left
+    dw BossWinScene_CheckDarck
+    dw BossWinScene_Shake
+    dw BossWinScene_SinkObject5
+    dw BossWinScene_FlickerObject5
+    dw BossWinScene_HopUnderFloater
+    dw BossWinScene_WaitMessageAgain
+    dw BossWinScene_HopAndTurn
+    dw BossWinScene_CheckDarck
+    dw BossWinScene_AdvanceScriptStep
 
 ; Boss-win scene, step 17: next script step. (C1, E-0357)
-RunSceneScriptSubStep_AdvanceScriptStep::
+BossWinScene_AdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1956,7 +1957,7 @@ StartMessage5AndAdvanceScriptSubStep::
 ; Boss-win scene, step 15: sound $65 at the start, then sprite 0 hops and turns for 32 frames; at
 ; the end sound $72, loads sprite $49 into the tiles at $8500, starts message 4 and gives back the
 ; party count saved in step 4. (C1, E-0357)
-RunSceneScriptSubStep_AddStepDeltaToPointedByte_2::
+BossWinScene_HopAndTurn::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_lo
@@ -2019,7 +2020,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte_2::
     ret
 
 ; Boss-win scene, step 14: waits for the message; next step. (C1, E-0357)
-RunSceneScriptSubStep_SetScriptParam0::
+BossWinScene_WaitMessageAgain::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2031,7 +2032,7 @@ RunSceneScriptSubStep_SetScriptParam0::
 
 ; Boss-win scene, step 13: sprite 0 hops by the table for 32 frames under the floating sprite; then
 ; message 3; next step. (C1, E-0357)
-RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
+BossWinScene_HopUnderFloater::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2055,7 +2056,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
 
 ; Boss-win scene, step 12: object 5 flickers, faster and faster (wScriptParam1 / 16 added each
 ; frame), until the speed reaches 48; then it is hidden at Y $30; next step. (C1, E-0357)
-RunSceneScriptSubStep_CycleSpriteFloatYDown_2::
+BossWinScene_FlickerObject5::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2104,7 +2105,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_2::
 
 ; Boss-win scene, step 11: object 5 hops by the table, sinking a pixel every other frame, for 32
 ; frames; next step. (C1, E-0357)
-RunSceneScriptSubStep_CycleSpriteFloatYDown_3::
+BossWinScene_SinkObject5::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2136,11 +2137,11 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_3::
 
 ; Boss-win scene, step 10: object 5 shakes at random (X $40 - 1 to + 1) for 180 frames; then sound
 ; $72 and the next step. (C1, E-0357)
-RunSceneScriptSubStep_NextTableByte::
+BossWinScene_Shake::
     call NextTableByte
     ld a, [wRandomLo]
     and $03
-    jr z, RunSceneScriptSubStep_NextTableByte
+    jr z, BossWinScene_Shake
     dec a
     dec a
     add $40
@@ -2162,7 +2163,7 @@ RunSceneScriptSubStep_NextTableByte::
 
 ; Boss-win scene, step 9: waits for the message; once Darck has been defeated
 ; (EVENT_SCENE_DARCK_DEFEATED) skips to step 17, otherwise goes on. (C1, E-0357)
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
+BossWinScene_CheckDarck::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2179,7 +2180,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
 
 ; Boss-win scene, step 8: object 5 hops along by the table (left and down a pixel a frame) for 16
 ; frames; then message 2; next step. (C1, E-0357)
-RunSceneScriptSubStep_CycleSpriteFloatYDown_4::
+BossWinScene_HopObject5Left::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2210,7 +2211,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_4::
 
 ; Boss-win scene, step 7: sprite 0 hops by the table, moving left every other frame, for 32 frames;
 ; next step. (C1, E-0357)
-RunSceneScriptSubStep_CycleSpriteFloatYDown::
+BossWinScene_HopPlayer::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2242,7 +2243,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown::
 
 ; Boss-win scene, step 6: waits for the message; loads sprite 2 into the tiles at $8500; next step.
 ; (C1, E-0357)
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM::
+BossWinScene_LoadSprite2::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2258,7 +2259,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM::
 
 ; Boss-win scene, step 5: object 5 hops by the table, rising a pixel a frame, for 16 frames; then
 ; message 1; next step. (C1, E-0357)
-RunSceneScriptSubStep_AddStepDeltaToPointedByte::
+BossWinScene_HopObject5::
     ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
@@ -2283,7 +2284,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte::
 
 ; Boss-win scene, step 4: waits for the message; shows object 5 and treats the party as one monster
 ; (the count kept in wScriptTemp4); next step. (C1, E-0357)
-RunSceneScriptSubStep_SetObject5::
+BossWinScene_ShowObject5::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2300,7 +2301,7 @@ RunSceneScriptSubStep_SetObject5::
 ; Boss-win scene, step 3: first frame fully heals the party; second puts fallen monsters behind the
 ; others (twice), reloads the name tiles, the player and follower sprites and the object palettes;
 ; next step. (C1, E-0357)
-RunSceneScriptSubStep_FullyHealParty::
+BossWinScene_HealParty::
     ld a, [wScriptParam0]
     or a
     jr nz, .call_move_incapacitated_party_members_back
@@ -2328,7 +2329,7 @@ RunSceneScriptSubStep_FullyHealParty::
 
 ; Boss-win scene, step 2: flashes the screen for 30 frames, swapping the palettes for their inverse
 ; every four frames; then message 0; next step. (C1, E-0357)
-RunSceneScriptSubStep_CopyBytes::
+BossWinScene_Flash::
     ld a, [wScriptParam0]
     srl a
     srl a
@@ -2393,7 +2394,7 @@ RunSceneScriptSubStep_CopyBytes::
 
 ; Boss-win scene, step 1: the player faces left; waits for the message, saves the BG palettes (CGB),
 ; plays sound $7A; next step. (C1, E-0357)
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
+BossWinScene_WaitMessage::
     ld a, $03
     ldh [hPlayerFacing], a
     ld a, $01
@@ -2421,7 +2422,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
 ; EVENT_SCENE_RIVAL_DEFEATED_021: set 0, command 3; before EVENT_SCENE_MERMAID_KINGDOM_022: set 1,
 ; command 8; before EVENT_SCENE_SHIELD2_023: set 2, command $0A; afterwards set 3, command $0F);
 ; places object 5 at ($50, $30). (C1, E-0357)
-RunSceneScriptSubStep_LoadSpriteGraphics7EToTiles0::
+BossWinScene_LoadSprites::
     ld a, $01
     ldh [hTemp0], a
     farcall LoadSpriteGraphics7EToTiles0
@@ -2802,18 +2803,18 @@ ScriptSlideObjectY_Data::
 RunOneTimeTreasure::
     ld a, [wScriptStep]
     jumptable
-    dw RunOneTimeTreasure_CopyItemNameToDE
-    dw RunOneTimeTreasure_SetBit1OfPlayerAndObjectFlags
-    dw RunOneTimeTreasure_ShowMessageHL
-    dw RunOneTimeTreasure_QueueSoundEffect
-    dw RunOneTimeTreasure_ApplyMapScreenFlagEvents
+    dw RunOneTimeTreasure_PrepareMessage
+    dw RunOneTimeTreasure_OpenWindow
+    dw RunOneTimeTreasure_ShowMessage
+    dw RunOneTimeTreasure_CloseWindow
+    dw RunOneTimeTreasure_RedrawChest
 
 ; Treasure, step 0: copies the item's name for the message; message = $A0 + 3 x kind: one more when
 ; the treasure's flag (wMessageIndex/wMessageGroup) is already set (empty), two more when the bag is
 ; full; otherwise puts the item in the bag's first free place (asks for a sort) and sets the flag; a
 ; Magic Key chest makes a new key entry instead (GenerateNewKeyEntry, full when hTemp0 = 0). (C1,
 ; E-0357)
-RunOneTimeTreasure_CopyItemNameToDE::
+RunOneTimeTreasure_PrepareMessage::
     ld a, [wScriptParam0]
     cp $03
     jr z, .read_script_param0
@@ -2902,7 +2903,7 @@ RunOneTimeTreasure_CopyItemNameToDE::
 ; Treasure, step 1: unless wScriptParam1 bit 7, freezes the player and objects, clears the window
 ; tiles, plays sound $69 and opens the text window (at the top when the player is low); next step.
 ; (C1, E-0357)
-RunOneTimeTreasure_SetBit1OfPlayerAndObjectFlags::
+RunOneTimeTreasure_OpenWindow::
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, .done
@@ -2933,7 +2934,7 @@ RunOneTimeTreasure_SetBit1OfPlayerAndObjectFlags::
     ret
 
 ; Treasure, step 2: once the window has opened, shows message wScriptParam0; next step. (C1, E-0357)
-RunOneTimeTreasure_ShowMessageHL::
+RunOneTimeTreasure_ShowMessage::
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, .read_script_param0
@@ -2952,7 +2953,7 @@ RunOneTimeTreasure_ShowMessageHL::
 
 ; Treasure, step 3: waits for the text; unless wScriptParam1 bit 6, plays sound $69 and starts
 ; closing the window; next step. (C1, E-0357)
-RunOneTimeTreasure_QueueSoundEffect::
+RunOneTimeTreasure_CloseWindow::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -2980,7 +2981,7 @@ RunOneTimeTreasure_QueueSoundEffect::
 
 ; Treasure, step 4: once the window has closed, redraws the map (the opened chest's flag tiles),
 ; unfreezes the player and objects, and ends the script. (C1, E-0357)
-RunOneTimeTreasure_ApplyMapScreenFlagEvents::
+RunOneTimeTreasure_RedrawChest::
     ld a, [wTextWindowState]
     and $03
     ret nz

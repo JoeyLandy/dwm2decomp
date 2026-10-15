@@ -55,7 +55,24 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Current handoff (2026-10-14, E-0366)
+## Current handoff (2026-10-14, E-0367)
+
+E-0366 was committed after suite580 (OK). This round renames the steps of the
+game's state machines: the jumptable entries that the step-naming pass had
+named after their first callee (`KeyAppraisalMenu_CopyBytesDEToHL_Bank0D`)
+are named from their hand notes in the pokered manner
+(`KeyAppraisalMenu_Init`, `ArenaMenu_PayEntryFee`,
+`RunBattleSetup_PlanMenu_ChooseAction`), with 50 dispatchers renamed to match
+(TitleMenu, TitleOpening, LinkRulesEditor, ForgetSkillMenu,
+LinkBattleSetupMenu, ...): 1,878 labels in all. Only 16 jumptable entries,
+all without a hand note, keep a callee name. Final binary identity:
+**PASS**, `build/run602/report.json`, 4,194,304 bytes, approved SHA-256, zero
+differences; full suite: `build/logs/suite602.log`. Next: names that still
+describe instructions rather than purpose outside the state machines
+(`Write...Etc`, `..._ReadByteAtHLPlusA`), and a read-through of a few banks
+as a reader would meet them. The full readability goal remains active.
+
+## Prior handoff (2026-10-14, E-0366)
 
 E-0365 was committed after suite578 (OK). This round reads the last 105
 routines that only had a generated restatement (95 AI scorers in bank $E2 and

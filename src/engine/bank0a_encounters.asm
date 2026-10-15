@@ -379,7 +379,7 @@ RunPlayerMoveTypeMapMoveType::
     dw RunPlayerMoveTypeMapMoveType_3
     dw RunPlayerMoveTypeMapMoveType_4
     dw RunPlayerMoveTypeMapMoveType_5
-    dw RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A
+    dw RunPlayerMoveTypeMapMoveType_HurtFloor
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1
     dw RunPlayerMoveTypeMapMoveType_2
 
@@ -396,7 +396,7 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
 
 ; Map movement type 7: floor tile $52 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_2::
@@ -404,7 +404,7 @@ RunPlayerMoveTypeMapMoveType_2::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
 
 ; Map movement type 1: floor tile $44 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
@@ -412,7 +412,7 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
 
 ; Map movement type 2: floor tile $56 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_3::
@@ -420,7 +420,7 @@ RunPlayerMoveTypeMapMoveType_3::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
 
 ; Map movement type 3: floor tile $44 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_4::
@@ -428,7 +428,7 @@ RunPlayerMoveTypeMapMoveType_4::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
 
 ; Map movement type 4: floor tile $44 hurts, the lighter kind (wStatusFieldStep $80, wFieldStepFlags
 ; $40). (C1, E-0357)
@@ -439,19 +439,19 @@ RunPlayerMoveTypeMapMoveType_5::
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
 
 ; Map movement type 5: floor tile $44 hurts. (C1, E-0357)
-RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
+RunPlayerMoveTypeMapMoveType_HurtFloor::
     ld a, $44
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
 
 ; When no fade, script or talk countdown is running and one of the four tiles under the player is
 ; the harmful tile in hTemp1, switches to field state 7 (the floor damage). (C1, E-0357)
-RunPlayerMoveTypeMapMoveType_CheckFadeState::
+RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState::
     ld a, [wFadeState]
     or a
     ret nz
@@ -923,20 +923,20 @@ RunBattleIntroKindCase::
     and $07
     jumptable
     dw RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags
-    dw RunBattleIntroKindCase_NextTableByte
+    dw RunBattleIntroKindCase_KeyWorldEncounter
     dw RunBattleIntroKindCase_SetBattleKindTo02
     dw RunBattleIntroKindCase_WriteBattleIntroFlagAndBattleKind
     dw RunBattleIntroKindCase_SetBattleKindTo04
-    dw RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength
-    dw RunBattleIntroKindCase_ComputePartyStrengthForKey
+    dw RunBattleIntroKindCase_StrengthSingleFoe
+    dw RunBattleIntroKindCase_KeyWorldStrength
     dw RunBattleIntroKindCase_SetBattleKindTo05
 
 ; Battle intro kind 6, a key-world encounter by party strength: for field events below $0C picks
-; three monsters from the row of RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1 chosen by
-; party strength / 5 (each a random entry 0-9 of it); for events $0C and above takes the three fixed
+; three monsters from the row of RunBattleIntroKindCase_KeyWorldStrength_Data1 chosen by party
+; strength / 5 (each a random entry 0-9 of it); for events $0C and above takes the three fixed
 ; monsters of that event from RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2. Encounter
 ; kind 2, battle kind 6. (C1, E-0357)
-RunBattleIntroKindCase_ComputePartyStrengthForKey::
+RunBattleIntroKindCase_KeyWorldStrength::
     ld a, [wPendingFieldEvent]
     and $0f
     cp $0c
@@ -948,7 +948,7 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey::
     call DivideBByA
     ld a, b
     add a
-    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1
+    ld de, RunBattleIntroKindCase_KeyWorldStrength_Data1
     add e
     ld e, a
     jr nc, .set_temp0
@@ -1001,7 +1001,7 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey::
     add a
     add c
     add a
-    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2
+    ld de, RunBattleIntroKindCase_KeyWorldStrength_Data2
     add e
     ld e, a
     jr nc, .skip3
@@ -1022,19 +1022,19 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey::
     jr nz, .loop2
     jr .set_encounter_kind_to_02
 
-; data read by RunBattleIntroKindCase_ComputePartyStrengthForKey (40 bytes) (E-0347)
-RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1::
+; data read by RunBattleIntroKindCase_KeyWorldStrength (40 bytes) (E-0347)
+RunBattleIntroKindCase_KeyWorldStrength_Data1::
     db $ac, $00, $bc, $00, $cc, $00, $dc, $00, $ec, $00, $fc, $00, $0c, $01, $1c, $01
     db $2c, $01, $3c, $01, $1e, $02, $23, $02, $28, $02, $2d, $02, $32, $02, $37, $02
     db $3c, $02, $41, $02, $46, $02, $48, $02
 
-RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2::
+RunBattleIntroKindCase_KeyWorldStrength_Data2::
     db $0b, $02, $0c, $02, $0d, $02, $0e, $02, $0f, $02, $0e, $02, $10, $02, $11, $02
     db $12, $02, $13, $02, $14, $02, $15, $02
 
 ; Battle intro kind 5: picks one monster id $76-$7D by party strength (one step per 5 points up to
 ; 35) as a single foe; encounter kind 0, battle kind 2. (C1, E-0357)
-RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength::
+RunBattleIntroKindCase_StrengthSingleFoe::
     farcall ComputePartyStrengthLevelPartyStrength
     ld c, $76
     ld a, [wPartyStrength]
@@ -2471,8 +2471,9 @@ RunBattleIntroKindCase_SetBattleKindTo02::
 
 ; Battle intro kind 1, a key-world encounter: picks a random encounter kind (one of four) and the
 ; area's monster group from wKeyWorldAreas (or the floor's entry in wKeyWorldFloorInfo), draws the
-; foes (RunBattleIntroKindCase_NextRandomSeed) and sets battle kind 1. (C1, E-0357)
-RunBattleIntroKindCase_NextTableByte::
+; foes (RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed) and sets battle kind 1. (C1,
+; E-0357)
+RunBattleIntroKindCase_KeyWorldEncounter::
     call NextTableByte
     ld a, [wRandomLo]
     and $03
@@ -2504,7 +2505,7 @@ RunBattleIntroKindCase_NextTableByte::
     add a
     add c
     ld c, a
-    call RunBattleIntroKindCase_NextRandomSeed
+    call RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed
     ld a, $01
     ld [wBattleKind], a
     ret
@@ -2534,7 +2535,7 @@ RunBattleIntroKindCase_NextTableByte::
     add a
     add a
     ld c, a
-    call RunBattleIntroKindCase_NextRandomSeed
+    call RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed
     ld a, $01
     ld [wBattleKind], a
     ret
@@ -2548,7 +2549,7 @@ RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data2::
 
 ; Draws three key-world foes: each a random one of eight entries from wKeyWorldMonsters starting at
 ; the area's group, with its level; skipped when hPlayerStateFlags bit 3 is set. (C1, E-0357)
-RunBattleIntroKindCase_NextRandomSeed::
+RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed::
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .skip2
@@ -2673,13 +2674,13 @@ RunBattleIntroKindCase_SetBattleKindTo05::
 RunBattleTransitionStep::
     ld a, [wBattleTransitionStep]
     jumptable
-    dw RunBattleTransitionStep_QueueMusic
+    dw RunBattleTransitionStep_PlayBattleMusic
     dw RunBattleTransitionStep_StagedSteps
     dw RunBattleTransitionStep_WriteGameModeAndModeStateEtc
 
 ; Battle transition, step 0: remembers the current music, plays battle music $44 or $46, sets the
 ; sprite clipping and the starting BG map position for the effect. (C1, E-0357)
-RunBattleTransitionStep_QueueMusic::
+RunBattleTransitionStep_PlayBattleMusic::
     ld a, [wCurrentMusic]
     ld [wTransitionMusic], a
     ld a, [wBattleTransitionSubStep]

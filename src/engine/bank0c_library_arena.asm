@@ -14,19 +14,19 @@ LibraryMenu::
     dw LibraryMenu_WriteMessageModeAndScreenStateEtc
     dw LibraryMenu_WriteScrollYAndScrollXEtc
     dw LibraryMenu_ToClearStringWindowAt2020AndStep
-    dw LibraryMenu_CopyRectTo20ByteRows_Bank0C
-    dw LibraryMenu_BGMapAddressAtScroll_Bank0C
+    dw LibraryMenu_DrawFamilyChooser
+    dw LibraryMenu_CountSeenMonsters
     dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc
-    dw LibraryMenu_LoadMapHeader
-    dw LibraryMenu_CopyBytesDEToHL_Bank0C
-    dw LibraryMenu_DrawRecordListNameTiles_Bank1D
+    dw LibraryMenu_LeaveReloadMap
+    dw LibraryMenu_LeaveRestoreScreen
+    dw LibraryMenu_LeaveReloadNames
     dw LibraryMenu_ToClearStringWindowAt2200AndStep
-    dw LibraryMenu_GridIndexFromGridCursorXGridCursorY
+    dw LibraryMenu_DrawMonsterList
     dw LibraryMenu_WriteScreenState
     dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2
-    dw LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits
-    dw LibraryMenu_StoreBAtWordTableEntry_Bank0C
-    dw LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile
+    dw LibraryMenu_BackToFamilies
+    dw LibraryMenu_EraseFamilyMark
+    dw LibraryMenu_ClearForEntry
     dw LibraryMenu_ShowMonsterEntry
 
 ; Library, state 0: clears the library's state bytes, sets message mode 9 and lets the script show
@@ -103,8 +103,8 @@ LibraryMenu_ToClearStringWindowAt2020AndStep::
 
 ; Library, state 3: draws the family chooser: the family panel (two rows of family icons, the second
 ; row with one fewer), the cursor on the current family, and the message window. (C1, E-0357)
-LibraryMenu_CopyRectTo20ByteRows_Bank0C::
-    ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect
+LibraryMenu_DrawFamilyChooser::
+    ld de, LibraryMenu_DrawFamilyChooser_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $09, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -116,7 +116,7 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
 
 .read_grid_cursor_x:
     ld a, [wGridCursorX]
-    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
+    ld hl, LibraryMenu_DrawFamilyChooser_Data
     ld b, $bb
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -124,7 +124,7 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wGridCursorX]
-    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
+    ld hl, LibraryMenu_DrawFamilyChooser_Data
     ld b, $c3
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -142,7 +142,7 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
 ; Library, state 4: writes the page number (wGridCursorY) and, for each family on the shown row,
 ; counts how many of its monsters have been seen, for the counts shown beside the icons. (C1,
 ; E-0357)
-LibraryMenu_BGMapAddressAtScroll_Bank0C::
+LibraryMenu_CountSeenMonsters::
     call BGMapAddressAtScroll_Bank0C
     ld de, $0182
     add hl, de
@@ -166,7 +166,7 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C::
     ld a, c
     add b
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
+    ld hl, LibraryMenu_CountSeenMonsters_Data1
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -227,7 +227,7 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C::
     ld a, c
     add l
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2
+    ld hl, LibraryMenu_CountSeenMonsters_Data2
     add_a_to_hl
     push de
     ld e, [hl]
@@ -418,7 +418,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld a, [hl]
     and a
     jr nz, .call_queue_sound_effect
-    call LibraryMenu_BGMapAddressAtScroll_Bank0C_2
+    call LibraryMenu_BGMapAddressAtScroll_Bank0C
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a
@@ -430,9 +430,9 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_BGMapAddressAtScroll_Bank0C_2
+    call LibraryMenu_BGMapAddressAtScroll_Bank0C
     ld a, [wGridCursorX]
-    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
+    ld hl, LibraryMenu_DrawFamilyChooser_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     ld a, [wGridCursorY]
@@ -484,20 +484,20 @@ LibraryMenu_WriteGlyphListStart::
 ; Draws the family cursor (tile $BB). (C1, E-0357)
 LibraryMenu_ReadGridCursorX::
     ld b, $bb
-    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
+    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
 
 ; Hides the family cursor (tile $C3). (C1, E-0357)
 LibraryMenu_ReadGridCursorX_2::
     ld b, $c3
-    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
+    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
 
 ; Marks the chosen family (tile $BC). (C1, E-0357)
-LibraryMenu_BGMapAddressAtScroll_Bank0C_2::
+LibraryMenu_BGMapAddressAtScroll_Bank0C::
     ld b, $bc
 
 ; Writes tile B at the family cursor position (from LibraryMenu_BGMapAddressAtScroll_Bank0C_Data by
 ; wGridCursorX). (C1, E-0357)
-LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX::
+LibraryMenu_BGMapAddressAtScroll_Bank0C_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
     ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data
@@ -522,7 +522,7 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C_Data::
 
 ; Library, state 6 (leaving): clears the screen area and reloads map $11's header, the player's
 ; sprites and the map objects. (C1, E-0357)
-LibraryMenu_LoadMapHeader::
+LibraryMenu_LeaveReloadMap::
     call LibraryMenu_FillTileRectWithArg1Tile
     ld a, $11
     ldh [hMapId], a
@@ -538,7 +538,7 @@ LibraryMenu_LoadMapHeader::
 
 ; Library, state 7 (leaving): restores the screen buffer and attributes to the BG map, the sprite
 ; clipping and hide tile, and the text window. (C1, E-0357)
-LibraryMenu_CopyBytesDEToHL_Bank0C::
+LibraryMenu_LeaveRestoreScreen::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
@@ -589,13 +589,13 @@ LibraryMenu_CopyBytesDEToHL_Bank0C::
 
 ; Library, state 8 (leaving): reloads the name and party tiles, clears the library's state and puts
 ; the player's name in the text buffer for the closing message. (C1, E-0357)
-LibraryMenu_DrawRecordListNameTiles_Bank1D::
+LibraryMenu_LeaveReloadNames::
     ld hl, $2940
     ld de, vTiles1 + $500
     call CopyTileBytesToVRAM_Bank0C
-    call LibraryMenu_CopyTileBytesToVRAM_Bank0C
-    call LibraryMenu_CopyTileBytesToVRAM_Bank0C
-    call LibraryMenu_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_LeaveReloadNames_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_LeaveReloadNames_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_LeaveReloadNames_CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
@@ -630,7 +630,7 @@ LibraryMenu_DrawRecordListNameTiles_Bank1D::
     ret
 
 ; Clears four tiles of the name area (the blank pattern at $2940). (C1, E-0357)
-LibraryMenu_CopyTileBytesToVRAM_Bank0C::
+LibraryMenu_LeaveReloadNames_CopyTileBytesToVRAM_Bank0C::
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
@@ -652,13 +652,13 @@ LibraryMenu_ToClearStringWindowAt2200AndStep::
 ; Library, state 10: draws the monster list of the chosen family: its panel, the page count and the
 ; cursor, and the names of the monsters seen (LibraryMenu_GridIndexFromGridCursorXGridCursorY_2).
 ; (C1, E-0357)
-LibraryMenu_GridIndexFromGridCursorXGridCursorY::
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect
+LibraryMenu_DrawMonsterList::
+    ld de, LibraryMenu_DrawMonsterList_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
+    ld de, LibraryMenu_DrawMonsterList_Data2
     add e
     ld e, a
     jr nc, .set_window_tile_buffer
@@ -669,7 +669,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     add $e1
     ld [wWindowTileBuffer + $165], a
     ld a, [wGrid2CursorX]
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
+    ld hl, LibraryMenu_DrawMonsterList_Data1
     ld b, $bb
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -677,7 +677,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wGrid2CursorX]
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
+    ld hl, LibraryMenu_DrawMonsterList_Data1
     ld b, $c3
     call StoreBAtWordTableEntry_Bank0C
     call LibraryMenu_GridIndexFromGridCursorXGridCursorY_2
@@ -688,7 +688,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
 
 ; Library, state 11: draws the list's page number and page count. (C1, E-0357)
 LibraryMenu_WriteScreenState::
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_3
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -716,7 +716,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
 
 .call_grid_index_from_grid_cursor_x_grid:
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
+    ld de, LibraryMenu_DrawMonsterList_Data2
     add e
     ld e, a
     jr nc, .check_grid2_cursor_y
@@ -738,7 +738,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     ld [wGrid2CursorY], a
     push af
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
+    ld de, LibraryMenu_DrawMonsterList_Data2
     add e
     ld e, a
     jr nc, .skip
@@ -778,7 +778,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     and a
     jr nz, .skip3
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
+    ld de, LibraryMenu_DrawMonsterList_Data2
     add e
     ld e, a
     jr nc, .skip2
@@ -829,7 +829,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
 .call_grid_index_from_grid_cursor_x_grid2:
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
+    ld de, LibraryMenu_CountSeenMonsters_Data1
     add e
     ld e, a
     jr nc, .skip5
@@ -931,8 +931,8 @@ LibraryMenu_ReadGrid2CursorX_Data::
 
 ; Library, state 13 (back to the families): redraws the family panel with the seen counts and lets
 ; the script continue. (C1, E-0357)
-LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits::
-    ld de, LibraryMenu_HLToDecimalDigits_TileRect
+LibraryMenu_BackToFamilies::
+    ld de, LibraryMenu_BackToFamilies_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -964,9 +964,9 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits::
 
 ; Library, state 14: erases the chosen-family mark and returns to the family cursor (state 5). (C1,
 ; E-0357)
-LibraryMenu_StoreBAtWordTableEntry_Bank0C::
+LibraryMenu_EraseFamilyMark::
     ld a, [wGridCursorX]
-    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
+    ld hl, LibraryMenu_DrawFamilyChooser_Data
     ld b, $c3
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -983,7 +983,7 @@ LibraryMenu_StoreBAtWordTableEntry_Bank0C::
 
 ; Library, state 15: clears the screen area and the window buffer before showing an entry. (C1,
 ; E-0357)
-LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile::
+LibraryMenu_ClearForEntry::
     call LibraryMenu_FillTileRectWithArg1Tile
     call LibraryMenu_WriteSVBK
     ld a, [wScreenState]
@@ -996,25 +996,25 @@ LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile::
 LibraryMenu_ShowMonsterEntry::
     ld a, [wScreenStep]
     jumptable
-    dw LibraryMenu_ShowMonsterEntry_FillTilesFromRequest
-    dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo
-    dw LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params
-    dw LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor
-    dw LibraryMenu_ShowMonsterEntry_2
-    dw LibraryMenu_ShowMonsterEntry_3
-    dw LibraryMenu_ShowMonsterEntry_4
-    dw LibraryMenu_ShowMonsterEntry_5
-    dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM
-    dw LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C
-    dw LibraryMenu_ShowMonsterEntry_WriteBGPalette0FromData
-    dw LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits
-    dw LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C
+    dw LibraryMenu_ShowMonsterEntry_LoadTiles
+    dw LibraryMenu_ShowMonsterEntry_LoadScreen
+    dw LibraryMenu_ShowMonsterEntry_DrawPicture
+    dw LibraryMenu_ShowMonsterEntry_LoadSprite
+    dw LibraryMenu_ShowMonsterEntry_DrawEntry
+    dw LibraryMenu_ShowMonsterEntry_DrawParents
+    dw LibraryMenu_ShowMonsterEntry_ShowPedigree
+    dw LibraryMenu_ShowMonsterEntry_ShowDescription2
+    dw LibraryMenu_ShowMonsterEntry_BrowseFamily
+    dw LibraryMenu_ShowMonsterEntry_Close
+    dw LibraryMenu_ShowMonsterEntry_RedrawLists
+    dw LibraryMenu_ShowMonsterEntry_RestorePalette
+    dw LibraryMenu_ShowMonsterEntry_RedrawCounts
+    dw LibraryMenu_ShowMonsterEntry_EraseListMark
 
 ; Library entry, step 0: clears the string tiles, loads the entry's frame tiles and four tiles from
 ; bank $1F. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
-    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
+LibraryMenu_ShowMonsterEntry_LoadTiles::
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1073,9 +1073,10 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles::
     db $ff, $60, $ff, $60, $ff, $60, $ff, $ff, $ff, $ff, $ff, $00, $ff, $00, $ff, $00 ; id 5
 
 ; Library entry, step 1: decompresses the entry screen's tiles, map and attributes and the monster's
-; icon kind (LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX), then
+; icon kind
+; (LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX), then
 ; draws them. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
+LibraryMenu_ShowMonsterEntry_LoadScreen::
     ld a, [wScreenSubStep]
     and a
     jr nz, .skip
@@ -1098,7 +1099,7 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     ld hl, wWindowTileBuffer + $64
     ld b, $f1
     call DecompressToVRAM
-    ld de, LibraryMenu_ShowMonsterEntry_WindowTileBufferGfx
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_WindowTileBufferGfx
     ld hl, wWindowTileBuffer
     ld b, $f1
     call DecompressToVRAM
@@ -1111,7 +1112,7 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     ld hl, wWindowAttrBuffer + $64
     ld b, $f1
     call DecompressToVRAM
-    ld de, LibraryMenu_ShowMonsterEntry_WindowAttrBufferGfx
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_WindowAttrBufferGfx
     ld hl, wWindowAttrBuffer
     ld b, $f1
     call DecompressToVRAM
@@ -1123,39 +1124,39 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     call UploadBGPalettes
 
 .skip:
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect
     ld hl, wWindowTileBuffer + $81
     lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_2
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_2
     ld hl, wWindowTileBuffer + $bd
     lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_3
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_3
     ld hl, wWindowTileBuffer + $e5
     lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_4
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_4
     ld hl, wWindowTileBuffer + $10d
     lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_5
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_5
     ld hl, wWindowTileBuffer + $135
     lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_6
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_6
     ld hl, wWindowTileBuffer + $15d
     lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_7
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_7
     ld hl, wWindowTileBuffer + $15
     lb bc, $12, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_8
+    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_8
     ld hl, wWindowTileBuffer + $3d
     lb bc, $12, $01
     call CopyRectTo20ByteRows_Bank0C
-    call LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX
+    call LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, wLibraryEntryBlock
     ld hl, wWindowTileBuffer + $108
     lb bc, $02, $01
@@ -1203,36 +1204,36 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 10 x 1 tiles, one row per line
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect::
     db $2f, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e ; id 0
 
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_2::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_2::
     db $42, $30, $31, $32, $33, $34, $35, $36, $37, $38 ; id 0
 
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_3::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_3::
     db $43, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41 ; id 0
 
 ; record: 9 x 1 tiles, one row per line
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_4::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_4::
     db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c ; id 0
 
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_5::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_5::
     db $4d, $4e, $4f, $50, $51, $52, $53, $54, $55 ; id 0
 
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_6::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_6::
     db $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e ; id 0
 
 ; record: 18 x 1 tiles, one row per line
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_7::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_7::
     db $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $b0, $b1, $b2, $b3 ; id 0
 
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_8::
+LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect_8::
     db $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd, $be, $bf, $c0, $c1, $c2, $c3, $c4, $c5 ; id 0
     db $7e, $7f
 
 ; Library entry, step 2: draws the 6 x 6 picture frame and loads the monster's picture
 ; (LoadMonsterPicture) into it, then its CGB attributes. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
+LibraryMenu_ShowMonsterEntry_DrawPicture::
     ld a, [wScreenSubStep]
     and a
     jp nz, .call_grid_cell_address_from_grid_cursor_x_and
@@ -1243,7 +1244,7 @@ LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1295,7 +1296,7 @@ LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect
+    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1316,7 +1317,7 @@ LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
 
 ; Library entry, step 3: decompresses the monster's sprite graphics (DecompressGraphicsArg1ToArg4).
 ; (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
+LibraryMenu_ShowMonsterEntry_LoadSprite::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
     ld [wArg1], a
@@ -1335,7 +1336,7 @@ LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
 
 ; Library entry, step 4: draws the monster's sprite and shows its name, its family's icon and name,
 ; and its description strings. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor::
+LibraryMenu_ShowMonsterEntry_DrawEntry::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, h
@@ -1394,7 +1395,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor::
     ld [wStringIndex], a
     ld a, c
     add a
-    ld de, LibraryMenu_ShowMonsterEntry_Data
+    ld de, LibraryMenu_ShowMonsterEntry_DrawEntry_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1429,12 +1430,12 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor::
     ret
 
 ; data read by LibraryMenu (6 bytes) (E-0347)
-LibraryMenu_ShowMonsterEntry_Data::
+LibraryMenu_ShowMonsterEntry_DrawEntry_Data::
     db $40, $94, $d0, $94, $60, $95
 
 ; Library entry, step 5: for a monster not yet seen (LibraryMenu_TestBitInFieldAtArg3 = $FF) shows
 ; placeholder parents and skips the pedigree step. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_2::
+LibraryMenu_ShowMonsterEntry_DrawParents::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     call LibraryMenu_TestBitInFieldAtArg3
@@ -1484,7 +1485,7 @@ LibraryMenu_ShowMonsterEntry_2::
 
 ; Library entry, step 6: shows the monster's pedigree: the two parents from MonsterPedigreeTableA
 ; and MonsterPedigreeTableB, each a species (name and family icon) or a family. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_3::
+LibraryMenu_ShowMonsterEntry_ShowPedigree::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     push hl
@@ -1493,7 +1494,7 @@ LibraryMenu_ShowMonsterEntry_3::
     ld de, MonsterPedigreeTableA
     add hl, de
     ld a, $42
-    call LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_FamilyForSpeciesIdArg6
     pop hl
     push hl
     sla l
@@ -1501,7 +1502,7 @@ LibraryMenu_ShowMonsterEntry_3::
     ld de, MonsterPedigreeTableB
     add hl, de
     ld a, $43
-    call LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_FamilyForSpeciesIdArg6
     pop hl
     push hl
     sla l
@@ -1509,14 +1510,14 @@ LibraryMenu_ShowMonsterEntry_3::
     ld de, MonsterPedigreeTableA
     add hl, de
     ld de, vTiles2 + $300
-    call LibraryMenu_ShowMonsterEntry_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_ShowString_Bank08
     pop hl
     sla l
     rl h
     ld de, MonsterPedigreeTableB
     add hl, de
     ld de, vTiles2 + $390
-    call LibraryMenu_ShowMonsterEntry_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_ShowString_Bank08
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1524,7 +1525,7 @@ LibraryMenu_ShowMonsterEntry_3::
 
 ; Library entry, step 7: shows the monster's second description (string $10 entries on, bank $0B) in
 ; the text window. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_4::
+LibraryMenu_ShowMonsterEntry_ShowDescription2::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, $10
@@ -1551,7 +1552,7 @@ LibraryMenu_ShowMonsterEntry_4::
 
 ; Library entry, step 8: Right/Left show the next or previous monster of the family (when the family
 ; has more than one page), A and B close the entry. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_5::
+LibraryMenu_ShowMonsterEntry_BrowseFamily::
     call DrawThreeMetaSpritePartsAtGridCursor
     ld a, [wGridCursorY]
     add a
@@ -1587,7 +1588,7 @@ LibraryMenu_ShowMonsterEntry_5::
     xor a
     ld [wGrid2CursorX], a
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
+    ld de, LibraryMenu_DrawMonsterList_Data2
     add e
     ld e, a
     jr nc, .check_grid2_cursor_y
@@ -1620,7 +1621,7 @@ LibraryMenu_ShowMonsterEntry_5::
     push hl
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2
+    ld hl, LibraryMenu_CountSeenMonsters_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1642,7 +1643,7 @@ LibraryMenu_ShowMonsterEntry_5::
     jr z, .loop
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1669,7 +1670,7 @@ LibraryMenu_ShowMonsterEntry_5::
 
 .loop4:
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
+    ld de, LibraryMenu_DrawMonsterList_Data2
     add e
     ld e, a
     jr nc, .set_grid2_cursor_y2
@@ -1698,7 +1699,7 @@ LibraryMenu_ShowMonsterEntry_5::
     push hl
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2
+    ld hl, LibraryMenu_CountSeenMonsters_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1720,7 +1721,7 @@ LibraryMenu_ShowMonsterEntry_5::
     jr z, .loop3
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1749,7 +1750,7 @@ LibraryMenu_ShowMonsterEntry_5::
 
 ; Library entry, step 9 (closing): clears the screen area, restores the font tiles and blanks the
 ; window buffer. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
+LibraryMenu_ShowMonsterEntry_Close::
     call LibraryMenu_FillTileRectWithArg1Tile
     ld b, $46
     ld de, Tiles1Gfx
@@ -1763,8 +1764,8 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
 
 ; Library entry, step 10: redraws the family panel and the monster list with their marks, and clears
 ; the string tiles. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
-    ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect
+LibraryMenu_ShowMonsterEntry_RedrawLists::
+    ld de, LibraryMenu_DrawFamilyChooser_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $09, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -1776,19 +1777,19 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
 
 .read_grid_cursor_x:
     ld a, [wGridCursorX]
-    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
+    ld hl, LibraryMenu_DrawFamilyChooser_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     ld a, [wGridCursorY]
     add $e1
     ld [wWindowTileBuffer + $156], a
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect
+    ld de, LibraryMenu_DrawMonsterList_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wGrid2CursorX]
     ld b, $bc
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
+    ld hl, LibraryMenu_DrawMonsterList_Data1
     call StoreBAtWordTableEntry_Bank0C
     call ClearStringWindowAt2020
     call ClearStringWindowAt2200
@@ -1812,7 +1813,7 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     ret
 
 ; Library entry, step 11: restores BG palette 0 and the family icons and list names. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_WriteBGPalette0FromData::
+LibraryMenu_ShowMonsterEntry_RestorePalette::
     call WriteBGPalette0FromData
     call LibraryMenu_WriteWorkBuf
     call LibraryMenu_GridIndexFromGridCursorXGridCursorY_2
@@ -1823,7 +1824,7 @@ LibraryMenu_ShowMonsterEntry_WriteBGPalette0FromData::
 
 ; Library entry, step 12: redraws the family counts and the message window, and lets the script
 ; continue. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
+LibraryMenu_ShowMonsterEntry_RedrawCounts::
     ld a, $01
     ld [wArg1], a
     call LibraryMenu_HLToDecimalDigits
@@ -1831,7 +1832,7 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
-    ld de, LibraryMenu_ShowMonsterEntry_HLToDecimalDigits_TileRect
+    ld de, LibraryMenu_ShowMonsterEntry_RedrawCounts_TileRect
     ld hl, wWindowTileBuffer
     lb bc, $14, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -1841,7 +1842,7 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
     lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_3
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1863,10 +1864,10 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
 
 ; Library entry, step 13: erases the list mark and returns to the monster cursor (library state
 ; $0C). (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
+LibraryMenu_ShowMonsterEntry_EraseListMark::
     ld a, [wGrid2CursorX]
     ld b, $c3
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
+    ld hl, LibraryMenu_DrawMonsterList_Data1
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     lb bc, $14, $0c
@@ -1894,7 +1895,7 @@ LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
 
 ; Shows one parent of a pedigree entry at DE: a species name (category = high byte + 2), or a family
 ; name when the entry is a family ($FE form), or nothing. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_ShowString_Bank08::
+LibraryMenu_ShowMonsterEntry_ShowPedigree_ShowString_Bank08::
     push de
     inc hl
     ld a, [hld]
@@ -1949,7 +1950,7 @@ LibraryMenu_ShowMonsterEntry_ShowString_Bank08::
 
 ; Loads the family icon of one pedigree parent into tile A: the species' family
 ; (FamilyForSpeciesIdArg6) or the entry's family, or a blank tile. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6::
+LibraryMenu_ShowMonsterEntry_ShowPedigree_FamilyForSpeciesIdArg6::
     push af
     inc hl
     ld a, [hld]
@@ -2001,7 +2002,7 @@ LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6::
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_2::
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
+    ld de, LibraryMenu_CountSeenMonsters_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -2207,7 +2208,7 @@ DrawThreeMetaSpritePartsAtGridCursor::
 
 ; Draws the list page indicator: the current page and the family's page count as digit tiles. (C1,
 ; E-0357)
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_3::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     call BGMapAddressAtScroll_Bank0C
     ld de, $018f
     add hl, de
@@ -2225,7 +2226,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_3::
     inc hl
     push hl
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
+    ld de, LibraryMenu_DrawMonsterList_Data2
     add e
     ld e, a
     jr nc, .skip
@@ -2243,12 +2244,12 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_3::
     ei
     ret
 
-; HL = the word LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1[GridIndexFromGridCursorXGridCursorY] +
+; HL = the word LibraryMenu_CountSeenMonsters_Data1[GridIndexFromGridCursorXGridCursorY] +
 ; GridIndexFromGrid2CursorXGrid2CursorY (E-0124)
 GridCellAddressFromGridCursorXAndGrid2CursorX::
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
+    ld de, LibraryMenu_CountSeenMonsters_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -2600,7 +2601,7 @@ DrawScreenBufferRect_Bank0C::
     ret
 
 ; Arena: writes the blank tile $C3 at the first C entries of the address table at HL. (C1, E-0357)
-ArenaMenu_StoreBAtWordTableEntry_Bank0C::
+ArenaMenu_CancelClass_StoreBAtWordTableEntry_Bank0C::
     ld a, c
     ld b, a
     ld c, $00
@@ -2666,7 +2667,7 @@ ClearStringWindowAt2200::
     ret
 
 ; Clears the string tiles of the entry screen (vTiles2 and vTiles2 + $670). (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo::
+LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
     ld hl, vTiles2
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2793,14 +2794,14 @@ LibraryMenu_TestBitInFieldAtArg3::
     ld a, $fe
     ret
 
-; Copies the monster's two-byte icon block (by its kind in LibraryMenu_..._MonsterIconKindTable) to
+; Copies the monster's two-byte icon block (by its kind in MonsterIconKindTable) to
 ; wLibraryEntryBlock. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
+LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
-    ld de, LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_MonsterIconKindTable
+    ld de, MonsterIconKindTable
     add hl, de
     ld a, [hl]
-    ld hl, LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data
+    ld hl, MonsterIconBlockPointers
     add a
     add_a_to_hl
     ld e, [hl]
@@ -2817,14 +2818,12 @@ LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
     jr nz, .loop
     ret
 
-; LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX reads the byte at
-; $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two
-; tile bytes that
-; LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data[value] points
-; to into wScreenBlock9C; 373 bytes, one per monster id up to $174 (E-0206, C1)
-; record: index into
-; LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data
-LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_MonsterIconKindTable::
+; LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX reads
+; the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and
+; copies the two tile bytes that MonsterIconBlockPointers[value] points to into wScreenBlock9C; 373
+; bytes, one per monster id up to $174 (E-0206, C1)
+; record: index into MonsterIconBlockPointers
+MonsterIconKindTable::
     db $00 ; id 0
     db $00 ; id 1 DrakSlime
     db $00 ; id 2 SpotSlime
@@ -3199,9 +3198,29 @@ LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_M
     db $03 ; id 371 Orgodemir
     db $02 ; id 372 Darck
 
-LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data::
-    db $e9, $54, $eb, $54, $ed, $54, $ef, $54, $f1, $54, $7c, $80, $7d, $80, $7e, $80
-    db $7e, $7e, $7f, $80
+; the five words point at the two-byte icon blocks right after them; MonsterIconKindTable's values
+; index this list (E-0206); was named after a step label since renamed (E-0367, C1)
+; record: icon block (two tile bytes)
+MonsterIconBlockPointers::
+    dw MonsterIconBlocks ; entry 0
+    dw MonsterIconBlocks_01 ; entry 1
+    dw MonsterIconBlocks_02 ; entry 2
+    dw MonsterIconBlocks_03 ; entry 3
+    dw MonsterIconBlocks_04 ; entry 4
+
+; the five two-byte icon blocks MonsterIconBlockPointers points at, copied to wLibraryEntryBlock by
+; the library entry screen (E-0206) (E-0367, C1)
+; record: tile pair
+MonsterIconBlocks::
+    db $7c, $80 ; entry 0
+MonsterIconBlocks_01::
+    db $7d, $80 ; entry 1
+MonsterIconBlocks_02::
+    db $7e, $80 ; entry 2
+MonsterIconBlocks_03::
+    db $7e, $7e ; entry 3
+MonsterIconBlocks_04::
+    db $7f, $80 ; entry 4
 
 ; takes the class byte of the grid cell
 ; (LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable) and copies its four bytes to
@@ -3677,7 +3696,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 9 x 13 tiles, one row per line
-LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect::
+LibraryMenu_DrawFamilyChooser_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $02, $c3, $c3, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3693,7 +3712,7 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect::
     db $b3, $c5, $c3, $be, $e2, $c6, $b4, $b4, $b5 ; id 12
 
 ; record: 12 x 13 tiles, one row per line
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect::
+LibraryMenu_DrawMonsterList_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3708,7 +3727,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect::
     db $b6, $c3, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $b7 ; id 11
     db $b3, $b4, $b4, $b4, $b4, $b4, $c5, $c3, $be, $c3, $c6, $b5 ; id 12
 
-LibraryMenu_HLToDecimalDigits_TileRect::
+LibraryMenu_BackToFamilies_TileRect::
     db $b2, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -3726,28 +3745,28 @@ LibraryMenu_HLToDecimalDigits_TileRect::
     db $b9, $b9, $b9, $ba
 
 ; record: 20 x 5 tiles, one row per line
-LibraryMenu_ShowMonsterEntry_HLToDecimalDigits_TileRect::
+LibraryMenu_ShowMonsterEntry_RedrawCounts_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $92, $93, $94, $95, $96, $97, $98, $99, $9a, $9b, $9c, $9d, $9e, $9f, $a0, $a1, $a2, $a3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data::
+LibraryMenu_DrawFamilyChooser_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4, $41, $c4
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1::
+LibraryMenu_DrawMonsterList_Data1::
     db $81, $c3, $a9, $c3, $d1, $c3, $f9, $c3, $21, $c4, $49, $c4
 
-LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1::
+LibraryMenu_CountSeenMonsters_Data1::
     db $01, $00, $24, $00, $47, $00, $6a, $00, $8d, $00, $b0, $00, $d3, $00, $f6, $00
     db $19, $01, $3c, $01, $5f, $01, $ff, $ff
 
-LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2::
+LibraryMenu_CountSeenMonsters_Data2::
     db $1b, $00, $43, $00, $67, $00, $85, $00, $a8, $00, $ca, $00, $f1, $00, $11, $01
     db $39, $01, $5c, $01, $75, $01
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2::
+LibraryMenu_DrawMonsterList_Data2::
     db $04, $05, $05, $04, $04, $04, $04, $04, $05, $05, $03
 
 ReadGridCellByteForGridCursorXGridCursorY_Data::
@@ -3796,13 +3815,13 @@ ReadGridCellByteForGridCursorXGridCursorY_Data_Entry09::
 ReadGridCellByteForGridCursorXGridCursorY_Data_Entry0A::
     db $05, $05, $05, $03
 
-; LibraryMenu_ShowMonsterEntry_3 takes the monster number from
-; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from
-; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1 plus the grid position) and reads the word at $599F
-; + 2 * number: the first word LibraryMenu_ShowMonsterEntry_3 draws (graphics at vTiles2 + $300,
-; sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are
-; families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's
-; species (C2 for those entries); 384 words (E-0211, C1)
+; LibraryMenu_ShowMonsterEntry_ShowPedigree takes the monster number from
+; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from LibraryMenu_CountSeenMonsters_Data1
+; plus the grid position) and reads the word at $599F + 2 * number: the first word
+; LibraryMenu_ShowMonsterEntry_ShowPedigree draws (graphics at vTiles2 + $300, sprite part $42); the
+; two parents shown for the monster: for all 95 monsters whose two entries are families,
+; FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for
+; those entries); 384 words (E-0211, C1)
 ; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
 MonsterPedigreeTableA::
     dw $fe00 ; id 0 family 0
@@ -4579,13 +4598,12 @@ MonsterPedigreeTableA_Alt::
     dw $fefe ; id 382 Kagebou none
     dw $fefe ; id 383 ? none
 
-; LibraryMenu_ShowMonsterEntry_3 takes the monster number from
-; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from
-; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1 plus the grid position) and reads the word at $5F9F
-; + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the
-; monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row
-; A, column B gives that monster or parent A's species (C2 for those entries); 384 words (E-0211,
-; C1)
+; LibraryMenu_ShowMonsterEntry_ShowPedigree takes the monster number from
+; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from LibraryMenu_CountSeenMonsters_Data1
+; plus the grid position) and reads the word at $5F9F + 2 * number: the second word (vTiles2 + $390,
+; sprite part $43); the two parents shown for the monster: for all 95 monsters whose two entries are
+; families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's
+; species (C2 for those entries); 384 words (E-0211, C1)
 MonsterPedigreeTableB::
     dw $fefe ; id 0 none
     dw $fe01 ; id 1 DrakSlime family 1
@@ -5366,53 +5384,53 @@ MonsterPedigreeTableB_Alt::
 ArenaMenu::
     ld a, [wScreenState]
     jumptable
-    dw ArenaMenu_CopyBytesDEToHL_Bank0C
-    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C
+    dw ArenaMenu_Init
+    dw ArenaMenu_DrawClassChooser
     dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D
-    dw ArenaMenu_BGMapAddressAtScroll_Bank0C
+    dw ArenaMenu_AskEnterClass
+    dw ArenaMenu_CancelClass
     dw ArenaMenu_AdvanceScreenState
-    dw ArenaMenu_SubtractArg1AmountFromGold
-    dw ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity
+    dw ArenaMenu_PayEntryFee
+    dw ArenaMenu_AfterRound
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_CallArenaMenu_DispatchTalkEvent
-    dw ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_3
+    dw ArenaMenu_ShowGoldAndYesNo
+    dw ArenaMenu_ReadAnswer
     dw ArenaMenu_AdvanceScreenState_SetScreenState
     dw ArenaMenu_SetScreenState
-    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C
-    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD
-    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Number24ToPackedBCD_2
+    dw ArenaMenu_RestoreClassPanels
+    dw ArenaMenu_DrawClassPanel
+    dw ArenaMenu_DrawClassPanelGold
     dw ArenaMenu_WriteTextBuf0AndScreenStateEtc
-    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_2
+    dw ArenaMenu_RestorePanel
     dw ArenaMenu_AdvanceScreenState_SetScreenState_2
     dw ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_4
-    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3
-    dw ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD
-    dw ArenaMenu_RedrawFullScreenBoxes_0C
-    dw ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
+    dw ArenaMenu_ReadFeeAnswer
+    dw ArenaMenu_ClosePanelBox
+    dw ArenaMenu_PayEntryFeeAgain
+    dw ArenaMenu_StartArenaTalk
+    dw ArenaMenu_AfterRoundAgain
     dw ArenaMenu_ToArenaMenu_ReadArenaRound
     dw ArenaMenu_AdvanceScreenState
-    dw ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent
-    dw ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity
+    dw ArenaMenu_StartTalkAndClearRun
+    dw ArenaMenu_AfterRound
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_ToArenaMenu_DispatchTalkEvent
     dw ArenaMenu_SetTwoChoiceCursor
     dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2
-    dw ArenaMenu_SetFlagBit
+    dw ArenaMenu_GiveRankReward
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2
-    dw ArenaMenu_RandomModulo52
+    dw ArenaMenu_ReadQuestion
+    dw ArenaMenu_PickPrize
 
 ; Arena, state 39, the prize: picks a random prize for the class (wAreaGraphicsIndex) from its
 ; chance list; the prize may be gold, a new key (GenerateNewKeyEntry) or another draw. (C1, E-0357)
-ArenaMenu_RandomModulo52::
+ArenaMenu_PickPrize::
     ld a, [wAreaGraphicsIndex]
     add a
-    ld hl, ArenaMenu_RandomModulo52_Data1
+    ld hl, ArenaMenu_PickPrize_Data1
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5426,7 +5444,7 @@ ArenaMenu_RandomModulo52::
 .skip:
     ld a, [de]
     cp $ff
-    jp z, .call_arena_menu_add_arg1_to_gold_capped999992
+    jp z, .call_arena_menu_pick_prize_add_arg1_to_gold2
     cp l
     jr nc, .read_area_graphics_index
     inc de
@@ -5436,7 +5454,7 @@ ArenaMenu_RandomModulo52::
 .read_area_graphics_index:
     ld a, [wAreaGraphicsIndex]
     add a
-    ld hl, ArenaMenu_RandomModulo52_Data2
+    ld hl, ArenaMenu_PickPrize_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5452,31 +5470,31 @@ ArenaMenu_RandomModulo52::
     cp $fe
     jr z, .call_generate_new_key_entry
     cp $fd
-    jr z, .call_arena_menu_random_modulo52_2
+    jr z, .call_arena_menu_pick_prize_random_modulo52
     ld [wArg1], a
-    call ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999
+    call ArenaMenu_PickPrize_AddArg1ToGoldCapped99999_2
     jp .set_two_choice_cursor
 
 .call_generate_new_key_entry:
     farcall GenerateNewKeyEntry
     ldh a, [hTemp0]
     and a
-    jr z, .call_arena_menu_add_arg1_to_gold_capped99999
+    jr z, .call_arena_menu_pick_prize_add_arg1_to_gold
     ld a, $01
     jr .set_two_choice_cursor
 
-.call_arena_menu_add_arg1_to_gold_capped99999:
-    call ArenaMenu_AddArg1ToGoldCapped99999
+.call_arena_menu_pick_prize_add_arg1_to_gold:
+    call ArenaMenu_PickPrize_AddArg1ToGoldCapped99999
     ld a, $03
     jr .set_two_choice_cursor
 
-.call_arena_menu_random_modulo52_2:
-    call ArenaMenu_RandomModulo52_2
-    call ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999
+.call_arena_menu_pick_prize_random_modulo52:
+    call ArenaMenu_PickPrize_RandomModulo52
+    call ArenaMenu_PickPrize_AddArg1ToGoldCapped99999_2
     jp .set_two_choice_cursor
 
-.call_arena_menu_add_arg1_to_gold_capped999992:
-    call ArenaMenu_AddArg1ToGoldCapped99999
+.call_arena_menu_pick_prize_add_arg1_to_gold2:
+    call ArenaMenu_PickPrize_AddArg1ToGoldCapped99999
     ld a, $03
 
 .set_two_choice_cursor:
@@ -5491,7 +5509,7 @@ ArenaMenu_RandomModulo52::
 
 ; Arena, state 38: a yes/no question; yes moves on, no redraws the screen and steps back. (C1,
 ; E-0357)
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2::
+ArenaMenu_ReadQuestion::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -5543,7 +5561,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2::
 ; Arena, state 0: clears the arena state, copies the screen to the window buffer, sets message mode
 ; $0A and picks the starting state by the arena rank (wArenaRank): the first visit, a class choice,
 ; or the champion's state. (C1, E-0357)
-ArenaMenu_CopyBytesDEToHL_Bank0C::
+ArenaMenu_Init::
     ld hl, wScreenState
     ld b, $6f
 
@@ -5677,12 +5695,12 @@ ArenaMenu_CopyBytesDEToHL_Bank0C::
     ret
 
 ; Arena, state 1: draws the class chooser with the current rank and the prize money. (C1, E-0357)
-ArenaMenu_CopyRectTo20ByteRows_Bank0C::
-    ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_TileRect
+ArenaMenu_DrawClassChooser::
+    ld de, ArenaMenu_DrawClassChooser_TileRect
     ld hl, wWindowTileBuffer + $b4
     lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
-    call ArenaMenu_ReadArenaRank
+    call ArenaMenu_DrawClassChooser_ReadArenaRank
     call ArenaMenu_Number24ToPackedBCD
     call BGMapAddressAtScroll_Bank0C
     lb bc, $14, $0d
@@ -5882,8 +5900,8 @@ ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     ret
 
 ; Arena, state 4: the yes/no question on entering the chosen class; yes checks the class's entry fee
-; (ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data), no closes the question and moves on. (C1, E-0357)
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
+; (ArenaMenu_AskEnterClass_Data), no closes the question and moves on. (C1, E-0357)
+ArenaMenu_AskEnterClass::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -5895,7 +5913,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 .loop:
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -5913,7 +5931,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
     jr nz, .loop
     ld a, [wGridCursorX]
     sla a
-    ld de, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data
+    ld de, ArenaMenu_AskEnterClass_Data
     add e
     ld e, a
     jr nc, .skip
@@ -5961,7 +5979,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
 
 ; Closes the arena's yes/no box: restores the screen behind it and redraws the box frame. (C1,
 ; E-0357)
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
     ld b, $00
     ld c, $05
     ld hl, $027a
@@ -5971,7 +5989,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1::
     ld a, $06
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_0C
-    ld de, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_TileRect
+    ld de, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $03, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -5983,11 +6001,11 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1::
 
 ; Arena, state 5: closes the box, blanks the four class marks and returns to the class cursor (state
 ; 2). (C1, E-0357)
-ArenaMenu_BGMapAddressAtScroll_Bank0C::
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
+ArenaMenu_CancelClass::
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C
     ld c, $04
     ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
-    call ArenaMenu_StoreBAtWordTableEntry_Bank0C
+    call ArenaMenu_CancelClass_StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     lb bc, $14, $0d
     ld de, $01cc
@@ -6006,11 +6024,11 @@ ArenaMenu_AdvanceScreenState::
 ; Arena, state 7: pays the class's entry fee (SubtractArg1AmountFromGold), records the class
 ; (wAreaGraphicsIndex) and the round count, starts the arena talk event and redraws the screen. (C1,
 ; E-0357)
-ArenaMenu_SubtractArg1AmountFromGold::
+ArenaMenu_PayEntryFee::
     call ArenaMenu_DispatchTalkEvent_SetScriptReturnBank
     ld a, [wGridCursorX]
     sla a
-    ld de, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data
+    ld de, ArenaMenu_AskEnterClass_Data
     add e
     ld e, a
     jr nc, .skip
@@ -6043,7 +6061,7 @@ ArenaMenu_SubtractArg1AmountFromGold::
 ; Arena, state 8, after a round: when the battle was lost (wBattleScene set) the run ends; before
 ; the third round it prepares the next one; after the third the arena rank goes up and the run ends.
 ; (C1, E-0357)
-ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity::
+ArenaMenu_AfterRound::
     ld a, [wBattleScene]
     and a
     jr nz, .set_two_choice_cursor_to_02
@@ -6098,14 +6116,14 @@ ArenaMenu_CallArenaMenu_DispatchTalkEvent::
     ret
 
 ; Arena, state 11: shows the gold and the yes/no box. (C1, E-0357)
-ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
+ArenaMenu_ShowGoldAndYesNo::
     call ArenaMenu_Number24ToPackedBCD
     call ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     ret
 
 ; Arena, state 12: the yes/no answer: yes closes the box and moves on, no leaves the question for
 ; the script. (C1, E-0357)
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_3::
+ArenaMenu_ReadAnswer::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -6129,7 +6147,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_3::
     ld a, [wTwoChoiceCursor]
     and a
     jr nz, .loop
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenState]
@@ -6164,7 +6182,7 @@ ArenaMenu_SetScreenState::
 
 ; Arena, state 15: restores the screen areas behind the class panels and steps back four states.
 ; (C1, E-0357)
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
+ArenaMenu_RestoreClassPanels::
     ld b, $00
     ld c, $03
     ld hl, $01e0
@@ -6198,8 +6216,8 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
 
 ; Arena, state 16: draws the class panel with the gold, judges the party's strength
 ; (ArenaMenu_WriteTwoChoiceCursor) and skips a state. (C1, E-0357)
-ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD::
-    ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Number24ToPackedBCD_TileRect
+ArenaMenu_DrawClassPanel::
+    ld de, ArenaMenu_DrawClassPanel_TileRect
     ld hl, wWindowTileBuffer + $b4
     lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
@@ -6224,8 +6242,8 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD::
     ret
 
 ; Arena, state 17: draws the class panel with the gold. (C1, E-0357)
-ArenaMenu_CopyRectTo20ByteRows_Bank0C_Number24ToPackedBCD_2::
-    ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Number24ToPackedBCD_TileRect
+ArenaMenu_DrawClassPanelGold::
+    ld de, ArenaMenu_DrawClassPanel_TileRect
     ld hl, wWindowTileBuffer + $b4
     lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
@@ -6386,7 +6404,7 @@ ArenaMenu_ReadGridCursorX_Data_2::
     db $a1, $00, $e1, $00, $21, $01, $61, $01
 
 ; Arena, state 19: restores the screen behind the panel and goes back to state $0D. (C1, E-0357)
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_2::
+ArenaMenu_RestorePanel::
     ld b, $00
     ld c, $05
     ld hl, $01e0
@@ -6452,7 +6470,7 @@ ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data::
 
 ; Arena, state 23: the fee question: yes checks the gold (IsAmountInArg1AboveGold) and moves on when
 ; there is not enough (to the refusal) or pays; no moves on. (C1, E-0357)
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_4::
+ArenaMenu_ReadFeeAnswer::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -6515,7 +6533,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_4::
 
 ; Arena, state 24: closes the box, redraws the panel, judges the party and returns to state $11.
 ; (C1, E-0357)
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3::
+ArenaMenu_ClosePanelBox::
     ld b, $00
     ld c, $05
     ld hl, $027a
@@ -6525,7 +6543,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3::
     ld a, $06
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_0C
-    ld de, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3_TileRect
+    ld de, ArenaMenu_ClosePanelBox_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $03, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -6546,7 +6564,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3::
     ret
 
 ; Arena, state 25: pays the entry fee and redraws the gold. (C1, E-0357)
-ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD::
+ArenaMenu_PayEntryFeeAgain::
     xor a
     ld [wArg3], a
     ld a, [wArenaFeeHi]
@@ -6570,10 +6588,10 @@ ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD::
 
 ; Arena, state 26: records the area, starts talk event group $1F and redraws the screen. (C1,
 ; E-0357)
-ArenaMenu_RedrawFullScreenBoxes_0C::
+ArenaMenu_StartArenaTalk::
     ld a, [wScreenArea]
     ld [wAreaGraphicsIndex], a
-    call ArenaMenu_DispatchTalkEvent_2
+    call ArenaMenu_StartArenaTalk_DispatchTalkEvent
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6583,13 +6601,13 @@ ArenaMenu_RedrawFullScreenBoxes_0C::
 
 ; Arena, state 27, after a round: a lost battle clears the prize; before the third round the round
 ; count goes up for the next battle; after it the run ends (state $23). (C1, E-0357)
-ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
+ArenaMenu_AfterRoundAgain::
     ld a, [wBattleScene]
     and a
     jr nz, .clear_arg3
     ld a, [wArenaRound]
     cp $02
-    jr nc, .call_arena_menu_return
+    jr nc, .call_arena_menu_after_round_again_return
     call IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -6604,8 +6622,8 @@ ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld [wScreenState], a
     ret
 
-.call_arena_menu_return:
-    call ArenaMenu_Return
+.call_arena_menu_after_round_again_return:
+    call ArenaMenu_AfterRoundAgain_Return
     xor a
 
 .set_two_choice_cursor:
@@ -6637,7 +6655,7 @@ ArenaMenu_ToArenaMenu_ReadArenaRound::
 
 ; Arena, state 30: starts the arena talk event, clears the run's record and redraws the screen. (C1,
 ; E-0357)
-ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent::
+ArenaMenu_StartTalkAndClearRun::
     call ArenaMenu_DispatchTalkEvent
     ld a, [wScreenState]
     inc a
@@ -6745,7 +6763,7 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2::
 ; kind 3, and sets EVENT_WARUBOU_WA_HEY_THIS_TIME); otherwise generates a new key
 ; (GenerateNewKeyEntry), noting when the list is full; then the player's name goes in the text
 ; buffer. (C1, E-0357)
-ArenaMenu_SetFlagBit::
+ArenaMenu_GiveRankReward::
     ld a, [wArenaRank]
     cp $01
     jr nz, .call_generate_new_key_entry
@@ -6886,7 +6904,7 @@ SetupScreenCountPlusOneFromRecordCapacity::
 
 ; Marks the cleared classes on the class panel: tile $AD beside each class below the arena rank.
 ; (C1, E-0357)
-ArenaMenu_ReadArenaRank::
+ArenaMenu_DrawClassChooser_ReadArenaRank::
     ld hl, wWindowTileBuffer + $c9
     ld a, [wArenaRank]
     cp $02
@@ -7494,11 +7512,11 @@ RandomModulo52::
     ret
 
 ; A shared return. (C1, E-0357)
-ArenaMenu_Return::
+ArenaMenu_AfterRoundAgain_Return::
     ret
 
 ; Starts talk event group $1F, saving the script position to return to (wScriptReturn). (C1, E-0357)
-ArenaMenu_DispatchTalkEvent_2::
+ArenaMenu_StartArenaTalk_DispatchTalkEvent::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
@@ -7700,15 +7718,15 @@ ArenaMenu_WriteTwoChoiceCursor::
     ret
 
 ; Picks a random item prize: one of seven entries of the list chosen by the random value's low two
-; bits (ArenaMenu_RandomModulo52_Data), into wArg1. (C1, E-0357)
-ArenaMenu_RandomModulo52_2::
+; bits (ArenaMenu_PickPrize_RandomModulo52_Data), into wArg1. (C1, E-0357)
+ArenaMenu_PickPrize_RandomModulo52::
     ld b, $1f
     call RandomModulo52
     ld c, l
     ld a, l
     and $03
     sla a
-    ld hl, ArenaMenu_RandomModulo52_Data
+    ld hl, ArenaMenu_PickPrize_RandomModulo52_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -7733,14 +7751,14 @@ ArenaMenu_RandomModulo52_2::
     ret
 
 ; data read by ArenaMenu (36 bytes) (E-0347)
-ArenaMenu_RandomModulo52_Data::
+ArenaMenu_PickPrize_RandomModulo52_Data::
     db $40, $75, $47, $75, $4e, $75, $55, $75, $40, $41, $42, $43, $44, $45, $46, $47
     db $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $5a, $5b, $5c, $5d
     db $5e, $5f, $60, $61
 
 ; Gives item prize wArg1: put in the first free inventory slot (A = 0), or, with a full inventory,
 ; 6,000 gold instead (A = 2); the item's name goes in the text buffer either way. (C1, E-0357)
-ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999::
+ArenaMenu_PickPrize_AddArg1ToGoldCapped99999_2::
     ld hl, wInventory
     ld c, $18
 
@@ -7755,24 +7773,24 @@ ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999::
     jr nz, .loop
     ld a, [wArg1]
     push af
-    call ArenaMenu_AddArg1ToGoldCapped99999
+    call ArenaMenu_PickPrize_AddArg1ToGoldCapped99999
     pop af
     ld [wArg1], a
-    call ArenaMenu_ReadFarPointerAtDEInBankB
+    call ArenaMenu_PickPrize_ReadFarPointerAtDEInBankB
     ld a, $02
     ret
 
 .read_arg1:
     ld a, [wArg1]
     ld [hl], a
-    call ArenaMenu_ReadFarPointerAtDEInBankB
+    call ArenaMenu_PickPrize_ReadFarPointerAtDEInBankB
     xor a
     ret
 
 ; Copies the name of item wArg1 (through the far pointer table in bank $08) to wTextBuf1. (C1,
 ; E-0357)
-ArenaMenu_ReadFarPointerAtDEInBankB::
-    ld de, ArenaMenu_ReadFarPointerAtDEInBankB_Data
+ArenaMenu_PickPrize_ReadFarPointerAtDEInBankB::
+    ld de, ArenaMenu_PickPrize_ReadFarPointerAtDEInBankB_Data
     ld b, $08
     call ReadFarPointerAtDEInBankB
     ld c, l
@@ -7809,7 +7827,7 @@ ArenaMenu_ReadFarPointerAtDEInBankB::
     ret
 
 ; Adds 6,000 ($1770) gold, capped at 99,999. (C1, E-0357)
-ArenaMenu_AddArg1ToGoldCapped99999::
+ArenaMenu_PickPrize_AddArg1ToGoldCapped99999::
     ld hl, $1770
     ld a, l
     ld [wArg1], a
@@ -7820,13 +7838,13 @@ ArenaMenu_AddArg1ToGoldCapped99999::
     farcall AddArg1ToGoldCapped99999
     ret
 
-; data read by ArenaMenu_RandomModulo52 (48 bytes) (E-0347)
-ArenaMenu_RandomModulo52_Data1::
+; data read by ArenaMenu_PickPrize (48 bytes) (E-0347)
+ArenaMenu_PickPrize_Data1::
     db $de, $75, $de, $75, $de, $75, $e7, $75, $f0, $75, $f9, $75, $19, $23, $2d, $37
     db $41, $4b, $5f, $64, $ff, $14, $1f, $2a, $35, $40, $4b, $5a, $64, $ff, $0f, $17
     db $1f, $27, $2f, $37, $50, $64, $ff, $0a, $15, $20, $2b, $36, $41, $50, $64, $ff
 
-ArenaMenu_RandomModulo52_Data2::
+ArenaMenu_PickPrize_Data2::
     db $0e, $76, $0e, $76, $0e, $76, $16, $76, $1e, $76, $26, $76, $01, $53, $05, $0c
     db $24, $0b, $1c, $44, $02, $18, $0f, $10, $13, $15, $45, $fe, $03, $0d, $11, $12
     db $17, $2c, $fd, $fe, $23, $2c, $0d, $0e, $17, $fd, $1e, $fe
@@ -7834,7 +7852,7 @@ ArenaMenu_RandomModulo52_Data2::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 17 x 9 tiles, one row per line
-ArenaMenu_CopyRectTo20ByteRows_Bank0C_TileRect::
+ArenaMenu_DrawClassChooser_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $aa, $c3, $aa, $a4, $a5, $a6, $a6, $c3, $c3, $e1, $e0, $e0, $bf, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7846,14 +7864,14 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 3 x 5 tiles, one row per line
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_TileRect::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_TileRect::
     db $c3, $c3, $b7 ; id 0
     db $e0, $bf, $b7 ; id 1
     db $c3, $c3, $b7 ; id 2
     db $e0, $bf, $b7 ; id 3
     db $b4, $b4, $b5 ; id 4
 
-ArenaMenu_CopyRectTo20ByteRows_Bank0C_Number24ToPackedBCD_TileRect::
+ArenaMenu_DrawClassPanel_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $aa, $c3, $aa, $a4, $a5, $a6, $a6, $c3, $e1, $e0, $e0, $e0, $bf, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7864,7 +7882,7 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_Number24ToPackedBCD_TileRect::
     db $b6, $c3, $a7, $c3, $aa, $a4, $a5, $a6, $a6, $c3, $e5, $e0, $e0, $e0, $bf, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3_TileRect::
+ArenaMenu_ClosePanelBox_TileRect::
     db $c3, $c3, $b7 ; id 0
     db $bf, $c3, $b7 ; id 1
     db $c3, $c3, $b7 ; id 2
@@ -7920,7 +7938,7 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data2::
     db $c9, $c3, $f1, $c3, $19, $c4, $41, $c4, $8d, $c3, $8f, $c3, $91, $c3, $8d, $c3
     db $8f, $c3, $91, $c3, $b5, $c3, $b7, $c3, $b9, $c3
 
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data::
+ArenaMenu_AskEnterClass_Data::
     db $64, $00, $f4, $01, $e8, $03, $88, $13, $02, $04, $08, $10
 
 ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Data::

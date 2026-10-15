@@ -736,9 +736,9 @@ DEF MSG_ALREADY_OPEN EQU $8000 ; bit 7: the box is already open (no tile fill, n
 ; what their first setter says: a talk routine's message, a scene, a script's last scene command or
 ; message before the flag is set (D-009), or else the last message the setting routine shows; a
 ; flag no code sets is named after a routine that tests it (E-0346). The rest keep their numbers.
-DEF EVENT_NEVER_SET EQU $000 ; named by reading (config/story_flags.json); used by FhuntTalkEvents_TestFlagBit_3, GameMode5_Update_NewPlayerSetup_SetFlagBit and 19 more
-DEF EVENT_IN_THE_MIDDLE_OF_THE EQU $001 ; set by GameMode5_Update_NewPlayerSetup_SetFlagBit
-DEF EVENT_SCENE_LONG_FACES_002 EQU $002 ; set by SceneLongFaces_RunMessageBoxFar_Bank0F_ScriptStartFadeAndAdvanceStep
+DEF EVENT_NEVER_SET EQU $000 ; named by reading (config/story_flags.json); used by FhuntTalkEvents_IsDisguisedAsListedMonster, GameMode5_Update_NewPlayerSetup_SetGameBegun and 19 more
+DEF EVENT_IN_THE_MIDDLE_OF_THE EQU $001 ; set by GameMode5_Update_NewPlayerSetup_SetGameBegun
+DEF EVENT_SCENE_LONG_FACES_002 EQU $002 ; set by SceneLongFaces_Fade
 DEF EVENT_SCENE_VAULT_SETTLED EQU $003 ; set by Script_You_3
 DEF EVENT_YO_DID_YOU_ENJOY EQU $004 ; set by GreatLogTalkEvents_ShowYoDidYouEnjoy
 DEF EVENT_OH_ITS_ALL_SPINNING_AROUND EQU $005 ; set by StartScriptAndSetFlag5
@@ -747,36 +747,36 @@ DEF EVENT_THANKS_FOR_COMING_BY EQU $007 ; set by Talk0046_ThanksForComingBy
 DEF EVENT_IM_PRINCE_KAMEHA_OF EQU $008 ; set by GreatLogTalkEvents_ShowImPrinceKamehaOf
 DEF EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT EQU $009 ; set by GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit
 DEF EVENT_SCENE_WARUBOU_SMELLS EQU $00A ; set by GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit, Script_WarubouWhaISmell
-DEF EVENT_SCENE_WARUBOU_FOOD2 EQU $00B ; set by SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73
+DEF EVENT_SCENE_WARUBOU_FOOD2 EQU $00B ; set by SceneWarubouFood2_SinkObject2
 DEF EVENT_SCENE_WARUBOU_FOOD2_00C EQU $00C ; set by SceneWarubouFood2_WriteScriptParam0AndStepPtrLoEtc
-DEF EVENT_DID_YOU_GET_THE_PACKAGE EQU $00D ; set by GreatLogTalkEvents_TestFlagBit
+DEF EVENT_DID_YOU_GET_THE_PACKAGE EQU $00D ; set by GreatLogTalkEvents_Mama
 DEF EVENT_LOOK_AN_ISLAND_JUST_DOESN EQU $00E ; set by Script_HahTheIsland, Script_HahTheIsland_2
 DEF EVENT_YOURE_THE_KIDS_FROM_THE EQU $00F ; set by TalkMsg003C_YoureTheKidsFromTheNew
 DEF EVENT_HELLO_THERE_YOU_MUST_BE EQU $010 ; set by TalkMsg0032_HelloThereYouMustBeThe
 DEF EVENT_HERO_RECEIVED_THE_GREAT_LOG EQU $011 ; set by Script_HeroReceivedTheGreatLog, TalkMsg003A_ThatWeirdApeThingIsWarubou
 DEF EVENT_SCENE_AT_SEA EQU $012 ; set by Script_InTheMiddleOf, Script_InTheMiddleOf_2
-DEF EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED EQU $013 ; set by GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13_2
+DEF EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED EQU $013 ; set by GreatLogTalkEvents_EditionChoice
 DEF EVENT_FOLLOWER_FACE_PLAYER EQU $014 ; set by Script_I_5, Script_I_6
 DEF EVENT_SCENE_WARUBOU_LEAVES EQU $015 ; set by Script_HehSoTheseAre
 DEF EVENT_WARUBOU_NO_THEN_FIND_SOMEONE EQU $016 ; set by Script_WarubouWaHeyGood
 DEF EVENT_HERO_RECEIVED_THE_GREAT_LOG_017 EQU $017 ; set by Script_HeroReceivedTheGreatLog
 DEF EVENT_WARUBOU_OBJECTS_GATE EQU $018 ; named by reading (config/story_flags.json); used by 
-DEF EVENT_SCRIPT_COMMAND20_TURNED EQU $019 ; named by reading (config/story_flags.json); used by ScriptCommand20_Run_SetFlagBit
+DEF EVENT_SCRIPT_COMMAND20_TURNED EQU $019 ; named by reading (config/story_flags.json); used by ScriptCommand20_Run_FaceAndSetFlag
 DEF EVENT_SCENE_OASIS_KEY EQU $01A ; set by Script_WarubouWaHeyGood_2
-DEF EVENT_SCENE_LAND_HO EQU $01B ; set by SceneLandHo_ScriptStartFadeAndAdvanceStep_SetMapId, ScriptCommand76_Run_SetFlagBit
+DEF EVENT_SCENE_LAND_HO EQU $01B ; set by SceneLandHo_WarpHome, ScriptCommand76_Run_PlaceFollower
 DEF EVENT_SCENE_RIVAL_DEFEATED EQU $01D ; set by SceneRivalDefeated_ShowWarubouWaheyTheAbility
 DEF EVENT_SCENE_SHIELD2 EQU $01E ; set by SceneShield2_ShowWarubouWaheyYouCan
 DEF EVENT_SCENE_MERMAID_KINGDOM EQU $01F ; set by SceneMermaidKingdom_ShowWarubouWaheyYouCan
-DEF EVENT_COBI_HERO_WHILE_YOURE EQU $020 ; set by RunFieldReturnPhase_OpenFieldMenuOnA
-DEF EVENT_SCENE_RIVAL_DEFEATED_021 EQU $021 ; set by SceneRivalDefeated_SetFlagBit
-DEF EVENT_SCENE_MERMAID_KINGDOM_022 EQU $022 ; set by SceneMermaidKingdom_SetFlagBit_MarkKeyEntryKindTemp0Bit6
-DEF EVENT_SCENE_SHIELD2_023 EQU $023 ; set by SceneShield2_SetFlagBit
+DEF EVENT_COBI_HERO_WHILE_YOURE EQU $020 ; set by RunFieldReturnPhase_RunReturnAction
+DEF EVENT_SCENE_RIVAL_DEFEATED_021 EQU $021 ; set by SceneRivalDefeated_GiveKey
+DEF EVENT_SCENE_MERMAID_KINGDOM_022 EQU $022 ; set by SceneMermaidKingdom_GiveKey
+DEF EVENT_SCENE_SHIELD2_023 EQU $023 ; set by SceneShield2_GiveKey
 DEF EVENT_SCENE_THREE_ITEMS EQU $024 ; set by SceneThreeItems_ShowWarubouWaheyHeroAnd
 DEF EVENT_THANKS_FOR_COMING_BY_025 EQU $025 ; set by PauseMenu_State4_CheckWorldMapState
 DEF EVENT_OH_THE_SAVIOR_OF EQU $028 ; set by Script_OhTheSaviorOf
 DEF EVENT_GIVE_MONSTER EQU $029 ; set by Script_You_8
-DEF EVENT_SCENE_LIMBO_MONSTER EQU $02A ; set by SceneLimboMonster_AddStepDeltaToPointedByte
-DEF EVENT_SCENE_LIMBO_MONSTER2 EQU $02B ; set by SceneLimboMonster2_StepObjectTowardCoord_SetFieldDrawFlags
+DEF EVENT_SCENE_LIMBO_MONSTER EQU $02A ; set by SceneLimboMonster_SpinLeft
+DEF EVENT_SCENE_LIMBO_MONSTER2 EQU $02B ; set by SceneLimboMonster2_WalkOffAndCreate
 DEF EVENT_AREN EQU $02C ; set by Script_Aren
 DEF EVENT_HELLO_OUR_YOUNG_SAVIOR EQU $02D ; set by Script_HelloOurYoungSavior
 DEF EVENT_THAT_KEY_IUSED EQU $02E ; set by Talk04CB_ThatKeyIUsed
@@ -789,21 +789,21 @@ DEF EVENT_BREEDING_FIRE_AND_ICE EQU $035 ; no setter found; tested by SetFlagsCB
 DEF EVENT_BREEDING_FIRE_AND_ICE_036 EQU $036 ; no setter found; tested by SetFlagsCBAndCCFrom35And36, Talk0B6D_BreedingFireAndIce
 DEF EVENT_SCENE_TERRY_BATTLE EQU $037 ; set by SceneTerryBattle_SetFlagBitAndStep
 DEF EVENT_SCENE_TERRY_BATTLE_038 EQU $038 ; set by SceneTerryBattle_ShowTerryWellThisProves
-DEF EVENT_SCENE_KAMEHA_KEY_BATTLE EQU $039 ; set by SceneKamehaKeyBattle_SetFlagBit
-DEF EVENT_HERO_RECEIVED_THE_ELF_KEY EQU $03A ; set by SceneKamehaKeyBattle_SetFlagBit, Script_KamehaWhatOhIt and 1 more
-DEF EVENT_SCENE_KAMEHA_KEY_BATTLE2 EQU $03B ; set by SceneKamehaKeyBattle2_SetFlagBit
-DEF EVENT_HERO_RECEIVED_THE_TRAVELER_KEY EQU $03C ; set by SceneKamehaKeyBattle2_SetFlagBit, Script_KamehaWhatOhIt_3 and 1 more
+DEF EVENT_SCENE_KAMEHA_KEY_BATTLE EQU $039 ; set by SceneKamehaKeyBattle_AfterBattle
+DEF EVENT_HERO_RECEIVED_THE_ELF_KEY EQU $03A ; set by SceneKamehaKeyBattle_AfterBattle, Script_KamehaWhatOhIt and 1 more
+DEF EVENT_SCENE_KAMEHA_KEY_BATTLE2 EQU $03B ; set by SceneKamehaKeyBattle2_AfterBattle
+DEF EVENT_HERO_RECEIVED_THE_TRAVELER_KEY EQU $03C ; set by SceneKamehaKeyBattle2_AfterBattle, Script_KamehaWhatOhIt_3 and 1 more
 DEF EVENT_DESK_KEY EQU $03D ; set by GreatLogTalkEvents_ShowHeroFoundAMagic, Script_HeroCheckedTheDesk and 1 more
 DEF EVENT_THAT_KEY_IUSED_03E EQU $03E ; set by Talk04CB_ThatKeyIUsed
-DEF EVENT_WELCOME_TO_MY_ITEM_SHOP EQU $040 ; set by KalkaTalkEvents_TestFlagBit
-DEF EVENT_THE_CHURCH_WELCOMES_YOU_WE EQU $041 ; set by KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou
+DEF EVENT_WELCOME_TO_MY_ITEM_SHOP EQU $040 ; set by KalkaTalkEvents_ItemShop
+DEF EVENT_THE_CHURCH_WELCOMES_YOU_WE EQU $041 ; set by KalkaTalkEvents_Church
 DEF EVENT_DID_YOU_SAY_YES_YES EQU $042 ; set by Script_DidYouSayYes, Script_DidYouSayYes_2 and 1 more
 DEF EVENT_SCENE_MONSTER_INSPECTION EQU $043 ; set by Script_AhThreeHealthyMonsters, Script_DidYouSayYes
 DEF EVENT_KING_YOU_WISH_TO EQU $044 ; set by Script_KingYouWishTo
 DEF EVENT_KING_THEN_MAKE_WAY_TO EQU $045 ; set by Script_KingThenMakeWay, Script_KingThenMakeWay_2
 DEF EVENT_STRONG_MONSTERS_ARE_IN_THE EQU $048 ; set by TalkMsg013D_StrongMonstersAreInTheWell
 DEF EVENT_KING_WHAT_NEVER_MIND_THEN EQU $049 ; set by Script_SoHaveYouDiscovered
-DEF EVENT_WHAT_OPEN_THE_CANAL_GATE EQU $04A ; set by KalkaTalkEvents_TestFlagBit_WhatOpenTheCanal
+DEF EVENT_WHAT_OPEN_THE_CANAL_GATE EQU $04A ; set by KalkaTalkEvents_TestFlagBit
 DEF EVENT_YOU_WILL_SO_WE_CAN EQU $053 ; set by Script_I_13
 DEF EVENT_SCENE_WATER_SOLVED EQU $054 ; set by Script_I_13
 DEF EVENT_KING_THE_TOWN EQU $055 ; set by Script_KingTheTown
@@ -811,14 +811,14 @@ DEF EVENT_SCENE_TREASURE_THEFT EQU $056 ; set by Script_KingTheTown
 DEF EVENT_CHECK_ITEM EQU $057 ; set by Script_HeroHandedOverSome
 DEF EVENT_SCENE_MONSTERS_IN_TOW EQU $058 ; set by Script_SceneMonstersInTow
 DEF EVENT_HEH_YOU_HAVE_MONSTERS_IN EQU $059 ; set by Script_HehYouHaveMonsters
-DEF EVENT_SCENE_RIVAL_DEFEATED_05A EQU $05A ; set by SceneRivalDefeated_ScriptStepBlinkObjectTemp0
-DEF EVENT_SCENE_WATER_REWARD EQU $05C ; set by SceneWaterReward_RunMessageBoxFar_Bank85
-DEF EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO EQU $05D ; set by KalkaTalkEvents_TestFlagBit_OurChurchIsImpoverished
+DEF EVENT_SCENE_RIVAL_DEFEATED_05A EQU $05A ; set by SceneRivalDefeated_BlinkOut
+DEF EVENT_SCENE_WATER_REWARD EQU $05C ; set by SceneWaterReward_Finish
+DEF EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO EQU $05D ; set by KalkaTalkEvents_Church2
 DEF EVENT_HERO_RECEIVED_THE_SAILOR_RING EQU $05E ; set by Script_WelcomeMyYoungHero
-DEF EVENT_SCENE_MERMAID_KINGDOM_05F EQU $05F ; set by SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo
-DEF EVENT_THE_BIRDS_ARE_NOISY_ITS EQU $060 ; set by YoldTalkEvents_TestFlagBit
-DEF EVENT_SCENE_WHO_ARE_YOU EQU $064 ; set by SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_SetScriptParam0
-DEF EVENT_WHO_ARE_YOU_THIS_IS EQU $065 ; set by YoldTalkEvents_TestFlagBit_WhoAreYouThis
+DEF EVENT_SCENE_MERMAID_KINGDOM_05F EQU $05F ; set by SceneMermaidKingdom_WalkPlayerLeft
+DEF EVENT_THE_BIRDS_ARE_NOISY_ITS EQU $060 ; set by YoldTalkEvents_NoisyBirds
+DEF EVENT_SCENE_WHO_ARE_YOU EQU $064 ; set by SceneWhoAreYou_KeepInStep
+DEF EVENT_WHO_ARE_YOU_THIS_IS EQU $065 ; set by YoldTalkEvents_WhoAreYou
 DEF EVENT_SCENE_WATCH_OUT EQU $066 ; set by Script_WhoAreYouThis, Script_YouCanKeepTrying
 DEF EVENT_THE_PIRATES EQU $06D ; set by Script_ItWasInMy
 DEF EVENT_SCENE_MERMAID_SONG EQU $06E ; set by SceneMermaidSong_ShowHeroReceivedATinyMedal
@@ -831,18 +831,18 @@ DEF EVENT_WHO_DISTURBS_US_IN_OUR EQU $074 ; set by YoldTalkEvents_TestFlagBit_Wh
 DEF EVENT_GIVE_ITEM_BLINK EQU $075 ; set by Script_WhoDisturbsUsIn, Script_YouSeemToNot
 DEF EVENT_SCENE_CRATE EQU $076 ; set by Script_HeroCheckedTheTreasure
 DEF EVENT_HERO_CHECKED_THE_CRATE_THERE EQU $077 ; set by YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate
-DEF EVENT_SCENE_WATCH_OUT_078 EQU $078 ; set by SceneWatchOut_RunMessageBoxFar_Bank85_RestoreScreenBufferFromBGMap1, UnreferencedScriptStepDispatch_73_ClearArg5IfAtOrAboveLimitForFarmLevel
+DEF EVENT_SCENE_WATCH_OUT_078 EQU $078 ; set by SceneWatchOut_Finish, UnreferencedScriptStepDispatch_73_MakeMonster
 DEF EVENT_THE_PIRATES_WERE_SWALLOWED_BY EQU $07A ; set by YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
-DEF EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING EQU $07B ; set by YoldTalkEvents_SetFlagBit
+DEF EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING EQU $07B ; set by YoldTalkEvents_KamehaThanks
 DEF EVENT_SCENE_CREW_FOLLOWS EQU $07C ; set by Script_KamehaUrkHowYou
-DEF EVENT_SCENE_CREW_FOLLOWS_07D EQU $07D ; set by SceneCrewFollows_StepScriptParam0Counter_Bank0F
+DEF EVENT_SCENE_CREW_FOLLOWS_07D EQU $07D ; set by SceneCrewFollows_ShakeScreen
 DEF EVENT_SCENE_KAMEHA_FLEES EQU $07E ; set by SceneKamehaFlees_SetFlagBit
-DEF EVENT_SCENE_MERMAID_KINGDOM_07F EQU $07F ; set by SceneMermaidKingdom_SetFlagBit
+DEF EVENT_SCENE_MERMAID_KINGDOM_07F EQU $07F ; set by SceneMermaidKingdom_SetFlags
 DEF EVENT_HERO_CHECKED_THE_TREASURE_CHEST EQU $080 ; set by Script_HeroCheckedTheTreasure_2
 DEF EVENT_WHAT_IS_THAT_DIRTY_MEDAL EQU $081 ; set by Script_WhatIsThatDirty
 DEF EVENT_SCENE_SPIRIT_ENVOY EQU $082 ; set by Script_AhYouAreThe
 DEF EVENT_AH_YOU_ARE_THE_SPIRIT EQU $083 ; set by Script_AhYouAreThe
-DEF EVENT_SCENE_EXPLOSION EQU $085 ; set by SceneExplosion_TestFlagBit
+DEF EVENT_SCENE_EXPLOSION EQU $085 ; set by SceneExplosion_Start
 DEF EVENT_SCENE_GOT_TO EQU $086 ; set by Script_WhatWhatWasThat, Script_WhatWhatWasThat_2
 DEF EVENT_SCENE_REPORT_TO_KING EQU $087 ; set by Script_WeReportedToThe
 DEF EVENT_AH_SAVED_AT_LAST EQU $088 ; set by NordenTalkEvents_ShowAhSavedAtLast
@@ -856,19 +856,19 @@ DEF EVENT_IAM_REAL_DONT EQU $08F ; set by NordenTalkEvents_ShowIAmRealDont
 DEF EVENT_IAM_REAL_DONT_090 EQU $090 ; set by NordenTalkEvents_ShowIAmRealDont
 DEF EVENT_IAM_REAL_DONT_091 EQU $091 ; set by NordenTalkEvents_ShowIAmRealDont
 DEF EVENT_IAM_REAL_DONT_092 EQU $092 ; set by NordenTalkEvents_ShowIAmRealDont
-DEF EVENT_SCENE_PLAN_RUINED EQU $093 ; set by ScenePlanRuined_StepScriptParam0Counter_Bank0F
+DEF EVENT_SCENE_PLAN_RUINED EQU $093 ; set by ScenePlanRuined_Wait
 DEF EVENT_SCENE_PLAN_RUINED_094 EQU $094 ; set by Script_ArrghYou, Script_ItAlmostWorkedTo
 DEF EVENT_GATHER_FOLLOWERS EQU $095 ; set by Script_HeroReadTheSign
 DEF EVENT_SCENE_CHEER_YUNA EQU $096 ; set by Script_KingMagnificentDon
 DEF EVENT_OH_AN_ENVOY_FROM_THE EQU $097 ; set by Script_ThisIsNoPlace, Script_ThisIsNoPlace_2
-DEF EVENT_SCENE_SPIRIT_ENVOY2 EQU $098 ; set by SceneSpiritEnvoy2_SetBit1AtHL_Bank73
-DEF EVENT_SCENE_SPIRIT_ENVOY2_099 EQU $099 ; set by SceneSpiritEnvoy2_SetBit1AtHL_Bank73
+DEF EVENT_SCENE_SPIRIT_ENVOY2 EQU $098 ; set by SceneSpiritEnvoy2_Float
+DEF EVENT_SCENE_SPIRIT_ENVOY2_099 EQU $099 ; set by SceneSpiritEnvoy2_Float
 DEF EVENT_GIVE_ITEM_BLINK_09A EQU $09A ; set by Script_YouStartledMeI, Script_YouStartledMeI_2 and 1 more
 DEF EVENT_YOU_WILL_THANK_YOU_LET EQU $09B ; set by Script_YouWillThankYou, Script_YouWillThankYou_3
-DEF EVENT_SCENE_PRINCESS_MEDICINE EQU $09C ; set by ScenePrincessMedicine_ScriptApplyStepDeltaAtDE
+DEF EVENT_SCENE_PRINCESS_MEDICINE EQU $09C ; set by ScenePrincessMedicine_HopObject0
 DEF EVENT_SCENE_PRINCESS_MEDICINE_09D EQU $09D ; set by ScenePrincessMedicine_ShowIveFinallyRememberedIm
 DEF EVENT_ICAME_FROM_THE_EASTERN_KINGDOM EQU $09E ; set by TalkMsg0337_ICameFromTheEasternKingdom
-DEF EVENT_HERO_CHECKED_THE_BLUE_FLOWER EQU $09F ; set by NordenTalkEvents_TestFlagBit_3
+DEF EVENT_HERO_CHECKED_THE_BLUE_FLOWER EQU $09F ; set by NordenTalkEvents_BlueFlower
 DEF EVENT_SCENE_GRAVE EQU $0A0 ; set by Script_HeroCheckedTheGrave
 DEF EVENT_SCENE_MADCONDOR EQU $0A4 ; set by Script_Kweeeeh
 DEF EVENT_SCENE_GRAVE_0A5 EQU $0A5 ; set by SceneGrave_ShowAhYoullDoIt
@@ -879,19 +879,19 @@ DEF EVENT_WHEN_IPASSED_TOO EQU $0A9 ; set by FhuntTalkEvents_ShowWhenIPassedToo
 DEF EVENT_YOU_CAN_TAKE_THIS_TREASURE EQU $0AD ; set by Script_YouCanTakeThis
 DEF EVENT_HEH_YOU EQU $0AE ; set by Script_I_16, Script_YouCanTakeThis
 DEF EVENT_SCENE_JUSTICE EQU $0B0 ; set by SceneJustice
-DEF EVENT_SCENE_GRAVESTONE EQU $0B1 ; set by SceneGravestone_ScriptStepBlinkObjectTemp0
+DEF EVENT_SCENE_GRAVESTONE EQU $0B1 ; set by SceneGravestone_Open
 DEF EVENT_SET_FLAG_322 EQU $0B2 ; set by Script_ADoorOpenedSomewhere
 DEF EVENT_YOU_OVERCAME_THE_TRAPS_I EQU $0B3 ; set by Script_YouOvercameTheTraps
 DEF EVENT_SCENE_BEATEN_FAIRLY EQU $0B4 ; set by Script_WahahahahHereAgainAre, Script_YouOvercameTheTraps
 DEF EVENT_WHAT_YOU_HAVE_THE_THREE EQU $0B6 ; set by Script_WhatYouHaveThe
-DEF EVENT_WHAT_YOU_HAVE_THE_THREE_0B7 EQU $0B7 ; set by FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_2
+DEF EVENT_WHAT_YOU_HAVE_THE_THREE_0B7 EQU $0B7 ; set by FhuntTalkEvents_SoldierThreeItems2
 DEF EVENT_SCENE_FOUND_ME EQU $0B8 ; set by Script_I_17
 DEF EVENT_FOUND_ME_FOE_SCREEN0 EQU $0B9 ; named by reading (config/story_flags.json); used by 
 DEF EVENT_FOUND_ME_FOE_SCREEN1 EQU $0BA ; named by reading (config/story_flags.json); used by 
 DEF EVENT_FOUND_ME_FOE_SCREEN2 EQU $0BB ; named by reading (config/story_flags.json); used by 
 DEF EVENT_GOOD_YOU_HAVE_BROUGHT_THE EQU $0C0 ; set by Script_AhSoGoodOf
 DEF EVENT_SCENE_THREE_ITEMS_BATTLE EQU $0C1 ; set by Script_AhSoGoodOf, Script_FwahahahaDon
-DEF EVENT_SCENE_THREE_ITEMS_0C2 EQU $0C2 ; set by SceneThreeItems_SetFlagBit
+DEF EVENT_SCENE_THREE_ITEMS_0C2 EQU $0C2 ; set by SceneThreeItems_SetFlags
 DEF EVENT_SCENE_THREE_ITEMS_0C3 EQU $0C3 ; set by SceneThreeItems_ShowWarubouWaheyThereIs
 DEF EVENT_MAP_7A_OBJECT_ADDED EQU $0C4 ; named by reading (config/story_flags.json); used by Script_Sound
 DEF EVENT_SCENE_BEATEN_FAIRLY_0C5 EQU $0C5 ; set by Script_WahahahahHereAgainAre, Script_YouOvercameTheTraps
@@ -902,10 +902,10 @@ DEF EVENT_MAP_17_OBJECT_REMOVED EQU $0C9 ; set by SetFlagsC9AndCAFrom32And33
 DEF EVENT_MAP_17_OBJECT_REMOVED_0CA EQU $0CA ; set by SetFlagsC9AndCAFrom32And33
 DEF EVENT_MAP_04_OBJECT_REMOVED EQU $0CB ; set by SetFlagsCBAndCCFrom35And36
 DEF EVENT_MAP_04_OBJECT_REMOVED_0CC EQU $0CC ; set by SetFlagsCBAndCCFrom35And36
-DEF EVENT_THE_WAY_YOU_SAVED_GREAT EQU $0CD ; set by GreatLogTalkEvents_TestFlagBit_DidYouKnowThat
+DEF EVENT_THE_WAY_YOU_SAVED_GREAT EQU $0CD ; set by GreatLogTalkEvents_DidYouKnow
 DEF EVENT_THE_KING_IS_TOO_LENIENT EQU $0CE ; set by TalkMsg0035_TheKingIsTooLenientOn
 DEF EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR EQU $0D0 ; set by Script_DarckFawahahahYouChased
-DEF EVENT_SCENE_DARCK_DEFEATED EQU $0D1 ; set by SceneDarckDefeated_ScriptStepBlinkObjectTemp0
+DEF EVENT_SCENE_DARCK_DEFEATED EQU $0D1 ; set by SceneDarckDefeated_BlinkOut
 DEF EVENT_TAKE_ITEM EQU $0D2 ; set by Script_SurprisinglyObedientAreYou
 DEF EVENT_SCENE_DARCK_TAUNT EQU $0D3 ; set by Script_SurprisinglyObedientAreYou, Script_YouSeemToStill
 DEF EVENT_MAP_D6_OBJECT_REMOVED EQU $0D5 ; no setter found; tested by ObjSelector_MapD6_1
@@ -920,23 +920,23 @@ DEF EVENT_IT_SEEMS_TO_ME_THAT EQU $100 ; set by TalkMsg0016_ItSeemsToMeThatThe
 DEF EVENT_IT_SEEMS_TO_ME_THAT_101 EQU $101 ; set by TalkMsg0016_ItSeemsToMeThatThe
 DEF EVENT_COBI_HI_I EQU $102 ; set by Script_CobiHiI, Script_TaraI
 DEF EVENT_OH_HI_GOOD_TO EQU $103 ; set by Script_OhHiGoodTo
-DEF EVENT_YOUVE_BEEN_GOING_OUT_A EQU $104 ; set by GreatLogTalkEvents_TestFlagBit_2
+DEF EVENT_YOUVE_BEEN_GOING_OUT_A EQU $104 ; set by GreatLogTalkEvents_Mama_TestFlagBit
 DEF EVENT_COBI_HERO_WHAT_WAS EQU $105 ; set by Script_CobiHeroWhatWas, Script_TaraBigBrotherHave
 DEF EVENT_THE_KING_IS_TOO_LENIENT_106 EQU $106 ; set by TalkMsg0035_TheKingIsTooLenientOn
-DEF EVENT_TAKE_THIS_SLIDE_AS_A EQU $107 ; set by GreatLogTalkEvents_TestFlagBit_TakeThisSlideAs
+DEF EVENT_TAKE_THIS_SLIDE_AS_A EQU $107 ; set by GreatLogTalkEvents_Slide
 DEF EVENT_WELCOME_TO_THE_LIBRARY EQU $108 ; set by Script_WelcomeToTheLibrary
 DEF EVENT_COBI_HERO_WHAT_WAS_109 EQU $109 ; set by Script_CobiHeroWhatWas_2, Script_TaraBigBrotherTell
-DEF EVENT_HELLO_HERO_WELCOME_THIS_IS EQU $10A ; set by GreatLogTalkEvents_TestFlagBit_HelloHeroWelcomeThis
+DEF EVENT_HELLO_HERO_WELCOME_THIS_IS EQU $10A ; set by GreatLogTalkEvents_TestFlagBit
 DEF EVENT_THAT_WEIRD_APE_THING_IS EQU $10B ; set by TalkMsg003A_ThatWeirdApeThingIsWarubou
-DEF EVENT_I_LOST_AGAIN_I_NEED EQU $10D ; no setter found; tested by GreatLogTalkEvents_SaveScreenBufferToBGMap1
-DEF EVENT_WHEN_YOU_BREED_THE_OFFSPRING EQU $10E ; named by reading (config/story_flags.json); used by GreatLogTalkEvents_SaveScreenBufferToBGMap1
+DEF EVENT_I_LOST_AGAIN_I_NEED EQU $10D ; no setter found; tested by GreatLogTalkEvents_Breeder
+DEF EVENT_WHEN_YOU_BREED_THE_OFFSPRING EQU $10E ; named by reading (config/story_flags.json); used by GreatLogTalkEvents_Breeder
 DEF EVENT_UM_I EQU $10F ; set by Script_UmI
 DEF EVENT_WELCOME_TO_THE_STARRY_SHRINE EQU $110 ; set by Script_WelcomeToTheStarry
-DEF EVENT_WELCOME_IM_THE_CHRISTENER_I EQU $111 ; set by GreatLogTalkEvents_TestFlagBit_WelcomeI
+DEF EVENT_WELCOME_IM_THE_CHRISTENER_I EQU $111 ; set by GreatLogTalkEvents_Christener
 DEF EVENT_YOU_CAN_CALL_ME EQU $112 ; set by Script_YouCanCallMe
 DEF EVENT_YOU EQU $113 ; set by Script_You_7
 DEF EVENT_COBI_HERO_WHAT_WAS_115 EQU $115 ; set by Script_CobiHeroWhatWas_3, Script_TaraBigBrotherTell_2
-DEF EVENT_ARMY_ANT_HELPED_ME_GET EQU $116 ; set by GreatLogTalkEvents_TestFlagBit_SetFlagBit
+DEF EVENT_ARMY_ANT_HELPED_ME_GET EQU $116 ; set by GreatLogTalkEvents_Shopkeeper
 DEF EVENT_WHAT EQU $117 ; set by Script_IfTheIslandSink, Script_What and 2 more
 DEF EVENT_BREEDING_COULD_RESULT_IN EQU $118 ; no setter found; tested by Talk0A49_BreedingCouldResultIn
 DEF EVENT_IF_YOU_GET_AN EQU $11A ; no setter found; tested by Talk04BA_IfYouGetAn
@@ -953,11 +953,11 @@ DEF EVENT_SCENE_STRONGEST_MASTER EQU $12B ; set by Script_SceneStrongestMaster
 DEF EVENT_THAT_WEIRD_APE_THING_IS_12C EQU $12C ; set by Script_I_12
 DEF EVENT_SCENE_MASTER_THANKS EQU $12D ; set by Script_RReallyWowThank
 DEF EVENT_HERO_RECEIVED_A_LIFE_ACORN EQU $12E ; set by Script_I_9
-DEF EVENT_WARUBOU_WA_HEY_THIS_TIME EQU $12F ; set by ArenaMenu_SetFlagBit
+DEF EVENT_WARUBOU_WA_HEY_THIS_TIME EQU $12F ; set by ArenaMenu_GiveRankReward
 DEF EVENT_COBI_HERO_IENVIED EQU $131 ; set by Script_CobiHeroIEnvied, Script_TaraHeroIWas
-DEF EVENT_I_WANT_TO_OPEN_UP EQU $133 ; set by GreatLogTalkEvents_TestFlagBit_SetFlagBit
+DEF EVENT_I_WANT_TO_OPEN_UP EQU $133 ; set by GreatLogTalkEvents_Shopkeeper
 DEF EVENT_REWARD_ITEM_OR_KEY_2 EQU $134 ; set by Script_FantasticICanOpen, Script_FantasticICanOpen_2 and 1 more
-DEF EVENT_WARUBOU_WA_HEY_FIND_ANOTHER EQU $135 ; set by RewardItemOrKey2_TestFlagBit_SetScriptStartRequest, RewardItemOrKey_TestFlagBit_SetScriptStartRequest
+DEF EVENT_WARUBOU_WA_HEY_FIND_ANOTHER EQU $135 ; set by RewardItemOrKey2_GiveReward, RewardItemOrKey_GiveReward
 DEF EVENT_MONSTERS_LOOK_SO_FRIGHTENING EQU $136 ; no setter found; tested by TalkMsg0A6B_MonstersLookSoFrightening
 DEF EVENT_PRINCE_KAMEHA_HAS_BEEN EQU $138 ; set by Script_PrinceKamehaHasBeen_2
 DEF EVENT_SCENE_LIMBO EQU $13B ; set by Script_WarubouWaHeyTake_2
@@ -966,7 +966,7 @@ DEF EVENT_YOURE_AHUMAN_HOW EQU $141 ; set by ElvenVillageTalkEvents_ShowYoureAHu
 DEF EVENT_ARE_YOU_MAYBE_A EQU $142 ; set by Script_AreYouMaybeA
 DEF EVENT_CYAL_YAY_YOU EQU $143 ; set by Script_SoCyalTookA
 DEF EVENT_WELL_WELL_IT_IS EQU $144 ; set by ElvenVillageTalkEvents_ShowWellWellItIs
-DEF EVENT_YOURE_AHUMAN_HOW_145 EQU $145 ; set by ElvenVillageTalkEvents_ShowYoureAHumanHow, ElvenVillageTalkEvents_TestFlagBit_AreYouMaybeA
+DEF EVENT_YOURE_AHUMAN_HOW_145 EQU $145 ; set by ElvenVillageTalkEvents_Cyal, ElvenVillageTalkEvents_ShowYoureAHumanHow
 DEF EVENT_SCENE_ROLT_ELDER EQU $146 ; set by Script_I_18, Script_WellWellAHuman
 DEF EVENT_CYAL_LISTEN_HERO_WE_SHOULD EQU $147 ; set by Script_CyalListenHeroWe
 DEF EVENT_CYAL_EEEK_HERO_HELP_ME EQU $148 ; set by Script_CyalOhHeroI
@@ -979,20 +979,20 @@ DEF EVENT_THIS_IS_ELVENS_LOOKOUT_POST EQU $14E ; set by TalkMsg072F_ThisIsElvens
 DEF EVENT_SCENE_GIVE_BACK_CYAL EQU $14F ; set by Script_RoltI
 DEF EVENT_THE_HUMAN_IN_THE_FOREST EQU $150 ; set by ElvenVillageTalkEvents_TestFlagBit_TheHumanInThe
 DEF EVENT_KEY_BOSS_BEATEN EQU $151 ; set by Script_TheHumanInThe, Script_WhatYouAgainRude
-DEF EVENT_CYAL_I_HOPE_YOULL_STAY EQU $152 ; set by ElvenVillageTalkEvents_TestFlagBit_AreYouMaybeA
+DEF EVENT_CYAL_I_HOPE_YOULL_STAY EQU $152 ; set by ElvenVillageTalkEvents_Cyal
 DEF EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR EQU $159 ; set by Script_HohAhExcuseMy
 DEF EVENT_KIRAL_OH_FOOLISH_OF_ME EQU $15A ; set by Script_KiralHohohGrandGrand, Script_KiralHohohGrandGrand_2
 DEF EVENT_HERO_PEERED_INTO_THE_BARREL EQU $15D ; set by Script_HeroPeeredIntoThe_2
 DEF EVENT_HERO_PEERED_INTO_THE_BARREL_15E EQU $15E ; set by Script_HeroPeeredIntoThe_3
-DEF EVENT_KIRAL_FETCH_ME_MY EQU $15F ; no setter found; tested by SceneBarrel_TestFlagBit, Talk075F_KiralFetchMeMy and 1 more
-DEF EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY EQU $160 ; no setter found; tested by SceneBarrel_TestFlagBit, Talk078E_RobosterStoppedMovingEntirely
-DEF EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY_161 EQU $161 ; no setter found; tested by SceneBarrel_TestFlagBit, Talk078E_RobosterStoppedMovingEntirely
+DEF EVENT_KIRAL_FETCH_ME_MY EQU $15F ; no setter found; tested by SceneBarrel_CountBarrel, Talk075F_KiralFetchMeMy and 1 more
+DEF EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY EQU $160 ; no setter found; tested by SceneBarrel_CountBarrel, Talk078E_RobosterStoppedMovingEntirely
+DEF EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY_161 EQU $161 ; no setter found; tested by SceneBarrel_CountBarrel, Talk078E_RobosterStoppedMovingEntirely
 DEF EVENT_KIRAL_PLEASE_GO_STOP_HIM EQU $162 ; set by Script_KiralAhBackThe
-DEF EVENT_SCENE_BARREL EQU $163 ; set by SceneBarrel_SetFlagBit
+DEF EVENT_SCENE_BARREL EQU $163 ; set by SceneBarrel_SetBarrelFlag
 DEF EVENT_HERO_PEERED_INTO_THE EQU $164 ; set by Talk077B_HeroPeeredIntoThe
 DEF EVENT_SCENE_WIZSTONE EQU $165 ; set by Script_KiralAhBackIs
 DEF EVENT_KIRAL_FETCH_ME_MY_166 EQU $166 ; set by Talk075F_KiralFetchMeMy
-DEF EVENT_KIRAL_FETCH_ME_MY_167 EQU $167 ; set by RunMenuStateMenuState_InitSoundHardware
+DEF EVENT_KIRAL_FETCH_ME_MY_167 EQU $167 ; set by WarpEffect_Warp
 DEF EVENT_KIRAL_FETCH_ME_MY_168 EQU $168 ; set by Talk075F_KiralFetchMeMy
 DEF EVENT_MAP_CD_OBJECT_REMOVED EQU $16A ; no setter found; tested by ObjSelector_MapCD_1
 DEF EVENT_MAP_CE_OBJECT_REMOVED EQU $16E ; no setter found; tested by ObjSelector_MapCE_1, Talk0C17
@@ -1000,17 +1000,17 @@ DEF EVENT_THIS_IS_THE_BAFFLE EQU $173 ; set by ElvenVillageTalkEvents_ShowThisIs
 DEF EVENT_MAP_D3_OBJECT_REMOVED EQU $174 ; no setter found; tested by ObjSelector_MapD3_1
 DEF EVENT_MAP_D4_OBJECT_REMOVED EQU $178 ; no setter found; tested by ObjSelector_MapD4_1
 DEF EVENT_MAP_D5_OBJECT_REMOVED EQU $17C ; no setter found; tested by ObjSelector_MapD5_1
-DEF EVENT_YOUVE_BEEN_GOING_OUT_A_180 EQU $180 ; set by GreatLogTalkEvents_TestFlagBit_2
-DEF EVENT_OH_YOU_BOUGHT_THE_LOVE EQU $181 ; set by GreatLogTalkEvents_TestFlagBit_2
-DEF EVENT_ILL_GET_YOU_TO_RUN EQU $182 ; set by GreatLogTalkEvents_TestFlagBit_2
+DEF EVENT_YOUVE_BEEN_GOING_OUT_A_180 EQU $180 ; set by GreatLogTalkEvents_Mama_TestFlagBit
+DEF EVENT_OH_YOU_BOUGHT_THE_LOVE EQU $181 ; set by GreatLogTalkEvents_Mama_TestFlagBit
+DEF EVENT_ILL_GET_YOU_TO_RUN EQU $182 ; set by GreatLogTalkEvents_Mama_TestFlagBit
 DEF EVENT_MAMA_HANDED_OVER_400_G EQU $183 ; set by Script_MyWhatHasGotten
 DEF EVENT_HERO_HANDED_OVER_THE_POTION EQU $184 ; set by Script_OhYou_2
 DEF EVENT_MAMA_HANDED_OVER_600_G EQU $185 ; set by Script_WellCouldYouGo
 DEF EVENT_HERO_HANDED_OVER_THE_RIB EQU $186 ; set by Script_OhYou_4
 DEF EVENT_WHAT_YOU_DON EQU $187 ; set by Script_You_9
-DEF EVENT_ARENA_RANK1_KEY_GIVEN EQU $188 ; named by reading (config/story_flags.json); used by ArenaMenu_SetFlagBit
+DEF EVENT_ARENA_RANK1_KEY_GIVEN EQU $188 ; named by reading (config/story_flags.json); used by ArenaMenu_GiveRankReward
 DEF EVENT_WELCOME_TO_THE_ARENA EQU $189 ; set by Script_WelcomeToTheArena_2
-DEF EVENT_HERO_YOU_WERE_SO_BUSY EQU $18A ; set by GreatLogTalkEvents_TestFlagBit
+DEF EVENT_HERO_YOU_WERE_SO_BUSY EQU $18A ; set by GreatLogTalkEvents_Mama
 DEF EVENT_MAMA_HANDED_OVER_1_200 EQU $18B ; set by Script_TheFarmThatYour, Script_TheFarmThatYour_2
 DEF EVENT_HERO_HANDED_OVER_THE_SIRLOIN EQU $18C ; set by Script_TheyDidn
 DEF EVENT_BEAVERN_HELPED_PUT_UP EQU $190 ; set by Script_BeavernHelpedPutUp
@@ -1028,10 +1028,10 @@ DEF EVENT_KING_YOU_WILL_I_KNEW_19B EQU $19B ; set by Script_KingYouWillI_4
 DEF EVENT_KING_IF_YOU_SEE_19C EQU $19C ; no setter found; tested by TalkMsg0A3C_KingIfYouSee, TalkMsg0A3E_YoureFreeToGo and 1 more
 DEF EVENT_HERO_RECEIVED_40_000_G EQU $19D ; set by Script_KingAhYou_4
 DEF EVENT_WELCOME_TO_THE_LIBRARY_19E EQU $19E ; set by Script_WelcomeToTheLibrary_3
-DEF EVENT_STAFF_ROLL_PARTY_SAVED EQU $19F ; named by reading (config/story_flags.json); used by DebugStaffRoll_Update_2
-DEF EVENT_WARUBOU_WA_HEY_HERO_YOURE EQU $1A0 ; set by GreatLogTalkEvents_TestFlagBit_3
-DEF EVENT_WARUBOU_WA_HEY_HERO_TOO EQU $1A1 ; set by GreatLogTalkEvents_TestFlagBit_3
-DEF EVENT_WARUBOU_WA_HEY_HERO_YOU EQU $1A2 ; set by GreatLogTalkEvents_TestFlagBit_3
+DEF EVENT_STAFF_ROLL_PARTY_SAVED EQU $19F ; named by reading (config/story_flags.json); used by DebugStaffRoll_Credits_WriteWorkBufAndMapIdEtc
+DEF EVENT_WARUBOU_WA_HEY_HERO_YOURE EQU $1A0 ; set by GreatLogTalkEvents_WarubouInCastle
+DEF EVENT_WARUBOU_WA_HEY_HERO_TOO EQU $1A1 ; set by GreatLogTalkEvents_WarubouInCastle
+DEF EVENT_WARUBOU_WA_HEY_HERO_YOU EQU $1A2 ; set by GreatLogTalkEvents_WarubouInCastle
 DEF EVENT_REWARD_ITEM_OR_KEY_1A3 EQU $1A3 ; set by Script_GreatHeroThanksA_2
 DEF EVENT_HERO_RECEIVED_A_TINY_MEDAL EQU $1A4 ; set by Script_Here_3
 DEF EVENT_REWARD_ITEM_OR_KEY_2_1A5 EQU $1A5 ; set by Script_FantasticICanOpen_2
@@ -1058,7 +1058,7 @@ DEF EVENT_SCENE_MILAYOU_FOREST EQU $1C1 ; set by Script_MilayouIThoughtThis
 DEF EVENT_WHAT_IS_IT_YOU EQU $1C2 ; set by Script_WhatIsItYou
 DEF EVENT_KEY_BOSS_BEATEN_2 EQU $1C3 ; set by Script_WhatIsItYou, Script_WhatIsItYou_2
 DEF EVENT_MILAYOU_HOW_DO_I_KNOW EQU $1C4 ; set by Script_MilayouIAskedFor
-DEF EVENT_MILAYOU_IEBEEN EQU $1C5 ; set by RunMenuStateMenuState_InitSoundHardware
+DEF EVENT_MILAYOU_IEBEEN EQU $1C5 ; set by WarpEffect_Warp
 DEF EVENT_MILAYOU_IKNEW_YOU EQU $1C6 ; set by Script_MilayouIKnewYou
 DEF EVENT_MILAYOU_I_LOST_BUT_GOOD EQU $1C7 ; set by Script_MilayouGreatNoHolding, Script_MilayouGreatNoHolding_2
 DEF EVENT_THIS_IS_THE_POWER EQU $1D3 ; set by ElvenVillageTalkEvents_ShowThisIsThePower
@@ -1075,14 +1075,14 @@ DEF EVENT_SCENE_MEDICINE_GIVEN EQU $1F1 ; set by Script_PardonMeYouHave
 DEF EVENT_MAP_DF_OBJECT_REMOVED EQU $1F2 ; no setter found; tested by ObjSelector_MapDF_1
 DEF EVENT_MAP_E0_OBJECT_REMOVED EQU $1F6 ; no setter found; tested by ObjSelector_MapE0_1, Talk0C47
 DEF EVENT_FOUND_ME_FOE_MAP96 EQU $201 ; named by reading (config/story_flags.json); used by 
-DEF EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202 EQU $202 ; set by YoldTalkEvents_TestFlagBit_OurChurchIsImpoverished
+DEF EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202 EQU $202 ; set by YoldTalkEvents_Church
 DEF EVENT_KEY_BOSS_BEATEN_203 EQU $203 ; set by Script_TheHumanInThe, Script_WhatYouAgainRude
 DEF EVENT_SCENE_WIZSTONE_204 EQU $204 ; set by Script_KiralAhBackIs
 DEF EVENT_KEY_BOSS_BEATEN_2_205 EQU $205 ; set by Script_WhatIsItYou, Script_WhatIsItYou_2
 DEF EVENT_SCENE_CHEST_BATTLE EQU $206 ; set by SceneChestBattle_WriteTemp0AndScriptStep
 DEF EVENT_SCENE_CHEST_BATTLE_207 EQU $207 ; set by SceneChestBattle_WriteTemp0AndScriptStep
 DEF EVENT_SCENE_CHEST_BATTLE_208 EQU $208 ; set by SceneChestBattle_WriteTemp0AndScriptStep
-DEF EVENT_HM_YOURE_FROM_THE_VILLAGE EQU $209 ; set by FhuntTalkEvents_TestFlagBit_2
+DEF EVENT_HM_YOURE_FROM_THE_VILLAGE EQU $209 ; set by FhuntTalkEvents_Sleeper
 
 ; Bits of a battle slot's status bytes wBattleStatus ... wBattleStatus8 (config/battle_status.json, D-009):
 ; 'forced' = tools/status_check.py set the bit in a debug battle and the texts appeared (E-0339);

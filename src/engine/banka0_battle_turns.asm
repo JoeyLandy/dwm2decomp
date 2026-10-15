@@ -2376,17 +2376,17 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetLinkSendByte
     dw RunBattlePhaseWhenTextIdle_A0_SetBattleStep
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_2
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_BeginStringDisplay_Bank07
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetUpFoes
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowIntroText
     dw RunBattlePhaseWhenTextIdle_A0_ShowTheFirstMonsterIs
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_2
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadPicture
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawPicture
     dw RunBattlePhaseWhenTextIdle_A0_ShowTheSecondMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep
     dw RunBattlePhaseWhenTextIdle_A0_WriteBattleStepAndTemp0
     dw RunBattlePhaseWhenTextIdle_A0_ShowTheThirdMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_SetBGPaletteUploadRequest
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_3
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawThirdPicture
     dw RunBattlePhaseWhenTextIdle_A0_ShowPleaseWait
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetBattleStep
 
@@ -2499,7 +2499,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_2::
 ; Introduction, step 6: sets up the foes: with wScreenCountPlusOne 2 two foes (encounter kind 1)
 ; from backed-up battler records; otherwise three wild monsters (encounter kind 2) at the computed
 ; wild level. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetUpFoes::
     call InitBattleSlotsForFoeCount
     ld a, [wScreenCountPlusOne]
     cp $02
@@ -2527,7 +2527,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount::
     ret
 
 ; Introduction, step 7: after the fade shows string wScreenCountPlusOne of category 6. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_BeginStringDisplay_Bank07::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowIntroText::
     ld a, [wFadeState]
     or a
     ret nz
@@ -2562,7 +2562,7 @@ RunBattlePhaseWhenTextIdle_A0_ShowTheFirstMonsterIs::
     ret
 
 ; Introduction, step 9: loads the first monster's picture into VRAM $9140 (palette 1). (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadPicture::
     ld a, [wIsCGB]
     or a
     jr z, .read_battle_picture_ids
@@ -2588,7 +2588,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes::
 
 ; Introduction, step 10: draws the first picture's 6 x 6 tiles (at column 1, or 4 with two foes)
 ; with its attributes on the GBC. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_2::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawPicture::
     ld hl, vBGMap0 + $e1
     ld a, [wScreenCountPlusOne]
     cp $02
@@ -2733,7 +2733,7 @@ RunBattlePhaseWhenTextIdle_A0_SetBGPaletteUploadRequest::
     ret
 
 ; Introduction, step 16: draws the third picture at column 13. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_3::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawThirdPicture::
     ld d, $5c
     ld hl, vBGMap0 + $ed
     call RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc
@@ -2849,7 +2849,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink::
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_SetLinkSendByte
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_2
-    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_AddAx9ToHL
+    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_CountTurns
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_ReadSTAT
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WriteVBK
@@ -2915,7 +2915,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_2::
 ; Round end, step 3: adds the turns (wBattleTurn + 1) to the total in wLinkRuleTurnLimit (at most
 ; 99); when both slots are out or paralyzed (status bit 6) plays music 2 and goes to the next phase;
 ; otherwise shows string wScreenCountPlusOne + 6 of category 6. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_SyncLink_AddAx9ToHL::
+RunBattlePhaseWhenTextIdle_A0_SyncLink_CountTurns::
     ld a, [wBattleTurn]
     inc a
     ld b, a
@@ -3165,13 +3165,13 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
     ld a, [wBattleStep]
     jumptable
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRectAndWriteDATiles
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_FillTilesRequest
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1_2
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Save
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Blank
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowHeadings
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawResults
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyToBGMap
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowStatChange
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowStatsFalling
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut
@@ -3270,7 +3270,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01::
 
 ; The results, step 1: backs up and saves (RunBackupAndSaveSteps, then SaveGameToSRAMWithChecksum)
 ; and shows string $0F + the result of category 5. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Save::
     farcall RunBackupAndSaveSteps
     ld a, [wSaveStep]
     bit 7, a
@@ -3287,7 +3287,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps::
     ret
 
 ; The results, step 2: after the text blanks the screen buffer and the BG map. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Blank::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -3303,7 +3303,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0::
 
 ; The results, step 3: shows the results headings (string 3 of category 1, 44 x 1 at VRAM $9700) and
 ; the rank letters 'GFEDCBAS' (string 5, at $9200). (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowHeadings::
     ld hl, vTiles1 + $700
     ld a, l
     ld [wTextWindowTileLo], a
@@ -3341,10 +3341,10 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
 ; The results, step 4: draws the frame, the result's label tiles, the wild level, the turn total,
 ; wWildBand, the rank letter (wEncounterClass + $20) and three two-digit rows from wKeyNameBuf. (C1,
 ; E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRectAndWriteDATiles::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawResults::
     call DrawRectAndWriteDATiles
     ld a, [wBattleResultStep]
-    ld hl, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Data
+    ld hl, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawResults_Data
     add a
     add_a_to_hl
     ld e, [hl]
@@ -3457,14 +3457,13 @@ WriteTwoDigitsFromDEStepRow::
     ld h, a
     ret
 
-; data read by RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRectAndWriteDATiles (8 bytes)
-; (E-0347)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Data::
+; data read by RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawResults (8 bytes) (E-0347)
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawResults_Data::
     db $04, $f7, $04, $0e, $04, $12, $04, $16
 
 ; The results, step 5: copies the screen to the BG map, clears the text tiles and copies record A's
 ; name into wTextBuf0. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_FillTilesRequest::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyToBGMap::
     ld hl, vBGMap0
     call CopyScreenTileBufferToVRAM_A0
     ld hl, vTiles1
@@ -3483,7 +3482,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_FillTi
 ; The results, step 6: with one stat change (wWorkBuf + 9 not $FF) shows it (string $14 for results
 ; 0-1, $15 otherwise, with the stat's name and the amount at wWorkBuf + $0A) and skips step 7;
 ; otherwise goes straight to step 7. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowStatChange::
     ld a, [wWorkBuf + $9]
     cp $ff
     jr nz, .call_copy_f0_string_from_table_to_text_buf1
@@ -3515,7 +3514,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1::
 
 ; The results, step 7: after the text shows the six stats falling in turn ('<name>'s <stat> fell by
 ; <n>.', string $15, amounts from wWorkBuf + $0A). (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1_2::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowStatsFalling::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -3903,7 +3902,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut::
     ld a, [wBattleSubPhase]
     jumptable
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_StartPaletteFade
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_Finish
 
 ; The results' end, sub-step 0: after the text sends 1. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags::
@@ -3918,7 +3917,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags::
 
 ; The results' end, sub-step 1: on the partner's 1 starts fade 4, switches to game mode 5, state 1
 ; and clears the link state. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_StartPaletteFade::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_Finish::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -4593,16 +4592,16 @@ RunBattleSetup_BankA0::
     dw RunBattleSetup_BankA0_EntrySelect
     dw RunBattleSetup_BankA0_CommandMenu
     dw RunBattleSetup_BankA0_Return
-    dw RunBattleSetup_BankA0_ClearAndLayoutTileBlocksForBattleFoeCount
+    dw RunBattleSetup_BankA0_MarkSlotsToAct
     dw RunBattleSetup_BankA0_ShowSelectingHeroSMove
-    dw RunBattleSetup_BankA0_AdvanceRandom
+    dw RunBattleSetup_BankA0_PackChoice
     dw RunBattleSetup_BankA0_WaitLinkMessage
     dw RunBattleSetup_BankA0_SetBattleSubPhase
     dw RunBattleSetup_BankA0_WaitLinkMessage_SetLinkSendByte
     dw RunBattleSetup_BankA0_WriteLinkSendByteAndCounterPtr0Lo
     dw RunBattleSetup_BankA0_WriteCounterPtr0HiAndLinkSendByte
     dw RunBattleSetup_BankA0_WriteLinkSendByteAndBattleSubPhase
-    dw RunBattleSetup_BankA0_FillTilesFromRequest
+    dw RunBattleSetup_BankA0_ClearWindow
 
 ; by wBattleResolveStep: lays out the tile blocks for the foe count and moves a selection over
 ; entries, setting or clearing bit 6 and the entry tile (SetBit6AndBlankEntryTile_BankA0,
@@ -4610,18 +4609,18 @@ RunBattleSetup_BankA0::
 RunBattleSetup_BankA0_EntrySelect::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount
+    dw RunBattleSetup_BankA0_EntrySelect_ShowChoices
     dw RunBattleSetup_BankA0_EntrySelect_AdvanceBattleResolveStep
-    dw RunBattleSetup_BankA0_EntrySelect_2
+    dw RunBattleSetup_BankA0_EntrySelect_Cursor
     dw RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0AndStep
     dw RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc
     dw RunBattleSetup_BankA0_CopyRectRecordToScreenBufferAndStep
     dw RunBattleSetup_BankA0_ToBeginStringDisplay_Bank2FAndStep
-    dw RunBattleSetup_BankA0_EntrySelect_3
+    dw RunBattleSetup_BankA0_EntrySelect_Redraw
 
 ; Choosing what to do, step 0: sets side control bit 7 on slots 0-3, lays out the screen, shows the
 ; choices (string 0 of category 2, 7 x 1 at VRAM $96D0) and draws the record frame. (C1, E-0357)
-RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount::
+RunBattleSetup_BankA0_EntrySelect_ShowChoices::
     ld hl, wSideControl
     set 7, [hl]
     inc hl
@@ -4666,10 +4665,10 @@ RunBattleSetup_BankA0_EntrySelect_AdvanceBattleResolveStep::
 
 ; Choosing what to do, step 2: moves the cursor; A (sound $69) clears the menu bytes, lays out the
 ; screen and goes on. (C1, E-0357)
-RunBattleSetup_BankA0_EntrySelect_2::
+RunBattleSetup_BankA0_EntrySelect_Cursor::
     ld de, RunBattleSetup_BankA0_EntrySelect_Data
     ld hl, wMenuState
-    call RunBattleSetup_BankA0_EntrySelect_SetBit6AndBlankEntryTile_BankA0
+    call RunBattleSetup_BankA0_EntrySelect_Cursor_SetBit6AndBlankEntryTile_BankA0
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .return
@@ -4788,7 +4787,7 @@ RunBattleSetup_BankA0_ToBeginStringDisplay_Bank2FAndStep::
     ret
 
 ; Choosing what to do, step 7: after the text redraws and returns to step 1. (C1, E-0357)
-RunBattleSetup_BankA0_EntrySelect_3::
+RunBattleSetup_BankA0_EntrySelect_Redraw::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -4804,35 +4803,35 @@ RunBattleSetup_BankA0_EntrySelect_3::
 RunBattleSetup_BankA0_CommandMenu::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleSetup_BankA0_CommandMenu_ShowStringBank09AtTilesHL_BankA0
+    dw RunBattleSetup_BankA0_CommandMenu_DrawLists
     dw RunBattleSetup_BankA0_CommandMenu_WriteMenuSubStateAndListLastPageSize
     dw RunBattleSetup_BankA0_WriteBattleArg1AndBattleResolveStepEtc
     dw RunBattleSetup_WriteBattleResolveStepAndBattleSubPhase
     dw RunBattleSetup_BankA0_WriteBattleArg1AndStringCategoryEtc
     dw RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember
-    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount
+    dw RunBattleSetup_BankA0_CommandMenu_StoreCommand
     dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep
     dw RunBattleSetup_CallDrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
     dw RunBattleSetup_BankA0_CommandMenu_ShowItHasNoUsable
-    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep
-    dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
+    dw RunBattleSetup_BankA0_CommandMenu_LayOut
+    dw RunBattleSetup_BankA0_CommandMenu_BackToList
     dw RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc
     dw RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize
-    dw RunBattleSetup_BankA0_CommandMenu_2
+    dw RunBattleSetup_BankA0_CommandMenu_SkillCursor
     dw RunBattleSetup_BankA0_WriteBattleResolveStepAndBattleArg1
-    dw RunBattleSetup_BankA0_CommandMenu_3
+    dw RunBattleSetup_BankA0_CommandMenu_DrawRecordFrame
     dw RunBattleSetup_BankA0_CommandMenu_WriteStringCategory
-    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep_2
-    dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_2
+    dw RunBattleSetup_BankA0_CommandMenu_LayOutAfterText
+    dw RunBattleSetup_BankA0_CommandMenu_BackToSkills
     dw RunBattleSetup_BankA0_CommandMenu_SetBattleResolveStep
     dw RunBattleSetup_CallDrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
     dw RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo
-    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep
-    dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
+    dw RunBattleSetup_BankA0_CommandMenu_LayOut
+    dw RunBattleSetup_BankA0_CommandMenu_BackToList
 
 ; The command menu, step 0: shows the tactic list (string 1 of category 2) and the command list
 ; (string 8), four places, and draws the frame. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_ShowStringBank09AtTilesHL_BankA0::
+RunBattleSetup_BankA0_CommandMenu_DrawLists::
     ld hl, vTiles1 + $6d0
     ld de, $2001
     ld a, $02
@@ -5010,10 +5009,10 @@ RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember::
 ; The command menu, step 6: B goes back; A (sound $69) stores the command in side control bits 4-5:
 ; 0 picks action $C0 aimed at the partner slot (step $15 when absent), 1 the skills (step 8 when
 ; none can be used, otherwise step $0C), 2 action $AC on itself. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount::
+RunBattleSetup_BankA0_CommandMenu_StoreCommand::
     ld de, RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember_Data
     ld hl, wMenuSelectedMember
-    call RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0_2
+    call RunBattleSetup_BankA0_CommandMenu_StoreCommand_SetBit6AndBlankEntryTile_BankA0
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -5071,7 +5070,7 @@ RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount::
     jr .return
 
 .call_run_battle_setup_bank_a0_command_menu:
-    call RunBattleSetup_BankA0_CommandMenu_WriteBattleArg2AndBattleArg3Etc
+    call RunBattleSetup_BankA0_CommandMenu_StoreCommand_WriteBattleArg2AndBattleArg3Etc
     ld a, d
     or a
     jr nz, .call_clear_and_layout_tile_blocks_for_battle2
@@ -5154,7 +5153,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo::
     ret
 
 ; The command menu, step 10: after the text lays out the screen and goes on. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep::
+RunBattleSetup_BankA0_CommandMenu_LayOut::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5165,7 +5164,7 @@ RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Adva
 
 ; The command menu, step 11: draws the bottom rows and returns to the command list (step 4). (C1,
 ; E-0357)
-RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0::
+RunBattleSetup_BankA0_CommandMenu_BackToList::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     ld a, $04
     ld [wBattleResolveStep], a
@@ -5245,7 +5244,7 @@ RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize::
 ; byte 3 bit 0 shows string $25, one costing more MP than the monster has (cost $FF counts as 1)
 ; string $26, both returning here through step 16; otherwise stores the page and entry in side
 ; control and the skill as the action and goes on; B returns to the commands. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_2::
+RunBattleSetup_BankA0_CommandMenu_SkillCursor::
     ld de, RunBattleSetup_BankA0_CommandMenu_Data
     ld hl, wMenuCursor
     call RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0
@@ -5359,7 +5358,7 @@ RunBattleSetup_BankA0_WriteBattleResolveStepAndBattleArg1::
     ret
 
 ; The command menu, step 16: lays out, redraws and draws the record frame. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_3::
+RunBattleSetup_BankA0_CommandMenu_DrawRecordFrame::
     farcall ClearAndLayoutTileBlocksForBattleFoeCount
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0
     farcall CopyRectRecordToScreenBuffer
@@ -5379,7 +5378,7 @@ RunBattleSetup_BankA0_CommandMenu_WriteStringCategory::
     ret
 
 ; The command menu, step 18: after the text lays out the screen. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep_2::
+RunBattleSetup_BankA0_CommandMenu_LayOutAfterText::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5390,7 +5389,7 @@ RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Adva
 
 ; The command menu, step 19: draws the bottom rows and returns to the skill list (step $0C). (C1,
 ; E-0357)
-RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_2::
+RunBattleSetup_BankA0_CommandMenu_BackToSkills::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     ld a, $0c
     ld [wBattleResolveStep], a
@@ -5410,7 +5409,7 @@ RunBattleSetup_BankA0_Return::
 
 ; Turn setup, sub-phase 3: marks every slot with mark 0 as chosen (1), resets the actor, lays out
 ; the screen, blanks the text tiles, draws the frame and clears the send byte. (C1, E-0357)
-RunBattleSetup_BankA0_ClearAndLayoutTileBlocksForBattleFoeCount::
+RunBattleSetup_BankA0_MarkSlotsToAct::
     ld b, $08
     ld hl, wSlotMarks
 
@@ -5454,7 +5453,7 @@ RunBattleSetup_BankA0_ShowSelectingHeroSMove::
 ; Turn setup, sub-phase 5: rolls the random bytes until neither is $F3, packs this side's choice
 ; (menu bytes, its tactic, the two random bytes, side controls and action choices; 11 bytes) into
 ; wLinkRecvBuffer and sends 1. (C1, E-0357)
-RunBattleSetup_BankA0_AdvanceRandom::
+RunBattleSetup_BankA0_PackChoice::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $f3
@@ -5685,7 +5684,7 @@ RunBattleSetup_BankA0_WriteLinkSendByteAndBattleSubPhase::
 
 ; Turn setup, sub-phase 12: on the partner's 2 clears the text tiles and goes to the next battle
 ; step. (C1, E-0357)
-RunBattleSetup_BankA0_FillTilesFromRequest::
+RunBattleSetup_BankA0_ClearWindow::
     ld a, [wLinkMessage]
     cp $02
     ret nz
@@ -5698,7 +5697,7 @@ RunBattleSetup_BankA0_FillTilesFromRequest::
 
 ; A 2 x 2 cursor (entry byte HL, BG map offsets DE): Up/Down toggle bit 0, Left/Right bit 1 (sound
 ; $69); otherwise blinks the cursor every 16 frames. (C1, E-0357)
-RunBattleSetup_BankA0_EntrySelect_SetBit6AndBlankEntryTile_BankA0::
+RunBattleSetup_BankA0_EntrySelect_Cursor_SetBit6AndBlankEntryTile_BankA0::
     ld a, [wJoypadPressedRepeat]
     and $c0
     jr z, .check_joypad_pressed_repeat
@@ -5746,7 +5745,7 @@ RunBattleSetup_BankA0_EntrySelect_SetBit6AndBlankEntryTile_BankA0::
 
 ; A three-entry cursor: Up/Down move with wrap (sound $69); otherwise blinks the cursor every 16
 ; frames. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0_2::
+RunBattleSetup_BankA0_CommandMenu_StoreCommand_SetBit6AndBlankEntryTile_BankA0::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
@@ -6054,7 +6053,7 @@ WriteFiveTilesFromTable_2_Data::
 
 ; Counts the command monster's skills (up to eight, stopping at $FF or 0) for the skill list: two
 ; pages from five on, the last page's size, and returns D = the skills outside $A2-$A9. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_WriteBattleArg2AndBattleArg3Etc::
+RunBattleSetup_BankA0_CommandMenu_StoreCommand_WriteBattleArg2AndBattleArg3Etc::
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
     swap a

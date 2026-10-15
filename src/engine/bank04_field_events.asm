@@ -2053,27 +2053,27 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode::
 .read_player_sprite_mode:
     ldh a, [hPlayerSpriteMode]
     jumptable
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawFollowerSpriteIfFlag1B
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawPlayerOverlaySprite21Or22
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFollowers
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFlagFollower
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerWithOverlay
 
 ; Player sprite mode 0: draws the player and then the party followers (DrawPartyFollowerSprites).
 ; (C1, E-0357)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFollowers::
     call DrawPlayerSprite
     call DrawPartyFollowerSprites
     ret
 
 ; Player sprite mode 1: draws the player and the single follower shown when story flag $1B is set.
 ; (C1, E-0357)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawFollowerSpriteIfFlag1B::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFlagFollower::
     call DrawPlayerSprite
     call DrawFollowerSpriteIfFlag1B
     ret
 
 ; Player sprite mode 2: draws the player with an overlay sprite (set $21 or $22) below it. (C1,
 ; E-0357)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawPlayerOverlaySprite21Or22::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerWithOverlay::
     call DrawPlayerSprite
     call DrawPlayerOverlaySprite21Or22
     ret
@@ -3354,7 +3354,7 @@ ReadableTalkEvents::
     dw Talk0046_ThanksForComingBy
     dw TalkMsg0047_HeroReadTheNoticeWeGuarantee
     dw Talk_HeroCheckedThePedestalIts
-    dw ReadableTalkEvents_TestFlagBit_2
+    dw ReadableTalkEvents_LibraryDesk
     dw TalkMsg0233_HeroCheckedTheBookshelfMonster
     dw TalkMsg0234_HeroCheckedTheBookshelfMonster
     dw TalkMsg0235_HeroCheckedTheBookshelfPersonalities
@@ -3367,7 +3367,7 @@ ReadableTalkEvents::
     dw TalkMsg023C_HeroCheckedTheBookshelfAccessory
     dw TalkMsg023D_HeroCheckedTheBookshelfHidden
     dw TalkMsg023E_HeroReadTheNoticePleaseReturn
-    dw ReadableTalkEvents_TestFlagBit_3
+    dw ReadableTalkEvents_Notice
     dw TalkMsg0010_HeroPeeredIntoTheVaseFreshly
     dw TalkMsg000F_HeroPeeredIntoTheBarrelIt
     dw MapEventCountKeysAndStartScript
@@ -3539,7 +3539,7 @@ Talk_HeroCheckedThePedestalIts::
 ; the normal one; after the game's end (EVENT_THANKS_FOR_COMING_BY_025), with at least 56 ($38)
 ; species seen (TotalSpeciesFlaggedOrListed), a further script, otherwise 'Hello, our young savior'
 ; once. (C1, E-0357)
-ReadableTalkEvents_TestFlagBit_2::
+ReadableTalkEvents_LibraryDesk::
     ldh a, [hPlayerX]
     cp $40
     jr z, .clear_sprite_slots
@@ -3693,7 +3693,7 @@ TalkMsg023E_HeroReadTheNoticePleaseReturn::
 
 ; Talk event $0A step 23: a notice (message $0042) shown before the three-item scene and again after
 ; the game's end. (C1, E-0357)
-ReadableTalkEvents_TestFlagBit_3::
+ReadableTalkEvents_Notice::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -3843,8 +3843,8 @@ YoldTalkEvents::
     dw TalkMsg0803_ISawAHauntedShipIn
     dw TalkMsg0804_TheVolcanicIslandOffTheCoast
     dw TalkMsg0805_MermaidsLivedInTheSeaIn
-    dw YoldTalkEvents_TestFlagBit
-    dw YoldTalkEvents_StartScriptAtHL_B04
+    dw YoldTalkEvents_NoisyBirds
+    dw YoldTalkEvents_Shop
     dw TalkMsg080A_HeroPeeredIntoTheBarrelA
     dw TalkMsg080B_HeroPeeredIntoTheBarrelIt
     dw BarrelItem_TinyMedal
@@ -3856,8 +3856,8 @@ YoldTalkEvents::
     dw TalkMsg080D_YouCouldMeetMermaidsHere
     dw TalkMsg080E_ImFromThePortInThe
     dw TalkMsg080F_YoureNotSupposedToGoNear
-    dw YoldTalkEvents_TestFlagBit_InThePastMermaids
-    dw YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn
+    dw YoldTalkEvents_MermaidPast
+    dw YoldTalkEvents_StartScriptAtHL_B04
     dw Talk_HaveYouHeardTheLegendAbout
     dw TalkMsg081B_AhhThisIsHeavenlyItMakes
     dw TalkMsg081C_ICameFromFarAwayTo
@@ -3869,7 +3869,7 @@ YoldTalkEvents::
     dw Talk_HowMayOurChurchServeYou
     dw TalkMsg0821_AllSortsOfPeopleComeHere
     dw TalkMsg0822_IWentToPolonaAWhile
-    dw YoldTalkEvents_StartScriptAtHL_B04_IOfferQualityMerchandise
+    dw YoldTalkEvents_Shop2
     dw TalkMsg0824_ThereIsALighthouseToThe
     dw TalkMsg0825_MyShipSankInTheEastern
     dw TalkMsg0826_TheOldManInTheTaverns
@@ -3881,7 +3881,7 @@ YoldTalkEvents::
     dw Talk_HeroTriedToCheckTheChest
     dw TalkMsg082E_HeroPeeredIntoTheBarrelIt
     dw BarrelItem_TinyMedal_Flag0063
-    dw YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn_2
+    dw YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn
     dw TalkMsg082F_ThisAreaWasALotMore
     dw TalkMsg0830_WhenYoureOutAtSeaYou
     dw TalkScript
@@ -3889,7 +3889,7 @@ YoldTalkEvents::
     dw TalkMsg0835_TheOldFellowThereTheInstant
     dw TalkMsg0836_TheVolcanicIslandOffTheCoast
     dw YoldTalkEvents_ShowHnnnrHicGnnZzz
-    dw YoldTalkEvents_TestFlagBit_WhoAreYouThis
+    dw YoldTalkEvents_WhoAreYou
     dw ChestItem_Rib
     dw ChestItem_LoveWater
     dw ChestItem_LoveWater_Flag0069
@@ -3898,7 +3898,7 @@ YoldTalkEvents::
     dw ChestItem_Warp
     dw TalkMsg0843_ISawAChildCrossThe
     dw TalkMsg0844_WatchMeDanceAndYoullWant
-    dw YoldTalkEvents_TestFlagBit_DoYouWantTo
+    dw YoldTalkEvents_TestFlagBit
     dw YoldTalkEvents_ShowThisIsTheMermaid
     dw TalkMsg084F_IKnowNotAllHumansAre
     dw TalkMsg0850_ThePiratesCaughtUsInNets
@@ -3906,7 +3906,7 @@ YoldTalkEvents::
     dw TalkMsg0852_TheMoonRockFellFromTheSky
     dw TalkMsg0853_ThePiratesSankWithTheirShip
     dw TalkMsg0854_WeMermaidsArePeacefulBeings
-    dw YoldTalkEvents_TestFlagBit_WelcomeYoungHumanI
+    dw YoldTalkEvents_SailorRingGiver
     dw Talk_SceneSailorRing
     dw Talk_HowCouldWeDieBeforeEnjoying
     dw Talk_TheTreasuresAreOursNoOne
@@ -3917,7 +3917,7 @@ YoldTalkEvents::
     dw YoldTalkEvents_SetSpriteSlotsPlus7
     dw ChestItem_LogTwig
     dw YoldTalkEvents_ShowHeroCheckedThePedestal
-    dw YoldTalkEvents_SetFlagBit
+    dw YoldTalkEvents_KamehaThanks
     dw Talk_KamehaUrkHowYouCatchUp
     dw Talk_KamehaArrrrhClearTheWayIm
     dw Talk_SceneMermaidKingdom
@@ -3946,7 +3946,7 @@ YoldTalkEvents::
     dw YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
     dw TalkMsg00FF_Composing
     dw Talk_ThickSuctionCuppedTentacles
-    dw YoldTalkEvents_TestFlagBit_OurChurchIsImpoverished
+    dw YoldTalkEvents_Church
 
 ; starts message $0800 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'This is the village of Yold. We're' (E-0268, the E-0082 shape; was
@@ -4026,7 +4026,7 @@ TalkMsg0805_MermaidsLivedInTheSeaIn::
 
 ; Yold talk 6: 'The birds are noisy' the first time (setting its flag), message $0808 afterwards,
 ; message $0877 after the mermaid kingdom scene (EVENT_SCENE_MERMAID_KINGDOM_05F). (C1, E-0357)
-YoldTalkEvents_TestFlagBit::
+YoldTalkEvents_NoisyBirds::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -4050,7 +4050,7 @@ YoldTalkEvents_TestFlagBit::
     ret
 
 ; Yold talk 7: a shop: screen table 4, script data in bank $10, script Script_IDon. (C1, E-0357)
-YoldTalkEvents_StartScriptAtHL_B04::
+YoldTalkEvents_Shop::
     ld a, $04
     ld [wScreenTableIndex], a
     ld a, $10
@@ -4171,7 +4171,7 @@ TalkMsg080F_YoureNotSupposedToGoNear::
 ; the story script; with a member marked in record byte $55 bit 7, another; otherwise it names the
 ; member and skill in the text buffers and starts one of two scripts by EVENT_THE_PIRATES. (C1,
 ; E-0357)
-YoldTalkEvents_TestFlagBit_InThePastMermaids::
+YoldTalkEvents_MermaidPast::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -4228,7 +4228,7 @@ YoldTalkEvents_TestFlagBit_InThePastMermaids::
     ret
 
 ; starts Script_WelcomeToOurInn_3: '*: Welcome to our inn!' (E-0248)
-YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn::
+YoldTalkEvents_StartScriptAtHL_B04::
     ld hl, Script_WelcomeToOurInn_3 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
     ld a, $10
@@ -4349,7 +4349,7 @@ TalkMsg0822_IWentToPolonaAWhile::
 
 ; Yold talk 32: a shop: screen table 6, script data in bank $10, 'I offer quality merchandise'. (C1,
 ; E-0357)
-YoldTalkEvents_StartScriptAtHL_B04_IOfferQualityMerchandise::
+YoldTalkEvents_Shop2::
     ld a, $06
     ld [wScreenTableIndex], a
     ld a, $10
@@ -4491,7 +4491,7 @@ BarrelItem_TinyMedal_Flag0063::
     ret
 
 ; starts Script_WelcomeToOurInn_4: '*: Welcome to our inn!' (E-0248)
-YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn_2::
+YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn::
     ld hl, Script_WelcomeToOurInn_4 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
     ld a, $10
@@ -4681,7 +4681,7 @@ PartyHasSpeciesLo3CTo5BWithHiSet::
 
 ; Yold talk 52: 'Who are you? This is ...' the first time (setting its flag), then 'You can keep
 ; trying'; after EVENT_SCENE_WATCH_OUT the watch-out scene script. (C1, E-0357)
-YoldTalkEvents_TestFlagBit_WhoAreYouThis::
+YoldTalkEvents_WhoAreYou::
     ld de, EVENT_SCENE_WATCH_OUT
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
@@ -4798,7 +4798,7 @@ TalkMsg0844_WatchMeDanceAndYoullWant::
     ret
 
 ; starts Script_DoYouWantTo_2: '*: Do you want to go' (E-0248)
-YoldTalkEvents_TestFlagBit_DoYouWantTo::
+YoldTalkEvents_TestFlagBit::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
     ret nc
@@ -4911,7 +4911,7 @@ TalkMsg0854_WeMermaidsArePeacefulBeings::
 ; message $0858; after EVENT_SCENE_CRATE it gives item $5F when the inventory has room (marking
 ; wInventorySortFlags bit 6) with its script, or message $0DC7 when it is full; after
 ; EVENT_HERO_RECEIVED_THE_SAILOR_RING message $0885. (C1, E-0357)
-YoldTalkEvents_TestFlagBit_WelcomeYoungHumanI::
+YoldTalkEvents_SailorRingGiver::
     ld de, EVENT_HERO_RECEIVED_THE_SAILOR_RING
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -5074,7 +5074,7 @@ YoldTalkEvents_ShowHeroCheckedThePedestal::
 
 ; Yold talk 80: at Y $30, sets EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING and starts Kameha's thanks;
 ; at X $50 also moves the first slot and objects 1 and 2 to X $40. (C1, E-0357)
-YoldTalkEvents_SetFlagBit::
+YoldTalkEvents_KamehaThanks::
     ldh a, [hPlayerY]
     cp $30
     ret nz
@@ -5419,7 +5419,7 @@ Talk_ThickSuctionCuppedTentacles::
 
 ; Yold talk 109, the church: 'Our church is impoverished' the first time (setting its flag), then 'I
 ; am a servant'; script data in bank $1F. (C1, E-0357)
-YoldTalkEvents_TestFlagBit_OurChurchIsImpoverished::
+YoldTalkEvents_Church::
     ld a, $1f
     ld [wDataBank], a
     ld de, EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202
@@ -5459,13 +5459,13 @@ KalkaTalkEvents::
     dw TalkMsg013D_StrongMonstersAreInTheWell
     dw TalkMsg013E_OurKingHasBeenAFan
     dw TalkMsg013F_TheCircusMasterWasTrying
-    dw KalkaTalkEvents_TestFlagBit
+    dw KalkaTalkEvents_ItemShop
     dw TalkMsg0140_NoOneEntersTheCastleWithout
     dw TalkMsg0141_IfYouWantToGetIn
     dw TalkMsg0142_DidYouWantSomethingHoney
     dw TalkMsg0143_WhenWeGetAHotSpell
-    dw KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou
-    dw KalkaTalkEvents_TestFlagBit_IAmTheLeader
+    dw KalkaTalkEvents_Church
+    dw KalkaTalkEvents_Leader
     dw TalkMsg014F_HeroPeeredIntoTheVaseIt
     dw VaseItem_Antidote_Flag0047
     dw TalkMsg0137_HeroCheckedTheOvenASharp_04
@@ -5480,14 +5480,14 @@ KalkaTalkEvents::
     dw TalkMsg0157_HehDidYouSeeTheLooks
     dw TalkMsg0158_ThisIsTheKingsTreasuryNo
     dw TalkMsg0159_WhatSeeHisMajestysTreasure
-    dw KalkaTalkEvents_TestFlagBit_WhyAreYouSnooping
+    dw KalkaTalkEvents_Snooping
     dw TalkMsg015A_HisMajestyIsHonestAndMost
     dw KalkaTalkEvents_StartScriptAtHL_B04_2
     dw TalkMsg015F_HeroCheckedTheDresserThere
-    dw KalkaTalkEvents_TestFlagBit_KingAhYou
+    dw KalkaTalkEvents_King
     dw TalkMsg0166_ThatFoolIsATerribleSwindler
     dw TalkMsg0167_HumphAMirageLakeHeSays
-    dw KalkaTalkEvents_TestFlagBit_WhatOpenTheCanal
+    dw KalkaTalkEvents_TestFlagBit
     dw VaseItem_Herb_Flag004B
     dw VaseItem_PorkChop
     dw VaseItem_TinyMedal
@@ -5497,11 +5497,11 @@ KalkaTalkEvents::
     dw ChestItem_WarpWing
     dw ChestItem_AGL
     dw KalkaTalkEvents_TestFlagBit_I
-    dw KalkaTalkEvents_TestFlagBit_WhwhereIsEverybodyI
+    dw KalkaTalkEvents_WhereIsEverybody
     dw KalkaTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
     dw TalkMsg0194_ThievesDroveUsFromOurHomes
     dw TalkMsg0195_TheLeaderOfTheThievesIs
-    dw KalkaTalkEvents_RunFieldCommandTemp0
+    dw KalkaTalkEvents_MonsterFan
     dw TalkMsg01B5_KyoohSwimmingInADesertThis
     dw TalkMsg01BC_HeroCheckedTheTreasureChest
     dw TalkMsg01BD_HeroPeeredIntoTheVaseIt
@@ -5510,7 +5510,7 @@ KalkaTalkEvents::
     dw VaseItem_BeefJerky
     dw KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04
     dw KalkaTalkEvents_WaitStoryFlagsPlus61
-    dw KalkaTalkEvents_TestFlagBit_OurChurchIsImpoverished
+    dw KalkaTalkEvents_Church2
 
 ; starts message $0130 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'This is Kalka, an oasis village.' (E-0268, the E-0082 shape; was
@@ -5820,7 +5820,7 @@ TalkMsg013F_TheCircusMasterWasTrying::
 
 ; Kalka talk 18, the item shop: screen table 3; 'Welcome to my item shop' the first time (setting
 ; its flag), then 'Hello, how may I ...'. (C1, E-0357)
-KalkaTalkEvents_TestFlagBit::
+KalkaTalkEvents_ItemShop::
     ld a, $03
     ld [wScreenTableIndex], a
     ld a, $10
@@ -5908,7 +5908,7 @@ TalkMsg0143_WhenWeGetAHotSpell::
 
 ; Kalka talk 23, the church: 'The church welcomes you' the first time (setting its flag), then 'I am
 ; a servant'; script data in bank $1F. (C1, E-0357)
-KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou::
+KalkaTalkEvents_Church::
     ld a, $1f
     ld [wDataBank], a
     ld de, EVENT_THE_CHURCH_WELCOMES_YOU_WE
@@ -5928,7 +5928,7 @@ KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou::
 ; Kalka talk 24, the leader: before EVENT_DID_YOU_SAY_YES_YES, one of three scripts by whether the
 ; party has three members and whether one is marked in record byte $55 bit 7; afterwards, with three
 ; unmarked members, 'Ah, three healthy monsters', otherwise message $014E. (C1, E-0357)
-KalkaTalkEvents_TestFlagBit_IAmTheLeader::
+KalkaTalkEvents_Leader::
     ld de, EVENT_DID_YOU_SAY_YES_YES
     call TestFlagBit
     jr c, .check_party_count
@@ -6177,7 +6177,7 @@ TalkMsg0159_WhatSeeHisMajestysTreasure::
 
 ; Kalka talk 39: 'Why are you snooping?' until EVENT_YOU_WILL_SO_WE_CAN, then message $017F; after
 ; the rival is defeated (EVENT_SCENE_RIVAL_DEFEATED_05A) message $01AE. (C1, E-0357)
-KalkaTalkEvents_TestFlagBit_WhyAreYouSnooping::
+KalkaTalkEvents_Snooping::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -6245,7 +6245,7 @@ TalkMsg015F_HeroCheckedTheDresserThere::
 ; then 'So have you ...', the way-making and 'Strong monsters are in the ...' stages, the water
 ; solved, the treasure theft and the rival defeated (seven story flags tested from the latest). (C1,
 ; E-0357)
-KalkaTalkEvents_TestFlagBit_KingAhYou::
+KalkaTalkEvents_King::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
@@ -6341,7 +6341,7 @@ TalkMsg0167_HumphAMirageLakeHeSays::
     ret
 
 ; starts Script_WhatOpenTheCanal: '*: What? Open the Canal Gate' (E-0248)
-KalkaTalkEvents_TestFlagBit_WhatOpenTheCanal::
+KalkaTalkEvents_TestFlagBit::
     ld de, EVENT_KING_WHAT_NEVER_MIND_THEN
     call TestFlagBit
     ret nc
@@ -6472,7 +6472,7 @@ KalkaTalkEvents_TestFlagBit_I::
 ; Kalka talk 56: after the treasure theft, 'Wh-where is everybody?' when the inventory holds none of
 ; items $19-$1C, the second version when it holds any of them, message $018E after EVENT_CHECK_ITEM.
 ; (C1, E-0357)
-KalkaTalkEvents_TestFlagBit_WhwhereIsEverybodyI::
+KalkaTalkEvents_WhereIsEverybody::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     ret nc
@@ -6566,7 +6566,7 @@ TalkMsg0195_TheLeaderOfTheThievesIs::
 
 ; Kalka talk 60: runs field command 3, then 'Heh, you have monsters in ...' the first time and 'You
 ; again? You ...' after its flag. (C1, E-0357)
-KalkaTalkEvents_RunFieldCommandTemp0::
+KalkaTalkEvents_MonsterFan::
     ld a, $03
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -6655,7 +6655,7 @@ KalkaTalkEvents_WaitStoryFlagsPlus61::
 
 ; Kalka talk 69, a second church: 'Our church is impoverished' the first time, then 'I am a
 ; servant'. (C1, E-0357)
-KalkaTalkEvents_TestFlagBit_OurChurchIsImpoverished::
+KalkaTalkEvents_Church2::
     ld a, $1f
     ld [wDataBank], a
     ld de, EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO
@@ -6677,12 +6677,12 @@ KalkaTalkEvents_TestFlagBit_OurChurchIsImpoverished::
 DarckTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
+    dw DarckTalkEvents_HeardFromLord
     dw DarckTalkEvents_TestFlagBit
-    dw DarckTalkEvents_TestFlagBit_DarckFawahahahYouChased
 
 ; Darck talk 0: before EVENT_TAKE_ITEM, 'I heard from Lord ...' in one of two versions by whether
 ; the inventory holds any of items $36-$38; afterwards 'You seem to still ...'. (C1, E-0357)
-DarckTalkEvents_TestFlagBit::
+DarckTalkEvents_HeardFromLord::
     ld de, EVENT_TAKE_ITEM
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
@@ -6719,7 +6719,7 @@ DarckTalkEvents_TestFlagBit::
     ret
 
 ; starts Script_DarckFawahahahYouChased: 'Darck: Fawahahah! You chased your treasures' (E-0248)
-DarckTalkEvents_TestFlagBit_DarckFawahahahYouChased::
+DarckTalkEvents_TestFlagBit::
     ld de, EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6764,17 +6764,17 @@ FieldTalkEvents::
     dw Talk_ArenaGridBattle
     dw Talk_RandomBattle
     dw Talk_HealParty
-    dw FieldTalkEvents_TestFlagBit
-    dw FieldTalkEvents_TestFlagBit_2
+    dw FieldTalkEvents_ObjectPathAfterThreeItems
+    dw FieldTalkEvents_ObjectPathAfterThreeItems2
     dw Talk_EncounterMessage
     dw Talk_CountdownMessage
     dw Talk_ArenaRounds
     dw Talk_NpcBreedWarp
     dw Talk_LinkMessage
+    dw FieldTalkEvents_TalkToFollower
+    dw FieldTalkEvents_TalkToSecondFollower
+    dw FieldTalkEvents_TalkToThirdFollower
     dw FieldTalkEvents_StartScriptAtHL_B04
-    dw FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1
-    dw FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1_2
-    dw FieldTalkEvents_StartScriptAtHL_B04_2
     dw FieldTalkEvents_SetFollowerDelay
     dw FieldTalkEvents_Return
 
@@ -6797,7 +6797,7 @@ Talk_EncounterMessage::
     ret
 
 ; Field talk 28: after the three-item scene starts the object path script $1C. (C1, E-0357)
-FieldTalkEvents_TestFlagBit_2::
+FieldTalkEvents_ObjectPathAfterThreeItems2::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6809,7 +6809,7 @@ FieldTalkEvents_TestFlagBit_2::
     ret
 
 ; Field talk 27: after the three-item scene starts the object path script $1B. (C1, E-0357)
-FieldTalkEvents_TestFlagBit::
+FieldTalkEvents_ObjectPathAfterThreeItems::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6903,7 +6903,7 @@ Talk_LinkMessage::
 
 ; Field talk 34, talking to the first follower: while the followers trail the player, turns follower
 ; 0 to face the player and starts its personality message (wScriptParam1 = 0). (C1, E-0357)
-FieldTalkEvents_StartScriptAtHL_B04::
+FieldTalkEvents_TalkToFollower::
     ld a, [wFollowerDelay]
     or a
     ret z
@@ -6920,7 +6920,7 @@ FieldTalkEvents_StartScriptAtHL_B04::
 
 ; Field talk 35, the second follower: as talk 34 for follower 1 when the party has at least two
 ; members. (C1, E-0357)
-FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
+FieldTalkEvents_TalkToSecondFollower::
     ld a, [wFollowerDelay]
     or a
     ret z
@@ -6940,7 +6940,7 @@ FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
 
 ; Field talk 36, the third follower: as talk 34 for follower 2 when the party has three members.
 ; (C1, E-0357)
-FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1_2::
+FieldTalkEvents_TalkToThirdFollower::
     ld a, [wFollowerDelay]
     or a
     ret z
@@ -6961,7 +6961,7 @@ FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1_2::
     ret
 
 ; starts Script_SceneKamehaStole (E-0248)
-FieldTalkEvents_StartScriptAtHL_B04_2::
+FieldTalkEvents_StartScriptAtHL_B04::
     ld a, [wFollowerDelay]
     or a
     ret nz
@@ -7139,7 +7139,7 @@ ElvenVillageTalkEvents::
     jumptable
     dw ElvenVillageTalkEvents_TestFlagBit
     dw ElvenVillageTalkEvents_ShowYoureAHumanHow
-    dw ElvenVillageTalkEvents_TestFlagBit_AreYouMaybeA
+    dw ElvenVillageTalkEvents_Cyal
     dw TalkMsg0708_HelloMunchkinEnjoyYourStay
     dw TalkMsg0709_AHumanHereItsBeenSeveral
     dw TalkMsg070A_YoureNotLikeUsYouScare
@@ -7147,7 +7147,7 @@ ElvenVillageTalkEvents::
     dw TalkMsg070C_ThisHorseWasHereBeforeUs
     dw TalkMsg070D_ThisIsElvenVillageYoureA
     dw TalkMsg0752_IveHeardThatHumansAre
-    dw ElvenVillageTalkEvents_StartScriptAtHL_B04
+    dw ElvenVillageTalkEvents_Shop
     dw ElvenVillageTalkEvents_ShowWellWellItIs
     dw ElvenVillageTalkEvents_TestFlagBit_MasterAgDevilAHuman
     dw TalkMsg0723_TchWeHaveToEatThe
@@ -7414,7 +7414,7 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
 ; Elven village talk 2, Cyal: 'Are you maybe a ...' at first, message $0707 after Cyal's 'Yay, you',
 ; Cyal's 'Listen, hero' script after the elder's scene, message $0747 then $0748 after the key boss
 ; is beaten. (C1, E-0357)
-ElvenVillageTalkEvents_TestFlagBit_AreYouMaybeA::
+ElvenVillageTalkEvents_Cyal::
     ld de, EVENT_CYAL_I_HOPE_YOULL_STAY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
@@ -7657,7 +7657,7 @@ TalkMsg0752_IveHeardThatHumansAre::
     ret
 
 ; Elven village talk 10: a shop: screen table $10, 'Welcome, how may I ...'. (C1, E-0357)
-ElvenVillageTalkEvents_StartScriptAtHL_B04::
+ElvenVillageTalkEvents_Shop::
     ld a, $10
     ld [wScreenTableIndex], a
     ld a, $10
@@ -10090,8 +10090,8 @@ KeyWorldTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
     dw Talk_KeyWorldBossBattle
+    dw KeyWorldTalkEvents_Warubou
     dw KeyWorldTalkEvents_StartScriptAtHL_B04
-    dw KeyWorldTalkEvents_StartScriptAtHL_B04_WarubouWaheyYouDid
     dw Talk_KeyWorldFloorBattle
     dw TalkMsg0120_WarubouQuitDawdlingWarooh
     dw TalkMsg0122_WarubouWaheyYouDidItHero
@@ -10110,7 +10110,7 @@ Talk_KeyWorldBossBattle::
 
 ; Key world talk 1, Warubou: starts his script with screen table $0F on a floor of kind 3, otherwise
 ; $12 or $13 by bit 7 of wKeyWorldFloorState. (C1, E-0357)
-KeyWorldTalkEvents_StartScriptAtHL_B04::
+KeyWorldTalkEvents_Warubou::
     ld a, $10
     ld [wDataBank], a
     ld a, [wKeyWorldFloor]
@@ -10145,7 +10145,7 @@ KeyWorldTalkEvents_StartScriptAtHL_B04::
     ret
 
 ; starts Script_WarubouWaHeyYou_3: 'Warubou: Wa-hey! You did it, 0!' (E-0248)
-KeyWorldTalkEvents_StartScriptAtHL_B04_WarubouWaheyYouDid::
+KeyWorldTalkEvents_StartScriptAtHL_B04::
     ld a, [wMapType]
     cp $84
     jr nz, .call_is_player_at_key_world_goal_kind_trigger

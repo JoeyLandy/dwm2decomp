@@ -154,7 +154,7 @@ OBJPaletteBufferPlus20Data::
     dw $0000, $4f5d, $1415, $0000 ; id 15
     dw $0000, $5efd, $39b2, $0000 ; id 16
     dw $0000, $6bff, $6b2a, $0800 ; id 17
-DebugStaffRoll_Scene00_DecompressToVRAM_OBJPaletteBufferData::
+DebugStaffRoll_Scene00_Load_OBJPaletteBufferData::
     dw $0000, $6bff, $7da0, $0000 ; id 18
 OBJPaletteBufferPlus8Data::
     dw $0000, $6bff, $2e0a, $0000 ; id 19

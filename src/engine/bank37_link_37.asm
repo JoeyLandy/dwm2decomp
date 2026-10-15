@@ -106,9 +106,9 @@ StringList_Bank37_StringCategories_1::
     dw String_37_01_1A ; id 26
     dw String_37_01_1B ; id 27
     dw String_37_01_1C ; id 28
-    dw RunLinkSession5Exchange_WaitFadeState ; id 29
-    dw RunLinkSession5Exchange_WaitFadeState ; id 30
-    dw RunLinkSession5Exchange_WaitFadeState ; id 31
+    dw RunLinkSession5Exchange_Receive_WaitFadeState ; id 29
+    dw RunLinkSession5Exchange_Receive_WaitFadeState ; id 30
+    dw RunLinkSession5Exchange_Receive_WaitFadeState ; id 31
 
 String_37_00_00::
     db "The <BUF2><LINE>"
@@ -564,33 +564,33 @@ String_37_01_1C::
 ; Link session 5's screen (breeding with Terry's Wonderland): once no fade runs, by wScreenState:
 ; the swap menu, leaving, the start, the messages, the breeding steps, the handshake, the stats
 ; screens and the chosen record. (C1, E-0357)
-RunLinkSession5Exchange_WaitFadeState::
+RunLinkSession5Exchange_Receive_WaitFadeState::
     ld a, [wFadeState]
     and a
     ret nz
     ld a, [wScreenState]
     jumptable
-    dw RunLinkSession5Exchange_ToSwapMonstersMenuAndStep
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_SetScreenState
+    dw RunLinkSession5Exchange_Receive_ToSwapMonstersMenuAndStep
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_Receive_SetScreenState
     dw RunLinkSession5Exchange_ShowMessages
-    dw RunLinkSession5Exchange_LinkBreed
-    dw RunLinkSession5Exchange_SetLinkSendByte
-    dw RunLinkSession5Exchange_WaitLinkMessage
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_SwapMonstersMenu
-    dw RunLinkSession5Exchange_ShowRecordStats
+    dw LinkBreed
+    dw RunLinkSession5Exchange_Receive_SetLinkSendByte
+    dw RunLinkSession5Exchange_Receive_WaitLinkMessage
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_RunStatsScreen
+    dw PartnerStats
     dw RunLinkSession5Exchange_ResetListAndShowString
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_WaitTextFlags
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_Receive_WaitTextFlags
     dw RunLinkSession5Exchange_ShowChosenRecord
 
 ; Session 5, state 0: runs the swap menu (SwapMonstersMenu) and goes on. (C1, E-0357)
-RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
+RunLinkSession5Exchange_Receive_ToSwapMonstersMenuAndStep::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
     inc a
@@ -599,7 +599,7 @@ RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
 
 ; Session 5, state 1: after the text clears $6F bytes of screen state and returns to game mode 5,
 ; state 1 (the link menu). (C1, E-0357)
-RunLinkSession5Exchange_WaitTextFlags::
+RunLinkSession5Exchange_Receive_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -622,7 +622,7 @@ RunLinkSession5Exchange_WaitTextFlags::
     ret
 
 ; Session 5, state 5: after the text sends 3. (C1, E-0357)
-RunLinkSession5Exchange_SetLinkSendByte::
+RunLinkSession5Exchange_Receive_SetLinkSendByte::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -633,7 +633,7 @@ RunLinkSession5Exchange_SetLinkSendByte::
     ret
 
 ; Session 5, state 6: on the partner's 3 goes to leaving (state 1). (C1, E-0357)
-RunLinkSession5Exchange_WaitLinkMessage::
+RunLinkSession5Exchange_Receive_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $03
     ret nz
@@ -644,7 +644,7 @@ RunLinkSession5Exchange_WaitLinkMessage::
     ret
 
 ; Session 5, state 2: sends 2 and goes on. (C1, E-0357)
-RunLinkSession5Exchange_SetScreenState::
+RunLinkSession5Exchange_Receive_SetScreenState::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -659,8 +659,8 @@ RunLinkSession5Exchange_ShowMessages::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession5Exchange_ShowMessages_WaitTextFlags
-    dw RunLinkSession5Exchange_ShowMessages_SetScreenState
-    dw RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37
+    dw RunLinkSession5Exchange_ShowMessages_TerryMessage
+    dw RunLinkSession5Exchange_ShowMessages_AskChoose
     dw RunLinkSession5Exchange_ShowMessages_SetScreenStep
 
 ; The messages, step 0: after the text goes on. (C1, E-0357)
@@ -675,7 +675,7 @@ RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
 
 ; The messages, step 1: after the text, a partner's 2 shows "For breeding with Terry's ..."
 ; (bank-$0E string $15) and goes to state 5; with no byte goes on. (C1, E-0357)
-RunLinkSession5Exchange_ShowMessages_SetScreenState::
+RunLinkSession5Exchange_ShowMessages_TerryMessage::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -699,7 +699,7 @@ RunLinkSession5Exchange_ShowMessages_SetScreenState::
     ret
 
 ; The messages, step 2: 'Choose the monster for breeding.' (string 9). (C1, E-0357)
-RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37::
+RunLinkSession5Exchange_ShowMessages_AskChoose::
     xor a
     ld [wLinkSendByte], a
     ld a, $09
@@ -722,48 +722,49 @@ RunLinkSession5Exchange_ShowMessages_SetScreenStep::
     ret
 
 ; by wScreenStep: BreedMenu list steps, unpacks the partner's record from the link
-; (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and StoreReceivedRecordIntoSRAM (E-0288)
-RunLinkSession5Exchange_LinkBreed::
+; (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and StoreReceivedRecordIntoSRAM (renamed from
+; RunLinkSession5Exchange_LinkBreed from its E-0357 note, E-0367)
+LinkBreed::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_LinkBreed_WaitLinkMessage
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags
+    dw LinkBreed_RunList
+    dw LinkBreed_RunList
+    dw LinkBreed_RunList
+    dw LinkBreed_RunList
+    dw LinkBreed_DrawPanel
+    dw LinkBreed_RunList
+    dw LinkBreed_RunList
+    dw LinkBreed_RunList
+    dw LinkBreed_ChooseOrRefuse
+    dw LinkBreed_WaitPartnerCancel
+    dw LinkBreed_WaitText
     dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner
-    dw RunLinkSession5Exchange_LinkBreed_SetScreenSubStep
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_2
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_LinkBreed_SetScreenStep
-    dw RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_2
-    dw RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_3
-    dw RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37
-    dw RunLinkSession5Exchange_LinkBreed_CopyScreenBufferRectAt024FAndDrawBox_37
-    dw RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM
-    dw RunLinkSession5Exchange_LinkBreed_UpdateTwoChoiceCursor_Bank1D
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_4
-    dw RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild
+    dw LinkBreed_AskIsThisOK
+    dw LinkBreed_RunList
+    dw LinkBreed_PartnerCancel
+    dw LinkBreed_WaitTextAgain
+    dw LinkBreed_AskChoose
+    dw LinkBreed_CheckPick
+    dw LinkBreed_SendRecord
+    dw LinkBreed_SendReady
+    dw LinkBreed_ExchangeRecords
+    dw LinkBreed_ReceiveRecord
+    dw LinkBreed_CheckGenders
+    dw LinkBreed_DrawChoiceBox
+    dw LinkBreed_ReadChoice
+    dw LinkBreed_DrawYesNo
+    dw LinkBreed_ReadAnswer
+    dw LinkBreed_SendReady
+    dw LinkBreed_WaitPartnerForChild
+    dw LinkBreed_MakeChild
     dw StoreReceivedRecordIntoSRAM
-    dw RunLinkSession5Exchange_WriteLinkBufferCountLoAndLinkBufferCountHiEtc
-    dw RunLinkSession5Exchange_WriteLinkSendByteAndLinkSceneEtc
-    dw RunLinkSession5Exchange_LinkBreed_SetLinkSendByte
+    dw LinkBreed_StartWorkBufExchange
+    dw LinkBreed_FinishExchange
+    dw LinkBreed_WaitPartnerRefusal
 
 ; Session 5 breeding, step 14: the partner's cancel ($FD) shows 'Your pal refused breeding.' (string
 ; $14), step 9, answering $FD (wAIFlag 1); otherwise the list's steps. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep::
+LinkBreed_PartnerCancel::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -786,7 +787,7 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep::
 
 ; Session 5 breeding, step 8: the partner's cancel as above; otherwise the list, where B shows 'You
 ; refused breeding.' (string $13), step 9, sending $FD (wAIFlag 0). (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37::
+LinkBreed_ChooseOrRefuse::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -819,7 +820,7 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37::
     ret
 
 ; Session 5 breeding, step 0: after the text the list's steps (BreedMenu). (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_BreedMenu::
+LinkBreed_RunList::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -828,7 +829,7 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu::
 
 ; Session 5 breeding, step 16: with a pick runs the list and asks 'Choose the monster for
 ; breeding.'; after a cancel ($FF) runs the re-asking sub-steps. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37::
+LinkBreed_AskChoose::
     ld a, [wSelectedRecord]
     cp $ff
     jr z, .read_screen_sub_step
@@ -843,20 +844,20 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37::
 .read_screen_sub_step:
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_SetScreenSubStep
-    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37_2
-    dw RunLinkSession5Exchange_BreedMenu
-    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_SetScreenSubStep
-    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37_2
-    dw RunLinkSession5Exchange_BreedMenu
-    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37_3
-    dw RunLinkSession5Exchange_BreedMenu
+    dw LinkBreed_AskChoose_PleaseWait
+    dw RunLinkSession5Exchange_Receive_SetScreenSubStep
+    dw LinkBreed_AskChoose_AskAgain
+    dw LinkBreed_AskChoose_RunList
+    dw LinkBreed_AskChoose_PleaseWait
+    dw RunLinkSession5Exchange_Receive_SetScreenSubStep
+    dw LinkBreed_AskChoose_AskAgain
+    dw LinkBreed_AskChoose_RunList
+    dw LinkBreed_AskChoose_PleaseWait
+    dw LinkBreed_AskChoose_AskAgain2
+    dw LinkBreed_AskChoose_RunList
 
 ; Re-asking, sub-step 0: after the text 'Please wait.' (string 7). (C1, E-0357)
-RunLinkSession5Exchange_ShowStringIndexA_Bank37::
+LinkBreed_AskChoose_PleaseWait::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -870,7 +871,7 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37::
     ret
 
 ; Re-asking, sub-step 1: after the text sends 1. (C1, E-0357)
-RunLinkSession5Exchange_SetScreenSubStep::
+RunLinkSession5Exchange_Receive_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -882,7 +883,7 @@ RunLinkSession5Exchange_SetScreenSubStep::
     ret
 
 ; Re-asking, sub-step 2: on the partner's 1 'Choose the monster for breeding.'. (C1, E-0357)
-RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
+LinkBreed_AskChoose_AskAgain::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -896,7 +897,7 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
     ret
 
 ; Re-asking, sub-step 3: after the text runs the list and clears the pick. (C1, E-0357)
-RunLinkSession5Exchange_BreedMenu::
+LinkBreed_AskChoose_RunList::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -907,7 +908,7 @@ RunLinkSession5Exchange_BreedMenu::
     ret
 
 ; Re-asking, sub-step 9: after the text 'Choose the monster for breeding.'. (C1, E-0357)
-RunLinkSession5Exchange_ShowStringIndexA_Bank37_3::
+LinkBreed_AskChoose_AskAgain2::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -922,7 +923,7 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37_3::
 
 ; Session 5 breeding, step 12: 'Is this one OK for breeding?' (string 4), then the list's next step
 ; with two cursor tiles reloaded. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_SetScreenSubStep::
+LinkBreed_AskIsThisOK::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -954,7 +955,7 @@ RunLinkSession5Exchange_LinkBreed_SetScreenSubStep::
 
 ; Session 5 breeding, step 4: loads the chosen record's family icon and draws its 12 x 5 panel with
 ; its sex mark and level. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5::
+LinkBreed_DrawPanel::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -966,7 +967,7 @@ RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5::
     ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank37
-    ld de, RunLinkSession5Exchange_LinkBreed_TileRect
+    ld de, LinkBreed_DrawPanel_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $05
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -984,7 +985,7 @@ RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5::
     ret
 
 ; Session 5 breeding, step 15: waits for the text. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_WaitTextFlags_2::
+LinkBreed_WaitTextAgain::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1012,7 +1013,7 @@ RunCopyScreenBufferRectWithAttrs_37At0278AndStep::
 ; Session 5 breeding, step 17: a pick below level 10 gives 'This one is too young to ...' (string 5)
 ; and a party member 'Choose from the farm's roster.' (string 6), both two steps back; otherwise
 ; keeps the record and the list place. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_SetScreenStep::
+LinkBreed_CheckPick::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1093,7 +1094,7 @@ RunLinkSession5Exchange_LinkBreed_SetScreenStep::
 ; Session 5 breeding, step 18: copies the chosen SRAM record into wRecordBufA, converts it into
 ; wWorkBuf for the exchange (UnpackLinkRecordToWorkBuf; here wRecordBufA holds this side's own
 ; record), shows 'Please wait.' and redraws. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf::
+LinkBreed_SendRecord::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1128,7 +1129,7 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf::
     ret
 
 ; Session 5 breeding, step 19: after the text sends 1. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep::
+LinkBreed_SendReady::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1140,7 +1141,7 @@ RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep::
     ret
 
 ; Session 5 breeding, step 31: starts a $64-byte exchange of wWorkBuf. (C1, E-0357)
-RunLinkSession5Exchange_WriteLinkBufferCountLoAndLinkBufferCountHiEtc::
+LinkBreed_StartWorkBufExchange::
     ld a, $64
     ld [wLinkBufferCountLo], a
     xor a
@@ -1167,7 +1168,7 @@ RunLinkSession5Exchange_WriteLinkBufferCountLoAndLinkBufferCountHiEtc::
 ; Session 5 breeding, step 20: on the partner's 1 starts a $95-byte exchange (wWorkBuf out, the
 ; partner's record into the battler record area); on $FD 'Your pal refused breeding.' (step 9). (C1,
 ; E-0357)
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_2::
+LinkBreed_ExchangeRecords::
     ld a, [wLinkMessage]
     cp $01
     jr z, .check_screen_step
@@ -1209,7 +1210,7 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_2::
 
 ; Session 5 breeding, step 21: when the exchange ends unpacks the partner's record into wRecordBufB
 ; (UnpackLinkRecordToRecordBufB). (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB::
+LinkBreed_ReceiveRecord::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1224,7 +1225,7 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB::
 ; Session 5 breeding, step 22: the same sex gives 'Identical genders can't breed.' and back to
 ; choosing (step $10, sub-step 8); otherwise shows the partner's monster (string $0F, 13 x 1 at VRAM
 ; $9600) and asks 'Proceed with breeding?'. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_3::
+LinkBreed_CheckGenders::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1284,7 +1285,7 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_3::
 ; Session 5 breeding, step 29: the leader (link role bit 1 clear) works out the child
 ; (ComputeBreedingChild); then stores the received record in SRAM (StoreReceivedRecordIntoSRAM,
 ; repeated until it moves the step) and starts the $64-byte exchange. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild::
+LinkBreed_MakeChild::
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .check_screen_step
@@ -1305,11 +1306,11 @@ RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild::
     ld a, [wScreenStep]
     cp b
     jr z, .loop
-    jp RunLinkSession5Exchange_WriteLinkBufferCountLoAndLinkBufferCountHiEtc
+    jp LinkBreed_StartWorkBufExchange
 
 ; Session 5 breeding, step 23: plays sound $6C and draws the 9 x 7 three-way choice box. (C1,
 ; E-0357)
-RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37::
+LinkBreed_DrawChoiceBox::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1327,7 +1328,7 @@ RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37::
     ld [wTwoChoiceCursor], a
     ld a, $6c
     call QueueSoundEffect
-    ld de, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37_TileRect
+    ld de, LinkBreed_DrawChoiceBox_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -1344,7 +1345,7 @@ RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37::
 ; refused breeding.' (step $21); the choice: B or the third entry 'You refused breeding.' (step $21,
 ; sending $FE); the second opens the stats screen (state $0D); the first marks it and asks 'Is it OK
 ; to record the ...' (string $0C). (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_CopyScreenBufferRectAt024FAndDrawBox_37::
+LinkBreed_ReadChoice::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1392,7 +1393,7 @@ RunLinkSession5Exchange_LinkBreed_CopyScreenBufferRectAt024FAndDrawBox_37::
     jr z, .read_screen_state
     ld a, [wTwoChoiceCursor]
     ld b, $bc
-    ld hl, RunLinkSession5Exchange_LinkBreed_Data
+    ld hl, LinkBreed_ReadChoice_Data
     call StoreBAtWordTableEntry_Bank37
     ld a, [wScreenStep]
     inc a
@@ -1420,7 +1421,7 @@ RunLinkSession5Exchange_LinkBreed_CopyScreenBufferRectAt024FAndDrawBox_37::
     ret
 
 ; Session 5 breeding, step 25: loads the yes/no tiles and draws its box. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM::
+LinkBreed_DrawYesNo::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1446,7 +1447,7 @@ RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM::
     call CopyFromBankWaitVRAM
     xor a
     ld [wTwoChoiceCursor], a
-    ld de, RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM_TileRect
+    ld de, LinkBreed_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -1461,7 +1462,7 @@ RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM::
 
 ; Session 5 breeding, step 26: no or B asks 'Proceed with breeding?' again (step $17); yes shows
 ; 'Please wait.' and goes on. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_UpdateTwoChoiceCursor_Bank1D::
+LinkBreed_ReadAnswer::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1583,7 +1584,7 @@ StoreReceivedRecordIntoSRAM::
 
 ; Session 5 breeding, step 28: on the partner's 1 goes on to the child; on $FE 'Your pal refused
 ; breeding.' (step $21). (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_4::
+LinkBreed_WaitPartnerForChild::
     ld a, [wLinkMessage]
     cp $01
     jr z, .check_screen_step
@@ -1603,20 +1604,20 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_4::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    jp RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild
+    jp LinkBreed_MakeChild
 
 ; Session 5 breeding, step 9: on the partner's $FD goes on. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_WaitLinkMessage::
+LinkBreed_WaitPartnerCancel::
     ld a, [wLinkMessage]
     cp $fd
     ret nz
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    jr RunLinkSession5Exchange_LinkBreed_WaitTextFlags
+    jr LinkBreed_WaitText
 
 ; Session 5 breeding, step 33: on the partner's $FE goes to step $0A. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_SetLinkSendByte::
+LinkBreed_WaitPartnerRefusal::
     ld a, [wLinkMessage]
     cp $fe
     ret nz
@@ -1624,10 +1625,10 @@ RunLinkSession5Exchange_LinkBreed_SetLinkSendByte::
     ld [wLinkSendByte], a
     ld a, $0a
     ld [wScreenStep], a
-    jr RunLinkSession5Exchange_LinkBreed_WaitTextFlags
+    jr LinkBreed_WaitText
 
 ; Session 5 breeding, step 10: after the text goes on. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_WaitTextFlags::
+LinkBreed_WaitText::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1641,12 +1642,12 @@ RunLinkSession5Exchange_LinkBreed_WaitTextFlags::
 RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner::
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage
+    dw RunLinkSession5Exchange_WaitTextFlags
+    dw RunLinkSession5Exchange_WaitLinkMessage
 
 ; The closing exchange, sub-step 0: after the text starts an exchange of wWorkBuf: $64 bytes for the
 ; leader, $48 for the follower ($45 after the partner cancelled). (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags::
+RunLinkSession5Exchange_WaitTextFlags::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1686,7 +1687,7 @@ RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags::
 
 ; The closing exchange, sub-step 1: when it ends clears $6F bytes of screen state and returns to
 ; game mode 5, state 1. (C1, E-0357)
-RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
+RunLinkSession5Exchange_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1714,7 +1715,7 @@ RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
 
 ; Session 5 breeding, step 32: when the exchange ends sets wLinkScene and wLinkBreedResult 1 (the
 ; egg screens). (C1, E-0357)
-RunLinkSession5Exchange_WriteLinkSendByteAndLinkSceneEtc::
+LinkBreed_FinishExchange::
     ld a, [wLinkMessage]
     cp $f0
     jr z, .clear_link_send_byte
@@ -1730,7 +1731,7 @@ RunLinkSession5Exchange_WriteLinkSendByteAndLinkSceneEtc::
     ret
 
 ; Session 5, state 12: runs the stats screen until its step $0A, then state 17. (C1, E-0357)
-RunLinkSession5Exchange_SwapMonstersMenu::
+RunLinkSession5Exchange_RunStatsScreen::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -1752,9 +1753,9 @@ RunLinkSession5Exchange_ShowChosenRecord::
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest
-    dw RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5
+    dw LinkBreed_DrawPanel
+    dw RunLinkSession5Exchange_ShowChosenRecord_ClearTiles
+    dw RunLinkSession5Exchange_ShowChosenRecord_DrawName
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
 
@@ -1780,7 +1781,7 @@ ShowString0EAndStep_Bank37::
 
 ; The chosen record, step 6: clears the species and name tile areas and resets the text window. (C1,
 ; E-0357)
-RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
+RunLinkSession5Exchange_ShowChosenRecord_ClearTiles::
     ld hl, vTiles1 + $270
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1818,7 +1819,7 @@ RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
     ret
 
 ; The chosen record, step 7: draws the chosen record's name and species name. (C1, E-0357)
-RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5::
+RunLinkSession5Exchange_ShowChosenRecord_DrawName::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -1834,50 +1835,51 @@ RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5::
     ret
 
 ; by wScreenStep: the stats screens of record buffer B, as
-; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0288)
-RunLinkSession5Exchange_ShowRecordStats::
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (renamed from
+; RunLinkSession5Exchange_ShowRecordStats from its E-0357 note, E-0367)
+PartnerStats::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession5Exchange_ToClearBGMapAndLoadFrameTilesAndStep
-    dw RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault
-    dw RunLinkSession5Exchange_ShowRecordStats_AdvanceScreenStep
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37
-    dw RunLinkSession5Exchange_ToDrawRecordBufBStatsScreenAndStep
-    dw RunLinkSession5Exchange_CallDrawRecordBufBSpeciesMonsterPictureInTwoSteps
-    dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor
-    dw RunLinkSession5Exchange_ShowRecordStats_FillTileRectWithArg1Tile
-    dw RunLinkSession5Exchange_ShowRecordStats_Return
-    dw RunLinkSession5Exchange_ShowRecordStats_Return
-    dw RunLinkSession5Exchange_ShowRecordStats_Return
-    dw RunLinkSession5Exchange_ShowRecordStats_Return
-    dw RunLinkSession5Exchange_ShowRecordStats_Return
-    dw RunLinkSession5Exchange_ShowRecordStats_Return
-    dw RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest
-    dw RunLinkSession5Exchange_ShowRecordStats_SetTextWindowTileLo
-    dw RunLinkSession5Exchange_ShowRecordStats_WriteScreenStep
-    dw RunLinkSession5Exchange_ShowRecordStats_SetArg3
-    dw RunLinkSession5Exchange_WriteScreenStepAndArg1Etc
-    dw RunLinkSession5Exchange_ShowRecordStats_WriteArg1AndArg2Etc
-    dw RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4
-    dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel
-    dw RunLinkSession5Exchange_ShowRecordStats_ToDrawRects_2AndStep
-    dw RunLinkSession5Exchange_ToClearTilesAndDrawRectsAndStep
-    dw RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone
-    dw RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680
-    dw RunLinkSession5Exchange_ShowRecordStats_2
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawRects_3
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_SetTextWindowTileLo
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_DecompressRecordBufBSpeciesGraphics
-    dw RunLinkSession5Exchange_ShowRecordStats_RunF2
-    dw RunLinkSession5Exchange_ShowRecordStats_3
+    dw PartnerStats_ToClearBGMapAndLoadFrameTilesAndStep
+    dw PartnerStats_ShowHeading
+    dw PartnerStats_AdvanceScreenStep
+    dw PartnerStats_DrawFrame
+    dw PartnerStats_ToDrawRecordBufBStatsScreenAndStep
+    dw PartnerStats_ToDrawRecordBufBSpeciesMonsterPictureInTwoSteps
+    dw PartnerStats_Cursor
+    dw PartnerStats_Leave
+    dw PartnerStats_Return
+    dw PartnerStats_Return
+    dw PartnerStats_Return
+    dw PartnerStats_Return
+    dw PartnerStats_Return
+    dw PartnerStats_Return
+    dw PartnerStats_ClearPage2
+    dw PartnerStats_ClearPage2Names
+    dw PartnerStats_ToDrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37AndStep
+    dw PartnerStats_DrawPage2Frame
+    dw PartnerStats_ShowPersonality
+    dw PartnerStats_DrawFamilyIcon
+    dw PartnerStats_LoadSprite
+    dw PartnerStats_Page2Keys
+    dw PartnerStats_DrawLevelRow
+    dw PartnerStats_ToDrawRects_2AndStep
+    dw PartnerStats_ToClearTilesAndDrawRectsAndStep
+    dw PartnerStats_ShowSkillNames
+    dw PartnerStats_ShowDescription
+    dw PartnerStats_SkillsKeys
+    dw PartnerStats_DrawSummaryFrames
+    dw PartnerStats_DrawSummaryLevelRow
+    dw PartnerStats_DrawPedigreeFrame
+    dw PartnerStats_DrawParents
+    dw PartnerStats_PedigreeKeys
 
 ; The partner's monster stats, step 8: nothing (a bare ret). (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_Return::
+PartnerStats_Return::
     ret
 
 ; The partner's monster stats, step 0: clears the BG map and loads the frame tiles. (C1, E-0357)
-RunLinkSession5Exchange_ToClearBGMapAndLoadFrameTilesAndStep::
+PartnerStats_ToClearBGMapAndLoadFrameTilesAndStep::
     farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
     inc a
@@ -1886,13 +1888,13 @@ RunLinkSession5Exchange_ToClearBGMapAndLoadFrameTilesAndStep::
 
 ; The partner's monster stats, step 1: shows the heading (bank-$0E string $10), loads sixteen glyph
 ; tiles and draws the monster's name. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault::
+PartnerStats_ShowHeading::
     farcall ShowString10Bank0EAtTiles2020ThenDefault
     farcall LoadSixteenGlyphTilesFromTable
     call DrawRecordBufBNameNameAtTiles1500
 
 ; The partner's monster stats, step 2: moves on. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_AdvanceScreenStep::
+PartnerStats_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1919,9 +1921,9 @@ DrawRecordBufBNameNameAtTiles1500::
     ret
 
 ; The partner's monster stats, step 3: draws the 20 x 18 stats frame. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37::
+PartnerStats_DrawFrame::
     call BGMapAddressAtScroll_Bank37
-    ld de, RunLinkSession5Exchange_ShowRecordStats_TileRect
+    ld de, PartnerStats_DrawFrame_TileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -1935,7 +1937,7 @@ RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37::
     ret
 
 ; The partner's monster stats, step 4: draws its level, status and stats. (C1, E-0357)
-RunLinkSession5Exchange_ToDrawRecordBufBStatsScreenAndStep::
+PartnerStats_ToDrawRecordBufBStatsScreenAndStep::
     farcall DrawRecordBufBStatsScreen
     ld a, [wScreenStep]
     inc a
@@ -1943,13 +1945,13 @@ RunLinkSession5Exchange_ToDrawRecordBufBStatsScreenAndStep::
     ret
 
 ; The partner's monster stats, step 5: draws its picture in two calls. (C1, E-0357)
-RunLinkSession5Exchange_CallDrawRecordBufBSpeciesMonsterPictureInTwoSteps::
+PartnerStats_ToDrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     farcall DrawRecordBufBSpeciesMonsterPictureInTwoSteps
     ret
 
 ; The partner's monster stats, step 6: B leaves; A redraws the picture frame and turns to the second
 ; page (step $0E). (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor::
+PartnerStats_Cursor::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -1976,7 +1978,7 @@ RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor::
     call BGMapAddressAtScroll_Bank37
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -1990,7 +1992,7 @@ RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor::
 
 ; The partner's monster stats, step 7 (leaving): fills the BG map with the fill tile and goes to the
 ; next state. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_FillTileRectWithArg1Tile::
+PartnerStats_Leave::
     call BGMapAddressAtScroll_Bank37
     ld a, h
     ld [wArg5], a
@@ -2017,7 +2019,7 @@ RunLinkSession5Exchange_ShowRecordStats_FillTileRectWithArg1Tile::
     ret
 
 ; The second page, step 14: clears $0F x 2 tiles at VRAM $9200. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest::
+PartnerStats_ClearPage2::
     ld hl, vTiles2 + $200
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2035,7 +2037,7 @@ RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest::
     ret
 
 ; The second page, step 15: clears the species and name tile areas. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_SetTextWindowTileLo::
+PartnerStats_ClearPage2Names::
     ld hl, vTiles1 + $270
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2064,7 +2066,7 @@ RunLinkSession5Exchange_ShowRecordStats_SetTextWindowTileLo::
     ret
 
 ; The second page, step 16: draws the name and species name. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_WriteScreenStep::
+PartnerStats_ToDrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37AndStep::
     call DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37
     ld a, [wScreenStep]
     inc a
@@ -2072,11 +2074,11 @@ RunLinkSession5Exchange_ShowRecordStats_WriteScreenStep::
     ret
 
 ; The second page, step 17: draws the 12 x 15 page frame. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_SetArg3::
+PartnerStats_DrawPage2Frame::
     call BGMapAddressAtScroll_Bank37
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_4_TileRect
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame_TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -2090,7 +2092,7 @@ RunLinkSession5Exchange_ShowRecordStats_SetArg3::
     ret
 
 ; The second page, step 18: shows its personality name and master's name. (C1, E-0357)
-RunLinkSession5Exchange_WriteScreenStepAndArg1Etc::
+PartnerStats_ShowPersonality::
     farcall ShowPersonalityNameAndRecordBufBMasterNameName
     ld a, [wScreenStep]
     inc a
@@ -2098,7 +2100,7 @@ RunLinkSession5Exchange_WriteScreenStepAndArg1Etc::
 
 ; The second page, step 19: draws the family icon with its count and the experience still needed.
 ; (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_WriteArg1AndArg2Etc::
+PartnerStats_DrawFamilyIcon::
     ld a, $6d
     ld [wArg1], a
     xor a
@@ -2115,7 +2117,7 @@ RunLinkSession5Exchange_ShowRecordStats_WriteArg1AndArg2Etc::
 
 ; The second page, step 20: decompresses the species' sprite graphics, shows its item string and
 ; draws the 8 x 7 sprite frame. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
+PartnerStats_LoadSprite::
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
     ld a, [wRecordBufB + MON_SPECIES + 1]
@@ -2132,7 +2134,7 @@ RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     call BGMapAddressAtScroll_Bank37
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DecompressGraphicsArg1ToArg4_TileRect
+    ld de, SwapMonstersMenu_ShowMonsterDetails_LoadSprite_TileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -2147,7 +2149,7 @@ RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
 
 ; The second page, step 21: B redraws and goes back to the first page (step 4); A goes on to the
 ; skills. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat::
+PartnerStats_Page2Keys::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2182,14 +2184,14 @@ RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRe
     ret
 
 ; The second page, step 22: draws the level and status row, then step $0F. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel::
+PartnerStats_DrawLevelRow::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld a, $0f
     ld [wScreenStep], a
     ret
 
 ; The skills page, step 23: draws its frames. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_ToDrawRects_2AndStep::
+PartnerStats_ToDrawRects_2AndStep::
     farcall DrawRects_2
     ld a, [wScreenStep]
     inc a
@@ -2197,7 +2199,7 @@ RunLinkSession5Exchange_ShowRecordStats_ToDrawRects_2AndStep::
     ret
 
 ; The skills page, step 24: clears the text tiles and draws the frames. (C1, E-0357)
-RunLinkSession5Exchange_ToClearTilesAndDrawRectsAndStep::
+PartnerStats_ToClearTilesAndDrawRectsAndStep::
     farcall ClearTilesAndDrawRects
     ld a, [wScreenStep]
     inc a
@@ -2205,14 +2207,14 @@ RunLinkSession5Exchange_ToClearTilesAndDrawRectsAndStep::
     ret
 
 ; The skills page, step 25: shows the eight skill names, or none. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone::
+PartnerStats_ShowSkillNames::
     farcall ShowRecordBufBSkillNamesOrNone
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
 ; The skills page, step 26: shows the species' description. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680::
+PartnerStats_ShowDescription::
     farcall ShowSpeciesCategory13StringAtTiles2680
     ld a, [wScreenStep]
     inc a
@@ -2221,7 +2223,7 @@ RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680::
 
 ; The skills page, step 27: B clears the text and goes on; A loads the summary tiles and frames and
 ; goes on three steps. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_2::
+PartnerStats_SkillsKeys::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2269,7 +2271,7 @@ RunLinkSession5Exchange_ShowRecordStats_2::
     ret
 
 ; The summary page, step 28: draws its frames, then shows the headings and goes on. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_DrawRects_3::
+PartnerStats_DrawSummaryFrames::
     ld a, [wScreenSubStep]
     and a
     jr nz, .call_show_string10_bank0_e_at_tiles2020_then
@@ -2288,7 +2290,7 @@ RunLinkSession5Exchange_ShowRecordStats_DrawRects_3::
 
 ; The summary page, step 29: draws the level row, the name and species and a tile, then step $11.
 ; (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_SetTextWindowTileLo::
+PartnerStats_DrawSummaryLevelRow::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld hl, vTiles1 + $270
     ld a, l
@@ -2323,11 +2325,11 @@ RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_
 
 ; The pedigree page, step 30: draws the 12 x 18 frame and decompresses the parents' species
 ; graphics. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_DecompressRecordBufBSpeciesGraphics::
+PartnerStats_DrawPedigreeFrame::
     call BGMapAddressAtScroll_Bank37
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_GetListEntriesCell5Address_TileRect
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame_TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -2342,7 +2344,7 @@ RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Decompress
     ret
 
 ; The pedigree page, step 31: draws the parents and hides sprite tile $F0. (C1, E-0357)
-RunLinkSession5Exchange_ShowRecordStats_RunF2::
+PartnerStats_DrawParents::
     farcall RunF2
     ld a, $f0
     ldh [hSpriteHideTile], a
@@ -2353,7 +2355,7 @@ RunLinkSession5Exchange_ShowRecordStats_RunF2::
 
 ; The pedigree page, step 32: B goes back to the skills page (step $17); A to leaving (step 7). (C1,
 ; E-0357)
-RunLinkSession5Exchange_ShowRecordStats_3::
+PartnerStats_PedigreeKeys::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2392,14 +2394,14 @@ RunLinkSession5Exchange_ResetListAndShowString::
     jumptable
     dw RunLinkSession5Exchange_ResetListAndShowString_SetListCursor
     dw ShowString0EAndStep_Bank37
-    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu
-    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu
-    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest
-    dw RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5
+    dw RunLinkSession5Exchange_ResetListAndShowString_RunList
+    dw RunLinkSession5Exchange_ResetListAndShowString_RunList
+    dw RunLinkSession5Exchange_ResetListAndShowString_RunList
+    dw LinkBreed_DrawPanel
+    dw RunLinkSession5Exchange_ShowChosenRecord_ClearTiles
+    dw RunLinkSession5Exchange_ShowChosenRecord_DrawName
     dw RunLinkSession5Exchange_CallCopyRectToScreenBufferAndClearAttributes_37
-    dw RunLinkSession5Exchange_ResetListAndShowString_SetScreenState
+    dw RunLinkSession5Exchange_ResetListAndShowString_RunListAgain
 
 ; Back to the list, step 0: restores the list cursor and page. (C1, E-0357)
 RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
@@ -2414,7 +2416,7 @@ RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
 
 ; Back to the list, step 9: runs the list's steps as state $11 (the stored state not restored). (C1,
 ; E-0357)
-RunLinkSession5Exchange_ResetListAndShowString_SetScreenState::
+RunLinkSession5Exchange_ResetListAndShowString_RunListAgain::
     ld a, [wScreenState]
     push af
     ld a, $11
@@ -2424,7 +2426,7 @@ RunLinkSession5Exchange_ResetListAndShowString_SetScreenState::
     ret
 
 ; Back to the list, step 2: runs the list's steps as state $11. (C1, E-0357)
-RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
+RunLinkSession5Exchange_ResetListAndShowString_RunList::
     ld a, [wScreenState]
     push af
     ld a, $11
@@ -2437,7 +2439,7 @@ RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
 ; Back to the list, step 8: draws the choice box and shows the partner's monster (string $0F, 13 x 1
 ; at VRAM $9600). (C1, E-0357)
 RunLinkSession5Exchange_CallCopyRectToScreenBufferAndClearAttributes_37::
-    ld de, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37_TileRect
+    ld de, LinkBreed_DrawChoiceBox_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -4707,9 +4709,8 @@ LinkSkillMapTable_B::
     db SKILL_AHHH ; id 221
 
 ; MapAndCompactSkillListLinkSkillMapTable_A, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes
-; through $63D3 + byte and compacts the lists; 170 entries end at
-; RunLinkSession5Exchange_LinkBreed_TileRect; for 155 of them LinkSkillMapTable_B maps the result
-; back (E-0217, C1)
+; through $63D3 + byte and compacts the lists; 170 entries end at LinkBreed_DrawPanel_TileRect; for
+; 155 of them LinkSkillMapTable_B maps the result back (E-0217, C1)
 ; record: mapped skill ($FE = dropped)
 LinkSkillMapTable_A::
     db SKILL_TRANSFORM ; id 0
@@ -4886,7 +4887,7 @@ LinkSkillMapTable_A::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
-RunLinkSession5Exchange_LinkBreed_TileRect::
+LinkBreed_DrawPanel_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4894,7 +4895,7 @@ RunLinkSession5Exchange_LinkBreed_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 6 x 5 tiles, one row per line
-RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM_TileRect::
+LinkBreed_DrawYesNo_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4902,7 +4903,7 @@ RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 9 x 7 tiles, one row per line
-RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37_TileRect::
+LinkBreed_DrawChoiceBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $60, $61, $62, $62, $63, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4911,6 +4912,6 @@ RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37_Ti
     db $b6, $c3, $c3, $68, $69, $6a, $6b, $c3, $b7 ; id 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-RunLinkSession5Exchange_LinkBreed_Data::
+LinkBreed_ReadChoice_Data::
     db $fc, $c3, $24, $c4, $4c, $c4
     ds $1ae4, $00

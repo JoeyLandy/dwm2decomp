@@ -1239,7 +1239,7 @@
   },
   "C46B": {
     "name": "wMenuState",
-    "note": "state of the current menu or debug screen (RunMenuStateMenuState dispatches on it); cleared by LoadMapHeader",
+    "note": "state of the current menu or debug screen (WarpEffect dispatches on it); cleared by LoadMapHeader",
     "evidence": "E-0133"
   },
   "C46C": {
@@ -2128,7 +2128,7 @@
   },
   "C892": {
     "name": "wArenaOutcome",
-    "note": "set by the arena menu (ArenaMenu_SetFlagBit, script command $F7), read by GreatLog's talk event 1/$65 to clear the arena data (E-0345, C1: named from its users; was wTalkEventByte92)",
+    "note": "set by the arena menu (ArenaMenu_GiveRankReward, script command $F7), read by GreatLog's talk event 1/$65 to clear the arena data (E-0345, C1: named from its users; was wTalkEventByte92)",
     "evidence": "E-0133; E-0345"
   },
   "C893": {
@@ -2610,7 +2610,7 @@
   },
   "C963": {
     "name": "wLinkFightInfo",
-    "note": "link fight information byte (RunLinkSession6Exchange_FightInfoEx) (E-0345, C1: named from its users; was wBattleByte63)",
+    "note": "link fight information byte (RunLinkSession6Exchange_FightInfo_DrawWindow) (E-0345, C1: named from its users; was wBattleByte63)",
     "evidence": "E-0134; E-0345"
   },
   "C964": {
@@ -3542,7 +3542,7 @@
   },
   "D0E7": {
     "name": "wLinkMenuCounter",
-    "note": "counter of the RunGameMode5Case00SubStates screen",
+    "note": "counter of the TitleOpening screen",
     "evidence": "E-0136"
   },
   "D0E8": {
@@ -3782,7 +3782,7 @@
   },
   "D790": {
     "name": "wShopScrollA",
-    "note": "shop list scroll work byte (ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap) (E-0345, C1: named from its users; was wScreenByte90)",
+    "note": "shop list scroll work byte (ShopMenu_Sell_StartQuantity) (E-0345, C1: named from its users; was wScreenByte90)",
     "evidence": "E-0136; E-0345"
   },
   "D791": {

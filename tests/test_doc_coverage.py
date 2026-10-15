@@ -77,6 +77,30 @@ class Coverage(unittest.TestCase):
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]
         self.assertEqual(len(hand_keys), hand, "every hand-written note sits above exactly one code label")
 
+    def test_state_handlers_are_named_for_what_they_do(self):
+        """E-0367: a jumptable entry is not named Parent_<another label> (the step-naming pass's first callee) once its
+        note says what it does; the 16 left have no hand note to name them from."""
+        import re
+        texts = [f.read_text(encoding="utf-8") for f in FILES]
+        labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
+        entries = {m for t in texts for m in re.findall(r"^\s+jumptable\n((?:\s+dw \w+\n)+)", t, re.M)
+                   for m in re.findall(r"dw (\w+)", m)}
+        import json
+        given = {v["name"] for v in json.loads((ROOT / "config/names.json").read_text(encoding="utf-8")).values()
+                 if isinstance(v, dict) and "name" in v}
+        callee_named = []
+        for e in sorted(entries - given):
+            parts = e.split("_")
+            for i in range(1, len(parts)):
+                pre, own = "_".join(parts[:i]), "_".join(parts[i:])
+                if pre in labels and (own in labels or re.sub(r"_\d+$", "", own) in labels):
+                    callee_named.append(e)
+                    break
+        self.assertLessEqual(len(callee_named), 16, callee_named[:20])
+        text = "\n".join(texts)
+        self.assertIn("    jumptable\n    dw KeyAppraisalMenu_Init\n    dw KeyAppraisalMenu_DrawGoldBox\n", text)
+        self.assertIn("RunLoadGameSteps::", text)
+
     def test_hand_notes_answer_gap_notes(self):
         """E-0365: a routine read by hand gets no generated '; code:' restatement under an older gap note."""
         both = [f"{f.name}:{line} {name}" for f in FILES for name, kind, comment, line, _ in doc_coverage.scan(f)

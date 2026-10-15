@@ -2235,7 +2235,7 @@
         }
       ],
       "record": "5 x 5 tiles, one row per line (block number = id)",
-      "note": "E-0166 (C1: RunWorldMapState_WriteTemp0AndTemp1 (A1:4640, the game mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers 1-281 fit before Map49Tileset at $5F2A)."
+      "note": "E-0166 (C1: RunWorldMapState_DrawCloseUp_WriteTemp0AndTemp1 (A1:4640, the game mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers 1-281 fit before Map49Tileset at $5F2A)."
     },
     {
       "bank": "A1",
@@ -2261,7 +2261,7 @@
           "name": "a map number ($20, $30, $48 ...) and three zero bytes; not read here"
         }
       ],
-      "note": "E-0167 (C1: RunWorldMapState_CenteredBGMapOriginForSizeBC takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE)."
+      "note": "E-0167 (C1: RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE)."
     },
     {
       "bank": "5D",
@@ -2953,7 +2953,7 @@
         }
       ],
       "record": "size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell grid",
-      "note": "E-0185 (C1: RunWorldMapState_WriteTemp3AndTemp4Etc reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692)."
+      "note": "E-0185 (C1: RunWorldMapState_DrawCloseUp_WriteTemp3AndTemp4Etc reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692)."
     },
     {
       "bank": "5D",
@@ -3625,7 +3625,7 @@
         }
       ],
       "record": "a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes",
-      "note": "E-0191 (C1: RunNameEntryStateWhenNotFading_ReadArg1 walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
+      "note": "E-0191 (C1: RunNameEntryStateWhenNotFading_CheckName_ReadArg1 walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
     },
     {
       "bank": "60",
@@ -12698,7 +12698,7 @@
     {
       "bank": "0C",
       "addr": "536A",
-      "label": "LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_MonsterIconKindTable",
+      "label": "MonsterIconKindTable",
       "count": 373,
       "id_base": 0,
       "id_names": "monster",
@@ -12709,7 +12709,7 @@
           "name": "index into Data_00C_54DF"
         }
       ],
-      "note": "E-0206 (C1: LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
+      "note": "E-0206 (C1: LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
     },
     {
       "bank": "19",
@@ -13365,7 +13365,7 @@
         ],
         "record": "first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers"
       },
-      "note": "E-0213 (C1: DebugStaffRoll_Update_Sub01_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read)."
+      "note": "E-0213 (C1: DebugStaffRoll_Credits_ShowLines reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read)."
     },
     {
       "bank": "73",
@@ -14434,7 +14434,7 @@
           "name": "82 bank-$1F tile sources, then $FFFF"
         }
       ],
-      "note": "E-0224 (C1: passed with the empty destination list by RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM; 82 words and $FFFF, then 16 bytes of $FF before NameEntryKeyboard)."
+      "note": "E-0224 (C1: passed with the empty destination list by RunNameEntryStateWhenNotFading_SwapGlyphs; 82 words and $FFFF, then 16 bytes of $FF before NameEntryKeyboard)."
     },
     {
       "bank": "14",
@@ -18559,7 +18559,7 @@
           "name": "words to match, then $0000"
         }
       ],
-      "note": "E-0236 (C1: FhuntTalkEvents_WriteTemp0AndRAMG compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear, and otherwise with the word at byte $0B of each party record whose byte $55 bit 7 is clear (LoadSRAMRecordWord); a match sets hTemp0 to 1 or to the party position; 29 words; what the words identify is not read)."
+      "note": "E-0236 (C1: FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear, and otherwise with the word at byte $0B of each party record whose byte $55 bit 7 is clear (LoadSRAMRecordWord); a match sets hTemp0 to 1 or to the party position; 29 words; what the words identify is not read)."
     },
     {
       "bank": "85",
@@ -18574,7 +18574,7 @@
           "name": "words to match, then $0000"
         }
       ],
-      "note": "E-0236 (C1: FhuntTalkEvents_TestFlagBit_3 (unless flag 0 is set) compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear; a match sets hTemp0 to 2; 113 words; what the words identify is not read)."
+      "note": "E-0236 (C1: FhuntTalkEvents_IsDisguisedAsListedMonster (unless flag 0 is set) compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear; a match sets hTemp0 to 2; 113 words; what the words identify is not read)."
     },
     {
       "bank": "30",
@@ -24540,6 +24540,33 @@
       ],
       "record": "map/screen, exact pixel X and inclusive pixel Y range",
       "note": "Nine six-byte regions and $FF sentinel, searched only while no fade runs by UseSpecialSpritePoseAtPosition. Match map/screen, B=X and minimum <= C=Y <= maximum to return A=1. The fade branch ignores this table. All nine region boundaries are probed. (C1, E-0362; earlier fade-only E-0175 was incomplete)"
+    },
+    {
+      "bank": "0C",
+      "addr": "54DF",
+      "label": "MonsterIconBlockPointers",
+      "count": 5,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "icon block (two tile bytes)"
+        }
+      ],
+      "note": "E-0367 (C1: the five words point at the two-byte icon blocks right after them; MonsterIconKindTable's values index this list (E-0206); was named after a step label since renamed)."
+    },
+    {
+      "bank": "0C",
+      "addr": "54E9",
+      "label": "MonsterIconBlocks",
+      "count": 5,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "tile pair"
+        }
+      ],
+      "note": "E-0367 (C1: the five two-byte icon blocks MonsterIconBlockPointers points at, copied to wLibraryEntryBlock by the library entry screen (E-0206))."
     }
   ]
 }

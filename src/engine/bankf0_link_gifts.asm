@@ -587,7 +587,7 @@ Text_CantBeGivenTo::
 ; (outside state 4) the text, then runs state wScreenState: choosing, the egg list, Info / OK, the
 ; records, the message, saving, the exchange, the scenes, 'obtained an egg', 'eggs were traded',
 ; 'hatched' and waiting. (C1, E-0357)
-RunLinkSession8Exchange_WriteTitleScreenState::
+RunLinkSession8Exchange_Receive_WriteTitleScreenState::
     ld a, $01
     ld [wTitleScreenState], a
     ld a, [wFadeState]
@@ -603,23 +603,23 @@ RunLinkSession8Exchange_WriteTitleScreenState::
 .read_screen_state:
     ld a, [wScreenState]
     jumptable
-    dw RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc
-    dw RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_SetScreenStep
-    dw RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_2
-    dw RunLinkSession8Exchange_ToRunLinkSession8Case03Steps
+    dw RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc
+    dw RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_SetScreenStep
+    dw RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_2
+    dw RunLinkSession8Exchange_Receive_ToLinkRecordScreen
     dw RunLinkSession8Exchange_ShowMessage
-    dw RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_3
-    dw RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_4
-    dw RunLinkSession8Exchange_ObjectSceneThenSave
+    dw RunLinkSession8Exchange_Saving
+    dw RunLinkSession8Exchange_Trade
+    dw RunLinkSession8Exchange_GivingScene
     dw RunLinkSession8Exchange_ObtainedEgg
     dw RunLinkSession8Exchange_EggsTraded
-    dw RunLinkSession8Exchange_ObjectScene
+    dw HatchingScene
     dw RunLinkSession8Exchange_EggHatched
     dw RunLinkSession8Exchange_WaitForPartner
 
 ; Dream eggs, state 0: when the partner sends $BD (cancel) goes to the message state 4 answering
 ; $BB; otherwise the opening steps. (C1, E-0357)
-RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc::
+RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .read_screen_step
@@ -635,17 +635,17 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc::
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_SetScreenStep
-    dw RunLinkSession8Exchange_SetLinkSendByte
-    dw RunLinkSession8Exchange_SetScreenStep_2
-    dw RunLinkSession8Exchange_SetLinkSendByte_2
-    dw RunLinkSession8Exchange_SetScreenStep_9
-    dw RunLinkSession8Exchange_SetStringCategory_3
-    dw RunLinkSession8Exchange_SetMenuChoice
-    dw RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0
+    dw RunLinkSession8Exchange_Receive_SetScreenStep
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_2
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_2
+    dw RunLinkSession8Exchange_Receive_2
+    dw RunLinkSession8Exchange_Receive_3
+    dw RunLinkSession8Exchange_Receive_SetMenuChoice
+    dw RunLinkSession8Exchange_ReadSaveAnswer
 
 ; State 0, step 0: sends $BA. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep::
+RunLinkSession8Exchange_Receive_SetScreenStep::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -654,7 +654,7 @@ RunLinkSession8Exchange_SetScreenStep::
     ret
 
 ; State 0, step 1: on the partner's $BA goes on. (C1, E-0357)
-RunLinkSession8Exchange_SetLinkSendByte::
+RunLinkSession8Exchange_Receive_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $ba
     ret nz
@@ -667,7 +667,7 @@ RunLinkSession8Exchange_SetLinkSendByte::
 
 ; State 0, step 2: starts a 12-byte exchange of the player's name and id (wPlayerId) into
 ; wLinkPartnerName. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep_2::
+RunLinkSession8Exchange_Receive_SetScreenStep_2::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -712,7 +712,7 @@ RunLinkSession8Exchange_SetScreenStep_2::
     ret
 
 ; State 0, step 3: when the exchange ends ($F0) goes on. (C1, E-0357)
-RunLinkSession8Exchange_SetLinkSendByte_2::
+RunLinkSession8Exchange_Receive_SetLinkSendByte_2::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -726,7 +726,7 @@ RunLinkSession8Exchange_SetLinkSendByte_2::
     ret
 
 ; State 0, step 4: copies the partner's name into wTextBuf3. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep_9::
+RunLinkSession8Exchange_Receive_2::
     ld hl, wLinkPartnerName
     ld de, wTextBuf3
     ld c, $0a
@@ -752,7 +752,7 @@ RunLinkSession8Exchange_SetScreenStep_9::
 ; State 0, step 5: clears $35 bytes from wFamilyRankTaken, shows 'Yes / No' (string $1F) at VRAM
 ; $9700 and asks 'Give a dream egg?' (string 1) when a gift record is set, otherwise 'Obtain a dream
 ; egg?' (string 0). (C1, E-0357)
-RunLinkSession8Exchange_SetStringCategory_3::
+RunLinkSession8Exchange_Receive_3::
     ld hl, wFamilyRankTaken
     ld b, $35
 
@@ -800,8 +800,8 @@ RunLinkSession8Exchange_SetStringCategory_3::
     ret
 
 ; State 0, step 6: draws the yes/no box with the cursor on yes. (C1, E-0357)
-RunLinkSession8Exchange_SetMenuChoice::
-    ld de, RunLinkSession8Exchange_SetMenuChoice_TileRect
+RunLinkSession8Exchange_Receive_SetMenuChoice::
+    ld de, RunLinkSession8Exchange_Receive_SetMenuChoice_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_BankF0
@@ -817,7 +817,7 @@ RunLinkSession8Exchange_SetMenuChoice::
 
 ; State 0, step 7: yes goes to saving (state 5, 'OK to save the egg trade ...', string 7); no or B
 ; shows 'Please wait...' (string 8), goes to state 4 and sends $BD. (C1, E-0357)
-RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0::
+RunLinkSession8Exchange_ReadSaveAnswer::
     ld a, $02
     ld [wArg2], a
     call HandleTwoChoiceCursorInput_F0
@@ -854,11 +854,11 @@ RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0::
     ret
 
 ; Dream eggs, state 1: the partner's cancel as in state 0; otherwise the egg list's steps
-; (RunLinkSession8Case01Steps). (C1, E-0357)
-RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_SetScreenStep::
+; (LinkEggList). (C1, E-0357)
+RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_SetScreenStep::
     ld a, [wLinkMessage]
     cp $bd
-    jr nz, .call_run_link_session8_case01_steps
+    jr nz, .call_link_egg_list
     xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
@@ -868,13 +868,13 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_SetScreenStep::
     ld [wLinkSendByte], a
     ret
 
-.call_run_link_session8_case01_steps:
-    call RunLinkSession8Case01Steps
+.call_link_egg_list:
+    call LinkEggList
     ret
 
 ; Dream eggs, state 2 (the chosen egg): the partner's cancel as in state 0; otherwise its six steps.
 ; (C1, E-0357)
-RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_2::
+RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_2::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .read_screen_step
@@ -890,15 +890,15 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_2::
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_IsItOKTo
-    dw RunLinkSession8Exchange_SetStringCategory
-    dw RunLinkSession8Exchange_SetMenuChoice_2
-    dw RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_2
-    dw RunLinkSession8Exchange_SetStringCategory_2
-    dw RunLinkSession8Exchange_SetScreenSubStep
+    dw RunLinkSession8Exchange_Receive_IsItOKTo
+    dw RunLinkSession8Exchange_Receive_SetStringCategory
+    dw RunLinkSession8Exchange_Receive_SetMenuChoice_2
+    dw RunLinkSession8Exchange_InfoOrOK
+    dw RunLinkSession8Exchange_Receive_SetStringCategory_2
+    dw RunLinkSession8Exchange_Receive_SetScreenSubStep
 
 ; State 2, step 0: 'Is it OK to transfer the ...' (string 6). (C1, E-0357)
-RunLinkSession8Exchange_IsItOKTo::
+RunLinkSession8Exchange_Receive_IsItOKTo::
     ld a, $06 ; 'Is it OK to transfer the'
     call BeginString_BankF0_Cat0
     ld hl, wScreenStep
@@ -907,14 +907,14 @@ RunLinkSession8Exchange_IsItOKTo::
 
 ; State 2, step 1: draws the box, marks the list entry and shows 'Info / OK' (string $1E, 9 x 1 at
 ; VRAM $9700). (C1, E-0357)
-RunLinkSession8Exchange_SetStringCategory::
-    ld de, RunLinkSession8Exchange_SetStringCategory_TileRect
+RunLinkSession8Exchange_Receive_SetStringCategory::
+    ld de, RunLinkSession8Exchange_Receive_SetStringCategory_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, RunLinkSession8Exchange_Data_2
+    ld hl, RunLinkSession8Exchange_Receive_Data_2
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     lb bc, $14, $0d
@@ -949,8 +949,8 @@ RunLinkSession8Exchange_SetStringCategory::
     ret
 
 ; State 2, step 2: draws the box with the cursor on the first choice. (C1, E-0357)
-RunLinkSession8Exchange_SetMenuChoice_2::
-    ld de, RunLinkSession8Exchange_SetMenuChoice_2_TileRect
+RunLinkSession8Exchange_Receive_SetMenuChoice_2::
+    ld de, RunLinkSession8Exchange_Receive_SetMenuChoice_2_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
@@ -968,7 +968,7 @@ RunLinkSession8Exchange_SetMenuChoice_2::
 ; State 2, step 3: A on Info goes to the records (state 3); A on OK goes to saving ('OK to save the
 ; egg trade ...', state 5, screen kind 0); B shows 'Choose the egg to be transferred.' (string 5)
 ; and goes on. (C1, E-0357)
-RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_2::
+RunLinkSession8Exchange_InfoOrOK::
     xor a
     ld [wArg2], a
     call HandleTwoChoiceCursorInput_F0
@@ -1010,14 +1010,14 @@ RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_2::
 
 ; State 2, step 4 (back): redraws, clears the entry mark and shows 'Ally / Store' (string $1D, 7 x
 ; 1). (C1, E-0357)
-RunLinkSession8Exchange_SetStringCategory_2::
-    ld de, RunLinkSession8Exchange_SetStringCategory_2_TileRect
+RunLinkSession8Exchange_Receive_SetStringCategory_2::
+    ld de, RunLinkSession8Exchange_Receive_SetStringCategory_2_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, RunLinkSession8Exchange_Data_2
+    ld hl, RunLinkSession8Exchange_Receive_Data_2
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     lb bc, $14, $0d
@@ -1052,14 +1052,14 @@ RunLinkSession8Exchange_SetStringCategory_2::
 
 ; State 2, step 5: draws the Ally / Store box with the choice marked and returns to the list (state
 ; 1, step 6). (C1, E-0357)
-RunLinkSession8Exchange_SetScreenSubStep::
-    ld de, RunLinkSession8Exchange_SetScreenSubStep_TileRect
+RunLinkSession8Exchange_Receive_SetScreenSubStep::
+    ld de, RunLinkSession8Exchange_Receive_SetScreenSubStep_TileRect
     ld hl, wWindowTileBuffer + $125
     lb bc, $07, $04
     call CopyRectTo20ByteRows_BankF0
     ld a, [wMenuChoice]
     ld b, $bc
-    ld hl, RunLinkSession8Exchange_Data
+    ld hl, RunLinkSession8Exchange_Receive_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     lb bc, $14, $0d
@@ -1073,16 +1073,16 @@ RunLinkSession8Exchange_SetScreenSubStep::
     ld [wScreenStep], a
     ret
 
-; Dream eggs, state 3: the record screen (RunLinkSession8Case03Steps). (C1, E-0357)
-RunLinkSession8Exchange_ToRunLinkSession8Case03Steps::
-    call RunLinkSession8Case03Steps
+; Dream eggs, state 3: the record screen (LinkRecordScreen). (C1, E-0357)
+RunLinkSession8Exchange_Receive_ToLinkRecordScreen::
+    call LinkRecordScreen
     ret
 
 ; shows a category-0 string, then text waits (E-0303)
 RunLinkSession8Exchange_ShowMessage::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_ShowMessage_BeginString_BankF0_Cat0
+    dw RunLinkSession8Exchange_ShowMessage_ShowStopReason
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_SetLinkSendByte
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_2
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags
@@ -1116,7 +1116,7 @@ RunLinkSession8Exchange_ShowMessage_WaitTextFlags_2::
 
 ; The message, step 0: on the partner's $BB or $BD shows why the exchange stopped (string 2, or 3
 ; when this side cancelled first or has link role bit 1) and goes on. (C1, E-0357)
-RunLinkSession8Exchange_ShowMessage_BeginString_BankF0_Cat0::
+RunLinkSession8Exchange_ShowMessage_ShowStopReason::
     ld a, [wLinkMessage]
     cp $bb
     jr z, .clear_link_send_byte
@@ -1174,7 +1174,7 @@ RunLinkSession8Exchange_ShowMessage_WaitTextFlags::
 
 ; Dream eggs, state 5 (saving): the partner's cancel as in state 0; otherwise its six steps. (C1,
 ; E-0357)
-RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_3::
+RunLinkSession8Exchange_Saving::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .read_screen_step
@@ -1190,16 +1190,16 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_3::
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0
-    dw RunLinkSession8Exchange_CopyRectToWindowTileBufferRow5AndDraw
-    dw RunLinkSession8Exchange_ShowSaveFileInfoWindow
-    dw RunLinkSession8Exchange_DrawBottomBoxForLinkAndSetScreenSubStep
-    dw RunLinkSession8Exchange_SetMenuChoice_3
-    dw RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_3
+    dw RunLinkSession8Exchange_Saving_DrawYesNo
+    dw RunLinkSession8Exchange_Saving_DrawWindow
+    dw RunLinkSession8Exchange_Saving_ShowSaveInfo
+    dw RunLinkSession8Exchange_Saving_DrawBottomBox
+    dw RunLinkSession8Exchange_Receive_SetMenuChoice_3
+    dw RunLinkSession8Exchange_Saving_ReadAnswer
 
 ; Saving, step 1: draws the 20 x 11 save window (CopyRectToWindowTileBufferRow5AndDraw). (C1,
 ; E-0357)
-RunLinkSession8Exchange_CopyRectToWindowTileBufferRow5AndDraw::
+RunLinkSession8Exchange_Saving_DrawWindow::
     farcall CopyRectToWindowTileBufferRow5AndDraw
     ld hl, wScreenStep
     inc [hl]
@@ -1207,7 +1207,7 @@ RunLinkSession8Exchange_CopyRectToWindowTileBufferRow5AndDraw::
 
 ; Saving, step 2: shows the save file's details (ShowSaveFileInfoWindow) and sets wPickCount 1. (C1,
 ; E-0357)
-RunLinkSession8Exchange_ShowSaveFileInfoWindow::
+RunLinkSession8Exchange_Saving_ShowSaveInfo::
     farcall ShowSaveFileInfoWindow
     ld hl, wScreenStep
     inc [hl]
@@ -1216,7 +1216,7 @@ RunLinkSession8Exchange_ShowSaveFileInfoWindow::
     ret
 
 ; Saving, step 3: draws the link bottom box and resets the text window. (C1, E-0357)
-RunLinkSession8Exchange_DrawBottomBoxForLinkAndSetScreenSubStep::
+RunLinkSession8Exchange_Saving_DrawBottomBox::
     farcall DrawBottomBoxForLinkAndSetScreenSubStep
     ld hl, wTextWindowTileLo
     xor a
@@ -1232,7 +1232,7 @@ RunLinkSession8Exchange_DrawBottomBoxForLinkAndSetScreenSubStep::
 
 ; Saving, step 0: moves a 13 x 9 area of the screen buffer, loads two tiles, draws the yes/no box
 ; and shows 'Yes / No' (string $1F), cursor on yes. (C1, E-0357)
-RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0::
+RunLinkSession8Exchange_Saving_DrawYesNo::
     ld c, $09
     ld hl, $01d3
     ld de, $0007
@@ -1251,7 +1251,7 @@ RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0::
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, RunLinkSession8Exchange_TileRect
+    ld de, RunLinkSession8Exchange_Saving_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
@@ -1289,8 +1289,8 @@ RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0::
     ret
 
 ; Saving, step 4: draws the yes/no box with the cursor on yes. (C1, E-0357)
-RunLinkSession8Exchange_SetMenuChoice_3::
-    ld de, RunLinkSession8Exchange_SetMenuChoice_TileRect
+RunLinkSession8Exchange_Receive_SetMenuChoice_3::
+    ld de, RunLinkSession8Exchange_Receive_SetMenuChoice_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_BankF0
@@ -1306,7 +1306,7 @@ RunLinkSession8Exchange_SetMenuChoice_3::
 
 ; Saving, step 5: yes shows 'Please wait...' and goes on to the exchange (state 6); no or B shows
 ; 'Please wait...', goes to state 4 and sends $BD. (C1, E-0357)
-RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_3::
+RunLinkSession8Exchange_Saving_ReadAnswer::
     ld a, $02
     ld [wArg2], a
     call HandleTwoChoiceCursorInput_F0
@@ -1344,7 +1344,7 @@ RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_3::
 
 ; Dream eggs, state 6 (the exchange): the partner's cancel as in state 0; otherwise its 28 steps of
 ; handshakes and record exchanges. (C1, E-0357)
-RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_4::
+RunLinkSession8Exchange_Trade::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .read_screen_step
@@ -1360,37 +1360,37 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_4::
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount
-    dw RunLinkSession8Exchange_SetScreenStep_7
-    dw RunLinkSession8Exchange_SetLinkSendByte_6
-    dw RunLinkSession8Exchange_SetScreenStep_8
-    dw RunLinkSession8Exchange_SetLinkSendByte_7
-    dw RunLinkSession8Exchange_MAlreadyHasA
-    dw RunLinkSession8Exchange_PleaseWait
-    dw RunLinkSession8Exchange_SetScreenStep_7
-    dw RunLinkSession8Exchange_SetLinkSendByte_6
-    dw RunLinkSession8Exchange_SetScreenStep_10
-    dw RunLinkSession8Exchange_SetLinkSendByte_7
-    dw RunLinkSession8Exchange_SetScreenStep_7
-    dw RunLinkSession8Exchange_SetLinkSendByte_6
-    dw RunLinkSession8Exchange_SetScreenStep_6
-    dw RunLinkSession8Exchange_SetLinkSendByte_7
-    dw RunLinkSession8Exchange_SetScreenStep_7
-    dw RunLinkSession8Exchange_SetLinkSendByte_6
-    dw RunLinkSession8Exchange_TestFlagBit
-    dw RunLinkSession8Exchange_SetLinkSendByte_7
-    dw RunLinkSession8Exchange_SetF0ScreenKind
-    dw RunLinkSession8Exchange_AdvanceScreenStep
-    dw RunLinkSession8Exchange_SetScreenStep_3
-    dw RunLinkSession8Exchange_SetLinkSendByte_3
-    dw RunLinkSession8Exchange_SetArg5
-    dw RunLinkSession8Exchange_SetScreenStep_4
-    dw RunLinkSession8Exchange_SetLinkSendByte_4
-    dw RunLinkSession8Exchange_SetScreenStep_5
-    dw RunLinkSession8Exchange_SetLinkSendByte_5
+    dw RunLinkSession8Exchange_Trade_Pack
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_7
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_6
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_8
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_7
+    dw RunLinkSession8Exchange_Receive_5
+    dw RunLinkSession8Exchange_Receive_PleaseWait
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_7
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_6
+    dw RunLinkSession8Exchange_Receive_4
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_7
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_7
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_6
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_6
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_7
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_7
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_6
+    dw RunLinkSession8Exchange_Trade_RankFamilies
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_7
+    dw RunLinkSession8Exchange_Receive_6
+    dw RunLinkSession8Exchange_Receive_7
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_3
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_3
+    dw RunLinkSession8Exchange_Receive_SetArg5
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_4
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_4
+    dw RunLinkSession8Exchange_Receive_SetScreenStep_5
+    dw RunLinkSession8Exchange_Receive_SetLinkSendByte_5
 
 ; The exchange: sends $B3. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep_3::
+RunLinkSession8Exchange_Receive_SetScreenStep_3::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1399,7 +1399,7 @@ RunLinkSession8Exchange_SetScreenStep_3::
     ret
 
 ; The exchange: when wMenuCounter is 0 sends $A8. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep_4::
+RunLinkSession8Exchange_Receive_SetScreenStep_4::
     ld a, [wMenuCounter]
     and a
     ret nz
@@ -1411,7 +1411,7 @@ RunLinkSession8Exchange_SetScreenStep_4::
     ret
 
 ; The exchange: on the partner's $B3 goes on. (C1, E-0357)
-RunLinkSession8Exchange_SetLinkSendByte_3::
+RunLinkSession8Exchange_Receive_SetLinkSendByte_3::
     ld a, [wLinkMessage]
     cp $b3
     ret nz
@@ -1423,7 +1423,7 @@ RunLinkSession8Exchange_SetLinkSendByte_3::
     ret
 
 ; The exchange: on the partner's $A8 goes on. (C1, E-0357)
-RunLinkSession8Exchange_SetLinkSendByte_4::
+RunLinkSession8Exchange_Receive_SetLinkSendByte_4::
     ld a, [wLinkMessage]
     cp $a8
     ret nz
@@ -1435,7 +1435,7 @@ RunLinkSession8Exchange_SetLinkSendByte_4::
     ret
 
 ; The exchange: sends $B6. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep_5::
+RunLinkSession8Exchange_Receive_SetScreenStep_5::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1444,7 +1444,7 @@ RunLinkSession8Exchange_SetScreenStep_5::
     ret
 
 ; The exchange: on the partner's $B6 goes to the scene state 7 + wF0ScreenKind. (C1, E-0357)
-RunLinkSession8Exchange_SetLinkSendByte_5::
+RunLinkSession8Exchange_Receive_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $b6
     ret nz
@@ -1462,13 +1462,13 @@ RunLinkSession8Exchange_SetLinkSendByte_5::
     ret
 
 ; The exchange, step 9: starts the $A5-byte record exchange: this side's gift record (or, without
-; one, the empty record RunLinkSession8Exchange_Data_3) out, the partner's into wRecordBufA. (C1,
-; E-0357)
-RunLinkSession8Exchange_SetScreenStep_10::
+; one, the empty record RunLinkSession8Exchange_Receive_Data_3) out, the partner's into wRecordBufA.
+; (C1, E-0357)
+RunLinkSession8Exchange_Receive_4::
     ld a, [wGiftRecord]
     and a
     jr nz, .check_screen_step
-    ld hl, RunLinkSession8Exchange_Data_3
+    ld hl, RunLinkSession8Exchange_Receive_Data_3
     jr .check_screen_step2
 
 .check_screen_step:
@@ -1500,7 +1500,7 @@ RunLinkSession8Exchange_SetScreenStep_10::
 
 ; The exchange, step 13: starts a $D8-byte exchange from wGM2TimerFrames into wRecordBufB. (C1,
 ; E-0357)
-RunLinkSession8Exchange_SetScreenStep_6::
+RunLinkSession8Exchange_Receive_SetScreenStep_6::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1530,7 +1530,7 @@ RunLinkSession8Exchange_SetScreenStep_6::
 ; (8 - wRankBand) / 5 and raises that many random lowest resistances; then fills the egg data
 ; (species, family, the player's name) and starts a 16-byte exchange into wLinkHatchData. (C1,
 ; E-0357)
-RunLinkSession8Exchange_TestFlagBit::
+RunLinkSession8Exchange_Trade_RankFamilies::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .set_link_egg_data_to_01
@@ -1604,7 +1604,7 @@ RunLinkSession8Exchange_TestFlagBit::
     ret
 
 ; The exchange: sends $BA. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep_7::
+RunLinkSession8Exchange_Receive_SetScreenStep_7::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1613,7 +1613,7 @@ RunLinkSession8Exchange_SetScreenStep_7::
     ret
 
 ; The exchange: on the partner's $BA goes on. (C1, E-0357)
-RunLinkSession8Exchange_SetLinkSendByte_6::
+RunLinkSession8Exchange_Receive_SetLinkSendByte_6::
     ld a, [wLinkMessage]
     cp $ba
     ret nz
@@ -1627,7 +1627,7 @@ RunLinkSession8Exchange_SetLinkSendByte_6::
 ; The exchange, step 0: packs the screen kind and the gift flag to send, marks the partner's family
 ; bit (MarkBitBInFamilyBitsAndCount) and rolls whether the egg improves (RollMarkChangeCountChance,
 ; wLinkEggState). (C1, E-0357)
-RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount::
+RunLinkSession8Exchange_Trade_Pack::
     ld a, [wF0ScreenKind]
     ld [wLinkRecvBuffer], a
     ld a, [wGiftRecord]
@@ -1643,7 +1643,7 @@ RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount::
     ret
 
 ; The exchange, step 3: starts a 3-byte exchange into wLinkPartnerName. (C1, E-0357)
-RunLinkSession8Exchange_SetScreenStep_8::
+RunLinkSession8Exchange_Receive_SetScreenStep_8::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1669,7 +1669,7 @@ RunLinkSession8Exchange_SetScreenStep_8::
     ret
 
 ; The exchange: when the exchange ends ($F0) goes on. (C1, E-0357)
-RunLinkSession8Exchange_SetLinkSendByte_7::
+RunLinkSession8Exchange_Receive_SetLinkSendByte_7::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1685,7 +1685,7 @@ RunLinkSession8Exchange_SetLinkSendByte_7::
 ; The exchange, step 5: when this side gives and the partner already has a dream egg shows '...
 ; already has a Dream Egg.' (string $16); when this side obtains and the partner has none, '... has
 ; no Dream Egg to ...' (string $13); otherwise skips two steps. (C1, E-0357)
-RunLinkSession8Exchange_MAlreadyHasA::
+RunLinkSession8Exchange_Receive_5::
     ld a, [wGiftRecord]
     and a
     jr nz, .check_link_partner_byte1
@@ -1721,7 +1721,7 @@ RunLinkSession8Exchange_MAlreadyHasA::
 
 ; The exchange, step 6: 'Please wait...' (string $12) and on to the message state 4 (step 1). (C1,
 ; E-0357)
-RunLinkSession8Exchange_PleaseWait::
+RunLinkSession8Exchange_Receive_PleaseWait::
     ld a, $12 ; 'Please wait…'
     call BeginString_BankF0_Cat0
     xor a
@@ -1734,7 +1734,7 @@ RunLinkSession8Exchange_PleaseWait::
 
 ; The exchange, step 19: picks the closing scene (wF0ScreenKind): 3 when the egg improved, 4 when
 ; the partner's byte 2 is set, 0 when this side gave an egg, otherwise 1. (C1, E-0357)
-RunLinkSession8Exchange_SetF0ScreenKind::
+RunLinkSession8Exchange_Receive_6::
     ld a, [wLinkEggState]
     and a
     jr nz, .skip
@@ -1767,7 +1767,7 @@ RunLinkSession8Exchange_SetF0ScreenKind::
 ; The exchange, step 20: kind 0 clears the $D8 bytes from wGM2TimerFrames; kinds 1 and 2 store the
 ; received record as the new gift record (first byte 1) and copy $33 bytes of wRecordBufB to
 ; wGM2TimerFrames; then goes on. (C1, E-0357)
-RunLinkSession8Exchange_AdvanceScreenStep::
+RunLinkSession8Exchange_Receive_7::
     ld a, [wF0ScreenKind]
     and a
     jr z, .skip
@@ -1824,7 +1824,7 @@ RunLinkSession8Exchange_AdvanceScreenStep::
 
 ; The exchange, step 23: fills the 32 x 32 BG map with the fill tile, sets up the closing scene's
 ; objects (RunWithArg1ForF0ScreenKind), clears the sprite window clip mode and goes on. (C1, E-0357)
-RunLinkSession8Exchange_SetArg5::
+RunLinkSession8Exchange_Receive_SetArg5::
     call BGMapAddressAtScroll_BankF0
     ld a, h
     ld [wArg5], a
@@ -1857,27 +1857,28 @@ RunLinkSession8Exchange_SetArg5::
 .return:
     ret
 
-; by wScreenSubStep: timed waits and moves of field objects 1 and 5, then RunSaveGameSteps (E-0293)
-RunLinkSession8Exchange_ObjectSceneThenSave::
+; by wScreenSubStep: timed waits and moves of field objects 1 and 5, then RunSaveGameSteps (renamed
+; from RunLinkSession8Exchange_ObjectSceneThenSave from its E-0357 note, E-0367)
+RunLinkSession8Exchange_GivingScene::
     ld a, [wScreenSubStep]
     jumptable
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetScreenSubStep
-    dw RunLinkSession8Exchange_ShowHeroReceivedYourEgg
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
+    dw RunLinkSession8Exchange_GivingScene_SetScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_ShowHeroReceivedYourEgg
+    dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Giving scene, step 12: after the text saves (RunSaveGameSteps), then the waiting state $0C. (C1,
 ; E-0357)
-RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps::
+RunLinkSession8Exchange_GivingScene_Save::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1914,7 +1915,7 @@ RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep::
 
 ; Giving scene, step 4: walks object 1 left on three counts of four until X $58, then sets its flag
 ; bit 1. (C1, E-0357)
-RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep::
+RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
     and a
@@ -1949,7 +1950,7 @@ RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep::
     ret
 
 ; Giving scene, step 3: shows object 5 (state $80; the egg). (C1, E-0357)
-RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5::
+RunLinkSession8Exchange_GivingScene_SetObject5::
     ld a, $80
     ld [wObject5], a
     ld a, $01
@@ -1960,7 +1961,7 @@ RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5::
     ret
 
 ; Giving scene, step 7: hides object 5. (C1, E-0357)
-RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5::
+RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5::
     ld a, $00
     ld [wObject5], a
     ld [wArg1], a
@@ -1970,7 +1971,7 @@ RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5::
     ret
 
 ; Giving scene, step 10: turns object 1 right and walks it off the screen (X $E0). (C1, E-0357)
-RunLinkSession8Exchange_ObjectSceneThenSave_SetScreenSubStep::
+RunLinkSession8Exchange_GivingScene_SetScreenSubStep::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
     ld [wObject1 + OBJ_FLAGS], a
@@ -1992,7 +1993,7 @@ RunLinkSession8Exchange_ObjectSceneThenSave_SetScreenSubStep::
 
 ; Giving scene, step 11: '<name> received your egg.' (string 9) and resets the save steps. (C1,
 ; E-0357)
-RunLinkSession8Exchange_ShowHeroReceivedYourEgg::
+RunLinkSession8Exchange_GivingScene_ShowHeroReceivedYourEgg::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggMessageBlock
     ld de, wTextBuf0
@@ -2012,18 +2013,18 @@ RunLinkSession8Exchange_ObtainedEgg::
     ld a, [wScreenSubStep]
     jumptable
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_SetObject5
     dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObtainedEgg_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
+    dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Obtaining scene, step 10: turns the sprite at wSpriteSlots + $B left and moves it off the screen
 ; ($E0). (C1, E-0357)
@@ -2071,24 +2072,24 @@ RunLinkSession8Exchange_EggsTraded::
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_SetObject5
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
-    dw RunLinkSession8Exchange_EggsTraded_StepObjectCB9AUpToE0
+    dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
+    dw RunLinkSession8Exchange_EggsTraded_MoveOff
     dw RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
+    dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Trading scene, step 14: moves object 1 right and the sprite left until both leave the screen. (C1,
 ; E-0357)
-RunLinkSession8Exchange_EggsTraded_StepObjectCB9AUpToE0::
+RunLinkSession8Exchange_EggsTraded_MoveOff::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a
@@ -2157,49 +2158,49 @@ RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith::
     ld [wSaveRecordIndex], a
     ret
 
-; by wScreenSubStep: the steps of RunLinkSession8Exchange_ObjectSceneThenSave in another order
-; (E-0293)
-RunLinkSession8Exchange_ObjectScene::
+; by wScreenSubStep: the steps of RunLinkSession8Exchange_GivingScene in another order (renamed from
+; RunLinkSession8Exchange_ObjectScene from its E-0357 note, E-0367)
+HatchingScene::
     ld a, [wScreenSubStep]
     jumptable
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_SetObject5
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_RunFieldCommandTemp0
-    dw RunLinkSession8Exchange_ObjectScene_SetSpriteSlotsPlus7
-    dw RunLinkSession8Exchange_ObjectScene_QueueSoundEffect
-    dw RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames
+    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetScreenSubStep
+    dw HatchingScene_ShowEgg
+    dw HatchingScene_SetSpriteSlotsPlus7
+    dw HatchingScene_Hatch
+    dw HatchingScene_Bob
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteObject2AndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteObject2AndSpriteSlotsEtc
+    dw HatchingScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe
-    dw RunLinkSession8Exchange_ObjectScene_CopyRectTo20ByteRows_BankF0
-    dw RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0
-    dw RunLinkSession8Exchange_ObjectScene_GameMode6_Update
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
+    dw HatchingScene_SetObject2Plus7
+    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw HatchingScene_SetObject2Plus7_SetScreenSubStep
+    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw HatchingScene_SetObject2Plus7
+    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw HatchingScene_SetObject2Plus7_SetScreenSubStep
+    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw HatchingScene_WriteObject2AndScreenSubStep
+    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw HatchingScene_WriteObject2AndSpriteSlotsEtc
+    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw HatchingScene_ShowGHatchedFromThe
+    dw HatchingScene_DrawFrame
+    dw HatchingScene_RunText
+    dw HatchingScene_RunEggScreens
+    dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Hatching scene, step 32: once wMenuCounter is 0 runs the text window and goes on. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0::
+HatchingScene_RunText::
     ld a, [wMenuCounter]
     and a
     ret nz
@@ -2211,8 +2212,8 @@ RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0::
 
 ; Hatching scene, step 31: draws the 20 x 13 frame, clears the battle scene, sprite count and name
 ; entry state and sets wMenuCounter 1. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_CopyRectTo20ByteRows_BankF0::
-    ld de, RunLinkSession8Exchange_ObjectScene_TileRect
+HatchingScene_DrawFrame::
+    ld de, HatchingScene_DrawFrame_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $14, $0d
     call CopyRectTo20ByteRows_BankF0
@@ -2232,7 +2233,7 @@ RunLinkSession8Exchange_ObjectScene_CopyRectTo20ByteRows_BankF0::
 ; Hatching scene, step 33: runs game mode 6's update with the hatch state swapped into the screen
 ; state (the egg screens); when it asks for a mode change switches to game mode 7, state $0A,
 ; sub-step $22, clearing $D8 bytes from wGM2TimerFrames and the save steps. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_GameMode6_Update::
+HatchingScene_RunEggScreens::
     ld a, [wScreenState]
     ld l, a
     ld a, [wScreenStep]
@@ -2292,7 +2293,7 @@ RunLinkSession8Exchange_ObjectScene_GameMode6_Update::
 
 ; Hatching scene, step 8: turns the sprite left and moves it to $20, then starts field command $0E
 ; (the egg at ($48, $40)) and stops the sprite. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_RunFieldCommandTemp0::
+HatchingScene_ShowEgg::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a
@@ -2327,7 +2328,7 @@ RunLinkSession8Exchange_ObjectScene_RunFieldCommandTemp0::
     ret
 
 ; Hatching scene, step 9: turns the sprite right. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_SetSpriteSlotsPlus7::
+HatchingScene_SetSpriteSlotsPlus7::
     ld a, $01
     ld [wSpriteSlots + $7], a
     ld a, [wScreenSubStep]
@@ -2336,7 +2337,7 @@ RunLinkSession8Exchange_ObjectScene_SetSpriteSlotsPlus7::
     ret
 
 ; Hatching scene, step 15: turns object 2 left. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_SetScreenSubStep::
+HatchingScene_SetObject2Plus7_SetScreenSubStep::
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
     ld a, [wScreenSubStep]
@@ -2345,7 +2346,7 @@ RunLinkSession8Exchange_ObjectScene_SetScreenSubStep::
     ret
 
 ; Hatching scene, step 17: turns object 2 right. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_SetObject2Plus7::
+HatchingScene_SetObject2Plus7::
     ld a, $01
     ld [wObject2 + OBJ_STATE], a
     ld a, [wScreenSubStep]
@@ -2354,7 +2355,7 @@ RunLinkSession8Exchange_ObjectScene_SetObject2Plus7::
     ret
 
 ; Hatching scene, step 26: walks object 2 left until X $30. (C1, E-0357)
-RunLinkSession8Exchange_WriteObject2AndScreenSubStep::
+HatchingScene_WriteObject2AndScreenSubStep::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
     ld [wObject2 + OBJ_FLAGS], a
@@ -2412,7 +2413,7 @@ StepObjectCB9AAndTriggerAt60::
 
 ; Hatching scene, step 10: counts $D9 frames (sound $74 at frame $BA), then hides the egg, adds a
 ; sprite slot and goes on. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_QueueSoundEffect::
+HatchingScene_Hatch::
     ld a, [wScreenCounter]
     cp $ba
     jr nz, .check_screen_counter
@@ -2441,7 +2442,7 @@ RunLinkSession8Exchange_ObjectScene_QueueSoundEffect::
 
 ; Hatching scene, step 11: bobs object 1's Y through the offset table every four frames and turns
 ; the sprite right. (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames::
+HatchingScene_Bob::
     ld de, wObject1 + OBJ_Y
     call StepScreenStepOffsetTableEvery4Frames
     ld a, $01
@@ -2449,7 +2450,7 @@ RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames::
     ret
 
 ; Hatching scene, step 28: walks object 2 and the sprite left off the screen. (C1, E-0357)
-RunLinkSession8Exchange_WriteObject2AndSpriteSlotsEtc::
+HatchingScene_WriteObject2AndSpriteSlotsEtc::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
     ld [wObject2 + OBJ_FLAGS], a
@@ -2475,7 +2476,7 @@ RunLinkSession8Exchange_WriteObject2AndSpriteSlotsEtc::
 
 ; Hatching scene, step 30: '<species> hatched from the egg that ...' (string $0C, the egg's species)
 ; and prepares the egg screen (hatch state 2, link breed result 1). (C1, E-0357)
-RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe::
+HatchingScene_ShowGHatchedFromThe::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggSpeciesLo
     ld de, wTextBuf1
@@ -2501,41 +2502,41 @@ RunLinkSession8Exchange_EggHatched::
     ld a, [wScreenSubStep]
     jumptable
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_GivingScene_SetObject5
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_EggHatched_RunFieldCommandTemp0
+    dw RunLinkSession8Exchange_EggHatched_ShowEgg
     dw RunLinkSession8Exchange_EggHatched_SetObject1Plus7
-    dw RunLinkSession8Exchange_ObjectScene_QueueSoundEffect
+    dw HatchingScene_Hatch
     dw RunLinkSession8Exchange_ToStepScreenStepOffsetTableEvery4Frames
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw HatchingScene_SetObject2Plus7
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetScreenSubStep
+    dw HatchingScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw HatchingScene_SetObject2Plus7
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetScreenSubStep
+    dw HatchingScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw HatchingScene_SetObject2Plus7
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_EggHatched_WriteObject2AndScreenSubStep
+    dw RunLinkSession8Exchange_WriteObject2AndScreenSubStep
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_WriteSpriteSlotsAndObject1Etc
     dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
+    dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Hatched scene, step 8: walks object 1 right to X $70, then starts field command $0E (the egg at
 ; ($48, $40)) and stops it. (C1, E-0357)
-RunLinkSession8Exchange_EggHatched_RunFieldCommandTemp0::
+RunLinkSession8Exchange_EggHatched_ShowEgg::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
     ld [wObject1 + OBJ_FLAGS], a
@@ -2579,7 +2580,7 @@ RunLinkSession8Exchange_EggHatched_SetObject1Plus7::
     ret
 
 ; Hatched scene, step 26: walks object 2 right until X $60. (C1, E-0357)
-RunLinkSession8Exchange_EggHatched_WriteObject2AndScreenSubStep::
+RunLinkSession8Exchange_WriteObject2AndScreenSubStep::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
     ld [wObject2 + OBJ_FLAGS], a
@@ -2778,36 +2779,37 @@ CopyStringMaxBToDE::
     ld [de], a
     ret
 
-; runs the routine for wScreenStep (jump table of ten) (E-0122)
-RunLinkSession8Case01Steps::
+; runs the routine for wScreenStep (jump table of ten) (E-0122) (renamed from
+; RunLinkSession8Case01Steps from its E-0357 note, E-0367)
+LinkEggList::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Case01Steps_ToLoadTileListSixPerFrame
-    dw RunLinkSession8Case01Steps_ListRecordsInUseEggs
-    dw RunLinkSession8Case01Steps_FillTilesBxC
-    dw RunLinkSession8Case01Steps_ClampRecordListPageCursor4
-    dw RunLinkSession8Case01Steps_DrawRecordListPageSpeciesNames
-    dw RunLinkSession8Case01Steps_DrawRecordListPageMarks
-    dw RunLinkSession8Case01Steps_UpdatePagedListCursor
-    dw RunLinkSession8Case01Steps_CopyScreenBufferRectWithAttrs_F0
-    dw RunLinkSession8Case01Steps_BGMapAddressAtScroll_BankF0
-    dw RunLinkSession8Case01Steps_ShowChooseTheKindOf
+    dw LinkEggList_ToLoadTileListSixPerFrame
+    dw LinkEggList_ListEggs
+    dw LinkEggList_ClearText
+    dw LinkEggList_DrawPageFrame
+    dw LinkEggList_DrawSpeciesNames
+    dw LinkEggList_DrawMarks
+    dw LinkEggList_Cursor
+    dw LinkEggList_Cancel
+    dw LinkEggList_RedrawScreen
+    dw LinkEggList_ShowChooseTheKindOf
 
 ; The egg list, step 0: loads the list's tiles six per call (LoadTileListSixPerFrame). (C1, E-0357)
-RunLinkSession8Case01Steps_ToLoadTileListSixPerFrame::
+LinkEggList_ToLoadTileListSixPerFrame::
     farcall LoadTileListSixPerFrame
     ret
 
 ; The egg list, step 1: draws the 13 x 9 list box with the Ally / Store choice marked and lists the
 ; eggs (ListRecordsInUseEggs). (C1, E-0357)
-RunLinkSession8Case01Steps_ListRecordsInUseEggs::
-    ld de, RunLinkSession8Case01Steps_ListRecordsInUseEggs_TileRect
+LinkEggList_ListEggs::
+    ld de, LinkEggList_ListEggs_TileRect
     ld hl, wWindowTileBuffer + $6b
     lb bc, $0d, $09
     call CopyRectTo20ByteRows_BankF0
     ld a, [wMenuChoice]
     ld b, $bc
-    ld hl, RunLinkSession8Exchange_Data
+    ld hl, RunLinkSession8Exchange_Receive_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     lb bc, $14, $0d
@@ -2822,7 +2824,7 @@ RunLinkSession8Case01Steps_ListRecordsInUseEggs::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 9 tiles, one row per line
-RunLinkSession8Case01Steps_ListRecordsInUseEggs_TileRect::
+LinkEggList_ListEggs_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -2834,7 +2836,7 @@ RunLinkSession8Case01Steps_ListRecordsInUseEggs_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; The egg list, step 2: clears five tile areas of the text and resets the text window. (C1, E-0357)
-RunLinkSession8Case01Steps_FillTilesBxC::
+LinkEggList_ClearText::
     ld hl, vTiles1 + $3f0
     ld bc, $0401
     call FillTilesBxC
@@ -2865,8 +2867,8 @@ RunLinkSession8Case01Steps_FillTilesBxC::
 
 ; The egg list, step 3: redraws the box, clamps the page cursor of four and, with two or more pages,
 ; draws the page brackets and page-of-pages numbers. (C1, E-0357)
-RunLinkSession8Case01Steps_ClampRecordListPageCursor4::
-    ld de, RunLinkSession8Case01Steps_ClampRecordListPageCursor4_TileRect
+LinkEggList_DrawPageFrame::
+    ld de, LinkEggList_DrawPageFrame_TileRect
     ld hl, wWindowTileBuffer + $6b
     lb bc, $0d, $09
     call CopyRectTo20ByteRows_BankF0
@@ -2902,7 +2904,7 @@ RunLinkSession8Case01Steps_ClampRecordListPageCursor4::
     ret
 
 ; The egg list, step 4: draws the page's species names. (C1, E-0357)
-RunLinkSession8Case01Steps_DrawRecordListPageSpeciesNames::
+LinkEggList_DrawSpeciesNames::
     xor a
     ld [wArg5], a
     farcall DrawRecordListPageSpeciesNames
@@ -2912,7 +2914,7 @@ RunLinkSession8Case01Steps_DrawRecordListPageSpeciesNames::
     ret
 
 ; The egg list, step 5: loads the mark tiles and draws the page's marks. (C1, E-0357)
-RunLinkSession8Case01Steps_DrawRecordListPageMarks::
+LinkEggList_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
@@ -2929,7 +2931,7 @@ RunLinkSession8Case01Steps_DrawRecordListPageMarks::
 
 ; The egg list, step 6: the list cursor: a page change goes back four steps; B goes on; A picks the
 ; egg, goes to state 2 and hides the sprites. (C1, E-0357)
-RunLinkSession8Case01Steps_UpdatePagedListCursor::
+LinkEggList_Cursor::
     ld a, $01
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
@@ -2975,7 +2977,7 @@ RunLinkSession8Case01Steps_UpdatePagedListCursor::
 
 ; The egg list, step 7 (B): moves a 13 x 9 area of the screen buffer and draws a 7 x 1 strip. (C1,
 ; E-0357)
-RunLinkSession8Case01Steps_CopyScreenBufferRectWithAttrs_F0::
+LinkEggList_Cancel::
     ld c, $09
     ld hl, $01d3
     ld de, $0007
@@ -2984,7 +2986,7 @@ RunLinkSession8Case01Steps_CopyScreenBufferRectWithAttrs_F0::
     ld a, $0d
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_F0
-    ld de, RunLinkSession8Case01Steps_TileRect
+    ld de, LinkEggList_Cancel_TileRect
     ld hl, wWindowTileBuffer + $111
     lb bc, $07, $01
     call CopyRectTo20ByteRows_BankF0
@@ -2996,11 +2998,11 @@ RunLinkSession8Case01Steps_CopyScreenBufferRectWithAttrs_F0::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 7 x 1 tiles, one row per line
-RunLinkSession8Case01Steps_TileRect::
+LinkEggList_Cancel_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
 
 ; The egg list, step 8: draws the screen and loads four frame tiles. (C1, E-0357)
-RunLinkSession8Case01Steps_BGMapAddressAtScroll_BankF0::
+LinkEggList_RedrawScreen::
     call BGMapAddressAtScroll_BankF0
     lb bc, $14, $09
     ld de, $01cc
@@ -3032,7 +3034,7 @@ RunLinkSession8Case01Steps_BGMapAddressAtScroll_BankF0::
 
 ; The egg list, step 9: reloads the list tiles six per call; when done clears the choice mark and
 ; returns to state 0, step 7 with 'Choose the kind of egg to ...' (string 4). (C1, E-0357)
-RunLinkSession8Case01Steps_ShowChooseTheKindOf::
+LinkEggList_ShowChooseTheKindOf::
     ld a, $9e
     ld [wArg1], a
     xor a
@@ -3048,7 +3050,7 @@ RunLinkSession8Case01Steps_ShowChooseTheKindOf::
     ret nz
     ld a, [wMenuChoice]
     ld b, $c3
-    ld hl, RunLinkSession8Exchange_Data
+    ld hl, RunLinkSession8Exchange_Receive_Data
     call StoreBAtWordTableEntry_BankF0
     xor a
     ld [wScreenState], a
@@ -3069,30 +3071,31 @@ BeginString_BankF0_Cat0::
 
 ; the record-list screen of link session 8's receive side: clears the BG map, draws a paged record
 ; list with species names and marks, and moves the list cursor (HandleListCursorInput_1D) (E-0354;
-; was: runs the routine for wScreenStep (jump table of seventeen) (E-0124))
-RunLinkSession8Case03Steps::
+; was: runs the routine for wScreenStep (jump table of seventeen) (E-0124)) (renamed from
+; RunLinkSession8Case03Steps from its E-0357 note, E-0367)
+LinkRecordScreen::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Case03Steps_ClearBGMapAtScrollAndResetScroll_BankF0
-    dw RunLinkSession8Case03Steps_WriteScreenStep
-    dw RunLinkSession8Case03Steps_OrFromBankWaitVRAM
-    dw RunLinkSession8Case03Steps_FillTilesBxC_SetListCursor
-    dw RunLinkSession8Case03Steps_UploadTilesFromData
-    dw RunLinkSession8Case03Steps_GetListEntriesCell4Address_BankF0
-    dw RunLinkSession8Case03Steps_DrawRect6x6FromAtScroll41_BankF0
-    dw RunLinkSession8Case03Steps_HandleListCursorInput_1D
-    dw RunLinkSession8Case03Steps_FillTilesBxC
+    dw LinkRecordScreen_Clear
+    dw LinkRecordScreen_WriteScreenStep
+    dw LinkRecordScreen_OrGlyphs
+    dw LinkRecordScreen_ClearText
+    dw LinkRecordScreen_DrawPedigreeFrame
+    dw LinkRecordScreen_DrawParents
+    dw LinkRecordScreen_LoadPicture
+    dw LinkRecordScreen_Cursor
+    dw LinkRecordScreen_ClearTiles
     dw ClearBGMapAtScrollAndResetScroll_BankF0
-    dw RunLinkSession8Case03Steps_WriteScreenStep_RunLinkSession8Case03Steps_WriteGlyphListPos
-    dw RunLinkSession8Case03Steps_ShowString_BankF0
-    dw RunLinkSession8Case03Steps_FillTilesBxC_SetScreenStep
-    dw RunLinkSession8Case03Steps_ClampRecordListPageCursor4
-    dw RunLinkSession8Case03Steps_DrawRecordListPageSpeciesNames
-    dw RunLinkSession8Case03Steps_DrawRecordListPageMarks
-    dw RunLinkSession8Case03Steps_RestoreSpriteStateClearCount_BankF0
+    dw LinkRecordScreen_CopyGlyphs
+    dw LinkRecordScreen_ShowInfoOK
+    dw LinkRecordScreen_ClearTextAgain
+    dw LinkRecordScreen_DrawListBox
+    dw LinkRecordScreen_DrawSpeciesNames
+    dw LinkRecordScreen_DrawMarks
+    dw LinkRecordScreen_Leave
 
 ; The record screen, step 0: clears the BG map, resets the scroll and loads two tiles. (C1, E-0357)
-RunLinkSession8Case03Steps_ClearBGMapAtScrollAndResetScroll_BankF0::
+LinkRecordScreen_Clear::
     call ClearBGMapAtScrollAndResetScroll_BankF0
     ld de, Tiles1Plus2F0Tiles
     ld hl, vTiles1 + $7e0
@@ -3136,10 +3139,10 @@ ClearBGMapAtScrollAndResetScroll_BankF0::
     ret
 
 ; The record screen, step 1: copies the glyph tiles from its tile lists. (C1, E-0357)
-RunLinkSession8Case03Steps_WriteScreenStep::
-    ld hl, RunLinkSession8Case03Steps_WriteScreenStep_TileCopyDestList
-    ld de, RunLinkSession8Case03Steps_WriteScreenStep_TileCopySrcList
-    call RunLinkSession8Case03Steps_WriteGlyphListPos
+LinkRecordScreen_WriteScreenStep::
+    ld hl, LinkRecordScreen_WriteScreenStep_TileCopyDestList
+    ld de, LinkRecordScreen_WriteScreenStep_TileCopySrcList
+    call LinkRecordScreen_WriteGlyphListPos
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3147,7 +3150,7 @@ RunLinkSession8Case03Steps_WriteScreenStep::
 
 ; The record screen, step 2: ORs six glyph tiles into VRAM $9020 onward (OrFromBankWaitVRAM). (C1,
 ; E-0357)
-RunLinkSession8Case03Steps_OrFromBankWaitVRAM::
+LinkRecordScreen_OrGlyphs::
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $20
     ld b, $1f
@@ -3185,7 +3188,7 @@ RunLinkSession8Case03Steps_OrFromBankWaitVRAM::
 
 ; The record screen, step 3: clears the text tiles, loads a frame tile and turns the paged cursor
 ; into a plain index (page x 4 + row). (C1, E-0357)
-RunLinkSession8Case03Steps_FillTilesBxC_SetListCursor::
+LinkRecordScreen_ClearText::
     ld hl, vTiles2 + $200
     ld bc, $1304
     call FillTilesBxC
@@ -3210,10 +3213,10 @@ RunLinkSession8Case03Steps_FillTilesBxC_SetListCursor::
 
 ; The record screen, step 4: loads the arrow tiles, draws the 20 x 18 pedigree frame and loads the
 ; party's species sprites. (C1, E-0357)
-RunLinkSession8Case03Steps_UploadTilesFromData::
+LinkRecordScreen_DrawPedigreeFrame::
     farcall UploadTilesFromData
     call BGMapAddressAtScroll_BankF0
-    ld de, SwapMonstersMenu_ShowParents2_UploadTilesFromData_TileRect
+    ld de, SwapMonstersMenu_ShowParents2_DrawFrame_TileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -3234,11 +3237,11 @@ RunLinkSession8Case03Steps_UploadTilesFromData::
 
 ; The record screen, step 5: draws the record's parents' names and family entries, the arrow tiles
 ; $6C/$6D, and with two or more entries the scroll arrows. (C1, E-0357)
-RunLinkSession8Case03Steps_GetListEntriesCell4Address_BankF0::
+LinkRecordScreen_DrawParents::
     call GetListEntriesCell4Address_BankF0
     ld a, [hl]
     ld e, a
-    farcall RunLinkSession8Case03Steps_DrawRecordParentNames
+    farcall LinkRecordScreen_DrawParents_DrawRecordParentNames
     ld a, $f0
     ldh [hSpriteHideTile], a
     call BGMapAddressAtScroll_BankF0
@@ -3295,7 +3298,7 @@ RunLinkSession8Case03Steps_GetListEntriesCell4Address_BankF0::
 
 ; The record screen, step 6: in two sub-steps loads the monster's picture into VRAM $9480 and, on
 ; the GBC, its palette and attributes, then draws its 6 x 6 frame. (C1, E-0357)
-RunLinkSession8Case03Steps_DrawRect6x6FromAtScroll41_BankF0::
+LinkRecordScreen_LoadPicture::
     ld a, [wScreenSubStep]
     and a
     jp nz, .call_get_list_entries_cell4_address_bank_f0
@@ -3362,7 +3365,7 @@ RunLinkSession8Case03Steps_DrawRect6x6FromAtScroll41_BankF0::
     call BGMapAddressAtScroll_BankF0
     ld de, $0041
     add hl, de
-    ld de, SwapMonstersMenu_ShowParents2_DrawRect6x6FromAtScroll41_TileRect
+    ld de, SwapMonstersMenu_ShowParents2_LoadPicture_TileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -3379,7 +3382,7 @@ RunLinkSession8Case03Steps_DrawRect6x6FromAtScroll41_BankF0::
 
 ; The record screen, step 7: the cursor; a move with two or more flagged records goes on one step; A
 ; or B split the cursor back into page and row and go on two steps. (C1, E-0357)
-RunLinkSession8Case03Steps_HandleListCursorInput_1D::
+LinkRecordScreen_Cursor::
     farcall HandleListCursorInput_1D
     ld a, [wMenuInputResult]
     and a
@@ -3416,7 +3419,7 @@ RunLinkSession8Case03Steps_HandleListCursorInput_1D::
 
 ; The record screen, step 8: clears the text and picture tiles and goes back four steps. (C1,
 ; E-0357)
-RunLinkSession8Case03Steps_FillTilesBxC::
+LinkRecordScreen_ClearTiles::
     ld hl, vTiles2 + $200
     ld bc, $0805
     call FillTilesBxC
@@ -3429,10 +3432,10 @@ RunLinkSession8Case03Steps_FillTilesBxC::
     ret
 
 ; The record screen, step 10: copies the list glyph tiles. (C1, E-0357)
-RunLinkSession8Case03Steps_WriteScreenStep_RunLinkSession8Case03Steps_WriteGlyphListPos::
-    ld hl, RunLinkSession8Case03Steps_TileCopyDestList
-    ld de, RunLinkSession8Case03Steps_WriteGlyphListPos_TileCopySrcList
-    call RunLinkSession8Case03Steps_WriteGlyphListPos
+LinkRecordScreen_CopyGlyphs::
+    ld hl, LinkRecordScreen_CopyGlyphs_TileCopyDestList
+    ld de, LinkRecordScreen_CopyGlyphs_TileCopySrcList
+    call LinkRecordScreen_WriteGlyphListPos
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3440,10 +3443,10 @@ RunLinkSession8Case03Steps_WriteScreenStep_RunLinkSession8Case03Steps_WriteGlyph
 
 ; The record screen, step 11: copies more glyph tiles, shows 'Info / OK' (string $1E, 9 x 1) and ORs
 ; a glyph tile in. (C1, E-0357)
-RunLinkSession8Case03Steps_ShowString_BankF0::
-    ld hl, RunLinkSession8Case03Steps_ShowString_BankF0_TileCopyDestList
-    ld de, RunLinkSession8Case03Steps_ShowString_BankF0_TileCopySrcList
-    call RunLinkSession8Case03Steps_WriteGlyphListPos
+LinkRecordScreen_ShowInfoOK::
+    ld hl, LinkRecordScreen_ShowInfoOK_TileCopyDestList
+    ld de, LinkRecordScreen_ShowInfoOK_TileCopySrcList
+    call LinkRecordScreen_WriteGlyphListPos
     xor a
     ld [wStringCategory], a
     ld a, $1e
@@ -3471,7 +3474,7 @@ RunLinkSession8Case03Steps_ShowString_BankF0::
 
 ; The record screen, step 12: clears five tile areas of the text and resets the text window. (C1,
 ; E-0357)
-RunLinkSession8Case03Steps_FillTilesBxC_SetScreenStep::
+LinkRecordScreen_ClearTextAgain::
     ld hl, vTiles1 + $3f0
     ld bc, $0401
     call FillTilesBxC
@@ -3501,8 +3504,8 @@ RunLinkSession8Case03Steps_FillTilesBxC_SetScreenStep::
     ret
 
 ; The record screen, step 13: draws the list box and clamps the page cursor of four. (C1, E-0357)
-RunLinkSession8Case03Steps_ClampRecordListPageCursor4::
-    ld de, RunLinkSession8Case01Steps_ClampRecordListPageCursor4_TileRect
+LinkRecordScreen_DrawListBox::
+    ld de, LinkEggList_DrawPageFrame_TileRect
     ld hl, wWindowTileBuffer + $6b
     lb bc, $0d, $09
     call CopyRectTo20ByteRows_BankF0
@@ -3546,7 +3549,7 @@ DrawPageIndicatorWhenTwoPagesAndStep_Skip_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
 
 ; The record screen, step 14: draws the page's species names. (C1, E-0357)
-RunLinkSession8Case03Steps_DrawRecordListPageSpeciesNames::
+LinkRecordScreen_DrawSpeciesNames::
     xor a
     ld [wArg5], a
     farcall DrawRecordListPageSpeciesNames
@@ -3557,7 +3560,7 @@ RunLinkSession8Case03Steps_DrawRecordListPageSpeciesNames::
 
 ; The record screen, step 15: loads the mark tiles, draws the page's marks and marks the cursor
 ; entry. (C1, E-0357)
-RunLinkSession8Case03Steps_DrawRecordListPageMarks::
+LinkRecordScreen_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
@@ -3570,7 +3573,7 @@ RunLinkSession8Case03Steps_DrawRecordListPageMarks::
     farcall DrawRecordListPageMarks
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, RunLinkSession8Exchange_Data_2
+    ld hl, RunLinkSession8Exchange_Receive_Data_2
     call StoreBAtWordTableEntry_BankF0
     ld a, [wScreenStep]
     inc a
@@ -3579,7 +3582,7 @@ RunLinkSession8Case03Steps_DrawRecordListPageMarks::
 
 ; The record screen, step 16 (leaving): redraws the screen and the bottom rows, restores the sprite
 ; state and hide tile $70 and returns to the chosen egg (state 2, step 3). (C1, E-0357)
-RunLinkSession8Case03Steps_RestoreSpriteStateClearCount_BankF0::
+LinkRecordScreen_Leave::
     call BGMapAddressAtScroll_BankF0
     lb bc, $14, $0d
     ld de, $01cc
@@ -3683,7 +3686,7 @@ DrawRect6x6FromAtScroll41_BankF0::
     call BGMapAddressAtScroll_BankF0
     ld de, $0041
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -3695,7 +3698,7 @@ DrawRect6x6FromAtScroll41_BankF0::
 
 ; Copies glyph tiles from a pair of tile lists (destinations at HL, sources at DE, bank $1F) to VRAM
 ; until the list ends ($FF), then clears wGlyphListPos. (C1, E-0357)
-RunLinkSession8Case03Steps_WriteGlyphListPos::
+LinkRecordScreen_WriteGlyphListPos::
     ld b, $00
 
 .skip:
@@ -4059,44 +4062,44 @@ CopyScreenBufferRectWithAttrs_F0::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-RunLinkSession8Case03Steps_WriteScreenStep_TileCopyDestList::
+LinkRecordScreen_WriteScreenStep_TileCopyDestList::
     dw vTiles2 + $20, vTiles2 + $30, vTiles2 + $40, vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90 ; entry 0
     dw vTiles2 + $a0, vTiles2 + $b0, vTiles2 + $c0, vTiles2 + $d0, vTiles2 + $e0, vTiles2 + $f0, vTiles2 + $100, vTiles2 + $110
     dw vTiles2 + $120, vTiles2 + $130, vTiles2 + $140, vTiles2 + $150, vTiles2 + $160, vTiles2 + $170, vTiles2 + $180, vTiles2 + $190
     dw vTiles2 + $1a0, vTiles2 + $1b0, vTiles2 + $1c0, vTiles2 + $1d0, vTiles2 + $1e0, vTiles2 + $1f0, vTiles2 + $6f0, rIE
 
 ; record: bank-$1F tile sources
-RunLinkSession8Case03Steps_WriteScreenStep_TileCopySrcList::
+LinkRecordScreen_WriteScreenStep_TileCopySrcList::
     dw $42d0, $42b0, $4300, $44c0, $4400, $4ab0, $4310, $43f0 ; entry 0
     dw $42e0, $42f0, $42a0, $4320, $4260, $4390, $47b0, $4680
     dw $46b0, $49d0, $42b0, $43e0, $4890, $4790, $4880, $4440
     dw $4380, $4500, $44e0, $42c0, $4a30, $4270, $4ad0, $ffff
 
-RunLinkSession8Case03Steps_TileCopyDestList::
+LinkRecordScreen_CopyGlyphs_TileCopyDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
-RunLinkSession8Case03Steps_WriteGlyphListPos_TileCopySrcList::
+LinkRecordScreen_CopyGlyphs_TileCopySrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
-RunLinkSession8Case03Steps_ShowString_BankF0_TileCopySrcList::
+LinkRecordScreen_ShowInfoOK_TileCopySrcList::
     dw $4440, $4480, $43e0, $42e0, $46b0, $47b0, $4650, $4400 ; entry 0
     dw $42b0, $4130, $4320, $42a0, $4330, $4190, $4150, $ffff
 
-RunLinkSession8Case03Steps_ShowString_BankF0_TileCopyDestList::
+LinkRecordScreen_ShowInfoOK_TileCopyDestList::
     dw vTiles2 + $7c0, vTiles2 + $7d0, vTiles2 + $7e0, vTiles2 + $7f0, vTiles1 + $5f0, vTiles1 + $7e0, vTiles1 + $7f0, vTiles2 + $770 ; entry 0
     dw vTiles2 + $780, vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760
     dw rIE
 
-RunLinkSession8Exchange_Data::
+RunLinkSession8Exchange_Receive_Data::
     db $26, $c4, $4e, $c4
 
-RunLinkSession8Exchange_Data_2::
+RunLinkSession8Exchange_Receive_Data_2::
     db $80, $c3, $a8, $c3, $d0, $c3, $f8, $c3, $20, $c4
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 9 tiles, one row per line
-RunLinkSession8Case01Steps_ClampRecordListPageCursor4_TileRect::
+LinkEggList_DrawPageFrame_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4108,8 +4111,8 @@ RunLinkSession8Case01Steps_ClampRecordListPageCursor4_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; no reference found; $B2 followed by eight $B7 frame tiles, between
-; RunLinkSession8Case01Steps_ClampRecordListPageCursor4_TileRect and the unreferenced frames that
-; follow; kept as bytes (E-0234, C0)
+; LinkEggList_DrawPageFrame_TileRect and the unreferenced frames that follow; kept as bytes (E-0234,
+; C0)
 ; record: bytes
 FrameTilesF0_1::
     db $b2, $b7, $b7, $b7, $b7, $b7, $b7, $b7, $b7 ; id 0
@@ -4133,7 +4136,7 @@ TileRectF0_2::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; no reference found; the top frame row ($B0 $B1.. $B2) of a 7 x 5 frame whose other four rows are
-; RunLinkSession8Exchange_SetScreenSubStep_TileRect (E-0234, C1)
+; RunLinkSession8Exchange_Receive_SetScreenSubStep_TileRect (E-0234, C1)
 ; record: 7 x 1 tiles, one row per line
 TileRectF0_3::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
@@ -4141,14 +4144,14 @@ TileRectF0_3::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 7 x 4 tiles, one row per line
-RunLinkSession8Exchange_SetScreenSubStep_TileRect::
+RunLinkSession8Exchange_Receive_SetScreenSubStep_TileRect::
     db $b6, $c3, $70, $71, $72, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $73, $74, $75, $76, $b7 ; id 2
     db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; id 3
 
 ; record: 8 x 5 tiles, one row per line
-RunLinkSession8Exchange_SetMenuChoice_2_TileRect::
+RunLinkSession8Exchange_Receive_SetMenuChoice_2_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $70, $71, $72, $73, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4156,28 +4159,28 @@ RunLinkSession8Exchange_SetMenuChoice_2_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 6 x 5 tiles, one row per line
-RunLinkSession8Exchange_SetMenuChoice_TileRect::
+RunLinkSession8Exchange_Receive_SetMenuChoice_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $73, $74, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-RunLinkSession8Exchange_SetStringCategory_TileRect::
+RunLinkSession8Exchange_Receive_SetStringCategory_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-RunLinkSession8Exchange_SetStringCategory_2_TileRect::
+RunLinkSession8Exchange_Receive_SetStringCategory_2_TileRect::
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 0
     db $c3, $b6, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $c3, $b6, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $c3, $b6, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-RunLinkSession8Exchange_TileRect::
+RunLinkSession8Exchange_Saving_DrawYesNo_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -4515,7 +4518,7 @@ CopyBytesDEFromHL_BankF0::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 13 tiles, one row per line
-RunLinkSession8Exchange_ObjectScene_TileRect::
+HatchingScene_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -4566,7 +4569,7 @@ Object1Init_2::
 Object2Init_2::
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00 ; entry 0
 
-RunLinkSession8Exchange_Data_3::
+RunLinkSession8Exchange_Receive_Data_3::
     ds $a6, $ff
 
 ; while wFamilyBitCount > 0 and some resistance at wGiftRecord + $73 is below 3: picks at random one
@@ -7288,7 +7291,7 @@ OrDIntoTestBitDEOfBitArrayHLByte::
 ; then writes a record: first byte 1, a blank name, species $001A, a random sex, the player as
 ; master (name and id), unknown parents ('???'), $21 bytes of $FF, the bytes 0, 1, $28, 0, 0, 0,
 ; then random values and the rest. (C1, E-0357)
-KeyWorldDoorItem_RandomModulo29_BankF0::
+KeyWorldDoorItem_OpenDoor_RandomModulo29_BankF0::
     ld hl, wGM2TimerFrames
     ld bc, $00d8
 

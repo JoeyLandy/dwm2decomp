@@ -479,18 +479,18 @@ LoadBCFromHL::
 RunBattleActions_UseItem::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleActions_UseItem_ShowActionBattleText
-    dw RunBattleActions_UseItem_TargetOnLocalSide_Bank3B
+    dw RunBattleActions_UseItem_PickTarget
+    dw RunBattleActions_UseItem_ShowItemText
+    dw RunBattleActions_UseItem_ThrowMeat
     dw RunBattleActions_UseItem_ShowHeroIsAHunk
     dw RunBattleActions_DispatchActionEffectTable_Bank3BAndStep
     dw RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc
-    dw RunBattleActions_UseItem_ShowBattleText
+    dw RunBattleActions_UseItem_ShowResultText
     dw RunBattleActions_UseItem_Return
-    dw RunBattleActions_UseItem_AddDoubleAToHL_Bank3B
+    dw RunBattleActions_UseItem_ApplyAmount
     dw RunBattleActions_UseItem_ToRunBattleSubStep2_2
     dw RunBattleActions_WriteBattleTargetAndBattleResolveStepEtc
-    dw RunBattleActions_UseItem_LoadItemRecord
+    dw RunBattleActions_UseItem_ConsumeItem
     dw RunBattleActions_UseItem_SetMultiHitCount
     dw RunBattleActions_UseItem_ShowButNothingHappened
 
@@ -498,7 +498,7 @@ RunBattleActions_UseItem::
 ; (slots 0-2, or 4-6 for the link follower), $20 the other side, otherwise a slot; an empty or
 ; fallen slot shows the item's text and goes to step $0D ('But nothing happened!'), except for the
 ; WorldLeaf; the action is the item. (C1, E-0357)
-RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleActions_UseItem_PickTarget::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
@@ -566,7 +566,7 @@ AllThreeSlotsFromCOccupied::
     ret
 
 ; Item use, step 1: shows the item's battle text (ShowActionBattleText). (C1, E-0357)
-RunBattleActions_UseItem_ShowActionBattleText::
+RunBattleActions_UseItem_ShowItemText::
     ld hl, wBattleResolveStep
     inc [hl]
     farcall ShowActionBattleText
@@ -577,7 +577,7 @@ RunBattleActions_UseItem_ShowActionBattleText::
 ; $E6, status bits $8C text $7B, status 5 bits 6-7 text $7D, a status block (CheckSlotStatusBlock)
 ; text $7C, each ending at step $0B; otherwise (and for every other item) selects the item's effect
 ; (wEffectFlags 8). (C1, E-0357)
-RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
+RunBattleActions_UseItem_ThrowMeat::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleActionId]
@@ -801,7 +801,7 @@ RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
 
 ; Item use, step 6 (and skips 7): shows the actor's message number when message flag bit 4 is set,
 ; otherwise the target's; without bit 4 goes to the damage message (step $0A). (C1, E-0357)
-RunBattleActions_UseItem_ShowBattleText::
+RunBattleActions_UseItem_ShowResultText::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -839,7 +839,7 @@ RunBattleActions_UseItem_Return::
 ; Item use, step 8 (and skips 9): by message argument bits 6-7: 0 nothing; $40 only marks the
 ; target's level-up gain bits 0-2; otherwise takes the amount from the target's HP, at 0 going back
 ; a step to the fall (sub-step 0), and marks the bits. (C1, E-0357)
-RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
+RunBattleActions_UseItem_ApplyAmount::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -1065,7 +1065,7 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
 ; Item use, step 11: once the item has been used (message argument bit 0 or the used mark), loads
 ; the item record for its bag place (row x 4 + column) and consumes it by its chance; when it is
 ; used up and its chance was below 100, or it is the MeteOrb, shows text $87. (C1, E-0357)
-RunBattleActions_UseItem_LoadItemRecord::
+RunBattleActions_UseItem_ConsumeItem::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wResolveMsgArg]

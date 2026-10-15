@@ -68,12 +68,12 @@ ResolveStepBegin::
     res 5, [hl]
 
 ; Resolve step 1: by the sub-step, the target's reaction (ResolveTargetReaction) or the local-side
-; follow-up (ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36). (C1, E-0357)
+; follow-up (ResolveStepTargetAndSubEffects_AquaWall). (C1, E-0357)
 ResolveStepTargetAndSubEffects::
     ld a, [wBattleSubStep]
     jumptable
     dw ResolveTargetReaction
-    dw ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
+    dw ResolveStepTargetAndSubEffects_AquaWall
 
 ; case 0 of ResolveStepTargetAndSubEffects: unless the action is a follow-up, a target that inhales
 ; attacks takes the hit in place of its side ('0 inhaled the attack!', wAttackInhaled = 1);
@@ -87,10 +87,10 @@ ResolveTargetReaction::
     jp nz, .skip2
     ld a, [wRecordBufferData + $4]
     cp $40
-    jp z, ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
+    jp z, ResolveStepTargetAndSubEffects_AquaWall
     and $f0
     cp $20
-    jp z, ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
+    jp z, ResolveStepTargetAndSubEffects_AquaWall
     ld a, [wRecordBufferData + $5]
     bit 4, a
     jr z, .check_record_buffer_data
@@ -165,7 +165,7 @@ ResolveTargetReaction::
     jr c, .return
 
 .skip:
-    jr ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
+    jr ResolveStepTargetAndSubEffects_AquaWall
 
 .return:
     ret
@@ -180,7 +180,7 @@ ResolveTargetReaction::
 ; byte 5 bit 3, the wall takes the hit: clears it, shows battle text $E9 (near-side target) or $EA,
 ; sets defeat step 3, clears message flag bit 4 and restarts the resolve at sub-phase 2. (C1,
 ; E-0357)
-ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36::
+ResolveStepTargetAndSubEffects_AquaWall::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
@@ -1695,9 +1695,9 @@ ResolveStepDamageMessage_ReadBattleSubStep::
     jumptable
     dw ResolveStepDamageMessage_ShowTheWindAroundHero
     dw ResolveStepDamageMessage_ShowHeroTurnedBackTo
-    dw ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB_2
+    dw ResolveStepDamageMessage_ReloadPicture
     dw ResolveStepDamageMessage_ShowHeroWentAway
-    dw ResolveStepDamageMessage_AddAx9ToHL_2
+    dw ResolveStepDamageMessage_BreakSealPray
     dw ResolveStepDamageMessage_WriteBattleResolveStepAndBattleSubStepEtc
 
 ; Aftermath, step 0: a target with BSTAT2_WIND_GUARD loses it with battle text $80. (C1, E-0357)
@@ -1946,7 +1946,7 @@ RecomputeTargetStatsFromRecord::
 
 ; Aftermath, step 2: reloads the target's picture, marks it done (3) and, outside link mode 1,
 ; clears a far-side target's name byte (not slot 7). (C1, E-0357)
-ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB_2::
+ResolveStepDamageMessage_ReloadPicture::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -2024,7 +2024,7 @@ ResolveStepDamageMessage_ShowHeroWentAway::
 
 ; Aftermath, step 4: a target with BSTAT8_SEAL_PRAY loses it and the queued action and SealPray
 ; state are cleared. (C1, E-0357)
-ResolveStepDamageMessage_AddAx9ToHL_2::
+ResolveStepDamageMessage_BreakSealPray::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleTarget]

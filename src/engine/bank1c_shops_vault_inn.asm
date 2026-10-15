@@ -953,8 +953,8 @@ CloseShopMenu::
     jumptable
     dw CloseShopMenu_ToCloseShopMenu_CopyBytesDEToHL_Bank1C
     dw CloseShopMenu_ToCloseShopMenu_SetGlyphListPos
-    dw CloseShopMenu_DecompressToVRAM
-    dw CloseShopMenu_DrawRecordListNameTiles_Bank1D
+    dw CloseShopMenu_ReloadTextTiles
+    dw CloseShopMenu_RedrawNamesAndFinish
 
 ; Closing the shop, step 0 (CloseShopMenu_CopyBytesDEToHL_Bank1C). (C1, E-0357)
 CloseShopMenu_ToCloseShopMenu_CopyBytesDEToHL_Bank1C::
@@ -968,7 +968,7 @@ CloseShopMenu_ToCloseShopMenu_SetGlyphListPos::
 
 ; Closing the shop, step 2: reloads the text tiles, clears $0F tiles at VRAM $8D00 and resets the
 ; text window. (C1, E-0357)
-CloseShopMenu_DecompressToVRAM::
+CloseShopMenu_ReloadTextTiles::
     ld b, $46
     ld de, Tiles1Gfx
     ld hl, vTiles1
@@ -1002,7 +1002,7 @@ CloseShopMenu_DecompressToVRAM::
 ; Closing the shop, step 3: redraws the party's name tiles and icons, clears the message mode and
 ; $70 bytes of screen state, refills wTextBuf0 with the player's name (and suffix) and resumes the
 ; script. (C1, E-0357)
-CloseShopMenu_DrawRecordListNameTiles_Bank1D::
+CloseShopMenu_RedrawNamesAndFinish::
     farcall DrawRecordListNameTiles_Bank1D
     farcall LoadTilesForPartyRecords
     xor a
@@ -1095,7 +1095,7 @@ ShopMenu_Setup::
     dw ShopMenu_Setup_AdvanceScreenStep
     dw ShopMenu_Setup_ToCopyTileListFromBank1F_1C
     dw ShopMenu_Setup_ToInitItemListScreenListAndCount
-    dw ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
+    dw ShopMenu_Setup_DrawBoxes
     dw ShopMenu_Setup_SetScreenStep
 
 ; increments wScreenStep (E-0305)
@@ -1117,8 +1117,8 @@ ShopMenu_Setup_ToInitItemListScreenListAndCount::
 
 ; Shop setup, step 3: draws the 8 x 7 box and the choice box, then the next state with the script
 ; resuming. (C1, E-0357)
-ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
-    ld de, ShopMenu_Setup_TileRect
+ShopMenu_Setup_DrawBoxes::
+    ld de, ShopMenu_Setup_DrawBoxes_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRowsJp_Bank1C
@@ -1137,7 +1137,7 @@ ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 7 tiles, one row per line
-ShopMenu_Setup_TileRect::
+ShopMenu_Setup_DrawBoxes_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ea, $eb, $ec, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -1334,22 +1334,22 @@ ShopMenu_Buy::
     ld a, [wScreenStep]
     jumptable
     dw ShopMenu_Buy_WriteVBKAndScreenStep
-    dw ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1
-    dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex
+    dw ShopMenu_Buy_DrawWindow
+    dw ShopMenu_Buy_CountItems
     dw ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc
     dw ShopMenu_Buy_AdvanceScreenStep
-    dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_2
-    dw ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C
-    dw ShopMenu_Buy_ResetTextCounter0Counters
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_SetNumberTens
-    dw ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C
-    dw ShopMenu_Buy_SetListCursorBlink
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap
-    dw ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C
+    dw ShopMenu_Buy_DrawPrices
+    dw ShopMenu_Buy_ItemCursor
+    dw ShopMenu_Buy_CheckRoom
+    dw ShopMenu_Buy_StartQuantity
+    dw ShopMenu_Buy_EnterQuantity
+    dw ShopMenu_Buy_WriteTotal
+    dw ShopMenu_Buy_DrawYesNo
+    dw ShopMenu_Buy_YesNoCursor
     dw DrawTwoBoxesAndRequestScript80
-    dw ShopMenu_Buy_SubtractArg1AmountFromGold
-    dw ShopMenu_Buy_DrawTwoBoxesAndRequestScript80
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_3
+    dw ShopMenu_Buy_Pay
+    dw ShopMenu_Buy_ClearBoxes
+    dw ShopMenu_Buy_BlankCursors
 
 ; Buying, step 0: writes the item window's tile map into BG map 1 at $9F00 (to the $7F end) and on
 ; the GBC clears its attributes. (C1, E-0357)
@@ -1406,7 +1406,7 @@ ShopMenu_Buy_WriteVBKAndScreenStep::
 
 ; Buying, step 1: draws the 19 x 9 window from BG map 1 at the screen's row 4, column 1. (C1,
 ; E-0357)
-ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1::
+ShopMenu_Buy_DrawWindow::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $0081
     add hl, de
@@ -1421,7 +1421,7 @@ ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1::
 ; Buying, step 2: counts the shop's items, works out the pages of four, clamps the page and cursor
 ; (the last page's size) and, with two or more pages, draws the page brackets and 'page / pages'.
 ; (C1, E-0357)
-ShopMenu_Buy_LoadArg1PointerForScreenTableIndex::
+ShopMenu_Buy_CountItems::
     call LoadArg1PointerForScreenTableIndex
     ld c, $00
 
@@ -1698,7 +1698,7 @@ ShopMenu_Buy_AdvanceScreenStep::
 
 ; Buying, step 5: draws the page's four prices from the bank-$F2 price tables as digits with the
 ; gold mark ($DF), or blanks for an empty place. (C1, E-0357)
-ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_2::
+ShopMenu_Buy_DrawPrices::
     call LoadArg1PointerForScreenTableIndex
     ld a, [wItemGridY]
     ld e, a
@@ -1754,7 +1754,7 @@ ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_2::
     ld [wArg8], a
 
 .read_screen_counter:
-    ld hl, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Data
+    ld hl, ShopMenu_Buy_DrawPrices_Data
     ld a, [wScreenCounter]
     add a
     add_a_to_hl
@@ -1821,7 +1821,7 @@ ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_2::
 ; Buying, step 6: the item cursor: Right/Left turn the page (two or more pages), Up/Down move within
 ; it (sound $69), A confirms; B, after a short wait, leaves with answer 1 and resumes the script.
 ; (C1, E-0357)
-ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C::
+ShopMenu_Buy_ItemCursor::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, .check_saved_field_draw_flags
@@ -1835,7 +1835,7 @@ ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C::
     bit 0, a
     jp nz, .call_draw_item_grid_x_cursor_confirmed
     call BlinkCursorSelectedRecord_Bank1C
-    call ShopMenu_WriteTextCounter6AndTextTimerEtc
+    call ShopMenu_Description
     ld a, [wTextCounter0]
     cp $03
     ret c
@@ -2016,7 +2016,7 @@ DrawItemGridXCursorConfirmed_Data::
 
 ; Buying, step 7: with 24 items already held (wListPages $18 or more) answers 2 (no room) and
 ; resumes the script; otherwise starts the quantity entry at 1. (C1, E-0357)
-ShopMenu_Buy_ResetTextCounter0Counters::
+ShopMenu_Buy_CheckRoom::
     call ResetTextCounter0Counters
     ld a, [wListPages]
     cp $18
@@ -2053,7 +2053,7 @@ ShopMenu_Buy_ResetTextCounter0Counters::
 
 ; Buying, step 8: sets the quantity to 01, saves the 4 x 3 area at the screen's row 10 (with its GBC
 ; attributes) to BG map 1 at $9FB0 and clears its attributes for the quantity box. (C1, E-0357)
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_SetNumberTens::
+ShopMenu_Buy_StartQuantity::
     xor a
     ld [wNumberTens], a
     ld a, $01
@@ -2159,7 +2159,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_SetNumberTens::
 
 .skip:
     ld hl, wScreenList
-    ld de, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Data_2
+    ld de, ShopMenu_Buy_StartQuantity_Data
     ld bc, $000c
 
 .loop2:
@@ -2190,14 +2190,14 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_SetNumberTens::
 ; Buying, step 9: the quantity entry: B restores the area and returns to the item cursor (answer 1,
 ; step 6); Right/Left move between the tens and ones digit; Up/Down change the digit (sound $69),
 ; the quantity at most 24; A goes on; the digit cursor blinks. (C1, E-0357)
-ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C::
+ShopMenu_Buy_EnterQuantity::
     ld a, [wJoypadPressedRepeat]
     bit 1, a
     jr nz, .call_bg_map_address_at_scroll_bank1_c_2
     bit 4, a
-    jr nz, .call_shop_menu_buy_bg_map_address_at_scroll
+    jr nz, .call_shop_menu_buy_enter_quantity_bg_map
     bit 5, a
-    jr nz, .call_shop_menu_buy_bg_map_address_at_scroll2
+    jr nz, .call_shop_menu_buy_enter_quantity_bg_map2
     bit 6, a
     jp nz, .call_queue_sound_effect
     bit 7, a
@@ -2227,8 +2227,8 @@ ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C::
     ld [wScriptStartRequest], a
     ret
 
-.call_shop_menu_buy_bg_map_address_at_scroll:
-    call ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2
+.call_shop_menu_buy_enter_quantity_bg_map:
+    call ShopMenu_Buy_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
     ld a, [wNumberEditPos]
     cp $01
     jr nz, .set_number_edit_pos
@@ -2245,8 +2245,8 @@ ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C::
     call QueueSoundEffect
     ret
 
-.call_shop_menu_buy_bg_map_address_at_scroll2:
-    call ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2
+.call_shop_menu_buy_enter_quantity_bg_map2:
+    call ShopMenu_Buy_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
     ld a, [wNumberEditPos]
     and a
     jr nz, .skip
@@ -2429,8 +2429,8 @@ ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C::
 .call_queue_sound_effect3:
     ld a, $69
     call QueueSoundEffect
-    call ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2
-    call ShopMenu_Buy_WriteThreeDigits
+    call ShopMenu_Buy_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
+    call ShopMenu_Buy_EnterQuantity_WriteThreeDigits
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -2450,14 +2450,14 @@ BlinkCursorBlinkCD_Bank1C::
     inc a
     ld [wCursorBlinkCD], a
     cp $10
-    jr c, ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2
+    jr c, ShopMenu_Buy_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
     cp $18
-    jr c, ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Skip
+    jr c, ShopMenu_Buy_EnterQuantity_Skip
     xor a
     ld [wCursorBlinkCD], a
 
 ; Draws the edited quantity digit ($E0 + tens or ones) at its place. (C1, E-0357)
-ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2::
+ShopMenu_Buy_EnterQuantity_BGMapAddressAtScroll_Bank1C_2::
     ld a, [wNumberEditPos]
     and a
     jr nz, .read_number_ones
@@ -2470,18 +2470,18 @@ ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2::
 .skip:
     add $e0
     ld b, a
-    jr ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_ReadNumberEditPos
+    jr ShopMenu_Buy_EnterQuantity_ReadNumberEditPos
 
 ; B = the digit cursor tile ($CB). (C1, E-0357)
-ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Skip::
+ShopMenu_Buy_EnterQuantity_Skip::
     ld b, $cb
 
-; Writes tile B at digit place wNumberEditPos (ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data),
-; stepping back on a scroll wrap. (C1, E-0357)
-ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_ReadNumberEditPos::
+; Writes tile B at digit place wNumberEditPos (ShopMenu_Buy_EnterQuantity_Data), stepping back on a
+; scroll wrap. (C1, E-0357)
+ShopMenu_Buy_EnterQuantity_ReadNumberEditPos::
     ld a, [wNumberEditPos]
     add a
-    ld hl, ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data
+    ld hl, ShopMenu_Buy_EnterQuantity_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2499,12 +2499,11 @@ ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_ReadNumberEditPos::
     ret
 
 ; writes wNumberTens and wNumberOnes as digit tiles at the scroll offsets in
-; ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data and DrawNumberTensOnesAtTableOffsets_Data (E-0121)
-; (E-0344: the address in its name dropped or read as the label there; was
-; DrawNumberTensOnesAtTableOffsets; shortened from
-; DrawNumberTensNumberOnesDigitsAtTableShopMenu_Buy_BGMapAddressAtScroll_Bank1C_Data)
+; ShopMenu_Buy_EnterQuantity_Data and DrawNumberTensOnesAtTableOffsets_Data (E-0121) (E-0344: the
+; address in its name dropped or read as the label there; was DrawNumberTensOnesAtTableOffsets;
+; shortened from DrawNumberTensNumberOnesDigitsAtTableShopMenu_Buy_BGMapAddressAtScroll_Bank1C_Data)
 DrawNumberTensOnesAtTableOffsets::
-    ld hl, ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data
+    ld hl, ShopMenu_Buy_EnterQuantity_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -2541,7 +2540,7 @@ DrawNumberTensOnesAtTableOffsets::
     ret
 
 ; data read by ShopMenu (2 bytes) (E-0347)
-ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data::
+ShopMenu_Buy_EnterQuantity_Data::
     db $61, $01
 
 DrawNumberTensOnesAtTableOffsets_Data::
@@ -2549,7 +2548,7 @@ DrawNumberTensOnesAtTableOffsets_Data::
 
 ; wThreeDigits = the quantity (tens x 10 + ones) times the chosen item's price (from the bank-$F2
 ; price tables), 24 bits. (C1, E-0357)
-ShopMenu_Buy_WriteThreeDigits::
+ShopMenu_Buy_EnterQuantity_WriteThreeDigits::
     ld a, [wNumberTens]
     ld e, a
     ld d, $00
@@ -2618,7 +2617,7 @@ ShopMenu_Buy_WriteThreeDigits::
 
 ; Buying, step 10: keeps the chosen item and writes the total cost's decimal digits (leading zeros
 ; as $90) into wTextBuf0 for the message. (C1, E-0357)
-ShopMenu_Buy_SetListCursorBlink::
+ShopMenu_Buy_WriteTotal::
     call LoadArg1PointerForScreenTableIndex
     ld a, [wItemGridY]
     ld e, a
@@ -2733,7 +2732,7 @@ ShopMenu_Buy_SetListCursorBlink::
 
 ; Buying, step 11: saves the 6 x 5 area at the screen's row 8, column 14 to BG map 1 at $9FD0,
 ; clears it for the yes/no box and plays sound $6C. (C1, E-0357)
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap::
+ShopMenu_Buy_DrawYesNo::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $010e
     add hl, de
@@ -2772,7 +2771,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap::
     jp c, .loop
     pop hl
     pop hl
-    ld de, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_TileRect
+    ld de, ShopMenu_Buy_DrawYesNo_TileRect
     lb bc, $06, $05
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, $6c
@@ -2785,7 +2784,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap::
 ; Buying, step 12: the yes/no cursor: Up/Down toggle (sound $69); A on yes checks the gold
 ; (IsAmountInArg1AboveGold: too little gives answer 0) and the room (held + quantity above 24 gives
 ; answer 1), otherwise answer 2 and two steps on; the cursor blinks. (C1, E-0357)
-ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C::
+ShopMenu_Buy_YesNoCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, .call_draw_blank_tile_c3_bank1_c
@@ -2832,7 +2831,7 @@ ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2
+    call ShopMenu_Buy_YesNoCursor_StepBGMapAddressBackOnScrollWrap
     ld a, [wShopCursorToggle]
     and a
     jr nz, .call_bg_map_address_at_scroll_bank1_c_2
@@ -2943,23 +2942,23 @@ BlinkCursorBlinkD2_Bank1C::
 
 .skip:
     ld b, $bb
-    jr ShopMenu_Buy_ReadShopCursorToggle
+    jr ShopMenu_Buy_YesNoCursor_ReadShopCursorToggle
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1C)
 DrawBlankTileC3_Bank1C::
     ld b, $c3
-    jr ShopMenu_Buy_ReadShopCursorToggle
+    jr ShopMenu_Buy_YesNoCursor_ReadShopCursorToggle
 
 ; B = the chosen tile ($BC) for the yes/no cursor. (C1, E-0357)
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2::
+ShopMenu_Buy_YesNoCursor_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
 ; Writes tile B at yes/no place wShopCursorToggle, stepping back on a scroll wrap. (C1, E-0357)
-ShopMenu_Buy_ReadShopCursorToggle::
+ShopMenu_Buy_YesNoCursor_ReadShopCursorToggle::
     ld a, [wShopCursorToggle]
     add a
-    ld hl, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, ShopMenu_Buy_YesNoCursor_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2977,7 +2976,7 @@ ShopMenu_Buy_ReadShopCursorToggle::
     ret
 
 ; data read by ShopMenu (4 bytes) (E-0347)
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Data::
+ShopMenu_Buy_YesNoCursor_Data::
     db $2f, $01, $6f, $01
 
 ; clears two rectangles at scroll + $10E and + $140, wScreenStep = 6, clears wScriptCommandType and
@@ -3004,7 +3003,7 @@ DrawTwoBoxesAndRequestScript80::
     ret
 
 ; Buying, step 15: clears the two boxes, resumes the script at step 6, then step $10. (C1, E-0357)
-ShopMenu_Buy_DrawTwoBoxesAndRequestScript80::
+ShopMenu_Buy_ClearBoxes::
     call DrawTwoBoxesAndRequestScript80
     ld a, $10
     ld [wScreenStep], a
@@ -3012,7 +3011,7 @@ ShopMenu_Buy_DrawTwoBoxesAndRequestScript80::
 
 ; Buying, step 16: blanks the four cursor places; back to the item cursor (step 6) on page 0,
 ; otherwise step 0 (redraw), with the cursor reset. (C1, E-0357)
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_3::
+ShopMenu_Buy_BlankCursors::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $00a2
     add hl, de
@@ -3052,7 +3051,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_3::
 ; Buying, step 14: pays (SubtractArg1AmountFromGold) and puts the quantity of the item into the
 ; first free inventory places (up to 24); a now full bag ends the shopping (state 1, step 1),
 ; otherwise the rest follows. (C1, E-0357)
-ShopMenu_Buy_SubtractArg1AmountFromGold::
+ShopMenu_Buy_Pay::
     ld a, [wThreeDigits + $2]
     ld [wArg3], a
     ld a, [wThreeDigits + $1]
@@ -3159,7 +3158,7 @@ ShopMenu_Buy_SubtractArg1AmountFromGold::
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld hl, wScreenList
-    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
+    ld de, ShopMenu_Buy_Pay_Data
     ld bc, $0020
 
 .loop2:
@@ -3223,24 +3222,24 @@ ShopMenu_Sell::
     ld a, [wScreenStep]
     jumptable
     dw ShopMenu_Buy_WriteVBKAndScreenStep
-    dw ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1
-    dw ShopMenu_Sell_ListDistinctInventoryItemsToItemGrid
+    dw ShopMenu_Buy_DrawWindow
+    dw ShopMenu_Sell_ListItems
     dw ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc
-    dw ShopMenu_Sell_ComputeSellPrice
-    dw ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C
-    dw ShopMenu_Sell_ResetTextCounter0Counters
-    dw ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap
-    dw ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2
+    dw ShopMenu_Sell_DrawPrices
+    dw ShopMenu_Sell_ItemCursor
+    dw ShopMenu_Sell_CheckSellable
+    dw ShopMenu_Sell_StartQuantity
+    dw ShopMenu_Sell_EnterQuantity
     dw ShopMenu_Sell_WriteListCursorBlinkAndDigitsEtc
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap
-    dw ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_2
-    dw ShopMenu_Sell_ClearRectSetTextCursorLoPlus1C1_Bank1C
-    dw ShopMenu_Sell_AddArg1ToGoldCapped99999
+    dw ShopMenu_Buy_DrawYesNo
+    dw ShopMenu_Sell_YesNoCursor
+    dw ShopMenu_Sell_ClearYesNo
+    dw ShopMenu_Sell_Pay
 
 ; Selling, step 2: counts the held items, lists the distinct ones
 ; (ListDistinctInventoryItemsToItemGrid), works out the pages of four, clamps the page and cursor
 ; and, with two or more pages, draws the page indicator. (C1, E-0357)
-ShopMenu_Sell_ListDistinctInventoryItemsToItemGrid::
+ShopMenu_Sell_ListItems::
     ld hl, wInventory
     ld b, $00
     ld c, $00
@@ -3539,7 +3538,7 @@ ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc::
 ; Selling, step 4: draws the page's four sell prices (ComputeSellPrice: the item's value times the
 ; shop's percentage / 100) as digits with leading blanks and the gold mark ($DF), or blanks. (C1,
 ; E-0357)
-ShopMenu_Sell_ComputeSellPrice::
+ShopMenu_Sell_DrawPrices::
     ld hl, wItemGrid
     ld a, [wItemGridY]
     ld e, a
@@ -3610,7 +3609,7 @@ ShopMenu_Sell_ComputeSellPrice::
     ld [wMenuWordBuf2], a
 
 .read_screen_counter:
-    ld hl, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Data
+    ld hl, ShopMenu_Buy_DrawPrices_Data
     ld a, [wScreenCounter]
     add a
     add_a_to_hl
@@ -3674,7 +3673,7 @@ ShopMenu_Sell_ComputeSellPrice::
 
 ; Selling, step 5: the item cursor: Right/Left turn the page, Up/Down move (sound $69), A confirms;
 ; B, after a short wait, leaves with answer 2 and resumes the script. (C1, E-0357)
-ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C::
+ShopMenu_Sell_ItemCursor::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, .check_saved_sprite_slot_count
@@ -3688,7 +3687,7 @@ ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C::
     bit 0, a
     jp nz, .call_queue_sound_effect
     call BlinkCursorSelectedRecord_Bank1C
-    call ShopMenu_WriteTextCounter6AndTextTimerEtc
+    call ShopMenu_Description
     ld a, [wTextCounter0]
     cp $03
     ret c
@@ -3814,7 +3813,7 @@ ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C::
 
 ; Selling, step 6: an item worth nothing answers 1 (it cannot be sold) and stays; otherwise starts
 ; the quantity entry at 1 and goes on. (C1, E-0357)
-ShopMenu_Sell_ResetTextCounter0Counters::
+ShopMenu_Sell_CheckSellable::
     call ResetTextCounter0Counters
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -3871,7 +3870,7 @@ ShopMenu_Sell_ResetTextCounter0Counters::
 
 ; Selling, step 7: sets the quantity to 01, saves the 7 x 3 area at the screen's row 10 (with its
 ; GBC attributes) to BG map 1 at $9FB0 and clears its attributes for the quantity box. (C1, E-0357)
-ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap::
+ShopMenu_Sell_StartQuantity::
     xor a
     ld [wNumberTens], a
     ld a, $01
@@ -3977,7 +3976,7 @@ ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap::
 
 .skip:
     ld hl, wScreenList
-    ld de, ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data
+    ld de, ShopMenu_Sell_StartQuantity_Data
     ld bc, $0015
 
 .loop2:
@@ -4025,14 +4024,14 @@ ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap::
 ; Selling, step 8: the quantity entry: B restores the area and returns to the item cursor (answer 1,
 ; step 5); Right/Left move between the digits; Up/Down change the digit, at most the number held
 ; (wCountTens/wCountOnes); A goes on; the digit cursor blinks. (C1, E-0357)
-ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2::
+ShopMenu_Sell_EnterQuantity::
     ld a, [wJoypadPressedRepeat]
     bit 1, a
     jr nz, .call_bg_map_address_at_scroll_bank1_c_2
     bit 4, a
-    jr nz, .call_shop_menu_sell_bg_map_address_at_scroll
+    jr nz, .call_shop_menu_sell_enter_quantity_bg_map
     bit 5, a
-    jr nz, .call_shop_menu_sell_bg_map_address_at_scroll2
+    jr nz, .call_shop_menu_sell_enter_quantity_bg_map2
     bit 6, a
     jp nz, .call_queue_sound_effect
     bit 7, a
@@ -4062,8 +4061,8 @@ ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2::
     ld [wScriptStartRequest], a
     ret
 
-.call_shop_menu_sell_bg_map_address_at_scroll:
-    call ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2
+.call_shop_menu_sell_enter_quantity_bg_map:
+    call ShopMenu_Sell_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
     ld a, [wNumberEditPos]
     cp $01
     jr nz, .set_number_edit_pos
@@ -4078,8 +4077,8 @@ ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2::
     call BlinkCursorBlinkCD_Bank1C_2
     ret
 
-.call_shop_menu_sell_bg_map_address_at_scroll2:
-    call ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2
+.call_shop_menu_sell_enter_quantity_bg_map2:
+    call ShopMenu_Sell_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
     ld a, [wNumberEditPos]
     and a
     jr nz, .skip
@@ -4269,14 +4268,14 @@ ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2::
     ld a, [wNumberOnes]
     and a
     jr nz, .call_queue_sound_effect3
-    call ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
     ret
 
 .call_queue_sound_effect3:
     ld a, $69
     call QueueSoundEffect
-    call ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2
-    call ShopMenu_Sell_WriteThreeDigits
+    call ShopMenu_Sell_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_WriteThreeDigits
     xor a
     ld [wTwoChoiceCursor], a
     xor a
@@ -4294,14 +4293,14 @@ BlinkCursorBlinkCD_Bank1C_2::
     inc a
     ld [wCursorBlinkCD], a
     cp $10
-    jr c, ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2
+    jr c, ShopMenu_Sell_EnterQuantity_BGMapAddressAtScroll_Bank1C_2
     cp $18
-    jr c, ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2_Skip
+    jr c, ShopMenu_Sell_EnterQuantity_Skip
     xor a
     ld [wCursorBlinkCD], a
 
 ; Draws the edited quantity digit ($E0 + tens or ones) at its place. (C1, E-0357)
-ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2::
+ShopMenu_Sell_EnterQuantity_BGMapAddressAtScroll_Bank1C_2::
     ld a, [wNumberEditPos]
     and a
     jr nz, .read_number_ones
@@ -4314,17 +4313,17 @@ ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2::
 .skip:
     add $e0
     ld b, a
-    jr ShopMenu_Sell_ReadNumberEditPos
+    jr ShopMenu_Sell_EnterQuantity_ReadNumberEditPos
 
 ; B = the digit cursor tile ($CB). (C1, E-0357)
-ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2_Skip::
+ShopMenu_Sell_EnterQuantity_Skip::
     ld b, $cb
 
 ; Writes tile B at digit place wNumberEditPos, stepping back on a scroll wrap. (C1, E-0357)
-ShopMenu_Sell_ReadNumberEditPos::
+ShopMenu_Sell_EnterQuantity_ReadNumberEditPos::
     ld a, [wNumberEditPos]
     add a
-    ld hl, ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data
+    ld hl, ShopMenu_Buy_EnterQuantity_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4342,12 +4341,12 @@ ShopMenu_Sell_ReadNumberEditPos::
     ret
 
 ; writes wNumberTens and wNumberOnes as digit tiles at the scroll offsets in
-; ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data and DrawNumberTensOnesAtTableOffsets_2_Data
-; (E-0121) (E-0344: the address in its name dropped or read as the label there; was
-; DrawNumberTensOnesAtTableOffsets_2; shortened from
+; ShopMenu_Buy_EnterQuantity_Data and DrawNumberTensOnesAtTableOffsets_2_Data (E-0121) (E-0344: the
+; address in its name dropped or read as the label there; was DrawNumberTensOnesAtTableOffsets_2;
+; shortened from
 ; DrawNumberTensNumberOnesDigitsAtTableShopMenu_Buy_BGMapAddressAtScroll_Bank1C_Data_2)
 DrawNumberTensOnesAtTableOffsets_2::
-    ld hl, ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data
+    ld hl, ShopMenu_Buy_EnterQuantity_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -4389,7 +4388,7 @@ DrawNumberTensOnesAtTableOffsets_2_Data::
     db $62, $01
 
 ; wThreeDigits = the quantity times the item's sell price, 24 bits. (C1, E-0357)
-ShopMenu_Sell_WriteThreeDigits::
+ShopMenu_Sell_EnterQuantity_WriteThreeDigits::
     ld a, [wNumberTens]
     ld e, a
     ld d, $00
@@ -4557,7 +4556,7 @@ ShopMenu_Sell_WriteListCursorBlinkAndDigitsEtc::
 ; Selling, step 11: the yes/no cursor: Up/Down toggle (sound $69); A on yes answers 0 and goes on
 ; two steps; no or B clears the box, answers 1 and goes back three steps; the cursor blinks. (C1,
 ; E-0357)
-ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_2::
+ShopMenu_Sell_YesNoCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, .call_draw_blank_tile_c3_bank1_c_2
@@ -4604,7 +4603,7 @@ ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_2::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2
+    call ShopMenu_Sell_YesNoCursor_StepBGMapAddressBackOnScrollWrap
     ld a, [wShopCursorToggle]
     and a
     jr nz, .call_bg_map_address_at_scroll_bank1_c_2
@@ -4657,25 +4656,24 @@ BlinkCursorBlinkD2_Bank1C_2::
 
 .skip:
     ld b, $bb
-    jr ShopMenu_Sell_ReadShopCursorToggle
+    jr ShopMenu_Sell_YesNoCursor_ReadShopCursorToggle
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1C_2)
 DrawBlankTileC3_Bank1C_2::
     ld b, $c3
-    jr ShopMenu_Sell_ReadShopCursorToggle
+    jr ShopMenu_Sell_YesNoCursor_ReadShopCursorToggle
 
 ; B = the chosen tile ($BC) for the yes/no cursor. (C1, E-0357)
-ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2::
+ShopMenu_Sell_YesNoCursor_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Writes tile B at yes/no place wShopCursorToggle
-; (ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data_2), stepping back on a scroll wrap. (C1,
-; E-0357)
-ShopMenu_Sell_ReadShopCursorToggle::
+; Writes tile B at yes/no place wShopCursorToggle (ShopMenu_Sell_YesNoCursor_Data), stepping back on
+; a scroll wrap. (C1, E-0357)
+ShopMenu_Sell_YesNoCursor_ReadShopCursorToggle::
     ld a, [wShopCursorToggle]
     add a
-    ld hl, ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data_2
+    ld hl, ShopMenu_Sell_YesNoCursor_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4692,13 +4690,13 @@ ShopMenu_Sell_ReadShopCursorToggle::
     ei
     ret
 
-; data read by ShopMenu_Sell_ReadShopCursorToggle (4 bytes) (E-0347)
-ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data_2::
+; data read by ShopMenu (4 bytes) (E-0347)
+ShopMenu_Sell_YesNoCursor_Data::
     db $2f, $01, $6f, $01
 
 ; Selling, step 12: clears the yes/no box, restores the quantity area and returns to step 1 with the
 ; script resuming. (C1, E-0357)
-ShopMenu_Sell_ClearRectSetTextCursorLoPlus1C1_Bank1C::
+ShopMenu_Sell_ClearYesNo::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $010e
     add hl, de
@@ -4722,7 +4720,7 @@ ShopMenu_Sell_ClearRectSetTextCursorLoPlus1C1_Bank1C::
 ; Selling, step 13: pays the total (AddArg1ToGoldCapped99999, at most 99,999), removes the items,
 ; recounts the bag; an empty bag ends the selling (state 1, step 1); otherwise redraws the gold and
 ; the item count and goes back a step. (C1, E-0357)
-ShopMenu_Sell_AddArg1ToGoldCapped99999::
+ShopMenu_Sell_Pay::
     ld a, [wThreeDigits + $2]
     ld [wArg3], a
     ld a, [wThreeDigits + $1]
@@ -4774,7 +4772,7 @@ ShopMenu_Sell_AddArg1ToGoldCapped99999::
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld hl, wScreenList
-    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
+    ld de, ShopMenu_Buy_Pay_Data
     ld bc, $0020
 
 .loop2:
@@ -4925,7 +4923,7 @@ ComputeSellPrice::
     ret
 
 ; data read by ShopMenu (40 bytes) (E-0347)
-ShopMenu_Buy_SubtractArg1AmountFromGold_Data::
+ShopMenu_Buy_Pay_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba, $b6, $ae, $ad, $ec, $af, $c3, $c3, $b7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
@@ -5129,20 +5127,20 @@ TileDests_1C_3::
     dw vTiles1 + $580, vTiles1 + $590, vTiles1 + $5a0, vTiles1 + $5b0, vTiles1 + $5c0, vTiles1 + $5d0 ; entry 0
     dw vTiles1 + $5e0, vTiles1 + $2a0, vTiles1 + $4a0
 
-ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Data::
+ShopMenu_Buy_DrawPrices_Data::
     db $ae, $00, $ee, $00, $2e, $01, $6e, $01
 
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Data_2::
+ShopMenu_Buy_StartQuantity_Data::
     db $b0, $b1, $b1, $b2, $b6, $c3, $c3, $b7, $b3, $b4, $b4, $b5
 
-ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data::
+ShopMenu_Sell_StartQuantity_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_TileRect::
+ShopMenu_Buy_DrawYesNo_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6156,12 +6154,12 @@ CopyTileListFromBank1F_1C::
     inc [hl]
     ret
 
-; copies $28 bytes from ShopMenu_Buy_SubtractArg1AmountFromGold_Data to wScreenList, runs
-; DrawGoldDigitsAtHLWrapped_1C, counts the inventory items into wListPages and its digits into
-; wItemCountTens/6, wScreenStep += 1 (E-0125)
+; copies $28 bytes from ShopMenu_Buy_Pay_Data to wScreenList, runs DrawGoldDigitsAtHLWrapped_1C,
+; counts the inventory items into wListPages and its digits into wItemCountTens/6, wScreenStep += 1
+; (E-0125)
 InitItemListScreenListAndCount::
     ld hl, wScreenList
-    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
+    ld de, ShopMenu_Buy_Pay_Data
     ld bc, $0028
 
 .loop:
@@ -6283,7 +6281,7 @@ ResetTextCounter0Counters::
 ; The item description line: once wTextTimer has counted up to 60 it steps every frame through
 ; clear, prepare, draw and done; a key other than A sets wTextCounter6 and the timer full, except
 ; that B at the buy or sell item cursor marks the line done (counter 3). (C1, E-0357)
-ShopMenu_WriteTextCounter6AndTextTimerEtc::
+ShopMenu_Description::
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jr nz, .check_text_timer
@@ -6332,26 +6330,26 @@ ShopMenu_WriteTextCounter6AndTextTimerEtc::
     ld [wTextTimer], a
     ld a, [wTextCounter0]
     jumptable
-    dw ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C
-    dw ShopMenu_SetTextCounter0
-    dw ShopMenu_ToStepItemDescriptionText
-    dw ShopMenu_Return
+    dw ShopMenu_Description_Clear
+    dw ShopMenu_Description_ClearAgain
+    dw ShopMenu_Description_ToStepItemDescriptionText
+    dw ShopMenu_Description_Return
 
 ; Item description, step 0: clears the bottom five rows and $24 text tiles, then step 1. (C1,
 ; E-0357)
-ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C::
+ShopMenu_Description_Clear::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $01a0
     add hl, de
     lb bc, $14, $05
-    ld de, ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C_TileRect
+    ld de, ShopMenu_Description_Clear_TileRect
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld c, $24
     ld de, vTiles1
 
 .loop:
     push bc
-    ld hl, ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C_Tiles
+    ld hl, ShopMenu_Description_Clear_Tiles
     call CopyTileBytesToVRAM_Bank1C
     pop bc
     dec c
@@ -6359,12 +6357,12 @@ ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C::
     ld a, [wTextCounter0]
     inc a
     ld [wTextCounter0], a
-    jp ShopMenu_SetTextCounter0
+    jp ShopMenu_Description_ClearAgain
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 5 tiles, one row per line
-ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C_TileRect::
+ShopMenu_Description_Clear_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6373,27 +6371,27 @@ ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C_TileRect::
 
 ; HL = $6BE1 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-ShopMenu_ClearRectSetTextCursorLoPlus1C1_Bank1C_Tiles::
+ShopMenu_Description_Clear_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 0
 
 ; Item description, step 1: clears the bottom five rows again, then starts drawing. (C1, E-0357)
-ShopMenu_SetTextCounter0::
+ShopMenu_Description_ClearAgain::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $01a0
     add hl, de
     lb bc, $14, $05
-    ld de, ShopMenu_SetTextCounter0_TileRect
+    ld de, ShopMenu_Description_ClearAgain_TileRect
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, [wTextCounter0]
     inc a
     ld [wTextCounter0], a
-    jp ShopMenu_ToStepItemDescriptionText
+    jp ShopMenu_Description_ToStepItemDescriptionText
     db $c9
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 5 tiles, one row per line
-ShopMenu_SetTextCounter0_TileRect::
+ShopMenu_Description_ClearAgain_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6402,12 +6400,12 @@ ShopMenu_SetTextCounter0_TileRect::
 
 ; Item description, step 2: draws the next glyph of the item's description
 ; (StepItemDescriptionText). (C1, E-0357)
-ShopMenu_ToStepItemDescriptionText::
+ShopMenu_Description_ToStepItemDescriptionText::
     farcall StepItemDescriptionText
     ret
 
 ; Item description, step 3: done (a bare ret). (C1, E-0357)
-ShopMenu_Return::
+ShopMenu_Description_Return::
     ret
 
 ; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll_Bank1C + $18E, two entries apart (E-0121)
@@ -6554,15 +6552,15 @@ VaultMenu_Init::
 VaultMenu_Setup::
     ld a, [wScreenStep]
     jumptable
-    dw VaultMenu_Setup_CopyTileBytesToVRAM_Bank1C
+    dw VaultMenu_Setup_CopyTiles
     dw VaultMenu_Setup_ToCopyTileListFromBank1F_1C
     dw VaultMenu_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep
-    dw VaultMenu_Setup_CopyFromBankWaitVRAM
+    dw VaultMenu_Setup_LoadFrameTiles
     dw VaultMenu_Setup_ToInitItemListScreenListAndCount
-    dw VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
+    dw VaultMenu_Setup_DrawBoxes
 
 ; Vault setup, step 0: copies three tiles from VRAM $9240 to $97D0. (C1, E-0357)
-VaultMenu_Setup_CopyTileBytesToVRAM_Bank1C::
+VaultMenu_Setup_CopyTiles::
     ld hl, vTiles1 + $240
     ld de, vTiles2 + $7d0
     call CopyTileBytesToVRAM_Bank1C
@@ -6589,7 +6587,7 @@ VaultMenu_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep::
     ret
 
 ; Vault setup, step 3: loads four frame tiles into VRAM $9240-$9270. (C1, E-0357)
-VaultMenu_Setup_CopyFromBankWaitVRAM::
+VaultMenu_Setup_LoadFrameTiles::
     ld hl, vTiles1 + $240
     ld de, Tiles1Plus2D0Tiles
     ld b, $1f
@@ -6622,8 +6620,8 @@ VaultMenu_Setup_ToInitItemListScreenListAndCount::
 
 ; Vault setup, step 5: draws the 11 x 7 box and the choice box, then the next state with the script
 ; resuming. (C1, E-0357)
-VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
-    ld de, VaultMenu_Setup_TileRect
+VaultMenu_Setup_DrawBoxes::
+    ld de, VaultMenu_Setup_DrawBoxes_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0b, $07
     call CopyRectTo20ByteRowsJp_Bank1C
@@ -6642,7 +6640,7 @@ VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 11 x 7 tiles, one row per line
-VaultMenu_Setup_TileRect::
+VaultMenu_Setup_DrawBoxes_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $a6, $cf, $a5, $a7, $df, $eb, $ad, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6809,30 +6807,30 @@ VaultMenu_Store::
     ld a, [wScreenStep]
     jumptable
     dw VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
-    dw VaultMenu_Store_LoadThreeTilesAndDrawRows
+    dw VaultMenu_Store_DrawWindow
+    dw VaultMenu_Store_DrawRows
     dw VaultMenu_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
-    dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
+    dw VaultMenu_Store_SaveArea
     dw VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
     dw VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits
     dw VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc
     dw VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
     dw VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
-    dw VaultMenu_Store_SetScreenStep
+    dw VaultMenu_Store_RestoreAreas
     dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D
     dw VaultMenu_Store_ReadScreenState
-    dw VaultMenu_Store_InitItemListScreenListAndDraw
-    dw VaultMenu_Store_SetTwoChoiceCursor
+    dw VaultMenu_Store_RedrawList
+    dw VaultMenu_Store_RestoreAreasAgain
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
-    dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
+    dw VaultMenu_Store_CopyTile
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
     dw VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
     dw VaultMenu_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc
     dw ClearRect147AndAskTwoChoice
-    dw VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C
-    dw VaultMenu_Store_ClearRect147AndAskTwoChoice
+    dw VaultMenu_Store_RedrawGold
+    dw VaultMenu_Store_AskAgain
 
 ; Storing, step 0 (VaultMenu_Store_WaitForVRAMAccess). (C1, E-0357)
 VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess::
@@ -6840,7 +6838,7 @@ VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess::
     ret
 
 ; Storing, step 1: draws the 11 x 9 window from BG map 1. (C1, E-0357)
-VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1::
+VaultMenu_Store_DrawWindow::
     call BGMapAddressAtScroll_Bank1C_2
     lb bc, $0b, $09
     ld de, vBGMap1 + $300
@@ -6852,7 +6850,7 @@ VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1::
 
 ; Storing, step 2: loads three tiles and draws their rows, clears the vault mode and resumes the
 ; script. (C1, E-0357)
-VaultMenu_Store_LoadThreeTilesAndDrawRows::
+VaultMenu_Store_DrawRows::
     farcall LoadThreeTilesAndDrawRows
     xor a
     ld [wVaultMode], a
@@ -6894,13 +6892,13 @@ VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep::
 
 ; Storing, step 6: copies the blank tiles for the four name places, then saves the 3 x 7 area
 ; (DrawRect0140AtBGMap13E0AndStep). (C1, E-0357)
-VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep::
+VaultMenu_Store_SaveArea::
     call VaultMenu_Store_WriteGlyphListPos
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
     cp $04
-    jr c, VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
+    jr c, VaultMenu_Store_SaveArea
     xor a
     ld [wScreenCounter], a
     farcall DrawRect0140AtBGMap13E0AndStep
@@ -7072,7 +7070,7 @@ VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
 
 ; Storing, step 12: restores the two saved areas from BG map 1 and returns to step 3 with the script
 ; resuming. (C1, E-0357)
-VaultMenu_Store_SetScreenStep::
+VaultMenu_Store_RestoreAreas::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $0088
     add hl, de
@@ -7115,14 +7113,14 @@ VaultMenu_Store_ReadScreenState::
     ret
 
 ; Storing, step 15: redraws the item list screen and goes on
-; (VaultMenu_Store_WriteScreenStepAndScriptCommandTypeEtc). (C1, E-0357)
-VaultMenu_Store_InitItemListScreenListAndDraw::
+; (VaultMenu_Store_RedrawList_WriteScreenStepAndScriptCommandTypeEtc). (C1, E-0357)
+VaultMenu_Store_RedrawList::
     call InitItemListScreenListAndDraw
-    farcall VaultMenu_Store_WriteScreenStepAndScriptCommandTypeEtc
+    farcall VaultMenu_Store_RedrawList_WriteScreenStepAndScriptCommandTypeEtc
     ret
 
 ; Storing, step 16: restores the two saved areas and returns to step 4. (C1, E-0357)
-VaultMenu_Store_SetTwoChoiceCursor::
+VaultMenu_Store_RestoreAreasAgain::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $0088
     add hl, de
@@ -7153,7 +7151,7 @@ VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD::
     ret
 
 ; Storing, step 18: copies a tile from VRAM $94C0 to $9700 and reloads $94C0. (C1, E-0357)
-VaultMenu_Store_CopyTileBytesToVRAM_Bank1C::
+VaultMenu_Store_CopyTile::
     ld hl, vTiles1 + $4c0
     ld de, vTiles2 + $700
     call CopyTileBytesToVRAM_Bank1C
@@ -7201,9 +7199,9 @@ ClearRect147AndAskTwoChoice::
     ret
 
 ; Storing, step 23: redraws the gold panel and resumes the script. (C1, E-0357)
-VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C::
+VaultMenu_Store_RedrawGold::
     ld hl, wScreenList
-    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
+    ld de, ShopMenu_Buy_Pay_Data
     ld bc, $0020
 
 .loop:
@@ -7231,7 +7229,7 @@ VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C::
 
 ; Storing, step 24: clears the area, asks the two-way choice again and returns to the vault's choice
 ; (state 1, step 2). (C1, E-0357)
-VaultMenu_Store_ClearRect147AndAskTwoChoice::
+VaultMenu_Store_AskAgain::
     call ClearRect147AndAskTwoChoice
     ld a, $01
     ld [wScreenState], a
@@ -7244,30 +7242,30 @@ VaultMenu_TakeOut::
     ld a, [wScreenStep]
     jumptable
     dw VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
-    dw VaultMenu_Store_LoadThreeTilesAndDrawRows
+    dw VaultMenu_Store_DrawWindow
+    dw VaultMenu_Store_DrawRows
     dw VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
-    dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
+    dw VaultMenu_Store_SaveArea
     dw VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
     dw VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits
     dw VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc
     dw VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
     dw VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
-    dw VaultMenu_Store_SetScreenStep
+    dw VaultMenu_Store_RestoreAreas
     dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D
     dw VaultMenu_Store_ReadScreenState
-    dw VaultMenu_Store_InitItemListScreenListAndDraw
-    dw VaultMenu_Store_SetTwoChoiceCursor
+    dw VaultMenu_Store_RedrawList
+    dw VaultMenu_Store_RestoreAreasAgain
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
-    dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
+    dw VaultMenu_Store_CopyTile
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
     dw VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
     dw VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc
     dw ClearRect147AndAskTwoChoice
-    dw VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C
-    dw VaultMenu_Store_ClearRect147AndAskTwoChoice
+    dw VaultMenu_Store_RedrawGold
+    dw VaultMenu_Store_AskAgain
 
 ; Taking out, step 3 (VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2). (C1, E-0357)
 VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc::
@@ -7279,11 +7277,11 @@ VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc::
     farcall VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2
     ret
 
-; copies $20 bytes from ShopMenu_Buy_SubtractArg1AmountFromGold_Data to wScreenList, counts the
-; inventory items into wListPages and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
+; copies $20 bytes from ShopMenu_Buy_Pay_Data to wScreenList, counts the inventory items into
+; wListPages and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
 InitItemListScreenListAndDraw::
     ld hl, wScreenList
-    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
+    ld de, ShopMenu_Buy_Pay_Data
     ld bc, $0020
 
 .loop:

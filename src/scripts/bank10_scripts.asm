@@ -1589,14 +1589,14 @@ ScriptCommand0A::
 ScriptCommand09::
     ld a, [wScriptStep]
     jumptable
-    dw ScriptCommand09_SetBit1OfPlayerAndObjectFlags
+    dw ScriptCommand09_OpenWindow
     dw ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc
-    dw ScriptCommand09_QueueSoundEffect
-    dw ScriptCommand09_ClearBit1OfPlayerAndObjectFlags
+    dw ScriptCommand09_CloseWindow
+    dw ScriptCommand09_Finish
 
 ; Command 09, step 3: once the window has closed, unfreezes the player and objects and ends the
 ; script (mode state 0). (C1, E-0357)
-ScriptCommand09_ClearBit1OfPlayerAndObjectFlags::
+ScriptCommand09_Finish::
     ld a, [wTextWindowState]
     and $03
     ret nz
@@ -1613,15 +1613,15 @@ ScriptCommand09_ClearBit1OfPlayerAndObjectFlags::
 ScriptCommand01::
     ld a, [wScriptStep]
     jumptable
-    dw ScriptCommand09_SetBit1OfPlayerAndObjectFlags
+    dw ScriptCommand09_OpenWindow
     dw ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc
-    dw ScriptCommand09_QueueSoundEffect
-    dw ScriptCommand01_ClearBit1OfPlayerAndObjectFlags
+    dw ScriptCommand09_CloseWindow
+    dw ScriptCommand01_CloseWindow
 
 ; Command 09, step 0: unless wScriptParam1 bit 7 (the window is already open), freezes the player
 ; and objects, clears the window tiles, plays sound $69 and opens the text window (at the top when
 ; the player is low on the screen); next step. (C1, E-0357)
-ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
+ScriptCommand09_OpenWindow::
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, .done
@@ -1674,7 +1674,7 @@ ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
 
 ; Command 09, step 2: waits for the text; unless wScriptParam1 bit 6 (keep the window open), plays
 ; sound $69 and starts closing it; next step. (C1, E-0357)
-ScriptCommand09_QueueSoundEffect::
+ScriptCommand09_CloseWindow::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1703,7 +1703,7 @@ ScriptCommand09_QueueSoundEffect::
 ; Command 01, step 3: unless wScriptParam1 bit 6, waits for the window to close and unfreezes the
 ; player and objects; then ends the command and asks for the next one (wScriptStartRequest $80).
 ; (C1, E-0357)
-ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
+ScriptCommand01_CloseWindow::
     ld a, [wScriptParam1]
     bit 6, a
     jr nz, .clear_script_command_type

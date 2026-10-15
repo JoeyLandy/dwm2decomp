@@ -534,7 +534,7 @@ LoadPalette0FromData_2_Data::
 ; CGB step of the field menu's palette effect: runs one palette upload step
 ; (RunScreenStateStepEveryOtherFrame), then copies any changed DMG palette bytes (BGP, then OBP0)
 ; into wDMGPaletteBytes so the CGB palettes made from them follow. (C1, E-0357)
-RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame::
+WarpEffect_RunScreenStateStepEveryOtherFrame::
     ld a, [wIsCGB]
     or a
     ret z
@@ -542,10 +542,10 @@ RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame::
     ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp [hl]
-    jp z, RunMenuStateMenuState_CheckDMGPaletteOBP0
+    jp z, WarpEffect_Cover_CheckDMGPaletteOBP0
     ld a, [wDMGPaletteBGP]
     ld [wDMGPaletteBytes], a
-    jp RunMenuStateMenuState_CheckDMGPaletteOBP0
+    jp WarpEffect_Cover_CheckDMGPaletteOBP0
 
 ; wScreenStep += 1; on odd values, unless wScreenState is $FF, runs the step for wScreenState (jump
 ; table) (E-0122)
@@ -760,7 +760,7 @@ RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
 ; Precomputes the 8 frames of the field menu's palette animation into wWorkBuf: for each frame
 ; (wScreenCounter 0-7) it brightens all eight palettes of wBGPaletteBuffer (64 bytes) by that
 ; frame's step. (C1, E-0357)
-RunMenuStateMenuState_WriteScreenCounter::
+WarpEffect_Cover_WriteScreenCounter::
     ld hl, wBGPaletteBuffer
     ld de, wWorkBuf
     ld c, $04
@@ -769,7 +769,7 @@ RunMenuStateMenuState_WriteScreenCounter::
     push bc
     push hl
     push de
-    call RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc
+    call WarpEffect_Cover_WriteTextCounter2AndTextCounter3Etc
     pop de
     pop hl
     pop bc
@@ -798,7 +798,7 @@ RunMenuStateMenuState_WriteScreenCounter::
 ; Brightens 8 colours (16 bytes) for frame wScreenCounter of the field menu's palette animation:
 ; each colour is split into red, green and blue (wTextCounter2-4), raised by the frame's step from
 ; RunMenuStateMenuState_Data (capped at 31) and stored at DE. (C1, E-0357)
-RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
+WarpEffect_Cover_WriteTextCounter2AndTextCounter3Etc::
     ld c, [hl]
     inc hl
     ld b, [hl]
@@ -822,7 +822,7 @@ RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
     and $1f
     ld [wTextCounter4], a
     push hl
-    ld hl, RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data
+    ld hl, WarpEffect_Cover_WriteTextCounter2AndTextCounter3Etc_Data
     ld a, [wScreenCounter]
     add_a_to_hl
     ld b, [hl]
@@ -865,17 +865,17 @@ RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
     inc a
     ld [wScreenSubStep], a
     cp $08
-    jr c, RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc
+    jr c, WarpEffect_Cover_WriteTextCounter2AndTextCounter3Etc
     xor a
     ld [wScreenSubStep], a
     ret
 
-; data read by RunMenuStateMenuState (9 bytes) (E-0347)
-RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data::
+; data read by WarpEffect (9 bytes) (E-0347)
+WarpEffect_Cover_WriteTextCounter2AndTextCounter3Etc_Data::
     db $04, $08, $0c, $10, $14, $18, $1c, $20, $24
 
 ; Copies wDMGPaletteOBP0 into wDMGPaletteBytes + 1 when it has changed. (C1, E-0357)
-RunMenuStateMenuState_CheckDMGPaletteOBP0::
+WarpEffect_Cover_CheckDMGPaletteOBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp [hl]
@@ -1176,8 +1176,8 @@ RunFieldReturnPhase::
     and $03
     jumptable
     dw RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
-    dw RunFieldReturnPhase_OpenFieldMenuOnA
-    dw RunFieldReturnPhase_ResetLeadRecordFields55And5B
+    dw RunFieldReturnPhase_RunReturnAction
+    dw RunFieldReturnPhase_AfterBattle
     dw RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
 ; Field entry phase 0 (also the end of phase 2): clears the phase; coming from the field menu
@@ -1233,7 +1233,7 @@ RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc::
 ; other scene and kind sends the player to map 5, screen (1, 0) at ($50, $30) facing down (or up
 ; after EVENT_THANKS_FOR_COMING_BY_025), saving a key world first, then play the map music and run
 ; talk event group 5. (C1, E-0357)
-RunFieldReturnPhase_ResetLeadRecordFields55And5B::
+RunFieldReturnPhase_AfterBattle::
     ld a, [wBattleKind]
     cp $05
     jp z, .call_fully_heal_party2
@@ -1372,11 +1372,12 @@ RunFieldReturnPhase_ResetLeadRecordFields55And5B::
 ; entry (from $C707) has bit 7 set and its byte 0 is not 1, and the field menu opens at state 6.
 ; Values 1-9 start a talk event (group $19; groups 8, 6 or 7 after resetting the followers with
 ; music 2 and sound $67; group $39, $6A, $A1 or $AA; or
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc), others group 9. (C1, E-0357)
-RunFieldReturnPhase_OpenFieldMenuOnA::
+; RunFieldReturnPhase_RunReturnAction_WriteSpriteWindowClipModeAndTemp0Etc), others group 9. (C1,
+; E-0357)
+RunFieldReturnPhase_RunReturnAction::
     xor a
     ld [wFieldReturnPhase], a
-    call RunFieldReturnPhase_WaitMapType
+    call RunFieldReturnPhase_RunReturnAction_WaitMapType
     ld a, [wDataBankSave]
     cp $40
     jr nz, .skip
@@ -1553,7 +1554,7 @@ RunFieldReturnPhase_OpenFieldMenuOnA::
     jr nz, .set_talk_event_group_to_09
     xor a
     ld [wDataBankSave], a
-    farcall RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc
+    farcall RunFieldReturnPhase_RunReturnAction_WriteSpriteWindowClipModeAndTemp0Etc
     ret
 
 .set_talk_event_group_to_09:
@@ -1606,7 +1607,7 @@ ResetLeadRecordFields55And5B::
 
 ; On map 0 at screen (0, 3), outside a key world, when wGiftRecord is 1: places script object 5,
 ; running field command $15 once first (when wCounterPtr0Lo is $FF). (C1, E-0357)
-RunFieldReturnPhase_WaitMapType::
+RunFieldReturnPhase_RunReturnAction_WaitMapType::
     ld a, [wMapType]
     bit 7, a
     ret nz
@@ -1986,9 +1987,9 @@ FieldState_WalkAMenu::
     call FarClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
-; field state 6: runs the field menu (RunMenuStateMenuState) (E-0339)
+; field state 6: runs the field menu (WarpEffect) (E-0339)
 FieldState_FieldMenu::
-    farcall RunMenuStateMenuState
+    farcall WarpEffect
     ld a, [wMenuSubState]
     or a
     jr nz, .return
@@ -2309,7 +2310,7 @@ FieldState_WalkAMenu_WaitFadeState::
     dw FieldState_WalkAMenu_Return
     dw FieldState_WalkAMenu_Return
     dw FieldState_WalkAMenu_Return
-    dw FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
+    dw FieldState_WalkAMenu_CheckExitFacingUp
 
 ; Map types without an A-button exit: returns. (C1, E-0357)
 FieldState_WalkAMenu_Return::
@@ -2346,7 +2347,7 @@ FieldState_WalkAMenu_WriteFieldReturnPhaseAndGameModeEtc::
     ret
 
 ; A-button exit check on map type 7: facing up at position ($40, $40). (C1, E-0357)
-FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
+FieldState_WalkAMenu_CheckExitFacingUp::
     ldh a, [hPlayerFacing]
     cp $02
     ret nz
@@ -2492,16 +2493,16 @@ RunFieldEventFieldEventKind::
     dw AnimateTilesByRotatingVTiles2
     dw RunFieldEventFieldEventKind_WaitFrameCounterLo
     dw RunFieldEventFieldEventKind_WaitFrameCounterLo_2
-    dw RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2
-    dw RunFieldEventFieldEventKind_TestFlagBit
+    dw RunFieldEventFieldEventKind_AnimateTiles5
+    dw RunFieldEventFieldEventKind_SwapTilePairs
     dw RunFieldEventFieldEventKind_ReadFrameCounterLo
     dw RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes
     dw RunFieldEventFieldEventKind_WaitFrameCounterLo_3
     dw RunFieldEventFieldEventKind_WaitFrameCounterLo_4
     dw RunFieldEventFieldEventKind_WaitMapScreenY
     dw RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX
-    dw RunFieldEventFieldEventKind_WriteVRAMByteInc
-    dw RunFieldEventFieldEventKind_WriteVRAMByteInc_2
+    dw RunFieldEventFieldEventKind_RotateTile
+    dw RunFieldEventFieldEventKind_RotateTiles
     dw RunFieldEventFieldEventKind_WaitMapScreenX
 
 ; Field event 12: scroll shake (RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2). (C1,
@@ -2555,7 +2556,7 @@ AnimateTilesByRotatingVTiles2::
 
 ; Field event 13: every 8 frames rotates the 32 bytes at vTiles2 + $A0 left by one bit (an animated
 ; tile). (C1, E-0357)
-RunFieldEventFieldEventKind_WriteVRAMByteInc::
+RunFieldEventFieldEventKind_RotateTile::
     ld a, [wFrameCounterLo]
     and $07
     ret nz
@@ -2575,7 +2576,7 @@ RunFieldEventFieldEventKind_WriteVRAMByteInc::
 
 ; Field event 14: every 8 frames rotates the 96 bytes at vTiles2 and vTiles2 + $30 left by one bit
 ; (animated tiles). (C1, E-0357)
-RunFieldEventFieldEventKind_WriteVRAMByteInc_2::
+RunFieldEventFieldEventKind_RotateTiles::
     ld a, [wFrameCounterLo]
     and $07
     ret nz
@@ -2627,7 +2628,7 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_2::
 
 ; Field event 5: rotates the first tiles (AnimateTilesByRotatingVTiles2) and every 4 frames cycles
 ; the tile at vTiles2 + $140 through the frames at + $180. (C1, E-0357)
-RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2::
+RunFieldEventFieldEventKind_AnimateTiles5::
     call AnimateTilesByRotatingVTiles2
     ld a, [wFrameCounterLo]
     and $03
@@ -2751,9 +2752,9 @@ RunFieldEventFieldEventKind_CheckFrameCounterLo::
     ret
 
 ; Field event 6: until EVENT_SCENE_MONSTER_INSPECTION is set, in the first 12 of every 32 frames
-; swaps one tile pair from the 4-byte entries of RunFieldEventFieldEventKind_TestFlagBit_Data. (C1,
-; E-0357)
-RunFieldEventFieldEventKind_TestFlagBit::
+; swaps one tile pair from the 4-byte entries of RunFieldEventFieldEventKind_SwapTilePairs_Data.
+; (C1, E-0357)
+RunFieldEventFieldEventKind_SwapTilePairs::
     ld de, EVENT_SCENE_MONSTER_INSPECTION
     call TestFlagBit
     ret c
@@ -2763,7 +2764,7 @@ RunFieldEventFieldEventKind_TestFlagBit::
     ret nc
     sla a
     sla a
-    ld hl, RunFieldEventFieldEventKind_TestFlagBit_Data
+    ld hl, RunFieldEventFieldEventKind_SwapTilePairs_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -2777,7 +2778,7 @@ RunFieldEventFieldEventKind_TestFlagBit::
     jp RunFieldEventFieldEventKind_CallWaitForVRAMAccess
 
 ; data read by RunFieldEventFieldEventKind (48 bytes) (E-0347)
-RunFieldEventFieldEventKind_TestFlagBit_Data::
+RunFieldEventFieldEventKind_SwapTilePairs_Data::
     db $c0, $91, $e0, $91, $d0, $91, $f0, $91, $20, $92, $60, $92, $30, $92, $70, $92
     db $20, $93, $40, $93, $30, $93, $50, $93, $80, $93, $a0, $93, $90, $93, $b0, $93
     db $20, $94, $40, $94, $30, $94, $50, $94, $80, $94, $a0, $94, $90, $94, $b0, $94
@@ -4265,8 +4266,8 @@ RunFieldActionRequestActionIfBit7::
     jumptable
     dw RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep
     dw RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY
-    dw RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen
-    dw RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords
+    dw RunFieldActionRequestActionIfBit7_EnterScreen
+    dw RunFieldActionRequestActionIfBit7_StepChecks
 
 ; Field action step 0: loads the new screen (LoadMapScreen) and moves to the scroll step. (C1,
 ; E-0357)
@@ -4281,7 +4282,7 @@ RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep::
 ; Field action step 3 (after a screen scroll): runs the per-step checks (step counter, periodic
 ; events, encounters, warps, movement type, status effects, talk countdown) and ends the action.
 ; (C1, E-0357)
-RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords::
+RunFieldActionRequestActionIfBit7_StepChecks::
     xor a
     ld [wStepTriggerFlag], a
     farcall AdvanceStepCounterAndUpdateStoredRecords
@@ -4298,7 +4299,7 @@ RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords::
 ; Field action step 2: finds the new screen's triggers and objects
 ; (FindTriggerEntryForCurrentScreen, LoadMapObjectsForScreen), handles a pending field event and
 ; places special map objects. (C1, E-0357)
-RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen::
+RunFieldActionRequestActionIfBit7_EnterScreen::
     ld hl, wFieldActionRequest
     inc [hl]
     farcall FindTriggerEntryForCurrentScreen
@@ -4994,25 +4995,18 @@ PlayMapMusic_CheckSoundEffectRequest::
     ret
 
 ; Chooses the field music by map: a 227-entry jump table indexed by hMapId. Most entries pick one
-; song; some check the screen or story flags first (the PlayMapMusic_TestFlagBit cases), and a few
-; entries are 0 (maps that are never looked up). (C1, E-0357)
+; song; some check the screen or story flags first (the PlayMapMusic_Map01 cases), and a few entries
+; are 0 (maps that are never looked up). (C1, E-0357)
 PlayMapMusic_ReadMapId::
     ldh a, [hMapId]
     jumptable
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit
+    dw PlayMapMusic_Map01
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_3
-    dw PlayMapMusic_TestFlagBit_2
+    dw PlayMapMusic_Map04
+    dw PlayMapMusic_Map05
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_2
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -5023,7 +5017,14 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_3
+    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_2
+    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_Map04
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -5056,9 +5057,9 @@ PlayMapMusic_ReadMapId::
     dw MapMusicByPlayerStateFlagsBit3
     dw PlayMapMusic_ReadCurrentMusic_7
     dw PlayMapMusic_InitSoundHardware
-    dw PlayMapMusic_TestFlagBit_4
+    dw PlayMapMusic_TestFlagBit
     dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_TestFlagBit_5
+    dw PlayMapMusic_TestFlagBit_2
     dw PlayMapMusic_ReadCurrentMusic_3
     dw PlayMapMusic_ReadCurrentMusic_3
     dw PlayMapMusic_ReadCurrentMusic_7
@@ -5154,7 +5155,7 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadCurrentMusic_7
     dw PlayMapMusic_ReadCurrentMusic_7
     dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_TestFlagBit_6
+    dw PlayMapMusic_TestFlagBit_3
     dw $0000 ; unused index (E-0207)
     dw PlayMapMusic_ReadCurrentMusic_4
     dw $0000 ; unused index (E-0207)
@@ -5235,7 +5236,7 @@ PlayMapMusic_ReadCurrentMusic::
 
 ; Map 1's music: on screen row 2 at screen X 0 or 2, after EVENT_THANKS_FOR_COMING_BY and before
 ; EVENT_SCENE_WARUBOU_SMELLS, music $28; otherwise $16. (C1, E-0357)
-PlayMapMusic_TestFlagBit::
+PlayMapMusic_Map01::
     ldh a, [hMapScreenY]
     cp $02
     jr nz, PlayMapMusic_ReadCurrentMusic
@@ -5258,7 +5259,7 @@ PlayMapMusic_TestFlagBit::
 ; Map 5's music: at screen X 0, after EVENT_SCENE_WARUBOU_SMELLS, music $28 until the three-item
 ; scene is under way (EVENT_SCENE_WARUBOU_FOOD2_00C set, then 0C2 set and 0C3 clear also give $28);
 ; otherwise $16. (C1, E-0357)
-PlayMapMusic_TestFlagBit_2::
+PlayMapMusic_Map05::
     ldh a, [hMapScreenX]
     or a
     jr nz, PlayMapMusic_ReadCurrentMusic
@@ -5286,7 +5287,7 @@ PlayMapMusic_ReadCurrentMusic_2::
 
 ; Maps 4 and $18: after EVENT_MAP_04_OBJECT_REMOVED_0CC and before EVENT_SCENE_TERRY_BATTLE_038,
 ; music $CF; otherwise $16. (C1, E-0357)
-PlayMapMusic_TestFlagBit_3::
+PlayMapMusic_Map04::
     ld de, EVENT_MAP_04_OBJECT_REMOVED_0CC
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
@@ -5388,7 +5389,7 @@ PlayMapMusic_InitSoundHardware::
 
 ; At screen (1, 1) of its map, before EVENT_SCENE_CREW_FOLLOWS, music $28; otherwise $25. (C1,
 ; E-0357)
-PlayMapMusic_TestFlagBit_4::
+PlayMapMusic_TestFlagBit::
     ldh a, [hMapScreenX]
     cp $01
     jr nz, PlayMapMusic_ReadCurrentMusic_6
@@ -5402,7 +5403,7 @@ PlayMapMusic_TestFlagBit_4::
     jp PlayMapMusic_CheckCurrentMusic
 
 ; Before EVENT_SCENE_MERMAID_KINGDOM_022, music $28; afterwards $25. (C1, E-0357)
-PlayMapMusic_TestFlagBit_5::
+PlayMapMusic_TestFlagBit_2::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic_6
@@ -5416,7 +5417,7 @@ PlayMapMusic_ReadCurrentMusic_7::
 
 ; On screen row 0 while the three-item scene is under way (EVENT_SCENE_THREE_ITEMS_0C2 set, 0C3
 ; clear), music $28; otherwise $22. (C1, E-0357)
-PlayMapMusic_TestFlagBit_6::
+PlayMapMusic_TestFlagBit_3::
     ldh a, [hMapScreenY]
     or a
     jr nz, PlayMapMusic_ReadCurrentMusic_7
@@ -6446,21 +6447,21 @@ StepTextWindowOpenClose::
     srl a
     and $03
     jumptable
-    dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes
-    dw StepTextWindowOpenClose_2
-    dw StepTextWindowOpenClose_SetTextWindowState
-    dw StepTextWindowOpenClose_SetTextWindowState
+    dw StepTextWindowOpenClose_CopyRow
+    dw StepTextWindowOpenClose_CopyRows
+    dw StepTextWindowOpenClose_CopyAllRows
+    dw StepTextWindowOpenClose_CopyAllRows
 
 ; Text window step 0: opening, copies the window's bottom row (from StepTextWindowOpenClose_Data1)
 ; into the buffer; closing, restores three rows from StepTextWindowOpenClose_Data2; then redraws the
 ; 20 x 5 window area. (C1, E-0357)
-StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
+StepTextWindowOpenClose_CopyRow::
     ld a, [wTextWindowState]
     bit 0, a
     jr z, .skip
     push de
     ld hl, wWindowTileBuffer + $28
-    ld de, StepTextWindowOpenClose_Data1
+    ld de, StepTextWindowOpenClose_CopyRow_Data1
     ld b, $01
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6473,7 +6474,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
 .skip:
     push de
     ld hl, wWindowTileBuffer + $14
-    ld de, StepTextWindowOpenClose_Data2
+    ld de, StepTextWindowOpenClose_CopyRow_Data2
     ld b, $03
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6485,13 +6486,13 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
 
 ; Text window step 1: the middle rows (opening) or the bottom row (closing), then redraws the window
 ; area. (C1, E-0357)
-StepTextWindowOpenClose_2::
+StepTextWindowOpenClose_CopyRows::
     ld a, [wTextWindowState]
     bit 0, a
     jr z, .skip
     push de
     ld hl, wWindowTileBuffer + $14
-    ld de, StepTextWindowOpenClose_Data2
+    ld de, StepTextWindowOpenClose_CopyRow_Data2
     ld b, $03
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6504,7 +6505,7 @@ StepTextWindowOpenClose_2::
 .skip:
     push de
     ld hl, wWindowTileBuffer + $28
-    ld de, StepTextWindowOpenClose_Data1
+    ld de, StepTextWindowOpenClose_CopyRow_Data1
     ld b, $01
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6514,16 +6515,16 @@ StepTextWindowOpenClose_2::
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
-; Text window step 2: opening, copies all five rows of the window (StepTextWindowOpenClose_Data);
-; closing, just redraws; then ends the open/close (wTextWindowState keeps only bit 7, step 0). (C1,
-; E-0357)
-StepTextWindowOpenClose_SetTextWindowState::
+; Text window step 2: opening, copies all five rows of the window
+; (StepTextWindowOpenClose_CopyAllRows_Data); closing, just redraws; then ends the open/close
+; (wTextWindowState keeps only bit 7, step 0). (C1, E-0357)
+StepTextWindowOpenClose_CopyAllRows::
     ld a, [wTextWindowState]
     bit 0, a
     jr z, .skip
     push de
     ld hl, wWindowTileBuffer
-    ld de, StepTextWindowOpenClose_Data
+    ld de, StepTextWindowOpenClose_CopyAllRows_Data
     ld b, $05
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6639,13 +6640,13 @@ CopyRowsToScreenBufferAndClearAttributes::
     ldh [rSVBK], a
     ret
 
-; data read by StepTextWindowOpenClose (2 bytes) (E-0347)
-StepTextWindowOpenClose_Data1::
+; data read by StepTextWindowOpenClose_CopyRow (2 bytes) (E-0347)
+StepTextWindowOpenClose_CopyRow_Data1::
     db $b6
     ds $12, $c3
     db $b7
 
-StepTextWindowOpenClose_Data2::
+StepTextWindowOpenClose_CopyRow_Data2::
     db $b0
     ds $12, $b1
     db $b2, $b6
@@ -6654,7 +6655,7 @@ StepTextWindowOpenClose_Data2::
     ds $12, $b4
     db $b5
 
-StepTextWindowOpenClose_Data::
+StepTextWindowOpenClose_CopyAllRows_Data::
     db $b0
     ds $12, $b1
     db $b2, $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d
@@ -6667,8 +6668,9 @@ StepTextWindowOpenClose_Data::
 
 ; the field menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the
 ; cursor and sub-state of the open menu, and closes it (InitSoundHardware); states 6-8 return at
-; once (E-0354; was: runs the routine for wMenuState & $0F (jump table) (E-0122))
-RunMenuStateMenuState::
+; once (E-0354; was: runs the routine for wMenuState & $0F (jump table) (E-0122)) (renamed from
+; RunMenuStateMenuState from its E-0357 note, E-0367)
+WarpEffect::
     ld a, [wMenuState]
     or a
     jr nz, .check_menu_state
@@ -6677,23 +6679,23 @@ RunMenuStateMenuState::
     ld a, [wMenuState]
     and $0f
     jumptable
-    dw RunMenuStateMenuState_QueueMusic
-    dw RunMenuStateMenuState_QueueSoundEffect
-    dw RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc
-    dw RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc
-    dw RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc
-    dw RunMenuStateMenuState_InitSoundHardware
-    dw RunMenuStateMenuState_Return
-    dw RunMenuStateMenuState_Return
-    dw RunMenuStateMenuState_Return
+    dw WarpEffect_PlayMusic
+    dw WarpEffect_Cover
+    dw WarpEffect_WriteMenuSubStateAndMenuSelectedMemberEtc
+    dw WarpEffect_WriteMenuSubStateAndMenuCursorEtc
+    dw WarpEffect_WriteSubMenuCursorAndSTATSplitEnableEtc
+    dw WarpEffect_Warp
+    dw WarpEffect_Return
+    dw WarpEffect_Return
+    dw WarpEffect_Return
 
 ; Warp effect step 6: nothing (the effect waits here). (C1, E-0357)
-RunMenuStateMenuState_Return::
+WarpEffect_Return::
     ret
 
 ; Field state 6, the warp effect, step 0: queues music 2 and silences the channels; in a key world
 ; (wMapToggleFlag bit 7) it plays sound $78 at once, otherwise it waits $3B frames. (C1, E-0357)
-RunMenuStateMenuState_QueueMusic::
+WarpEffect_PlayMusic::
     ld a, $02
     call QueueMusic
     call InitSoundHardware
@@ -6719,7 +6721,7 @@ RunMenuStateMenuState_QueueMusic::
 ; Warp effect step 1: after the wait, plays sound $61, covers the 12 columns right of the screen
 ; with tile $C4, fills the per-line scroll table (wBGPaletteCopy, $90 lines) with hScrollX,
 ; precomputes the brightened palettes and starts a $1E-frame countdown. (C1, E-0357)
-RunMenuStateMenuState_QueueSoundEffect::
+WarpEffect_Cover::
     ld a, [wMenuCursor]
     inc a
     ld [wMenuCursor], a
@@ -6727,7 +6729,7 @@ RunMenuStateMenuState_QueueSoundEffect::
     ret c
     ld a, $61
     call QueueSoundEffect
-    call RunMenuStateMenuState_ReadScrollYAndScrollX
+    call WarpEffect_Cover_ReadScrollYAndScrollX
     xor a
     ld [wMenuSubState], a
     ld [wMenuSelectedMember], a
@@ -6751,14 +6753,14 @@ RunMenuStateMenuState_QueueSoundEffect::
     xor a
     ld [wScreenState], a
     ld [wScreenSubStep], a
-    call RunMenuStateMenuState_WriteScreenCounter
+    call WarpEffect_Cover_WriteScreenCounter
     xor a
     ld [wScreenState], a
     ret
 
 ; Covers the 12 BG map columns to the right of the visible screen (18 rows) with tile $C4, wrapping
 ; inside each row. (C1, E-0357)
-RunMenuStateMenuState_ReadScrollYAndScrollX::
+WarpEffect_Cover_ReadScrollYAndScrollX::
     ldh a, [hScrollY]
     and $f8
     ld l, a
@@ -6815,7 +6817,7 @@ RunMenuStateMenuState_ReadScrollYAndScrollX::
 
 ; Warp effect step 2: counts down $1E frames, then turns on the horizontal wave (STAT split 2 from
 ; line 2). (C1, E-0357)
-RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc::
+WarpEffect_WriteMenuSubStateAndMenuSelectedMemberEtc::
     ld a, [wMenuSelectedMember]
     and $01
     ld [wMenuSubState], a
@@ -6837,12 +6839,12 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc::
 
 ; Warp effect step 3: every 8 frames increases the wave amplitude (wMenuCursor) until it reaches
 ; $38, then goes to step 4. (C1, E-0357)
-RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
+WarpEffect_WriteMenuSubStateAndMenuCursorEtc::
     ld a, $01
     ld [wMenuSubState], a
     ld a, [wFrameCounterLo]
     and $07
-    jr nz, RunMenuStateMenuState_ReadMenuCursor
+    jr nz, WarpEffect_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor
     ld a, [wMenuCursor]
     swap a
     and $0f
@@ -6852,7 +6854,7 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
     add b
     ld [wMenuCursor], a
     cp $38
-    jr c, RunMenuStateMenuState_ReadMenuCursor
+    jr c, WarpEffect_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor
     ld hl, wMenuState
     inc [hl]
     xor a
@@ -6860,8 +6862,8 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
 
 ; Fills a quarter of the per-line scroll table each frame (the quarter chosen by the frame count):
 ; each line's X scroll = hScrollX plus or minus amplitude * the entry of the sine-like table
-; RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data, giving the wave. (C1, E-0357)
-RunMenuStateMenuState_ReadMenuCursor::
+; WarpEffect_WriteMenuSubStateAndMenuCursorEtc_Data, giving the wave. (C1, E-0357)
+WarpEffect_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor::
     ld a, [wMenuCursor]
     ldh [hTemp0], a
     ld a, [wFrameCounterLo]
@@ -6905,7 +6907,7 @@ RunMenuStateMenuState_ReadMenuCursor::
     ld a, e
     and $0f
     ld e, a
-    ld hl, RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data
+    ld hl, WarpEffect_WriteMenuSubStateAndMenuCursorEtc_Data
     add hl, de
     push bc
     ld c, [hl]
@@ -6932,14 +6934,14 @@ RunMenuStateMenuState_ReadMenuCursor::
     jr nz, .loop
     ret
 
-; data read by RunMenuStateMenuState (16 bytes) (E-0347)
-RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data::
+; data read by WarpEffect (16 bytes) (E-0347)
+WarpEffect_WriteMenuSubStateAndMenuCursorEtc_Data::
     db $00, $60, $b6, $ec, $ff, $ec, $b6, $60, $00, $60, $b6, $ec, $ff, $ec, $b6, $60
 
-; Warp effect step 4: every 16 frames steps the DMG palette through RunMenuStateMenuState_Data (a
-; fade) with the matching CGB palette step; after 4 steps the wave is turned off and step 5 follows.
-; (C1, E-0357)
-RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
+; Warp effect step 4: every 16 frames steps the DMG palette through
+; WarpEffect_WriteSubMenuCursorAndSTATSplitEnableEtc_Data (a fade) with the matching CGB palette
+; step; after 4 steps the wave is turned off and step 5 follows. (C1, E-0357)
+WarpEffect_WriteSubMenuCursorAndSTATSplitEnableEtc::
     ld a, [wFrameCounterLo]
     and $0f
     jr nz, .read_sub_menu_cursor
@@ -6948,7 +6950,7 @@ RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
     ld [wSubMenuCursor], a
     cp $04
     jr nz, .read_sub_menu_cursor
-    call RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame
+    call WarpEffect_RunScreenStateStepEveryOtherFrame
     ld hl, wMenuState
     inc [hl]
     xor a
@@ -6956,15 +6958,15 @@ RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
 
 .read_sub_menu_cursor:
     ld a, [wSubMenuCursor]
-    ld hl, RunMenuStateMenuState_Data
+    ld hl, WarpEffect_WriteSubMenuCursorAndSTATSplitEnableEtc_Data
     add_a_to_hl
     ld a, [hl]
     ld [wDMGPaletteBGP], a
-    call RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame
-    jp RunMenuStateMenuState_ReadMenuCursor
+    call WarpEffect_RunScreenStateStepEveryOtherFrame
+    jp WarpEffect_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor
 
-; data read by RunMenuStateMenuState (5 bytes) (E-0347)
-RunMenuStateMenuState_Data::
+; data read by WarpEffect (5 bytes) (E-0347)
+WarpEffect_WriteSubMenuCursorAndSTATSplitEnableEtc_Data::
     db $d2, $81, $40, $00, $00
 
 ; Warp effect step 5, the warp itself: silences and restarts the map music, then moves the player. A
@@ -6974,7 +6976,7 @@ RunMenuStateMenuState_Data::
 ; to the destination in KeyListMapDestinationTable (setting two story flags when their condition
 ; flags are set, and running talk event $1A for destination 1); otherwise it enters the key world,
 ; from a free SRAM slot or the slot already saved, at its goal screen and position. (C1, E-0357)
-RunMenuStateMenuState_InitSoundHardware::
+WarpEffect_Warp::
     call InitSoundHardware
     farcall RestartMapMusic
     xor a
@@ -7039,7 +7041,7 @@ RunMenuStateMenuState_InitSoundHardware::
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
-    farcall RunMenuStateMenuState_ReadKeyWorldFloor
+    farcall WarpEffect_Warp_ReadKeyWorldFloor
     ret
 
 .check_map_type:
@@ -7134,7 +7136,7 @@ RunMenuStateMenuState_InitSoundHardware::
     inc hl
     ld a, [hl]
     ld [wPartyStrength], a
-    farcall RunMenuStateMenuState_FindSRAMSlotMarkerIndex
+    farcall WarpEffect_Warp_FindSRAMSlotMarkerIndex
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     jr .set_key_world_refresh_to_80
 
@@ -7203,9 +7205,9 @@ RunMenuStateMenuState_InitSoundHardware::
     ldh [hPlayerSpriteOverride], a
     ret
 
-; the code after RunMenuStateMenuState_InitSoundHardware.read_current_key_index takes the key list
-; byte & $3F as the index, sets game mode 1 and loads hMapId, hMapScreenX, hMapScreenY, hPlayerX and
-; hPlayerY from the 8-byte record at $7006 + 8 * index; 13 records (E-0237, C1)
+; the code after WarpEffect_Warp.read_current_key_index takes the key list byte & $3F as the index,
+; sets game mode 1 and loads hMapId, hMapScreenX, hMapScreenY, hPlayerX and hPlayerY from the 8-byte
+; record at $7006 + 8 * index; 13 records (E-0237, C1)
 ; record: map number, screen X, screen Y, player X, player Y; three bytes not read
 KeyListMapDestinationTable::
     db $00, $00, $00, $00, $00 ; id 0: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY

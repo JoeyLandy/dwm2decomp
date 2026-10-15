@@ -7,7 +7,7 @@ SECTION "Bank 60", ROMX[$4000], BANK[$60]
 ; Entering a key world: finds a free SRAM slot for it (FindSRAMSlotMarkerIndex; none returns), keeps
 ; it in wKeyWorldSlot and in the key's list entry (byte 3, with bit 7), and loads the key's seed
 ; into wKeyRandomLo/Hi. (C1, E-0357)
-RunMenuStateMenuState_FindSRAMSlotMarkerIndex::
+WarpEffect_Warp_FindSRAMSlotMarkerIndex::
     ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
@@ -3213,19 +3213,19 @@ RunRandomPatternCase::
     ld a, [wKeyRandomHi]
     and $0f
     jumptable
-    dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
+    dw RunRandomPatternCase_SingleChunk
     dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_WriteTempA_3
     dw RunRandomPatternCase_WriteTempA_2
     dw RunRandomPatternCase_WriteTempA_3
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
+    dw RunRandomPatternCase_SingleChunk
     dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_WriteTempA_3
     dw RunRandomPatternCase_WriteTempA_2
     dw RunRandomPatternCase_WriteTempA_3
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
+    dw RunRandomPatternCase_SingleChunk
     dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_WriteTempA_3
     dw RunRandomPatternCase_WriteTempA_2
@@ -3495,7 +3495,7 @@ RunRandomPatternCase_WriteTempA::
 
 ; Chunk pattern 0, a single chunk: one of 32 from KeyWorldChunkLists into the slot, and the area's
 ; cell. (C1, E-0357)
-RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer::
+RunRandomPatternCase_SingleChunk::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $1f
@@ -3579,9 +3579,9 @@ StoreTemp2To3BytesBeforeHLPlusTemp0::
     ld [hli], a
     ret
 
-; RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer/01/02 pick entry (random & $1F) of the
-; lists at $610D, $616D and $61E5 and store the far pointer in the key-world area data; the far
-; pointers run to $62F8 and all point at chunk groups ($61 bytes per sub-chunk) (E-0146, C1)
+; RunRandomPatternCase_SingleChunk/01/02 pick entry (random & $1F) of the lists at $610D, $616D and
+; $61E5 and store the far pointer in the key-world area data; the far pointers run to $62F8 and all
+; point at chunk groups ($61 bytes per sub-chunk) (E-0146, C1)
 ; record: chunk group in bank $67/$68; its ROM bank
 KeyWorldChunkLists::
     dfar KeyWorldChunkGroup00 ; id 0

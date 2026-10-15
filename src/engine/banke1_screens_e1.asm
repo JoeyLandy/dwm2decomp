@@ -78,11 +78,11 @@ GameMode5_Update_LoadScreens_ScreenAttrBufferGfx::
     INCBIN "gfx/misc/game_mode5_update_load_screens_screen_attr_buffer_gfx.lz"
 
 ; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
-RunGameMode5Case00SubStates_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/run_game_mode5_case00_sub_states_screen_tile_buffer_gfx.lz"
+TitleOpening_LoadNextScreen_ScreenTileBufferGfx::
+    INCBIN "gfx/misc/title_opening_load_next_screen_screen_tile_buffer_gfx.lz"
 
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
-RunGameMode5Case00SubStates_ScreenAttrBufferGfx::
+TitleOpening_LoadNextScreen_ScreenAttrBufferGfx::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
     db $1f, $1f, $35
 
@@ -96,13 +96,13 @@ BGMap0Gfx_2::
     db $00, $20, $1f, $4d, $00, $80, $1f, $4d, $00, $e0, $1f, $4d, $00, $40, $2f, $4d
     db $00, $a0, $2f, $4d, $00, $00, $3f, $4d, $00, $60, $3f, $4d, $00, $a0, $3f, $2c
 
-RunGameMode5Case00SubStates_BGPaletteBufferData::
+TitleOpening_LoadTitle_BGPaletteBufferData::
     db $0f, $54, $ff, $7f, $1f, $13, $aa, $04, $0f, $54, $ff, $7f, $1f, $13, $d5, $09
     db $33, $05, $ff, $03, $bd, $21, $aa, $04, $33, $05, $ff, $7f, $1f, $13, $aa, $04
     db $33, $05, $ff, $7f, $bd, $21, $aa, $04, $36, $04, $ff, $7f, $1f, $13, $aa, $04
     db $36, $04, $ff, $7f, $1f, $13, $d5, $09, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f
 
-RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState_BGPaletteBufferData::
+TitleOpening_LoadNextScreen_BGPaletteBufferData::
     db $0f, $54, $ff, $7f, $1f, $13, $aa, $04, $0f, $54, $ff, $7f, $1f, $13, $d5, $09
     db $33, $05, $ff, $03, $bd, $21, $aa, $04, $33, $05, $ff, $7f, $1f, $13, $aa, $04
     db $33, $05, $ff, $7f, $bd, $21, $aa, $04, $36, $04, $ff, $7f, $1f, $13, $aa, $04

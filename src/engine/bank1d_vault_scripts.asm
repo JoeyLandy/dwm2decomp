@@ -2270,7 +2270,7 @@ ClearVRAM9700Block_Unreferenced:: ; configured code entry (E-0227); C0
 
 ; Storing, step 15: with answer 2 (more to do) returns to the item list (step 7) with the cursor
 ; reset and the count cleared; otherwise goes on; the script resumes. (C1, E-0357)
-VaultMenu_Store_WriteScreenStepAndScriptCommandTypeEtc::
+VaultMenu_Store_RedrawList_WriteScreenStepAndScriptCommandTypeEtc::
     ld a, [wTwoChoiceCursor]
     cp $02
     jr z, .set_screen_step_to_07
@@ -3926,14 +3926,14 @@ LoadListEntriesCell5RecordAndContinue::
 
 ; Copies the selected SRAM record's name into wTextBuf0 ($F0-terminated, at most 10 letters) for the
 ; message (SRAM enabled around the read). (C1, E-0357)
-HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
+HibernateMenu_ChooseRecords_ReadSwapAnswer_CopyRecordNameToNameGlyphBuf::
     ld a, $0a
     ld [rRAMG2], a
     xor a
     ld [rRAMB], a
     ld a, [wSelectedRecord]
 
-; The name copy of HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2:
+; The name copy of HibernateMenu_ChooseRecords_ReadSwapAnswer_CopyRecordNameToNameGlyphBuf:
 ; CopyRecordNameToNameGlyphBuf, then up to 10 bytes to wTextBuf0 and the $F0 end. (C1, E-0357)
 HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf::
     ld c, MON_NAME
@@ -5172,7 +5172,7 @@ DrawRecordListPageMarks_Data6::
 ; The view-records cursor: Up/Down move between the two choices (wrapping) and answer $FD; A plays
 ; sound $69, marks the choice and answers $FF; B erases the cursor and answers $FE; otherwise blinks
 ; the cursor and answers 0. (C1, E-0357)
-SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D::
+SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, .call_draw_blank_tile_c3_bank1_d_32
@@ -5191,7 +5191,7 @@ SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap
     ld a, $ff
     ld [wMenuInputResult], a
     ret
@@ -5255,24 +5255,25 @@ BlinkCursorBlinkB8_Bank1D::
 ; or read as the label there; was DrawCursorTileBB_Bank1D_3)
 DrawCursorTileBB_Bank1D_3::
     ld b, $bb
-    jr SwapMonstersMenu_ChooseToView_ReadMenuChoice
+    jr SwapMonstersMenu_ReadMenuChoice
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1D_3)
 DrawBlankTileC3_Bank1D_3::
     ld b, $c3
-    jr SwapMonstersMenu_ChooseToView_ReadMenuChoice
+    jr SwapMonstersMenu_ReadMenuChoice
 
-; B = the chosen-cursor tile ($BC), then SwapMonstersMenu_ChooseToView_ReadMenuChoice. (C1, E-0357)
-SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap::
+; B = the chosen-cursor tile ($BC), then SwapMonstersMenu_ReadMenuChoice. (C1, E-0357)
+SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Writes tile B at choice wMenuChoice's place (SwapMonstersMenu_ChooseToView_Data), allowing for the
-; scroll wrap. (C1, E-0357)
-SwapMonstersMenu_ChooseToView_ReadMenuChoice::
+; Writes tile B at choice wMenuChoice's place
+; (SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data), allowing for the scroll wrap. (C1,
+; E-0357)
+SwapMonstersMenu_ReadMenuChoice::
     ld a, [wMenuChoice]
     add a
-    ld hl, SwapMonstersMenu_ChooseToView_Data
+    ld hl, SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5290,7 +5291,7 @@ SwapMonstersMenu_ChooseToView_ReadMenuChoice::
     ret
 
 ; data read by SwapMonstersMenu (4 bytes) (E-0347)
-SwapMonstersMenu_ChooseToView_Data::
+SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data::
     db $28, $01, $68, $01
 
 ; up/down moves wListCursor over wListCount entries ($FD), A selects ($FF, sound $69), B cancels
@@ -6371,7 +6372,7 @@ MarkPartyMembersInRecordListPage_Data2::
 ; goes to step $10); 1 lists the farm records that are not eggs (none returns to state 1, step 3),
 ; with a full party (3 or more) going to step $1E; 2 and 3 take their own lists; starts the script.
 ; (C1, E-0357)
-SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries::
+SwapMonstersMenu_ListParty_ListPartyRecordsWithState2ToListEntries::
     ld hl, wTextWindowTileLo
     xor a
     ld [hli], a
@@ -6580,11 +6581,11 @@ CopyTileBytesToVRAM_Bank1D::
     jr nz, .loop
     ret
 
-; HL = CloseHibernateMenu_LoadTileListSixPerCall_Data, wArg1/2 = $9C/0, DE = vBGMap1, wGlyphListPos
-; = 0, then continues at LoadTileListSixPerFrame_Loop (E-0126) (E-0344: the address in its name
-; dropped or read as the label there; was SetupTileMapAtBGMap1)
+; HL = CloseHibernateMenu_RestoreGlyphs_Data, wArg1/2 = $9C/0, DE = vBGMap1, wGlyphListPos = 0, then
+; continues at LoadTileListSixPerFrame_Loop (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was SetupTileMapAtBGMap1)
 SetupTileMapAtBGMap1::
-    ld hl, CloseHibernateMenu_LoadTileListSixPerCall_Data
+    ld hl, CloseHibernateMenu_RestoreGlyphs_Data
     ld a, $9c
     ld [wArg1], a
     xor a
@@ -6706,7 +6707,7 @@ LoadRecordCapacityFromFarmLevelTable::
 LoadRecordCapacityFromFarmLevelTable_Data::
     db $0a, $14, $1e
 
-CloseHibernateMenu_LoadTileListSixPerCall_Data::
+CloseHibernateMenu_RestoreGlyphs_Data::
     db $40, $8a, $50, $8a, $60, $8a, $70, $8a, $80, $8a, $90, $8a, $a0, $8a, $b0, $8a
     db $c0, $8a, $d0, $8a, $e0, $8a, $f0, $8a, $e0, $8e, $f0, $8e, $00, $8f, $10, $8f
     db $20, $8f, $30, $8f, $40, $8f, $50, $8f, $60, $8f, $70, $8f, $80, $8f, $90, $8f

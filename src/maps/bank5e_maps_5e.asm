@@ -19,7 +19,7 @@ BGPaletteBufferPlus8Data::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
-RunWorldMapState_CopyScrollToHardware_TileRect::
+RunWorldMapState_DrawOverview_TileRect::
     db $6e, $53, $57, $54, $55, $53, $54, $53, $54, $55, $55, $57, $53, $55, $54, $55, $54, $58, $59, $5a ; id 0
     db $66, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $5c, $5d, $5e, $5f ; id 1
     db $60, $51, $51, $74, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $75, $61, $62, $63 ; id 2
@@ -39,10 +39,10 @@ RunWorldMapState_CopyScrollToHardware_TileRect::
     db $64, $51, $51, $6d, $52, $52, $52, $52, $52, $52, $52, $52, $52, $52, $52, $52, $6f, $51, $51, $65 ; id 16
     db $7b, $7c, $7d, $70, $71, $72, $72, $71, $71, $72, $72, $71, $71, $72, $72, $71, $73, $7c, $7e, $7f ; id 17
 
-; RunWorldMapState_WriteTemp0AndTemp1 (RunWorldMapState_WriteTemp0AndTemp1, the game mode 2 map
-; view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and writes the
-; tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers 1-281 fit
-; before Map49Tileset at $5F2A (E-0166, C1)
+; RunWorldMapState_DrawCloseUp_WriteTemp0AndTemp1 (RunWorldMapState_DrawCloseUp_WriteTemp0AndTemp1,
+; the game mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header
+; (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map;
+; block numbers 1-281 fit before Map49Tileset at $5F2A (E-0166, C1)
 ; record: 5 x 5 tiles, one row per line (block number = id)
 AutomapBlocks::
     db $56, $56, $56, $56, $56 ; id 1

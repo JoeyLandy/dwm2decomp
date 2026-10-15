@@ -1687,18 +1687,18 @@ RunEffectRoutineEffectEvery5Frames::
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_SetEffectId
     dw RunEffectRoutineEffectEvery5Frames_SetEffectId
-    dw RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty
+    dw RunEffectRoutineEffectEvery5Frames_BlinkTarget
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake
     dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
     dw RunEffectRoutineEffectEvery5Frames_FlashOnce
     dw RunEffectRoutineEffectEvery5Frames_Delay
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice
-    dw RunEffectRoutineEffectEvery5Frames_RunEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash
     dw RunEffectRoutineEffectEvery5Frames_ReadEffectCounter
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette
     dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen
-    dw RunEffectRoutineEffectEvery5Frames_2
+    dw RunEffectRoutineEffectEvery5Frames_BlinkActor
 
 ; Effect routine 0: ends the effect at once. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_SetEffectId::
@@ -1710,7 +1710,7 @@ RunEffectRoutineEffectEvery5Frames_SetEffectId::
 
 ; Effect routine 2: ends unless the target is one present slot on the far side (4 and up, or below 4
 ; for the link follower); then blinks its picture through four steps. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty::
+RunEffectRoutineEffectEvery5Frames_BlinkTarget::
     ld a, [wBattleTarget]
     and $03
     cp $03
@@ -1737,19 +1737,19 @@ RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty::
     jr c, RunEffectRoutineEffectEvery5Frames_SetEffectId_2
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget
-    dw RunEffectRoutineEffectEvery5Frames_SetEffectStep
-    dw RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget
-    dw RunEffectRoutineEffectEvery5Frames_SetEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_CoverTarget
+    dw RunEffectRoutineEffectEvery5Frames_RestoreTarget
+    dw RunEffectRoutineEffectEvery5Frames_CoverTarget
+    dw RunEffectRoutineEffectEvery5Frames_RestoreTarget
     dw RunEffectRoutineEffectEvery5Frames_SetEffectId_2
 
 ; Effect routine 2, steps 0 and 2: covers the target's picture place with tile block 3 (six rows).
 ; (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget::
+RunEffectRoutineEffectEvery5Frames_CoverTarget::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, RunEffectRoutineEffectEvery5Frames_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1766,11 +1766,11 @@ RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget::
 
 ; Effect routine 2, steps 1 and 3: restores the target's picture place from its own tile block (slot
 ; & 3). (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_SetEffectStep::
+RunEffectRoutineEffectEvery5Frames_RestoreTarget::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, RunEffectRoutineEffectEvery5Frames_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1874,7 +1874,7 @@ ReadWordTableEntry_Bank3A::
     ret
 
 ; data read by RunEffectRoutineEffectEvery5Frames (10 bytes) (E-0347)
-RunEffectRoutineEffectEvery5Frames_Data::
+RunEffectRoutineEffectEvery5Frames_CoverTarget_Data::
     db $e7, $00, $e4, $00, $ea, $00, $e1, $00, $ed, $00
 
 ; two effect routines read the word at $4D5C + 2 * index (index 3, or wBattleTarget & 3) and pass it
@@ -2235,10 +2235,10 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice_SetEffectId::
 
 ; Effect routine 8: runs the 27-step shake and the palette flash (RunEffectStep) together; when the
 ; shake has ended, ends the effect. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_RunEffectStep::
+RunEffectRoutineEffectEvery5Frames_ShakeAndFlash::
     ld a, [wEffectSpriteX]
     or a
-    call z, RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX
+    call z, RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WaitEffectSpriteX
     call RunEffectStep
     ld a, [wEffectSpriteX]
     or a
@@ -2253,42 +2253,42 @@ RunEffectRoutineEffectEvery5Frames_RunEffectStep::
 
 ; Effect routine 8's shake: steps through Y 4, 0, X 3, 0 and repeats, until step 26 ends it. (C1,
 ; E-0357)
-RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX::
+RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WaitEffectSpriteX::
     ld a, [wEffectSpriteX]
     or a
     ret nz
     ld a, [wEffectStep]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_WriteEffectSpriteXAndScrollYEtc
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetEffectSpriteXTo01
 
 ; Routine 8's shake: hScrollY 4, hScrollX 0. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX::
+RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX::
     ld a, $04
     ldh [hScrollY], a
     ld a, $00
@@ -2298,7 +2298,7 @@ RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX::
     ret
 
 ; Routine 8's shake: hScrollY 0, hScrollX 3. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_SetScrollY::
+RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY::
     ld a, $00
     ldh [hScrollY], a
     ld a, $03
@@ -2308,7 +2308,7 @@ RunEffectRoutineEffectEvery5Frames_SetScrollY::
     ret
 
 ; Routine 8's shake: hScrollY and hScrollX 0. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY::
+RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY::
     xor a
     ldh [hScrollY], a
     xor a
@@ -2319,7 +2319,7 @@ RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY::
 
 ; Routine 8's shake, step 26: resets the scroll and marks the shake done (wEffectSpriteX 1). (C1,
 ; E-0357)
-RunEffectRoutineEffectEvery5Frames_WriteEffectSpriteXAndScrollYEtc::
+RunEffectRoutineEffectEvery5Frames_SetEffectSpriteXTo01::
     ld a, $01
     ld [wEffectSpriteX], a
     xor a
@@ -2403,13 +2403,13 @@ RunEffectRoutineEffectEvery5Frames_ReadEffectCounter::
 RunEffectRoutineEffectEvery5Frames_FlashPalette::
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep
+    dw RunEffectRoutineEffectEvery5Frames_FlashPalette_Lighten
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette_WriteEffectStep
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette_SetEffectId
 
 ; Flash light, step 0: lightens the DMG palettes a shade per call, four times. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep::
+RunEffectRoutineEffectEvery5Frames_FlashPalette_Lighten::
     call LightenDMGPaletteOneStep
     ld a, [wEffectCounter]
     cp $04
@@ -2535,31 +2535,31 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen::
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left4
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_3
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right4
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_4
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left8
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_5
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right8
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
     dw RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc
 
 ; The screen shake, step 1: scroll back to 0. (C1, E-0357)
@@ -2580,7 +2580,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX::
     ret
 
 ; The screen shake, step 2: hScrollX +2. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_SetScrollX::
     ld a, $02
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2588,7 +2588,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX::
     ret
 
 ; The screen shake, step 4: hScrollX -4. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_2::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left4::
     ld a, $fc
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2596,7 +2596,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_2::
     ret
 
 ; The screen shake, step 6: hScrollX +4. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_3::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right4::
     ld a, $04
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2604,7 +2604,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_3::
     ret
 
 ; The screen shake, step 8: hScrollX -8. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_4::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left8::
     ld a, $f8
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2612,7 +2612,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_4::
     ret
 
 ; The screen shake, step 10: hScrollX +8. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_5::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right8::
     ld a, $08
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2630,7 +2630,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     ret
 
 ; The screen shake, step 14: hScrollX +8 and hScrollY 2. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown::
     ld a, $08
     ldh [hScrollX], a
     ld a, $02
@@ -2652,7 +2652,7 @@ RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc::
 
 ; Effect routine 13: ends unless the actor is a present slot 4-6 (0-2 in link mode 1, whatever the
 ; role; never slot 3 or 7 up); then blinks its picture through four steps. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_2::
+RunEffectRoutineEffectEvery5Frames_BlinkActor::
     ld a, [wLinkRole]
     ld b, a
     ld a, [wLinkMode]
@@ -2678,19 +2678,19 @@ RunEffectRoutineEffectEvery5Frames_2::
     jr c, LightenDMGPaletteOneStep_SetEffectId
     ld a, [wEffectSpriteX]
     jumptable
-    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
-    dw LightenDMGPaletteOneStep_SetEffectStep
-    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
-    dw LightenDMGPaletteOneStep_SetEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_CoverActor
+    dw RunEffectRoutineEffectEvery5Frames_RestoreActor
+    dw RunEffectRoutineEffectEvery5Frames_CoverActor
+    dw RunEffectRoutineEffectEvery5Frames_RestoreActor
     dw LightenDMGPaletteOneStep_SetEffectId
 
 ; Effect routine 13, steps 0 and 2: covers the actor's picture place with tile block 3 (six rows).
 ; (C1, E-0357)
-LightenDMGPaletteOneStep_EffectPositionIndexForActor::
+RunEffectRoutineEffectEvery5Frames_CoverActor::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, RunEffectRoutineEffectEvery5Frames_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -2707,11 +2707,11 @@ LightenDMGPaletteOneStep_EffectPositionIndexForActor::
 
 ; Effect routine 13, steps 1 and 3: restores the actor's picture place from its own tile block (slot
 ; & 3). (C1, E-0357)
-LightenDMGPaletteOneStep_SetEffectStep::
+RunEffectRoutineEffectEvery5Frames_RestoreActor::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, RunEffectRoutineEffectEvery5Frames_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -3078,7 +3078,7 @@ DrawHexByteAtBGMap8A_FillBytes::
 
 ; Runs the debug effect: first decompresses its graphics; then ticks its sequence, moves it in mode
 ; 3 and draws it until it ends ($FF). (C1, E-0357)
-RunDebugState_E0_DecompressGraphicsAToTiles0::
+RunDebugState_E0_EffectViewer_DecompressGraphicsAToTiles0::
     ld a, [wEffectAnimState]
     cp $01
     jr nz, .call_tick_sequence_ptr_lo_sequence
@@ -4900,12 +4900,12 @@ RunBattleActions::
     jumptable
     dw RunBattleActions_ToRunBattleActions_StatusChecks
     dw RunBattleActions_ToRunBattleResolveStep
-    dw RunBattleActions_LoadSkillRecord
+    dw RunBattleActions_ResolveAction
     dw RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc
     dw RunActionSpecificPostStep
     dw RunBattleActions_ShowHeroBlewBackG
-    dw RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleActions_CheckActionBDOrRun
+    dw RunBattleActions_FocusFollowUp
+    dw RunBattleActions_MarkActorDone
     dw RunBattleActions_ToRunBattleActions_UseItem
     dw RunBattleActions_WearOffAndDefeat
     dw RunBattleActions_SetBattlePhase
@@ -4923,7 +4923,7 @@ RunBattleActions_ToRunBattleResolveStep::
 
 ; Battle fight step 3, sub-phase 2: loads the action's skill record and resolves the action
 ; (RunActionResolveStep). (C1, E-0357)
-RunBattleActions_LoadSkillRecord::
+RunBattleActions_ResolveAction::
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
     xor a
@@ -5078,7 +5078,7 @@ RunBattleActions_ShowHeroBlewBackG::
 ; Battle fight step 3, sub-phase 6: when the present actor had Focus, clears it and, for a skill
 ; with record byte 7 bit 4 while the battle goes on, acts again: resets the effect and hits, picks a
 ; new target and resolves again. (C1, E-0357)
-RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleActions_FocusFollowUp::
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .skip
@@ -5127,7 +5127,7 @@ RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty::
 ; Battle fight step 3, sub-phase 7: when the battle is decided goes to the next phase; otherwise
 ; marks the actor done (wSlotMarks 3; choice $CC clears status 4 bits 2-3) and moves to the next
 ; queued action of a present slot, or with none left (or nine done) to sub-phase 9. (C1, E-0357)
-RunBattleActions_CheckActionBDOrRun::
+RunBattleActions_MarkActorDone::
     xor a
     ld [wFollowUpAction], a
     xor a
@@ -5302,11 +5302,11 @@ RunBattleActions_WearOffAndDefeat::
     jumptable
     dw RunBattleActions_WriteBattleActorAndBattleResolveStep
     dw RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore
-    dw RunBattleActions_WearOffAndDefeat_AddAx9ToHL
+    dw RunBattleActions_WearOffAndDefeat_Poison
     dw RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead
-    dw RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty
+    dw RunBattleActions_WearOffAndDefeat_NextSlot
     dw RunBattleActions_WearOffAndDefeat_WaitTextFlags
-    dw RunBattleActions_WearOffAndDefeat_QueueMusic
+    dw RunBattleActions_WearOffAndDefeat_TurnLimitDraw
 
 ; End of turn, step 0: clears side flag bits 4 and 6 and the slot pair bytes' bits 2-7; for nine
 ; 9-byte status rows counts down the two-bit timers (byte 4 all four, byte 5 bits 4-5, byte 8 bits
@@ -5420,7 +5420,7 @@ RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore::
 ; End of turn, step 2: poison: BSTAT0_POISONED takes max HP / 16 (at least 1, at most 50) with text
 ; $88, BSTAT0_BADLY_POISONED max HP / 6 (at most 150) with text $89; when that defeats the slot goes
 ; back to step 3, otherwise on to step 4. (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_AddAx9ToHL::
+RunBattleActions_WearOffAndDefeat_Poison::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -5446,8 +5446,8 @@ RunBattleActions_WearOffAndDefeat_AddAx9ToHL::
 .read_battle_actor:
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunBattleActions_WearOffAndDefeat_GetBattleMaxHP_Bank3A
-    call RunBattleActions_WearOffAndDefeat_AddDoubleAToHL_Bank3A
+    call RunBattleActions_WearOffAndDefeat_Poison_GetBattleMaxHP_Bank3A
+    call RunBattleActions_WearOffAndDefeat_Poison_AddDoubleAToHL_Bank3A
     ld a, [wBattleArg0]
     ld d, a
     farcall ShowBattleText
@@ -5460,7 +5460,7 @@ RunBattleActions_WearOffAndDefeat_AddAx9ToHL::
 
 ; The poison damage: wBattleDamage = max HP / B (B = 16 or 6), at least 1, at most 50 (B = 16) or
 ; 150 (B = 6). (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_GetBattleMaxHP_Bank3A::
+RunBattleActions_WearOffAndDefeat_Poison_GetBattleMaxHP_Bank3A::
     push bc
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank3A
@@ -5507,7 +5507,7 @@ RunBattleActions_WearOffAndDefeat_GetBattleMaxHP_Bank3A::
 
 ; Takes the poison damage from the slot's HP; at zero clears it, marks the slot's level-up gains
 ; (bit 2) and defeats it (DefeatTarget, wLoadSlot 1); marks bit 0 either way. (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_AddDoubleAToHL_Bank3A::
+RunBattleActions_WearOffAndDefeat_Poison_AddDoubleAToHL_Bank3A::
     xor a
     ld [wLoadSlot], a
     ld a, [wBattleActor]
@@ -5578,14 +5578,14 @@ RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead::
 ; marks, counts the turn (up to $FF) and, in a link battle with a turn limit (wLinkRuleTurnLimit bit
 ; 7), shows the turns left (string $61, or $88 when the number starts with 1) or past the limit
 ; string $62 and goes to the draw (step 6); otherwise starts the next turn. (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleActions_WearOffAndDefeat_NextSlot::
     ld hl, wBattleActor
     inc [hl]
     ld a, [hl]
     cp $08
     jr z, .skip
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty
+    jr c, RunBattleActions_WearOffAndDefeat_NextSlot
     ld a, $01
     ld [wBattleResolveStep], a
     ret
@@ -5707,7 +5707,7 @@ RunBattleActions_WearOffAndDefeat_WaitTextFlags::
 
 ; End of turn, step 6 (the turn limit): after the text ends the battle as a draw: phase 2, step 8,
 ; wBattleScene $80, music $42. (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_QueueMusic::
+RunBattleActions_WearOffAndDefeat_TurnLimitDraw::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -6241,41 +6241,41 @@ RunBattleStep4_WriteBattleActorAndBattleTargetEtc::
 RunActionResolveStep::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunActionResolveStep_HeroWokeUp
-    dw RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A
-    dw RunActionResolveStep_CheckActionBDOrRun
-    dw RunActionResolveStep_SetBattleArg0
+    dw RunActionResolveStep_TakeMagic
+    dw RunActionResolveStep_WakeOrSnapOut
+    dw RunActionResolveStep_SnapOutOfConfusion
+    dw RunActionResolveStep_CheckDecided
+    dw RunActionResolveStep_Counter
     dw RunActionResolveStep_ToRunBattleSubStep
-    dw RunActionResolveStep_AddDoubleAToHL_Bank3A
-    dw RunActionResolveStep_RunDefeatStepMinus1Step
-    dw RunActionResolveStep_AdvanceBattleResolveStep
-    dw RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A
+    dw RunActionResolveStep_RestoreTarget
+    dw RunActionResolveStep_RunDefeat
+    dw RunActionResolveStep_CheckDecidedAfterDefeat
+    dw RunActionResolveStep_Imitate
 
 ; Resolve step 0 (TakeMagic): when the present target has BSTAT2_TAKE_MAGIC, the skill's record byte
 ; 7 bit 0 (and, for a follow-up, message flag bit 4) and less than full MP, it gains MP equal to
 ; record byte 0, at most up to its max (wBattleDamage holds the gain while text $40 shows); then
 ; step 1. (C1, E-0357)
-RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
+RunActionResolveStep_TakeMagic::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit BSTAT2_TAKE_MAGIC, [hl]
-    jp z, RunActionResolveStep_HeroWokeUp
+    jp z, RunActionResolveStep_WakeOrSnapOut
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, RunActionResolveStep_HeroWokeUp
+    jp c, RunActionResolveStep_WakeOrSnapOut
     ld a, [wRecordBufferData + $7]
     bit 0, a
-    jr z, RunActionResolveStep_HeroWokeUp
+    jr z, RunActionResolveStep_WakeOrSnapOut
     ld a, [wFollowUpAction]
     bit 2, a
     jr z, .read_battle_target
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, RunActionResolveStep_HeroWokeUp
+    jr z, RunActionResolveStep_WakeOrSnapOut
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -6285,7 +6285,7 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     call GetBattleMP_Bank3A
     pop bc
     call CompareHLToBC
-    jr z, RunActionResolveStep_HeroWokeUp
+    jr z, RunActionResolveStep_WakeOrSnapOut
     ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wBattleDamageHi]
@@ -6345,7 +6345,7 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
 ; record byte 7 bit 3 and message flag bit 4, a roll below $40 (a foe outside a link) or $80 wakes a
 ; sleeper (clearing bits 7, 3 and 2, mark 3, text $82 '<name> woke up!'); a confused target goes to
 ; step 2; otherwise on to step 3. (C1, E-0357)
-RunActionResolveStep_HeroWokeUp::
+RunActionResolveStep_WakeOrSnapOut::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -6369,7 +6369,7 @@ RunActionResolveStep_HeroWokeUp::
     pop hl
     jr nc, .skip
     bit 7, [hl]
-    jr z, RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A
+    jr z, RunActionResolveStep_SnapOutOfConfusion
     ld a, [hl]
     and $73
     ld [hl], a
@@ -6386,11 +6386,11 @@ RunActionResolveStep_HeroWokeUp::
 .skip:
     ld hl, wBattleResolveStep
     inc [hl]
-    jr RunActionResolveStep_CheckActionBDOrRun
+    jr RunActionResolveStep_CheckDecided
 
 ; Resolve step 2: a confused target that passed step 1's roll snaps out of it (clears
 ; BSTAT0_CONFUSED, mark 3, text $83). (C1, E-0357)
-RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A::
+RunActionResolveStep_SnapOutOfConfusion::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -6398,7 +6398,7 @@ RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A::
     call AddAx9ToHL
     ld a, [hl]
     bit BSTAT0_CONFUSED, [hl]
-    jr z, RunActionResolveStep_CheckActionBDOrRun
+    jr z, RunActionResolveStep_CheckDecided
     res BSTAT0_CONFUSED, [hl]
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
@@ -6411,11 +6411,11 @@ RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A::
     ret
 
 ; Resolve step 3: when the battle is decided skips to step 6; otherwise step 4. (C1, E-0357)
-RunActionResolveStep_CheckActionBDOrRun::
+RunActionResolveStep_CheckDecided::
     ld hl, wBattleResolveStep
     inc [hl]
     call CheckActionBDOrRun
-    jr nc, RunActionResolveStep_SetBattleArg0
+    jr nc, RunActionResolveStep_Counter
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -6427,7 +6427,7 @@ RunActionResolveStep_CheckActionBDOrRun::
 ; set: halves the damage (doubles it with BSTAT7_DAMAGE_DOUBLED), swaps actor and target, sets
 ; effect flags $11 ($10 for no damage) and shows the counter's text by the target's personality act
 ; bit 3 or a random pick. (C1, E-0357)
-RunActionResolveStep_SetBattleArg0::
+RunActionResolveStep_Counter::
     ld a, [wFollowUpAction]
     or a
     jp nz, .skip4
@@ -6567,7 +6567,7 @@ RunActionResolveStep_ToRunBattleSubStep::
 ; Resolve step 6: puts back a redirected target (wOriginalTarget) as the target and choice;
 ; otherwise outside fight step 4 after a follow-up restores the saved actor, target, hits and
 ; choices. (C1, E-0357)
-RunActionResolveStep_AddDoubleAToHL_Bank3A::
+RunActionResolveStep_RestoreTarget::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wOriginalTarget]
@@ -6586,10 +6586,10 @@ RunActionResolveStep_AddDoubleAToHL_Bank3A::
 .check_battle_step:
     ld a, [wBattleStep]
     cp $04
-    jr z, RunActionResolveStep_RunDefeatStepMinus1Step
+    jr z, RunActionResolveStep_RunDefeat
     ld a, [wFollowUpAction]
     or a
-    jr z, RunActionResolveStep_RunDefeatStepMinus1Step
+    jr z, RunActionResolveStep_RunDefeat
     xor a
     ld [wFollowUpAction], a
     ld hl, wSavedActorTarget
@@ -6622,7 +6622,7 @@ RunActionResolveStep_StoreWordAtIndex::
     ret
 
 ; Resolve step 7: runs the pending defeat step (RunDefeatStepMinus1Step). (C1, E-0357)
-RunActionResolveStep_RunDefeatStepMinus1Step::
+RunActionResolveStep_RunDefeat::
     ld a, [wDefeatStep]
     or a
     call nz, RunDefeatStepMinus1Step
@@ -6632,7 +6632,7 @@ RunActionResolveStep_RunDefeatStepMinus1Step::
 
 ; Resolve step 8: when the battle is decided clears the hits and goes to sub-phase 4; otherwise step
 ; 9. (C1, E-0357)
-RunActionResolveStep_AdvanceBattleResolveStep::
+RunActionResolveStep_CheckDecidedAfterDefeat::
     call CheckActionBDOrRun
     jr c, .clear_multi_hit_count
     ld hl, wBattleResolveStep
@@ -6649,8 +6649,8 @@ RunActionResolveStep_AdvanceBattleResolveStep::
     ret
 
 ; Resolve step 9: the Imitate check. (C1, E-0357)
-RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A::
-    call RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A_2
+RunActionResolveStep_Imitate::
+    call RunActionResolveStep_Imitate_CheckSlotStatusBlockWide_Bank3A
     ret
 
 ; carry when wRandomLo is below $40 (a foe target outside link battles) or $80 (otherwise) (E-0122)
@@ -6679,8 +6679,8 @@ RunDefeatStepMinus1Step::
     ld a, [wDefeatStep]
     dec a
     jumptable
-    dw RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A
-    dw RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A_2
+    dw RunDefeatStepMinus1Step_ShowText
+    dw RunDefeatStepMinus1Step_ShowText2
     dw RunDefeatStepMinus1Step_WriteDefeatStep
     dw RunDefeatStepMinus1Step_Return
     dw RunDefeatStepMinus1Step_Return
@@ -6691,7 +6691,7 @@ RunDefeatStepMinus1Step::
     dw RunDefeatStepMinus1Step_Return
 
 ; Defeat step 0: battle text $85 for a target on the near side, $E8 otherwise. (C1, E-0357)
-RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A::
+RunDefeatStepMinus1Step_ShowText::
     call TargetOnLocalSide_Bank3A
     ld d, $85
     jr c, RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
@@ -6699,7 +6699,7 @@ RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A::
     jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
 
 ; Defeat step 1: battle text $80 for a target on the near side, $E7 otherwise. (C1, E-0357)
-RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A_2::
+RunDefeatStepMinus1Step_ShowText2::
     call TargetOnLocalSide_Bank3A
     ld d, $80
     jr c, RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
@@ -6730,7 +6730,7 @@ RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText::
 ; act and has BSTAT6_IMITATE, a skill without record byte 7 bit 2 shows text $7B, otherwise
 ; (Massacre only across sides, not deflected, with message flag bit 4) text $7A and the next battle
 ; step, returning NC; every other case goes to the next sub-phase with carry. (C1, E-0357)
-RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A_2::
+RunActionResolveStep_Imitate_CheckSlotStatusBlockWide_Bank3A::
     ld a, [wBattleStep]
     cp $04
     jr z, .clear_attack_deflected

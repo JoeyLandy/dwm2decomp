@@ -401,7 +401,7 @@ MapType5Tiles5::
 ; entry 5 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes5::
-LoadMapHeaderByMapType_DecompressToVRAM_BGPaletteBufferData::
+LoadMapHeaderByMapType_Type1_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $150b, $5f17, $15ae, $0044 ; entry 1
     dw $1528, $5f17, $15ae, $0000 ; entry 2

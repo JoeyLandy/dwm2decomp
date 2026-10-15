@@ -366,16 +366,16 @@ LoadMapHeaderByMapType::
     and $07
     jumptable
     dw LoadKeyWorldTilesetAndHeader
-    dw LoadMapHeaderByMapType_DecompressToVRAM
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0_2
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0_2
+    dw LoadMapHeaderByMapType_Type1
+    dw LoadMapHeaderByMapType_Type2
+    dw LoadMapHeaderByMapType_Type3
+    dw LoadMapHeaderByMapType_Type3
     dw LoadMapType5TilesetAndHeader
     dw LoadMapHeaderByMapType_WriteTemp0
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader
+    dw LoadMapHeaderByMapType_Type7
 
 ; Map type 7's header: special map record $66 (LoadSpecialMapHeader). (C1, E-0357)
-LoadMapHeaderByMapType_LoadSpecialMapHeader::
+LoadMapHeaderByMapType_Type7::
     ld a, $66
     ldh [hTemp0], a
     call LoadSpecialMapHeader
@@ -520,7 +520,7 @@ MapType5TilesetTable::
 ; from $3F, no field events, map sprites or tall tiles; the map's size in screens from the table
 ; entry for the floor's key-world object (its two nibbles); encounter rate $A3, normal movement.
 ; (C1, E-0357)
-LoadMapHeaderByMapType_DecompressToVRAM::
+LoadMapHeaderByMapType_Type1::
     ld de, MapType5Tiles5
     ld b, $6e
     ld hl, vTiles2
@@ -528,7 +528,7 @@ LoadMapHeaderByMapType_DecompressToVRAM::
     ld a, [wIsCGB]
     or a
     jr z, .set_max_blocking_tile_to_3F
-    ld de, LoadMapHeaderByMapType_DecompressToVRAM_BGPaletteBufferData
+    ld de, LoadMapHeaderByMapType_Type1_BGPaletteBufferData
     ld b, $6e
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -590,7 +590,7 @@ LoadMapHeaderByMapType_DecompressToVRAM::
 
 ; Map type 2's header: special map record $61, or $62 for the floor's second half (wKeyWorldFloor
 ; bit 7), which is also kept in wKeyWorldSetting (0 or 1). (C1, E-0357)
-LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0::
+LoadMapHeaderByMapType_Type2::
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
@@ -608,7 +608,7 @@ LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0::
 
 ; Map type 3's header: the special map record numbered by the floor's wKeyWorldFloorState byte 0
 ; (without bit 7). (C1, E-0357)
-LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0_2::
+LoadMapHeaderByMapType_Type3::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a
@@ -727,15 +727,15 @@ LoadMapScreen_ReadMapType::
     jumptable
     dw LoadMapScreen_WriteSVBK_2
     dw LoadMapScreen_Return
-    dw LoadMapScreen_SetTemp0
-    dw LoadMapScreen_LoadMapScreenFromChunk_SetTemp0
-    dw LoadMapScreen_LoadMapScreenFromChunk_SetTemp0
+    dw LoadMapScreen_Type2
+    dw LoadMapScreen_Type3
+    dw LoadMapScreen_Type3
     dw LoadMapScreen_WriteTemp0AndSVBK
     dw LoadMapScreen_WriteTemp0_2
-    dw LoadMapScreen_LoadMapScreenFromChunk
+    dw LoadMapScreen_Type7
 
 ; Map type 7's screen: from special map $66's chunks. (C1, E-0357)
-LoadMapScreen_LoadMapScreenFromChunk::
+LoadMapScreen_Type7::
     ld a, $66
     ldh [hTemp0], a
     call LoadMapScreenFromChunk
@@ -1578,7 +1578,7 @@ LoadMapScreen_Return::
     db $c9
 
 ; Map type 2's screen: from special map $61, or $62 for the floor's second half. (C1, E-0357)
-LoadMapScreen_SetTemp0::
+LoadMapScreen_Type2::
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
@@ -1593,7 +1593,7 @@ LoadMapScreen_SetTemp0::
 
 ; Map types 3 and 4's screen: from the special map numbered by floor state byte 0 (without bit 7).
 ; (C1, E-0357)
-LoadMapScreen_LoadMapScreenFromChunk_SetTemp0::
+LoadMapScreen_Type3::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a

@@ -412,11 +412,11 @@ class NestedDispatchCases(unittest.TestCase):
 
     def test_table_in_a_case_belongs_to_the_case(self):
         text = (BANKS / "bank37.asm").read_text(encoding="utf-8")
-        start = text.index("RunLinkSession5Exchange_ShowRecordStats::")  # a nested dispatcher (E-0245 prefix; named in E-0288)
+        start = text.index("PartnerStats::")  # a nested dispatcher (E-0245 prefix; named in E-0288)
         body = text[start:text.index("\n\n", start)]
         self.assertIn("rst $00", body)
         # its targets carry the case's name as a prefix (CaseNN, or a shape name such as _To..., E-0272)
-        self.assertRegex(body, r"dw RunLinkSession5Exchange_ShowRecordStats_\w+")
+        self.assertRegex(body, r"dw PartnerStats_\w+")
 
 
 class InlineTableTrim(unittest.TestCase):

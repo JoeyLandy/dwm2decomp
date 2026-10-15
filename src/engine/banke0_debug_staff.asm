@@ -10,7 +10,7 @@ SECTION "Bank E0", ROMX[$4000], BANK[$E0]
 RunDebugSubState_E0::
     ld a, [wDebugSubState]
     jumptable
-    dw RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault
+    dw RunDebugSubState_E0_ShowHeading
     dw RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor
     dw RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0
     dw RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1
@@ -18,9 +18,9 @@ RunDebugSubState_E0::
     dw RunDebugSubState_E0_SetDebugSubState
 
 ; Debug skill editor, sub-state 0: shows its heading strings, draws its 20 x 18 layout
-; (RunDebugSubState_E0_Data) and the four fields (the side, the skill number and name, a count, the
-; battle-end flag) with the cursor on the first. (C1, E-0357)
-RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault::
+; (RunDebugSubState_E0_ShowHeading_Data) and the four fields (the side, the skill number and name, a
+; count, the battle-end flag) with the cursor on the first. (C1, E-0357)
+RunDebugSubState_E0_ShowHeading::
     ld hl, vTiles1 + $6d0
     ld de, $2101
     ld a, $02
@@ -36,7 +36,7 @@ RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault::
     ld [wStringIndex], a
     call ShowStringBank08AtTilesHLThenDefault_BankE0
     call FillTilesFromRequest
-    ld de, RunDebugSubState_E0_Data
+    ld de, RunDebugSubState_E0_ShowHeading_Data
     ld bc, $1412
     ld hl, vBGMap0
 
@@ -450,8 +450,8 @@ ShowStringBank09AtHLSizeDEThenDefault::
     ld [wTextWindowWidth], a
     ret
 
-; data read by RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault (198 bytes) (E-0347)
-RunDebugSubState_E0_Data::
+; data read by RunDebugSubState_E0_ShowHeading (198 bytes) (E-0347)
+RunDebugSubState_E0_ShowHeading_Data::
     db $b0
     ds $12, $b1
     db $b2, $b6
@@ -488,24 +488,24 @@ RunDebugSubState_E0_Data::
 RunDebugState_E0::
     ld a, [wDebugState]
     jumptable
-    dw RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0
-    dw RunDebugState_E0_DrawSlotHPMPStats_BankE0
-    dw RunDebugState_E0_DrawFullScreenFromBankE0_2
-    dw RunDebugState_E0_WriteVRAMByteInc
+    dw RunDebugState_E0_ShowHeading
+    dw RunDebugState_E0_DrawSlotStats
+    dw RunDebugState_E0_Input
+    dw RunDebugState_E0_MarkGains
     dw RunDebugState_E0_ToDrawTileMapAndStep
-    dw RunDebugState_E0_DrawPacked2BitFieldsInRows
+    dw RunDebugState_E0_DrawResistances
     dw RunDebugState_E0_WaitJoypadPressed
     dw DrawTileMapAndStep
-    dw RunDebugState_E0_DrawEightBytesAsHexColumns
+    dw RunDebugState_E0_DrawSkillBytes
     dw RunDebugState_E0_WaitJoypadPressed_SetDebugState
-    dw RunDebugState_E0_DecompressGraphicsAToTiles0_2
-    dw RunDebugState_E0_BlinkTemp0Tile
+    dw RunDebugState_E0_EffectViewer
+    dw RunDebugState_E0_EditStatusBits
     dw RunDebugState_E0_ToRunDebugSubState_E0
     dw RunDebugState_E0_ChooseActionTargets
 
 ; Debug battle viewer, state 0: shows its heading (string 4 of category 2), draws the screen and
 ; puts the cursor at the current page's mark. (C1, E-0357)
-RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0::
+RunDebugState_E0_ShowHeading::
     ld hl, vTiles1 + $6d0
     ld de, $2301
     ld a, $02
@@ -514,7 +514,7 @@ RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0::
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_BankE0
     call DrawFullScreenFromBankE0
-    ld hl, RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0_Data
+    ld hl, RunDebugState_E0_ShowHeading_Data
     ld a, [wDebugSubState]
     add a
     add_a_to_hl
@@ -525,13 +525,13 @@ RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0::
     inc [hl]
     ret
 
-; data read by RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0 (4 bytes) (E-0347)
-RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0_Data::
+; data read by RunDebugState_E0_ShowHeading (4 bytes) (E-0347)
+RunDebugState_E0_ShowHeading_Data::
     db $24, $98, $2a, $98
 
 ; Debug battle viewer, state 1: draws the HP, MP and stats of three battle slots (the party's 0-2,
 ; or the foes' 4-6 on page 1) and the battle meter. (C1, E-0357)
-RunDebugState_E0_DrawSlotHPMPStats_BankE0::
+RunDebugState_E0_DrawSlotStats::
     ld a, [wDebugSubState]
     or a
     jr nz, .call_draw_slot_hpmp_stats_bank_e0
@@ -549,7 +549,7 @@ RunDebugState_E0_DrawSlotHPMPStats_BankE0::
     call DrawSlotHPMPStats_BankE0
     ld hl, vBGMap0 + $20b
     ld de, wBattleMeter
-    call RunDebugState_E0_WordAtDEToPackedBCD
+    call RunDebugState_E0_DrawSlotStats_WordAtDEToPackedBCD
     ld hl, wDebugState
     inc [hl]
     ret
@@ -686,11 +686,11 @@ DrawSlotHPMPStats_BankE0_IndexWordC::
     add a
     add e
     ld e, a
-    jr nc, RunDebugState_E0_WordAtDEToPackedBCD
+    jr nc, RunDebugState_E0_DrawSlotStats_WordAtDEToPackedBCD
     inc d
 
 ; Draws the word at DE as digits (the battle meter). (C1, E-0357)
-RunDebugState_E0_WordAtDEToPackedBCD::
+RunDebugState_E0_DrawSlotStats_WordAtDEToPackedBCD::
     call WordAtDEToPackedBCD
 
 ; Draws the packed number's five digits and moves HL down a row. (C1, E-0357)
@@ -833,7 +833,7 @@ DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data2::
 ; Debug battle viewer, state 2: Select saves the battle counts and actor and opens the effect viewer
 ; (state $0A); Start goes on to state 3; Left/Right turn the page; A opens the resistances (state
 ; 4); B the skills (state 7). (C1, E-0357)
-RunDebugState_E0_DrawFullScreenFromBankE0_2::
+RunDebugState_E0_Input::
     ld a, [wJoypadPressed]
     and $04
     jr z, .check_joypad_pressed
@@ -901,7 +901,7 @@ RunDebugState_E0_DrawFullScreenFromBankE0_2::
 
 ; Debug battle viewer, state 3: draws the screen buffer and marks every active slot's level-up gains
 ; as 7, clearing wDebugValue3. (C1, E-0357)
-RunDebugState_E0_WriteVRAMByteInc::
+RunDebugState_E0_MarkGains::
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     ld bc, $1412
@@ -957,7 +957,7 @@ RunDebugState_E0_ToDrawTileMapAndStep::
 
 ; Debug battle viewer, state 5: draws the six slots' 27 resistance levels as 2-bit digits
 ; (wSlotResistances). (C1, E-0357)
-RunDebugState_E0_DrawPacked2BitFieldsInRows::
+RunDebugState_E0_DrawResistances::
     ld hl, vBGMap0 + $61
     ld de, wSlotResistances
     call DrawPacked2BitFieldsInRows
@@ -1118,7 +1118,7 @@ DrawTileMapAndStep::
 
 ; Debug battle viewer, state 8: draws the six slots' skill bytes (wBattleSkills) as hex columns and
 ; the three battler records' experience. (C1, E-0357)
-RunDebugState_E0_DrawEightBytesAsHexColumns::
+RunDebugState_E0_DrawSkillBytes::
     ld de, wBattleSkills
     ld hl, vBGMap0 + $62
     call DrawEightBytesAsHexColumns
@@ -1348,11 +1348,11 @@ DrawTileMapAndStep_Data::
 
 ; The effect viewer, state 10: while an effect plays runs it; otherwise Right/Left step the effect
 ; number 0-$3B with wrap and draw it, then the buttons below. (C1, E-0357)
-RunDebugState_E0_DecompressGraphicsAToTiles0_2::
+RunDebugState_E0_EffectViewer::
     ld a, [wEffectId]
     cp $ff
     jr z, .check_joypad_pressed
-    farcall RunDebugState_E0_DecompressGraphicsAToTiles0
+    farcall RunDebugState_E0_EffectViewer_DecompressGraphicsAToTiles0
     ret
 
 .check_joypad_pressed:
@@ -1474,7 +1474,7 @@ DrawHexByteAtBGMap8A_CheckJoypadPressed2::
 ; Debug battle viewer, state 11 (the status bits): blinks the cursor; Start changes slot (0-7); the
 ; D-pad moves over the bits (columns 0-7, rows of the slot's status bytes); the rest follow. (C1,
 ; E-0357)
-RunDebugState_E0_BlinkTemp0Tile::
+RunDebugState_E0_EditStatusBits::
     call BlinkTemp0Tile
     ld a, [wJoypadPressed]
     and $08
@@ -1626,7 +1626,7 @@ RunDebugState_E0_BlinkTemp0Tile::
     and $01
     jr z, .skip6
     ld a, e
-    ld de, RunDebugState_E0_BlinkTemp0Tile_Data2
+    ld de, RunDebugState_E0_EditStatusBits_Data2
     and $0f
     add e
     ld e, a
@@ -1641,7 +1641,7 @@ RunDebugState_E0_BlinkTemp0Tile::
 
 .skip6:
     ld a, e
-    ld de, RunDebugState_E0_BlinkTemp0Tile_Data1
+    ld de, RunDebugState_E0_EditStatusBits_Data1
     and $0f
     add e
     ld e, a
@@ -1657,11 +1657,11 @@ RunDebugState_E0_BlinkTemp0Tile::
 .skip8:
     jp DrawHexByteAtBGMap8A_CheckJoypadPressed2
 
-; data read by RunDebugState_E0_BlinkTemp0Tile (8 bytes) (E-0347)
-RunDebugState_E0_BlinkTemp0Tile_Data1::
+; data read by RunDebugState_E0_EditStatusBits (8 bytes) (E-0347)
+RunDebugState_E0_EditStatusBits_Data1::
     db $fe, $fd, $fb, $f7, $ef, $df, $bf, $7f
 
-RunDebugState_E0_BlinkTemp0Tile_Data2::
+RunDebugState_E0_EditStatusBits_Data2::
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in
@@ -1691,8 +1691,8 @@ RunDebugState_E0_ToRunDebugSubState_E0::
 RunDebugState_E0_ChooseActionTargets::
     ld a, [wDebugSubState]
     jumptable
-    dw RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0
-    dw RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0
+    dw RunDebugState_E0_ChooseActionTargets_Start
+    dw RunDebugState_E0_ChooseActionTargets_AIChoice
     dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubState
     dw RunDebugState_E0_WriteDebugSubStateAndBattleActor
     dw RunDebugState_E0_WriteBattleActorAndDebugSubStateEtc
@@ -1700,7 +1700,7 @@ RunDebugState_E0_ChooseActionTargets::
 
 ; Choosing actions, sub-state 0: shows the headings, draws the layout and starts with actor 0. (C1,
 ; E-0357)
-RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0::
+RunDebugState_E0_ChooseActionTargets_Start::
     ld hl, vTiles2 + $10
     ld de, $1001
     ld a, $00
@@ -1742,12 +1742,12 @@ RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0
     ret
 
 ; Choosing actions, sub-state 1: works out the actor's personality and its AI choice
-; (RunDebugState_E0_ChooseActionTargets_WriteRandomLoAndRandomHiEtc). (C1, E-0357)
-RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0::
+; (RunDebugState_E0_ChooseActionTargets_AIChoice_WriteRandomLoAndRandomHiEtc). (C1, E-0357)
+RunDebugState_E0_ChooseActionTargets_AIChoice::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_BankE0
     ld [wPersonalityIndex], a
-    farcall RunDebugState_E0_ChooseActionTargets_WriteRandomLoAndRandomHiEtc
+    farcall RunDebugState_E0_ChooseActionTargets_AIChoice_WriteRandomLoAndRandomHiEtc
     ld a, $02
     ld [wDebugSubState], a
     ret
@@ -2412,7 +2412,7 @@ EffectTestEntries::
 ; Clears the actor's action choice and runs the AI's choice for it (AIChooseActionResolveStep,
 ; ChooseTargetIfUnset); in a link session the random seeds are saved and restored around it. (C1,
 ; E-0357)
-RunDebugState_E0_ChooseActionTargets_WriteRandomLoAndRandomHiEtc::
+RunDebugState_E0_ChooseActionTargets_AIChoice_WriteRandomLoAndRandomHiEtc::
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
     add a
@@ -3061,7 +3061,7 @@ ShowStringBank09AtHLSizeDEThenDefault_BankE0::
 DebugStaffRoll_Update_RunFieldEventFieldEventKind::
     ld a, [wWorkBuf]
     or a
-    jp z, DebugStaffRoll_Scene04_DrawSpriteSlots_CheckWorkBuf
+    jp z, DebugStaffRoll_Credits
     farcall RunFieldEventFieldEventKind
     call IncrementSpriteSlotCounters
     ld a, [wWorkBuf + $2]
@@ -3078,26 +3078,26 @@ DebugStaffRoll_Update_RunFieldEventFieldEventKind::
 DebugStaffRoll_Scene00::
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Scene00_DecompressToVRAM
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_2
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_3
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_4
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotTowardDE
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_11
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_12
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_5
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_6
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_7
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_8
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_9
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_StepWorkBuf5Mod15
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_10
+    dw DebugStaffRoll_Scene00_Load
+    dw DebugStaffRoll_Scene00_WalkSprite3
+    dw DebugStaffRoll_Scene00_WalkSprite3Down
+    dw DebugStaffRoll_Scene00_WalkSprite3Back
+    dw DebugStaffRoll_Scene00_WalkSprite0
+    dw DebugStaffRoll_Scene00_WalkSprite3Left
+    dw DebugStaffRoll_Scene00_WalkSprite2
+    dw DebugStaffRoll_Scene00_WalkPair
+    dw DebugStaffRoll_Scene00_WalkPairRight
+    dw DebugStaffRoll_Scene00_WalkPairQuick
+    dw DebugStaffRoll_Scene00_WalkSprite1
+    dw DebugStaffRoll_Scene00_WalkPairUp
+    dw DebugStaffRoll_Scene00_WalkSprites01
+    dw DebugStaffRoll_Scene00_WalkSprites01Again
+    dw DebugStaffRoll_Scene00_WaitAndTurn
+    dw DebugStaffRoll_Scene00_WalkOff
 
 ; Staff roll scene 0, step 0: loads the field sprites, the area tileset, map 0's screen (and on the
 ; GBC its attributes and palettes) and places four sprites. (C1, E-0357)
-DebugStaffRoll_Scene00_DecompressToVRAM::
+DebugStaffRoll_Scene00_Load::
     ld b, $7d
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
@@ -3134,12 +3134,12 @@ DebugStaffRoll_Scene00_DecompressToVRAM::
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, DebugStaffRoll_Scene00_DecompressToVRAM_BGPaletteBufferData
+    ld de, DebugStaffRoll_Scene00_Load_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7e
-    ld de, DebugStaffRoll_Scene00_DecompressToVRAM_OBJPaletteBufferData
+    ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -3240,7 +3240,7 @@ DebugStaffRoll_Scene00_DecompressToVRAM::
 
 ; Staff roll scene 0, step 1: after the fade, sprite 3 walks to ($60, $50) and turns; then a
 ; 15-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots::
+DebugStaffRoll_Scene00_WalkSprite3::
     call DrawSpriteSlots
     ld a, [wFadeState]
     or a
@@ -3262,7 +3262,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots::
 
 ; Staff roll scene 0, step 2: sprite 3 walks every other frame to ($60, $60), then a wait. (C1,
 ; E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward::
+DebugStaffRoll_Scene00_WalkSprite3Down::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $a]
     inc a
@@ -3282,7 +3282,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward::
     ret
 
 ; Staff roll scene 0, step 3: sprite 3 walks two steps a frame to ($60, $50). (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_2::
+DebugStaffRoll_Scene00_WalkSprite3Back::
     call DrawSpriteSlots
     ld a, $03
     lb de, $60, $50
@@ -3296,7 +3296,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_2::
 
 ; Staff roll scene 0, step 4: sprite 0 walks four steps a frame to ($60, $20), then a wait. (C1,
 ; E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_3::
+DebugStaffRoll_Scene00_WalkSprite0::
     call DrawSpriteSlots
     ld a, $00
     lb de, $60, $20
@@ -3315,7 +3315,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_3::
     ret
 
 ; Staff roll scene 0, step 5: sprite 3 walks to ($60, $40) and turns; then a wait. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_4::
+DebugStaffRoll_Scene00_WalkSprite3Left::
     call DrawSpriteSlots
     ld a, $03
     lb de, $60, $40
@@ -3331,7 +3331,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_4::
     ret
 
 ; Staff roll scene 0, step 6: sprite 2 walks to ($60, $30), then a wait. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotTowardDE::
+DebugStaffRoll_Scene00_WalkSprite2::
     call DrawSpriteSlots
     ld a, $02
     lb de, $60, $30
@@ -3347,7 +3347,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotTowardDE::
 
 ; Staff roll scene 0, step 9: sprites 2 and 3 walk two steps a frame to ($50, $30) and ($50, $40),
 ; and sprite 1 turns. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_5::
+DebugStaffRoll_Scene00_WalkPairQuick::
     call DrawSpriteSlots
     ld a, $02
     lb de, $50, $30
@@ -3369,7 +3369,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_5::
 
 ; Staff roll scene 0, step 10: sprite 1 walks four steps a frame to ($10, $40), then a wait and two
 ; turns. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_6::
+DebugStaffRoll_Scene00_WalkSprite1::
     call DrawSpriteSlots
     ld a, $01
     lb de, $10, $40
@@ -3394,7 +3394,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_6::
     ret
 
 ; Staff roll scene 0, step 11: sprites 2 and 3 walk up to Y 0; then turns and a wait. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_7::
+DebugStaffRoll_Scene00_WalkPairUp::
     call DrawSpriteSlots
     ld a, $02
     lb de, $50, $00
@@ -3423,7 +3423,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_7::
 
 ; Staff roll scene 0, step 12: sprites 1 and 0 walk to ($40, $40) and ($60, $30); sprite 0 turns.
 ; (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_8::
+DebugStaffRoll_Scene00_WalkSprites01::
     call DrawSpriteSlots
     ld a, $01
     lb de, $40, $40
@@ -3441,7 +3441,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_8::
 
 ; Staff roll scene 0, step 13: sprites 0 and 1 walk to ($40, $30) and ($40, $40); turns and a wait.
 ; (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_9::
+DebugStaffRoll_Scene00_WalkSprites01Again::
     call DrawSpriteSlots
     ld a, $00
     lb de, $40, $30
@@ -3463,7 +3463,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_9::
     ret
 
 ; Staff roll scene 0, step 14: a wait, then sprite 0 turns. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_StepWorkBuf5Mod15::
+DebugStaffRoll_Scene00_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod15
     ret nz
@@ -3476,7 +3476,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepWorkBuf5Mod15::
 
 ; Staff roll scene 0, step 15: sprites 0 and 1 walk up to Y 0; then a wait, the field event ends,
 ; palette fade 4 and the next scene. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_10::
+DebugStaffRoll_Scene00_WalkOff::
     call DrawSpriteSlots
     ld a, $00
     lb de, $40, $00
@@ -3499,7 +3499,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_10::
 
 ; Staff roll scene 0, step 7: sprites 2 and 3 walk to ($50, $30) and ($50, $40), then a wait. (C1,
 ; E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_11::
+DebugStaffRoll_Scene00_WalkPair::
     call DrawSpriteSlots
     ld a, $02
     lb de, $50, $30
@@ -3516,7 +3516,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_11::
 
 ; Staff roll scene 0, step 8: sprites 2 and 3 walk every other frame to ($60, $30) and ($60, $40),
 ; then a wait. (C1, E-0357)
-DebugStaffRoll_Scene00_DrawSpriteSlots_12::
+DebugStaffRoll_Scene00_WalkPairRight::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $a]
     inc a
@@ -3540,36 +3540,36 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_12::
 DebugStaffRoll_Scene01::
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Scene01_DecompressToVRAM
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_StepWorkBuf5Mod15
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_2
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_4
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_6
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_7
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_5
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_4
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_6
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_7
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_5
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_4
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_6
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_7
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_5
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_4
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_6
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_3
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_3
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_2
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_3
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_4
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_2
+    dw DebugStaffRoll_Scene01_Load
+    dw DebugStaffRoll_Scene01_WalkSprites
+    dw DebugStaffRoll_Scene01_TurnSprites
+    dw DebugStaffRoll_Scene01_Wait
+    dw DebugStaffRoll_Scene01_HopSprite2
+    dw DebugStaffRoll_Scene01_WalkSprite2
+    dw DebugStaffRoll_Scene01_HopTo50
+    dw DebugStaffRoll_Scene01_HopTo40
+    dw DebugStaffRoll_Scene01_HopBackTo50
+    dw DebugStaffRoll_Scene01_HopTo60
+    dw DebugStaffRoll_Scene01_HopTo50
+    dw DebugStaffRoll_Scene01_HopTo40
+    dw DebugStaffRoll_Scene01_HopBackTo50
+    dw DebugStaffRoll_Scene01_HopTo60
+    dw DebugStaffRoll_Scene01_HopTo50
+    dw DebugStaffRoll_Scene01_HopTo40
+    dw DebugStaffRoll_Scene01_HopBackTo50
+    dw DebugStaffRoll_Scene01_HopTo60
+    dw DebugStaffRoll_Scene01_HopTo50
+    dw DebugStaffRoll_Scene01_HopTo40
+    dw DebugStaffRoll_Scene01_TurnAndWalk
+    dw DebugStaffRoll_Scene01_StepSprite2
+    dw DebugStaffRoll_Scene01_HopSprite2Turn
+    dw DebugStaffRoll_Scene01_HopTogether
+    dw DebugStaffRoll_Scene01_Sprite2Leaves
+    dw DebugStaffRoll_Scene01_PairLeaves
 
 ; Staff roll scene 1, step 0: loads the field sprites, map 2's tileset and screen (and on the GBC
 ; its attributes and palettes) and places the sprites. (C1, E-0357)
-DebugStaffRoll_Scene01_DecompressToVRAM::
+DebugStaffRoll_Scene01_Load::
     ld b, $7d
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
@@ -3602,12 +3602,12 @@ DebugStaffRoll_Scene01_DecompressToVRAM::
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, DebugStaffRoll_Scene01_DecompressToVRAM_BGPaletteBufferData
+    ld de, DebugStaffRoll_Scene01_Load_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7e
-    ld de, DebugStaffRoll_Scene00_DecompressToVRAM_OBJPaletteBufferData
+    ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -3687,7 +3687,7 @@ DebugStaffRoll_Scene01_DecompressToVRAM::
 
 ; Staff roll scene 1, step 1: after the fade, sprites 0 and 1 walk to ($50, $30) and ($60, $30),
 ; then a wait. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots::
+DebugStaffRoll_Scene01_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
     or a
@@ -3707,13 +3707,13 @@ DebugStaffRoll_Scene01_DrawSpriteSlots::
 
 ; Staff roll scene 1, step 2: sprites 0 and 1 turn by two frame tables for $9F frames, then face
 ; down. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5::
+DebugStaffRoll_Scene01_TurnSprites::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     srl a
     swap a
     and $07
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data1
+    ld hl, DebugStaffRoll_Scene01_TurnSprites_Data1
     add_a_to_hl
     ld c, [hl]
     ld a, $00
@@ -3722,7 +3722,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5::
     srl a
     swap a
     and $07
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data2
+    ld hl, DebugStaffRoll_Scene01_TurnSprites_Data2
     add_a_to_hl
     ld c, [hl]
     ld a, $01
@@ -3744,15 +3744,15 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene01_DrawSpriteSlots (5 bytes) (E-0347)
-DebugStaffRoll_Scene01_DrawSpriteSlots_Data1::
+; data read by DebugStaffRoll_Scene01_TurnSprites (5 bytes) (E-0347)
+DebugStaffRoll_Scene01_TurnSprites_Data1::
     db $03, $02, $03, $00, $03
 
-DebugStaffRoll_Scene01_DrawSpriteSlots_Data2::
+DebugStaffRoll_Scene01_TurnSprites_Data2::
     db $01, $00, $01, $02, $01
 
 ; Staff roll scene 1, step 3: draws three sprite slots and waits. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_StepWorkBuf5Mod15::
+DebugStaffRoll_Scene01_Wait::
     call DrawSpriteSlots
     ld a, $03
     ld [wSpriteSlotCount], a
@@ -3763,8 +3763,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepWorkBuf5Mod15::
     ret
 
 ; Staff roll scene 1, step 4: sprite 2 walks to X $60 with a hop (its Y plus
-; DebugStaffRoll_Scene01_DrawSpriteSlots_Data), then a wait and a turn. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward::
+; DebugStaffRoll_Scene01_HopSprite2_Data), then a wait and a turn. (C1, E-0357)
+DebugStaffRoll_Scene01_HopSprite2::
     call DrawSpriteSlots
     ld d, $60
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
@@ -3789,19 +3789,19 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; data read by DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward (16 bytes) (E-0347)
-DebugStaffRoll_Scene01_DrawSpriteSlots_Data::
+; data read by DebugStaffRoll_Scene01_HopSprite2 (16 bytes) (E-0347)
+DebugStaffRoll_Scene01_HopSprite2_Data::
     db $fe, $fe, $fe, $ff, $ff, $ff, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02
 
 ; Staff roll scene 1, step 5: sprite 2 walks to ($60, $50), then a 30-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_2::
+DebugStaffRoll_Scene01_WalkSprite2::
     call DrawSpriteSlots
     ld a, $02
     lb de, $60, $50
@@ -3814,7 +3814,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_2::
     ret
 
 ; Staff roll scene 1, step 22: sprite 2 turns and hops for $20 frames, then a wait. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_2::
+DebugStaffRoll_Scene01_HopSprite2Turn::
     call DrawSpriteSlots
     ld a, $02
     ld c, $01
@@ -3825,7 +3825,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_2::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -3846,7 +3846,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_2::
 
 ; Staff roll scene 1, step 20: sprite 2 turns and walks to ($40, $30); then sprites 0-2 turn. (C1,
 ; E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_3::
+DebugStaffRoll_Scene01_TurnAndWalk::
     call DrawSpriteSlots
     ld a, $02
     ld c, $02
@@ -3869,7 +3869,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_3::
     ret
 
 ; Staff roll scene 1, step 21: sprite 2 walks one step every four frames to ($30, $30). (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_3::
+DebugStaffRoll_Scene01_StepSprite2::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     inc a
@@ -3888,7 +3888,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_3::
 
 ; Staff roll scene 1, step 24: sprite 2 moves left two pixels a frame off the screen (to $F0),
 ; animating; then two slots, turns and a wait. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_4::
+DebugStaffRoll_Scene01_Sprite2Leaves::
     call DrawSpriteSlots
     ld a, $02
     ld c, $03
@@ -3923,7 +3923,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_4::
 
 ; Staff roll scene 1, step 25: sprites 0 and 1 move left a pixel a frame off the screen, animating;
 ; then the field event ends, palette fade 4 and the next scene. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_2::
+DebugStaffRoll_Scene01_PairLeaves::
     call DrawSpriteSlots
     ld a, [wSpriteSlots + $2]
     cp $f0
@@ -3961,7 +3961,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_2::
     ret
 
 ; Staff roll scene 1, step 6: sprite 2 walks to X $50 with a hop. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_4::
+DebugStaffRoll_Scene01_HopTo50::
     call DrawSpriteSlots
     ld d, $50
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
@@ -3981,7 +3981,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_4::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -3989,7 +3989,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_4::
     ret
 
 ; Staff roll scene 1, step 9: sprite 2 walks to X $60 with a hop. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_5::
+DebugStaffRoll_Scene01_HopTo60::
     call DrawSpriteSlots
     ld d, $60
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
@@ -4009,7 +4009,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_5::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4017,7 +4017,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_5::
     ret
 
 ; Staff roll scene 1, step 7: a sprite walks to X $40 with a hop. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_6::
+DebugStaffRoll_Scene01_HopTo40::
     call DrawSpriteSlots
     ld d, $40
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
@@ -4037,7 +4037,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_6::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4045,7 +4045,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_6::
     ret
 
 ; Staff roll scene 1, step 8: a sprite walks to X $50 with a hop. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_7::
+DebugStaffRoll_Scene01_HopBackTo50::
     call DrawSpriteSlots
     ld d, $50
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
@@ -4065,7 +4065,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_7::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4073,8 +4073,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_7::
     ret
 
 ; Staff roll scene 1, step 23: two sprites hop together for 16 frames
-; (DebugStaffRoll_Scene01_DrawSpriteSlots_Data_2), then a wait and a turn. (C1, E-0357)
-DebugStaffRoll_Scene01_DrawSpriteSlots_3::
+; (DebugStaffRoll_Scene01_HopTogether_Data), then a wait and a turn. (C1, E-0357)
+DebugStaffRoll_Scene01_HopTogether::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4082,7 +4082,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_3::
     and $07
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data_2
+    ld hl, DebugStaffRoll_Scene01_HopTogether_Data
     add hl, bc
     ld a, [wSpriteSlots + $3]
     add [hl]
@@ -4107,46 +4107,46 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_3::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene01_DrawSpriteSlots_3 (8 bytes) (E-0347)
-DebugStaffRoll_Scene01_DrawSpriteSlots_Data_2::
+; data read by DebugStaffRoll_Scene01_HopTogether (8 bytes) (E-0347)
+DebugStaffRoll_Scene01_HopTogether_Data::
     db $fd, $fe, $ff, $00, $00, $01, $02, $03
 
 ; as DebugStaffRoll_Scene00 (E-0288)
 DebugStaffRoll_Scene02::
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Scene02_DecompressToVRAM
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_2
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_8
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_9
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_10
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_11
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_12
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_3
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_4
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_13
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_14
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_15
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_16
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_17
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_2
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_4
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod60
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod30
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_19
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_3
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_5
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_6
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_7
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_18
+    dw DebugStaffRoll_Scene02_Load
+    dw DebugStaffRoll_Scene02_WalkSprites
+    dw DebugStaffRoll_Scene02_TurnSprites
+    dw DebugStaffRoll_Scene02_WalkSprite
+    dw DebugStaffRoll_Scene02_WalkPair
+    dw DebugStaffRoll_Scene02_WalkPairLeft
+    dw DebugStaffRoll_Scene02_WalkPairDown
+    dw DebugStaffRoll_Scene02_WalkPairDownAgain
+    dw DebugStaffRoll_Scene02_WalkSpriteDown
+    dw DebugStaffRoll_Scene02_WalkSpriteUp
+    dw DebugStaffRoll_Scene02_WalkSpriteRight
+    dw DebugStaffRoll_Scene02_WalkPairRight
+    dw DebugStaffRoll_Scene02_WalkPairBack
+    dw DebugStaffRoll_Scene02_WalkPairToPoint
+    dw DebugStaffRoll_Scene02_WalkPairToPoint2
+    dw DebugStaffRoll_Scene02_WalkSpriteFar
+    dw DebugStaffRoll_Scene02_WalkSpriteFarUp
+    dw DebugStaffRoll_Scene02_HopTogether
+    dw DebugStaffRoll_Scene02_HopSideways
+    dw DebugStaffRoll_Scene02_WaitAndTurn
+    dw DebugStaffRoll_Scene02_Wait
+    dw DebugStaffRoll_Scene02_StepPair
+    dw DebugStaffRoll_Scene02_HopMoving
+    dw DebugStaffRoll_Scene02_WalkPairQuick
+    dw DebugStaffRoll_Scene02_WalkSpriteQuick
+    dw DebugStaffRoll_Scene02_WalkPairOff
+    dw DebugStaffRoll_Scene02_Finish
 
 ; Staff roll scene 2, step 0: loads the field sprites, a Watabou sprite and others, map $18's
 ; tileset and screen (and on the GBC its attributes and palettes) and places the sprites. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DecompressToVRAM::
+DebugStaffRoll_Scene02_Load::
     ld b, $7d
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
@@ -4191,12 +4191,12 @@ DebugStaffRoll_Scene02_DecompressToVRAM::
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, DebugStaffRoll_Scene02_DecompressToVRAM_BGPaletteBufferData
+    ld de, DebugStaffRoll_Scene02_Load_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7e
-    ld de, DebugStaffRoll_Scene00_DecompressToVRAM_OBJPaletteBufferData
+    ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -4337,7 +4337,7 @@ DebugStaffRoll_Scene02_DecompressToVRAM::
 
 ; Staff roll scene 2, step 1: after the fade, two sprites walk to ($40, $70) and ($40, $80), then a
 ; wait. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots::
+DebugStaffRoll_Scene02_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
     or a
@@ -4357,13 +4357,13 @@ DebugStaffRoll_Scene02_DrawSpriteSlots::
 
 ; Staff roll scene 2, step 2: two sprites turn by two frame tables for $9F frames, then face set
 ; ways and one more slot is drawn. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_SetSpriteSlotByte5::
+DebugStaffRoll_Scene02_TurnSprites::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     srl a
     swap a
     and $07
-    ld hl, DebugStaffRoll_Scene02_DrawSpriteSlots_Data1
+    ld hl, DebugStaffRoll_Scene02_TurnSprites_Data1
     add_a_to_hl
     ld c, [hl]
     ld a, $00
@@ -4372,7 +4372,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_SetSpriteSlotByte5::
     srl a
     swap a
     and $07
-    ld hl, DebugStaffRoll_Scene02_DrawSpriteSlots_Data2
+    ld hl, DebugStaffRoll_Scene02_TurnSprites_Data2
     add_a_to_hl
     ld c, [hl]
     ld a, $01
@@ -4396,15 +4396,15 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_SetSpriteSlotByte5::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene02_DrawSpriteSlots (5 bytes) (E-0347)
-DebugStaffRoll_Scene02_DrawSpriteSlots_Data1::
+; data read by DebugStaffRoll_Scene02_TurnSprites (5 bytes) (E-0347)
+DebugStaffRoll_Scene02_TurnSprites_Data1::
     db $03, $02, $01, $02, $03
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Data2::
+DebugStaffRoll_Scene02_TurnSprites_Data2::
     db $01, $00, $03, $00, $01
 
 ; Staff roll scene 2, step 3: a sprite walks to ($40, $20); then one more slot. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward::
+DebugStaffRoll_Scene02_WalkSprite::
     call DrawSpriteSlots
     ld a, $02
     lb de, $40, $20
@@ -4418,7 +4418,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward::
 
 ; Staff roll scene 2, step 4: two sprites walk to ($40, $30) and ($40, $20); then three turns. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_2::
+DebugStaffRoll_Scene02_WalkPair::
     call DrawSpriteSlots
     ld a, $02
     lb de, $40, $30
@@ -4441,7 +4441,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_2::
     ret
 
 ; Staff roll scene 2, step 10: a sprite walks to ($50, $20); then one more slot. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_3::
+DebugStaffRoll_Scene02_WalkSpriteRight::
     call DrawSpriteSlots
     ld a, $04
     lb de, $50, $20
@@ -4455,7 +4455,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_3::
 
 ; Staff roll scene 2, step 11: two sprites walk to ($50, $30) and ($50, $20); then a turn. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_4::
+DebugStaffRoll_Scene02_WalkPairRight::
     call DrawSpriteSlots
     ld a, $04
     lb de, $50, $30
@@ -4473,7 +4473,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_4::
 
 ; Staff roll scene 2, step 17: two sprites hop together for 16 frames; then a turn and a wait. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_2::
+DebugStaffRoll_Scene02_HopTogether::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4481,7 +4481,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_2::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wSpriteSlots + $3]
     add [hl]
@@ -4508,7 +4508,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_2::
 
 ; Staff roll scene 2, step 22: a sprite hops while moving for 16 frames; then a 30-frame wait and
 ; two turns. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_3::
+DebugStaffRoll_Scene02_HopMoving::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4516,7 +4516,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_3::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject2 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4546,7 +4546,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_3::
 
 ; Staff roll scene 2, step 23: two sprites walk two steps a frame to ($50, $20) and ($50, $10); then
 ; fewer slots. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_5::
+DebugStaffRoll_Scene02_WalkPairQuick::
     call DrawSpriteSlots
     ld a, $04
     lb de, $50, $20
@@ -4567,7 +4567,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_5::
 
 ; Staff roll scene 2, step 24: a sprite walks two steps a frame to ($50, $10); then turns, a wait
 ; and another turn. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_6::
+DebugStaffRoll_Scene02_WalkSpriteQuick::
     call DrawSpriteSlots
     ld a, $04
     lb de, $50, $10
@@ -4597,7 +4597,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_6::
 
 ; Staff roll scene 2, step 25: two sprites walk to ($A0, $70) and ($40, $70); then three turns. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_7::
+DebugStaffRoll_Scene02_WalkPairOff::
     call DrawSpriteSlots
     ld a, $00
     lb de, $a0, $70
@@ -4621,7 +4621,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_7::
 
 ; Staff roll scene 2, step 5: two sprites walk to ($30, $30) and ($40, $30); then two turns. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_8::
+DebugStaffRoll_Scene02_WalkPairLeft::
     call DrawSpriteSlots
     ld a, $02
     lb de, $30, $30
@@ -4642,7 +4642,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_8::
 
 ; Staff roll scene 2, step 6: two sprites walk to ($30, $40) and ($30, $30); then a turn. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_9::
+DebugStaffRoll_Scene02_WalkPairDown::
     call DrawSpriteSlots
     ld a, $02
     lb de, $30, $40
@@ -4660,7 +4660,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_9::
 
 ; Staff roll scene 2, step 7: two sprites walk to ($30, $50) and ($30, $40); then a turn. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_10::
+DebugStaffRoll_Scene02_WalkPairDownAgain::
     call DrawSpriteSlots
     ld a, $02
     lb de, $30, $50
@@ -4677,7 +4677,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_10::
     ret
 
 ; Staff roll scene 2, step 8: a sprite walks to ($20, $50); then a turn. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_11::
+DebugStaffRoll_Scene02_WalkSpriteDown::
     call DrawSpriteSlots
     ld a, $02
     lb de, $20, $50
@@ -4692,7 +4692,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_11::
 
 ; Staff roll scene 2, step 9: a sprite walks to ($20, $40); then four turns, a wait and fewer slots.
 ; (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_12::
+DebugStaffRoll_Scene02_WalkSpriteUp::
     call DrawSpriteSlots
     ld a, $02
     lb de, $20, $40
@@ -4720,7 +4720,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_12::
 
 ; Staff roll scene 2, step 12: two sprites walk to ($60, $30) and ($50, $30); then two turns. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_13::
+DebugStaffRoll_Scene02_WalkPairBack::
     call DrawSpriteSlots
     ld a, $04
     lb de, $60, $30
@@ -4740,11 +4740,11 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_13::
     ret
 
 ; Staff roll scene 2, step 13: two sprites walk (one to the point in
-; DebugStaffRoll_Scene01_DrawSpriteSlots_Data + 8, one to ($60, $30)); then a turn. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_14::
+; DebugStaffRoll_Scene01_HopSprite2_Data + 8, one to ($60, $30)); then a turn. (C1, E-0357)
+DebugStaffRoll_Scene02_WalkPairToPoint::
     call DrawSpriteSlots
     ld a, $04
-    ld de, DebugStaffRoll_Scene01_DrawSpriteSlots_Data + $8
+    ld de, DebugStaffRoll_Scene01_HopSprite2_Data + $8
     call StepSpriteSlotToward
     ld a, $05
     lb de, $60, $30
@@ -4759,13 +4759,13 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_14::
 
 ; Staff roll scene 2, step 14: two sprites walk to ($60, $50) and the data point; then a turn. (C1,
 ; E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_15::
+DebugStaffRoll_Scene02_WalkPairToPoint2::
     call DrawSpriteSlots
     ld a, $04
     lb de, $60, $50
     call StepSpriteSlotToward
     ld a, $05
-    ld de, DebugStaffRoll_Scene01_DrawSpriteSlots_Data + $8
+    ld de, DebugStaffRoll_Scene01_HopSprite2_Data + $8
     call StepSpriteSlotToward
     ret nz
     ld a, $04
@@ -4776,7 +4776,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_15::
     ret
 
 ; Staff roll scene 2, step 15: a sprite walks to ($70, $50); then a turn. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_16::
+DebugStaffRoll_Scene02_WalkSpriteFar::
     call DrawSpriteSlots
     ld a, $04
     lb de, $70, $50
@@ -4790,7 +4790,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_16::
     ret
 
 ; Staff roll scene 2, step 16: a sprite walks to ($70, $40); then two turns and a wait. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_17::
+DebugStaffRoll_Scene02_WalkSpriteFarUp::
     call DrawSpriteSlots
     ld a, $04
     lb de, $70, $40
@@ -4810,7 +4810,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_17::
 
 ; Staff roll scene 2, step 26: two sprites walk to ($A0, $70); then turns, a wait, a palette fade
 ; and the next scene. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_18::
+DebugStaffRoll_Scene02_Finish::
     call DrawSpriteSlots
     ld a, $01
     lb de, $a0, $70
@@ -4837,7 +4837,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_18::
 
 ; Staff roll scene 2, step 18: a sprite moves sideways with a hop for 16 frames; then a 60-frame
 ; wait and a turn. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_4::
+DebugStaffRoll_Scene02_HopSideways::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4845,7 +4845,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_4::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject2 + OBJ_X]
     add [hl]
@@ -4868,7 +4868,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_4::
     ret
 
 ; Staff roll scene 2, step 19: a 60-frame wait, then two turns. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod60::
+DebugStaffRoll_Scene02_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
     ret nz
@@ -4883,7 +4883,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod60::
     ret
 
 ; Staff roll scene 2, step 20: a 30-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod30::
+DebugStaffRoll_Scene02_Wait::
     call DrawSpriteSlots
     call StepWorkBuf5Mod30
     ret nz
@@ -4893,7 +4893,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod30::
 
 ; Staff roll scene 2, step 21: two sprites step every eight frames toward ($70, $50) and ($60, $50),
 ; three times. (C1, E-0357)
-DebugStaffRoll_Scene02_DrawSpriteSlots_19::
+DebugStaffRoll_Scene02_StepPair::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     inc a
@@ -4923,21 +4923,21 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_19::
 DebugStaffRoll_Scene03::
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Scene03_DecompressToVRAM
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_StepWorkBuf5Mod45
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_2
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_3
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5_2
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_2
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_3
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_4
+    dw DebugStaffRoll_Scene03_Load
+    dw DebugStaffRoll_Scene03_WalkSprites
+    dw DebugStaffRoll_Scene03_TurnSprites
+    dw DebugStaffRoll_Scene03_WaitAndTurn
+    dw DebugStaffRoll_Scene03_WalkSpritesUp
+    dw DebugStaffRoll_Scene03_HopSideways
+    dw DebugStaffRoll_Scene03_Hop
+    dw DebugStaffRoll_Scene03_TurnAndWalk
+    dw DebugStaffRoll_Scene03_WalkOff
+    dw DebugStaffRoll_Scene03_WalkPair
+    dw DebugStaffRoll_Scene03_Finish
 
 ; Staff roll scene 3, step 0: loads the field sprites and others, map $19's tileset and screen (and
 ; on the GBC its attributes and palettes) and places the sprites. (C1, E-0357)
-DebugStaffRoll_Scene03_DecompressToVRAM::
+DebugStaffRoll_Scene03_Load::
     ld b, $7d
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
@@ -4986,17 +4986,17 @@ DebugStaffRoll_Scene03_DecompressToVRAM::
     ld a, $00
     ldh [rSVBK], a
     ld b, $94
-    ld de, DebugStaffRoll_Scene03_DecompressToVRAM_BGPaletteBufferData
+    ld de, DebugStaffRoll_Scene03_Load_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $48
-    ld de, DebugStaffRoll_Scene02_DecompressToVRAM_BGPaletteBufferData
+    ld de, DebugStaffRoll_Scene02_Load_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7e
-    ld de, DebugStaffRoll_Scene00_DecompressToVRAM_OBJPaletteBufferData
+    ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -5158,7 +5158,7 @@ DebugStaffRoll_Scene03_DecompressToVRAM::
 
 ; Staff roll scene 3, step 1: after the fade, two sprites walk to ($40, $50) and ($40, $60), then a
 ; wait. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots::
+DebugStaffRoll_Scene03_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
     or a
@@ -5178,13 +5178,13 @@ DebugStaffRoll_Scene03_DrawSpriteSlots::
 
 ; Staff roll scene 3, step 2: two sprites turn by two frame tables for $9F frames, then face set
 ; ways and one more slot is drawn. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5::
+DebugStaffRoll_Scene03_TurnSprites::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     srl a
     swap a
     and $07
-    ld hl, DebugStaffRoll_Scene02_DrawSpriteSlots_Data1
+    ld hl, DebugStaffRoll_Scene02_TurnSprites_Data1
     add_a_to_hl
     ld c, [hl]
     ld a, $00
@@ -5193,7 +5193,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5::
     srl a
     swap a
     and $07
-    ld hl, DebugStaffRoll_Scene02_DrawSpriteSlots_Data2
+    ld hl, DebugStaffRoll_Scene02_TurnSprites_Data2
     add_a_to_hl
     ld c, [hl]
     ld a, $01
@@ -5218,7 +5218,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5::
     ret
 
 ; Staff roll scene 3, step 3: a 45-frame wait, then a turn and another slot. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_StepWorkBuf5Mod45::
+DebugStaffRoll_Scene03_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod45
     ret nz
@@ -5233,7 +5233,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepWorkBuf5Mod45::
 
 ; Staff roll scene 3, step 4: two sprites walk to ($40, $40) and ($40, $50), then a 30-frame wait.
 ; (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward::
+DebugStaffRoll_Scene03_WalkSpritesUp::
     call DrawSpriteSlots
     ld a, $00
     lb de, $40, $40
@@ -5250,7 +5250,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward::
 
 ; Staff roll scene 3, step 5: a sprite moves sideways with a hop for 16 frames, its frame changing
 ; every four; then five slots and a second sprite takes its X. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_2::
+DebugStaffRoll_Scene03_HopSideways::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5258,7 +5258,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_2::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject2 + OBJ_X]
     add [hl]
@@ -5266,7 +5266,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_2::
     ld a, [wWorkBuf + $6]
     srl a
     srl a
-    ld hl, DebugStaffRoll_Scene03_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene03_HopSideways_Data
     ld [wObject2 + OBJ_FLAGS], a
     ld a, [wWorkBuf + $6]
     inc a
@@ -5287,13 +5287,13 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_2::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene03_DrawSpriteSlots_2 (4 bytes) (E-0347)
-DebugStaffRoll_Scene03_DrawSpriteSlots_Data::
+; data read by DebugStaffRoll_Scene03_HopSideways (4 bytes) (E-0347)
+DebugStaffRoll_Scene03_HopSideways_Data::
     db $03, $02, $01, $00
 
 ; Staff roll scene 3, step 6: a sprite hops for 16 frames, its frame changing every four; then four
 ; slots, a second sprite takes its Y and a 30-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_3::
+DebugStaffRoll_Scene03_Hop::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5301,7 +5301,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_3::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wObject2 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -5309,7 +5309,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_3::
     ld a, [wWorkBuf + $6]
     srl a
     srl a
-    ld hl, DebugStaffRoll_Scene03_DrawSpriteSlots_Data_2
+    ld hl, DebugStaffRoll_Scene03_Hop_Data
     ld [wObject2 + $5], a
     ld a, [wWorkBuf + $6]
     inc a
@@ -5330,13 +5330,13 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_3::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene03_DrawSpriteSlots_3 (4 bytes) (E-0347)
-DebugStaffRoll_Scene03_DrawSpriteSlots_Data_2::
+; data read by DebugStaffRoll_Scene03_Hop (4 bytes) (E-0347)
+DebugStaffRoll_Scene03_Hop_Data::
     db $02, $01, $00, $03
 
 ; Staff roll scene 3, step 7: two sprites turn and walk to ($50, $40) and ($50, $30); then four
 ; turns. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5_2::
+DebugStaffRoll_Scene03_TurnAndWalk::
     call DrawSpriteSlots
     ld a, $02
     ld c, $03
@@ -5369,7 +5369,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5_2::
 
 ; Staff roll scene 3, step 8: two sprites walk down to ($50, $A0), off the screen; then two turns
 ; and a 30-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_2::
+DebugStaffRoll_Scene03_WalkOff::
     call DrawSpriteSlots
     ld a, $02
     lb de, $50, $a0
@@ -5392,7 +5392,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_2::
 
 ; Staff roll scene 3, step 9: two sprites walk to ($40, $A0) and ($40, $40); then a turn. (C1,
 ; E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_3::
+DebugStaffRoll_Scene03_WalkPair::
     call DrawSpriteSlots
     ld a, $00
     lb de, $40, $a0
@@ -5410,7 +5410,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_3::
 
 ; Staff roll scene 3, step 10: two sprites walk to ($40, $A0) and ($40, $B0); then a wait, a palette
 ; fade and the next scene. (C1, E-0357)
-DebugStaffRoll_Scene03_DrawSpriteSlots_4::
+DebugStaffRoll_Scene03_Finish::
     call DrawSpriteSlots
     ld a, $00
     lb de, $40, $a0
@@ -5433,25 +5433,25 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_4::
 DebugStaffRoll_Scene04::
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Scene04_DecompressToVRAM
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_2
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_3
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_2
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_4
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_6
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_2
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_3
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_5
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_3
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_4
+    dw DebugStaffRoll_Scene04_Load
+    dw DebugStaffRoll_Scene04_WalkSprites
+    dw DebugStaffRoll_Scene04_StepSpritesLeft
+    dw DebugStaffRoll_Scene04_StepSpritesBack
+    dw DebugStaffRoll_Scene04_WaitAndTurnAgain
+    dw DebugStaffRoll_Scene04_WaitAndTurn
+    dw DebugStaffRoll_Scene04_WaitAgain
+    dw DebugStaffRoll_Scene04_StepPairRight
+    dw DebugStaffRoll_Scene04_WalkPair
+    dw DebugStaffRoll_Scene04_HopInTurn
+    dw DebugStaffRoll_Scene04_HopTogether
+    dw DebugStaffRoll_Scene04_Wait
+    dw DebugStaffRoll_Scene04_StepPairRightAgain
+    dw DebugStaffRoll_Scene04_WalkApart
+    dw DebugStaffRoll_Scene04_Finish
 
 ; Staff roll scene 4, step 0: loads the field sprites, map $1A's tileset and screen (and on the GBC
 ; its attributes and palettes) and places the sprites. (C1, E-0357)
-DebugStaffRoll_Scene04_DecompressToVRAM::
+DebugStaffRoll_Scene04_Load::
     ld b, $7d
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
@@ -5488,12 +5488,12 @@ DebugStaffRoll_Scene04_DecompressToVRAM::
     ld a, $00
     ldh [rSVBK], a
     ld b, $49
-    ld de, DebugStaffRoll_Scene04_DecompressToVRAM_BGPaletteBufferData
+    ld de, DebugStaffRoll_Scene04_Load_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7e
-    ld de, DebugStaffRoll_Scene00_DecompressToVRAM_OBJPaletteBufferData
+    ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -5592,7 +5592,7 @@ DebugStaffRoll_Scene04_DecompressToVRAM::
 
 ; Staff roll scene 4, step 1: after the fade, two sprites walk to ($80, $40) and ($90, $40); then a
 ; 30-frame wait and two turns. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots::
+DebugStaffRoll_Scene04_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
     or a
@@ -5618,7 +5618,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots::
 
 ; Staff roll scene 4, step 2: two sprites step every four frames toward ($70, $40) and ($80, $40),
 ; seven times. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward::
+DebugStaffRoll_Scene04_StepSpritesLeft::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     inc a
@@ -5646,7 +5646,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward::
 
 ; Staff roll scene 4, step 3: two sprites step every four frames toward ($30, $40) and ($40, $40),
 ; turning after the seventh, until the fifteenth. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_2::
+DebugStaffRoll_Scene04_StepSpritesBack::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     inc a
@@ -5685,7 +5685,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_2::
 
 ; Staff roll scene 4, step 9: two sprites hop in turn while walking to X $10 (16-frame offsets
 ; apart), then run off to ($10, $A0); then a 30-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_2::
+DebugStaffRoll_Scene04_HopInTurn::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $20
@@ -5693,7 +5693,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_2::
     and $1f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene04_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene04_HopInTurn_Data
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -5724,7 +5724,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_2::
     and $1f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene04_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene04_HopInTurn_Data
     add hl, bc
     ld a, [wObject1 + OBJ_X]
     add [hl]
@@ -5765,14 +5765,14 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_2::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene04_DrawSpriteSlots_2 (32 bytes) (E-0347)
-DebugStaffRoll_Scene04_DrawSpriteSlots_Data::
+; data read by DebugStaffRoll_Scene04_HopInTurn (32 bytes) (E-0347)
+DebugStaffRoll_Scene04_HopInTurn_Data::
     db $fd, $fd, $fd, $fd, $fe, $fe, $fe, $fe, $ff, $ff, $ff, $ff, $00, $00, $00, $00
     db $00, $00, $00, $00, $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03, $03
 
 ; Staff roll scene 4, step 10: two sprites hop together for 16 frames, then after 16 more walk to
 ; ($30, $40) and ($40, $40). (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_3::
+DebugStaffRoll_Scene04_HopTogether::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5780,7 +5780,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_3::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_DrawSpriteSlots_Data
+    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
     add hl, bc
     ld a, [wSpriteSlots + $3]
     add [hl]
@@ -5814,7 +5814,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_3::
     ret
 
 ; Staff roll scene 4, step 11: a 60-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60::
+DebugStaffRoll_Scene04_Wait::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
     ret nz
@@ -5824,7 +5824,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60::
 
 ; Staff roll scene 4, step 13: two sprites walk to ($A0, $40) and ($40, $40); then a turn. (C1,
 ; E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_3::
+DebugStaffRoll_Scene04_WalkApart::
     call DrawSpriteSlots
     ld a, $00
     lb de, $a0, $40
@@ -5842,7 +5842,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_3::
 
 ; Staff roll scene 4, step 14: two sprites walk to ($A0, $40); then a wait, a palette fade and the
 ; next scene. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_4::
+DebugStaffRoll_Scene04_Finish::
     call DrawSpriteSlots
     ld a, $00
     lb de, $a0, $40
@@ -5862,7 +5862,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_4::
     ret
 
 ; Staff roll scene 4, step 5: a 60-frame wait, then two turns. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_2::
+DebugStaffRoll_Scene04_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
     ret nz
@@ -5878,7 +5878,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_2::
 
 ; Staff roll scene 4, step 12: two sprites step every four frames toward ($40, $40) and ($50, $40);
 ; then a wait and a turn. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_5::
+DebugStaffRoll_Scene04_StepPairRightAgain::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     inc a
@@ -5904,7 +5904,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_5::
     ret
 
 ; Staff roll scene 4, step 4: a 60-frame wait, then two turns. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_3::
+DebugStaffRoll_Scene04_WaitAndTurnAgain::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
     ret nz
@@ -5919,7 +5919,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_3::
     ret
 
 ; Staff roll scene 4, step 6: a 60-frame wait. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_4::
+DebugStaffRoll_Scene04_WaitAgain::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
     ret nz
@@ -5929,7 +5929,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_4::
 
 ; Staff roll scene 4, step 7: two sprites step every four frames toward ($40, $40) and ($50, $40);
 ; then a wait. (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_6::
+DebugStaffRoll_Scene04_StepPairRight::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     inc a
@@ -5952,7 +5952,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_6::
     ret
 
 ; Staff roll scene 4, step 8: two sprites walk to ($30, $40) and ($40, $40). (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7::
+DebugStaffRoll_Scene04_WalkPair::
     call DrawSpriteSlots
     ld a, $02
     lb de, $30, $40
@@ -5967,27 +5967,27 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7::
 
 ; The staff roll's caption steps by wWorkBuf + 1: with a scene number set the credits text (draw,
 ; wait, end), otherwise the title card (draw, wait, next). (C1, E-0357)
-DebugStaffRoll_Scene04_DrawSpriteSlots_CheckWorkBuf::
+DebugStaffRoll_Credits::
     ld a, [wWorkBuf + $2]
     or a
     jr z, .read_work_buf
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Update_FillTilesRequest
-    dw DebugStaffRoll_Update_2
-    dw DebugStaffRoll_Update_3
+    dw DebugStaffRoll_Credits_ShowLines
+    dw DebugStaffRoll_Credits_WriteWorkBufAndMapIdEtc
+    dw DebugStaffRoll_Credits_WaitFadeState
 
 .read_work_buf:
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Update_FillTilesRequest_2
-    dw DebugStaffRoll_Update_StartPaletteFade
+    dw DebugStaffRoll_Credits_TitleCard
+    dw DebugStaffRoll_Credits_TitleCardFadeOut
     dw DebugStaffRoll_Update_AdvanceWorkBuf
 
 ; Staff roll credits, step 0: on the first call clears a tile and loads the scene's credit list
 ; (WorkBufSequenceTable); then draws its lines one by one (strings of the staff list, each in an 18
 ; x 2 window, advancing $240 bytes of tiles a line) until the list ends. (C1, E-0357)
-DebugStaffRoll_Update_FillTilesRequest::
+DebugStaffRoll_Credits_ShowLines::
     ld a, [wWorkBuf + $4]
     or a
     jr nz, .read_work_buf
@@ -6379,7 +6379,7 @@ DebugStaffRoll_Update_FillTilesRequest::
 ; sound channel has finished, then fades, puts the player on map 0 at (0, 0), keeps the party count,
 ; sets EVENT_STAFF_ROLL_PARTY_SAVED and switches game mode; otherwise when the time runs out fades
 ; and goes on. (C1, E-0357)
-DebugStaffRoll_Update_2::
+DebugStaffRoll_Credits_WriteWorkBufAndMapIdEtc::
     ld hl, wWorkBuf + $5
     ld a, [hli]
     and [hl]
@@ -6448,7 +6448,7 @@ DebugStaffRoll_Update_2::
 
 ; Staff roll credits, step 2: after the fade, the next caption of the scene, or with none left the
 ; next scene. (C1, E-0357)
-DebugStaffRoll_Update_3::
+DebugStaffRoll_Credits_WaitFadeState::
     ld a, [wFadeState]
     or a
     ret nz
@@ -6472,7 +6472,7 @@ DebugStaffRoll_Update_3::
 ; The staff roll's title card, step 0: clears two tile areas and shows the first string, blanks the
 ; BG map (and on the GBC its attributes with the first palette), draws the caption's tiles, sets its
 ; time ($168 frames, $F0 on the SGB), resets the palettes and fades in. (C1, E-0357)
-DebugStaffRoll_Update_FillTilesRequest_2::
+DebugStaffRoll_Credits_TitleCard::
     ld hl, vTiles2 + $7f0
     ld de, $0101
     call FillTilesRequest
@@ -6488,7 +6488,7 @@ DebugStaffRoll_Update_FillTilesRequest_2::
     or a
     jr z, .skip
     ld b, $48
-    ld de, DebugStaffRoll_Scene00_DecompressToVRAM_BGPaletteBufferData
+    ld de, DebugStaffRoll_Scene00_Load_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -6530,7 +6530,7 @@ DebugStaffRoll_Update_FillTilesRequest_2::
     ret
 
 ; The title card, step 1: counts down its time, then fades out. (C1, E-0357)
-DebugStaffRoll_Update_StartPaletteFade::
+DebugStaffRoll_Credits_TitleCardFadeOut::
     ld a, [wWorkBuf + $5]
     sub $01
     ld [wWorkBuf + $5], a
@@ -6978,10 +6978,9 @@ ResetScreenPalettes_E0::
 ResetScreenPalettes_E0_Palette::
     dw $67de, $331f, $123c, $0000 ; entry 0
 
-; DebugStaffRoll_Update_FillTilesRequest reads word wWorkBuf + 2 - 1 of $7649
-; (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as
-; count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair
-; meaning is not read (E-0213, C1)
+; DebugStaffRoll_Credits_ShowLines reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00),
+; stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a
+; section, $FF ends one); the five lists run to $76E0; the pair meaning is not read (E-0213, C1)
 ; record: sequence for wWorkBuf + 2 = id
 WorkBufSequenceTable::
     dw WorkBufSequence001 ; id 1

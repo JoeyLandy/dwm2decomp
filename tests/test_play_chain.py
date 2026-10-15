@@ -148,7 +148,7 @@ class FarmChain(unittest.TestCase):
         """Recording the journey stores, little-endian, (~sum + $4321) of the $1A04 bytes from sA06F of SRAM bank 1
         at sBA73, and (~sum + $1234) of the first $1FFE bytes of SRAM bank 3 at sBFFE; both words were 0 before."""
         for name in ("ComputeSRAMBank1RecordChecksum", "CopySaveBlocksToSRAMWithSum", "BackupRecordsToSRAMBank1",
-                     "PauseMenu_Plan_RecordJourney_ShowYourProgressHasBeen"):
+                     "PauseMenu_Plan_Record_ShowYourProgressHasBeen"):
             self.assertEqual(self.ran["j03!"].get(name), {2}, name)
 
         def words(gb):
@@ -310,7 +310,7 @@ class FarmChain(unittest.TestCase):
         self.assertEqual((dead.sram[0x55], dead.sram[0x5B]), (0x80, 0))
         self.assertEqual((alive.sram[0x55], alive.sram[0x5B]), (0, alive.sram[0x5D]))
         self.assertEqual(self.gold("pr03!") - self.gold("pr05!"), 25)
-        self.assertIn(1, self.ran["pr04!"].get("PriestMenu_PayForService_SubtractArg1AmountFromGold", set()))
+        self.assertIn(1, self.ran["pr04!"].get("PriestMenu_PayForService_Pay", set()))
 
 
     def test_hibernation_moves_a_record_into_the_compact_records(self):

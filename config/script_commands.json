@@ -688,19 +688,19 @@
     "88": {
       "const": "SCRIPT_RETURN_MESSAGE",
       "routine": "ReturnMessage",
-      "note": "a key-world/field talk event (group $05, dispatched by RunFieldReturnPhase_ResetLeadRecordFields55And5B and PartyDefeatedReturn: a message chosen by a story flag); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $05, dispatched by RunFieldReturnPhase_AfterBattle and PartyDefeatedReturn: a message chosen by a story flag); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "89": {
       "const": "SCRIPT_RETURN_WARP",
       "routine": "ReturnWarp",
-      "note": "a key-world/field talk event (group $06, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: StartReturnWarpByFlag25); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $06, dispatched by RunFieldReturnPhase_RunReturnAction: StartReturnWarpByFlag25); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "8A": {
       "const": "SCRIPT_MAP_EXIT_WARP",
       "routine": "MapExitWarp",
-      "note": "a key-world/field talk event (group $07, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: fades, then sets the warp destination from the map exit records (E-0182), wMapType, the map size and the field transition); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $07, dispatched by RunFieldReturnPhase_RunReturnAction: fades, then sets the warp destination from the map exit records (E-0182), wMapType, the map size and the field transition); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "8B": {
@@ -724,13 +724,13 @@
     "8E": {
       "const": "SCRIPT_MAP_LINK_WARP",
       "routine": "MapLinkWarp",
-      "note": "a key-world/field talk event (group $08, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: a timed palette fade, then the warp destination from the map link records (E-0238) or wKeyWorldGoal); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $08, dispatched by RunFieldReturnPhase_RunReturnAction: a timed palette fade, then the warp destination from the map link records (E-0238) or wKeyWorldGoal); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "8F": {
       "const": "SCRIPT_NPC_BREED_WARP",
       "routine": "NpcBreedWarp",
-      "note": "a key-world/field talk event (group $20, dispatched by NpcBreedMenu_ChooseAndBreed_DispatchTalkEvent: fades, sets the warp destination and wSavedPositionValid, and queues the next script and talk event); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $20, dispatched by NpcBreedMenu_ChooseAndBreed_StartResultTalk: fades, sets the warp destination and wSavedPositionValid, and queues the next script and talk event); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "90": {
@@ -790,13 +790,13 @@
     "9A": {
       "const": "SCRIPT_RANDOM_BATTLE",
       "routine": "RandomBattleEvent",
-      "note": "a key-world/field talk event (group $19, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: picks a battle intro (NextRandomSeed) and starts a battle (SetModeState3AndSaveScreen)); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $19, dispatched by RunFieldReturnPhase_RunReturnAction: picks a battle intro (NextRandomSeed) and starts a battle (SetModeState3AndSaveScreen)); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "9B": {
       "const": "SCRIPT_HEAL_PARTY",
       "routine": "HealPartyEvent",
-      "note": "a key-world/field talk event (group $1A, dispatched by RunMenuStateMenuState: heals the party (FullyHealParty) after a flag-chosen message); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $1A, dispatched by WarpEffect: heals the party (FullyHealParty) after a flag-chosen message); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "9C": {
@@ -826,7 +826,7 @@
     "A0": {
       "const": "SCRIPT_PLAYER_SPRITE_FLASH",
       "routine": "PlayerSpriteFlash",
-      "note": "a key-world/field talk event (group $09, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: reloads the player sprite graphics with a negative screen flash); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $09, dispatched by RunFieldReturnPhase_RunReturnAction: reloads the player sprite graphics with a negative screen flash); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "A1": {

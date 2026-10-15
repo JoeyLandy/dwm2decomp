@@ -206,7 +206,6 @@ gfx/misc/map_x6248_screens0_y0_x0.lz	$24F91A	$9C
 gfx/misc/map_x6248_tileset.lz	$24F745	$18F
 gfx/misc/map_x62_f0_screens0_y0_x0.lz	$1A3E04	$BA
 gfx/misc/map_x62_f0_tileset.lz	$242FB4	$27F
-gfx/misc/run_game_mode5_case00_sub_states_screen_tile_buffer_gfx.lz	$38590F	$65
 gfx/misc/screen_map47_1.lz	$11E9D1	$6B
 gfx/misc/screen_map48_1.lz	$121F34	$E2
 gfx/misc/screen_map58_1.lz	$160706	$F5
@@ -316,6 +315,7 @@ gfx/misc/tiles2_gfx_6.lz	$384617	$32F
 gfx/misc/tiles2_gfx_7.lz	$384E67	$59E
 gfx/misc/tiles2_gfx_8.lz	$385405	$377
 gfx/misc/tiles2_plus500_gfx.lz	$178001	$22E
+gfx/misc/title_opening_load_next_screen_screen_tile_buffer_gfx.lz	$38590F	$65
 gfx/misc/window_tile_buffer_plus64_gfx.lz	$3C5D44	$58
 gfx/monster_pics/1_eye_clown.lz	$1E0B28	$131
 gfx/monster_pics/ag_devil.lz	$1E01FB	$176

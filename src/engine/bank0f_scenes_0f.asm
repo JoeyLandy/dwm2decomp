@@ -10,14 +10,14 @@ SECTION "Bank 0F", ROMX[$4000], BANK[$0F]
 ScenePendantSeller::
     ld a, [wScriptStep]
     jumptable
-    dw ScenePendantSeller_SetBit2AtHL_B0F
-    dw ScenePendantSeller_StepObjectTowardCoord
-    dw ScenePendantSeller_UpdateFollowersOnStep_Bank0F
-    dw ScenePendantSeller_SetScriptParam0
+    dw ScenePendantSeller_RaiseObject
+    dw ScenePendantSeller_WalkObjectDown
+    dw ScenePendantSeller_WalkPlayerDown
+    dw ScenePendantSeller_KeepInStep
 
 ; Pendant seller scene, step 3: keeps the followers in step for $1E frames, then restarts the
 ; player's animation (hPlayerStateFlags bit 1 cleared) and resumes the script. (C1, E-0357)
-ScenePendantSeller_SetScriptParam0::
+ScenePendantSeller_KeepInStep::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
@@ -36,7 +36,7 @@ ScenePendantSeller_SetScriptParam0::
 
 ; Pendant seller scene, step 2: walks the player down two pixels per frame (followers following) to
 ; Y $80. (C1, E-0357)
-ScenePendantSeller_UpdateFollowersOnStep_Bank0F::
+ScenePendantSeller_WalkPlayerDown::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
@@ -58,7 +58,7 @@ ScenePendantSeller_UpdateFollowersOnStep_Bank0F::
 ; Pendant seller scene, step 1: walks object 1 down two pixels a frame to Y $40
 ; (StepObjectTowardCoord); on arrival freezes the player's animation (bit 1) and plays sound $63.
 ; (C1, E-0357)
-ScenePendantSeller_StepObjectTowardCoord::
+ScenePendantSeller_WalkObjectDown::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $80
@@ -80,7 +80,7 @@ ScenePendantSeller_StepObjectTowardCoord::
 
 ; Pendant seller scene, step 0: moves object 1 up one pixel every other frame to Y $30, then sets
 ; its moving flag. (C1, E-0357)
-ScenePendantSeller_SetBit2AtHL_B0F::
+ScenePendantSeller_RaiseObject::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -105,13 +105,13 @@ ScenePendantSeller_SetBit2AtHL_B0F::
 PersonalityMessage::
     ld a, [wScriptStep]
     jumptable
-    dw PersonalityMessage_LoadSRAMRecordByte
-    dw PersonalityMessage_RunMessageBoxFar_Bank0F
+    dw PersonalityMessage_PickMessage
+    dw PersonalityMessage_WaitForMessage
 
 ; A follower's personality message: picks a message in group 5 from the follower's family
-; (PersonalityMessage_LoadSRAMRecordByte_Data) plus its personality grade (PersonalityIndexOfRecord)
-; and starts it. (C1, E-0357)
-PersonalityMessage_LoadSRAMRecordByte::
+; (PersonalityMessage_PickMessage_Data) plus its personality grade (PersonalityIndexOfRecord) and
+; starts it. (C1, E-0357)
+PersonalityMessage_PickMessage::
     ld a, $0a
     ld [rRAMG], a
     ld hl, wPartyList
@@ -123,7 +123,7 @@ PersonalityMessage_LoadSRAMRecordByte::
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and $0f
-    ld hl, PersonalityMessage_LoadSRAMRecordByte_Data
+    ld hl, PersonalityMessage_PickMessage_Data
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -143,7 +143,7 @@ PersonalityMessage_LoadSRAMRecordByte::
     ret
 
 ; data read by PersonalityMessage (11 bytes) (E-0347)
-PersonalityMessage_LoadSRAMRecordByte_Data::
+PersonalityMessage_PickMessage_Data::
     db $94, $af, $ca, $af, $94, $ca, $af, $94, $ca, $ca, $e5
 
 ; implements script command type 5F (SCRIPT_SCENE_HOMECOMING): a cutscene step named after the scene
@@ -152,45 +152,45 @@ PersonalityMessage_LoadSRAMRecordByte_Data::
 SceneHomecoming::
     ld a, [wScriptStep]
     jumptable
-    dw SceneHomecoming_RunFieldCommandTemp0
+    dw SceneHomecoming_PlaceObject
     dw SceneHomecoming_WriteScriptParam0AndScriptParam1Etc
     dw SceneHomecoming_ShowWarubouWaheyInsteadOf
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_ShowWarubouNoOneKnows
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneHomecoming_StepScriptParam0Counter_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneHomecoming_FaceUp
     dw SceneHomecoming_StartPaletteFadeAndStep
-    dw SceneHomecoming_RunFieldCommandTemp0_SetTemp0
+    dw SceneHomecoming_ShowObject
     dw SceneHomecoming_ToScriptStepSetObjectBit2AndWait
     dw SceneHomecoming_ShowWarubouWaheyIWas
     dw SceneHomecoming_ShowWarubouWaheyIWas
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_ShowKamehaIWentAnd
     dw SceneHomecoming_ShowKamehaIWentAnd
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_ShowWarubouWAHEYSomePrince
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_ShowKamehaYoureAGlutton
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneHomecoming_ClearBit2AtHL_Bank0F
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneHomecoming_AddStepDeltaToPointedByte
-    dw SceneHomecoming_StepObjectTowardCoord
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneHomecoming_WalkPlayerLeft
+    dw SceneHomecoming_WaitMessage
+    dw SceneHomecoming_HopObjects
+    dw SceneHomecoming_WalkObject1
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_ShowKamehaNoOnesTaking
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_WritePlayerFacingAndPlayerYEtc
     dw SceneHomecoming_WriteObject2AndPlayerXEtc
     dw SceneHomecoming_WriteObject2AndPlayerXEtc_2
     dw SceneHomecoming_Msg0DB8_WarubouWaheyIHave
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_WriteFollowerRecords
-    dw SceneHomecoming_ScriptApplyStepDeltaAtDE
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_HopFollower
+    dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_WriteObject2AndPlayerXEtc
     dw SceneHomecoming_WriteObject2AndPlayerXEtc_2
     dw SceneHomecoming_WriteObject2AndPlayerXEtc
-    dw SceneHomecoming_ScriptApplyStepDeltaAtDE_SetBit1AtHL_Bank0F
+    dw SceneHomecoming_HopAndWalk
     dw SceneHomecoming_ToStartPaletteFadeAndStep
     dw SceneHomecoming_WaitFadeState
     dw SceneHomecoming_ShowTHEEND
@@ -374,7 +374,7 @@ SceneHomecoming_ToStartPaletteFadeAndStep::
 
 ; Homecoming scene, step 38: makes the scene object hop and walks object 2 left two pixels per frame
 ; to X $40, then hides the first sprite slot. (C1, E-0357)
-SceneHomecoming_ScriptApplyStepDeltaAtDE_SetBit1AtHL_Bank0F::
+SceneHomecoming_HopAndWalk::
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE
     ld hl, wObject2 + OBJ_FLAGS
@@ -395,7 +395,7 @@ SceneHomecoming_ScriptApplyStepDeltaAtDE_SetBit1AtHL_Bank0F::
 
 ; Homecoming scene, step 33: makes the second follower hop; when the hop ends shows message $0DBA.
 ; (C1, E-0357)
-SceneHomecoming_ScriptApplyStepDeltaAtDE::
+SceneHomecoming_HopFollower::
     ld de, wFollowerRecords + $2
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -529,7 +529,7 @@ SceneHomecoming_ShowKamehaNoOnesTaking::
 
 ; Homecoming scene, step 23: walks object 1 down (two pixels a frame) to Y $40, then left to X $58;
 ; then sets the objects' states and shows message $0DB6. (C1, E-0357)
-SceneHomecoming_StepObjectTowardCoord::
+SceneHomecoming_WalkObject1::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
@@ -569,7 +569,7 @@ SceneHomecoming_StepObjectTowardCoord::
     ret
 
 ; Homecoming scene, step 22: both objects hop together; at the end object 1 faces left. (C1, E-0357)
-SceneHomecoming_AddStepDeltaToPointedByte::
+SceneHomecoming_HopObjects::
     ld a, $01
     ld [wObject1 + OBJ_STATE], a
     ld [wObject2 + OBJ_STATE], a
@@ -590,7 +590,7 @@ SceneHomecoming_AddStepDeltaToPointedByte::
 
 ; Homecoming scene, step 20: stops both objects and walks the player left to X $80; then message
 ; $0DB5. (C1, E-0357)
-SceneHomecoming_ClearBit2AtHL_Bank0F::
+SceneHomecoming_WalkPlayerLeft::
     ld hl, wObject1 + OBJ_FLAGS
     call ClearBit2AtHL_Bank0F
     ld hl, wObject2 + OBJ_FLAGS
@@ -666,7 +666,7 @@ SceneHomecoming_ToScriptStepSetObjectBit2AndWait::
 
 ; Homecoming scene, step 8: places the scene object (field command 1) at ($68, $30) and shows it.
 ; (C1, E-0357)
-SceneHomecoming_RunFieldCommandTemp0_SetTemp0::
+SceneHomecoming_ShowObject::
     ld a, $01
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -695,7 +695,7 @@ SceneHomecoming_StartPaletteFadeAndStep::
     ret
 
 ; Homecoming scene, step 6: the player faces up for $78 frames. (C1, E-0357)
-SceneHomecoming_StepScriptParam0Counter_Bank0F::
+SceneHomecoming_FaceUp::
     ld a, $01
     ldh [hPlayerFacing], a
     ld b, $78
@@ -785,7 +785,7 @@ SceneHomecoming_WriteScriptParam0AndScriptParam1Etc::
 
 ; Homecoming scene, step 0: places the scene object (field command $13) at ($40, $40), sets the arc
 ; speed to -$180, plays sound $65 and hides the field sprites. (C1, E-0357)
-SceneHomecoming_RunFieldCommandTemp0::
+SceneHomecoming_PlaceObject::
     ld a, $13
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -811,155 +811,155 @@ SceneHomecoming_RunFieldCommandTemp0::
 SceneDarckDefeated::
     ld a, [wScriptStep]
     jumptable
-    dw SceneDarckDefeated_ScriptStepBlinkObjectTemp0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepPlayerLeftTowardStepPtrLo
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
+    dw SceneDarckDefeated_BlinkOut
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkPlayer
+    dw SceneDarckDefeated_HopSprite
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
     dw SceneDarckDefeated_MoveSprite0Down
     dw SceneDarckDefeated_Msg055A_AVoiceEchoedFrom
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneDarckDefeated_Msg055B_WaheyCanYouHear
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneDarckDefeated_ShowWarubouWaheyYouDid
-    dw SceneDarckDefeated_ToRunSceneScriptSubStep
-    dw SceneDarckDefeated_RedrawColumnsBesideScreenAndStep
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ToScriptStepShakeScreen
+    dw SceneDarckDefeated_RunBossWinScene
+    dw SceneDarckDefeated_ResetScene
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_ShakeScreen
     dw SceneDarckDefeated_ShowWarubouWaheyFeelThat
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteFieldEventKindAndFieldEventTimerEtc
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_StartScrollShake
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
     dw SceneDarckDefeated_ShowWarubouWawaheyWeWere
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneDarckDefeated_ScriptStepDeltaThenNextStep
-    dw SceneDarckDefeated_SetFieldEventArg
-    dw SceneDarckDefeated_StepObjectTowardCoord
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_15
-    dw SceneDarckDefeated_StepObjectTowardCoord
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_15
-    dw SceneDarckDefeated_StepObjectTowardCoord
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_15
-    dw SceneDarckDefeated_StepObjectTowardCoord
+    dw SceneHomecoming_WaitMessage
+    dw SceneDarckDefeated_HopPlayer
+    dw SceneDarckDefeated_ClearEventArg
+    dw SceneDarckDefeated_WalkObject0Up
+    dw SceneDarckDefeated_WalkObject0Down
+    dw SceneDarckDefeated_WalkObject0Up
+    dw SceneDarckDefeated_WalkObject0Down
+    dw SceneDarckDefeated_WalkObject0Up
+    dw SceneDarckDefeated_WalkObject0Down
+    dw SceneDarckDefeated_WalkObject0Up
     dw SceneDarckDefeated_ShowWarubouWaheyThatsIt
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneDarckDefeated_StepPlayerDownTowardStepPtrLo
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneDarckDefeated_WalkPlayerDown
+    dw SceneDarckDefeated_Wait
     dw SceneDarckDefeated_ShowWarubouWaheyGetGoing
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteFieldEventArgAndObject5
+    dw SceneHomecoming_WaitMessage
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_MoveSceneObject
     dw SceneDarckDefeated_ShowWarubouWaheyGreatLogsLife
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneDarckDefeated_WriteFieldEventArgAndObject5
-    dw SceneDarckDefeated_WriteFieldEventArgAndMapIdEtc
-    dw SceneDarckDefeated_RunFieldCommandTemp0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_3
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_4
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteObject5AndScriptParam0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_7
-    dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_7
-    dw SceneDarckDefeated_AdvanceScriptStep
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_5
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_13
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_12
-    dw SceneDarckDefeated_WriteStepPtrHiAndStepPtrLoEtc
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_4
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteObject5AndScriptParam0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_6
-    dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_6
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_11
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_3
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_3
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_10
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo_2
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteObject5AndScriptParam0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_5
-    dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_5
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteObject1AndObject2Etc
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_3
-    dw SceneDarckDefeated_WriteScriptParam0AndObject1Etc
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_2
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteObject5AndScriptParam0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_4
-    dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_4
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_9
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_8
-    dw SceneDarckDefeated_AddStepDeltaToPointedByte
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_7
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_6
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_2
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteObject5AndScriptParam0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_3
-    dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_3
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_5
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_4
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteStepPtrLoAndStepTargetEtc
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_3
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_2
-    dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_WriteObject5AndScriptParam0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_2
-    dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_2
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneDarckDefeated_MoveSceneObject
+    dw SceneDarckDefeated_WarpToMap26
+    dw SceneDarckDefeated_PlaceObject
+    dw SceneDarckDefeated_TurnObjects
+    dw SceneDarckDefeated_HopObject2
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_RaiseSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToMap2F
+    dw SceneDarckDefeated_PlaceObjectAgain
+    dw SceneDarckDefeated_WaitAndPlaceSprite
+    dw SceneDarckDefeated_WalkObject0DownFar
+    dw SceneDarckDefeated_DriftSprite
+    dw SceneDarckDefeated_WalkObjectsApart
+    dw SceneDarckDefeated_WalkObject0Off
+    dw SceneDarckDefeated_WalkObject2Down
+    dw SceneDarckDefeated_DriftObject2
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_RaiseSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToMap33
+    dw SceneDarckDefeated_PlaceObjectLeft
+    dw SceneDarckDefeated_WalkObject1Around
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_HopObject1
+    dw SceneDarckDefeated_HopObject1
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObject1Off
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObjectsUp
+    dw SceneDarckDefeated_HopObject3
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_RaiseSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToMap41
+    dw SceneDarckDefeated_PlaceObjectTop
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_MoveObjectsLeft
+    dw SceneDarckDefeated_HopObjectsAndFace
+    dw SceneDarckDefeated_MoveObjectsRight
+    dw SceneDarckDefeated_HopObjects
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_RaiseSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToMap49
+    dw SceneDarckDefeated_PlaceObjectMiddle
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObjects34Up
+    dw SceneDarckDefeated_HopObject1Again
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObject1DownRight
+    dw SceneDarckDefeated_DriftObject1
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObject2Left
+    dw SceneDarckDefeated_WalkObjects34Off
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_FlickerSprite
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_RaiseSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToMap60
+    dw SceneDarckDefeated_PlaceObjectLow
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObject4Up
+    dw SceneDarckDefeated_WalkObjectsTogether
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObject4Right
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObject4Left
+    dw SceneDarckDefeated_WalkObject0DownAgain
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WalkObjectsApartAgain
+    dw SceneDarckDefeated_WalkObject0DownLast
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_RaiseSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToMap71
+    dw SceneDarckDefeated_PlaceObjectLeftAgain
+    dw SceneDarckDefeated_Wait
     dw ScriptStepMoveObjects2And3To0340
     dw ScriptStepFlickerObjectCB9B
     dw ScriptStepDeltaObject2CThenCopy
     dw ScriptStepMoveObjects2And3To81B0
-    dw SceneDarckDefeated_WriteObject5AndScriptParam0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId
-    dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0
-    dw SceneDarckDefeated_WriteFieldEventArgAndObject5_SetFieldEventArg
-    dw SceneDarckDefeated_WriteFieldEventArgAndObject5_SetFieldEventArg
-    dw SceneDarckDefeated_SetObject5
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetFieldEventArg
+    dw SceneDarckDefeated_RaiseSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToMap03
+    dw SceneDarckDefeated_PlaceObjectLeftLast
+    dw SceneDarckDefeated_MoveSceneObjectAgain
+    dw SceneDarckDefeated_MoveSceneObjectAgain
+    dw SceneDarckDefeated_HideSceneObject
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_Wait
+    dw SceneDarckDefeated_WarpToKing
     dw SceneDarckDefeated_Msg053B_KingIThankYou
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneDarckDefeated_QueueSoundEffect
+    dw SceneHomecoming_WaitMessage
+    dw SceneDarckDefeated_PlaySound
     dw SceneDarckDefeated_ShowKingEvenThoughThe
-    dw PersonalityMessage_RunMessageBoxFar_Bank0F
+    dw PersonalityMessage_WaitForMessage
 
 ; Darck defeated scene, step 147: the king's 'Even though the ...' (message $053C) and marks the
 ; first key of kind 6 (MarkKeyEntryKindTemp0Bit6). (C1, E-0357)
@@ -975,7 +975,7 @@ SceneDarckDefeated_ShowKingEvenThoughThe::
 
 ; Darck defeated scene, step 146: plays sound $6D, waits $78 frames, then restarts the map music.
 ; (C1, E-0357)
-SceneDarckDefeated_QueueSoundEffect::
+SceneDarckDefeated_PlaySound::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_script_param0
@@ -1007,7 +1007,7 @@ SceneDarckDefeated_Msg053B_KingIThankYou::
 
 ; Darck defeated scene, step 143: clears the field event, sets bit 5 of story byte $60, and warps to
 ; map $19 at ($40, $40) with transition kind 3 and fade $3F. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetFieldEventArg::
+SceneDarckDefeated_WarpToKing::
     xor a
     ld [wFieldEventArg], a
     ld a, [wStoryFlags + $60]
@@ -1029,7 +1029,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetFieldEventArg::
     ret
 
 ; Darck defeated scene, step 140: hides the scene object. (C1, E-0357)
-SceneDarckDefeated_SetObject5::
+SceneDarckDefeated_HideSceneObject::
     xor a
     ld [wObject5], a
     ld hl, wScriptStep
@@ -1038,7 +1038,7 @@ SceneDarckDefeated_SetObject5::
 
 ; Darck defeated scene, step 137: places the scene object (field command $11) at ($20, $50), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0::
+SceneDarckDefeated_PlaceObjectLeftLast::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1054,7 +1054,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0::
 
 ; Darck defeated scene, step 136: moves to map 3, screen (0, 0), scene object at ($40, $30), with a
 ; fade. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId::
+SceneDarckDefeated_WarpToMap03::
     ld a, $03
     ldh [hMapId], a
     xor a
@@ -1173,7 +1173,7 @@ ScriptStepMoveObjects2And3To0340::
 
 ; Darck defeated scene, step 127: places the scene object (field command $11) at ($20, $40), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_2::
+SceneDarckDefeated_PlaceObjectLeftAgain::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1189,7 +1189,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_2::
 
 ; Darck defeated scene, step 126: moves to map $71, screen (0, 0), scene object at ($40, $30), with
 ; a fade. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_2::
+SceneDarckDefeated_WarpToMap71::
     ld a, $71
     ldh [hMapId], a
     xor a
@@ -1203,7 +1203,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_2::
     ret
 
 ; Darck defeated scene, step 121: walks object 0 down to Y $60. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi::
+SceneDarckDefeated_WalkObject0DownLast::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $60
@@ -1220,7 +1220,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi::
 
 ; Darck defeated scene, step 120: walks object 1 left to X $30 and object 2 right to X $60, then
 ; stops them. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_2::
+SceneDarckDefeated_WalkObjectsApartAgain::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $30
@@ -1247,7 +1247,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_2::
 
 ; Darck defeated scene, step 118: walks object 0 down to Y $50, then objects 1 and 2 face up. (C1,
 ; E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_3::
+SceneDarckDefeated_WalkObject0DownAgain::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $50
@@ -1266,22 +1266,22 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_3::
     ret
 
 ; Darck defeated scene, step 117: walks object 4 left to X $40. (C1, E-0357)
-SceneDarckDefeated_WriteStepPtrLoAndStepTargetEtc::
+SceneDarckDefeated_WalkObject4Left::
     ld a, $40
     ld [wStepPtrLo], a
     ld a, $03
     ld [wStepTarget], a
-    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHiTo04
+    jr SceneDarckDefeated_WalkObject4Right_SetStepPtrHiTo04
 
 ; Darck defeated scene, step 115: walks object 4 right to X $50. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo::
+SceneDarckDefeated_WalkObject4Right::
     ld a, $50
     ld [wStepPtrLo], a
     ld a, $01
     ld [wStepTarget], a
 
 ; Walks object 4 toward the target set, then it faces up. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHiTo04::
+SceneDarckDefeated_WalkObject4Right_SetStepPtrHiTo04::
     ld a, $04
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -1296,7 +1296,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHiTo04::
 
 ; Darck defeated scene, step 113: walks object 1 right to X $40 and object 2 left to X $50 (two
 ; pixels a frame), then stops them. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_4::
+SceneDarckDefeated_WalkObjectsTogether::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $40
@@ -1322,7 +1322,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_4::
     ret
 
 ; Darck defeated scene, step 112: walks object 4 up to Y $70. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_5::
+SceneDarckDefeated_WalkObject4Up::
     ld a, $04
     ld [wStepPtrHi], a
     ld a, $70
@@ -1339,7 +1339,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_5::
 
 ; Darck defeated scene, step 110: places the scene object (field command $11) at ($40, $60), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_3::
+SceneDarckDefeated_PlaceObjectLow::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1355,7 +1355,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_3::
 
 ; Darck defeated scene, step 109: moves to map $60, screen (0, 0), scene object at ($40, $30), with
 ; a fade. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_3::
+SceneDarckDefeated_WarpToMap60::
     ld a, $60
     ldh [hMapId], a
     xor a
@@ -1371,7 +1371,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_3::
 ; Darck defeated scene, step 104: makes a sprite flicker for $78 frames (shown at Y $30 or hidden at
 ; $E0, switching every 2 frames, then every 4 from frame $1E and every 8 from $3C), then leaves it
 ; shown. (C1, E-0357)
-SceneDarckDefeated_StepScriptParam0Counter_Bank0F_2::
+SceneDarckDefeated_FlickerSprite::
     ld a, [wScriptParam0]
     cp $1e
     jr nc, .cp_3C
@@ -1412,7 +1412,7 @@ SceneDarckDefeated_StepScriptParam0Counter_Bank0F_2::
 
 ; Darck defeated scene, step 102: walks objects 3 and 4 down (two pixels a frame) to Y $B0, off the
 ; screen. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_6::
+SceneDarckDefeated_WalkObjects34Off::
     ld a, $03
     ld [wStepPtrHi], a
     ld a, $b0
@@ -1437,7 +1437,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_6::
 ; Darck defeated scene, step 101: walks object 2 left (two pixels a frame) to X $40 with object 1
 ; following it, then sets the objects' states; then walks object 2 down to Y $C0 with object 1
 ; riding 8 pixels above it. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_7::
+SceneDarckDefeated_WalkObject2Left::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_hi_to_02
@@ -1488,7 +1488,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_7::
 
 ; Darck defeated scene, step 99: object 1 drifts up and right while hopping for $20 frames, then
 ; faces left. (C1, E-0357)
-SceneDarckDefeated_AddStepDeltaToPointedByte::
+SceneDarckDefeated_DriftObject1::
     ld a, [wScriptParam0]
     and $03
     jr nz, .check_script_param0
@@ -1523,7 +1523,7 @@ SceneDarckDefeated_AddStepDeltaToPointedByte::
     ret
 
 ; Darck defeated scene, step 98: walks object 1 down to Y $70, then it faces right. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_8::
+SceneDarckDefeated_WalkObject1DownRight::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $70
@@ -1541,7 +1541,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_8::
     ret
 
 ; Darck defeated scene, step 96: makes object 1 hop once (16 frames). (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep::
+SceneDarckDefeated_HopObject1Again::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -1551,7 +1551,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep::
 
 ; Darck defeated scene, step 95: walks objects 3 and 4 up to Y $80, then stops object 1. (C1,
 ; E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_9::
+SceneDarckDefeated_WalkObjects34Up::
     ld a, $03
     ld [wStepPtrHi], a
     ld a, $80
@@ -1577,7 +1577,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_9::
 
 ; Darck defeated scene, step 92: places the scene object (field command $11) at ($40, $30), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_4::
+SceneDarckDefeated_PlaceObjectMiddle::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1592,7 +1592,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_4::
     ret
 
 ; Darck defeated scene, step 91: moves to map $49, screen (0, 0), with a fade. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_4::
+SceneDarckDefeated_WarpToMap49::
     ld a, $49
     ldh [hMapId], a
     xor a
@@ -1603,7 +1603,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_4::
 
 ; Darck defeated scene, step 86: objects 1-3 hop together while turning every four frames (and a
 ; sprite 48 pixels above them); then they face up (state 2). (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_2::
+SceneDarckDefeated_HopObjects::
     ld a, [wScriptParam0]
     and $03
     jr nz, .call_script_apply_step_delta_at_de
@@ -1641,7 +1641,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_2::
 
 ; Darck defeated scene, step 85: moves objects 1-3 right one pixel every four frames, 16 pixels
 ; apart, until object 3 reaches X $60. (C1, E-0357)
-SceneDarckDefeated_WriteScriptParam0AndObject1Etc::
+SceneDarckDefeated_MoveObjectsRight::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -1664,7 +1664,7 @@ SceneDarckDefeated_WriteScriptParam0AndObject1Etc::
 
 ; Darck defeated scene, step 84: objects 1-3 hop together while turning; then they face right (state
 ; 1). (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_3::
+SceneDarckDefeated_HopObjectsAndFace::
     ld a, [wScriptParam0]
     and $03
     jr nz, .call_script_apply_step_delta_at_de
@@ -1694,7 +1694,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_3::
 
 ; Darck defeated scene, step 83: objects 1-3 face left and move left one pixel every four frames
 ; until object 3 reaches X $50. (C1, E-0357)
-SceneDarckDefeated_WriteObject1AndObject2Etc::
+SceneDarckDefeated_MoveObjectsLeft::
     ld a, $03
     ld [wObject1 + OBJ_STATE], a
     ld [wObject2 + OBJ_STATE], a
@@ -1721,7 +1721,7 @@ SceneDarckDefeated_WriteObject1AndObject2Etc::
 
 ; Darck defeated scene, step 81: places the scene object (field command $11) at ($40, $20), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_5::
+SceneDarckDefeated_PlaceObjectTop::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1736,7 +1736,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_5::
     ret
 
 ; Darck defeated scene, step 80: moves to map $41, screen (0, 0), with a fade. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_5::
+SceneDarckDefeated_WarpToMap41::
     ld a, $41
     ldh [hMapId], a
     xor a
@@ -1746,7 +1746,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_5::
     ret
 
 ; Darck defeated scene, step 75: makes object 3 hop once. (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2::
+SceneDarckDefeated_HopObject3::
     ld de, wObject3 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -1757,7 +1757,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2::
 ; Darck defeated scene, step 74: in three sub-steps walks objects 2 and 1 up to Y $60; then object 1
 ; left to X $20 while object 2 finishes going up and then left; then object 2 left to X $20 and
 ; object 1 up to Y $50. Then object 3 stops and object 2 faces down. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo_2::
+SceneDarckDefeated_WalkObjectsUp::
     ld a, [wScriptParam0]
     or a
     jr nz, .skip
@@ -1848,7 +1848,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo_2::
 
 ; Darck defeated scene, step 72: walks object 1 down to Y $60, right to X $40, then down to Y $B0
 ; (two pixels a frame), off the screen. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_10::
+SceneDarckDefeated_WalkObject1Off::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
@@ -1897,7 +1897,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_10::
     ret
 
 ; Darck defeated scene, step 69: makes object 1 hop once. (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_3::
+SceneDarckDefeated_HopObject1::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -1907,7 +1907,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_3::
 
 ; Darck defeated scene, step 67: walks object 1 up to Y $60, left to X $20, then up to Y $50. (C1,
 ; E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_11::
+SceneDarckDefeated_WalkObject1Around::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
@@ -1957,7 +1957,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_11::
 
 ; Darck defeated scene, step 66: places the scene object (field command $11) at ($20, $40), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_6::
+SceneDarckDefeated_PlaceObjectLeft::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1974,7 +1974,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_6::
     ret
 
 ; Darck defeated scene, step 65: moves to map $33, screen (0, 0), with a fade. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_6::
+SceneDarckDefeated_WarpToMap33::
     ld a, $33
     ldh [hMapId], a
     xor a
@@ -1985,7 +1985,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_6::
 
 ; Darck defeated scene, step 60: object 2 faces left and drifts left while hopping once, then stops.
 ; (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_4::
+SceneDarckDefeated_DriftObject2::
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
     ld a, [wObject2 + OBJ_X]
@@ -2002,16 +2002,16 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_4::
 
 ; Darck defeated scene, step 59: walks object 2 down (two pixels a frame) to Y $60, then turns the
 ; first sprite. (C1, E-0357)
-SceneDarckDefeated_WriteStepPtrHiAndStepPtrLoEtc::
+SceneDarckDefeated_WalkObject2Down::
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80
+    jr SceneDarckDefeated_WalkObject0DownFar_SetStepTargetTo80
 
 ; Darck defeated scene, step 58: walks object 0 left to X $E0 (two pixels a frame) while object 1
 ; drifts right and hops; then puts object 2 at Y $30. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_12::
+SceneDarckDefeated_WalkObject0Off::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $e0
@@ -2036,7 +2036,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_12::
 
 ; Darck defeated scene, step 57: walks object 0 left to X $E0 and object 1 down to Y $60. (C1,
 ; E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_13::
+SceneDarckDefeated_WalkObjectsApart::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $e0
@@ -2048,11 +2048,11 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_13::
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80
+    jr SceneDarckDefeated_WalkObject0DownFar_SetStepTargetTo80
 
 ; Darck defeated scene, step 56: the first sprite drifts left while hopping; then object 1 is put at
 ; Y $30. (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_5::
+SceneDarckDefeated_DriftSprite::
     ld hl, wSpriteSlots + $b
     dec [hl]
     ld de, wSpriteSlots + $c
@@ -2065,7 +2065,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_5::
     ret
 
 ; Darck defeated scene, step 55: walks object 0 down (two pixels a frame) to Y $60. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14::
+SceneDarckDefeated_WalkObject0DownFar::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $60
@@ -2073,7 +2073,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14::
 
 ; Walks the object set up down two pixels a frame to the target, then turns the first sprite left
 ; (direction 3). (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80::
+SceneDarckDefeated_WalkObject0DownFar_SetStepTargetTo80::
     ld a, $80
     ld [wStepTarget], a
     farcall StepObjectTowardCoord
@@ -2087,7 +2087,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80::
     ret
 
 ; Darck defeated scene, step 54: waits $5A frames, then puts the first sprite at Y $30. (C1, E-0357)
-SceneDarckDefeated_AdvanceScriptStep::
+SceneDarckDefeated_WaitAndPlaceSprite::
     ld b, $5a
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -2099,7 +2099,7 @@ SceneDarckDefeated_AdvanceScriptStep::
 
 ; Darck defeated scene, step 53: places the scene object (field command $11) at ($30, $60), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_7::
+SceneDarckDefeated_PlaceObjectAgain::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -2114,7 +2114,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_7::
     ret
 
 ; Darck defeated scene, step 52: moves to map $2F, screen (1, 0), with a fade. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_7::
+SceneDarckDefeated_WarpToMap2F::
     ld a, $2f
     ldh [hMapId], a
     ld a, $01
@@ -2126,7 +2126,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_7::
 
 ; Darck defeated scene, step 49: the scene object rises one pixel every other frame for $40 frames,
 ; then is hidden. (C1, E-0357)
-SceneDarckDefeated_WriteObject5AndScriptParam0::
+SceneDarckDefeated_RaiseSceneObject::
     ld a, $80
     ld [wObject5], a
     ld a, [wScriptParam0]
@@ -2151,7 +2151,7 @@ SceneDarckDefeated_WriteObject5AndScriptParam0::
 
 ; Darck defeated scene, step 47: object 2 hops while objects 3 and 4 turn every eight frames; then
 ; objects 3 and 4 face up. (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_4::
+SceneDarckDefeated_HopObject2::
     ld a, [wScriptParam0]
     and $07
     jr nz, .call_script_apply_step_delta_at_de
@@ -2173,7 +2173,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_4::
     ret
 
 ; Darck defeated scene, step 46: objects 3 and 4 turn every four frames for $96 frames. (C1, E-0357)
-SceneDarckDefeated_StepScriptParam0Counter_Bank0F_3::
+SceneDarckDefeated_TurnObjects::
     ld a, [wScriptParam0]
     and $03
     jr nz, .call_step_script_param0_counter_bank0_f
@@ -2193,7 +2193,7 @@ SceneDarckDefeated_StepScriptParam0Counter_Bank0F_3::
 
 ; Darck defeated scene, step 45: places the scene object (field command $11) at ($40, $10), hidden.
 ; (C1, E-0357)
-SceneDarckDefeated_RunFieldCommandTemp0::
+SceneDarckDefeated_PlaceObject::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -2211,7 +2211,7 @@ SceneDarckDefeated_RunFieldCommandTemp0::
 
 ; Darck defeated scene, step 44: sets the field event argument and moves to map $26, screen (0, 0),
 ; with a fade. (C1, E-0357)
-SceneDarckDefeated_WriteFieldEventArgAndMapIdEtc::
+SceneDarckDefeated_WarpToMap26::
     ld a, $01
     ld [wFieldEventArg], a
     ld a, $26
@@ -2267,7 +2267,7 @@ SceneDarckDefeated_ShowWarubouWaheyGetGoing::
 
 ; Darck defeated scene, step 35: walks the player down to Y $40, then right to X $80, then faces
 ; left. (C1, E-0357)
-SceneDarckDefeated_StepPlayerDownTowardStepPtrLo::
+SceneDarckDefeated_WalkPlayerDown::
     xor a
     ld [wFieldEventArg], a
     ldh a, [hPlayerY]
@@ -2309,7 +2309,7 @@ SceneDarckDefeated_ShowWarubouWaheyThatsIt::
     ret
 
 ; Darck defeated scene, step 27: walks object 0 down to Y $40. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_15::
+SceneDarckDefeated_WalkObject0Down::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $00
@@ -2325,7 +2325,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_15::
     ret
 
 ; Darck defeated scene, step 26: walks object 0 up to Y $20. (C1, E-0357)
-SceneDarckDefeated_StepObjectTowardCoord::
+SceneDarckDefeated_WalkObject0Up::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $02
@@ -2342,7 +2342,7 @@ SceneDarckDefeated_StepObjectTowardCoord::
 
 ; Darck defeated scene, step 24: makes the player hop, then moves on (ScriptStepDeltaThenNextStep).
 ; (C1, E-0357)
-SceneDarckDefeated_ScriptStepDeltaThenNextStep::
+SceneDarckDefeated_HopPlayer::
     xor a
     ld [wFieldEventArg], a
     ld de, hPlayerY
@@ -2361,14 +2361,14 @@ SceneDarckDefeated_ShowWarubouWawaheyWeWere::
 
 ; Darck defeated scene, step 19: starts field event $0C (the scroll shake) and falls into clearing
 ; the event argument. (C1, E-0357)
-SceneDarckDefeated_WriteFieldEventKindAndFieldEventTimerEtc::
+SceneDarckDefeated_StartScrollShake::
     ld a, $0c
     ld [wFieldEventKind], a
     xor a
     ld [wFieldEventTimer], a
 
 ; Clears the field event argument and moves on. (C1, E-0357)
-SceneDarckDefeated_SetFieldEventArg::
+SceneDarckDefeated_ClearEventArg::
     xor a
     ld [wFieldEventArg], a
     ld hl, wScriptStep
@@ -2386,14 +2386,14 @@ SceneDarckDefeated_ShowWarubouWaheyFeelThat::
     ret
 
 ; Darck defeated scene, step 15: shakes the screen ($0F, ScriptStepShakeScreen). (C1, E-0357)
-SceneDarckDefeated_ToScriptStepShakeScreen::
+SceneDarckDefeated_ShakeScreen::
     ld b, $0f
     call ScriptStepShakeScreen
     ret
 
 ; Darck defeated scene, step 13: puts object 1 at Y $30, hides the scene object and redraws the
 ; columns beside the screen. (C1, E-0357)
-SceneDarckDefeated_RedrawColumnsBesideScreenAndStep::
+SceneDarckDefeated_ResetScene::
     ld a, $30
     ld [wObject1 + OBJ_Y], a
     xor a
@@ -2403,10 +2403,9 @@ SceneDarckDefeated_RedrawColumnsBesideScreenAndStep::
     inc [hl]
     ret
 
-; Darck defeated scene, step 12: runs the scene's script sub-step (RunSceneScriptSubStep). (C1,
-; E-0357)
-SceneDarckDefeated_ToRunSceneScriptSubStep::
-    farcall RunSceneScriptSubStep
+; Darck defeated scene, step 12: runs the scene's script sub-step (BossWinScene). (C1, E-0357)
+SceneDarckDefeated_RunBossWinScene::
+    farcall BossWinScene
     ret
 
 ; Darck defeated scene, step 11: warps to map 5, screen (1, 0) at ($50, $30) with a fade and shows
@@ -2455,7 +2454,7 @@ SceneDarckDefeated_MoveSprite0Down::
     inc [hl]
 
 ; Darck defeated scene, step 3: makes the first sprite hop once. (C1, E-0357)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE::
+SceneDarckDefeated_HopSprite::
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -2465,7 +2464,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE::
 
 ; Darck defeated scene, step 2: walks the player left to X $40, then up to Y $20; then shows the
 ; first sprite at Y $10, puts tiles $54 $55 into the screen and redraws it. (C1, E-0357)
-SceneDarckDefeated_StepPlayerLeftTowardStepPtrLo::
+SceneDarckDefeated_WalkPlayer::
     ldh a, [hPlayerX]
     cp $40
     jr z, .set_step_ptr_lo_to_20
@@ -2493,7 +2492,7 @@ SceneDarckDefeated_StepPlayerLeftTowardStepPtrLo::
     ret
 
 ; Darck defeated scene, step 1: waits $3C frames. (C1, E-0357)
-SceneDarckDefeated_StepScriptParam0Counter_Bank0F::
+SceneDarckDefeated_Wait::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -2503,7 +2502,7 @@ SceneDarckDefeated_StepScriptParam0Counter_Bank0F::
 
 ; Darck defeated scene, step 0: blinks object 1 out (ScriptStepBlinkObjectTemp0); when done keeps
 ; one sprite, sets EVENT_SCENE_DARCK_DEFEATED and bit 0 of story byte $65. (C1, E-0357)
-SceneDarckDefeated_ScriptStepBlinkObjectTemp0::
+SceneDarckDefeated_BlinkOut::
     ld a, $01
     ldh [hTemp0], a
     ld a, $30
@@ -2525,7 +2524,7 @@ SceneDarckDefeated_ScriptStepBlinkObjectTemp0::
 
 ; Darck defeated scene, step 138: shows the scene object and runs one of two phases by
 ; wScriptParam1: moving along a path, then counting the passes. (C1, E-0357)
-SceneDarckDefeated_WriteFieldEventArgAndObject5_SetFieldEventArg::
+SceneDarckDefeated_MoveSceneObjectAgain::
     xor a
     ld [wFieldEventArg], a
     ld a, $80
@@ -2608,7 +2607,7 @@ SceneDarckDefeated_WriteObject5AndScriptSubStepEtc::
 
 ; Darck defeated scene, step 40: shows the scene object and runs one of two phases by wScriptParam1:
 ; moving along a path, then counting the passes. (C1, E-0357)
-SceneDarckDefeated_WriteFieldEventArgAndObject5::
+SceneDarckDefeated_MoveSceneObject::
     xor a
     ld [wFieldEventArg], a
     ld a, $80
@@ -2616,12 +2615,12 @@ SceneDarckDefeated_WriteFieldEventArgAndObject5::
     ld a, [wScriptParam1]
     and $0f
     jumptable
-    dw SceneDarckDefeated_WriteScriptSubStepAndObject5_2
+    dw SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5
     dw SceneDarckDefeated_WriteScriptSubStepAndScriptParam1
 
 ; Moves the scene object forwards along its path (the row chosen by wScriptParam1 bits 4-6), one
 ; point every other frame; after $17 points the next phase. (C1, E-0357)
-SceneDarckDefeated_WriteScriptSubStepAndObject5_2::
+SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5::
     ld a, [wScriptSubStep]
     bit 0, a
     jr z, .skip
@@ -2679,9 +2678,9 @@ SceneDarckDefeated_WriteScriptSubStepAndScriptParam1::
     ld [wScriptParam1], a
     ret
 
-; SceneDarckDefeated_WriteScriptSubStepAndObject5_2 reads, every other frame, the pair at $5284 +
-; $30 * ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 and + 4, for 23 steps per path; 8
-; paths end at SceneThreeItems (E-0206, C1)
+; SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5 reads, every other frame, the pair
+; at $5284 + $30 * ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 and + 4, for 23 steps
+; per path; 8 paths end at SceneThreeItems (E-0206, C1)
 ; record: 24 steps of two bytes (wObject5 + 5, wObject5 + 4), 12 per line
 SceneDarckDefeated_WriteScriptSubStepAndObject5_ObjectPathTable::
     db $fe, $06, $00, $09, $02, $0c, $04, $0f, $06, $12, $08, $15, $0a, $18, $0c, $1b, $0e, $1e, $10, $21, $12, $23, $14, $26 ; id 0
@@ -2710,51 +2709,51 @@ SceneThreeItems::
     dw SceneThreeItems_ToRedrawColumnsBesideScreenAndStep
     dw SceneThreeItems_ToScriptStepShakeScreen
     dw SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneThreeItems_QueueMusic
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneThreeItems_PlayMusic
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg0485_GreetingsIAmDarck
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ToScriptStepDeltaThenMessage
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg_DarckWellForMe
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ShowDarckIImagineThat
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneThreeItems_StartMessageHL_B0F
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneThreeItems_DropObject
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg048D_HeroReceivedTheLimbo
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg048E_DarckIWillBe
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneThreeItems_CopyBytes
+    dw SceneHomecoming_WaitMessage
+    dw SceneThreeItems_SavePalettes
     dw SceneThreeItems_WriteSpriteSlotCount
-    dw SceneThreeItems_SetFlagBit
-    dw SceneThreeItems_StepScriptParam0Counter_Bank0F
+    dw SceneThreeItems_SetFlags
+    dw SceneThreeItems_TurnObject0
     dw SceneThreeItems_ToScriptStepDeltaThenMessage_3
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg0490_AVoiceEchoedFrom
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg0491_WaheyCanYouHear
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ShowWarubouWaheyHeroAnd
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneThreeItems_QueueSoundEffect
+    dw SceneHomecoming_WaitMessage
+    dw SceneThreeItems_PlaySound
     dw SceneThreeItems_ToScriptStepFlashScreenNegative
     dw SceneThreeItems_ShowWarubouThereAllHealed
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ToRedrawColumnsBesideScreenAndStep
     dw SceneThreeItems_ToScriptStepShakeScreen
     dw SceneThreeItems_Msg0A7C_KamehaIIHave
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ShowWarubouWaheyThereIs
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ToScriptStepDeltaThenMessage_2
-    dw SceneThreeItems_RunMessageBoxFar_Bank0F
+    dw SceneThreeItems_GiveKeys
 
 ; Three items scene, step 43: after the message box closes, marks the key of kind 5, sets bit 4 of
 ; story byte $60, gives a key of kind 6 (WriteKeyEntryTemp0) and resumes the script. (C1, E-0357)
-SceneThreeItems_RunMessageBoxFar_Bank0F::
+SceneThreeItems_GiveKeys::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -2878,7 +2877,7 @@ SceneThreeItems_ToScriptStepDeltaThenMessage_3::
 
 ; Three items scene, step 23: object 0 faces right and left in turn every 64 frames for $B4 frames,
 ; then faces down. (C1, E-0357)
-SceneThreeItems_StepScriptParam0Counter_Bank0F::
+SceneThreeItems_TurnObject0::
     ld a, [wScriptParam0]
     swap a
     srl a
@@ -2898,7 +2897,7 @@ SceneThreeItems_StepScriptParam0Counter_Bank0F::
 
 ; Three items scene, step 22: sets bit 3 of story byte $64 and EVENT_SCENE_THREE_ITEMS_0C2, and
 ; starts a transition in place (fade 1, transition kind 3). (C1, E-0357)
-SceneThreeItems_SetFlagBit::
+SceneThreeItems_SetFlags::
     ld a, [wStoryFlags + $64]
     set 3, a
     ld [wStoryFlags + $64], a
@@ -2934,13 +2933,13 @@ SceneThreeItems_ToScriptStepFlashScreenNegative::
 
 ; Three items scene, step 32: plays sound $7A, then falls into saving the palettes below. (C1,
 ; E-0357)
-SceneThreeItems_QueueSoundEffect::
+SceneThreeItems_PlaySound::
     ld a, $7a
     call QueueSoundEffect
 
 ; Three items scene, step 20: on the GBC saves the 64-byte background palette buffer in
 ; wBGPaletteCopy (for the flash to restore), then moves on. (C1, E-0357)
-SceneThreeItems_CopyBytes::
+SceneThreeItems_SavePalettes::
     ld a, [wIsCGB]
     or a
     jr z, .done
@@ -2973,7 +2972,7 @@ SceneThreeItems_Msg048D_HeroReceivedTheLimbo::
 ; Three items scene, step 14: the scene object flashes (every 4 frames) while falling one pixel a
 ; frame to the player's Y; then it is hidden and Darck says 'That key will bring you ...' (message
 ; $048C). (C1, E-0357)
-SceneThreeItems_StartMessageHL_B0F::
+SceneThreeItems_DropObject::
     ld a, [wFrameCounterLo]
     bit 2, a
     jr z, .set_object5_to_80
@@ -3057,7 +3056,7 @@ SceneThreeItems_Msg0485_GreetingsIAmDarck::
 ; flickers object 1 (Y $10 shown, $C0 hidden; every 2 frames, then 4 from frame $1E, 8 from $3C) for
 ; $78 frames; then object 0 faces up and Kameha says 'Who are you to disturb ...' (message $0484).
 ; (C1, E-0357)
-SceneThreeItems_QueueMusic::
+SceneThreeItems_PlayMusic::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_object3_to_18
@@ -3134,14 +3133,14 @@ SceneThreeItems_ToRedrawColumnsBesideScreenAndStep::
 SceneGrave::
     ld a, [wScriptStep]
     jumptable
-    dw SceneGrave_StepScriptParam0Counter_Bank0F
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneGrave_Flicker
+    dw SceneHomecoming_WaitMessage
     dw SceneGrave_ShowAhYoullDoIt
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneGrave_ScriptStepBlinkObjectTemp0
+    dw SceneHomecoming_WaitMessage
+    dw SceneGrave_BlinkOut
 
 ; Grave scene, step 4: blinks object 1 (at Y $40) out; when done resumes the script. (C1, E-0357)
-SceneGrave_ScriptStepBlinkObjectTemp0::
+SceneGrave_BlinkOut::
     ld a, $40
     ldh [hTemp1], a
     ld a, $01
@@ -3182,7 +3181,7 @@ SceneGrave_ShowAhYoullDoIt::
 ; the question again ($0419) after a refusal (0A5); after EVENT_SCENE_MADCONDOR the question ($0418,
 ; or $0415 before EVENT_SCENE_GRAVE); otherwise $040D or $040C. Questions go on to step 1, the rest
 ; end at step 3. (C1, E-0357)
-SceneGrave_StepScriptParam0Counter_Bank0F::
+SceneGrave_Flicker::
     ld a, $40
     ld [wObject1 + OBJ_Y], a
     ld a, [wScriptParam0]
@@ -3303,33 +3302,33 @@ SceneGrave_StepScriptParam0Counter_Bank0F::
 SceneShield2::
     ld a, [wScriptStep]
     jumptable
-    dw SceneShield2_RunFieldCommandTemp0
-    dw SceneShield2_ScriptApplyStepDeltaAtDE
-    dw SceneShield2_StepScriptParam0Counter_Bank0F
+    dw SceneShield2_ShowObject
+    dw SceneShield2_RaiseObject
+    dw SceneShield2_Wait
     dw SceneShield2_ShowLetMeShowYou
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneShield2_StepScriptParam0Counter_Bank0F
-    dw SceneShield2_ScriptStartFadeAndAdvanceStep_SetMapId_2
-    dw SceneShield2_StepScriptParam0Counter_Bank0F
-    dw SceneShield2_ScriptStartFadeAndAdvanceStep
-    dw SceneShield2_StepScriptParam0Counter_Bank0F
-    dw SceneShield2_ScriptStartFadeAndAdvanceStep_SetMapId
-    dw SceneShield2_StepScriptParam0Counter_Bank0F_2
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneShield2_Wait
+    dw SceneShield2_WarpIn
+    dw SceneShield2_Wait
+    dw SceneShield2_Fade
+    dw SceneShield2_Wait
+    dw SceneShield2_Warp
+    dw SceneShield2_Flicker
+    dw SceneHomecoming_WaitMessage
     dw SceneShield2_ShowHeroReceivedTheSky
     dw SceneShield2_ShowAVoiceEchoedFrom
     dw SceneShield2_ShowWaheyHeroCanYou
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneShield2_ShowWarubouWaheyYouDid
-    dw SceneShield2_ToRunSceneScriptSubStep
-    dw SceneShield2_RunFieldCommandTemp0_SetTemp0
+    dw SceneShield2_ToBossWinScene
+    dw SceneShield2_ShowObject2
     dw SceneShield2_ShowWarubouWaheyYouCan
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneShield2_SetFlagBit
+    dw SceneHomecoming_WaitMessage
+    dw SceneShield2_GiveKey
 
 ; Shield scene 2, step 22: sets EVENT_SCENE_SHIELD2_023, marks the key of kind 4
 ; (MarkKeyEntryKindTemp0Bit6), sets bit 3 of story byte $60 and resumes the script. (C1, E-0357)
-SceneShield2_SetFlagBit::
+SceneShield2_GiveKey::
     ld de, EVENT_SCENE_SHIELD2_023
     call SetFlagBit
     ld a, $04
@@ -3364,7 +3363,7 @@ SceneShield2_ShowWarubouWaheyYouCan::
 
 ; Shield scene 2, step 19: object 0 faces away from the player (facing + 2), runs field command $11,
 ; shows the scene object 32 pixels above the player and plays sound $85. (C1, E-0357)
-SceneShield2_RunFieldCommandTemp0_SetTemp0::
+SceneShield2_ShowObject2::
     ldh a, [hPlayerFacing]
     inc a
     inc a
@@ -3386,9 +3385,9 @@ SceneShield2_RunFieldCommandTemp0_SetTemp0::
     inc [hl]
     ret
 
-; Shield scene 2, step 18: runs the scene's script sub-step (RunSceneScriptSubStep). (C1, E-0357)
-SceneShield2_ToRunSceneScriptSubStep::
-    farcall RunSceneScriptSubStep
+; Shield scene 2, step 18: runs the scene's script sub-step (BossWinScene). (C1, E-0357)
+SceneShield2_ToBossWinScene::
+    farcall BossWinScene
     ret
 
 ; Shield scene 2, step 17: warps to map 5, screen (1, 0) at ($50, $30) (transition kind 1) with a
@@ -3462,7 +3461,7 @@ SceneShield2_ShowHeroReceivedTheSky::
 
 ; Shield scene 2, step 11: puts object 2 at Y $18 and flickers it (3 or 2 sprite slots drawn,
 ; slowing) for $78 frames; then 'The Kingdoms should return to ...' (message $0A07). (C1, E-0357)
-SceneShield2_StepScriptParam0Counter_Bank0F_2::
+SceneShield2_Flicker::
     ld a, $18
     ld [wObject2 + OBJ_Y], a
     ld a, [wScriptParam0]
@@ -3506,7 +3505,7 @@ SceneShield2_StepScriptParam0Counter_Bank0F_2::
     ret
 
 ; Shield scene 2, step 10: moves to map $49, screen (0, 0), warp Y $40, with a fade. (C1, E-0357)
-SceneShield2_ScriptStartFadeAndAdvanceStep_SetMapId::
+SceneShield2_Warp::
     ld a, $49
     ldh [hMapId], a
     ld a, $00
@@ -3519,7 +3518,7 @@ SceneShield2_ScriptStartFadeAndAdvanceStep_SetMapId::
     ret
 
 ; Shield scene 2, step 8: sets bit 1 of story byte $63 and fades. (C1, E-0357)
-SceneShield2_ScriptStartFadeAndAdvanceStep::
+SceneShield2_Fade::
     ld a, [wStoryFlags + $63]
     set 1, a
     ld [wStoryFlags + $63], a
@@ -3528,7 +3527,7 @@ SceneShield2_ScriptStartFadeAndAdvanceStep::
 
 ; Shield scene 2, step 6: moves to map $48, screen (7, 5), the player entering from the top at the
 ; same X (transition kind 3), with a fade. (C1, E-0357)
-SceneShield2_ScriptStartFadeAndAdvanceStep_SetMapId_2::
+SceneShield2_WarpIn::
     ld a, $48
     ldh [hMapId], a
     ld a, $07
@@ -3561,7 +3560,7 @@ SceneShield2_ShowLetMeShowYou::
     ret
 
 ; Shield scene 2, step 2: waits $3C frames. (C1, E-0357)
-SceneShield2_StepScriptParam0Counter_Bank0F::
+SceneShield2_Wait::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -3570,7 +3569,7 @@ SceneShield2_StepScriptParam0Counter_Bank0F::
     ret
 
 ; Shield scene 2, step 1: the scene object rises one pixel a frame with a hop. (C1, E-0357)
-SceneShield2_ScriptApplyStepDeltaAtDE::
+SceneShield2_RaiseObject::
     ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
     ld de, wObject5 + SCRIPTOBJ_Y
@@ -3582,7 +3581,7 @@ SceneShield2_ScriptApplyStepDeltaAtDE::
 
 ; Shield scene 2, step 0: runs field command $10 and shows the scene object on the player. (C1,
 ; E-0357)
-SceneShield2_RunFieldCommandTemp0::
+SceneShield2_ShowObject::
     ld a, $10
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -3604,16 +3603,16 @@ SceneShield::
     jumptable
     dw SceneShield_ShowTchObstinateAndFoolish
     dw SceneShield_ToScriptStepFlashScreenNegative
-    dw SceneShield_StepScriptParam0Counter_Bank0F
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneShield_Flicker
+    dw SceneHomecoming_WaitMessage
     dw SceneShield_ShowImpetuousFoolIllShow
-    dw SceneShield_RunMessageBoxFar_Bank0F
+    dw SceneShield_StartBattle
     dw SceneShield_ShowWhaNoMyMonsters
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneShield_ShowABeautifulVoiceEchoed
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneShield_ShowIBoreWitnessTo
-    dw PersonalityMessage_RunMessageBoxFar_Bank0F
+    dw PersonalityMessage_WaitForMessage
 
 ; Shield scene, step 10: 'I bore witness to it ...' (message $0A05) and EVENT_SCENE_SHIELD_1E4. (C1,
 ; E-0357)
@@ -3655,7 +3654,7 @@ SceneShield_ShowWhaNoMyMonsters::
     ret
 
 ; Shield scene, step 5: after the box closes, starts scripted battle $19. (C1, E-0357)
-SceneShield_RunMessageBoxFar_Bank0F::
+SceneShield_StartBattle::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -3687,7 +3686,7 @@ SceneShield_ShowImpetuousFoolIllShow::
 
 ; Shield scene, step 2: object 1 flickers (Y $20 shown, $E0 hidden, slowing) for $78 frames; then
 ; 'So it was you holding ...' (message $0A02, kept open for the question). (C1, E-0357)
-SceneShield_StepScriptParam0Counter_Bank0F::
+SceneShield_Flicker::
     ld a, [wScriptParam0]
     cp $1e
     jr nc, .cp_3C
@@ -3773,21 +3772,21 @@ SceneShieldGuardian::
     ld a, [wScriptStep]
     jumptable
     dw SceneShieldGuardian_ShowIWishYouWouldnt
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneShieldGuardian_StepScriptParam0Counter_Bank0F
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneShieldGuardian_Flicker
+    dw SceneHomecoming_WaitMessage
     dw SceneShieldGuardian_ShowISeeButI
-    dw SceneShieldGuardian_RunMessageBoxFar_Bank0F
+    dw SceneShieldGuardian_StartBattle
     dw SceneShieldGuardian_Msg0AF0_WhatLoseToA
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneShieldGuardian_ShowOhMyGoodnessThank
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneShieldGuardian_ShowThatWasALovely
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneShieldGuardian_ScriptStepDeltaThenMessage
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneShieldGuardian_HopObject1
+    dw SceneHomecoming_WaitMessage
     dw SceneShieldGuardian_ShowHelenIPutYou
-    dw PersonalityMessage_RunMessageBoxFar_Bank0F
+    dw PersonalityMessage_WaitForMessage
 
 ; Shield guardian scene, step 14: object 0 faces down; Helen's 'I put you through trouble...'
 ; (message $0AF5) and EVENT_SCENE_SHIELD_GUARDIAN_1E2. (C1, E-0357)
@@ -3803,7 +3802,7 @@ SceneShieldGuardian_ShowHelenIPutYou::
     ret
 
 ; Shield guardian scene, step 12: object 1 faces up and hops; then message $0AF4. (C1, E-0357)
-SceneShieldGuardian_ScriptStepDeltaThenMessage::
+SceneShieldGuardian_HopObject1::
     ld a, $02
     ld [wObject1 + OBJ_STATE], a
     ld de, wObject1 + OBJ_Y
@@ -3860,7 +3859,7 @@ SceneShieldGuardian_Msg0AF0_WhatLoseToA::
     ret
 
 ; Shield guardian scene, step 5: after the box closes, starts scripted battle 4. (C1, E-0357)
-SceneShieldGuardian_RunMessageBoxFar_Bank0F::
+SceneShieldGuardian_StartBattle::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -3893,7 +3892,7 @@ SceneShieldGuardian_ShowISeeButI::
 ; Shield guardian scene, step 2: puts object 2 at Y $20 and flickers it (3 or 2 sprite slots,
 ; slowing) for $78 frames; then 'Our plan called for chaos ...' (message $0AEE, kept open for the
 ; question). (C1, E-0357)
-SceneShieldGuardian_StepScriptParam0Counter_Bank0F::
+SceneShieldGuardian_Flicker::
     ld a, $20
     ld [wObject2 + OBJ_Y], a
     ld a, [wScriptParam0]
@@ -3969,14 +3968,14 @@ SceneShieldGuardian_ShowIWishYouWouldnt::
 SceneMedicineGiven::
     ld a, [wScriptStep]
     jumptable
-    dw SceneMedicineGiven_StepObjectTowardCoord
-    dw SceneMedicineGiven_UpdatePlayerMovement
-    dw SceneMedicineGiven_StepObjectTowardCoord_SetStepPtrHi_2
-    dw SceneMedicineGiven_StepObjectTowardCoord_SetStepPtrHi
+    dw SceneMedicineGiven_WalkUp
+    dw SceneMedicineGiven_Scroll
+    dw SceneMedicineGiven_WalkObject1
+    dw SceneMedicineGiven_WalkObject1Back
 
 ; Medicine given scene, step 3: object 1 walks up to Y $40, then right to X $50; the player walks up
 ; to Y $40, then right to X $40, then faces up with object 1, and the script resumes. (C1, E-0357)
-SceneMedicineGiven_StepObjectTowardCoord_SetStepPtrHi::
+SceneMedicineGiven_WalkObject1Back::
     ld a, [wObject1 + OBJ_Y]
     cp $40
     jr z, .set_step_ptr_hi_to_01
@@ -4023,7 +4022,7 @@ SceneMedicineGiven_StepObjectTowardCoord_SetStepPtrHi::
 
 ; Medicine given scene, step 2: object 1 walks left to X $30, then up to Y $40; the player walks up
 ; to Y $70, then left to X $30. (C1, E-0357)
-SceneMedicineGiven_StepObjectTowardCoord_SetStepPtrHi_2::
+SceneMedicineGiven_WalkObject1::
     ld a, [wObject1 + OBJ_X]
     cp $30
     jr z, .set_step_ptr_hi_to_01
@@ -4067,7 +4066,7 @@ SceneMedicineGiven_StepObjectTowardCoord_SetStepPtrHi_2::
 
 ; Medicine given scene, step 1: moves the player and runs the field action until its request (bit 7)
 ; ends. (C1, E-0357)
-SceneMedicineGiven_UpdatePlayerMovement::
+SceneMedicineGiven_Scroll::
     farcall UpdatePlayerMovement
     farcall RunFieldActionRequestActionIfBit7
     ld a, [wFieldActionRequest]
@@ -4080,7 +4079,7 @@ SceneMedicineGiven_UpdatePlayerMovement::
 ; Medicine given scene, step 0: object 0 walks left to X $50, then up off the screen; the player
 ; walks left to X $50, then up to Y 0; then starts a scroll to the screen above (field action $80,
 ; direction 4, map screen Y - 1). (C1, E-0357)
-SceneMedicineGiven_StepObjectTowardCoord::
+SceneMedicineGiven_WalkUp::
     ld a, [wSpriteSlots + $b]
     cp $50
     jr z, .set_step_ptr_hi_to_00
@@ -4144,19 +4143,19 @@ SceneMedicineGiven_StepObjectTowardCoord::
 ScenePrincessMedicine::
     ld a, [wScriptStep]
     jumptable
-    dw ScenePrincessMedicine_QueueSoundEffect
-    dw ScenePrincessMedicine_AddStepDeltaToPointedByte
-    dw ScenePrincessMedicine_ScriptApplyStepDeltaAtDE
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw ScenePrincessMedicine_FindTemp0InInventoryList
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw ScenePrincessMedicine_Start
+    dw ScenePrincessMedicine_HopObject1
+    dw ScenePrincessMedicine_HopObject0
+    dw SceneHomecoming_WaitMessage
+    dw ScenePrincessMedicine_TakeItem
+    dw SceneHomecoming_WaitMessage
     dw ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep
     dw ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw ScenePrincessMedicine_ShowYunasSoulFilledHer
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw ScenePrincessMedicine_ShowIveFinallyRememberedIm
-    dw PersonalityMessage_RunMessageBoxFar_Bank0F
+    dw PersonalityMessage_WaitForMessage
 
 ; Princess medicine scene, step 11: 'I've finally remembered. I'm Yuna, ...' (message $0AD5) and
 ; EVENT_SCENE_PRINCESS_MEDICINE_09D. (C1, E-0357)
@@ -4207,7 +4206,7 @@ ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep::
 
 ; Princess medicine scene, step 4: removes item $33 from the inventory when present; the first
 ; choice shows message $0DCC in the open box, another shows $0DCD and ends at step $0C. (C1, E-0357)
-ScenePrincessMedicine_FindTemp0InInventoryList::
+ScenePrincessMedicine_TakeItem::
     ld a, $33
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
@@ -4236,7 +4235,7 @@ ScenePrincessMedicine_FindTemp0InInventoryList::
 ; Princess medicine scene, step 2: object 0 hops while moving up (wScriptParam1 = 0) or down a pixel
 ; a frame; then the first time 'NEVER DID I EXPECT YUNA'S ...' (message $0AD2, kept open) and
 ; EVENT_SCENE_PRINCESS_MEDICINE, otherwise straight to the battle (step 6). (C1, E-0357)
-ScenePrincessMedicine_ScriptApplyStepDeltaAtDE::
+ScenePrincessMedicine_HopObject0::
     ld a, [wScriptParam1]
     or a
     jr nz, .skip
@@ -4272,7 +4271,7 @@ ScenePrincessMedicine_ScriptApplyStepDeltaAtDE::
 ; every four frames, for $20 frames; then object 2 takes its place and facing, object 1 is hidden
 ; and sound $63 plays; wScriptParam1 picks step 2's direction (down when the player is at Y $20, or
 ; away from Y $40 with a follower whose byte 7 is $20). (C1, E-0357)
-ScenePrincessMedicine_AddStepDeltaToPointedByte::
+ScenePrincessMedicine_HopObject1::
     ld hl, wObject1 + OBJ_X
     dec [hl]
     ld hl, wObject1 + OBJ_Y
@@ -4333,7 +4332,7 @@ ScenePrincessMedicine_AddStepDeltaToPointedByte::
 
 ; Princess medicine scene, step 0: with object 1 at ($80, $10) plays sound $65 and moves on;
 ; otherwise skips to the battle (step 6). (C1, E-0357)
-ScenePrincessMedicine_QueueSoundEffect::
+ScenePrincessMedicine_Start::
     ld a, [wObject1 + OBJ_X]
     cp $80
     jr nz, .set_script_step_to_06
@@ -4357,20 +4356,20 @@ ScenePrincessMedicine_QueueSoundEffect::
 SceneCheerYuna::
     ld a, [wScriptStep]
     jumptable
-    dw SceneCheerYuna_StepObjectTowardCoord
-    dw SceneCheerYuna_SetBit2AtHL_B0F
-    dw SceneCheerYuna_StepScriptParam0Counter_Bank0F
-    dw SceneCheerYuna_SetBit2AtHL_B0F_StepScriptParam0Counter_Bank0F
-    dw SceneCheerYuna_StepScriptParam0Counter_Bank0F_ClearBit1AtHL_Bank0F
-    dw SceneCheerYuna_SetBit2AtHL_B0F_StepScriptParam0Counter_Bank0F
-    dw SceneCheerYuna_StepScriptParam0Counter_Bank0F_ClearBit1AtHL_Bank0F
+    dw SceneCheerYuna_Dance
+    dw SceneCheerYuna_Hop
+    dw SceneCheerYuna_FaceLeft
+    dw SceneCheerYuna_Pause
+    dw SceneCheerYuna_FaceRight
+    dw SceneCheerYuna_Pause
+    dw SceneCheerYuna_FaceRight
     dw SceneCheerYuna_ShowEnoughEnoughOfThat
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneCheerYuna_ToScriptStepDeltaThenNextStep
-    dw SceneCheerYuna_StepObjectTowardCoord_SetBit2AtHL_B0F
+    dw SceneCheerYuna_WalkOff
     dw SceneCheerYuna_WritePlayerFacing
     dw SceneCheerYuna_ShowIAmTheKing
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneCheerYuna_SetScriptSubStep
     dw SceneCheerYuna_ToRunScriptSubStep
     dw SceneCheerYuna_WritePlayerFacingAndScriptStartRequest
@@ -4444,7 +4443,7 @@ SceneCheerYuna_WritePlayerFacing::
 
 ; Cheer Yuna scene, step 10: walks object 2 down to Y $A0; then sets bit 2 of hPlayerStateFlags and
 ; plays the map music. (C1, E-0357)
-SceneCheerYuna_StepObjectTowardCoord_SetBit2AtHL_B0F::
+SceneCheerYuna_WalkOff::
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $00
@@ -4483,7 +4482,7 @@ SceneCheerYuna_ShowEnoughEnoughOfThat::
 
 ; Cheer Yuna scene, step 4: after $4B frames object 2 faces right and clears its flag bit 1. (C1,
 ; E-0357)
-SceneCheerYuna_StepScriptParam0Counter_Bank0F_ClearBit1AtHL_Bank0F::
+SceneCheerYuna_FaceRight::
     ld b, $4b
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -4497,7 +4496,7 @@ SceneCheerYuna_StepScriptParam0Counter_Bank0F_ClearBit1AtHL_Bank0F::
 
 ; Cheer Yuna scene, step 3: sets object 2's flag bit 2; after $1E frames sets its flag bit 1. (C1,
 ; E-0357)
-SceneCheerYuna_SetBit2AtHL_B0F_StepScriptParam0Counter_Bank0F::
+SceneCheerYuna_Pause::
     ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B0F
     ld b, $1e
@@ -4511,7 +4510,7 @@ SceneCheerYuna_SetBit2AtHL_B0F_StepScriptParam0Counter_Bank0F::
 
 ; Cheer Yuna scene, step 2: after $4B frames object 2 faces left and clears its flag bit 1. (C1,
 ; E-0357)
-SceneCheerYuna_StepScriptParam0Counter_Bank0F::
+SceneCheerYuna_FaceLeft::
     ld b, $4b
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -4525,7 +4524,7 @@ SceneCheerYuna_StepScriptParam0Counter_Bank0F::
 
 ; Cheer Yuna scene, step 1: object 2 hops while moving right one pixel every other frame and turning
 ; every eight frames, for $20 frames; then faces down and sets its flag bit 1. (C1, E-0357)
-SceneCheerYuna_SetBit2AtHL_B0F::
+SceneCheerYuna_Hop::
     ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B0F
     ld a, [wFrameCounterLo]
@@ -4564,7 +4563,7 @@ SceneCheerYuna_SetBit2AtHL_B0F::
 
 ; Cheer Yuna scene, step 0: object 2 dances: walks right to X $70, left to X $20, then right to X
 ; $40, turning every four frames. (C1, E-0357)
-SceneCheerYuna_StepObjectTowardCoord::
+SceneCheerYuna_Dance::
     ld a, [wScriptParam0]
     or a
     jr nz, .skip
@@ -4575,7 +4574,7 @@ SceneCheerYuna_StepObjectTowardCoord::
     ld a, $70
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    call SceneCheerYuna_WriteObject2
+    call SceneCheerYuna_Dance_WriteObject2
     ld a, [wStepArrived]
     or a
     ret z
@@ -4593,7 +4592,7 @@ SceneCheerYuna_StepObjectTowardCoord::
     ld a, $20
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    call SceneCheerYuna_WriteObject2
+    call SceneCheerYuna_Dance_WriteObject2
     ld a, [wStepArrived]
     or a
     ret z
@@ -4609,7 +4608,7 @@ SceneCheerYuna_StepObjectTowardCoord::
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    call SceneCheerYuna_WriteObject2
+    call SceneCheerYuna_Dance_WriteObject2
     ld a, [wStepArrived]
     or a
     ret z
@@ -4620,7 +4619,7 @@ SceneCheerYuna_StepObjectTowardCoord::
     ret
 
 ; Turns object 2 every four frames (its state = frame counter bits 2-3). (C1, E-0357)
-SceneCheerYuna_WriteObject2::
+SceneCheerYuna_Dance_WriteObject2::
     ld a, [wFrameCounterLo]
     srl a
     srl a
@@ -4634,21 +4633,21 @@ SceneCheerYuna_WriteObject2::
 SceneExplosion::
     ld a, [wScriptStep]
     jumptable
-    dw SceneExplosion_TestFlagBit
-    dw SceneExplosion_StepObjectTowardCoord
-    dw SceneExplosion_ScriptStepShakeScreen
-    dw SceneExplosion_RunMessageBoxFar_Bank0F
+    dw SceneExplosion_Start
+    dw SceneExplosion_WalkObject0Down
+    dw SceneExplosion_Shake
+    dw SceneExplosion_StartBattle
     dw SceneExplosion_Msg0348_DarnTakeThisSACRIFICE
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneExplosion_SetBit2AtHL_B0F
-    dw SceneExplosion_ScriptStepFlashScreenNegative
+    dw SceneHomecoming_WaitMessage
+    dw SceneExplosion_WalkDown
+    dw SceneExplosion_Flash
     dw SceneExplosion_ToScriptStepShakeScreen
-    dw SceneExplosion_QueueSoundEffect
+    dw SceneExplosion_DropObject
 
 ; Explosion scene, step 9: the scene object falls two pixels a frame to Y $10; then sound $72,
 ; object 2 becomes sprite $52 (graphics decompressed to VRAM $8700), the object palettes are
 ; reloaded and the script resumes. (C1, E-0357)
-SceneExplosion_QueueSoundEffect::
+SceneExplosion_DropObject::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     inc a
     inc a
@@ -4685,7 +4684,7 @@ SceneExplosion_ToScriptStepShakeScreen::
     ret
 
 ; Explosion scene, step 7: hides object 0 (X $E0) and runs the negative screen flash. (C1, E-0357)
-SceneExplosion_ScriptStepFlashScreenNegative::
+SceneExplosion_Flash::
     ld a, $e0
     ld [wSpriteSlots + $b], a
     farcall ScriptStepFlashScreenNegative
@@ -4694,7 +4693,7 @@ SceneExplosion_ScriptStepFlashScreenNegative::
 ; Explosion scene, step 6: speeds up the player's walking animation (hPlayerStateFlags bit 2) while
 ; the player and the followers move down one pixel every four frames to Y $40; then field command 9,
 ; saves the GBC background palettes, plays sound $7A and ends the fast animation. (C1, E-0357)
-SceneExplosion_SetBit2AtHL_B0F::
+SceneExplosion_WalkDown::
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B0F
     ld a, [wScriptParam0]
@@ -4741,7 +4740,7 @@ SceneExplosion_Msg0348_DarnTakeThisSACRIFICE::
     ret
 
 ; Explosion scene, step 3: after the box closes, starts scripted battle 3. (C1, E-0357)
-SceneExplosion_RunMessageBoxFar_Bank0F::
+SceneExplosion_StartBattle::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -4755,7 +4754,7 @@ SceneExplosion_RunMessageBoxFar_Bank0F::
 ; Explosion scene, step 2: shakes the screen while the player and the followers move down a pixel a
 ; frame with a hop, for $20 frames; then 'Don't you touch that. If ...' (message $0346). (C1,
 ; E-0357)
-SceneExplosion_ScriptStepShakeScreen::
+SceneExplosion_Shake::
     ld b, $3c
     call ScriptStepShakeScreen
     ld hl, hPlayerY
@@ -4805,7 +4804,7 @@ SceneExplosion_ScriptStepShakeScreen::
 
 ; Explosion scene, step 1: walks object 0 down (two pixels a frame) to Y $20; then sound $66. (C1,
 ; E-0357)
-SceneExplosion_StepObjectTowardCoord::
+SceneExplosion_WalkObject0Down::
     ld a, $20
     ld [wStepPtrLo], a
     ld a, $00
@@ -4825,7 +4824,7 @@ SceneExplosion_StepObjectTowardCoord::
 ; Explosion scene, step 0: the first time redraws the columns beside the screen and sets
 ; EVENT_SCENE_EXPLOSION; again 'You again? I'll have to ...' (message $0347) and straight to the
 ; battle (step 3). (C1, E-0357)
-SceneExplosion_TestFlagBit::
+SceneExplosion_Start::
     ld de, EVENT_SCENE_EXPLOSION
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
@@ -4849,14 +4848,14 @@ SceneExplosion_TestFlagBit::
 ScenePlanRuined::
     ld a, [wScriptStep]
     jumptable
-    dw ScenePlanRuined_TestFlagBit
-    dw ScenePlanRuined_StepScriptParam0Counter_Bank0F
+    dw ScenePlanRuined_Start
+    dw ScenePlanRuined_Wait
     dw ScenePlanRuined_StartScriptedEncounterTemp0AndStep
-    dw ScenePlanRuined_ScriptStepBlinkObjectTemp0
+    dw ScenePlanRuined_BlinkOut
 
 ; Plan ruined scene, step 3: blinks object 0 (at Y $40) out, hides it and resumes the script. (C1,
 ; E-0357)
-ScenePlanRuined_ScriptStepBlinkObjectTemp0::
+ScenePlanRuined_BlinkOut::
     ld a, $00
     ldh [hTemp0], a
     ld a, $40
@@ -4881,7 +4880,7 @@ ScenePlanRuined_StartScriptedEncounterTemp0AndStep::
     ret
 
 ; Plan ruined scene, step 1: waits $1E frames, then sets EVENT_SCENE_PLAN_RUINED. (C1, E-0357)
-ScenePlanRuined_StepScriptParam0Counter_Bank0F::
+ScenePlanRuined_Wait::
     ld b, $1e
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -4895,7 +4894,7 @@ ScenePlanRuined_StepScriptParam0Counter_Bank0F::
 ; otherwise object 0 takes object 2's facing and the two swap places on screen (one at Y $40, the
 ; other hidden; every 2 frames, slowing to 4 and 8) for $78 frames, ending with object 0 shown. (C1,
 ; E-0357)
-ScenePlanRuined_TestFlagBit::
+ScenePlanRuined_Start::
     ld de, EVENT_SCENE_PLAN_RUINED
     call TestFlagBit
     jr nc, .read_object2
@@ -4958,23 +4957,23 @@ ScenePlanRuined_TestFlagBit::
 SceneWallExit::
     ld a, [wScriptStep]
     jumptable
-    dw SceneWallExit_RedrawColumnsBesideScreen
+    dw SceneWallExit_Start
     dw SceneWallExit_ShowKamehaSoThatsWhere
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneWallExit_SetBit2AtHL_B0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneWallExit_WalkPlayer
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_SetBit2AtHL_B0F_2
+    dw SceneWallExit_MoveObject1
     dw SceneWallExit_WriteScriptParam0AndObject1
-    dw SceneWallExit_StepObjectTowardCoord
+    dw SceneWallExit_WalkObject1
     dw SceneWallExit_ShowKamehaHeroThatWasnt
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneWallExit_StepObjectTowardCoord_SetStepPtrLo
+    dw SceneHomecoming_WaitMessage
+    dw SceneWallExit_WalkObject1Down
 
 ; Wall exit scene, step 12: walks object 1 down (two pixels a frame) to Y $50, then moves it left
 ; two pixels a frame to X $30; then it faces right, stops and the script resumes. (C1, E-0357)
-SceneWallExit_StepObjectTowardCoord_SetStepPtrLo::
+SceneWallExit_WalkObject1Down::
     ld a, [wObject1 + OBJ_Y]
     cp $50
     jr z, .check_object1
@@ -5059,7 +5058,7 @@ SceneWallExit_ShowKamehaHeroThatWasnt::
 
 ; Wall exit scene, step 9: walks object 1 up (two pixels a frame) to Y 0; then plays sound $66 when
 ; the player stood at X $30, $63 otherwise. (C1, E-0357)
-SceneWallExit_StepObjectTowardCoord::
+SceneWallExit_WalkObject1::
     ld a, $00
     ld [wStepPtrLo], a
     ld a, $01
@@ -5104,7 +5103,7 @@ SceneWallExit_WriteScriptParam0AndObject1::
 
 ; Wall exit scene, step 7: object 1 moves right two pixels a frame (facing right) to the player's
 ; saved X, then up to Y $20, then stops. (C1, E-0357)
-SceneWallExit_SetBit2AtHL_B0F_2::
+SceneWallExit_MoveObject1::
     ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B0F
     ld a, [wScriptParam1]
@@ -5139,7 +5138,7 @@ SceneWallExit_SetBit2AtHL_B0F_2::
 ; Wall exit scene, step 3: walks the player (fast animation, bit 2) one pixel a frame for 16 frames
 ; (right when the saved X is below $40, left otherwise, the followers following); then turns it
 ; around and lets it go. (C1, E-0357)
-SceneWallExit_SetBit2AtHL_B0F::
+SceneWallExit_WalkPlayer::
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B0F
     ldh a, [hPlayerX]
@@ -5198,7 +5197,7 @@ SceneWallExit_ShowKamehaSoThatsWhere::
 
 ; Wall exit scene, step 0: redraws the columns beside the screen, runs field command 5 and puts the
 ; scene object at ($30, $40). (C1, E-0357)
-SceneWallExit_RedrawColumnsBesideScreen::
+SceneWallExit_Start::
     farcall RedrawColumnsBesideScreen
     ld a, $05
     ldh [hTemp0], a
@@ -5217,29 +5216,29 @@ SceneWallExit_RedrawColumnsBesideScreen::
 SceneReportToKing::
     ld a, [wScriptStep]
     jumptable
-    dw SceneReportToKing_StepObjectTowardCoord
-    dw SceneReportToKing_UpdatePlayerMovement
-    dw SceneReportToKing_StepObjectTowardCoord_SetStepPtrLo_2
+    dw SceneReportToKing_WalkUp
+    dw SceneReportToKing_Scroll
+    dw SceneReportToKing_WalkObject1
     dw SceneReportToKing_Msg035A_WhatIsItYou
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneReportToKing_ScriptStepDeltaThenNextStep
-    dw SceneReportToKing_StepObjectTowardCoord_SetStepPtrLo
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneReportToKing_DrawFullScreenBufferAtScroll
+    dw SceneHomecoming_WaitMessage
+    dw SceneReportToKing_HopObject1
+    dw SceneReportToKing_WalkObject1Off
+    dw SceneHomecoming_WaitMessage
+    dw SceneReportToKing_DrawTiles
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_WriteFieldDrawFlagsAndScriptStep
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_AdvanceScriptStep
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_WriteFieldDrawFlags
-    dw SceneReportToKing_ScriptStartFadeAndAdvanceStep
+    dw SceneReportToKing_Warp
     dw SceneReportToKing_SetBit1AtHL_Bank0FAndStep
-    dw SceneReportToKing_AddStepDeltaToPointedByte
+    dw SceneReportToKing_WalkDown
 
 ; Report to king scene, step 17: the player and the followers walk down two pixels a frame to Y $40;
 ; once the player is there objects 0 and 1 hop; when the last follower arrives the player's
 ; animation restarts (bit 1) and the script resumes. (C1, E-0357)
-SceneReportToKing_AddStepDeltaToPointedByte::
+SceneReportToKing_WalkDown::
     ld a, [wScriptParam1]
     or a
     jr nz, .skip
@@ -5322,7 +5321,7 @@ SceneReportToKing_SetBit1AtHL_Bank0FAndStep::
 ; Report to king scene, step 15: moves the player and the followers off the screen (X $E0), shows
 ; them again (hFieldDrawFlags 0) and warps to map $4D, screen (0, 1) at ($40, $E0) (transition kind
 ; 1) with a fade. (C1, E-0357)
-SceneReportToKing_ScriptStartFadeAndAdvanceStep::
+SceneReportToKing_Warp::
     ld a, $e0
     ldh [hPlayerX], a
     ld [wFollowerRecords + $1], a
@@ -5384,7 +5383,7 @@ SceneReportToKing_WriteFieldDrawFlagsAndScriptStep::
 
 ; Report to king scene, step 8: puts tile $6A into four screen buffer cells and redraws the screen,
 ; hides the player (hFieldDrawFlags 1) and plays sound $65. (C1, E-0357)
-SceneReportToKing_DrawFullScreenBufferAtScroll::
+SceneReportToKing_DrawTiles::
     ld a, $6a
     ld [wScreenTileBuffer + $a8], a
     ld [wScreenTileBuffer + $a9], a
@@ -5401,7 +5400,7 @@ SceneReportToKing_DrawFullScreenBufferAtScroll::
 
 ; Report to king scene, step 6: walks object 1 right (two pixels a frame) to X $40, then down to Y
 ; $A0; then 'You're no envoy of the ...' (message $035B). (C1, E-0357)
-SceneReportToKing_StepObjectTowardCoord_SetStepPtrLo::
+SceneReportToKing_WalkObject1Off::
     ld a, [wObject1 + OBJ_X]
     cp $40
     jr z, .set_step_ptr_lo_to_A0
@@ -5432,7 +5431,7 @@ SceneReportToKing_StepObjectTowardCoord_SetStepPtrLo::
     ret
 
 ; Report to king scene, step 5: object 1 faces up and hops, then the next step. (C1, E-0357)
-SceneReportToKing_ScriptStepDeltaThenNextStep::
+SceneReportToKing_HopObject1::
     ld a, $02
     ld [wObject1 + OBJ_STATE], a
     ld de, wObject1 + OBJ_Y
@@ -5453,13 +5452,13 @@ SceneReportToKing_Msg035A_WhatIsItYou::
 SceneSpiritEnvoy::
     ld a, [wScriptStep]
     jumptable
-    dw SceneReportToKing_StepObjectTowardCoord
-    dw SceneReportToKing_UpdatePlayerMovement
-    dw SceneReportToKing_StepObjectTowardCoord_SetStepPtrLo_2
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo
-    dw SceneReportToKing_UpdatePlayerMovement
-    dw SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo_SetStepPtrLo
+    dw SceneReportToKing_WalkUp
+    dw SceneReportToKing_Scroll
+    dw SceneReportToKing_WalkObject1
+    dw SceneHomecoming_WaitMessage
+    dw SceneSpiritEnvoy_WalkDownAndScroll
+    dw SceneReportToKing_Scroll
+    dw SceneSpiritEnvoy_WalkPlayerDown
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
@@ -5472,7 +5471,7 @@ SceneSpiritEnvoy_SetScriptStartRequestTo80::
     ret
 
 ; Spirit envoy scene, step 6: walks the player down to Y $10. (C1, E-0357)
-SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo_SetStepPtrLo::
+SceneSpiritEnvoy_WalkPlayerDown::
     ld a, $10
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardStepPtrLo
@@ -5485,7 +5484,7 @@ SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo_SetStepPtrLo::
 
 ; Spirit envoy scene, step 4: walks the player down to Y $80, then starts a scroll to the screen
 ; below (field action $80, direction 8, map screen Y + 1). (C1, E-0357)
-SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo::
+SceneSpiritEnvoy_WalkDownAndScroll::
     ld a, $80
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardStepPtrLo
@@ -5514,7 +5513,7 @@ SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo::
 
 ; Report to king scene, step 2: object 1 walks up to Y $60, then left to X $30 and faces right; the
 ; player walks up to Y $40; then 'You're the envoy? ...Well, no ...' (message $0322). (C1, E-0357)
-SceneReportToKing_StepObjectTowardCoord_SetStepPtrLo_2::
+SceneReportToKing_WalkObject1::
     ld a, [wObject1 + OBJ_Y]
     cp $60
     jr z, .check_object1
@@ -5559,7 +5558,7 @@ SceneReportToKing_StepObjectTowardCoord_SetStepPtrLo_2::
 
 ; Report to king scene, step 1: moves the player and runs the field action until its request (bit 7)
 ; ends. (C1, E-0357)
-SceneReportToKing_UpdatePlayerMovement::
+SceneReportToKing_Scroll::
     farcall UpdatePlayerMovement
     farcall RunFieldActionRequestActionIfBit7
     ld a, [wFieldActionRequest]
@@ -5572,7 +5571,7 @@ SceneReportToKing_UpdatePlayerMovement::
 ; Report to king scene, step 0: walks object 1 up off the screen and the player up to Y 0; then
 ; starts a scroll to the screen above (field action $80, direction 4, map screen Y - 1). (C1,
 ; E-0357)
-SceneReportToKing_StepObjectTowardCoord::
+SceneReportToKing_WalkUp::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $02
@@ -5615,56 +5614,56 @@ SceneMermaidKingdom::
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidKingdom_ShowKamehaGaspHackI
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_SetBit2AtHL_B0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneMermaidKingdom_WalkObject1
     dw SceneMermaidKingdom_WriteScriptParam0AndObject1Etc
-    dw SceneMermaidKingdom_StepScriptParam0Counter_Bank0F
+    dw SceneMermaidKingdom_MoveObject2
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_StepObjectTowardCoord
+    dw SceneHomecoming_WaitMessage
+    dw SceneMermaidKingdom_WalkDown
     dw SceneMermaidKingdom_ShowKahahaha
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_DecompressGraphicsTemp0ToTemp4
+    dw SceneHomecoming_WaitMessage
+    dw SceneMermaidKingdom_LoadSprites
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_3
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE
+    dw SceneHomecoming_WaitMessage
+    dw SceneMermaidKingdom_SinkObject
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_2
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
+    dw SceneHomecoming_WaitMessage
+    dw SceneMermaidKingdom_HopObject2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
+    dw SceneMermaidKingdom_HopObject2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
+    dw SceneMermaidKingdom_HopObject2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
+    dw SceneMermaidKingdom_HopObject2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
+    dw SceneMermaidKingdom_HopObject2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_SetFlagBit
-    dw SceneMermaidKingdom_QueueSoundEffect
-    dw SceneMermaidKingdom_SetSpriteSlotCount
-    dw SceneMermaidKingdom_StepPlayerDownTowardStepPtrLo
+    dw SceneMermaidKingdom_SetFlags
+    dw SceneMermaidKingdom_TurnObjects
+    dw SceneMermaidKingdom_RaiseObject
+    dw SceneMermaidKingdom_WalkPlayerDown
     dw SceneMermaidKingdom_ShowKamehaIWasStupid
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_WriteStepTargetAndStepPtrLoEtc
-    dw SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep
-    dw SceneMermaidKingdom_AdvanceScriptStep
+    dw SceneMermaidKingdom_WalkPlayerLeft
+    dw SceneMermaidKingdom_DriftObject
+    dw SceneMermaidKingdom_Wait
     dw SceneMermaidKingdom_ShowAVoiceEchoedFrom
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_Msg0873_WaheyHeroHearMe
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_ShowWarubouWaheyYouDid
-    dw SceneMermaidKingdom_ToRunSceneScriptSubStep
-    dw SceneMermaidKingdom_RunFieldCommandTemp0
+    dw SceneMermaidKingdom_ToBossWinScene
+    dw SceneMermaidKingdom_ShowObject
     dw SceneMermaidKingdom_ShowWarubouWaheyYouCan
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_SetFlagBit_MarkKeyEntryKindTemp0Bit6
+    dw SceneHomecoming_WaitMessage
+    dw SceneMermaidKingdom_GiveKey
 
 ; Mermaid kingdom scene, step 49: sets EVENT_SCENE_MERMAID_KINGDOM_022, marks the key of kind 3
 ; (MarkKeyEntryKindTemp0Bit6), sets bit 2 of story byte $60 and wFarmLevel 2, and resumes the
 ; script. (C1, E-0357)
-SceneMermaidKingdom_SetFlagBit_MarkKeyEntryKindTemp0Bit6::
+SceneMermaidKingdom_GiveKey::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call SetFlagBit
     ld a, $03
@@ -5702,7 +5701,7 @@ SceneMermaidKingdom_ShowWarubouWaheyYouCan::
 
 ; Mermaid kingdom scene, step 46: object 0 faces away from the player, runs field command $11, shows
 ; the scene object 32 pixels above the player and plays sound $85. (C1, E-0357)
-SceneMermaidKingdom_RunFieldCommandTemp0::
+SceneMermaidKingdom_ShowObject::
     ldh a, [hPlayerFacing]
     inc a
     inc a
@@ -5724,10 +5723,9 @@ SceneMermaidKingdom_RunFieldCommandTemp0::
     inc [hl]
     ret
 
-; Mermaid kingdom scene, step 45: runs the scene's script sub-step (RunSceneScriptSubStep). (C1,
-; E-0357)
-SceneMermaidKingdom_ToRunSceneScriptSubStep::
-    farcall RunSceneScriptSubStep
+; Mermaid kingdom scene, step 45: runs the scene's script sub-step (BossWinScene). (C1, E-0357)
+SceneMermaidKingdom_ToBossWinScene::
+    farcall BossWinScene
     ret
 
 ; Mermaid kingdom scene, step 44: warps to map 5, screen (1, 0) at ($50, $30) (transition kind 1)
@@ -5789,7 +5787,7 @@ SceneMermaidKingdom_ShowAVoiceEchoedFrom::
     ret
 
 ; Mermaid kingdom scene, step 39: waits $1E frames. (C1, E-0357)
-SceneMermaidKingdom_AdvanceScriptStep::
+SceneMermaidKingdom_Wait::
     ld b, $1e
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -5799,7 +5797,7 @@ SceneMermaidKingdom_AdvanceScriptStep::
 
 ; Mermaid kingdom scene, step 38: the scene object moves up and right a pixel a frame with a hop.
 ; (C1, E-0357)
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep::
+SceneMermaidKingdom_DriftObject::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
     ld hl, wObject5 + SCRIPTOBJ_Y
@@ -5813,7 +5811,7 @@ SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep::
 
 ; Mermaid kingdom scene, step 37: walks the player left to X $50, then sets
 ; EVENT_SCENE_MERMAID_KINGDOM_05F. (C1, E-0357)
-SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo::
+SceneMermaidKingdom_WalkPlayerLeft::
     ld a, $50
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardStepPtrLo
@@ -5910,7 +5908,7 @@ SceneMermaidKingdom_ShowKamehaIWasStupid::
 
 ; Mermaid kingdom scene, step 33: walks the player down to Y $10, right to X $80, then down to Y
 ; $30. (C1, E-0357)
-SceneMermaidKingdom_StepPlayerDownTowardStepPtrLo::
+SceneMermaidKingdom_WalkPlayerDown::
     ld a, [wScriptParam0]
     or a
     jr nz, .skip
@@ -5952,7 +5950,7 @@ SceneMermaidKingdom_StepPlayerDownTowardStepPtrLo::
 
 ; Mermaid kingdom scene, step 32: the scene object rises two pixels a frame with a hop; then sound
 ; $65 and one sprite slot. (C1, E-0357)
-SceneMermaidKingdom_SetSpriteSlotCount::
+SceneMermaidKingdom_RaiseObject::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     dec a
     dec a
@@ -5971,7 +5969,7 @@ SceneMermaidKingdom_SetSpriteSlotCount::
 ; Mermaid kingdom scene, step 31: objects 1 and 2 face opposite ways, swapping between right and
 ; left every 16 frames, for $78 frames; then shows the scene object, plays sound $65 and hides
 ; object 1. (C1, E-0357)
-SceneMermaidKingdom_QueueSoundEffect::
+SceneMermaidKingdom_TurnObjects::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -6007,7 +6005,7 @@ SceneMermaidKingdom_QueueSoundEffect::
 
 ; Mermaid kingdom scene, step 30: sets bit 3 of story byte $62 and EVENT_SCENE_MERMAID_KINGDOM_07F
 ; and starts a transition in place (transition kind 0) with a fade. (C1, E-0357)
-SceneMermaidKingdom_SetFlagBit::
+SceneMermaidKingdom_SetFlags::
     ld a, [wStoryFlags + $62]
     set 3, a
     ld [wStoryFlags + $62], a
@@ -6029,7 +6027,7 @@ SceneMermaidKingdom_ToScriptStepShakeScreen::
     ret
 
 ; Mermaid kingdom scene, step 20: object 2 hops; then sound $63. (C1, E-0357)
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2::
+SceneMermaidKingdom_HopObject2::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -6047,7 +6045,7 @@ SceneMermaidKingdom_ToScriptStepDeltaThenMessage_2::
     ret
 
 ; Mermaid kingdom scene, step 17: the scene object sinks with a hop and is hidden. (C1, E-0357)
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE::
+SceneMermaidKingdom_SinkObject::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     inc a
     ld [wObject5 + SCRIPTOBJ_Y], a
@@ -6069,7 +6067,7 @@ SceneMermaidKingdom_ToScriptStepDeltaThenMessage_3::
 
 ; Mermaid kingdom scene, step 14: loads new sprites: object 0 becomes sprite $E3 (graphics to VRAM
 ; $8500) and object 1 sprite $D6 (to $8600), and the object palettes are reloaded. (C1, E-0357)
-SceneMermaidKingdom_DecompressGraphicsTemp0ToTemp4::
+SceneMermaidKingdom_LoadSprites::
     xor a
     ld [wSpriteSlots + $1], a
     ld a, $e3
@@ -6128,7 +6126,7 @@ SceneMermaidKingdom_ShowKahahaha::
 
 ; Mermaid kingdom scene, step 11: walks objects 0 and 1 down to Y $50; then runs field command 8 and
 ; shows the scene object at ($40, $60). (C1, E-0357)
-SceneMermaidKingdom_StepObjectTowardCoord::
+SceneMermaidKingdom_WalkDown::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $00
@@ -6169,7 +6167,7 @@ SceneMermaidKingdom_ToScriptStepDeltaThenMessage::
 
 ; Mermaid kingdom scene, step 8: object 2 moves right two pixels a frame up to X $80 while $3C
 ; frames pass. (C1, E-0357)
-SceneMermaidKingdom_StepScriptParam0Counter_Bank0F::
+SceneMermaidKingdom_MoveObject2::
     ld a, [wObject2 + OBJ_X]
     cp $80
     jr z, .call_step_script_param0_counter_bank0_f
@@ -6224,7 +6222,7 @@ SceneMermaidKingdom_WriteScriptParam0AndObject1Etc::
 ; Mermaid kingdom scene, step 6: object 1 walks (two pixels a frame, facing its way) left to X $40,
 ; down to Y $50, right to X $60, up to Y $30, left to X $40 and down to Y $40; then faces right and
 ; stops, and object 2 becomes sprite $45 (FieldSpriteGfx45 to VRAM $8700). (C1, E-0357)
-SceneMermaidKingdom_SetBit2AtHL_B0F::
+SceneMermaidKingdom_WalkObject1::
     ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B0F
     ld a, [wScriptParam0]
@@ -6397,18 +6395,18 @@ SceneMermaidKingdom_WriteScriptStepAndStepPtrLoEtc::
 SceneKamehaFlees::
     ld a, [wScriptStep]
     jumptable
-    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
-    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
-    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
-    dw SceneKamehaFlees_StepScriptParam0Counter_Bank0F
-    dw SceneKamehaFlees_ClearBit2AtHL_Bank0F
-    dw SceneKamehaFlees_UpdateFollowersOnStep_Bank0F
-    dw SceneKamehaFlees_UpdateFollowersOnStep_Bank0F_ClearBit1AtHL_Bank0F
-    dw SceneKamehaFlees_StepScriptParam0Counter_Bank0F
+    dw SceneKamehaFlees_Gather
+    dw SceneKamehaFlees_Gather
+    dw SceneKamehaFlees_Gather
+    dw SceneKamehaFlees_Wait
+    dw SceneKamehaFlees_MoveUp
+    dw SceneKamehaFlees_WalkPlayerUp
+    dw SceneKamehaFlees_KeepInStep
+    dw SceneKamehaFlees_Wait
     dw SceneKamehaFlees_WriteObject2AndTemp0Etc
-    dw SceneKamehaFlees_RedrawColumnsBesideScreen
-    dw SceneKamehaFlees_AddStepDeltaToPointedByte
-    dw SceneKamehaFlees_StepObjectTowardCoord
+    dw SceneKamehaFlees_DropObject
+    dw SceneKamehaFlees_ShakeAndHop
+    dw SceneKamehaFlees_WalkRight
     dw SceneKamehaFlees_ToSceneKamehaFlees_SetFlagBit
 
 ; Kameha flees scene, step 12: moves the scene object (below). (C1, E-0357)
@@ -6445,7 +6443,7 @@ SceneKamehaFlees_SetFlagBit_Data::
 
 ; Kameha flees scene, step 11: moves the scene object as above while objects 0-2 walk right (two
 ; pixels a frame) to X $A0; then draws no sprite slots. (C1, E-0357)
-SceneKamehaFlees_StepObjectTowardCoord::
+SceneKamehaFlees_WalkRight::
     call SceneKamehaFlees_SetFlagBit
     ld a, $00
     ld [wStepPtrHi], a
@@ -6480,7 +6478,7 @@ SceneKamehaFlees_StepObjectTowardCoord::
 ; Kameha flees scene, step 10: objects 0-2 hop while the screen shakes sideways (2 pixels every
 ; other frame) for $20 frames; then the scroll is rounded to a whole tile, sound $7D plays and every
 ; field sprite is shown again. (C1, E-0357)
-SceneKamehaFlees_AddStepDeltaToPointedByte::
+SceneKamehaFlees_ShakeAndHop::
     ld de, wSpriteSlots + $c
     ld a, e
     ld [wStepPtrLo], a
@@ -6529,7 +6527,7 @@ SceneKamehaFlees_AddStepDeltaToPointedByte::
 ; Kameha flees scene, step 9: the scene object falls two pixels a frame to Y $40; then redraws the
 ; columns beside the screen, plays sound $66 and hides the followers (hFieldDrawFlags $0E). (C1,
 ; E-0357)
-SceneKamehaFlees_RedrawColumnsBesideScreen::
+SceneKamehaFlees_DropObject::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     inc a
     inc a
@@ -6605,7 +6603,7 @@ SceneKamehaFlees_WriteObject2AndTemp0Etc::
     ret
 
 ; Kameha flees scene, step 3: waits $3C frames, then sets objects 0-2 moving. (C1, E-0357)
-SceneKamehaFlees_StepScriptParam0Counter_Bank0F::
+SceneKamehaFlees_Wait::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -6621,7 +6619,7 @@ SceneKamehaFlees_StepScriptParam0Counter_Bank0F::
 
 ; Kameha flees scene, step 6: keeps the followers in step for $1E frames, then restarts the player's
 ; animation (bit 1). (C1, E-0357)
-SceneKamehaFlees_UpdateFollowersOnStep_Bank0F_ClearBit1AtHL_Bank0F::
+SceneKamehaFlees_KeepInStep::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
@@ -6641,7 +6639,7 @@ SceneKamehaFlees_UpdateFollowersOnStep_Bank0F_ClearBit1AtHL_Bank0F::
 
 ; Kameha flees scene, step 5: walks the player up two pixels a frame (the followers following) to Y
 ; $30. (C1, E-0357)
-SceneKamehaFlees_UpdateFollowersOnStep_Bank0F::
+SceneKamehaFlees_WalkPlayerUp::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
@@ -6661,7 +6659,7 @@ SceneKamehaFlees_UpdateFollowersOnStep_Bank0F::
 ; Kameha flees scene, step 4: the player faces down while objects 0-2 move up two pixels a frame
 ; until object 0 reaches Y $70; then they stop, the player's animation is frozen (bit 1) and sound
 ; $63 plays. (C1, E-0357)
-SceneKamehaFlees_ClearBit2AtHL_Bank0F::
+SceneKamehaFlees_MoveUp::
     xor a
     ldh [hPlayerFacing], a
     ld a, [wObject2 + OBJ_Y]
@@ -6694,7 +6692,7 @@ SceneKamehaFlees_ClearBit2AtHL_Bank0F::
 
 ; Kameha flees scene, step 0: moves the followers to the leader and sets objects 0-2 moving. (C1,
 ; E-0357)
-SceneKamehaFlees_ScriptStepMoveFollowersToLeader::
+SceneKamehaFlees_Gather::
     farcall ScriptStepMoveFollowersToLeader
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
@@ -6710,8 +6708,8 @@ SceneKamehaFlees_ScriptStepMoveFollowersToLeader::
 SceneCrewFollows::
     ld a, [wScriptStep]
     jumptable
-    dw SceneCrewFollows_SetBit2AtHL_B0F
-    dw SceneCrewFollows_StepScriptParam0Counter_Bank0F
+    dw SceneCrewFollows_MoveRight
+    dw SceneCrewFollows_ShakeScreen
     dw SceneCrewFollows_SetBit2AtHL_B0FAndStep
     dw SceneCrewFollows_WriteScriptParam0AndSpriteSlotsEtc
 
@@ -6761,7 +6759,7 @@ SceneCrewFollows_SetBit2AtHL_B0FAndStep::
 ; Crew follows scene, step 1: shakes the screen sideways for $78 frames, rounds the scroll to a
 ; whole tile, sets EVENT_SCENE_CREW_FOLLOWS_07D and bit 2 of story byte $62, starts a transition in
 ; place (kind 0) with a fade and plays sound 0. (C1, E-0357)
-SceneCrewFollows_StepScriptParam0Counter_Bank0F::
+SceneCrewFollows_ShakeScreen::
     ld a, [wFrameCounterLo]
     and $03
     bit 0, a
@@ -6801,7 +6799,7 @@ SceneCrewFollows_StepScriptParam0Counter_Bank0F::
 
 ; Crew follows scene, step 0: objects 0-2 move right two pixels a frame until object 0 reaches X
 ; $60; then they stop and sound $7D plays. (C1, E-0357)
-SceneCrewFollows_SetBit2AtHL_B0F::
+SceneCrewFollows_MoveRight::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
     ld hl, wObject1 + OBJ_FLAGS
@@ -6892,12 +6890,12 @@ SceneKamehaCaught_WriteSpriteSlotCountAndScriptStartRequest::
 GiveItemBlink::
     ld a, [wScriptStep]
     jumptable
-    dw GiveItemBlink_TestFlagBit
+    dw GiveItemBlink_BlinkAndGive
 
 ; Item-giving blink, step 0: with EVENT_GIVE_ITEM_BLINK set blinks object 0 (at Y $40) out and, when
 ; EVENT_YOU_WILL_THANK_YOU_LET is set, adds item $33 to the inventory; otherwise blinks object 0 (at
 ; Y $20) out. Then draws no sprite slots and resumes the script. (C1, E-0357)
-GiveItemBlink_TestFlagBit::
+GiveItemBlink_BlinkAndGive::
     ld de, EVENT_GIVE_ITEM_BLINK
     call TestFlagBit
     jr c, .set_temp0_to_00
@@ -6945,20 +6943,20 @@ GiveItemBlink_TestFlagBit::
 SceneWhoAreYou::
     ld a, [wScriptStep]
     jumptable
-    dw SceneWhoAreYou_SetBit2AtHL_B0F
+    dw SceneWhoAreYou_MoveDown
     dw SceneWhoAreYou_ShowTchMadeMeWaste
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneWhoAreYou_ToScriptStepDeltaThenNextStep
     dw SceneWhoAreYou_ShowKamehaHeyYoureHero
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneWhoAreYou_StepObjectTowardCoord
+    dw SceneHomecoming_WaitMessage
+    dw SceneWhoAreYou_WalkObject0
     dw SceneWhoAreYou_WriteScriptParam0AndSpriteSlotsEtc
-    dw SceneWhoAreYou_UpdateFollowersOnStep_Bank0F
-    dw SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_SetScriptParam0
+    dw SceneWhoAreYou_WalkPlayerRight
+    dw SceneWhoAreYou_KeepInStep
 
 ; Who are you scene, step 9: keeps the followers in step for $1E frames, restarts the player's
 ; animation (bit 1), sets EVENT_SCENE_WHO_ARE_YOU and resumes the script. (C1, E-0357)
-SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_SetScriptParam0::
+SceneWhoAreYou_KeepInStep::
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerX]
@@ -6979,7 +6977,7 @@ SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_SetScriptParam0::
 
 ; Who are you scene, step 8: walks the player right two pixels a frame (the followers following) to
 ; X $70. (C1, E-0357)
-SceneWhoAreYou_UpdateFollowersOnStep_Bank0F::
+SceneWhoAreYou_WalkPlayerRight::
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerX]
@@ -7043,7 +7041,7 @@ SceneWhoAreYou_WriteScriptParam0AndSpriteSlotsEtc::
 
 ; Who are you scene, step 6: walks object 0 left to X $30, then down to Y $70; then object 0 faces
 ; right and the player left. (C1, E-0357)
-SceneWhoAreYou_StepObjectTowardCoord::
+SceneWhoAreYou_WalkObject0::
     ld a, [wSpriteSlots + $b]
     cp $30
     jr z, .set_step_ptr_hi_to_00
@@ -7120,7 +7118,7 @@ SceneWhoAreYou_ShowTchMadeMeWaste::
 ; Who are you scene, step 0: objects 0-2 move down a pixel a frame (moving) until object 0 reaches Y
 ; $40; then they stop, object 2 faces left and 'Heh, that old man, he ...' (message $0831). (C1,
 ; E-0357)
-SceneWhoAreYou_SetBit2AtHL_B0F::
+SceneWhoAreYou_MoveDown::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
     ld hl, wObject1 + OBJ_FLAGS
@@ -7162,7 +7160,7 @@ ShakeScreen::
     jumptable
     dw ShakeScreen_RedrawColumnsBesideScreenAndStep
     dw ShakeScreen_ToScriptStepShakeScreen
-    dw ShakeScreen_QueueSoundEffect
+    dw ShakeScreen_Finish
 
 ; Screen shake, step 0: redraws the columns beside the screen and plays sound $7D. (C1, E-0357)
 ShakeScreen_RedrawColumnsBesideScreenAndStep::
@@ -7180,7 +7178,7 @@ ShakeScreen_ToScriptStepShakeScreen::
     ret
 
 ; Screen shake, step 2: plays sound 0 and resumes the script. (C1, E-0357)
-ShakeScreen_QueueSoundEffect::
+ShakeScreen_Finish::
     ld a, $00
     call QueueSoundEffect
     ld a, $80
@@ -7240,47 +7238,47 @@ ScriptStepShakeScreen::
 SceneRivalDefeated::
     ld a, [wScriptStep]
     jumptable
-    dw SceneRivalDefeated_ScriptStepBlinkObjectTemp0
+    dw SceneRivalDefeated_BlinkOut
     dw SceneRivalDefeated_ShowKingYouThievesTheres
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneRivalDefeated_StepPlayerLeftTowardStepPtrLo
-    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
-    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
-    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
+    dw SceneHomecoming_WaitMessage
+    dw SceneRivalDefeated_WalkPlayerLeft
+    dw SceneKamehaFlees_Gather
+    dw SceneKamehaFlees_Gather
+    dw SceneKamehaFlees_Gather
     dw SceneRivalDefeated_ShowKingSurrenderAndLive
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneRivalDefeated_QueueSoundEffect
+    dw SceneHomecoming_WaitMessage
+    dw SceneRivalDefeated_PlaySounds
     dw SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneRivalDefeated_QueueSoundEffect
+    dw SceneHomecoming_WaitMessage
+    dw SceneRivalDefeated_PlaySounds
     dw SceneRivalDefeated_Msg019C_UrgahMercyISurrender
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneRivalDefeated_DecompressToVRAM
-    dw SceneRivalDefeated_StepObjectTowardCoord
+    dw SceneHomecoming_WaitMessage
+    dw SceneRivalDefeated_PlaceObjects
+    dw SceneRivalDefeated_WalkObjectsDown
     dw SceneRivalDefeated_ShowKingWahahWeveBagged
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_WriteObject5AndScriptTemp4Etc
     dw SceneRivalDefeated_ShowKingThisIsThe
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_ShowHeroObtainedTheTidalBell
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_Msg01A0_KingIveBeenA
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_ShowAVoiceEchoedFrom
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_Msg01A2_WaheyCanYouHear
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_ShowWarubouWaheyYouDid
-    dw SceneRivalDefeated_ToRunSceneScriptSubStep
-    dw SceneRivalDefeated_RunFieldCommandTemp0
+    dw SceneRivalDefeated_ToBossWinScene
+    dw SceneRivalDefeated_ShowObject
     dw SceneRivalDefeated_ShowWarubouWaheyTheAbility
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneRivalDefeated_SetFlagBit
+    dw SceneHomecoming_WaitMessage
+    dw SceneRivalDefeated_GiveKey
 
 ; Rival defeated scene, step 35: sets EVENT_SCENE_RIVAL_DEFEATED_021, marks the key of kind 2
 ; (MarkKeyEntryKindTemp0Bit6), sets bit 1 of story byte $60 and wFarmLevel 1, and resumes the
 ; script. (C1, E-0357)
-SceneRivalDefeated_SetFlagBit::
+SceneRivalDefeated_GiveKey::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call SetFlagBit
     ld a, $02
@@ -7318,7 +7316,7 @@ SceneRivalDefeated_ShowWarubouWaheyTheAbility::
 
 ; Rival defeated scene, step 32: object 0 faces away from the player, runs field command $11, shows
 ; the scene object 32 pixels above the player and plays sound $85. (C1, E-0357)
-SceneRivalDefeated_RunFieldCommandTemp0::
+SceneRivalDefeated_ShowObject::
     ldh a, [hPlayerFacing]
     inc a
     inc a
@@ -7340,10 +7338,9 @@ SceneRivalDefeated_RunFieldCommandTemp0::
     inc [hl]
     ret
 
-; Rival defeated scene, step 31: runs the scene's script sub-step (RunSceneScriptSubStep). (C1,
-; E-0357)
-SceneRivalDefeated_ToRunSceneScriptSubStep::
-    farcall RunSceneScriptSubStep
+; Rival defeated scene, step 31: runs the scene's script sub-step (BossWinScene). (C1, E-0357)
+SceneRivalDefeated_ToBossWinScene::
+    farcall BossWinScene
     ret
 
 ; Rival defeated scene, step 30: warps to map 5, screen (1, 0) at ($50, $30) (transition kind 1)
@@ -7492,7 +7489,7 @@ SceneRivalDefeated_ShowKingWahahWeveBagged::
 
 ; Rival defeated scene, step 16: walks objects 0-3 down to Y $A0, off the screen; then one sprite
 ; slot, object 0 becomes sprite $22 (FieldSpriteGfx22 to VRAM $8500), hidden. (C1, E-0357)
-SceneRivalDefeated_StepObjectTowardCoord::
+SceneRivalDefeated_WalkObjectsDown::
     ld a, $00
     ld [wStepTarget], a
     ld a, $a0
@@ -7529,7 +7526,7 @@ SceneRivalDefeated_StepObjectTowardCoord::
 ; Rival defeated scene, step 15: places the objects off the screen (object 0 at Y $D0, 1 at $C0, 2
 ; at $E0, 3 at $B0) and gives objects 0 and 1 sprite $27 (FieldSpriteGfx27 to VRAM $8500 and $8600).
 ; (C1, E-0357)
-SceneRivalDefeated_DecompressToVRAM::
+SceneRivalDefeated_PlaceObjects::
     ld a, $e0
     ld [wObject2 + OBJ_Y], a
     ld a, $b0
@@ -7572,7 +7569,7 @@ SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss::
 
 ; Rival defeated scene, step 9: plays sound $7C at once and $81 at frame $3C, and waits $78 frames.
 ; (C1, E-0357)
-SceneRivalDefeated_QueueSoundEffect::
+SceneRivalDefeated_PlaySounds::
     ld a, [wScriptParam0]
     or a
     jr nz, .cp_3C
@@ -7624,7 +7621,7 @@ SceneRivalDefeated_ShowKingSurrenderAndLive::
     ret
 
 ; Rival defeated scene, step 3: walks the player left to X $30 and turns it right. (C1, E-0357)
-SceneRivalDefeated_StepPlayerLeftTowardStepPtrLo::
+SceneRivalDefeated_WalkPlayerLeft::
     ld a, $30
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardStepPtrLo
@@ -7666,7 +7663,7 @@ SceneRivalDefeated_ShowKingYouThievesTheres::
 
 ; Rival defeated scene, step 0: blinks object 0 (at Y $10) out; then sets bit 5 of story byte $61
 ; and EVENT_SCENE_RIVAL_DEFEATED_05A. (C1, E-0357)
-SceneRivalDefeated_ScriptStepBlinkObjectTemp0::
+SceneRivalDefeated_BlinkOut::
     xor a
     ldh [hTemp0], a
     ld a, $10
@@ -7690,10 +7687,10 @@ SceneRivalDefeated_ScriptStepBlinkObjectTemp0::
 SceneWaterShortage::
     ld a, [wScriptStep]
     jumptable
-    dw SceneWaterShortage_StepPlayerLeftTowardStepPtrLo
-    dw SceneWaterShortage_ScriptStartFadeAndAdvanceStep
-    dw SceneWaterShortage_StepPlayerDownTowardStepPtrLo
-    dw SceneWaterShortage_SetStepPtrLo
+    dw SceneWaterShortage_WalkPlayer
+    dw SceneWaterShortage_Warp
+    dw SceneWaterShortage_WalkDown
+    dw SceneWaterShortage_WalkAndWarp
     dw SceneWaterShortage_SetScriptStartRequestTo80
 
 ; Water shortage scene, step 4: resumes the script. (C1, E-0357)
@@ -7704,7 +7701,7 @@ SceneWaterShortage_SetScriptStartRequestTo80::
 
 ; Water shortage scene, step 3: walks the player left to X $20; then warps to map $2E, screen (0, 0)
 ; at ($20, $60) (transition kind 1) with a fade and plays sound $60. (C1, E-0357)
-SceneWaterShortage_SetStepPtrLo::
+SceneWaterShortage_WalkAndWarp::
     ld a, $20
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardStepPtrLo
@@ -7730,7 +7727,7 @@ SceneWaterShortage_SetStepPtrLo::
 ; Water shortage scene, step 2: the player walks down to Y $60, then left to X $30, while object 0
 ; walks down to Y $60, then left to X $20 (wScriptParam0's low and high nibbles track the two legs);
 ; when object 0 arrives it is hidden. (C1, E-0357)
-SceneWaterShortage_StepPlayerDownTowardStepPtrLo::
+SceneWaterShortage_WalkDown::
     ld a, [wScriptParam0]
     and $0f
     jr nz, .set_step_ptr_lo_to_30
@@ -7787,7 +7784,7 @@ SceneWaterShortage_StepPlayerDownTowardStepPtrLo::
 
 ; Water shortage scene, step 1: warps to map $25, screen (0, 0) at ($40, $08) (transition kind 1)
 ; with a fade and plays sound $60. (C1, E-0357)
-SceneWaterShortage_ScriptStartFadeAndAdvanceStep::
+SceneWaterShortage_Warp::
     ld a, $25
     ldh [hMapId], a
     xor a
@@ -7805,7 +7802,7 @@ SceneWaterShortage_ScriptStartFadeAndAdvanceStep::
     ret
 
 ; Water shortage scene, step 0: walks the player left to X $40, then down to Y $80. (C1, E-0357)
-SceneWaterShortage_StepPlayerLeftTowardStepPtrLo::
+SceneWaterShortage_WalkPlayer::
     ldh a, [hPlayerX]
     cp $40
     jr z, .set_step_ptr_lo_to_80
@@ -7832,15 +7829,15 @@ SceneMonsterInspection::
     ld a, [wScriptStep]
     jumptable
     dw SceneMonsterInspection_ShowAndThatWasThe
-    dw SceneMonsterInspection_RunMessageBoxFar_Bank0F
+    dw SceneMonsterInspection_PlaySound
     dw SceneMonsterInspection_ShowNextMonstersWillPerform
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMonsterInspection_StepPlayerUpTowardStepPtrLo
-    dw SceneMonsterInspection_StepPlayerUpTowardStepPtrLo_ClearBit2AtHL_Bank0F
-    dw SceneMonsterInspection_StepScriptParam0Counter_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneMonsterInspection_WalkUpAndWarp
+    dw SceneMonsterInspection_WalkUp
+    dw SceneMonsterInspection_Wait
     dw SceneMonsterInspection_ToRunScriptSubStep
-    dw SceneMonsterInspection_StepPlayerDownTowardStepPtrLo
-    dw SceneMonsterInspection_PlayMapMusic
+    dw SceneMonsterInspection_WalkDownAndWarp
+    dw SceneMonsterInspection_Finish
 
 ; Monster inspection scene, step 0: moves to map $25, screen (0, 0) at ($50, $30) (transition kind
 ; 3) with a fade; 'And that was the firebreather!' (message $0151). (C1, E-0357)
@@ -7862,7 +7859,7 @@ SceneMonsterInspection_ShowAndThatWasThe::
     ret
 
 ; Monster inspection scene, step 1: after the box closes, plays sound $6D. (C1, E-0357)
-SceneMonsterInspection_RunMessageBoxFar_Bank0F::
+SceneMonsterInspection_PlaySound::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -7889,7 +7886,7 @@ SceneMonsterInspection_ShowNextMonstersWillPerform::
 
 ; Monster inspection scene, step 4: walks the player up to Y 0; then moves to map $26, screen (0, 0)
 ; at ($50, $80) (transition kind 3) with a fade and plays sound $60. (C1, E-0357)
-SceneMonsterInspection_StepPlayerUpTowardStepPtrLo::
+SceneMonsterInspection_WalkUpAndWarp::
     ld a, $00
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardStepPtrLo
@@ -7914,7 +7911,7 @@ SceneMonsterInspection_StepPlayerUpTowardStepPtrLo::
 
 ; Monster inspection scene, step 5: walks the player up to Y $40; then ends its fast animation (bit
 ; 2), faces it up and plays sound $6D. (C1, E-0357)
-SceneMonsterInspection_StepPlayerUpTowardStepPtrLo_ClearBit2AtHL_Bank0F::
+SceneMonsterInspection_WalkUp::
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardStepPtrLo
@@ -7935,7 +7932,7 @@ SceneMonsterInspection_StepPlayerUpTowardStepPtrLo_ClearBit2AtHL_Bank0F::
 
 ; Monster inspection scene, step 6: waits $B4 frames, restarts the map music and clears the
 ; sub-step. (C1, E-0357)
-SceneMonsterInspection_StepScriptParam0Counter_Bank0F::
+SceneMonsterInspection_Wait::
     ld b, $b4
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -7954,7 +7951,7 @@ SceneMonsterInspection_ToRunScriptSubStep::
 ; Monster inspection scene, step 8: plays sound $6D on the first frame and walks the player down to
 ; Y $80; then warps to map $25, screen (1, 0) at ($30, $40) (transition kind 1) with a fade, music 2
 ; and sound $60. (C1, E-0357)
-SceneMonsterInspection_StepPlayerDownTowardStepPtrLo::
+SceneMonsterInspection_WalkDownAndWarp::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_lo_to_80
@@ -7993,7 +7990,7 @@ SceneMonsterInspection_StepPlayerDownTowardStepPtrLo::
 
 ; Monster inspection scene, step 9: plays the map music, sets bit 0 of story byte $61 and resumes
 ; the script. (C1, E-0357)
-SceneMonsterInspection_PlayMapMusic::
+SceneMonsterInspection_Finish::
     farcall PlayMapMusic
     ld a, [wStoryFlags + $61]
     or $01
@@ -8008,18 +8005,18 @@ SceneMonsterInspection_PlayMapMusic::
 SceneLongFaces::
     ld a, [wScriptStep]
     jumptable
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneLongFaces_StartMessageHL_B0F
-    dw SceneLongFaces_RunMessageBoxFar_Bank0F
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneLongFaces_StepObjectTowardCoord
+    dw SceneHomecoming_WaitMessage
+    dw SceneLongFaces_Answer
+    dw SceneLongFaces_AskAgain
+    dw SceneHomecoming_WaitMessage
+    dw SceneLongFaces_WalkObject0
     dw SceneLongFaces_ShowSlashDontWorryIm
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
     dw SceneLongFaces_ShowSlashAndHeroHas
     dw SceneLongFaces_ShowTaraThenItsYour
-    dw SceneLongFaces_ScriptApplyStepDeltaAtDE
+    dw SceneLongFaces_HopPlayer
     dw SceneLongFaces_ShowSlashThatsSettledThen
-    dw SceneLongFaces_RunMessageBoxFar_Bank0F_ScriptStartFadeAndAdvanceStep
+    dw SceneLongFaces_Fade
     dw SceneLongFaces_WriteStoryFlagsAndScriptStartRequest
 
 ; Long faces scene, step 12: sets bit 0 of story byte $60 and resumes the script. (C1, E-0357)
@@ -8033,7 +8030,7 @@ SceneLongFaces_WriteStoryFlagsAndScriptStartRequest::
 
 ; Long faces scene, step 11: after the box closes, starts a transition in place (kind 1) with a
 ; fade, sets the party count to 1 and EVENT_SCENE_LONG_FACES_002. (C1, E-0357)
-SceneLongFaces_RunMessageBoxFar_Bank0F_ScriptStartFadeAndAdvanceStep::
+SceneLongFaces_Fade::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -8062,7 +8059,7 @@ SceneLongFaces_ShowSlashThatsSettledThen::
 
 ; Long faces scene, step 9: the player hops (the first follower at the same height); then the player
 ; faces right and the follower left. (C1, E-0357)
-SceneLongFaces_ScriptApplyStepDeltaAtDE::
+SceneLongFaces_HopPlayer::
     ld de, hPlayerY
     call ScriptApplyStepDeltaAtDE
     push af
@@ -8150,7 +8147,7 @@ SceneLongFaces_ShowSlashDontWorryIm::
 
 ; Long faces scene, step 4: walks object 0 left to X $60, up to Y $40, then right to X $78, and
 ; turns it down. (C1, E-0357)
-SceneLongFaces_StepObjectTowardCoord::
+SceneLongFaces_WalkObject0::
     ld a, [wScriptParam0]
     or a
     jr nz, .check_sprite_slots
@@ -8202,7 +8199,7 @@ SceneLongFaces_StepObjectTowardCoord::
 
 ; Long faces scene, step 2: after the box closes, moves the message number back one and returns to
 ; step 1 to ask again. (C1, E-0357)
-SceneLongFaces_RunMessageBoxFar_Bank0F::
+SceneLongFaces_AskAgain::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -8223,7 +8220,7 @@ SceneLongFaces_RunMessageBoxFar_Bank0F::
 ; choice shows the message two after it in the open box and skips to step 3; another shows the next
 ; one in the open box, kept open, and goes on to step 2 (the flags are written back into
 ; wMessageGroup). (C1, E-0357)
-SceneLongFaces_StartMessageHL_B0F::
+SceneLongFaces_Answer::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .read_message_index
@@ -8267,15 +8264,15 @@ SceneLongFaces_StartMessageHL_B0F::
 SceneWarubouWarning::
     ld a, [wScriptStep]
     jumptable
-    dw SceneWarubouWarning_RunMessageBoxFar_Bank0F
+    dw SceneWarubouWarning_Warp
     dw SceneWarubouWarning_ShowTaraIfWeDont
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneWarubouWarning_StartMessageHL_B0F
-    dw PersonalityMessage_RunMessageBoxFar_Bank0F
+    dw SceneHomecoming_WaitMessage
+    dw SceneWarubouWarning_Answer
+    dw PersonalityMessage_WaitForMessage
 
 ; Warubou warning scene, step 3: the answer: the first choice shows the message after the current
 ; one, another the one after that, both with the box kept open. (C1, E-0357)
-SceneWarubouWarning_StartMessageHL_B0F::
+SceneWarubouWarning_Answer::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wTextYesNoResult]
@@ -8342,7 +8339,7 @@ SceneWarubouWarning_ShowTaraIfWeDont::
 
 ; Warubou warning scene, step 0: after the box closes, warps to map 6, screen (0, 0) at ($70, $50)
 ; (transition kind 2) with a fade. (C1, E-0357)
-SceneWarubouWarning_RunMessageBoxFar_Bank0F::
+SceneWarubouWarning_Warp::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -8366,24 +8363,24 @@ SceneWarubouWarning_RunMessageBoxFar_Bank0F::
 SceneLandHo::
     ld a, [wScriptStep]
     jumptable
-    dw SceneLandHo_ScriptStartFadeAndAdvanceStep
-    dw SceneLandHo_StepScriptParam0Counter_Bank0F
-    dw SceneLandHo_SetBit2AtHL_B0F
-    dw SceneLandHo_ComputeSpriteScrollOffsets
-    dw SceneLandHo_ComputeSpriteScrollOffsets
-    dw SceneLandHo_ComputeSpriteScrollOffsets
-    dw SceneLandHo_ComputeSpriteScrollOffsets
-    dw SceneLandHo_ComputeSpriteScrollOffsets
-    dw SceneLandHo_ComputeSpriteScrollOffsets
+    dw SceneLandHo_Warp
+    dw SceneLandHo_Wait
+    dw SceneLandHo_RaiseObject
+    dw SceneLandHo_ScrollUp
+    dw SceneLandHo_ScrollUp
+    dw SceneLandHo_ScrollUp
+    dw SceneLandHo_ScrollUp
+    dw SceneLandHo_ScrollUp
+    dw SceneLandHo_ScrollUp
     dw SceneLandHo_SetFieldActionStep
     dw SceneLandHo_WriteScriptParam0AndScrollY
     dw SceneLandHo_ShowThisIsATale
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneLandHo_ScriptStartFadeAndAdvanceStep_SetMapId
-    dw SceneLandHo_DispatchTalkEvent
+    dw SceneHomecoming_WaitMessage
+    dw SceneLandHo_WarpHome
+    dw SceneLandHo_StartTalk
 
 ; Land ho scene, step 14: starts talk event $0A of group 2 (DispatchTalkEvent). (C1, E-0357)
-SceneLandHo_DispatchTalkEvent::
+SceneLandHo_StartTalk::
     ld a, $0a
     ld [wTalkEventIndex], a
     ld a, $02
@@ -8394,7 +8391,7 @@ SceneLandHo_DispatchTalkEvent::
 ; Land ho scene, step 13: warps to map 0, screen (1, 2) at ($50, $50) (transition kind 1) with a
 ; fade; sets EVENT_SCENE_LAND_HO, player sprite mode 1, and clears wMessageIndex/wMessageGroup. (C1,
 ; E-0357)
-SceneLandHo_ScriptStartFadeAndAdvanceStep_SetMapId::
+SceneLandHo_WarpHome::
     ld a, $00
     ldh [hMapId], a
     ld a, $01
@@ -8585,7 +8582,7 @@ SceneLandHo_SetFieldActionStep::
 
 ; Land ho scene, step 3: scrolls the view up one pixel every four frames for 16 pixels, then resets
 ; the scroll to 0. (C1, E-0357)
-SceneLandHo_ComputeSpriteScrollOffsets::
+SceneLandHo_ScrollUp::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -8612,7 +8609,7 @@ SceneLandHo_ComputeSpriteScrollOffsets::
     ret
 
 ; Land ho scene, step 2: object 0 (moving) rises one pixel every four frames to Y $50. (C1, E-0357)
-SceneLandHo_SetBit2AtHL_B0F::
+SceneLandHo_RaiseObject::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
     ld a, [wScriptParam0]
@@ -8633,7 +8630,7 @@ SceneLandHo_SetBit2AtHL_B0F::
 
 ; Land ho scene, step 1: waits $3C frames, then loads the map screen above (LoadMapScreen). (C1,
 ; E-0357)
-SceneLandHo_StepScriptParam0Counter_Bank0F::
+SceneLandHo_Wait::
     ld b, $3c
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -8646,7 +8643,7 @@ SceneLandHo_StepScriptParam0Counter_Bank0F::
 
 ; Land ho scene, step 0: moves to map $1C, screen (0, 1), the player off the screen at ($E0, 0)
 ; (transition kind 3), with a fade. (C1, E-0357)
-SceneLandHo_ScriptStartFadeAndAdvanceStep::
+SceneLandHo_Warp::
     ld a, $1c
     ldh [hMapId], a
     xor a
@@ -8668,12 +8665,12 @@ ScriptCommand76_Run::
     jumptable
     dw ScriptCommand76_Run_ShowTheIslandIsSinking
     dw ScriptCommand76_Run_ShowTheIslandIsSinking
-    dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw ScriptCommand76_Run_SetFlagBit
+    dw SceneHomecoming_WaitMessage
+    dw ScriptCommand76_Run_PlaceFollower
 
 ; Script command $76, step 3: plays sound $76, sets EVENT_SCENE_LAND_HO, puts the first follower
 ; facing left at ($60, $50), hides object 3 and resumes the script. (C1, E-0357)
-ScriptCommand76_Run_SetFlagBit::
+ScriptCommand76_Run_PlaceFollower::
     ld a, $76
     call QueueSoundEffect
     ld de, EVENT_SCENE_LAND_HO
@@ -8719,14 +8716,14 @@ ScriptCommand76_Run_ShowTheIslandIsSinking::
 SceneAtSea::
     ld a, [wScriptStep]
     jumptable
-    dw SceneAtSea_ScriptStartFadeAndAdvanceStep
-    dw SceneAtSea_StepScriptParam0Counter_Bank0F
+    dw SceneAtSea_Warp
+    dw SceneAtSea_Wait
     dw SceneAtSea_WriteObject3
-    dw SceneAtSea_ScriptApplyStepDeltaAtDE
+    dw SceneAtSea_MoveObject3
 
 ; At sea scene, step 3: object 3 moves left and down a pixel a frame with a hop; then the script
 ; resumes. (C1, E-0357)
-SceneAtSea_ScriptApplyStepDeltaAtDE::
+SceneAtSea_MoveObject3::
     ld hl, wObject3 + OBJ_X
     dec [hl]
     ld hl, wObject3 + OBJ_Y
@@ -8753,7 +8750,7 @@ SceneAtSea_WriteObject3::
     ret
 
 ; At sea scene, step 1: waits $5A frames. (C1, E-0357)
-SceneAtSea_StepScriptParam0Counter_Bank0F::
+SceneAtSea_Wait::
     ld b, $5a
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -8763,7 +8760,7 @@ SceneAtSea_StepScriptParam0Counter_Bank0F::
 
 ; At sea scene, step 0: moves to map $1D, screen (1, 0) at ($50, $40) (transition kind 2) with a
 ; fade and sets player sprite mode 1. (C1, E-0357)
-SceneAtSea_ScriptStartFadeAndAdvanceStep::
+SceneAtSea_Warp::
     ld a, $1d
     ldh [hMapId], a
     ld a, $01
@@ -8787,9 +8784,9 @@ SceneAtSea_ScriptStartFadeAndAdvanceStep::
 SceneVaultSettled::
     ld a, [wScriptStep]
     jumptable
-    dw SceneVaultSettled_ScriptApplyStepDeltaAtDE
+    dw SceneVaultSettled_HopFollower
     dw SceneVaultSettled_ShowTaraWellBeOK
-    dw PersonalityMessage_RunMessageBoxFar_Bank0F
+    dw PersonalityMessage_WaitForMessage
 
 ; Vault settled scene, step 1: Tara's 'We'll be OK! I'm going ...' (message $0021); Cobi's line
 ; $001F is behind EVENT_NEVER_SET. (C1, E-0357)
@@ -8809,7 +8806,7 @@ SceneVaultSettled_ShowTaraWellBeOK::
     ret
 
 ; Vault settled scene, step 0: the first follower faces the player's way and hops. (C1, E-0357)
-SceneVaultSettled_ScriptApplyStepDeltaAtDE::
+SceneVaultSettled_HopFollower::
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
     ld de, wFollowerRecords + $2
@@ -8826,13 +8823,13 @@ SceneHorsingAround::
     ld a, [wScriptStep]
     jumptable
     dw SceneHorsingAround_WriteMessageIndexAndMessageGroup
-    dw SceneHorsingAround_StepObjectTowardCoord
+    dw SceneHorsingAround_WalkObject0
     dw SceneHorsingAround_WriteMessageIndex
-    dw SceneHorsingAround_ScriptApplyStepDeltaAtDE
+    dw SceneHorsingAround_HopObject0
 
 ; Horsing around scene, step 3: the player keeps walking its loop while object 0 hops; then the fast
 ; animation ends (bit 2) and the script resumes. (C1, E-0357)
-SceneHorsingAround_ScriptApplyStepDeltaAtDE::
+SceneHorsingAround_HopObject0::
     call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE
@@ -8860,7 +8857,7 @@ SceneHorsingAround_WriteMessageIndex::
 
 ; Horsing around scene, step 1: the player keeps walking its loop while object 0 walks down to Y
 ; $50; then object 0 faces right. (C1, E-0357)
-SceneHorsingAround_StepObjectTowardCoord::
+SceneHorsingAround_WalkObject0::
     call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
     ld a, $00
     ld [wStepTarget], a
@@ -9143,7 +9140,7 @@ RunMessageBoxFar_Bank0F::
     ret
 
 ; Homecoming scene, step 3: waits for the message box to close. (C1, E-0357)
-SceneHomecoming_RunMessageBoxFar_Bank0F::
+SceneHomecoming_WaitMessage::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -9153,7 +9150,7 @@ SceneHomecoming_RunMessageBoxFar_Bank0F::
 
 ; Personality message, step 1: waits for the message box to close, then resumes the script. (C1,
 ; E-0357)
-PersonalityMessage_RunMessageBoxFar_Bank0F::
+PersonalityMessage_WaitForMessage::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc

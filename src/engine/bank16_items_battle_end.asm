@@ -2785,7 +2785,7 @@ ItemTable::
 ; ItemUsable_WarpWing tests bit 6, the ExitBell check (ItemUsable_ExitBell, E-0085) bit 5 and
 ; SaveForbiddenHere bit 4 of the byte at $51C9 + hMapId; a clear bit refuses the item (wItemId =
 ; $FF) or, for bit 4, gives C = 1 (no saving, E-0322); 256 bytes, one per map number, end at
-; PauseMenu_Skills_UseFieldSkill_WriteItemId (E-0229, C1)
+; FieldSkillUsable (E-0229, C1)
 ; record: flag bits for this map (bit 6: WarpWing, bit 5: ExitBell, bit 4: saving allowed,
 ; SaveForbiddenHere)
 MapItemUseFlags::
@@ -3049,7 +3049,7 @@ MapItemUseFlags::
 ; The usability check of field skill wInventorySlot (20 skills; a larger index refuses with wItemId
 ; $FF): most reuse an item's check (the Herb, WorldDew, Potion, WorldLeaf, Antidote, Repellent,
 ; ExitBell, Warp and WarpWing checks) and set the refusal message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_WriteItemId::
+FieldSkillUsable::
     ld a, [wInventorySlot]
     cp $14
     jr c, .skip
@@ -3059,43 +3059,43 @@ PauseMenu_Skills_UseFieldSkill_WriteItemId::
 
 .skip:
     jumptable
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldDew
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldDew
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldLeaf
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldLeaf
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Antidote
-    dw PauseMenu_Skills_UseFieldSkill_ListPartyMembersWithField55Bit0
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_ExitBell
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent
-    dw PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp
-    dw PauseMenu_Skills_UseFieldSkill_ItemUsable_WarpWing
+    dw FieldSkillUsable_HealOne
+    dw FieldSkillUsable_HealOne
+    dw FieldSkillUsable_HealOne
+    dw FieldSkillUsable_HealParty
+    dw FieldSkillUsable_HealParty
+    dw FieldSkillUsable_GiveMP
+    dw FieldSkillUsable_GiveMP
+    dw FieldSkillUsable_GiveMP
+    dw FieldSkillUsable_Revive
+    dw FieldSkillUsable_Revive
+    dw FieldSkillUsable_CurePoison
+    dw FieldSkillUsable_CurePartyPoison
+    dw FieldSkillUsable_Encounters
+    dw FieldSkillUsable_Encounters
+    dw FieldSkillUsable_Encounters
+    dw FieldSkillUsable_LeaveDungeon
+    dw FieldSkillUsable_Encounters
+    dw FieldSkillUsable_DrawRandomItem
+    dw FieldSkillUsable_Warp
+    dw FieldSkillUsable_MapAroundPlayer
 
 ; Field skills 0-2 (one-monster HP healing): the Herb's check, refusing with message $12. (C1,
 ; E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb::
+FieldSkillUsable_HealOne::
     call ItemUsable_Herb
     call SetItemMessage12IfItemRefused
     ret
 
 ; Field skills 3-4 (party HP healing): the WorldDew's check, refusing with message $12. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldDew::
+FieldSkillUsable_HealParty::
     call ItemUsable_WorldDew
     call SetItemMessage12IfItemRefused
     ret
 
 ; Field skills 5-7 (MP to another monster): refuses when the target is the caster itself, otherwise
 ; the Potion's check; refusal message $12. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
+FieldSkillUsable_GiveMP::
     ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wTargetRecord]
@@ -3113,20 +3113,20 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
     ret
 
 ; Field skills 8-9 (revival): the WorldLeaf's check, refusing with message $12. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldLeaf::
+FieldSkillUsable_Revive::
     call ItemUsable_WorldLeaf
     call SetItemMessage12IfItemRefused
     ret
 
 ; Field skill 10 (poison cure): the Antidote's check, refusing with message $12. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_Antidote::
+FieldSkillUsable_CurePoison::
     call ItemUsable_Antidote
     call SetItemMessage12IfItemRefused
     ret
 
 ; Field skill 11 (party poison cure): lists the poisoned party members
 ; (ListPartyMembersWithField55Bit0), refusing with message $12. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ListPartyMembersWithField55Bit0::
+FieldSkillUsable_CurePartyPoison::
     call ListPartyMembersWithField55Bit0
     call SetItemMessage12IfItemRefused
     ret
@@ -3134,7 +3134,7 @@ PauseMenu_Skills_UseFieldSkill_ListPartyMembersWithField55Bit0::
 ; Field skills 12-14 and 16: the Repellent's check; skill 16 refused gives message $15, otherwise
 ; collects the area's encounter ids (CollectUniqueEncounterIdsToWorkBuf2); the others refuse with
 ; message $14. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
+FieldSkillUsable_Encounters::
     call ItemUsable_Repellent
     ld a, [wInventorySlot]
     cp $10
@@ -3155,14 +3155,14 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
     ret
 
 ; Field skill 15 (leaving a dungeon): the ExitBell's check, refusing with message $14. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_ExitBell::
+FieldSkillUsable_LeaveDungeon::
     call ItemUsable_ExitBell
     call SetItemMessage14IfItemRefused
     ret
 
 ; Field skill 17: the Repellent's check; then refuses with message $17 when the gold is under 100,
 ; or $16 when the last inventory slot is taken. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
+FieldSkillUsable_DrawRandomItem::
     call ItemUsable_Repellent
     call SetItemMessage14IfItemRefused
     ret z
@@ -3195,7 +3195,7 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
 
 ; Field skill 18: the Warp's check; then refuses with message $18 when there are no map objects or
 ; every one has bit 7 set. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
+FieldSkillUsable_Warp::
     call ItemUsable_Warp
     call SetItemMessage14IfItemRefused
     ret z
@@ -3229,7 +3229,7 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
     ret
 
 ; Field skill 19: the WarpWing's check, refusing with message $14. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ItemUsable_WarpWing::
+FieldSkillUsable_MapAroundPlayer::
     call ItemUsable_WarpWing
     call SetItemMessage14IfItemRefused
     ret
@@ -3256,36 +3256,36 @@ SetItemMessage14IfItemRefused::
 
 ; The effect of field skill wInventorySlot (unless refused): one routine per skill (healing, MP,
 ; revival, cures, field effects). (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_WaitItemId::
+FieldSkillEffect::
     ld a, [wItemId]
     cp $ff
     ret z
     ld a, [wInventorySlot]
     jumptable
-    dw PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount
-    dw PauseMenu_Skills_UseFieldSkill_SetItemEffectAmount
+    dw FieldSkillEffect_HealOne
+    dw FieldSkillEffect_HealOneMore
     dw FullHealRecordTargetRecord
-    dw PauseMenu_Skills_UseFieldSkill_HealPartyRecordAIfHurt
-    dw PauseMenu_Skills_UseFieldSkill_FullHealPartyRecordA
-    dw PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount
-    dw PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount
-    dw PauseMenu_Skills_UseFieldSkill_2
-    dw PauseMenu_Skills_UseFieldSkill_SetItemMessage
-    dw PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord
-    dw PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2
-    dw PauseMenu_Skills_UseFieldSkill_ClearPartyRecordFlag55Bit0
-    dw PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2
-    dw PauseMenu_Skills_UseFieldSkill_SetDataBankSave
-    dw PauseMenu_Skills_UseFieldSkill_SetTalkCountdown
-    dw PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave
-    dw PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B
-    dw PauseMenu_Skills_UseFieldSkill_NextTableByte
-    dw PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill
-    dw PauseMenu_Skills_UseFieldSkill_MarkVisitedScreens5x5AroundPlayer
+    dw FieldSkillEffect_HealPartyHurt
+    dw FieldSkillEffect_FullHealParty
+    dw FieldSkillEffect_GiveMP
+    dw FieldSkillEffect_GiveMoreMP
+    dw FieldSkillEffect_GiveMostMP
+    dw FieldSkillEffect_ReviveHalf
+    dw FieldSkillEffect_Revive
+    dw FieldSkillEffect_CurePoison
+    dw FieldSkillEffect_CurePartyPoison
+    dw FieldSkillEffect_SetDataBankSave
+    dw FieldSkillEffect_SetNewRecordFamily
+    dw FieldSkillEffect_SetTalkCountdown
+    dw FieldSkillEffect_SetDataBankSave_SetDataBankSave
+    dw FieldSkillEffect_SetItemMessageTo0B
+    dw FieldSkillEffect_DrawRandomItem
+    dw FieldSkillEffect_SetWorldMapByFieldSkill
+    dw FieldSkillEffect_MapAroundPlayer
 
 ; Field skill 0: heals the target 10-40 HP (HealRecordHPByRandomAmount, amount 10 and range 30);
 ; message 6. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
+FieldSkillEffect_HealOne::
     ld a, $0a
     ld [wItemEffectAmount], a
     ld a, $1e
@@ -3296,7 +3296,7 @@ PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
     ret
 
 ; Field skill 1: heals the target 15-90 HP (amount 15, range 75); message 6. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetItemEffectAmount::
+FieldSkillEffect_HealOneMore::
     ld a, $0f
     ld [wItemEffectAmount], a
     ld a, $4b
@@ -3322,7 +3322,7 @@ FullHealRecordTargetRecord::
 
 ; Field skill 3: heals each party member that is hurt 30-120 HP (amount 30, range 90), with the use
 ; message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_HealPartyRecordAIfHurt::
+FieldSkillEffect_HealPartyHurt::
     ld a, $1e
     ld [wItemEffectAmount], a
     ld a, $5a
@@ -3366,7 +3366,7 @@ HealPartyRecordAIfHurt::
     ret
 
 ; Field skill 4: fully heals each party member, with the use message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_FullHealPartyRecordA::
+FieldSkillEffect_FullHealParty::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
     ld a, $00
@@ -3394,7 +3394,7 @@ FullHealPartyRecordA::
     ret
 
 ; Field skill 5: gives the target 15 MP; message 7. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
+FieldSkillEffect_GiveMP::
     ld a, $0f
     ld [wItemEffectAmount], a
     call HealRecordMPByItemEffectAmount
@@ -3403,7 +3403,7 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
     ret
 
 ; Field skill 6: gives the target 30 MP; message 7. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount::
+FieldSkillEffect_GiveMoreMP::
     ld a, $1e
     ld [wItemEffectAmount], a
     call HealRecordMPByItemEffectAmount
@@ -3412,7 +3412,7 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmoun
     ret
 
 ; Field skill 7: gives the target 80 MP; message 7. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_2::
+FieldSkillEffect_GiveMostMP::
     ld a, $50
     ld [wItemEffectAmount], a
     call HealRecordMPByItemEffectAmount
@@ -3422,7 +3422,7 @@ PauseMenu_Skills_UseFieldSkill_2::
 
 ; Field skill 8: revives the target (MON_STATUS cleared) with half its max HP; message 8 and the
 ; stats redraw flag (wLevelUpGains 1). (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetItemMessage::
+FieldSkillEffect_ReviveHalf::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
@@ -3449,7 +3449,7 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage::
     ret
 
 ; Field skill 9: revives the target with full HP and MP; message 8 and the redraw flag. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
+FieldSkillEffect_Revive::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
@@ -3462,7 +3462,7 @@ PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
     ret
 
 ; Field skill 10: cures the target's poison (MON_STATUS bit 2); message 9. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
+FieldSkillEffect_CurePoison::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
@@ -3473,7 +3473,7 @@ PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
 
 ; Field skill 11: clears flag bit 0 of each party member (ClearPartyRecordFlag55Bit0), with the use
 ; message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ClearPartyRecordFlag55Bit0::
+FieldSkillEffect_CurePartyPoison::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
     ld a, $00
@@ -3498,7 +3498,7 @@ ClearPartyRecordFlag55Bit0::
     ret
 
 ; Field skill 12: sets wDataBankSave to 1 and ends with no message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
+FieldSkillEffect_SetDataBankSave::
     ld a, $01
     ld [wDataBankSave], a
     ld a, $ff
@@ -3509,7 +3509,7 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
 
 ; Field skill 13: sets wDataBankSave to 1 and wNewRecordFamily to $10 + the opposite of the caster's
 ; sex; no message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
+FieldSkillEffect_SetNewRecordFamily::
     ld a, $01
     ld [wDataBankSave], a
     ld a, [wMenuSelectedMember]
@@ -3527,7 +3527,7 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
     ret
 
 ; Field skill 14: sets the talk countdown to 200 (wTalkCountdown $C8); no message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
+FieldSkillEffect_SetTalkCountdown::
     ld a, $c8
     ld [wTalkCountdown], a
     ld a, $ff
@@ -3537,7 +3537,7 @@ PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
     ret
 
 ; Field skill 15: sets wDataBankSave to 4 (leaving the dungeon); no message. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
+FieldSkillEffect_SetDataBankSave_SetDataBankSave::
     ld a, $04
     ld [wDataBankSave], a
     ld a, $ff
@@ -3547,7 +3547,7 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
     ret
 
 ; Field skill 16: message $0B. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B::
+FieldSkillEffect_SetItemMessageTo0B::
     ld a, $0b
     ld [wItemMessage], a
     ret
@@ -3555,7 +3555,7 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B::
 ; Field skill 17: ends a pending event in a key world, pays 100 gold and draws one of 18 items by
 ; chance (out of 100: Herb 25, LoveWater 10, then 5, 2 or 1 each), putting it in the last inventory
 ; slot with its name in wTextBuf3 (CompactInventory); message $0E. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_NextTableByte::
+FieldSkillEffect_DrawRandomItem::
     ld a, [wMapType]
     cp $80
     jr nz, .skip
@@ -3658,7 +3658,7 @@ PauseMenu_Skills_UseFieldSkill_NextTableByte::
     ret
 
 ; Field skill 18: sets wWorldMapByFieldSkill; message $11. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
+FieldSkillEffect_SetWorldMapByFieldSkill::
     ld a, $01
     ld [wWorldMapByFieldSkill], a
     ld a, $11
@@ -3669,7 +3669,7 @@ PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
 
 ; Field skill 19: marks the 5 x 5 map screens around the player visited
 ; (MarkVisitedScreens5x5AroundPlayer); message $1C. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_MarkVisitedScreens5x5AroundPlayer::
+FieldSkillEffect_MapAroundPlayer::
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1c
     ld [wItemMessage], a
@@ -4899,41 +4899,41 @@ BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc_Data2::
 BattleEnd_AskToJoin::
     ld a, [wBattleSubStep]
     jumptable
-    dw BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix
+    dw BattleEnd_AskToJoin_Start
     dw BattleEnd_AskToJoin_WaitTextFlags
     dw BattleEnd_AskToJoin_ShowHeroGotUpLooking
-    dw BattleEnd_AskToJoin_LoadCursorTileAndRect
+    dw BattleEnd_AskToJoin_DrawYesNo
     dw BattleEnd_AskToJoin_ShowHeroDepartedSadly
-    dw BattleEnd_AskToJoin_WriteVRAMByte
+    dw BattleEnd_AskToJoin_CheckFarmRoom
     dw BattleEnd_AskToJoin_ShowButThereIsNo
-    dw BattleEnd_AskToJoin_LoadCursorTileAndRect
+    dw BattleEnd_AskToJoin_DrawYesNo
     dw BattleEnd_AskToJoin_ShowHeroDepartedSadly
     dw BattleEnd_AskToJoin_ShowWhichWillYouChoose
-    dw BattleEnd_AskToJoin_BuildBattleMenuScreen
+    dw BattleEnd_AskToJoin_DrawReleaseChoice
     dw BattleEnd_AskToJoin_ShowYouHaveNoEggs
     dw BattleEnd_AskToJoin_ShowChooseAMonsterTo
-    dw BattleEnd_AskToJoin_MovePagedListCursor
-    dw BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C
-    dw BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep
-    dw BattleEnd_AskToJoin_ClampRecordListPageCursor5
-    dw BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C
-    dw BattleEnd_AskToJoin_WriteVRAMByte_2
+    dw BattleEnd_AskToJoin_MonsterListCursor
+    dw BattleEnd_AskToJoin_MarkPick
+    dw BattleEnd_AskToJoin_PickOption
+    dw BattleEnd_AskToJoin_OpenPickStats
+    dw BattleEnd_AskToJoin_RedrawAfterStats
+    dw BattleEnd_AskToJoin_CheckRelease
     dw BattleEnd_AskToJoin_AdvanceBattleSubStep
     dw BattleEnd_AskToJoin_ShowGWasSetFree
     dw BattleEnd_AskToJoin_WaitTextFlags_SetArg1
     dw BattleEnd_AskToJoin_ShowChooseAnEggTo
-    dw BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage
-    dw BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12
-    dw BattleEnd_AskToJoin_MovePagedListCursor_2
-    dw BattleEnd_AskToJoin_ClampRecordListPageCursor4
-    dw BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12
+    dw BattleEnd_AskToJoin_EggListCursor
+    dw BattleEnd_AskToJoin_MarkEgg
+    dw BattleEnd_AskToJoin_PickEggOption
+    dw BattleEnd_AskToJoin_OpenEggStats
+    dw BattleEnd_AskToJoin_RedrawEggsAfterStats
     dw BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2
 
 ; Asking to join, step 0: copies the foe's name (with its letter) into wTextBuf0; in battle kinds 8
 ; and up, or an odd kind where KeyWorldAreaEncounterIndex returns 0, shows '<name> got up, looking
 ; hopeful. But ...' (string $1E); otherwise counts the farm's monsters and eggs
 ; (CountRecordsByField6E) and goes on. (C1, E-0357)
-BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
+BattleEnd_AskToJoin_Start::
     ld hl, wBattleSubStep
     inc [hl]
     ld de, wTextBuf0
@@ -4991,7 +4991,7 @@ BattleEnd_AskToJoin_ShowHeroGotUpLooking::
     ret
 
 ; Asking to join, step 3: draws the yes/no box (two entries). (C1, E-0357)
-BattleEnd_AskToJoin_LoadCursorTileAndRect::
+BattleEnd_AskToJoin_DrawYesNo::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5036,14 +5036,14 @@ BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ret
 
 ; Asking to join, step 5: marks yes; with the farm's monsters and eggs below the farm level's
-; capacity (BattleEnd_AskToJoin_WriteVRAMByte_Data) moves on two sub-phases to add it, otherwise
+; capacity (BattleEnd_AskToJoin_CheckFarmRoom_Data) moves on two sub-phases to add it, otherwise
 ; goes on to step 6. (C1, E-0357)
-BattleEnd_AskToJoin_WriteVRAMByte::
+BattleEnd_AskToJoin_CheckFarmRoom::
     ld a, $bc
     ld hl, vBGMap0 + $12f
     call WriteVRAMByte
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_CheckFarmRoom_Data
     add_a_to_hl
     ld a, [wTemp0]
     ld b, a
@@ -5086,7 +5086,7 @@ BattleEnd_AskToJoin_ShowWhichWillYouChoose::
     ret
 
 ; Asking to join, step 10: draws the release-or-abandon choice and plays sound $6C. (C1, E-0357)
-BattleEnd_AskToJoin_BuildBattleMenuScreen::
+BattleEnd_AskToJoin_DrawReleaseChoice::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5186,9 +5186,9 @@ BattleEnd_AskToJoin_ShowChooseAMonsterTo::
 
 ; Asking to join, step 13: the list cursor (Left/Right turn pages); A picks the monster and shows
 ; its name (string $12); B returns to step 9. (C1, E-0357)
-BattleEnd_AskToJoin_MovePagedListCursor::
+BattleEnd_AskToJoin_MonsterListCursor::
     ld de, wMenuState
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MonsterListCursor_Data
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and $30
@@ -5217,9 +5217,9 @@ BattleEnd_AskToJoin_MovePagedListCursor::
     ret
 
 ; Asking to join, step 14: marks the pick and draws its two options. (C1, E-0357)
-BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
+BattleEnd_AskToJoin_MarkPick::
     ld a, [wMenuState]
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MonsterListCursor_Data
     add a
     add_a_to_hl
     deref_hl
@@ -5248,9 +5248,9 @@ BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
 
 ; Asking to join, step 15: the options: the first (look) goes to step 16, the second (release) to
 ; step 18; B clears the box and returns to the list (step 12). (C1, E-0357)
-BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep::
+BattleEnd_AskToJoin_PickOption::
     ld de, wMenuSubState
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
+    ld hl, BattleEnd_AskToJoin_PickOption_Data
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -5300,7 +5300,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep::
 
 ; Asking to join, step 16: opens the stats screen for the picked monster (screen state $0C) after
 ; saving the sprites. (C1, E-0357)
-BattleEnd_AskToJoin_ClampRecordListPageCursor5::
+BattleEnd_AskToJoin_OpenPickStats::
     ld a, [wTemp0]
     ld [wListCount], a
     ld a, [wMenuState]
@@ -5326,11 +5326,11 @@ BattleEnd_AskToJoin_ClampRecordListPageCursor5::
 
 ; Asking to join, step 17: after the stats screen redraws the list with the pick and its options
 ; (step $0F). (C1, E-0357)
-BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
+BattleEnd_AskToJoin_RedrawAfterStats::
     farcall CopyRectRecordToScreenBufferAndPlaySound6C
     ld a, [wListCursor]
     ld [wMenuState], a
-    ld hl, BattleEnd_AskToJoin_Data
+    ld hl, BattleEnd_AskToJoin_RedrawAfterStats_Data
     add a
     add_a_to_hl
     deref_hl
@@ -5363,7 +5363,7 @@ BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
 ; Asking to join, step 18: refuses to release the only party member, or the last party member still
 ; able to fight (by wBattleSlotOut), with 'You can't travel all alone.' (string $15) and step 9;
 ; otherwise goes on. (C1, E-0357)
-BattleEnd_AskToJoin_WriteVRAMByte_2::
+BattleEnd_AskToJoin_CheckRelease::
     ld a, $bc
     ld hl, vBGMap0 + $16d
     call WriteVRAMByte
@@ -5580,9 +5580,9 @@ BattleEnd_AskToJoin_ShowChooseAnEggTo::
     ret
 
 ; Asking to join, step 23: the egg list cursor; A picks the egg, B returns to step 9. (C1, E-0357)
-BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage::
+BattleEnd_AskToJoin_EggListCursor::
     ld de, wMenuState
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_3
+    ld hl, BattleEnd_AskToJoin_EggListCursor_Data
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and $30
@@ -5622,7 +5622,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage::
     ret
 
 ; Asking to join, step 24: marks the egg and draws its two options with its name. (C1, E-0357)
-BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
+BattleEnd_AskToJoin_MarkEgg::
     call BuildBattleMenuScreen
     farcall CopyRectRecordToScreenBuffer_12
     farcall CopyRectRecordAndPlaySound6C
@@ -5641,7 +5641,7 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
 .call_draw_four_list_entries_for_page_list:
     call DrawFourListEntriesForPageListPage
     ld a, [wCommandCursorMax]
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_3
+    ld hl, BattleEnd_AskToJoin_EggListCursor_Data
     add a
     add_a_to_hl
     deref_hl
@@ -5674,8 +5674,8 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
 ; Asking to join, step 25: the options: the first (look) goes to step 26; the second shows
 ; '<species>'s egg was abandoned.' (string $18) and goes to step 28; B returns to step $16. (C1,
 ; E-0357)
-BattleEnd_AskToJoin_MovePagedListCursor_2::
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
+BattleEnd_AskToJoin_PickEggOption::
+    ld hl, BattleEnd_AskToJoin_PickOption_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -5726,7 +5726,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_2::
     ret
 
 ; Asking to join, step 26: opens the egg's stats screen (screen state $0D). (C1, E-0357)
-BattleEnd_AskToJoin_ClampRecordListPageCursor4::
+BattleEnd_AskToJoin_OpenEggStats::
     ld a, [wMenuState]
     ld [wListCursor], a
     ld a, [wMenuOption]
@@ -5750,12 +5750,12 @@ BattleEnd_AskToJoin_ClampRecordListPageCursor4::
 
 ; Asking to join, step 27: after the stats screen redraws the egg list with the pick and its options
 ; (step $19). (C1, E-0357)
-BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12::
+BattleEnd_AskToJoin_RedrawEggsAfterStats::
     farcall CopyRectRecordToScreenBuffer_12
     ld a, [wListCursor]
     ld [wMenuState], a
     ld [wCommandCursorMax], a
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_3
+    ld hl, BattleEnd_AskToJoin_EggListCursor_Data
     add a
     add_a_to_hl
     deref_hl
@@ -5853,7 +5853,7 @@ SetDEFlagOnBButton::
     ld [de], a
     ret
 
-; counts the first BattleEnd_AskToJoin_WriteVRAMByte_Data[wFarmLevel] SRAM records: wTemp1 = those
+; counts the first BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel] SRAM records: wTemp1 = those
 ; with field $6E set, wTemp0 = the others (E-0125)
 CountRecordsByField6E::
     ld a, $0a
@@ -5861,7 +5861,7 @@ CountRecordsByField6E::
     xor a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_CheckFarmRoom_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -5929,7 +5929,7 @@ ListPartyAndStoredRecordsForPage::
     dec b
     jr nz, .loop
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_CheckFarmRoom_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6031,7 +6031,7 @@ ListPartyAndStoredRecordsForPage::
     ret
 
 ; fills wListEntries ($1E bytes) with $FF, then lists the indexes of the first
-; BattleEnd_AskToJoin_WriteVRAMByte_Data[wFarmLevel] SRAM records that have field $6E set (E-0127)
+; BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel] SRAM records that have field $6E set (E-0127)
 ListRecordsWithField6EToListEntries::
     ld hl, wListEntries
     ld bc, $001e
@@ -6042,7 +6042,7 @@ ListRecordsWithField6EToListEntries::
     xor a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_CheckFarmRoom_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6229,20 +6229,20 @@ DrawCursorTileAtTableEntryDE::
     pop hl
     ret
 
-; data read by BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C (10 bytes) (E-0347)
-BattleEnd_AskToJoin_Data::
+; data read by BattleEnd_AskToJoin_RedrawAfterStats (10 bytes) (E-0347)
+BattleEnd_AskToJoin_RedrawAfterStats_Data::
     db $b9, $c1, $f9, $c1, $39, $c2, $79, $c2, $b9, $c2
 
 BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data::
     db $2f, $99, $6f, $99
 
-BattleEnd_AskToJoin_MovePagedListCursor_Data_2::
+BattleEnd_AskToJoin_PickOption_Data::
     db $2d, $99, $6d, $99
 
-BattleEnd_AskToJoin_MovePagedListCursor_Data_3::
+BattleEnd_AskToJoin_EggListCursor_Data::
     db $a1, $98, $e1, $98, $21, $99, $61, $99
 
-BattleEnd_AskToJoin_MovePagedListCursor_Data::
+BattleEnd_AskToJoin_MonsterListCursor_Data::
     db $21, $98, $61, $98, $a1, $98, $e1, $98, $21, $99
 
 BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data::
@@ -6766,7 +6766,7 @@ RunBattleEndStep5SubSteps::
     ld a, [wBattleSubStep]
     jumptable
     dw RunBattleEndStep5SubSteps_ShowPleaseNameHero
-    dw RunBattleEndStep5SubSteps_FillBytes
+    dw RunBattleEndStep5SubSteps_SetUpNameEntry
     dw RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc
     dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
     dw RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc
@@ -6785,7 +6785,7 @@ RunBattleEndStep5SubSteps_ShowPleaseNameHero::
 ; Naming the new monster, step 1: once the text has finished clears the name entry's state, sets its
 ; arguments (a monster: its letter suffix, family and species) and marks the species seen
 ; (SetSpeciesFlag), clears the screen buffer and resets the text window. (C1, E-0357)
-RunBattleEndStep5SubSteps_FillBytes::
+RunBattleEndStep5SubSteps_SetUpNameEntry::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -6915,7 +6915,7 @@ RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc::
     xor a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_CheckFarmRoom_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -7032,31 +7032,31 @@ SetBit0AtHL_Skip::
 BattleEnd_AddJoinedMonster::
     ld a, [wBattleSubStep]
     jumptable
-    dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize
-    dw BattleEnd_AddJoinedMonster_MovePagedListCursor
+    dw BattleEnd_AddJoinedMonster_AskTakeAlong
+    dw BattleEnd_AddJoinedMonster_DrawYesNo
+    dw BattleEnd_AddJoinedMonster_ReadAnswer
     dw BattleEnd_AddJoinedMonster_ShowHeroWasSentTo
     dw BattleEnd_AddJoinedMonster_SetBattleStep
     dw BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex
-    dw BattleEnd_AddJoinedMonster_SetRecordState2ForB
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16
+    dw BattleEnd_AddJoinedMonster_AddToParty
+    dw BattleEnd_AddJoinedMonster_DrawScreen
     dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2
-    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_2
-    dw BattleEnd_AddJoinedMonster_SetMenuSelectedMember
-    dw BattleEnd_AddJoinedMonster_AdvanceBattleSubStep
-    dw BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5
-    dw BattleEnd_AddJoinedMonster_SwapMonstersMenu
-    dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values
+    dw BattleEnd_AddJoinedMonster_SetUpList
+    dw BattleEnd_AddJoinedMonster_ListCursor
+    dw BattleEnd_AddJoinedMonster_DrawOptions
+    dw BattleEnd_AddJoinedMonster_PickOption
+    dw BattleEnd_AddJoinedMonster_OpenPickStats
+    dw BattleEnd_AddJoinedMonster_RunStatsScreen
+    dw BattleEnd_AddJoinedMonster_RedrawPickOptions
     dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero
     dw BattleEnd_AddJoinedMonster_ChooseTheMonsterTo
-    dw BattleEnd_AddJoinedMonster_RestoreRecordAFully
+    dw BattleEnd_AddJoinedMonster_SendPickToFarm
     dw BattleEnd_AddJoinedMonster_WillYouTakeHero
 
 ; Adding the new monster, step 0: redraws the battle screen, lists the party and the new monster (in
 ; wBattleArg0 on), copies its name into wTextBuf0 and asks 'Will you take <name> with you?' (string
 ; $19). (C1, E-0357)
-BattleEnd_AddJoinedMonster_BuildBattleMenuScreen::
+BattleEnd_AddJoinedMonster_AskTakeAlong::
     call BuildBattleMenuScreen
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -7107,7 +7107,7 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen::
     ret
 
 ; Adding the new monster, step 1: draws the yes/no box. (C1, E-0357)
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize::
+BattleEnd_AddJoinedMonster_DrawYesNo::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7129,7 +7129,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize::
 
 ; Adding the new monster, step 2: yes goes to step 5; no or B to step 3; plays sound $6C on A. (C1,
 ; E-0357)
-BattleEnd_AddJoinedMonster_MovePagedListCursor::
+BattleEnd_AddJoinedMonster_ReadAnswer::
     ld hl, BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data
     ld de, wMenuState
     call MovePagedListCursor
@@ -7213,7 +7213,7 @@ BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex::
 
 ; Adding the new monster, step 6: once the text has finished adds it to the party (state 2), reloads
 ; the name tiles and battle slots and redraws. (C1, E-0357)
-BattleEnd_AddJoinedMonster_SetRecordState2ForB::
+BattleEnd_AddJoinedMonster_AddToParty::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7238,7 +7238,7 @@ BattleEnd_AddJoinedMonster_SetRecordState2ForB::
     ret
 
 ; Adding the new monster, step 7: draws the screen and goes to step 4. (C1, E-0357)
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16::
+BattleEnd_AddJoinedMonster_DrawScreen::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     lb bc, $14, $0d
@@ -7264,7 +7264,7 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
 
 ; Adding the new monster, step 9: once the text has finished sets up the four-entry list and shows
 ; its cursor. (C1, E-0357)
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2::
+BattleEnd_AddJoinedMonster_SetUpList::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7281,7 +7281,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2::
     lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wMenuSubState]
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MonsterListCursor_Data
     add a
     add_a_to_hl
     deref_hl
@@ -7293,8 +7293,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2::
 
 ; Adding the new monster, step 10: the list cursor: B copies the new monster's name and goes to step
 ; $13 (asking again); A plays sound $69 and goes on. (C1, E-0357)
-BattleEnd_AddJoinedMonster_MovePagedListCursor_2::
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
+BattleEnd_AddJoinedMonster_ListCursor::
+    ld hl, BattleEnd_AskToJoin_MonsterListCursor_Data
     ld de, wMenuSubState
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7338,7 +7338,7 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor_2::
 
 ; Adding the new monster, step 11: draws the two options for the pick and its name (string $1D).
 ; (C1, E-0357)
-BattleEnd_AddJoinedMonster_SetMenuSelectedMember::
+BattleEnd_AddJoinedMonster_DrawOptions::
     xor a
     ld [wMenuSelectedMember], a
     ld hl, vBGMap0 + $10c
@@ -7353,7 +7353,7 @@ BattleEnd_AddJoinedMonster_SetMenuSelectedMember::
     ld [wListPageCount], a
     ld a, $02
     ld [wListLastPageSize], a
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MonsterListCursor_Data
     ld a, [wMenuSubState]
     add a
     add_a_to_hl
@@ -7371,8 +7371,8 @@ BattleEnd_AddJoinedMonster_SetMenuSelectedMember::
 ; Adding the new monster, step 12: the options: the first (look) goes to step 13; the second sends
 ; the pick home with '<name> was sent back to the ...' (string $1A) and step $12; B returns to the
 ; list (step $11). (C1, E-0357)
-BattleEnd_AddJoinedMonster_AdvanceBattleSubStep::
-    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
+BattleEnd_AddJoinedMonster_PickOption::
+    ld hl, BattleEnd_AskToJoin_PickOption_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7426,7 +7426,7 @@ BattleEnd_AddJoinedMonster_AdvanceBattleSubStep::
 
 ; Adding the new monster, step 13: lists the four and opens the pick's stats screen (screen state
 ; $0E), saving the sprites. (C1, E-0357)
-BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
+BattleEnd_AddJoinedMonster_OpenPickStats::
     ld hl, wListEntries
     ld bc, $001e
     xor a
@@ -7462,7 +7462,7 @@ BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
 
 ; Adding the new monster, step 14: runs the stats screen (SwapMonstersMenu) until its step $0A, then
 ; restores the sprite state and reloads the battle tiles. (C1, E-0357)
-BattleEnd_AddJoinedMonster_SwapMonstersMenu::
+BattleEnd_AddJoinedMonster_RunStatsScreen::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -7491,12 +7491,12 @@ BattleEnd_AddJoinedMonster_SwapMonstersMenu::
 
 ; Adding the new monster, step 15: redraws the list with the pick and its options (step $0C). (C1,
 ; E-0357)
-BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values::
+BattleEnd_AddJoinedMonster_RedrawPickOptions::
     call BuildBattleMenuScreen
     call CopyRectAndDrawBattleArg0Values
     ld a, [wListCursor]
     ld [wMenuSubState], a
-    ld hl, BattleEnd_AskToJoin_Data
+    ld hl, BattleEnd_AskToJoin_RedrawAfterStats_Data
     add a
     add_a_to_hl
     deref_hl
@@ -7560,7 +7560,7 @@ BattleEnd_AddJoinedMonster_ChooseTheMonsterTo::
 ; Adding the new monster, step 18: sends the pick to the farm restored (RestoreRecordAFully) and
 ; rebuilds the party from the others (state 2), reloads names and slots, redraws; step 4. (C1,
 ; E-0357)
-BattleEnd_AddJoinedMonster_RestoreRecordAFully::
+BattleEnd_AddJoinedMonster_SendPickToFarm::
     ld a, [wMenuSubState]
     ld hl, wBattleArg0
     add_a_to_hl
@@ -8640,8 +8640,8 @@ ShowStrings6To8Bank09InRows::
     ld [wTextWindowWidth], a
     ret
 
-; data read by BattleEnd_AskToJoin_WriteVRAMByte (3 bytes) (E-0347)
-BattleEnd_AskToJoin_WriteVRAMByte_Data::
+; data read by BattleEnd_AskToJoin_CheckFarmRoom (3 bytes) (E-0347)
+BattleEnd_AskToJoin_CheckFarmRoom_Data::
     db $0a, $14, $1e
 
 ; checks the save; when valid, loads the player name, play time, party summaries and other
