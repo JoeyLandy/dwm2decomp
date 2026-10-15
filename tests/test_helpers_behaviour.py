@@ -86,7 +86,7 @@ class SmallHelpers(unittest.TestCase):
         self.assertEqual(call(0x0D, 0x6D09, mem=full).a, 0xFF)    # no free slot
 
     def test_subtract_floor_zero(self):
-        # RunBattleSetup_MainMenu_SubtractFloor0: [DE + C] -= [HL], not below 0
+        # LowerPersonalityAfterFleeing_LowerByte: [DE + C] -= [HL], not below 0
         for a, b in ((10, 3), (3, 10), (0, 0)):
             mem = {0xC100 + 2: a, 0xC200: b}
             gb = call(0x31, 0x4EB9, mem=mem, d=0xC1, e=0x00, c=2, h=0xC2, l=0x00)

@@ -1240,3 +1240,38 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `DrawRecordFamilyEntries` (1E:6FEB): Whether tile $CC / $CD, the marks it writes, are the male and female marks (DrawRecordListPageMarks uses $CC + sex bit) was inferred from that use only.
 - `DrawScreenBufferRect_Bank1E` (1E:74C8): Registers on return on CGB follow CopyRectToBGMapWrapped (DE past the source, HL at the last row start, C = 0), not checked by a probe (VRAM).
 - `DrawC5BEC6AtScrollOffsetDE_Bank1E` (1E:7530): Which of the tiles $C5, $BE, $C6 is a bracket, arrow or separator was not looked up in the tile data.
+
+## E-0380
+
+- `RunBattleSetup_UnpackPartnerChoices` (31:5DA7): Why wMenuState overwrites one of the two received menu-state bytes on each side is not known.
+- `RunBattleSetup_CompareSeeds` (31:5E7D): The older note called wBattleSetupFlagsLo/Hi the partner seed; they are the own seed bytes of the packed send buffer.
+- `ShowSkillPageNames` (31:6153): What the odd byte of each two-byte skill place (skipped here) holds is not known.
+- `UnreferencedDebugScreenCaller` (31:6564): Whether any code reaches this routine at run time (a computed jump) is not known.
+- `BattleEnd_Records_StoreMP` (31:6723): Why a wBattleMP word with bit 15 set leaves the maximum MP in the record is not known.
+- `BattleEnd_GainExperience_LearnSkill` (31:6C67): What the learn-a-foe-skill path was meant to do: step 1 stops before adding the skill and showing '0 learned G!'; TryAddSkillUnlessBetterKnown (no caller) looks like the routine meant to run in its place.
+- `ShowSelectedSkillNameAndCost` (31:7105): Byte 0 of the skill record is shown as the MP cost; it is not checked on screen. Why SKILL_MEGAMAGIC, SKILL_FAREWELL and SKILL_LIFEDANCE show the monster MP instead is unknown.
+- `CountDownBattleEndTimerWhenSoundIdle` (31:71C4): wBattleEndTimer is set to $3C by BattleEnd_GainExperience_CheckLevelUp_RaiseLevel and counted down here, but no routine in src/ reads its value to decide anything; what the count is for is unknown.
+- `CopyScreenBufferRect20x9ToBGMapRow9` (31:74C8): Why wBattleArg0 is set to 1 here is not clear from this routine.
+- `UnreferencedShowFiveGlyphsAtTilesHL_Bank31` (31:7A78): Why the five glyphs are copied to wTextBuf0 when String_08_02_00 is only the end byte $F0; no caller exists to show the intended use.
+- `TickSequencePtrLoSequence` (32:4001): Byte 1 of the sequence record is never read or written by these routines; its use is not known.
+- `RollStatusTickEffect` (32:4C9C): The meaning of battle text $0F ('is cursed! ... cannot move!') for the action lost is read from the text only.
+- `PickRandomActionWhenUncontrolled` (32:4D99): What the actions $C0-$C8 do was not read here (see ActionEffect_ActionC0 and the following).
+- `ApplyActionResultAndMarkFormation` (32:4F0A): RunBattleActions_StatusChecks_CheckAction_Skip is labelled data (dw lines) but its bytes CD 4C 51 38 49 7A FE 07 CA 4E 4F are the instructions call CheckFormationPartnersCanAct; jr c; ld a, d; cp 7; jp z: the source could write them as code.
+- `CheckFormationPartnersCanAct` (32:514C): The caller is the code hidden in the data labelled RunBattleActions_StatusChecks_CheckAction_Skip (see ApplyActionResultAndMarkFormation).
+- `CheckSkillMPCost` (32:51F9): The skill record fields used (byte 4 low nibble, byte 5 bits 3, 4, 5 and 6, byte 8 bit 7) have no names in src/records.inc.
+- `CheckLinkRuleViolation` (32:55EE): The meaning of the bits of wLinkRules + 1 and + 2 and of the CheckLinkRuleViolation_Data values is not decoded; the note states only how they combine.
+- `RunBattleActions_StatusChecks_PayActionMP` (32:5770): Whether bit 4 of wPersonalityActs makes the action free (text $32 'Light fell softly') is not checked beyond the code.
+- `BlankTargetMonsterPicture` (32:5AB3): Which pattern the bytes $FF, $00 produce on screen (a solid colour-1 tile by the bitplane layout) was not observed in an emulator frame.
+- `DefeatTarget` (32:5B12): For slots 3 and 7 the code computes ((wBattleTarget AND 4) >> 2) AND 1 and then clears bit 2 of wSideFlags0 without using that value; whether wSideFlags0 plus that value was meant is unknown.
+- `SetBit0OfLevelUpGainsIndexed_Bank32` (32:687F): What bits 0-2 of wLevelUpGains mean for the end of the battle is not established here.
+- `BattleActions_ZeroPadding` (32:7A49): Does anything jump to the bank padding? No caller exists; the dw in RunBattleActions_StatusChecks_CheckAction_Skip looks like code bytes (call, jr c, ld a d, cp, jp z), not a table.
+- `LoadRecordByteForPickedRecords` (33:5F6B): No call, jump or table entry names it in src/: is it dead code or reached some other way?
+- `DrawBoxAndKeyRows` (33:5F83): What the four numbers of wKeyNameBuf count is not shown here (the neighbouring window is PlayerWinLossWindow_TileRect).
+- `BeginStringDisplay_Bank33` (33:6490): The last entry (id 54) of its string list is the word $7037, the address of BeginStringDisplay_Bank33_2, not a string: is index 54 ever selected?
+- `ResolveStepEffectChecks` (36:438A): What the skill record byte 5 and byte 6 flags tested here are called is not known; only their effects are described.
+- `ResolveStepComputeDamage` (36:460B): BSTAT7_DAMAGE_X10 is described as a x10 in the damage message step, but here bit 1 alone divides by 10: which reading of bit 1 is right is not settled.
+- `ResolveStepEffectFlags13AndSound` (36:47F1): What effect animation $14 looks like is not identified.
+- `LoadBattleMonsterPictureForSlotB` (36:4E26): Which of wSide0Flag / wSide1Flag counts the foes in link mode 1 was read only from the code, not seen in a link battle.
+- `SetSubPhase3AndRestartResolve_Bank36` (36:4F0E): Nothing calls this copy; it may be dead code left by the original build.
+- `PickShuntSlot` (36:4F18): Whether the other side can have no present slot here (E = 0, then the random pick reads past wSlotChoices) was not checked.
+- `ActionEffect_ActionD9_Damage` (36:5152): E is not set by this routine: which slot E holds when ActionEffect_ActionD9 runs (it is left by the resolve step runner) is not known; it may be an unintended stale register.

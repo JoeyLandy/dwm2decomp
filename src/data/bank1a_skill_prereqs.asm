@@ -3319,8 +3319,8 @@ CopyRectRecordToScreenBuffer_2::
 ; column 0 (offset $00E0)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
 ; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
 ; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
-; CopyRectRecordToScreenBufferFar. The number in the name only tells it apart from the other
-; rectangle wrappers of bank $1A. (C2, E-0379)
+; RunBattleSetup_PlanMenu_DrawTactics_BuildBox. The number in the name only tells it apart from the
+; other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_3_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_3)
@@ -3347,8 +3347,8 @@ CopyRectRecordToScreenBuffer_4::
 ; column 0 (offset $0120)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
 ; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
 ; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
-; CopyRectRecordToScreenBufferFar_2. The number in the name only tells it apart from the other
-; rectangle wrappers of bank $1A. (C2, E-0379)
+; RunBattleSetup_PlanMenu_DrawActions_BuildBox. The number in the name only tells it apart from the
+; other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_5_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_5)
@@ -3375,8 +3375,8 @@ CopyRectRecordToScreenBuffer_6::
 ; column 0 (offset $0120)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
 ; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
 ; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
-; CopyRectRecordToScreenBufferFar_3. The number in the name only tells it apart from the other
-; rectangle wrappers of bank $1A. (C2, E-0379)
+; RunBattleSetup_ItemMenu_DrawBagPage_BuildBox. The number in the name only tells it apart from the
+; other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_7_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_7)
@@ -3389,7 +3389,7 @@ CopyRectRecordToScreenBuffer_7::
 ; column 0 (offset $0120)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
 ; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
 ; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
-; CopyRectRecordToScreenBufferFar_4. The number in the name only tells it apart from the other
+; RunBattleSetup_DrawAllyList_BuildBox. The number in the name only tells it apart from the other
 ; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_8_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -3403,8 +3403,8 @@ CopyRectRecordToScreenBuffer_8::
 ; column 0 (offset $0160)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
 ; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
 ; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
-; CopyRectRecordToScreenBufferFar_5. The number in the name only tells it apart from the other
-; rectangle wrappers of bank $1A. (C2, E-0379)
+; RunBattleSetup_ItemMenu_DrawSideWindow_BuildBox. The number in the name only tells it apart from
+; the other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_9_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_9)
@@ -3418,7 +3418,8 @@ CopyRectRecordToScreenBuffer_9::
 ; screen row 9, column 0 (offset $0120)), then CopyRectRecordsAndToScreenBuffer_TileRect (8 x 3
 ; tiles at screen row 14, column 12 (offset $01CC)). Each is a bordered box (corner tiles $B0, $B2,
 ; $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
-; CopyRectRecordsAndToScreenBufferFar and RunBattleSetup_BankA0_CommandMenu_ShowSkills. (C2, E-0379)
+; RunBattleSetup_PlanMenu_DrawSkillList_BuildBoxes and RunBattleSetup_BankA0_CommandMenu_ShowSkills.
+; (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with CopyRectRecordToScreenBuffer_7_TileRect, then with
 ; CopyRectRecordsAndToScreenBuffer_TileRect (E-0114) (E-0344: the address in its name dropped or
 ; read as the label there; was CopyRectRecordsAndToScreenBuffer)
@@ -3433,7 +3434,7 @@ CopyRectRecordsAndToScreenBuffer::
 ; column 0 (offset $0160)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
 ; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
 ; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
-; CopyRectRecordToScreenBufferFar_6. The number in the name only tells it apart from the other
+; RunBattleSetup_DrawFoeList_BuildBox. The number in the name only tells it apart from the other
 ; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_10_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was

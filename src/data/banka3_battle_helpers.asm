@@ -1233,7 +1233,7 @@ StoreBattleStateToPartyRecords_BankA3::
 
 ; RollRandomLoBelowChance_LoadActorChance reads the byte at $4B57 + the actor's wBattleMonsterId for
 ; the party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance
-; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
+; (ResolveStepCriticalRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
 ; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)
 ; record: chance class 0-3
 MonsterResolveChanceTable::
@@ -1624,7 +1624,7 @@ MonsterResolveChanceTable::
 
 ; RollRandomLoBelowChance_LoadActorChance reads the byte at $4CD7 + the actor's wBattleMonsterId for
 ; battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance
-; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
+; (ResolveStepCriticalRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
 ; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)
 MonsterResolveChanceTable_Foes::
     db $00 ; id 0

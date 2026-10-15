@@ -99,6 +99,11 @@ effect is on the display, sound, serial link or joypad (what they do is seen the
 interrupt timing, or jumps through a computed address. A passing probe raises the mechanical part of a note to C2
 (the project's emulator, not hardware); what a routine is for stays C1.
 
+**Decision D-014 (2026-10-15): two batches drafted at once.** Read-only drafting of a code batch and a data-label
+batch may run at the same time (12 workers), each against the same commit. Integration stays one batch at a time and
+one E-entry per batch: the second batch is validated against the snapshot after the first is applied, with its
+citations of renamed labels rewritten first.
+
 **Decision D-013 (2026-10-15): cheaper drafting models.** From E-0378 the user asked for cheaper sub-agents where
 appropriate. Drafting workers run on Sonnet or Haiku instead of the session model; E-0378 splits them three and three
 (Sonnet slices 1, 5, 6; Haiku slices 2, 3, 4) to compare rejection rates. The gates do not change: every draft is
@@ -134,6 +139,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 9: unread + probe scope, banks $10-$16 (6 slices of 150-152) | E-0377 | 904 | 904 (808 probed, 1,639 probes; 14 names) | 0 (91 spot checks, all correct) | PASS build/run_E-0377 | par627 OK (394, 3 skipped) |
 | 10: unread + probe scope, banks $16-$31 (6 slices of 150-153; 3 Sonnet, 3 Haiku) | E-0378 | 903 | 452 (330 probed, 1,152 probes; 29 names + 65 children) | 451 (all three Haiku drafts: partial reads, line-number citations, a wrong input; 50%: slices halved to 75, Haiku dropped) | PASS build/run629 | par629 OK (394, 3 skipped) |
 | 11: unread + probe scope, banks $19-$31 (6 slices of 75-80, Sonnet) | E-0379 | 459 | 459 (233 probed, 823 probes; 49 names + 4 derived) | 0 (48 spot checks, all correct) | PASS build/run631 | par631 OK (395, 3 skipped) |
+| 12: unread + probe scope, banks $31-$36 (6 slices of 75-80, Sonnet) | E-0380 | 457 | 457 (352 probed, 1,519 probes; 46 names + 14 child steps) | 0 (48 spot checks, all correct) | PASS build/run633 | par633 OK (396, 3 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.

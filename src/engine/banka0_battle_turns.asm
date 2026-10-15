@@ -2080,15 +2080,13 @@ BuildAndCopySlotPanel_A0::
 
 ; Copies the 20 x 5 tile block at rows 13-17 of the 32-column screen buffer (written as
 ; wWindowTileBuffer + $38, which is wScreenTileBuffer + $1A0) to vBGMap0 + $1A0
-; (CopyRect32StrideToVRAM_BankA0); the bank-$A0 copy of
-; DrawWindowTileBufferRow2Col16RowsToBGMapRow13 (bank $31). Its callers are RunBattleSetup_BankA0
-; steps such as RunBattleSetup_BankA0_EntrySelect_DrawRecordFrame,
+; (CopyRect32StrideToVRAM_BankA0); the bank-$A0 copy of CopyMessageBoxToBGMapRow13 (bank $31). Its
+; callers are RunBattleSetup_BankA0 steps such as RunBattleSetup_BankA0_EntrySelect_DrawRecordFrame,
 ; RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo and
 ; RunBattleSetup_BankA0_CommandMenu_ShowSkillError. (C1, E-0372)
 ; copies a 20 x 5 rectangle from wWindowTileBuffer + $38 (rows 32 bytes apart) to vBGMap0 + $1A0
-; (row 13) with CopyRect32StrideToVRAM_BankA0, as DrawWindowTileBufferRow2Col16RowsToBGMapRow13 does
-; in bank $31 (E-0076) (E-0340: the address in its name read as its RAM name; was
-; DrawRows13To17ToBGMap_BankA0)
+; (row 13) with CopyRect32StrideToVRAM_BankA0, as CopyMessageBoxToBGMapRow13 does in bank $31
+; (E-0076) (E-0340: the address in its name read as its RAM name; was DrawRows13To17ToBGMap_BankA0)
 DrawRows13To17ToBGMap_BankA0::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
@@ -3033,19 +3031,19 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_CountRound::
     farcall CopySlotPanelRowToVRAM
     ld c, $00
     farcall DrawSlotHPDigits
-    farcall CopySlotPanelPartToVRAM
+    farcall CopySlotHPDigitsPanelToVRAM
     ld c, $00
     farcall DrawSlotMPDigits
-    farcall CopySlotPanelPartToVRAM_2
+    farcall CopySlotMPDigitsPanelToVRAM
     ld c, $01
     farcall DrawSlotStatusMarks
     farcall CopySlotPanelRowToVRAM
     ld c, $01
     farcall DrawSlotHPDigits
-    farcall CopySlotPanelPartToVRAM
+    farcall CopySlotHPDigitsPanelToVRAM
     ld c, $01
     farcall DrawSlotMPDigits
-    farcall CopySlotPanelPartToVRAM_2
+    farcall CopySlotMPDigitsPanelToVRAM
     ld a, $05
     ld [wStringCategory], a
     ld a, $0c
@@ -4704,7 +4702,7 @@ RunBattleSetup_BankA0_EntrySelect_ShowChoices::
     inc hl
     set 7, [hl]
     farcall ClearAndLayoutTileBlocksForBattleFoeCount
-    farcall DrawScreenTileBufferRow11Col4RowsToBGMapRow7
+    farcall CopyScreenBufferRect20x11ToBGMapRow7
     ld hl, vTiles1 + $6d0
     ld de, $0701
     ld a, $02
@@ -5502,7 +5500,7 @@ RunBattleSetup_BankA0_MarkSlotsToAct::
     farcall ClearAndLayoutTileBlocksForBattleFoeCount
     call RunBattleSetup_BankA0_ClearTextTiles
     farcall CopyRectRecordToScreenBuffer
-    farcall DrawScreenTileBufferRow11Col4RowsToBGMapRow7
+    farcall CopyScreenBufferRect20x11ToBGMapRow7
     ld hl, wBattleSubPhase
     inc [hl]
     xor a

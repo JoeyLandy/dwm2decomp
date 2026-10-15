@@ -11,7 +11,8 @@ Five queues, in the order the readability goal works them (docs/PROJECT_STATUS.m
 3. unread: code labels without a hand-written whole-routine note (doc_coverage.HAND_NOTE);
 4. data: data labels described only by their reader and size (`; data read by Foo (8 bytes)`), by their own
    comment or by the header of their run;
-5. asset: INCBIN asset files that only the catch-all rule placed (gfx/misc/): their content is not identified.
+5. asset: INCBIN asset files that only the catch-all rule placed (gfx/misc/) and whose label has no hand-written
+   note (E-0382: the note identifies the content, or says what was tried when it stays unidentified).
 
     python -I tools/readability_queue.py [--list QUEUE] [--json OUT]
 """
@@ -65,7 +66,9 @@ def queues(files=None, root: Path = ROOT) -> dict[str, list[str]]:
     q: dict[str, list[str]] = {"instruction": [], "long": [], "unread": [], "data": [], "asset": []}
     for f in files:
         header = ""
+        noted: dict[int, bool] = {}  # label line -> the label has a hand-written note
         for name, kind, comment, line, text_body in doc_coverage.scan(f):
+            noted[line] = bool(doc_coverage.HAND_NOTE.search(comment.split("; why: ")[0]))
             where = f"{f.name}:{line} {name}"
             if len(name) > LONG:
                 q["long"].append(where)
@@ -82,7 +85,9 @@ def queues(files=None, root: Path = ROOT) -> dict[str, list[str]]:
                 q["data"].append(where)
         for n, ln in enumerate(f.read_text(encoding="utf-8").split("\n"), 1):
             if 'INCBIN "gfx/misc/' in ln:
-                q["asset"].append(f"{f.name}:{n} {ln.split(chr(34))[1]}")
+                owner = max((k for k in noted if k < n), default=None)
+                if owner is None or not noted[owner]:  # a hand note identifies it, or says what was tried
+                    q["asset"].append(f"{f.name}:{n} {ln.split(chr(34))[1]}")
     return q
 
 

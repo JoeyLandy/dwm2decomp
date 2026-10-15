@@ -5790,7 +5790,7 @@ RedrawChangedSlotPanels::
     jr z, .skip
     push hl
     farcall DrawSlotHPDigits
-    farcall CopySlotPanelPartToVRAM
+    farcall CopySlotHPDigitsPanelToVRAM
     pop hl
     res 0, [hl]
 
@@ -5799,7 +5799,7 @@ RedrawChangedSlotPanels::
     jr z, .skip2
     push hl
     farcall DrawSlotMPDigits
-    farcall CopySlotPanelPartToVRAM_2
+    farcall CopySlotMPDigitsPanelToVRAM
     pop hl
     res 1, [hl]
 

@@ -4,13 +4,23 @@
 SECTION "Bank 34", ROMX[$4000], BANK[$34]
     db $34
 
+; wMonsterId (16 bit, wMonsterId + 1 is the high byte) = monster id: copies its 26-byte MonsterTable
+; record to wRecordBuffer (LoadMonsterRecordTo with DE = wRecordBuffer). Ids below $250 come from
+; this bank (record at $4075 + 26 * id), ids from $250 on from bank $A2. Far-called by the battle
+; code and the debug menu among others. (C2, E-0380)
 ; wMonsterId/wMonsterId + $1 = monster id: copies its 26-byte MonsterTable record to wRecordBuffer
-; (ids at or above $250 come from bank $A2 through LoadMonsterRecordTo_Multiply8By16) (E-0033)
+; (ids at or above $250 come from bank $A2 through LoadMonsterRecordTo_Multiply8By16)
 LoadMonsterRecord::
     ld de, wRecordBuffer
     call LoadMonsterRecordTo
     ret
 
+; Copies part of a monster record: wMonsterId (16 bit) = monster id, C = first byte inside the
+; 26-byte record, hTemp0 = number of bytes, DE = destination. Ids below $250 are read from
+; MonsterTable in this bank (record at $4075 + 26 * id); ids from $250 on are passed to
+; CopyMonsterTableBytes in bank $A2. Callers (LoadEncounterMonsterIdsToWorkBuf,
+; SetupMap0BMonsterObjects) use it to read the first two bytes of a record (the picture number) into
+; hTemp0/hTemp1. (C2, E-0380)
 ; copies hTemp0 bytes of the 26-byte entry of monster wMonsterId/wMonsterId + $1 plus C from $4075
 ; to DE; ids from $250 use CopyMonsterTableBytes in bank $A2 (E-0125)
 CopyMonsterTableBytesFromMonsterTable::
@@ -47,7 +57,11 @@ CopyMonsterTableBytesFromMonsterTable::
     call CopyBytesDEFromHL
     ret
 
-; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE] (E-0353)
+; DE = destination: copies the 26-byte record of monster id wMonsterId (16 bit) from MonsterTable
+; (record at $4075 + 26 * id, Multiply8By16 with A = $1A) to [DE], then falls into CopyBytesDEFromHL
+; with B = $1A. Ids from $250 on are handed to LoadMonsterRecordTo_Multiply8By16 in bank $A2 (record
+; at $4056 + 26 * (id - $24F)). Called by LoadMonsterRecord. (C2, E-0380)
+; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE]
 LoadMonsterRecordTo::
     ld a, [wMonsterId + $1]
     cp $02
@@ -75,7 +89,9 @@ LoadMonsterRecordTo::
     pop de
     ld b, $1a
 
-; B bytes from [HL] to [DE]; HL and DE advance (E-0353)
+; B = count (0 means 256): copies B bytes from [HL] to [DE], advancing both, and returns with B = 0.
+; LoadMonsterRecordTo falls into it and CopyMonsterTableBytesFromMonsterTable calls it. (C2, E-0380)
+; B bytes from [HL] to [DE]; HL and DE advance
 CopyBytesDEFromHL::
     ld a, [hli]
     ld [de], a

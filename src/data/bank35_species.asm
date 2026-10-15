@@ -4,6 +4,9 @@
 SECTION "Bank 35", ROMX[$4000], BANK[$35]
     db $35
 
+; wSpeciesIdLo/wSpeciesIdHi = monster id: copies the whole 47-byte species record
+; (CopySpeciesRecordPrefix with B = $2F) to wSpeciesRecord; byte 0 is the family. Far-called from
+; many banks. (C2, E-0380)
 ; copies the whole 47-byte species record of monster id wSpeciesIdLo/Hi to wSpeciesRecord; byte 0 is
 ; the family (E-0069)
 LoadSpeciesRecord::
@@ -12,6 +15,9 @@ LoadSpeciesRecord::
     call CopySpeciesRecordPrefix
     ret
 
+; wSpeciesIdLo/wSpeciesIdHi = monster id: copies byte 0 of its species record, the family, to
+; wSpeciesRecord (CopySpeciesRecordPrefix with B = 1); the rest of wSpeciesRecord is left alone.
+; (C2, E-0380)
 ; copies byte 0 of the species record of monster id wSpeciesIdLo/Hi, the family (0 Slime ... 9
 ; Water, 10 Boss; $FF for an unused id), to wSpeciesRecord (E-0069)
 LoadSpeciesFamily::
@@ -20,6 +26,8 @@ LoadSpeciesFamily::
     call CopySpeciesRecordPrefix
     ret
 
+; wSpeciesIdLo/wSpeciesIdHi = monster id: copies bytes 0-1 of its species record (the family and the
+; byte after it) to wSpeciesRecord (CopySpeciesRecordPrefix with B = 2). (C2, E-0380)
 ; copies bytes 0-1 of the species record of monster id wSpeciesIdLo/Hi (the family and byte 1) to
 ; wSpeciesRecord (E-0069)
 LoadSpeciesRecordWord0::
@@ -28,6 +36,10 @@ LoadSpeciesRecordWord0::
     call CopySpeciesRecordPrefix
     ret
 
+; B = byte count (0 means 256), DE = destination: reads the word at SpeciesRecordPointers + 2 *
+; (wSpeciesIdLo/wSpeciesIdHi) and copies the first B bytes of the 47-byte species record it points
+; at to DE; B ends 0 and DE just past the copy. The id is not range checked (the table has 384
+; entries). (C2, E-0380)
 ; B = byte count, DE = destination: copies the first B bytes of the species record for monster id
 ; wSpeciesIdLo/Hi (pointer table SpeciesRecordPointers, 384 entries, 47-byte records) to DE (E-0062,
 ; E-0069)

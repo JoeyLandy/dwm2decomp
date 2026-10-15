@@ -895,10 +895,10 @@ RunBattleActions_UseItem_ApplyAmount::
 .return:
     ret
 
-; Item use, step 9: far-calls RunBattleSubStep2_2, the defeat sub-steps picked by wBattleSubStep2
+; Item use, step 9: far-calls UseItemDefeat_RunSteps, the defeat sub-steps picked by wBattleSubStep2
 ; (lower the target's mark and DefeatTarget, blank its picture, show the defeat text). (C1, E-0371)
 RunBattleActions_UseItem_DefeatTarget::
-    farcall RunBattleSubStep2_2
+    farcall UseItemDefeat_RunSteps
     ret
 
 ; Item use, step 10: the BeastTail shows text $2B or $2A by the target's species flag for each

@@ -24,7 +24,7 @@
     {"byte": 2, "bit": 4, "name": "UNUSED_2_4", "note": "no static reader or writer found (bit/set/res on the status byte, masks after AddAx9ToHL); forcing it showed no new battle text (E-0346 reading, C1)"},
     {"byte": 2, "bit": 5, "name": "MAGIC_BACK", "note": "a one-time spell bounce: TryWallOfLightBounce clears it after bouncing unless bit 1 is set; tested by ActionEffect_MagicBack (E-0346 reading, C1)"},
     {"byte": 2, "bit": 6, "name": "WIND_GUARD", "note": "set by TailWind; TryWindBounce: 'The wind around 0 bounced the attack!', DeMagic: 'The wind around 0 died!' (E-0337)"},
-    {"byte": 2, "bit": 7, "name": "CRITICAL_ROLLED", "note": "ResolveStepChanceRoll sets it on the actor when the critical roll succeeds ('Critical hit!' / 'A brutal hit!') and clears it otherwise; ResolveStepComputeDamage then uses ATK within 5% as the damage; Berserker, EvilSlash, Massacre and TwinSlash clear it (E-0346 reading, C1)"},
+    {"byte": 2, "bit": 7, "name": "CRITICAL_ROLLED", "note": "ResolveStepCriticalRoll sets it on the actor when the critical roll succeeds ('Critical hit!' / 'A brutal hit!') and clears it otherwise; ResolveStepComputeDamage then uses ATK within 5% as the damage; Berserker, EvilSlash, Massacre and TwinSlash clear it (E-0346 reading, C1)"},
     {"byte": 3, "bit": 0, "name": "FROZEN", "note": "forced: '0 is frozen solid!'"},
     {"byte": 3, "bit": 1, "name": "DANCING", "note": "forced: '0 is dancing along!'"},
     {"byte": 3, "bit": 2, "name": "TRIPPED", "note": "forced: '0 can't get back up!'"},

@@ -96,6 +96,19 @@ class Queue(unittest.TestCase):
         self.assertEqual([w.split()[-1] for w in q["data"]], ["Inn_Data", "Inn_Data2"])
         self.assertEqual(q["long"], [])
 
+    def test_an_asset_with_a_hand_note_leaves_the_asset_queue(self):
+        text = ('; LZSS-compressed (E-0016)\nGfx16_1::\n    INCBIN "gfx/misc/gfx16_1.lz"\n\n'
+                '; The title logo tiles: loaded to vTiles1 by the title screen. (C1, E-0373)\nTitleLogoTiles::\n'
+                '    INCBIN "gfx/misc/title_logo_tiles.lz"\n')
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "config").mkdir()
+            (root / "config/names.json").write_text(json.dumps({}), encoding="utf-8")
+            f = root / "bank16_items.asm"
+            f.write_text(text, encoding="utf-8")
+            q = readability_queue.queues([f], root)
+        self.assertEqual([w.split()[-1] for w in q["asset"]], ["gfx/misc/gfx16_1.lz"])
+
 
 if __name__ == "__main__":
     unittest.main()

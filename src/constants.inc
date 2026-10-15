@@ -1110,7 +1110,7 @@ DEF BSTAT2_AQUA_WALL EQU 3 ; set by AquaWall
 DEF BSTAT2_UNUSED_2_4 EQU 4 ; no static reader or writer found (bit/set/res on the status byte, masks after AddAx9ToHL); forcing it showed no new battle text (E-0346 reading, C1)
 DEF BSTAT2_MAGIC_BACK EQU 5 ; a one-time spell bounce: TryWallOfLightBounce clears it after bouncing unless bit 1 is set; tested by ActionEffect_MagicBack (E-0346 reading, C1)
 DEF BSTAT2_WIND_GUARD EQU 6 ; set by TailWind; TryWindBounce: 'The wind around 0 bounced the attack!', DeMagic: 'The wind around 0 died!' (E-0337)
-DEF BSTAT2_CRITICAL_ROLLED EQU 7 ; ResolveStepChanceRoll sets it on the actor when the critical roll succeeds ('Critical hit!' / 'A brutal hit!') and clears it otherwise; ResolveStepComputeDamage then uses ATK within 5% as the damage; Berserker, EvilSlash, Massacre and TwinSlash clear it (E-0346 reading, C1)
+DEF BSTAT2_CRITICAL_ROLLED EQU 7 ; ResolveStepCriticalRoll sets it on the actor when the critical roll succeeds ('Critical hit!' / 'A brutal hit!') and clears it otherwise; ResolveStepComputeDamage then uses ATK within 5% as the damage; Berserker, EvilSlash, Massacre and TwinSlash clear it (E-0346 reading, C1)
 DEF BSTAT3_FROZEN EQU 0 ; forced: '0 is frozen solid!'
 DEF BSTAT3_DANCING EQU 1 ; forced: '0 is dancing along!'
 DEF BSTAT3_TRIPPED EQU 2 ; forced: '0 can't get back up!'

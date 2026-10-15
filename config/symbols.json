@@ -3209,7 +3209,7 @@
   },
   "CFCE": {
     "name": "wEffectSubStep",
-    "note": "sub-step of the effect resolution (RunEffectSubStep, ResolveStep0EEffect)",
+    "note": "sub-step of the effect resolution (RecoilEffect_DefeatSteps, ResolveStep0EEffect)",
     "evidence": "E-0135"
   },
   "CFCF": {
@@ -4457,7 +4457,7 @@
   },
   "D8A7": {
     "name": "wSlotBodyFlags",
-    "note": "per-slot body flags from the species record at battle start (low nibble = species byte 3, high nibble = species byte 2): bit 0 metal (MetalCut x50, AttackDamageTimes1_5IfSlotDamageFlagsBit0), bit 4 cannot be tripped (LegSweep, BigTrip) (C1; was wSlotDamageFlags)",
+    "note": "per-slot body flags from the species record at battle start (low nibble = species byte 3, high nibble = species byte 2): bit 0 metal (MetalCut x50, AttackDamageTimes1_5IfSlotBodyFlagsBit0), bit 4 cannot be tripped (LegSweep, BigTrip) (C1; was wSlotDamageFlags)",
     "evidence": "E-0137, E-0310",
     "size": "8"
   },

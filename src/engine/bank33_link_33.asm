@@ -4,9 +4,14 @@
 SECTION "Bank 33", ROMX[$4000], BANK[$33]
     db $33
 
+; E = block number of ScreenBlockTable (D is overwritten with 0 and ignored). The record is a word
+; offset into wScreenTileBuffer, a width B, a row count C and then B * C tile bytes; the tiles are
+; copied to wScreenTileBuffer + offset one row at a time with 32 bytes from row to row, and the
+; other bytes of the buffer are not touched. Far-called by the pause menu (bank $03) and the screens
+; of bank $F1 to compose a screen from blocks. (C2, E-0380)
 ; DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a
 ; width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows
-; 32 bytes apart (E-0353)
+; 32 bytes apart
 CopyBlockToTileBuffer::
     ld d, $00
     ld hl, ScreenBlockTable
@@ -44,6 +49,10 @@ CopyBlockToTileBuffer::
     jr nz, .loop
     ret
 
+; E = block number of ScreenBlockTable (D is overwritten with 0 and ignored): like
+; CopyBlockToTileBuffer, but every tile from $15 to $A3 (the text glyphs) is written as the blank
+; tile $C3; tiles below $15 and from $A4 up are copied unchanged. Far-called by the pause menu (bank
+; $03). (C2, E-0380)
 ; E = block: copies the screen block from ScreenBlockTable[E] (word offset, width, rows, tiles) into
 ; wScreenTileBuffer like CopyBlockToTileBuffer, but writes tile $C3 for tiles $15-$A3 (the text
 ; glyphs) (E-0117)
@@ -823,7 +832,7 @@ RunLinkSession6Exchange_DrawTeamGold::
     call WriteGoldDigitsToScreenTileBufferRow1Col14
     ld de, wKeyNameBuf
     ld hl, wScreenTileBuffer + $43
-    call RunFourTimes
+    call DrawFourTwoDigitNumbers
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $0000
@@ -961,7 +970,7 @@ TeamMode_PayFee::
 ; Team Mode fee step 5: clears wLinkSendByte and wLinkScreenFlag and moves to step 6
 ; (RunLinkSession6Exchange_ChooseTeamMonster, whose steps wLinkScreenFlag picks). Reached after 'You
 ; paid the 1000G battle fee.' (TeamMode_PayFee) and from TeamMode_ReturnToChoice, which sets step 5
-; directly. (C1, E-0372)
+; directly. (C2, E-0372; probed E-0380)
 TeamMode_Screen_StartChoosing::
     xor a
     ld [wLinkSendByte], a
@@ -971,7 +980,11 @@ TeamMode_Screen_StartChoosing::
     ld [wLinkScreenFlag], a
     ret
 
-; by its step: 'Choose a monster for the Team ...' (E-0294)
+; Step 6 of TeamMode_Screen (wTitleScreenSubState, wTitleScreenState 0), 'Choose a monster for the
+; Team Mode.': runs the case of wLinkScreenFlag, 0 RunLinkSession6Exchange_ChooseTeamMonster_Clear,
+; 1 RunLinkSession6Exchange_ShowChooseAMonsterFor, 2
+; RunLinkSession6Exchange_ChooseTeamMonster_Finish. (C1, E-0380)
+; by its step: 'Choose a monster for the Team ...'
 RunLinkSession6Exchange_ChooseTeamMonster::
     ld a, [wLinkScreenFlag]
     jumptable
@@ -981,7 +994,7 @@ RunLinkSession6Exchange_ChooseTeamMonster::
 
 ; Step 0 of RunLinkSession6Exchange_ChooseTeamMonster (wLinkScreenFlag 0): once wTextFlags is clear,
 ; fills the $104 bytes from wScreenTileBuffer with blank tile $C3 and sets wLinkScreenFlag to 1
-; (RunLinkSession6Exchange_ShowChooseAMonsterFor). (C1, E-0372)
+; (RunLinkSession6Exchange_ShowChooseAMonsterFor). (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_ChooseTeamMonster_Clear::
     ld a, [wTextFlags]
     or a
@@ -1016,7 +1029,7 @@ RunLinkSession6Exchange_ShowChooseAMonsterFor::
 ; Step 2 of RunLinkSession6Exchange_ChooseTeamMonster (wLinkScreenFlag 2): clears
 ; wTitleScreenSubState and wLinkScreenFlag, sets wTitleScreenState to 1 and wScreenState to 0, so
 ; TeamMode_Screen now runs its screen-state table from TeamMode_Screen_AdvanceScreenState_2 (state
-; 0) toward the pick list (RunLinkSession6Exchange_Pick, state 4). (C1, E-0372)
+; 0) toward the pick list (RunLinkSession6Exchange_Pick, state 4). (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_ChooseTeamMonster_Finish::
     xor a
     ld [wTitleScreenSubState], a
@@ -1137,7 +1150,7 @@ TeamMode_WaitPartner::
 ; wTitleScreenSubState and sets wScreenState to 2 (TeamMode_Screen_Leave). Reached from
 ; TeamMode_WaitPartner (step 9) when the partner answers $30 or $40, after this side could not or
 ; would not pay for both ('Insufficient gold for Team Mode.' / 'You refused to pay the battle ...').
-; (C1, E-0372)
+; (C2, E-0372; probed E-0380)
 TeamMode_Screen_QuitUnpaid::
     ld a, $fe
     ld [wLinkSendByte], a
@@ -1239,7 +1252,7 @@ TeamMode_ReturnToChoice::
     ret
 
 ; Team Mode, step 13: on the partner's $10, $30, $40 or $FE gives up (sends $FE, screen state 2).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0380)
 TeamMode_GiveUp::
     ld a, [wLinkMessage]
     cp $10
@@ -1262,7 +1275,11 @@ TeamMode_GiveUp::
     ld [wScreenState], a
     ret
 
-; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07 (E-0353)
+; A = string index: stores A in wStringIndex and 5 in wStringCategory, then far-calls
+; BeginStringDisplay_Bank07, which starts printing that string. Category 5 of the bank $07 table
+; holds the Team Mode and fee messages ('Please wait.' is index $0C, 'Your pal refused the Team
+; Mode.' index $0A). Called by the Team Mode steps of this bank. (C1, E-0380)
+; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07
 BeginString_Bank07_Cat5::
     ld [wStringIndex], a
     ld a, $05
@@ -1272,15 +1289,15 @@ BeginString_Bank07_Cat5::
 
 ; Team Mode screen state 0 (wScreenState 0 of TeamMode_Screen, set by
 ; RunLinkSession6Exchange_ChooseTeamMonster_Finish): moves to state 1
-; (TeamMode_Screen_GoToPickAfterText). (C1, E-0372)
+; (TeamMode_Screen_GoToPickAfterText). (C2, E-0372; probed E-0380)
 TeamMode_Screen_Start::
     ld hl, wScreenState
     inc [hl]
     ret
 
 ; Team Mode screen state 1: once wTextFlags is clear, adds 2 to wScreenState, passing over state 2
-; (TeamMode_Screen_Leave) to state 3 (TeamMode_Screen_StartPick), which leads to the pick list. (C1,
-; E-0372)
+; (TeamMode_Screen_Leave) to state 3 (TeamMode_Screen_StartPick), which leads to the pick list. (C2,
+; E-0372; probed E-0380)
 TeamMode_Screen_GoToPickAfterText::
     ld a, [wTextFlags]
     and a
@@ -1302,7 +1319,7 @@ TeamMode_Screen_Leave::
 
 ; Step 0 of TeamMode_Screen_Leave (wScreenStep 0): waits until the partner's wLinkMessage is $FE
 ; (its quit byte), then clears wLinkSendByte and moves to step 1
-; (TeamMode_Screen_Leave_ShowPleaseWait). (C1, E-0372)
+; (TeamMode_Screen_Leave_ShowPleaseWait). (C2, E-0372; probed E-0380)
 TeamMode_Screen_Leave_OnPartnerQuit::
     ld a, [wLinkMessage]
     cp $fe
@@ -1326,7 +1343,7 @@ TeamMode_Screen_Leave_ShowPleaseWait::
     ret
 
 ; Step 2 of TeamMode_Screen_Leave: once wTextFlags is clear (after 'Please wait.'), sends 1
-; (wLinkSendByte) and moves to step 3. (C1, E-0372)
+; (wLinkSendByte) and moves to step 3. (C2, E-0372; probed E-0380)
 TeamMode_Screen_Leave_SendReady::
     ld a, [wTextFlags]
     and a
@@ -1338,7 +1355,7 @@ TeamMode_Screen_Leave_SendReady::
     ret
 
 ; Step 3 of TeamMode_Screen_Leave: waits until the partner's wLinkMessage is 1, then clears
-; wLinkSendByte and moves to step 4. (C1, E-0372)
+; wLinkSendByte and moves to step 4. (C2, E-0372; probed E-0380)
 TeamMode_Screen_Leave_OnPartnerReady::
     ld a, [wLinkMessage]
     cp $01
@@ -1352,7 +1369,7 @@ TeamMode_Screen_Leave_OnPartnerReady::
 ; Step 4 of TeamMode_Screen_Leave: once wTextFlags bit 0 is clear, zeroes the $6F bytes from
 ; wScreenState, then writes wGameMode = 5, wModeState = 1, wWorldMapState = 0, wGameMode2Arg = 0 and
 ; increments wModeChangeRequest, so the main loop restarts game mode 5 at GameMode5_Init entry 1
-; (GameMode5_Init_TitleMenu). (C1, E-0372)
+; (GameMode5_Init_TitleMenu). (C2, E-0372; probed E-0380)
 TeamMode_Screen_Leave_ExitToTitleMenu::
     ld a, [wTextFlags]
     bit 0, a
@@ -1380,7 +1397,7 @@ TeamMode_Screen_Leave_ExitToTitleMenu::
     ret
 
 ; Team Mode screen state 3: moves to state 4 (RunLinkSession6Exchange_Pick, the team pick list).
-; (C1, E-0372)
+; (C2, E-0372; probed E-0380)
 TeamMode_Screen_StartPick::
     ld hl, wScreenState
     inc [hl]
@@ -1421,11 +1438,19 @@ RunLinkSession6Exchange_Pick_ListMonsters::
     farcall DrawRecordListPageIndicators_1B
     ret
 
+; Far-calls DrawListEntriesCell5RecordPanel (bank $1B), which draws the family icon, level and sex
+; mark of the record under the list cursor into the record panel and adds 1 to wScreenStep. It is
+; step 4 of RunLinkSession6Exchange_Pick (picked by wScreenStep) and is also called by
+; RunLinkSession6Exchange_BackFromOwnStats_DrawPanel. (C1, E-0380)
 ; far-calls DrawListEntriesCell5RecordPanel (E-0122)
 CallDrawListEntriesCell5RecordPanel::
     farcall DrawListEntriesCell5RecordPanel
     ret
 
+; Far-calls ClearAndDrawListEntriesCell5NameAtTiles1780 (bank $1B), which blanks 5 tiles at vTiles1
+; + $780, draws the name of the record under the list cursor there and adds 1 to wScreenStep. It is
+; step 5 of RunLinkSession6Exchange_Pick and is also called by
+; RunLinkSession6Exchange_BackFromOwnStats_DrawName. (C1, E-0380)
 ; far-calls ClearAndDrawListEntriesCell5NameAtTiles1780 (E-0122)
 CallClearAndDrawListEntriesCell5Name::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
@@ -1436,7 +1461,7 @@ CallClearAndDrawListEntriesCell5Name::
 ; CopyRectTo20ByteRowsJp_Bank33, then wScreenStep += 1. It is step 6 of RunLinkSession6Exchange_Pick
 ; (wScreenStep) and is called by RunLinkSession6Exchange_BackFromOwnStats_DrawInfo;
 ; RunLinkSession6Exchange_Pick_MarkCursor then writes the four numbers into it from wKeyNameBuf.
-; (C1, E-0372)
+; (C2, E-0372; probed E-0380)
 ; copies the 10 x 11 rectangle PlayerWinLossWindow_TileRect into wWindowTileBuffer + $6E
 ; (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119) (E-0340: the address in its name
 ; read as its RAM name; was RunLinkSession6Exchange_DrawInfoWindow) (E-0344: the address in its name
@@ -1462,7 +1487,7 @@ RunLinkSession6Exchange_Pick_MarkCursor::
     call StoreBAtWordTableEntry_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFourTimes
+    call DrawFourTwoDigitNumbers
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -1684,7 +1709,7 @@ RunLinkSession6Exchange_Pick_ShowPleaseWait::
     ret
 
 ; Picking, step 13: copies the picked SRAM record into wRecordBufA for the exchange (into
-; wRecordBufB), clears the link scene and sends 1. (C1, E-0357)
+; wRecordBufB), clears the link scene and sends 1. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_Pick_CopyRecord::
     ld a, $0a
     ld [rRAMG], a
@@ -1756,7 +1781,7 @@ RunLinkSession6Exchange_Pick_StartExchange::
 
 ; Step 15 of RunLinkSession6Exchange_Pick: waits for wLinkMessage $F0 (the end of the $A5-byte
 ; record exchange started in step 14), then increments wScreenState to 5
-; (RunLinkSession6Exchange_FightInfo) and clears wScreenStep. (C1, E-0372)
+; (RunLinkSession6Exchange_FightInfo) and clears wScreenStep. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_Pick_EndExchange::
     ld a, [wLinkMessage]
     cp $f0
@@ -1790,7 +1815,8 @@ RunLinkSession6Exchange_FightInfo::
     dw RunLinkSession6Exchange_FightInfo_SendStart
     dw RunLinkSession6Exchange_FightInfo_StartLinkBattle
 
-; Fight info, step 0: packs this side's key bytes and the player's name to send. (C1, E-0357)
+; Fight info, step 0: packs this side's key bytes and the player's name to send. (C2, E-0357; probed
+; E-0380)
 RunLinkSession6Exchange_FightInfo_Pack::
     ld hl, wScreenStep
     inc [hl]
@@ -1803,6 +1829,11 @@ RunLinkSession6Exchange_FightInfo_Pack::
     ld hl, wPlayerName
     ld b, $0b
 
+; HL = source, DE = destination, B = count: copies B bytes (B = 0 copies 256) and then stores 1 at
+; the next destination byte; on return DE points at that 1, HL is just past the source, A = 1 and B
+; = 0. RunLinkSession6Exchange_FightInfo_Pack calls it for the four key bytes and then falls into it
+; again for the 11 bytes of the name, so the first name byte overwrites the 1 after the key bytes
+; and one final 1 ends the 16-byte block. (C2, E-0380)
 ; copies B bytes from HL to DE, then stores 1 after them (E-0115)
 CopyBBytesThenMark1::
     ld a, [hli]
@@ -1815,7 +1846,7 @@ CopyBBytesThenMark1::
     ret
 
 ; Step 1 of RunLinkSession6Exchange_FightInfo: sends 1 (wLinkSendByte) and moves to step 2, which
-; waits for the partner's 1. (C1, E-0372)
+; waits for the partner's 1. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_SendReady::
     ld a, $01
     ld [wLinkSendByte], a
@@ -1826,7 +1857,7 @@ RunLinkSession6Exchange_FightInfo_SendReady::
 ; Step 2 of RunLinkSession6Exchange_FightInfo: on the partner's 1, starts a 16-byte exchange: the
 ; word at wLinkTimeoutLo/Hi = wLinkRecvBuffer (where step 0 packed this side's four key bytes, the
 ; 11-byte player name and a 1), wLinkBufferPtrLo/Hi = wLinkPartnerName, wLinkBufferCountLo = $10,
-; sends $FF and moves to step 3. (C1, E-0372)
+; sends $FF and moves to step 3. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_StartExchange::
     ld a, [wLinkMessage]
     cp $01
@@ -1851,7 +1882,7 @@ RunLinkSession6Exchange_FightInfo_StartExchange::
 
 ; Step 3 of RunLinkSession6Exchange_FightInfo: waits for wLinkMessage $F0 (the 16-byte exchange of
 ; step 2 has ended), then clears wLinkSendByte and moves to step 4
-; (RunLinkSession6Exchange_FightInfo_DrawWindow). (C1, E-0372)
+; (RunLinkSession6Exchange_FightInfo_DrawWindow). (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_EndExchange::
     ld a, [wLinkMessage]
     cp $f0
@@ -1892,7 +1923,7 @@ RunLinkSession6Exchange_FightInfo_DrawWindow::
     ld [wLinkFightInfo], a
     ld de, wLinkPartnerName
     ld hl, wWindowTileBuffer + $a7
-    call RunFourTimes
+    call DrawFourTwoDigitNumbers
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2083,7 +2114,7 @@ RunLinkSession6Exchange_FightInfo_ShowPleaseWait::
 
 ; Step 10 of RunLinkSession6Exchange_FightInfo: once wTextFlags is clear (after 'Please wait.', step
 ; 9), moves to step 11 and sends 1; step 11 (RunLinkSession6Exchange_FightInfo_SaveAnswer) starts
-; saving on the partner's 1. (C1, E-0372)
+; saving on the partner's 1. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_ReadyToSave::
     ld a, [wTextFlags]
     and a
@@ -2126,7 +2157,7 @@ RunLinkSession6Exchange_FightInfo_SaveAnswer::
     ret
 
 ; Fight info, step 12: after the text checks the save (ReloadSaveBlocksWithChecksum, keeping the
-; gold) and saves, then sends 5. (C1, E-0357)
+; gold) and saves, then sends 5. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_FightInfo_Save::
     ld a, [wTextFlags]
     and a
@@ -2152,7 +2183,7 @@ RunLinkSession6Exchange_FightInfo_Save::
     ret
 
 ; Fight info, step 13: on the partner's 5 keeps the partner's name (wLinkSeedCopy) and the picked
-; record number. (C1, E-0357)
+; record number. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_FightInfo_KeepPartner::
     ld a, [wLinkMessage]
     cp $05
@@ -2175,7 +2206,7 @@ RunLinkSession6Exchange_FightInfo_KeepPartner::
     ld [wScreenStep], a
     ret
 
-; Fight info, step 14: starts a 2-byte exchange of the random seed. (C1, E-0357)
+; Fight info, step 14: starts a 2-byte exchange of the random seed. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_FightInfo_ExchangeSeed::
     ld a, [wScreenStep]
     inc a
@@ -2207,7 +2238,7 @@ RunLinkSession6Exchange_FightInfo_ExchangeSeed::
 ; Step 15 of RunLinkSession6Exchange_FightInfo: waits for wLinkMessage $F0 (the 2-byte seed exchange
 ; of step 14 has ended), clears wLinkSendByte and wLinkReady, then makes both sides use one seed:
 ; with wLinkRole bit 1 clear it copies wRandomLo/Hi to wRandomSeed2Lo/Hi; with bit 1 set it copies
-; the received wRandomSeed2Lo/Hi into wRandomLo/Hi. Moves to step 16. (C1, E-0372)
+; the received wRandomSeed2Lo/Hi into wRandomLo/Hi. Moves to step 16. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_SyncSeed::
     ld a, [wLinkMessage]
     cp $f0
@@ -2238,7 +2269,7 @@ RunLinkSession6Exchange_FightInfo_SyncSeed::
     ret
 
 ; Step 16 of RunLinkSession6Exchange_FightInfo: moves to step 17 and sends $D2 (wLinkSendByte); step
-; 17 starts the battle when the partner's $D2 arrives. (C1, E-0372)
+; 17 starts the battle when the partner's $D2 arrives. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_SendStart::
     ld a, [wScreenStep]
     inc a
@@ -2250,7 +2281,7 @@ RunLinkSession6Exchange_FightInfo_SendStart::
 ; Step 17 of RunLinkSession6Exchange_FightInfo: on the partner's $D2 clears wLinkSendByte, sets
 ; wGameMode = 7 with wModeState, wWorldMapState and wGameMode2Arg cleared and wModeChangeRequest = 1
 ; (RunGameModeInit entry 7, RunGameModeInit_LinkBattle), sets wLinkSession = 7 and
-; wLinkExchangeState = 0, and clears wLinkSendByte and wLinkMessage. (C1, E-0372)
+; wLinkExchangeState = 0, and clears wLinkSendByte and wLinkMessage. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_StartLinkBattle::
     ld a, [wLinkMessage]
     cp $d2
@@ -2346,8 +2377,8 @@ RunLinkSession6Exchange_BackFromStats_DrawInfo::
     ret
 
 ; Steps 1 and 2 of RunLinkSession6Exchange_BackFromStats: each only increments wScreenStep, so the
-; redraw waits two calls between drawing the info window (step 0) and the panel (step 3). (C1,
-; E-0372)
+; redraw waits two calls between drawing the info window (step 0) and the panel (step 3). (C2,
+; E-0372; probed E-0380)
 RunLinkSession6Exchange_BackFromStats_Delay::
     ld hl, wScreenStep
     inc [hl]
@@ -2466,14 +2497,14 @@ RunLinkSession6Exchange_BackFromStats_DrawWindows::
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFourTimes
+    call DrawFourTwoDigitNumbers
     ld de, PartnerWinLossWindow_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wLinkPartnerName
     ld hl, wWindowTileBuffer + $a7
-    call RunFourTimes
+    call DrawFourTwoDigitNumbers
     ld hl, vTiles2 + $50
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2625,7 +2656,7 @@ RunLinkSession6Exchange_BackFromOwnStats_DrawName::
     call CallClearAndDrawListEntriesCell5Name
     ret
 
-; Back from this side's stats, step 5: draws the info window. (C1, E-0357)
+; Back from this side's stats, step 5: draws the info window. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_BackFromOwnStats_DrawInfo::
     call RunLinkSession6Exchange_DrawInfoWindow
     ret
@@ -2656,7 +2687,7 @@ RunLinkSession6Exchange_BackFromOwnStats_AskPick::
     farcall ShowString_Bank1B
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFourTimes
+    call DrawFourTwoDigitNumbers
     ld de, InfoOKBox_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
@@ -2692,6 +2723,10 @@ RunLinkSession6Exchange_BackFromOwnStats_Return::
     call SetDefaultStringWindow_Bank33
     ret
 
+; C = field offset: enables SRAM, selects SRAM bank 0, loads field C of record number
+; [wPickedRecords] (the first picked record) into hTemp0 with LoadSRAMRecordByte, then disables SRAM
+; and selects bank 0 again. HL = wPickedRecords and A = 0 on return. No label or table in the source
+; names it, so it appears to be unused. (C1, E-0380)
 ; with SRAM bank 0 enabled, LoadSRAMRecordByte with A = wPickedRecords (C = field from the caller);
 ; then disables SRAM (E-0119)
 LoadRecordByteForPickedRecords::
@@ -2707,9 +2742,15 @@ LoadRecordByteForPickedRecords::
     ld [rRAMB], a
     ret
 
-; copies box DrawBoxAndKeyRows_TileRect to wWindowTileBuffer + $110 and runs RunFourTimes for
-; wKeyNameBuf at wWindowTileBuffer + $B1 (E-0126) (E-0344: the address in its name dropped or read
-; as the label there; was DrawBoxAndKeyRows)
+; Copies the 8 x 5 tile rectangle DrawBoxAndKeyRows_TileRect to wWindowTileBuffer + $110
+; (CopyRectTo20ByteRowsJp_Bank33), then draws the four numbers at wKeyNameBuf as two-digit tiles
+; from wWindowTileBuffer + $B1, two rows apart (DrawFourTwoDigitNumbers); the fourth number lands on
+; columns 5 and 6 of the second row of the rectangle and overwrites them. Called by
+; RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor and
+; RunLinkSession6Exchange_Pick_ShowPleaseWait. (C2, E-0380)
+; copies box DrawBoxAndKeyRows_TileRect to wWindowTileBuffer + $110 and runs DrawFourTwoDigitNumbers
+; for wKeyNameBuf at wWindowTileBuffer + $B1 (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was DrawBoxAndKeyRows)
 DrawBoxAndKeyRows::
     ld de, DrawBoxAndKeyRows_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -2717,9 +2758,17 @@ DrawBoxAndKeyRows::
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFourTimes
+    call DrawFourTwoDigitNumbers
     ret
 
+; Builds the pick list wListEntries from the first $1E stored records (sRecords, SRAM bank 0); the
+; 30 bytes of wListEntries and of wListEntries2 are zeroed first. A record is listed when its
+; MON_STATE is 1, or 2 while wPickCount is not 3, and its MON_EGG byte is 0; while wPickCount is 1
+; or 2 a record already in the first wPickCount bytes of wPickedRecords is left out. Each listed
+; record index is appended to wListEntries and wListCount is the length; wRecordsFlagged counts the
+; records with a fitting state whose MON_EGG byte is not 0. SRAM is switched off at the end and
+; MovePartyRecordsToFrontOfList puts the party members first. Called by
+; RunLinkSession6Exchange_BackFromOwnStats_ListPage. (C1, E-0380)
 ; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is
 ; clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
 ListAvailableRecordsForSelection_Bank33::
@@ -2839,6 +2888,11 @@ ListAvailableRecordsForSelection_Bank33::
     farcall MovePartyRecordsToFrontOfList
     ret
 
+; A = string number minus $10: sets wStringIndex = A + $10 and wStringCategory = 0, then farcalls
+; BeginStringDisplay_Bank1B to start showing that string of category 0 of bank $1B in the current
+; text window. Callers pass A = $0C ('Please wait.') from
+; RunLinkSession6Exchange_Pick_ShowPleaseWait and TeamMode_Screen_Leave_ShowPleaseWait, and A = $02
+; ('Pick 0 for the team?') from RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe. (C1, E-0380)
 ; the same 16 bytes as ShowStringA10_Bank1B (ShowStringA10_Bank1B) (E-0063)
 ShowStringA10_Bank33::
     add $10
@@ -2848,6 +2902,10 @@ ShowStringA10_Bank33::
     farcall BeginStringDisplay_Bank1B
     ret
 
+; Sets the text window for the next string: wTextWindowTileLo/Hi = vTiles1 ($8800), wTextWindowRows
+; = 2 and wTextWindowWidth = $12, so BeginStringDisplay clears and fills 18 tiles per line for 2
+; lines. Called after the Team Mode screens draw a frame or window (for example
+; TeamMode_Screen_DrawFrameAndName and RunLinkSession6Exchange_BackFromStats_DrawInfo). (C1, E-0380)
 ; sets the string window: wTextWindowTileLo/wTextWindowTileHi = vTiles1 ($8800),
 ; wTextWindowRows/wTextWindowWidth = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
 SetDefaultStringWindow_Bank33::
@@ -2863,6 +2921,10 @@ SetDefaultStringWindow_Bank33::
     ld [wTextWindowWidth], a
     ret
 
+; wPickedRecords (its first byte only) = the record index in the list cell under the cursor,
+; wListEntries + 5 * wListPageIndex + wListCursor (SetArg5ToListEntriesCell5). Called by
+; RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe and RunLinkSession6Exchange_Pick_InfoOKChoice.
+; (C2, E-0380)
 ; wPickedRecords = the record index at wListEntries cell 5 (E-0126)
 StoreListEntriesCell5RecordInPickedRecords::
     farcall SetArg5ToListEntriesCell5
@@ -2875,6 +2937,14 @@ StoreListEntriesCell5RecordInPickedRecords::
     ld [de], a
     ret
 
+; Copies the name of the record in the list cell under the cursor (wListEntries + 5 * wListPageIndex
+; + wListCursor) to wTextBuf0 so a message with <BUF0> shows it: with SRAM bank 0 enabled,
+; CopyRecordNameToNameGlyphBuf reads its 10 name bytes (MON_NAME) into wNameGlyphBuf, then 11 bytes
+; of wNameGlyphBuf go to wTextBuf0 (the 11th is whatever follows the name, normally the $F0 end mark
+; that DrawPlayerNameAndString0Category1 left there); SRAM is switched off again. Called by
+; RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe,
+; RunLinkSession6Exchange_BackFromStats_ShowChoices and
+; RunLinkSession6Exchange_BackFromOwnStats_AskPick. (C1, E-0380)
 ; copies the name of the record at wListEntries cell 5 (11 bytes) to wTextBuf0 (E-0124)
 CopyListEntriesCell5NameToTextBuf0_Bank33::
     ld a, $0a
@@ -2904,6 +2974,9 @@ CopyListEntriesCell5NameToTextBuf0_Bank33::
     ld [rRAMG], a
     ret
 
+; Closes the pick: wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4 (the RAM notes call
+; 4 the end of the picks and $FF a finished pick), wScreenSubStep = 0 and wScreenStep += 1. Called
+; by RunLinkSession6Exchange_Pick_ShowPleaseWait right after it incremented wPickCount. (C2, E-0380)
 ; wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4, wScreenSubStep = 0 and wScreenStep
 ; += 1 (E-0126)
 FinishPickedRecordsEntryAndStep_33::
@@ -2920,8 +2993,13 @@ FinishPickedRecordsEntryAndStep_33::
     ld [wScreenStep], a
     ret
 
+; HL = table of 16-bit addresses, A = index, B = tile number: stores B at the address held by entry
+; A (the index is doubled in 8 bits, so it wraps above $7F); BC is kept, A, DE and HL are clobbered.
+; The Team Mode pick steps call it with RunLinkSession6Exchange_Pick_MarkCursor_Data and A =
+; wListCursor to put a cursor tile ($BB, $BC) or the blank $C3 at the mark position of that list
+; row. (C2, E-0380)
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0353)
+; A, DE, HL (the same 16 bytes appear in 4 banks)
 StoreBAtWordTableEntry_Bank33::
     push bc
     sla a
@@ -2935,8 +3013,11 @@ StoreBAtWordTableEntry_Bank33::
     ld [de], a
     ret
 
+; HL = $9800 + (hScrollY AND $F8) * 4 + hScrollX / 8: the BG map address of the tile at the current
+; scroll position (hScrollX, hScrollY); A and DE are clobbered (DE ends equal to HL). Called before
+; DrawScreenBufferRectToBGMap_33 to give it the top-left BG map address of the screen. (C2, E-0380)
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0353)
+; clobbers A, DE (the same 41 bytes appear in 3 banks)
 BGMapAddressAtScroll_Bank33::
     ldh a, [hScrollY]
     and $f8
@@ -2968,6 +3049,13 @@ BGMapAddressAtScroll_Bank33::
     ld h, a
     ret
 
+; HL = BG map address, DE = offset into wScreenTileBuffer, B = width, C = rows: copies that
+; rectangle of the screen buffer to the BG map at HL (CopyRectFromBankToBGMapWrapped) and sets
+; wTextCursorLo/Hi = HL + $1C1. When wIsCGB is non-zero it then selects VRAM bank 1 and WRAM bank 2
+; and copies the same rectangle of wScreenAttrBuffer (offset DE) to the same map address, and
+; selects bank 0 of both again. BC, DE and HL are kept. Callers set HL with
+; BGMapAddressAtScroll_Bank33 and use B = $14, C = $0D to draw the whole 20 x 13 screen. (C1,
+; E-0380)
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL +
 ; $1C1, and on CGB copies its attributes (E-0127)
 DrawScreenBufferRectToBGMap_33::
@@ -3030,6 +3118,11 @@ DrawScreenBufferRectToBGMap_33::
     ldh [c], a
     ret
 
+; DE = source, HL = destination, B = width, C = rows: copies the B x C rectangle from DE to HL with
+; the destination rows 20 bytes ($14) apart; BC and HL are kept and DE ends just past the source.
+; When wIsCGB is non-zero it then also fills the same B x C rectangle with 0 at HL + $0E68 (the
+; attribute copy of the window buffer, with rSVBK = 2, restored to 0), leaving HL at the row after
+; the last one and C = 0. (C2, E-0380)
 ; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL
 ; with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2
 ; (E-0072)
@@ -3094,6 +3187,10 @@ CopyRectTo20ByteRowsJp_Bank33::
     ldh [rSVBK], a
     ret
 
+; Writes the gold (wGoldLo, wGoldMid, wGoldHi) as up to five digit tiles ($E0 + digit) at
+; wScreenTileBuffer + $22 to + $26, without leading zeros: a leading zero leaves its tile unchanged,
+; the last digit is always written, and the sixth digit (hundred-thousands) is ignored, so 100000
+; shows as 0. Called by RunLinkSession6Exchange_DrawTeamGold. (C2, E-0380)
 ; writes the gold as up to five decimal digit tiles without leading zeros at wScreenTileBuffer + $22
 ; (E-0127) (E-0340: the address in its name read as its RAM name; was
 ; WriteGoldDigitsToScreenTileBufferRow1Col14)
@@ -3166,9 +3263,14 @@ WriteGoldDigitsToScreenTileBufferRow1Col14::
     ld [hl], a
     ret
 
+; DE = four bytes, HL = tile buffer address: draws the four bytes at DE as four two-digit numbers
+; with RunFourTimes_DrawTwoDigitByte, called three times and entered once more by falling into it;
+; the numbers go to HL, HL + $28, HL + $50 and HL + $78 (two 20-byte rows apart). DE ends 4 bytes on
+; and HL at HL + $A0. Called by DrawBoxAndKeyRows and by several Team Mode steps, for example
+; RunLinkSession6Exchange_DrawTeamGold, which passes wKeyNameBuf. (C2, E-0380)
 ; calls RunFourTimes_DrawTwoDigitByte three times and falls into it once more (E-0122) (E-0344: the
-; address in its name dropped or read as the label there; was RunFourTimes)
-RunFourTimes::
+; address in its name dropped or read as the label there; was DrawFourTwoDigitNumbers)
+DrawFourTwoDigitNumbers::
     call RunFourTimes_DrawTwoDigitByte
     call RunFourTimes_DrawTwoDigitByte
     call RunFourTimes_DrawTwoDigitByte
@@ -3176,7 +3278,8 @@ RunFourTimes::
 ; DE = byte, HL = tile buffer address: converts the byte at DE (HLToDecimalDigits) and writes the
 ; tens digit as tile $E0 + digit at HL only when it is non-zero (a zero leaves that tile unchanged),
 ; then the ones digit at HL + 1; returns DE + 1 and HL + $28 (two 20-byte rows down from the start).
-; RunFourTimes calls it three times and falls into it once, drawing four numbers. (C1, E-0372)
+; DrawFourTwoDigitNumbers calls it three times and falls into it once, drawing four numbers. (C2,
+; E-0372; probed E-0380)
 RunFourTimes_DrawTwoDigitByte::
     push hl
     ld a, [de]
@@ -3204,6 +3307,11 @@ RunFourTimes_DrawTwoDigitByte::
     ld h, a
     ret
 
+; HL = table of 16-bit addresses, C = count: stores $C3 (a tile number) at the addresses held by
+; entries 0 to C - 1; C = 0 still writes entry 0, because the loop tests the count after each write.
+; Called by RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor with C = 5 and
+; RunLinkSession6Exchange_Pick_MarkCursor_Data (the five cursor mark addresses) to clear the five
+; marks. (C2, E-0380)
 ; writes $C3 at the addresses held by entries 0 to C - 1 of the word table at HL (E-0124)
 WriteC3AtWordTableEntries_Bank33::
     ld a, c
@@ -3233,6 +3341,13 @@ WriteC3AtWordTableEntries_Bank33::
     jr c, .loop
     ret
 
+; Draws the player name heading of the Team Mode window: blanks 5 tiles at vTiles2
+; (FillTilesFromRequest), copies the 10 bytes of wPlayerName to wNameGlyphBuf with $F0 after them
+; and draws them as glyph tiles at vTiles2 (CopyGlyphTilesToVRAM); then sets the text window to
+; vTiles2 + $100 (16 tiles, 1 row), wStringCategory = 1, wStringIndex = 0 and farcalls
+; ShowString_Bank07 to print string 0 of category 1 (a short heading text beside the name). Called
+; by TeamMode_Screen_DrawFrameAndName, RunLinkSession6Exchange_BackFromStats_DrawInfo and
+; RunLinkSession6Exchange_BackFromOwnStats_DrawBox. (C1, E-0380)
 ; clears vTiles2 (size $0105), draws the 10-byte player name wPlayerName there, then shows string 0
 ; of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)
 DrawPlayerNameAndString0Category1::
@@ -3272,8 +3387,12 @@ DrawPlayerNameAndString0Category1::
     farcall ShowString_Bank07
     ret
 
+; HL = address: stores $C5 at HL, $BE at HL + 2 and $C6 at HL + 4 (three tile numbers two bytes
+; apart) and leaves HL = the old HL + 4 and A = $C6. Called by
+; RunLinkSession6Exchange_BackFromOwnStats_ListPage to draw three tiles of the page indicator at
+; wWindowTileBuffer + $12E when wListPages is 2 or more. (C2, E-0380)
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
-; banks) (E-0353)
+; banks)
 StoreC5BEC6AtHLStride2_Bank33::
     ld a, $c5
     ld [hl], a
@@ -3373,6 +3492,11 @@ RunLinkSession6Exchange_ListBoxTileRect::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
+; Starts showing string wStringIndex of category wStringCategory from this bank first string table
+; (BeginStringDisplay_Bank33_StringCategories, class, prize and Magic Key messages) by loading DE
+; with the table and calling BeginStringDisplay; the glyphs are then printed a few per frame. Seven
+; unlabelled bytes after its ret repeat the same instructions as data. Far-called by the debug
+; message test (DebugMessageTest_Update_ShowBank33) and called by ShowString_Bank33. (C1, E-0380)
 ; ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or
 ; read as the label there; was BeginStringDisplay_Bank33)
 BeginStringDisplay_Bank33::
@@ -3381,6 +3505,9 @@ BeginStringDisplay_Bank33::
     ret
     db $11, $a5, $64, $cd, $fe, $25, $c9
 
+; Shows string wStringIndex of category wStringCategory from the first string table of this bank
+; (BeginStringDisplay_Bank33) and prints it to the end at once (RunStringDisplayToEnd). Far-called
+; by the library and arena code of bank $0C. (C1, E-0380)
 ; BeginStringDisplay_Bank33 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ; (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33)
 ShowString_Bank33::
@@ -3741,6 +3868,12 @@ Text_OhButYourKey_2::
     db "<NEXT>instead.<WAIT>"
     db "@"
 
+; Starts showing string wStringIndex of category wStringCategory from the second string table of
+; this bank (BeginStringDisplay_Bank33_2_StringCategories: draw, win and lose lines, 'Received',
+; 'Switch with which?', 'There are no eggs.') by loading DE with the table and calling
+; BeginStringDisplay. Seven unlabelled bytes after its ret repeat the same instructions as data.
+; Far-called by the debug message test (DebugMessageTest_Update_ShowBank33Second) and by the link
+; priest screens; called by ShowString_Bank33_2. (C1, E-0380)
 ; ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or
 ; read as the label there; was BeginStringDisplay_Bank33_2)
 BeginStringDisplay_Bank33_2::
@@ -3749,6 +3882,9 @@ BeginStringDisplay_Bank33_2::
     ret
     db $11, $4c, $70, $cd, $fe, $25, $c9
 
+; Shows string wStringIndex of category wStringCategory from the second string table of this bank
+; (BeginStringDisplay_Bank33_2) and prints it to the end at once (RunStringDisplayToEnd). Far-called
+; by the link priest screens. (C1, E-0380)
 ; BeginStringDisplay_Bank33_2 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ; (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33_2)
 ShowString_Bank33_2::
