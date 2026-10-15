@@ -376,15 +376,15 @@ SkillTable::
 
 ; CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the
 ; battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the
-; record's; BattleEnd_Step3_FindSkillInTable scans the five bytes at +13 of all 170 records ($5005,
-; stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end
-; exactly at the prerequisite pointer table $5BEC (E-0156, C1)
+; record's; BattleEnd_Records_FindSkillInTable scans the five bytes at +13 of all 170 records
+; ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18
+; bytes end exactly at the prerequisite pointer table $5BEC (E-0156, C1)
 ; record: required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27,
 ; +$29); five skill numbers ($FF = none)
 SkillRequirementTable::
     db $00 ; id 0
     dw 0, 0, 0, 0, 0, 0
-BattleEnd_Step3_FindSkillInTable_Data::
+BattleEnd_Records_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $01 ; id 1
     dw 0, 7, 0, 0, 0, 36
@@ -2101,11 +2101,11 @@ FindCInWorkBuf38::
     ret
 
 ; Rebuilds wRecordBufA's MON_SKILL_LIST from its species' three SPECIES_SKILLS: each skill is kept
-; when BattleEnd_Step3_BuildSkillList_SkillIsNew returns Z (neither it nor any skill of its
+; when BattleEnd_Records_BuildSkillList_SkillIsNew returns Z (neither it nor any skill of its
 ; SkillPrerequisitePointers list is among the record's MON_SKILLS), otherwise its entry is $FF
-; (BattleEnd_Step3_FindSkillInTable is called then but returns A unchanged); the 25-byte list is
+; (BattleEnd_Records_FindSkillInTable is called then but returns A unchanged); the 25-byte list is
 ; filled with $FF and the kept skills are packed into it. (C1, E-0370)
-BattleEnd_Step3_BuildSkillList::
+BattleEnd_Records_BuildSkillList::
     ld hl, wWorkBuf
     ld bc, $0019
     ld a, $ff
@@ -2126,9 +2126,9 @@ BattleEnd_Step3_BuildSkillList::
 .loop:
     ld a, [de]
     inc de
-    call BattleEnd_Step3_BuildSkillList_SkillIsNew
+    call BattleEnd_Records_BuildSkillList_SkillIsNew
     jr z, .skip
-    call BattleEnd_Step3_FindSkillInTable
+    call BattleEnd_Records_FindSkillInTable
 
 .skip:
     ld [hli], a
@@ -2159,16 +2159,16 @@ BattleEnd_Step3_BuildSkillList::
     ret
 
 ; A = a species skill: $C8 gives A = $FF with NZ; a skill already among wRecordBufA's MON_SKILLS
-; (BattleEnd_Step3_RecordKnowsSkill), or one whose $FF-terminated SkillPrerequisitePointers list
+; (BattleEnd_Records_RecordKnowsSkill), or one whose $FF-terminated SkillPrerequisitePointers list
 ; holds a known skill, also gives A = $FF with NZ; otherwise Z with A = the skill. HL and BC are
 ; kept. (C1, E-0370)
-BattleEnd_Step3_BuildSkillList_SkillIsNew::
+BattleEnd_Records_BuildSkillList_SkillIsNew::
     push hl
     push bc
     cp $c8
     jr z, .skip3
     ld c, a
-    call BattleEnd_Step3_RecordKnowsSkill
+    call BattleEnd_Records_RecordKnowsSkill
     jr nz, .done
     push bc
     ld b, $00
@@ -2183,7 +2183,7 @@ BattleEnd_Step3_BuildSkillList_SkillIsNew::
     cp $ff
     jr z, .skip2
     push hl
-    call BattleEnd_Step3_RecordKnowsSkill
+    call BattleEnd_Records_RecordKnowsSkill
     pop hl
     jr nz, .done
     jr .skip
@@ -2203,31 +2203,31 @@ BattleEnd_Step3_BuildSkillList_SkillIsNew::
     ret
 
 ; searches 170 18-byte records of its table for A among their first five bytes; on a match checks
-; the record's skills (BattleEnd_Step3_RecordKnowsSkill) (E-0305)
-BattleEnd_Step3_FindSkillInTable::
+; the record's skills (BattleEnd_Records_RecordKnowsSkill) (E-0305)
+BattleEnd_Records_FindSkillInTable::
     push hl
     push de
     push bc
-    ld hl, BattleEnd_Step3_FindSkillInTable_Data
+    ld hl, BattleEnd_Records_FindSkillInTable_Data
     ld b, $aa
     ld c, $00
 
 .loop:
     push hl
     cp [hl]
-    jr z, .call_battle_end_step3_record_knows_skill
+    jr z, .call_battle_end_records_record_knows_skill
     inc hl
     cp [hl]
-    jr z, .call_battle_end_step3_record_knows_skill
+    jr z, .call_battle_end_records_record_knows_skill
     inc hl
     cp [hl]
-    jr z, .call_battle_end_step3_record_knows_skill
+    jr z, .call_battle_end_records_record_knows_skill
     inc hl
     cp [hl]
-    jr z, .call_battle_end_step3_record_knows_skill
+    jr z, .call_battle_end_records_record_knows_skill
     inc hl
     cp [hl]
-    jr z, .call_battle_end_step3_record_knows_skill
+    jr z, .call_battle_end_records_record_knows_skill
 
 .loop2:
     pop hl
@@ -2243,17 +2243,17 @@ BattleEnd_Step3_FindSkillInTable::
     pop hl
     ret
 
-.call_battle_end_step3_record_knows_skill:
+.call_battle_end_records_record_knows_skill:
     ld e, a
     ld a, c
-    call BattleEnd_Step3_RecordKnowsSkill
+    call BattleEnd_Records_RecordKnowsSkill
     ld a, e
     jr z, .loop2
     pop hl
     jr .restore
 
 ; A = $FF when skill A is one of record buffer A's eight skills (MON_SKILLS) (E-0305)
-BattleEnd_Step3_RecordKnowsSkill::
+BattleEnd_Records_RecordKnowsSkill::
     push bc
     ld hl, wRecordBufA + MON_SKILLS
     ld b, $08

@@ -2027,7 +2027,7 @@
         }
       ],
       "record": "required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27, +$29); five skill numbers ($FF = none)",
-      "note": "E-0156 (C1: CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the record's; BattleEnd_Step3_FindSkillInTable scans the five bytes at +13 of all 170 records ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end exactly at the prerequisite pointer table $5BEC)."
+      "note": "E-0156 (C1: CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the record's; BattleEnd_Records_FindSkillInTable scans the five bytes at +13 of all 170 records ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end exactly at the prerequisite pointer table $5BEC)."
     },
     {
       "bank": "87",
@@ -18590,7 +18590,7 @@
           "name": "handler bit mask ($FFFF = none)"
         }
       ],
-      "note": "E-0237 (C1: ActorActionDataWord reads the word at $4D34 + 2 * the actor's chosen action byte; RunActorActionHandlersForAISlots skips $FFFF and otherwise passes it to RunHandlersForSetBitsInBC; 240 words up to that routine at $4F14)."
+      "note": "E-0237 (C1: ActorActionDataWord reads the word at $4D34 + 2 * the actor's chosen action byte; RollPersonalityActsForChosenAction skips $FFFF and otherwise passes it to RunHandlersForSetBitsInBC; 240 words up to that routine at $4F14)."
     },
     {
       "bank": "02",

@@ -418,10 +418,14 @@ ItemUsable_Laurel::
     ld [wItemId], a
     ret
 
-; Check of field skill 11 (FieldSkillUsable_CurePartyPoison): when a party member has MON_STATUS bit
-; 0 (poison) and not bit 7 (fallen), copies the names of all such members into wTextBuf3, 16 bytes
-; apart (CopyEligibleRecordNameToTextBuf3Row), and sets wItemUseMessage = $32 + their count;
-; otherwise, or with an empty party, wItemId = $FF. (C2, E-0377)
+; Check of field skill 11 (FieldSkillUsable_CurePartyPoison). It looks at party places 0, 1 and 2 in
+; turn (as far as wPartyCount) and stops at the first living member (MON_STATUS bit 7 clear) with
+; MON_STATUS bit 0 set; then it copies the names of all such members into wTextBuf3, 16 bytes apart
+; (CopyEligibleRecordNameToTextBuf3Row), and sets wItemUseMessage = $32 + their count. If no member
+; qualifies, or the party is empty, wItemId = $FF (refused). RefuseItemIfRecordFallen sets wItemId =
+; $FF for every fallen member it meets before the first qualifying one and nothing clears it again,
+; so a fallen member in an earlier place refuses the skill even when a later member qualifies. (C2,
+; E-0378)
 ; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to
 ; wTextBuf3 and wItemUseMessage = $32 + their count; otherwise wItemId = $FF (E-0127)
 ListPartyMembersWithField55Bit0::
@@ -3487,6 +3491,10 @@ FieldSkillEffect_HealOneMore::
     ld [wItemMessage], a
     ret
 
+; Entry 2 of the field-skill effect jumptable in FieldSkillEffect (picked by wInventorySlot), and
+; the tail FieldSkillEffect_Revive reuses: copies the max HP word (MON_MAX_HP) of the party member
+; in wTargetRecord into its HP word (MON_HP) and sets wItemMessage to 6. The party slot is mapped
+; through wPartyList; MP, status and the other members are untouched. (C2, E-0378)
 ; record wTargetRecord: copies its word at field $5D (max HP) into field $5B (HP)
 ; (StoreHLToRecordField), then wItemMessage = 6 (E-0117)
 FullHealRecordTargetRecord::
@@ -3501,8 +3509,11 @@ FullHealRecordTargetRecord::
     ld [wItemMessage], a
     ret
 
-; Field skill 3: heals each party member that is hurt 30-120 HP (amount 30, range 90), with the use
-; message. (C1, E-0357)
+; Field skill 3: sets wItemEffectAmount to 30 and wItemEffectRange to 90, copies wItemUseMessage to
+; wItemMessage, then runs HealPartyRecordAIfHurt for party slots 0, 1 and 2 (it falls into the
+; routine for slot 2). Each hurt, living member gains 90 plus (wRandomLo mod 31) HP, so 90-120 HP,
+; capped at its max HP; a member already at max HP or fallen is skipped without a random step. (C2,
+; E-0378)
 FieldSkillEffect_HealPartyHurt::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3516,6 +3527,11 @@ FieldSkillEffect_HealPartyHurt::
     call HealPartyRecordAIfHurt
     ld a, $02
 
+; A = party slot. Returns at once when A is not below wPartyCount; otherwise sets wTargetRecord = A,
+; then returns without healing when MON_STATUS bit 7 (fallen) is set or when the HP word already
+; equals the max HP word. Otherwise HealRecordHPByRandomAmount heals the member.
+; FieldSkillEffect_HealPartyHurt calls it for slots 0 and 1 and falls into it for slot 2. (C2,
+; E-0378)
 ; A = party index: returns when it is not below wPartyCount, when record byte $55 bit 7 is set, or
 ; when HP ($5B) already equals max HP ($5D); otherwise HealRecordHPByRandomAmount (a random heal)
 ; (E-0120)
@@ -3524,7 +3540,7 @@ HealPartyRecordAIfHurt::
     cp [hl]
     ret nc
     ld [wTargetRecord], a
-    call TestTargetRecordFlag55Bit7
+    call TestTargetRecordFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_HP
@@ -3546,7 +3562,7 @@ HealPartyRecordAIfHurt::
     call HealRecordHPByRandomAmount
     ret
 
-; Field skill 4: fully heals each party member, with the use message. (C1, E-0357)
+; Field skill 4: fully heals each party member, with the use message. (C2, E-0357; probed E-0378)
 FieldSkillEffect_FullHealParty::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3556,6 +3572,10 @@ FieldSkillEffect_FullHealParty::
     call FullHealPartyRecordA
     ld a, $02
 
+; A = party slot. Returns at once when A is not below wPartyCount; otherwise sets wTargetRecord = A,
+; and unless MON_STATUS bit 7 (fallen) is set copies the max HP word (MON_MAX_HP) into the HP word
+; (MON_HP) of that member. FieldSkillEffect_FullHealParty calls it for slots 0 and 1 and falls into
+; it for slot 2. (C2, E-0378)
 ; A = party index: returns when it is not below wPartyCount or the record's byte $55 bit 7 is set;
 ; otherwise wTargetRecord = A and the record's HP word ($5B) = its max HP word ($5D) (E-0117)
 FullHealPartyRecordA::
@@ -3563,7 +3583,7 @@ FullHealPartyRecordA::
     cp [hl]
     ret nc
     ld [wTargetRecord], a
-    call TestTargetRecordFlag55Bit7
+    call TestTargetRecordFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_MAX_HP
@@ -3574,7 +3594,7 @@ FullHealPartyRecordA::
     call StoreHLToRecordField
     ret
 
-; Field skill 5: gives the target 15 MP; message 7. (C1, E-0357)
+; Field skill 5: gives the target 15 MP; message 7. (C2, E-0357; probed E-0378)
 FieldSkillEffect_GiveMP::
     ld a, $0f
     ld [wItemEffectAmount], a
@@ -3583,7 +3603,7 @@ FieldSkillEffect_GiveMP::
     ld [wItemMessage], a
     ret
 
-; Field skill 6: gives the target 30 MP; message 7. (C1, E-0357)
+; Field skill 6: gives the target 30 MP; message 7. (C2, E-0357; probed E-0378)
 FieldSkillEffect_GiveMoreMP::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3592,7 +3612,7 @@ FieldSkillEffect_GiveMoreMP::
     ld [wItemMessage], a
     ret
 
-; Field skill 7: gives the target 80 MP; message 7. (C1, E-0357)
+; Field skill 7: gives the target 80 MP; message 7. (C2, E-0357; probed E-0378)
 FieldSkillEffect_GiveMostMP::
     ld a, $50
     ld [wItemEffectAmount], a
@@ -3602,7 +3622,7 @@ FieldSkillEffect_GiveMostMP::
     ret
 
 ; Field skill 8: revives the target (MON_STATUS cleared) with half its max HP; message 8 and the
-; stats redraw flag (wLevelUpGains 1). (C1, E-0357)
+; stats redraw flag (wLevelUpGains 1). (C2, E-0357; probed E-0378)
 FieldSkillEffect_ReviveHalf::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3629,7 +3649,9 @@ FieldSkillEffect_ReviveHalf::
     ld [wLevelUpGains], a
     ret
 
-; Field skill 9: revives the target with full HP and MP; message 8 and the redraw flag. (C1, E-0357)
+; Field skill 9: clears MON_STATUS of the target to 0, then FullHealRecordTargetRecord sets its HP
+; to its max HP (MP is not touched); wItemMessage = 8 and wLevelUpGains = 1, the stats redraw flag.
+; (C2, E-0378)
 FieldSkillEffect_Revive::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3642,7 +3664,8 @@ FieldSkillEffect_Revive::
     ld [wLevelUpGains], a
     ret
 
-; Field skill 10: cures the target's poison (MON_STATUS bit 2); message 9. (C1, E-0357)
+; Field skill 10: cures the target's poison (MON_STATUS bit 2); message 9. (C2, E-0357; probed
+; E-0378)
 FieldSkillEffect_CurePoison::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3653,7 +3676,7 @@ FieldSkillEffect_CurePoison::
     ret
 
 ; Field skill 11: clears flag bit 0 of each party member (ClearPartyRecordFlag55Bit0), with the use
-; message. (C1, E-0357)
+; message. (C2, E-0357; probed E-0378)
 FieldSkillEffect_CurePartyPoison::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3663,6 +3686,10 @@ FieldSkillEffect_CurePartyPoison::
     call ClearPartyRecordFlag55Bit0
     ld a, $02
 
+; A = party slot. Returns at once when A is not below wPartyCount; otherwise sets wTargetRecord = A
+; and, unless MON_STATUS bit 7 (fallen) is set, clears MON_STATUS bit 0 of that member.
+; FieldSkillEffect_CurePartyPoison calls it for slots 0 and 1 and falls into it for slot 2. (C2,
+; E-0378)
 ; A = party index: returns when it is not below wPartyCount or byte $55 bit 7 is set; otherwise
 ; clears bit 0 of the record's byte $55 (E-0117)
 ClearPartyRecordFlag55Bit0::
@@ -3670,7 +3697,7 @@ ClearPartyRecordFlag55Bit0::
     cp [hl]
     ret nc
     ld [wTargetRecord], a
-    call TestTargetRecordFlag55Bit7
+    call TestTargetRecordFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3681,7 +3708,7 @@ ClearPartyRecordFlag55Bit0::
 ; Field skill 12 (its first message is '<name> whistled!'): sets the field's return action
 ; wDataBankSave to 1, which RunFieldReturnPhase_RunReturnAction turns into talk event group $19 (the
 ; ShinyHarp sets the same value); wItemMessage and wItemId = $FF, so no result message follows and
-; PauseMenu_Skills_UseFieldSkill_Finish leaves for the field. (C1, E-0370)
+; PauseMenu_Skills_UseFieldSkill_Finish leaves for the field. (C2, E-0370; probed E-0378)
 FieldSkillEffect_Whistle::
     ld a, $01
     ld [wDataBankSave], a
@@ -3692,7 +3719,7 @@ FieldSkillEffect_Whistle::
     ret
 
 ; Field skill 13: sets wDataBankSave to 1 and wNewRecordFamily to $10 + the opposite of the caster's
-; sex; no message. (C1, E-0357)
+; sex; no message. (C2, E-0357; probed E-0378)
 FieldSkillEffect_SetNewRecordFamily::
     ld a, $01
     ld [wDataBankSave], a
@@ -3712,7 +3739,7 @@ FieldSkillEffect_SetNewRecordFamily::
 
 ; Field skill 14: wTalkCountdown = 200 ($C8), which CountDownTalkCountdownThenDispatchTalkEvent
 ; counts down before dispatching talk event group $1E (the countdown message); wItemMessage and
-; wItemId = $FF (no result message). (C1, E-0370)
+; wItemId = $FF (no result message). (C2, E-0370; probed E-0378)
 FieldSkillEffect_StartTalkCountdown::
     ld a, $c8
     ld [wTalkCountdown], a
@@ -3725,7 +3752,7 @@ FieldSkillEffect_StartTalkCountdown::
 ; Field skill 15 (usable where the ExitBell is, FieldSkillUsable_LeaveDungeon): sets the field's
 ; return action wDataBankSave to 4, the ExitBell's value, which RunFieldReturnPhase_RunReturnAction
 ; runs as talk event group 7 after ResetFollowersToPlayer, music 2 and sound $67; wItemMessage and
-; wItemId = $FF (no result message). (C1, E-0370)
+; wItemId = $FF (no result message). (C2, E-0370; probed E-0378)
 FieldSkillEffect_LeaveDungeon::
     ld a, $04
     ld [wDataBankSave], a
@@ -3735,7 +3762,7 @@ FieldSkillEffect_LeaveDungeon::
     ld [wItemId], a
     ret
 
-; Field skill 16: message $0B. (C1, E-0357)
+; Field skill 16: message $0B. (C2, E-0357; probed E-0378)
 FieldSkillEffect_SetItemMessageTo0B::
     ld a, $0b
     ld [wItemMessage], a
@@ -3743,7 +3770,7 @@ FieldSkillEffect_SetItemMessageTo0B::
 
 ; Field skill 17: ends a pending event in a key world, pays 100 gold and draws one of 18 items by
 ; chance (out of 100: Herb 25, LoveWater 10, then 5, 2 or 1 each), putting it in the last inventory
-; slot with its name in wTextBuf3 (CompactInventory); message $0E. (C1, E-0357)
+; slot with its name in wTextBuf3 (CompactInventory); message $0E. (C2, E-0357; probed E-0378)
 FieldSkillEffect_DrawRandomItem::
     ld a, [wMapType]
     cp $80
@@ -3849,7 +3876,7 @@ FieldSkillEffect_DrawRandomItem::
 ; Field skill 18 (first message '<name> scanned the area sharply.'; FieldSkillUsable_Warp refuses
 ; with 'There are no treasures nearby.' when no map object lacks bit 7): sets wWorldMapByFieldSkill
 ; to 1, which RunWorldMapState_DrawObjectMarkers reads to mark the map objects on the world map;
-; message $11 ('<name> sensed a treasure nearby.'); wItemId = $FF. (C1, E-0370)
+; message $11 ('<name> sensed a treasure nearby.'); wItemId = $FF. (C2, E-0370; probed E-0378)
 FieldSkillEffect_SenseTreasure::
     ld a, $01
     ld [wWorldMapByFieldSkill], a
@@ -3860,7 +3887,7 @@ FieldSkillEffect_SenseTreasure::
     ret
 
 ; Field skill 19: marks the 5 x 5 map screens around the player visited
-; (MarkVisitedScreens5x5AroundPlayer); message $1C. (C1, E-0357)
+; (MarkVisitedScreens5x5AroundPlayer); message $1C. (C2, E-0357; probed E-0378)
 FieldSkillEffect_MapAroundPlayer::
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1c
@@ -3869,6 +3896,10 @@ FieldSkillEffect_MapAroundPlayer::
     ld [wItemId], a
     ret
 
+; Takes one table random step (NextTableByte), then adds (wRandomLo mod (wItemEffectAmount + 1)) +
+; wItemEffectRange to the HP of the party member in wTargetRecord, capped at its max HP
+; (AddHLToRecordHPCapped). DivideBByA leaves the remainder in A and that remainder is the part used,
+; not the quotient; amount 10 and range 30 give 30-40 HP. (C2, E-0378)
 ; reads the next table byte, then heals record wTargetRecord's HP by wRandomLo / (wItemEffectAmount
 ; + 1) + wItemEffectRange (capped at max HP) (E-0122)
 HealRecordHPByRandomAmount::
@@ -3887,6 +3918,8 @@ HealRecordHPByRandomAmount::
     call AddHLToRecordHPCapped
     ret
 
+; Adds wItemEffectAmount to the MP of the party member in wTargetRecord, capped at its max MP
+; (AddHLToRecordMPCapped). (C2, E-0378)
 ; heals record wTargetRecord's MP by wItemEffectAmount (capped at max MP) (E-0122)
 HealRecordMPByItemEffectAmount::
     ld a, [wItemEffectAmount]
@@ -3896,15 +3929,24 @@ HealRecordMPByItemEffectAmount::
     call AddHLToRecordMPCapped
     ret
 
+; Tests MON_STATUS bit 7 (fallen) of the party member in wTargetRecord: Z is clear when it is set
+; and Z is set when it is clear. HL = the address of that status byte. (C2, E-0378)
 ; Z clear when bit 7 of byte $55 of record wTargetRecord is set (SRAMRecordAddressMapped); HL points
 ; at it (E-0114)
-TestTargetRecordFlag55Bit7::
+TestTargetRecordFallen::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     ret
 
+; Lists the monsters of the area into wWorkBuf for field skill 16 (FieldSkillUsable_Encounters calls
+; it). In a special map (wMapType bit 7) it copies the 8 two-byte entries of the current screen
+; (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wWorkBuf + 2 keeping only bit 0 of each second
+; byte, blanks every later entry equal to an earlier one, closes the gaps in first-seen order and
+; stores the count in wWorkBuf (wWorkBuf + 1 = 0). Other maps call
+; CollectUniqueEncounterIdsToWorkBuf2_FindTable in bank $0A, which does not remove repeats. (C2,
+; E-0378)
 ; for special maps copies the eight monster entries of the current screen
 ; (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wWorkBuf + $2, removes duplicates and stores
 ; the count in wWorkBuf; normal maps use CollectUniqueEncounterIdsToWorkBuf2_FindTable (E-0129)
@@ -4011,6 +4053,12 @@ CollectUniqueEncounterIdsToWorkBuf2::
     ld [wWorkBuf + $1], a
     ret
 
+; Returns HL = wKeyWorldMonsters + 2 * index, the monster entry of the current special-map screen.
+; hPlayerStateFlags bit 3 set: index $20. Otherwise for wMapType low bits 0 or 1: index = 4 *
+; wKeyWorldAreas[(hMapScreenX >> 2) + ((hMapScreenY >> 1) & $FE)] + ((hMapScreenY >> 1) & $FE); for
+; other low bits: the first byte of the wKeyWorldFloorInfo entry of floor wKeyWorldFloor gives the
+; area slot (low nibble >> 1 & $FE, plus high nibble >> 2) and index = 8 * wKeyWorldAreas[slot].
+; (C2, E-0378)
 ; HL = wKeyWorldMonsters + 2 * an index from the current map screen and the wKeyWorldAreas table
 ; (index $20 when bit 3 of hPlayerStateFlags is set) (E-0127)
 AddressOfKeyWorldMonstersEntryForCurrentScreen::
@@ -4079,6 +4127,9 @@ AddressOfKeyWorldMonstersEntryForCurrentScreen::
     add_a_to_hl
     ret
 
+; A = party slot, HL = amount: adds HL to the HP word (MON_HP) of that member, capped at its max HP
+; word (MON_MAX_HP) through AddDEToWordAtHLCappedAtBC. A sum that reaches the max stores the max; a
+; sum that carries past 16 bits is stored wrapped, not capped. (C2, E-0378)
 ; adds HL to record A's HP (field $5B), capped at its max HP (field $5D), through
 ; AddDEToWordAtHLCappedAtBC (E-0122) (C2 from E-0326: it adds a Herb's 30-40 to MON_HP, capped at
 ; MON_MAX_HP)
@@ -4099,6 +4150,9 @@ AddHLToRecordHPCapped::
     call AddDEToWordAtHLCappedAtBC
     ret
 
+; A = party slot, HL = amount: adds HL to the MP word (MON_MP) of that member, capped at its max MP
+; word (MON_MAX_MP) through AddDEToWordAtHLCappedAtBC. A sum that reaches the max stores the max; a
+; sum that carries past 16 bits is stored wrapped, not capped. (C2, E-0378)
 ; adds HL to record A's MP (field $5F), capped at its max MP (field $61), through
 ; AddDEToWordAtHLCappedAtBC (E-0122)
 AddHLToRecordMPCapped::
@@ -4118,7 +4172,7 @@ AddHLToRecordMPCapped::
     call AddDEToWordAtHLCappedAtBC
     ret
 
-; ATKseed: party member's ATK up (AddToRecordFieldWordCapped, cap 999). (C1, E-0357)
+; ATKseed: party member's ATK up (AddToRecordFieldWordCapped, cap 999). (C2, E-0357; probed E-0378)
 ItemApply_ATKseed_RaiseATK::
     call MapIndexViaPartyListKeepHL
     ld c, MON_ATK
@@ -4126,7 +4180,7 @@ ItemApply_ATKseed_RaiseATK::
     call AddToRecordFieldWordCapped
     ret
 
-; DEFseed: party member's DEF up (cap 999). (C1, E-0357)
+; DEFseed: party member's DEF up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_DEFseed_RaiseDEF::
     call MapIndexViaPartyListKeepHL
     ld c, MON_DEF
@@ -4134,7 +4188,7 @@ ItemApply_DEFseed_RaiseDEF::
     call AddToRecordFieldWordCapped
     ret
 
-; AGLseed: party member's AGL up (cap 999). (C1, E-0357)
+; AGLseed: party member's AGL up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_AGLseed_RaiseAGL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_AGL
@@ -4142,7 +4196,7 @@ ItemApply_AGLseed_RaiseAGL::
     call AddToRecordFieldWordCapped
     ret
 
-; INTseed: party member's INT up (cap 999). (C1, E-0357)
+; INTseed: party member's INT up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_INTseed_RaiseINT::
     call MapIndexViaPartyListKeepHL
     ld c, MON_INT
@@ -4150,7 +4204,7 @@ ItemApply_INTseed_RaiseINT::
     call AddToRecordFieldWordCapped
     ret
 
-; LifeAcorn: party member's max HP up (cap 999). (C1, E-0357)
+; LifeAcorn: party member's max HP up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_LifeAcorn_RaiseMaxHP::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_HP
@@ -4158,7 +4212,7 @@ ItemApply_LifeAcorn_RaiseMaxHP::
     call AddToRecordFieldWordCapped
     ret
 
-; MysticNut: party member's max MP up (cap 999). (C1, E-0357)
+; MysticNut: party member's max MP up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_MysticNut_RaiseMaxMP::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_MP
@@ -4166,7 +4220,7 @@ ItemApply_MysticNut_RaiseMaxMP::
     call AddToRecordFieldWordCapped
     ret
 
-; Quest: the first personality axis up (MON_PERSONALITY, cap 255). (C1, E-0357)
+; Quest: the first personality axis up (MON_PERSONALITY, cap 255). (C2, E-0357; probed E-0378)
 ItemApply_Quest_RaiseFirstAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
@@ -4174,7 +4228,7 @@ ItemApply_Quest_RaiseFirstAxis::
     call AddToRecordFieldByteCapped
     ret
 
-; Horror: the first personality axis down (floor 0). (C1, E-0357)
+; Horror: the first personality axis down (floor 0). (C2, E-0357; probed E-0378)
 ItemApply_Horror_LowerFirstAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
@@ -4182,7 +4236,7 @@ ItemApply_Horror_LowerFirstAxis::
     call SubtractFromRecordFieldByteFloored
     ret
 
-; BeNice: the second personality axis up (cap 255). (C1, E-0357)
+; BeNice: the second personality axis up (cap 255). (C2, E-0357; probed E-0378)
 ItemApply_BeNice_RaiseSecondAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
@@ -4190,7 +4244,7 @@ ItemApply_BeNice_RaiseSecondAxis::
     call AddToRecordFieldByteCapped
     ret
 
-; Cheater: the second personality axis down (floor 0). (C1, E-0357)
+; Cheater: the second personality axis down (floor 0). (C2, E-0357; probed E-0378)
 ItemApply_Cheater_LowerSecondAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
@@ -4198,7 +4252,7 @@ ItemApply_Cheater_LowerSecondAxis::
     call SubtractFromRecordFieldByteFloored
     ret
 
-; Smart: the fourth personality axis up (cap 255). (C1, E-0357)
+; Smart: the fourth personality axis up (cap 255). (C2, E-0357; probed E-0378)
 ItemApply_Smart_RaiseFourthAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
@@ -4206,7 +4260,7 @@ ItemApply_Smart_RaiseFourthAxis::
     call AddToRecordFieldByteCapped
     ret
 
-; Comedy: the fourth personality axis down (floor 0). (C1, E-0357)
+; Comedy: the fourth personality axis down (floor 0). (C2, E-0357; probed E-0378)
 ItemApply_Comedy_LowerFourthAxis::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
@@ -4214,6 +4268,9 @@ ItemApply_Comedy_LowerFourthAxis::
     call SubtractFromRecordFieldByteFloored
     ret
 
+; A = party slot (mapped through wPartyList), HL = amount: lowers the word at MON_WLD of that record
+; by HL, not below 0 (ApplyMeatToRecordField6B_SubtractDEFloor0). Called by ItemApply_BeefJerky and
+; ItemApply_BadMeat. (C2, E-0378)
 ; for the record selected through wPartyList, applies ApplyMeatToRecordField6B_SubtractDEFloor0 to
 ; field $6B (E-0122)
 ApplyMeatToRecordField6B::
@@ -4225,6 +4282,10 @@ ApplyMeatToRecordField6B::
     call ApplyMeatToRecordField6B_SubtractDEFloor0
     ret
 
+; A = record number (used as is, no party mapping), C = field offset, L = amount, E = cap: adds L to
+; the byte at that field of the record, storing E if the sum reaches E or carries past 255
+; (AddEToByteAtHLCappedAtC). ItemApply_Quest_RaiseFirstAxis and the other personality item effects
+; call it after mapping the party slot. (C2, E-0378)
 ; field C of record A: adds E, capped at the limit passed in DE's partner (AddEToByteAtHLCappedAtC)
 ; (E-0122)
 AddToRecordFieldByteCapped::
@@ -4236,6 +4297,9 @@ AddToRecordFieldByteCapped::
     call AddEToByteAtHLCappedAtC
     ret
 
+; A = record number (used as is, no party mapping), C = field offset, L = amount, E = floor:
+; subtracts L from the byte at that field of the record, storing E if the result falls below E or
+; borrows past 0 (SubtractEFromByteAtHLFlooredAtC). (C2, E-0378)
 ; field C of record A: subtracts E, floored at the limit (SubtractEFromByteAtHLFlooredAtC) (E-0122)
 SubtractFromRecordFieldByteFloored::
     push hl
@@ -4246,6 +4310,9 @@ SubtractFromRecordFieldByteFloored::
     call SubtractEFromByteAtHLFlooredAtC
     ret
 
+; A = record number (used as is, no party mapping), C = field offset, HL = amount, DE = cap: adds HL
+; to the word at that field of the record through AddDEToWordAtHLCappedAtBC, so a sum of at least DE
+; stores DE. A carry past 16 bits is not capped. (C2, E-0378)
 ; field C of record A: adds the amount, capped at the limit (AddDEToWordAtHLCappedAtBC) (E-0122)
 AddToRecordFieldWordCapped::
     push hl
@@ -4256,6 +4323,8 @@ AddToRecordFieldWordCapped::
     call AddDEToWordAtHLCappedAtBC
     ret
 
+; Adds E to the byte at HL. If the sum carries past 255 or is at least C, C is stored instead;
+; otherwise the sum. (C2, E-0378)
 ; [HL] += E, capped at C (also on overflow) (E-0122)
 AddEToByteAtHLCappedAtC::
     ld a, [hl]
@@ -4271,6 +4340,8 @@ AddEToByteAtHLCappedAtC::
     ld [hl], a
     ret
 
+; Subtracts E from the byte at HL. If it borrows below 0 or the result is below C, C is stored
+; instead; otherwise the result. (C2, E-0378)
 ; [HL] -= E, floored at C (also on underflow) (E-0122)
 SubtractEFromByteAtHLFlooredAtC::
     ld a, [hl]
@@ -4286,6 +4357,9 @@ SubtractEFromByteAtHLFlooredAtC::
     ld [hl], a
     ret
 
+; Adds DE to the little-endian word at HL. If the sum (without carry out of 16 bits) is at least BC,
+; BC is stored; if it is below BC, the sum. A carry out of 16 bits skips the comparison and stores
+; the wrapped sum, so the cap is not applied then. (C2, E-0378)
 ; the word at HL += DE, capped at BC (also on overflow) (E-0124)
 AddDEToWordAtHLCappedAtBC::
     push hl
@@ -4309,6 +4383,8 @@ AddDEToWordAtHLCappedAtBC::
     ld [hl], b
     ret
 
+; Subtracts DE from the little-endian word at HL (MON_WLD of a record in the callers), storing 0
+; when the result would go below 0. (C2, E-0378)
 ; the word at HL -= DE, not below 0 (field $6B is MON_WLD, E-0296)
 ApplyMeatToRecordField6B_SubtractDEFloor0::
     push hl
@@ -4331,6 +4407,8 @@ ApplyMeatToRecordField6B_SubtractDEFloor0::
     ld [hl], d
     ret
 
+; A = party slot (mapped through wPartyList), C = field offset, L = value: stores L (the low byte of
+; the HL passed in) at that field of the record. (C2, E-0378)
 ; A = record (SRAMRecordAddressMapped), C = field offset: stores the low byte of the caller's HL
 ; (moved to C) at that field (E-0114)
 StoreCToRecordField::
@@ -4340,6 +4418,8 @@ StoreCToRecordField::
     ld [hl], c
     ret
 
+; A = party slot (mapped through wPartyList), C = field offset, HL = value: stores the word HL, low
+; byte first, at that field of the record. (C2, E-0378)
 ; A = record (SRAMRecordAddressMapped), C = field offset: stores HL (low byte first) at that field
 ; (E-0103)
 StoreHLToRecordField::
@@ -4351,6 +4431,8 @@ StoreHLToRecordField::
     ld [hl], b
     ret
 
+; MapIndexViaPartyList with HL saved and restored: A = wPartyList[A & $7F], or A unchanged when
+; wLinkMode is non-zero and wGameMode is 4. (C2, E-0378)
 ; MapIndexViaPartyList with HL preserved (E-0072)
 MapIndexViaPartyListKeepHL::
     push hl
@@ -4358,6 +4440,12 @@ MapIndexViaPartyListKeepHL::
     pop hl
     ret
 
+; Sorts the 24 slots of wInventory in place, smallest key first, keeping the order of equal keys.
+; Each item id is looked up in InventorySortKeysA or InventorySortKeysB (an empty slot $FF uses the
+; key of id 0); every call first flips bit 0 of wInventorySortFlags to switch tables unless bit 7 is
+; set, which keeps the current table and is cleared. It builds the keys in wWorkBuf + 2 and
+; bubble-sorts them, swapping the matching inventory slots with SwapInventorySlotCWithNext. (C2,
+; E-0378)
 ; toggles the sort order in wInventorySortFlags and sorts the 24 inventory slots by the key table
 ; InventorySortKeysA or InventorySortKeysB (empty slots last) (E-0128)
 SortInventory::
@@ -4446,6 +4534,7 @@ SortInventory::
     jr nz, .loop2
     ret
 
+; Swaps wInventory[C] and wInventory[C + 1]. HL is kept. (C2, E-0378)
 ; swaps wInventory[C] and wInventory[C + 1]; HL kept (E-0118)
 SwapInventorySlotCWithNext::
     push hl
@@ -4693,6 +4782,10 @@ InventorySortKeysB::
     db $ff ; id 110
     db $ff ; id 111
 
+; Looks up the species flag of the monster id in wSpeciesIdLo/Hi in wSpeciesFlags, which holds one
+; bit per id (byte id / 8, mask 1 << (id and 7) from TestSpeciesFlag_Data). HL = the address of the
+; flag byte, B = the mask, A = C = that byte AND the mask, so Z is set when the species flag is
+; clear. (C2, E-0378)
 ; monster id = wSpeciesIdLo/Hi: HL = wSpeciesFlags + id / 8, B = the mask 1 << (id & 7)
 ; (TestSpeciesFlag_Data); C = A = [HL] & B, so Z is set when the species' bit is clear (E-0070)
 TestSpeciesFlag::
@@ -4723,6 +4816,9 @@ TestSpeciesFlag::
 TestSpeciesFlag_Data::
     db $01, $02, $04, $08, $10, $20, $40, $80
 
+; Sets the species flag of the monster id in wSpeciesIdLo/Hi (TestSpeciesFlag finds the byte and the
+; mask) and clears the high nibble of wSpeciesFlagCount. Returns A = the new flag byte and Z clear;
+; HL and B are as TestSpeciesFlag left them. (C2, E-0378)
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high
 ; nibble of wSpeciesFlagCount (E-0070)
 SetSpeciesFlag::
@@ -4737,6 +4833,11 @@ SetSpeciesFlag::
     pop af
     ret
 
+; Zeroes the 11 family counters at wWorkBuf, then for every monster id 0-372 that has a family
+; (LoadSpeciesFamily gives $FF for an unused id) adds 1 to the counter of its family when its
+; wSpeciesFlags bit is set or, if not, when its bit in the list at wMonsterLibraryBuf is set
+; (TestBitInFieldAtArg3, $80 first within each byte). Ends with wSpeciesIdLo/Hi = $0175.
+; BattleEnd_Records_ShapeJoiner_CountFlaggedSpecies is the same loop without the list. (C2, E-0378)
 ; zeroes the 11 per-family counters at wWorkBuf, then for monster ids 0-372 ($175 is the end) skips
 ; unused ids (family $FF) and adds 1 to wWorkBuf[family] when the species' flag is set
 ; (TestSpeciesFlag) or, when it is not, when TestBitInFieldAtArg3 finds the id in the list at
@@ -4810,8 +4911,8 @@ CountSpeciesPerFamilyFlaggedOrListed::
 ; Clears the 11 per-family counters at wWorkBuf, then for every monster id $0000-$0174 that has a
 ; family (LoadSpeciesFamily; $FF is skipped) adds 1 to wWorkBuf + family when its wSpeciesFlags bit
 ; is set (TestSpeciesFlag); leaves wSpeciesIdLo/Hi = $0175. CountSpeciesPerFamilyFlaggedOrListed is
-; the same loop that also counts ids listed at wMonsterLibraryBuf. (C1, E-0370)
-BattleEnd_Step3_ShapeJoiner_CountFlaggedSpecies::
+; the same loop that also counts ids listed at wMonsterLibraryBuf. (C2, E-0370; probed E-0378)
+BattleEnd_Records_ShapeJoiner_CountFlaggedSpecies::
     xor a
     ld hl, wWorkBuf
     ld bc, $000b
@@ -4864,8 +4965,8 @@ BattleEnd_Step3_ShapeJoiner_CountFlaggedSpecies::
 ; (unless wBattleEndFlag is set) the battle meter (wBattleMeter), scaled by the foe's entry of one
 ; of two tables (unseen or seen species: x5, x2, x1, /2, /5, /16, /4, /8 or /20; 0 always offers, 7
 ; never), minus a random 10-100 must stay positive, and a final random 1-100 must be under 91;
-; otherwise wDisplaySlot becomes $FF (no offer). (C1, E-0357)
-BattleEnd_Step5_DecideJoinOffer::
+; otherwise wDisplaySlot becomes $FF (no offer). (C2, E-0357; probed E-0378)
+BattleEnd_OfferJoin_DecideJoinOffer::
     ld a, $01
     ld [wBattleFoeCount], a
     ld a, [wLinkMode]
@@ -4902,7 +5003,7 @@ BattleEnd_Step5_DecideJoinOffer::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     call TestSpeciesFlag
-    ld de, BattleEnd_Step5_DecideJoinOffer_Data2
+    ld de, BattleEnd_OfferJoin_DecideJoinOffer_Data2
     jr nz, .read_battle_meter
     farcall LoadSpeciesRecord
     call NextTableByte
@@ -4924,7 +5025,7 @@ BattleEnd_Step5_DecideJoinOffer::
     ld a, [wBattleEndFlag]
     or a
     jp nz, .return
-    ld de, BattleEnd_Step5_DecideJoinOffer_Data1
+    ld de, BattleEnd_OfferJoin_DecideJoinOffer_Data1
 
 .read_battle_meter:
     ld a, [wBattleMeter]
@@ -5080,15 +5181,23 @@ BattleEnd_Step5_DecideJoinOffer::
 JoinChanceByClass::
     db $64, $32, $18, $0a, $06, $02, $01, $00
 
-BattleEnd_Step5_DecideJoinOffer_Data1::
+BattleEnd_OfferJoin_DecideJoinOffer_Data1::
     db $00, $01, $02, $03, $04, $05, $06, $07
 
-BattleEnd_Step5_DecideJoinOffer_Data2::
+BattleEnd_OfferJoin_DecideJoinOffer_Data2::
     db $00, $11, $12, $13, $14, $15, $16, $07
 
+; Runner of the question part of the join offer (BattleEnd_OfferJoin_DrawThenAskToJoin_Ask farcalls
+; it): jumps through 29 entries by wBattleSubStep. Steps 0-4 ask 'Allow ... to join you?' (_Start
+; copies the foe name and counts the farm records, _Finish ends the battle-end step once the text is
+; done, _ShowHeroGotUpLooking, _DrawYesNo, _ShowHeroDepartedSadly); steps 5-8 check the farm for
+; room and ask to release a monster; steps 9, 10 and 12-21 are the release choice and the monster
+; list (_ShowWhichWillYouChoose, _DrawReleaseChoice, then _ShowChooseAMonsterTo to _ReleaseMonster);
+; steps 11 and 22-28 are the egg side (_ShowYouHaveNoEggs, _ShowChooseAnEggTo to _AbandonEgg). (C1,
+; E-0378)
 ; by wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0
 ; to join you?' (category 5 string $0B), then the follow-ups ($0D 'But there is no more room!
-; Release a monster to make room?', $0E 'Which will you choose?') (E-0292)
+; Release a monster to make room?', $0E 'Which will you choose?')
 BattleEnd_AskToJoin::
     ld a, [wBattleSubStep]
     jumptable
@@ -5125,7 +5234,7 @@ BattleEnd_AskToJoin::
 ; Asking to join, step 0: copies the foe's name (with its letter) into wTextBuf0; in battle kinds 8
 ; and up, or an odd kind where KeyWorldAreaEncounterIndex returns 0, shows '<name> got up, looking
 ; hopeful. But ...' (string $1E); otherwise counts the farm's monsters and eggs
-; (CountRecordsByField6E) and goes on. (C1, E-0357)
+; (CountFarmMonstersAndEggs) and goes on. (C1, E-0357)
 BattleEnd_AskToJoin_Start::
     ld hl, wBattleSubStep
     inc [hl]
@@ -5135,11 +5244,11 @@ BattleEnd_AskToJoin_Start::
     cp $08
     jr nc, .set_string_index_to_1E
     and $01
-    jr z, .call_count_records_by_field6_e
+    jr z, .call_count_farm_monsters_and_eggs
     farcall KeyWorldAreaEncounterIndex
     ldh a, [hTemp0]
     or a
-    jr nz, .call_count_records_by_field6_e
+    jr nz, .call_count_farm_monsters_and_eggs
 
 .set_string_index_to_1E:
     ld a, $1e
@@ -5147,8 +5256,8 @@ BattleEnd_AskToJoin_Start::
     call ShowStringCategory5_Bank16
     ret
 
-.call_count_records_by_field6_e:
-    call CountRecordsByField6E
+.call_count_farm_monsters_and_eggs:
+    call CountFarmMonstersAndEggs
     xor a
     ld [wSubMenuCursor2], a
     ld [wMenuOption], a
@@ -5158,7 +5267,7 @@ BattleEnd_AskToJoin_Start::
     ret
 
 ; Asking to join, step 1: once the text has finished, ends this battle-end step (wBattleStep + 1).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0378)
 BattleEnd_AskToJoin_Finish::
     ld a, [wTextFlags]
     or a
@@ -5327,7 +5436,7 @@ BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     ld a, e
     or a
     ret z
-    call CountRecordsByField6E
+    call CountFarmMonstersAndEggs
     ld a, [wTemp1]
     or a
     jr nz, .set_battle_sub_step_to_16
@@ -5641,7 +5750,8 @@ BattleEnd_AskToJoin_CheckRelease::
     ret
 
 ; Asking to join, step 19: reached only when BattleEnd_AskToJoin_CheckRelease lets the picked
-; monster go; moves straight on to step 20 (BattleEnd_AskToJoin_ShowGWasSetFree). (C1, E-0370)
+; monster go; moves straight on to step 20 (BattleEnd_AskToJoin_ShowGWasSetFree). (C2, E-0370;
+; probed E-0378)
 BattleEnd_AskToJoin_ReleaseAllowed::
     ld hl, wBattleSubStep
     inc [hl]
@@ -5730,8 +5840,8 @@ BattleEnd_AskToJoin_ShowChooseAnEggTo::
     ld a, $16
     ld [wStringIndex], a ; 'Choose an egg to abandon.'
     call ShowStringCategory5Immediate_Bank16
-    call CountRecordsByField6E
-    call ListRecordsWithField6EToListEntries
+    call CountFarmMonstersAndEggs
+    call ListFarmEggsToListEntries
     ld a, [wTemp1]
     ld [wListCount], a
     dec a
@@ -5969,7 +6079,7 @@ BattleEnd_AskToJoin_RedrawEggsAfterStats::
     ld a, [wCommandPageCount]
     inc a
     cp $02
-    jr c, .call_list_records_with_field6_e_to_list
+    jr c, .call_list_farm_eggs_to_list_entries
     add $e0
     ld [wWindowTileBuffer + $22], a
     ld a, $c5
@@ -5979,8 +6089,8 @@ BattleEnd_AskToJoin_RedrawEggsAfterStats::
     ld a, $c6
     ld [wWindowTileBuffer + $23], a
 
-.call_list_records_with_field6_e_to_list:
-    call ListRecordsWithField6EToListEntries
+.call_list_farm_eggs_to_list_entries:
+    call ListFarmEggsToListEntries
     call DrawFourListEntriesForPageListPage
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -6034,6 +6144,9 @@ BattleEnd_AskToJoin_AbandonEgg::
     ld [wBattleSubStep], a
     ret
 
+; Runs MovePagedListCursor, then returns at once if A was newly pressed (wJoypadPressed bit 0);
+; otherwise writes 1 to [DE] when B was newly pressed (bit 1). DE is the cursor byte given to
+; MovePagedListCursor, so the caller reads a back-out request there. (C1, E-0378)
 ; runs MovePagedListCursor; unless A is pressed, writes 1 at DE when B is pressed (E-0122)
 SetDEFlagOnBButton::
     call MovePagedListCursor
@@ -6047,9 +6160,13 @@ SetDEFlagOnBButton::
     ld [de], a
     ret
 
+; Enables SRAM bank 0 and scans the first N records of sRecords, N =
+; BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel] ($0A, $14 or $1E). A record with a non-zero
+; first byte (MON_STATE) adds 1 to wTemp1 when its MON_EGG byte is non-zero and to wTemp0 otherwise;
+; empty records are skipped. SRAM is disabled again. (C2, E-0378)
 ; counts the first BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel] SRAM records: wTemp1 = those
 ; with field $6E set, wTemp0 = the others (E-0125)
-CountRecordsByField6E::
+CountFarmMonstersAndEggs::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -6099,6 +6216,13 @@ CountRecordsByField6E::
     ld [rRAMG], a
     ret
 
+; Builds the monster list of the farm page: wListEntries = the record numbers of the wPartyCount
+; party members from wPartyList, then the stored records (first byte 1, MON_EGG 0) among the first N
+; farm records (N from BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel]); wTemp0 = the total. Sets
+; wListPageSize = 5, wListPageCount = (total - 1) / 5 + 1 and wListLastPageSize = (total - 1) mod 5
+; + 1. In wScreenTileBuffer it puts tiles $E1-$E3 beside the party members when wSubMenuCursor2 is 0
+; (tile $B6 for places beyond wPartyCount, and for all three otherwise) and, with two or more pages,
+; the page marks at +$142. (C2, E-0378)
 ; lists the party records and then the stored records (state 1, field $6E clear) in wListEntries and
 ; sets the page counts wListPageSize-wListLastPageSize (E-0130)
 ListPartyAndStoredRecordsForPage::
@@ -6224,9 +6348,12 @@ ListPartyAndStoredRecordsForPage::
 .return:
     ret
 
+; Fills wListEntries ($1E bytes) with $FF, then lists in order the numbers of the records among the
+; first N farm records (N from BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel]) that are in use
+; (first byte non-zero) and have a non-zero MON_EGG, that is the eggs. (C2, E-0378)
 ; fills wListEntries ($1E bytes) with $FF, then lists the indexes of the first
 ; BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel] SRAM records that have field $6E set (E-0127)
-ListRecordsWithField6EToListEntries::
+ListFarmEggsToListEntries::
     ld hl, wListEntries
     ld bc, $001e
     ld a, $ff
@@ -6276,6 +6403,14 @@ ListRecordsWithField6EToListEntries::
     ld [rRAMG], a
     ret
 
+; Moves the cursor of a paged list. DE points at the cursor byte (the entry on the page) and HL is
+; the table of VRAM addresses that BlankTileAtTableEntryDE and DrawCursorTileAtTableEntryDE use.
+; wJoypadPressedRepeat up (bit 6) and down (bit 7) move it one entry, wrapping inside the page (the
+; last page holds wListLastPageSize entries, the others wListPageSize); left (bit 5) and right (bit
+; 4), only when wListPageCount is 2 or more, change wListPage by one with wrap and pull the cursor
+; back to the last entry of a shorter last page. After a move it redraws the cursor and sets
+; wFrameCounterLo to 2 (0 after a page change); with no direction pressed it draws or blanks the
+; cursor by bit 4 of wFrameCounterLo, skipping frames whose low nibble is 0. (C1, E-0378)
 ; up/down/left/right move the cursor at [DE] and the page wListPage within the page sizes
 ; wListPageSize/wListLastPageSize and page count wListPageCount (E-0130)
 MovePagedListCursor::
@@ -6397,6 +6532,8 @@ MovePagedListCursor::
     ld [wFrameCounterLo], a
     ret
 
+; HL = a table of VRAM address words, [DE] = an index: writes tile $C3 at that entry address
+; (WriteVRAMByte). HL is kept. (C1, E-0378)
 ; HL = table of VRAM addresses, [DE] = index: writes tile $C3 at that entry's address
 ; (WriteVRAMByte); HL kept (E-0103)
 BlankTileAtTableEntryDE::
@@ -6410,6 +6547,8 @@ BlankTileAtTableEntryDE::
     pop hl
     ret
 
+; HL = a table of VRAM address words, [DE] = an index: writes the cursor tile $BB at that entry
+; address (WriteVRAMByte). HL is kept. (C1, E-0378)
 ; HL = table of VRAM addresses, [DE] = index: writes the cursor tile $BB at that entry's address
 ; (WriteVRAMByte); HL kept (E-0118)
 DrawCursorTileAtTableEntryDE::
@@ -6442,6 +6581,12 @@ BattleEnd_AskToJoin_MonsterListCursor_Data::
 BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data::
     db $2b, $99, $6b, $99
 
+; Draws one page of the monster list: with the text window set to 1 row and width 5 it shows the
+; five record names of wListEntries from 5 * wListPage (ShowRecordNamesListFromHL into the tiles
+; from vTiles2 + $3B0), then restores the window settings. On page 0 it writes tiles $E1-$E3 into
+; the BG map beside the party members (vBGMap0 + $20, $60, $A0; $B6 beyond wPartyCount), on other
+; pages $B6 in all three; with two or more pages it writes the page tile $E1 + wListPage at vBGMap0
+; + $143. (C1, E-0378)
 ; shows five record names of page wListPage at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or
 ; marks ($B6) beside them (E-0128)
 DrawRecordListPageWithNumbers::
@@ -6528,6 +6673,9 @@ DrawRecordListPageWithNumbers::
 .return:
     ret
 
+; Saves the text window settings, sets 1 row and width 5, shows the names of the four records
+; numbered wBattleArg0 to wBattleArg0 + 3 ($FF gives an empty name) in the tiles from vTiles2 + $3B0
+; (ShowRecordNamesListFromHL), then restores the window settings. (C1, E-0378)
 ; draws four values from wBattleArg0 at vTiles2 + $3B0 with size $0105 (ShowRecordNamesListFromHL),
 ; preserving the window settings (E-0121)
 DrawBattleArg0ValuesAtTiles23B0::
@@ -6562,6 +6710,11 @@ DrawBattleArg0ValuesAtTiles23B0::
     ld [wTextWindowTileHi], a
     ret
 
+; B = number of entries, HL = list of record numbers, DE = tile address of the first name: enables
+; SRAM bank 0 and for each number (an $FF entry gives an empty name) copies the 10-byte record name
+; (MON_NAME) into wTextBuf0 with a $F0 end, sets the text window tile address to DE and shows string
+; 5 of category 8 (ShowString_Bank08). DE moves on by $100 for each entry. SRAM is disabled at the
+; end. (C1, E-0378)
 ; for B record indexes at HL shows each record name (or an empty one for $FF) as string 5 of
 ; category 8 at successive window rows from DE (E-0127)
 ShowRecordNamesListFromHL::
@@ -6617,6 +6770,11 @@ ShowRecordNamesListFromHL::
     ld [rRAMG], a
     ret
 
+; Draws the four egg-list entries of page wListPage (wListEntries from 4 * page): with the text
+; window set to 1 row and width 9 and SRAM bank 0 enabled it runs
+; DrawFourListEntriesForPageListPage_DrawEgg for entries 0-3 (wBattleArg0 = 0-3), then
+; DrawListPageDigitIfLong, and sets the text window back to vTiles1 with 2 rows and width $12. (C1,
+; E-0378)
 ; for the four entries of wListEntries page wListPage runs
 ; DrawFourListEntriesForPageListPage_DrawEgg with wBattleArg0 = 0-3, draws the page digit, then
 ; restores the default window (E-0121)
@@ -6731,6 +6889,9 @@ DrawFourListEntriesForPageListPage_ShowSpecies::
     add $02
     ld b, a
 
+; B = string category, C = string index: stores them in wStringCategory and wStringIndex, sets the
+; text window tile address to $9400 + $100 * wBattleArg0 and shows the string with
+; ShowString_Bank08. (C1, E-0378)
 ; wStringCategory = B, wStringIndex = C, string window destination = $9400 + 256 * wBattleArg0, then
 ; ShowString_Bank08 (E-0118)
 ShowStringBCAtTileRowBattleArg0::
@@ -6753,6 +6914,8 @@ ShowStringBCAtTileRowBattleArg0::
 DrawFourListEntriesForPageListPage_DrawEgg_Data::
     db $43, $c2, $83, $c2, $c3, $c2, $03, $c3
 
+; When wListCount is 5 or more, writes the page digit tile $E1 + wListPage to wWindowTileBuffer +
+; $20; with fewer entries it does nothing. (C2, E-0378)
 ; when wListCount is 5 or more: wWindowTileBuffer + $20 = $E1 + wListPage (the page number tile)
 ; (E-0119)
 DrawListPageDigitIfLong::
@@ -6764,6 +6927,9 @@ DrawListPageDigitIfLong::
     ld [wWindowTileBuffer + $20], a
     ret
 
+; Removes the $FF entry from wPartyList: the other entries move up in order, wPartyCount and
+; wBattlePartyCount drop by one and the list ends with $FF. If no entry is $FF the last one is
+; dropped. (C2, E-0378)
 ; removes the $FF entry from the party list wPartyList, wPartyCount -= 1, wBattlePartyCount = new
 ; count, and terminates the list with $FF (E-0124)
 RemovePartyMemberMarkedFF::
@@ -6800,6 +6966,9 @@ RemovePartyMemberMarkedFF::
     ld [de], a
     ret
 
+; Sets wStringCategory to 5 (the caller has set wStringIndex) and far-calls
+; BeginStringDisplay_Bank2F. ShowStringCategory5Immediate_Bank16 is the same with ShowString_Bank2F.
+; (C1, E-0378)
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls BeginStringDisplay_Bank2F
 ; (E-0072)
 ShowStringCategory5_Bank16::
@@ -6808,6 +6977,8 @@ ShowStringCategory5_Bank16::
     farcall BeginStringDisplay_Bank2F
     ret
 
+; Sets wStringCategory to 5 (the caller has set wStringIndex) and far-calls ShowString_Bank2F.
+; ShowStringCategory5_Bank16 is the same with BeginStringDisplay_Bank2F. (C1, E-0378)
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls ShowString_Bank2F (E-0074)
 ShowStringCategory5Immediate_Bank16::
     ld a, $05
@@ -6815,6 +6986,9 @@ ShowStringCategory5Immediate_Bank16::
     farcall ShowString_Bank2F
     ret
 
+; Copies the 10-byte name (MON_NAME) of the record wListEntries[5 * wSubMenuCursor2 + wMenuState]
+; into wTextBuf1 with a $F0 end (SRAM bank 0 enabled for the copy) and shows string $12 of category
+; 5, 'Do you want to release G?'. (C1, E-0378)
 ; copies the name of record wListEntries[5 * wSubMenuCursor2 + wMenuState] to wTextBuf1 and shows
 ; string $12 of category 5 (E-0125)
 ShowRecordNameString12::
@@ -6853,6 +7027,10 @@ ShowRecordNameString12::
     call ShowStringCategory5Immediate_Bank16
     ret
 
+; Takes the record number wListEntries[4 * wMenuOption + wCommandCursorMax], reads its species word
+; (MON_SPECIES), copies the species name (string category 2 plus the high byte, index the low byte)
+; into wTextBuf1 and shows string $17 of category 5, the question about abandoning that egg. (C1,
+; E-0378)
 ; copies the monster name of record wListEntries[wMenuOption * 4 + wCommandCursorMax] (its id word
 ; at field $0B) into wTextBuf1, then shows string $17 of category 5
 ; (ShowStringCategory5Immediate_Bank16) (E-0120)
@@ -6883,6 +7061,9 @@ ShowListedRecordNameMessage::
     call ShowStringCategory5Immediate_Bank16
     ret
 
+; Copies the 10-byte name (MON_NAME) of the record numbered wBattleArg0[wMenuSubState] into
+; wTextBuf0 and shows string $1D of category 5, 'Send 0 back to the farm?'. It writes no $F0 after
+; the 10 bytes. (C1, E-0378)
 ; copies the name of record wBattleArg0[wMenuSubState] to wTextBuf0 and shows string $1D of category
 ; 5 (E-0124)
 ShowRecordNameString1D::
@@ -6910,6 +7091,9 @@ ShowRecordNameString1D::
     call ShowStringCategory5_Bank16
     ret
 
+; DE = destination: copies the monster name of wDisplaySlot (CopyMonsterNameOfDisplaySlotToDE) and
+; replaces its $F0 end by the letter tile $A7 + (wSlotNameSuffix[slot] and 1), then writes $F0 after
+; it. (C2, E-0378)
 ; copies the name of battle slot wDisplaySlot to DE and appends tile $A7 + (wSlotNameSuffix[slot] &
 ; 1) before the terminator (E-0124)
 CopyBattleMonsterNameWithLetterSuffix::
@@ -6938,6 +7122,9 @@ CopyBattleMonsterNameWithLetterSuffix::
     ld [hl], $f0
     ret
 
+; DE = destination: copies the name of the monster id in wBattleMonsterId for slot wDisplaySlot with
+; CopyStringHLToDE, string category 2 plus the high byte of the id, index = the low byte, ending in
+; $F0. (C2, E-0378)
 ; copies the name of the monster in slot wDisplaySlot to DE: string category 2 + the id's high byte
 ; (StringTable_MonsterNames, then StringTable_MonsterNames2 from id 256), index = the low byte
 ; (CopyStringHLToDE) (E-0069)
@@ -6956,6 +7143,10 @@ CopyMonsterNameOfDisplaySlotToDE::
     call CopyStringHLToDE
     ret
 
+; Runner of part 3 of the join offer (BattleEnd_OfferJoin_RedrawBattleScreen farcalls it): jumps
+; through 5 entries by wBattleSubStep, the naming of the monster that joins. 0 _ShowPleaseNameHero
+; ('Please name <name>.'), 1 _SetUpNameEntry, 2 _EnterName (the name entry screen), 3 _NameDone, 4
+; _StoreOnFarm (writes the monster into the first free farm record). (C1, E-0378)
 ; runs the routine for wBattleSubStep (jump table of five) (E-0122)
 RunBattleEndStep5SubSteps::
     ld a, [wBattleSubStep]
@@ -7095,7 +7286,7 @@ RunBattleEndStep5SubSteps_EnterName::
     ret
 
 ; Naming the new monster, step 3: only moves on to step 4 (RunBattleEndStep5SubSteps_StoreOnFarm),
-; one call after RunBattleEndStep5SubSteps_EnterName copied the name. (C1, E-0370)
+; one call after RunBattleEndStep5SubSteps_EnterName copied the name. (C2, E-0370; probed E-0378)
 RunBattleEndStep5SubSteps_NameDone::
     ld hl, wBattleSubStep
     inc [hl]
@@ -7104,7 +7295,7 @@ RunBattleEndStep5SubSteps_NameDone::
 ; Naming the new monster, step 4: stores the monster in the first free farm record within the farm
 ; level's capacity (state 1, the new name, then $9A bytes from wRecordBufA's species on) and keeps
 ; its number in wWorkBuf; re-initialises each party slot's status (InitSlotFromRecordFlags); with no
-; free record nothing is stored. (C1, E-0357)
+; free record nothing is stored. (C2, E-0357; probed E-0378)
 RunBattleEndStep5SubSteps_StoreOnFarm::
     ld a, $0a
     ld [rRAMG], a
@@ -7174,6 +7365,8 @@ RunBattleEndStep5SubSteps_StoreOnFarm::
     ld [rRAMG], a
     ret
 
+; DE = source, HL = destination, B = count (0 copies 256): copies B bytes from DE to HL. DE and HL
+; end past the copy and B = 0. (C2, E-0378)
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
 ; the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 CopyBBytesDEToHL_Bank16::
@@ -7184,6 +7377,10 @@ CopyBBytesDEToHL_Bank16::
     jr nz, CopyBBytesDEToHL_Bank16
     ret
 
+; HL = a record status byte (MON_STATUS), C = battle slot: with bit 7 set the slot is marked out
+; (InitSlotFromRecordFlags_MarkOut). Otherwise wBattleSlotOut[C] = 0, the first byte of the slot
+; status record (wBattleStatus, 9 bytes per slot) is cleared, then status bit 2 sets its bit 0 and
+; status bit 0 sets its bit 5. (C2, E-0378)
 ; HL = a record flag byte, C = battle slot: unless bit 7 is set, marks the slot present
 ; (wBattleSlotOut = 0), clears its status byte 0 and sets status bit 0 when flag bit 2 is set and
 ; status bit 5 when flag bit 0 is set (E-0118)
@@ -7205,17 +7402,19 @@ InitSlotFromRecordFlags::
     call nz, SetBit5AtHL
     ret
 
+; Sets bit 5 of the byte at HL. (C2, E-0378)
 ; [HL] |= $20 (E-0114)
 SetBit5AtHL::
     set 5, [hl]
     ret
 
+; Sets bit 0 of the byte at HL. (C2, E-0378)
 ; [HL] |= $01 (E-0114)
 SetBit0AtHL::
     set 0, [hl]
     ret
 
-; Marks battle slot C as out (wBattleSlotOut + C = 1). (C1, E-0357)
+; Marks battle slot C as out (wBattleSlotOut + C = 1). (C2, E-0357; probed E-0378)
 InitSlotFromRecordFlags_MarkOut::
     ld a, c
     ld hl, wBattleSlotOut
@@ -7223,8 +7422,15 @@ InitSlotFromRecordFlags_MarkOut::
     ld [hl], $01
     ret
 
+; Runner of part 4 of the join offer: jumps through 20 entries by wBattleSubStep, the placing of the
+; monster that joined. 0 _AskTakeAlong ('Will you take <name> with you?'), 1 _DrawYesNo, 2
+; _ReadAnswer, 3 _ShowHeroWasSentTo, 4 _Finish; 5 _Join and 6 _AddToParty put it in the party when
+; there is room; with a full party 8-19 let the player pick a monster to send home
+; (_ShowChooseTheMonsterTo, _SetUpList, _ListCursor, _DrawOptions, _PickOption, _OpenPickStats,
+; _RunStatsScreen, _RedrawPickOptions, _ShowWillYouTakeHero, _BackToList, _SendPickToFarm,
+; _AskAgain); 7 _DrawScreen redraws. (C1, E-0378)
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0292)
+; RestoreRecordAFully: places the monster that joined
 BattleEnd_AddJoinedMonster::
     ld a, [wBattleSubStep]
     jumptable
@@ -7370,7 +7576,7 @@ BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
     call ShowStringCategory5_Bank16
     ret
 
-; Adding the new monster, step 4: ends this battle-end step. (C1, E-0357)
+; Adding the new monster, step 4: ends this battle-end step. (C2, E-0357; probed E-0378)
 BattleEnd_AddJoinedMonster_Finish::
     ld hl, wBattleStep
     inc [hl]
@@ -7815,6 +8021,8 @@ BattleEnd_AddJoinedMonster_AskAgain::
     ld [wMenuState], a
     ret
 
+; Far-calls CopyRectRecordToScreenBuffer_13, then DrawBattleArg0ValuesAtTiles23B0, which draws the
+; names of the four records numbered in wBattleArg0. (C1, E-0378)
 ; copies rectangle record $7923 to the screen buffer and draws the wBattleArg0 values at vTiles2 +
 ; $3B0 (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectAndDrawBattleArg0Values)
@@ -7823,6 +8031,9 @@ CopyRectAndDrawBattleArg0Values::
     call DrawBattleArg0ValuesAtTiles23B0
     ret
 
+; A = record number (no party mapping), HL kept: sets the record first byte (MON_STATE) to 1 and
+; MON_STATUS to 0, copies the max HP word into the HP word and the max MP word into the MP word.
+; Uses SRAM bank 0. (C2, E-0378)
 ; for record A: field 0 = 1, field $55 = 0, HP (field $5B) = max HP ($5D), MP ($5F) = max MP ($61)
 ; (E-0127)
 RestoreRecordAFully::
@@ -7876,10 +8087,14 @@ RestoreRecordAFully::
     pop hl
     ret
 
+; Copies B into A and falls into SetRecordState2: sets the first byte (MON_STATE) of record B to 2.
+; (C2, E-0378)
 ; A = B, then falls into SetRecordState2 (E-0126)
 SetRecordState2ForB::
     ld a, b
 
+; A = record number: sets its first byte (MON_STATE) to 2 in SRAM bank 0 (SRAMRecordAddress, then
+; SRAM enabled and disabled again). (C2, E-0378)
 ; A = record: sets its byte 0 (state) to 2 in SRAM bank 0 (SRAMRecordAddress with C = 0) (E-0118)
 SetRecordState2::
     ld c, MON_STATE
@@ -7893,6 +8108,9 @@ SetRecordState2::
     ld [rRAMG], a
     ret
 
+; Enables SRAM bank 0 and runs RunForPartyMembers_SetBattleSlot for party places 0, 1 and 2 (A = the
+; wPartyList entry, C = the place), stopping after wPartyCount places; then disables SRAM. It fills
+; the battle level, HP, MP, slot-out and status arrays from the party records. (C2, E-0378)
 ; with SRAM enabled runs RunForPartyMembers_SetBattleSlot for each of the first one to three party
 ; records (E-0124) (E-0344: the address in its name dropped or read as the label there; was
 ; RunForPartyMembers)
@@ -7926,7 +8144,7 @@ RunForPartyMembers::
 ; wBattleLevel + C and the MON_HP and MON_MP words to slot C's wBattleHP and wBattleMP words, and
 ; marks the slot present (wBattleSlotOut + C = 0); a fallen monster (MON_STATUS bit 7) marks it out
 ; (1) instead; otherwise clears its first wBattleStatus byte (9 per slot) and carries MON_STATUS bit
-; 0 to status bit 5 and bit 2 (poison) to bit 0. (C1, E-0370)
+; 0 to status bit 5 and bit 2 (poison) to bit 0. (C2, E-0370; probed E-0378)
 RunForPartyMembers_SetBattleSlot::
     push bc
     ld c, MON_LEVEL
@@ -8021,6 +8239,7 @@ RunForPartyMembers_SetBattleSlot::
     ld [de], a
     ret
 
+; Sets bit 5 of the byte at DE; A is clobbered. (C2, E-0378)
 ; [DE] |= $20; clobbers A (E-0114)
 SetBit5AtDE::
     ld a, [de]
@@ -8028,6 +8247,7 @@ SetBit5AtDE::
     ld [de], a
     ret
 
+; Sets bit 0 of the byte at DE; A is clobbered. (C2, E-0378)
 ; [DE] |= $01; clobbers A (E-0114)
 SetBit0AtDE::
     ld a, [de]
@@ -8035,6 +8255,9 @@ SetBit0AtDE::
     ld [de], a
     ret
 
+; A = 1 when MonsterClassByteTable_1 at the monster id of battle slot wDisplaySlot
+; (wBattleMonsterId) holds 6 or more, else A = 0. BattleEnd_AddJoinedMonster_ShowHeroWasSentTo and
+; _Join pick between two message variants by it. (C2, E-0378)
 ; A = 1 when Data $71AC[battle monster id of wDisplaySlot] is at least 6, else 0 (E-0124) (E-0344:
 ; the address in its name dropped or read as the label there; was BattleMonsterTableAtLeast6)
 BattleMonsterTableAtLeast6::
@@ -8445,6 +8668,9 @@ MonsterClassByteTable_1::
     db $07 ; id 372 Darck
 
 ; B = width, C = rows, DE = source with rows 32 bytes apart, HL = VRAM address with rows 32 bytes
+; apart: copies the rectangle with WriteVRAMByteInc. DE and HL end at the start of the row below, B
+; is kept and C = 0. (C1, E-0378)
+; B = width, C = rows, DE = source with rows 32 bytes apart, HL = VRAM address with rows 32 bytes
 ; apart: copies a B x C rectangle with WriteVRAMByteInc; DE and HL end at the start of the row
 ; below; B kept, C = 0 (E-0066)
 CopyRect32StrideToVRAM_Bank16::
@@ -8473,6 +8699,10 @@ CopyRect32StrideToVRAM_Bank16::
     jr nz, CopyRect32StrideToVRAM_Bank16
     ret
 
+; Rebuilds the battle screen buffer by far-calling ClearAttributesAndScreenBuffer_Bank31,
+; CopyRectRecordForBattlePartyCount_Bank31, DrawPartySlotStatusPanels,
+; LayoutTileBlocksForBattleFoeCount, LoadBattleMonsterPictureAttributes and
+; CopyRectRecordToScreenBuffer in that order. (C1, E-0378)
 ; clears attributes and the screen buffer and lays out the battle menu rectangles (bank $31 routines
 ; for wBattlePartyCount and wBattleFoeCount) (E-0122) (E-0344: the address in its name dropped or
 ; read as the label there; was BuildBattleMenuScreen)
@@ -8487,13 +8717,13 @@ BuildBattleMenuScreen::
 
 ; Shapes the joining foe's record in wRecordBufA: its level changes by a random -2 to +2 (by 0 in
 ; battle kind 2) and is kept within 1-99, and MON_MAX_LEVEL becomes the larger of SPECIES_MAX_LEVEL
-; and that level; outside kind 2 max HP (with HP) goes through BattleEnd_Step3_ShapeJoiner_LowerHP
+; and that level; outside kind 2 max HP (with HP) goes through BattleEnd_Records_ShapeJoiner_LowerHP
 ; and max MP (with MP), ATK, DEF, AGL, INT and wRecordBufAPersonality3 through
-; BattleEnd_Step3_ShapeJoiner_LowerStat. Then MON_WLD = 25 x level minus a value from the number of
-; flagged species (BattleEnd_Step3_ShapeJoiner_CountFlaggedSpecies summed over the 11 families: 0
-; below 21, 50 below 41, 100 below 61, 150 below 81, 200 below 101, 250 below 121, 300 below 141,
-; else 400), kept within 0-999. (C1, E-0370)
-BattleEnd_Step3_ShapeJoiner::
+; BattleEnd_Records_ShapeJoiner_LowerStat. Then MON_WLD = 25 x level minus a value from the number
+; of flagged species (BattleEnd_Records_ShapeJoiner_CountFlaggedSpecies summed over the 11 families:
+; 0 below 21, 50 below 41, 100 below 61, 150 below 81, 200 below 101, 250 below 121, 300 below 141,
+; else 400), kept within 0-999. (C2, E-0370; probed E-0378)
+BattleEnd_Records_ShapeJoiner::
     ld a, [wBattleKind]
     cp $02
     jr nz, .call_next_table_byte
@@ -8549,12 +8779,12 @@ BattleEnd_Step3_ShapeJoiner::
     ld [wRecordBufA + MON_MAX_LEVEL], a
     ld a, [wBattleKind]
     cp $02
-    jp z, .call_battle_end_step3_shape_joiner_count
+    jp z, .call_battle_end_records_shape_joiner_count
     ld a, [wRecordBufA + MON_MAX_HP]
     ld c, a
     ld a, [wRecordBufA + MON_MAX_HP + 1]
     ld b, a
-    call BattleEnd_Step3_ShapeJoiner_LowerHP
+    call BattleEnd_Records_ShapeJoiner_LowerHP
     ld a, l
     ld [wRecordBufA + MON_MAX_HP], a
     ld a, h
@@ -8567,7 +8797,7 @@ BattleEnd_Step3_ShapeJoiner::
     ld c, a
     ld a, [wRecordBufA + MON_MAX_MP + 1]
     ld b, a
-    call BattleEnd_Step3_ShapeJoiner_LowerStat
+    call BattleEnd_Records_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_MAX_MP], a
     ld a, h
@@ -8580,7 +8810,7 @@ BattleEnd_Step3_ShapeJoiner::
     ld c, a
     ld a, [wRecordBufA + MON_ATK + 1]
     ld b, a
-    call BattleEnd_Step3_ShapeJoiner_LowerStat
+    call BattleEnd_Records_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_ATK], a
     ld a, h
@@ -8589,7 +8819,7 @@ BattleEnd_Step3_ShapeJoiner::
     ld c, a
     ld a, [wRecordBufA + MON_DEF + 1]
     ld b, a
-    call BattleEnd_Step3_ShapeJoiner_LowerStat
+    call BattleEnd_Records_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_DEF], a
     ld a, h
@@ -8598,7 +8828,7 @@ BattleEnd_Step3_ShapeJoiner::
     ld c, a
     ld a, [wRecordBufA + MON_AGL + 1]
     ld b, a
-    call BattleEnd_Step3_ShapeJoiner_LowerStat
+    call BattleEnd_Records_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_AGL], a
     ld a, h
@@ -8607,7 +8837,7 @@ BattleEnd_Step3_ShapeJoiner::
     ld c, a
     ld a, [wRecordBufA + MON_INT + 1]
     ld b, a
-    call BattleEnd_Step3_ShapeJoiner_LowerStat
+    call BattleEnd_Records_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufA + MON_INT], a
     ld a, h
@@ -8615,12 +8845,12 @@ BattleEnd_Step3_ShapeJoiner::
     ld a, [wRecordBufAPersonality3]
     ld c, a
     ld b, $00
-    call BattleEnd_Step3_ShapeJoiner_LowerStat
+    call BattleEnd_Records_ShapeJoiner_LowerStat
     ld a, l
     ld [wRecordBufAPersonality3], a
 
-.call_battle_end_step3_shape_joiner_count:
-    call BattleEnd_Step3_ShapeJoiner_CountFlaggedSpecies
+.call_battle_end_records_shape_joiner_count:
+    call BattleEnd_Records_ShapeJoiner_CountFlaggedSpecies
     ld hl, wWorkBuf
     ld b, $0b
     ld de, $0000
@@ -8697,8 +8927,8 @@ BattleEnd_Step3_ShapeJoiner::
     ret
 
 ; Lowers stat BC (capped at 999) by a random amount: random mod (20% of the stat, low byte); returns
-; the result in HL. (C1, E-0357)
-BattleEnd_Step3_ShapeJoiner_LowerStat::
+; the result in HL. (C2, E-0357; probed E-0378)
+BattleEnd_Records_ShapeJoiner_LowerStat::
     ld hl, $03e7
     ld a, l
     sub c
@@ -8740,8 +8970,9 @@ BattleEnd_Step3_ShapeJoiner_LowerStat::
     ld h, a
     ret
 
-; As the routine before for HP, then adds 8 unless the result's high byte is 3. (C1, E-0357)
-BattleEnd_Step3_ShapeJoiner_LowerHP::
+; As the routine before for HP, then adds 8 unless the result's high byte is 3. (C2, E-0357; probed
+; E-0378)
+BattleEnd_Records_ShapeJoiner_LowerHP::
     ld hl, $03e7
     ld a, l
     sub c
@@ -8788,6 +9019,10 @@ BattleEnd_Step3_ShapeJoiner_LowerHP::
     add_a_to_hl
     ret
 
+; Copies the 16-byte tile at vTiles1 + $2F0 to vTiles1 + $6D0, then with a text window of 1 row and
+; width 3 shows strings 6, 7 and 8 of category 2 of bank $09 (ShowString_Bank09) at vTiles1 + $6D0,
+; $750 and $7D0 ('Skill On/Off Orb ID Odds' is string 6) and restores the default window (vTiles1, 2
+; rows, width $12). (C1, E-0378)
 ; copies a tile to vTiles1 + $6D0, shows strings 6, 7 and 8 of category 2 (bank 09) at vTiles1 +
 ; $6D0, $750 and $7D0, then restores the default window (E-0127)
 ShowStrings6To8Bank09InRows::
@@ -8849,6 +9084,15 @@ ShowStrings6To8Bank09InRows::
 BattleEnd_AskToJoin_CheckFarmRoom_Data::
     db $0a, $14, $1e
 
+; Clears the first $3C bytes of wBattlerRecords and checks the save (CheckSaveData: hTemp0 non-zero
+; means none or damaged, and wBattlerRecords stays 0). With a valid save it sets wBattlerRecords = 1
+; and, reading SRAM bank 1, copies the player name (10 bytes) to wTitlePlayerName and the 5
+; play-time bytes to wBattlerRecords + BATTLER_SPECIES + 1, sets wTitlePartyCount, and builds one
+; 12-byte summary (BuildRecordSummaryForWorkBuf) for each saved party member, the first at
+; wTitlePartySummary and the others at wBattlerRecords + BATTLER_MAX_HP and + BATTLER_INT. It then
+; copies the completed flag, the map type (wTitleKeyFlag), the map id (wTitleStringIndex) and the
+; 4-byte key entry of the saved key index to wTitleGameCompleted and the fields after it. (C2,
+; E-0378)
 ; checks the save; when valid, loads the player name, play time, party summaries and other
 ; title-screen details from SRAM bank 1 into wBattlerRecords onward (E-0129)
 LoadSaveFileSummary::
@@ -8942,6 +9186,8 @@ LoadSaveFileSummary::
 .return:
     ret
 
+; HL = source, DE = destination, B = count: copies B bytes from HL to DE; both end past the copy and
+; B = 0 (a count of 0 copies 256). (C2, E-0378)
 ; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_Bank16::
     ld a, [hli]
@@ -8951,6 +9197,12 @@ CopyBytesDEFromHL_Bank16::
     jr nz, CopyBytesDEFromHL_Bank16
     ret
 
+; Builds a 12-byte summary of a compact $6F-byte record from the SRAM bank the caller selected (bank
+; 1 in LoadSaveFileSummary): wWorkBuf = the record number (record at $A06F + $6F * number), wWorkBuf
+; + 1/+2 = the destination. Byte 0 = the low nibble of the record first byte, bytes 1-10 = a name
+; made from the record bytes 3-7 with mark tiles from bytes $21 and $27
+; (BuildRecordSummaryForWorkBuf_ClearAndCopy, padded with $F0), byte 11 = record byte $62 with bit 7
+; cleared. (C2, E-0378)
 ; for SRAM bank-1 record wWorkBuf writes its family nibble, a packed field from bytes $21/$27
 ; (BuildRecordSummaryForWorkBuf_ClearAndCopy) and field $62 & $7F to the buffer at wWorkBuf + $1
 ; (E-0127)
@@ -9014,7 +9266,10 @@ BuildRecordSummaryForWorkBuf::
     ld [de], a
     ret
 
-; fills ten bytes at DE with $F0, then copies bytes from HL by the flags in B (E-0305)
+; DE = destination, HL = source, B and C = mark fields: fills the 10 bytes at DE with $F0, then
+; copies 5 characters from HL, each followed by the mark tile $8C + a 2-bit field when that field is
+; non-zero (the fields are B bits 7-6, 5-4, 3-2, 1-0 and C bits 7-6). (C2, E-0378)
+; fills ten bytes at DE with $F0, then copies bytes from HL by the flags in B
 BuildRecordSummaryForWorkBuf_ClearAndCopy::
     push de
     ld a, $f0
@@ -9101,12 +9356,18 @@ BuildRecordSummaryForWorkBuf_ClearAndCopy::
 .return:
     ret
 
+; Far-calls DecompressGraphicsA4ToTiles0, then jumps to DrawTitleSaveSummaryScreen_DrawSummary. (C1,
+; E-0378)
 ; far-calls DecompressGraphicsA4ToTiles0 and continues at DrawTitleSaveSummaryScreen_DrawSummary
 ; (E-0127)
 DecompressA4GraphicsAndContinue::
     farcall DecompressGraphicsA4ToTiles0
     jr DrawTitleSaveSummaryScreen_DrawSummary
 
+; Decompresses Tiles0Gfx_3 (bank $7E) to vTiles0 and, when wIsCGB is non-zero, copies 8 bytes of
+; object palette (DrawTitleSaveSummaryScreen_OBJPaletteBufferData) to wOBJPaletteBuffer and sets
+; wOBJPaletteUploadRequest = $7F; then falls into DrawTitleSaveSummaryScreen_DrawSummary, which
+; draws the save summary. (C1, E-0378)
 ; loads the summary graphics and palette, the save file summary, and draws the player name, party
 ; icons, names, levels and key name on the title screen (E-0131)
 DrawTitleSaveSummaryScreen::
@@ -9280,6 +9541,9 @@ DrawTitleSaveSummaryScreen_DrawSummary::
     ld [wTextWindowWidth], a
     ret
 
+; DE = destination: writes tile $E0 + wDigits (the hundreds digit) at DE, then falls into
+; WriteTwoDigitTilesDigits1NoBlank_Bank16 for the tens and ones; DE ends on the last tile written.
+; (C2, E-0378)
 ; writes wDigits as a digit tile at DE and falls into WriteTwoDigitTilesDigits1NoBlank_Bank16
 ; (E-0126)
 WriteThreeDigitTilesDigits_Bank16::
@@ -9289,6 +9553,8 @@ WriteThreeDigitTilesDigits_Bank16::
     ld [de], a
     inc de
 
+; DE = destination: writes tiles $E0 + wDigits + 1 (tens) and $E0 + wDigits + 2 (ones) at DE and DE
+; + 1 without blanking a leading zero; DE ends on the second tile. (C2, E-0378)
 ; writes wDigits + $1 and wDigits + $2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank)
 ; (E-0117) (the same 13 bytes appear in 2 banks)
 WriteTwoDigitTilesDigits1NoBlank_Bank16::
@@ -9302,6 +9568,8 @@ WriteTwoDigitTilesDigits1NoBlank_Bank16::
     ld [de], a
     ret
 
+; DE = tile address, HL = 10 name bytes: sets the text window tile address to DE, copies the 10
+; bytes to wTextBuf0 with a $F0 end and shows them with ShowString_Bank08. (C1, E-0378)
 ; window at DE: copies 10 bytes from HL to wTextBuf0 with a $F0 terminator and shows it
 ; (ShowString_Bank08) (E-0122)
 ShowTenByteNameAtDE::
@@ -9323,6 +9591,12 @@ ShowTenByteNameAtDE::
     farcall ShowString_Bank08
     ret
 
+; C = entry number, B = number of entries, HL = the 12-byte summary: when C is below B it takes the
+; first byte as the family icon number (wWorkBuf), loads that icon tile into a tile number from
+; DrawSaveSummaryPartyEntryC_Data1 or Data2 (game mode 5) by C, shows the 10-byte name beside it
+; (ShowTenByteNameAtDE) and writes the level byte (summary byte 11) as two digit tiles at the
+; address from DrawSaveSummaryPartyEntryC_Data3 or Data4. When C is not below B it blanks the entry
+; cells with tile $C3. (C1, E-0378)
 ; for summary entry C (below B) loads its family icon, shows its 10-byte name and writes its level;
 ; otherwise blanks the entry (E-0129)
 DrawSaveSummaryPartyEntryC::
@@ -9422,6 +9696,8 @@ DrawSaveSummaryPartyEntryC::
     pop bc
     ret
 
+; Writes tile $C3 to two tiles in each of two rows of wScreenTileBuffer: +$8F, +$90, +$AF and +$B0,
+; or +$CF, +$D0, +$EF and +$F0 in game mode 5. (C2, E-0378)
 ; writes $C3 to wScreenTileBuffer + $8F/8 and wScreenTileBuffer + $AF/8, or to wScreenTileBuffer +
 ; $CF/8 and wScreenTileBuffer + $EF/8 in game mode 5 (E-0122)
 BlankTwoTileCellByGameMode::
@@ -9443,6 +9719,12 @@ BlankTwoTileCellByGameMode::
     ld [wScreenTileBuffer + $f0], a
     ret
 
+; Sets the text window to the tiles at vTiles2 + $3B0 (vTiles2 + $5B0 in game mode 5), 1 row and
+; width $0D. With wTitleKeyFlag bit 7 clear it shows string wTitleStringIndex + $0A of category 0
+; (ShowString_Bank08). With bit 7 set and wTitleKeyByte3 bit 7 clear it builds a two-word key name
+; in wTextBuf0 from wTitleKeyWord1 + 1 and wTitleKeyWord2 + $11 (CopyKeyNameWordToDE_Bank16) and
+; shows it; with both set it continues in ShowKeyNameOrStringForTitleKeyFlag_KeyEntryName. (C1,
+; E-0378)
 ; window at vTiles2 + $3B0 (or + $5B0 in game mode 5): shows string wTitleStringIndex + $0A, or
 ; builds a two-word key name from wTitleKeyWord1/wTitleKeyWord2 (E-0127)
 ShowKeyNameOrStringForTitleKeyFlag::
@@ -9495,6 +9777,8 @@ ShowKeyNameOrStringForTitleKeyFlag::
     farcall ShowString_Bank08
     ret
 
+; A = word number, DE = destination: calls CopyKeyNameWordToDE, which copies that key-name word (a
+; bank $09 string) with its $F0 to DE; DE ends past it. (C2, E-0378)
 ; calls CopyKeyNameWordToDE (bank $00) (E-0114)
 CopyKeyNameWordToDE_Bank16::
     call CopyKeyNameWordToDE
@@ -9525,6 +9809,8 @@ DrawSaveSummaryPartyEntryC_Data3::
 DrawSaveSummaryPartyEntryC_Data4::
     db $62, $c2, $a2, $c2, $e2, $c2
 
+; Writes the 16-byte family icon at FamilyIconTiles + 16 * wWorkBuf to VRAM tile number wWorkBuf + 1
+; (WriteBytesToVRAMTileWorkBuf1). (C1, E-0378)
 ; writes the 16-byte icon tile of family wWorkBuf (FamilyIconTiles + 16 * family) to VRAM tile
 ; wWorkBuf + $1 through WriteBytesToVRAMTileWorkBuf1; corrected in E-0124, first named as a palette
 ; load (E-0122)
@@ -9542,6 +9828,8 @@ LoadFamilyIconTileForWorkBuf::
     call WriteBytesToVRAMTileWorkBuf1
     ret
 
+; Writes the $B0 bytes at FamilyIconTiles (the eleven family icons) to VRAM from tile number
+; wWorkBuf + 1 (WriteBytesToVRAMTileWorkBuf1). (C1, E-0378)
 ; writes the $B0 bytes at FamilyIconTiles (the eleven family icon tiles) to VRAM from tile wWorkBuf
 ; + $1; corrected in E-0124 (E-0122)
 LoadAllFamilyIconTiles::
@@ -9550,6 +9838,9 @@ LoadAllFamilyIconTiles::
     call WriteBytesToVRAMTileWorkBuf1
     ret
 
+; Enables SRAM bank 0 and runs LoadTileForRecordFamily for party places 0, 1 and 2 with H = $C7, $C8
+; and $C9 (the tile numbers), stopping after wPartyCount places; then disables SRAM. Each call
+; writes the family icon of that member to its tile. (C1, E-0378)
 ; with SRAM enabled (bank 0), runs LoadTileForRecordFamily for record list entries 0, 1 and 2 with H
 ; = $C7, $C8 and $C9, stopping after wPartyCount entries; then disables SRAM (E-0103)
 LoadTilesForPartyRecords::
@@ -9598,6 +9889,9 @@ LoadTileForRecordFamily::
     pop af
     jr WriteBytesToVRAMTile
 
+; DE = source, B = byte count: loads A = wWorkBuf + 1 and falls into WriteBytesToVRAMTile, which
+; writes the B bytes to VRAM tile A in the signed numbering ($00-$7F at $9000, $80-$FF at $8800).
+; (C1, E-0378)
 ; writes B bytes from DE to VRAM tile wWorkBuf + $1 ($8000 + 16 * index; indices below $80 use the
 ; $9000 area) (E-0124) (E-0340: the address in its name read as its RAM name; was
 ; WriteBytesToVRAMTileWorkBuf1)

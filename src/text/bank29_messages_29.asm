@@ -4,6 +4,13 @@
 SECTION "Bank 29", ROMX[$4000], BANK[$29]
     db $29
 
+; Starts a message of message group 1 (strings of category 0 of bank $29, picked by wStringIndex).
+; When wStringIndex is below $8E it calls BeginStringDisplay with DE = MessageStrings_Bank29; from
+; $8E on it far-calls BeginStringDisplay_Bank29_Overflow in bank $97, which subtracts $8E from
+; wStringIndex and uses the overflow table. BeginStringDisplay blanks the text window, points the
+; text printer at the string and sets wTextFlags to 1; the text appears on the following frames.
+; Reached by farcall from the message group dispatch (ShowMessageHL in bank $5F,
+; StartMessageForGroup_Group01 in bank $10) and from the debug menu in bank $01. (C1, E-0378)
 ; message bank $29: when wStringIndex < $8E, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank29; otherwise far-calls BeginStringDisplay_Bank29_Overflow (E-0080)
 BeginStringDisplay_Bank29::
@@ -18,6 +25,12 @@ BeginStringDisplay_Bank29::
     call BeginStringDisplay
     ret
 
+; Copies a message of message group 1 to a buffer instead of printing it: string wStringIndex of
+; category wStringCategory is copied, with its $F0 terminator, to the address in
+; wStringDestLo/wStringDestHi. When wStringIndex is below $8E it uses MessageStrings_Bank29 through
+; CopyStringToBuffer; from $8E on it far-calls CopyStringToBuffer_Bank29_Overflow in bank $97, which
+; subtracts $8E from wStringIndex first (so wStringIndex is changed). Nothing in src/ calls this
+; copy by name. (C2, E-0378)
 ; message bank $29: when wStringIndex < $8E, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank29; otherwise far-calls CopyStringToBuffer_Bank29_Overflow (E-0080)
 CopyStringToBuffer_Bank29::

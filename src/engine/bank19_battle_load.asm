@@ -67,7 +67,8 @@ GameMode4_Init_SetUpBattle::
 ; queued action, Seal/Pray state or item target; slot marks, monster ids, skills, slot out and name
 ; bytes $FF; side control $80; battle meter 10; turn 0, scene 0. Outside link battles takes the
 ; party count, the foe count (wEncounterKind + 1), the setup byte and the text speed; in link
-; battles text speed 3 and the counts from the battler records by link role. (C1, E-0357)
+; battles text speed 3 and the counts from the battler records by link role. (C2, E-0357; probed
+; E-0378)
 GameMode4_Init_ResetBattleArrays::
     ld a, [wBattleKind]
     cp $04
@@ -186,7 +187,10 @@ GameMode4_Init_ResetBattleArrays::
     ld [wLinkRuleState], a
     ret
 
-; A = 1, 2 or 3: how many $4E-byte battler records from HL are in use (E-0305)
+; HL = the BATTLER_LEVEL field of the first of up to three $4E-byte battler records: returns A = C =
+; 1, plus 1 for the second record when its byte is non-zero, plus 1 more for the third when that one
+; is non-zero as well. The first record byte is not tested. (C2, E-0378)
+; A = 1, 2 or 3: how many $4E-byte battler records from HL are in use
 GameMode4_Init_CountBattlerRecords::
     ld de, $004e
     ld c, $01
@@ -279,8 +283,8 @@ GameMode4_Init_LoadFoePictures_LoadOne::
 
 ; Loads the battle slots from the battler records (the player's side from slot 0 and the other from
 ; slot 4, the counts swapped for the link follower), adjusts the skills, and sets each present
-; slot's body flags from its species (metal in the low nibble, untrippable in the high). (C1,
-; E-0357)
+; slot's body flags from its species (metal in the low nibble, untrippable in the high). (C2,
+; E-0357; probed E-0378)
 GameMode4_Init_LoadBattleSlots::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -348,6 +352,8 @@ GameMode4_Init_LoadBattleSlots::
     jr nz, .loop3
     ret
 
+; C = battle slot: wSlotAIMode[C] = 0, 1, 2, 3 or 4 by the INT word of the slot in wBattleINT, below
+; 30, 100, 550, 900, or more. BC is kept. (C2, E-0378)
 ; wSlotAIMode[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
 SetSlotAIModeFromINT::
     push bc
@@ -412,6 +418,8 @@ SetSlotAIModeFromINT::
     pop bc
     ret
 
+; Zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes. BC and HL are kept.
+; (C2, E-0378)
 ; zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067)
 ; (the same 15 bytes appear in 2 banks)
 ClearSpeciesRecordBuffer_Bank19::
@@ -425,6 +433,10 @@ ClearSpeciesRecordBuffer_Bank19::
     pop bc
     ret
 
+; HL = pointer to a word. Unless wBattleKind is 2, 3 or 5 or wLinkMode is non-zero, the word is
+; replaced in place by 80 to 100 percent of itself: 80 percent (ScaleHLToEightTenths_Bank19) plus a
+; table random value (NextTableByte) modulo the remaining 20 percent, found by repeated subtraction.
+; BC is kept; other registers are not. (C2, E-0378)
 ; outside link and special battles stores a random value between 80 and 100 percent of the word at
 ; HL into BC's target (E-0127)
 RandomizeWordBetween80And100Percent::
@@ -493,12 +505,18 @@ RandomizeWordBetween80And100Percent::
 ; Entry for far callers: C = wBattleArg0 (the battle slot), then falls into
 ; LoadSlotSkillsFromBattlerRecord, which refills that slot's 8 entries of wBattleSkills from its
 ; 78-byte battler record and loads each skill's record part. Called from bank $19 (twice) and by
-; farcall from bank $A0. (C1, E-0372)
+; farcall from bank $A0. (C2, E-0372; probed E-0378)
 ; C = wBattleArg0, then falls into LoadSlotSkillsFromBattlerRecord (E-0126)
 LoadSlotSkillsForBattleArg0::
     ld a, [wBattleArg0]
     ld c, a
 
+; C = battle slot. Clears the 8 (prefix, skill) pairs of the slot in
+; wBattleSkillsPrefix/wBattleSkills to (0, $FF), then copies the skills from its 78-byte battler
+; record (record C below 4, else C - 1; the field at BATTLER_SKILLS) up to 8, stopping before the
+; first $00 or $FF after the first one. For each skill it stores the high nibble of byte 3 of the
+; skill record (LoadSkillRecordPart) in the prefix byte before it. When wBattleArg0 is non-zero it
+; finally runs AdjustSkillsForBattleStart; wBattleArg0 is restored. (C2, E-0378)
 ; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads
 ; each skill record (with wBattleArg0 = 3) (E-0130)
 LoadSlotSkillsFromBattlerRecord::
@@ -613,6 +631,10 @@ LoadSlotSkillsFromBattlerRecord::
     call nz, AdjustSkillsForBattleStart
     ret
 
+; For each of the 8 slots whose wBattleSlotOut is 0 and whose wSlotNameSuffix is 0, the first skill
+; $8F in its list becomes $AA (ReplaceSkill8FWithAAInSlotC). Outside link battles, in the foe slots
+; 4-6 that are present, the first four skills $34 and $35 are replaced by the tiles $AD and $AE (a
+; list ends at $FF). (C2, E-0378)
 ; replaces skill $8F by $AA for slots without wSlotNameSuffix set; outside link battles marks skills
 ; $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
 AdjustSkillsForBattleStart::
@@ -674,6 +696,8 @@ AdjustSkillsForBattleStart::
     jr nz, .loop2
     ret
 
+; C = battle slot: in its skill list (8 entries, 2 bytes apart in wBattleSkills) the first skill $8F
+; becomes $AA; the scan stops at the first $FF. HL is kept. (C2, E-0378)
 ; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
 ReplaceSkill8FWithAAInSlotC::
     push hl
@@ -703,16 +727,22 @@ ReplaceSkill8FWithAAInSlotC::
     pop hl
     ret
 
+; Stores the byte $AD at [HL] (a tile id); HL and every register are kept. (C2, E-0378)
 ; [HL] = $AD (E-0114)
 StoreTileADAtHL::
     ld [hl], $ad
     ret
 
+; Stores the byte $AE at [HL] (a tile id); HL and every register are kept. (C2, E-0378)
 ; [HL] = $AE (E-0114)
 StoreTileAEAtHL::
     ld [hl], $ae
     ret
 
+; C = battle slot, HL = a record status byte: with bit 7 set, wBattleSlotOut[C] = 1 and nothing
+; more. Otherwise wBattleSlotOut[C] = 0 and, unless wBattleKind is 4, bit 0 of the flags stores $20
+; in the first byte of the slot status record (wBattleStatus, 9 bytes per slot, replacing it) and
+; bit 2 then sets bit 0 of that byte. HL is kept. (C2, E-0378)
 ; slot C: wBattleSlotOut = 1 when bit 7 of [HL] is set; otherwise 0 and, unless wBattleKind = 4, the
 ; status byte gets $20 for bit 0 and bit 0 for bit 2 (E-0125)
 InitSlotOutAndStatusFromRecordFlags::
@@ -765,7 +795,8 @@ InitSlotOutAndStatusFromRecordFlags::
     pop hl
     ret
 
-; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks) (E-0353)
+; DE += C, then copies the byte at HL to [DE] and HL += 1. (C2, E-0378)
+; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
 StoreByteAtDEPlusC_Bank19::
     ld a, c
     add e
@@ -778,8 +809,10 @@ StoreByteAtDEPlusC_Bank19::
     ld [de], a
     ret
 
+; DE += 2 x C, then copies the word at HL to [DE] and [DE + 1] and HL += 2; DE ends on the second
+; byte written. (C2, E-0378)
 ; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same
-; 13 bytes appear in 2 banks) (E-0353)
+; 13 bytes appear in 2 banks)
 StoreWordAtDEPlus2C_Bank19::
     ld a, c
     add a
@@ -798,8 +831,8 @@ StoreWordAtDEPlus2C_Bank19::
 
 ; Entry for far callers: HL = the word wBattleArg0/wBattleArg1 (source fields), DE = the word
 ; wBattleArg2/wBattleArg3 (destination), then falls into PackResistanceFieldsToDE, which packs the
-; 2-bit fields at HL into the 7-byte record at DE. Far-called from banks $32, $36 and $A0. (C1,
-; E-0372)
+; 2-bit fields at HL into the 7-byte record at DE. Far-called from banks $32, $36 and $A0. (C2,
+; E-0372; probed E-0378)
 ; HL = the word wBattleArg0, DE = the word wBattleArg2, then falls into PackResistanceFieldsToDE
 ; (E-0126)
 PackResistancesFromBattleArgs::
@@ -812,6 +845,9 @@ PackResistancesFromBattleArgs::
     ld a, [wBattleArg3]
     ld d, a
 
+; HL = 27 resistance fields of 2 bits, one per byte, DE = destination: packs them into 7 bytes. Byte
+; 0 holds field 26 in bits 7-6 and fields 0-2 in bits 5-0, bytes 1-5 hold fields 3-22 four to a byte
+; (the first in bits 7-6), byte 6 holds fields 23-25 in bits 7-2. (C2, E-0378)
 ; packs the 2-bit fields at HL (and bits 0-1 of byte $1A) into the 7-byte wSlotResistances-style
 ; record at DE (E-0127)
 PackResistanceFieldsToDE::
@@ -869,6 +905,8 @@ PackResistanceFieldsToDE::
     ld [de], a
     ret
 
+; HL = VRAM address: copies the 20 x 18 tiles of wScreenTileBuffer (rows 32 bytes apart in the
+; buffer) to the VRAM rectangle at HL with rows 32 bytes apart, using WriteVRAMByteInc. (C1, E-0378)
 ; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (CopyScreenTileBufferToVRAM_A0) (E-0124)
 CopyScreenTileBufferToVRAM_A0_Bank19::
     ld de, wScreenTileBuffer
@@ -899,6 +937,8 @@ CopyScreenTileBufferToVRAM_A0_Bank19::
     jr nz, .loop
     ret
 
+; HL = HL x 8 / 10, the multiply done in 16 bits so it wraps above 8191 (8192 gives 0). BC and DE
+; are kept. (C2, E-0378)
 ; HL = (HL * 8) / 10 with 16-bit arithmetic (the multiply can overflow above 8191); BC and DE kept
 ; (E-0118)
 ScaleHLToEightTenths_Bank19::
@@ -913,7 +953,7 @@ ScaleHLToEightTenths_Bank19::
     pop bc
     ret
 
-; Battle music: $0F for battle kinds 0 and 1, otherwise $13. (C1, E-0357)
+; Battle music: $0F for battle kinds 0 and 1, otherwise $13. (C2, E-0357; probed E-0378)
 GameMode4_Init_PlayBattleMusic::
     ld a, [wBattleKind]
     or a
@@ -934,7 +974,7 @@ GameMode4_Init_PlayBattleMusic::
 
 ; With SRAM enabled by the caller, copies each of the wBattlePartyCount party members' SRAM records
 ; into consecutive $4E-byte battler records from wBattlerRecords
-; (GameMode4_Init_CopyPartyToBattlers_Member). (C1, E-0370)
+; (GameMode4_Init_CopyPartyToBattlers_Member). (C2, E-0370; probed E-0378)
 GameMode4_Init_CopyPartyToBattlers::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -955,7 +995,7 @@ GameMode4_Init_CopyPartyToBattlers::
 ; MON_EXP through MON_WLD, MON_PERSONALITY, MON_RESISTANCES and MON_ITEM; for an item value $0D-$13
 ; (the capes) it then raises listed BATTLER_RESISTANCES bytes by one, up to 3
 ; (ApplyIncrementOffsetRows19ForA0DTo13), and the last byte (BATTLER_JOIN_CLASS) is $FF. DE ends
-; past the record. (C1, E-0370)
+; past the record. (C2, E-0370; probed E-0378)
 GameMode4_Init_CopyPartyToBattlers_Member::
     ld a, c
     ld c, MON_NAME
@@ -1156,10 +1196,10 @@ IncrementOffsetRows_19::
 
 ; Reloads the battler record of foe slot 4 (wDisplaySlot 4) or 5 (wDisplaySlot 5) from its
 ; wEncounterMonsters entry (LoadMonsterAndSpeciesForListEntryC with C = 0 or 1), keeping the
-; record's byte $0D (after BATTLER_FAMILY, copied from MON_SEX). BattleEnd_Step3_ReplaceSpecialFoe
-; reaches it through BattleEnd_Step3_ReplaceSpecialFoe_SetMonster after writing the next form's
+; record's byte $0D (after BATTLER_FAMILY, copied from MON_SEX). BattleEnd_Records_ReplaceSpecialFoe
+; reaches it through BattleEnd_Records_ReplaceSpecialFoe_SetMonster after writing the next form's
 ; monster id into that entry. (C1, E-0370)
-BattleEnd_Step3_ReloadFoeBattler::
+BattleEnd_Records_ReloadFoeBattler::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
     and $03

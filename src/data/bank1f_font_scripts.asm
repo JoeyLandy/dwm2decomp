@@ -310,10 +310,16 @@ Tiles2Plus30Tiles::
     db $ff, $00, $ff, $00, $ff, $78, $ff, $84, $ff, $84, $ff, $84, $ff, $78, $ff, $00 ; id 257
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 258
 
+; Sends a Super Game Boy command packet set when wSGBActive is nonzero, and returns at once when it
+; is 0. wSGBPacketIndex $FF selects the packet buffer at wSGBPacketBuffer; any other value picks the
+; pointer at entry wSGBPacketIndex of SGBPacketSetTable. The low 3 bits of the first byte are the
+; packet count (0 sends nothing); each 16-byte packet goes out through rP1 as a reset pulse ($00
+; then $30), 128 bits (a 1 bit as $10, a 0 bit as $20, each followed by $30) and a stop bit, with
+; SpinDelay between packets. Called by farcall_b from banks $00, $02, $07, $1C and $E0. (C2, E-0378)
 ; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex
 ; ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count
 ; is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse,
-; 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit (E-0353)
+; 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit
 SendSGBPacketSet::
     ld a, [wSGBActive]
     or a
@@ -454,7 +460,15 @@ SgbIconEn_SGBPacketSetTable_19::
 SgbMaskEn_SGBPacketSetTable_20::
     db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Bank $1F copy of the string display starter: loads DE with
+; BeginStringDisplay_Bank1F_StringCategories (this bank has one category with one string) and calls
+; BeginStringDisplay, which blanks the text window, points the text printer at the string and sets
+; wTextFlags to 1; the drawing happens later in StepTextPrinter. Its only caller is a farcall from
+; the debug menu code in bank $01. The 14 bytes after its ret have no label: they decode as a second
+; copy of this routine (ld de, $5223 / call BeginStringDisplay / ret) and a wrapper that prints the
+; string to its end (call BeginStringDisplay_Bank1F / call RunStringDisplayToEnd / ret), the pair
+; that bank $28 labels BeginStringDisplay_Bank28 and ShowString_Bank28. (C1, E-0378)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank1F::
     ld de, BeginStringDisplay_Bank1F_StringCategories
     call BeginStringDisplay
@@ -1078,6 +1092,15 @@ Script_SwapMonsters_31::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_SwapMonsters_30
 
+; Draws the names of the records on the current page of a record list into VRAM, one name per call
+; to the glyph copier, then moves on to the next screen step. It opens SRAM (rRAMG2 = $0A, bank 0),
+; takes the record numbers from wListEntries starting at entry 5 * wListPageIndex, and for each of
+; up to five entries (stopping at wListCount) copies the name with CopyRecordNameToNameGlyphBuf,
+; ends it with $F0 and draws it: entries 0-3 with CopyGlyphTilesToVRAM at the addresses in
+; DrawRecordListPageNames_Data ($8D00, $8D50, $8DA0, $8F00), the fifth with
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F. Finally closes SRAM and increments wScreenStep.
+; All three paths that test wListLastRow and wListPages read the same wListCount, so those tests
+; change nothing. (C1, E-0378)
 ; for the visible entries of record-list page wListPageIndex draws each record name at
 ; DrawRecordListPageNames_Data[n] (the fifth through the mark-overlay drawer) (E-0128)
 DrawRecordListPageNames::
@@ -1172,6 +1195,14 @@ DrawRecordListPageNames::
 DrawRecordListPageNames_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
+; Draws the $F0-terminated name in wNameGlyphBuf one glyph at a time into the VRAM tiles listed in
+; GlyphCopyArgsForA_Data ($8A40, $8A50, $8A60, $8CE0, $8CF0), counting the character in
+; wGlyphListPos and the destination tile in wGlyphListStart. An ordinary character is copied as a
+; 16-byte tile with CopyFromBankWaitVRAM. The marks $8D and $8E take no tile of their own: the
+; destination counter first steps back one, and the mark glyph is ORed onto the previous tile with
+; OrFromBankWaitVRAM, so it sits on top of the letter before it. Both counters are reset to 0 at the
+; start and the end. Only caller is DrawRecordListPageNames, for the fifth name of a page. (C1,
+; E-0378)
 ; draws the $F0-terminated text at wNameGlyphBuf glyph by glyph; marks $8D and $8E are ORed onto the
 ; previous tile (E-0125)
 DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F::
@@ -1221,6 +1252,11 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F::
     ld [wGlyphListPos], a
     ret
 
+; Sets up the arguments for copying one font glyph to VRAM. A = glyph number; returns DE = GlyphFont
+; + 16 * A (the glyph tile in bank $1F, which starts at $4010), HL = the destination word at index
+; wGlyphListStart of GlyphCopyArgsForA_Data ($8A40, $8A50, $8A60, $8CE0, $8CF0), B = $1F (the bank)
+; and C = 16 (bytes), ready for CopyFromBankWaitVRAM or OrFromBankWaitVRAM. Only
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F calls it. (C2, E-0378)
 ; DE = GlyphFont + 16 * A (the glyph's tile), HL = the VRAM address from GlyphCopyArgsForA_Data + 2
 ; * wGlyphListStart, B = $1F (bank), C = 16 (bytes) (E-0120)
 GlyphCopyArgsForA::
@@ -1355,6 +1391,13 @@ DrawTileRectFromArg1Params::
     jr nz, .loop
     ret
 
+; Fills a rectangle of the BG map with one tile. Inputs: wArg1/wArg2 = the address of the tile byte
+; (high, low; every caller passes BGFillTile, tile $C3), wArg3 = width, wArg4 = rows, wArg5/wArg6 =
+; the BG map address of the first cell. Each cell is written with interrupts off after waiting for
+; rSTAT bit 1 to clear, wrapping inside the 32-entry row; a row of the rectangle starts $20 after
+; the one before, kept inside the map by masking the high byte with $9B. On the Game Boy Color
+; (wIsCGB nonzero), unless wArg7 is nonzero, the same cells in VRAM bank 1 (their attributes) are
+; set to 0. Unlike DrawTileRectFromArg1Params it never moves the source pointer. (C1, E-0378)
 ; fills a wArg3 x wArg4 rectangle of the BG map at wArg5/6 (wrapping inside the 32-entry row) with
 ; the one tile byte at wArg1/2: unlike DrawTileRectFromArg1Params it never advances DE; on CGB,
 ; unless wArg7 is set, clears the same entries' attributes; every caller passes BGFillTile (E-0186,
@@ -1928,6 +1971,11 @@ GameMode6_PictureRowTileRects::
     db $c3, $18, $19, $1a, $1b, $1c, $1d, $3c, $3d, $3e, $3f, $40, $41, $60, $61, $62, $63, $64, $65, $c3 ; row 4
     db $c3, $1e, $1f, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6a, $6b, $c3 ; row 5
 
+; Copies 16 font glyph tiles into VRAM. For each index 0-15 it takes a glyph number from
+; LoadSixteenGlyphTilesFromTable_Data1, finds its tile at GlyphFont + 16 * glyph in bank $1F, and
+; copies the 16 bytes with CopyFromBankWaitVRAM to the address in word the same index of
+; LoadSixteenGlyphTilesFromTable_Data2. Called by farcall from the partner stats screen (bank $37)
+; and the record stats screen (bank $F1), step 1, right after the heading is drawn. (C1, E-0378)
 ; copies 16 glyph tiles (LoadSixteenGlyphTilesFromTable_Data1) from bank $1F to the VRAM addresses
 ; in LoadSixteenGlyphTilesFromTable_Data2 (E-0127) (E-0344: the address in its name dropped or read
 ; as the label there; was LoadSixteenGlyphTilesFromTable)
@@ -1993,6 +2041,16 @@ LoadSixteenGlyphTilesFromTable_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
+; Draws the monster picture of the record in wRecordBufB on the stats screen, over two calls told
+; apart by wScreenSubStep. Call 1 (wScreenSubStep 0): draws the 6 x 6 frame BlankPictureTileRect at
+; the BG map scroll origin + $161 (wArg7 = 0), loads the picture of the species word at wRecordBufB
+; + MON_SPECIES into VRAM at vTiles2 + $200 with palette slot 1 (LoadMonsterPicture) and sets
+; wScreenSubStep to 1. Call 2: on the Game Boy Color it uploads the BG palettes
+; (wBGPaletteUploadRequest = $7F) and writes the picture attributes with palette 1
+; (LoadMonsterPictureAttributes); then on every system it draws MonsterDetailsPictureTileRect, 6 x 6
+; tiles $20-$31 laid out in rows, at the same place with wArg7 = 1, clears wScreenSubStep and
+; increments wScreenStep. Callers are step 5 of PartnerStats and its record stats twin in bank $F1.
+; (C1, E-0378)
 ; first call: draws the 6 x 6 frame BlankPictureTileRect and loads the picture of species
 ; wRecordBufB + $B at vTiles2 + $200; second call: loads its CGB attributes and draws the picture
 ; (E-0128) (E-0340: the address in its name read as its RAM name; was
@@ -2079,6 +2137,12 @@ DrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     ld [wScreenStep], a
     ret
 
+; Starts a stats screen: fills the whole 32 x 32 BG map from the scroll origin with BGFillTile (tile
+; $C3) through FillTileRectWithArg1Tile, with wArg7 = 0 so the attribute bytes are cleared too on
+; the Game Boy Color. Then copies three 16-byte tiles from bank $1F to vTiles1 + $7E0
+; (Tiles1Plus2F0Tiles), vTiles1 + $7F0 (Tiles1Plus7F0Tiles) and vTiles2 + $6F0 (Tiles1Plus4A0Tiles)
+; with CopyFromBankWaitVRAM, the frame tiles the later steps draw with. Step 0 of PartnerStats and
+; of the record stats screen in bank $F1. (C1, E-0378)
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3), then copies three
 ; tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121; fill, not a tile map:
 ; E-0186)
@@ -2117,10 +2181,15 @@ ClearBGMapAndLoadFrameTiles::
     call CopyFromBankWaitVRAM
     ret
 
+; Draws the two frames of the first stats page: MonsterDetailsStatsTileRect (12 wide, 15 rows) at
+; the BG map scroll origin + $68, then MonsterDetailsStatsLowerLeftTileRect (8 wide, 7 rows) at the
+; scroll origin + $160, both with wArg7 = 0 through DrawTileRectFromArg1Params. Farcalled by the
+; PartnerStats code (bank $37) and the bank $F1 record stats screen when the player comes back from
+; the second page to the first, just before the stats are drawn again at step 4. (C1, E-0378)
 ; draws the tile rectangles MonsterDetailsStatsTileRect (12 x 15 at scroll + $68) and
 ; MonsterDetailsStatsLowerLeftTileRect (8 x 7 at scroll + $160) (E-0121) (E-0344: the address in its
-; name dropped or read as the label there; was DrawRects)
-DrawRects::
+; name dropped or read as the label there; was MonsterDetails_DrawStatsPageFrames)
+MonsterDetails_DrawStatsPageFrames::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0068
     add hl, de
@@ -2161,10 +2230,15 @@ DrawRects::
     call DrawTileRectFromArg1Params
     ret
 
+; Draws the two frames of an emptied page: MonsterDetailsBlankPageTileRect (12 wide, 18 rows) at the
+; BG map scroll origin + 8, then MonsterDetailsBlankPageLowerLeftTileRect (8 wide, 7 rows) at the
+; scroll origin + $160, with wArg7 = 0 through DrawTileRectFromArg1Params. It is the first step (23)
+; of the skills page in PartnerStats and its bank $F1 twin; step 24 then draws the skills frames
+; over it. (C1, E-0378)
 ; draws the tile rectangles MonsterDetailsBlankPageTileRect (12 x 18 at scroll + 8) and
 ; MonsterDetailsBlankPageLowerLeftTileRect (8 x 7 at scroll + $160) (E-0121) (E-0344: the address in
-; its name dropped or read as the label there; was DrawRects_2)
-DrawRects_2::
+; its name dropped or read as the label there; was MonsterDetails_DrawBlankPageFrames)
+MonsterDetails_DrawBlankPageFrames::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
     add hl, de
@@ -2205,11 +2279,16 @@ DrawRects_2::
     call DrawTileRectFromArg1Params
     ret
 
+; Prepares the skills page. It blanks 21 x 4 tiles at vTiles2 + $200 with FillTilesFromRequest (the
+; area the skill names will be written into), then draws MonsterDetailsSkillsPageTileRect (12 wide,
+; 18 rows) at the BG map scroll origin + 8 and MonsterDetailsSkillsLowerLeftTileRect (8 wide, 7
+; rows) at the scroll origin + $160, with wArg7 = 0. Step 24 of PartnerStats and of its bank $F1
+; twin; step 25 shows the skill names. (C1, E-0378)
 ; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles
 ; MonsterDetailsSkillsPageTileRect (12 x 18) and MonsterDetailsSkillsLowerLeftTileRect (8 x 7)
 ; (E-0127) (E-0344: the address in its name dropped or read as the label there; was
-; ClearTilesAndDrawRects)
-ClearTilesAndDrawRects::
+; MonsterDetails_DrawSkillsPageFrames)
+MonsterDetails_DrawSkillsPageFrames::
     ld hl, vTiles2 + $200
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2261,6 +2340,13 @@ ClearTilesAndDrawRects::
     call DrawTileRectFromArg1Params
     ret
 
+; Shows the skill names of the record in wRecordBufB on the skills page. If the first skill byte
+; (wRecordBufB + MON_SKILLS) is $FF or 0 the record has no skills: it blanks 21 x 4 tiles at vTiles2
+; + $200 and shows string $0E of category 8 there with ShowString_Bank08. Otherwise it goes through
+; the eight skill bytes; each one is a 9 x 1 tile box, $90 bytes of VRAM after the one before it
+; from vTiles2 + $200, filled with blank tiles when the byte is 0 or $FF and with string category 4,
+; index = the skill id, when not. At the end the text window is put back to vTiles1, 18 wide and 2
+; rows. Step 25 of PartnerStats and its bank $F1 twin. (C1, E-0378)
 ; shows the eight skill names of the record at wRecordBufB (field $34) in rows from vTiles2 + $200,
 ; or string $0E of category 8 when it has none (E-0129)
 ShowRecordBufBSkillNamesOrNone::
@@ -2363,6 +2449,13 @@ ShowRecordBufBSkillNamesOrNone::
     ld [wTextWindowWidth], a
     ret
 
+; Clears the pedigree and summary pages so the summary page can be built. Draws
+; MonsterDetailsPedigreeLowerLeftTileRect (8 x 7) at the BG map scroll origin + $160, blanks 2 x 1
+; tiles at vTiles2 + $6C0, draws MonsterDetailsEmptyPedigreeTileRect (12 x 18) at the scroll origin
+; + 8, blanks 8 x 5 tiles at vTiles2 + $200, and ends by setting the text window to vTiles1, 18 wide
+; and 2 rows. All rectangles use wArg7 = 0. Farcalled at step 27 of PartnerStats and of its bank $F1
+; twin when the player goes on from the skills page; wScreenStep then moves ahead by three. (C1,
+; E-0378)
 ; draws the tile rectangles MonsterDetailsPedigreeLowerLeftTileRect and
 ; MonsterDetailsEmptyPedigreeTileRect, clears tile rows and sets up the summary text window (E-0128)
 ; (E-0344: the address in its name dropped or read as the label there; was DrawSummaryFrames)
@@ -2439,10 +2532,14 @@ DrawSummaryFrames::
     ld [wTextWindowWidth], a
     ret
 
+; Draws the frames of the summary page: MonsterDetailsPanelTopTileRect (12 wide, 3 rows) at the BG
+; map scroll origin + 8 and MonsterDetailsItemBoxTileRect (8 wide, 7 rows) at the scroll origin +
+; $160, both with wArg7 = 0 through DrawTileRectFromArg1Params. Called at step 28 of PartnerStats
+; (and of its bank $F1 twin), the first of the two calls of wScreenSubStep. (C1, E-0378)
 ; draws the tile rectangles MonsterDetailsPanelTopTileRect (12 x 3 at scroll + 8) and
 ; MonsterDetailsItemBoxTileRect (8 x 7 at scroll + $160) (E-0121) (E-0344: the address in its name
-; dropped or read as the label there; was DrawRects_3)
-DrawRects_3::
+; dropped or read as the label there; was MonsterDetails_DrawSummaryPanelFrames)
+MonsterDetails_DrawSummaryPanelFrames::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
     add hl, de
@@ -2483,8 +2580,13 @@ DrawRects_3::
     call DrawTileRectFromArg1Params
     ret
 
+; Returns HL = the BG map address of the tile at the scroll position: $9800 + (hScrollY & $F8) * 4 +
+; hScrollX / 8 (32 tiles per map row, 8 pixels per tile; the low 3 bits of each scroll value are
+; ignored). Clobbers A, DE. The same 41 bytes are in other banks too (for example
+; BGMapAddressAtScroll_Bank37). Used by every frame-drawing routine of this bank to place rectangles
+; relative to the screen. (C2, E-0378)
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0353)
+; clobbers A, DE (the same 41 bytes appear in 3 banks)
 BGMapAddressAtScroll_Bank1F::
     ldh a, [hScrollY]
     and $f8

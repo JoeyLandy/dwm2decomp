@@ -2600,12 +2600,12 @@
   },
   "C958": {
     "name": "wBattleTextWork",
-    "note": "battle work byte used while building names and texts (BattlePhase0_Step2, BattleEnd_Step1) (E-0345, C1: named from its users; was wBattleByte58)",
+    "note": "battle work byte used while building names and texts (BattlePhase0_Intro, BattleEnd_Result) (E-0345, C1: named from its users; was wBattleByte58)",
     "evidence": "E-0134; E-0345"
   },
   "C962": {
     "name": "wBattleTextWork2",
-    "note": "battle work byte used while building names (BattlePhase0_Step2) (E-0345, C1: named from its users; was wBattleByte62)",
+    "note": "battle work byte used while building names (BattlePhase0_Intro) (E-0345, C1: named from its users; was wBattleByte62)",
     "evidence": "E-0134; E-0345"
   },
   "C963": {
@@ -4383,7 +4383,7 @@
   },
   "D87D": {
     "name": "wBattleTempBuf",
-    "note": "18-byte battle scratch buffer: RunBattleCommandEntry clears and fills it; the battle end keeps two words of a calculation in its first four bytes (BattleEnd_Step3) (E-0340; was wBattleTemp7D, with $D87E-$D880)",
+    "note": "18-byte battle scratch buffer: RunBattleCommandEntry clears and fills it; the battle end keeps two words of a calculation in its first four bytes (BattleEnd_Records) (E-0340; was wBattleTemp7D, with $D87E-$D880)",
     "evidence": "E-0137; E-0340",
     "size": "12"
   },
@@ -4405,7 +4405,7 @@
   },
   "D891": {
     "name": "wBattleTurn",
-    "note": "battle turn counter (BattlePhase0_Step3; LinkRuleCheckLinkRuleTurnLimitTurnLimit)",
+    "note": "battle turn counter (BattlePhase0_RollSurpriseRound; LinkRuleCheckLinkRuleTurnLimitTurnLimit)",
     "evidence": "E-0137"
   },
   "D892": {
@@ -4475,7 +4475,7 @@
   },
   "D93F": {
     "name": "wBattleExtraStat",
-    "note": "a word per battle slot after wBattleINT (ActorBattleWordArray3FBand) (E-0345, C1: named from its users; was wBattleWordArray3F)",
+    "note": "a word per battle slot after wBattleINT (ActorExtraStatBand) (E-0345, C1: named from its users; was wBattleWordArray3F)",
     "evidence": "E-0137; E-0345",
     "size": "10"
   },
@@ -4486,7 +4486,7 @@
   },
   "D960": {
     "name": "wBattlePictureIds",
-    "note": "three monster ids whose pictures the battle intro shows (LoadBattleMonsterPictureAttributes, BattlePhase0_Step2)",
+    "note": "three monster ids whose pictures the battle intro shows (LoadBattleMonsterPictureAttributes, BattlePhase0_Intro)",
     "evidence": "E-0137",
     "size": "6"
   },
@@ -4515,7 +4515,7 @@
   },
   "DA3C": {
     "name": "wAIChoiceWeights",
-    "note": "three AI choice weights sorted by SortThreeAIWeightsRandomTies",
+    "note": "three AI choice weights sorted by SortAIChoiceWeightsAndWeightSkills",
     "evidence": "E-0137",
     "size": "3"
   },

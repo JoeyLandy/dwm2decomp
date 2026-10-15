@@ -9,7 +9,7 @@ SECTION "Bank 17", ROMX[$4000], BANK[$17]
 ; byte's low three bits give the number of 16-byte packets, each sent as a reset pulse, 128 bits
 ; ($10 for 1, $20 for 0, each followed by $30) and a stop bit, with SpinDelay between packets. The
 ; same instructions as SendSGBPacketSet in bank $1F with this bank's own table; its only caller,
-; SendSGBPaletteSetPacket, sets wSGBPacketIndex to $FF first. (C1, E-0370)
+; SendSGBPaletteSetPacket, sets wSGBPacketIndex to $FF first. (C2, E-0370; probed E-0378)
 SendSGBPaletteSetPacket_SendPacketSet::
     ld a, [wSGBActive]
     or a
@@ -159,6 +159,11 @@ PointerRun_Entry11::
 PointerRun_Entry12::
     db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; Does nothing unless wSGBActive is non-zero. Then it clears wSGBPacketBuffer and builds a PAL_SET
+; ($51) packet there: bytes 1-8 are the four palette-number words of SGBPaletteSets[wSGBPaletteSet]
+; (also copied to wSGBPaletteNum0Lo-3Hi), byte 9 is wSGBAttrFile or $80. It converts the four object
+; palettes (LoadSGBObjectPalettesFromPointers), sets wSGBPacketIndex to $FF, sends the packet
+; (SendSGBPaletteSetPacket_SendPacketSet) and runs SpinDelay. (C2, E-0378)
 ; when the Super Game Boy is active, builds a PAL_SET ($51) packet from
 ; SGBPaletteSets[wSGBPaletteSet] (also kept in wSGBPaletteNum0Lo), attribute file wSGBAttrFile |
 ; $80, loads the object palettes and sends it (E-0125)
@@ -202,6 +207,10 @@ SendSGBPaletteSetPacket::
     call SpinDelay
     ret
 
+; Does nothing unless wSGBActive is non-zero. Otherwise copies the four 8-byte palettes numbered by
+; the words wSGBPaletteNum0Lo/Hi to wSGBPaletteNum3Lo/Hi
+; (LoadSGBObjectPalettesFromPointers_CopyPaletteEntry, data at $446C + 8 x number in bank $17) to
+; wOBJPaletteBuffer, + $8, + $10 and + $18. (C2, E-0378)
 ; when the Super Game Boy is active, converts the four palettes pointed to by
 ; wSGBPaletteNum0Lo-wSGBPaletteNum3Hi into wOBJPaletteBuffer, wOBJPaletteBuffer + $8,
 ; wOBJPaletteBuffer + $10 and wOBJPaletteBuffer + $18
@@ -236,7 +245,9 @@ LoadSGBObjectPalettesFromPointers::
     call LoadSGBObjectPalettesFromPointers_CopyPaletteEntry
     ret
 
-; copies the 8 bytes at $446C + 8 * HL to DE (E-0305)
+; HL = palette number, DE = destination: copies the 8 bytes at $446C + 8 x HL (bank $17) to DE; DE
+; ends past them. (C2, E-0378)
+; copies the 8 bytes at $446C + 8 * HL to DE
 LoadSGBObjectPalettesFromPointers_CopyPaletteEntry::
     add hl, hl
     add hl, hl

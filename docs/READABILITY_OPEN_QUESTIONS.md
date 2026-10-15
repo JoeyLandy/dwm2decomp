@@ -1111,3 +1111,63 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `ListPartyMembersWithField55Bit0`: the note leaves out the refusal when a fallen member is tested.
 - `BreedMenu_ChooseParents_CheckChildIsNew`: may share the "in the library's list" wording that was wrong for BreedMenu_ChooseParents_CheckChildSeen.
 - RAM notes in src/ram.asm: wItemMessage names the old SetWD08D12IfItemRefused/SetWD08D14IfItemRefused; wTriggerMarkerFlags bit 7 selects raw pixel coordinates in DrawTriggerMarkerSprite (it does not hide the marker); wMapTallTileMin is tested as "at or below" (banks $02, $04, $12), not "at or above".
+
+## E-0378
+
+- `ClearPartyRecordFlag55Bit0` (16:555C): FieldSkillEffect_CurePoison clears MON_STATUS bit 2 (read as poison) of one member, but this party version clears bit 0; what status bit 0 is, and whether the party skill really cures poison, is not established.
+- `CollectUniqueEncounterIdsToWorkBuf2` (16:56E4): The second byte of a wKeyWorldMonsters entry holds level * 2 ORed in; only its bit 0 is compared here, so entries that differ only in level count as equal. What bit 0 means is not established.
+- `AddressOfKeyWorldMonstersEntryForCurrentScreen` (16:5766): Index $20 (hPlayerStateFlags bit 3) points one entry past the 32 entries wKeyWorldMonsters documents; what lives there is not established.
+- `AddDEToWordAtHLCappedAtBC` (16:58CC): The routine is used for stats capped at 999 and HP capped at max HP, which stay far below 16 bits, so the missing cap on carry does not show in play as far as read.
+- `SetSpeciesFlag` (16:5AAF): wSpeciesFlagCount is only masked to its low nibble here; what its low nibble counts is not established.
+- `BattleEnd_AskToJoin` (16:5D13): The exact step graph (which step each answer jumps to) was not traced for every entry; only the table order and each entry label are read.
+- `SetDEFlagOnBButton` (16:6480): Which byte the two callers point DE at (their back-out flag) was not traced.
+- `MovePagedListCursor` (16:65FF): Not run on the emulator: it writes tiles through WriteVRAMByte, which is outside the probe scope.
+- `RemovePartyMemberMarkedFF` (16:6926): With wPartyCount 1 the second copy loop runs 256 times (its counter starts at 0); no caller in src was found to confirm that case cannot happen.
+- `ShowStringCategory5Immediate_Bank16` (16:6961): What separates BeginStringDisplay_Bank2F from ShowString_Bank2F was not read here.
+- `ShowRecordNameString1D` (16:69E2): No $F0 terminator is written after the 10 name bytes, so a name shorter than 10 characters relies on a $F0 inside the copied bytes; this was not checked against a record.
+- `BattleMonsterTableAtLeast6` (16:7188): What the 0-7 class in MonsterClassByteTable_1 means is not read.
+- `ShowStrings6To8Bank09InRows` (16:756F): No caller of this routine was found in src.
+- `BuildRecordSummaryForWorkBuf` (16:76BD): What the nibble, the name marks and byte $62 are in the compact record layout is not established; DrawSaveSummaryPartyEntryC uses byte 0 as the family icon number and byte 11 as the level.
+- `DrawTitleSaveSummaryScreen` (16:7783): No caller of this routine was found in src.
+- `RandomizeWordBetween80And100Percent` (19:42FD): A word of 0 leaves a difference of 0 and the subtraction loop never ends; whether any caller can pass 0 was not traced.
+- `ListPartyMembersWithField55Bit0` (16:425E): Read from the code and the RefuseItemIfRecordFallen note; not run on the emulator because the routine is outside the probe scope.
+- `BreedMenu_ChooseParents_CheckChildIsNew` (15:4B02): Read from the code; not run on the emulator because the routine is outside the probe scope.
+- `BlankTwoTableEntriesSwapMenuCursorCellsFrom5` (1E:7778): Which tile is $C3 on the swap menu screen, and is blanking its purpose?
+- `BeginStringDisplay_Bank1F` (1F:520E): The 14 bytes after the ret (11 23 52 CD FE 25 C9 CD 0E 52 CD 11 26 C9) are not referenced by name anywhere in src/; whether anything reaches them was not checked beyond that.
+- `LoadSixteenGlyphTilesFromTable` (1F:7375): Which glyphs and VRAM addresses are in the two tables; the heading characters they draw were not read.
+- `DrawSummaryFrames` (1F:76B5): The 2 x 1 tile blank at vTiles2 + $6C0 and the 8 x 5 blank at vTiles2 + $200: which text they clear was not found.
+- `GameMode6_Init` (24:4001): Why the loss side deletes the record wLinkSceneArg: read from the order of the code and from GameMode6_Update_ShowResult_CheckPrize only; the stake rule is not confirmed.
+- `CopyRectTo20ByteRowsJp_Bank24` (24:4E12): The CGB attribute fill in WRAM bank 2 was not probed: the runner reads WRAM bank 1 after the routine resets rSVBK.
+- `ReturnStub` (24:51A3): Whether the calls to ReturnStub stood in for a removed routine is unknown.
+- `CopyAttributeBlockToBattlerRecordSlot64` (24:51A4): The written attribute bytes are in WRAM bank 2, which the probe cannot read back; the probe checks the registers only.
+- `CopyDefaultRecordToRecordBufB` (24:52DE): Nothing in src/ names CopyDefaultRecordToRecordBufB or DefaultMonsterRecord outside bank $24; whether a computed jump reaches it is not known.
+- `BeginStringDisplay_Bank24` (24:5D10): Whether anything reaches the 7 bytes after the ret was not checked beyond src/ names.
+- `CopyRectTo20ByteRows_Bank24` (24:67FD): The CGB attribute fill in WRAM bank 2 was not probed: the runner reads WRAM bank 1 after the routine resets rSVBK.
+- `StepItemDescriptionText` (24:7045): The first test of wTextCounter6 jumps to the same place whichever way it goes, so that counter has no effect here.
+- `CopyStringToBuffer_Bank28` (28:4016): No caller of this routine was found in src/.
+- `CopyStringToBuffer_Bank29` (29:4016): No caller of this routine was found in src/.
+- `CopyStringToBuffer_Bank2A` (2A:4016): No caller of this routine was found in src/.
+- `CopyStringToBuffer_Bank2B` (2B:4016): No caller of this routine was found in src/.
+- `CopyStringToBuffer_Bank2C` (2C:4016): No caller of this routine was found in src/.
+- `CopyStringToBuffer_Bank2D` (2D:4016): No caller of this routine was found in src/.
+- `CopyStringToBuffer_Bank2E` (2E:4016): No caller of this routine was found in src/.
+- `BeginStringDisplay_Bank2F` (2F:4001): The 7 unreferenced bytes after the ret were not traced.
+- `ChooseTargetForActor` (30:4102): What command value 1 means (taken from the battle menu) and what wBattleTargetChoice holds before the choice were not read.
+- `RunCommandEntryResolveStep` (30:43C4): State 3 is named RunCommandEntryResolveStep_RunAIHandlers but runs RunActorActionHandlersForAISlots, which rolls personality acts for the party slots 0-2 outside link battles, not for AI slots.
+- `ActorExtraStatBand` (30:44E0): What wBattleExtraStat measures is unknown (named from its users only); it is compared with $33 and $3B6.
+- `SortAIChoiceWeightsAndWeightSkills` (30:483F): The name and the old comment say ties are broken at random; probes with every pattern of the random bits show equal weights never swap.
+- `AIRunNextChoice` (30:4946): The old comment says it reads the next wAIChoiceWeights entry; wAIChoiceIndex 3-5 actually indexes the three wAIChoiceOrder bytes that follow the weights.
+- `RollPersonalityActsForChosenAction` (30:4CFC): The old comment says foes (AI slots); the code lets only slots 0-2 through outside link mode 1, so the rolls are for the party monsters.
+- `RollPersonalityActsForChosenAction` (30:4CFC): RunCommandEntryResolveStep_RunAIHandlers (step 3 of RunCommandEntryResolveStep) is named after the old reading.
+- `MaybeOverrideActorActionWithDebugValue0` (30:556C): No direct caller; it may be an unused debug hook or reached through a vector.
+- `BattlePhase0_RollSurpriseRound` (31:4243): wBattleTurn is only set to 1 on the no-surprise paths; what clears it for a surprise round was not traced.
+- `BattleFight_Step4` (31:43DF): What RunBattleStep4 does for the round is not described in the callee comment either.
+- `BattleEnd_Records` (31:449C): The old comment said steps are skipped for battle scenes 2 and 3; any non-zero scene skips them.
+
+### E-0378: reported by workers, not yet settled
+
+- `RandomizeWordBetween80And100Percent`: a word of 0 makes its remainder loop subtract 0 forever; whether a caller can pass 0 is not traced.
+- `FieldSkillEffect_DrawRandomItem`: reads the caller's E as the top byte of its 24-bit divide, and takes 100 gold with no floor (gold wraps below 100).
+- `TryAddSkillIfPrerequisitesKnown` (1A:631F): its E-0126 note says the skill is added when every listed skill is known; a rejected draft's probes showed the reverse. Re-queued with its slice.
+- `RunLinkSession` (1B:4001): the E-0259 comment names RunLinkSession1Exchange to 8Exchange; the jump table names RunLinkSession_Battle and the others. Re-queued with its slice.
+- src/ram.asm and src/records.inc comments are not covered by the stale-name check; wFarmLevel, wLinkTimeoutLo/Hi and hSpriteHideTile comments were reported inaccurate.

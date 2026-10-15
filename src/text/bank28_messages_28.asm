@@ -4,8 +4,15 @@
 SECTION "Bank 28", ROMX[$4000], BANK[$28]
     db $28
 
+; Starts a message of message group 0 (strings of category 0 of bank $28, picked by wStringIndex).
+; When wStringIndex is below $DA it calls BeginStringDisplay with DE = MessageStrings_Bank28; from
+; $DA on it far-calls BeginStringDisplay_Bank28_Overflow in bank $97, which subtracts $DA from
+; wStringIndex and uses the overflow table. BeginStringDisplay blanks the text window, points the
+; text printer at the string and sets wTextFlags to 1; the text appears on the following frames.
+; Reached by farcall from the message group dispatch (ShowMessageHL in bank $5F,
+; StartMessageForGroup_Group00 in bank $10) and from the debug menu in bank $01. (C1, E-0378)
 ; if wStringIndex < $DA, BeginStringDisplay with this bank's table; otherwise far-calls
-; BeginStringDisplay_Bank28_Overflow (E-0353)
+; BeginStringDisplay_Bank28_Overflow
 BeginStringDisplay_Bank28::
     ld a, [wStringIndex]
     cp $da
@@ -18,6 +25,12 @@ BeginStringDisplay_Bank28::
     call BeginStringDisplay
     ret
 
+; Copies a message of message group 0 to a buffer instead of printing it: string wStringIndex of
+; category wStringCategory is copied, with its $F0 terminator, to the address in
+; wStringDestLo/wStringDestHi. When wStringIndex is below $DA it uses MessageStrings_Bank28 through
+; CopyStringToBuffer; from $DA on it far-calls CopyStringToBuffer_Bank28_Overflow in bank $97, which
+; subtracts $DA from wStringIndex first (so wStringIndex is changed). Nothing in src/ calls this
+; copy by name. (C2, E-0378)
 ; message bank $28: when wStringIndex < $DA, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank28; otherwise far-calls CopyStringToBuffer_Bank28_Overflow (E-0080)
 CopyStringToBuffer_Bank28::
@@ -32,8 +45,10 @@ CopyStringToBuffer_Bank28::
     call CopyStringToBuffer
     ret
 
+; Shows a bank $28 message to its end: calls BeginStringDisplay_Bank28, then RunStringDisplayToEnd,
+; which sets bit 1 of wTextFlags and runs StepTextPrinter until wTextFlags is 0, so the whole string
+; is printed at once. Farcalled from a bank $0F routine. (C1, E-0378)
 ; BeginStringDisplay_Bank28 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_Bank28::
     call BeginStringDisplay_Bank28
     call RunStringDisplayToEnd

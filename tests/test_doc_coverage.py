@@ -71,7 +71,7 @@ class Coverage(unittest.TestCase):
         RESTATED_AT_MOST = 0
         hand, restated = doc_coverage.note_counts(FILES)
         self.assertLessEqual(restated, RESTATED_AT_MOST, f"{restated} restated routines (was at most {RESTATED_AT_MOST})")
-        self.assertGreaterEqual(hand, 7638)  # E-0377: raised as the readability batches add readings
+        self.assertGreaterEqual(hand, 7936)  # E-0378: raised as the readability batches add readings
         import json
         ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]

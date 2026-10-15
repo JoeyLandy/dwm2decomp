@@ -7908,18 +7908,28 @@ StoreTemp0BytesToSRAMRecord::
     pop hl
     ret
 
+; Returns HL = the address of one list entry: wListEntries + 5 * wListPageIndex + wListCursor, which
+; treats the list as pages of five entries with wListCursor the place on the page. It far-calls
+; SetArg5ToListEntriesCell5, which leaves the address in wArg5 (high byte) and wArg6 (low byte),
+; then continues into ListEntriesCellAddressToHL to read it back. The sum is done in bytes, so it is
+; only right while 5 * wListPageIndex + wListCursor stays under 256. (C2, E-0378)
 ; far-calls SetArg5ToListEntriesCell5, then HL = wArg5 (high) / wArg6 (low) (E-0075)
 GetListEntriesCell5Address::
     farcall SetArg5ToListEntriesCell5
     jr ListEntriesCellAddressToHL
 
+; Returns HL = the address of one list entry: wListEntries + 4 * wListPageIndex + wListCursor, the
+; pages-of-four twin of GetListEntriesCell5Address. It far-calls SetArg5ToListEntriesCell4, which
+; leaves the address in wArg5 (high byte) and wArg6 (low byte), and then falls into
+; ListEntriesCellAddressToHL to load it into HL. SplitListCursorBy4_Bank1E builds the page index and
+; place on the page that this routine reads back. (C2, E-0378)
 ; far-calls SetArg5ToListEntriesCell4, then HL = wArg5 (high) / wArg6 (low) (E-0075)
 GetListEntriesCell4Address::
     farcall SetArg5ToListEntriesCell4
 
 ; Shared tail of GetListEntriesCell5Address and GetListEntriesCell4Address: returns HL = the list
 ; entry address left in wArg5 (high) and wArg6 (low) by SetArg5ToListEntriesCell5 or
-; SetArg5ToListEntriesCell4. (C1, E-0370)
+; SetArg5ToListEntriesCell4. (C2, E-0370; probed E-0378)
 ListEntriesCellAddressToHL::
     ld a, [wArg5]
     ld h, a
@@ -7958,6 +7968,10 @@ SwapMonstersMenu_ShowMonsterDetails3_ClearMarks::
     ld [wWindowTileBuffer + $118], a
     ret
 
+; Turns a flat list position into a page and a place on the page for lists of four entries per page:
+; wListPageIndex = wListCursor / 4 and wListCursor = wListCursor mod 4, using DivideHLByA. Returns A
+; = the new page index; DE and HL are clobbered. Its only caller is in this bank (the record list
+; page code), and GetListEntriesCell4Address is the reader of the pair it leaves. (C2, E-0378)
 ; wListPageIndex = wListCursor / 4 and wListCursor = wListCursor mod 4 (DivideHLByA) (E-0067) (the
 ; same 19 bytes appear in 2 banks)
 SplitListCursorBy4_Bank1E::
@@ -7971,6 +7985,12 @@ SplitListCursorBy4_Bank1E::
     ld [wListPageIndex], a
     ret
 
+; Saves the sprite drawing state and then hides all sprites: wSavedSpriteClipMode =
+; hSpriteWindowClipMode, wSavedFieldDrawFlags = hFieldDrawFlags and wSavedSpriteSlotCount =
+; wSpriteSlotCount. Then hSpriteWindowClipMode and hSpriteHideTile are cleared to 0, hFieldDrawFlags
+; is set to $FF and wSpriteSlotCount to 0. The old hSpriteHideTile is not saved.
+; RestoreSpriteStateFromSavedFieldDrawFlags undoes it; farcalled by menus in banks $0D, $14, $15 and
+; $16. (C2, E-0378)
 ; wSavedSpriteClipMode = hSpriteWindowClipMode, then hSpriteWindowClipMode = hSpriteHideTile = 0;
 ; wSavedFieldDrawFlags = hFieldDrawFlags, wSavedSpriteSlotCount = wSpriteSlotCount; then
 ; hFieldDrawFlags = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
@@ -7990,6 +8010,10 @@ SaveAndHideSpriteState_Bank1E::
     ld [wSpriteSlotCount], a
     ret
 
+; Puts back what SaveAndHideSpriteState_Bank1E stored: hSpriteWindowClipMode = wSavedSpriteClipMode,
+; hFieldDrawFlags = wSavedFieldDrawFlags and wSpriteSlotCount = wSavedSpriteSlotCount.
+; hSpriteHideTile is not restored from a copy but set to $80, its usual value. Called by the swap
+; menu and farcalled from banks $0D and $15. (C2, E-0378)
 ; hSpriteWindowClipMode = wSavedSpriteClipMode, hSpriteHideTile = $80, hFieldDrawFlags =
 ; wSavedFieldDrawFlags, wSpriteSlotCount = wSavedSpriteSlotCount: puts back the values
 ; SaveAndHideSpriteState_Bank1E stored (hSpriteHideTile is set to $80 rather than restored) (E-0078)
@@ -8004,6 +8028,11 @@ RestoreSpriteStateFromSavedFieldDrawFlags::
     ld [wSpriteSlotCount], a
     ret
 
+; Writes tile $C3 into the two window tile buffer cells that are entries 0 and 1 of
+; SwapMenuCursorCellsFrom5 (wWindowTileBuffer + $120 and + $148, two text rows apart), through
+; StoreBAtWordTableEntry_Bank1E. Clobbers A, B, DE and HL. Judging by the table name these are the
+; cursor cells of the swap menu; the swap menu code calls it three times. What tile $C3 looks like
+; is not read. (C2, E-0378)
 ; stores tile $C3 at the addresses in entries 0 and 1 of the table at $788A
 ; (StoreBAtWordTableEntry_Bank1E) (E-0118) (E-0344: the address in its name dropped or read as the
 ; label there; was BlankTwoTableEntriesSwapMenuCursorCellsFrom5)

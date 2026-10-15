@@ -2190,7 +2190,7 @@ PartnerStats_Page2Keys::
 .clear_sprite_hide_tile2:
     xor a
     ldh [hSpriteHideTile], a
-    farcall DrawRects
+    farcall MonsterDetails_DrawStatsPageFrames
     ld a, $04
     ld [wScreenStep], a
     ret
@@ -2204,7 +2204,7 @@ PartnerStats_DrawLevelRow::
 
 ; The skills page, step 23: draws its frames. (C1, E-0357)
 PartnerStats_DrawSkillsFrames::
-    farcall DrawRects_2
+    farcall MonsterDetails_DrawBlankPageFrames
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2212,7 +2212,7 @@ PartnerStats_DrawSkillsFrames::
 
 ; The skills page, step 24: clears the text tiles and draws the frames. (C1, E-0357)
 PartnerStats_ClearSkillsText::
-    farcall ClearTilesAndDrawRects
+    farcall MonsterDetails_DrawSkillsPageFrames
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2287,7 +2287,7 @@ PartnerStats_DrawSummaryFrames::
     ld a, [wScreenSubStep]
     and a
     jr nz, .call_show_string10_bank0_e_at_tiles2020_then
-    farcall DrawRects_3
+    farcall MonsterDetails_DrawSummaryPanelFrames
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a

@@ -1498,9 +1498,15 @@ BreedMenu_ChooseParents_CheckMate::
     ld [wScriptStartRequest], a
     ret
 
-; Choosing parents, step 39: answer 1 when the child is new (in the library's list and the breeding
-; list, not yet seen); otherwise writes '<species> +<plus value>' (MON_PLUS) into wTextBuf0 and
-; answer 0. (C1, E-0357)
+; Choosing parents, step 39: tests the species of wChildRecord (MON_SPECIES) in three bit fields:
+; the list wMonsterLibraryBuf and BreedShowNameSpeciesBits with TestBitInFieldAtArg3 ($80 first in
+; each byte) and wSpeciesFlags with TestSpeciesFlag. Only when the bit is clear in all three is
+; wTwoChoiceCursor = 1 and wScreenStep raised by 2, skipping step 40
+; (BreedMenu_ChooseParents_CheckChildSeen). When any of the three is set it builds '<species name>
+; +<MON_PLUS>' in wTextBuf0 (the name from CopyMonsterNameToBuffer_B15, tile $A2, then the one or
+; two digits of MON_PLUS with a leading zero blanked), sets wTwoChoiceCursor = 0 and raises
+; wScreenStep by 1. Both paths clear wScriptCommandType and set wScriptStartRequest to $80. (C1,
+; E-0378)
 BreedMenu_ChooseParents_CheckChildIsNew::
     ld hl, wChildRecord + MON_SPECIES
     ld a, [hli]

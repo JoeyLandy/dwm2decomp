@@ -3043,10 +3043,10 @@ RunScreenStateWhenNotFading_F1_StatsLoadSprite::
     ret
 
 ; The second page, step 21: clears the Up and Down bits of wJoypadPressedRepeat and runs
-; UpdatePagedListCursor; B ($FE) clears hSpriteHideTile, redraws the first page frames (DrawRects)
-; and goes back to step 4 (RunScreenStateWhenNotFading_F1_StatsDrawValues); A ($FF) clears
-; hSpriteHideTile and goes on two steps to the skills page (step 23,
-; RunScreenStateWhenNotFading_F1_SkillsPageFrames). (C1, E-0373)
+; UpdatePagedListCursor; B ($FE) clears hSpriteHideTile, redraws the first page frames
+; (MonsterDetails_DrawStatsPageFrames) and goes back to step 4
+; (RunScreenStateWhenNotFading_F1_StatsDrawValues); A ($FF) clears hSpriteHideTile and goes on two
+; steps to the skills page (step 23, RunScreenStateWhenNotFading_F1_SkillsPageFrames). (C1, E-0373)
 RunScreenStateWhenNotFading_F1_StatsPage2Keys::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3076,7 +3076,7 @@ RunScreenStateWhenNotFading_F1_StatsPage2Keys::
 .clear_sprite_hide_tile2:
     xor a
     ldh [hSpriteHideTile], a
-    farcall DrawRects
+    farcall MonsterDetails_DrawStatsPageFrames
     ld a, $04
     ld [wScreenStep], a
     ret
@@ -3093,7 +3093,7 @@ RunScreenStateWhenNotFading_F1_StatsPage2LevelRow::
 
 ; The skills page, step 23: draws its frames. (C1, E-0357)
 RunScreenStateWhenNotFading_F1_SkillsPageFrames::
-    farcall DrawRects_2
+    farcall MonsterDetails_DrawBlankPageFrames
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3101,7 +3101,7 @@ RunScreenStateWhenNotFading_F1_SkillsPageFrames::
 
 ; The skills page, step 24: clears the text tiles and draws the frames. (C1, E-0357)
 RunScreenStateWhenNotFading_F1_SkillsPageClear::
-    farcall ClearTilesAndDrawRects
+    farcall MonsterDetails_DrawSkillsPageFrames
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3166,10 +3166,11 @@ RunScreenStateWhenNotFading_F1_StatsSkillsKeys::
     ret
 
 ; The record stats screen, step 28 (B on the skills page), by wScreenSubStep: sub-step 0 sets the
-; text window to vTiles2 + $200 with size $1504, clears it (FillTilesFromRequest), draws DrawRects_3
-; (a 12 x 3 frame at the scroll origin + 8 and the item box) and advances the sub-step; sub-step 1
-; shows the heading (ShowString10Bank0EAtTiles2020ThenDefault) and string $0E 'InfoOK' with its
-; tiles (ShowString0EAndStep_BankF1, wScreenStep += 1) and clears the sub-step. (C1, E-0373)
+; text window to vTiles2 + $200 with size $1504, clears it (FillTilesFromRequest), draws
+; MonsterDetails_DrawSummaryPanelFrames (a 12 x 3 frame at the scroll origin + 8 and the item box)
+; and advances the sub-step; sub-step 1 shows the heading (ShowString10Bank0EAtTiles2020ThenDefault)
+; and string $0E 'InfoOK' with its tiles (ShowString0EAndStep_BankF1, wScreenStep += 1) and clears
+; the sub-step. (C1, E-0373)
 RunScreenStateWhenNotFading_F1_StatsLeaveSkills::
     ld a, [wScreenSubStep]
     and a
@@ -3185,7 +3186,7 @@ RunScreenStateWhenNotFading_F1_StatsLeaveSkills::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    farcall DrawRects_3
+    farcall MonsterDetails_DrawSummaryPanelFrames
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a

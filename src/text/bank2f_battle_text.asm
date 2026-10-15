@@ -4,15 +4,23 @@
 SECTION "Bank 2F", ROMX[$4000], BANK[$2F]
     db $2f
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Starts a battle text message of bank $2F: loads DE with BeginStringDisplay_Bank2F_StringCategories
+; (six string categories, chosen by wStringCategory with the string in wStringIndex) and calls
+; BeginStringDisplay, which blanks the text window, points the text printer at the string and sets
+; wTextFlags to 1. Farcalled by the battle code of banks $31 and $16 and by the debug menu in bank
+; $01. The 7 bytes after its ret have no label and decode as another ld de, $4016 / call
+; BeginStringDisplay / ret. (C1, E-0378)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank2F::
     ld de, BeginStringDisplay_Bank2F_StringCategories
     call BeginStringDisplay
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9
 
+; Shows a bank $2F battle text message to its end: calls BeginStringDisplay_Bank2F, then
+; RunStringDisplayToEnd, which sets bit 1 of wTextFlags and runs StepTextPrinter until wTextFlags is
+; 0, so the whole string is printed at once. Farcalled from banks $01 and $16. (C1, E-0378)
 ; BeginStringDisplay_Bank2F (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_Bank2F::
     call BeginStringDisplay_Bank2F
     call RunStringDisplayToEnd

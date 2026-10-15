@@ -4,6 +4,13 @@
 SECTION "Bank 31", ROMX[$4000], BANK[$31]
     db $31
 
+; Start-up of game mode 4, the battle (RunGameModeInit_Battle far-calls it). Starts music 2, sends
+; the SGB palette packet when wSGBActive is set, clears the scroll registers, fills vBGMap0 with
+; tile $C3 (and, on a Color Game Boy, the attribute map in VRAM bank 1 with 0), puts the text cursor
+; at vBGMap0 + $1C1 and far-calls GameMode4_Init_SetUpBattle. It then decompresses Tiles1Plus240Gfx
+; to vTiles1 + $240 and Tiles1Plus5F0Gfx to vTiles1 + $5F0, fills 18 x 2 tiles at vTiles1
+; (FillTilesRequest), starts palette fade $FC, sets hWindowX = 7, hWindowY = $FF and wLCDCShadow =
+; 3, and ends by jumping to ResumeAfterModeChange with A = $0B. (C1, E-0378)
 ; start-up for wGameMode = 4, the battle: starts music 2, clears the BG map and builds the battle
 ; screen; reached from the debug battle setup (Start) and from encounters (E-0042)
 GameMode4_Init::
@@ -80,9 +87,14 @@ GameMode4_Init::
     ld a, $0b
     jp ResumeAfterModeChange
 
+; Frame routine of game mode 4, the battle (RunGameModeUpdate_Battle far-calls it). In link mode it
+; runs LinkExchangeJoypadPerFrame, then (unless wEffectId is $FF) RunBattleEffectAnimation and, when
+; wEffectAnimState is 2, TickSequencePtrLoSequence with interrupts off; the phase machine then runs
+; from RunLinkSession1Exchange_Receive. Outside link mode it counts the play time
+; (IncrementPlayTime_Bank31) and falls into RunBattlePhase. (C1, E-0378)
 ; per-frame routine for wGameMode = 4, the battle: in link mode (wLinkMode) it serves the serial
 ; link, otherwise IncrementPlayTime_Bank31 and the phase machine RunBattlePhase (wBattlePhase =
-; phase (1 fight, 2 after), wBattleStep = step) (E-0029)
+; phase (1 fight, 2 after), wBattleStep = step)
 GameMode4_Update::
     ld a, [wLinkMode]
     or a
@@ -103,6 +115,10 @@ GameMode4_Update::
 .call_increment_play_time_bank31:
     call IncrementPlayTime_Bank31
 
+; Jump table on wBattlePhase: 0 BattlePhase0 (the start of the battle), 1 BattlePhaseFight (the
+; fight), 2 BattlePhaseEnd (after the fight). Called every frame outside link mode by
+; GameMode4_Update and in link mode by RunLinkSession1Exchange_Receive; each phase is a jump table
+; on wBattleStep. (C1, E-0378)
 ; runs BattlePhase0, BattlePhaseFight or BattlePhaseEnd for wBattlePhase (E-0122)
 RunBattlePhase::
     ld a, [wBattlePhase]
@@ -111,18 +127,23 @@ RunBattlePhase::
     dw BattlePhaseFight
     dw BattlePhaseEnd
 
+; Phase 0 of RunBattlePhase, the start of the battle: a jump table on wBattleStep with
+; BattlePhase0_WaitForFade (wait for the fade), Step1 (draw the screen), Step2 (the intro message),
+; Step3 (a possible surprise round) and Step4 (go on to the fight). (C1, E-0378)
 ; wBattlePhase = 0: the start of the battle (E-0044)
 BattlePhase0::
     ld a, [wBattleStep]
     jumptable
-    dw BattlePhase0_Step0
-    dw BattlePhase0_Step1
-    dw BattlePhase0_Step2
-    dw BattlePhase0_Step3
-    dw BattlePhase0_Step4
+    dw BattlePhase0_WaitForFade
+    dw BattlePhase0_DrawScreen
+    dw BattlePhase0_Intro
+    dw BattlePhase0_RollSurpriseRound
+    dw BattlePhase0_StartFightPhase
 
+; Waits for the palette fade of GameMode4_Init: returns while wFadeState is not 0, then wBattleStep
+; += 1. (C2, E-0378)
 ; wBattlePhase 0, wBattleStep 0 (E-0044)
-BattlePhase0_Step0::
+BattlePhase0_WaitForFade::
     ld a, [wFadeState]
     or a
     ret nz
@@ -130,8 +151,12 @@ BattlePhase0_Step0::
     inc [hl]
     ret
 
+; Clears the window and copies the screen rectangle (ClearWindowAndCopyRectFar), draws the screen
+; tile buffer to the background map (DrawScreenTileBufferRow11Col4RowsToBGMapRow7), wBattleStep +=
+; 1, wBattleArg0 = 0 and, in link mode, wArg1 = 0 (the part counter of BattlePhase0_Intro). (C1,
+; E-0378)
 ; wBattlePhase 0, wBattleStep 1 (E-0044)
-BattlePhase0_Step1::
+BattlePhase0_DrawScreen::
     call ClearWindowAndCopyRectFar
     call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
     ld hl, wBattleStep
@@ -145,20 +170,25 @@ BattlePhase0_Step1::
     ld [wArg1], a
     ret
 
+; Intro message of the battle. Outside link battles it jumps to BattlePhase0_Intro_Message. In link
+; battles it is a jump table on wArg1, one part per call: 0 BattlePhase0_Intro_SendSync, 1
+; BattlePhase0_Intro_ReceiveSync, 2 BattlePhase0_Intro_ExchangeNames, 3
+; BattlePhase0_Intro_CopyPartnerName; each part moves wArg1 on itself, and part 3 ends in the intro
+; message. (C1, E-0378)
 ; wBattlePhase 0, wBattleStep 2 (E-0044)
-BattlePhase0_Step2::
+BattlePhase0_Intro::
     ld a, [wLinkMode]
     or a
-    jp z, BattlePhase0_Step2_IntroMessage
+    jp z, BattlePhase0_Intro_Message
     ld a, [wArg1]
     jumptable
-    dw BattlePhase0_Step2_SendSync
-    dw BattlePhase0_Step2_ReceiveSync
-    dw BattlePhase0_Step2_ExchangeNames
-    dw BattlePhase0_Step2_CopyPartnerName
+    dw BattlePhase0_Intro_SendSync
+    dw BattlePhase0_Intro_ReceiveSync
+    dw BattlePhase0_Intro_ExchangeNames
+    dw BattlePhase0_Intro_CopyPartnerName
 
-; Battle start, step 2, part 0 (link): sends $D2; next part. (C1, E-0357)
-BattlePhase0_Step2_SendSync::
+; Battle start, step 2, part 0 (link): sends $D2; next part. (C2, E-0357; probed E-0378)
+BattlePhase0_Intro_SendSync::
     ld a, [wArg1]
     inc a
     ld [wArg1], a
@@ -166,8 +196,9 @@ BattlePhase0_Step2_SendSync::
     ld [wLinkSendByte], a
     ret
 
-; Part 1: once the partner's $D2 arrives, clears the send byte; next part. (C1, E-0357)
-BattlePhase0_Step2_ReceiveSync::
+; Part 1: once the partner's $D2 arrives, clears the send byte; next part. (C2, E-0357; probed
+; E-0378)
+BattlePhase0_Intro_ReceiveSync::
     ld a, [wLinkMessage]
     cp $d2
     ret nz
@@ -179,8 +210,8 @@ BattlePhase0_Step2_ReceiveSync::
     ret
 
 ; Part 2: starts exchanging names: sends wPlayerName (10 bytes) and receives the partner's into
-; wBattleTextWork (link buffer, ready); next part. (C1, E-0357)
-BattlePhase0_Step2_ExchangeNames::
+; wBattleTextWork (link buffer, ready); next part. (C2, E-0357; probed E-0378)
+BattlePhase0_Intro_ExchangeNames::
     ld a, [wArg1]
     inc a
     ld [wArg1], a
@@ -207,7 +238,7 @@ BattlePhase0_Step2_ExchangeNames::
 
 ; Part 3: once the exchange ends ($F0), ends the partner's name and copies it to wTextBuf0 (five
 ; letters plus marks); then the intro message. (C1, E-0357)
-BattlePhase0_Step2_CopyPartnerName::
+BattlePhase0_Intro_CopyPartnerName::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -222,7 +253,7 @@ BattlePhase0_Step2_CopyPartnerName::
     ld de, wBattleTextWork
     ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
-    jp BattlePhase0_Step2_IntroMessage_AllSame
+    jp BattlePhase0_Intro_Message_AllSame
 
 ; Battle start, step 2 outside link battles: copies the foes' names (the three monster id words of
 ; wBattlePictureIds; the second when there are two or more foes, the third with three) to
@@ -231,7 +262,7 @@ BattlePhase0_Step2_CopyPartnerName::
 ; first two match and the third differs, 3 for two different foes, 5 when the first two differ and
 ; the third matches the second, 4 when the first two differ and the third differs from the second
 ; (it may match the first). (C1, E-0370)
-BattlePhase0_Step2_IntroMessage::
+BattlePhase0_Intro_Message::
     ld a, [wBattlePictureIds]
     ld l, a
     ld a, [wBattlePictureIds + $1]
@@ -269,62 +300,62 @@ BattlePhase0_Step2_IntroMessage::
     jr nz, .check_battle_foe_count
     ld a, [wBattleFoeCount]
     cp $02
-    jr z, BattlePhase0_Step2_IntroMessage_AllSame
+    jr z, BattlePhase0_Intro_Message_AllSame
     ld a, [wBattlePictureIds + $4]
     cp e
-    jr nz, BattlePhase0_Step2_IntroMessage_FirstTwoMatch
+    jr nz, BattlePhase0_Intro_Message_FirstTwoMatch
     ld a, [wBattlePictureIds + $5]
     cp d
-    jr nz, BattlePhase0_Step2_IntroMessage_FirstTwoMatch
-    jr BattlePhase0_Step2_IntroMessage_AllSame
+    jr nz, BattlePhase0_Intro_Message_FirstTwoMatch
+    jr BattlePhase0_Intro_Message_AllSame
 
 .check_battle_foe_count:
     ld a, [wBattleFoeCount]
     cp $02
-    jr z, BattlePhase0_Step2_IntroMessage_TwoFoesDiffer
+    jr z, BattlePhase0_Intro_Message_TwoFoesDiffer
     ld a, [wBattlePictureIds + $2]
     ld e, a
     ld a, [wBattlePictureIds + $3]
     ld d, a
     ld a, [wBattlePictureIds + $4]
     cp e
-    jr nz, BattlePhase0_Step2_IntroMessage_LastTwoDiffer
+    jr nz, BattlePhase0_Intro_Message_LastTwoDiffer
     ld a, [wBattlePictureIds + $5]
     cp d
-    jr nz, BattlePhase0_Step2_IntroMessage_LastTwoDiffer
-    jr BattlePhase0_Step2_IntroMessage_LastTwoMatch
+    jr nz, BattlePhase0_Intro_Message_LastTwoDiffer
+    jr BattlePhase0_Intro_Message_LastTwoMatch
 
 .skip:
     ld a, $00
-    jr BattlePhase0_Step2_IntroMessage_Show
+    jr BattlePhase0_Intro_Message_Show
 
 ; Intro message 1 (HL = wTextBuf0). (C1, E-0357)
-BattlePhase0_Step2_IntroMessage_AllSame::
+BattlePhase0_Intro_Message_AllSame::
     ld hl, wTextBuf0
     ld a, $01
-    jr BattlePhase0_Step2_IntroMessage_Show
+    jr BattlePhase0_Intro_Message_Show
 
 ; Intro message 2. (C1, E-0357)
-BattlePhase0_Step2_IntroMessage_FirstTwoMatch::
+BattlePhase0_Intro_Message_FirstTwoMatch::
     ld a, $02
-    jr BattlePhase0_Step2_IntroMessage_Show
+    jr BattlePhase0_Intro_Message_Show
 
 ; Intro message 3. (C1, E-0357)
-BattlePhase0_Step2_IntroMessage_TwoFoesDiffer::
+BattlePhase0_Intro_Message_TwoFoesDiffer::
     ld a, $03
-    jr BattlePhase0_Step2_IntroMessage_Show
+    jr BattlePhase0_Intro_Message_Show
 
 ; Intro message 4. (C1, E-0357)
-BattlePhase0_Step2_IntroMessage_LastTwoDiffer::
+BattlePhase0_Intro_Message_LastTwoDiffer::
     ld a, $04
-    jr BattlePhase0_Step2_IntroMessage_Show
+    jr BattlePhase0_Intro_Message_Show
 
 ; Intro message 5. (C1, E-0357)
-BattlePhase0_Step2_IntroMessage_LastTwoMatch::
+BattlePhase0_Intro_Message_LastTwoMatch::
     ld a, $05
 
 ; Starts intro message A of bank $2F's category 0 and goes to the next battle step. (C1, E-0357)
-BattlePhase0_Step2_IntroMessage_Show::
+BattlePhase0_Intro_Message_Show::
     ld [wStringIndex], a ; 'Monsters appear!'
     ld a, $00
     ld [wStringCategory], a
@@ -333,6 +364,9 @@ BattlePhase0_Step2_IntroMessage_Show::
     inc [hl]
     ret
 
+; HL = a monster id, DE = destination: H += 2 (the monster names are string categories 2 and 3, one
+; per high byte of the id) and CopyStringHLToDE copies the name with its $F0 end byte to DE. The
+; intro message calls it for up to three foes. (C2, E-0378)
 ; HL = monster id: H += 2 (string categories 2 and 3 hold the monster names), then CopyStringHLToDE
 ; (E-0115)
 CopyMonsterNameToDE_Bank31::
@@ -342,8 +376,19 @@ CopyMonsterNameToDE_Bank31::
     call CopyStringHLToDE
     ret
 
+; Waits until wTextFlags is 0, then wBattlePhase += 1, wBattleStep = 0, wBattleSubPhase = 0. In link
+; battles and in battle kinds 2 and up it sets wBattleTurn = 1 and returns. Otherwise it draws
+; random values: wRandomLo below 8 (one NextTableByte) makes a surprise round with string $0B +
+; (wRandomHi & 1), wBattleArg0 = 0, the foe slots 4-6 marked; else, when the next wRandomHi is below
+; 8, string $0D + (wRandomLo & 1), wBattleArg0 = 1, the party slots 0-2 marked; else wBattleTurn = 1
+; and nothing more. For a surprise round each of the three marks in wSlotMarks becomes 3 (or $FF for
+; a slot whose wBattleSlotOut is $FF), BattlePhase0_RollSurpriseRound_FoeName fills wTextBuf0, the
+; string of category 0 of bank $2F is shown (the first pair, $0B and $0C, says the foes are stunned:
+; 'appeared stunned!' for $0C; the second pair, $0D and $0E, says the foes strike first: 'suddenly
+; attacked!' for $0D and 'struck without warning!' for $0E), wBattlePhase goes back by 1 and
+; wBattleStep = 4. (C1, E-0378)
 ; wBattlePhase 0, wBattleStep 3 (E-0044)
-BattlePhase0_Step3::
+BattlePhase0_RollSurpriseRound::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -407,7 +452,7 @@ BattlePhase0_Step3::
     jr nz, .loop
     ld a, $00
     ld [wStringCategory], a
-    call BattlePhase0_Step3_FoeName
+    call BattlePhase0_RollSurpriseRound_FoeName
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattlePhase
     dec [hl]
@@ -423,16 +468,16 @@ BattlePhase0_Step3::
     ret
 
 ; The foes' name for the next message in wTextBuf0: one foe's own name, 'Monsters' when all are the
-; same species, otherwise a fixed text (BattlePhase0_Step3_FoeName_Data1, or Data2 for strings
-; $0B-$0E, 9 or 13 bytes). (C1, E-0357)
-BattlePhase0_Step3_FoeName::
+; same species, otherwise a fixed text (BattlePhase0_RollSurpriseRound_FoeName_Data1, or Data2 for
+; strings $0B-$0E, 9 or 13 bytes). (C2, E-0357; probed E-0378)
+BattlePhase0_RollSurpriseRound_FoeName::
     ld a, [wBattlePictureIds]
     ld e, a
     ld a, [wBattlePictureIds + $1]
     ld d, a
     ld a, [wBattleFoeCount]
     cp $01
-    jr z, .call_battle_phase0_step3_foe_name_one_foe
+    jr z, .call_battle_phase0_roll_surprise_round_foe
     ld a, [wBattlePictureIds + $2]
     cp e
     jr nz, .skip2
@@ -450,8 +495,8 @@ BattlePhase0_Step3_FoeName::
     jr nz, .skip2
     jr .skip
 
-.call_battle_phase0_step3_foe_name_one_foe:
-    call BattlePhase0_Step3_FoeName_OneFoe
+.call_battle_phase0_roll_surprise_round_foe:
+    call BattlePhase0_RollSurpriseRound_FoeName_OneFoe
     jr .return
 
 .skip:
@@ -477,26 +522,26 @@ BattlePhase0_Step3_FoeName::
 
 .skip2:
     ld hl, wTextBuf0
-    ld de, BattlePhase0_Step3_FoeName_Data1
+    ld de, BattlePhase0_RollSurpriseRound_FoeName_Data1
     ld b, $09
     ld a, [wStringIndex]
     cp $0b
     jr nz, .cp_0C
-    ld de, BattlePhase0_Step3_FoeName_Data2
+    ld de, BattlePhase0_RollSurpriseRound_FoeName_Data2
     ld b, $09
     jr .loop
 
 .cp_0C:
     cp $0c
     jr nz, .cp_0D
-    ld de, BattlePhase0_Step3_FoeName_Data2
+    ld de, BattlePhase0_RollSurpriseRound_FoeName_Data2
     ld b, $0d
     jr .loop
 
 .cp_0D:
     cp $0d
     jr nz, .cp_0E
-    ld de, BattlePhase0_Step3_FoeName_Data2
+    ld de, BattlePhase0_RollSurpriseRound_FoeName_Data2
     ld b, $0d
     jr .loop
 
@@ -504,7 +549,7 @@ BattlePhase0_Step3_FoeName::
     cp $0e
     jr nz, .loop
     ld b, $09
-    ld de, BattlePhase0_Step3_FoeName_Data2
+    ld de, BattlePhase0_RollSurpriseRound_FoeName_Data2
 
 .loop:
     ld a, [de]
@@ -517,8 +562,8 @@ BattlePhase0_Step3_FoeName::
     ret
 
 ; Copies the foe's name (monster id DE: categories 2 and 3 of the strings) to wTextBuf0, keeping
-; wStringCategory and wStringIndex. (C1, E-0357)
-BattlePhase0_Step3_FoeName_OneFoe::
+; wStringCategory and wStringIndex. (C2, E-0357; probed E-0378)
+BattlePhase0_RollSurpriseRound_FoeName_OneFoe::
     ld a, [wStringCategory]
     ld l, a
     ld a, [wStringIndex]
@@ -547,15 +592,18 @@ BattlePhase0_Step3_FoeName_OneFoe::
     ld [wStringIndex], a
     ret
 
-; data read by BattlePhase0_Step3_FoeName (9 bytes) (E-0347)
-BattlePhase0_Step3_FoeName_Data1::
+; data read by BattlePhase0_RollSurpriseRound_FoeName (9 bytes) (E-0347)
+BattlePhase0_RollSurpriseRound_FoeName_Data1::
     db $30, $32, $31, $36, $37, $28, $35, $36, $f0
 
-BattlePhase0_Step3_FoeName_Data2::
+BattlePhase0_RollSurpriseRound_FoeName_Data2::
     db $16, $32, $31, $36, $37, $28, $35, $36, $f0
 
+; Waits until wTextFlags is 0 (the message is done), then wBattlePhase += 1 (the fight) and
+; wBattleStep = 0. Returns with A = wBattleArg0 and the flags of that byte (0 after a normal intro
+; or surprise by the party, 1 after the foes struck first). (C2, E-0378)
 ; wBattlePhase 0, wBattleStep 4 (E-0044)
-BattlePhase0_Step4::
+BattlePhase0_StartFightPhase::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -567,64 +615,86 @@ BattlePhase0_Step4::
     or a
     ret
 
+; Phase 1 of RunBattlePhase, the fight: a jump table on wBattleStep with BattleFight_BeginRound
+; (start a round), Step1 (RunBattleSetup, the command menus), Step2 (RunBattleCommandEntry, the turn
+; order and commands), Step3 (RunBattleActions, executing the actions) and Step4 (RunBattleStep4).
+; (C1, E-0378)
 ; wBattlePhase = 1: the fight; steps: 1 set-up, 2 command entry, 3 executing the actions (E-0044)
 BattlePhaseFight::
     ld a, [wBattleStep]
     jumptable
-    dw BattleFight_Step0
-    dw BattleFight_Step1
+    dw BattleFight_BeginRound
+    dw BattleFight_ChooseCommands
     dw BattleFight_Step2
-    dw BattleFight_Step3
+    dw BattleFight_RunActions
     dw BattleFight_Step4
 
+; Waits until wTextFlags is 0, then BattleFight_BeginRound_StartRound resets the round (wSideControl
+; bit 7, wPersonalityActs, wActionQueue, wBattleActionChoice, the item bytes, wMenuState) and marks
+; the slots; wBattleStep += 1 afterwards (that routine adds one more when none of the marks of the
+; player side was 0 before it marked the slots again). (C2, E-0378)
 ; battle fight, step 0: waits for the text, clears the battle work area (FillBytes) and moves on
 ; (E-0354; was: wBattlePhase 1, wBattleStep 0 (E-0044))
-BattleFight_Step0::
+BattleFight_BeginRound::
     ld a, [wTextFlags]
     or a
     ret nz
-    call BattleFight_Step0_StartRound
+    call BattleFight_BeginRound_StartRound
     ld hl, wBattleStep
     inc [hl]
     ret
 
+; Runs RunBattleSetup, the command menus of the round (a jump table on wBattleSubPhase). (C1,
+; E-0378)
 ; wBattlePhase 1, wBattleStep 1 (E-0044)
-BattleFight_Step1::
+BattleFight_ChooseCommands::
     call RunBattleSetup
     ret
 
+; Far-calls RunBattleCommandEntry: the turn order and the command entry of every slot (sub-steps on
+; wBattleSubPhase). (C1, E-0378)
 ; wBattlePhase 1, wBattleStep 2 (E-0044)
 BattleFight_Step2::
     farcall RunBattleCommandEntry
     ret
 
+; Far-calls RunBattleActions: executes the chosen actions (sub-steps on wBattleSubPhase). (C1,
+; E-0378)
 ; wBattlePhase 1, wBattleStep 3 (E-0044)
-BattleFight_Step3::
+BattleFight_RunActions::
     farcall RunBattleActions
     ret
 
+; Far-calls RunBattleStep4, the last sub-steps of the round (not seen in the first battle by earlier
+; readings). (C1, E-0378)
 ; wBattlePhase 1, wBattleStep 4 (E-0044)
 BattleFight_Step4::
     farcall RunBattleStep4
     ret
 
+; Phase 2 of RunBattlePhase, after the fight: a jump table on wBattleStep, entries 0-9:
+; BattleEnd_DrawScreen to Step6, BattleEnd_LinkFinish for both 7 and 8, and BattleEnd_QueueEndSound
+; (result message, experience, join offer, back to the field). (C1, E-0378)
 ; wBattlePhase = 2: after the fight; steps 0-9 (result message, rewards, recruiting) (E-0044)
 BattlePhaseEnd::
     ld a, [wBattleStep]
     jumptable
-    dw BattleEnd_Step0
-    dw BattleEnd_Step1
-    dw BattleEnd_Step2
-    dw BattleEnd_Step3
-    dw BattleEnd_Step4
-    dw BattleEnd_Step5
-    dw BattleEnd_Step6
-    dw BattleEnd_Step7
-    dw BattleEnd_Step7
-    dw BattleEnd_Step9
+    dw BattleEnd_DrawScreen
+    dw BattleEnd_Result
+    dw BattleEnd_WaitForSound
+    dw BattleEnd_Records
+    dw BattleEnd_AwardExperience
+    dw BattleEnd_OfferJoin
+    dw BattleEnd_ReturnToField
+    dw BattleEnd_LinkFinish
+    dw BattleEnd_LinkFinish
+    dw BattleEnd_QueueEndSound
 
+; Queues music 2 (QueueMusic), clears the window and copies the screen rectangle
+; (ClearWindowAndCopyRectFar), draws the screen tile buffer to the background map
+; (DrawScreenTileBufferRow11Col4RowsToBGMapRow7) and wBattleStep += 1. (C1, E-0378)
 ; wBattlePhase 2, wBattleStep 0 (E-0044)
-BattleEnd_Step0::
+BattleEnd_DrawScreen::
     ld a, $02
     call QueueMusic
     call ClearWindowAndCopyRectFar
@@ -633,21 +703,28 @@ BattleEnd_Step0::
     inc [hl]
     ret
 
+; Shows the closing message of the battle. Sets wTextSpeed = 1, BattleEnd_Result_SetResult sets the
+; result in wBattleScene, and the string of category 0 of bank $2F is chosen: 6 (the wiped-out text
+; of the party of the player) when wBattleScene bit 0 is set; otherwise
+; BattleEnd_Result_SetMessageName fills wTextBuf0 and the string is 8 + wBattleArg0 for wBattleScene
+; 2 ('left the scene'), $87 in link mode 1 (the wiped-out text with the name of the partner), 7
+; ('Monsters were defeated!') when wBattleArg0 is 1 or more and $86 ('Monster was defeated!') for 0.
+; BeginStringDisplay_Bank2F starts it and wBattleStep += 1. (C1, E-0378)
 ; battle end, step 1: at text speed 1 shows the battle's closing message, battle text 6, 7, 8 +
 ; wBattleArg0, $86 or $87 by wBattleScene, link mode and wBattleArg0 (E-0354; was: wBattlePhase 2,
 ; wBattleStep 1 (E-0044))
-BattleEnd_Step1::
+BattleEnd_Result::
     ld a, $01
     ld [wTextSpeed], a
-    call BattleEnd_Step1_SetResult
+    call BattleEnd_Result_SetResult
     ld a, [wBattleScene]
     and $01
-    jr z, .call_battle_end_step1_set_message_name
+    jr z, .call_battle_end_result_set_message_name
     ld a, $06
     jr .set_string_index
 
-.call_battle_end_step1_set_message_name:
-    call BattleEnd_Step1_SetMessageName
+.call_battle_end_result_set_message_name:
+    call BattleEnd_Result_SetMessageName
     ld a, [wBattleScene]
     cp $02
     jr z, .read_battle_arg0
@@ -678,9 +755,13 @@ BattleEnd_Step1::
     inc [hl]
     ret
 
+; Waits for the message and the sound. When all twelve bytes of wSoundChannelSlots, wSoundChannel1
+; to wSoundChannel5 (two bytes each) are $FF it counts wBattleEndTimer down
+; (BattleEnd_WaitForSound_CountDownTimer; nothing here tests the timer). Returns while wTextFlags is
+; not 0; then wBattleStep += 1 and wBattleSubPhase = 0. (C2, E-0378)
 ; battle end, step 2: waits until every sound channel is idle and the text has finished, counting
 ; wBattleEndTimer down, then moves on (E-0354; was: wBattlePhase 2, wBattleStep 2 (E-0044))
-BattleEnd_Step2::
+BattleEnd_WaitForSound::
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
     and [hl]
@@ -705,7 +786,7 @@ BattleEnd_Step2::
     inc hl
     and [hl]
     cp $ff
-    call z, BattleEnd_Step2_CountDownTimer
+    call z, BattleEnd_WaitForSound_CountDownTimer
     ld a, [wTextFlags]
     or a
     ret nz
@@ -715,19 +796,30 @@ BattleEnd_Step2::
     ld [wBattleSubPhase], a
     ret
 
-; Counts wBattleEndTimer down. (C1, E-0357)
-BattleEnd_Step2_CountDownTimer::
+; Counts wBattleEndTimer down. (C2, E-0357; probed E-0378)
+BattleEnd_WaitForSound_CountDownTimer::
     ld a, [wBattleEndTimer]
     dec a
     ld [wBattleEndTimer], a
     ret nz
     ret
 
-; battle end, step 3: settles the battle MP (BattleEnd_Step3_UpdatePartyRecords) and moves on,
+; Stores the result of the battle in the party records and builds the record of a foe that may join.
+; BattleEnd_Records_UpdatePartyRecords runs first (not in link battles); wBattleStep += 1 and
+; wBattleSubPhase = 0, and then the step goes on by 3 more in a link battle (to step 7) or by 2 more
+; for any non-zero wBattleScene (to step 6). With wBattleScene 0 and wDisplaySlot 4-6 it sums the
+; experience award (BattleEnd_Records_SumExpAward, link mode 0), may replace a special foe
+; (BattleEnd_Records_ReplaceSpecialFoe) and builds the foe as a save-format record in wRecordBufA
+; from the battler record of wDisplaySlot (name, species, family, the name of the player as master
+; name, placeholder parent names, skills without $C8, status, level, stats, personality and
+; resistances, equipment byte), then far-calls BattleEnd_Records_BuildSkillList,
+; BattleEnd_Records_ShapeJoiner and LoadTableEntryForRecordBufASpeciesToRecordBufAExp. With any
+; other wDisplaySlot it stops at step 4. (C2, E-0378)
+; battle end, step 3: settles the battle MP (BattleEnd_Records_UpdatePartyRecords) and moves on,
 ; skipping the next steps for link battles and for battle scenes 2 and 3 (E-0354; was: wBattlePhase
 ; 2, wBattleStep 3 (E-0044))
-BattleEnd_Step3::
-    call BattleEnd_Step3_UpdatePartyRecords
+BattleEnd_Records::
+    call BattleEnd_Records_UpdatePartyRecords
     ld hl, wBattleStep
     inc [hl]
     xor a
@@ -769,8 +861,8 @@ BattleEnd_Step3::
     ret nc
     ld a, [wLinkMode]
     or a
-    call z, BattleEnd_Step3_SumExpAward
-    call BattleEnd_Step3_ReplaceSpecialFoe
+    call z, BattleEnd_Records_SumExpAward
+    call BattleEnd_Records_ReplaceSpecialFoe
     ld a, [wDisplaySlot]
     dec a
     ld c, $4e
@@ -800,14 +892,14 @@ BattleEnd_Step3::
     ld [hli], a
     ld [hli], a
     ld [hli], a
-    call BattleEnd_Step3_WriteUnknownName
+    call BattleEnd_Records_WriteUnknownName
     ld a, $ff
     ld [hli], a
-    call BattleEnd_Step3_WriteUnknownName
+    call BattleEnd_Records_WriteUnknownName
     ld a, $ff
     ld [hli], a
     ld b, $08
-    call BattleEnd_Step3_CopySkillsSkippingC8
+    call BattleEnd_Records_CopySkillsSkippingC8
     ld a, $ff
     ld b, $19
 
@@ -829,19 +921,22 @@ BattleEnd_Step3::
     ld [hli], a
     ld b, $1f
     call CopyBBytesDEToHL_Bank31
-    call BattleEnd_Step3_WriteUnknownName
+    call BattleEnd_Records_WriteUnknownName
     ld a, $00
     ld [hli], a
-    call BattleEnd_Step3_WriteUnknownName
+    call BattleEnd_Records_WriteUnknownName
     ld a, $00
     ld [hli], a
     ld a, [de]
     ld [hli], a
-    farcall BattleEnd_Step3_BuildSkillList
-    farcall BattleEnd_Step3_ShapeJoiner
+    farcall BattleEnd_Records_BuildSkillList
+    farcall BattleEnd_Records_ShapeJoiner
     farcall LoadTableEntryForRecordBufASpeciesToRecordBufAExp
     ret
 
+; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
+; the copy, B = 0, A is clobbered. BattleEnd_Records uses it to build the record in wRecordBufA.
+; (C2, E-0378)
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
 ; the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 CopyBBytesDEToHL_Bank31::
@@ -852,8 +947,12 @@ CopyBBytesDEToHL_Bank31::
     jr nz, CopyBBytesDEToHL_Bank31
     ret
 
-; fills 8 bytes at HL with $FF, then copies B bytes from DE, skipping $C8 (E-0305)
-BattleEnd_Step3_CopySkillsSkippingC8::
+; HL = destination, DE = source, B = count: fills the 8 bytes at HL with $FF, then copies B source
+; bytes to HL, leaving out the bytes equal to $C8; HL ends at the start + 8 and DE past the source
+; bytes. BattleEnd_Records copies the skills of the foe battler record into MON_SKILLS with it. (C2,
+; E-0378)
+; fills 8 bytes at HL with $FF, then copies B bytes from DE, skipping $C8
+BattleEnd_Records_CopySkillsSkippingC8::
     push hl
     ld a, $ff
     ld [hli], a
@@ -886,8 +985,10 @@ BattleEnd_Step3_CopySkillsSkippingC8::
     ld h, a
     ret
 
-; writes three $98 placeholder glyphs and seven $F0 bytes at HL (E-0305)
-BattleEnd_Step3_WriteUnknownName::
+; Writes 10 bytes at HL: three $98 placeholder glyphs and seven $F0 end bytes; HL ends past them.
+; BattleEnd_Records uses it for the parent names and master names of the built record. (C2, E-0378)
+; writes three $98 placeholder glyphs and seven $F0 bytes at HL
+BattleEnd_Records_WriteUnknownName::
     ld a, $98
     ld [hli], a
     ld a, $98
@@ -907,9 +1008,9 @@ BattleEnd_Step3_WriteUnknownName::
 
 ; Clears the 24-bit wBattleExpAward and adds the experience of each foe slot from 4 (wBattleFoeCount
 ; slots) whose wBattleSlotOut byte is 1, through the table after it: pointers to BATTLER_EXP in
-; wBattlerRecordSlot4, wBattlerRecordSlot5 and wBattlerRecordSlot6. BattleEnd_Step3 calls it outside
-; link battles. (C1, E-0370)
-BattleEnd_Step3_SumExpAward::
+; wBattlerRecordSlot4, wBattlerRecordSlot5 and wBattlerRecordSlot6. BattleEnd_Records calls it
+; outside link battles. (C2, E-0370; probed E-0378)
+BattleEnd_Records_SumExpAward::
     ld a, [wBattleFoeCount]
     ld b, a
     ld c, $04
@@ -927,7 +1028,7 @@ BattleEnd_Step3_SumExpAward::
     jr nz, .next
     ld a, c
     and $03
-    ld hl, BattleEnd_Step3_SumExpAward_Data
+    ld hl, BattleEnd_Records_SumExpAward_Data
     add a
     add_a_to_hl
     deref_hl
@@ -949,8 +1050,8 @@ BattleEnd_Step3_SumExpAward::
     jr nz, .loop
     ret
 
-; data read by BattleEnd_Step3_SumExpAward (6 bytes) (E-0347)
-BattleEnd_Step3_SumExpAward_Data::
+; data read by BattleEnd_Records_SumExpAward (6 bytes) (E-0347)
+BattleEnd_Records_SumExpAward_Data::
     db $d7, $d1, $25, $d2, $73, $d2
 
 ; In battle kind 2 (wBattleKind) only: takes the first wEncounterMonsters entry (one or two foes;
@@ -958,9 +1059,9 @@ BattleEnd_Step3_SumExpAward_Data::
 ; hTemp0/hTemp1, and replaces its monster id: MONSTER_BABBLE becomes MONSTER_BOXSLIME,
 ; MONSTER_WONDEREGG becomes MONSTER_BUTCH, $182 becomes $183, $1AB becomes $1AC (also setting
 ; wScreenSavedFlag to 2) and $190 becomes $1AF, each reloaded through
-; BattleEnd_Step3_ReplaceSpecialFoe_SetMonster; other ids are left alone. BattleEnd_Step3 calls it
-; before it builds the record in wRecordBufA. (C1, E-0370)
-BattleEnd_Step3_ReplaceSpecialFoe::
+; BattleEnd_Records_ReplaceSpecialFoe_SetMonster; other ids are left alone. BattleEnd_Records calls
+; it before it builds the record in wRecordBufA. (C2, E-0370; probed E-0378)
+BattleEnd_Records_ReplaceSpecialFoe::
     ld a, [wBattleKind]
     cp $02
     ret nz
@@ -1001,19 +1102,19 @@ BattleEnd_Step3_ReplaceSpecialFoe::
     jr nz, .cp_01
     ld a, l
     cp $07
-    jr z, .call_battle_end_step3_replace_special_foe_set
+    jr z, .call_battle_end_records_replace_special_foe
     cp $1a
-    jr z, .call_battle_end_step3_replace_special_foe_set2
+    jr z, .call_battle_end_records_replace_special_foe2
     jr .return
 
-.call_battle_end_step3_replace_special_foe_set:
+.call_battle_end_records_replace_special_foe:
     ld hl, $0008
-    call BattleEnd_Step3_ReplaceSpecialFoe_SetMonster
+    call BattleEnd_Records_ReplaceSpecialFoe_SetMonster
     jr .return
 
-.call_battle_end_step3_replace_special_foe_set2:
+.call_battle_end_records_replace_special_foe2:
     ld hl, $001b
-    call BattleEnd_Step3_ReplaceSpecialFoe_SetMonster
+    call BattleEnd_Records_ReplaceSpecialFoe_SetMonster
     jr .return
 
 .cp_01:
@@ -1021,36 +1122,36 @@ BattleEnd_Step3_ReplaceSpecialFoe::
     jr nz, .return
     ld a, l
     cp $82
-    jr z, .call_battle_end_step3_replace_special_foe_set3
+    jr z, .call_battle_end_records_replace_special_foe3
     cp $ab
     jr z, .set_screen_saved_flag_to_02
     cp $90
-    jr z, .call_battle_end_step3_replace_special_foe_set4
+    jr z, .call_battle_end_records_replace_special_foe4
     jr .return
 
-.call_battle_end_step3_replace_special_foe_set3:
+.call_battle_end_records_replace_special_foe3:
     ld hl, $0183
-    call BattleEnd_Step3_ReplaceSpecialFoe_SetMonster
+    call BattleEnd_Records_ReplaceSpecialFoe_SetMonster
     jr .return
 
 .set_screen_saved_flag_to_02:
     ld a, $02
     ld [wScreenSavedFlag], a
     ld hl, $01ac
-    call BattleEnd_Step3_ReplaceSpecialFoe_SetMonster
+    call BattleEnd_Records_ReplaceSpecialFoe_SetMonster
     jr .return
 
-.call_battle_end_step3_replace_special_foe_set4:
+.call_battle_end_records_replace_special_foe4:
     ld hl, $01af
-    call BattleEnd_Step3_ReplaceSpecialFoe_SetMonster
+    call BattleEnd_Records_ReplaceSpecialFoe_SetMonster
     jr .return
 
 .return:
     ret
 
 ; Writes monster id HL into the foe's wEncounterMonsters entry (hTemp0/1) and reloads its battler
-; record. (C1, E-0357)
-BattleEnd_Step3_ReplaceSpecialFoe_SetMonster::
+; record. (C2, E-0357; probed E-0378)
+BattleEnd_Records_ReplaceSpecialFoe_SetMonster::
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -1060,12 +1161,16 @@ BattleEnd_Step3_ReplaceSpecialFoe_SetMonster::
     inc de
     ld a, h
     ld [de], a
-    farcall BattleEnd_Step3_ReloadFoeBattler
+    farcall BattleEnd_Records_ReloadFoeBattler
     ret
 
+; Like BattleEnd_WaitForSound it counts wBattleEndTimer down when the twelve sound bytes are all $FF
+; (BattleEnd_AwardExperience_CountDownTimer), then always runs BattleEnd_GainExperience, a jump
+; table on wBattleSubPhase that awards experience and handles level-ups and new skills; its last
+; part (BattleEnd_GainExperience_Finish) does wBattleStep += 1. (C1, E-0378)
 ; battle end, step 4: the same wait for the sound channels, then gains experience
 ; (BattleEnd_GainExperience) (E-0354; was: wBattlePhase 2, wBattleStep 4 (E-0044))
-BattleEnd_Step4::
+BattleEnd_AwardExperience::
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
     and [hl]
@@ -1090,35 +1195,39 @@ BattleEnd_Step4::
     inc hl
     and [hl]
     cp $ff
-    call z, BattleEnd_Step4_CountDownTimer
+    call z, BattleEnd_AwardExperience_CountDownTimer
     call BattleEnd_GainExperience
     ret
 
-; Counts wBattleEndTimer down. (C1, E-0357)
-BattleEnd_Step4_CountDownTimer::
+; Counts wBattleEndTimer down. (C2, E-0357; probed E-0378)
+BattleEnd_AwardExperience_CountDownTimer::
     ld a, [wBattleEndTimer]
     dec a
     ld [wBattleEndTimer], a
     ret nz
     ret
 
+; Offers a defeated foe to join the party. A jump table on wBattleSubPhase: 0
+; BattleEnd_OfferJoin_Start (decide the offer), 1 BattleEnd_OfferJoin_DrawThenAskToJoin, 2
+; BattleEnd_OfferJoin_RunSwapMenu, 3 BattleEnd_OfferJoin_RedrawBattleScreen, 4
+; BattleEnd_OfferJoin_AddJoinedMonster. (C1, E-0378)
 ; battle end, step 5: offers the defeated monster to join, by wBattleSubPhase
-; (BattleEnd_Step5_DrawThenAskToJoin, the swap menu, BattleEnd_AddJoinedMonster) (E-0354; was:
+; (BattleEnd_OfferJoin_DrawThenAskToJoin, the swap menu, BattleEnd_AddJoinedMonster) (E-0354; was:
 ; wBattlePhase 2, wBattleStep 5 (E-0044))
-BattleEnd_Step5::
+BattleEnd_OfferJoin::
     ld a, [wBattleSubPhase]
     jumptable
-    dw BattleEnd_Step5_Start
-    dw BattleEnd_Step5_DrawThenAskToJoin
-    dw BattleEnd_Step5_RunSwapMenu
-    dw BattleEnd_Step5_RedrawBattleScreen
-    dw BattleEnd_Step5_AddJoinedMonster
+    dw BattleEnd_OfferJoin_Start
+    dw BattleEnd_OfferJoin_DrawThenAskToJoin
+    dw BattleEnd_OfferJoin_RunSwapMenu
+    dw BattleEnd_OfferJoin_RedrawBattleScreen
+    dw BattleEnd_OfferJoin_AddJoinedMonster
 
 ; Join offer, part 0: decides whether a defeated foe offers to join; none ($FF) goes to the next
 ; battle step; otherwise shows its picture, redraws the party panels, plays sound $6C and goes on.
 ; (C1, E-0357)
-BattleEnd_Step5_Start::
-    farcall BattleEnd_Step5_DecideJoinOffer
+BattleEnd_OfferJoin_Start::
+    farcall BattleEnd_OfferJoin_DecideJoinOffer
     ld a, [wDisplaySlot]
     cp $ff
     jr nz, .read_species_id_lo
@@ -1151,16 +1260,19 @@ BattleEnd_Step5_Start::
     ld [wBattleSubStep], a
     ret
 
-; copies a rectangle to VRAM, then BattleEnd_AskToJoin (E-0303)
-BattleEnd_Step5_DrawThenAskToJoin::
+; Part 1 of the join offer, a jump table on wBattleResolveStep: 0
+; BattleEnd_OfferJoin_DrawThenAskToJoin_LoadPicture (draw the screen and the monster picture), 1
+; BattleEnd_OfferJoin_DrawThenAskToJoin_Ask (BattleEnd_AskToJoin). (C1, E-0378)
+; copies a rectangle to VRAM, then BattleEnd_AskToJoin
+BattleEnd_OfferJoin_DrawThenAskToJoin::
     ld a, [wBattleResolveStep]
     jumptable
-    dw BattleEnd_Step5_DrawThenAskToJoin_LoadPicture
-    dw BattleEnd_Step5_DrawThenAskToJoin_Ask
+    dw BattleEnd_OfferJoin_DrawThenAskToJoin_LoadPicture
+    dw BattleEnd_OfferJoin_DrawThenAskToJoin_Ask
 
 ; Join offer, part 1, step 0: copies the screen to the BG map and loads the joining monster's
 ; picture, title, tile blocks and attributes; next step. (C1, E-0357)
-BattleEnd_Step5_DrawThenAskToJoin_LoadPicture::
+BattleEnd_OfferJoin_DrawThenAskToJoin_LoadPicture::
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
     lb bc, $14, $12
@@ -1177,14 +1289,14 @@ BattleEnd_Step5_DrawThenAskToJoin_LoadPicture::
     ret
 
 ; Join offer, part 1, step 1: asks whether it may join (BattleEnd_AskToJoin). (C1, E-0357)
-BattleEnd_Step5_DrawThenAskToJoin_Ask::
+BattleEnd_OfferJoin_DrawThenAskToJoin_Ask::
     farcall BattleEnd_AskToJoin
     ret
 
 ; Join offer, part 2: the swap menu (SwapMonstersMenu); when it is done (step $0A) restores the
 ; sprite and field settings, rebuilds the battle screen, reloads the battle tiles and returns to
 ; part 1, next sub-step. (C1, E-0357)
-BattleEnd_Step5_RunSwapMenu::
+BattleEnd_OfferJoin_RunSwapMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -1214,7 +1326,7 @@ BattleEnd_Step5_RunSwapMenu::
 
 ; Join offer, part 3: redraws the battle screen at sub-step 3, runs the sub-steps and reloads the
 ; picture when the screen flags ask. (C1, E-0357)
-BattleEnd_Step5_RedrawBattleScreen::
+BattleEnd_OfferJoin_RedrawBattleScreen::
     ld a, [wBattleSubStep]
     cp $03
     call z, BuildAndDrawBattleScreen
@@ -1224,6 +1336,9 @@ BattleEnd_Step5_RedrawBattleScreen::
     call nz, LoadBattleMonsterPictureAndTitle
     ret
 
+; BuildBattleScreenBuffer, then copies the 20 x 18 wScreenTileBuffer to vBGMap0
+; (CopyRect32StrideToVRAM). BattleEnd_OfferJoin_RedrawBattleScreen calls it at wBattleSubStep 3.
+; (C1, E-0378)
 ; BuildBattleScreenBuffer, then copies the 20 x 18 wScreenTileBuffer to vBGMap0
 ; (CopyRect32StrideToVRAM) (E-0115)
 BuildAndDrawBattleScreen::
@@ -1236,13 +1351,17 @@ BuildAndDrawBattleScreen::
 
 ; Join offer, part 4: adds the monster that joined (BattleEnd_AddJoinedMonster), reloading the
 ; picture when the screen flags ask. (C1, E-0357)
-BattleEnd_Step5_AddJoinedMonster::
+BattleEnd_OfferJoin_AddJoinedMonster::
     farcall BattleEnd_AddJoinedMonster
     ld a, [wBattleScreenFlags]
     or a
     call nz, LoadBattleMonsterPictureAndTitle
     ret
 
+; Builds the battle screen in wScreenTileBuffer by calling in turn LoadBattleMonsterPictureAndTitle,
+; ClearAttributesAndScreenBuffer_Bank31, CopyRectRecordForBattlePartyCount_Bank31,
+; DrawPartySlotStatusPanels, LayoutTileBlocksForBattleFoeCount, LoadBattleMonsterPictureAttributes
+; and ClearWindowAndCopyRectFar. (C1, E-0378)
 ; runs LoadBattleMonsterPictureAndTitle, ClearAttributesAndScreenBuffer_Bank31,
 ; CopyRectRecordForBattlePartyCount_Bank31, DrawPartySlotStatusPanels,
 ; LayoutTileBlocksForBattleFoeCount, LoadBattleMonsterPictureAttributes and
@@ -1257,6 +1376,11 @@ BuildBattleScreenBuffer::
     call ClearWindowAndCopyRectFar
     ret
 
+; Clears wBattleScreenFlags, loads the picture of the monster id of wDisplaySlot (the word at
+; wBattleMonsterId + 2 * slot) to vTiles2 + $140 (LoadMonsterPicture), uploads the background
+; palettes (wBGPaletteUploadRequest = $7F) and the name tiles (LoadRecordListNameTiles), shows
+; string 5 of category 2 (bank $09, 'InfoOKMonsterEgg') in a one-row window at vTiles1 + $6D0, then
+; restores the default text window (vTiles1, size $1202). (C1, E-0378)
 ; loads the picture of battle monster wDisplaySlot at vTiles2 + $140, uploads palettes, loads name
 ; tiles and shows string 5 of category 2 (bank 09) at vTiles1 + $6D0, then restores the default
 ; window (E-0121)
@@ -1304,18 +1428,21 @@ LoadBattleMonsterPictureAndTitle::
     ld [wTextWindowWidth], a
     ret
 
+; Leaving the battle, a jump table on wBattleSubPhase: 0 BattleEnd_ReturnToField_PlayEndMusic (music
+; and fade), 1 BattleEnd_ReturnToField_FinishFade (wait for the fade), 2
+; BattleEnd_ReturnToField_PlayTransitionMusic (back to the field). (C1, E-0378)
 ; battle end, step 6: changes the music and waits for the fade (E-0354; was: wBattlePhase 2,
 ; wBattleStep 6 (E-0044))
-BattleEnd_Step6::
+BattleEnd_ReturnToField::
     ld a, [wBattleSubPhase]
     jumptable
-    dw BattleEnd_Step6_PlayEndMusic
-    dw BattleEnd_Step6_FinishFade
-    dw BattleEnd_Step6_PlayTransitionMusic
+    dw BattleEnd_ReturnToField_PlayEndMusic
+    dw BattleEnd_ReturnToField_FinishFade
+    dw BattleEnd_ReturnToField_PlayTransitionMusic
 
 ; Battle end, step 6, part 0: after the text, music 2 unless the transition music is already
 ; playing; clears the window clipping and starts fade 4; next part. (C1, E-0357)
-BattleEnd_Step6_PlayEndMusic::
+BattleEnd_ReturnToField_PlayEndMusic::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -1337,8 +1464,8 @@ BattleEnd_Step6_PlayEndMusic::
     inc [hl]
     ret
 
-; Battle end, step 6, part 1: waits for the fade; next part. (C1, E-0357)
-BattleEnd_Step6_FinishFade::
+; Battle end, step 6, part 1: waits for the fade; next part. (C2, E-0357; probed E-0378)
+BattleEnd_ReturnToField_FinishFade::
     ld a, [wFadeState]
     or a
     ret nz
@@ -1348,7 +1475,7 @@ BattleEnd_Step6_FinishFade::
 
 ; Battle end, step 6, part 2: plays the transition music; in battle kinds 2 and 3 puts the followers
 ; on the player; back to the field (game mode 1), reloading the field tiles. (C1, E-0357)
-BattleEnd_Step6_PlayTransitionMusic::
+BattleEnd_ReturnToField_PlayTransitionMusic::
     ld a, [wCurrentMusic]
     ld hl, wTransitionMusic
     cp [hl]
@@ -1384,6 +1511,9 @@ BattleEnd_Step6_PlayTransitionMusic::
     inc [hl]
     ret
 
+; Copies hPlayerFacing to the direction byte and hPlayerX, hPlayerY to the X and Y bytes of the
+; three follower records in wFollowerRecords (offsets 0, 5 and 10; the target bytes are left as they
+; are). BattleEnd_ReturnToField_PlayTransitionMusic calls it for battle kinds 2 and 3. (C2, E-0378)
 ; copies hPlayerFacing to the three follower directions and hPlayerX/hPlayerY to the three follower
 ; positions (the facing-preserving form of ResetFollowersToPlayer) (E-0118)
 SetFollowersToPlayer::
@@ -1401,18 +1531,21 @@ SetFollowersToPlayer::
     ld [wFollowerRecords + $c], a
     ret
 
+; Ends a link battle, a jump table on wBattleSubPhase: 0 BattleEnd_LinkFinish_SendSync, 1
+; BattleEnd_LinkFinish_ReceiveSync, 2 BattleEnd_LinkFinish_FadeOutAndStore. Both wBattleStep 7 and 8
+; run it. (C1, E-0378)
 ; battle end, step 7 (link battles): sends the end byte, waits for the partner's message and fades
 ; out (E-0354; was: wBattlePhase 2, wBattleStep 7 (E-0044))
-BattleEnd_Step7::
+BattleEnd_LinkFinish::
     ld a, [wBattleSubPhase]
     jumptable
-    dw BattleEnd_Step7_SendSync
-    dw BattleEnd_Step7_ReceiveSync
-    dw BattleEnd_Step7_FadeOutAndStore
+    dw BattleEnd_LinkFinish_SendSync
+    dw BattleEnd_LinkFinish_ReceiveSync
+    dw BattleEnd_LinkFinish_FadeOutAndStore
 
 ; Battle end, step 7, part 0 (link): once every sound channel is idle and the text is done, sends 1;
-; next part. (C1, E-0357)
-BattleEnd_Step7_SendSync::
+; next part. (C2, E-0357; probed E-0378)
+BattleEnd_LinkFinish_SendSync::
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
     and [hl]
@@ -1447,8 +1580,8 @@ BattleEnd_Step7_SendSync::
     inc [hl]
     ret
 
-; Battle end, step 7, part 1: waits for the partner's 1; next part. (C1, E-0357)
-BattleEnd_Step7_ReceiveSync::
+; Battle end, step 7, part 1: waits for the partner's 1; next part. (C2, E-0357; probed E-0378)
+BattleEnd_LinkFinish_ReceiveSync::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -1458,7 +1591,7 @@ BattleEnd_Step7_ReceiveSync::
 
 ; Battle end, step 7, part 2: fades out, stores the battle state into the party records, switches to
 ; game mode 6 and clears the link state. (C1, E-0357)
-BattleEnd_Step7_FadeOutAndStore::
+BattleEnd_LinkFinish_FadeOutAndStore::
     ld a, $04
     call StartPaletteFade
     farcall StoreBattleStateToPartyRecords_BankA3
@@ -1489,8 +1622,10 @@ BattleEnd_Step7_FadeOutAndStore::
     ld [wLinkScreenStep], a
     ret
 
+; In wBattleScene 4 queues sound effect $7E (QueueSoundEffect), otherwise music $42 (QueueMusic),
+; and sets wBattleStep = 7. (C2, E-0378)
 ; wBattlePhase 2, wBattleStep 9 (E-0044)
-BattleEnd_Step9::
+BattleEnd_QueueEndSound::
     ld a, [wBattleScene]
     cp $04
     jr z, .call_queue_sound_effect
@@ -1507,15 +1642,15 @@ BattleEnd_Step9::
     ld [wBattleStep], a
     ret
 
-; Sets the name for BattleEnd_Step1's closing message in wTextBuf0: in link battles the partner's
+; Sets the name for BattleEnd_Result's closing message in wTextBuf0: in link battles the partner's
 ; name (wBattleArg0 = 0); otherwise one foe's name (wBattleArg0 0), the species name followed by
 ; bytes $33, $34 (charmap 'p', 'q') when every foe is the same species (wBattleArg0 1), or
-; 'monsters' (wBattleArg0 2). Of the strings BattleEnd_Step1 then shows, only String_2F_00_08
-; (wBattleArg0 0) and String_2F_00_87 (link) contain <BUF0>. (C1, E-0370)
-BattleEnd_Step1_SetMessageName::
+; 'monsters' (wBattleArg0 2). Of the strings BattleEnd_Result then shows, only String_2F_00_08
+; (wBattleArg0 0) and String_2F_00_87 (link) contain <BUF0>. (C2, E-0370; probed E-0378)
+BattleEnd_Result_SetMessageName::
     ld a, [wLinkMode]
     or a
-    jr nz, BattleEnd_Step1_SetMessageName_PartnerName
+    jr nz, BattleEnd_Result_SetMessageName_PartnerName
     xor a
     ld [wBattleArg0], a
     ld hl, wBattlePictureIds
@@ -1525,27 +1660,27 @@ BattleEnd_Step1_SetMessageName::
     inc hl
     ld a, [wBattleFoeCount]
     cp $01
-    jr z, BattleEnd_Step1_SetMessageName_FoeName
+    jr z, BattleEnd_Result_SetMessageName_FoeName
     ld a, $01
     ld [wBattleArg0], a
     ld a, [hli]
     cp e
-    jr nz, BattleEnd_Step1_SetMessageName_Monsters
+    jr nz, BattleEnd_Result_SetMessageName_Monsters
     ld a, [hli]
     cp d
-    jr nz, BattleEnd_Step1_SetMessageName_Monsters
+    jr nz, BattleEnd_Result_SetMessageName_Monsters
     ld a, [wBattleFoeCount]
     cp $02
-    jr z, .call_battle_end_step1_set_message_name_foe
+    jr z, .call_battle_end_result_set_message_name_foe
     ld a, [hli]
     cp e
-    jr nz, BattleEnd_Step1_SetMessageName_Monsters
+    jr nz, BattleEnd_Result_SetMessageName_Monsters
     ld a, [hl]
     cp d
-    jr nz, BattleEnd_Step1_SetMessageName_Monsters
+    jr nz, BattleEnd_Result_SetMessageName_Monsters
 
-.call_battle_end_step1_set_message_name_foe:
-    call BattleEnd_Step1_SetMessageName_FoeName
+.call_battle_end_result_set_message_name_foe:
+    call BattleEnd_Result_SetMessageName_FoeName
     ld hl, wTextBuf0
 
 .loop:
@@ -1558,21 +1693,21 @@ BattleEnd_Step1_SetMessageName::
     ld a, $34
     ld [hli], a
     ld [hl], $f0
-    jr BattleEnd_Step1_SetMessageName_Done
+    jr BattleEnd_Result_SetMessageName_Done
 
-; Copies foe name DE (categories 2 and 3) to wTextBuf0. (C1, E-0357)
-BattleEnd_Step1_SetMessageName_FoeName::
+; Copies foe name DE (categories 2 and 3) to wTextBuf0. (C2, E-0357; probed E-0378)
+BattleEnd_Result_SetMessageName_FoeName::
     ld l, e
     ld a, d
     add $02
     ld h, a
     ld de, wTextBuf0
     call CopyStringHLToDE
-    jr BattleEnd_Step1_SetMessageName_Done
+    jr BattleEnd_Result_SetMessageName_Done
 
-; Copies the partner's name (wBattleTextWork, up to 10 letters) to wTextBuf0 (wBattleArg0 0). (C1,
-; E-0357)
-BattleEnd_Step1_SetMessageName_PartnerName::
+; Copies the partner's name (wBattleTextWork, up to 10 letters) to wTextBuf0 (wBattleArg0 0). (C2,
+; E-0357; probed E-0378)
+BattleEnd_Result_SetMessageName_PartnerName::
     ld de, wBattleTextWork
     ld hl, wTextBuf0
     ld b, $0a
@@ -1590,10 +1725,10 @@ BattleEnd_Step1_SetMessageName_PartnerName::
     ld [hl], $f0
     ld a, $00
     ld [wBattleArg0], a
-    jr BattleEnd_Step1_SetMessageName_Done
+    jr BattleEnd_Result_SetMessageName_Done
 
-; wTextBuf0 = 'monsters' (wBattleArg0 2). (C1, E-0357)
-BattleEnd_Step1_SetMessageName_Monsters::
+; wTextBuf0 = 'monsters' (wBattleArg0 2). (C2, E-0357; probed E-0378)
+BattleEnd_Result_SetMessageName_Monsters::
     ld hl, wTextBuf0
     ld a, $30
     ld [hli], a
@@ -1615,10 +1750,14 @@ BattleEnd_Step1_SetMessageName_Monsters::
     ld a, $02
     ld [wBattleArg0], a
 
-; Returns. (C1, E-0357)
-BattleEnd_Step1_SetMessageName_Done::
+; Returns. (C2, E-0357; probed E-0378)
+BattleEnd_Result_SetMessageName_Done::
     ret
 
+; Counts the play time one frame: wPlayFrames, wPlaySeconds and wPlayMinutes roll over at 60 and the
+; 16-bit hours (wPlayHoursLo/Hi) go up by 1. At 999 hours (the word $03E7) with 59 minutes it
+; returns before counting, so the time stops at 999:59. A copy of IncrementPlayTime called by
+; GameMode4_Update. (C2, E-0378)
 ; the same 66 bytes as IncrementPlayTime (IncrementPlayTime) (E-0030)
 IncrementPlayTime_Bank31::
     ld a, [wPlayHoursLo]
@@ -1680,7 +1819,7 @@ IncrementPlayTime_Bank31::
 ; command menu (RunBattleSetup) is skipped; finally it marks each of those slots: 3 empty, 1 blocked
 ; by status (CheckSlotStatusBlock) or by wBattleStatus3 byte 0 bits 6-7, byte 1 bits 2-3, byte 2
 ; bits 4-5 or byte 5 bits 0-1, otherwise 0. (C1, E-0370)
-BattleFight_Step0_StartRound::
+BattleFight_BeginRound_StartRound::
     ld hl, wSideControl
     ld b, $08
 
@@ -5878,7 +6017,7 @@ CallRunDebugState_E0InBankE0::
 ; can act (present and not paralysed) or a foe is still present; with no foe left, 0 when one fell
 ; and 2 when none did. In link battles (kinds 8 and up), unless a result is already set: 4 when only
 ; this side can still act, 5 when only the other side can, $80 (a draw) otherwise. (C1, E-0357)
-BattleEnd_Step1_SetResult::
+BattleEnd_Result_SetResult::
     ld a, [wDataBankSave]
     ld [wDataBank], a
     xor a
@@ -5892,7 +6031,7 @@ BattleEnd_Step1_SetResult::
     jr c, .skip2
     ld bc, $0304
     ld de, $0000
-    call BattleEnd_Step1_CountSlots
+    call BattleEnd_Result_CountSlots
     jr nc, .skip2
     ld a, d
     or a
@@ -5990,7 +6129,7 @@ CountSlotsAbleToAct::
 
 ; over B slots from C counts present (wBattleSlotOut 0) in E and out in D; Z when exactly one is
 ; present (E-0305)
-BattleEnd_Step1_CountSlots::
+BattleEnd_Result_CountSlots::
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -6008,7 +6147,7 @@ BattleEnd_Step1_CountSlots::
 .next2:
     inc c
     dec b
-    jr nz, BattleEnd_Step1_CountSlots
+    jr nz, BattleEnd_Result_CountSlots
     ld a, e
     cp $01
     ret
@@ -6016,7 +6155,7 @@ BattleEnd_Step1_CountSlots::
 ; Battle end, step 3: outside link battles, for each party member stores its tactics into its record
 ; and settles the record's status, HP, MP, wBattleExtraStat and personality from the battle (SRAM
 ; enabled around it). (C1, E-0357)
-BattleEnd_Step3_UpdatePartyRecords::
+BattleEnd_Records_UpdatePartyRecords::
     ld a, [wLinkMode]
     or a
     jr nz, .return
@@ -6030,17 +6169,17 @@ BattleEnd_Step3_UpdatePartyRecords::
 
 .loop:
     push bc
-    call BattleEnd_Step3_StoreTactics
+    call BattleEnd_Records_StoreTactics
     ld a, c
     push bc
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
     pop bc
     call RecordStatusAfterBattle
-    call BattleEnd_Step3_StoreHP
-    call BattleEnd_Step3_SubtractBattleMP
-    call BattleEnd_Step3_StoreExtraStat
-    call BattleEnd_Step3_StorePersonality
+    call BattleEnd_Records_StoreHP
+    call BattleEnd_Records_SubtractBattleMP
+    call BattleEnd_Records_StoreExtraStat
+    call BattleEnd_Records_StorePersonality
     pop bc
     inc c
     dec b
@@ -6054,7 +6193,7 @@ BattleEnd_Step3_UpdatePartyRecords::
 ; C = slot (and record): stores wSlotTactic & 3 in bits 4-5 and wSlotLastTactic & 3 in bits 6-7 of
 ; the record's MON_SEX byte, keeping its low nibble (bit 0 is the sex); also sets wBattleResultByte
 ; = wMenuState & 3. BC kept; SRAM must be enabled. (C1, E-0372)
-BattleEnd_Step3_StoreTactics::
+BattleEnd_Records_StoreTactics::
     push bc
     ld a, c
     ld hl, wSlotTactic
@@ -6135,8 +6274,8 @@ RecordStatusAfterBattle_MarkPoisoned::
 
 ; HL = the record's MON_STATUS, C = slot: saves the status byte in wBattleArg0, then stores at
 ; MON_HP 0 when status bit 7 (fell) is set, otherwise the slot's wBattleHP word capped at MON_MAX_HP
-; (signed compare); returns HL at MON_MP for BattleEnd_Step3_SubtractBattleMP. (C1, E-0372)
-BattleEnd_Step3_StoreHP::
+; (signed compare); returns HL at MON_MP for BattleEnd_Records_SubtractBattleMP. (C1, E-0372)
+BattleEnd_Records_StoreHP::
     ld a, [hl]
     ld [wBattleArg0], a
     bit 7, [hl]
@@ -6192,7 +6331,7 @@ BattleEnd_Step3_StoreHP::
 
 ; the record word - the slot's wBattleMP word, keeping the word when the result would be negative
 ; (E-0305)
-BattleEnd_Step3_SubtractBattleMP::
+BattleEnd_Records_SubtractBattleMP::
     push hl
     inc hl
     inc hl
@@ -6237,9 +6376,9 @@ BattleEnd_Step3_SubtractBattleMP::
     ret
 
 ; Unless the record fell (wBattleArg0 bit 7), copies the slot's wBattleExtraStat word to HL, which
-; BattleEnd_Step3_SubtractBattleMP left at MON_WLD; returns HL at MON_PERSONALITY either way. (C1,
+; BattleEnd_Records_SubtractBattleMP left at MON_WLD; returns HL at MON_PERSONALITY either way. (C1,
 ; E-0372)
-BattleEnd_Step3_StoreExtraStat::
+BattleEnd_Records_StoreExtraStat::
     ld a, [wBattleArg0]
     bit 7, a
     jr nz, .skip2
@@ -6270,7 +6409,7 @@ BattleEnd_Step3_StoreExtraStat::
 ; Unless the record fell (wBattleArg0 bit 7), copies the slot's wSlotPersonalityHi,
 ; wSlotPersonalityLo, wSlotTrait and wSlotPersonalityMid bytes to the four MON_PERSONALITY bytes at
 ; HL, in that order. (C1, E-0372)
-BattleEnd_Step3_StorePersonality::
+BattleEnd_Records_StorePersonality::
     ld a, [wBattleArg0]
     bit 7, a
     jr nz, .return

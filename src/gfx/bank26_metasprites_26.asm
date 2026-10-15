@@ -4,6 +4,13 @@
 SECTION "Bank 26", ROMX[$4000], BANK[$26]
     db $26
 
+; Draws one meta-sprite of bank $26 into the shadow OAM. hSpriteSetIndex picks the set; when bit 0
+; of MetaSprites26Attrs[hSpriteSetIndex] is set, its high nibble is ORed into hSpriteAttrXor (it
+; flips or recolours every part). Then it calls DrawMetaSpriteSet_Bank26_BuildOam with DE =
+; MetaSprites26Table, which builds the parts of frame hSpriteSubIndex of that set. The field sprite
+; drawing in bank $04 picks the bank from the sprite graphics id: a nonzero high byte uses bank $27,
+; bit 7 of the low byte set uses bank $26, otherwise bank $25, and the low 7 bits are the set index.
+; Also farcalled from the debug menu (bank $01) and bank $1D. (C1, E-0378)
 ; ORs the attribute bits from MetaSprites26Attrs[hSpriteSetIndex] (when its bit 0 is set) into
 ; hSpriteAttrXor, then builds the sprite from MetaSprites26Table (E-0124)
 DrawMetaSpriteSet_Bank26::
@@ -760,6 +767,13 @@ DrawMetaSpriteSet_Bank26_BuildOam::
     jr nz, .loop5
     ret
 
+; DE = the address of an X byte with its Y byte at DE - 1 (screen coordinates). Reads the $9800 BG
+; map tile under (X + hScrollX - 4, Y + hScrollY - 12), with rows wrapping inside the map, after
+; rSTAT bit 1 clears (interrupts off), and compares it with hSpriteHideTile. Returns A = that tile
+; and the flags of cp hSpriteHideTile: Z when they are equal, carry when the tile is below it. Its
+; two callers in this bank (the meta-sprite builder, used only when hSpriteWindowClipMode is
+; nonzero) skip a sprite part on jr nc, that is when the tile is hSpriteHideTile or higher. BC and
+; HL are kept. (C1, E-0378)
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the
