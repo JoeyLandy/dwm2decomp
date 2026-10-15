@@ -1117,7 +1117,7 @@
   "C150": {
     "name": "wTextBuf2",
     "size": "10",
-    "note": "16-byte text slot: the target or item name of a message (CopyActionItemNameToTextBuf2, BuildActionMessageNames)",
+    "note": "16-byte text slot: the target or item name of a message (CopyActionItemNameToTextBuf2, ShowActionRefusedMessage)",
     "evidence": "E-0132"
   },
   "C160": {
@@ -2791,7 +2791,7 @@
   "CAD0": {
     "name": "wChildRecord",
     "size": "A5",
-    "note": "the $A5-byte record built by ComputeBreedingChild; stored into SRAM by StoreReceivedRecordIntoSRAM",
+    "note": "the $A5-byte record built by ComputeBreedingChild; stored into SRAM by LinkBreed_StoreChildRecord",
     "evidence": "E-0134"
   },
   "CBD7": {
@@ -3362,7 +3362,7 @@
   },
   "D043": {
     "name": "wLinkRules",
-    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckLinkRules1Bit6, UnpackLinkRecordToWorkBuf)",
+    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckLinkRules1Bit6, PackRecordBufAToLinkWorkBuf)",
     "evidence": "E-0136",
     "size": "A"
   },

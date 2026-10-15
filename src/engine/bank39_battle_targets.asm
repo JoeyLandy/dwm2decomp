@@ -4,6 +4,13 @@
 SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
+; Picks the target of the action chosen for wBattleActor. wBattleActionId = the action id in
+; wBattleActionChoice for the actor. The mode wSlotAIMode[actor] selects a 4-byte record of
+; ActionTargetModeTable holding two pointers to tables of 228 per-action routines (one word per
+; action id): the second table is used for an actor in slots 4-7 when wLinkMode is 0 or 2, the first
+; table otherwise. The routine of the action is called (JumpToWordAtHL) and writes the target slot
+; to wBattleTargetChoice for the actor. It is called by farcall from several banks, among them the
+; battle command and battle action code. (C1, E-0382)
 ; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wSlotAIMode[actor], the entry at
 ; ActionTargetModeTable + 4 * mode holds two per-action routine tables, the second used for actors
 ; in slots 4-7 when wLinkMode is 0 or 2, the first otherwise; calls the routine for the action
@@ -46,6 +53,11 @@ ChooseActionTarget::
     call JumpToWordAtHL
     ret
 
+; Target = a random present foe: the opposite side is slots 4-6 for an actor in 0-3 and 0-2 for an
+; actor in 4-7; the first present slot is taken, and each later present one replaces it when bit 7
+; of wRandomLo is set after AdvanceRandom, so later slots are favoured. $FF is stored when no foe is
+; present. It goes through TargetRandomPresentOfThree and fills 185 of the 2280 entries of the
+; tables ActionTargetRoutines0 to ActionTargetRoutines4. (C2, E-0382)
 ; target = a present slot of the opposite three (slots 4-6 for actors 0-3, 0-2 for 4-7): the first
 ; present one, then each later present one replaces it when wRandomLo bit 7 is set after
 ; AdvanceRandom, so the last is favoured; $FF when none is present (E-0061)
@@ -55,6 +67,10 @@ TargetRandomFoe::
     xor $04
     jp TargetRandomPresentOfThree
 
+; Target = the slot saved in wSavedActionChoices + 1 + 2 x wBattleActor when that slot is present
+; (any slot 0-7 with wBattleSlotOut 0, not only a foe); otherwise TargetRandomFoe chooses. A saved
+; value of 8 or more counts as absent. The tables list it for action 204 in the near-side tables.
+; (C2, E-0382)
 ; target = the slot in wSavedActionChoices + $1[2 * actor] when that slot is present, else
 ; TargetRandomFoe (E-0061)
 TargetSavedSlotOrRandomFoe::
@@ -76,6 +92,10 @@ TargetSavedSlotOrRandomFoe::
     ld [hl], c
     ret
 
+; Target = the first present slot of the opposite side in slot order (4, 5, 6 for an actor in 0-3;
+; 0, 1, 2 for an actor in 4-7); the first slot of the side plus 3 (7 or 3) when none is present. No
+; random number is used. It is the most common entry of the tables ActionTargetRoutines0 to
+; ActionTargetRoutines4 (695 of 2280). (C2, E-0382)
 ; target = the first present slot of the opposite three; base + 3 when none is present (E-0061)
 TargetFirstFoe::
     ld a, [wBattleActor]
@@ -100,6 +120,9 @@ TargetFirstFoe::
     ld [hl], c
     ret
 
+; Target = a random present slot of the actor own side, the actor included: A = wBattleActor & 4
+; goes to TargetRandomPresentOfThree (first present slot, each later one replacing it when bit 7 of
+; wRandomLo is set after AdvanceRandom); $FF when none is present. (C2, E-0382)
 ; per-action target routine: A = the actor's side (slot 0 or 4), then the shared choice at $417C
 ; over that side's living slots (E-0219)
 TargetRandomAlly::
@@ -107,6 +130,8 @@ TargetRandomAlly::
     and $04
     jp TargetRandomPresentOfThree
 
+; Target = the first present slot of the actor own side in slot order, the actor itself included;
+; the first slot plus 3 (3 or 7) when none is present. No random number is used. (C2, E-0382)
 ; target = the first present slot of the actor's own three (the actor included); base + 3 when none
 ; is present (E-0061)
 TargetFirstAlly::
@@ -131,6 +156,9 @@ TargetFirstAlly::
     ld [hl], c
     ret
 
+; Target = one of the three slots of the actor own side chosen by three coin flips, one
+; AdvanceRandom each, bit 7 of wRandomLo: the last slot whose flip is set, or the first slot when
+; none is. Presence is not checked, so an absent slot can be chosen. (C2, E-0382)
 ; target = one of the actor's own three slots by coin flips (wRandomLo bit 7), the later ones
 ; favoured; presence is not checked (E-0061)
 TargetRandomAllySlot::
@@ -158,6 +186,10 @@ TargetRandomAllySlot::
     ld [hl], d
     ret
 
+; Target = a present slot of the actor own side other than the actor: the first such slot, and each
+; later one replaces it when bit 7 of wRandomLo is set after AdvanceRandom (no random number is
+; drawn for the first). With none, the first slot of the side (0 or 4) is stored, present or not.
+; The tables list it for actions 27-29, 151 and 192. (C2, E-0382)
 ; per-action target routine (ActionTargetRoutines0 to ActionTargetRoutines4): a random living slot
 ; on the actor's side other than the actor (the first such slot when no coin flip picks one), else
 ; the side's first slot (E-0219)
@@ -208,6 +240,9 @@ TargetRandomOtherAlly::
     ld [hl], d
     ret
 
+; Target = wBattleActor itself, with no check. It fills 446 of the 2280 entries of the tables
+; ActionTargetRoutines0 to ActionTargetRoutines4, the second most common entry after TargetFirstFoe.
+; (C2, E-0382)
 ; target = wBattleActor; the per-action entry used most often (334 table entries) (E-0061)
 TargetSelf::
     ld a, [wBattleActor]
@@ -218,6 +253,8 @@ TargetSelf::
     ld [hl], a
     ret
 
+; Target = wBattleActor & 4, the first slot (0 or 4) of the actor own side; presence is not checked.
+; The tables list it for actions 32, 123, 187 and 206. (C2, E-0382)
 ; target = wBattleActor & 4, slot 0 or 4 of the actor's side; presence is not checked (E-0061)
 TargetOwnSideFirstSlot::
     ld a, [wBattleActor]
@@ -229,6 +266,9 @@ TargetOwnSideFirstSlot::
     ld [hl], a
     ret
 
+; Target = a random slot 0-7 other than the actor: it draws wRandomLo & 7 after AdvanceRandom until
+; the slot is not the actor, is present, and is not slot 3 or 7 (slot & 3 = 3), then stores that
+; slot. It has no exit if no slot qualifies. The tables list it for action 108. (C2, E-0382)
 ; target = a random slot (wRandomLo & 7 after AdvanceRandom) that is not the actor, is present and
 ; is not slot 3 or 7; retries until one is found (E-0061)
 TargetRandomOtherSlot::
@@ -257,7 +297,7 @@ TargetRandomOtherSlot::
 
 ; Picks a target among the three slots from A: the first present one, then each later present one
 ; takes its place on a coin flip (random bit 7); stores it as the actor's target choice ($FF when
-; none is present). (C1, E-0357)
+; none is present). (C2, E-0357; probed E-0382)
 TargetRandomPresentOfThree::
     ld c, a
     ld b, $03
@@ -797,9 +837,9 @@ ActionTargetRoutines2::
     dw TargetFoeWeightedBySlotOrder ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_5 ; id 22
-    dw ChooseTarget_Heal_5 ; id 23
-    dw ChooseTarget_Heal_5 ; id 24
+    dw ChooseTarget_Heal_SmallestHPShare ; id 22
+    dw ChooseTarget_Heal_SmallestHPShare ; id 23
+    dw ChooseTarget_Heal_SmallestHPShare ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw ChooseTarget_MPass ; id 27
@@ -818,7 +858,7 @@ ActionTargetRoutines2::
     dw TargetFirstFoe ; id 40
     dw ChooseTarget_Speed_3 ; id 41
     dw TargetFirstAlly ; id 42
-    dw TargetByAllyAGL ; id 43
+    dw TargetFoeWithAGLAboveOne ; id 43
     dw TargetFirstFoe ; id 44
     dw TargetRandomAlly ; id 45
     dw TargetFirstFoe ; id 46
@@ -1029,9 +1069,9 @@ ActionTargetRoutines3::
     dw TargetFoeWeightedBySlotOrder ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_5 ; id 22
-    dw ChooseTarget_Heal_5 ; id 23
-    dw ChooseTarget_Heal_5 ; id 24
+    dw ChooseTarget_Heal_SmallestHPShare ; id 22
+    dw ChooseTarget_Heal_SmallestHPShare ; id 23
+    dw ChooseTarget_Heal_SmallestHPShare ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw ChooseTarget_MPass ; id 27
@@ -1050,7 +1090,7 @@ ActionTargetRoutines3::
     dw TargetFirstFoe ; id 40
     dw ChooseTarget_Speed_3 ; id 41
     dw TargetFirstAlly ; id 42
-    dw TargetByAllyAGL ; id 43
+    dw TargetFoeWithAGLAboveOne ; id 43
     dw TargetFirstFoe ; id 44
     dw TargetRandomAlly ; id 45
     dw TargetFirstFoe ; id 46
@@ -2717,16 +2757,16 @@ ChooseTarget_SquallHit::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr .call_multiply_damage_by50_if_slot_damage
+    jr .call_multiply_damage_by50_if_slot_body_flags
 
 .set_battle_damage_lo_to_FF:
     ld a, $ff
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-.call_multiply_damage_by50_if_slot_damage:
+.call_multiply_damage_by50_if_slot_body_flags:
     pop bc
-    call MultiplyDamageBy50IfSlotDamageFlagsBit0
+    call MultiplyDamageBy50IfSlotBodyFlagsBit0
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -2859,16 +2899,16 @@ ChooseTarget_SquallHit_2::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr .call_multiply_damage_by50_if_slot_damage
+    jr .call_multiply_damage_by50_if_slot_body_flags
 
 .set_battle_damage_lo_to_FF:
     ld a, $ff
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-.call_multiply_damage_by50_if_slot_damage:
+.call_multiply_damage_by50_if_slot_body_flags:
     pop bc
-    call MultiplyDamageBy50IfSlotDamageFlagsBit0
+    call MultiplyDamageBy50IfSlotBodyFlagsBit0
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -2888,8 +2928,8 @@ ChooseTarget_SquallHit_2::
     ld [hl], a
     ret
 
-; Heal: E = the actor's side, D = 3, then the most-hurt search (ChooseTarget_Heal_RateAllies). (C1,
-; E-0357)
+; Heal: E = the actor's side, D = 3, then the most-hurt search (ChooseTarget_Heal_RateAllies). (C2,
+; E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
 ; target to wBattleTargetChoice (E-0086)
@@ -2901,7 +2941,7 @@ ChooseTarget_Heal::
 
 ; For each of D ally slots from E: how hurt it is, as max HP / HP (quotient in wTargetEstimates,
 ; remainder in wBattleTempBuf); full HP counts as 0 remainder 1 and an absent slot as 0; then picks
-; the most hurt (ChooseTarget_Heal_MostHurt). (C1, E-0357)
+; the most hurt (ChooseTarget_Heal_MostHurt). (C2, E-0357; probed E-0382)
 ChooseTarget_Heal_RateAllies::
     ld a, e
     ld [wBattleArg3], a
@@ -2970,10 +3010,13 @@ ChooseTarget_Heal_RateAllies::
     call ChooseTarget_Heal_MostHurt
     ret
 
-; Heal (another): a threshold from the present allies' max HP (thirty times it for a slot with body
-; flag bit 0), divided by their number twice; targets the ally with the lowest HP below its max and
-; under that threshold (ties at random); with none, the most-hurt search
-; (ChooseTarget_Heal_RateAllies). (C1, E-0357)
+; Heal (another): sums the max HP of the present allies, except that an ally with body flag bit 0
+; (wSlotBodyFlags) adds 30 x BC (BC is the loop pair, b = slots left and c = slot, not its max HP;
+; apparently a slip) instead. The sum, kept in hTemp0-hTemp2, is divided by the number of present
+; allies twice to give a threshold. Allies with HP below their max HP and below the threshold
+; compete: the lowest HP wins, a tie going to the later ally when bit 7 of wRandomLo is set after
+; AdvanceRandom. With no candidate the most-hurt search runs (ChooseTarget_Heal_RateAllies). (C2,
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
 ; target to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the
@@ -3132,7 +3175,7 @@ ChooseTarget_Heal_2::
     jp ChooseTarget_Heal_RateAllies
 
 ; Vivify's target: one of the fallen allies (wBattleSlotOut 1), each later one replacing the first
-; on a coin flip; with none, the actor itself. (C1, E-0357)
+; on a coin flip; with none, the actor itself. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3216,7 +3259,7 @@ ChooseTarget_Vivify::
 
 ; Antidote's target: a badly poisoned ally (BSTAT0_BADLY_POISONED; one at random among three, a coin
 ; flip between two), otherwise a poisoned one (BSTAT0_POISONED); stored as the actor's target
-; choice. (C1, E-0357)
+; choice. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3351,7 +3394,7 @@ ChooseTarget_Antidote::
 
 ; TwinHits' target: the ally (own side) with the highest ATK, leaving out empty slots, paralyzed
 ; ones (BSTAT0_PARALYZED) and those already ATK-doubled (BSTAT1_ATK_DOUBLED); ties go to the later
-; one on a coin flip; with none, the actor itself. (C1, E-0357)
+; one on a coin flip; with none, the actor itself. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3436,7 +3479,7 @@ ChooseTarget_TwinHits::
 ; Upper's target: of the present allies, only those whose DEF is above the value BuffCapOfBaseDEF
 ; gives are kept (HL = that value, BC = DEF, skipped without carry; read literally this passes
 ; allies already past the cap), and the one with the lowest DEF is taken; with none, the actor
-; itself. (C1, E-0357)
+; itself. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3502,7 +3545,7 @@ ChooseTarget_Upper::
 
 ; Sap's target: a foe without BSTAT2_BOUNCE whose DEF is at least 2, leaving out Sap resistance
 ; (byte 3 bits 4-5) 3; the lowest level wins, the later one on ties (SetActorTargetFromHRAMChoice).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3564,7 +3607,7 @@ ChooseTarget_Sap::
 
 ; Slow's target: as Sap's (ChooseTarget_Sap) but by AGL: a foe without bounce, AGL at least 2; it
 ; reads the Sap resistance field (byte 3 bits 4-5) too, not Slow's (bits 2-3), the lowest level
-; winning. (C1, E-0357)
+; winning. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3625,7 +3668,8 @@ ChooseTarget_Slow::
     ret
 
 ; Speed's target: as Upper's (ChooseTarget_Upper) but with AGL and BuffCapOfBaseAGL: only allies
-; whose AGL is above that value, the lowest AGL taken; with none, the actor itself. (C1, E-0357)
+; whose AGL is above that value, the lowest AGL taken; with none, the actor itself. (C2, E-0357;
+; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3692,7 +3736,7 @@ ChooseTarget_Speed::
 ; UltraDown's target: a foe whose DEF or AGL is at least 2, leaving out level 3 of the field it
 ; reads, Beat's (byte 2 bits 4-5); the lowest level wins, the later one on ties; without one, the
 ; last foe that passed the stat check, else the last present one (SetActorTargetFromHRAMChoice).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3757,7 +3801,7 @@ ChooseTarget_UltraDown::
 
 ; Cover's target: of the allies other than the actor, those with HP x 10 below their max HP (under a
 ; tenth), the one with the least; the last such ally is also kept in hTemp5; finished by
-; ChooseTarget_Cover_StoreChoice. (C1, E-0357)
+; ChooseTarget_Cover_StoreChoice. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3823,7 +3867,7 @@ ChooseTarget_Cover::
 
 ; MouthShut's target: a foe with at least one mouth skill (ChooseTarget_MouthShut_CountMouthSkills)
 ; not already breath-sealed, leaving out MouthShut resistance (byte 6 bits 6-7) 3; the lowest level
-; wins (SetActorTargetFromHRAMChoice4). (C1, E-0357)
+; wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3881,7 +3925,7 @@ ChooseTarget_MouthShut::
 
 ; SickLick's target: a foe with DEF at least 2 that is not asleep or paralyzed (status 0 & $CC) and
 ; has no status byte 3 (frozen, dancing, airborne ...), leaving out LegSweep resistance (byte 5 bits
-; 2-3) 3; the lowest level wins (SetActorTargetFromHRAMChoice4). (C1, E-0357)
+; 2-3) 3; the lowest level wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3952,7 +3996,7 @@ ChooseTarget_SickLick::
 
 ; LegSweep's target: a foe without body flag bit 4 that is not asleep, confused or paralyzed (status
 ; 0 & $DC) and has no status byte 3, leaving out LegSweep resistance (byte 5 bits 2-3) 3; the lowest
-; level wins (SetActorTargetFromHRAMChoice4). (C1, E-0357)
+; level wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4018,7 +4062,7 @@ ChooseTarget_LegSweep::
 
 ; NapAttack's target: a foe not asleep or paralyzed (status 0 & $CC) with no status byte 3, leaving
 ; out Sleep resistance (byte 2 bits 6-7) 3; the lowest level wins, the later one on ties
-; (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4076,7 +4120,7 @@ ChooseTarget_NapAttack::
     ret
 
 ; OddDance's target: a foe with MP left, leaving out RobMagic resistance (byte 2 bits 2-3) 3; the
-; lowest level wins (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; lowest level wins (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the
 ; target to wBattleTargetChoice (E-0086)
@@ -4130,7 +4174,7 @@ ChooseTarget_OddDance::
 ; MetalCut's target: among foes with body flag bit 0, meant as the one with the least HP + DEF, but
 ; the best starts at $FFFF and a foe is skipped when its sum is below it, so in practice none is
 ; taken and SetActorTargetFromTemp0OrTemp3 falls back to the last present foe (read literally;
-; apparently a slip). (C1, E-0357)
+; apparently a slip). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4186,7 +4230,7 @@ ChooseTarget_MetalCut::
     ret
 
 ; DrakSlash's target: the weakest foe of family 1 (TargetWeakestFoeOfFamilyD; dragons, by the
-; skill's name). (C1, E-0357)
+; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4196,7 +4240,7 @@ ChooseTarget_DrakSlash::
     ret
 
 ; BeastCut's target: the weakest foe of family 2 (TargetWeakestFoeOfFamilyD; beasts, by the skill's
-; name). (C1, E-0357)
+; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4206,7 +4250,7 @@ ChooseTarget_BeastCut::
     ret
 
 ; BirdBlow's target: the weakest foe of family 3 (TargetWeakestFoeOfFamilyD; birds, by the skill's
-; name). (C1, E-0357)
+; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4216,7 +4260,7 @@ ChooseTarget_BirdBlow::
     ret
 
 ; DevilCut's target: the weakest foe of family 6 (TargetWeakestFoeOfFamilyD; devils, by the skill's
-; name). (C1, E-0357)
+; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4226,7 +4270,7 @@ ChooseTarget_DevilCut::
     ret
 
 ; ZombieCut's target: the weakest foe of family 7 (TargetWeakestFoeOfFamilyD; zombies, by the
-; skill's name). (C1, E-0357)
+; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4235,7 +4279,8 @@ ChooseTarget_ZombieCut::
     call TargetWeakestFoeOfFamilyD
     ret
 
-; CleanCut's target: the weakest foe of family 8 (TargetWeakestFoeOfFamilyD). (C1, E-0357)
+; CleanCut's target: the weakest foe of family 8 (TargetWeakestFoeOfFamilyD). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4245,7 +4290,7 @@ ChooseTarget_CleanCut::
     ret
 
 ; SlimeBlow's target: the weakest foe of family 0 (TargetWeakestFoeOfFamilyD; slimes, by the skill's
-; name). (C1, E-0357)
+; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4255,7 +4300,7 @@ ChooseTarget_SlimeBlow::
     ret
 
 ; BugBlow's target: the weakest foe of family 5 (TargetWeakestFoeOfFamilyD; bugs, by the skill's
-; name). (C1, E-0357)
+; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4264,7 +4309,8 @@ ChooseTarget_BugBlow::
     call TargetWeakestFoeOfFamilyD
     ret
 
-; Shears' target: the weakest foe of family 4 (TargetWeakestFoeOfFamilyD). (C1, E-0357)
+; Shears' target: the weakest foe of family 4 (TargetWeakestFoeOfFamilyD). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4274,7 +4320,8 @@ ChooseTarget_Shears::
     ret
 
 ; PoisonHit's target: a foe not yet poisoned (status 0 bits 0-1), leaving out PoisonGas resistance
-; (byte 4 bits 0-1) 3; the lowest level wins (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; (byte 4 bits 0-1) 3; the lowest level wins (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4325,7 +4372,8 @@ ChooseTarget_PoisonHit::
     ret
 
 ; Paralyze's target: a foe not asleep or paralyzed (status 0 & $CC), leaving out PalsyAir resistance
-; (byte 5 bits 6-7) 3; the lowest level wins (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; (byte 5 bits 6-7) 3; the lowest level wins (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4379,7 +4427,7 @@ ChooseTarget_Paralyze::
 
 ; LushLicks' target: a foe not asleep, confused or paralyzed (status 0 & $DC) with no status byte 3,
 ; leaving out LegSweep resistance (byte 5 bits 2-3) 3; the lowest level wins
-; (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target
 ; to wBattleTargetChoice (E-0086)
@@ -4436,8 +4484,9 @@ ChooseTarget_LushLicks::
     call SetActorTargetFromHRAMChoice
     ret
 
-; Transform's target: the foe with the highest max HP + max MP, the later one on ties; with none,
-; the last present foe (SetActorTargetFromTemp0OrTemp3). (C1, E-0357)
+; Transform target: the present foe with the highest max HP + max MP (16-bit sum), the later one on
+; ties; a foe whose sum is 0 is still taken. With no foe present $FF is stored, since the fallback
+; to the last present foe is never needed once one foe is present. (C2, E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4488,11 +4537,13 @@ ChooseTarget_Transform::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
-; Beat's target: finds the lowest Beat resistance (byte 2 bits 4-5, leaving out 3) among foes
-; without BSTAT2_BOUNCE and counts the foes at it; with several, the one at that level with the most
-; HP; with one, the first present foe at that level (this pass does not skip bounce); with none, a
-; pass over every present foe for the most HP that stores C (by then the old best HP's low byte, not
-; the slot; apparently a slip) as the choice. (C1, E-0357)
+; Beat target: finds the lowest Beat resistance level (byte 2 bits 4-5, level 3 left out) among
+; present foes without BSTAT2_BOUNCE and counts the foes at that level in hTemp2, which starts at
+; $FF and becomes 1 at each new lowest level. With several foes at the level (or the unchanged count
+; $FF), the one with the most HP wins, the later one on ties. With exactly one, the first present
+; foe at that level is taken, bounce not checked in this pass. When no foe is counted (every foe at
+; level 3 or with bounce) the count stays $FF, no foe matches, and $FF is stored; the pass written
+; for a count of 0 is never reached. (C2, E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -4676,7 +4727,7 @@ ChooseTarget_Beat::
 ; & $22) and Blaze resistance (byte 0 bits 4-5) below 3, scales the estimate by the level
 ; (ChooseTarget_Blaze_ScaleEstimate); prefers the foe the hit would finish (HP below it) with the
 ; most HP; otherwise the lowest level, the lower HP on ties; with neither, the last present foe.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF;
 ; writes the target to wBattleTargetChoice (E-0086)
@@ -4824,7 +4875,7 @@ ChooseTarget_Blaze::
 ; skipped against it (and the `and $05` after `and $20` always gives zero); so the second pass
 ; decides: the foe without BSTAT7_GUARD with the most HP, the later one on ties; when every foe
 ; guards, a third pass whose skip tests the carry GetBattleHP_Bank39 leaves, with no compare
-; (apparently a slip); SetActorTargetFromTemp0OrTemp3. (C1, E-0357)
+; (apparently a slip); SetActorTargetFromTemp0OrTemp3. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 111 Ramming, 112 Kamikaze; writes the target
 ; to wBattleTargetChoice (E-0086)
@@ -4969,7 +5020,7 @@ ChooseTarget_Ramming::
 
 ; Sleep's target: a foe not asleep or paralyzed (status 0 & $CC), with no status byte 3 and no
 ; bounce or MagicBack (status 2 & $22), leaving out Sleep resistance (byte 2 bits 6-7) 3; the lowest
-; level wins (SetActorTargetFromHRAMChoice4). (C1, E-0357)
+; level wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5034,7 +5085,7 @@ ChooseTarget_Sleep::
 
 ; RobMagic's target: a foe with MP left and no bounce or MagicBack (status 2 & $22), leaving out
 ; RobMagic resistance (byte 2 bits 2-3) 3; the lowest level wins (SetActorTargetFromHRAMChoice).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5093,7 +5144,7 @@ ChooseTarget_RobMagic::
 
 ; FireSlash's target: a foe not airborne (status 3 bits 6-7) or in HighJump (status 4 bits 2-3); the
 ; lowest Blaze resistance (byte 0 bits 4-5; 3 is not left out here) wins, the least HP + DEF on ties
-; (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5174,7 +5225,7 @@ ChooseTarget_FireSlash::
 
 ; BoltSlash's target: a foe not airborne (status 3 bits 6-7) or in HighJump (status 4 bits 2-3); the
 ; lowest Bolt resistance (byte 1 bits 4-5, 3 not left out) wins, the least HP + DEF on ties
-; (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5254,7 +5305,7 @@ ChooseTarget_BoltSlash::
     ret
 
 ; VacuSlash's target: as BoltSlash's (ChooseTarget_BoltSlash) but by Vacuum resistance (byte 1 bits
-; 6-7). (C1, E-0357)
+; 6-7). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5335,7 +5386,7 @@ ChooseTarget_VacuSlash::
     ret
 
 ; IceSlash's target: as BoltSlash's (ChooseTarget_BoltSlash) but by IceBolt resistance (byte 1 bits
-; 2-3). (C1, E-0357)
+; 2-3). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5416,7 +5467,8 @@ ChooseTarget_IceSlash::
     ret
 
 ; WindBeast's target: the lowest Vacuum resistance (byte 1 bits 6-7) among all present foes (no
-; status check), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; status check), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5492,7 +5544,7 @@ ChooseTarget_WindBeast::
 ; DEF (EstimateAndPickWeakestTarget); when every one has a blocking status and AquaWall or Ironize,
 ; the three estimates (EstimateThreeTargets); otherwise, from the first foe lacking one of those on,
 ; the foes with neither, the lowest GigaSlash resistance (byte 6 bits 2-3) winning and the least HP
-; + DEF on ties. (C1, E-0357)
+; + DEF on ties. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5615,7 +5667,7 @@ ChooseTarget_GigaSlash::
     ret
 
 ; AquaCut's target: as BoltSlash's (ChooseTarget_BoltSlash) but by Watershot resistance (byte 0 bits
-; 6-7). (C1, E-0357)
+; 6-7). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5696,7 +5748,8 @@ ChooseTarget_AquaCut::
     ret
 
 ; Watershot's target: the lowest Watershot resistance (byte 0 bits 6-7) among all present foes (no
-; status check), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; status check), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5768,11 +5821,11 @@ ChooseTarget_Watershot::
     call SetActorTargetFromHRAMChoice
     ret
 
-; MegaMagic's target: for each present foe with MegaMagic resistance (byte 4 bits 6-7) below 3, the
-; damage estimate from the actor's MP and level scaled by that level
-; (ChooseTarget_MegaMagic_EstimateDamage); prefers the foe the hit would finish (HP below it) with
-; the most HP; otherwise the lowest level, the lower HP on ties; with neither, the last present foe.
-; (C1, E-0357)
+; MegaMagic target: for each present foe with MegaMagic resistance (byte 4 bits 6-7) below 3, the
+; damage estimate (ChooseTarget_MegaMagic_EstimateDamage, in effect 90 / 100 of the loop pair BC,
+; whatever the MP and level of the actor are) scaled by that level; prefers the foe the hit would
+; finish (HP below the estimate) with the most HP; otherwise the lowest level, the lower HP on ties;
+; with neither, the last present foe. (C2, E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5886,6 +5939,11 @@ ChooseTarget_MegaMagic::
     ld [hl], a
     ret
 
+; Target = a present foe picked with fixed weights: AdvanceRandom is called first, the present slots
+; of the opposite side are listed in slot order in hTemp1-hTemp3 (count in hTemp0), and
+; PickWeightedTargetCandidate chooses by wRandomLo. One foe: that foe; two: the first below $AB,
+; else the second; three: the first below $80, the second below $D5, else the third; $FF when none
+; is present. (C2, E-0382)
 ; after AdvanceRandom, lists the present opposite slots in slot order (count in hTemp0, slots in
 ; hTemp1-hTemp3, unused entries $FF) and lets PickWeightedTargetCandidate choose (E-0061)
 TargetFoeWeightedBySlotOrder::
@@ -5924,7 +5982,7 @@ TargetFoeWeightedBySlotOrder::
 ; DEF) / 2 and sorts the three entries so the smaller keys come first before
 ; PickWeightedTargetCandidate; but the count hTemp0 is never increased and that count (0) is passed
 ; as the slot for the HP and DEF reads, so as read every present foe overwrites entry 0 and the pick
-; is hTemp1, the last present foe (apparently a slip). (C1, E-0357)
+; is hTemp1, the last present foe (apparently a slip). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105
 ; PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 112 Kamikaze, $CC, $D2 ...; writes the
@@ -6060,10 +6118,12 @@ ChooseTarget_SquallHit_3::
     call PickWeightedTargetCandidate
     ret
 
-; Heal (third): for each ally below its max HP keeps max HP / HP (quotient and remainder,
-; DivideHLByBC) in wWorkBuf; takes the first present ally, then any whose ratio is larger (the
-; quotient, then the remainder), so the ally with the smallest share of its HP left; with no ally
-; present, the actor itself. (C1, E-0357)
+; Heal (third): for each present ally below its max HP keeps max HP / HP (quotient and remainder,
+; DivideHLByBC) in wWorkBuf; a full-HP ally keeps a zero entry. The pick starts with the first
+; present ally, and a later present ally replaces it while the pick still has a zero entry, or when
+; its quotient is larger, or when the quotients are equal and its remainder is larger. So the ally
+; with the smallest share of its HP left wins, and when every present ally is at full HP the last
+; present ally does. With no ally present, the actor itself. (C2, E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
 ; target to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the
@@ -6238,7 +6298,8 @@ ChooseTarget_Heal_3::
 
 ; Heal (fourth): averages the present allies' max HP; of the allies whose HP is below that average
 ; (up to three, their HP kept in wBattleDamage/wTargetEstimates/wEffectTemp), the one with the least
-; HP, the earlier on ties; with none, Heal's third routine (ChooseTarget_Heal_3). (C1, E-0357)
+; HP, the earlier on ties; with none, Heal's third routine (ChooseTarget_Heal_3). (C2, E-0357;
+; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
 ; target to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the
@@ -6379,7 +6440,7 @@ ChooseTarget_Heal_4::
     ld [hl], a
     ret
 
-; Same choice as ChooseTarget_Vivify: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Vivify: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6387,7 +6448,7 @@ ChooseTarget_Heal_4::
 ChooseTarget_Vivify_2::
     jp ChooseTarget_Vivify
 
-; Same choice as ChooseTarget_Antidote: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Antidote: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6395,7 +6456,7 @@ ChooseTarget_Vivify_2::
 ChooseTarget_Antidote_2::
     jp ChooseTarget_Antidote
 
-; Same choice as ChooseTarget_TwinHits: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_TwinHits: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6403,7 +6464,7 @@ ChooseTarget_Antidote_2::
 ChooseTarget_TwinHits_2::
     jp ChooseTarget_TwinHits
 
-; Same choice as ChooseTarget_Upper: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Upper: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6411,7 +6472,7 @@ ChooseTarget_TwinHits_2::
 ChooseTarget_Upper_2::
     jp ChooseTarget_Upper
 
-; Same choice as ChooseTarget_Sap: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Sap: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6419,7 +6480,7 @@ ChooseTarget_Upper_2::
 ChooseTarget_Sap_2::
     jp ChooseTarget_Sap
 
-; Same choice as ChooseTarget_Slow: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Slow: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6427,7 +6488,7 @@ ChooseTarget_Sap_2::
 ChooseTarget_Slow_2::
     jp ChooseTarget_Slow
 
-; Same choice as ChooseTarget_Speed: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Speed: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6435,7 +6496,7 @@ ChooseTarget_Slow_2::
 ChooseTarget_Speed_2::
     jp ChooseTarget_Speed
 
-; Same choice as ChooseTarget_UltraDown: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_UltraDown: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6443,7 +6504,7 @@ ChooseTarget_Speed_2::
 ChooseTarget_UltraDown_2::
     jp ChooseTarget_UltraDown
 
-; Same choice as ChooseTarget_Cover: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Cover: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6451,7 +6512,7 @@ ChooseTarget_UltraDown_2::
 ChooseTarget_Cover_2::
     jp ChooseTarget_Cover
 
-; Same choice as ChooseTarget_MouthShut: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_MouthShut: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6459,7 +6520,7 @@ ChooseTarget_Cover_2::
 ChooseTarget_MouthShut_2::
     jp ChooseTarget_MouthShut
 
-; Same choice as ChooseTarget_SickLick: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_SickLick: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6467,7 +6528,7 @@ ChooseTarget_MouthShut_2::
 ChooseTarget_SickLick_2::
     jp ChooseTarget_SickLick
 
-; Same choice as ChooseTarget_LegSweep: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_LegSweep: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6475,7 +6536,7 @@ ChooseTarget_SickLick_2::
 ChooseTarget_LegSweep_2::
     jp ChooseTarget_LegSweep
 
-; Same choice as ChooseTarget_NapAttack: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_NapAttack: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6483,7 +6544,7 @@ ChooseTarget_LegSweep_2::
 ChooseTarget_NapAttack_2::
     jp ChooseTarget_NapAttack
 
-; Same choice as ChooseTarget_OddDance: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_OddDance: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the
 ; target to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the
@@ -6491,7 +6552,7 @@ ChooseTarget_NapAttack_2::
 ChooseTarget_OddDance_2::
     jp ChooseTarget_OddDance
 
-; Same choice as ChooseTarget_MetalCut: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_MetalCut: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6500,7 +6561,7 @@ ChooseTarget_MetalCut_2::
     jp ChooseTarget_MetalCut
 
 ; DrakSlash's other target: a random foe of family 1 (TargetRandomFoeOfFamilyD; dragons, by the
-; skill's name). (C1, E-0357)
+; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6511,7 +6572,7 @@ ChooseTarget_DrakSlash_2::
     ret
 
 ; BeastCut's other target: a random foe of family 2 (TargetRandomFoeOfFamilyD; beasts, by the
-; skill's name). (C1, E-0357)
+; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6522,7 +6583,7 @@ ChooseTarget_BeastCut_2::
     ret
 
 ; BirdBlow's other target: a random foe of family 3 (TargetRandomFoeOfFamilyD; birds, by the skill's
-; name). (C1, E-0357)
+; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6533,7 +6594,7 @@ ChooseTarget_BirdBlow_2::
     ret
 
 ; DevilCut's other target: a random foe of family 6 (TargetRandomFoeOfFamilyD; devils, by the
-; skill's name). (C1, E-0357)
+; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6544,7 +6605,7 @@ ChooseTarget_DevilCut_2::
     ret
 
 ; ZombieCut's other target: a random foe of family 7 (TargetRandomFoeOfFamilyD; zombies, by the
-; skill's name). (C1, E-0357)
+; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6554,7 +6615,8 @@ ChooseTarget_ZombieCut_2::
     call TargetRandomFoeOfFamilyD
     ret
 
-; CleanCut's other target: a random foe of family 8 (TargetRandomFoeOfFamilyD). (C1, E-0357)
+; CleanCut's other target: a random foe of family 8 (TargetRandomFoeOfFamilyD). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6565,7 +6627,7 @@ ChooseTarget_CleanCut_2::
     ret
 
 ; SlimeBlow's other target: a random foe of family 0 (TargetRandomFoeOfFamilyD; slimes, by the
-; skill's name). (C1, E-0357)
+; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6576,7 +6638,7 @@ ChooseTarget_SlimeBlow_2::
     ret
 
 ; BugBlow's other target: a random foe of family 5 (TargetRandomFoeOfFamilyD; bugs, by the skill's
-; name). (C1, E-0357)
+; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6586,7 +6648,8 @@ ChooseTarget_BugBlow_2::
     call TargetRandomFoeOfFamilyD
     ret
 
-; Shears's other target: a random foe of family 4 (TargetRandomFoeOfFamilyD). (C1, E-0357)
+; Shears's other target: a random foe of family 4 (TargetRandomFoeOfFamilyD). (C2, E-0357; probed
+; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6596,7 +6659,7 @@ ChooseTarget_Shears_2::
     call TargetRandomFoeOfFamilyD
     ret
 
-; Same choice as ChooseTarget_PoisonHit: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_PoisonHit: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6604,7 +6667,7 @@ ChooseTarget_Shears_2::
 ChooseTarget_PoisonHit_2::
     jp ChooseTarget_PoisonHit
 
-; Same choice as ChooseTarget_Paralyze: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Paralyze: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6612,7 +6675,7 @@ ChooseTarget_PoisonHit_2::
 ChooseTarget_Paralyze_2::
     jp ChooseTarget_Paralyze
 
-; Same choice as ChooseTarget_LushLicks: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_LushLicks: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target
 ; to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label
@@ -6620,7 +6683,7 @@ ChooseTarget_Paralyze_2::
 ChooseTarget_LushLicks_2::
     jp ChooseTarget_LushLicks
 
-; Same choice as ChooseTarget_Transform: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Transform: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6628,7 +6691,7 @@ ChooseTarget_LushLicks_2::
 ChooseTarget_Transform_2::
     jp ChooseTarget_Transform
 
-; Same choice as ChooseTarget_Beat: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Beat: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6636,7 +6699,7 @@ ChooseTarget_Transform_2::
 ChooseTarget_Beat_2::
     jp ChooseTarget_Beat
 
-; Same choice as ChooseTarget_Blaze: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Blaze: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF;
 ; writes the target to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read
@@ -6644,14 +6707,14 @@ ChooseTarget_Beat_2::
 ChooseTarget_Blaze_2::
     jp ChooseTarget_Blaze
 
-; Same choice as ChooseTarget_Ramming: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Ramming: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 110 Berserker, 111 Ramming; writes the
 ; target to wBattleTargetChoice (E-0086)
 ChooseTarget_Berserker::
     jp ChooseTarget_Ramming
 
-; Same choice as ChooseTarget_Sleep: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Sleep: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6659,7 +6722,7 @@ ChooseTarget_Berserker::
 ChooseTarget_Sleep_2::
     jp ChooseTarget_Sleep
 
-; Same choice as ChooseTarget_RobMagic: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_RobMagic: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6667,7 +6730,7 @@ ChooseTarget_Sleep_2::
 ChooseTarget_RobMagic_2::
     jp ChooseTarget_RobMagic
 
-; Same choice as ChooseTarget_FireSlash: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_FireSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6675,7 +6738,7 @@ ChooseTarget_RobMagic_2::
 ChooseTarget_FireSlash_2::
     jp ChooseTarget_FireSlash
 
-; Same choice as ChooseTarget_BoltSlash: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_BoltSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6683,7 +6746,7 @@ ChooseTarget_FireSlash_2::
 ChooseTarget_BoltSlash_2::
     jp ChooseTarget_BoltSlash
 
-; Same choice as ChooseTarget_VacuSlash: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_VacuSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6691,7 +6754,7 @@ ChooseTarget_BoltSlash_2::
 ChooseTarget_VacuSlash_2::
     jp ChooseTarget_VacuSlash
 
-; Same choice as ChooseTarget_IceSlash: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_IceSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6699,7 +6762,7 @@ ChooseTarget_VacuSlash_2::
 ChooseTarget_IceSlash_2::
     jp ChooseTarget_IceSlash
 
-; Same choice as ChooseTarget_WindBeast: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_WindBeast: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6708,7 +6771,8 @@ ChooseTarget_WindBeast_2::
     jp ChooseTarget_WindBeast
 
 ; GigaSlash's other target: among all present foes, the lowest GigaSlash resistance (byte 6 bits
-; 2-3, 3 not left out), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C1, E-0357)
+; 2-3, 3 not left out), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C2, E-0357;
+; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6781,7 +6845,7 @@ ChooseTarget_GigaSlash_2::
     call SetActorTargetFromHRAMChoice
     ret
 
-; Same choice as ChooseTarget_AquaCut: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_AquaCut: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6789,7 +6853,7 @@ ChooseTarget_GigaSlash_2::
 ChooseTarget_AquaCut_2::
     jp ChooseTarget_AquaCut
 
-; Same choice as ChooseTarget_Watershot: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_Watershot: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6799,7 +6863,7 @@ ChooseTarget_Watershot_2::
 
 ; PanicAll's target: a foe not asleep or paralyzed (status 0 & $CC), with no status byte 3 and no
 ; bounce or MagicBack (status 2 & $22), leaving out PanicAll resistance (byte 3 bits 6-7) 3; the
-; lowest level wins (SetActorTargetFromHRAMChoice4). (C1, E-0357)
+; lowest level wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 173 PanicAll; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -6862,7 +6926,7 @@ ChooseTarget_PanicAll::
     call SetActorTargetFromHRAMChoice4
     ret
 
-; Same choice as ChooseTarget_MegaMagic: jumps there. (C1, E-0357)
+; Same choice as ChooseTarget_MegaMagic: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6871,7 +6935,8 @@ ChooseTarget_MegaMagic_2::
     jp ChooseTarget_MegaMagic
 
 ; Antidote's third routine: a poisoned or badly poisoned ally (status 0 & 3), picked by
-; PickWeightedTargetCandidate; with none, the actor itself (TargetAllyWithStatusMask). (C1, E-0357)
+; PickWeightedTargetCandidate; with none, the actor itself (TargetAllyWithStatusMask). (C2, E-0357;
+; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6885,7 +6950,7 @@ ChooseTarget_Antidote_3::
 
 ; Upper's third routine: lists the present allies whose DEF differs from the BuffCapOfBaseDEF value
 ; in slot order and picks one (PickWeightedTargetCandidate: one sure, two 171:85, three 128:85:43);
-; with none, the actor itself. (C1, E-0357)
+; with none, the actor itself. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6938,8 +7003,8 @@ ChooseTarget_Upper_3::
     ld [hl], a
     ret
 
-; Speed's third routine: as Upper's (ChooseTarget_Upper_3) with AGL and BuffCapOfBaseAGL. (C1,
-; E-0357)
+; Speed's third routine: as Upper's (ChooseTarget_Upper_3) with AGL and BuffCapOfBaseAGL. (C2,
+; E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -7002,31 +7067,49 @@ ChooseTarget_Sap_3::
     ld de, GetBattleDEF_Bank39
     jp TargetFoeWithStatAboveOne
 
+; Per-action target routine of ChooseActionTarget: loads DE = GetBattleAGL_Bank39 and jumps to
+; TargetFoeWithStatAboveOne, so it lists the present foes whose AGL word is 2 or more and picks one
+; with PickWeightedTargetCandidate (TargetFoeWeightedBySlotOrder when none qualifies). It is listed
+; for action id 43 (SKILL_SLOW) in ActionTargetRoutines2 and ActionTargetRoutines3. Despite the name
+; it looks at the opposite side, not at allies. (C1, E-0382)
 ; per-action target routine: DE = GetBattleAGL_Bank39, then the shared stat comparison at $6C30
 ; (E-0219)
-TargetByAllyAGL::
+TargetFoeWithAGLAboveOne::
     ld de, GetBattleAGL_Bank39
     jp TargetFoeWithStatAboveOne
 
+; Not called and not listed in any table in src/. It sets A = wBattleActor & 4 (the first slot of
+; the side of the actor), HL = wBattleStatus and D = $10 (BSTAT0_CONFUSED) and jumps to
+; TargetAllyWithStatusMask, which picks one present slot of that side whose first status byte has
+; the bit and stores it in wBattleTargetChoice[2 * wBattleActor], or the actor itself when no slot
+; has it. (C2, E-0382)
 ; per-action target routine: scans the actor's side for wBattleStatus (+9 * slot) bit mask $10
 ; (shared code at $6BE3) (E-0219)
-TargetAllyWithStatusBit10::
+TargetAllyConfused::
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleStatus
     ld d, $10
     jp TargetAllyWithStatusMask
 
-; as TargetAllyWithStatusBit10 with mask $40 (E-0219)
-TargetAllyWithStatusBit40::
+; Not called and not listed in any table in src/. As TargetAllyConfused with D = $40
+; (BSTAT0_PARALYZED): it sets A = wBattleActor & 4, HL = wBattleStatus and jumps to
+; TargetAllyWithStatusMask, which picks one present slot of the side of the actor whose first status
+; byte has that bit, or the actor itself when none has it. (C2, E-0382)
+; as TargetAllyConfused with mask $40 (E-0219)
+TargetAllyParalyzed::
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleStatus
     ld d, $40
     jp TargetAllyWithStatusMask
 
-; as TargetAllyWithStatusBit10 with mask $20 (E-0219)
-TargetAllyWithStatusBit20::
+; Not called and not listed in any table in src/. As TargetAllyConfused with D = $20
+; (BSTAT0_CURSED): it sets A = wBattleActor & 4, HL = wBattleStatus and jumps to
+; TargetAllyWithStatusMask, which picks one present slot of the side of the actor whose first status
+; byte has that bit, or the actor itself when none has it. (C2, E-0382)
+; as TargetAllyConfused with mask $20 (E-0219)
+TargetAllyCursed::
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleStatus
@@ -7034,8 +7117,8 @@ TargetAllyWithStatusBit20::
     jp TargetAllyWithStatusMask
 
 ; Lists the present slots of the side from A whose status byte (HL, 9 bytes per slot) has a bit of
-; mask D, and picks one (PickWeightedTargetCandidate); with none the actor targets itself. (C1,
-; E-0357)
+; mask D, and picks one (PickWeightedTargetCandidate); with none the actor targets itself. (C2,
+; E-0357; probed E-0382)
 TargetAllyWithStatusMask::
     ld c, a
     ld b, $03
@@ -7129,12 +7212,12 @@ TargetFoeWithStatAboveOne::
 
 ; Heal (fifth): the present ally with the largest max HP / HP (quotient, then remainder), so the
 ; smallest share of its HP left, ties going to the later one on a coin flip; with no ally present it
-; stores $FF. (C1, E-0357)
+; stores $FF. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
 ; target to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the
-; label there; was ChooseTarget_Heal_5)
-ChooseTarget_Heal_5::
+; label there; was ChooseTarget_Heal_SmallestHPShare)
+ChooseTarget_Heal_SmallestHPShare::
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -7212,7 +7295,7 @@ ChooseTarget_Heal_5::
 
 ; MPass' target: the ally other than the actor with the largest max MP / MP (quotient, then
 ; remainder), so the smallest share of MP left, ties going to the later one on a coin flip; with
-; none, the actor itself. (C1, E-0357)
+; none, the actor itself. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 27 MPass, 28 MPassmore, 29 MPassmost; writes
 ; the target to wBattleTargetChoice (E-0086)
@@ -7300,6 +7383,10 @@ ChooseTarget_MPass::
     ld [hl], a
     ret
 
+; A = battle slot: HL = wBattleStatus4 + 9 * A (status byte 4 of that slot) and A = that byte & $0C,
+; the bits BSTAT4_HIGH_JUMP and BSTAT4_HIGH_JUMP_HI; Z set when both are clear.
+; ChooseTarget_SquallHit, ChooseTarget_SquallHit_2 and ChooseTarget_GigaSlash use it to find out
+; whether some present foe is free of those bits. (C2, E-0382)
 ; A = slot: A = its status byte 4 (wBattleStatus4) & $0C; Z set when both bits are clear (E-0116)
 SlotStatus4Bits23::
     ld hl, wBattleStatus4
@@ -7308,6 +7395,12 @@ SlotStatus4Bits23::
     and $0c
     ret
 
+; Sets wBattleTempBuf + 2 and hTemp1 to 0, then for the three slots from wBattleTarget calls
+; StoreSlotHPPlusDEFToTargetEstimates (HP + DEF in wTargetEstimates, $FFFF for an empty slot, DEF
+; not halved because hTemp1 is 0) and falls into PickWeakestEstimatedTarget, which adds the index of
+; the smallest estimate to wBattleTarget. ChooseTarget_SquallHit, ChooseTarget_SquallHit_2 and
+; ChooseTarget_GigaSlash call it when every present foe has bits 2-3 of status byte 4 set
+; (BSTAT4_HIGH_JUMP, BSTAT4_HIGH_JUMP_HI). (C2, E-0382)
 ; wBattleTempBuf + $2 = 0, hTemp1 = 0, stores HP + DEF of three slots from the target in
 ; wTargetEstimates and falls into PickWeakestEstimatedTarget (E-0126)
 EstimateAndPickWeakestTarget::
@@ -7325,6 +7418,11 @@ EstimateAndPickWeakestTarget::
     dec b
     jr nz, .loop
 
+; Looks at the three words of wTargetEstimates (index 0 first) and adds the index 0-2 of the
+; smallest to wBattleTarget, which holds the first slot of the three on entry; hTemp0 ends as that
+; index. A tie is decided by AdvanceRandom: the later word replaces the earlier when bit 1 of
+; wRandomLo is clear. Called by EstimateAndPickWeakestTarget, EstimateThreeTargets and the SquallHit
+; target routines. (C2, E-0382)
 ; picks the smallest of the three wTargetEstimates estimates (ties broken randomly) and adds its
 ; index to wBattleTarget (E-0125)
 PickWeakestEstimatedTarget::
@@ -7369,6 +7467,11 @@ PickWeakestEstimatedTarget::
     ld [hl], a
     ret
 
+; C = battle slot: stores HP + DEF of the slot (GetBattleHP_Bank39, GetBattleDEF_Bank39) as the word
+; wTargetEstimates[C & 3]. When hTemp1 is not 0 and bit 2 of status byte 6 of the slot
+; (BSTAT6_BERSERK) is set, the DEF is halved first; an empty slot (CarryUnlessBattleSlotOutSlotEmpty
+; carry set) stores $FFFF instead. hTemp1 is 0 from EstimateAndPickWeakestTarget and 1 from
+; EstimateThreeTargets. (C2, E-0382)
 ; slot C: stores HP + DEF (DEF halved when hTemp1 is set and bit 2 of its wBattleStatus6 byte is
 ; set) in wTargetEstimates[C & 3], or $FFFF when empty (E-0124)
 StoreSlotHPPlusDEFToTargetEstimates::
@@ -7398,10 +7501,16 @@ StoreSlotHPPlusDEFToTargetEstimates::
     add hl, de
     jr StoreHLToTargetEstimatesSlotC
 
+; C = battle slot: stores $FFFF as the word wTargetEstimates[C & 3] by loading HL = $FFFF and
+; falling into StoreHLToTargetEstimatesSlotC; the largest possible estimate, so the slot is not
+; picked as the weakest. (C2, E-0382)
 ; HL = $FFFF, then falls into StoreHLToTargetEstimatesSlotC (E-0122)
 StoreFFFFToTargetEstimatesSlotC::
     ld hl, -1
 
+; C = battle slot, HL = value: stores HL as the word at wTargetEstimates + 2 * (C & 3), low byte
+; first. Slots 4-6 land on words 0-2 and slot 3 or 7 on word 3. Called by the SquallHit target
+; routines and the two routines above. (C2, E-0382)
 ; stores HL in the word wTargetEstimates[C & 3] (E-0122)
 StoreHLToTargetEstimatesSlotC::
     ld a, c
@@ -7421,6 +7530,11 @@ StoreHLToTargetEstimatesSlotC::
     ld [de], a
     ret
 
+; A = battle slot: NZ when the slot has any of these status bits, with A = the masked byte of the
+; first one found: byte 0 & $40 (BSTAT0_PARALYZED), byte 3 & $C0 (BSTAT3_AIRBORNE,
+; BSTAT3_AIRBORNE_HI), byte 4 & $0C (the HighJump bits), byte 6 & $20 (BSTAT6_DODGE), byte 7 & $07
+; (BSTAT7_GUARD, BSTAT7_DAMAGE_X10, BSTAT7_COUNTER); Z with A = 0 when none is set. The SquallHit
+; and GigaSlash target routines treat these as a blocking status of a foe. (C2, E-0382)
 ; A = slot: NZ when its status byte 0 & $40, byte 3 & $C0, byte 4 & $0C, byte 6 & $20 or byte 7 &
 ; $07 is set (A = that masked value), Z when none is (E-0096)
 AnySlotStatusMaskSet::
@@ -7447,6 +7561,13 @@ AnySlotStatusMaskSet::
 .return:
     ret
 
+; Leaves the damage estimate of wBattleActionId in wBattleDamageLo and wBattleDamageHi, keeping BC.
+; ACTION_FIGHT and every id from SKILL_WINDBEAST up, except SKILL_MULTICUT, SKILL_EVILSLASH and
+; SKILL_MASSACRE, farcall RunEffectHandlerForActionId (the handler of the action in
+; EffectHandlerTable); ids below SKILL_WINDBEAST and SKILL_MULTICUT farcall
+; ComputeDamageEstimateForAction_FromSkillRecord, which copies a word of the 17-byte skill record;
+; SKILL_EVILSLASH and SKILL_MASSACRE use the ATK of the actor (GetBattleATK_Bank39). Called by
+; ChooseTarget_SquallHit and ChooseTarget_SquallHit_2. (C1, E-0382)
 ; fills the damage for wBattleActionId: the effect handler for 0 or ids from $48 (except $66),
 ; ComputeDamageEstimateForAction_FromSkillRecord for low ids and $66, or the actor's ATK for $6B and
 ; $6C (E-0124)
@@ -7485,9 +7606,15 @@ ComputeDamageEstimateForAction::
     pop bc
     ret
 
+; C = battle slot: when bit 0 of wSlotBodyFlags[C] is set (the metal bit, by the note of
+; wSlotBodyFlags), the word wBattleDamageLo and wBattleDamageHi is multiplied by 50 with
+; Multiply8By16 and only the low 16 bits are kept. BC and DE are kept, but A ends as the low byte of
+; the address of the flag byte and HL as that address, whether or not it multiplies. The SquallHit
+; target routines call it with the word holding the HP the foe would have left after the estimated
+; damage ($FFFF for a foe that is out or blocked). (C2, E-0382)
 ; if bit 0 of wSlotBodyFlags[C] is set, the damage word (wBattleDamageLo, wBattleDamageHi) = damage
 ; * 50 (Multiply8By16); registers preserved (E-0121)
-MultiplyDamageBy50IfSlotDamageFlagsBit0::
+MultiplyDamageBy50IfSlotBodyFlagsBit0::
     ld a, c
     ld hl, wSlotBodyFlags
     add_a_to_hl
@@ -7513,6 +7640,12 @@ MultiplyDamageBy50IfSlotDamageFlagsBit0::
     pop af
     ret
 
+; Sets hTemp1 = 1 and, for the three slots from wBattleTarget, stores $FFFF in wTargetEstimates when
+; status byte 3 & $C0 or status byte 4 & $0C of the slot is set, otherwise HP + DEF through
+; StoreSlotHPPlusDEFToTargetEstimates (DEF halved for BSTAT6_BERSERK, $FFFF for an empty slot). It
+; ends with PickWeakestEstimatedTarget, so wBattleTarget becomes the slot with the smallest
+; estimate. Used by ChooseTarget_SquallHit, ChooseTarget_SquallHit_2 and ChooseTarget_GigaSlash when
+; every foe has a blocking status. (C2, E-0382)
 ; hTemp1 = 1; for three slots from the target stores HP + DEF in wTargetEstimates, or $FFFF for
 ; slots with wBattleStatus3 status bits $C0 or $0C; then PickWeakestEstimatedTarget (E-0124)
 EstimateThreeTargets::
@@ -7547,7 +7680,7 @@ EstimateThreeTargets::
 
 ; Heal target: the ally with the highest max HP / HP (a larger remainder breaks a tie, the earlier
 ; slot otherwise), on the actor's side; stores it as wBattleTarget and the actor's target choice.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0382)
 ChooseTarget_Heal_MostHurt::
     ld a, $00
     ldh [hTemp0], a
@@ -7612,6 +7745,12 @@ ChooseTarget_Heal_MostHurt::
     ld [hl], a
     ret
 
+; C = battle slot: HL = the base DEF of the slot (GetBaseDEF) scaled like this. A base of 999 or
+; more comes back as it is; otherwise it is doubled and the result is 999 if the double reaches 999;
+; otherwise, when wLinkMode is 1 or wBattleActor is below 4, it is doubled again and the result is
+; 999 if that reaches 999, else the value x 4; when wBattleActor is 4 or more outside link mode 1
+; the doubled value is the result. ChooseTarget_Upper and ChooseTarget_Upper_3 compare it with the
+; current DEF of each ally. (C2, E-0382)
 ; HL = 999 when the base DEF doubled (quadrupled for allies or link battles) reaches 999, otherwise
 ; the base DEF times that factor (E-0124)
 BuffCapOfBaseDEF::
@@ -7644,6 +7783,10 @@ BuffCapOfBaseDEF::
 .return:
     ret
 
+; C = battle slot: as BuffCapOfBaseDEF but for the base AGL (GetBaseAGL): a base of 999 or more
+; comes back unchanged; otherwise x 2, with 999 when the double reaches 999, and for wLinkMode 1 or
+; wBattleActor below 4 x 4 (999 when that reaches 999). ChooseTarget_Speed and ChooseTarget_Speed_3
+; compare it with the current AGL of each ally. (C2, E-0382)
 ; HL = 999 when the base AGL doubled (quadrupled for allies or link battles) reaches 999, otherwise
 ; the base AGL times that factor (E-0124)
 BuffCapOfBaseAGL::
@@ -7676,7 +7819,10 @@ BuffCapOfBaseAGL::
 .return:
     ret
 
-; counts the slot's skills in $40-$47, $70-$75 or $89 (C1: the skills MouthShut blocks) (E-0305)
+; A = battle slot: counts how many of the eight skills of that slot (16 bytes at wBattleSkills + 16
+; * A, the skill id in every second byte) have an id in $40-$47, $70-$75 or $89. Returns A = the
+; count with Z when it is 0; BC is kept, HL is not. Called by ChooseTarget_MouthShut. (C2, E-0382)
+; counts the slot's skills in $40-$47, $70-$75 or $89 (C1: the skills MouthShut blocks)
 ChooseTarget_MouthShut_CountMouthSkills::
     push bc
     ld hl, wBattleSkills
@@ -7710,6 +7856,10 @@ ChooseTarget_MouthShut_CountMouthSkills::
     pop bc
     ret
 
+; Stores hTemp0, or hTemp3 when hTemp0 is $FF, OR hTempA into wBattleTargetChoice[2 * wBattleActor].
+; TargetWeakestFoeOfFamilyD and TargetRandomFoeOfFamilyD leave the chosen slot in hTemp0 ($FF for
+; none), the last present foe in hTemp3 and the first slot of the foe side (0 or 4) in hTempA;
+; ChooseTarget_MetalCut, ChooseTarget_Ramming and ChooseTarget_Transform also call it. (C2, E-0382)
 ; wBattleTargetChoice[2 * actor] = (hTemp0, or hTemp3 when hTemp0 is $FF) | hTempA (the two-choice
 ; form of SetActorTargetFromHRAMChoice) (E-0078)
 SetActorTargetFromTemp0OrTemp3::
@@ -7729,6 +7879,10 @@ SetActorTargetFromTemp0OrTemp3::
     ld [hl], a
     ret
 
+; Stores the first of hTemp0, hTemp3 and hTemp2 that is not $FF (hTemp2 when both others are $FF),
+; OR hTempA, into wBattleTargetChoice[2 * wBattleActor]. Shared last step of many per-action target
+; routines (ChooseTarget_AquaCut, ChooseTarget_BoltSlash, ChooseTarget_FireSlash,
+; ChooseTarget_GigaSlash and others). (C2, E-0382)
 ; HL = wBattleTargetChoice + 2 * wBattleActor; A = hTemp0, or hTemp3 when hTemp0 is $FF, or hTemp2
 ; when both are $FF; stores A | hTempA at HL. What the bytes mean is not known (E-0060)
 SetActorTargetFromHRAMChoice::
@@ -7751,6 +7905,10 @@ SetActorTargetFromHRAMChoice::
     ld [hl], a
     ret
 
+; Stores the first of hTemp0, hTemp4 and hTemp3 that is not $FF (hTemp2 when all three are $FF), OR
+; hTempA, into wBattleTargetChoice[2 * wBattleActor]. The four-choice form of
+; SetActorTargetFromHRAMChoice, called by ChooseTarget_LegSweep, ChooseTarget_MouthShut,
+; ChooseTarget_PanicAll, ChooseTarget_SickLick and ChooseTarget_Sleep. (C2, E-0382)
 ; wBattleTargetChoice[2 * actor] = (the first of hTemp0, hTemp4, hTemp3 that is not $FF, else
 ; hTemp2) | hTempA (the four-choice form of SetActorTargetFromHRAMChoice) (E-0096)
 SetActorTargetFromHRAMChoice4::
@@ -7776,8 +7934,8 @@ SetActorTargetFromHRAMChoice4::
     ld [hl], a
     ret
 
-; Cover's target choice: wBattleTargetChoice[actor] = hTempA OR the first of hTemp0, hTemp5 and
-; hTemp4 that is not $FF, else hTemp3. (C1, E-0357)
+; Cover target choice: stores hTempA OR the first of hTemp0, hTemp5 and hTemp4 that is not $FF, else
+; hTemp3, into wBattleTargetChoice[2 * wBattleActor]. Called by ChooseTarget_Cover. (C2, E-0382)
 ChooseTarget_Cover_StoreChoice::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -7801,6 +7959,12 @@ ChooseTarget_Cover_StoreChoice::
     ld [hl], a
     ret
 
+; hTemp0 = the number of candidates and hTemp1-hTemp3 = the candidate slots in priority order;
+; stores the pick in wBattleTargetChoice[2 * wBattleActor] using wRandomLo as it is (it does not
+; advance the random state). Two candidates: the first when wRandomLo is below $AB (171 of 256),
+; else the second. Three: the first below $80, the second below $D5, else the third (128, 85 and 43
+; of 256). Any other count (1, or 0) stores hTemp1, which TargetAllyWithStatusMask and
+; TargetFoeWithStatAboveOne set to $FF before listing. (C2, E-0382)
 ; hTemp0 = candidate count, hTemp1-hTemp3 = candidates in priority order: target = the first for
 ; one; with two the first when wRandomLo < $AB (171/256), else the second; with three the first when
 ; wRandomLo < $80, the second when < $D5, else the third (128, 85 and 43 of 256). Writes
@@ -7847,6 +8011,12 @@ PickWeightedTargetCandidate::
     ld [hl], b
     ret
 
+; D = species family: among the present foes (the three slots of the side opposite the actor, hTempA
+; = their first slot) whose family from LoadSpeciesFamily equals D, picks the one with the smallest
+; HP + DEF; an equal sum keeps the earlier slot. hTemp0 = the pick ($FF for none), hTemp1-hTemp2 =
+; its HP + DEF, hTemp3 = the last present foe. SetActorTargetFromTemp0OrTemp3 then stores the pick,
+; or the last present foe when no family matches. Called by the family-slaying skills such as
+; ChooseTarget_BeastCut, ChooseTarget_BirdBlow and ChooseTarget_BugBlow. (C2, E-0382)
 ; D = family: among the actor's present opposite slots whose species family (LoadSpeciesFamily) is
 ; D, targets the one with the smallest HP + DEF; when none matches, the last present foe (hTemp3) is
 ; used (SetActorTargetFromTemp0OrTemp3). Used by the family-slaying moves' target routines (E-0096)
@@ -7913,9 +8083,11 @@ TargetWeakestFoeOfFamilyD::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
-; D = family: one of the present foes whose species family (LoadSpeciesFamily) is D, each later one
-; replacing the first on a coin flip; with none, the last present foe
-; (SetActorTargetFromTemp0OrTemp3). (C1, E-0357)
+; D = species family: goes through the present foes (the three slots opposite the actor) and keeps
+; the first whose family from LoadSpeciesFamily is D; every later match replaces the current pick
+; when bit 0 of wRandomLo is set after AdvanceRandom. With no match the last present foe is used
+; (SetActorTargetFromTemp0OrTemp3 stores hTemp0, or hTemp3 when that is $FF). Called by the second
+; target routines of the family-slaying skills such as ChooseTarget_BeastCut_2. (C2, E-0382)
 TargetRandomFoeOfFamilyD::
     ld a, [wBattleActor]
     and $04
@@ -7970,7 +8142,7 @@ TargetRandomFoeOfFamilyD::
 ; A = resistance level: HL = the damage estimate hTemp8:hTemp9 for level 0, half of it (signed
 ; shift) for 2 and 0 for 3. For level 1 it runs Multiply8By16 and Divide24ByA by $55 / $64 without
 ; loading BC from HL, so the result is 85% of the caller's BC (the loop pair: B = slots left, C =
-; slot), not of the estimate. (C1, E-0371)
+; slot), not of the estimate. (C2, E-0371; probed E-0382)
 ChooseTarget_Blaze_ScaleEstimate::
     push af
     ldh a, [hTemp8]
@@ -8007,7 +8179,7 @@ ChooseTarget_Blaze_ScaleEstimate::
 ; A = resistance level. Loads HL = the actor's MP + 2 x its level, but then runs Multiply8By16 with
 ; A = $5A, which multiplies BC (the caller's loop pair: B = slots left, C = slot) and discards HL,
 ; so HL = BC x 90 / 100. Level 0 returns that, 2 halves it, 3 gives 0; level 1 multiplies the BC
-; left by the first product (B = $64 after Divide24ByA) by $55 / $64. (C1, E-0371)
+; left by the first product (B = $64 after Divide24ByA) by $55 / $64. (C2, E-0371; probed E-0382)
 ChooseTarget_MegaMagic_EstimateDamage::
     push af
     ld a, [wBattleActor]
@@ -8051,8 +8223,12 @@ ChooseTarget_MegaMagic_EstimateDamage::
 .return:
     ret
 
+; A = [HL + 4 * A + 3 * C]: the offset is added up in 8 bits (it wraps above $FF) and added to HL,
+; which ends pointing at the byte. With A = C = a slot it is HL + 7 * slot, which is how
+; ChooseTarget_Blaze, ChooseTarget_GigaSlash and others step through 7-byte per-slot records. A copy
+; of this routine exists in bank $05. (C2, E-0382)
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in
-; 2 banks) (E-0353)
+; 2 banks)
 ReadByteAtHLPlus4APlus3C_Bank39::
     add a
     add c
@@ -8062,6 +8238,10 @@ ReadByteAtHLPlus4APlus3C_Bank39::
     ld a, [hl]
     ret
 
+; C = battle slot: NZ at once when bit 3 of status byte 2 of the slot (BSTAT2_AQUA_WALL) is set;
+; otherwise A = status byte 5 & $C0 (BSTAT5_IRONIZED, BSTAT5_IRONIZE_TURNS_HI), NZ when either is
+; set and Z when both are clear. ChooseTarget_GigaSlash and ChooseTarget_SquallHit_2 use it to leave
+; out foes under AquaWall or Ironize. (C2, E-0382)
 ; C = slot: NZ when its status byte 2 bit 3 is set; otherwise A = status byte 5 & $C0 (Z when clear)
 ; (E-0118)
 TestSlotStatus2Bit3OrStatus5Bits67::
@@ -8077,63 +8257,93 @@ TestSlotStatus2Bit3OrStatus5Bits67::
     and $c0
     ret
 
+; A = battle slot: loads HL = wBattleATK and jumps to ReadSlotWord_Bank39, so HL = the word of that
+; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_TwinHits and
+; ComputeDamageEstimateForAction. (C2, E-0382)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$39 copy of
 ; GetBattleATK) (E-0060)
 GetBattleATK_Bank39::
     ld hl, wBattleATK
     jr ReadSlotWord_Bank39
 
+; A = battle slot: loads HL = wBattleDEF and jumps to ReadSlotWord_Bank39, so HL = the word of that
+; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_AquaCut,
+; ChooseTarget_BoltSlash and the other slash targets. (C2, E-0382)
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)
 GetBattleDEF_Bank39::
     ld hl, wBattleDEF
     jr ReadSlotWord_Bank39
 
+; A = battle slot: loads HL = wBattleMaxHP and jumps to ReadSlotWord_Bank39, so HL = the word of
+; that slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_Cover
+; and the Heal target routines. (C2, E-0382)
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0060)
 GetBattleMaxHP_Bank39::
     ld hl, wBattleMaxHP
     jr ReadSlotWord_Bank39
 
+; A = battle slot: loads HL = wBattleMaxMP and jumps to ReadSlotWord_Bank39, so HL = the word of
+; that slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_MPass
+; and ChooseTarget_Transform. (C2, E-0382)
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0060)
 GetBattleMaxMP_Bank39::
     ld hl, wBattleMaxMP
     jr ReadSlotWord_Bank39
 
+; A = battle slot: loads HL = wBattleHP and jumps to ReadSlotWord_Bank39, so HL = the word of that
+; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_AquaCut,
+; ChooseTarget_Beat, ChooseTarget_Blaze and many other target routines. (C2, E-0382)
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0060)
 GetBattleHP_Bank39::
     ld hl, wBattleHP
     jr ReadSlotWord_Bank39
 
+; A = battle slot: loads HL = wBattleMP and jumps to ReadSlotWord_Bank39, so HL = the word of that
+; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_MPass,
+; ChooseTarget_MegaMagic_EstimateDamage, ChooseTarget_OddDance and ChooseTarget_RobMagic. (C2,
+; E-0382)
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)
 GetBattleMP_Bank39::
     ld hl, wBattleMP
     jr ReadSlotWord_Bank39
 
+; A = battle slot: loads HL = wBattleAGL and jumps to ReadSlotWord_Bank39, so HL = the word of that
+; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_Slow,
+; ChooseTarget_Speed and ChooseTarget_UltraDown. (C2, E-0382)
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0060)
 GetBattleAGL_Bank39::
     ld hl, wBattleAGL
     jr ReadSlotWord_Bank39
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
+; A = index: A = wSlotAIMode[A] and HL = the address of that byte. Nothing in src/ calls this bank
+; 39 copy; copies exist in banks $05, $31 and $32. (C2, E-0382)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ReadSlotAIModeIndexed_Bank39::
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     ret
 
-; HL = the word at HL + 2 x A. (C1, E-0357)
+; HL = the word at HL + 2 x A. (C2, E-0357; probed E-0382)
 ReadSlotWord_Bank39::
     add a
     add_a_to_hl
     deref_hl
     ret
 
+; HL += 2 * A, with A doubled in 8 bits first (so an A of $80 or more wraps); A ends as the low byte
+; of the new HL. Nothing in src/ calls this bank 39 copy; per-bank copies exist in 12 banks. (C2,
+; E-0382)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0353)
+; appear in 12 banks)
 AddDoubleAToHL_Bank39::
     add a
     add_a_to_hl
     ret
 
+; Carry set when wBattleActor is below 4; when wLinkMode is 1 and bit 1 of wLinkRole is set the test
+; is reversed (carry set when wBattleActor is 4 or more). A = wBattleActor on return. Nothing in
+; src/ calls this bank 39 copy. (C2, E-0382)
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
@@ -8154,6 +8364,9 @@ ActorOnLocalSide_Bank39::
     cp $04
     ret
 
+; Carry set when wBattleTarget is below 4; when wLinkMode is 1 and bit 1 of wLinkRole is set the
+; test is reversed (carry set when wBattleTarget is 4 or more). A = wBattleTarget on return. Nothing
+; in src/ calls this bank 39 copy. (C2, E-0382)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
@@ -8175,7 +8388,7 @@ TargetOnLocalSide_Bank39::
     ret
 
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank39_Data); a copy of
-; the bank $05 routine. (C1, E-0357)
+; the bank $05 routine. (C2, E-0357; probed E-0382)
 ClearBattleStatusBitsWithMaskD_Bank39::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank39_Data
@@ -8198,8 +8411,10 @@ ClearBattleStatusBitsWithMaskD_Bank39::
 ClearBattleStatusBitsWithMaskD_Bank39_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
+; Sets bit 0 of the byte wLevelUpGains[A]. HL is kept and A is clobbered. Nothing in src/ calls this
+; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit0OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains
@@ -8208,8 +8423,10 @@ SetBit0OfLevelUpGainsIndexed_Bank39::
     pop hl
     ret
 
+; Sets bit 1 of the byte wLevelUpGains[A]. HL is kept and A is clobbered. Nothing in src/ calls this
+; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit1OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains
@@ -8218,8 +8435,10 @@ SetBit1OfLevelUpGainsIndexed_Bank39::
     pop hl
     ret
 
+; Sets bit 2 of the byte wLevelUpGains[A]. HL is kept and A is clobbered. Nothing in src/ calls this
+; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit2OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains
@@ -8228,6 +8447,9 @@ SetBit2OfLevelUpGainsIndexed_Bank39::
     pop hl
     ret
 
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]), where g(v) is 0 for v of $C0 or more, 1 for $40 or more and 2 below $40,
+; so A is 0-26. HL and BC are kept. Nothing in src/ calls this bank 39 copy. (C2, E-0382)
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
@@ -8287,6 +8509,10 @@ PersonalityIndexOfSlot_Bank39::
     pop hl
     ret
 
+; A = battle slot: carry set when CheckSlotStatusBlock sets it (the slot is out, or status byte 0 &
+; $D0, byte 3 & $3F, byte 5 & $C0 or byte 8 bit 3 is set), or else when status byte 3 & $C0 or
+; status byte 4 & $0C of the slot is set; otherwise carry clear. A, BC and HL are kept. Nothing in
+; src/ calls this bank 39 copy. (C2, E-0382)
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
@@ -8316,6 +8542,8 @@ CheckSlotStatusBlockWide_Bank39::
     pop hl
     ret
 
+; A = battle slot: A = status byte 3 & $C0 of the slot when that is not 0, otherwise status byte 4 &
+; $0C; Z set when both are clear. HL is kept. Nothing in src/ calls this bank 39 copy. (C2, E-0382)
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)

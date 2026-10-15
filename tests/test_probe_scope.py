@@ -19,6 +19,7 @@ Func_005_4001:: ; address name
 UsesBankRegs::
     ld a, $0a
     ld [rRAMG], a
+    ld [rRAMG2], a
     ldh [rSVBK], a
     call Pure
     ret

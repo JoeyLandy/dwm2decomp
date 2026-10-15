@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LABEL = re.compile(r"^([A-Za-z_]\w*)::")
-BANK_REGS = {"rSVBK", "rRAMG", "rRAMB", "rROMB0", "rROMB1"}
+BANK_REGS = {"rSVBK", "rRAMG", "rRAMG2", "rRAMB", "rROMB0", "rROMB1"}  # rRAMG2 ($1FFF): the RAM enable too (E-0382)
 CALL = re.compile(r"^\s+(?:call|jp|jr|farcall|farcall_b|farjp)(?: (?:n?z|n?c),)? ([A-Za-z_][\w]*)\s*$")
 DW = re.compile(r"^\s+dw ([A-Za-z_]\w*)")
 

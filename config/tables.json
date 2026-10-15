@@ -13623,7 +13623,7 @@
           "name": "species for this link code"
         }
       ],
-      "note": "E-0217 (C1: FamilyNibbleOrSpeciesFamily reads the word at $5FC7 + 2 * code to look up a species' family while UnpackLinkRecordToWorkBuf unpacks a record; for all 215 codes, SpeciesToLinkCodeTable[species] gives the code back (C2 for the pairing))."
+      "note": "E-0217 (C1: FamilyNibbleOrSpeciesFamily reads the word at $5FC7 + 2 * code to look up a species' family while PackRecordBufAToLinkWorkBuf unpacks a record; for all 215 codes, SpeciesToLinkCodeTable[species] gives the code back (C2 for the pairing))."
     },
     {
       "bank": "37",

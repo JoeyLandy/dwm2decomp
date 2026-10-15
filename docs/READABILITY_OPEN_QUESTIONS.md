@@ -1397,3 +1397,90 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `DrawTileBAtTwoChoiceEntry_BankF1_Data` (F1:58F4): wTwoChoiceCursor is not bounded by the reader.
 - `BreedRecordPanelTileRect` (F1:5A36): What the glyph tiles of rows 1 and 3 spell is not decided by the reader.
 - `GameMode8_Update_SetUpScene_Data4` (F2:42F2): The second six bytes have no reader found; they may be a record for a monster sprite load that is never issued.
+
+## E-0382
+
+- `RollVsBeatResistance` (36:5B19): Why an ally actor in wBattleKind 2 or 3 can never get Beat, Sacrifice or PalsyAir through is not known; the meaning of those battle kinds is open.
+- `RollVsSleepResistance` (36:5F01): Why the Sleep roll also rolls the skill damage into wBattleDamageLo/wBattleDamageHi is not known; the damage is not used by the rest of the routine.
+- `RollChanceByLevelAndSide` (36:62B1): Why targets in slots 0-3 get the lower chances is not known.
+- `ActionEffect_ActionD0` (36:6906): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD1` (36:6912): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD2` (36:691E): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD3` (36:692A): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD4` (36:6936): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD5` (36:6942): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD6` (36:694E): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD7` (36:6957): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD8` (36:6963): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD9` (36:696F): E is read as a slot number by ActionEffect_ActionD9_Damage but is not loaded by this routine or by DispatchActionEffectTable: which value reaches it in a real battle is not read.
+- `ActionEffect_ActionD9` (36:696F): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDA` (36:697B): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDB` (36:69ED): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDC` (36:6A69): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDD` (36:6A82): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDE` (36:6ACA): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDF` (36:6AE7): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE0` (36:6AF0): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE1` (36:6B0F): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE2` (36:6B18): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE3` (36:6B42): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_Kamikaze` (36:73BD): ActionEffect_Kamikaze_Damage reads a word through the HP value of the actor (a second dereference after GetBattleHP); whether that is intended is not settled here.
+- `ActionEffect_LifeSong` (36:794F): Where BSTAT5_SONG_FORCED is set and how BSTAT5_LIFE_SONG ends the song is done by other code and was not read for this note.
+- `ActionEffect_ActionB9` (36:7AEE): which battle action id $B9 (185) stands for is not known
+- `RemoveCFromActionQueue` (36:7DA6): the ram.asm note for wActionQueue says 8-byte queue; this routine and RunBattleCommandEntry_ListSpeeds treat nine bytes as the queue
+- `RunEffectHandlerForActionId` (36:7DC9): table entry 0 is reached only by action 0, because ComputeDamageEstimateForAction sends id $47 to the skill record path
+- `PersonalityIndexOfSlot_Bank36` (36:7EE5): what the 27 values select (a personality) is documented only through PersonalityIndexOfRecord
+- `BeginStringDisplay_Bank37` (37:4001): whether the 14 unlabelled bytes after the ret are ever jumped to by address
+- `LinkBreed_CopyBlockAndAdvance` (37:4DC7): rename proposed: name has the offset digits $0278 and a callee name; purpose of the block is not known
+- `LinkBreed_StoreChildRecord` (37:5172): a follower never reaches the copy in this routine; where the follower stores its side of the result is not known
+- `LinkBreed_StoreChildRecord` (37:5172): rename proposed: the record it stores is wChildRecord, the child built by ComputeBreedingChild, not a received record
+- `PartnerStats_DrawHeadingName` (37:542C): rename proposed: name has the digit run 1500 (vTiles1 + $500); its only caller is PartnerStats_ShowHeading
+- `DrawRecordBufBSpeciesSpritePart` (37:5870): no caller is named in src; whether it is reached by address is not known
+- `PartnerStats_UploadSummaryTiles` (37:5895): rename proposed: name ends in a _2 numbering; its only caller PartnerStats_SkillsKeys loads it just before DrawSummaryFrames
+- `LinkBreed_ClearChoiceBox` (37:5976): whether offset $0083 holds a saved copy of the area under the box is inferred from the copy direction only
+- `LinkBreed_ClearChoiceBox` (37:5976): rename proposed: name has the offset digits $024F; the target offset is where LinkBreed_DrawChoiceBox draws the 9 x 7 box and both callers are in LinkBreed_ReadChoice
+- `PackRecordBufAToLinkWorkBuf` (37:5BC6): what the EXP replacement by the bank $81 table is for is not known
+- `PackRecordBufAToLinkWorkBuf` (37:5BC6): rename proposed: it converts the own record in wRecordBufA into the exchange buffer, the reverse of the name
+- `UnpackLinkRecordToRecordBufB` (37:5C4E): the cases in which CheckBreedingRecipes sets bit 4 of MON_FAMILY were not exercised by the probes
+- `WriteBlankName10_Bank37` (37:5CF1): The two blanked groups are taken to be the parent names because the byte tested is the first parent code; the record layout of the received data is not documented.
+- `ConvertLinkNameGlyphToGameGlyph` (37:5D0F): Which game or format sits at the other end of the link is not established; only the code mapping is.
+- `ConvertNameBytesToLinkFormat` (37:5D5E): The old name and comment say the conversion goes from the link format to the game; the call path (the record copied from the save into wRecordBufA, then packed into wWorkBuf and sent) shows the opposite direction.
+- `AppendSpeciesToLinkCodeByteForWordAtDE` (37:5DA9): Species ids above 383 read past the table.
+- `FamilyNibbleOrSpeciesFamily` (37:5DBC): Why a nibble of 9 asks the species for its family is not read; the nibble is the family field MON_FAMILY of the record.
+- `MapAndCompactSkillListLinkSkillMapTable_A` (37:5DEB): The 8 + 25 split is by position; which record fields the two lists are is not read.
+- `ScaleStatWordsToLinkFormat` (37:5E3E): Which three record fields these are (they follow the skill bytes) is not read.
+- `Copy26BytesThenLastSpeciesResistance` (37:5FAD): Why the last resistance is not taken from the received data is not read.
+- `ChooseActionTarget` (39:4001): Not probed: probe scope excludes it. Modes above 4 would read past ActionTargetModeTable (no range check).
+- `TargetSavedSlotOrRandomFoe` (39:4055): What action 204 is and why it keeps its earlier target is not read.
+- `TargetFoeWithAGLAboveOne` (39:6BB6): Why action 43 uses this routine in the mode 1 tables while the other mode tables use ChooseTarget_Slow.
+- `TargetAllyConfused` (39:6BBC): Whether any code reaches it (nothing in src/ names it outside its own comment).
+- `TargetAllyParalyzed` (39:6BC9): Whether any code reaches it.
+- `TargetAllyCursed` (39:6BD6): Whether any code reaches it.
+- `EstimateAndPickWeakestTarget` (39:6D74): What wBattleTempBuf + 2 is cleared for (nothing here reads it).
+- `ComputeDamageEstimateForAction` (39:6E27): What each effect handler writes to wBattleDamageLo and wBattleDamageHi when run for an estimate.
+- `BuffCapOfBaseDEF` (39:6F32): Why the scaling depends on the side of the actor (likely a buff of x 4 or x 2).
+- `ChooseTarget_MouthShut_CountMouthSkills` (39:6F9A): Whether these are the skills MouthShut seals (BSTAT1_BREATH_SEALED); an earlier reading says so at C1.
+- `SetActorTargetFromHRAMChoice` (39:6FE2): The meaning of hTemp2 and hTemp3 differs between callers; not recorded here.
+- `ActorOnLocalSide_Bank39` (39:7223): Which side the link role marks as local is inferred from the reversal, not checked.
+- `SetEffectSpriteXForTargets` (3A:4A3A): The one-foe case of mode 2 looks like a game bug (it skips the list and uses the foe count as the table base).
+- `RunBattleEffectAnimation` (3A:4ADB): What writes wEffectFlashState and wEffectCounter during the sequence.
+- `RunEffectRoutineEffectEvery5Frames_InvertPalettes` (3A:4F06): The name Delay does not fit: every step inverts the palettes.
+- `EffectPositionIndexForActor` (3A:5272): Values of wBattleFoeCount other than 1 and 2 (3 in battle) are all treated like three foes.
+- `DrawEffectSpriteForEffectTileOffsetRange` (3A:5383): Offsets $1F and $20 give identical OAM bytes in banks $3F and $3D, so the probes cannot separate that boundary.
+- `UploadBGPalettesWithFade` (3A:5536): Which routines change wDMGPaletteBGP during a battle effect was not followed.
+- `SelectEffectByEffectFlags2Flags_SacrificeSound` (3A:57CA): Why the caller stops on NZ for Farewell and LifeDance (bit 6 of wResolveMsgFlags set) was not followed.
+- `RunBattleActions` (3A:6157): Which routine runs the effect animation in a link battle (this routine only returns there) was not followed.
+- `RunActionSpecificPostStep` (3A:61F8): What resolve step $0E does for Sacrifice and ACTION_D6 was not followed.
+- `CheckBattleDecided` (3A:639A): Why action $BD with hits left counts as not decided was not followed.
+- `SetSlotMarksForPresentSlots` (3A:6650): What the mark values 0, 1, 3 and $FF mean to the consumers of wSlotMarks was not followed.
+- `RunBattleStep4_CountTargets` (3A:6785): ACTION_CE and ACTION_BB are ids whose skill name only repeats 'LoveRain' and 'HighJump'; their own effect was not followed.
+- `RunMultiHitCounter` (3A:6846): Where the extra hits are counted in the damage or the text was not followed.
+- `RunActionResolveStep` (3A:69AA): Where RunBattleSubStep moves wBattleResolveStep on from step 5 was not followed.
+- `RunDefeatStepMinus1Step` (3A:6C93): Which routines set wDefeatStep to each of the values 1-3 and 9 was not followed.
+- `RemoveCFromActionQueue_3A` (3A:6D53): Whether the byte at wActionQueue + 8 is a ninth queue entry (wActionQueuePos can reach 8) was not followed.
+- `ShowActionBattleText` (3A:6E92): Item ids of 64 or more would read past ActionBattleTextTable2; whether they occur was not followed.
+- `BattleText0HookTargetNameAndGroupWord` (3A:7138): Why a recruit message ($2A, $2B) reads wMultiHitCount and wSpeciesGroups was not followed.
+- `BattleTextPrepB8` (3A:73E4): If all three slots of the other side are out the scan ends on slot 3 or 7; that case was not probed.
+- `BattleTextPrep4D` (3A:747B): The text String_2F_01_4D contains no name buffer, so which message this prep serves was not followed.
+- `BattleTextPrep92` (3A:74D6): Whether wSealPrayState holds a skill number in the case that reaches this text was not followed.
+- `ShowActionRefusedMessage` (3A:7508): What reasons 3 to 6 of CheckSkillMPCost each mean in play (which seal) was not followed.
