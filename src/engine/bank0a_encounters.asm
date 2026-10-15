@@ -58,7 +58,7 @@ FieldState_StepChecks_HarmfulFloor::
     ret
 
 ; The MP loss of a harmful floor (when wStatusStepFlags bit 0 is set): each standing party member
-; with status bit 0 set and MP left loses 1 MP. (C1, E-0357)
+; with status bit 0 set and MP left loses 1 MP. (C2, E-0357; probed E-0375)
 FieldState_StepChecks_HarmfulFloor_DrainMP::
     ld a, [wStatusStepFlags]
     and $01
@@ -109,6 +109,8 @@ FieldState_StepChecks_HarmfulFloor_DrainMP::
     jr nz, .loop
     ret
 
+; Sets bit 7 of wFieldStepFlags (A = the new value). FieldState_StepChecks_HarmfulFloor_PoisonDamage
+; and FieldState_StepChecks_HarmfulFloor_FloorDamage call it when a party member falls. (C2, E-0375)
 ; sets bit 7 of wFieldStepFlags (E-0114)
 SetFieldStepFlagsBit7::
     ld a, [wFieldStepFlags]
@@ -118,8 +120,8 @@ SetFieldStepFlagsBit7::
 
 ; The poison damage of a step: each standing party member (MON_STATUS bit 7 clear) with status bit 2
 ; loses 1 HP; one that reaches 0 or below falls: SetFieldStepFlagsBit7, its bit (party position) set
-; in wStatusFieldStep, its status bits 2 and 3 cleared and bit 7 set, and its HP written as 0. (C1,
-; E-0369)
+; in wStatusFieldStep, its status bits 2 and 3 cleared and bit 7 set, and its HP written as 0. (C2,
+; E-0369; probed E-0375)
 FieldState_StepChecks_HarmfulFloor_PoisonDamage::
     ld a, [wPartyCount]
     ld b, a
@@ -201,7 +203,7 @@ FieldState_StepChecks_HarmfulFloor_PoisonDamage::
 ; The damage of a harmful floor: each standing party member loses 10 HP (also setting
 ; wFieldStepFlags to $40) unless wStatusFieldStep bit 7 is set, in which case it loses 2 HP, or 5 on
 ; map $3A outside key worlds; a member that reaches 0 falls (status bit 7, its bit in
-; wStatusFieldStep). (C1, E-0357)
+; wStatusFieldStep). (C2, E-0357; probed E-0375)
 FieldState_StepChecks_HarmfulFloor_FloorDamage::
     ld a, [wPartyCount]
     ld b, a
@@ -300,8 +302,8 @@ FieldState_StepChecks_HarmfulFloor_FloorDamage::
 ; FieldState_StepChecks_HarmfulFloor counts 0-4): at 0 plays sound $66, sets the DMG palettes
 ; $D2/$D2/$E2 and on CGB saves wBGPaletteBuffer to wBGPaletteCopy; at 1-3 (bit 2 clear) shows the
 ; flash, DMG $2D/$2D/$1D and on CGB the saved colours inverted into wBGPaletteBuffer; at 4 restores
-; $D2/$D2/$E2 and the saved colours. On CGB each change sets wBGPaletteUploadRequest to $7F. (C1,
-; E-0369)
+; $D2/$D2/$E2 and the saved colours. On CGB each change sets wBGPaletteUploadRequest to $7F. (C2,
+; E-0369; probed E-0375)
 FieldState_StepChecks_HarmfulFloor_Flash::
     ld a, [wMenuState]
     or a
@@ -376,6 +378,17 @@ FieldState_StepChecks_HarmfulFloor_Flash::
 .return:
     ret
 
+; Field step check, far-called from the field step code of bank $02 after
+; CheckWarpsAtPlayerPosition: jumps by wMapMoveType (a map header byte) to
+; RunPlayerMoveTypeMapMoveType_None (0) or a harmful floor check:
+; RunPlayerMoveTypeMapMoveType_HurtFloor1 (1, tile $44), RunPlayerMoveTypeMapMoveType_HurtFloor2 (2,
+; $56), RunPlayerMoveTypeMapMoveType_HurtFloor3 (3, $44),
+; RunPlayerMoveTypeMapMoveType_LightHurtFloor4 (4, $44), RunPlayerMoveTypeMapMoveType_HurtFloor (5,
+; $44), RunPlayerMoveTypeMapMoveType_LightHurtFloor (6, $50) and
+; RunPlayerMoveTypeMapMoveType_HurtFloor7 (7, $52). Each puts its tile in hTemp1 and sets
+; wStatusFieldStep (0, or $80 with wFieldStepFlags $40 for the light kinds 4 and 6), then
+; RunPlayerMoveTypeMapMoveType_CheckHurtTile switches to field state 7 when the player stands on
+; that tile. (C2, E-0375)
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0122)
 RunPlayerMoveTypeMapMoveType::
     ld a, [wMapMoveType]
@@ -389,12 +402,14 @@ RunPlayerMoveTypeMapMoveType::
     dw RunPlayerMoveTypeMapMoveType_LightHurtFloor
     dw RunPlayerMoveTypeMapMoveType_HurtFloor7
 
-; Map movement type 0: no harmful floor. (C1, E-0357)
+; Map movement type 0: no harmful floor. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_None::
     ret
 
-; Map movement type 6: floor tile $50 hurts, the lighter kind (wStatusFieldStep $80: 2 HP per step;
-; wFieldStepFlags $40). (C1, E-0357)
+; Map movement type 6: floor tile $50 hurts, the lighter kind: hTemp1 = $50, wStatusFieldStep = $80
+; (so FieldState_StepChecks_HarmfulFloor_FloorDamage takes 2 HP, or 5 on map $3A outside key worlds,
+; instead of 10) and wFieldStepFlags = $40; continues in RunPlayerMoveTypeMapMoveType_CheckHurtTile.
+; (C2, E-0375)
 RunPlayerMoveTypeMapMoveType_LightHurtFloor::
     ld a, $50
     ldh [hTemp1], a
@@ -404,7 +419,7 @@ RunPlayerMoveTypeMapMoveType_LightHurtFloor::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
-; Map movement type 7: floor tile $52 hurts. (C1, E-0357)
+; Map movement type 7: floor tile $52 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor7::
     ld a, $52
     ldh [hTemp1], a
@@ -412,7 +427,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor7::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
-; Map movement type 1: floor tile $44 hurts. (C1, E-0357)
+; Map movement type 1: floor tile $44 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor1::
     ld a, $44
     ldh [hTemp1], a
@@ -420,7 +435,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor1::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
-; Map movement type 2: floor tile $56 hurts. (C1, E-0357)
+; Map movement type 2: floor tile $56 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor2::
     ld a, $56
     ldh [hTemp1], a
@@ -428,7 +443,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor2::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
-; Map movement type 3: floor tile $44 hurts. (C1, E-0357)
+; Map movement type 3: floor tile $44 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor3::
     ld a, $44
     ldh [hTemp1], a
@@ -437,7 +452,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor3::
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; Map movement type 4: floor tile $44 hurts, the lighter kind (wStatusFieldStep $80, wFieldStepFlags
-; $40). (C1, E-0357)
+; $40). (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_LightHurtFloor4::
     ld a, $44
     ldh [hTemp1], a
@@ -447,7 +462,7 @@ RunPlayerMoveTypeMapMoveType_LightHurtFloor4::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
-; Map movement type 5: floor tile $44 hurts. (C1, E-0357)
+; Map movement type 5: floor tile $44 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor::
     ld a, $44
     ldh [hTemp1], a
@@ -456,7 +471,8 @@ RunPlayerMoveTypeMapMoveType_HurtFloor::
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; When no fade, script or talk countdown is running and one of the four tiles under the player is
-; the harmful tile in hTemp1, switches to field state 7 (the floor damage). (C1, E-0357)
+; the harmful tile in hTemp1, switches to field state 7 (the floor damage). (C2, E-0357; probed
+; E-0375)
 RunPlayerMoveTypeMapMoveType_CheckHurtTile::
     ld a, [wFadeState]
     or a
@@ -496,6 +512,18 @@ RunPlayerMoveTypeMapMoveType_CheckHurtTile::
     ld [wMenuSubState], a
     ret
 
+; Field step check for the poison and MP-drain statuses, far-called after
+; RunPlayerMoveTypeMapMoveType. It does nothing when hPlayerStateFlags bit 7 or 5 is set,
+; EVENT_SCENE_LONG_FACES_002 is clear, the field state (wModeState low nibble) is 1, wModeState is
+; 7, or the map is excluded: in key worlds (wMapType bit 7) the special maps $82, $83, $84 and $87,
+; elsewhere maps below $20 and the 64 maps listed in EnterStatusEffectFieldState_Data. Otherwise,
+; with SRAM enabled, it scans the standing party members (MON_STATUS bit 7 clear). Status bit 2
+; (poison) toggles wStatusStepFlags bit 0 (ToggleStatusStepFlagsLowBitOnce, once per call) and
+; switches to field state 7 with wMenuState 0, wMenuSubState 1 and wStatusFieldStep 0 (the poison
+; damage and MP drain of FieldState_StepChecks_HarmfulFloor), also clearing wEncounterCountdown when
+; coming from field state 3. Status bit 0 does the same toggle but switches only when bit 0 ends up
+; set, so on every other step. At the end it clears wStatusStepFlags bit 7 and disables SRAM. (C2,
+; E-0375)
 ; in the field (story flag 2, not in mode states 1 or 7, outside listed maps): when a party member
 ; has status bit 2 or 0 of field $55, switches to mode state 7 and toggles wStatusStepFlags (E-0129)
 EnterStatusEffectFieldState::
@@ -605,6 +633,10 @@ EnterStatusEffectFieldState::
     ld [rRAMG], a
     ret
 
+; When wStatusStepFlags bit 7 is clear: wStatusStepFlags = ((wStatusStepFlags + 1) & 1) | $80,
+; flipping bit 0 and setting bit 7 so that later calls in the same scan change nothing. Returns A =
+; wStatusStepFlags either way. EnterStatusEffectFieldState clears bit 7 again when it finishes. (C2,
+; E-0375)
 ; when wStatusStepFlags bit 7 is clear: wStatusStepFlags = ((wStatusStepFlags + 1) & 1) | $80
 ; (E-0119)
 ToggleStatusStepFlagsLowBitOnce::
@@ -636,6 +668,11 @@ EnterStatusEffectFieldState_Data::
     db $89, $92, $9d, $a4, $a9, $ab, $af, $b2, $b1, $b6, $b9, $ba, $bc, $c5, $d0, $d9
     db $e2, $ff
 
+; Field step check, far-called last after EnterStatusEffectFieldState: returns while a fade or
+; script runs, when wEncounterRate & $7F is 0, or when wTalkCountdown is 0. Otherwise it decrements
+; wTalkCountdown and, when that reaches 0, sets wTalkEventGroup = $1E and wTalkEventIndex = 0 and
+; far-calls DispatchTalkEvent (a second wScriptRunning check would instead set wTalkCountdown back
+; to 1, but scripts were already excluded). Field skill 14 sets wTalkCountdown = 200. (C1, E-0375)
 ; when nothing else runs and wEncounterRate & $7F is set, counts wTalkCountdown down; at zero sets
 ; wTalkEventGroup = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs)
 ; (E-0124)
@@ -671,6 +708,18 @@ CountDownTalkCountdownThenDispatchTalkEvent::
     farcall DispatchTalkEvent
     ret
 
+; Field step check for random encounters, far-called from the field step code of bank $02. Returns
+; while a fade or script runs, with hPlayerStateFlags bit 7 or 5 set, or in field state 1 or 4. If
+; wEncounterRate bit 7 is set it only clears that bit (one step skipped); wEncounterRate 0 means no
+; encounters. While wEncounterDelay is non-zero it counts that down instead and, on reaching 0,
+; starts talk event group $1D (DispatchTalkEvent). Otherwise it subtracts from wEncounterCountdown:
+; 1 with hPlayerStateFlags bit 3 set; else by EncounterRateTable record wEncounterRate: a non-zero
+; byte 0 subtracts byte 1; byte 0 = 0 compares bytes 1-7 with the four tiles under the player
+; (ReadTileBuffer2x2AtPixel_Bank0A) and subtracts 1, 1, 2, 2, 3, 3 or 4 for the first match, 1
+; without one. When the count borrows, reaches 0 or is $E0 or more a battle starts: wBattleIntroKind
+; 0 (1 in a key world), RedrawScreenBufferIfPartyWindowFlagsBit7, field state 3 with
+; wBattleTransitionStep 0 and wBattleTransitionSubStep 0 or 2 (NextRandomSeed), wFieldReturnPhase 2,
+; SaveScreenBufferToBGMap1 and a new count (PickRandomEncounterCountdownFromTable). (C1, E-0375)
 ; in the field when nothing blocks it: counts down the encounter or talk timers (wEncounterRate,
 ; wEncounterDelay) and starts a battle or talk event when they expire (E-0131)
 TickRandomEncounterCounter::
@@ -881,6 +930,11 @@ EncounterRateTable::
     db $00, $ff, $ff, $40, $42, $44, $ff, $ff ; id 34
     db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 35
 
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries, as
+; field mode uses the buffer); copies the 2 x 2 entries there to wTilesUnderPoint and
+; wTilesUnderPoint + 1 (top row) and wTilesUnderPoint + 2 and + 3 (bottom row); HL ends on the
+; bottom-right entry. TickRandomEncounterCounter and RunPlayerMoveTypeMapMoveType_CheckHurtTile read
+; the tiles under the player with it. (C2, E-0375)
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries);
 ; copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and
 ; wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry
@@ -920,6 +974,15 @@ ReadTileBuffer2x2AtPixel_Bank0A::
     ld [wTilesUnderPoint + $3], a
     ret
 
+; Decides the foes and the battle kind as a battle starts (RunBattleTransitionStep_StartBattle):
+; clears wBattleIntroFlag and jumps by wBattleIntroKind & 7 to 0
+; RunBattleIntroKindCase_RandomEncounter (the map encounter tables), 1
+; RunBattleIntroKindCase_KeyWorldEncounter, 2 RunBattleIntroKindCase_SetBattleKindTo02, 3
+; RunBattleIntroKindCase_Kind3, 4 RunBattleIntroKindCase_SetBattleKindTo04, 5
+; RunBattleIntroKindCase_StrengthSingleFoe, 6 RunBattleIntroKindCase_KeyWorldStrength or 7
+; RunBattleIntroKindCase_SetBattleKindTo05. StartScriptedEncounterTemp0 sets intro kind 2 or 7 after
+; filling the foes itself; the arena and field object code of banks $0C and $12 set others. (C2,
+; E-0375)
 ; clears wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight)
 ; (E-0122)
 RunBattleIntroKindCase::
@@ -937,11 +1000,12 @@ RunBattleIntroKindCase::
     dw RunBattleIntroKindCase_KeyWorldStrength
     dw RunBattleIntroKindCase_SetBattleKindTo05
 
-; Battle intro kind 6, a key-world encounter by party strength: for field events below $0C picks
-; three monsters from the row of RunBattleIntroKindCase_KeyWorldStrength_Data1 chosen by party
-; strength / 5 (each a random entry 0-9 of it); for events $0C and above takes the three fixed
-; monsters of that event from RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2. Encounter
-; kind 2, battle kind 6. (C1, E-0357)
+; Battle intro kind 6, a key-world encounter by party strength. For field events (wPendingFieldEvent
+; & $0F) below $0C it computes wPartyStrength (ComputePartyStrengthForKey; 0 without a party) and
+; takes the word at RunBattleIntroKindCase_KeyWorldStrength_Data1 + 2 * (strength / 5) as a base
+; monster id; each of the three foes is that id plus a random 0-9 (NextRandomSeed until wKeyRandomHi
+; & $0F is below 10). For events $0C-$0F it copies the three fixed monster words of that event from
+; RunBattleIntroKindCase_KeyWorldStrength_Data2. Encounter kind 2, battle kind 6. (C2, E-0375)
 RunBattleIntroKindCase_KeyWorldStrength::
     ld a, [wPendingFieldEvent]
     and $0f
@@ -1039,7 +1103,7 @@ RunBattleIntroKindCase_KeyWorldStrength_Data2::
     db $12, $02, $13, $02, $14, $02, $15, $02
 
 ; Battle intro kind 5: picks one monster id $76-$7D by party strength (one step per 5 points up to
-; 35) as a single foe; encounter kind 0, battle kind 2. (C1, E-0357)
+; 35) as a single foe; encounter kind 0, battle kind 2. (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_StrengthSingleFoe::
     farcall ComputePartyStrengthLevelPartyStrength
     ld c, $76
@@ -1077,6 +1141,11 @@ RunBattleIntroKindCase_StrengthSingleFoe::
     ld [wBattleKind], a
     ret
 
+; Sets wEncounterCountdown = 2 * PickRandomEncounterCountdownFromTable_Data[v / 5], with v =
+; wKeyRandomHi & $3F after NextRandomSeed. Its loop redraws when v is 100 or more, which never
+; happens (v is at most 63), so only the first 13 of the 21 table bytes are used (counts 20 to 104).
+; Called when a battle starts (TickRandomEncounterCounter, StartScriptedEncounterTemp0), when a save
+; is continued (TitleMenu_Continue_LoadSave) and from scenes in banks $5F and $73. (C2, E-0375)
 ; draws random values until wKeyRandomHi & $3F is below 100, then wEncounterCountdown = 2 *
 ; PickRandomEncounterCountdownFromTable_Data[value / 5] (E-0122) (E-0344: the address in its name
 ; dropped or read as the label there; was PickRandomEncounterCountdownFromTable)
@@ -1102,6 +1171,13 @@ PickRandomEncounterCountdownFromTable_Data::
     db $0a, $14, $19, $1e, $23, $28, $2a, $2c, $2d, $2e, $30, $32, $34, $36, $38, $3a
     db $3c, $41, $46, $50, $50
 
+; hTemp0 = encounter id: copies record hTemp0 of ScriptedEncounterTable (8 bytes each) into
+; wEncounterKind (byte 0) and wEncounterMonsters (bytes 2-7, three monster words); sets
+; wBattleIntroKind 2 (7 for records $14, $15 and $2F-$31), field state 3 with wBattleTransitionStep
+; 0 and wBattleTransitionSubStep 1 (the spiral transition and battle music $46), wFieldReturnPhase
+; 2; saves the screen (SaveScreenBufferToBGMap1) and picks a new encounter count
+; (PickRandomEncounterCountdownFromTable). HL is kept. Scenes in banks $0F, $5F, $73 and $85
+; far-call it for their set battles. (C1, E-0375)
 ; loads encounter entry $481C + 8 * hTemp0 into wEncounterKind-wEncounterMonsters + $5, sets the
 ; battle intro (wBattleIntroKind = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the
 ; battle transition (E-0128)
@@ -1382,7 +1458,7 @@ ScriptedEncounterTable::
 
 ; Battle intro kind 0, a normal random encounter: picks the encounter table for the current map
 ; (and, on some maps, the screen or the player's state flags), then fills the three foes from it
-; (FillEncounterFromEntry). (C1, E-0357)
+; (FillEncounterFromEntry). (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_RandomEncounter::
     ldh a, [hMapId]
     cp $20
@@ -1824,6 +1900,10 @@ RunBattleIntroKindCase_RandomEncounter::
     call ReadMapCellWordForScreenXY
     ret
 
+; A = cells per row, DE = encounter grid: DE = the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)), the encounter entry of the current map screen, then falls into
+; FillEncounterFromEntry. RunBattleIntroKindCase_RandomEncounter uses it for the maps that have a
+; grid table (EncounterGrid_1 and the others). (C2, E-0375)
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through
 ; (E-0122)
 ReadMapCellWordForScreenXY::
@@ -1842,9 +1922,14 @@ ReadMapCellWordForScreenXY::
     ld a, [hl]
     ld d, a
 
-; Fills the encounter from a table entry at DE: the encounter kind and three chance thresholds; for
-; each of three foes it draws a random number and picks the monster whose threshold it falls under.
-; (C1, E-0357)
+; DE = encounter entry (17 bytes): byte 0 = encounter kind + 1, byte 1 = a cap, bytes 2-6 = five
+; rising thresholds, then five monster words. For each of the three foes it draws r = wRandomLo &
+; $7F (NextTableByte), drawing again while r is above the cap, and stores in wEncounterMonsters the
+; word of the first threshold that is r or more (the slot is left unchanged when none is). Then
+; wBattleKind = 0 and wEncounterKind = byte 0 - 1, except that kind 1 is replaced by
+; FillEncounterFromEntry_Data2[random & 3] (0 or 1) and kinds 2 and above by
+; FillEncounterFromEntry_Data1[random & 3] (0, 1 or 2). ReadMapCellWordForScreenXY falls into it.
+; (C2, E-0375)
 FillEncounterFromEntry::
     ld a, [de]
     inc de
@@ -1945,39 +2030,43 @@ FillEncounterFromEntry::
     ld [wEncounterKind], a
     ret
 
-; The map dispatch of CollectUniqueEncounterIdsToWorkBuf2: by map (and screen or player state) finds
-; the encounter table and collects its distinct monster ids, so they can be shown or loaded. (C1,
-; E-0357)
+; The map dispatch of CollectUniqueEncounterIdsToWorkBuf2 for maps outside key worlds: by hMapId
+; (and on some maps the screen position or hPlayerStateFlags bit 3) it picks the same encounter
+; entry as RunBattleIntroKindCase_RandomEncounter (except that map $B8 ignores hPlayerStateFlags bit
+; 3) and lists it with LoadEncounterMonsterIdsToWorkBuf, directly or through
+; LoadEncounterIdsForScreenCell: wWorkBuf = the count, then from wWorkBuf + 2 the picture numbers of
+; the entry monsters. It does not remove duplicates; an unlisted map leaves wWorkBuf unchanged. (C2,
+; E-0375)
 CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     ldh a, [hMapId]
     cp $20
-    jp z, .call_read_map_cell_word_for_screen_xy_2
+    jp z, .call_load_encounter_ids_for_screen_cell
     cp $2b
     jp z, .check_player_state_flags
     cp $30
     jp z, .check_player_state_flags2
     cp $35
-    jp z, .call_read_map_cell_word_for_screen_xy_22
+    jp z, .call_load_encounter_ids_for_screen_cell2
     cp $38
-    jp z, .call_read_map_cell_word_for_screen_xy_23
+    jp z, .call_load_encounter_ids_for_screen_cell3
     cp $39
-    jp z, .call_read_map_cell_word_for_screen_xy_24
+    jp z, .call_load_encounter_ids_for_screen_cell4
     cp $3a
-    jp z, .call_read_map_cell_word_for_screen_xy_25
+    jp z, .call_load_encounter_ids_for_screen_cell5
     cp $3e
-    jp z, .call_read_map_cell_word_for_screen_xy_26
+    jp z, .call_load_encounter_ids_for_screen_cell6
     cp $3f
-    jp z, .call_read_map_cell_word_for_screen_xy_27
+    jp z, .call_load_encounter_ids_for_screen_cell7
     cp $37
-    jp z, .call_read_map_cell_word_for_screen_xy_28
+    jp z, .call_load_encounter_ids_for_screen_cell8
     cp $42
-    jp z, .call_read_map_cell_word_for_screen_xy_29
+    jp z, .call_load_encounter_ids_for_screen_cell9
     cp $43
-    jp z, .call_read_map_cell_word_for_screen_xy_210
+    jp z, .call_load_encounter_ids_for_screen_cell10
     cp $48
     jp z, .check_player_state_flags3
     cp $53
-    jp z, .call_read_map_cell_word_for_screen_xy_211
+    jp z, .call_load_encounter_ids_for_screen_cell11
     cp $54
     jp z, .call_load_encounter_monster_ids_to_work_buf4
     cp $55
@@ -1985,89 +2074,89 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     cp $56
     jp z, .call_load_encounter_monster_ids_to_work_buf4
     cp $5d
-    jp z, .call_read_map_cell_word_for_screen_xy_212
+    jp z, .call_load_encounter_ids_for_screen_cell12
     cp $62
-    jp z, .call_read_map_cell_word_for_screen_xy_213
+    jp z, .call_load_encounter_ids_for_screen_cell13
     cp $63
-    jp z, .call_read_map_cell_word_for_screen_xy_214
+    jp z, .call_load_encounter_ids_for_screen_cell14
     cp $64
-    jp z, .call_read_map_cell_word_for_screen_xy_215
+    jp z, .call_load_encounter_ids_for_screen_cell15
     cp $65
-    jp z, .call_read_map_cell_word_for_screen_xy_216
+    jp z, .call_load_encounter_ids_for_screen_cell16
     cp $66
-    jp z, .call_read_map_cell_word_for_screen_xy_217
+    jp z, .call_load_encounter_ids_for_screen_cell17
     cp $67
-    jp z, .call_read_map_cell_word_for_screen_xy_218
+    jp z, .call_load_encounter_ids_for_screen_cell18
     cp $70
-    jp z, .call_read_map_cell_word_for_screen_xy_219
+    jp z, .call_load_encounter_ids_for_screen_cell19
     cp $73
-    jp z, .call_read_map_cell_word_for_screen_xy_220
+    jp z, .call_load_encounter_ids_for_screen_cell20
     cp $74
-    jp z, .call_read_map_cell_word_for_screen_xy_221
+    jp z, .call_load_encounter_ids_for_screen_cell21
     cp $75
-    jp z, .call_read_map_cell_word_for_screen_xy_222
+    jp z, .call_load_encounter_ids_for_screen_cell22
     cp $76
-    jp z, .call_read_map_cell_word_for_screen_xy_223
+    jp z, .call_load_encounter_ids_for_screen_cell23
     cp $81
-    jp z, .call_read_map_cell_word_for_screen_xy_224
+    jp z, .call_load_encounter_ids_for_screen_cell24
     cp $82
-    jp z, .call_read_map_cell_word_for_screen_xy_225
+    jp z, .call_load_encounter_ids_for_screen_cell25
     cp $83
-    jp z, .call_read_map_cell_word_for_screen_xy_226
+    jp z, .call_load_encounter_ids_for_screen_cell26
     cp $85
-    jp z, .call_read_map_cell_word_for_screen_xy_227
+    jp z, .call_load_encounter_ids_for_screen_cell27
     cp $86
-    jp z, .call_read_map_cell_word_for_screen_xy_228
+    jp z, .call_load_encounter_ids_for_screen_cell28
     cp $87
-    jp z, .call_read_map_cell_word_for_screen_xy_229
+    jp z, .call_load_encounter_ids_for_screen_cell29
     cp $88
-    jp z, .call_read_map_cell_word_for_screen_xy_230
+    jp z, .call_load_encounter_ids_for_screen_cell30
     cp $8b
-    jp z, .call_read_map_cell_word_for_screen_xy_231
+    jp z, .call_load_encounter_ids_for_screen_cell31
     cp $8c
-    jp z, .call_read_map_cell_word_for_screen_xy_232
+    jp z, .call_load_encounter_ids_for_screen_cell32
     cp $8e
-    jp z, .call_read_map_cell_word_for_screen_xy_233
+    jp z, .call_load_encounter_ids_for_screen_cell33
     cp $90
-    jp z, .call_read_map_cell_word_for_screen_xy_234
+    jp z, .call_load_encounter_ids_for_screen_cell34
     cp $a0
-    jp z, .call_read_map_cell_word_for_screen_xy_235
+    jp z, .call_load_encounter_ids_for_screen_cell35
     cp $a2
-    jp z, .call_read_map_cell_word_for_screen_xy_236
+    jp z, .call_load_encounter_ids_for_screen_cell36
     cp $a8
-    jp z, .call_read_map_cell_word_for_screen_xy_237
+    jp z, .call_load_encounter_ids_for_screen_cell37
     cp $ad
-    jp z, .call_read_map_cell_word_for_screen_xy_238
+    jp z, .call_load_encounter_ids_for_screen_cell38
     cp $ae
-    jp z, .call_read_map_cell_word_for_screen_xy_238
+    jp z, .call_load_encounter_ids_for_screen_cell38
     cp $b0
-    jp z, .call_read_map_cell_word_for_screen_xy_239
+    jp z, .call_load_encounter_ids_for_screen_cell39
     cp $b3
-    jp z, .call_read_map_cell_word_for_screen_xy_240
+    jp z, .call_load_encounter_ids_for_screen_cell40
     cp $b4
-    jp z, .call_read_map_cell_word_for_screen_xy_240
+    jp z, .call_load_encounter_ids_for_screen_cell40
     cp $b5
-    jp z, .call_read_map_cell_word_for_screen_xy_240
+    jp z, .call_load_encounter_ids_for_screen_cell40
     cp $b8
-    jp z, .call_read_map_cell_word_for_screen_xy_241
+    jp z, .call_load_encounter_ids_for_screen_cell41
     cp $be
-    jp z, .call_read_map_cell_word_for_screen_xy_242
+    jp z, .call_load_encounter_ids_for_screen_cell42
     cp $bf
-    jp z, .call_read_map_cell_word_for_screen_xy_243
+    jp z, .call_load_encounter_ids_for_screen_cell43
     cp $c0
-    jp z, .call_read_map_cell_word_for_screen_xy_244
+    jp z, .call_load_encounter_ids_for_screen_cell44
     cp $c1
-    jp z, .call_read_map_cell_word_for_screen_xy_244
+    jp z, .call_load_encounter_ids_for_screen_cell44
     cp $c2
-    jp z, .call_read_map_cell_word_for_screen_xy_245
+    jp z, .call_load_encounter_ids_for_screen_cell45
     cp $c3
-    jp z, .call_read_map_cell_word_for_screen_xy_245
+    jp z, .call_load_encounter_ids_for_screen_cell45
     ret
 
-.call_read_map_cell_word_for_screen_xy_2:
+.call_load_encounter_ids_for_screen_cell:
     ld de, EncounterGrid_1
     ld a, $08
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
 .check_player_state_flags:
@@ -2076,7 +2165,7 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     jr nz, .call_load_encounter_monster_ids_to_work_buf
     ld de, EncounterGrid_2
     ld a, $04
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
 .call_load_encounter_monster_ids_to_work_buf:
@@ -2090,7 +2179,7 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     jr nz, .call_load_encounter_monster_ids_to_work_buf2
     ld de, EncounterGrid_3
     ld a, $08
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
 .call_load_encounter_monster_ids_to_work_buf2:
@@ -2098,58 +2187,58 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-.call_read_map_cell_word_for_screen_xy_22:
+.call_load_encounter_ids_for_screen_cell2:
     ld de, EncounterGrid_4
     ld a, $04
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_23:
+.call_load_encounter_ids_for_screen_cell3:
     ld de, EncounterGrid_5
     ld a, $04
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_24:
+.call_load_encounter_ids_for_screen_cell4:
     ld de, EncounterGrid_6
     ld a, $04
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_25:
+.call_load_encounter_ids_for_screen_cell5:
     ld de, EncounterGrid_7
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_26:
+.call_load_encounter_ids_for_screen_cell6:
     ld de, EncounterGrid_8
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_27:
+.call_load_encounter_ids_for_screen_cell7:
     ld de, EncounterGrid_9
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_28:
+.call_load_encounter_ids_for_screen_cell8:
     ld de, EncounterGrid_10
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_29:
+.call_load_encounter_ids_for_screen_cell9:
     ld de, EncounterGrid_11
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_210:
+.call_load_encounter_ids_for_screen_cell10:
     ld de, EncounterGrid_12
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
 .check_player_state_flags3:
@@ -2158,7 +2247,7 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     jr nz, .call_load_encounter_monster_ids_to_work_buf3
     ld de, EncounterGrid_13
     ld a, $0c
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
 .call_load_encounter_monster_ids_to_work_buf3:
@@ -2166,10 +2255,10 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-.call_read_map_cell_word_for_screen_xy_211:
+.call_load_encounter_ids_for_screen_cell11:
     ld de, EncounterGrid_14
     ld a, $04
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
 .call_load_encounter_monster_ids_to_work_buf4:
@@ -2177,214 +2266,218 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-.call_read_map_cell_word_for_screen_xy_212:
+.call_load_encounter_ids_for_screen_cell12:
     ld de, EncounterGrid_15
     ld a, $04
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_213:
+.call_load_encounter_ids_for_screen_cell13:
     ld de, EncounterGrid_16
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_214:
+.call_load_encounter_ids_for_screen_cell14:
     ld de, EncounterGrid_17
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_215:
+.call_load_encounter_ids_for_screen_cell15:
     ld de, EncounterGrid_18
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_216:
+.call_load_encounter_ids_for_screen_cell16:
     ld de, EncounterGrid_19
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_217:
+.call_load_encounter_ids_for_screen_cell17:
     ld de, EncounterGrid_20
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_218:
+.call_load_encounter_ids_for_screen_cell18:
     ld de, EncounterGrid_21
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_219:
+.call_load_encounter_ids_for_screen_cell19:
     ld de, EncounterGrid_22
     ld a, $0c
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_220:
+.call_load_encounter_ids_for_screen_cell20:
     ld de, EncounterGrid_23
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_221:
+.call_load_encounter_ids_for_screen_cell21:
     ld de, EncounterGrid_24
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_222:
+.call_load_encounter_ids_for_screen_cell22:
     ld de, EncounterGrid_25
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_223:
+.call_load_encounter_ids_for_screen_cell23:
     ld de, EncounterGrid_26
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_224:
+.call_load_encounter_ids_for_screen_cell24:
     ld de, EncounterGrid_27
     ld a, $01
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_225:
+.call_load_encounter_ids_for_screen_cell25:
     ld de, EncounterGrid_28
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_226:
+.call_load_encounter_ids_for_screen_cell26:
     ld de, EncounterGrid_29
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_227:
+.call_load_encounter_ids_for_screen_cell27:
     ld de, EncounterGrid_30
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_228:
+.call_load_encounter_ids_for_screen_cell28:
     ld de, EncounterGrid_31
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_229:
+.call_load_encounter_ids_for_screen_cell29:
     ld de, EncounterGrid_32
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_230:
+.call_load_encounter_ids_for_screen_cell30:
     ld de, EncounterGrid_33
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_231:
+.call_load_encounter_ids_for_screen_cell31:
     ld de, EncounterGrid_34
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_232:
+.call_load_encounter_ids_for_screen_cell32:
     ld de, EncounterGrid_35
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_233:
+.call_load_encounter_ids_for_screen_cell33:
     ld de, EncounterGrid_36
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_234:
+.call_load_encounter_ids_for_screen_cell34:
     ld de, EncounterGrid_37
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_235:
+.call_load_encounter_ids_for_screen_cell35:
     ld de, EncounterGrid_38
     ld a, $04
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_236:
+.call_load_encounter_ids_for_screen_cell36:
     ld de, EncounterGrid_39
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_237:
+.call_load_encounter_ids_for_screen_cell37:
     ld de, EncounterGrid_40
     ld a, $06
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_238:
+.call_load_encounter_ids_for_screen_cell38:
     ld de, EncounterGrid_41
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_239:
+.call_load_encounter_ids_for_screen_cell39:
     ld de, EncounterGrid_42
     ld a, $03
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_240:
+.call_load_encounter_ids_for_screen_cell40:
     ld de, EncounterGrid_43
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_241:
+.call_load_encounter_ids_for_screen_cell41:
     ld de, EncounterGrid_44
     ld a, $05
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_242:
+.call_load_encounter_ids_for_screen_cell42:
     ld de, EncounterGrid_45
     ld a, $01
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_243:
+.call_load_encounter_ids_for_screen_cell43:
     ld de, EncounterGrid_46
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_244:
+.call_load_encounter_ids_for_screen_cell44:
     ld de, EncounterGrid_47
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
-.call_read_map_cell_word_for_screen_xy_245:
+.call_load_encounter_ids_for_screen_cell45:
     ld de, EncounterGrid_48
     ld a, $02
-    call ReadMapCellWordForScreenXY_2
+    call LoadEncounterIdsForScreenCell
     ret
 
+; The grid look-up of ReadMapCellWordForScreenXY (A = cells per row, DE = grid: DE = the entry word
+; for hMapScreenY & $0F and hMapScreenX & $0F), falling into LoadEncounterMonsterIdsToWorkBuf
+; instead of FillEncounterFromEntry. CollectUniqueEncounterIdsToWorkBuf2_FindTable uses it for the
+; maps with a grid table (EncounterGrid_1 and the others). (C2, E-0375)
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; ReadMapCellWordForScreenXY_2)
-ReadMapCellWordForScreenXY_2::
+; LoadEncounterIdsForScreenCell)
+LoadEncounterIdsForScreenCell::
     sla a
     ld c, a
     ldh a, [hMapScreenY]
@@ -2400,6 +2493,11 @@ ReadMapCellWordForScreenXY_2::
     ld a, [hl]
     ld d, a
 
+; DE = encounter entry (the FillEncounterFromEntry layout): wWorkBuf = the number of leading
+; non-zero thresholds (entry bytes 2-6, at most 5), wWorkBuf + 1 = 0, and from wWorkBuf + 2 that
+; many monster words, each replaced by the first word of its MonsterTable entry, the picture number
+; (CopyMonsterTableBytesFromMonsterTable with hTemp0 = 2, C = 0). A count of 0 is not handled: the
+; copy loops would run 256 times. (C2, E-0375)
 ; DE += 2; wWorkBuf = the number of non-zero entries (up to 5); copies their monster ids to wWorkBuf
 ; + $2 and replaces each with two bytes of its monster table entry (E-0127)
 LoadEncounterMonsterIdsToWorkBuf::
@@ -2469,7 +2567,7 @@ LoadEncounterMonsterIdsToWorkBuf::
     jr nz, .loop2
     ret
 
-; Battle intro kind 2: battle kind 2. (C1, E-0357)
+; Battle intro kind 2: battle kind 2. (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_SetBattleKindTo02::
     ld a, $02
     ld [wBattleKind], a
@@ -2477,7 +2575,8 @@ RunBattleIntroKindCase_SetBattleKindTo02::
 
 ; Battle intro kind 1, a key-world encounter: picks a random encounter kind (one of four) and the
 ; area's monster group from wKeyWorldAreas (or the floor's entry in wKeyWorldFloorInfo), draws the
-; foes (RunBattleIntroKindCase_KeyWorldEncounter_RollFoes) and sets battle kind 1. (C1, E-0357)
+; foes (RunBattleIntroKindCase_KeyWorldEncounter_RollFoes) and sets battle kind 1. (C2, E-0357;
+; probed E-0375)
 RunBattleIntroKindCase_KeyWorldEncounter::
     call NextTableByte
     ld a, [wRandomLo]
@@ -2557,7 +2656,7 @@ FillEncounterFromEntry_Data2::
 ; NextRandomSeed, capped at entry $1F, where C is the group the caller computed; with
 ; hPlayerStateFlags bit 3 set each is entry $20 + (wKeyRandomLo & 7) instead, past the 32 rolled
 ; entries, and C is ignored. The id word goes to wEncounterMonsters and the level (byte / 2) to
-; wWildLevel + foe index. (C1, E-0369)
+; wWildLevel + foe index. (C2, E-0369; probed E-0375)
 RunBattleIntroKindCase_KeyWorldEncounter_RollFoes::
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2654,7 +2753,8 @@ RunBattleIntroKindCase_KeyWorldEncounter_RollFoes::
     jr nz, .loop2
     ret
 
-; Battle intro kind 3: battle kind 3, with the intro flag set on map type $82. (C1, E-0357)
+; Battle intro kind 3: battle kind 3, with the intro flag set on map type $82. (C2, E-0357; probed
+; E-0375)
 RunBattleIntroKindCase_Kind3::
     ld a, [wMapType]
     cp $82
@@ -2667,18 +2767,23 @@ RunBattleIntroKindCase_Kind3::
     ld [wBattleKind], a
     ret
 
-; Battle intro kind 4: battle kind 4. (C1, E-0357)
+; Battle intro kind 4: battle kind 4. (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_SetBattleKindTo04::
     ld a, $04
     ld [wBattleKind], a
     ret
 
-; Battle intro kind 7: battle kind 5. (C1, E-0357)
+; Battle intro kind 7: battle kind 5. (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_SetBattleKindTo05::
     ld a, $05
     ld [wBattleKind], a
     ret
 
+; Field state 3 (FieldState_BattleTransition) step: jumps by wBattleTransitionStep to 0
+; RunBattleTransitionStep_PlayBattleMusic (battle music and the start position of the effect), 1
+; RunBattleTransitionStep_StagedSteps (the screen effect chosen by wBattleTransitionSubStep) or 2
+; RunBattleTransitionStep_StartBattle (when the music has stopped: RunBattleIntroKindCase, fade,
+; game mode 4). (C1, E-0375)
 ; runs the routine for wBattleTransitionStep (jump table of three); field mode state 3 (E-0122)
 RunBattleTransitionStep::
     ld a, [wBattleTransitionStep]
@@ -2688,7 +2793,7 @@ RunBattleTransitionStep::
     dw RunBattleTransitionStep_StartBattle
 
 ; Battle transition, step 0: remembers the current music, plays battle music $44 or $46, sets the
-; sprite clipping and the starting BG map position for the effect. (C1, E-0357)
+; sprite clipping and the starting BG map position for the effect. (C2, E-0357; probed E-0375)
 RunBattleTransitionStep_PlayBattleMusic::
     ld a, [wCurrentMusic]
     ld [wTransitionMusic], a
@@ -2781,7 +2886,12 @@ RunBattleTransitionStep_StartBattle::
     inc [hl]
     ret
 
-; by its sub-step: CheckStage, the transition counter, SetCounts (E-0304)
+; Battle transition step 1, the screen effect, by wBattleTransitionSubStep (set as the battle
+; starts: 0 or 2 at random by TickRandomEncounterCounter, 1 by StartScriptedEncounterTemp0): 0
+; RunBattleTransitionStep_CheckStage (columns closing from both sides), 1
+; RunBattleTransitionStep_StagedSteps_Spiral (the spiral) and 2 RunBattleTransitionStep_SetCounts.
+; (C1, E-0375)
+; by its sub-step: CheckStage, the transition counter, SetCounts
 RunBattleTransitionStep_StagedSteps::
     ld a, [wBattleTransitionSubStep]
     jumptable
@@ -2789,6 +2899,10 @@ RunBattleTransitionStep_StagedSteps::
     dw RunBattleTransitionStep_StagedSteps_Spiral
     dw RunBattleTransitionStep_SetCounts
 
+; The closing-columns transition (sub-step 0 of RunBattleTransitionStep_StagedSteps), by
+; wTransitionCounter: 0 RunBattleTransitionStep_CheckStage_CloseColumns (20 stages, one column
+; blanked from each side per stage) and 1 RunBattleTransitionStep_CheckStage_End (moves
+; wBattleTransitionStep on to the battle start). (C1, E-0375)
 ; (E-0345: was RunBattleTransitionStep_CheckStage) reads the transition stage, then advances the
 ; step
 RunBattleTransitionStep_CheckStage::
@@ -2856,7 +2970,7 @@ RunBattleTransitionStep_CheckStage_CloseColumns::
     inc [hl]
     ret
 
-; Ends the closing transition: next transition step. (C1, E-0357)
+; Ends the closing transition: next transition step. (C2, E-0357; probed E-0375)
 RunBattleTransitionStep_CheckStage_End::
     ld hl, wBattleTransitionStep
     inc [hl]

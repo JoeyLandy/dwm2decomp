@@ -101,7 +101,10 @@ def validate_probes(probes: list[dict], entries: list[dict], rom: bytes | None =
     for k, e in probed.items():
         if k not in has:
             problems.append(f"{Path(e['_draft']).name} {e['label']}: marked probed but has no probe")
+    unread = {w.split()[-1] for w in readability_queue.queues()["unread"]}
     for e in entries:
+        if e.get("label") in unread and not e.get("note"):
+            problems.append(f"{Path(e['_draft']).name} {e['label']}: no hand reading yet, so it needs a note")
         if e.get("confidence") == "C2" and key(e) not in probed:
             problems.append(f"{Path(e['_draft']).name} {e['label']}: C2 without a probe")
         if e.get("probe_status") == "not_probed" and len(e.get("not_probed_reason") or "") < 10:

@@ -547,7 +547,7 @@ DEF wBGFillFlag EQU $D066 ; selects clearing the BG map or filling it with tile 
 DEF wDataBankSave EQU $D067 ; spare slot some code copies wDataBank to and restores it from (E-0014)
 DEF wNewRecordFamily EQU $D068 ; value for byte $0D (MON_FAMILY) of a new or changed record (RollRecordField0DState) (E-0345, C1: named from its users; was wNewRecordByte0D) (E-0136; E-0345)
 DEF wTalkCountdown EQU $D069 ; frames before a talk event is dispatched (CountDownTalkCountdownThenDispatchTalkEvent) (E-0136)
-DEF wTitleScreenState EQU $D06A ; state of game mode 5's screens: the opening and title screens, name entry and new-player setup, and the link screens reached from them (StartFadeToLinkScreenState1/2); the boot trace runs the title flow through it first (was wLinkScreenState) (E-0136, E-0318)
+DEF wTitleScreenState EQU $D06A ; state of game mode 5's screens: the opening and title screens, name entry and new-player setup, and the link screens reached from them (StartFadeToTitleScreenState1/2); the boot trace runs the title flow through it first (was wLinkScreenState) (E-0136, E-0318)
 DEF wTitleScreenSubState EQU $D06B ; sub-state of game mode 5's screens (RunWD06BSubState_* tables); see wTitleScreenState (was wLinkScreenSubState) (E-0136, E-0318)
 DEF wLinkScreenFlag EQU $D06C ; flag set and tested by the link screen sub-states (E-0136)
 DEF wItemId EQU $D081 ; item id used by LoadItemRecord and CheckItemUsable; $FF = none (reading)

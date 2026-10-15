@@ -53,14 +53,14 @@ CallInBank::
     ds $10, $00
 
 ; The rst $30 restart: a bare ret, then 7 zero bytes of padding to $0038. No rst $30 appears in
-; src/. (C1, E-0373)
+; src/. (C2, E-0373; probed E-0375)
 ; the rst $30 vector: a bare ret (unused restart) (E-0114)
 Rst30Vector::
     ret
     db $00, $00, $00, $00, $00, $00, $00
 
 ; The rst $38 restart: a bare ret, then 7 zero bytes of padding to the VBlank vector at $0040. No
-; rst $38 appears in src/. (C1, E-0373)
+; rst $38 appears in src/. (C2, E-0373; probed E-0375)
 ; the rst $38 vector: a bare ret (unused restart) (E-0114)
 Rst38Vector::
     ret

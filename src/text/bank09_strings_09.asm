@@ -4,20 +4,27 @@
 SECTION "Bank 09", ROMX[$4000], BANK[$09]
     db $09
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Starts showing string wStringIndex of category wStringCategory from the bank $09 table
+; BeginStringDisplay_Bank09_StringCategories (BeginStringDisplay); the text printer then draws it
+; over the next frames. (C1, E-0375)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank09::
     ld de, BeginStringDisplay_Bank09_StringCategories
     call BeginStringDisplay
     ret
 
-; ld de, this bank's string table / CopyStringToBuffer (E-0353)
+; Copies string wStringIndex of category wStringCategory from
+; BeginStringDisplay_Bank09_StringCategories, with its $F0 end, to the address in
+; wStringDestLo/wStringDestHi (CopyStringToBuffer; wStringBank = $09). (C2, E-0375)
+; ld de, this bank's string table / CopyStringToBuffer
 CopyStringToBuffer_Bank09::
     ld de, BeginStringDisplay_Bank09_StringCategories
     call CopyStringToBuffer
     ret
 
+; BeginStringDisplay_Bank09, then RunStringDisplayToEnd: draws a whole bank $09 string at once (the
+; pause menu page headings and key names among them). (C1, E-0375)
 ; BeginStringDisplay_Bank09 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_Bank09::
     call BeginStringDisplay_Bank09
     call RunStringDisplayToEnd

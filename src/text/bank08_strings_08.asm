@@ -4,8 +4,12 @@
 SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
+; Starts showing string wStringIndex of category wStringCategory: categories below 9 call
+; BeginStringDisplay with DE = StringDatabase (this bank); 9 and above far-call
+; BeginStringDisplay_Bank08_Overflow, which uses category - 9 of the bank $95 table. The text
+; printer then draws the string over the next frames while wTextFlags is non-zero. (C1, E-0375)
 ; if wStringCategory < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls
-; BeginStringDisplay_Bank08_Overflow (E-0353)
+; BeginStringDisplay_Bank08_Overflow
 BeginStringDisplay_Bank08::
     ld a, [wStringCategory]
     cp $09
@@ -18,8 +22,12 @@ BeginStringDisplay_Bank08::
     call BeginStringDisplay
     ret
 
+; Copies string wStringIndex of category wStringCategory, with its $F0 end, to the address in
+; wStringDestLo/wStringDestHi (CopyStringToBuffer, which also sets wStringBank): categories below 9
+; from StringDatabase in this bank, 9 and above from bank $95 through
+; CopyStringToBuffer_Bank08_Overflow, which leaves wStringCategory reduced by 9. (C2, E-0375)
 ; if wStringCategory < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls
-; CopyStringToBuffer_Bank08_Overflow (E-0353)
+; CopyStringToBuffer_Bank08_Overflow
 CopyStringToBuffer_Bank08::
     ld a, [wStringCategory]
     cp $09
@@ -32,8 +40,10 @@ CopyStringToBuffer_Bank08::
     call CopyStringToBuffer
     ret
 
+; BeginStringDisplay_Bank08, then RunStringDisplayToEnd: draws a whole string of the bank $08 table
+; (bank $95 for categories 9 and above) at once. Used by the debug menu, the pause menu, the library
+; and the arena among others. (C1, E-0375)
 ; BeginStringDisplay_Bank08 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_Bank08::
     call BeginStringDisplay_Bank08
     call RunStringDisplayToEnd

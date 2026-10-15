@@ -913,3 +913,95 @@ reading itself. Labels are as named when the batch was applied; later renames ar
 - `YoldTalkEvents_MermaidPast` (04:5AA5): FindPartyMemberWithSkill76To7DOr92 stops a member at its first $FF skill byte; a record with no $FF among its 8 skills falls through to the next member as well.
 - `TalkMsg0889_HeroPeeredIntoTheOvenIt_04` (04:5B54): Which map uses entry 25 rather than entry 13; the two routines are byte-identical apart from position.
 - `PartyHasSpeciesLo3CTo5BWithHiSet` (04:5D14): Whether the $13C-$15B species share a family (sea monsters) that the sleeper reacts to; not checked against the family table.
+
+## E-0375
+
+- `YoldTalkEvents_ShowHeroCheckedThePedestal` (04:5F35): which handler places the MoonRock when the player holds it is not established here (YoldTalkEvents_KamehaEscape removes it, but that is talk 106)
+- `YoldTalkEvents_ShowHeroCheckedThePedestal` (04:5F35): corrected earlier note: the old note said message $0865 shows when item $31 IS in the inventory; the code returns at `bit 7, a / ret z` when it is found, and probes 04:5F35#2-#3 confirm
+- `TalkMsg00FF_Composing` (04:60FC): message word $00FF is group-0 string $FF; the generated comment reads it as 'Composing' (a string found in bank $97); whether Yold talk 107 is reachable or a leftover is not established
+- `KalkaTalkEvents` (04:612B): entry 60 (KalkaTalkEvents_MonsterFan) far-calls RunFieldCommandTemp0, which takes the dispatcher out of probe scope
+- `DarckTalkEvents_HeardFromLord` (04:682F): corrected earlier note: the old note said the version depends on whether the inventory holds ANY of $36-$38; each `jr nz` goes to Script_IHeardFromLord when an item is missing, so _2 needs all three (probes 04:682F#2-#4)
+- `FieldTalkEvents_ResumeFollowers` (04:69B8): corrected earlier note: the old note said FieldTalkEvents_TalkToThirdFollower sets wFollowerDelay to 1; that routine only reads it; the only store of 1 is in SceneKamehaStole_DrawBlocks (bank $73)
+- `ElvenVillageTalkEvents` (04:6A35): Which maps set wTalkEventGroup to each entry (and so the place of each handler) is not traced; places in the notes come from the message texts.
+- `ElvenVillageTalkEvents_ShopHelloWhatMayI` (04:73C7): Which item list wScreenTableIndex $11 selects for SCRIPT_SHOP (ShopItemListTable) is not read here.
+- `ElvenVillageTalkEvents_TravelersInn` (04:73D8): What 0 or 1 in slot 0 OBJ_STATE (wSpriteSlots + 7) means for the inn keeper (facing or animation) is not read here; hPlayerX $30 is presumably one side of the counter.
+- `Talk_SoulTowerChestBattle` (04:79FC): the tower is named only from the message of Talk0C47, the next entry of the same group
+- `SkillPassesSideFlagBit3Check` (05:41B9): what side flag bit 3 is (set by which skill) is not read here
+- `SkillPassesRepeatCheck` (05:41D6): which skills set bit 7 of record byte 8, and what queued action means here, are not read
+- `AIScore_TakeMagic_Conditions_FoeHasTakeableSkill` (05:4286): whether the game meant to read the skill numbers (wBattleSkills + 16 * foe + 2k) as SlotHasSkillWithFlagD does
+- `AIGateFoeStatus2Mask22` (05:4676): whether class 3 stands for the Bang skills the bounce affects is inferred from the AnyFoeNotFullyResistant_Data order
+- `AIScore_UltraDown_Conditions_AnyFoeLowerable` (05:4880): the resistance field (byte 2 bits 5-4) is named Beat in the wSlotResistances note; why UltraDown tests it is not read
+- `NoUnflaggedFoeSpeciesOrLink` (05:4C9C): Nothing in src/ calls it; what the wSpeciesFlags bit means here (a library entry?) is not checked.
+- `AIScore_DeMagic_Conditions_AnyFoeToClear` (05:4DA5): The earlier note said the foe fourth slot; the slot read is on the actor side.
+- `FailIfFoeAIDamageEstimatesAtLeastEstimate` (05:4E48): The one-byte stride and the byte-wise compare (a high byte above with a low byte below counts as below) look like slips; whether wAIDamageEstimates was meant as a word per slot is not settled.
+- `EstimateSkillDamage` (05:4E7C): The level-based paths add A (1 or the actor slot) for skills $4E/$4F, and the percentages depend on the slot number itself; both look unintended.
+- `EstimateSkillDamage` (05:4E7C): The earlier note said the level paths use stats and did not mention the slot-number percentages.
+- `PassIfTwiceATKAboveHighestFoeDEF` (05:517D): The name and the earlier note said lowest; the compare keeps the highest. Whether lowest was intended is not settled.
+- `FailIfFoeKnowsSkills42To47` (05:53FA): The name says skills $42-$47 but $44 and $45 are not tested.
+- `FailIfFoeKnowsSkills42To47` (05:53FA): The list address built from the low byte of the status pointer looks like a bug; the same slip is in FailIfAbleAllyKnowsSkill42To47 and FailIfAbleAllyWithStatus6KnowsSkill78To92.
+- `FailIfFoeSkill3DThreatensActorHP` (05:5500): The restart offset 2 * (slot + 1) (where 16 * (slot + 1) fits the layout) looks like a slip.
+- `AIGateLoneAllyMPAndSkills` (05:5919): Nothing in src/ calls it.
+- `AIGateLoneAllyMPAndSkills` (05:5919): The first loop jumps into .next of the second loop; when no present ally is found but one absent slot was counted, it reads the MP and skills of slot L (a leftover byte).
+- `FailIfAllyLacksMPForHealSkill` (05:59BD): Nothing in src/ calls it.
+- `FailIfAllyLacksMPForHealSkill` (05:59BD): Why a dance seal (not the spell seal) excludes a healer is not settled.
+- `FailIfAbleAllyKnowsSkillList` (05:5A38): Nothing in src/ calls it.
+- `FailIfAbleAllyKnowsSkillList` (05:5A38): The list address built from the low byte of the status pointer looks like a bug.
+- `FailIfAllyLacksMPForSkillList` (05:5A73): Nothing in src/ calls it.
+- `FailIfAbleAllyKnowsSkill42To47` (05:5AFE): Nothing in src/ calls it.
+- `FailIfAbleAllyKnowsSkill42To47` (05:5AFE): The name says $42-$47 but $44 and $45 are not tested; the list address looks like a bug.
+- `FailIfAbleAllyWithStatus6KnowsSkill78To92` (05:5B57): Nothing in src/ calls it.
+- `FailIfAbleAllyWithStatus6KnowsSkill78To92` (05:5B57): The list address looks like a bug.
+- `PassIfSkill83OrNoAllyHasStatus` (05:5C50): Nothing in src/ calls it.
+- `PassIfSideFlagOrOtherAllyPresent` (05:5CF1): The earlier note and the name said an empty ally slot passes; the code passes on a present one.
+- `AnyAllyLacksStatus2Bit2_2` (05:5D31): Whether the foes were meant (and $04 twice) is not settled; the _2 name only marks the duplicate.
+- `FailIfLinkModeZeroAndPlayerStateFlagsBit3` (05:5D89): Nothing in src/ calls it; what bit 3 of hPlayerStateFlags means in battle is not settled.
+- `AnyFoeLacksStatus4Bits23ThenStatus3Bits67` (05:5E4B): Nothing in src/ calls it; the missing ld b, $03 looks like a slip.
+- `AIScore_EvilSlash_CheckFoes` (05:5EA1): The earlier note said status 2 & $3F; the byte read is status 3.
+- `AIAddScoresForTwoLists_SealingFoes` (05:5ECE): The ld c, a after building the wSlotMarks pointer looks like a slip for the first slot of the side; as built, the routine cannot return 0.
+- `AIAddScoresForTwoLists_SealingFoes` (05:5ECE): The earlier note described the foe tests as live; as built they are never reached.
+- `AIAddScoresForTwoLists_OtherAllies` (05:5FC7): The earlier note said only the MP test of SlotCHasMP3AndSkill6B was used.
+- `SlotCHasCastableHealSkill` (05:60BA): Reading from wBattleTargetChoice + 16 * slot, and the id - $1B index, both look like bugs; FailIfFoeHurtAndHealerCanCast is the only caller.
+- `AIGateFoeSlotResistances2Bits45` (05:6153): The earlier note said status byte 1 mask $2A; the byte is status 2.
+- `UnreferencedEstimateWeakestFoeHit` (05:61C4): Nothing in src/ calls it.
+- `UnreferencedEstimateWeakestFoeHit` (05:61C4): The earlier note said highest ATK; the compare keeps the lowest.
+- `UnreferencedResultC1` (05:6226): The earlier note said no jump reached it.
+- `AIScore_MPass_AnyAllyMPAboveMax` (05:62E1): The swapped operands look like a bug: as built it passes only when an ally MP exceeds its max.
+- `AIScore_MPass_AnyAllyMPAboveMax` (05:62E1): The earlier note said MP below max.
+- `MPBandOfSlotTemp0` (05:6312): Nothing in src/ calls it.
+- `FoeHPCheckReadsWrongSlot` (05:6494): Both slips (C never advanced, the HP slot taken from the estimate) look like game bugs.
+- `FailIfSkillHasResistanceClass` (05:64FE): The missing jump to the $FF exit (and the missing pointer step) look like bugs; as built the result does not depend on the foes.
+- `FailIfSkillHasResistanceClass` (05:64FE): The earlier note said $FF when no foe is fully resistant.
+- `FailIfTwoAlliesBelowHalfHP` (05:6556): The earlier note had the skill test reversed.
+- `AIScore_Sap_CompareATKWithDEF` (05:65C1): The earlier note doubled the foe DEF instead of the ally ATK.
+- `AIGateCompareAllyStatAverages` (05:667F): Which slots have wBattleSlotOut $FF rather than 1 (defeated) is not settled here.
+- `AIGateCompareAllyStatAverages` (05:667F): The earlier note had the skill test reversed.
+- `ActorStatus4CheckReadsAddress` (05:6972): The missing ld a, [hl] looks like a game bug.
+- `ActorLacksStatus2Bit1And5Bits01` (05:69DA): The earlier note said status byte 4.
+- `ResistanceAverageGateForAISide` (05:69F5): Which side slots 4-7 are outside link battles (the earlier note said the player side) is not checked here.
+- `AddBCToAISkillScore` (05:6AF8): Nothing in src/ calls it (AddAIWeight adds to the same word).
+- `AddBCToAISkillScore2` (05:6B07): Nothing in src/ calls it.
+- `CompareHPWithHalfMax` (05:6BBC): Nothing in src/ calls it.
+- `CompareHPWithQuarterMax` (05:6BCE): Nothing in src/ calls it.
+- `CompareHPWithTenthMax` (05:6BE1): Nothing in src/ calls it.
+- `CountSkillsWithZeroRecordByte1` (05:6C42): Nothing in src/ calls it; the single HL step looks like a slip for every other byte.
+- `CountSkillsInList_2` (05:6D54): No static caller found: is CountSkillsInList_2 reached through a pointer, or unused?
+- `CountSkillsInRanges` (05:6D9E): No static caller found: is CountSkillsInRanges reached through a pointer, or unused?
+- `CountSkills16To1AOr1ETo20` (05:6DD9): No static caller found: is it reached through a pointer, or unused?
+- `CountSkillsWithFlag6` (05:6E8B): Was E meant to count record byte 5 bit 6 (the spell flag that SkillPassesStatus1Bit0Check reads), as the earlier note said?
+- `CountSkillsWithFlag6` (05:6E8B): No static caller found.
+- `CountSkillsBelow16Or2ETo34Except31` (05:6ED1): No static caller found.
+- `CountSlotSkills40To47` (05:6F01): No static caller found.
+- `CountSkillsInRanges_2` (05:6F21): No static caller found.
+- `ReadActorResistanceFieldForSkillA` (05:7032): No static caller found.
+- `AIScore_Kamikaze_CheckSkills` (05:7058): The caller does inc c / dec b after the call with B already counted down; what does its loop do then?
+- `AIScore_TakeMagic_Conditions` (05:72F7): AIScore_TakeMagic_Conditions_FoeHasTakeableSkill steps through wBattleSkillsPrefix + 16 * slot by 2, so it reads the byte before each list and then the odd bytes, not the skill numbers (an extra probe in AI mode 2 passed with $01 in an odd byte and failed with SKILL_BLAZE as a skill); a slip?
+- `ClearBGMap0Screen20x18` (07:510D): No caller, jump or table entry names ClearBGMap0Screen20x18; is it unused code?
+- `StartFadeToTitleScreenState1` (07:5999): Was the ret before StartFadeToLinkScreenState1 meant to be a ret z, making A, B or Start skip intro screen 0? As built, GameMode5_Update_ShowScreen0 never reaches it.
+- `StartFadeToTitleScreenState2` (07:5A3F): Was the ret before StartFadeToLinkScreenState2 meant to be a ret z (a button skip of intro screen 1)?
+- `DrawCGBMetaSpriteAt38_30` (07:5FE8): No caller names DrawCGBMetaSpriteAt38_30; is it unused? The earlier note said sub-index 1, but $01 XOR $01 stores 0.
+- `RunLinkSession4ScreenState` (07:6C12): The earlier note said this state machine hands over to the egg service menu; state 7 far-calls LinkBattleSetupMenu, whose note describes the VS battle set-up.
+- `LinkRulesEditor_DrawFamilyMark` (07:7724): The current name refers to RunLinkSession4ScreenState_EditRules, the old name of LinkRulesEditor.
+- `EnterStatusEffectFieldState` (0A:42BC): EnterStatusEffectFieldState_Data is one $FF-ended list of 64 map ids; its dw lines (FillEncounterFromEntry_Data2, PointerRun_Entry03 and others) are map id pairs, not pointers.
+- `CountDownTalkCountdownThenDispatchTalkEvent` (0A:43B5): What does talk event group $1E do at the end of the countdown that field skill 14 starts?
+- `TickRandomEncounterCounter` (0A:43EC): What does talk event group $1D do when wEncounterDelay runs out?
+- `LoadEncounterIdsForScreenCell` (0A:5057): The current name only numbers a copy of ReadMapCellWordForScreenXY; the proposal names what it loads.

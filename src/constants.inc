@@ -909,7 +909,7 @@ DEF EVENT_SCENE_DARCK_DEFEATED EQU $0D1 ; set by SceneDarckDefeated_BlinkOut
 DEF EVENT_TAKE_ITEM EQU $0D2 ; set by Script_SurprisinglyObedientAreYou
 DEF EVENT_SCENE_DARCK_TAUNT EQU $0D3 ; set by Script_SurprisinglyObedientAreYou, Script_YouSeemToStill
 DEF EVENT_MAP_D6_OBJECT_REMOVED EQU $0D5 ; no setter found; tested by ObjSelector_MapD6_1
-DEF EVENT_MAP_D7_OBJECT_REMOVED EQU $0D9 ; no setter found; tested by ObjSelector_MapD7_1, Talk0C2F
+DEF EVENT_MAP_D7_OBJECT_REMOVED EQU $0D9 ; no setter found; tested by ElvenVillageTalkEvents_BaffleTowerChestBattle, ObjSelector_MapD7_1
 DEF EVENT_IF_YOUVE_MADE_IT EQU $0DE ; set by ElvenVillageTalkEvents_ShowIfYouveMadeIt
 DEF EVENT_MAP_DC_OBJECT_REMOVED EQU $0DF ; no setter found; tested by ObjSelector_MapDC_1
 DEF EVENT_THIS_IS_THE_MERMAID EQU $0F1 ; set by YoldTalkEvents_ShowThisIsTheMermaid
@@ -995,7 +995,7 @@ DEF EVENT_KIRAL_FETCH_ME_MY_166 EQU $166 ; set by Talk075F_KiralFetchMeMy
 DEF EVENT_KIRAL_FETCH_ME_MY_167 EQU $167 ; set by WarpEffect_Warp
 DEF EVENT_KIRAL_FETCH_ME_MY_168 EQU $168 ; set by Talk075F_KiralFetchMeMy
 DEF EVENT_MAP_CD_OBJECT_REMOVED EQU $16A ; no setter found; tested by ObjSelector_MapCD_1
-DEF EVENT_MAP_CE_OBJECT_REMOVED EQU $16E ; no setter found; tested by ObjSelector_MapCE_1, Talk0C17
+DEF EVENT_MAP_CE_OBJECT_REMOVED EQU $16E ; no setter found; tested by ElvenVillageTalkEvents_PowerTowerChestBattle, ObjSelector_MapCE_1
 DEF EVENT_THIS_IS_THE_BAFFLE EQU $173 ; set by ElvenVillageTalkEvents_ShowThisIsTheBaffle
 DEF EVENT_MAP_D3_OBJECT_REMOVED EQU $174 ; no setter found; tested by ObjSelector_MapD3_1
 DEF EVENT_MAP_D4_OBJECT_REMOVED EQU $178 ; no setter found; tested by ObjSelector_MapD4_1

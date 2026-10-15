@@ -3425,7 +3425,7 @@
   },
   "D06A": {
     "name": "wTitleScreenState",
-    "note": "state of game mode 5's screens: the opening and title screens, name entry and new-player setup, and the link screens reached from them (StartFadeToLinkScreenState1/2); the boot trace runs the title flow through it first (was wLinkScreenState)",
+    "note": "state of game mode 5's screens: the opening and title screens, name entry and new-player setup, and the link screens reached from them (StartFadeToTitleScreenState1/2); the boot trace runs the title flow through it first (was wLinkScreenState)",
     "evidence": "E-0136, E-0318"
   },
   "D06B": {
