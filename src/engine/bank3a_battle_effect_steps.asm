@@ -1684,14 +1684,14 @@ RunEffectRoutineEffectEvery5Frames::
     dw RunEffectRoutineEffectEvery5Frames_EndAtOnce
     dw RunEffectRoutineEffectEvery5Frames_BlinkTarget
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
+    dw RunEffectRoutineEffectEvery5Frames_FlashWhite
     dw RunEffectRoutineEffectEvery5Frames_FlashOnce
     dw RunEffectRoutineEffectEvery5Frames_Delay
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice
     dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash
     dw RunEffectRoutineEffectEvery5Frames_CountUp
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2
+    dw RunEffectRoutineEffectEvery5Frames_FlashWhiteLong
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen
     dw RunEffectRoutineEffectEvery5Frames_BlinkActor
 
@@ -1744,7 +1744,7 @@ RunEffectRoutineEffectEvery5Frames_CoverTarget::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
+    ld hl, EffectPictureBGMapOffsets
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1765,7 +1765,7 @@ RunEffectRoutineEffectEvery5Frames_RestoreTarget::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
+    ld hl, EffectPictureBGMapOffsets
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1869,8 +1869,14 @@ ReadWordTableEntry_Bank3A::
     deref_hl
     ret
 
-; data read by RunEffectRoutineEffectEvery5Frames (10 bytes) (E-0347)
-RunEffectRoutineEffectEvery5Frames_CoverTarget_Data::
+; Five words, offsets added to vBGMap0: $00E7, $00E4, $00EA, $00E1 and $00ED (BG map row 7, columns
+; 7, 4, 10, 1 and 13), indexed by the 0-4 position from EffectPositionIndexForTarget or
+; EffectPositionIndexForActor (ReadWordTableEntry_Bank3A). The result is the top-left corner of a
+; monster's 6 x 6 picture place, where the blink steps
+; (RunEffectRoutineEffectEvery5Frames_CoverTarget, RunEffectRoutineEffectEvery5Frames_RestoreTarget,
+; RunEffectRoutineEffectEvery5Frames_CoverActor, RunEffectRoutineEffectEvery5Frames_RestoreActor)
+; copy a tile block from EffectTileBlockTable with CopyVRAMRectToBuffer. (C1, E-0372)
+EffectPictureBGMapOffsets::
     db $e7, $00, $e4, $00, $ea, $00, $e1, $00, $ed, $00
 
 ; two effect routines read the word at $4D5C + 2 * index (index 3, or wBattleTarget & 3) and pass it
@@ -1971,8 +1977,13 @@ ScrollShake_End::
     ld [wEffectSpriteX], a
     ret
 
-; alternates rBGP writes with a palette pattern that moves the effect sprite right (E-0293)
-RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite::
+; Effect routine 4 (wEffectRoutine), stepped by wEffectSpriteX, which here only counts the steps:
+; three times sets the three DMG palette bytes (wDMGPaletteBGP and the two after it) to $00, every
+; shade 0 (FlashAndMoveSprite_White), then back to $D2, $D2, $E2
+; (SetDMGPaletteBGPPatternAndIncEffectSpriteX); step 6, FlashAndMoveSprite_End, restores them and
+; ends the effect (wEffectId $FF, wEffectSpriteX 0). No sprite is moved. (C1, E-0372)
+; alternates rBGP writes with a palette pattern that moves the effect sprite right
+RunEffectRoutineEffectEvery5Frames_FlashWhite::
     ld a, [wEffectSpriteX]
     jumptable
     dw FlashAndMoveSprite_White
@@ -1983,9 +1994,9 @@ RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite::
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
     dw FlashAndMoveSprite_End
 
-; Flash and move, even steps (0, 2, 4; 0-14 in
-; RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2): sets all three DMG palettes
-; (wDMGPaletteBGP and the two after it) to 0, white, and moves to the next step. (C1, E-0371)
+; Flash and move, even steps (0, 2, 4; 0-14 in RunEffectRoutineEffectEvery5Frames_FlashWhiteLong):
+; sets all three DMG palettes (wDMGPaletteBGP and the two after it) to 0, white, and moves to the
+; next step. (C1, E-0371)
 FlashAndMoveSprite_White::
     ld hl, wDMGPaletteBGP
     ld [hl], $00
@@ -2009,7 +2020,7 @@ SetDMGPaletteBGPPatternAndIncEffectSpriteX::
     inc [hl]
     ret
 
-; Flash and move, last step (6, or 16 in RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2):
+; Flash and move, last step (6, or 16 in RunEffectRoutineEffectEvery5Frames_FlashWhiteLong):
 ; restores the palettes ($D2, $D2, $E2; SetDMGPaletteBGPPatternAndIncEffectSpriteX) and ends the
 ; effect. (C1, E-0371)
 FlashAndMoveSprite_End::
@@ -2031,7 +2042,7 @@ RunEffectRoutineEffectEvery5Frames_FlashOnce::
 
 ; Flash once, step 0: darkens the DMG palettes a shade per call, four times. (C1, E-0357)
 FlashOnce_Darken::
-    call RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep
+    call DarkenDMGPaletteOneStep
     ld a, [wEffectCounter]
     cp $04
     ret c
@@ -2079,8 +2090,8 @@ FlashOnce_End::
 ; increments wEffectCounter and steps the three DMG palette bytes one shade darker: shades 0-2 cap
 ; at 3, but the top shade wraps from 3 to 0 ($C0 + $40 overflows past the cap check), and C is never
 ; cleared, so the second and third bytes also get the earlier bytes' low shades ORed in (likely game
-; bugs; C2: executed in tests/test_helpers_behaviour.py) (E-0305, E-0315)
-RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep::
+; bugs; C2: executed in tests/test_helpers_behaviour.py) (E-0305, E-0315, E-0372)
+DarkenDMGPaletteOneStep::
     ld hl, wEffectCounter
     inc [hl]
     ld b, $03
@@ -2136,22 +2147,26 @@ RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep::
 RunEffectRoutineEffectEvery5Frames_Delay::
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
-    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
+    dw DelayEffect_InvertPalettes
     dw DelayEffect_End
 
-; inverts the three DMG palette bytes and moves the effect sprite right (E-0305)
-RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes::
+; Steps 0-11 of effect routine 6 (RunEffectRoutineEffectEvery5Frames_Delay, stepped by
+; wEffectSpriteX): inverts the three DMG palette bytes (wDMGPaletteBGP and the two after it, each
+; XOR $FF) and moves to the next step, so the twelve steps flash the palettes to their negative six
+; times and leave them as they were; step 12 is DelayEffect_End. (C1, E-0372)
+; inverts the three DMG palette bytes and moves the effect sprite right
+DelayEffect_InvertPalettes::
     ld hl, wDMGPaletteBGP
     ld a, [hl]
     xor $ff
@@ -2186,11 +2201,10 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice::
     dw FlashTwice_Restore
     dw FlashTwice_End
 
-; Flash twice, steps 0 and 3: darkens the DMG palettes a shade per call
-; (RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep); after four, clears wEffectFlashState and
-; wEffectCounter and moves on. (C1, E-0371)
+; Flash twice, steps 0 and 3: darkens the DMG palettes a shade per call (DarkenDMGPaletteOneStep);
+; after four, clears wEffectFlashState and wEffectCounter and moves on. (C1, E-0371)
 FlashTwice_Darken::
-    call RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep
+    call DarkenDMGPaletteOneStep
     ld a, [wEffectCounter]
     cp $04
     ret c
@@ -2409,13 +2423,13 @@ RunEffectRoutineEffectEvery5Frames_CountUp::
 RunEffectRoutineEffectEvery5Frames_FlashPalette::
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_FlashPalette_Lighten
+    dw FlashPalette_Lighten
     dw FlashPalette_Hold
     dw FlashPalette_Restore
     dw FlashPalette_End
 
 ; Flash light, step 0: lightens the DMG palettes a shade per call, four times. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_FlashPalette_Lighten::
+FlashPalette_Lighten::
     call LightenDMGPaletteOneStep
     ld a, [wEffectCounter]
     cp $04
@@ -2513,8 +2527,12 @@ LightenDMGPaletteOneStep::
     jr nz, .loop
     ret
 
-; as RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite (E-0293)
-RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2::
+; Effect routine 11: as RunEffectRoutineEffectEvery5Frames_FlashWhite but eight times: steps 0-15
+; (by wEffectSpriteX) alternate FlashAndMoveSprite_White (DMG palettes $00) and
+; SetDMGPaletteBGPPatternAndIncEffectSpriteX ($D2, $D2, $E2), then step 16, FlashAndMoveSprite_End,
+; ends the effect. (C1, E-0372)
+; as RunEffectRoutineEffectEvery5Frames_FlashWhite
+RunEffectRoutineEffectEvery5Frames_FlashWhiteLong::
     ld a, [wEffectSpriteX]
     jumptable
     dw FlashAndMoveSprite_White
@@ -2543,29 +2561,29 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen::
     dw ScreenShake_Reset
     dw ScreenShake_Right2
     dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left4
+    dw ScreenShake_Left4
     dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right4
+    dw ScreenShake_Right4
     dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left8
+    dw ScreenShake_Left8
     dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right8
-    dw ScreenShake_Reset
-    dw ScreenShake_LeftDown
-    dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
+    dw ScreenShake_Right8
     dw ScreenShake_Reset
     dw ScreenShake_LeftDown
     dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
+    dw ScreenShake_RightDown
     dw ScreenShake_Reset
     dw ScreenShake_LeftDown
     dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
+    dw ScreenShake_RightDown
     dw ScreenShake_Reset
     dw ScreenShake_LeftDown
     dw ScreenShake_Reset
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
+    dw ScreenShake_RightDown
+    dw ScreenShake_Reset
+    dw ScreenShake_LeftDown
+    dw ScreenShake_Reset
+    dw ScreenShake_RightDown
     dw ScreenShake_End
 
 ; The screen shake, step 1: scroll back to 0. (C1, E-0357)
@@ -2594,7 +2612,7 @@ ScreenShake_Right2::
     ret
 
 ; The screen shake, step 4: hScrollX -4. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left4::
+ScreenShake_Left4::
     ld a, $fc
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2602,7 +2620,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left4::
     ret
 
 ; The screen shake, step 6: hScrollX +4. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right4::
+ScreenShake_Right4::
     ld a, $04
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2610,7 +2628,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right4::
     ret
 
 ; The screen shake, step 8: hScrollX -8. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left8::
+ScreenShake_Left8::
     ld a, $f8
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2618,7 +2636,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left8::
     ret
 
 ; The screen shake, step 10: hScrollX +8. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right8::
+ScreenShake_Right8::
     ld a, $08
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2636,7 +2654,7 @@ ScreenShake_LeftDown::
     ret
 
 ; The screen shake, step 14: hScrollX +8 and hScrollY 2. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown::
+ScreenShake_RightDown::
     ld a, $08
     ldh [hScrollX], a
     ld a, $02
@@ -2696,7 +2714,7 @@ RunEffectRoutineEffectEvery5Frames_CoverActor::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
+    ld hl, EffectPictureBGMapOffsets
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -2717,7 +2735,7 @@ RunEffectRoutineEffectEvery5Frames_RestoreActor::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, RunEffectRoutineEffectEvery5Frames_CoverTarget_Data
+    ld hl, EffectPictureBGMapOffsets
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -5307,9 +5325,9 @@ RunBattleActions_WearOffAndDefeat::
     ld a, [wBattleResolveStep]
     jumptable
     dw RunBattleActions_EndOfTurn
-    dw RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore
+    dw RunBattleActions_WearOffAndDefeat_Ironize
     dw RunBattleActions_WearOffAndDefeat_Poison
-    dw RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead
+    dw RunBattleActions_WearOffAndDefeat_DroppedDead
     dw RunBattleActions_WearOffAndDefeat_NextSlot
     dw RunBattleActions_WearOffAndDefeat_NextTurn
     dw RunBattleActions_WearOffAndDefeat_TurnLimitDraw
@@ -5392,7 +5410,7 @@ RunBattleActions_EndOfTurn::
 
 ; End of turn, step 1: counts down the slot's Ironize ($40 a turn), showing "<name>'s Ironize wore
 ; off!" (text $84) at zero; an Ironized slot skips the poison step. (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore::
+RunBattleActions_WearOffAndDefeat_Ironize::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleActor]
@@ -5566,7 +5584,7 @@ ApplyPoisonDamage::
 
 ; End of turn, step 3: blanks the slot's picture and shows '<name> dropped dead!' (text $90); when
 ; the battle is decided goes to sub-phase $0A. (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead::
+RunBattleActions_WearOffAndDefeat_DroppedDead::
     ld hl, wBattleResolveStep
     inc [hl]
     farcall BlankTargetMonsterPicture
@@ -6700,24 +6718,23 @@ RunDefeatStepMinus1Step::
 RunDefeatStepMinus1Step_ShowText::
     call TargetOnLocalSide_Bank3A
     ld d, $85
-    jr c, RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
+    jr c, RunDefeatStepMinus1Step_ShowTextAndEnd
     ld d, $e8
-    jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
+    jr RunDefeatStepMinus1Step_ShowTextAndEnd
 
 ; Defeat step 1: battle text $80 for a target on the near side, $E7 otherwise. (C1, E-0357)
 RunDefeatStepMinus1Step_ShowText2::
     call TargetOnLocalSide_Bank3A
     ld d, $80
-    jr c, RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
+    jr c, RunDefeatStepMinus1Step_ShowTextAndEnd
     ld d, $e7
-    jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
+    jr RunDefeatStepMinus1Step_ShowTextAndEnd
 
 ; Defeat step 2 (wDefeatStep = 3): D = battle text $AC 'The barrier popped and disappeared!', shown
-; by RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText, which also clears wDefeatStep.
-; (C1, E-0371)
+; by RunDefeatStepMinus1Step_ShowTextAndEnd, which also clears wDefeatStep. (C1, E-0371)
 RunDefeatStepMinus1Step_ShowBarrierPopped::
     ld d, $ac
-    jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
+    jr RunDefeatStepMinus1Step_ShowTextAndEnd
 
 ; Entries 3-7 and 9 of RunDefeatStepMinus1Step (wDefeatStep = 4-8 and 10): a bare ret; unlike the
 ; other entries it leaves wDefeatStep unchanged. (C1, E-0371)
@@ -6729,7 +6746,7 @@ RunDefeatStepMinus1Step_ShowHeroWentAway::
     ld d, $7f ; battle text '0 went away!'
 
 ; Shows battle text D and clears the defeat step. (C1, E-0357)
-RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText::
+RunDefeatStepMinus1Step_ShowTextAndEnd::
     farcall ShowBattleText
     xor a
     ld [wDefeatStep], a
@@ -6840,7 +6857,7 @@ RemoveCFromActionQueue_3A::
     ret
 
 ; D = ActionBattleTextTable[wBattleActionId]; returns at once when it is $FF; for action $CF first
-; runs ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom; then ShowBattleText (E-0118)
+; runs RollLoveRainOutcome; then ShowBattleText (E-0118)
 ShowActionBattleTextFromActionBattleTextTable::
     ld a, [wBattleActionId]
     ld hl, ActionBattleTextTable
@@ -6851,12 +6868,14 @@ ShowActionBattleTextFromActionBattleTextTable::
     ld d, a
     ld a, [wBattleActionId]
     cp ACTION_CF
-    call z, ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom
+    call z, RollLoveRainOutcome
     jp ShowBattleText
 
-; Half the time (a roll below $80) sets the LoveRain flag and picks battle text $D6, otherwise
-; clears it and picks $91. (C1, E-0357)
-ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom::
+; For action ACTION_CF only (called by ShowActionBattleTextFromActionBattleTextTable): rolls
+; AdvanceRandom; when wRandomLo is below $80 sets wLoveRainFlag to 1 and returns D = battle text $D6
+; ('A gentle rain fell!'), otherwise clears wLoveRainFlag and returns D = $91 ('... prayer went
+; unanswered!'). ActionEffect_ActionCF tests wLoveRainFlag to decide whether it heals. (C1, E-0372)
+RollLoveRainOutcome::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $80
@@ -6873,9 +6892,8 @@ ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom::
     ret
 
 ; ShowActionBattleTextFromActionBattleTextTable reads the byte at $6DAA + wBattleActionId and,
-; unless it is $FF, passes it in D to ShowBattleText (action $CF first runs
-; ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom); 232 bytes end at
-; ShowActionBattleText ($6E92) (E-0210, C1)
+; unless it is $FF, passes it in D to ShowBattleText (action $CF first runs RollLoveRainOutcome);
+; 232 bytes end at ShowActionBattleText ($6E92) (E-0210, C1)
 ; record: battle text index ($FF = none)
 ActionBattleTextTable::
     db $00 ; id 0

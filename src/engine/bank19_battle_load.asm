@@ -209,7 +209,7 @@ GameMode4_Init_CountBattlerRecords::
 ; picture blocks, the status panels and the picture attributes, copied to the BG map with a palette
 ; upload. (C1, E-0357)
 GameMode4_Init_BuildBattleScreen::
-    farcall GameMode4_Init_BuildBattleScreen_CopyGlyphTilesToVRAM
+    farcall GameMode4_Init_BuildBattleScreen_LoadNameTiles
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForBattlePartyCount_Bank31
     farcall LayoutTileBlocksForBattleFoeCount
@@ -490,8 +490,12 @@ RandomizeWordBetween80And100Percent::
     pop bc
     ret
 
+; Entry for far callers: C = wBattleArg0 (the battle slot), then falls into
+; LoadSlotSkillsFromBattlerRecord, which refills that slot's 8 entries of wBattleSkills from its
+; 78-byte battler record and loads each skill's record part. Called from bank $19 (twice) and by
+; farcall from bank $A0. (C1, E-0372)
 ; C = wBattleArg0, then falls into LoadSlotSkillsFromBattlerRecord (E-0126)
-SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord::
+LoadSlotSkillsForBattleArg0::
     ld a, [wBattleArg0]
     ld c, a
 
@@ -792,9 +796,13 @@ StoreWordAtDEPlus2C_Bank19::
     ld [de], a
     ret
 
+; Entry for far callers: HL = the word wBattleArg0/wBattleArg1 (source fields), DE = the word
+; wBattleArg2/wBattleArg3 (destination), then falls into PackResistanceFieldsToDE, which packs the
+; 2-bit fields at HL into the 7-byte record at DE. Far-called from banks $32, $36 and $A0. (C1,
+; E-0372)
 ; HL = the word wBattleArg0, DE = the word wBattleArg2, then falls into PackResistanceFieldsToDE
 ; (E-0126)
-LoadBattleArg0PointersThenRunPackResistanceFieldsToDE::
+PackResistancesFromBattleArgs::
     ld a, [wBattleArg0]
     ld l, a
     ld a, [wBattleArg1]
@@ -2168,12 +2176,12 @@ LoadBattleSlotFromBattlerRecord::
     push bc
     ld a, [wBattleArg0]
     or a
-    jr nz, .call_set_c_from_battle_arg0_then_run_load
+    jr nz, .call_load_slot_skills_for_battle_arg0
     call LoadSlotSkillsFromBattlerRecord
     jr .restore4
 
-.call_set_c_from_battle_arg0_then_run_load:
-    call SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
+.call_load_slot_skills_for_battle_arg0:
+    call LoadSlotSkillsForBattleArg0
 
 .restore4:
     pop bc
@@ -2330,12 +2338,12 @@ LoadBattleSlotFromBattlerRecord_2::
     push bc
     ld a, [wBattleArg0]
     or a
-    jr nz, .call_set_c_from_battle_arg0_then_run_load
+    jr nz, .call_load_slot_skills_for_battle_arg0
     call LoadSlotSkillsFromBattlerRecord
     jr .restore
 
-.call_set_c_from_battle_arg0_then_run_load:
-    call SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
+.call_load_slot_skills_for_battle_arg0:
+    call LoadSlotSkillsForBattleArg0
 
 .restore:
     pop bc

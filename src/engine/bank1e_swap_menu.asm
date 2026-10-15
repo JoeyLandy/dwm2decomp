@@ -696,7 +696,7 @@ SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs::
 
 ; Moving records, step 11: draws the yes/no box, plays sound $6C and resets the choice. (C1, E-0357)
 SwapMonstersMenu_MoveRecords_DrawYesNoAgain::
-    ld de, SwapMonstersMenu_MoveRecords_DrawYesNoAgain_TileRect
+    ld de, SwapMonstersMenu_YesNoAgainTileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank1E
@@ -717,7 +717,9 @@ SwapMonstersMenu_MoveRecords_DrawYesNoAgain::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
-SwapMonstersMenu_MoveRecords_DrawYesNoAgain_TileRect::
+TileRect_1E::
+; data read by SwapMonstersMenu_MoveRecords_DrawYesNoAgain (40 bytes) (E-0347)
+SwapMonstersMenu_YesNoAgainTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -974,7 +976,7 @@ SwapMonstersMenu_MoveRecords_YesNoCursor_Mark::
 SwapMonstersMenu_MoveRecords_YesNoCursor_DrawTile::
     ld a, [wChoiceCursor]
     add a
-    ld hl, SwapMonstersMenu_MoveRecords_YesNoCursor_DrawTile_Data
+    ld hl, SwapMonstersMenu_YesNoCursorOffsets
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -991,8 +993,11 @@ SwapMonstersMenu_MoveRecords_YesNoCursor_DrawTile::
     ei
     ret
 
-; data read by SwapMonstersMenu (4 bytes) (E-0347)
-SwapMonstersMenu_MoveRecords_YesNoCursor_DrawTile_Data::
+; Two little-endian words, $012D and $016D: BG map offsets from the scroll origin (row 9 column 13,
+; row 11 column 13) of the yes/no cursor for wChoiceCursor 0 and 1.
+; SwapMonstersMenu_MoveRecords_YesNoCursor_DrawTile adds the entry to BGMapAddressAtScroll_Bank1E,
+; steps back on a scroll wrap and writes tile B there. (C1, E-0372)
+SwapMonstersMenu_YesNoCursorOffsets::
     db $2d, $01, $6d, $01
 
 ; copies box $4718 to wWindowTileBuffer + $110, runs CopyScreenBufferRectWithAttrs_1E, blanks the
@@ -1368,20 +1373,23 @@ SwapMonstersMenu_MoveRecords_ClearList::
     ld [wScreenStep], a
     ret
 
-; far-calls ListRecordsState1NotEggs and continues with
-; SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5 (E-0122)
+; far-calls ListRecordsState1NotEggs and continues with SwapMonstersMenu_ClampListPage (E-0122)
 ListRecordsState1ThenContinue::
     farcall ListRecordsState1NotEggs
-    jr SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
+    jr SwapMonstersMenu_ClampListPage
 
 ; Choosing to view, step 6: lists the farm monsters that are not eggs, then the page (below). (C1,
 ; E-0357)
 SwapMonstersMenu_Check_ListMonsters::
     farcall ListRecordsInUseNotEggs
 
-; Clamps the list's page cursor; with two or more pages draws the arrows and 'page/pages' on the
-; screen and in the window buffer. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5::
+; Clamps the list's page cursor (ClampRecordListPageCursor5); when wListPages >= 2 draws the page
+; marks (tiles $C5, $BE, $C6) at scroll offset $0142 and at wWindowTileBuffer + $12E, and the
+; page-of-pages at scroll offset $0143 (DrawPageOfPagesAtScrollOffset) and at wWindowTileBuffer +
+; $12F (DrawPageOfPagesAtArg1_Bank1E). Then adds 1 to wScreenStep. ListRecordsState1ThenContinue and
+; SwapMonstersMenu_Check_ListMonsters run into it, and five steps of the stats screens call it. (C1,
+; E-0372)
+SwapMonstersMenu_ClampListPage::
     call ClampRecordListPageCursor5
     ld a, [wListPages]
     cp $02
@@ -3588,42 +3596,42 @@ SwapMonstersMenu_ShowMonsterDetails::
     dw ClearBGMapAtScrollAndResetScroll
     dw SwapMonstersMenu_ShowMonsterDetails_CopyGlyphs
     dw SwapMonstersMenu_ShowMonsterDetails_MoveOn
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawScreenFrame
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawFrame
     dw DrawListEntriesCell5RecordDetails
     dw SwapMonstersMenu_ShowMonsterDetails_LoadPicture
-    dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList
+    dw SwapMonstersMenu_ShowMonsterDetails_ListPage
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics
+    dw SwapMonstersMenu_ShowMonsterDetails_ReloadArea
     dw SwapMonstersMenu_ShowMonsterDetails_MarkEntry
     dw ListRecordsAndDrawListEntriesCell5Panel
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_Leave
     dw SwapMonstersMenu_ShowMonsterDetails_BlankText
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame
-    dw SwapMonstersMenu_ShowMonsterDetails_ShowPersonality
+    dw SwapMonstersMenu_ShowMonsterDetails_Personality
     dw SwapMonstersMenu_ShowMonsterDetails_DrawExperience
     dw SwapMonstersMenu_ShowMonsterDetails_LoadSprite
-    dw SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsPage
     dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRow
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawNextPage
     dw SwapMonstersMenu_ShowMonsterDetails_ListSkills
     dw SwapMonstersMenu_ShowMonsterDetails_ShowCategory
-    dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRowAndName
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame
+    dw SwapMonstersMenu_ShowMonsterDetails_SkillsPage
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsFrames
+    dw SwapMonstersMenu_ShowMonsterDetails_LevelAndName
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigree
     dw SwapMonstersMenu_ShowMonsterDetails_DrawParents
-    dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3
+    dw SwapMonstersMenu_ShowMonsterDetails_PedigreePage
 
 ; Stats screen, step 3: draws the screen frame and, with two or more pages, the arrows and
 ; 'page/pages'. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_DrawScreenFrame::
+SwapMonstersMenu_ShowMonsterDetails_DrawFrame::
     call BGMapAddressAtScroll_Bank1E
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawScreenFrame_TileRect
+    ld de, MonsterDetailsScreenTileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -3649,9 +3657,13 @@ SwapMonstersMenu_ShowMonsterDetails_DrawScreenFrame::
     ld [wScreenStep], a
     ret
 
+; Stats screen, step 6: runs sub-step wScreenSubStep: 0 SwapMonstersMenu_ShowMonsterDetails_Cursor1
+; (the paged list cursor), 1 ClearTileAreasAndIncScreenSubStep, 2 RedrawRecordListAndNextStep
+; (redraws the page names, wScreenStep -= 1), 3 SwapMonstersMenu_ShowMonsterDetails_RelistFarm
+; (relists, then step 4). (C1, E-0372)
 ; moves the paged cursor, clears the panel, redraws the list and continues
-; (ListRecordsState1ThenContinue) (E-0303)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList::
+; (ListRecordsState1ThenContinue)
+SwapMonstersMenu_ShowMonsterDetails_ListPage::
     ld a, [wScreenSubStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails_Cursor1
@@ -3702,7 +3714,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor1::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -3747,9 +3759,9 @@ RedrawRecordListAndNextStep::
     ld [wScreenSubStep], a
     ret
 
-; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList: relists the farm monsters
-; that are not eggs and redraws the page arrows (ListRecordsState1ThenContinue, which also advances
-; wScreenStep), then sets wScreenStep to 4 and clears wScreenSubStep. (C1, E-0370)
+; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails_ListPage: relists the farm monsters that are not
+; eggs and redraws the page arrows (ListRecordsState1ThenContinue, which also advances wScreenStep),
+; then sets wScreenStep to 4 and clears wScreenSubStep. (C1, E-0370)
 SwapMonstersMenu_ShowMonsterDetails_RelistFarm::
     call ListRecordsState1ThenContinue
     ld a, $04
@@ -3833,19 +3845,27 @@ SwapMonstersMenu_ShowMonsterDetails_Leave::
     ld [wScriptStartRequest], a
     ret
 
-; draws the species sprite, clears the panel, redraws the list and continues (E-0303)
-SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList::
+; Stats screen, step 21 (after the personality, experience and sprite steps): runs sub-step
+; wScreenSubStep: 0 SwapMonstersMenu_ShowMonsterDetails_StatsCursor (sprite and cursor), 1
+; ClearTileAreasAndIncScreenSubStep, 2 RedrawRecordListAndNextStep, 3
+; SwapMonstersMenu_ShowMonsterDetails_Relist. (C1, E-0372)
+; draws the species sprite, clears the panel, redraws the list and continues
+SwapMonstersMenu_ShowMonsterDetails_StatsPage::
     ld a, [wScreenSubStep]
     jumptable
-    dw SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsCursor
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_ShowMonsterDetails_WriteScreenSubStep
+    dw SwapMonstersMenu_ShowMonsterDetails_Relist
 
-; Stats screen (sprite and redraw), sub-step 0: draws the monster's species sprite (not in game mode
-; 5); the cursor: a page change or move redraws, B on two steps, A draws the stats pages' frame and
-; goes to step 4. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode::
+; Sub-step 0 of stats step 21: unless wGameMode is 5 draws the record's species sprite
+; (DrawListEntriesCell5SpeciesSprite), then runs UpdatePagedListCursor; every result clears
+; hSpriteHideTile. $FB/$FC (a page change) go on one sub-step (redraw), $FD (a row move) goes on one
+; step, A ($FF) goes on two steps, and B ($FE) draws the 12 x 15 rectangle
+; MonsterDetailsStatsTileRect at scroll offset $68 and the 8 x 7 rectangle
+; MonsterDetailsStatsLowerLeftTileRect at offset $160, then sets wScreenStep to 4. Also sub-step 0
+; of SwapMonstersMenu_ShowMonsterDetails3_StatsPage. (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails_StatsCursor::
     ld a, [wGameMode]
     cp $05
     jr z, .clear_menu_input_result
@@ -3901,7 +3921,7 @@ SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_2
+    ld de, MonsterDetailsStatsTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -3912,7 +3932,7 @@ SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect
+    ld de, MonsterDetailsStatsLowerLeftTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -3924,15 +3944,21 @@ SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode::
     ld [wScreenStep], a
     ret
 
-; Stats screen, sub-step 3: relists the farm monsters. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_WriteScreenSubStep::
+; Sub-step 3 of stats step 21: ListRecordsState1ThenContinue (relists the non-egg records, clamps
+; the page, draws the page marks and adds 1 to wScreenStep, undoing the decrement of
+; RedrawRecordListAndNextStep), then clears wScreenSubStep. (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails_Relist::
     call ListRecordsState1ThenContinue
     xor a
     ld [wScreenSubStep], a
     ret
 
-; as SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList (E-0303)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2::
+; Stats screen, step 27 (after the skill list and field ability steps): runs sub-step
+; wScreenSubStep: 0 SwapMonstersMenu_ShowMonsterDetails_Cursor2, 1
+; ClearTileAreasAndIncScreenSubStep, 2 RedrawRecordListAndNextStep, 3
+; SwapMonstersMenu_ShowMonsterDetails_RelistToFrames. (C1, E-0372)
+; as SwapMonstersMenu_ShowMonsterDetails_ListPage
+SwapMonstersMenu_ShowMonsterDetails_SkillsPage::
     ld a, [wScreenSubStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails_Cursor2
@@ -3993,7 +4019,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor2::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_Cursor2_TileRect_2
+    ld de, MonsterDetailsPedigreeLowerLeftTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4007,7 +4033,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor2::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_Cursor2_TileRect
+    ld de, MonsterDetailsEmptyPedigreeTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -4031,7 +4057,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor2::
     ld [wScreenStep], a
     ret
 
-; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2 (screen step 27 of
+; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails_SkillsPage (screen step 27 of
 ; SwapMonstersMenu_ShowMonsterDetails), reached after a page change has cleared the tiles and
 ; redrawn the list (RedrawRecordListAndNextStep, wScreenStep -= 1): relists the farm monsters that
 ; are not eggs and redraws the page arrows (ListRecordsState1ThenContinue, wScreenStep += 1), then
@@ -4051,7 +4077,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames_TileRect
+    ld de, MonsterDetailsBlankPageTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -4062,7 +4088,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames_2
+    ld de, MonsterDetailsBlankPageLowerLeftTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4083,7 +4109,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawNextPage::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawNextPage_TileRect
+    ld de, MonsterDetailsSkillsPageTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -4094,7 +4120,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawNextPage::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawNextPage_TileRect_2
+    ld de, MonsterDetailsSkillsLowerLeftTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4107,8 +4133,11 @@ SwapMonstersMenu_ShowMonsterDetails_DrawNextPage::
     ld [wScreenStep], a
     ret
 
-; as SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList (E-0303)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3::
+; Stats screen, step 32 (after the pedigree frame and parents): runs sub-step wScreenSubStep: 0
+; SwapMonstersMenu_ShowMonsterDetails_Cursor3, 1 ClearTileAreasAndIncScreenSubStep, 2
+; RedrawRecordListAndNextStep, 3 SwapMonstersMenu_ShowMonsterDetails_RelistBack1. (C1, E-0372)
+; as SwapMonstersMenu_ShowMonsterDetails_ListPage
+SwapMonstersMenu_ShowMonsterDetails_PedigreePage::
     ld a, [wScreenSubStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails_Cursor3
@@ -4131,11 +4160,11 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor3::
     cp $fc
     jr z, .clear_sprite_hide_tile
     cp $fd
-    jr z, SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile
+    jr z, SwapMonstersMenu_ShowMonsterDetails_BackTwoSteps
     cp $fe
-    jr z, SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile2
+    jr z, SwapMonstersMenu_ShowMonsterDetails_BackToSkills
     cp $ff
-    jr z, SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile3
+    jr z, SwapMonstersMenu_ShowMonsterDetails_BackToList
 
 .check_game_mode:
     ld a, [wGameMode]
@@ -4152,8 +4181,12 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor3::
     ld [wScreenSubStep], a
     ret
 
-; Goes back two steps, blanking the text tiles and resetting the text window. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile::
+; Clears hSpriteHideTile, subtracts 2 from wScreenStep, blanks 8 x 5 tiles at vTiles2 + $200
+; (FillTilesBxC) and resets the text window to vTiles1 with size $02, $12. Reached from
+; SwapMonstersMenu_ShowMonsterDetails_Cursor3 on a row move ($FD) and as the tail of
+; SwapMonstersMenu_ShowMonsterDetails_RelistBack1 and
+; SwapMonstersMenu_ShowMonsterDetails3_MarkBack1. (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails_BackTwoSteps::
     xor a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -4173,16 +4206,22 @@ SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile::
     ld [hl], $12
     ret
 
-; Goes to step $17. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile2::
+; B on the pedigree page (SwapMonstersMenu_ShowMonsterDetails_Cursor3): clears hSpriteHideTile and
+; sets wScreenStep to $17 (step 23, SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames, which leads
+; to the skill list page). (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails_BackToSkills::
     xor a
     ldh [hSpriteHideTile], a
     ld a, $17
     ld [wScreenStep], a
     ret
 
-; Goes to step 7. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile3::
+; A on the pedigree page (SwapMonstersMenu_ShowMonsterDetails_Cursor3): clears hSpriteHideTile and
+; sets wScreenStep to 7, which in SwapMonstersMenu_ShowMonsterDetails starts the return to the
+; record list (ClearBGMapAtScrollAndResetScroll, then the area graphics and the list) and in
+; SwapMonstersMenu_ShowMonsterDetails2 and SwapMonstersMenu_ShowMonsterDetails3 is
+; SwapMonstersMenu_ShowMonsterDetails3_DrawParty (then the list again). (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails_BackToList::
     xor a
     ldh [hSpriteHideTile], a
     ld a, $07
@@ -4198,50 +4237,50 @@ SwapMonstersMenu_ShowMonsterDetails_RelistBack1::
     ld [wScreenStep], a
     xor a
     ld [wScreenSubStep], a
-    jp SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile
+    jp SwapMonstersMenu_ShowMonsterDetails_BackTwoSteps
 
 ; screen state $0E: as SwapMonstersMenu_ShowMonsterDetails2 (E-0302)
 SwapMonstersMenu_ShowMonsterDetails3::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails3_Clear
-    dw SwapMonstersMenu_ShowMonsterDetails3_CopyGlyphTiles
+    dw SwapMonstersMenu_ShowMonsterDetails3_CopyGlyphs
     dw SwapMonstersMenu_ShowMonsterDetails_MoveOn
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawFrame
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawDetails
     dw SwapMonstersMenu_ShowMonsterDetails_LoadPicture
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList
-    dw SwapMonstersMenu_ShowMonsterDetails3_DrawPartyNames
-    dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
-    dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
+    dw SwapMonstersMenu_ShowMonsterDetails3_ListPage
+    dw SwapMonstersMenu_ShowMonsterDetails3_DrawParty
+    dw SwapMonstersMenu_ShowMonsterDetails3_MoveOn
+    dw SwapMonstersMenu_ShowMonsterDetails3_MoveOn
     dw SwapMonstersMenu_ShowMonsterDetails3_ListRecords
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_Leave
     dw SwapMonstersMenu_ShowMonsterDetails_BlankText
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame
-    dw SwapMonstersMenu_ShowMonsterDetails_ShowPersonality
+    dw SwapMonstersMenu_ShowMonsterDetails_Personality
     dw SwapMonstersMenu_ShowMonsterDetails_DrawExperience
     dw SwapMonstersMenu_ShowMonsterDetails_LoadSprite
-    dw SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList
+    dw SwapMonstersMenu_ShowMonsterDetails3_StatsPage
     dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRow
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawNextPage
     dw SwapMonstersMenu_ShowMonsterDetails_ListSkills
     dw SwapMonstersMenu_ShowMonsterDetails_ShowCategory
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRowAndName
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame
+    dw SwapMonstersMenu_ShowMonsterDetails3_SkillsPage
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsFrames
+    dw SwapMonstersMenu_ShowMonsterDetails_LevelAndName
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigree
     dw SwapMonstersMenu_ShowMonsterDetails_DrawParents
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3
+    dw SwapMonstersMenu_ShowMonsterDetails3_PedigreePage
 
 ; Stats screen (the party version), step 3: draws the screen frame. (C1, E-0357)
 SwapMonstersMenu_ShowMonsterDetails3_DrawFrame::
     call BGMapAddressAtScroll_Bank1E
-    ld de, SwapMonstersMenu_ShowMonsterDetails3_DrawFrame_TileRect
+    ld de, MonsterDetails3ScreenTileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -4260,49 +4299,53 @@ SwapMonstersMenu_ShowMonsterDetails2::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails3_Clear
-    dw SwapMonstersMenu_ShowMonsterDetails3_CopyGlyphTiles
+    dw SwapMonstersMenu_ShowMonsterDetails3_CopyGlyphs
     dw SwapMonstersMenu_ShowMonsterDetails_MoveOn
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawScreenFrame
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawFrame
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawDetails
     dw SwapMonstersMenu_ShowMonsterDetails_LoadPicture
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList
-    dw SwapMonstersMenu_ShowMonsterDetails3_DrawPartyNames
-    dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
-    dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
+    dw SwapMonstersMenu_ShowMonsterDetails3_ListPage
+    dw SwapMonstersMenu_ShowMonsterDetails3_DrawParty
+    dw SwapMonstersMenu_ShowMonsterDetails3_MoveOn
+    dw SwapMonstersMenu_ShowMonsterDetails3_MoveOn
     dw SwapMonstersMenu_ShowMonsterDetails3_ListRecords
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_Leave
     dw SwapMonstersMenu_ShowMonsterDetails_BlankText
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame
-    dw SwapMonstersMenu_ShowMonsterDetails_ShowPersonality
+    dw SwapMonstersMenu_ShowMonsterDetails_Personality
     dw SwapMonstersMenu_ShowMonsterDetails_DrawExperience
     dw SwapMonstersMenu_ShowMonsterDetails_LoadSprite
-    dw SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList
+    dw SwapMonstersMenu_ShowMonsterDetails3_StatsPage
     dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRow
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawNextPage
     dw SwapMonstersMenu_ShowMonsterDetails_ListSkills
     dw SwapMonstersMenu_ShowMonsterDetails_ShowCategory
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRowAndName
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame
+    dw SwapMonstersMenu_ShowMonsterDetails3_SkillsPage
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsFrames
+    dw SwapMonstersMenu_ShowMonsterDetails_LevelAndName
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigree
     dw SwapMonstersMenu_ShowMonsterDetails_DrawParents
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3
+    dw SwapMonstersMenu_ShowMonsterDetails3_PedigreePage
 
-; Stats screen (the party version), step 1: copies the glyph tiles, draws the frames, clears the
-; tiles and redraws the list, then step 2. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails3_CopyGlyphTiles::
+; Step 1 of SwapMonstersMenu_ShowMonsterDetails2 and SwapMonstersMenu_ShowMonsterDetails3: copies
+; the tiles of GlyphCopyDestList4/GlyphCopySrcList4 (SwapMonstersMenu_CopyGlyphTiles) and 16
+; GlyphFont glyphs (SwapMonstersMenu_CopySixteenTiles), blanks the tile areas
+; (ClearTileAreasAndIncScreenSubStep), redraws the page names (RedrawRecordListAndNextStep), clamps
+; the page and draws the page marks (SwapMonstersMenu_ClampListPage), then sets wScreenSubStep to 0
+; and wScreenStep to 2. (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails3_CopyGlyphs::
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
     call SwapMonstersMenu_CopyGlyphTiles
     call SwapMonstersMenu_CopySixteenTiles
     call ClearTileAreasAndIncScreenSubStep
     call RedrawRecordListAndNextStep
-    call SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
+    call SwapMonstersMenu_ClampListPage
     xor a
     ld [wScreenSubStep], a
     ld a, $02
@@ -4369,9 +4412,12 @@ SwapMonstersMenu_CopySixteenTiles_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; Stats screen (the party version), step 7: clears the BG map and draws the party's names. (C1,
-; E-0357)
-SwapMonstersMenu_ShowMonsterDetails3_DrawPartyNames::
+; Clears the BG map from the scroll origin and resets the scroll (ClearBGMapAtScrollAndResetScroll,
+; which adds 1 to wScreenStep), copies each party member's name into its tiles
+; (CopyPartyNamesToTiles) and clears wScreenSubStep. Step 7 of SwapMonstersMenu_ShowMonsterDetails2
+; and SwapMonstersMenu_ShowMonsterDetails3, and step 9 of SwapMonstersMenu_ShowParents2. (C1,
+; E-0372)
+SwapMonstersMenu_ShowMonsterDetails3_DrawParty::
     call ClearBGMapAtScrollAndResetScroll
     call CopyPartyNamesToTiles
     xor a
@@ -4379,7 +4425,7 @@ SwapMonstersMenu_ShowMonsterDetails3_DrawPartyNames::
     ret
 
 ; Stats screen (the party version), step 8: moves on. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep::
+SwapMonstersMenu_ShowMonsterDetails3_MoveOn::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -4392,36 +4438,36 @@ SwapMonstersMenu_ShowFarmMonsterDetails::
     dw SwapMonstersMenu_ShowMonsterDetails3_Clear
     dw SwapMonstersMenu_ShowMonsterDetails_CopyGlyphs
     dw SwapMonstersMenu_ShowMonsterDetails_MoveOn
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawScreenFrame
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawFrame
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawDetails
     dw SwapMonstersMenu_ShowMonsterDetails_LoadPicture
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList
+    dw SwapMonstersMenu_ShowMonsterDetails3_ListPage
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics
+    dw SwapMonstersMenu_ShowMonsterDetails_ReloadArea
     dw SwapMonstersMenu_ShowMonsterDetails_MarkEntry
     dw SwapMonstersMenu_ShowFarmMonsterDetails_ListFarm
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_Leave
     dw SwapMonstersMenu_ShowMonsterDetails_BlankText
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame
-    dw SwapMonstersMenu_ShowMonsterDetails_ShowPersonality
+    dw SwapMonstersMenu_ShowMonsterDetails_Personality
     dw SwapMonstersMenu_ShowMonsterDetails_DrawExperience
     dw SwapMonstersMenu_ShowMonsterDetails_LoadSprite
-    dw SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList
+    dw SwapMonstersMenu_ShowMonsterDetails3_StatsPage
     dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRow
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawNextPage
     dw SwapMonstersMenu_ShowMonsterDetails_ListSkills
     dw SwapMonstersMenu_ShowMonsterDetails_ShowCategory
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRowAndName
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame
+    dw SwapMonstersMenu_ShowMonsterDetails3_SkillsPage
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsFrames
+    dw SwapMonstersMenu_ShowMonsterDetails_LevelAndName
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigree
     dw SwapMonstersMenu_ShowMonsterDetails_DrawParents
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3
+    dw SwapMonstersMenu_ShowMonsterDetails3_PedigreePage
 
 ; Farm monster stats, step 10: copies the glyph tiles, lists the farm monsters and draws the family
 ; icon and stats box of the one under the cursor. (C1, E-0357)
@@ -4462,8 +4508,12 @@ SwapMonstersMenu_ShowMonsterDetails3_DrawDetails::
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; moves the paged cursor, clears the panel and redraws the list (E-0303)
-SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList::
+; Step 6 of SwapMonstersMenu_ShowMonsterDetails2, SwapMonstersMenu_ShowMonsterDetails3 and
+; SwapMonstersMenu_ShowFarmMonsterDetails: runs sub-step wScreenSubStep: 0
+; SwapMonstersMenu_ShowMonsterDetails_Cursor1, 1 ClearTileAreasAndIncScreenSubStep, 2
+; RedrawRecordListAndNextStep, 3 SwapMonstersMenu_ShowMonsterDetails3_RedrawPage. (C1, E-0372)
+; moves the paged cursor, clears the panel and redraws the list
+SwapMonstersMenu_ShowMonsterDetails3_ListPage::
     ld a, [wScreenSubStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails_Cursor1
@@ -4471,15 +4521,14 @@ SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList::
     dw RedrawRecordListAndNextStep
     dw SwapMonstersMenu_ShowMonsterDetails3_RedrawPage
 
-; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList: clamps the page cursor
-; and draws the page arrows (SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5),
-; writes tile $B6 (the boxes' left-edge tile) over the five rows of the party-mark column
-; (SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap), then sets wScreenStep to
-; 4 and clears wScreenSubStep; step 4 (SwapMonstersMenu_ShowMonsterDetails3_DrawDetails) marks the
-; party members again. (C1, E-0370)
+; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails3_ListPage: clamps the page cursor and draws the
+; page arrows (SwapMonstersMenu_ClampListPage), writes tile $B6 (the boxes' left-edge tile) over the
+; five rows of the party-mark column (SwapMonstersMenu_ShowMonsterDetails3_ClearMarks), then sets
+; wScreenStep to 4 and clears wScreenSubStep; step 4
+; (SwapMonstersMenu_ShowMonsterDetails3_DrawDetails) marks the party members again. (C1, E-0370)
 SwapMonstersMenu_ShowMonsterDetails3_RedrawPage::
-    call SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
-    call SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_ClampListPage
+    call SwapMonstersMenu_ShowMonsterDetails3_ClearMarks
     ld a, $04
     ld [wScreenStep], a
     xor a
@@ -4510,28 +4559,31 @@ SwapMonstersMenu_ShowMonsterDetails3_Clear::
     call CopyFromBankWaitVRAM
     ret
 
-; draws the species sprite, clears the panel and redraws the list (E-0303)
-SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList::
+; Step 21 of SwapMonstersMenu_ShowMonsterDetails2, SwapMonstersMenu_ShowMonsterDetails3 and
+; SwapMonstersMenu_ShowFarmMonsterDetails: runs sub-step wScreenSubStep: 0
+; SwapMonstersMenu_ShowMonsterDetails_StatsCursor, 1 ClearTileAreasAndIncScreenSubStep, 2
+; RedrawRecordListAndNextStep, 3 SwapMonstersMenu_ShowMonsterDetails3_MarkListPage. (C1, E-0372)
+; draws the species sprite, clears the panel and redraws the list
+SwapMonstersMenu_ShowMonsterDetails3_StatsPage::
     ld a, [wScreenSubStep]
     jumptable
-    dw SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsCursor
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw SwapMonstersMenu_ShowMonsterDetails3_MarkListPage
 
-; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList (screen step 21 of
+; Sub-step 3 of SwapMonstersMenu_ShowMonsterDetails3_StatsPage (screen step 21 of
 ; SwapMonstersMenu_ShowFarmMonsterDetails, SwapMonstersMenu_ShowMonsterDetails2 and
 ; SwapMonstersMenu_ShowMonsterDetails3), reached after a page change has cleared the tiles and
 ; redrawn the list (RedrawRecordListAndNextStep, wScreenStep -= 1): clamps the page cursor and draws
-; the page arrows and 'page/pages' (SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5,
-; wScreenStep += 1), draws the party column's divider
-; (SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap) and the party marks
+; the page arrows and 'page/pages' (SwapMonstersMenu_ClampListPage, wScreenStep += 1), draws the
+; party column's divider (SwapMonstersMenu_ShowMonsterDetails3_ClearMarks) and the party marks
 ; through MarkPartyMembersInRecordListPage, once with wArg1 = 1 (screen) and once with wArg1 = 0
 ; (window buffer). Then clears wScreenSubStep, so the screen stays on step 21 and goes back to its
 ; cursor (sub-step 0). (C1, E-0370)
 SwapMonstersMenu_ShowMonsterDetails3_MarkListPage::
-    call SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
-    call SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_ClampListPage
+    call SwapMonstersMenu_ShowMonsterDetails3_ClearMarks
     ld a, $01
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
@@ -4542,8 +4594,12 @@ SwapMonstersMenu_ShowMonsterDetails3_MarkListPage::
     ld [wScreenSubStep], a
     ret
 
-; as SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList (E-0303)
-SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2::
+; Step 27 of SwapMonstersMenu_ShowMonsterDetails2, SwapMonstersMenu_ShowMonsterDetails3 and
+; SwapMonstersMenu_ShowFarmMonsterDetails: runs sub-step wScreenSubStep: 0
+; SwapMonstersMenu_ShowMonsterDetails_Cursor2, 1 ClearTileAreasAndIncScreenSubStep, 2
+; RedrawRecordListAndNextStep, 3 SwapMonstersMenu_ShowMonsterDetails3_MarkBack4. (C1, E-0372)
+; as SwapMonstersMenu_ShowMonsterDetails_ListPage
+SwapMonstersMenu_ShowMonsterDetails3_SkillsPage::
     ld a, [wScreenSubStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails_Cursor2
@@ -4554,8 +4610,8 @@ SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2::
 ; Party stats screen, sub-step 3 (second version): clamps the page cursor, draws the marks and goes
 ; back four steps. (C1, E-0357)
 SwapMonstersMenu_ShowMonsterDetails3_MarkBack4::
-    call SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
-    call SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_ClampListPage
+    call SwapMonstersMenu_ShowMonsterDetails3_ClearMarks
     ld a, $01
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
@@ -4569,8 +4625,12 @@ SwapMonstersMenu_ShowMonsterDetails3_MarkBack4::
     ld [wScreenSubStep], a
     ret
 
-; as SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList (E-0303)
-SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3::
+; Step 32 of SwapMonstersMenu_ShowMonsterDetails2, SwapMonstersMenu_ShowMonsterDetails3 and
+; SwapMonstersMenu_ShowFarmMonsterDetails: runs sub-step wScreenSubStep: 0
+; SwapMonstersMenu_ShowMonsterDetails_Cursor3, 1 ClearTileAreasAndIncScreenSubStep, 2
+; RedrawRecordListAndNextStep, 3 SwapMonstersMenu_ShowMonsterDetails3_MarkBack1. (C1, E-0372)
+; as SwapMonstersMenu_ShowMonsterDetails_ListPage
+SwapMonstersMenu_ShowMonsterDetails3_PedigreePage::
     ld a, [wScreenSubStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails_Cursor3
@@ -4581,8 +4641,8 @@ SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3::
 ; Party stats screen, sub-step 3 (third version): clamps the page cursor, draws the marks, goes back
 ; one step and resets the text tiles. (C1, E-0357)
 SwapMonstersMenu_ShowMonsterDetails3_MarkBack1::
-    call SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
-    call SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_ClampListPage
+    call SwapMonstersMenu_ShowMonsterDetails3_ClearMarks
     ld a, $01
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
@@ -4594,7 +4654,7 @@ SwapMonstersMenu_ShowMonsterDetails3_MarkBack1::
     ld [wScreenStep], a
     xor a
     ld [wScreenSubStep], a
-    jp SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile
+    jp SwapMonstersMenu_ShowMonsterDetails_BackTwoSteps
 
 ; screen state $0D: as ShowParents (E-0302)
 SwapMonstersMenu_ShowParents2::
@@ -4609,8 +4669,8 @@ SwapMonstersMenu_ShowParents2::
     dw SwapMonstersMenu_ShowParents2_LoadPicture
     dw SwapMonstersMenu_ShowParents2_Cursor
     dw SwapMonstersMenu_ShowParents2_BlankTiles
-    dw SwapMonstersMenu_ShowMonsterDetails3_DrawPartyNames
-    dw SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics
+    dw SwapMonstersMenu_ShowMonsterDetails3_DrawParty
+    dw SwapMonstersMenu_ShowMonsterDetails_ReloadArea
     dw SwapMonstersMenu_ShowMonsterDetails_MarkEntry
     dw SwapMonstersMenu_ShowParents2_CopyListGlyphs
     dw SwapMonstersMenu_Check_BlankTiles
@@ -4645,7 +4705,7 @@ SwapMonstersMenu_ShowParents::
     dw SwapMonstersMenu_ShowParents2_Cursor
     dw SwapMonstersMenu_ShowParents2_BlankTiles
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics
+    dw SwapMonstersMenu_ShowMonsterDetails_ReloadArea
     dw SwapMonstersMenu_ShowMonsterDetails_MarkEntry
     dw SwapMonstersMenu_ShowParents2_CopyListGlyphs
     dw SwapMonstersMenu_Check_BlankTiles
@@ -5063,33 +5123,33 @@ SwapMonstersMenu_ShowPartyMemberDetails::
     dw SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame
     dw DrawListEntriesCell5RecordDetails
     dw SwapMonstersMenu_ShowMonsterDetails_LoadPicture
-    dw SwapMonstersMenu_ShowPartyMemberDetails_PartyCursor
+    dw SwapMonstersMenu_ShowPartyMemberDetails_ListPage
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics
+    dw SwapMonstersMenu_ShowMonsterDetails_ReloadArea
     dw SwapMonstersMenu_ShowMonsterDetails_MarkEntry
     dw ListRecordsAndDrawListEntriesCell5Panel
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowPartyMemberDetails_Leave
     dw SwapMonstersMenu_ShowMonsterDetails_BlankText
     dw SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawNames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame
-    dw SwapMonstersMenu_ShowMonsterDetails_ShowPersonality
+    dw SwapMonstersMenu_ShowMonsterDetails_Personality
     dw SwapMonstersMenu_ShowMonsterDetails_DrawExperience
     dw SwapMonstersMenu_ShowMonsterDetails_LoadSprite
-    dw SwapMonstersMenu_ShowPartyMemberDetails_SpriteCursor
+    dw SwapMonstersMenu_ShowPartyMemberDetails_StatsPage
     dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRow
     dw SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames
     dw SwapMonstersMenu_ShowMonsterDetails_DrawNextPage
     dw SwapMonstersMenu_ShowMonsterDetails_ListSkills
     dw SwapMonstersMenu_ShowMonsterDetails_ShowCategory
     dw SwapMonstersMenu_ShowPartyMemberDetails_Cursor
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawLevelRowAndName
-    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame
+    dw SwapMonstersMenu_ShowMonsterDetails_StatsFrames
+    dw SwapMonstersMenu_ShowMonsterDetails_LevelAndName
+    dw SwapMonstersMenu_ShowMonsterDetails_DrawPedigree
     dw SwapMonstersMenu_ShowMonsterDetails_DrawParents
-    dw SwapMonstersMenu_ShowPartyMemberDetails_PedigreeCursor
+    dw SwapMonstersMenu_ShowPartyMemberDetails_Pedigree
 
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through
 ; FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wScreenStep += 1
@@ -5140,7 +5200,7 @@ SwapMonstersMenu_ShowMonsterDetails_MoveOn::
 ; Party member stats, step 3: draws the screen frame and the party marks in the list. (C1, E-0357)
 SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame::
     call BGMapAddressAtScroll_Bank1E
-    ld de, SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame_TileRect
+    ld de, PartyMemberDetailsScreenTileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -5187,7 +5247,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadPicture::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5257,7 +5317,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadPicture::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_LoadPicture_TileRect
+    ld de, MonsterDetailsPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5274,7 +5334,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadPicture::
 
 ; Party member stats, step 6: the party cursor: a move goes to step 4, B on one, A draws a 6 x 6 box
 ; and goes to step $0E. (C1, E-0357)
-SwapMonstersMenu_ShowPartyMemberDetails_PartyCursor::
+SwapMonstersMenu_ShowPartyMemberDetails_ListPage::
     xor a
     ld [wMenuInputResult], a
     farcall UpdateListCursorListCursor
@@ -5304,7 +5364,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_PartyCursor::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5318,7 +5378,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_PartyCursor::
 
 ; Stats screen, step 8: reloads the area graphics (LoadAreaGraphicsForAreaGraphicsIndex) and the
 ; background palettes. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics::
+SwapMonstersMenu_ShowMonsterDetails_ReloadArea::
     farcall LoadAreaGraphicsForAreaGraphicsIndex
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
@@ -5416,7 +5476,7 @@ SwapMonstersMenu_ShowMonsterDetails_BlankNameTiles::
     ret
 
 ; Stats screen, step 12: draws the record's name and species name. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_DrawNameAndSpecies::
+SwapMonstersMenu_ShowMonsterDetails_DrawNames::
     call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
@@ -5486,7 +5546,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame_TileRect
+    ld de, MonsterDetailsPage2TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -5499,8 +5559,11 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame::
     ld [wScreenStep], a
     ret
 
-; Stats screen, step 18: shows the monster's personality name and its master's name. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_ShowPersonality::
+; Stats screen, step 18: for the record under the cursor (GetListEntriesCell5Address), with SRAM
+; bank 0 enabled, shows its personality name (ShowRecordPersonalityName) and draws its
+; MON_MASTER_NAME at vTiles2 + $290 (DrawRecordName0FAtTiles2290), disables SRAM, then falls into
+; step 19 (SwapMonstersMenu_ShowMonsterDetails_DrawExperience) in the same call. (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails_Personality::
     call GetListEntriesCell5Address
     ld a, [hl]
     push hl
@@ -5569,7 +5632,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadSprite::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_LoadSprite_TileRect
+    ld de, MonsterDetailsItemBoxTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -5584,7 +5647,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadSprite::
 
 ; Party member stats, step 21: draws the species metasprite at (64, 144) and runs the cursor: a move
 ; goes on one step, A on two, B draws the page frames and goes to step 4. (C1, E-0357)
-SwapMonstersMenu_ShowPartyMemberDetails_SpriteCursor::
+SwapMonstersMenu_ShowPartyMemberDetails_StatsPage::
     call GetListEntriesCell5Address
     ld a, $0a
     ld [rRAMG2], a
@@ -5645,7 +5708,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_SpriteCursor::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_2
+    ld de, MonsterDetailsStatsTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -5656,7 +5719,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_SpriteCursor::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect
+    ld de, MonsterDetailsStatsLowerLeftTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -5778,7 +5841,7 @@ SwapMonstersMenu_ShowMonsterDetails_ListSkills::
 
 ; Stats screen, step 26: shows the species' category-$13 string and goes on two steps. (C1, E-0357)
 SwapMonstersMenu_ShowMonsterDetails_ShowCategory::
-    farcall ShowSpeciesCategory13StringOfListEntriesCell5Record
+    farcall ShowCursorRecordFieldAbility
     ld a, [wScreenStep]
     add $02
     ld [wScreenStep], a
@@ -5826,7 +5889,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_Cursor::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_Cursor2_TileRect_2
+    ld de, MonsterDetailsPedigreeLowerLeftTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -5840,7 +5903,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_Cursor::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_Cursor2_TileRect
+    ld de, MonsterDetailsEmptyPedigreeTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -5866,14 +5929,14 @@ SwapMonstersMenu_ShowPartyMemberDetails_Cursor::
 
 ; Stats screen, step 28: in two sub-steps draws the page frames, then copies the yes/no glyphs. (C1,
 ; E-0357)
-SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs::
+SwapMonstersMenu_ShowMonsterDetails_StatsFrames::
     ld a, [wScreenSubStep]
     and a
     jr nz, .call_swap_monsters_menu_copy_glyph_tiles
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_TileRect
+    ld de, SwapMonstersMenu_ShowMonsterDetails_StatsFrames_TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $03
@@ -5884,7 +5947,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_LoadSprite_TileRect
+    ld de, MonsterDetailsItemBoxTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -5910,7 +5973,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawFramesAndGlyphs::
 
 ; Stats screen, step 29: draws the level and status row and the name and species, loads a tile and
 ; goes to step $11. (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_DrawLevelRowAndName::
+SwapMonstersMenu_ShowMonsterDetails_LevelAndName::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -5948,11 +6011,11 @@ SwapMonstersMenu_ShowMonsterDetails_DrawLevelRowAndName::
 
 ; Stats screen, step 30: draws the pedigree frame and loads the party's species sprites, then falls
 ; into the parents (below). (C1, E-0357)
-SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame::
+SwapMonstersMenu_ShowMonsterDetails_DrawPedigree::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame_TileRect
+    ld de, MonsterDetailsPedigreeTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -5982,9 +6045,12 @@ SwapMonstersMenu_ShowMonsterDetails_DrawParents::
     ld [wScreenStep], a
     ret
 
-; Party member stats, step 32: the cursor; with no input draws the party's species sprites; a move
-; goes back two steps (text reset), A to step $17, B to step 7. (C1, E-0357)
-SwapMonstersMenu_ShowPartyMemberDetails_PedigreeCursor::
+; Party member stats, step 32: runs UpdateListCursorListCursor; with no input draws the party's
+; species sprites for the entry (DrawPartySpeciesSprites with wArg1/wArg2 =
+; GetListEntriesCell5Address, C = 0). Every press clears hSpriteHideTile: a row move ($FD) goes back
+; two steps, blanking 8 x 5 tiles at vTiles2 + $200 and resetting the text window; B ($FE) sets
+; wScreenStep to $17; A ($FF) sets it to 7. (C1, E-0372)
+SwapMonstersMenu_ShowPartyMemberDetails_Pedigree::
     xor a
     ld [wMenuInputResult], a
     farcall UpdateListCursorListCursor
@@ -6049,7 +6115,7 @@ DrawRect6x6FromAtScroll41::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0041
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -7172,7 +7238,7 @@ DrawListEntriesCell5RecordDetails_DrawHPAndMP::
     ld b, a
     push bc
     ld a, c
-    ld hl, DrawListEntriesCell5RecordDetails_DrawHPAndMP_Data1
+    ld hl, DrawListEntriesCell5RecordDetails_HPMPFields
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -7187,7 +7253,7 @@ DrawListEntriesCell5RecordDetails_DrawHPAndMP::
     pop bc
     ld a, c
     add a
-    ld hl, DrawListEntriesCell5RecordDetails_DrawHPAndMP_Data2
+    ld hl, DrawListEntriesCell5RecordDetails_HPMPOffsets
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -7222,11 +7288,18 @@ DrawListEntriesCell5RecordDetails_DrawHPAndMP::
     jr c, .loop
     ret
 
-; data read by DrawListEntriesCell5RecordDetails_DrawHPAndMP (4 bytes) (E-0347)
-DrawListEntriesCell5RecordDetails_DrawHPAndMP_Data1::
+; Four record field offsets, MON_HP, MON_MAX_HP, MON_MP and MON_MAX_MP ($5B, $5D, $5F, $61).
+; DrawListEntriesCell5RecordDetails_DrawHPAndMP reads entry C (0-3) as the field for
+; LoadSRAMRecordWord and draws that word as three digit tiles. (C1, E-0372)
+DrawListEntriesCell5RecordDetails_HPMPFields::
     db $5b, $5d, $5f, $61
 
-DrawListEntriesCell5RecordDetails_DrawHPAndMP_Data2::
+; Four words, the BG map offsets from the scroll origin where
+; DrawListEntriesCell5RecordDetails_DrawHPAndMP puts each value's three digits: $1CC (HP), $1D0 (max
+; HP), $20C (MP) and $210 (max MP), that is rows 14 and 16, columns 12 and 16 of the 32-wide map.
+; The reader adds entry C to BGMapAddressAtScroll_Bank1E and steps back over the scroll wrap
+; (StepBGMapAddressBackOnScrollWrap). (C1, E-0372)
+DrawListEntriesCell5RecordDetails_HPMPOffsets::
     db $cc, $01, $d0, $01, $0c, $02, $10, $02
 
 ; stores tile $C3 at the addresses of entries 0 to C - 1 of the word table at HL (E-0122)
@@ -7854,9 +7927,13 @@ ListEntriesCellAddressToHL::
     ld l, a
     ret
 
-; Draws the party column's divider tile $B6 on five rows of the screen and the window buffer. (C1,
-; E-0357)
-SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap::
+; Writes tile $B6 (the boxes' left-edge tile) over the five party-mark places of the record list: on
+; the BG map at the scroll origin + $20 + $40 * k (k = 0-4, through BGMapAddressAtScroll_Bank1E and
+; StepBGMapAddressBackOnScrollWrap, waiting for VRAM access) and in wWindowTileBuffer + $78, $A0,
+; $C8, $F0 and $118. These are the places MarkPartyMembersInRecordListPage draws its marks
+; (MarkPartyMembersInRecordListPage_Data2 and MarkPartyMembersInRecordListPage_Data1), so the old
+; marks are erased before the callers draw them again. Clobbers A, C, DE, HL. (C1, E-0372)
+SwapMonstersMenu_ShowMonsterDetails3_ClearMarks::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0020
     add hl, de

@@ -2470,7 +2470,7 @@
     {
       "bank": "87",
       "addr": "5D28",
-      "label": "CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_3",
+      "label": "MapType84Interactions",
       "count": 1,
       "tail": 1,
       "id_base": 0,
@@ -2492,12 +2492,12 @@
         }
       ],
       "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
-      "note": "E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+      "note": "The list CheckMapInteractionOnA_KeyWorldFloor returns for map type $84: one 10-byte entry (kind 3, map 0, screen (0, 0), player ($30, $40); talk event group 7, index 9) and the $FF end. (C1, E-0372); E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF). (named from its reading, E-0372; was CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_3)"
     },
     {
       "bank": "87",
       "addr": "5CA4",
-      "label": "CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions",
+      "label": "KeyWorldFloorKind2Interactions",
       "count": 9,
       "tail": 1,
       "id_base": 0,
@@ -2519,12 +2519,12 @@
         }
       ],
       "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
-      "note": "E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+      "note": "The interaction list CheckMapInteractionOnA_KeyWorldFloor returns for map type $83 when the floor's wKeyWorldFloorInfo + $1 byte is 2: nine 10-byte entries (kind, map, screen X, screen Y, player X, player Y; story flag $FFFF; talk event group, index) ending with $FF, all on map 0, with talk event index 9 (DispatchTalkEvent_KeyWorld) and groups 2, 4 and 6. (C1, E-0372); E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF). (named from its reading, E-0372; was CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions)"
     },
     {
       "bank": "87",
       "addr": "5CFF",
-      "label": "CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_2",
+      "label": "KeyWorldFloorKind3Interactions",
       "count": 4,
       "tail": 1,
       "id_base": 0,
@@ -2546,7 +2546,7 @@
         }
       ],
       "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
-      "note": "E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+      "note": "The list for map type $83 when the floor's wKeyWorldFloorInfo + $1 byte is 3: four 10-byte entries in the MapInteractionTable layout, ending with $FF, all kind 5 on map 0, with talk event index 9 and groups 4 and 5. (C1, E-0372); E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF). (named from its reading, E-0372; was CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_2)"
     },
     {
       "bank": "F2",
@@ -3150,7 +3150,7 @@
     {
       "bank": "1F",
       "addr": "720D",
-      "label": "GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24_TileRect",
+      "label": "GameMode6_PictureRowTileRects",
       "count": 3,
       "id_base": 1,
       "fields": [
@@ -3192,7 +3192,7 @@
         }
       ],
       "record": "one 20 x 6 tile panel (wScreenByteBD selects it)",
-      "note": "E-0187 (C1: Jump_024_513A sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375)."
+      "note": "Three 20 x 6 tile panels, $78 bytes each, for one, two or three 6 x 6 pictures centred on the blank tile $C3: one picture of tiles $00-$23 at columns 7-12; two of $00-$23 and $24-$47 at columns 4-15; three of $00-$23, $24-$47 and $48-$6B at columns 1-18. GameMode6_Init_DrawPictureRow (bank $24) picks panel wSharedMenuWork - 1 and far-calls DrawTileRectFromArg1Params (bank $1F) to draw it at the scroll origin + $E0 with wArg7 = 1. (C1, E-0372); E-0187 (C1: Jump_024_513A sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375). (named from its reading, E-0372; was GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24_TileRect)"
     },
     {
       "bank": "1F",
@@ -12682,7 +12682,7 @@
     {
       "bank": "0C",
       "addr": "5562",
-      "label": "LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable",
+      "label": "LibraryMonsterClasses",
       "count": 373,
       "id_base": 0,
       "id_names": "monster",
@@ -12693,7 +12693,7 @@
           "name": "class 0-7"
         }
       ],
-      "note": "E-0206 (C1: LibraryMenu_ShowMonsterEntry_LoadClassBlock reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_1 in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372)."
+      "note": "373 bytes, one per monster number 0-$174 (indexed by GridCellAddressFromGridCursorXAndGrid2CursorX), each a class 0-7 that picks the four-tile row LibraryClassBlock_Class0 to LibraryClassBlock_Class7 through LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data. The same values as MonsterClassByteTable_1 in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367 and 372. (C1, E-0372); E-0206 (C1: LibraryMenu_ShowMonsterEntry_LoadClassBlock reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_1 in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372). (named from its reading, E-0372; was LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable)"
     },
     {
       "bank": "0C",
@@ -12709,7 +12709,7 @@
           "name": "index into Data_00C_54DF"
         }
       ],
-      "note": "E-0206 (C1: LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
+      "note": "E-0206 (C1: LibraryMenu_ShowMonsterEntry_LoadIconBlock reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
     },
     {
       "bank": "19",
@@ -13041,7 +13041,7 @@
           "name": "battle text index ($FF = none)"
         }
       ],
-      "note": "E-0210 (C1: ShowActionBattleTextFromActionBattleTextTable reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom); 232 bytes end at ShowActionBattleText ($6E92))."
+      "note": "E-0210 (C1: ShowActionBattleTextFromActionBattleTextTable reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs RollLoveRainOutcome); 232 bytes end at ShowActionBattleText ($6E92))."
     },
     {
       "bank": "3A",
@@ -13446,7 +13446,7 @@
     {
       "bank": "73",
       "addr": "530C",
-      "label": "SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable",
+      "label": "ChestBattlePreBattleMessages",
       "count": 54,
       "id_base": 200,
       "fields": [
@@ -13457,7 +13457,7 @@
           "name": "message word ($0000 = none)"
         }
       ],
-      "note": "E-0214 (C1: SceneChestBattle_Case00 passes $530C to SceneChestBattle_StartMapMessage, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at KeyBossBeaten2)."
+      "note": "27 message words, one per map $C8-$E2 (index hMapId - $C8; $0000 = none), that SceneChestBattle_ShowPreBattleMessage starts through SceneChestBattle_StartMapMessage (StartMessageHL_B73b) before the chest battle: 'This is the second floor-' to the fifth, and a closing line, for each of three five-map groups. SceneChestBattle_ShowPostBattleMessage_Data, the after-battle words for the same maps, follows directly. (C1, E-0372); E-0214 (C1: SceneChestBattle_Case00 passes $530C to SceneChestBattle_StartMapMessage, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at KeyBossBeaten2). (named from its reading, E-0372; was SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable)"
     },
     {
       "bank": "A1",
@@ -18715,7 +18715,7 @@
     {
       "bank": "0C",
       "addr": "4718",
-      "label": "LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles",
+      "label": "LibraryEntryLineTiles",
       "count": 6,
       "id_base": 0,
       "fields": [
@@ -18726,12 +18726,12 @@
           "name": "tile (16 bytes, 2 bits per pixel)"
         }
       ],
-      "note": "E-0237 (C1: ScriptCommandF6 code loads HL = $4718 and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C six times, 16 bytes each)."
+      "note": "Six 2bpp tiles (16 bytes each, every first byte of a pair $FF, the second the pattern): line pieces made of 2-pixel vertical strokes ($03 at the right edge, $60 inside) and full rows ($FF). LibraryMenu_ShowMonsterEntry_LoadTiles copies them to vTiles2 + $610 (BG tiles $61-$66) with six CopyTileBytesToVRAM_Bank0C calls. (C1, E-0372); E-0237 (C1: ScriptCommandF6 code loads HL = $4718 and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C six times, 16 bytes each). (named from its reading, E-0372; was LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles)"
     },
     {
       "bank": "7E",
       "addr": "4BBD",
-      "label": "LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData",
+      "label": "SharedOBJPalettes",
       "count": 38,
       "id_base": 0,
       "fields": [
@@ -18741,7 +18741,7 @@
           "name": "one CGB OBJ palette: 4 BGR555 colours"
         }
       ],
-      "note": "E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_LoadGfxPalette4 with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes)."
+      "note": "A table of CGB OBJ palettes, 4 BGR555 colours (8 bytes) each, continuing FieldSpritePalettes. Its users copy 8-byte palettes from bank $7E to wOBJPaletteBuffer slots with CopyFromBankWaitVRAM at a byte offset into it: TitleOpening_Load (offset 0), RunWorldMapState_DrawCloseUp ($40), LoadPlayerAndFollowerSpriteGraphics_Followers ($C8), LoadSpriteGraphics7EToTiles0 ($D8), LoadAltObjectGraphicsIfPlayerStateFlagsBit3 ($108), RunWorldMapState_DrawOverview and LoadTriggerMarkerGraphics (an offset from its own table). (C1, E-0372); E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_LoadGfxPalette4 with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes). (named from its reading, E-0372; was LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData)"
     },
     {
       "bank": "12",
@@ -19569,7 +19569,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)"
+          "name": "palette byte offset from 7E:$4BBD (SharedOBJPalettes)"
         },
         {
           "type": "db",
@@ -19753,7 +19753,7 @@
         ],
         "record": "frame, timer"
       },
-      "note": "E-0240 (C1: LookupSequencePtrLoFrameWord reads the word at $40A6 + 2 * [seq + 2], then the word at 2 * [seq + 3] of that list; TickSequencePtrLoSequence_LookupSequencePtrLoFrameWord ends the sequence at $FFFF, steps back B entries when the low byte is $FE, and otherwise stores the word at seq + 4 (frame, then the timer CountDownSequencePtrLoFrameTimer counts down); 60 lists from $411E to $4ADC, each ending with $FFFF)."
+      "note": "E-0240 (C1: LookupSequencePtrLoFrameWord reads the word at $40A6 + 2 * [seq + 2], then the word at 2 * [seq + 3] of that list; TickSequencePtrLoSequence_LoadFrame ends the sequence at $FFFF, steps back B entries when the low byte is $FE, and otherwise stores the word at seq + 4 (frame, then the timer CountDownSequencePtrLoFrameTimer counts down); 60 lists from $411E to $4ADC, each ending with $FFFF)."
     },
     {
       "bank": "F0",

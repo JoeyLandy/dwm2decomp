@@ -4023,8 +4023,13 @@ FailIfFoeSkill3DThreatensActorHP::
     ld c, $01
     ret
 
+; Inverts FailIfFoeAIDamageEstimatesAtLeastEstimate: C = $FF when that routine gives C = 0 (a
+; present foe's wAIDamageEstimates word is at least EstimateSkillDamage), else C = 0; clobbers A and
+; what the callee clobbers. This matches the naming of PassIfFoesAverageResistanceAtLeast2 (C = $FF
+; when the condition holds). AI score routines in bank $E2 far-call it and add a weight row when it
+; gives 0. (C1, E-0372)
 ; C = $FF when FailIfFoeAIDamageEstimatesAtLeastEstimate returns C = 0, else $00 (E-0122)
-InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate::
+PassIfFoeAIDamageEstimatesAtLeastEstimate::
     call FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a

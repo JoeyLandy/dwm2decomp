@@ -2188,7 +2188,7 @@ CheckWarpAtPlayer_SpecialMap::
     dw CheckWarpAtPlayer_AreaExit
     dw CheckWarpAtPlayer_WarpList
     dw CheckWarpAtPlayer_SpecialMap_Type4
-    dw CheckWarpAtPlayer_ToWarpByKeyWorldFloorInfo1EntryAtScreen14
+    dw CheckWarpAtPlayer_FloorInfoExit
     dw CheckWarpAtPlayer_NoWarp
     dw CheckWarpAtPlayer_LinkedMap
 
@@ -2220,7 +2220,7 @@ CheckWarpAtPlayer_SpecialMap_Type4::
 
 ; Map type 5: the exit from screen (1, 4) of area 0 (WarpByKeyWorldFloorInfo1EntryAtScreen14). (C1,
 ; E-0357)
-CheckWarpAtPlayer_ToWarpByKeyWorldFloorInfo1EntryAtScreen14::
+CheckWarpAtPlayer_FloorInfoExit::
     call WarpByKeyWorldFloorInfo1EntryAtScreen14
     ret
 

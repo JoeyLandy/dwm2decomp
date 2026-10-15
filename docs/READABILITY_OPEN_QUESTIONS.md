@@ -583,3 +583,168 @@ reading itself. Labels are as named when the batch was applied; later renames ar
 - `RunF2_DrawParentIcons` (F2:4D72): The mark tile written beside each icon is B from PickNameBufferForFirstByte_BankF2, which tests the table's own plus-offset byte ($98 for parent 1) rather than record data; what tile that gives was not checked.
 - `DrawRecordBufBPlusValue` (F2:50F8): The earlier note said a value of 0-9 gets a leading blank; the code skips the tens write, so the ones digit sits right after tile $1E. It also called the value a count; its callers pass the plus-value offsets.
 - `CopyUnflaggedKeys_NextEntry` (F2:63E3): CopyFlaggedKeys jumps here on a $FF entry, so after the first empty entry the rest of its pass runs the unflagged test instead of its own; whether the key list can have an $FF entry before a flagged key is not read.
+
+## E-0372
+
+- `RunBattleSetup_AllyListWithFallen` (31:6465): Reached from two parents (PlanMenu and ItemMenu), so named with the RunBattleSetup prefix rather than one parent's.
+- `BattleEnd_Step3_UpdatePartyRecords` (31:663D): Existing E-0357 note confirmed (slot C = record C for C below wBattlePartyCount, SRAM bank 0).
+- `BattleEnd_Step3_UpdatePartyRecords` (31:663D): BattleEnd_Step3_SubtractBattleMP's E-0305 note ('the record word - the slot's wBattleMP word, keeping the word when the result would be negative') is wrong: it stores the slot's wBattleMP word at MON_MP capped at MON_MAX_MP (signed compare; a negative wBattleMP stores MON_MAX_MP), the same way BattleEnd_Step3_WriteBattleArg0 stores HP, then leaves HL at MON_WLD.
+- `BattleEnd_Step3_StoreTactics` (31:6678): What wMenuState & 3 holds at this point of the battle end (and so what wBattleResultByte carries to the next battle set-up) is not read.
+- `RecordStatusAfterBattle_MarkCursed` (31:66DC): What record status bit 0 does outside battle is not read (MON_STATUS documents bits 7 and 2 only).
+- `BattleEnd_Step3_StoreExtraStat` (31:6757): wBattleExtraStat is written back into MON_WLD here, which supports reading it as the battle WLD word; the RAM name could follow.
+- `BattleEnd_GainExperience_Finish` (31:6C5E): BattleEnd_GainExperience_Start's note says link battles go to part 8, but its code does xor a, then loads (which keep flags) and ret z, so it always returns with part 9; the ld a, $08 path is never reached. That earlier note is wrong.
+- `ForEachSkillOfRecordBRun_RemoveFromSkillList` (31:6E30): The existing note says 'skill D'; the input is A (copied to D on entry).
+- `GameMode4_Init_BuildBattleScreen_LoadNameTiles` (31:7239): The existing note says 'from slot 3 for the link follower'; the code starts at battler record 3, which wBattlerRecords' note maps to slot 4. Whether bit 1 of wLinkRole means the link follower is taken from the old note, not checked.
+- `GameMode4_Init_BuildBattleScreen_LoadNameTiles` (31:7239): Whether glyph $90 is a blank is not checked.
+- `DrawSlotStatusMarks_BlankMarks` (31:773C): The data labels named after these routines (DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data, _Data_2, _Data_3, _Data_4) will cascade with the renames.
+- `DrawSlotStatusMarks_DrawLevel` (31:78B8): Named as a step of its only caller, DrawSlotStatusMarks; DrawSlotLevel (matching DrawSlotHPDigits and DrawSlotMPDigits) would be the alternative if the integrator prefers the per-bank pairing. The current name ends in _BankA0 although it is the bank-$31 routine, not a family copy.
+- `GetBattleStatWord_Bank31` (31:7B0D): The current name borrows the ReadSlotAIModeIndexed family name although the code is unrelated to wSlotAIMode; it is not a copy of that family, so it is renamed after the bank-$05 twin. The bank-$39 twin ReadSlotWord_Bank39 could take the same name.
+- `RollSleepWakeUp_ShowWokeUp` (32:4ED3): RollSleepWakeUp's note says the wake path sets the action to $BF and shows text $82; the code does one or the other: when status 3 bits 6-7 or status 4 bits 2-3 were set it clears them and sets action $BF with no text (RunBattleActions_StatusChecks_CheckAction_ShowBattleText, whose name is also wrong: it shows no text), otherwise it shows $82.
+- `RollSleepWakeUp_ShowWokeUp` (32:4ED3): These two tails sit after RollSleepWakeUp and are only reached from it, so they take its prefix rather than RunBattleActions_StatusChecks_CheckAction.
+- `RunBattleStep4_ResolveSkill_CheckLinkRules` (32:59CB): Existing E-0357 note confirmed.
+- `RunDefeatSequence_BlankPicture` (32:5A5B): Existing E-0357 note confirmed.
+- `DefeatTarget_AdjustHitsAndGuards` (32:5B94): The existing note's 'redirected away from a lower slot' is loose: the code requires wRedirectFlags bit 1 (an ally guarded) and target above wOriginalTarget; 'guarded slot (status 7 high nibble)' should be the guarding slot.
+- `ResetFoeSlotNameToSpecies` (32:5E1E): Used by two routines, so given a standalone name rather than a parent prefix. The existing note's 'outside link mode 1' is close: the code proceeds only for wLinkMode 0 or 2.
+- `ResolveStep0EEffect_Start_PickRandomAttack` (32:604A): The search loops until it finds a present slot; with the whole other side out it would not end (not checked whether that can happen here).
+- `ResolveStep0EEffect_Start_PickRandomAttack` (32:604A): The fourth slot of the side (3 or 7) can be picked.
+- `RunEffectSubStep_BlankPicture` (32:61A9): Existing E-0357 note confirmed.
+- `ResolveStep0EEffect_Brutalize_DefeatTarget_Blank` (32:629B): The parent prefix ResolveStep0EEffect_Brutalize_DefeatTarget is 42 characters, so the step part is the single word Blank (blanks the picture). Existing E-0357 note confirmed.
+- `ResolveStep0EEffect_Brutalize_Finish` (32:62CB): Existing E-0357 note confirmed.
+- `ResolveStep0EEffect_Sacrifice_CheckActor` (32:62FD): The current name puts it under Brutalize, but it is only an entry of ResolveStep0EEffect_Sacrifice.
+- `ResolveStep0EEffect_Sacrifice_LoseHP` (32:630B): The current name borrows the SetBit0OfLevelUpGainsIndexed family name; it is a Sacrifice step, not a copy.
+- `RunEffectSubStep_2_BlankPicture` (32:63E1): Existing E-0357 note confirmed.
+- `ResolveStep0EEffect_Sacrifice_End` (32:640B): Sub-phase 6 is RunBattleActions_FocusFollowUp in RunBattleActions' table; RunBattleStep4's table has only six entries (0-5), so whether resolve step $0E can run under fight step 4 with this action is not checked.
+- `RunEffectSubStep_3_BlankPicture` (32:654D): Existing E-0357 note confirmed.
+- `ResolveStep0EEffect_QuarterRecoil_Finish` (32:657D): Existing E-0357 note confirmed.
+- `ActionEffect_DeMagic_ClearTargetStatus` (32:6622): The existing note says it marks the target done when 'held'; the third check is status 5 bits 6-7 (BSTAT5_IRONIZED and its high bit).
+- `RunBattleSubStep_DefeatDamagedSlot` (32:66DB): The existing note 'the defeat with the actor as target' is literal; the swap in RunBattleSubStep_DealDamage means the defeated slot is the damaged one.
+- `RunBattleSubStep2_BlankPicture` (32:6710): Existing E-0357 note confirmed.
+- `RunBattleSubStep2_2_BlankPicture` (32:6785): Existing E-0357 note confirmed.
+- `GetBattleStatWord_Bank32` (32:681C): Bank $31 has the same tail as ReadSlotAIModeIndexed_Bank31_Skip; it would take GetBattleStatWord_Bank31 for consistency (not in this slice).
+- `TeamMode_Screen_DrawFrameAndName` (33:5264): The two data labels TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_TileRect and _2 are named after this routine; they may need renaming with it (tables.json). The _2 rectangle is also used by CopyRectToWindowTileBufferRow5Col10AndIncScreenStep.
+- `RunLinkSession6Exchange_ChooseTeamMonster_Clear` (33:5394): The parent prefix uses 47 of the 50 characters; if the parent is renamed shorter, this should follow.
+- `RunLinkSession6Exchange_ChooseTeamMonster_Finish` (33:53C2): Current label lacks the parent's ChooseTeamMonster part; the proposed name restores the parent prefix.
+- `TeamMode_Screen_Leave_ExitToTitleMenu` (33:55BC): Earlier note (E-0357) said this returns to 'the link menu'; wModeState 1 selects GameMode5_Init_TitleMenu, the title menu. Whether the title menu itself is where the link options are offered is not read here.
+- `RunLinkSession6Exchange_FightInfo_StartExchange` (33:58D7): wLinkTimeoutLo/Hi is named a timeout counter in ram.asm but here (and in Pick step 13 and FightInfo step 14) it is loaded with the address of the bytes to send; the RAM name may be wrong.
+- `RunLinkSession6Exchange_FightInfo_StartExchange` (33:58D7): wLinkBufferCountHi is not written here; it relies on an earlier value.
+- `ResolveStepDamageMessage_ShowLordDracoPicture` (36:48CB): Whether LoadBattleMonsterPictureForSlotB's DE word uses the same numbering as the MONSTER_* constants is assumed from the matching value, not checked; the sibling branch for SKILL_BEDRAGON / ACTION_B8 uses $0160 (MONSTER_DRACOLORD_160).
+- `ResolveStepDamageMessage_AdjustActorMessage` (36:4991): Earlier note (E-0357) called the result 'the target's message number'; the caller loads wResolveMsgActor into wTemp0 before calling it. It also listed 'HighJump variants $BF-$CB' (only $BF, $C0, $C9, $CA, $CB count down) and left out SKILL_PANICALL_AD, SKILL_PANIDANCE, ACTION_B5 and ACTION_BA.
+- `ResolveStepBranchOnAction_UltraDown` (36:4A9D): Its only user is ResolveStepBranchOnAction, so the proposed name takes that prefix; its helper ResolveStepDamageMessage_RollVsRadiantResistance keeps the old prefix.
+- `ResolveStepBranchOnAction_RemoveEffects` (36:4B16): Earlier note (E-0357) called this 'the aftermath of a defeat'; its only entry is from ResolveStepBranchOnAction for SKILL_DEMAGIC, SKILL_THICKFOG and ACTION_B3, and its steps remove effects. Its six steps keep the ResolveStepDamageMessage_ prefix.
+- `ActionEffect_Infernos_Damage` (36:51F9): Earlier note (E-0357) said only 'its resistance scaling'; the fall-through shows it is the RESIST_VACUUM field.
+- `ActionEffect_MegaMagic_Damage_SpreadAndResist` (36:588D): Earlier notes (E-0357) on this label, ActionEffect_MegaMagic_Damage and ActionEffect_ActionD9_Damage say the damage is 'cut to 40%'; the 40% only computes the spread (HL), and the stored damage keeps its full value plus the random spread. Those two parent notes should be corrected too.
+- `ActionEffect_Sacrifice_RollVsResistance` (36:5ED8): The note names FailResistanceRoll, the name proposed in this draft for ActionEffect_EerieLite_Done; use the old label if that rename is not accepted.
+- `ActionEffect_BeDragon_LoadDragonStats` (36:5F25): Earlier note (E-0357) left out the wSlotBodyFlags clear and the two level-up gains bits.
+- `ActionEffect_BeDragon_CopySkills` (36:6018): Earlier note (E-0357) says 'then clears three more entries'; the three calls are followed by a fall-through into ActionEffect_BeDragon_ClearEntry, so four entries are cleared after the copies.
+- `ActionEffect_BeDragon_CopySkills` (36:6018): The existing note on ActionEffect_BeDragon_ClearEntry says 'then DE += 3'; it does dec de then inc de three times, a net DE += 2 (one two-byte entry).
+- `ActionEffect_EerieLite_RollVsResistance` (36:6126): The field read (byte 2 bits 5-4) is the one records.inc names RESIST_BEAT, not a separate EerieLite resistance.
+- `FailResistanceRoll` (36:613D): Not used by ActionEffect_EerieLite; the old name only came from its position after ActionEffect_EerieLite's roll.
+- `SoundRunAllSlotsRestoreMode` (00:32C6): No caller found; whether the pair is a pause/resume of music is not read.
+- `PauseMenu_Info_Page2_DrawDetails` (03:4BE8): The earlier note (E-0357) was wrong in three places: record byte $A4 is MON_ITEM and category $0B holds item names (not the personality); the category-7 string picked from bytes $6F, $70 and $72 (not three bytes from $6F) is the personality; the name shown is MON_MASTER_NAME ($0F), the master's name, not the monster's own name.
+- `PauseMenu_Info_Page2_DrawDetails` (03:4BE8): The direct parent's label WithSRAMDrawBuildRecordLevelAndStatusRow_2 is 42 characters, so a Parent_Step name would exceed 50; the name uses the page step that reaches it (PauseMenu_Info_Page2_Draw).
+- `WithSRAMDrawMemberRecordFamily_DrawParents` (03:4E02): The earlier note (E-0357) left out the parents' master names; the rest was confirmed.
+- `WithSRAMDrawMemberRecordFamily_DrawParents` (03:4E02): Only slots 0 and 1 are expected from the MON_FAMILY high nibble; a larger value would index past the two-entry address tables. Not checked whether such records exist.
+- `PauseMenu_Skills_UseFieldSkill_ShowItemResult` (03:63D0): The earlier note said 'Hero returned with'; the message starts with <BUF0>, which step 0 fills with the user's name according to its note.
+- `PauseMenu_Skills_UseFieldSkill_ShowItemResult` (03:63D0): Which field skill is $11 is not read here.
+- `SkillTargetBoxRects` (03:6921): What tiles $F3 $F4 and $F5 $F6 show (the only difference between the two boxes) is not read; the selector table at $6851 has no label of its own.
+- `SkillTargetBoxRect_Default` (03:6925): The glyphs of tiles $F3/$F4 (and $BE) are not read.
+- `SkillTargetBoxRect_MPass` (03:6956): The glyphs of tiles $F5/$F6 are not read.
+- `PauseMenu_Plan_PartyOrder_ShowMemberDetails` (03:7281): The earlier note's 'further numbers' are HP and MP with their maximums.
+- `KeyListMarkBGMapAddrs` (03:78C3): What the mark tile $1D means for a key is not read.
+- `TacticsGlyphTileSources` (03:7BAF): Which words these letters spell on the tactics screen (blocks $26 and $27) is not read.
+- `CopyTileListFromBank1F_Bank03` (03:7BBF): Named as a bank copy like CopyTileListFromBank1F_1C; the bytes differ from that routine (index in B rather than wScreenCounter), so it is not a name family. The old name's 'TileBufferMenu' part matches no label.
+- `DrawPlayerAndFollowers` (04:4BCF): The parent's label is 45 characters, so a Parent_Step name would exceed 50; the step's own words are kept as a plain name.
+- `PassIfFoeAIDamageEstimatesAtLeastEstimate` (05:557E): Observed in the callee, not this label: FailIfFoeAIDamageEstimatesAtLeastEstimate advances HL by one byte per examined foe and not at all for an absent one, so for the second and third foes it compares words at shifted offsets of wAIDamageEstimates, unlike CheckLoneFoeHPNotBelowAIDamageEstimates which uses 2 * (slot & 3). Not checked in the emulator.
+- `GameMode5_Update_LoadScreens_StartTitleMusic` (07:5F89): 'Title' in the name comes from the screen this state loads (TitleOpening_LoadTitle_BGPaletteBufferData) and from step 2 going to the title menu; what music 6 is has not been checked by ear.
+- `GameMode5_Update_LoadScreens_StartTitleMusic` (07:5F89): The earlier note's '$B4-frame timer' only runs after the music ends (step 2).
+- `GameMode5_Update_TitleMenuState_LinkRefused` (07:66E0): The earlier note said message 7 shows the three numbers; String_07_00_07 has no <BUF0> token, so the digits written to wTextBuf0 are not shown by this message. What else reads them is not found.
+- `GameMode5_Update_TitleMenuState_LinkRefused` (07:66E0): Why the partner answers $FE (the message names the Super Game Boy) is not read on the partner's side.
+- `RunLinkSession4ScreenState_RefusalHandshake` (07:6E9A): The parent's label is 47 characters; these steps take the grandparent prefix like their renamed siblings RunLinkSession4ScreenState_FollowPartnerOrRefuse and RunLinkSession4ScreenState_SignalAfterRefusal.
+- `RunLinkSession4ScreenState_CheckPartnerPreset` (07:7880): The earlier note said the $FD case 'moves on'; it writes the current state number back and leaves wTitleScreenSubState at 0, so the step repeats until wLinkMessage changes.
+- `RunLinkSession4ScreenState_ResetAndSignal_Draw` (07:7C8C): Shortened to keep the parent prefix within 50 characters.
+- `LibraryEntryLineTiles` (0C:4718): The earlier comment named ScriptCommandF6 as the reader; the code that loads it is LibraryMenu_ShowMonsterEntry_LoadTiles (the library is reached through ScriptCommandF6 per the bank header).
+- `LibraryEntryLineTiles` (0C:4718): Where the entry screen draws tiles $61-$66 is not read.
+- `LibraryMenu_ShowMonsterEntry_ShowPedigree_Name` (0C:4E16): The earlier note said $FEFE shows nothing; it shows '???' (category 0, index 0 of bank $0B).
+- `LibraryMenu_ShowMonsterEntry_ShowPedigree_Icon` (0C:4E75): The earlier note called the $FEFE tile blank; it is the '?' glyph.
+- `LibraryClassBlock_Class0` (0C:5523): What tiles $80, $81 and $82 look like is not read (the pattern suggests empty, half and full marks).
+- `LibraryClassBlock_Class0` (0C:5523): The class number is used as the name part because it is the entry's index value, not a position.
+- `LibraryMonsterClasses` (0C:5562): What the class measures is not read (the bank $16 note says the same).
+- `LibraryRowLastColumns_Slime` (0C:5965): Counts agree with LibraryMenu_CountSeenMonsters_Data2 minus LibraryMenu_CountSeenMonsters_Data1 per family (26, 31, 32, 27, ...) and with LibraryMenu_DrawMonsterList_Data2 + 1 rows; the family order is taken from bank $0B category 2 and the first monsters of families 0 and 1 (DrakSlime, DragonKid).
+- `LibraryRowLastColumns_Unknown` (0C:599B): The family string is '????'; 'Unknown' in the name stands for it.
+- `TwoChoiceBoxRect` (0C:7831): The glyphs of tiles $CE $CF $DF and $AE $AF (presumably the two choice words) are not read.
+- `EggListGlyphTileSources` (0D:50AF): With wGlyphListStart 0 the copier reads the seventh tile's 16 bytes from $FFFF on (the IE register, then $0000 onward of ROM bank 0); what tile $76 then holds and whether the screen shows it is not checked in the emulator.
+- `NpcBreedMenu_YesNoGlyphDestList` (0D:789A): The seventh destination ($9760, tile $76) is paired with the source word $FFFF, so CopyFromBankWaitVRAM would read 16 bytes from $FFFF onward; whether tile $76 is loaded elsewhere before NpcBreedMenu_ChooseAndBreed_DrawYesNo_TileRect uses it is not read. The bank-$1E copy GlyphCopyDestList3 has six destinations only.
+- `HibernateMenu_PartyGlyphSrcList` (14:5A84): The comment on NamingScreenTileDestListA says 27 destinations; the list holds 28 words and the copy runs on through the first three words of NamingScreenTileDestListB (31 destinations) before its rIE.
+- `HibernateMenu_RecordStatsTileRect` (14:5B8E): Whether the trailing 56 bytes (two tile lists at 14:5BFA) are read through a computed address is not known.
+- `HibernateMenu_YesNoGlyphDestList` (14:5C8A): Same seventh-entry question as the bank-$0D copy: tile $76 gets 16 bytes read from $FFFF onward.
+- `RunNameEntryStateWhenNotFading_Sprite0GfxArgs` (14:5E93): What wArg2 (wWorkBuf at the new-player set-up) selects between field sprites 0 and 1 is not read.
+- `RunNameEntryStateWhenNotFading_ApplyCharacter` (14:631C): The exact cursor-mark ($9F) handling at four glyphs was traced but not run; what the sub-state changes of $FD/$FE select is not read.
+- `RunNameEntryStateWhenNotFading_CheckName_PlayerOK` (14:6664): The earlier note ('points DE at wTextBuf0 and copies the name there') leaves out that the call also passes step 3 and ends on step 4.
+- `BreedShowNameSpeciesBits` (15:75C5): What the 237 marked species have in common is not read; the name keeps to what the readers do with a set bit.
+- `BreedMenu_ChooseParents_CloseBoxTileRect` (15:761D): The note on BreedMenu_ChooseParents_DrawLinkBoxAndSprites says the 6 x 5 box is drawn 'in a link session'; the code copies it always, and only DrawRectIfLinkModeAndStep's rectangle depends on wLinkMode.
+- `EggServiceMenu_Bank1B_PickRecords_ListCursor` (1B:686F): The earlier note says B 'takes back the last pick'; at three or more picks the count becomes wSelectedRecord - 1 instead.
+- `EggServiceMenu_Bank1B_PickRecords_AskPrize` (1B:6BAB): The earlier note does not say that wPickCount is saved in wSelectedRecord here, which step 8's B path reads back.
+- `EggServiceMenu_Bank1B_StartLinkBattle_PalReady` (1B:6D1E): The earlier note names only step 3; the routine is also step 20, before LinkBattleSetupMenu_StartBattle.
+- `ShowCursorRecordFieldAbility` (1D:5DF9): The note on SwapMonstersMenu_ShowMonsterDetails_ShowCategory says 'category-$13 string'; the category is $0D (13), the field ability.
+- `SwapMonstersMenu_ClampListPage` (1E:49F8): The earlier note leaves out the wScreenStep += 1.
+- `SwapMonstersMenu_ShowMonsterDetails_StatsCursor` (1E:5D2B): The earlier note says 'a page change or move redraws, B on two steps, A draws the stats pages' frame and goes to step 4'; the code moves on one step for a row move ($FD), two for A ($FF), and draws the frames and goes to step 4 for B ($FE), as the party version's note says.
+- `SwapMonstersMenu_ShowMonsterDetails3_CopyGlyphs` (1E:6055): The earlier note says it 'draws the frames'; SwapMonstersMenu_CopySixteenTiles copies 16 font glyphs from GlyphFont, and no frame is drawn here.
+- `SwapMonstersMenu_ShowMonsterDetails_Personality` (1E:6907): The earlier note does not mention the fall-through into step 19.
+- `SwapMonstersMenu_ShowPartyMemberDetails_Pedigree` (1E:6CAB): The earlier note says 'A to step $17, B to step 7'; the code sends B ($FE) to $17 and A ($FF) to 7, as SwapMonstersMenu_ShowMonsterDetails_Cursor3 does.
+- `SwapMonstersMenu_ShowMonsterDetails3_ClearMarks` (1E:7702): The E-0357 note calls tile $B6 'the party column's divider'; $B6 is the box left-edge tile and the five places are exactly the party-mark places, so the routine erases the marks. Corrected in this note.
+- `PartyMemberDetailsScreenTileRect` (1F:5E37): The glyph tiles are loaded at run time; that the label rows read ATK, DEF, AGL, INT, WLD and HP, MP is inferred from the stat drawers (MON_ATK..MON_WLD, MON_HP..MON_MAX_MP), not from the tile graphics.
+- `BlankPictureTileRect` (1F:651B): Several callers' notes say they draw a '6 x 6 frame' or '6 x 6 box' from this label; the bytes are all the blank tile $C3, so the area is blanked.
+- `MonsterDetailsPedigreeLowerLeftTileRect` (1F:6E47): What the figure of tiles $6E, $6F and $7C-$7E shows is not read.
+- `GameMode6_PictureRowTileRects` (1F:720D): The comment above this label still names wScreenByteBD; that RAM byte is now wSharedMenuWork. GameMode6_Init_DrawPictureRow's note says the table is 'after it' in bank $24; it is in bank $1F, read there by DrawTileRectFromArg1Params.
+- `GameMode6_ChooseMonsterChoiceBoxTileRect` (24:5A28): Which neighbouring box the edge tiles in column 0 belong to is not read.
+- `GameMode6_ResultBannerPalette` (24:6CA4): The reader loads 8 zero bytes, so palette 7 becomes all colour $0000; whether the four non-zero colours at the end are read through another address is not known.
+- `RunBattleActions_StatusChecks_StartAction_Statuses` (32:4B62): The E-0357 note says the forced-$CD check reads status 4 bits 6-7 and the $CA/$CB check status 1 bits 6-7. Tracing HL (status 5; hld to 4; dec to 3; hli reads 3 and returns to 4; hld reads 4 and goes to 3; three decs to 0) the bytes are status 3 and status 0 (wBattleStatus). Corrected in this note.
+- `RollSleepWakeUp_SetWakingAction` (32:4ECA): The label sits inside RollSleepWakeUp, not in RunBattleActions_StatusChecks_CheckAction. The listing's 'entry 9 of the rst $00 table' comes from RunBattleActions_StatusChecks_CheckAction_Skip, which step 0 jumps into as code; its five dw words decode as call Func_032_514C; jr c; ld a, d; cp $07; jp z, so the $4ECA word there is probably instruction operand bytes, not a table entry.
+- `RollSleepWakeUp_SetWakingAction` (32:4ECA): RollSleepWakeUp's note says waking sets action $BF and shows text $82; in the code these are alternatives ($BF without the text when status 3 bits 6-7 or status 4 bits 2-3 were set, otherwise text $82 without $BF).
+- `RunBattleActions_StatusChecks_CheckAction_FoeDupes` (32:5000): What the wSlotMarks values 3 and $FE mean for a queued foe is not read here.
+- `RunBattleActions_StatusChecks_CheckAction_MPAgain` (32:5130): The E-0357 note says that with too little MP it 'shows the message'; no message builder is called here (BuildActionMessageNames is only in step 0), and D = 7 also goes back two steps.
+- `RunBattleActions_StatusChecks_ShatterChecks_End` (32:55E7): The E-0357 note says it 'pays a two-monster action's MP if needed'; that rests on CheckActionD0ToE3OrSpecial and PayActorMPCost_CpD6, which were not re-read here, so the new note only names them.
+- `ResolveStep0EEffect_Brutalize_DefeatTarget_Message` (32:62A3): The E-0357 note says '$8D for a foe'; the choice is made by the actor's side (ActorOnLocalSide_Bank32), and in this effect the target is the actor.
+- `TeamModeGoldBox_TileRect` (33:62AB): What tile $BF shows is not read.
+- `PlayerWinLossWindow_TileRect` (33:62C3): The 'Duo W' to 'Own L' reading assumes one tile per glyph of 'DuoOwnWL:'; tile $ED is not read.
+- `PartnerWinLossWindow_TileRect` (33:6331): The name drawn into tiles $05-$09 is copied from wRandomSeed2Hi and the numbers from wLinkPartnerName (RAM reused for link data); that they are the partner's comes from the E-0357 notes, not from the RAM names.
+- `InfoOKBox_TileRect` (33:63C7): The glyph-to-tile mapping assumes one tile per character.
+- `FightInfoExitBox_TileRect` (33:63F9): The third row spelling 'Exit' rests on one tile per glyph; the earlier notes call the box 'Fight / Info / Ex'.
+- `RunLinkSession5Exchange_ChosenRecordList` (37:5335): The parent prefix RunLinkSession5Exchange_ShowChosenRecord_ (41 characters) leaves no room under 50; the short form follows the sibling RunLinkSession5Exchange_RestoreListCursor and the F1 twin's RunScreenStateWhenNotFading_F1_ChosenRecordStart.
+- `RunLinkSession5Exchange_RunBreedListFinal` (37:57FC): Whether leaving wScreenState as BreedMenu set it is intended is not read (see the branch noted in LINK_BREEDING_SCENES.md, E-0360).
+- `RunLinkSession5Exchange_RunBreedList` (37:580D): The parent prefix RunLinkSession5Exchange_ResetListAndShowString_ is 47 characters, so the step keeps the shorter RunLinkSession5Exchange_ prefix as RunLinkSession5Exchange_RestoreListCursor does.
+- `PartnerStats_DrawNameAndSpecies` (37:5929): Not a name-family copy (no entry in config/name_families.json); the _Bank37 suffix came from the generator.
+- `RunEffectRoutineEffectEvery5Frames_FlashWhite` (3A:4E35): The old note (E-0293) said it 'moves the effect sprite right': wEffectSpriteX is only the step counter here. The step names FlashAndMoveSprite_White and FlashAndMoveSprite_End carry the same wrong 'MoveSprite' claim.
+- `DarkenDMGPaletteOneStep` (3A:4EC3): The existing note (E-0305, E-0315, with a C2 test) was checked against the code and is right; it is not an E-0357..E-0362 note, so the integrator should keep it rather than replace it.
+- `DelayEffect_InvertPalettes` (3A:4F24): The old note (E-0305) said it 'moves the effect sprite right' (wEffectSpriteX is the step counter). The parent's note 'twelve identical waiting steps' and its name RunEffectRoutineEffectEvery5Frames_Delay are wrong too: the steps invert the palettes.
+- `RunEffectRoutineEffectEvery5Frames_FlashWhiteLong` (3A:5114): The old note 'as ..._FlashAndMoveSprite' inherited the wrong 'moves the effect sprite' claim.
+- `RollLoveRainOutcome` (3A:6D91): The parent ShowActionBattleTextFromActionBattleTextTable is 45 characters, so a Parent_Step name cannot fit; a standalone name is proposed.
+- `MeatExtraStatAmounts` (3B:492A): The earlier note of ApplyTargetBattleWordArray3FReduction (E-0127) has the sides reversed: TargetOnLocalSide_Bank3B carry (a local target) takes the subtract path, and a far-side target adds to wBattleMeter (AddActionAmountToBattleMeter_Data: 10, 30, 100, 999, 5). InflictStatus0Bit0WithBattleWordArray3FReduction's note (E-0129) says the same thing correctly.
+- `MeatExtraStatAmounts` (3B:492A): What wBattleExtraStat means in play is not read.
+- `ItemEffect_EndForTarget` (3B:4F15): The old note 'Goes to the damage message' (E-0357) and SetResolveStep0A's note (E-0116, 'the damage-message step, ResolveStepDamageMessage') follow bank $36's RunBattleResolveStep table; in this bank wBattleResolveStep indexes RunBattleActions_UseItem, whose entry $0A is RunBattleActions_UseItem_BeastTail.
+- `ItemEffect_EndForTarget` (3B:4F15): Whether the ten trailing bytes are ever executed is not read.
+- `BreedMenuPalettes` (47:67E2): The label duplicates Map0DPalettes at the same address; the generator could point the caller at Map0DPalettes and drop this label instead.
+- `EggServicePalettes` (49:46DC): The label duplicates Map0APalettes at the same address; the generator could point the caller at Map0APalettes and drop this label instead.
+- `RenameMenuPalettes` (49:4AC5): The label duplicates Map13Palettes at the same address; the generator could point the caller at Map13Palettes and drop this label instead.
+- `ShowMessageHL_OnSpecialMap` (5F:6A85): The old name said Bank89; the code starts bank $28's table.
+- `KeyWorldLayout_ClearActiveIfSameKey` (60:4C6C): wKeyWorldKey's note says its low bits are the key index + 1 while wKeyWorldSlot is a 0-19 slot; why they are compared directly is not read.
+- `TravelerEvents_MedicineMaster_AfterBattle` (73:4888): That wBattleScene = 0 means a win comes from the earlier readings; ram.asm describes wBattleScene only as the battle kind or scene.
+- `TravelerEvents_PriceyMerchant_Sell` (73:4CE5): No gold check was found in steps 0-2; whether a check happens before the event is offered is not read.
+- `ChestBattlePreBattleMessages` (73:530C): The old comment (E-0214) counts 54 words ending at KeyBossBeaten2; that span is this table plus SceneChestBattle_ShowPostBattleMessage_Data (27 words each).
+- `SharedOBJPalettes` (7E:4BBD): Two labels name this address; the other (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData) should get the same treatment by whoever owns it.
+- `SharedOBJPalettes` (7E:4BBD): The offset used by RunWorldMapState_DrawOverview (bankA1:2703) was not read.
+- `KeyWorldFloorKind2Interactions` (87:5CA4): What floor kind 2 is in play is not read.
+- `KeyWorldFloorKind3Interactions` (87:5CFF): What floor kind 3 is in play is not read.
+- `MapType84Interactions` (87:5D28): Kind 3 is a facing test per MapInteractionTable's comment (1-4 need hPlayerFacing = kind - 1).
+- `DrawRows13To17ToBGMap_BankA0` (A0:4C74): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `DrawRows7To17ToBGMap_BankA0` (A0:4C8E): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `DrawRect11x9AtRow9ToBGMap_BankA0` (A0:4C9B): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `DrawRows9To17ToBGMap_BankA0` (A0:4CA8): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `DrawRect8x9AtRow9ToBGMap_BankA0` (A0:4CBA): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `DrawRect7x7AtRow11ToBGMap_BankA0` (A0:4CC7): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `DrawRow8AndRows9To17ToBGMap_BankA0` (A0:4CD4): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `DrawRect13x7AtRow11ToBGMap_BankA0` (A0:4CED): The old names read the offsets as rows of 20 (Row11Col4 for +$E0); in a 32-column buffer +$E0 is row 7, column 0. The bank-$31 counterparts (DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7 and the others at bank31:8386-8529) keep the misleading form and could be renamed to match.
+- `RunBattlePhaseWhenTextIdle_A0_DrawResults` (A0:5622): The E-0357 note called the second number 'the turn total'; the code writes wLinkRuleTurnLimit, the link rule byte that the end-of-turn step compares with wBattleTurn. Whether it holds a count in this mode is not read.
+- `ResultLabelTiles` (A0:56CA): The label text rests on one tile per glyph; it agrees with the E-0357 result meanings (1 the partner fell, 3 this side fell).
+- `RunBattlePhaseWhenTextIdle_A0_ShowStatChange` (A0:56F7): The generated comment on its wStringIndex write quotes only string $15.
+- `RunBattlePhaseWhenTextIdle_A0_MakeEgg` (A0:57B1): The old note (E-0303) described only the '???' placeholders of RunBattlePhaseWhenTextIdle_A0_MakeEggRecord.

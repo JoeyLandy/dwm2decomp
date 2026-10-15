@@ -54,7 +54,7 @@ DEF BATTLER_AGL EQU $27 ; AGL word (GetBaseAGL) (C2 from E-0320: during that bat
 DEF BATTLER_INT EQU $29 ; INT word (GetBaseINT) (C2 from E-0320: during that battle battler record 0 holds the same values as SRAM record 0 at $17 and $1B-$2C) (E-0124, E-0320)
 DEF BATTLER_WLD EQU $2B ; WLD word after INT (C2 from E-0320: during that battle battler record 0 holds the same values as SRAM record 0 at $17 and $1B-$2C; WLD 387 sits here as at the main record's $6B) (E-0320)
 DEF BATTLER_PERSONALITY EQU $2D ; personality bytes (MonsterTable bytes 22, 23, 25, 24 in that order) (E-0298)
-DEF BATTLER_RESISTANCES EQU $31 ; 27 resistance levels: RecomputeTargetStatsFromRecord packs them into the slot's 7-byte wSlotResistances record (LoadBattleArg0PointersThenRunPackResistanceFieldsToDE) (E-0310)
+DEF BATTLER_RESISTANCES EQU $31 ; 27 resistance levels: RecomputeTargetStatsFromRecord packs them into the slot's 7-byte wSlotResistances record (PackResistancesFromBattleArgs) (E-0310)
 DEF BATTLER_JOIN_CLASS EQU $4D ; MonsterTable byte 8 for a wild monster; copied to wFoeJoinClass1-3 for the three foes, 7 stops the defeated monster from joining (E-0306)
 
 ; Offsets into the 47-byte species record (wSpeciesRecord; config/record_fields.json "species", E-0299).

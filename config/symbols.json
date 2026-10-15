@@ -4771,7 +4771,7 @@
   },
   "DD09": {
     "name": "wSoundEngineMode",
-    "note": "sound engine mode (SetSoundEngineStateTo0AndSoundEngineModeFromSoundSavedMode, SetSoundEngineStateTo4AndClearSoundEngineMode)",
+    "note": "sound engine mode (SoundRunAllSlotsRestoreMode, SetSoundEngineStateTo4AndClearSoundEngineMode)",
     "evidence": "E-0137"
   },
   "DD0B": {

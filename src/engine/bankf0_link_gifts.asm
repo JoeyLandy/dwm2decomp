@@ -3712,7 +3712,7 @@ DrawRect6x6FromAtScroll41_BankF0::
     call BGMapAddressAtScroll_BankF0
     ld de, $0041
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06

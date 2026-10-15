@@ -4677,7 +4677,7 @@ EggServiceMenu_Bank1B_WaitForPartner::
     ld a, [wScreenStep]
     jumptable
     dw EggServiceMenu_Bank1B_WaitForPartner_PalRefused
-    dw EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait
+    dw EggServiceMenu_Bank1B_WaitForPartner_ShowWait
     dw EggServiceMenu_Bank1B_WaitForPartner_SignalReady
     dw EggServiceMenu_Bank1B_WaitForPartner_PartnerReady
     dw EggServiceMenu_Bank1B_WaitForPartner_ExitToTitle
@@ -4695,7 +4695,7 @@ EggServiceMenu_Bank1B_WaitForPartner_PalRefused::
     ret
 
 ; Waiting for the partner, step 1: 'Please wait.' (string $0C). (C1, E-0357)
-EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait::
+EggServiceMenu_Bank1B_WaitForPartner_ShowWait::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -4774,12 +4774,12 @@ EggServiceMenu_Bank1B_PickRecords::
     dw ClearAndDrawListEntriesCell5NameAtTiles1780
     dw DrawRuleBoxByLinkRuleTurnLimit1Bit7
     dw LinkBattleSetupMenu_ShowCursorMark
-    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo
+    dw EggServiceMenu_Bank1B_PickRecords_ListCursor
     dw EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN
-    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo
+    dw EggServiceMenu_Bank1B_PickRecords_InfoOrOK
     dw LinkBattleSetupMenu_EraseMarks
     dw LinkBattleSetupMenu_CountPick
-    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2
+    dw EggServiceMenu_Bank1B_PickRecords_AskMoreOrPrize
 
 ; Picking members, step 1: once the text has finished runs the record list's steps (BreedMenu). (C1,
 ; E-0357)
@@ -4937,11 +4937,17 @@ LinkBattleSetupMenu_ShowCursorMark::
     ld [wScreenStep], a
     ret
 
-; Picking members, step 8: the list cursor: the partner's refusal ($FE) shows 'Your pal refused to
-; battle.' (string $0B) and returns to state 2; a page change or move redraws; B takes back the last
-; pick ('Choose the members for VS battle.'), or with none refuses ('You refused to battle.', string
-; $0A); A checks the pick and, when allowed, shows its name and goes on. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo::
+; Picking members, step 8: the list cursor. When wLinkMessage is $FE (the partner refused) it shows
+; 'Your pal refused to battle.' (string $0B), goes to screen state 2 and sends $FE. Otherwise
+; UpdatePagedListCursor: $FB/$FC go back 7 steps (redraw), $FD back 4; B ($FE) with no picks refuses
+; ('You refused to battle.', state 2, sends $FE), with one or two picks drops the last one, and at
+; three or more sets wPickCount to wSelectedRecord - 1 (the count saved by
+; EggServiceMenu_Bank1B_PickRecords_AskPrize before it set three); both show 'Choose the members for
+; VS battle.', clear the bottom rows and go to step 1. A ($FF) records the pick and, when
+; CheckPickAgainstLinkRules allows it, marks the entry, copies its name to wTextBuf0, goes on one
+; step and asks 'Pick <BUF0> for the team?' (string 2) or, at three picks, 'Put up <BUF0> as a
+; prize?' (string 7). (C1, E-0372)
+EggServiceMenu_Bank1B_PickRecords_ListCursor::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .clear_menu_input_result
@@ -5079,7 +5085,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
     farcall ShowString_Bank1B
     ld a, $6c
     call QueueSoundEffect
-    ld de, EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN_TileRect
+    ld de, EggServiceMenu_InfoOKBoxTileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows
@@ -5107,7 +5113,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
 ; Picking members, step 10: the Info / OK choice (the partner's refusal stops as before): Info opens
 ; the stats screen (state $0C); OK adds the pick, and with three picks (and the prize not a party
 ; member) keeps the prize, sets four picks and waits for the partner ('Please wait.'). (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo::
+EggServiceMenu_Bank1B_PickRecords_InfoOrOK::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .clear_arg5
@@ -5252,7 +5258,7 @@ LinkBattleSetupMenu_CountPick::
 
 ; Picking members, step 13: the partner's refusal stops as before; otherwise runs its sub-steps
 ; (another member, the prize question, waiting). (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2::
+EggServiceMenu_Bank1B_PickRecords_AskMoreOrPrize::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .read_screen_sub_step
@@ -5270,18 +5276,18 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2::
 .read_screen_sub_step:
     ld a, [wScreenSubStep]
     jumptable
-    dw EggServiceMenu_Bank1B_PickRecords_ShowChooseOneMoreMember
+    dw EggServiceMenu_Bank1B_PickRecords_AskOneMore
     dw LinkBattleSetupMenu_DrawYesNo
-    dw EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowYourPalRefusedTo
+    dw EggServiceMenu_Bank1B_PickRecords_AnswerOneMore
     dw EggServiceMenu_Bank1B_PickRecords_BackToPicking
-    dw EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowPleaseWait
+    dw EggServiceMenu_Bank1B_PickRecords_AskPrize
     dw EggServiceMenu_Bank1B_PickRecords_FinishPicks
     dw LinkBattleSetupMenu_DrawYesNo
     dw EggServiceMenu_Bank1B_PickRecords_AnswerPrize
 
 ; Choosing another member: below three picks and with members left asks 'Choose one more member for
 ; battle?' (string 3); otherwise skips to the prize sub-step. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_ShowChooseOneMoreMember::
+EggServiceMenu_Bank1B_PickRecords_AskOneMore::
     ld a, [wPickCount]
     cp $03
     jr z, .read_screen_sub_step
@@ -5338,7 +5344,7 @@ LinkBattleSetupMenu_DrawYesNo::
 
 ; The answer to another member: yes clears the box and returns to picking (string 0); no goes on two
 ; sub-steps. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowYourPalRefusedTo::
+EggServiceMenu_Bank1B_PickRecords_AnswerOneMore::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
@@ -5393,10 +5399,13 @@ EggServiceMenu_Bank1B_PickRecords_BackToPicking::
     ld [wScreenSubStep], a
     ret
 
-; The prize: without the prize rule (wLinkRules + 9 bit 7) 'Please wait.' and the picks are
-; finished; with it, no farm monsters gives 'You have no monsters on the ...' (string 5), otherwise
-; 'Will you put up a prize?' (string 4); the picks are padded to three. (C1, E-0357)
-EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowPleaseWait::
+; Sub-step 4 of the picking step 13 (the prize): without the prize rule (wLinkRules + 9 bit 7 clear)
+; shows 'Please wait.' (string $0C) and finishes the picks (FinishPickedRecordsEntryAndAdvance).
+; With it, when ListRecordsState1NotEggs lists nothing it pads the picks to three with $FF, shows
+; 'You have no monsters on the ...' (string 5) and goes on one sub-step; otherwise it shows 'Will
+; you put up a prize?' (string 4), pads the picks, saves wPickCount in wSelectedRecord, sets
+; wPickCount to 3, goes on two sub-steps and clears wTwoChoiceCursor. (C1, E-0372)
+EggServiceMenu_Bank1B_PickRecords_AskPrize::
     ld a, [wLinkRules + $9]
     bit 7, a
     jr nz, .call_list_records_state1_not_eggs
@@ -5501,16 +5510,16 @@ EggServiceMenu_Bank1B_StartLinkBattle::
     dw LinkBattleSetupMenu_DrawPickedMembers
     dw LinkBattleSetupMenu_CopyPrizeRecord
     dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
+    dw EggServiceMenu_Bank1B_StartLinkBattle_PalReady
     dw LinkBattleSetupMenu_ExchangePrizes
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo
+    dw EggServiceMenu_Bank1B_StartLinkBattle_AskBegin
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ReadChoice
     dw EggServiceMenu_Bank1B_StartLinkBattle_RetryChoice
     dw EggServiceMenu_Bank1B_StartLinkBattle_PleaseWait
     dw EggServiceMenu_Bank1B_StartLinkBattle_TextDone
     dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_2
+    dw EggServiceMenu_Bank1B_StartLinkBattle_PalBattleOK
     dw LinkBattleSetupMenu_PackMembers
     dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
     dw EggServiceMenu_Bank1B_StartLinkBattle_SendMembers
@@ -5518,7 +5527,7 @@ EggServiceMenu_Bank1B_StartLinkBattle::
     dw EggServiceMenu_Bank1B_StartLinkBattle_Announce
     dw EggServiceMenu_Bank1B_StartLinkBattle_TextDone
     dw EggServiceMenu_Bank1B_StartLinkBattle_SignalReady
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
+    dw EggServiceMenu_Bank1B_StartLinkBattle_PalReady
     dw LinkBattleSetupMenu_StartBattle
 
 ; Starting the battle, step 17: 'Starting battle...' (string 9). (C1, E-0357)
@@ -5612,9 +5621,12 @@ EggServiceMenu_Bank1B_StartLinkBattle_SignalReady::
     ld [wLinkSendByte], a
     ret
 
-; Starting the battle, step 3: on the partner's 1 goes on; on $FE 'Your pal refused to battle.' and
-; back to state 2. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo::
+; Starting the battle, steps 3 and 20 (each after
+; EggServiceMenu_Bank1B_StartLinkBattle_SignalReady): when wLinkMessage is 1 clears wLinkSendByte
+; and goes on one step; when it is $FE shows 'Your pal refused to battle.' (string $0B), goes to
+; screen state 2 (step and sub-step 0) and sends $FE; any other value waits.
+; EggServiceMenu_Bank1B_StartLinkBattle_PalBattleOK (step 12) has the same code. (C1, E-0372)
+EggServiceMenu_Bank1B_StartLinkBattle_PalReady::
     ld a, [wLinkMessage]
     cp $01
     jr z, .clear_link_send_byte
@@ -5681,7 +5693,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_EndExchange::
     ret
 
 ; Starting the battle, step 5: when the exchange ends asks 'Begin battle?' (string 8). (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle::
+EggServiceMenu_Bank1B_StartLinkBattle_AskBegin::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -5698,7 +5710,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle::
 
 ; Starting the battle, step 6: shows the 'Battle / Prize / Exit' choice (string $1F), plays sound
 ; $6C and draws its box. (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
+EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -5719,7 +5731,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
     farcall ShowString_Bank1B
     ld a, $6c
     call QueueSoundEffect
-    ld de, EggServiceMenu_Bank1B_StartLinkBattle_TileRect
+    ld de, EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows
@@ -5739,7 +5751,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
 ; two steps; Prize shows the partner's prize ('There is no prize for this ...' string $14 without
 ; the rule, 'There is no prize.' string $15 when none, otherwise its stats screen, state $0D); Exit
 ; or B refuses ('You refused to battle.'). (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo::
+EggServiceMenu_Bank1B_StartLinkBattle_ReadChoice::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_handle_three_choice_cursor_input_f1
@@ -5843,7 +5855,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_RetryChoice::
 
 ; Starting the battle, step 12: on the partner's 1 goes on; on $FE 'Your pal refused to battle.'.
 ; (C1, E-0357)
-EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_2::
+EggServiceMenu_Bank1B_StartLinkBattle_PalBattleOK::
     ld a, [wLinkMessage]
     cp $01
     jr z, .clear_link_send_byte
@@ -5990,7 +6002,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords::
     dw LinkBattleSetupMenu_ListMembers
     dw LinkBattleSetupMenu_DrawPageNames
     dw LinkBattleSetupMenu_DrawCursorPanel
-    dw EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780
+    dw LinkBattleSetupMenu_DrawCursorName
     dw LinkBattleSetupMenu_DrawPicksBox
     dw EggServiceMenu_ShowBattlePrizeExit
     dw LinkBattleSetupMenu_LeaveList
@@ -6013,7 +6025,7 @@ EggServiceMenu_ShowBattlePrizeExit::
     ld a, $1f
     ld [wStringIndex], a ; 'BattlePrizeExit'
     farcall ShowString_Bank1B
-    ld de, EggServiceMenu_Bank1B_StartLinkBattle_TileRect
+    ld de, EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows
@@ -6033,9 +6045,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords2::
     dw LinkBattleSetupMenu_ListMembers
     dw LinkBattleSetupMenu_DrawPageNames
     dw LinkBattleSetupMenu_DrawCursorPanel
-    dw EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780
+    dw LinkBattleSetupMenu_DrawCursorName
     dw LinkBattleSetupMenu_DrawPicksBox
-    dw EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN
+    dw EggServiceMenu_ShowInfoOKChoice
     dw LinkBattleSetupMenu_LeaveList
 
 ; Listing members, step 0: clears the record panel tiles, draws the list box and marks the cursor
@@ -6092,21 +6104,20 @@ LinkBattleSetupMenu_DrawCursorPanel::
     ret
 
 ; Listing members, step 4: draws the name of the monster under the cursor. (C1, E-0357)
-EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780::
+LinkBattleSetupMenu_DrawCursorName::
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
 ; Listing members, step 5: draws the picks box (DrawRuleBoxByLinkRuleTurnLimit1Bit7, which advances
 ; wScreenStep): three numbered rows, and a fourth row when bit 7 of wLinkRules + $9 is set, the same
-; bit that turns on the prize questions
-; (EggServiceMenu_Bank1B_PickRecords_MarkPrize_ShowPleaseWait). (C1, E-0370)
+; bit that turns on the prize questions (EggServiceMenu_Bank1B_PickRecords_AskPrize). (C1, E-0370)
 LinkBattleSetupMenu_DrawPicksBox::
     call DrawRuleBoxByLinkRuleTurnLimit1Bit7
     ret
 
 ; Listing members, step 6 (second list): shows 'Info / OK' and the pick question (string $12, or $17
 ; for the prize at three picks) and draws its box. (C1, E-0357)
-EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
+EggServiceMenu_ShowInfoOKChoice::
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
@@ -6147,7 +6158,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
 .set_string_index:
     ld [wStringIndex], a
     farcall ShowString_Bank1B
-    ld de, EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN_TileRect
+    ld de, EggServiceMenu_InfoOKBoxTileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows
@@ -7203,7 +7214,8 @@ LinkBattleSetupMenu_DrawYesNoBox_TileRect_2::
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN_TileRect::
+TileRect_1B::
+EggServiceMenu_InfoOKBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7240,7 +7252,7 @@ LinkBattleSetupMenu_DrawYesNo_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 9 x 7 tiles, one row per line
-EggServiceMenu_Bank1B_StartLinkBattle_TileRect::
+EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $35, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2

@@ -1122,7 +1122,7 @@ ShopMenu_Setup_DrawBoxes::
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRowsJp_Bank1C
-    call DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
+    call DrawGoldBoxFromScreenList
     xor a
     ld [wScreenStep], a
     ld [wTwoChoiceCursor], a
@@ -6213,10 +6213,15 @@ InitItemListScreenListAndCount::
     inc [hl]
     ret
 
+; Copies the 8 x 5 box at wScreenList to wWindowTileBuffer + $70 (CopyRectTo20ByteRowsJp_Bank1C),
+; redraws the 20 x 13 screen at the scroll position (DrawScreenBufferRectToBGMap_1C, DE = $01CC) and
+; adds 1 to wScreenStep. InitItemListScreenListAndCount fills wScreenList with the frame of
+; ShopMenu_Buy_Pay_Data and the gold digits at wGoldDigits (row 1). Used by ShopMenu_Setup_DrawBoxes
+; and VaultMenu_Setup_DrawBoxes, which then set wScreenStep to 0 themselves. (C1, E-0372)
 ; copies the 8 x 5 box at wScreenList to wWindowTileBuffer + $70, draws it at scroll + $1CC and
 ; wScreenStep += 1 (E-0122) (E-0340: the address in its name read as its RAM name; was
-; DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep)
-DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
+; DrawGoldBoxFromScreenList)
+DrawGoldBoxFromScreenList::
     ld de, wScreenList
     ld hl, wWindowTileBuffer + $70
     lb bc, $08, $05
@@ -6630,7 +6635,7 @@ VaultMenu_Setup_DrawBoxes::
     ld hl, wWindowTileBuffer + $64
     lb bc, $0b, $07
     call CopyRectTo20ByteRowsJp_Bank1C
-    call DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
+    call DrawGoldBoxFromScreenList
     xor a
     ld [wScreenStep], a
     ld [wTwoChoiceCursor], a

@@ -118,6 +118,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 1: instruction-named, banks $00-$0F (6 slices of 80-109, plus 18 derived) | E-0369 | 547 | 547 (5 names withheld: helper families) | 0 (54 spot checks, all correct) | PASS build/run606 | suite606 OK; par606b identical |
 | 2: instruction-named, banks $0F-$31 (6 slices of 80-118, 10 derived, 7 renumbered siblings, 2 parents) | E-0370 | 553 | 553 (equipment table renamed as a whole) | 0 (60 spot checks, all correct) | PASS build/run610 | suite610 OK (387, 4 skipped); par610b identical (agreement 3 of 3) |
 | 3: instruction-named, banks $31-$F2 (5 slices of 120-141, 7 derived) | E-0371 | 649 | 516 | 133 (worker 1: a name repeated a wrong 'link menu' note; 20.7%: slices halved to 60) | PASS build/run614 | par613 OK (392, 4 skipped) |
+| 4: 130 re-queued instruction-named + 288 long (6 slices of 60-80 with callers and tables) | E-0372 | 418 | 418 | 0 (43 spot checks, all correct) | PASS build/run616 | par616 OK (392, 4 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
@@ -131,7 +132,14 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-15, E-0371)
+## Current handoff (2026-10-15, E-0372)
+
+Batch 4 (E-0372) finished the instruction-named queue (0 left) and shortened 288 long labels; 0 rejected.
+Queue: long (over 50) 102, over 60: 14, `Etc`: 1 (GiftEffect_BookmarkEtc), unread 4,499, reader-only data 501,
+assets 155. Next: E-0373, the last long labels plus the first reader-only data labels, slices of 60 (the second
+batch at 0% would grow them to 90).
+
+## Prior handoff (2026-10-15, E-0371)
 
 Batch 3 (E-0371) named 516 routines; worker 1's draft (133 labels, banks $31-$36) was rejected for a name that
 repeated a wrong note, so those labels are back in the queue (instruction-named: 130). Rejection 20.7%: the next

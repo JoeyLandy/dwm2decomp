@@ -1162,7 +1162,7 @@ EggServiceMenu_DrawListAndPrice_LoadTiles::
     ld b, $49
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, EggServiceMenu_DrawListAndPrice_BGPaletteBufferData
+    ld de, EggServicePalettes
     ld b, $49
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -1175,8 +1175,8 @@ EggServiceMenu_DrawListAndPrice_LoadTiles::
 
 ; Egg list screen, step 1: copies the glyph tiles and draws the frame pair. (C1, E-0357)
 EggServiceMenu_DrawListAndPrice_LoadGlyphs::
-    ld hl, EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopyDestList
-    ld de, EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopySrcList
+    ld hl, EggListGlyphTileDests
+    ld de, EggListGlyphTileSources
     call CopyGlyphTileListFromBank1F
     call DrawPairAndStep
     ret
@@ -1906,11 +1906,13 @@ EggServiceMenu_ChooseAndPay_ListCursor_Data::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopyDestList::
+TileCopyDestList_0D::
+EggListGlyphTileDests::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 ; record: bank-$1F tile sources
-EggServiceMenu_DrawListAndPrice_LoadGlyphs_TileCopySrcList::
+TileCopySrcList_0D::
+EggListGlyphTileSources::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
@@ -2234,7 +2236,7 @@ RenameMenu_PickMonster_LoadTiles::
     ld b, $49
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, RenameMenu_PickMonster_LoadTiles_BGPaletteBufferData
+    ld de, RenameMenuPalettes
     ld b, $49
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -3126,12 +3128,12 @@ KeyAppraisalMenu_ChooseKey_ConfirmPrice::
     ret
 
 ; After the yes/no answer of KeyAppraisalMenu_ChooseKey_ConfirmPrice: copies the 6 x 5 rectangle
-; KeyAppraisalMenu_ChooseKey_ConfirmPrice_CloseBox_TileRect over the yes/no box at wWindowTileBuffer
-; + $112 (where KeyAppraisalMenu_ChooseKey_DrawYesNo drew it), draws the page indicator at
-; wWindowTileBuffer + $162 when wListPages >= 2 (StoreC5BEC6AtHLStride2_Bank0D,
-; DrawPageOfPagesAtArg1_Bank1E) and redraws the 20 x 13 screen. (C1, E-0369)
+; KeyAppraisalMenu_CloseBoxTileRect over the yes/no box at wWindowTileBuffer + $112 (where
+; KeyAppraisalMenu_ChooseKey_DrawYesNo drew it), draws the page indicator at wWindowTileBuffer +
+; $162 when wListPages >= 2 (StoreC5BEC6AtHLStride2_Bank0D, DrawPageOfPagesAtArg1_Bank1E) and
+; redraws the 20 x 13 screen. (C1, E-0369)
 KeyAppraisalMenu_ChooseKey_ConfirmPrice_CloseBox::
-    ld de, KeyAppraisalMenu_ChooseKey_ConfirmPrice_CloseBox_TileRect
+    ld de, KeyAppraisalMenu_CloseBoxTileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -4285,7 +4287,8 @@ KeyAppraisalMenu_ChooseKey_DrawListBox_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $ad, $ae, $af, $fd, $fe, $ff, $70, $71, $72, $73, $74, $75 ; id 6
 
-KeyAppraisalMenu_ChooseKey_ConfirmPrice_CloseBox_TileRect::
+TileRect_0D::
+KeyAppraisalMenu_CloseBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $ab, $ac, $ee, $ef, $fc, $b7 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6380,7 +6383,7 @@ NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel::
     ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank0D
-    ld de, NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel_TileRect
+    ld de, NpcBreedMenu_FamilySexLevelTileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank0D
@@ -6929,8 +6932,8 @@ NpcBreedMenu_RedrawListScreen_LoadTiles_Data2::
 
 ; Redrawing the breeding list, step 1: copies the glyph tiles and two frame tiles. (C1, E-0357)
 NpcBreedMenu_RedrawListScreen_LoadGlyphs::
-    ld hl, NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopyDestList
-    ld de, NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopySrcList
+    ld hl, NpcBreedMenu_YesNoGlyphDestList
+    ld de, NpcBreedMenu_YesNoGlyphSrcList
     call CopyGlyphTileListFromBank1F
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
@@ -7003,12 +7006,11 @@ NpcBreedMenu_RedrawListScreen_DrawNameAndSpecies::
     ret
 
 ; After the child is computed, with its species id in wArg6/wArg7: wTwoChoiceCursor = 0 when the
-; id's bit is set in the bit field NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data or its
-; species flag is set (TestSpeciesFlag); then wTextBuf0 = the species name, a space, glyph $A2 and
-; the child's MON_PLUS in digits (leading zeros dropped), ending with $F0. Otherwise
-; wTwoChoiceCursor = 1. A second test against wMonsterLibraryBuf compares A after the farcall, which
-; then holds the bank number restored by rst $10 rather than the result, so that test never
-; branches. (C1, E-0369)
+; id's bit is set in the bit field BreedShowNameSpeciesBits or its species flag is set
+; (TestSpeciesFlag); then wTextBuf0 = the species name, a space, glyph $A2 and the child's MON_PLUS
+; in digits (leading zeros dropped), ending with $F0. Otherwise wTwoChoiceCursor = 1. A second test
+; against wMonsterLibraryBuf compares A after the farcall, which then holds the bank number restored
+; by rst $10 rather than the result, so that test never branches. (C1, E-0369)
 NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg::
     ld a, [wArg6]
     ld [wArg1], a
@@ -7016,7 +7018,7 @@ NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg::
     ld a, [wArg7]
     ld [wArg2], a
     ld [wSpeciesIdHi], a
-    ld de, NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data
+    ld de, BreedShowNameSpeciesBits
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -7218,7 +7220,9 @@ NpcBreedMenu_ChooseAndBreed_LoadChosenRecord::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
-NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel_TileRect::
+TileRect_0D_2::
+; data read by NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel (60 bytes) (E-0347)
+NpcBreedMenu_FamilySexLevelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7228,11 +7232,13 @@ NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel_TileRect::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopyDestList::
+TileCopyDestList_0D_2::
+NpcBreedMenu_YesNoGlyphDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 ; record: bank-$1F tile sources
-NpcBreedMenu_RedrawListScreen_LoadGlyphs_TileCopySrcList::
+TileCopySrcList_0D_2::
+NpcBreedMenu_YesNoGlyphSrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as

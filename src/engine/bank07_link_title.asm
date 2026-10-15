@@ -2708,7 +2708,7 @@ GameMode5_Update_LoadScreens_ScreenWithMusic::
     ld a, [wTitleScreenSubState]
     jumptable
     dw GameMode5_Update_LoadScreens_ScreenWithMusic_Load
-    dw GameMode5_Update_LoadScreens_ScreenWithMusic_PlayMusic
+    dw GameMode5_Update_LoadScreens_StartTitleMusic
     dw GameMode5_Update_LoadScreens_TitlePressStart
 
 ; Title state with music, step 0: after the fade decompresses the title tiles, map, attributes and
@@ -2769,8 +2769,12 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_Load::
     ldh [hScrollY], a
     ret
 
-; Title state with music, step 1: plays music 6 and sets a $B4-frame timer. (C1, E-0357)
-GameMode5_Update_LoadScreens_ScreenWithMusic_PlayMusic::
+; Title screen with music (wTitleScreenState 4 of GameMode5_Update_LoadScreens), step 1
+; (wTitleScreenSubState 1): after the fade (wFadeState 0) sets wWorkBuf = $B4, queues music 6
+; (QueueMusic) and moves to step 2, GameMode5_Update_LoadScreens_TitlePressStart. That step only
+; counts wWorkBuf down after the music has ended on channels 2-5, then returns to wTitleScreenState
+; 2. (C1, E-0372)
+GameMode5_Update_LoadScreens_StartTitleMusic::
     ld a, [wFadeState]
     or a
     ret nz
@@ -2933,7 +2937,7 @@ GameMode5_Update_TitleMenuState::
     dw GameMode5_Update_TitleMenuState_ShowGameLinkIsNot
     dw GameMode5_Update_BackToTitleMenu
     dw GameMode5_Update_NewPlayerSetup
-    dw GameMode5_Update_TitleMenuState_ShowGameLinkCannotBe
+    dw GameMode5_Update_TitleMenuState_LinkRefused
     dw GameMode5_Update_DuoSetup
 
 ; Title menu: runs the menu (TitleMenu); when it asks to start a link (wLinkScreenStep), sends that
@@ -3806,9 +3810,14 @@ GameMode5_Update_StartGame::
     inc [hl]
     ret
 
-; Title state 7, link refused: shows message 7 with the error numbers from wLinkTimerLo,
-; wGridCursorY and wScreenState written into the text buffer as digits. (C1, E-0357)
-GameMode5_Update_TitleMenuState_ShowGameLinkCannotBe::
+; Title state 7 (wTitleScreenState, set by WriteTileSound69ThenTitleScreenState7 when a title-menu
+; link entry gets $FE from the partner): sends $F4 over the link (SerialSendByte) with wScreenStep 0
+; then 1, clears the text tiles at vTiles1 (18 x 2, FillTilesRequest), writes the nibbles of
+; wLinkTimerLo, wGridCursorY and wScreenState into wTextBuf0 as $F0-ended groups, shows message 0/7
+; 'Game Link cannot be used with Super Game Boy.' (BeginStringDisplay_Bank07) in the 20 x 5 box
+; TileRect_SaveCheckScreenRects_2 copied to vBGMap0 + $1A0, and sets wTitleScreenState = 5
+; (GameMode5_Update_BackToTitleMenu). (C1, E-0372)
+GameMode5_Update_TitleMenuState_LinkRefused::
     xor a
     ld [wScreenStep], a
     ld a, $f4
@@ -4889,13 +4898,13 @@ RunLinkSession4ScreenState_SetBattleKindAndSync::
     ld a, [wTitleScreenSubState]
     jumptable
     dw RunLinkSession4ScreenState_FollowPartnerOrRefuse
-    dw RunLinkSession4ScreenState_SetBattleKindAndSync_Send2
-    dw RunLinkSession4ScreenState_SetBattleKindAndSync_WaitPartner2
-    dw RunLinkSession4ScreenState_SetBattleKindAndSync_WaitClear
-    dw RunLinkSession4ScreenState_SetBattleKindAndSync_ShowMessage
+    dw RunLinkSession4ScreenState_RefusalHandshake
+    dw RunLinkSession4ScreenState_RefusalOpenWindow
+    dw RunLinkSession4ScreenState_RefusalWaitIdle
+    dw RunLinkSession4ScreenState_ShowRefusal
     dw RunLinkSession4ScreenState_SignalAfterRefusal
-    dw RunLinkSession4ScreenState_SetBattleKindAndSync_WaitPartner1
-    dw RunLinkSession4ScreenState_SetBattleKindAndSync_EndSession
+    dw RunLinkSession4ScreenState_RefusalWaitPartner
+    dw RunLinkSession4ScreenState_EndLinkSession
 
 ; Battle kind and sync (wTitleScreenState 2, the refusal state), step 0: on the side that drives the
 ; clock (wLinkRole bit 1 set) a partner's $FB applies InitLinkRulesPresetA with wBattleKind 8 and
@@ -4964,17 +4973,19 @@ RunLinkSession4ScreenState_FollowPartnerOrRefuse::
     inc [hl]
     ret
 
-; Battle kind and sync, step 1: sends link byte 2. (C1, E-0357)
-RunLinkSession4ScreenState_SetBattleKindAndSync_Send2::
+; Refusal state (wTitleScreenState 2), step 1: sets wLinkSendByte = 2 and moves to step 2, which
+; waits for the partner's 2. (C1, E-0372)
+RunLinkSession4ScreenState_RefusalHandshake::
     ld hl, wTitleScreenSubState
     inc [hl]
     ld a, $02
     ld [wLinkSendByte], a
     ret
 
-; Battle kind and sync, step 2: waits for the partner's 2, then redraws the message window. (C1,
-; E-0357)
-RunLinkSession4ScreenState_SetBattleKindAndSync_WaitPartner2::
+; Refusal state, step 2: waits for the partner's 2 in wLinkMessage, then clears wLinkSendByte,
+; copies the 20 x 5 message box TileRect_SaveCheckScreenRects_2 into wScreenTileBuffer and from
+; there to vBGMap0 + $1A0, and moves to step 3. (C1, E-0372)
+RunLinkSession4ScreenState_RefusalOpenWindow::
     ld a, [wLinkMessage]
     cp $02
     ret nz
@@ -4990,8 +5001,9 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_WaitPartner2::
     inc [hl]
     ret
 
-; Battle kind and sync, step 3: waits until the partner's message byte returns to 0. (C1, E-0357)
-RunLinkSession4ScreenState_SetBattleKindAndSync_WaitClear::
+; Refusal state, step 3: waits until the partner's byte wLinkMessage is back to 0, then moves to
+; step 4. (C1, E-0372)
+RunLinkSession4ScreenState_RefusalWaitIdle::
     ld a, [wLinkMessage]
     or a
     ret nz
@@ -4999,9 +5011,11 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_WaitClear::
     inc [hl]
     ret
 
-; Battle kind and sync, step 4: shows message $0302, or $0303 when wLinkScreenFlag is set. (C1,
-; E-0357)
-RunLinkSession4ScreenState_SetBattleKindAndSync_ShowMessage::
+; Refusal state, step 4: shows message $0302 'Refused the VS battle.' (this side declined,
+; wLinkScreenFlag 0) or $0303 'The VS battle was refused.' (wLinkScreenFlag set, the partner
+; declined) with ShowStringHL_Bank07, then moves to step 5
+; (RunLinkSession4ScreenState_SignalAfterRefusal). (C1, E-0372)
+RunLinkSession4ScreenState_ShowRefusal::
     ld hl, $0302
     ld a, [wLinkScreenFlag]
     or a
@@ -5027,8 +5041,9 @@ RunLinkSession4ScreenState_SignalAfterRefusal::
     inc [hl]
     ret
 
-; Battle kind and sync, step 6: waits for the partner's 1. (C1, E-0357)
-RunLinkSession4ScreenState_SetBattleKindAndSync_WaitPartner1::
+; Refusal state, step 6: waits for the partner's 1 in wLinkMessage (step 5 sent 1 after the
+; message), then moves to step 7. (C1, E-0372)
+RunLinkSession4ScreenState_RefusalWaitPartner::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -5036,9 +5051,12 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_WaitPartner1::
     inc [hl]
     ret
 
-; Battle kind and sync, step 7: ends the link session (clears the link state and work bytes) and
-; returns to the title (game mode 5, wModeState 1) with a fade. (C1, E-0357)
-RunLinkSession4ScreenState_SetBattleKindAndSync_EndSession::
+; Refusal state, step 7: ends the link session: clears wLinkSession, wLinkExchangeState, wLinkRole,
+; wLinkStatus, wLinkMode, wLinkMessage, wLinkSendByte, wLinkScreenStep and $1E bytes of wWorkBuf,
+; then requests a mode change (wModeChangeRequest) to wGameMode 5 with wModeState 1
+; (GameMode5_Init_TitleMenu, the title menu), wWorldMapState and wGameMode2Arg 0, and starts fade 4.
+; (C1, E-0372)
+RunLinkSession4ScreenState_EndLinkSession::
     xor a
     ld [wLinkSession], a
     ld [wLinkExchangeState], a
@@ -6475,23 +6493,25 @@ LinkRulesEditor_FifthRule::
 RunLinkSession4ScreenState_StartWithPresetRules::
     ld a, [wTitleScreenSubState]
     jumptable
-    dw RunLinkSession4ScreenState_StartWithPresetRules_SetRules
-    dw RunLinkSession4ScreenState_ShowStringHL_Bank07AndStep
+    dw RunLinkSession4ScreenState_CheckPartnerPreset
+    dw RunLinkSession4ScreenState_ShowChoosingRules
     dw RunLinkSession4ScreenState_EndChoosingMessage
     dw RunLinkSession4ScreenState_PartnerRulesReady
     dw RunLinkSession4ScreenState_RequestRules
     dw RunLinkSession4ScreenState_ReceiveRules
     dw RunLinkSession4ScreenState_EndRulesReceive
-    dw RunLinkSession4ScreenState_StartWithPresetRules_DrawRules
-    dw RunLinkSession4ScreenState_StartWithPresetRules_ReadAnswer
+    dw RunLinkSession4ScreenState_DrawReceivedRules
+    dw RunLinkSession4ScreenState_AskAcceptRules
     dw RunLinkSession4ScreenState_RulesAccepted
     dw RunLinkSession4ScreenState_DeclineDelay
     dw RunLinkSession4ScreenState_DeclineRules
 
-; Start with preset rules, step 0: a partner's $FB, $FC or $FD sets the rules (preset A with battle
-; kind 8, preset B with kind 9, or kind 8 with the current rules) and moves on; otherwise redraws
-; the message window. (C1, E-0357)
-RunLinkSession4ScreenState_StartWithPresetRules_SetRules::
+; Preset rules (wTitleScreenState 4), step 0: a partner's $FB applies InitLinkRulesPresetA with
+; wBattleKind 8 and wLinkSetupMode 0, $FC InitLinkRulesPresetB with wBattleKind 9 and wLinkSetupMode
+; 1, both going to wTitleScreenState 5; $FD sets wBattleKind 8 and writes wTitleScreenState 4, the
+; state already running, so it stays at this step. Any other byte copies the 20 x 5 message box
+; TileRect_SaveCheckScreenRects_2 to vBGMap0 + $1A0 and moves to step 1. (C1, E-0372)
+RunLinkSession4ScreenState_CheckPartnerPreset::
     ld a, [wLinkMessage]
     cp $fb
     jr z, .call_init_link_rules_preset_a
@@ -6539,8 +6559,10 @@ RunLinkSession4ScreenState_StartWithPresetRules_SetRules::
     inc [hl]
     ret
 
-; Preset rules, step 1: shows message $0304 and clears the link byte. (C1, E-0357)
-RunLinkSession4ScreenState_ShowStringHL_Bank07AndStep::
+; Preset rules, step 1: shows message $0304 'Choosing rules. Please wait.' (ShowStringHL_Bank07),
+; clears wLinkSendByte and moves to step 2 (RunLinkSession4ScreenState_EndChoosingMessage). (C1,
+; E-0372)
+RunLinkSession4ScreenState_ShowChoosingRules::
     ld hl, $0304
     call ShowStringHL_Bank07
     xor a
@@ -6634,10 +6656,12 @@ RunLinkSession4ScreenState_EndRulesReceive::
     inc [hl]
     ret
 
-; Preset rules, step 7: draws the received rules (LoadInvertedBit7FlagsToWorkBuf,
-; DrawWorkBufSelectionTilesAndPanels) with a yes/no question, and saves a copy
-; (CopyLinkRulesToLinkRulesCopy). (C1, E-0357)
-RunLinkSession4ScreenState_StartWithPresetRules_DrawRules::
+; Preset rules, step 7 (after the partner's 10 rule bytes arrived in wLinkRules): fills
+; wScreenTileBuffer with $C3, copies the rectangle at TileRect_SaveCheckScreenRects_2 + $1DC, draws
+; the rules (LoadInvertedBit7FlagsToWorkBuf, DrawWorkBufSelectionTilesAndPanels) and the screen
+; (DrawScreenBufferToBGMap0_Bank07), sets wSubMenuCursor2 = 2 and wMenuSelectedMember = 0 for the
+; yes/no question, moves to step 8 and saves the rules (CopyLinkRulesToLinkRulesCopy). (C1, E-0372)
+RunLinkSession4ScreenState_DrawReceivedRules::
     ld d, $c3
     call FillScreenTileBufferWithD
     ld hl, TileRect_SaveCheckScreenRects_2 + $1dc
@@ -6654,9 +6678,11 @@ RunLinkSession4ScreenState_StartWithPresetRules_DrawRules::
     call CopyLinkRulesToLinkRulesCopy
     ret
 
-; Preset rules, step 8: the yes/no question. Yes accepts the partner's rules (wLinkSetupMode 2) and
-; sends 1; no or B sends $FE and skips a step. (C1, E-0357)
-RunLinkSession4ScreenState_StartWithPresetRules_ReadAnswer::
+; Preset rules, step 8: blinks the yes/no cursor (wMenuSelectedMember, CursorPositionWords_Bank07 +
+; $24). A on yes plays sound $69, sets wLinkSetupMode 2, sends 1 and moves to step 9
+; (RunLinkSession4ScreenState_RulesAccepted); A on no (also with sound $69) or B sends $FE and skips
+; to step 10 (RunLinkSession4ScreenState_DeclineDelay). (C1, E-0372)
+RunLinkSession4ScreenState_AskAcceptRules::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $24
     call BlinkHorizontalListCursor_Bank07
@@ -7168,15 +7194,19 @@ DrawWorkBufSelectionTilesAndPanels_TurnLimit::
 RunLinkSession4ScreenState_ResetAndSignal::
     ld a, [wTitleScreenSubState]
     jumptable
-    dw RunLinkSession4ScreenState_ResetAndSignal_DrawSummary
-    dw RunLinkSession4ScreenState_ResetAndSignal_ReadAnswer
+    dw RunLinkSession4ScreenState_ResetAndSignal_Draw
+    dw RunLinkSession4ScreenState_ResetAndSignal_Ask
     dw RunLinkSession4ScreenState_ResetAndSignal_Accept
     dw RunLinkSession4ScreenState_ResetAndSignal_Decline
     dw RunLinkSession4ScreenState_ResetAndSignal_Refused
 
-; Reset and signal, step 0: unless the partner sent $FE, draws the rules summary with a yes/no
-; question. (C1, E-0357)
-RunLinkSession4ScreenState_ResetAndSignal_DrawSummary::
+; Reset and signal (wTitleScreenState 8), step 0: when the partner sent $FE jumps to
+; RunLinkSession4ScreenState_ResetAndSignal_Refused; otherwise fills wScreenTileBuffer with $C3,
+; copies the rectangle at TileRect_SaveCheckScreenRects_2 + $1DC, draws the current rules
+; (LoadInvertedBit7FlagsToWorkBuf, DrawWorkBufSelectionTilesAndPanels,
+; DrawScreenBufferToBGMap0_Bank07), sets wSubMenuCursor2 = 2 and wMenuSelectedMember = 0 and moves
+; to step 1. (C1, E-0372)
+RunLinkSession4ScreenState_ResetAndSignal_Draw::
     ld a, [wLinkMessage]
     cp $fe
     jp z, RunLinkSession4ScreenState_ResetAndSignal_Refused
@@ -7195,9 +7225,12 @@ RunLinkSession4ScreenState_ResetAndSignal_DrawSummary::
     inc [hl]
     ret
 
-; Reset and signal, step 1: the yes/no question: yes sends 1 and moves on; no or B sends $FE and
-; skips a step; a partner's $FE ends at step 4. (C1, E-0357)
-RunLinkSession4ScreenState_ResetAndSignal_ReadAnswer::
+; Reset and signal, step 1: a partner's $FE jumps to
+; RunLinkSession4ScreenState_ResetAndSignal_Refused; otherwise blinks the yes/no cursor
+; (wMenuSelectedMember, CursorPositionWords_Bank07 + $24). A on yes plays sound $69, sends 1 and
+; moves to step 2 (RunLinkSession4ScreenState_ResetAndSignal_Accept); A on no (with sound $69) or B
+; sends $FE and skips to step 3 (RunLinkSession4ScreenState_ResetAndSignal_Decline). (C1, E-0372)
+RunLinkSession4ScreenState_ResetAndSignal_Ask::
     ld a, [wLinkMessage]
     cp $fe
     jr z, RunLinkSession4ScreenState_ResetAndSignal_Refused

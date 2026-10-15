@@ -2060,27 +2060,32 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode::
 .read_player_sprite_mode:
     ldh a, [hPlayerSpriteMode]
     jumptable
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFollowers
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFlagFollower
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerWithOverlay
+    dw DrawPlayerAndFollowers
+    dw DrawPlayerAndFlagFollower
+    dw DrawPlayerWithOverlay
 
-; Player sprite mode 0: draws the player and then the party followers (DrawPartyFollowerSprites).
-; (C1, E-0357)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFollowers::
+; Player sprite mode 0 (entry 0 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode by
+; hPlayerSpriteMode): draws the player (DrawPlayerSprite) and then the party followers
+; (DrawPartyFollowerSprites). (C1, E-0372)
+DrawPlayerAndFollowers::
     call DrawPlayerSprite
     call DrawPartyFollowerSprites
     ret
 
-; Player sprite mode 1: draws the player and the single follower shown when story flag $1B is set.
-; (C1, E-0357)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerAndFlagFollower::
+; Player sprite mode 1 (entry 1 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode by
+; hPlayerSpriteMode): draws the player (DrawPlayerSprite) and the single follower that
+; DrawFollowerSpriteIfFlag1B shows when EVENT_SCENE_LAND_HO (flag $1B) is set and hFieldDrawFlags
+; bit 1 is clear. (C1, E-0372)
+DrawPlayerAndFlagFollower::
     call DrawPlayerSprite
     call DrawFollowerSpriteIfFlag1B
     ret
 
-; Player sprite mode 2: draws the player with an overlay sprite (set $21 or $22) below it. (C1,
-; E-0357)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerWithOverlay::
+; Player sprite mode 2 (entry 2 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode by
+; hPlayerSpriteMode): draws the player (DrawPlayerSprite) and then the overlay meta-sprite set $21
+; (hPlayerStateFlags bit 3 set) or $22, 8 pixels lower with tile offset $70 and palette 7
+; (DrawPlayerOverlaySprite21Or22). (C1, E-0372)
+DrawPlayerWithOverlay::
     call DrawPlayerSprite
     call DrawPlayerOverlaySprite21Or22
     ret

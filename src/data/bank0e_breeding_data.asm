@@ -1606,9 +1606,9 @@ BuildChildRecordSkillListCandidateList::
     ld de, wRecordBufB + MON_SKILLS
     call CopyEightBytesDEToHL
     call MapChildRecordSkillListEntriesThroughTable
-    call BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills
+    call ClearDuplicateChildSkills
     call CompactChildRecordSkillListRemovingFF
-    call BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills
+    call ClearDuplicateChildSkills
     ret
 
 ; replaces each of the $19 bytes at wChildRecord + $3C (other than $FF) by SkillLineBaseTable[byte]
@@ -1681,10 +1681,15 @@ CompactChildRecordSkillListRemovingFF::
     jr nz, .loop
     ret
 
+; Walks the 25 ($19) bytes of the child's skill list at wChildRecord + MON_SKILL_LIST: a byte of 0
+; or $FF becomes $FF, and for every other byte each later byte equal to it is set to $FF, so each
+; skill stays only at its first place. No inputs; clobbers A, BC, DE, HL.
+; BuildChildRecordSkillListCandidateList calls it before and after
+; CompactChildRecordSkillListRemovingFF. (C1, E-0372)
 ; in the child's skill list (wChildRecord + MON_SKILL_LIST, 25 entries) turns zeros and repeated
 ; skills into $FF (E-0340: the address in its name read as its RAM name; was
-; BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills)
-BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills::
+; ClearDuplicateChildSkills)
+ClearDuplicateChildSkills::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $00
 

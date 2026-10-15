@@ -2445,9 +2445,9 @@ DebugResultsDisplay_ResistanceAddress_Data2::
 ; wRecordBufB and returns at once unless wArg5 is then $FF. With a child species (wArg6/wArg7 not
 ; both $FF) it tests that species with TestBitInFieldAtArg3 against the address of
 ; DebugResultsDisplay_Update_ShowChild_Data ($75C5), which, read while bank $15 is mapped, is the
-; bit field NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data; with the bit clear it draws the
-; unknown-name placeholder at vTiles2 + $500 (otherwise it blanks that field), then draws the
-; child's name at vTiles2 + $200, its species number, sex mark, plus value, level and maximum level
+; bit field BreedShowNameSpeciesBits; with the bit clear it draws the unknown-name placeholder at
+; vTiles2 + $500 (otherwise it blanks that field), then draws the child's name at vTiles2 + $200,
+; its species number, sex mark, plus value, level and maximum level
 ; (DebugResultsDisplay_Update_ShowChild_DrawBCD) and its 27 resistance digits, restores wArg1 and
 ; clears wScreenState and wNameEntryState. With no child it draws the placeholder in both name
 ; fields and number 0, clears wScreenState and wNameEntryState and returns without popping the saved

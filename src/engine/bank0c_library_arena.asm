@@ -1029,7 +1029,7 @@ LibraryMenu_ShowMonsterEntry_LoadTiles::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld hl, LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles
+    ld hl, LibraryEntryLineTiles
     ld de, vTiles2 + $610
     call CopyTileBytesToVRAM_Bank0C
     call CopyTileBytesToVRAM_Bank0C
@@ -1064,10 +1064,14 @@ LibraryMenu_ShowMonsterEntry_LoadTiles::
     ld [wScreenSubStep], a
     ret
 
-; ScriptCommandF6 code loads HL = $4718 and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C
-; six times, 16 bytes each (E-0237, C1)
+; Six 2bpp tiles (16 bytes each, every first byte of a pair $FF, the second the pattern): line
+; pieces made of 2-pixel vertical strokes ($03 at the right edge, $60 inside) and full rows ($FF).
+; LibraryMenu_ShowMonsterEntry_LoadTiles copies them to vTiles2 + $610 (BG tiles $61-$66) with six
+; CopyTileBytesToVRAM_Bank0C calls. (C1, E-0372); E-0237 (C1: ScriptCommandF6 code loads HL = $4718
+; and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C six times, 16 bytes each). (named
+; from its reading, E-0372; was LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles)
 ; record: tile (16 bytes, 2 bits per pixel)
-LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles::
+LibraryEntryLineTiles::
     db $ff, $03, $ff, $03, $ff, $03, $ff, $ff, $ff, $ff, $ff, $03, $ff, $03, $ff, $03 ; id 0
     db $ff, $00, $ff, $00, $ff, $00, $ff, $03, $ff, $03, $ff, $03, $ff, $03, $ff, $03 ; id 1
     db $ff, $03, $ff, $03, $ff, $03, $ff, $03, $ff, $03, $ff, $00, $ff, $00, $ff, $00 ; id 2
@@ -1076,9 +1080,7 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles::
     db $ff, $60, $ff, $60, $ff, $60, $ff, $ff, $ff, $ff, $ff, $00, $ff, $00, $ff, $00 ; id 5
 
 ; Library entry, step 1: decompresses the entry screen's tiles, map and attributes and the monster's
-; icon kind
-; (LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX), then
-; draws them. (C1, E-0357)
+; icon kind (LibraryMenu_ShowMonsterEntry_LoadIconBlock), then draws them. (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_LoadScreen::
     ld a, [wScreenSubStep]
     and a
@@ -1159,7 +1161,7 @@ LibraryMenu_ShowMonsterEntry_LoadScreen::
     ld hl, wWindowTileBuffer + $3d
     lb bc, $12, $01
     call CopyRectTo20ByteRows_Bank0C
-    call LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX
+    call LibraryMenu_ShowMonsterEntry_LoadIconBlock
     ld de, wLibraryEntryBlock
     ld hl, wWindowTileBuffer + $108
     lb bc, $02, $01
@@ -1247,7 +1249,7 @@ LibraryMenu_ShowMonsterEntry_DrawPicture::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1497,7 +1499,7 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree::
     ld de, MonsterPedigreeTableA
     add hl, de
     ld a, $42
-    call LibraryMenu_ShowMonsterEntry_ShowPedigree_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_Icon
     pop hl
     push hl
     sla l
@@ -1505,7 +1507,7 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree::
     ld de, MonsterPedigreeTableB
     add hl, de
     ld a, $43
-    call LibraryMenu_ShowMonsterEntry_ShowPedigree_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_Icon
     pop hl
     push hl
     sla l
@@ -1513,14 +1515,14 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree::
     ld de, MonsterPedigreeTableA
     add hl, de
     ld de, vTiles2 + $300
-    call LibraryMenu_ShowMonsterEntry_ShowPedigree_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_Name
     pop hl
     sla l
     rl h
     ld de, MonsterPedigreeTableB
     add hl, de
     ld de, vTiles2 + $390
-    call LibraryMenu_ShowMonsterEntry_ShowPedigree_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_ShowPedigree_Name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1896,9 +1898,11 @@ LibraryMenu_ShowMonsterEntry_EraseListMark::
     ld [wScriptStartRequest], a
     ret
 
-; Shows one parent of a pedigree entry at DE: a species name (category = high byte + 2), or a family
-; name when the entry is a family ($FE form), or nothing. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_ShowPedigree_ShowString_Bank08::
+; HL = a pedigree word (MonsterPedigreeTableA or MonsterPedigreeTableB), DE = tile address: shows
+; one parent's name in a 9 x 1 window at DE. A species id shows its name (category = high byte + 2,
+; ShowString_Bank08); a $FExx word shows family name xx & $0F (bank $0B category 2, such as 'Slime',
+; ShowString_Bank0B); $FEFE shows '???' (String_0B_00_00). (C1, E-0372)
+LibraryMenu_ShowMonsterEntry_ShowPedigree_Name::
     push de
     inc hl
     ld a, [hld]
@@ -1951,9 +1955,11 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree_ShowString_Bank08::
     farcall ShowString_Bank0B
     ret
 
-; Loads the family icon of one pedigree parent into tile A: the species' family
-; (FamilyForSpeciesIdArg6) or the entry's family, or a blank tile. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_ShowPedigree_FamilyForSpeciesIdArg6::
+; A = tile number, HL = a pedigree word: loads one parent's family icon into that tile. A species id
+; gets its family from FamilyForSpeciesIdArg6 (wArg6/wArg7 in, wArg5 out); a $FExx word uses family
+; xx & $0F; either way wWorkBuf = family, wWorkBuf + 1 = tile and LoadFamilyIconTileForWorkBuf draws
+; it. $FEFE copies the '?' glyph (Tiles2Plus420Tiles, bank $1F) to vTiles2 + 16 * A. (C1, E-0372)
+LibraryMenu_ShowMonsterEntry_ShowPedigree_Icon::
     push af
     inc hl
     ld a, [hld]
@@ -2806,9 +2812,11 @@ LibraryMenu_ClassifyMonster::
     ld a, $fe
     ret
 
-; Copies the monster's two-byte icon block (by its kind in MonsterIconKindTable) to
-; wLibraryEntryBlock. (C1, E-0357)
-LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
+; Copies the two tile bytes of the shown monster's icon block to wLibraryEntryBlock: the monster
+; number from GridCellAddressFromGridCursorXAndGrid2CursorX indexes MonsterIconKindTable, whose
+; value picks an entry of MonsterIconBlockPointers. LibraryMenu_ShowMonsterEntry_LoadScreen then
+; draws the pair at wWindowTileBuffer + $108. (C1, E-0372)
+LibraryMenu_ShowMonsterEntry_LoadIconBlock::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, MonsterIconKindTable
     add hl, de
@@ -2830,10 +2838,10 @@ LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGri
     jr nz, .loop
     ret
 
-; LibraryMenu_ShowMonsterEntry_LoadScreen_CallGridCellAddressFromGridCursorXAndGrid2CursorX reads
-; the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and
-; copies the two tile bytes that MonsterIconBlockPointers[value] points to into wScreenBlock9C; 373
-; bytes, one per monster id up to $174 (E-0206, C1)
+; LibraryMenu_ShowMonsterEntry_LoadIconBlock reads the byte at $536A + the monster number from
+; GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that
+; MonsterIconBlockPointers[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to
+; $174 (E-0206, C1)
 ; record: index into MonsterIconBlockPointers
 MonsterIconKindTable::
     db $00 ; id 0
@@ -3234,12 +3242,11 @@ MonsterIconBlocks_03::
 MonsterIconBlocks_04::
     db $7f, $80 ; entry 4
 
-; takes the class byte of the grid cell
-; (LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable) and copies its four bytes to
+; takes the class byte of the grid cell (LibraryMonsterClasses) and copies its four bytes to
 ; wLibraryEntryBlock (E-0305)
 LibraryMenu_ShowMonsterEntry_LoadClassBlock::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
-    ld de, LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable
+    ld de, LibraryMonsterClasses
     add hl, de
     ld a, [hl]
     add a
@@ -3261,37 +3268,57 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock::
 
 ; data read by LibraryMenu (8 words) (E-0347)
 LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data::
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry00
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry01
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry02
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry03
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry04
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry05
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry06
-    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry07
+    dw LibraryClassBlock_Class0
+    dw LibraryClassBlock_Class1
+    dw LibraryClassBlock_Class2
+    dw LibraryClassBlock_Class3
+    dw LibraryClassBlock_Class4
+    dw LibraryClassBlock_Class5
+    dw LibraryClassBlock_Class6
+    dw LibraryClassBlock_Class7
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry00::
+; The four tiles for class 0: $81, $80, $80, $80. One of eight 4-byte rows listed by
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data, one per class 0-7;
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock copies the row for the shown monster's class
+; (LibraryMonsterClasses) to wLibraryEntryBlock and LibraryMenu_ShowMonsterEntry_LoadScreen draws it
+; as a 4 x 1 strip at wWindowTileBuffer + $130. Each class changes one more tile: a $80 becomes $81
+; or an $81 becomes $82, from one $81 (class 0) to four $82 (class 7). (C1, E-0372)
+LibraryClassBlock_Class0::
     db $81, $80, $80, $80
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry01::
+; The four tiles for class 1: $82, $80, $80, $80 (row 1 of
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data; see LibraryClassBlock_Class0). (C1, E-0372)
+LibraryClassBlock_Class1::
     db $82, $80, $80, $80
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry02::
+; The four tiles for class 2: $82, $81, $80, $80 (row 2 of
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data; see LibraryClassBlock_Class0). (C1, E-0372)
+LibraryClassBlock_Class2::
     db $82, $81, $80, $80
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry03::
+; The four tiles for class 3: $82, $82, $80, $80 (row 3 of
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data; see LibraryClassBlock_Class0). (C1, E-0372)
+LibraryClassBlock_Class3::
     db $82, $82, $80, $80
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry04::
+; The four tiles for class 4: $82, $82, $81, $80 (row 4 of
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data; see LibraryClassBlock_Class0). (C1, E-0372)
+LibraryClassBlock_Class4::
     db $82, $82, $81, $80
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry05::
+; The four tiles for class 5: $82, $82, $82, $80 (row 5 of
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data; see LibraryClassBlock_Class0). (C1, E-0372)
+LibraryClassBlock_Class5::
     db $82, $82, $82, $80
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry06::
+; The four tiles for class 6: $82, $82, $82, $81 (row 6 of
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data; see LibraryClassBlock_Class0). (C1, E-0372)
+LibraryClassBlock_Class6::
     db $82, $82, $82, $81
 
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry07::
+; The four tiles for class 7: $82, $82, $82, $82 (row 7 of
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data; see LibraryClassBlock_Class0). (C1, E-0372)
+LibraryClassBlock_Class7::
     db $82, $82, $82, $82
 
 ; writes six bytes from WriteBGPalette0FromData_Data to the CGB background palette data (rBCPS =
@@ -3321,13 +3348,19 @@ WriteBGPalette0FromData::
 WriteBGPalette0FromData_Data::
     db $86, $7d, $ff, $7f, $e1, $7f
 
+; 373 bytes, one per monster number 0-$174 (indexed by
+; GridCellAddressFromGridCursorXAndGrid2CursorX), each a class 0-7 that picks the four-tile row
+; LibraryClassBlock_Class0 to LibraryClassBlock_Class7 through
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data. The same values as MonsterClassByteTable_1 in
+; bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367 and 372. (C1, E-0372); E-0206 (C1:
 ; LibraryMenu_ShowMonsterEntry_LoadClassBlock reads the byte at $5562 + the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that
 ; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data[class] points to into wScreenBlock9C; the same
 ; 373 values as MonsterClassByteTable_1 in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366,
-; 367, 372 (E-0206, C1)
+; 367, 372). (named from its reading, E-0372; was
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable)
 ; record: class 0-7
-LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable::
+LibraryMonsterClasses::
     db $00 ; id 0
     db $03 ; id 1 DrakSlime
     db $00 ; id 2 SpotSlime
@@ -3782,49 +3815,85 @@ LibraryMenu_DrawMonsterList_Data2::
     db $04, $05, $05, $04, $04, $04, $04, $04, $05, $05, $03
 
 ReadGridCellByteForGridCursorXGridCursorY_Data::
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry00
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry01
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry02
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry03
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry04
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry05
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry06
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry07
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry08
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry09
-    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry0A
+    dw LibraryRowLastColumns_Slime
+    dw LibraryRowLastColumns_Dragon
+    dw LibraryRowLastColumns_Beast
+    dw LibraryRowLastColumns_Bird
+    dw LibraryRowLastColumns_Plant
+    dw LibraryRowLastColumns_Bug
+    dw LibraryRowLastColumns_Demon
+    dw LibraryRowLastColumns_Zombie
+    dw LibraryRowLastColumns_Material
+    dw LibraryRowLastColumns_Water
+    dw LibraryRowLastColumns_Unknown
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry00::
+; Family 0 ('Slime', String_0B_02_00) of the library's monster grid: $05, $05, $05, $05, $01. One
+; byte per row of six (wGrid2CursorY), each the last valid column (wGrid2CursorX) on that row, so
+; this family has 5 rows and 26 monsters. ReadGridCellByteForGridCursorXGridCursorY reads the byte
+; for the chosen family (GridIndexFromGridCursorXGridCursorY) and row wGrid2CursorY through
+; ReadGridCellByteForGridCursorXGridCursorY_Data; the cursor moves and LibraryMenu_DrawSeenNames use
+; it as the column limit. (C1, E-0372)
+LibraryRowLastColumns_Slime::
     db $05, $05, $05, $05, $01
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry01::
+; Family 1 ('Dragon', String_0B_02_01): $05, $05, $05, $05, $05, $00, the last column of each of its
+; 6 rows of six, 31 monsters (entry 1 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Dragon::
     db $05, $05, $05, $05, $05, $00
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry02::
+; Family 2 ('Beast', String_0B_02_02): $05, $05, $05, $05, $05, $01, the last column of each of its
+; 6 rows of six, 32 monsters (entry 2 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Beast::
     db $05, $05, $05, $05, $05, $01
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry03::
+; Family 3 ('Bird', String_0B_02_03): $05, $05, $05, $05, $02, the last column of each of its 5 rows
+; of six, 27 monsters (entry 3 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Bird::
     db $05, $05, $05, $05, $02
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry04::
+; Family 4 ('Plant', String_0B_02_04): $05, $05, $05, $05, $02, the last column of each of its 5
+; rows of six, 27 monsters (entry 4 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Plant::
     db $05, $05, $05, $05, $02
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry05::
+; Family 5 ('Bug', String_0B_02_05): $05, $05, $05, $05, $01, the last column of each of its 5 rows
+; of six, 26 monsters (entry 5 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Bug::
     db $05, $05, $05, $05, $01
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry06::
+; Family 6 ('Demon', String_0B_02_06): $05, $05, $05, $05, $05, the last column of each of its 5
+; rows of six, 30 monsters (entry 6 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Demon::
     db $05, $05, $05, $05, $05
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry07::
+; Family 7 ('Zombie', String_0B_02_07): $05, $05, $05, $05, $02, the last column of each of its 5
+; rows of six, 27 monsters (entry 7 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Zombie::
     db $05, $05, $05, $05, $02
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry08::
+; Family 8 ('Material', String_0B_02_08): $05, $05, $05, $05, $05, $01, the last column of each of
+; its 6 rows of six, 32 monsters (entry 8 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Material::
     db $05, $05, $05, $05, $05, $01
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry09::
+; Family 9 ('Water', String_0B_02_09): $05, $05, $05, $05, $05, $01, the last column of each of its
+; 6 rows of six, 32 monsters (entry 9 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Water::
     db $05, $05, $05, $05, $05, $01
 
-ReadGridCellByteForGridCursorXGridCursorY_Data_Entry0A::
+; Family 10 ('????', String_0B_02_0A): $05, $05, $05, $03, the last column of each of its 4 rows of
+; six, 22 monsters (entry 10 of ReadGridCellByteForGridCursorXGridCursorY_Data; see
+; LibraryRowLastColumns_Slime). (C1, E-0372)
+LibraryRowLastColumns_Unknown::
     db $05, $05, $05, $03
 
 ; LibraryMenu_ShowMonsterEntry_ShowPedigree takes the monster number from
@@ -5892,14 +5961,13 @@ ArenaMenu_ClassCursor_DrawTile::
 ArenaMenu_ClassCursor_DrawTile_Data::
     db $a2, $00, $e2, $00, $22, $01, $62, $01
 
-; plays sound $6C, copies the 6 x 5 box ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect to
-; wWindowTileBuffer + $112, draws it at the scroll position + $1CC, wScreenState += 1 and
-; wTwoChoiceCursor = 0 (E-0122) (E-0340: the address in its name read as its RAM name; was
-; ShowTwoChoiceBoxAtWindowTileBufferRow13Col14)
+; plays sound $6C, copies the 6 x 5 box TwoChoiceBoxRect to wWindowTileBuffer + $112, draws it at
+; the scroll position + $1CC, wScreenState += 1 and wTwoChoiceCursor = 0 (E-0122) (E-0340: the
+; address in its name read as its RAM name; was ShowTwoChoiceBoxAtWindowTileBufferRow13Col14)
 ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     ld a, $6c
     call QueueSoundEffect
-    ld de, ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect
+    ld de, TwoChoiceBoxRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -7985,7 +8053,8 @@ TileRect0C_3::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect::
+TileRect_0C::
+TwoChoiceBoxRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2

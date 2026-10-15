@@ -2802,7 +2802,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_PageKeys::
     call BGMapAddressAtScroll_BankF1
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -2878,7 +2878,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Frame::
     call BGMapAddressAtScroll_BankF1
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame_TileRect
+    ld de, MonsterDetailsPage2TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -2934,7 +2934,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Sprite::
     call BGMapAddressAtScroll_BankF1
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_LoadSprite_TileRect
+    ld de, MonsterDetailsItemBoxTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -3118,7 +3118,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_PedigreeFrame::
     call BGMapAddressAtScroll_BankF1
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame_TileRect
+    ld de, MonsterDetailsPedigreeTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12

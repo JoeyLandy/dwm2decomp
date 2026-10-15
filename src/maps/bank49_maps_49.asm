@@ -45,7 +45,7 @@ Map0ATileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map0APalettes::
-EggServiceMenu_DrawListAndPrice_BGPaletteBufferData::
+EggServicePalettes::
     dw $7d00, $7fff, $7fe1, $0000 ; entry 0
     dw $7d00, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2
@@ -82,7 +82,7 @@ Map13Tileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map13Palettes::
-RenameMenu_PickMonster_LoadTiles_BGPaletteBufferData::
+RenameMenuPalettes::
     dw $7d86, $7fff, $7fe1, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2

@@ -1446,8 +1446,7 @@ SetDamageDEMinusBCPlusHL::
     ld [wBattleDamageHi], a
     ret
 
-; the target's wBattleExtraStat word -= SubtractActionAmountFromTargetBattleWordArray3F_Data[action
-; - $19], floored at 0 (E-0124)
+; the target's wBattleExtraStat word -= MeatExtraStatAmounts[action - $19], floored at 0 (E-0124)
 SubtractActionAmountFromTargetBattleWordArray3F::
     ld a, [wBattleTarget]
     ld hl, wBattleExtraStat
@@ -1458,7 +1457,7 @@ SubtractActionAmountFromTargetBattleWordArray3F::
     ld a, [wBattleActionId]
     sub $19
     add a
-    ld hl, SubtractActionAmountFromTargetBattleWordArray3F_Data
+    ld hl, MeatExtraStatAmounts
     add_a_to_hl
     ld a, [hli]
     ld b, [hl]
@@ -1480,8 +1479,14 @@ SubtractActionAmountFromTargetBattleWordArray3F::
     ld [hl], b
     ret
 
-; data read by SubtractActionAmountFromTargetBattleWordArray3F (10 bytes) (E-0347)
-SubtractActionAmountFromTargetBattleWordArray3F_Data::
+; Five words, one per item ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB, ITEM_SIRLOIN and ITEM_BADMEAT
+; (index wBattleActionId - $19 while an item is used): 5, 10, 20, 100 and 5.
+; SubtractActionAmountFromTargetBattleWordArray3F subtracts the item's word from the target's
+; wBattleExtraStat word, floored at 0; it runs for a target on the local side
+; (TargetOnLocalSide_Bank3B carry) in ApplyTargetBattleWordArray3FReduction and
+; InflictStatus0Bit0WithBattleWordArray3FReduction, ActionIdEffectTable_3B entries $19-$1D. (C1,
+; E-0372)
+MeatExtraStatAmounts::
     db $05, $00, $0a, $00, $14, $00, $64, $00, $05, $00
 
 ; adds the word AddActionAmountToBattleMeter_Data[action - $19] to wBattleMeter, capped at 1800
@@ -2068,15 +2073,15 @@ ApplyTargetMaxHPIfPresent::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, .to_store_nothing_happened_message_bank3_b
-    jr z, .skip
+    jr z, .to_item_effect_end_for_target
     farcall ApplyTargetMaxHPAmount
     ret
 
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
 
-.skip:
-    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
+.to_item_effect_end_for_target:
+    jp ItemEffect_EndForTarget
 
 ; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239) (E-0344: the address in
 ; its name dropped or read as the label there; was ActionIdEffectNone_3B_2)
@@ -2272,11 +2277,10 @@ SetBattleEndFlagAndMessage98::
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
     db $c9
 
-; effect table entry that goes straight to the failure path
-; ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A (E-0126) (E-0344: the address in its name
-; dropped or read as the label there; was JumpToEffectFailurePath)
+; effect table entry that goes straight to the failure path ItemEffect_EndForTarget (E-0126)
+; (E-0344: the address in its name dropped or read as the label there; was JumpToEffectFailurePath)
 JumpToEffectFailurePath::
-    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
+    jp ItemEffect_EndForTarget
 
 ; unless already set, rolls the chance (InflictTargetStatus0Bit0_RollStopSpell) and sets bit 0 of
 ; the target's wBattleStatus1 status (message $3B); otherwise one of two failure paths (E-0124)
@@ -2285,7 +2289,7 @@ InflictTargetStatus0Bit0::
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_SPELLS_SEALED, [hl]
-    jr nz, .skip
+    jr nz, .to_item_effect_end_for_target
     call InflictTargetStatus0Bit0_RollStopSpell
     jr nc, .to_store_unaffected_message_bank3_b
     ld a, [wBattleTarget]
@@ -2296,8 +2300,8 @@ InflictTargetStatus0Bit0::
     lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-.skip:
-    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
+.to_item_effect_end_for_target:
+    jp ItemEffect_EndForTarget
 
 .to_store_unaffected_message_bank3_b:
     jp StoreUnaffectedMessage_Bank3B
@@ -2309,14 +2313,14 @@ InflictTargetStatus0Bit2::
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_ATK_DOUBLED, [hl]
-    jr nz, .skip
+    jr nz, .to_item_effect_end_for_target
     set BSTAT1_ATK_DOUBLED, [hl]
     ld l, $43
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-.skip:
-    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
+.to_item_effect_end_for_target:
+    jp ItemEffect_EndForTarget
 
 ; calls RollTableDamageScaledByResistance, then stores resolve message $35 (wResolveMsgActor/Target
 ; = $35/$B5, flags $A8, arg $80); entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no
@@ -2460,8 +2464,14 @@ ClearDamageAndReadTargetStatus0::
     ld a, [hl]
     ret
 
-; Goes to the damage message (wBattleResolveStep = $0A). (C1, E-0357)
-ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A::
+; The failure path of the bank-$3B item effects (entries of ActionIdEffectTable_3B, run from
+; RunBattleActions_UseItem_RunEffect): ApplyTargetMaxHPIfPresent, JumpToEffectFailurePath,
+; InflictTargetStatus0Bit0 and InflictTargetStatus0Bit2 jump here. Sets wBattleResolveStep = $0A, so
+; RunBattleActions_UseItem next runs RunBattleActions_UseItem_BeastTail (the next target, or on to
+; RunBattleActions_UseItem_ConsumeItem), passing over steps 5-9 (RunBattleActions_UseItem_MarkUsed
+; to RunBattleActions_UseItem_DefeatTarget). It clears no damage; ten bytes ($21 $FF $D8 ...) follow
+; the ret. (C1, E-0372)
+ItemEffect_EndForTarget::
     ld a, $0a
     ld [wBattleResolveStep], a
     ret

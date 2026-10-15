@@ -7812,9 +7812,8 @@ FindTriggerEntryForCurrentScreen_StoreTrigger::
 
 ; Loads the trigger marker's sprite: the graphics of TriggerSpriteRecord0 + 6 x wTriggerKind
 ; (pointer and bank) to VRAM $8400 and, on the GBC, eight palette bytes from bank $7E
-; (LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData + the record's next byte) into OBJ
-; palette 4, with an upload request. Reached by falling through from
-; FindTriggerEntryForCurrentScreen_StoreTrigger and by far call from
+; (SharedOBJPalettes + the record's next byte) into OBJ palette 4, with an upload request. Reached
+; by falling through from FindTriggerEntryForCurrentScreen_StoreTrigger and by far call from
 ; RandomGoldOrItem_NextRandomSeed. (C1, E-0370)
 LoadTriggerMarkerGraphics::
     ld a, [wTriggerKind]
@@ -7874,34 +7873,34 @@ TriggerSpriteRecord0::
 ; record: graphics stream, bank; palette offset; two bytes
 TriggerSpriteTable::
     dfar Gfx_FieldCommandSpriteTable_16 ; id 1: compressed sprite graphics
-    db $48 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $48 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_2 ; id 2: compressed sprite graphics
-    db $08 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $08 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_2 ; id 3: compressed sprite graphics
-    db $08 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $08 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_4 ; id 4: compressed sprite graphics
-    db $10 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $10 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_5 ; id 5: compressed sprite graphics
-    db $18 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $18 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_6 ; id 6: compressed sprite graphics
-    db $20 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $20 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_7 ; id 7: compressed sprite graphics
-    db $28 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $28 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_8 ; id 8: compressed sprite graphics
-    db $30 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $30 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_9 ; id 9: compressed sprite graphics
-    db $38 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $38 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Tiles0Gfx_2 ; id 10: compressed sprite graphics
-    db $40 ; palette byte offset from 7E:$4BBD (LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData)
+    db $40 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
 
 ; unless bit 7 of wFieldActionRequest is set or no trigger is active (wTriggerKind = $FF), draws the
@@ -9530,11 +9529,10 @@ RunPendingFieldEventPendingFieldEvent_IfKeyWorld::
 ; Places the pending field event's sprite: returns unless wPendingFieldEvent bit 7 is set. With bit
 ; 6 (the first stage): for kinds 1, 3, 4, 5 and 7, when the last inventory slot is taken it clears
 ; wPendingFieldEvent, sets wTownEventTimer to $63 and runs RunPeriodicFieldEventChecks, then goes on
-; anyway; it puts sprite slot 0 at one of four random spots
-; (RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data2), returns when RollFieldEventOnTallTiles
-; reports a blocking tile there, otherwise sets up the slot and clears bit 6. Then one sprite slot
-; is drawn with the kind's sprite (RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data1) loaded
-; to VRAM $8500. (C1, E-0370)
+; anyway; it puts sprite slot 0 at one of four random spots (PendingFieldEventSpritePositions),
+; returns when RollFieldEventOnTallTiles reports a blocking tile there, otherwise sets up the slot
+; and clears bit 6. Then one sprite slot is drawn with the kind's sprite
+; (PendingFieldEventSpriteIds) loaded to VRAM $8500. (C1, E-0370)
 RunPendingFieldEventPendingFieldEvent_PlaceSprite::
     ld a, [wPendingFieldEvent]
     bit 7, a
@@ -9572,7 +9570,7 @@ RunPendingFieldEventPendingFieldEvent_PlaceSprite::
     ld a, [wRandomHi]
     and $03
     add a
-    ld hl, RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data2
+    ld hl, PendingFieldEventSpritePositions
     add_a_to_hl
     ld a, [hli]
     ld [wSpriteSlots + $4], a
@@ -9617,7 +9615,7 @@ RunPendingFieldEventPendingFieldEvent_PlaceSprite::
     ld [wSpriteSlotCount], a
     ld a, [wPendingFieldEvent]
     and $0f
-    ld hl, RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data1
+    ld hl, PendingFieldEventSpriteIds
     add_a_to_hl
     ld a, [hl]
     ld [wSpriteSlots + $2], a
@@ -9715,11 +9713,19 @@ RollFieldEventOnTallTiles::
     ld a, $01
     ret
 
-; data read by RunPendingFieldEventPendingFieldEvent_PlaceSprite (16 bytes) (E-0347)
-RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data1::
+; Sixteen bytes indexed by the pending event's kind (wPendingFieldEvent & $0F): the field sprite
+; graphics id of that kind. RunPendingFieldEventPendingFieldEvent_PlaceSprite stores the byte in
+; wSpriteSlots + 2 and in hTemp0 (hTemp1 = 0, hTemp2 = 1 to use FieldSpriteGraphicsTable, hTemp3 =
+; palette slot 5, destination vTiles0 + $500) and runs DecompressGraphicsTemp0ToTemp4. (C1, E-0372)
+PendingFieldEventSpriteIds::
     db $12, $15, $3d, $3e, $10, $11, $17, $15, $14, $13, $57, $12, $15, $12, $14, $10
 
-RunPendingFieldEventPendingFieldEvent_PlaceSprite_Data2::
+; Four (X, Y) pixel pairs, 8 bytes: ($20, $20), ($70, $60), ($20, $60), ($70, $20).
+; RunPendingFieldEventPendingFieldEvent_PlaceSprite picks one with NextTableByte (wRandomHi & 3),
+; writes X to wSpriteSlots + 4 and + $0B and Y to wSpriteSlots + 5 and + $0C, then tests the tiles
+; there (ReadTileBuffer2x2AtPixel_Bank12 with B = X, C = Y, then RollFieldEventOnTallTiles). (C1,
+; E-0372)
+PendingFieldEventSpritePositions::
     db $20, $20, $70, $60, $20, $60, $70, $20
 
 ; Returns A = 1, clearing the pending town event, on map $30 screen (5, 5) outside key worlds after

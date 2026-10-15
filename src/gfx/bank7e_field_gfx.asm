@@ -160,11 +160,17 @@ OBJPaletteBufferPlus8Data::
     dw $0000, $6bff, $2e0a, $0000 ; id 19
     dw $0000, $6bff, $7ec5, $0800 ; id 20
 
-; copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD +
-; $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_LoadGfxPalette4
-; with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes
-; (E-0238, C1)
-LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData::
+; A table of CGB OBJ palettes, 4 BGR555 colours (8 bytes) each, continuing FieldSpritePalettes. Its
+; users copy 8-byte palettes from bank $7E to wOBJPaletteBuffer slots with CopyFromBankWaitVRAM at a
+; byte offset into it: TitleOpening_Load (offset 0), RunWorldMapState_DrawCloseUp ($40),
+; LoadPlayerAndFollowerSpriteGraphics_Followers ($C8), LoadSpriteGraphics7EToTiles0 ($D8),
+; LoadAltObjectGraphicsIfPlayerStateFlagsBit3 ($108), RunWorldMapState_DrawOverview and
+; LoadTriggerMarkerGraphics (an offset from its own table). (C1, E-0372); E-0238 (C1: copied 8 bytes
+; at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07,
+; $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_LoadGfxPalette4 with $4BBD + 8 *
+; index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes). (named from its
+; reading, E-0372; was LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData)
+SharedOBJPalettes::
 LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData::
     dw $0000, $037f, $027f, $0000 ; id 0
     dw $0000, $4f5d, $1415, $0000 ; id 1

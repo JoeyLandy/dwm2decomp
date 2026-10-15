@@ -740,7 +740,7 @@ LinkBreed::
     dw LinkBreed_ChooseOrRefuse
     dw LinkBreed_WaitPartnerCancel
     dw LinkBreed_WaitText
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner
+    dw LinkBreed_ClosingExchange
     dw LinkBreed_AskIsThisOK
     dw LinkBreed_RunList
     dw LinkBreed_PartnerCancel
@@ -1641,8 +1641,13 @@ LinkBreed_WaitText::
     xor a
     ld [wScreenSubStep], a
 
-; waits for the text, then for the partner's link message (E-0303)
-RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner::
+; Session 5 breeding, step 11 of LinkBreed (by wScreenStep), also entered by falling through from
+; LinkBreed_WaitText (which clears wScreenSubStep): by wScreenSubStep runs
+; LinkBreed_StartClosingExchange (after the text starts an exchange of wWorkBuf with the partner)
+; and then LinkBreed_EndClosingExchange (when the exchange ends clears $6F bytes from wScreenState
+; and switches to wGameMode 5, wModeState 1, GameMode5_Init_TitleMenu). (C1, E-0372)
+; waits for the text, then for the partner's link message
+LinkBreed_ClosingExchange::
     ld a, [wScreenSubStep]
     jumptable
     dw LinkBreed_StartClosingExchange
@@ -1751,24 +1756,24 @@ RunLinkSession5Exchange_RunStatsScreen::
 RunLinkSession5Exchange_ShowChosenRecord::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession5Exchange_ShowChosenRecord_AdvanceScreenStep
+    dw RunLinkSession5Exchange_ChosenRecordStart
     dw ShowString0EAndStep_Bank37
-    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
-    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
-    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
+    dw RunLinkSession5Exchange_ChosenRecordList
+    dw RunLinkSession5Exchange_ChosenRecordList
+    dw RunLinkSession5Exchange_ChosenRecordList
     dw LinkBreed_DrawPanel
-    dw RunLinkSession5Exchange_ShowChosenRecord_ClearTiles
+    dw RunLinkSession5Exchange_ClearNameTiles
     dw RunLinkSession5Exchange_ShowChosenRecord_DrawName
-    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
-    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
+    dw RunLinkSession5Exchange_ChosenRecordList
+    dw RunLinkSession5Exchange_ChosenRecordList
 
 ; The chosen record, step 2: the list's steps. (C1, E-0357)
-RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu::
+RunLinkSession5Exchange_ChosenRecordList::
     farcall BreedMenu
     ret
 
 ; The chosen record, step 0: moves on. (C1, E-0357)
-RunLinkSession5Exchange_ShowChosenRecord_AdvanceScreenStep::
+RunLinkSession5Exchange_ChosenRecordStart::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1782,9 +1787,12 @@ ShowString0EAndStep_Bank37::
     ld [wScreenStep], a
     ret
 
-; The chosen record, step 6: clears the species and name tile areas and resets the text window. (C1,
-; E-0357)
-RunLinkSession5Exchange_ShowChosenRecord_ClearTiles::
+; Step 6 of RunLinkSession5Exchange_ShowChosenRecord and of
+; RunLinkSession5Exchange_ResetListAndShowString: clears the 9 x 1 species-name tiles at vTiles1 +
+; $270 and the 5 x 1 name tiles at vTiles1 + $780 (FillTilesFromRequest), where the next step
+; (RunLinkSession5Exchange_ShowChosenRecord_DrawName) draws them again, sets the string window back
+; to vTiles1 with size $1202, and moves on (wScreenStep += 1). (C1, E-0372)
+RunLinkSession5Exchange_ClearNameTiles::
     ld hl, vTiles1 + $270
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1982,7 +1990,7 @@ PartnerStats_Cursor::
     call BGMapAddressAtScroll_Bank37
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect_2
+    ld de, BlankPictureTileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -2071,7 +2079,7 @@ PartnerStats_ClearPage2Names::
 
 ; The second page, step 16: draws the name and species name. (C1, E-0357)
 PartnerStats_DrawNames::
-    call DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37
+    call PartnerStats_DrawNameAndSpecies
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2082,7 +2090,7 @@ PartnerStats_DrawPage2Frame::
     call BGMapAddressAtScroll_Bank37
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame_TileRect
+    ld de, MonsterDetailsPage2TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -2138,7 +2146,7 @@ PartnerStats_LoadSprite::
     call BGMapAddressAtScroll_Bank37
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_LoadSprite_TileRect
+    ld de, MonsterDetailsItemBoxTileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -2307,7 +2315,7 @@ PartnerStats_DrawSummaryLevelRow::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    call DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37
+    call PartnerStats_DrawNameAndSpecies
     ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles2 + $6f0
     ld b, $1f
@@ -2333,7 +2341,7 @@ PartnerStats_DrawPedigreeFrame::
     call BGMapAddressAtScroll_Bank37
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawPedigreeFrame_TileRect
+    ld de, MonsterDetailsPedigreeTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -2398,14 +2406,14 @@ RunLinkSession5Exchange_ResetListAndShowString::
     jumptable
     dw RunLinkSession5Exchange_RestoreListCursor
     dw ShowString0EAndStep_Bank37
-    dw RunLinkSession5Exchange_ResetListAndShowString_RunList
-    dw RunLinkSession5Exchange_ResetListAndShowString_RunList
-    dw RunLinkSession5Exchange_ResetListAndShowString_RunList
+    dw RunLinkSession5Exchange_RunBreedList
+    dw RunLinkSession5Exchange_RunBreedList
+    dw RunLinkSession5Exchange_RunBreedList
     dw LinkBreed_DrawPanel
-    dw RunLinkSession5Exchange_ShowChosenRecord_ClearTiles
+    dw RunLinkSession5Exchange_ClearNameTiles
     dw RunLinkSession5Exchange_ShowChosenRecord_DrawName
     dw RunLinkSession5Exchange_ShowPartnerMonster
-    dw RunLinkSession5Exchange_ResetListAndShowString_RunListAgain
+    dw RunLinkSession5Exchange_RunBreedListFinal
 
 ; Back to the list, step 0: restores the list cursor and page. (C1, E-0357)
 RunLinkSession5Exchange_RestoreListCursor::
@@ -2418,9 +2426,11 @@ RunLinkSession5Exchange_RestoreListCursor::
     ld [wScreenStep], a
     ret
 
-; Back to the list, step 9: runs the list's steps as state $11 (the stored state not restored). (C1,
-; E-0357)
-RunLinkSession5Exchange_ResetListAndShowString_RunListAgain::
+; Step 9 (the last) of RunLinkSession5Exchange_ResetListAndShowString: sets wScreenState to $11 and
+; runs BreedMenu's list steps like RunLinkSession5Exchange_RunBreedList, but the saved wScreenState
+; is popped into A and never stored back, so wScreenState keeps whatever BreedMenu left there. (C1,
+; E-0372)
+RunLinkSession5Exchange_RunBreedListFinal::
     ld a, [wScreenState]
     push af
     ld a, $11
@@ -2430,7 +2440,7 @@ RunLinkSession5Exchange_ResetListAndShowString_RunListAgain::
     ret
 
 ; Back to the list, step 2: runs the list's steps as state $11. (C1, E-0357)
-RunLinkSession5Exchange_ResetListAndShowString_RunList::
+RunLinkSession5Exchange_RunBreedList::
     ld a, [wScreenState]
     push af
     ld a, $11
@@ -2568,10 +2578,14 @@ CopyF0NameToNameGlyphBuf::
     ld [de], a
     ret
 
+; Draws record B's name (wRecordBufB + MON_NAME, CopyF0NameToNameGlyphBuf) as glyph tiles at vTiles1
+; + $780 and its species name, string [wRecordBufB + MON_SPECIES] of category [wRecordBufB +
+; MON_SPECIES + 1] + 2 (ShowString_Bank08), as 9 x 1 tiles at vTiles1 + $270, leaving the string
+; window there. Used by PartnerStats_DrawNames and PartnerStats_DrawSummaryLevelRow. (C1, E-0372)
 ; draws the name at wRecordBufB + $1 at vTiles1 + $780 and shows string [wRecordBufB + $B] of
 ; category [wRecordBufB + $C] + 2 at vTiles1 + $270 with size $0109 (E-0124) (E-0340: the address in
-; its name read as its RAM name; was DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37)
-DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37::
+; its name read as its RAM name; was PartnerStats_DrawNameAndSpecies)
+PartnerStats_DrawNameAndSpecies::
     ld hl, wRecordBufB + MON_NAME
     call CopyF0NameToNameGlyphBuf
     ld de, vTiles1 + $780

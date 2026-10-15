@@ -404,7 +404,7 @@ RunGameModeInit_EggAndSaveScreens::
     farcall GameMode6_Init
     ret
 
-; Game mode 7's start-up (the linked battle: RunLinkSession6Exchange_FightInfo_WaitLinkMessage_3 and
+; Game mode 7's start-up (the linked battle: RunLinkSession6Exchange_FightInfo_StartLinkBattle and
 ; HatchingScene_RunEggScreens switch to this mode, and GameMode7_Update runs
 ; LinkExchangeJoypadPerFrame and RunBattleEffectAnimation each frame): far-calls GameMode7_Init in
 ; bank $A0. (C1, E-0369)
@@ -8537,8 +8537,13 @@ InitSoundHardware::
     ld [wSoundWaveReload], a
     ret
 
+; Sets wSoundEngineState = 0, the channel slot SoundTick starts its pass at, so all six slots of
+; wSoundChannelSlots are processed again, and copies wSoundSavedMode back into wSoundEngineMode, the
+; stereo mask SoundTick_NextChannel writes to rNR51; clobbers A. Its neighbour
+; SetSoundEngineStateTo4AndClearSoundEngineMode does the opposite (start at slot 4, mask 0). No
+; caller and no code that writes wSoundSavedMode was found. (C1, E-0372)
 ; wSoundEngineState = 0, wSoundEngineMode = wSoundSavedMode (sound engine state) (E-0119)
-SetSoundEngineStateTo0AndSoundEngineModeFromSoundSavedMode::
+SoundRunAllSlotsRestoreMode::
     xor a
     ld [wSoundEngineState], a
     ld a, [wSoundSavedMode]

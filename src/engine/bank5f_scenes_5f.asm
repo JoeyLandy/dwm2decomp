@@ -403,7 +403,7 @@ ShowMessageHL::
     cp $80
     jr z, .skip
     bit 7, a
-    jp nz, ShowMessageHL_ToBeginStringDisplay_Bank89_SetStringIndex
+    jp nz, ShowMessageHL_OnSpecialMap
 
 .skip:
     ld a, h
@@ -490,9 +490,11 @@ ShowMessageHL_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
-; Sets string index L in category 0 and starts it from bank $28's table (BeginStringDisplay_Bank28).
-; (C1, E-0357)
-ShowMessageHL_ToBeginStringDisplay_Bank89_SetStringIndex::
+; ShowMessageHL's path for a special map other than the key world (wMapType bit 7 set and not $80):
+; ignores the message group in H and starts string L of category 0 (wStringIndex, wStringCategory)
+; from message group 0 (BeginStringDisplay_Bank28, which passes indexes from $DA up to
+; BeginStringDisplay_Bank28_Overflow). (C1, E-0372)
+ShowMessageHL_OnSpecialMap::
     ld a, l
     ld [wStringIndex], a
     xor a

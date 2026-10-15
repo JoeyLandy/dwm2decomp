@@ -4146,9 +4146,14 @@ ShowCategory11StringOfListEntriesCell5Record::
     farcall ShowString_Bank08
     ret
 
+; For the record in cell 5 of wListEntries (SetArg5ToListEntriesCell5) reads its MON_SPECIES word
+; from SRAM bank 0, loads the species record (LoadSpeciesRecord) and shows string
+; SPECIES_FIELD_ABILITY of category $0D, the field ability name, through ShowString_Bank08 with the
+; text window at $9680 (wTextWindowTileLo/Hi = $80, $96, then $02, $06). Far-called by
+; SwapMonstersMenu_ShowMonsterDetails_ShowCategory (stats screen step 26). (C1, E-0372)
 ; loads the species of the record at wListEntries cell 5 (field $0B) and shows string
 ; [wSpeciesRecord + $B] of category $0D at $9680 with size $0602 (E-0121)
-ShowSpeciesCategory13StringOfListEntriesCell5Record::
+ShowCursorRecordFieldAbility::
     call SetArg5ToListEntriesCell5
     ld a, $0a
     ld [rRAMG2], a

@@ -1671,9 +1671,8 @@ WithSRAMDrawBuildRecordLevelAndStatusRow::
     ld [rRAMG], a
     ret
 
-; with SRAM bank 0 enabled runs BuildRecordLevelAndStatusRow and
-; WithSRAMDrawBuildRecordLevelAndStatusRow_2_ShowStringBank08AtTilesHL_Bank03 (E-0122) (E-0344: the
-; address in its name dropped or read as the label there; was
+; with SRAM bank 0 enabled runs BuildRecordLevelAndStatusRow and PauseMenu_Info_Page2_DrawDetails
+; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; WithSRAMDrawBuildRecordLevelAndStatusRow_2)
 WithSRAMDrawBuildRecordLevelAndStatusRow_2::
     ld a, $0a
@@ -1681,7 +1680,7 @@ WithSRAMDrawBuildRecordLevelAndStatusRow_2::
     xor a
     ld [rRAMB], a
     call BuildRecordLevelAndStatusRow
-    call WithSRAMDrawBuildRecordLevelAndStatusRow_2_ShowStringBank08AtTilesHL_Bank03
+    call PauseMenu_Info_Page2_DrawDetails
     xor a
     ld [rRAMG], a
     ret
@@ -1706,7 +1705,7 @@ WithSRAMDrawMemberRecordFamily::
     ld [rRAMG], a
     xor a
     ld [rRAMB], a
-    call WithSRAMDrawMemberRecordFamily_ShowSpeciesNameAndIconForSlotB
+    call WithSRAMDrawMemberRecordFamily_DrawParents
     xor a
     ld [rRAMG], a
     ret
@@ -1893,13 +1892,19 @@ WithSRAMDrawBuildRecordLevelAndStatusRow_DrawStats::
     call WriteDecimalDigitTiles
     ret
 
-; Draws the member's details on Info page 2: its personality string (record byte $A4, category $0B);
-; a string from category 7 picked by three record bytes from offset $6F (each below $40, $40-$BF or
-; from $C0); its species name; the member number tile and its plus value (record byte $6D, '+' and
-; up to two digits); its name; its experience (24-bit, from offset $58) and the experience still
-; needed for the next level (from the species' growth curve, LoadExpTableEntryToTemp2), 0 at the
-; level cap. (C1, E-0357)
-WithSRAMDrawBuildRecordLevelAndStatusRow_2_ShowStringBank08AtTilesHL_Bank03::
+; Draws the details of record wMenuSelectedMember & $0F on Info page 2 (SRAM must be enabled;
+; WithSRAMDrawBuildRecordLevelAndStatusRow_2 does that). It shows the equipped item (MON_ITEM,
+; string category $0B, a two-line item name, 6 x 3 at vTiles2 + $350); the personality (category 7,
+; index 18, 9 or 0 for MON_PERSONALITY byte $6F below $40, $40-$BF or from $C0, plus 2, 1 or 0 for
+; byte $70 and 6, 3 or 0 for byte $72, 9 x 1 at vTiles2 + $4C0); the species name (MON_SPECIES,
+; category = high byte + 2, at vTiles2 + $550); the member number tile $C7 + member at
+; wScreenTileBuffer + $E9 followed, when MON_PLUS is not 0, by '+' (tile $FC) and its one or two
+; digits; the master's name (MON_MASTER_NAME through wTextBuf0, SelectString5Category8ThenShow at
+; vTiles2 + $470); MON_EXP (24-bit) at wWindowTileBuffer + $24; and the experience still needed for
+; the next level (the species' curve wSpeciesExpCurve and MON_LEVEL through
+; LoadExpTableEntryToTemp2, minus MON_EXP) at wWindowTileBuffer + $A4, or 0 when MON_LEVEL is at
+; least MON_MAX_LEVEL. (C1, E-0372)
+PauseMenu_Info_Page2_DrawDetails::
     ld c, $a4
     ld a, [wMenuSelectedMember]
     and $0f
@@ -2185,11 +2190,17 @@ ShowSkillNameAtSlotB_Skip::
 ShowSkillNameAtSlotB_Data::
     db $80, $93, $10, $94, $a0, $94, $30, $95, $c0, $95, $50, $96, $e0, $96, $70, $97
 
-; Draws the member's family on Info page 4 from its record: the two parents' species names and
-; icons, their names, and their plus values; the order is set by the high nibble of record byte $0D.
-; With no recorded parents ($FFFF) it clears the icon tiles and shows placeholder names. (C1,
-; E-0357)
-WithSRAMDrawMemberRecordFamily_ShowSpeciesNameAndIconForSlotB::
+; Draws the family of record wMenuSelectedMember & $0F on Info page 4. The high nibble of MON_FAMILY
+; ($0D) is kept in wMenuLastPageRows as the slot of the first parent (the second parent takes slot
+; nibble xor 1). When MON_PARENT1_SPECIES is not $FFFF it shows both parents' species names and
+; family icons (ShowSpeciesNameAndIconForSlotB), their master names
+; (WithSRAMDrawMemberRecordFamily_ShowParentMaster, from MON_PARENT1_MASTER and MON_PARENT2_MASTER),
+; their names and plus values (WithSRAMDrawMemberRecordFamily_ShowParentName, from MON_PARENT1_NAME
+; and MON_PARENT2_NAME), and writes tile $CC + slot at wScreenTileBuffer + $6E and that tile xor 1
+; at wWindowTileBuffer + $26. With $FFFF (no recorded parents) it fills $280 bytes of vTiles2 + $580
+; with $FF, $00 pairs, blanks the plus-value tiles with $C3, and shows '???' (wTextBuf0 = $98 x3) at
+; vTiles2 + $580, $670, $6C0 and $7B0. (C1, E-0372)
+WithSRAMDrawMemberRecordFamily_DrawParents::
     ld c, $0d
     ld a, [wMenuSelectedMember]
     and $0f
@@ -2324,16 +2335,16 @@ ShowSpeciesNameAndIconForSlotB::
 ; B = parent slot (0 or 1), HL = a 10-byte name in the record: copies it to wTextBuf0
 ; (CopyTenBytesToTextBuf0), skips one more byte, and shows it (string 5 of category 8, '<BUF0>',
 ; through DerefWordTableEntryA_Bank03) in a 5 x 1 window at tile address $9670 (B = 0) or $97B0 (B =
-; 1); returns HL 11 bytes on, BC kept. WithSRAMDrawMemberRecordFamily_ShowSpeciesNameAndIconForSlotB
-; calls it for MON_PARENT1_MASTER (skipping MON_UNUSED_28) and MON_PARENT2_MASTER, in slots B and B
-; xor 1. (C1, E-0369)
+; 1); returns HL 11 bytes on, BC kept. WithSRAMDrawMemberRecordFamily_DrawParents calls it for
+; MON_PARENT1_MASTER (skipping MON_UNUSED_28) and MON_PARENT2_MASTER, in slots B and B xor 1. (C1,
+; E-0369)
 WithSRAMDrawMemberRecordFamily_ShowParentMaster::
     call CopyTenBytesToTextBuf0
     inc hl
     push hl
     push bc
     ld a, b
-    ld hl, WithSRAMDrawMemberRecordFamily_ShowParentMaster_Data
+    ld hl, ParentMasterNameTileAddrs
     call DerefWordTableEntryA_Bank03
     pop bc
     pop hl
@@ -2344,20 +2355,20 @@ WithSRAMDrawMemberRecordFamily_ShowParentMaster::
 ; 1); then blanks three tiles at wScreenTileBuffer + $6A (B = 0) or wWindowTileBuffer + $22 (B = 1)
 ; and, when the next byte (the plus value) is not 0, writes '+' (tile $FC), its tens digit when not
 ; 0, and its units digit (tiles $E0 + digit) there. Returns HL past the plus byte, BC kept.
-; WithSRAMDrawMemberRecordFamily_ShowSpeciesNameAndIconForSlotB calls it for
-; MON_PARENT1_NAME/MON_PARENT1_PLUS and MON_PARENT2_NAME/MON_PARENT2_PLUS. (C1, E-0369)
+; WithSRAMDrawMemberRecordFamily_DrawParents calls it for MON_PARENT1_NAME/MON_PARENT1_PLUS and
+; MON_PARENT2_NAME/MON_PARENT2_PLUS. (C1, E-0369)
 WithSRAMDrawMemberRecordFamily_ShowParentName::
     call CopyTenBytesToTextBuf0
     push hl
     push bc
     ld a, b
-    ld hl, WithSRAMDrawMemberRecordFamily_ShowParentName_Data1
+    ld hl, ParentNameTileAddrs
     call DerefWordTableEntryA_Bank03
     pop bc
     pop hl
     push hl
     ld a, b
-    ld hl, WithSRAMDrawMemberRecordFamily_ShowParentName_Data2
+    ld hl, ParentPlusTileBufAddrs
     add a
     add_a_to_hl
     deref_hl
@@ -2376,7 +2387,7 @@ WithSRAMDrawMemberRecordFamily_ShowParentName::
     call HLToDecimalDigits
     pop bc
     ld a, b
-    ld hl, WithSRAMDrawMemberRecordFamily_ShowParentName_Data2
+    ld hl, ParentPlusTileBufAddrs
     add a
     add_a_to_hl
     deref_hl
@@ -2404,13 +2415,23 @@ ShowSpeciesNameAndIconForSlotB_Data1::
 ShowSpeciesNameAndIconForSlotB_Data2::
     db $5d, $71
 
-WithSRAMDrawMemberRecordFamily_ShowParentMaster_Data::
+; Two words: the VRAM tile addresses $9670 (parent slot 0) and $97B0 (slot 1) where
+; WithSRAMDrawMemberRecordFamily_ShowParentMaster shows a parent's master name in a 5 x 1 window; it
+; picks the word for slot B through DerefWordTableEntryA_Bank03. (C1, E-0372)
+ParentMasterNameTileAddrs::
     db $70, $96, $b0, $97
 
-WithSRAMDrawMemberRecordFamily_ShowParentName_Data1::
+; Two words: the VRAM tile addresses $9580 (parent slot 0) and $96C0 (slot 1) where
+; WithSRAMDrawMemberRecordFamily_ShowParentName shows a parent's name in a 5 x 1 window (picked by
+; slot B through DerefWordTableEntryA_Bank03). (C1, E-0372)
+ParentNameTileAddrs::
     db $80, $95, $c0, $96
 
-WithSRAMDrawMemberRecordFamily_ShowParentName_Data2::
+; Two words: $C202 (wScreenTileBuffer + $6A, parent slot 0) and $C322 (wWindowTileBuffer + $22, slot
+; 1), where WithSRAMDrawMemberRecordFamily_ShowParentName first blanks three tiles with $C3 and
+; then, for a non-zero plus value, writes '+' (tile $FC) and the value's digits (tiles $E0 + digit).
+; It is read twice per call, indexed by 2 * slot. (C1, E-0372)
+ParentPlusTileBufAddrs::
     db $02, $c2, $22, $c3
 
 ; reads field $0B of SRAM record wMenuSelectedMember & $0F and decompresses its graphics to vTiles0
@@ -4989,7 +5010,7 @@ PauseMenu_Skills_UseFieldSkill::
     dw PauseMenu_Skills_UseFieldSkill_RunEffect
     dw PauseMenu_Skills_UseFieldSkill_PickResultStep
     dw PauseMenu_Skills_UseFieldSkill_ShowResultLines
-    dw PauseMenu_Skills_UseFieldSkill_ShowHeroReturnedWithAn
+    dw PauseMenu_Skills_UseFieldSkill_ShowItemResult
     dw PauseMenu_Skills_UseFieldSkill_Finish
 
 ; Using a field skill, step 0: redraws the screen and copies the user's name and the skill's name
@@ -5256,9 +5277,12 @@ PauseMenu_Skills_UseFieldSkill_ShowResultLines::
     ld [wTemp1], a
     ret
 
-; Using a field skill, step 10: shows 'Hero returned with ...' (message $0F) or, when nothing was
-; found, message $10. (C1, E-0357)
-PauseMenu_Skills_UseFieldSkill_ShowHeroReturnedWithAn::
+; Using a field skill, step 10 (wTemp1 = $0A; step 8 sends field skill $11, wInventorySlot, here):
+; once the previous text has finished (wTextFlags 0) shows bank $37 message 1/$0F, '<BUF0> returned
+; with an item.' then '<PLAYER> obtained one <BUF3>.', or, when wItemId is $FF, message 1/$10
+; '<BUF0> came back with nothing...'; then sets wTemp1 = $0B
+; (PauseMenu_Skills_UseFieldSkill_Finish). (C1, E-0372)
+PauseMenu_Skills_UseFieldSkill_ShowItemResult::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5420,7 +5444,7 @@ PauseMenu_Skills_ChooseTarget_Draw_BuildScreen::
     adc $68
     ld h, a
     ld a, [hl]
-    ld hl, PauseMenu_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable
+    ld hl, SkillTargetBoxRects
     add a
     add_a_to_hl
     deref_hl
@@ -5441,8 +5465,8 @@ BuildRecordField5FValueScreenWithCursor::
     ret
 
 ; fills the screen tile buffer: blocks $20 and $0C, cursor marks for wMenuCursor and wSubMenuCursor,
-; the rectangle chosen by the skill wRecordBuffer (table $6851 to
-; PauseMenu_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable), then block $10 (E-0121)
+; the rectangle chosen by the skill wRecordBuffer (table $6851 to SkillTargetBoxRects), then block
+; $10 (E-0121)
 BuildSkillScreenTileBuffer::
     call FillTilesFromRequest
     call ClearScreenTileBuffer_Bank03
@@ -5469,7 +5493,7 @@ BuildSkillScreenTileBuffer::
     adc $68
     ld h, a
     ld a, [hl]
-    ld hl, PauseMenu_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable
+    ld hl, SkillTargetBoxRects
     add a
     add_a_to_hl
     deref_hl
@@ -5820,13 +5844,16 @@ ShowRecordSkillPageNames_Bank03::
 ; a word table of tile-rectangle records; the code derefs one entry into HL for a record copier
 ; (E-0221)
 ; record: rectangle record
-PauseMenu_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable::
-    dw TileRect_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable_0 ; id 0
-    dw TileRect_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable_1 ; id 1
+TileRectTable_03::
+; data read by PauseMenu_Skills_ChooseTarget_Draw_BuildScreen (2 words) (E-0347)
+SkillTargetBoxRects::
+    dw TileRect_03 ; id 0
+    dw TileRect_03_2 ; id 1
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank03 (E-0161)
 ; record: offset $0120 (row 9, column 0); 9 x 5 tiles
-TileRect_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable_0::
+TileRect_03::
+SkillTargetBoxRect_Default::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $09, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -5835,7 +5862,8 @@ TileRect_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable_0::
     db $b6, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; row 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-TileRect_Skills_ChooseTarget_Draw_BuildScreen_TileRectTable_1::
+TileRect_03_2::
+SkillTargetBoxRect_MPass::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $09, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -6984,7 +7012,7 @@ PauseMenu_Plan_PartyOrder_NextPlacement::
     call PauseMenu_Plan_PartyOrder_DrawColumns
     xor a
     ld [wMenuCursor], a
-    call PauseMenu_Plan_PartyOrder_ShowStringBank08AtTilesHL_Bank03
+    call PauseMenu_Plan_PartyOrder_ShowMemberDetails
     ld hl, wTemp1
     inc [hl]
     ret
@@ -7000,7 +7028,7 @@ PauseMenu_Plan_PartyOrder_Cursor::
     ld a, [wJoypadPressedRepeat]
     and $c0
     jr z, .check_joypad_pressed
-    call PauseMenu_Plan_PartyOrder_ShowStringBank08AtTilesHL_Bank03
+    call PauseMenu_Plan_PartyOrder_ShowMemberDetails
     ret
 
 .check_joypad_pressed:
@@ -7118,7 +7146,7 @@ PauseMenu_Plan_PartyOrder_Redraw::
     call PauseMenu_Plan_PartyOrder_DrawColumns
     xor a
     ld [wMenuCursor], a
-    call PauseMenu_Plan_PartyOrder_ShowStringBank08AtTilesHL_Bank03
+    call PauseMenu_Plan_PartyOrder_ShowMemberDetails
     call CopyTileBufferToBGMap
     ld hl, wTemp1
     dec [hl]
@@ -7246,9 +7274,15 @@ PauseMenu_Plan_PartyOrder_DrawPlacedEntry::
     pop af
     jr PauseMenu_Plan_PartyOrder_DrawMemberTiles
 
-; Shows the details of the unplaced member under the cursor: species name, sex mark, level and
-; further numbers from its record. (C1, E-0357)
-PauseMenu_Plan_PartyOrder_ShowStringBank08AtTilesHL_Bank03::
+; Shows the details of the unplaced member under the cursor (record number at wWorkBuf + 3 +
+; (wMenuCursor & 3)), with SRAM bank 0 enabled for the reads: its species name (MON_SPECIES,
+; category = high byte + 2, 9 x 1 at vTiles2 + $200), sex mark tile $CC + (MON_SEX & 1) at
+; wScreenTileBuffer + $14E, MON_LEVEL as two digits at wScreenTileBuffer + $151, MON_HP, MON_MAX_HP,
+; MON_MP and MON_MAX_MP at wWindowTileBuffer + $64, $68, $A4 and $A8, member number tile $C7 +
+; record at wWindowTileBuffer + $21, and its five tiles at wScreenTileBuffer + $149
+; (PauseMenu_Plan_PagedMenu_WriteFiveTileRun). Then disables SRAM and copies the 10 x 7 rectangle
+; from wScreenTileBuffer + $149 to vBGMap0 + $149. (C1, E-0372)
+PauseMenu_Plan_PartyOrder_ShowMemberDetails::
     ld a, $0a
     ld [rRAMG], a
     ld a, $00
@@ -7894,9 +7928,9 @@ BuildScreenBlocks21To25WithCursor::
 ; $27. (C1, E-0357)
 PauseMenu_Plan_Tactics_Build_DrawScreen::
     call LoadScreenBlock21WithCursor
-    ld hl, PauseMenu_Plan_Tactics_Build_DrawScreen_TileCopyDestList
-    ld de, PauseMenu_Plan_Tactics_Build_DrawScreen_TileCopySrcList
-    call PauseMenu_Plan_TileBufferMenu_CopyTileListFromBank1F
+    ld hl, TacticsGlyphTileDests
+    ld de, TacticsGlyphTileSources
+    call CopyTileListFromBank1F_Bank03
     ld e, $26
     farcall CopyBlockToTileBuffer
     ld e, $27
@@ -8101,7 +8135,7 @@ PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark::
 .skip:
     push af
     ld a, c
-    ld hl, PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark_Data
+    ld hl, KeyListMarkBGMapAddrs
     add a
     add_a_to_hl
     deref_hl
@@ -8124,7 +8158,11 @@ PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark::
 PauseMenu_Plan_Keys_DrawKeyNames_Data::
     db $40, $94, $00, $95, $c0, $95, $80, $96, $40, $97
 
-PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark_Data::
+; Four words: vBGMap0 addresses $9946, $9986, $99C6 and $9A06 (column 6 of rows 10, 12, 14 and 16),
+; one per visible key-list row C. PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark writes the mark
+; tile $1D there when the key's wKeyList entry byte 0 has bit 6 set and a high nibble other than $F,
+; otherwise the blank tile $C3. (C1, E-0372)
+KeyListMarkBGMapAddrs::
     db $46, $99, $86, $99, $c6, $99, $06, $9a
 
 ; When the key list is not empty (wPauseListCount), shows the details of the key under the cursor
@@ -8609,15 +8647,23 @@ FillTiles21E0PreservingWindow::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-PauseMenu_Plan_Tactics_Build_DrawScreen_TileCopyDestList::
+TileCopyDestList_03::
+; data read by PauseMenu_Plan_Tactics_Build_DrawScreen (8 words) (E-0347)
+TacticsGlyphTileDests::
     dw vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90, vTiles2 + $a0, vTiles2 + $b0, rIE ; entry 0
 
 ; record: bank-$1F tile sources
-PauseMenu_Plan_Tactics_Build_DrawScreen_TileCopySrcList::
+TileCopySrcList_03::
+TacticsGlyphTileSources::
     dw $40e0, $4370, $42b0, $42d0, $4310, $42c0, $43b0, $ffff ; entry 0
 
-; copies $10-byte tiles from bank $1F by a list of source and destination words until $FF (E-0305)
-PauseMenu_Plan_TileBufferMenu_CopyTileListFromBank1F::
+; HL = list of destination words, DE = list of source words in bank $1F: for entries 0, 1, ...
+; copies 16 bytes from the source to the destination with CopyFromBankWaitVRAM, stopping at the
+; first destination whose low byte is $FF. Keeps its index in B (CopyGlyphTileListFromBank1F and
+; CopyTileListFromBank1F_1C keep theirs in RAM); returns with HL and DE unchanged and B = the number
+; of tiles copied. (C1, E-0372)
+; copies $10-byte tiles from bank $1F by a list of source and destination words until $FF
+CopyTileListFromBank1F_Bank03::
     ld b, $00
 
 .skip:

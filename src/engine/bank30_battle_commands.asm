@@ -791,12 +791,16 @@ RunCommandEntryResolveStep_CheckObeys_AddTactic::
     call GetActorSlotTacticLow2
     cp $03
     ret z
-    ld hl, RunCommandEntryResolveStep_CheckObeys_AddTactic_Data
+    ld hl, TacticPersonalityArrays
     call ReadBattleWordFromArray_Bank30
     jr RunCommandEntryResolveStep_CheckObeys_AddSlotByte
 
-; data read by RunCommandEntryResolveStep (6 bytes) (E-0347)
-RunCommandEntryResolveStep_CheckObeys_AddTactic_Data::
+; Three words: wSlotPersonalityHi, wSlotPersonalityMid and wSlotPersonalityLo.
+; RunCommandEntryResolveStep_CheckObeys_AddTactic picks entry A = the actor's tactic 0-2
+; (GetActorSlotTacticLow2; tactic 3 adds nothing) with ReadBattleWordFromArray_Bank30, then adds the
+; actor's byte of that array / 4 to the word wBattleArg0
+; (RunCommandEntryResolveStep_CheckObeys_AddSlotByte). (C1, E-0372)
+TacticPersonalityArrays::
     db $68, $d9, $70, $d9, $78, $d9
 
 ; The word wBattleArg0 += the byte at HL + actor, / 4. (C1, E-0357)

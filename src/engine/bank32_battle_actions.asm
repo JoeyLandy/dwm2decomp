@@ -6,7 +6,7 @@ SECTION "Bank 32", ROMX[$4000], BANK[$32]
 
 ; for the sequence at wSequencePtrLo: runs the frame timer (CountDownSequencePtrLoFrameTimer) when
 ; started, otherwise marks it started, clears byte 4 and loads the first frame
-; (TickSequencePtrLoSequence_LookupSequencePtrLoFrameWord) (E-0124)
+; (TickSequencePtrLoSequence_LoadFrame) (E-0124)
 TickSequencePtrLoSequence::
     ld a, [wSequencePtrLo]
     ld l, a
@@ -24,7 +24,7 @@ TickSequencePtrLoSequence::
     inc hl
     inc hl
     ld [hl], $00
-    call TickSequencePtrLoSequence_LookupSequencePtrLoFrameWord
+    call TickSequencePtrLoSequence_LoadFrame
 
 .return:
     ret
@@ -41,13 +41,15 @@ CountDownSequencePtrLoFrameTimer::
     cp $ff
     ret z
     or a
-    jr z, CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo
+    jr z, CountDownSequencePtrLoFrameTimer_NextFrame
     dec a
     ld [hld], a
     ret
 
-; Advances the sequence's frame index (byte 3 of the sequence at wSequencePtrLo). (C1, E-0357)
-CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo::
+; Advances the frame index (byte 3) of the sequence at wSequencePtrLo and falls into
+; TickSequencePtrLoSequence_LoadFrame to load that frame. Reached when the frame timer (byte 5)
+; reaches 0 in CountDownSequencePtrLoFrameTimer and for the frame codes $FE and $FD. (C1, E-0372)
+CountDownSequencePtrLoFrameTimer_NextFrame::
     ld a, [wSequencePtrLo]
     add $03
     ld l, a
@@ -56,10 +58,11 @@ CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo::
     ld h, a
     inc [hl]
 
-; Reads the sequence's current frame word: $FFFF ends it (byte 0 cleared); $FE moves the frame index
-; back by B and advances; $FD advances; any other word is stored as the frame (bytes 4-5). (C1,
-; E-0357)
-TickSequencePtrLoSequence_LookupSequencePtrLoFrameWord::
+; Reads the sequence's current frame word into BC (LookupSequencePtrLoFrameWord): $FFFF ends the
+; sequence (byte 0 cleared); low byte $FE moves the frame index (byte 3) back by B and advances
+; (CountDownSequencePtrLoFrameTimer_NextFrame); $FD just advances; any other word is stored in bytes
+; 4-5 (C, then B, the count that CountDownSequencePtrLoFrameTimer counts down). (C1, E-0372)
+TickSequencePtrLoSequence_LoadFrame::
     call LookupSequencePtrLoFrameWord
     ld a, b
     and c
@@ -87,12 +90,12 @@ TickSequencePtrLoSequence_LookupSequencePtrLoFrameWord::
     ld a, [hl]
     sub b
     ld [hl], a
-    jr CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo
+    jr CountDownSequencePtrLoFrameTimer_NextFrame
 
 .cp_FD:
     cp $fd
     jr nz, .read_sequence_ptr_lo
-    jr CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo
+    jr CountDownSequencePtrLoFrameTimer_NextFrame
 
 .read_sequence_ptr_lo:
     ld a, [wSequencePtrLo]
@@ -129,10 +132,10 @@ LookupSequencePtrLoFrameWord::
     ret
 
 ; LookupSequencePtrLoFrameWord reads the word at $40A6 + 2 * [seq + 2], then the word at 2 * [seq +
-; 3] of that list; TickSequencePtrLoSequence_LookupSequencePtrLoFrameWord ends the sequence at
-; $FFFF, steps back B entries when the low byte is $FE, and otherwise stores the word at seq + 4
-; (frame, then the timer CountDownSequencePtrLoFrameTimer counts down); 60 lists from $411E to
-; $4ADC, each ending with $FFFF (E-0240, C1)
+; 3] of that list; TickSequencePtrLoSequence_LoadFrame ends the sequence at $FFFF, steps back B
+; entries when the low byte is $FE, and otherwise stores the word at seq + 4 (frame, then the timer
+; CountDownSequencePtrLoFrameTimer counts down); 60 lists from $411E to $4ADC, each ending with
+; $FFFF (E-0240, C1)
 ; record: frame list of this sequence
 SequenceFrameTable::
     dw SequenceFrames000 ; id 0
@@ -1660,11 +1663,11 @@ RunBattleActions_StatusChecks_StartAction::
     ld a, [wBattleSubStep]
     jumptable
     dw RunBattleActions_StatusChecks_StartAction_Begin
-    dw RunBattleActions_StatusChecks_StartAction_CheckIronized
-    dw RunBattleActions_StatusChecks_StartAction_CurseTick
+    dw RunBattleActions_StatusChecks_StartAction_Statuses
+    dw RunBattleActions_StatusChecks_StartAction_Curse
     dw RunBattleActions_StatusChecks_StartAction_Confused
-    dw RunBattleActions_StatusChecks_SetBattleResolveStep
-    dw RunBattleActions_StatusChecks_StartAction_SetBattleSubPhase
+    dw RunBattleActions_StatusChecks_StartAction_Finish
+    dw RunBattleActions_StatusChecks_StartAction_AllDone
 
 ; Starting the next action, step 0: resets the effect state; a follow-up goes to step 4; at the end
 ; of the queue (nine done or $FF) step 5; an item turn ($10) goes to sub-phase 8; otherwise takes
@@ -1714,7 +1717,7 @@ RunBattleActions_StatusChecks_StartAction_Begin::
     jr z, .done
     ld hl, wBattleSubStep
     inc [hl]
-    jr RunBattleActions_StatusChecks_StartAction_CheckIronized
+    jr RunBattleActions_StatusChecks_StartAction_Statuses
 
 .done:
     ld hl, wActionQueuePos
@@ -1723,11 +1726,17 @@ RunBattleActions_StatusChecks_StartAction_Begin::
 .return:
     ret
 
-; Starting the next action, step 1: an Ironized actor (status 5 bits 6-7) shows battle text $15 and
-; is skipped; one with status 4 bits 6-7 is forced to action $CD on itself (step 3); one with status
-; 4 bits 2-3 and status 1 bits 6-7 to action $CA or $CB (step 4); otherwise the recovery messages
-; (ShowActorStatusRecoveryMessage) and on to step 2. (C1, E-0357)
-RunBattleActions_StatusChecks_StartAction_CheckIronized::
+; Starting the next action, step 1 (wBattleSubStep 1 of RunBattleActions_StatusChecks_StartAction).
+; An actor with the BSTAT5_IRONIZED bits (status 5 bits 6-7) shows battle text $15
+; (ShowBattleTextCategory0) and is skipped (wBattleSubStep = 0, wActionQueuePos += 1). One with
+; status 3 bits 6-7 (the BSTAT3_AIRBORNE field) is given action $CD on itself (the actor at
+; wBattleTargetChoice + 2 * actor, $CD in the action byte before it) and sub-step 3. One with status
+; 4 bits 2-3 (BSTAT4_HIGH_JUMP) and wBattleStatus bits 6-7 is given action $CA (BSTAT0_PARALYZED
+; set) or $CB on itself and sub-step 4. Otherwise ShowActorStatusRecoveryMessage: with carry (no
+; message) it goes on at once to the curse step (wBattleSubStep += 1,
+; RunBattleActions_StatusChecks_StartAction_Curse); without carry the actor is skipped as above
+; unless wBattleSubStep is 4. (C1, E-0372)
+RunBattleActions_StatusChecks_StartAction_Statuses::
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
     call AddAx9ToHL
@@ -1790,7 +1799,7 @@ RunBattleActions_StatusChecks_StartAction_CheckIronized::
     jr nc, .check_battle_sub_step
     ld hl, wBattleSubStep
     inc [hl]
-    jr RunBattleActions_StatusChecks_StartAction_CurseTick
+    jr RunBattleActions_StatusChecks_StartAction_Curse
 
 .check_battle_sub_step:
     ld a, [wBattleSubStep]
@@ -1806,9 +1815,12 @@ RunBattleActions_StatusChecks_StartAction_CheckIronized::
 .return:
     ret
 
-; Starting the next action, step 2: a cursed actor may suffer the curse (RollStatusTickEffect); when
-; that leaves it at 0 HP goes to resolve step 9. (C1, E-0357)
-RunBattleActions_StatusChecks_StartAction_CurseTick::
+; Starting the next action, step 2: wBattleSubStep += 1 first. When the actor has BSTAT0_CURSED and
+; RollStatusTickEffect returns carry, reads its HP (GetBattleHP_Bank32): at 0 HP goes to resolve
+; step 9 (wBattleResolveStep = 9, wBattleSubStep = 0), otherwise returns. Without the curse or the
+; tick it runs step 3 at once (jumps to RunBattleActions_StatusChecks_StartAction_Confused). (C1,
+; E-0372)
+RunBattleActions_StatusChecks_StartAction_Curse::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleActor]
@@ -1838,22 +1850,26 @@ RunBattleActions_StatusChecks_StartAction_Confused::
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit BSTAT0_CONFUSED, [hl]
-    jr z, RunBattleActions_StatusChecks_SetBattleResolveStep
+    jr z, RunBattleActions_StatusChecks_StartAction_Finish
     call PickRandomActionWhenUncontrolled
     ld d, $14
     farcall ShowBattleTextCategory0
     ret
 
-; Starting the next action, step 4: the next resolve step. (C1, E-0357)
-RunBattleActions_StatusChecks_SetBattleResolveStep::
+; Starting the next action, step 4 (also step 3's end when the actor is not confused, and step 0's
+; target for a follow-up action): resolve step 1 (RunBattleActions_StatusChecks_CheckAction) with
+; wBattleSubStep 0. (C1, E-0372)
+RunBattleActions_StatusChecks_StartAction_Finish::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
     ld [wBattleSubStep], a
     ret
 
-; Starting the next action, step 5: the actions are done: sub-phase 9. (C1, E-0357)
-RunBattleActions_StatusChecks_StartAction_SetBattleSubPhase::
+; Starting the next action, step 5 (the action queue is used up): wBattleSubPhase 9
+; (RunBattleActions_WearOffAndDefeat in RunBattleActions' table), with wBattleResolveStep and
+; wBattleSubStep 0. (C1, E-0372)
+RunBattleActions_StatusChecks_StartAction_AllDone::
     ld a, $09
     ld [wBattleSubPhase], a
     xor a
@@ -2284,7 +2300,7 @@ RollSleepWakeUp::
     jr nz, .next
     ld a, [hl]
     and $0c
-    jr z, RunBattleActions_StatusChecks_CheckAction_CallShowBattleText
+    jr z, RollSleepWakeUp_ShowWokeUp
     ld a, [hl]
     and $f3
     ld [hl], a
@@ -2301,19 +2317,26 @@ RollSleepWakeUp::
     ld hl, wBattleActionChoice
     add a
 
-; Sets the actor's action to $BF (it spends the turn waking). (C1, E-0357)
-RunBattleActions_StatusChecks_CheckAction_ShowBattleText::
+; Tail of RollSleepWakeUp, reached by falling through with A = 2 * wBattleActor and HL =
+; wBattleActionChoice: sets the actor's action byte to $BF and jumps to the end of RollSleepWakeUp
+; (wBattleTarget restored from wLoadSlot, carry clear) without the 'woke up!' text $82.
+; RollSleepWakeUp comes here when the waking actor had status 3 bits 6-7 or status 4 bits 2-3 set
+; (it clears them first); with neither it shows text $82 instead and does not set $BF. (C1, E-0372)
+RollSleepWakeUp_SetWakingAction::
     add_a_to_hl
     ld [hl], $bf
-    jr RunBattleActions_StatusChecks_CheckAction_ReadLoadSlot
+    jr RollSleepWakeUp_RestoreTarget
 
-; Shows battle text $82. (C1, E-0357)
-RunBattleActions_StatusChecks_CheckAction_CallShowBattleText::
+; On RollSleepWakeUp's wake path, when the actor had neither BSTAT3_AIRBORNE bits nor
+; BSTAT4_HIGH_JUMP bits set: shows battle text $82 ('0 woke up!', with the actor as wBattleTarget)
+; and falls into RollSleepWakeUp_RestoreTarget. (C1, E-0372)
+RollSleepWakeUp_ShowWokeUp::
     ld d, $82 ; battle text '0 woke up!'
     farcall ShowBattleText
 
-; Puts the target back (from wLoadSlot) and returns NC. (C1, E-0357)
-RunBattleActions_StatusChecks_CheckAction_ReadLoadSlot::
+; The end of RollSleepWakeUp's wake path: puts wBattleTarget back from wLoadSlot and returns carry
+; clear (the actor is awake). (C1, E-0372)
+RollSleepWakeUp_RestoreTarget::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     scf
@@ -2336,10 +2359,10 @@ RunBattleActions_StatusChecks_CheckAction::
     ld a, [wBattleSubStep]
     jumptable
     dw RunBattleActions_StatusChecks_CheckAction_CheckMP
-    dw RunBattleActions_StatusChecks_CheckAction_CheckRepeat
-    dw RunBattleActions_StatusChecks_CheckAction_PickTarget
-    dw RunBattleActions_StatusChecks_CheckAction_CheckSealPray
-    dw RunBattleActions_StatusChecks_CheckAction_RecheckMP
+    dw RunBattleActions_StatusChecks_CheckAction_FoeDupes
+    dw RunBattleActions_StatusChecks_CheckAction_Target
+    dw RunBattleActions_StatusChecks_CheckAction_SealPray
+    dw RunBattleActions_StatusChecks_CheckAction_MPAgain
 
 ; data read by RunBattleActions_StatusChecks_CheckAction_CheckMP (5 words) (E-0347)
 RunBattleActions_StatusChecks_CheckAction_Skip::
@@ -2347,7 +2370,7 @@ RunBattleActions_StatusChecks_CheckAction_Skip::
     dw $3851
     dw RunBattleActions_StatusChecks_CheckAction_NopRun
     dw $07fe
-    dw RunBattleActions_StatusChecks_CheckAction_ShowBattleText
+    dw RollSleepWakeUp_SetWakingAction
 
 ; for C & 7 non-zero runs BuildActionMessageNames (and CheckActionD0ToE3OrSpecial unless the result
 ; is 1), else shows the special action message; then sets sub-phase 7 and marks the formation slot
@@ -2462,10 +2485,12 @@ RunBattleActions_StatusChecks_CheckAction_CheckMP::
     inc [hl]
     ret
 
-; Checking the action, step 1: outside link mode 1 a foe actor whose action was already used this
-; turn by another foe (one of the actions in
-; RunBattleActions_StatusChecks_CheckAction_CheckRepeat_Data) loses it (action 0). (C1, E-0357)
-RunBattleActions_StatusChecks_CheckAction_CheckRepeat::
+; Checking the action, step 1: outside link mode 1 (wLinkMode), for a foe actor (wBattleActor 4 or
+; more) when wActionQueuePos is non-zero: if an earlier wActionQueue entry that is a foe (4 or more,
+; not $10) with wSlotMarks 3 or $FE chose the same action as wBattleActionId, and that action is in
+; FoeNoRepeatSkills, the actor loses its action (action 0, target $FF) and its record is reloaded
+; (LoadActorChosenActionRecord). Then wBattleSubStep += 1. (C1, E-0372)
+RunBattleActions_StatusChecks_CheckAction_FoeDupes::
     ld a, [wLinkMode]
     cp $01
     jr z, .done
@@ -2514,7 +2539,7 @@ RunBattleActions_StatusChecks_CheckAction_CheckRepeat::
     ld a, [wBattleActionId]
     ld c, a
     push hl
-    ld hl, RunBattleActions_StatusChecks_CheckAction_CheckRepeat_Data
+    ld hl, FoeNoRepeatSkills
 
 .skip2:
     ld a, [hli]
@@ -2544,8 +2569,12 @@ RunBattleActions_StatusChecks_CheckAction_CheckRepeat::
     inc [hl]
     ret
 
-; data read by RunBattleActions (63 bytes) (E-0347)
-RunBattleActions_StatusChecks_CheckAction_CheckRepeat_Data::
+; 62 skill ids ending in $FF, from SKILL_FIREBAL to SKILL_WARCRY (among them SKILL_BEAT,
+; SKILL_SLEEPALL, SKILL_FIREAIR, SKILL_CALLHELP, SKILL_GIGASLASH and
+; SKILL_KODANCE).RunBattleActions_StatusChecks_CheckAction_FoeDupes scans it for wBattleActionId: an
+; action on this list that an earlier foe in the queue already chose is taken from the next foe.
+; (C1, E-0372)
+FoeNoRepeatSkills::
     db $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13
     db $14, $15, $19, $1a, $26, $28, $2a, $2c, $2e, $2f, $30, $33, $3d, $3e, $3f, $40
     db $41, $42, $43, $44, $45, $46, $47, $49, $4a, $4b, $4d, $4e, $4f, $64, $65, $66
@@ -2554,7 +2583,7 @@ RunBattleActions_StatusChecks_CheckAction_CheckRepeat_Data::
 ; Checking the action, step 2: picks the target: an unset target, an AI actor of mode 2 and up, or a
 ; group or kind-4 skill chooses it (ChooseActionTarget); then wBattleTarget is the actor's target
 ; choice. (C1, E-0357)
-RunBattleActions_StatusChecks_CheckAction_PickTarget::
+RunBattleActions_StatusChecks_CheckAction_Target::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a
@@ -2597,9 +2626,12 @@ RunBattleActions_StatusChecks_CheckAction_PickTarget::
     inc [hl]
     ret
 
-; Checking the action, step 3: when the action matches the queued SealPray action
-; (QueuedActionMatches) builds the message (2) and ends the action. (C1, E-0357)
-RunBattleActions_StatusChecks_CheckAction_CheckSealPray::
+; Checking the action, step 3: first moves on (wBattleResolveStep += 1, wBattleSubStep = 0). When
+; wBattleActionId matches wQueuedActionId or its pair (QueuedActionMatches), the action that
+; RunBattleActions_StatusChecks_ShatterChecks_Detect stores when it breaks a BSTAT8_SEAL_PRAY,
+; builds action message 2 (BuildActionMessageNames), runs CheckActionD0ToE3OrSpecial when
+; wRecordBufferData is non-zero and ends the action (SetSubPhase7AndResetSteps). (C1, E-0372)
+RunBattleActions_StatusChecks_CheckAction_SealPray::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
@@ -2615,9 +2647,11 @@ RunBattleActions_StatusChecks_CheckAction_CheckSealPray::
     call SetSubPhase7AndResetSteps
     ret
 
-; Checking the action, step 4: checks the MP again; with too little shows the message and ends the
-; action, otherwise goes back two steps. (C1, E-0357)
-RunBattleActions_StatusChecks_CheckAction_RecheckMP::
+; Checking the action, step 4: runs CheckSkillMPCost again. When the actor can pay (carry), or
+; cannot with D = 7, goes back two sub-steps (wBattleSubStep -= 2). Otherwise calls
+; CheckActionD0ToE3OrSpecial unless D = 1 and ends the action (SetSubPhase7AndResetSteps); unlike
+; step 0 it builds no message itself. (C1, E-0372)
+RunBattleActions_StatusChecks_CheckAction_MPAgain::
     call CheckSkillMPCost
     jr c, .skip
     ld a, d
@@ -3293,16 +3327,18 @@ CompareActionIdWithCD::
 RunBattleActions_StatusChecks_ShatterChecks::
     ld a, [wBattleSubStep]
     jumptable
-    dw RunBattleActions_StatusChecks_ShatterChecks_CheckShatter
+    dw RunBattleActions_StatusChecks_ShatterChecks_Detect
     dw RunBattleActions_StatusChecks_ShowGWasShattered
-    dw RunBattleActions_StatusChecks_ShowSealPrayWasBroken
-    dw RunBattleActions_StatusChecks_ShatterChecks_EndAction
+    dw RunBattleActions_StatusChecks_ShowSealPrayBroken
+    dw RunBattleActions_StatusChecks_ShatterChecks_End
 
-; Shatter checks, step 0: for a skill with record byte 8 bit 7 (a spell) aimed at a slot with
-; SealPray (status 8 bit 4), or at a group or Ironize while any present slot of the target's side
-; has it, removes that SealPray and queues the action (wQueuedActionId) for the next step; otherwise
-; the next resolve step. (C1, E-0357)
-RunBattleActions_StatusChecks_ShatterChecks_CheckShatter::
+; Shatter checks, step 0: loads the actor's chosen action and target into wBattleActionId and
+; wBattleTarget. For a skill with wRecordBufferData + 8 bit 7 aimed at a slot with BSTAT8_SEAL_PRAY,
+; or one with wRecordBufferData + 4 low nibble 2 or SKILL_IRONIZE while any present slot of the
+; target's side has it, clears that bit, moves wQueuedActionId to wSealPrayState, puts the action in
+; wQueuedActionId and goes to the next sub-step. Otherwise the next resolve step (wBattleResolveStep
+; += 1, wBattleSubStep = 0). (C1, E-0372)
+RunBattleActions_StatusChecks_ShatterChecks_Detect::
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
     add a
@@ -3382,7 +3418,7 @@ RunBattleActions_StatusChecks_ShowGWasShattered::
 
 ; Shatter checks, step 2: when a SealPray was set, battle text $92 ('SealPray was broken!') and
 ; clears it. (C1, E-0357)
-RunBattleActions_StatusChecks_ShowSealPrayWasBroken::
+RunBattleActions_StatusChecks_ShowSealPrayBroken::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wSealPrayState]
@@ -3394,9 +3430,9 @@ RunBattleActions_StatusChecks_ShowSealPrayWasBroken::
     ld [wSealPrayState], a
     ret
 
-; Shatter checks, step 3: pays a two-monster action's MP if needed and ends the action (sub-phase
-; 7). (C1, E-0357)
-RunBattleActions_StatusChecks_ShatterChecks_EndAction::
+; Shatter checks, step 3: CheckActionD0ToE3OrSpecial (actions $D0-$E3 go on to PayActorMPCost_CpD6),
+; then ends the action (SetSubPhase7AndResetSteps). (C1, E-0372)
+RunBattleActions_StatusChecks_ShatterChecks_End::
     call CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     ret
@@ -3525,7 +3561,7 @@ RunBattleActions_StatusChecks_DroppedDead::
     ld a, [wBattleSubStep]
     jumptable
     dw RunBattleActions_StatusChecks_ShowHeroDroppedDead
-    dw RunBattleActions_StatusChecks_DroppedDead_CheckSide
+    dw RunBattleActions_StatusChecks_DroppedDead_AnyLeft
 
 ; Dropped dead, step 0: after the text defeats the actor, blanks its picture and shows '<name>
 ; dropped dead!' (text $8A, $8D for a foe). (C1, E-0357)
@@ -3551,7 +3587,7 @@ RunBattleActions_StatusChecks_ShowHeroDroppedDead::
 
 ; Dropped dead, step 1: after the text, when the actor's side has nobody left that can act goes to
 ; the next battle phase; otherwise resolve step 7. (C1, E-0357)
-RunBattleActions_StatusChecks_DroppedDead_CheckSide::
+RunBattleActions_StatusChecks_DroppedDead_AnyLeft::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -3633,8 +3669,8 @@ RunBattleStep4_ResolveSkill::
     dw RunBattleStep4_ResolveSkill_ShowActionText
     dw RunBattleStep4_ResolveSkill_SelectEffect
     dw RunBattleStep4_ResolveSkill_ShatterChecks
-    dw RunBattleStep4_ResolveSkill_SetBattleSubPhase
-    dw RunBattleStep4_ResolveSkill_ToCheckLinkRuleViolation
+    dw RunBattleStep4_ResolveSkill_EndAfterShatter
+    dw RunBattleStep4_ResolveSkill_CheckLinkRules
     dw RunBattleStep4_ResolveSkill_PayPairMP
 
 ; Fight step 4, resolve step 0: saves the actor, target, hits, both choices and the target's mark,
@@ -3773,14 +3809,14 @@ RunBattleStep4_ResolveSkill_SelectEffect::
 RunBattleStep4_ResolveSkill_ShatterChecks::
     ld a, [wBattleSubStep]
     jumptable
-    dw RunBattleStep4_ResolveSkill_ShatterChecks_CheckShatter
-    dw RunBattleStep4_ResolveSkill_ShatterChecks_ShowGWasShattered
+    dw RunBattleStep4_ResolveSkill_ShatterChecks_Detect
+    dw RunBattleStep4_ResolveSkill_ShowGWasShattered
     dw RunBattleStep4_ResolveSkill_ShowSealPrayWasBroken
-    dw RunBattleStep4_ResolveSkill_SetBattleResolveStep
+    dw RunBattleStep4_ResolveSkill_ShatterChecks_Done
 
 ; Fight step 4's shatter checks, step 0: as the main shatter check, without the Ironize case; with
 ; no SealPray skips two resolve steps. (C1, E-0357)
-RunBattleStep4_ResolveSkill_ShatterChecks_CheckShatter::
+RunBattleStep4_ResolveSkill_ShatterChecks_Detect::
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
     add a
@@ -3850,7 +3886,7 @@ RunBattleStep4_ResolveSkill_ShatterChecks_CheckShatter::
     ret
 
 ; Fight step 4's shatter checks, step 1: battle text $B0. (C1, E-0357)
-RunBattleStep4_ResolveSkill_ShatterChecks_ShowGWasShattered::
+RunBattleStep4_ResolveSkill_ShowGWasShattered::
     ld hl, wBattleSubStep
     inc [hl]
     ld d, $b0 ; battle text 'G was shattered!'
@@ -3871,16 +3907,19 @@ RunBattleStep4_ResolveSkill_ShowSealPrayWasBroken::
     ld [wSealPrayState], a
     ret
 
-; Fight step 4's shatter checks, step 3: the next resolve step. (C1, E-0357)
-RunBattleStep4_ResolveSkill_SetBattleResolveStep::
+; Fight step 4's shatter checks, step 3: resolve step 5
+; (RunBattleStep4_ResolveSkill_EndAfterShatter) with wBattleSubStep 0. (C1, E-0372)
+RunBattleStep4_ResolveSkill_ShatterChecks_Done::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
     ld [wBattleSubStep], a
     ret
 
-; Fight step 4, resolve step 5: sub-phase 5. (C1, E-0357)
-RunBattleStep4_ResolveSkill_SetBattleSubPhase::
+; Fight step 4, resolve step 5, reached only after a target's BSTAT8_SEAL_PRAY shattered the skill
+; (the shatter checks' steps 1-3; without one, step 4 skips to step 6): wBattleSubPhase 5
+; (RunBattleStep4_RestoreSaved) and wBattleResolveStep 0, skipping sub-phases 1-4. (C1, E-0372)
+RunBattleStep4_ResolveSkill_EndAfterShatter::
     ld a, $05
     ld [wBattleSubPhase], a
     xor a
@@ -3888,7 +3927,7 @@ RunBattleStep4_ResolveSkill_SetBattleSubPhase::
     ret
 
 ; Fight step 4, resolve step 6: the link rule check (CheckLinkRuleViolation). (C1, E-0357)
-RunBattleStep4_ResolveSkill_ToCheckLinkRuleViolation::
+RunBattleStep4_ResolveSkill_CheckLinkRules::
     call CheckLinkRuleViolation
     ret
 
@@ -3973,7 +4012,7 @@ RunDefeatSequence::
     ld a, [wBattleSubStep2]
     jumptable
     dw RunDefeatSequence_Defeat
-    dw RunDefeatSequence_ToBlankTargetMonsterPictureAndStep
+    dw RunDefeatSequence_BlankPicture
     dw RunDefeatSequence_ShowDefeatText
 
 ; The defeat, sub-step 0: lowers the target's mark by 5 and defeats it (DefeatTarget). (C1, E-0357)
@@ -3990,7 +4029,7 @@ RunDefeatSequence_Defeat::
     ret
 
 ; The defeat, sub-step 1: blanks the target's picture. (C1, E-0357)
-RunDefeatSequence_ToBlankTargetMonsterPictureAndStep::
+RunDefeatSequence_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
@@ -4006,7 +4045,7 @@ RunDefeatSequence_ShowDefeatText::
     ld [wBattleSubStep2], a
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
-    call RunDefeatSequence_ShowDefeatText_WaitBattleActionId
+    call RunDefeatSequence_ShowDefeatText_CheckAction
     ret z
     ld a, [wBattleActionId]
     cp SKILL_GEYSER
@@ -4032,7 +4071,7 @@ RunDefeatSequence_ShowDefeatText::
 ; Z for Beat and Defeat; for Sacrifice and action $D6 the flags of wBattleDamage minus 1000;
 ; otherwise NZ. (KODance is compared but never branched on: the compare is overwritten by the next
 ; one.) (C1, E-0357)
-RunDefeatSequence_ShowDefeatText_WaitBattleActionId::
+RunDefeatSequence_ShowDefeatText_CheckAction::
     ld a, [wBattleActionId]
     cp SKILL_BEAT
     ret z
@@ -4123,7 +4162,7 @@ BlankTargetMonsterPicture::
     ret
 
 ; target slot wBattleTarget: re-derives its stats (RecomputeTargetMaxHPAndMP,
-; DefeatTarget_WriteMultiHitCount, ResetTargetAGLAndDEFToBase clear 'buff' bits), sets
+; DefeatTarget_AdjustHitsAndGuards, ResetTargetAGLAndDEFToBase clear 'buff' bits), sets
 ; wBattleSlotOut[target] = 1, wBattleHP[target] = 0 and clears the target's 9-byte status record
 ; (wBattleStatus + 9 * slot) (E-0043)
 DefeatTarget::
@@ -4133,14 +4172,14 @@ DefeatTarget::
     call AddAx9ToHL
     ld a, [hl]
     and $c0
-    jr z, .call_defeat_target_write_multi_hit_count
+    jr z, .call_defeat_target_adjust_hits_and_guards
     ld a, [hl]
     and $3f
     ld [hl], a
     call ResetTargetAGLAndDEFToBase
 
-.call_defeat_target_write_multi_hit_count:
-    call DefeatTarget_WriteMultiHitCount
+.call_defeat_target_adjust_hits_and_guards:
+    call DefeatTarget_AdjustHitsAndGuards
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -4200,10 +4239,12 @@ DefeatTarget::
 .return:
     ret
 
-; On a defeat: for a group action redirected away from a lower slot, counts one hit fewer; then
-; clears the guard (BSTAT6_GUARDED) of any slot of the side whose guarded slot (status 7 high
-; nibble) was the target. (C1, E-0357)
-DefeatTarget_WriteMultiHitCount::
+; Part of DefeatTarget: when the skill targets a whole side (wRecordBufferData + $4 low nibble 2),
+; an ally guard moved the attack (wRedirectFlags bit 1, wOriginalTarget not $FF), the defeated
+; wBattleTarget is a higher slot than wOriginalTarget, and wMultiHitCount has bit 7 set and is not
+; $81, counts one hit fewer. Then, for the four slots of the target's side, clears BSTAT6_GUARDED of
+; any slot whose guarding slot (the wBattleStatus7 high nibble) is the defeated target. (C1, E-0372)
+DefeatTarget_AdjustHitsAndGuards::
     ld a, [wRecordBufferData + $4]
     and $0f
     cp $02
@@ -4503,7 +4544,7 @@ RecomputeTargetMaxHPAndMP::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
+    farcall PackResistancesFromBattleArgs
     ret
 
 ; C = the target slot (into the name-byte reset below). (C1, E-0357)
@@ -4511,9 +4552,11 @@ RecomputeTargetMaxHPAndMP_TargetSlot::
     ld a, [wBattleTarget]
     ld c, a
 
-; Outside link mode 1 clears the name byte of foe slot C (not slot 7), so it shows its species name
-; again. (C1, E-0357)
-ActionEffect_BeDragon_ReadLinkMode::
+; C = slot: only when wLinkMode is 0 or 2 and C is a foe slot 4-6, sets its wSlotNameBytes entry (C
+; & 3) to $FF, so CopySlotNameToHL_HighSlot names it by its species again. Reached by falling from
+; RecomputeTargetMaxHPAndMP_TargetSlot (C = wBattleTarget) and far-called by ActionEffect_BeDragon
+; (C = wBattleActor). (C1, E-0372)
+ResetFoeSlotNameToSpecies::
     ld a, [wLinkMode]
     or a
     jr z, .skip
@@ -4616,13 +4659,13 @@ ResolveStep0EEffect::
     jumptable
     dw ResolveStep0EEffect_Start
     dw ResolveStep0EEffect_ShowMessage
-    dw ResolveStep0EEffect_SetBattleSubStep
+    dw ResolveStep0EEffect_Finish
     dw ResolveStep0EEffect_Recoil
     dw ResolveStep0EEffect_Brutalize
     dw ResolveStep0EEffect_Sacrifice
-    dw ResolveStep0EEffect_Return
-    dw ResolveStep0EEffect_Return
-    dw ResolveStep0EEffect_Return
+    dw ResolveStep0EEffect_DoNothing
+    dw ResolveStep0EEffect_DoNothing
+    dw ResolveStep0EEffect_DoNothing
     dw ResolveStep0EEffect_QuarterRecoil
 
 ; Resolve step $0E, sub-step 0: by the skill: Sacrifice, Farewell and LifeDance (and action $D6,
@@ -4641,7 +4684,7 @@ ResolveStep0EEffect_Start::
     cp SKILL_FAREWELL
     jr z, .check_battle_screen_flags
     cp SKILL_BEDRAGON
-    jr z, .call_resolve_step0_e_effect_start_advance
+    jr z, .call_resolve_step0_e_effect_start_pick_random
     cp SKILL_POISONHIT
     jp z, .read_battle_target
     cp SKILL_PARALYZE
@@ -4657,7 +4700,7 @@ ResolveStep0EEffect_Start::
     cp SKILL_LIFEDANCE
     jr z, .check_battle_screen_flags
     cp ACTION_B8
-    jr z, .call_resolve_step0_e_effect_start_advance
+    jr z, .call_resolve_step0_e_effect_start_pick_random
     cp ACTION_D6
     jr z, .read_battle_actor
     cp ACTION_DC
@@ -4700,8 +4743,8 @@ ResolveStep0EEffect_Start::
     ld [wBattleSubStep], a
     ret
 
-.call_resolve_step0_e_effect_start_advance:
-    call ResolveStep0EEffect_Start_AdvanceRandom
+.call_resolve_step0_e_effect_start_pick_random:
+    call ResolveStep0EEffect_Start_PickRandomAttack
     xor a
     ld [wBattleSubPhase], a
     xor a
@@ -4716,10 +4759,10 @@ ResolveStep0EEffect_Start::
     farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
-    call ResolveStep0EEffect_Start_AdvanceRandom
+    call ResolveStep0EEffect_Start_PickRandomAttack
     pop af
     ld [wBattleActor], a
-    jr .call_resolve_step0_e_effect_start_advance
+    jr .call_resolve_step0_e_effect_start_pick_random
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -4813,10 +4856,14 @@ ResolveStep0EEffect_Start::
     ld [wEffectSubStep], a
     jp SetBattleSubStep1
 
-; Picks a random follow-up action from ResolveStep0EEffect_AdvanceRandom_Data for the actor; for
-; action 0 aims it at a random present slot of the other side (searching downward, wrapping within
-; the side). (C1, E-0357)
-ResolveStep0EEffect_Start_AdvanceRandom::
+; Advances the random number and writes a new command for wBattleActor in wBattleActionChoice: the
+; action is entry wRandomLo & 3 of the table after the routine, which holds only zeros
+; (ACTION_FIGHT); for action 0 the target is slot (wRandomLo & 3) of the other side, moving down to
+; the nearest present slot (CarryUnlessBattleSlotOutSlotEmpty) and wrapping from the side's first
+; slot to its fourth; a nonzero action would get the other side's first slot.
+; ResolveStep0EEffect_Start uses it for SKILL_BEDRAGON, ACTION_B8 and ACTION_DC (for the formation
+; partner too) before restarting the action. (C1, E-0372)
+ResolveStep0EEffect_Start_PickRandomAttack::
     call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -4824,7 +4871,7 @@ ResolveStep0EEffect_Start_AdvanceRandom::
     push hl
     ld a, [wRandomLo]
     and $03
-    ld hl, ResolveStep0EEffect_Start_AdvanceRandom_Data
+    ld hl, ResolveStep0EEffect_Start_PickRandomAttack_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -4865,7 +4912,7 @@ ResolveStep0EEffect_Start_AdvanceRandom::
     ret
 
 ; data read by ResolveStep0EEffect (5 bytes) (E-0347)
-ResolveStep0EEffect_Start_AdvanceRandom_Data::
+ResolveStep0EEffect_Start_PickRandomAttack_Data::
     db $00, $00, $00, $00, $00
 
 ; Resolve step $0E, sub-step 1: shows the effect's message (wEffectSubStep) when there is one, then
@@ -4873,15 +4920,16 @@ ResolveStep0EEffect_Start_AdvanceRandom_Data::
 ResolveStep0EEffect_ShowMessage::
     ld a, [wEffectSubStep]
     or a
-    jr z, ResolveStep0EEffect_SetBattleSubStep
+    jr z, ResolveStep0EEffect_Finish
     ld d, a
     farcall ShowBattleText
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; Resolve step $0E, sub-step 2: the next resolve step. (C1, E-0357)
-ResolveStep0EEffect_SetBattleSubStep::
+; Resolve step $0E, sub-step 2 (also sub-step 1 when wEffectSubStep is 0, no message): the next
+; resolve step, with wBattleSubStep 0. (C1, E-0372)
+ResolveStep0EEffect_Finish::
     xor a
     ld [wBattleSubStep], a
     ld hl, wBattleResolveStep
@@ -5019,7 +5067,7 @@ RunEffectSubStep::
     ld a, [wEffectSubStep]
     jumptable
     dw RunEffectSubStep_Defeat
-    dw RunEffectSubStep_ToBlankTargetMonsterPictureAndStep
+    dw RunEffectSubStep_BlankPicture
     dw RunEffectSubStep_ShowDefeatText
 
 ; A defeat, step 0: marks the target $FE and defeats it (DefeatTarget). (C1, E-0357)
@@ -5034,7 +5082,7 @@ RunEffectSubStep_Defeat::
     ret
 
 ; A defeat, step 1: blanks the target's picture. (C1, E-0357)
-RunEffectSubStep_ToBlankTargetMonsterPictureAndStep::
+RunEffectSubStep_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
@@ -5076,8 +5124,8 @@ ResolveStep0EEffect_Brutalize::
     jumptable
     dw ResolveStep0EEffect_Brutalize_Start
     dw ResolveStep0EEffect_Brutalize_LeaveOneHP
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_SetLoadSlot
-    dw ResolveStep0EEffect_Brutalize_ToSetBattleSubStep1
+    dw ResolveStep0EEffect_Brutalize_DefeatActor
+    dw ResolveStep0EEffect_Brutalize_Finish
 
 ; The Brutalize effect, sub-step 0: skips an absent actor; otherwise selects the effect. (C1,
 ; E-0357)
@@ -5146,8 +5194,10 @@ ResolveStep0EEffect_Brutalize_LeaveOneHP::
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
-; The Brutalize effect, sub-step 2: the actor's defeat with the actor as target. (C1, E-0357)
-ResolveStep0EEffect_Brutalize_DefeatTarget_SetLoadSlot::
+; The Brutalize effect, sub-step 2: defeats the actor (ResolveStep0EEffect_Brutalize_DefeatTarget
+; with wBattleActor as wBattleTarget), keeping the target in wLoadSlot and restoring it; the
+; defeat's last step advances wBattleSubStep2. (C1, E-0372)
+ResolveStep0EEffect_Brutalize_DefeatActor::
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
     ld a, [wBattleActor]
@@ -5163,8 +5213,8 @@ ResolveStep0EEffect_Brutalize_DefeatTarget::
     ld a, [wEffectSubStep]
     jumptable
     dw ResolveStep0EEffect_Brutalize_DefeatTarget_Defeat
-    dw ResolveStep0EEffect_ToBlankTargetMonsterPictureAndStep
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_ShowText
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Blank
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Message
 
 ; The Brutalize defeat, step 0: marks the slot $FE and defeats it. (C1, E-0357)
 ResolveStep0EEffect_Brutalize_DefeatTarget_Defeat::
@@ -5178,15 +5228,17 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_Defeat::
     ret
 
 ; The Brutalize defeat, step 1: blanks the picture. (C1, E-0357)
-ResolveStep0EEffect_ToBlankTargetMonsterPictureAndStep::
+ResolveStep0EEffect_Brutalize_DefeatTarget_Blank::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-; The Brutalize defeat, step 2: marks the level-up gains (bit 2) and shows text $90 ($8D for a foe);
-; then the next sub-step. (C1, E-0357)
-ResolveStep0EEffect_Brutalize_DefeatTarget_ShowText::
+; The Brutalize defeat, step 2 (wEffectSubStep 2 of ResolveStep0EEffect_Brutalize_DefeatTarget):
+; sets bit 2 of the target's level-up gains entry, shows battle text $90 when the actor is on the
+; local side (ActorOnLocalSide_Bank32 carry), else $8D, then wBattleSubStep2 += 1 and wEffectSubStep
+; = 0. (C1, E-0372)
+ResolveStep0EEffect_Brutalize_DefeatTarget_Message::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $90
@@ -5207,7 +5259,7 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_ShowText::
     ret
 
 ; The Brutalize effect, sub-step 3: back to resolve sub-step 1. (C1, E-0357)
-ResolveStep0EEffect_Brutalize_ToSetBattleSubStep1::
+ResolveStep0EEffect_Brutalize_Finish::
     call SetBattleSubStep1
     ret
 
@@ -5232,23 +5284,26 @@ ResolveStep0EEffect_Sacrifice::
 .read_battle_sub_step2:
     ld a, [wBattleSubStep2]
     jumptable
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor
-    dw ResolveStep0EEffect_CallSetBit0OfLevelUpGainsIndexed_Bank32
+    dw ResolveStep0EEffect_Sacrifice_CheckActor
+    dw ResolveStep0EEffect_Sacrifice_LoseHP
     dw ResolveStep0EEffect_Sacrifice_DefeatActor
-    dw ResolveStep0EEffect_Brutalize_CheckBattleActionId
+    dw ResolveStep0EEffect_Sacrifice_End
 
-; The sacrifice, step 0: an absent actor skips to the end. (C1, E-0357)
-ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor::
+; The sacrifice, step 0: next step; an absent actor (CarryUnlessBattleSlotOutSlotEmpty) goes
+; straight to the end (ResolveStep0EEffect_Sacrifice_End). (C1, E-0372)
+ResolveStep0EEffect_Sacrifice_CheckActor::
     ld hl, wBattleSubStep2
     inc [hl]
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, ResolveStep0EEffect_Brutalize_CheckBattleActionId
+    jp c, ResolveStep0EEffect_Sacrifice_End
     ret
 
-; The sacrifice, step 1: half the time the actor loses all but 1% of its HP (text $38), otherwise
-; all of it (damage 1000); at 0 HP it falls. (C1, E-0357)
-ResolveStep0EEffect_CallSetBit0OfLevelUpGainsIndexed_Bank32::
+; The sacrifice, step 1: marks the actor's level-up gains bit 0; half the time (wRandomLo bit 0) the
+; actor loses all but 1% of its HP (at least 1 kept) with battle text $38 ('0 was brutalized!', the
+; actor as target), otherwise, or when that would take nothing, its HP becomes 0 with damage 1000.
+; At 0 HP the next step defeats the actor (step 2), otherwise step 3 ends. (C1, E-0372)
+ResolveStep0EEffect_Sacrifice_LoseHP::
     ld hl, wBattleSubStep2
     inc [hl]
     ld hl, wBattleSubStep2
@@ -5363,7 +5418,7 @@ RunEffectSubStep_2::
     ld a, [wEffectSubStep]
     jumptable
     dw RunEffectSubStep_2_Defeat
-    dw RunEffectSubStep_2_ToBlankTargetMonsterPictureAndStep
+    dw RunEffectSubStep_2_BlankPicture
     dw RunEffectSubStep_2_ShowHeroDroppedDead
 
 ; The sacrifice's defeat, step 0: marks the slot $FE and defeats it. (C1, E-0357)
@@ -5378,7 +5433,7 @@ RunEffectSubStep_2_Defeat::
     ret
 
 ; The sacrifice's defeat, step 1: blanks the picture. (C1, E-0357)
-RunEffectSubStep_2_ToBlankTargetMonsterPictureAndStep::
+RunEffectSubStep_2_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
@@ -5403,9 +5458,12 @@ RunEffectSubStep_2_ShowHeroDroppedDead::
     xor a
     ld [wEffectSubStep], a
 
-; The sacrifice, step 3: for action $D6 repeats once for the partner (wSavedActorByte), then
-; restores the actor; otherwise ends with sub-phase 6. (C1, E-0357)
-ResolveStep0EEffect_Brutalize_CheckBattleActionId::
+; The sacrifice, step 3 (also reached from step 0 for an absent actor and by falling from
+; RunEffectSubStep_2_ShowHeroDroppedDead): for ACTION_D6 the first pass sets wSavedActorByte bit 0
+; and restarts the steps (the next pass runs for the formation partner), and the second restores
+; wBattleActor from wSavedActorSlot; then, and for every other action, wBattleSubPhase 6 with
+; wBattleResolveStep and wBattleSubStep2 0. (C1, E-0372)
+ResolveStep0EEffect_Sacrifice_End::
     ld a, [wBattleActionId]
     cp ACTION_D6
     jr nz, .set_battle_sub_phase_to_06
@@ -5434,8 +5492,10 @@ ResolveStep0EEffect_Brutalize_CheckBattleActionId::
     ld [wBattleSubStep2], a
     ret
 
-; Resolve step $0E, sub-step 6: nothing (a bare ret). (C1, E-0357)
-ResolveStep0EEffect_Return::
+; Resolve step $0E, sub-steps 6, 7 and 8: a bare ret, so nothing advances; ResolveStep0EEffect_Start
+; sets only sub-steps 1, 3, 4, 5 and 9, and no write of 6-8 was found in the routines read here.
+; (C1, E-0372)
+ResolveStep0EEffect_DoNothing::
     ret
 
 ; skips an absent actor, computes damage on the target and selects the effect by the effect flags
@@ -5447,7 +5507,7 @@ ResolveStep0EEffect_QuarterRecoil::
     dw ResolveStep0EEffect_QuarterRecoil_Start
     dw ResolveStep0EEffect_QuarterRecoil_LoseHP
     dw ResolveStep0EEffect_QuarterRecoil_DefeatActor
-    dw ResolveStep0EEffect_QuarterRecoil_ToSetBattleSubStep1
+    dw ResolveStep0EEffect_QuarterRecoil_Finish
 
 ; The quarter-recoil effect, sub-step 0: skips an absent actor; otherwise selects the effect. (C1,
 ; E-0357)
@@ -5583,7 +5643,7 @@ RunEffectSubStep_3::
     ld a, [wEffectSubStep]
     jumptable
     dw RunEffectSubStep_3_Defeat
-    dw RunEffectSubStep_3_ToBlankTargetMonsterPictureAndStep
+    dw RunEffectSubStep_3_BlankPicture
     dw RunEffectSubStep_3_ShowDefeatText
 
 ; A defeat, step 0: marks the slot $FE and defeats it. (C1, E-0357)
@@ -5598,7 +5658,7 @@ RunEffectSubStep_3_Defeat::
     ret
 
 ; A defeat, step 1: blanks the picture. (C1, E-0357)
-RunEffectSubStep_3_ToBlankTargetMonsterPictureAndStep::
+RunEffectSubStep_3_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
@@ -5627,14 +5687,17 @@ RunEffectSubStep_3_ShowDefeatText::
     ret
 
 ; The quarter-recoil effect, sub-step 3: back to resolve sub-step 1. (C1, E-0357)
-ResolveStep0EEffect_QuarterRecoil_ToSetBattleSubStep1::
+ResolveStep0EEffect_QuarterRecoil_Finish::
     call SetBattleSubStep1
     ret
 
-; Surge: marks the target done when it was asleep, paralyzed or confused, clears its status 0,
-; status 1 bits 0-1 and 6-7, status 5 bits 0-1 (the blindings) and status 8 bit 7, and when status 6
-; bit 7 was set clears it and raises AGL and DEF back to their base values if below. (C1, E-0357)
-ActionEffect_Surge_SetTargetSlotMarksTo3::
+; Far-called by ActionEffect_Surge: marks the target done (SetTargetSlotMarksTo3) when it was
+; asleep, paralyzed or confused (status 0 and $D0), clears status byte 0 and marks its level-up
+; gains bit 2; clears BSTAT1_SPELLS_SEALED, BSTAT1_BLINDED, BSTAT1_DANCE_SEALED,
+; BSTAT1_BREATH_SEALED, BSTAT5_RADIANT_BLIND, BSTAT5_SANDSTORM_BLIND and BSTAT8_EERIE_LITE; when
+; BSTAT6_STATS_LOWERED was set clears it and raises wBattleAGL and wBattleDEF to their base values
+; (GetBaseAGL, GetBaseDEF, CompareHLToBC) when below. (C1, E-0372)
+ActionEffect_Surge_CureTarget::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -5720,10 +5783,14 @@ SetTargetSlotMarksTo3::
     ret
     db $c9
 
-; DeMagic: clears most of the target's status bits (marking it done when it was asleep, confused or
-; held), keeping status 0 bits 0, 1, 5 and 6, status 1 bits 4-5 and selected bits of the rest. (C1,
-; E-0357)
-ActionEffect_DeMagic_SetTargetSlotMarksTo3::
+; Far-called by ActionEffect_DeMagic: marks the target done (SetTargetSlotMarksTo3) when it was
+; asleep or confused, or ironized (BSTAT5_IRONIZED bits), and marks its level-up gains bit 2. It
+; keeps only status 0 bits 0, 1, 5 and 6 (poison, bad poison, curse, paralysis) and
+; BSTAT1_DRAGON_FORM and BSTAT1_TRANSFORMED; clears status byte 2, BSTAT3_SHIVERING, status 5 bits
+; 2-3 and 6-7 (the BSTAT5_SIDE_STEP and BSTAT5_IRONIZED fields), BSTAT6_IMITATE, BSTAT6_STATS_RAISED
+; and BSTAT6_STATS_LOWERED (without restoring stats), BSTAT7_COUNTER, BSTAT8_MAGIC_WALL and
+; BSTAT8_EERIE_LITE. (C1, E-0372)
+ActionEffect_DeMagic_ClearTargetStatus::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -5773,7 +5840,7 @@ RunBattleSubStep::
     jumptable
     dw RunBattleSubStep_SelectEffect
     dw RunBattleSubStep_DealDamage
-    dw RunBattleSubStep_2
+    dw RunBattleSubStep_DefeatDamagedSlot
 
 ; The effect, sub-step 0: selects the effect by both effect flag bytes. (C1, E-0357)
 RunBattleSubStep_SelectEffect::
@@ -5847,8 +5914,11 @@ RunBattleSubStep_DealDamage::
     ld [wBattleActor], a
     ret
 
-; The effect, sub-step 2: the defeat with the actor as target. (C1, E-0357)
-RunBattleSubStep_2::
+; The effect, sub-step 2 (after RunBattleSubStep_DealDamage left the damaged slot at 0 HP):
+; RunBattleSubStep_DealDamage swapped wBattleActor and wBattleTarget after its message, so the slot
+; now in wBattleActor is the one that took the damage; runs RunBattleSubStep2 with it as
+; wBattleTarget, keeping the target in wLoadSlot and restoring it. (C1, E-0372)
+RunBattleSubStep_DefeatDamagedSlot::
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
     ld a, [wBattleActor]
@@ -5864,7 +5934,7 @@ RunBattleSubStep2::
     ld a, [wBattleSubStep2]
     jumptable
     dw RunBattleSubStep2_Defeat
-    dw RunBattleSubStep2_ToBlankTargetMonsterPictureAndStep
+    dw RunBattleSubStep2_BlankPicture
     dw RunBattleSubStep2_ShowDefeatText
 
 ; The effect's defeat, step 0: marks the slot $FE and defeats it. (C1, E-0357)
@@ -5879,7 +5949,7 @@ RunBattleSubStep2_Defeat::
     ret
 
 ; The effect's defeat, step 1: blanks the picture. (C1, E-0357)
-RunBattleSubStep2_ToBlankTargetMonsterPictureAndStep::
+RunBattleSubStep2_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5940,7 +6010,7 @@ RunBattleSubStep2_2::
     ld a, [wBattleSubStep2]
     jumptable
     dw RunBattleSubStep2_2_Defeat
-    dw RunBattleSubStep2_2_ToBlankTargetMonsterPictureAndStep
+    dw RunBattleSubStep2_2_BlankPicture
     dw RunBattleSubStep2_2_ShowDefeatText
 
 ; Another defeat, step 0: lowers the target's mark by 5 and defeats it. (C1, E-0357)
@@ -5957,7 +6027,7 @@ RunBattleSubStep2_2_Defeat::
     ret
 
 ; Another defeat, step 1: blanks the picture. (C1, E-0357)
-RunBattleSubStep2_2_ToBlankTargetMonsterPictureAndStep::
+RunBattleSubStep2_2_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
@@ -6034,17 +6104,17 @@ ApplyDamageModifiers::
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 GetBattleMaxMP_Bank32::
     ld hl, wBattleMaxMP
-    jr ReadSlotAIModeIndexed_Bank32_Skip
+    jr GetBattleStatWord_Bank32
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
 GetBattleHP_Bank32::
     ld hl, wBattleHP
-    jr ReadSlotAIModeIndexed_Bank32_Skip
+    jr GetBattleStatWord_Bank32
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
 GetBattleMP_Bank32::
     ld hl, wBattleMP
-    jr ReadSlotAIModeIndexed_Bank32_Skip
+    jr GetBattleStatWord_Bank32
     db $21, $1f, $d9, $18, $0a
 
 ; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
@@ -6054,8 +6124,11 @@ ReadSlotAIModeIndexed_Bank32::
     ld a, [hl]
     ret
 
-; HL = word A of the array at HL. (C1, E-0357)
-ReadSlotAIModeIndexed_Bank32_Skip::
+; The shared tail of GetBattleMaxMP_Bank32, GetBattleHP_Bank32 and GetBattleMP_Bank32 (and of two
+; unlabeled ld hl / jr loaders in the db bytes beside them): HL = a per-slot word table, A = slot:
+; returns HL = the word at HL + 2 * A (A doubled in 8 bits) and A = its low byte (deref_hl). (C1,
+; E-0372)
+GetBattleStatWord_Bank32::
     add a
     add_a_to_hl
     deref_hl

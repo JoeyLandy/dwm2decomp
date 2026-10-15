@@ -198,7 +198,7 @@ TravelerEvents_Thief_ShowHeroLostG::
 TravelerEvents_CasinoShip::
     ld a, [wScriptStep]
     jumptable
-    dw TravelerEvents_CasinoShip_ShowWelcomeAboardTheCasino
+    dw TravelerEvents_CasinoShip_Welcome
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_CasinoShip_ShowStopTheReelsWith
     dw TravelerEvents_Thief_WaitMessage
@@ -587,7 +587,7 @@ TravelerEvents_CasinoShip_ShowStopTheReelsWith::
 
 ; Casino ship, step 0: 'Welcome aboard the casino ship! Have a spin on the slots for 100G!' ($2E,
 ; yes/no); next step. (C1, E-0357)
-TravelerEvents_CasinoShip_ShowWelcomeAboardTheCasino::
+TravelerEvents_CasinoShip_Welcome::
     ld hl, wScriptStep
     inc [hl]
     ld hl, $002e ; '*: Welcome aboard the casino ship!'
@@ -1265,12 +1265,12 @@ TravelerEvents_CardGame_ShowIPickedOhSame_Data2::
 TravelerEvents_MedicineMaster::
     ld a, [wScriptStep]
     jumptable
-    dw TravelerEvents_MedicineMaster_ShowIllGiveYouSpecial
+    dw TravelerEvents_MedicineMaster_Offer
     dw TravelerEvents_Thief_WaitMessage
-    dw TravelerEvents_MedicineMaster_ShowMyEyesDidntMislead
+    dw TravelerEvents_MedicineMaster_Answer
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_Thief_StartBattle
-    dw TravelerEvents_MedicineMaster_ShowYouveWonAsPromised
+    dw TravelerEvents_MedicineMaster_AfterBattle
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_MedicineMaster_RaiseStat
     dw TravelerEvents_Thief_WaitMessage
@@ -1282,7 +1282,7 @@ TravelerEvents_MedicineMaster::
 
 ; Medicine master, step 0: 'I'll give you special medicine if you manage to defeat me.' ($24); next
 ; step. (C1, E-0357)
-TravelerEvents_MedicineMaster_ShowIllGiveYouSpecial::
+TravelerEvents_MedicineMaster_Offer::
     ld hl, wScriptStep
     inc [hl]
     ld hl, MSG_KEEP_OPEN | $0024 ; '*: I'll give you special medicine'
@@ -1291,7 +1291,7 @@ TravelerEvents_MedicineMaster_ShowIllGiveYouSpecial::
 
 ; Medicine master, step 2: no gives message $50 ('I thought you were dedicated...') and step $0C;
 ; yes gives message $51 ('My eyes didn't mislead me. Ready?') and the next step. (C1, E-0357)
-TravelerEvents_MedicineMaster_ShowMyEyesDidntMislead::
+TravelerEvents_MedicineMaster_Answer::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
@@ -1311,7 +1311,7 @@ TravelerEvents_MedicineMaster_ShowMyEyesDidntMislead::
 ; Medicine master, step 5: after the battle, a win gives 'You've won. As promised, let me give you
 ; some of my medicine.' ($25); a loss gives message $53 ('I hope you'll put up more of a fight next
 ; time...'). (C1, E-0357)
-TravelerEvents_MedicineMaster_ShowYouveWonAsPromised::
+TravelerEvents_MedicineMaster_AfterBattle::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
@@ -1744,7 +1744,7 @@ TravelerEvents_RewardBattle_GiveMeat::
 TravelerEvents_TravelingMaster::
     ld a, [wScriptStep]
     jumptable
-    dw TravelerEvents_TravelingMaster_ShowImATravelingMaster
+    dw TravelerEvents_TravelingMaster_Greet
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_TravelingMaster_ShowOhYoureReadyAre
     dw TravelerEvents_Thief_WaitMessage
@@ -1757,7 +1757,7 @@ TravelerEvents_TravelingMaster::
 
 ; Traveling master, step 0: 'I'm a traveling master. I'm training my monsters.' ($10); next step.
 ; (C1, E-0357)
-TravelerEvents_TravelingMaster_ShowImATravelingMaster::
+TravelerEvents_TravelingMaster_Greet::
     ld hl, wScriptStep
     inc [hl]
     ld hl, MSG_KEEP_OPEN | $0010 ; '*: I'm a traveling master. I'm'
@@ -1807,12 +1807,12 @@ TravelerEvents_TravelingMaster_ShowUhohILostI::
 TravelerEvents_WanderingMaster::
     ld a, [wScriptStep]
     jumptable
-    dw TravelerEvents_WanderingMaster_ShowImAWanderingMaster
+    dw TravelerEvents_WanderingMaster_Greet
     dw TravelerEvents_Thief_WaitMessage
-    dw TravelerEvents_WanderingMaster_ShowGoodAnswerLetsBattle
+    dw TravelerEvents_WanderingMaster_Answer
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_Thief_StartBattle
-    dw TravelerEvents_WanderingMaster_ShowUrghTougherThanMe
+    dw TravelerEvents_WanderingMaster_AfterBattle
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_TravelingMaster_Reward
     dw TravelerEvents_Thief_WaitMessage
@@ -1820,7 +1820,7 @@ TravelerEvents_WanderingMaster::
 
 ; Wandering master, step 0: 'I'm a wandering master. I've been on the road for training.' ($0B);
 ; next step. (C1, E-0357)
-TravelerEvents_WanderingMaster_ShowImAWanderingMaster::
+TravelerEvents_WanderingMaster_Greet::
     ld hl, wScriptStep
     inc [hl]
     ld hl, MSG_KEEP_OPEN | $000b ; '*: I'm a wandering master. I've'
@@ -1829,7 +1829,7 @@ TravelerEvents_WanderingMaster_ShowImAWanderingMaster::
 
 ; Wandering master, step 2: no gives message $4C ('What? Little chicken!...') and step 8; yes gives
 ; message $4D ('Good answer! Let's battle!') and the next step. (C1, E-0357)
-TravelerEvents_WanderingMaster_ShowGoodAnswerLetsBattle::
+TravelerEvents_WanderingMaster_Answer::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
@@ -1848,7 +1848,7 @@ TravelerEvents_WanderingMaster_ShowGoodAnswerLetsBattle::
 
 ; Wandering master, step 5: after the battle, a win gives 'Urgh. Tougher than me...' ($0C); a loss
 ; gives 'Hahahah! I overestimated you!' ($0E). (C1, E-0357)
-TravelerEvents_WanderingMaster_ShowUrghTougherThanMe::
+TravelerEvents_WanderingMaster_AfterBattle::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
@@ -1937,7 +1937,7 @@ TravelerEvents_PriceyMerchant::
     jumptable
     dw TravelerEvents_PriceyMerchant_ShowYJustGWell
     dw TravelerEvents_Thief_WaitMessage
-    dw TravelerEvents_PriceyMerchant_ShowHehehehThanksSeeYou
+    dw TravelerEvents_PriceyMerchant_Sell
     dw TravelerEvents_Thief_WaitMessage
     dw ScriptStepBlinkSpritesThenEnd
 
@@ -1970,9 +1970,12 @@ TravelerEvents_PriceyMerchant_ShowYJustGWell::
     call WritePackedBCDNoLeadingZeros
     ret
 
-; Pricey merchant, step 2: yes gives the item and takes the price ('Heheheh, thanks! See you
-; again!', $09); no gives 'Tch, tightwad... You'll regret this.' ($0A). (C1, E-0357)
-TravelerEvents_PriceyMerchant_ShowHehehehThanksSeeYou::
+; Pricey merchant, step 2: on yes (wTextYesNoResult 0) adds item wScriptParam0 to the inventory
+; (AppendItemStepPtrLoToInventory) and takes five times its price (ReadBank16TableWord times 5,
+; SubtractGoldFloorZero, so gold stops at 0; no check that the player can pay was found), saying
+; 'Heheheh, thanks! See you again!' ($09); on no says 'Tch, tightwad... You'll regret this.' ($0A).
+; Next step either way. (C1, E-0372)
+TravelerEvents_PriceyMerchant_Sell::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wTextYesNoResult]
@@ -2923,7 +2926,7 @@ SceneChestBattle_StartBattle_Data::
 ; SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable by hMapId
 ; (SceneChestBattle_StartMapMessage); next step. (C1, E-0371)
 SceneChestBattle_ShowPreBattleMessage::
-    ld de, SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable
+    ld de, ChestBattlePreBattleMessages
     call SceneChestBattle_StartMapMessage
     ret
 
@@ -2948,11 +2951,17 @@ SceneChestBattle_StartMapMessage::
     inc [hl]
     ret
 
+; 27 message words, one per map $C8-$E2 (index hMapId - $C8; $0000 = none), that
+; SceneChestBattle_ShowPreBattleMessage starts through SceneChestBattle_StartMapMessage
+; (StartMessageHL_B73b) before the chest battle: 'This is the second floor-' to the fifth, and a
+; closing line, for each of three five-map groups. SceneChestBattle_ShowPostBattleMessage_Data, the
+; after-battle words for the same maps, follows directly. (C1, E-0372); E-0214 (C1:
 ; SceneChestBattle_ShowPreBattleMessage passes $530C to SceneChestBattle_StartMapMessage, which
 ; reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words,
-; one per map from $C8 (id = map number); the table ends at KeyBossBeaten2 (E-0214, C1)
+; one per map from $C8 (id = map number); the table ends at KeyBossBeaten2). (named from its
+; reading, E-0372; was SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable)
 ; record: message word ($0000 = none)
-SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable::
+ChestBattlePreBattleMessages::
     dw $0000 ; id 200 none
     dw $0000 ; id 201 none
     dw $0c04 ; id 202 '*: This is the second floor-'

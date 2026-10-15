@@ -517,7 +517,7 @@ GameMode6_Update_TakePrize_DrawMonsterEggChoice::
     ld a, $6c
     call QueueSoundEffect
     call GameMode6_Update_ShowMonsterEg
-    ld de, GameMode6_Update_TakePrize_DrawMonsterEggChoice_TileRect
+    ld de, GameMode6_MonsterEggChoiceTileRect
     ld hl, wWindowTileBuffer + $10e
     lb bc, $0a, $05
     call CopyRectTo20ByteRowsJp_Bank24
@@ -943,7 +943,7 @@ GameMode6_Update_PageList_Cancel::
     call CopyRectTo20ByteRowsJp_Bank24
 
 .skip:
-    ld de, GameMode6_Update_TakePrize_DrawMonsterEggChoice_TileRect
+    ld de, GameMode6_MonsterEggChoiceTileRect
     ld hl, wWindowTileBuffer + $10e
     lb bc, $0a, $05
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1039,7 +1039,7 @@ GameMode6_Update_ChooseMonster_InfoOrOK::
 ; Choosing the monster to switch, step 11: redraws the choice box and goes back three steps to the
 ; list. (C1, E-0357)
 GameMode6_Update_ChooseMonster_RedrawChoiceBox::
-    ld de, GameMode6_Update_ChooseMonster_RedrawChoiceBox_TileRect
+    ld de, GameMode6_ChooseMonsterChoiceBoxTileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1374,7 +1374,7 @@ GameMode6_Update_ChooseEgg_InfoOrOK::
 ; Choosing the egg to switch, step 9: redraws the Monster / Egg box with Egg marked and goes back
 ; four steps to the list cursor. (C1, E-0357)
 GameMode6_Update_ChooseEgg_RedrawChoiceBox::
-    ld de, GameMode6_Update_ChooseEgg_RedrawChoiceBox_TileRect
+    ld de, GameMode6_ChooseEggChoiceBoxTileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1730,7 +1730,7 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     call CopyRectTo20ByteRowsJp_Bank24
 
 .skip2:
-    ld de, GameMode6_Update_SwitchMonster_ShowInfoOKYesN_TileRect
+    ld de, GameMode6_MonsterListBoxTileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1776,9 +1776,8 @@ GameMode6_Update_SwitchMonster_DrawNames::
 
 ; Back to the monster list, steps 3, 4 and 6: far-calls LinkBattleSetupMenu, which with wScreenState
 ; = $0F runs EggServiceMenu_Bank1B_ListAvailableRecords2 at the same wScreenStep:
-; LinkBattleSetupMenu_DrawCursorPanel (3),
-; EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780 (4) and
-; EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN (6). (C1, E-0370)
+; LinkBattleSetupMenu_DrawCursorPanel (3), LinkBattleSetupMenu_DrawCursorName (4) and
+; EggServiceMenu_ShowInfoOKChoice (6). (C1, E-0370)
 GameMode6_Update_SwitchMonster_RunListStep::
     farcall LinkBattleSetupMenu
     ret
@@ -1843,7 +1842,7 @@ GameMode6_Update_ShowResult_WaitForVRAMAccess::
     ld a, $b8
     ld [hli], a
     ei
-    ld de, GameMode6_Update_ShowResult_WaitForVRAMAccess_Data2
+    ld de, GameMode6_ResultBannerPalette
     ld b, $08
 
 .loop:
@@ -1855,7 +1854,7 @@ GameMode6_Update_ShowResult_WaitForVRAMAccess::
     inc de
     dec b
     jr nz, .loop
-    ld de, GameMode6_Update_ShowResult_WaitForVRAMAccess_Data1
+    ld de, GameMode6_ResultBannerAttrs
     ld hl, wWindowAttrBuffer + $7b
     ld b, $1c
 
@@ -2524,7 +2523,7 @@ GameMode6_Init_DrawPictureRow::
     dec a
     ld c, $78
     call Multiply8
-    ld de, GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24_TileRect
+    ld de, GameMode6_PictureRowTileRects
     add hl, de
     ld a, h
     ld [wArg1], a
@@ -3461,7 +3460,10 @@ GameMode6_Update_ShowResult_Data::
     db $c3, $c3, $c3, $c3, $c3, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c3, $c3
     db $c3, $c3
 
-GameMode6_Update_ShowResult_WaitForVRAMAccess_Data1::
+; $1C bytes of $07, CGB attribute bytes selecting palette 7.
+; GameMode6_Update_ShowResult_WaitForVRAMAccess copies them to wWindowAttrBuffer + $7B on the GBC
+; after loading background palette 7. (C1, E-0372)
+GameMode6_ResultBannerAttrs::
     ds $1c, $07
 
 GameMode6_Update_PageList_Cancel_TileRect::
@@ -3495,6 +3497,8 @@ GameMode6_Update_TakePrize_RedrawBoxes_TileRect::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 GameMode6_Update_TakePrize_AskSwitchWhich_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $b7 ; id 1
@@ -3510,10 +3514,9 @@ GameMode6_Update_TakePrize_DrawYesNo_TileRect::
     db $b6, $c3, $70, $71, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
-; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
-GameMode6_Update_ChooseMonster_RedrawChoiceBox_TileRect::
+TileRect_24::
+GameMode6_ChooseMonsterChoiceBoxTileRect::
     db $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
     db $b2, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3521,14 +3524,16 @@ GameMode6_Update_ChooseMonster_RedrawChoiceBox_TileRect::
     db $b5, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 10 x 5 tiles, one row per line
-GameMode6_Update_TakePrize_DrawMonsterEggChoice_TileRect::
+TileRect_24_2::
+GameMode6_MonsterEggChoiceTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $7d, $7f, $7f, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-GameMode6_Update_ChooseEgg_RedrawChoiceBox_TileRect::
+TileRect_24_3::
+GameMode6_ChooseEggChoiceBoxTileRect::
     db $b5, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3542,7 +3547,8 @@ GameMode6_Update_ChooseMonster_ShowCursorMark_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
 ; record: 8 x 11 tiles, one row per line
-GameMode6_Update_SwitchMonster_ShowInfoOKYesN_TileRect::
+TileRect_24_4::
+GameMode6_MonsterListBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3555,6 +3561,8 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN_TileRect::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 9 tiles, one row per line
 GameMode6_Update_ChooseEgg_DrawListBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
@@ -3567,8 +3575,6 @@ GameMode6_Update_ChooseEgg_DrawListBox_TileRect::
     db $b6, $c3, $c7, $c8, $c9, $ca, $cb, $ea, $eb, $ec, $ed, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
-; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
 GameMode6_Update_ChooseEgg_ShowInfoOKYesN_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
@@ -3711,13 +3717,12 @@ GameMode6_Update_TakePrize_ChoiceCursor_Hide::
 GameMode6_Update_TakePrize_ChoiceCursor_Mark::
     ld b, $bc
 
-; Writes tile B at the two-choice cursor's place
-; (GameMode6_Update_TakePrize_ChoiceCursor_DrawTile_Data), stepping back on a scroll wrap, waiting
-; for VRAM access. (C1, E-0357)
+; Writes tile B at the two-choice cursor's place (GameMode6_TwoChoiceCursorOffsets), stepping back
+; on a scroll wrap, waiting for VRAM access. (C1, E-0357)
 GameMode6_Update_TakePrize_ChoiceCursor_DrawTile::
     ld a, [wTwoChoiceCursor]
     add a
-    ld hl, GameMode6_Update_TakePrize_ChoiceCursor_DrawTile_Data
+    ld hl, GameMode6_TwoChoiceCursorOffsets
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3754,8 +3759,11 @@ BGMapAddressAtScroll_Bank24_3::
     add_a_to_hl
     ret
 
-; data read by GameMode6_Update_TakePrize_ChoiceCursor_DrawTile (4 bytes) (E-0347)
-GameMode6_Update_TakePrize_ChoiceCursor_DrawTile_Data::
+; Two words, BG map offsets from the scroll origin for the two-choice cursor: $012B (row 9, column
+; 11) for wTwoChoiceCursor 0 and $016B (row 11, column 11) for 1.
+; GameMode6_Update_TakePrize_ChoiceCursor_DrawTile writes tile B there (the cursor $BB, the blank
+; $C3 or the chosen mark $BC). (C1, E-0372)
+GameMode6_TwoChoiceCursorOffsets::
     db $2b, $01, $6b, $01
 
 ; ld de, this bank's string table / BeginStringDisplay (E-0353)
@@ -5587,7 +5595,11 @@ PriestMenu_PayForService_PickService_Data::
 PriestMenu_PayForService_DrawYesNo_Data::
     db $f1, $c3, $19, $c4, $41, $c4
 
-GameMode6_Update_ShowResult_WaitForVRAMAccess_Data2::
+; $40 bytes: $38 zero bytes, then the colours $001F, $7FFF, $7E00 and $0000.
+; GameMode6_Update_ShowResult_WaitForVRAMAccess writes only the first 8 bytes (all zero) to
+; background palette 7 through rBGPI = $B8 (auto-increment); no reader of the rest was found. (C1,
+; E-0372)
+GameMode6_ResultBannerPalette::
     ds $38, $00
     db $1f, $00, $ff, $7f, $00, $7e, $00, $00
 

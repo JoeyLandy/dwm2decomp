@@ -509,7 +509,7 @@ BreedMenu_ChooseParents_DrawFamilySexLevel::
     ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank15
-    ld de, BreedMenu_ChooseParents_DrawFamilySexLevel_TileRect
+    ld de, BreedMenu_FamilySexLevelTileRect
     ld hl, wWindowTileBuffer + $bc
     lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank15
@@ -1075,7 +1075,7 @@ BreedMenu_ChooseParents_ComputeChild::
     ld a, [wArg7]
     ld [wArg2], a
     ld [wSpeciesIdHi], a
-    ld de, NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data
+    ld de, BreedShowNameSpeciesBits
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -1227,7 +1227,7 @@ BreedMenu_ChooseParents_DrawPairBox::
     ld [wWindowTileBuffer + $93], a
     ld [wWindowTileBuffer + $a7], a
     call DrawGoldBoxAndStep_Bank15
-    ld de, BreedMenu_ChooseParents_DrawFamilySexLevel_TileRect
+    ld de, BreedMenu_FamilySexLevelTileRect
     ld hl, wWindowTileBuffer + $bc
     lb bc, $0c, $01
     call CopyRectTo20ByteRows_Bank15
@@ -1489,7 +1489,7 @@ BreedMenu_ChooseParents_CheckChildIsNew::
     ld [wArg1], a
     ld a, [hl]
     ld [wArg2], a
-    ld hl, NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data
+    ld hl, BreedShowNameSpeciesBits
     ld a, l
     ld [wArg3], a
     ld a, h
@@ -1775,7 +1775,7 @@ BreedMenu_ChooseParents_LinkYesNo::
 ; Choosing parents, step 48: draws the 6 x 5 box (in a link session) and reloads the player's and
 ; followers' sprites. (C1, E-0357)
 BreedMenu_ChooseParents_DrawLinkBoxAndSprites::
-    ld de, BreedMenu_ChooseParents_DrawLinkBoxAndSprites_TileRect
+    ld de, BreedMenu_ChooseParents_CloseBoxTileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank15
@@ -4366,7 +4366,7 @@ BreedMenu_RedrawListScreen_LoadTileset::
     ld b, $47
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, BreedMenu_RedrawListScreen_LoadTileset_BGPaletteBufferData
+    ld de, BreedMenuPalettes
     ld b, $47
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -4642,7 +4642,7 @@ BreedMenu_ShowSelectedRecord::
     dw BreedMenu_ShowSelectedRecord_BlankTiles
     dw BreedMenu_ShowSelectedRecord_DrawPairNames
     dw BreedMenu_CopyBoxGlyphTiles
-    dw BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames
+    dw BreedMenu_DrawListPageNames
     dw BreedMenu_ShowSelectedRecord_DrawRecordName
     dw BreedMenu_ChooseParents_ComputeChild
     dw BreedMenu_ShowSelectedRecord_DrawIcons
@@ -4686,7 +4686,7 @@ BreedMenu_ShowSelectedRecord_DrawIcons::
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank15
     pop af
-    call CopyRectToWindowTileBufferRow13Col12AndIncScreenStep
+    call BreedMenu_DrawYesNoBox
     ret
 
 ; Showing the chosen record, step 1: notes the chosen record's sex, lists the possible mates and
@@ -4711,11 +4711,11 @@ BreedMenu_ListMonsters::
     dw BreedMenu_RedrawListScreen_LoadGlyphsAndPair
     dw BreedMenu_ListMonsters_ListNonEggs
     dw BreedMenu_ShowSelectedRecord_BlankTiles
-    dw BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames
+    dw BreedMenu_DrawListPageNames
     dw BreedMenu_ChooseParents_DrawFamilySexLevel
     dw BreedMenu_ChooseParents_BlankNameTiles
     dw BreedMenu_ChooseParents_DrawNameAndSpecies
-    dw CopyRectToWindowTileBufferRow13Col12AndIncScreenStep
+    dw BreedMenu_DrawYesNoBox
     dw BreedMenu_RedrawListScreen_RestoreSprites
 
 ; Listing monsters, step 2: lists the farm monsters that are not eggs, then the page (below). (C1,
@@ -4768,17 +4768,22 @@ BreedMenu_ShowSelectedRecord_BlankTiles::
     ld [wScreenStep], a
     ret
 
-; Showing the chosen record, step 6: draws the page's record names. (C1, E-0357)
-BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames::
+; Far-calls DrawRecordListPageNames, which draws the names of the visible records of page
+; wListPageIndex and adds 1 to wScreenStep. Step 6 of BreedMenu_ShowSelectedRecord and step 4 of
+; BreedMenu_ListMonsters. (C1, E-0372)
+BreedMenu_DrawListPageNames::
     farcall DrawRecordListPageNames
     ret
 
+; Copies the 8 x 5 yes/no box BreedMenu_ChooseParents_AskYesNo_TileRect into wWindowTileBuffer +
+; $110 (CopyRectTo20ByteRows_Bank15) and adds 1 to wScreenStep; it does not redraw the screen. Step
+; 8 of BreedMenu_ListMonsters and the end of BreedMenu_ShowSelectedRecord_DrawIcons (step 9 of
+; BreedMenu_ShowSelectedRecord). (C1, E-0372)
 ; copies the 8 x 5 rectangle BreedMenu_ChooseParents_AskYesNo_TileRect into wWindowTileBuffer + $110
 ; (CopyRectTo20ByteRows_Bank15), then wScreenStep += 1 (E-0119) (E-0340: the address in its name
-; read as its RAM name; was CopyRectToWindowTileBufferRow13Col12AndIncScreenStep) (E-0344: the
-; address in its name dropped or read as the label there; was
-; CopyRectToWindowTileBufferRow13Col12AndIncScreenStep)
-CopyRectToWindowTileBufferRow13Col12AndIncScreenStep::
+; read as its RAM name; was BreedMenu_DrawYesNoBox) (E-0344: the address in its name dropped or read
+; as the label there; was BreedMenu_DrawYesNoBox)
+BreedMenu_DrawYesNoBox::
     ld de, BreedMenu_ChooseParents_AskYesNo_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
@@ -6969,7 +6974,8 @@ BreedMenu_ChooseParents_ClearList_TileRect::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-BreedMenu_ChooseParents_DrawFamilySexLevel_TileRect::
+TileRect_15::
+BreedMenu_FamilySexLevelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7003,7 +7009,14 @@ BreedMenu_ChooseParents_ClearBoxes_TileRect_2::
     db $b6, $ff, $77, $78, $70, $71, $72, $73, $74, $75, $76, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data::
+; A bit field of 48 bytes (384 bits, one per species id, bit $80 first in each byte); 237 bits are
+; set, all for ids below 348. TestBitInFieldAtArg3 reads it with the species id in wArg1/wArg2. In
+; BreedMenu_ChooseParents_ComputeChild a set bit shows the child's species name and family icon
+; instead of '?????????'; in BreedMenu_ChooseParents_CheckChildIsNew and
+; NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg a set bit gives answer 0 and the '<species>
+; +<plus>' text. The bank-$0D reader passes this bank-$15 address to the far-called
+; TestBitInFieldAtArg3, which is in bank $15. (C1, E-0372)
+BreedShowNameSpeciesBits::
     db $ff, $ff, $dc, $00, $0f, $ff, $ff, $f1, $01, $ff, $ff, $3f, $36, $3f, $ff, $e2
     db $88, $07, $ff, $ff, $c3, $00, $ff, $ff, $fc, $40, $1f, $ff, $fe, $f8, $83, $ff
     db $fe, $63, $00, $7f, $fb, $f9, $f9, $0f, $ff, $ff, $c4, $30, $00, $00, $00, $00
@@ -7017,7 +7030,8 @@ BreedMenu_ChooseParents_RedrawPair_TileRect::
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 6 x 5 tiles, one row per line
-BreedMenu_ChooseParents_DrawLinkBoxAndSprites_TileRect::
+TileRect_15_2::
+BreedMenu_ChooseParents_CloseBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b4, $b4, $b4, $b4, $b4, $b5 ; id 2

@@ -1176,7 +1176,7 @@ KeyWorldLevelTable::
 KeyWorldLayout_Start::
     xor a
     ld [wKeyWorldFlags], a
-    call ClearKeyWorldActiveWhenKeyWorldKeyMatchesKeyWorldSlot
+    call KeyWorldLayout_ClearActiveIfSameKey
     xor a
     ld hl, wVisitedScreens
     ld b, $08
@@ -1349,9 +1349,12 @@ KeyWorldLayout_Start_Data::
     db $00, $0f, $08, $0f, $08, $0f, $10, $1f, $10, $1f, $10, $1f, $10, $1f, $10, $1f
     db $10, $1f, $10, $1f
 
+; Called by KeyWorldLayout_Start: when wKeyWorldActive is non-zero and wKeyWorldKey has bit 7 set
+; with its low 7 bits equal to wKeyWorldSlot, clears wKeyWorldActive; otherwise returns with it
+; unchanged. (C1, E-0372)
 ; when wKeyWorldActive is set and wKeyWorldKey has bit 7 with low bits equal to wKeyWorldSlot,
 ; clears wKeyWorldActive (E-0122)
-ClearKeyWorldActiveWhenKeyWorldKeyMatchesKeyWorldSlot::
+KeyWorldLayout_ClearActiveIfSameKey::
     ld a, [wKeyWorldActive]
     or a
     ret z

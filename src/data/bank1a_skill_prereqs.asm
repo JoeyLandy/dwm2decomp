@@ -3296,11 +3296,11 @@ CopyRectRecordToScreenBuffer_13::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBufferAndPlaySound6C_TileRect,
-; then QueueSoundEffect $6C (E-0115) (E-0344: the address in its name dropped or read as the label
-; there; was CopyRectRecordToScreenBufferAndPlaySound6C)
+; CopyRecordRectToScreenBuffer_Bank1A with HL = BattleEnd_AskToJoin_ListBoxTileRect, then
+; QueueSoundEffect $6C (E-0115) (E-0344: the address in its name dropped or read as the label there;
+; was CopyRectRecordToScreenBufferAndPlaySound6C)
 CopyRectRecordToScreenBufferAndPlaySound6C::
-    ld hl, CopyRectRecordToScreenBufferAndPlaySound6C_TileRect
+    ld hl, BattleEnd_AskToJoin_ListBoxTileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6c
     call QueueSoundEffect
@@ -3566,7 +3566,8 @@ CopyRectRecordToScreenBuffer_13_TileRect::
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $0000 (row 0, column 0); 8 x 11 tiles
-CopyRectRecordToScreenBufferAndPlaySound6C_TileRect::
+TileRect_1A::
+BattleEnd_AskToJoin_ListBoxTileRect::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $0b ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0

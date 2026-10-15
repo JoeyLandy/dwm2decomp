@@ -799,7 +799,7 @@ CheckMapInteractionOnA::
 CheckMapInteractionOnA_KeyWorldFloor::
     cp $84
     jr nz, .cp_83
-    ld hl, CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_3
+    ld hl, MapType84Interactions
     ld a, $01
     ret
 
@@ -814,14 +814,14 @@ CheckMapInteractionOnA_KeyWorldFloor::
     ld a, [hl]
     cp $02
     jr nz, .cp_03
-    ld hl, CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions
+    ld hl, KeyWorldFloorKind2Interactions
     ld a, $01
     ret
 
 .cp_03:
     cp $03
     jr nz, .return_0
-    ld hl, CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_2
+    ld hl, KeyWorldFloorKind3Interactions
     ld a, $01
     ret
 
@@ -3297,11 +3297,16 @@ MapInteractionsE0::
     db $b7, $07 ; talk event group, index
     db $ff ; end
 
+; The interaction list CheckMapInteractionOnA_KeyWorldFloor returns for map type $83 when the
+; floor's wKeyWorldFloorInfo + $1 byte is 2: nine 10-byte entries (kind, map, screen X, screen Y,
+; player X, player Y; story flag $FFFF; talk event group, index) ending with $FF, all on map 0, with
+; talk event index 9 (DispatchTalkEvent_KeyWorld) and groups 2, 4 and 6. (C1, E-0372); E-0170 (C1:
 ; CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when the floor info byte
-; is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF (E-0170, C1)
+; is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF). (named from its
+; reading, E-0372; was CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
 ; player Y; story flag ($FFFF = none; set = skip); talk event group, index
-CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions::
+KeyWorldFloorKind2Interactions::
     db $05, $00, $00, $00, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
     dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $06, $09 ; talk event group, index
@@ -3331,9 +3336,13 @@ CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions::
     db $02, $09 ; talk event group, index
     db $ff ; end
 
-; CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when that byte is 3; the
-; same 10-byte entries as MapInteractionTable's lists, ending with $FF (E-0170, C1)
-CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_2::
+; The list for map type $83 when the floor's wKeyWorldFloorInfo + $1 byte is 3: four 10-byte entries
+; in the MapInteractionTable layout, ending with $FF, all kind 5 on map 0, with talk event index 9
+; and groups 4 and 5. (C1, E-0372); E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this
+; list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's
+; lists, ending with $FF). (named from its reading, E-0372; was
+; CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_2)
+KeyWorldFloorKind3Interactions::
     db $05, $00, $00, $00, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
     dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $04, $09 ; talk event group, index
@@ -3348,9 +3357,12 @@ CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_2::
     db $04, $09 ; talk event group, index
     db $ff ; end
 
-; CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $84; the same 10-byte entries
-; as MapInteractionTable's lists, ending with $FF (E-0170, C1)
-CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_3::
+; The list CheckMapInteractionOnA_KeyWorldFloor returns for map type $84: one 10-byte entry (kind 3,
+; map 0, screen (0, 0), player ($30, $40); talk event group 7, index 9) and the $FF end. (C1,
+; E-0372); E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $84; the
+; same 10-byte entries as MapInteractionTable's lists, ending with $FF). (named from its reading,
+; E-0372; was CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_3)
+MapType84Interactions::
     db $03, $00, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
     dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $07, $09 ; talk event group, index
