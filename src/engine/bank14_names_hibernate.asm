@@ -4,6 +4,15 @@
 SECTION "Bank 14", ROMX[$4000], BANK[$14]
     db $14
 
+; Script command $EC (SCRIPT_HIBERNATE_CLOSE, through ScriptCommandEC in bank $10), run after
+; HibernateMenu: by wScreenList it restores the saved screen (CloseHibernateMenu_RestoreScreen),
+; reloads the field glyph tiles a few per call (CloseHibernateMenu_RestoreGlyphs, which clears the
+; menu state, sets wScriptCommandType = 0 and wScriptStartRequest = $80), blanks the name tiles and
+; resets the text window (CloseHibernateMenu_BlankNameTiles), then redraws the record names, clears
+; wMessageMode, wScreenList and $6F bytes from wScreenState and resumes the script
+; (CloseHibernateMenu_RedrawNamesAndFinish). Each step advances wScreenList. Script_ComeSeeMeIf
+; (bank $1D) runs the command twice: steps 0-1 end by resuming the script for the parting message
+; 'Come see me if you', and the second command runs steps 2-3. (C1, E-0377)
 ; implements script command type EC (SCRIPT_HIBERNATE_CLOSE): ends the hibernation session and
 ; clears wMessageMode; reached through ScriptCommandEC in bank $10 (E-0038, E-0244)
 CloseHibernateMenu::
@@ -116,6 +125,14 @@ CloseHibernateMenu_RedrawNamesAndFinish::
     ld [wScriptStartRequest], a
     ret
 
+; Script command $EB (SCRIPT_HIBERNATE, through ScriptCommandEB in bank $10), the hibernation menu
+; of the Great Log talk GreatLogTalkEvents_Hibernation: dispatches on wScreenState to
+; HibernateMenu_Init (0), HibernateMenu_SetupPartyList (1), HibernateMenu_OptionCursor (2),
+; HibernateMenu_DoOption (3), HibernateMenu_ChooseToHibernate (4), HibernateMenu_ChooseRecords (5),
+; HibernateMenu_ChooseWithStats (6), HibernateMenu_ReleaseSleeper (7) and
+; HibernateMenu_RunSwapScreen (8-11). CloseHibernateMenu (command $EC) ends it. The states hand
+; control back to the script between commands: Script_Hibernate (bank $1D) issues the command again
+; and branches on the chosen option with script_choice_jump. (C1, E-0377)
 ; implements script command type EB (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will
 ; hibernate?', 'Who should I wake up?' (mode 4, bank $1D strings); reached through ScriptCommandEB
 ; in bank $10 (E-0038, E-0244)
@@ -129,14 +146,14 @@ HibernateMenu::
     dw HibernateMenu_ChooseToHibernate
     dw HibernateMenu_ChooseRecords
     dw HibernateMenu_ChooseWithStats
-    dw HibernateMenu_IndexListEntry
+    dw HibernateMenu_ReleaseSleeper
     dw HibernateMenu_RunSwapScreen
     dw HibernateMenu_RunSwapScreen
     dw HibernateMenu_RunSwapScreen
     dw HibernateMenu_RunSwapScreen
 
 ; Hibernation menu, state 0: clears the menu state, saves the screen to the window buffer, sets
-; message mode 4 and sprite hide tile $70, and lets the script greet. (C1, E-0357)
+; message mode 4 and sprite hide tile $70, and lets the script greet. (C2, E-0357; probed E-0377)
 HibernateMenu_Init::
     ld hl, wScreenState
     ld bc, $006f
@@ -174,7 +191,10 @@ HibernateMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
-; by wScreenStep: the tile map, the glyph list and ListPartyRecordsWithState2ToListEntries (E-0293)
+; Hibernation menu, state 1 (HibernateMenu, wScreenState): dispatches on wScreenStep to
+; HibernateMenu_SetupPartyList_LoadTileMap (0), _CopyGlyphs (1), _ListParty (2) and _DrawOptions
+; (3); the last step resets wScreenStep and moves on to the option cursor (state 2). (C1, E-0377)
+; by wScreenStep: the tile map, the glyph list and ListPartyRecordsWithState2ToListEntries
 HibernateMenu_SetupPartyList::
     ld a, [wScreenStep]
     jumptable
@@ -553,6 +573,12 @@ HibernateMenu_DoOption::
     ld [wScriptStartRequest], a
     ret
 
+; Lists the farm monsters that are not eggs (ListRecordsState1NotEggs). With none (wListCount 0)
+; sets wTwoChoiceCursor = 1, wScreenState = 2 and clears wScreenStep and wScreenSubStep; otherwise
+; sets wTwoChoiceCursor = 0 and adds 3 to wScreenState. Both paths clear wScriptCommandType and
+; request script $80. Nothing in src/ names it or jumps to it; run from HibernateMenu state 3 it
+; would lead to state 6 (HibernateMenu_ChooseWithStats), the way HibernateMenu_DoOption_ViewSleepers
+; adds 4. (C1, E-0377)
 ; lists the records; with none sets wTwoChoiceCursor = 1 and wScreenState = 2, otherwise
 ; wScreenState += 3; then requests script $80 (the next entry does the same with
 ; CountFlaggedSRAMRecords) (E-0127)
@@ -618,8 +644,16 @@ HibernateMenu_DoOption_ViewSleepers::
     ld [wScriptStartRequest], a
     ret
 
+; HibernateMenu state 5, reached from option 1 (wake) of HibernateMenu_DoOption; dispatches on
+; wScreenStep (72 steps). Steps 0-8 list the sleepers with the paged cursor ('Who should I wake
+; up?'), 16-17 ask yes/no ('Wake this monster up?'), and 18-19 wake the chosen sleeper into a free
+; farm record (HibernateMenu_ChooseRecords_FindSleeper, _UnpackSleeper). When the farm has no room
+; HibernateMenu_DoOption starts it at step $1B: a yes/no, then the farm list (29-37), a sleeper
+; (51-59) and the swap (63-64, _PackForSwap and _StorePackedRecord). The remaining steps redraw the
+; screen and return to the option cursor (state 2) through HibernateMenu_ChooseRecords_BackToOptions
+; or _BackToOptionMenu. (C1, E-0377)
 ; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
-; UnpackRecordFromBank1Slot (E-0288)
+; UnpackRecordFromBank1Slot
 HibernateMenu_ChooseRecords::
     ld a, [wScreenStep]
     jumptable
@@ -999,7 +1033,7 @@ HibernateMenu_ChooseRecords_ShowCursorMark::
     ret
 
 ; Choosing records, step 9: copies a 13-row screen rectangle with attributes
-; (CopyScreenBufferRectWithAttrs_Bank14). (C1, E-0357)
+; (CopyScreenBufferRectWithAttrs_Bank14). (C2, E-0357; probed E-0377)
 HibernateMenu_ChooseRecords_SaveScreenArea::
     ld c, $0d
     ld hl, $01d4
@@ -1226,6 +1260,11 @@ HibernateMenu_ChooseRecords_YesNoCursor::
     ld [wScriptStartRequest], a
     ret
 
+; Yes/no cursor blink for HibernateMenu_ChooseRecords_YesNoCursor: while wJoypadRepeatTimer is below
+; $14 it draws the cursor tile $BB; otherwise it adds 1 to wCursorBlinkAE and draws $BB for 1-$0F,
+; the blank tile $C3 for $10-$17, and at $18 resets wCursorBlinkAE to 0 and falls through to
+; DrawCursorTileBB_Bank14. The tile goes to the place of wChoiceCursor
+; (HibernateMenu_ChooseRecords_YesNoCursor_DrawTile). (C1, E-0377)
 ; once the joypad repeat timer reaches $14, cycles wCursorBlinkAE through 0-$17 and draws the cursor
 ; tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
 BlinkCursorBlinkAE_Bank14::
@@ -1242,11 +1281,17 @@ BlinkCursorBlinkAE_Bank14::
     xor a
     ld [wCursorBlinkAE], a
 
+; B = $BB (the cursor tile), then jumps to HibernateMenu_ChooseRecords_YesNoCursor_DrawTile, which
+; writes it at the yes/no cursor place of wChoiceCursor. BlinkCursorBlinkAE_Bank14 jumps or falls
+; into it. (C1, E-0377)
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
 DrawCursorTileBB_Bank14::
     ld b, $bb
     jr HibernateMenu_ChooseRecords_YesNoCursor_DrawTile
 
+; B = $C3 (the blank tile), then jumps to HibernateMenu_ChooseRecords_YesNoCursor_DrawTile at the
+; yes/no cursor place of wChoiceCursor. Used by BlinkCursorBlinkAE_Bank14 and by
+; HibernateMenu_ChooseRecords_YesNoCursor to erase the cursor before a move. (C1, E-0377)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_Bank14::
     ld b, $c3
@@ -1283,6 +1328,12 @@ HibernateMenu_ChooseRecords_YesNoCursor_DrawTile::
 HibernateMenu_YesNoCursorOffsets::
     db $2d, $01, $6d, $01
 
+; Copies the 8 x 1 box row DrawBoxAndMenuAndStep_TileRect to wWindowTileBuffer + $110, then four
+; rows of 8 bytes inside the screen buffer from offset $C0 to offset $28C
+; (CopyScreenBufferRectWithAttrs_Bank14, wArg1 = 0, wArg2 = 8; the destination is wWindowTileBuffer
+; + $124), writes the blank tile $C3 at entry wListCursor of HibernateMenu_OptionCursor_Data and
+; adds 1 to wScreenStep. A step of HibernateMenu_ChooseRecords and HibernateMenu_ChooseToHibernate
+; after a yes/no, also called by their pack and store steps. (C2, E-0377)
 ; copies box DrawBoxAndMenuAndStep_TileRect to wWindowTileBuffer + $110, runs
 ; CopyScreenBufferRectWithAttrs_Bank14, blanks the cursor entry wListCursor of
 ; HibernateMenu_OptionCursor_Data and wScreenStep += 1 (E-0124) (E-0344: the address in its name
@@ -1429,7 +1480,7 @@ HibernateMenu_RestoreOptionYesNoBox::
     call DrawScreenBufferRect_Bank14
     ret
 
-; Copies five rows of six bytes from DE to HL, both with 20-byte rows. (C1, E-0357)
+; Copies five rows of six bytes from DE to HL, both with 20-byte rows. (C2, E-0357; probed E-0377)
 CopyFiveRowsOfSix_Bank14::
     push hl
     push de
@@ -1505,6 +1556,12 @@ HibernateMenu_ChooseRecords_DrawBoxes_TileRect_2::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
+; Fills four tile areas with the plain pattern tile (FillTilesBxC: 12 tiles at vTiles1 + $240, 15 at
+; vTiles1 + $500, 5 at vTiles1 + $700, 2 at vTiles1 + $4E0), copies the 8 x 11 list box
+; ClearTilesAndDrawRectAndStep_TileRect to wWindowTileBuffer + $64 and adds 1 to wScreenStep. Step 1
+; (and the first step of each later list) of HibernateMenu_ChooseRecords,
+; HibernateMenu_ChooseToHibernate, HibernateMenu_ChooseWithStats and HibernateMenu_ReleaseSleeper.
+; (C1, E-0377)
 ; clears four tile rows (vTiles1 + $240, $500, $700, $4E0), copies rectangle
 ; ClearTilesAndDrawRectAndStep_TileRect to wWindowTileBuffer + $64 and wScreenStep += 1 (E-0124)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -1763,9 +1820,17 @@ HibernateMenu_ChooseRecords_BackToOptions::
     ld [wScriptStartRequest], a
     ret
 
+; HibernateMenu state 4, reached from option 0 (hibernate) of HibernateMenu_DoOption; dispatches on
+; wScreenStep (75 steps). Steps 0-8 list the farm monsters that are not eggs with the paged cursor,
+; 16-18 ask yes/no ('So this one should hibernate?'), and 21-22 put the chosen monster to sleep
+; (HibernateMenu_ChooseToHibernate_CheckRecord finds a slot with FindFreeHibernationSlot,
+; _PackRecord packs it and deletes it from the farm). When the sleepers already fill the capacity
+; ('Uh-oh, the stable is full!') HibernateMenu_DoOption starts it at step $1E: a yes/no ('Want to
+; switch with someone?'), the sleeper list (32-40), the farm list (51-59) and the swap (66-67, _Swap
+; and _StorePackedRecord). The other steps redraw the screen and return to the option cursor (state
+; 2). (C1, E-0377)
 ; screen state 4, reached from menu option 0: the list of farm records that are not eggs
 ; (ListRecordsState1NotEggs) after a capacity check; the script asks Which monster will hibernate?
-; (E-0302)
 HibernateMenu_ChooseToHibernate::
     ld a, [wScreenStep]
     jumptable
@@ -2003,7 +2068,7 @@ HibernateMenu_RestoreYesNoBox_Data2::
 
 ; C = first row (0-4): copies rows C through 4 of six bytes each from DE to HL, rows 20 bytes apart
 ; in both, starting at the given addresses (so C = 0 copies five rows and C = 4 one row); the body
-; matches CopyFiveRowsOfSix_Bank14. (C1, E-0370)
+; matches CopyFiveRowsOfSix_Bank14. (C2, E-0370; probed E-0377)
 HibernateMenu_CopyBoxRows::
     push hl
     push de
@@ -2691,8 +2756,14 @@ HibernateMenu_ChooseToHibernate_StorePackedRecord::
     ld [wCursorBlinkAE], a
     ret
 
+; HibernateMenu state 6, by wScreenStep (17 steps): lists the farm monsters that are not eggs (steps
+; 0-8, with HibernateMenu_ChooseWithStats_DrawRecordStats marking the party members and drawing the
+; stats box), returns to the options on B (9-15) and on A opens the stats screen of the record (step
+; 16, HibernateMenu_ChooseWithStats_OpenStatsScreen, screen state 9 returning to state 6 step 8).
+; Only StartRecordListOrNoneMessage, which nothing in src/ references, and that return lead into
+; this state. (C1, E-0377)
 ; screen state 6: a paged record list that marks party members (MarkPartyMembersInRecordListPage)
-; and shows a stats box (DrawRecordStatsBoxForArg1) (E-0304)
+; and shows a stats box (DrawRecordStatsBoxForArg1)
 HibernateMenu_ChooseWithStats::
     ld a, [wScreenStep]
     jumptable
@@ -2809,6 +2880,11 @@ HibernateMenu_ChooseWithStats_ListCursor::
     ld [wScreenStep], a
     ret
 
+; Copies nine rows of 12 bytes inside the screen buffer from offset 8 to offset $1D4
+; (CopyScreenBufferRectWithAttrs_Bank14, wArg1 = 0, wArg2 = $0C), then the 11 x 1 row
+; DrawBox1D4AndCopyRect_TileRect to wWindowTileBuffer + $10D (over part of the last copied row), and
+; adds 1 to wScreenStep. Nothing in src/ references it; HibernateMenu_ChooseRecords_SaveScreenArea
+; makes the same copy with 13 rows. (C2, E-0377)
 ; runs CopyScreenBufferRectWithAttrs_Bank14 (C = 9, HL = $01D4, DE = 8, wArg1/2 = 0/$0C), copies the
 ; 11 x 1 rectangle DrawBox1D4AndCopyRect_TileRect to wWindowTileBuffer + $10D and wScreenStep += 1
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
@@ -2858,9 +2934,16 @@ HibernateMenu_ChooseWithStats_OpenStatsScreen::
     farcall SaveAndHideSpriteState_Bank1E
     ret
 
+; HibernateMenu state 7, reached from option 2 of HibernateMenu_DoOption
+; (HibernateMenu_DoOption_ViewSleepers); dispatches on wScreenStep (26 steps). Steps 0-8 list the
+; sleepers with the paged cursor, B returns to the options (9-15), 16-17 ask yes/no about the chosen
+; sleeper, and step 18 (HibernateMenu_IndexListEntry_FreeSlot) clears its $6F-byte compact record
+; and compacts the store; steps 19-25 redraw and return to the option cursor. The script around it
+; says 'G was released in the wild.' The old reading (takes the list entry and computes its index)
+; described only part of step 18. (C1, E-0377)
 ; screen state 7: takes the chosen list entry (SetArg5ToListEntriesCell5) and computes its index
-; (Multiply8) (E-0304)
-HibernateMenu_IndexListEntry::
+; (Multiply8)
+HibernateMenu_ReleaseSleeper::
     ld a, [wScreenStep]
     jumptable
     dw HibernateMenu_ChooseRecords_DrawBoxes
@@ -3188,6 +3271,9 @@ HibernateMenu_CopySleeperNameToTextBuf0::
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
+; past the copy, BC = 0, A = the last byte. Used by the screen-buffer copies of this bank
+; (CopyScreenBufferRectWithAttrs_Bank14, the box-row copies) and HibernateMenu_Init. (C2, E-0377)
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 CopyBytesDEToHL_Bank14::
     ld a, [de]
@@ -3199,8 +3285,11 @@ CopyBytesDEToHL_Bank14::
     jr nz, CopyBytesDEToHL_Bank14
     ret
 
+; Sets rSVBK = 2, copies BC bytes from DE to HL with each byte ANDed with 7 (the CGB attribute
+; palette bits), then sets rSVBK = 0. Both addresses are read in WRAM bank 2 when they are in
+; $D000-$DFFF; BC ends 0. Used for the attribute half of the screen-buffer copies. (C2, E-0377)
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 18 bytes appear in 7 banks) (E-0353)
+; 18 bytes appear in 7 banks)
 CopyLow3BitsToWRAMBank2_Bank14::
     ld a, $02
     ldh [rSVBK], a
@@ -3218,8 +3307,11 @@ CopyLow3BitsToWRAMBank2_Bank14::
     ldh [rSVBK], a
     ret
 
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8: the BG map entry at the top-left corner of the
+; visible screen. Clobbers A and DE. Every drawing step of this bank adds its offset to it. (C1,
+; E-0377)
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_Bank14::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3238,9 +3330,13 @@ BGMapAddressAtScroll_Bank14::
     add_a_to_hl
     ret
 
+; Copies a rectangle of B bytes by C rows from DE (packed) to HL, the destination rows 20 bytes
+; apart (the window and screen buffers); DE ends past the source, HL and BC are kept. On CGB (wIsCGB
+; non-zero) it also zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (the attribute buffer
+; of wWindowTileBuffer is wWindowAttrBuffer, $0E68 on) and sets rSVBK = 0. (C2, E-0377)
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
 ; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the
-; same 58 bytes appear in 8 banks) (E-0353)
+; same 58 bytes appear in 8 banks)
 CopyRectTo20ByteRows_Bank14::
     push hl
     push bc
@@ -3294,6 +3390,11 @@ CopyRectTo20ByteRows_Bank14::
     ldh [rSVBK], a
     ret
 
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: copies that
+; rectangle of the screen buffer to the BG map (CopyRectToBGMapWrapped) and sets
+; wTextCursorLo/wTextCursorHi = HL + $1C1. On CGB it then copies the same rectangle of
+; wScreenAttrBuffer (rSVBK = 2) into VRAM bank 1, the attributes, and sets rSVBK and rVBK back to 0.
+; BC, DE and HL are kept on DMG. (C1, E-0377)
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address:
 ; CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from
 ; wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are
@@ -3403,6 +3504,9 @@ CopyGlyphTilesFromLists_Bank14::
     ld a, $ff
     ret
 
+; Writes the blank tile $C3 at the addresses of entries 0-4 of HibernateMenu_OptionCursor_Data
+; ($C379, $C3A1, $C3C9, $C3F1, $C419 in wWindowTileBuffer), erasing the list marks. Called by
+; HibernateMenu_ChooseRecords_ListCursor and HibernateMenu_ChooseRecords_MarkAndRedraw. (C2, E-0377)
 ; stores tile $C3 at the addresses of entries 0-4 of the word table HibernateMenu_OptionCursor_Data
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; EraseFiveTableEntries; a trailing preposition left by the dropped address removed)
@@ -3422,8 +3526,11 @@ EraseFiveTableEntries::
     jr c, .loop
     ret
 
+; HL = table of 16-bit addresses, A = index: writes B at the address in entry A. Returns with DE =
+; that address and BC kept; clobbers A and HL. The menus use it to put a mark or blank tile at a
+; list position (HibernateMenu_OptionCursor_Data). (C2, E-0377)
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0353)
+; A, DE, HL (the same 14 bytes appear in 8 banks)
 StoreBAtWordTableEntry_Bank14::
     push bc
     add a
@@ -3436,6 +3543,10 @@ StoreBAtWordTableEntry_Bank14::
     ld [de], a
     ret
 
+; Copies two rows of 8 bytes inside the screen buffer from offset $B4 to offset $280
+; (CopyScreenBufferRectWithAttrs_Bank14 with C = 2, wArg1 = 0, wArg2 = 8; the destination is
+; wWindowTileBuffer + $118), with the CGB attributes. Called when the hibernation lists return to
+; the option menu. (C2, E-0377)
 ; runs CopyScreenBufferRectWithAttrs_Bank14 with C = 2, HL = $0280, DE = $00B4, wArg1/2 = 0/8
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; CopyScreenBufferRectAt0280_Bank14; shortened from RunCopyScreenBufferRectWithAttrs_Bank14At0280)
@@ -3450,6 +3561,12 @@ CopyScreenBufferRectAt0280_Bank14::
     call CopyScreenBufferRectWithAttrs_Bank14
     ret
 
+; HL = destination offset, DE = source offset, both into wScreenTileBuffer; C = rows: for each row
+; copies BC bytes with B = wArg1 and C = wArg2 (CopyBytesDEToHL_Bank14; callers set wArg1 = 0, so
+; wArg2 is the width), then on CGB the same bytes of wScreenAttrBuffer
+; (CopyLow3BitsToWRAMBank2_Bank14). Rows are 20 bytes apart in both; offsets past the screen buffer
+; reach wWindowTileBuffer, which follows it. The old reading 'a wArg1 x wArg2 block' was wrong:
+; wArg1 is the high byte of the per-row count. (C2, E-0377)
 ; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with
 ; CGB attributes (E-0127)
 CopyScreenBufferRectWithAttrs_Bank14::
@@ -3511,6 +3628,11 @@ CopyScreenBufferRectWithAttrs_Bank14::
     jr nz, CopyScreenBufferRectWithAttrs_Bank14
     ret
 
+; B = SRAM record: with SRAM bank 0 enabled reads its MON_FAMILY byte (LoadSRAMRecordByte), sets
+; wWorkBuf = the family (low 4 bits) and wWorkBuf + 1 = $C7, and far-calls
+; LoadFamilyIconTileForWorkBuf, which writes that family icon tile to VRAM tile $C7; then disables
+; SRAM. Used by HibernateMenu_ChooseRecords_DrawRecordStats and
+; HibernateMenu_ChooseWithStats_DrawRecordStats. (C1, E-0377)
 ; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = $C7, then
 ; LoadFamilyIconTileForWorkBuf (E-0122)
 LoadFamilyIconTileForRecordB_Bank14::
@@ -3531,6 +3653,9 @@ LoadFamilyIconTileForRecordB_Bank14::
     ld [rRAMG2], a
     ret
 
+; DE = offset from the scroll origin: writes tiles $C5, $BE and $C6 to the BG map at
+; BGMapAddressAtScroll_Bank14 + DE, + 2 and + 4, each with interrupts off after WaitForVRAMAccess.
+; HibernateMenu_UpdateListPages uses it for the 'page/pages' numbers row. (C1, E-0377)
 ; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll_Bank14 + DE, two entries apart
 ; (WaitForVRAMAccess, interrupts off) (E-0120)
 DrawC5BEC6AtScrollOffsetDE_Bank14::
@@ -3559,8 +3684,11 @@ DrawC5BEC6AtScrollOffsetDE_Bank14::
     ei
     ret
 
+; Writes $C5 at HL, $BE at HL + 2 and $C6 at HL + 4, leaving the bytes between; HL ends at HL + 4
+; and A = $C6. HibernateMenu_UpdateListPages uses it on the window buffer, the twin of
+; DrawC5BEC6AtScrollOffsetDE_Bank14 on the BG map. (C2, E-0377)
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
-; banks) (E-0353)
+; banks)
 StoreC5BEC6AtHLStride2_Bank14::
     ld a, $c5
     ld [hl], a
@@ -3576,7 +3704,7 @@ StoreC5BEC6AtHLStride2_Bank14::
 
 ; Finds the first free hibernation slot (compact record byte 0 bit 7 clear) among the 29 in bank 0,
 ; then slot $1D in bank 1's sRecords; returns its address in wArg6/wArg7 and its bank in wArg5, or A
-; = $FF when all are used. (C1, E-0357)
+; = $FF when all are used. (C2, E-0357; probed E-0377)
 FindFreeHibernationSlot::
     ld hl, sCompactRecords
     ld c, $00
@@ -3737,6 +3865,13 @@ TileCopySrcList_14_3::
 HibernateMenu_YesNoGlyphSrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
+; The name-entry screen: returns while wFadeState is non-zero, otherwise runs the state
+; wNameEntryState: 0 RunNameEntryStateWhenNotFading_Setup, 1 _Keyboard, 2 _DrawMessageWindow, 3
+; _CheckName, 4 _DrawYesNo, 5 _YesNoCursor, 6 _Finish, 7 _RedrawKeyboard. The callers name the
+; player at a new game (GameMode5_Update_NewPlayerSetup_EnterName, wArg1 = 0), rename a monster
+; (RenameMenu_EnterName), name a bred child (BreedMenu_NameEntry, wArg1 = 1) and a monster that
+; joins after a battle (RunBattleEndStep5SubSteps_EnterName); a finished entry leaves the name in
+; wNameGlyphBuf and wArg5 = $FF. (C1, E-0377)
 ; the name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
 ; naming a bred child (BreedMenu_NameEntry) and naming a monster that joins after a battle: while no
 ; fade runs, by wNameEntryState it sets up the keyboard, takes the cursor and letter input and draws
@@ -3757,8 +3892,12 @@ RunNameEntryStateWhenNotFading::
     dw RunNameEntryStateWhenNotFading_Finish
     dw RunNameEntryStateWhenNotFading_RedrawKeyboard
 
+; Name-entry state 0, by wNameEntrySubState: 0 _Setup_Clear (clears the state, fills the BG map,
+; loads the frame tiles), 1 _Setup_CopyGlyphs (keyboard glyph tiles, a few per call), 2
+; _Setup_DrawKeyboard, 3 _Setup_CopyArgs (the sprite of the one being named) and 4 _Setup_StartName
+; (the starting name: 'Cobi' for the player, empty, or the current name of party monster
+; wGridCursorX; then the keyboard state). (C1, E-0377)
 ; name-entry state 0: draws the entry rectangle, sets wNameEntrySubState and reads the record
-; (E-0293)
 RunNameEntryStateWhenNotFading_Setup::
     ld a, [wNameEntrySubState]
     jumptable
@@ -3903,7 +4042,14 @@ RunNameEntryStateWhenNotFading_Setup_DrawKeyboard::
     ld [wArg5], a
     ret
 
-; copies the eight wArg bytes to wCounterPtr0Lo onward and picks a data table by wArg1 (E-0305)
+; Name-entry set-up, sub-state 3: saves wArg1-wArg8 at wCounterPtr0Lo onward, then loads the sprite
+; shown beside the name. With wArg1 = 0 (the player) it copies the 16-byte sprite slot
+; RunNameEntryStateWhenNotFading_Sprite0Slot or _Sprite1Slot (by wArg2) to wSpriteSlots and six
+; graphics arguments to hTemp0 onward, runs DecompressGraphicsTemp0ToTemp4, sets wSpriteSlotCount =
+; 1 and on CGB wOBJPaletteUploadRequest = $7F. Otherwise it decompresses graphics number wArg4/wArg5
+; to $8000 (DecompressGraphicsArg1ToArg4 with wArg3 = 0). Then it restores wArg1-wArg8 from the
+; copy, adds 1 to wNameEntrySubState and clears wArg5. (C1, E-0377)
+; copies the eight wArg bytes to wCounterPtr0Lo onward and picks a data table by wArg1
 RunNameEntryStateWhenNotFading_Setup_CopyArgs::
     ld hl, wArg1
     ld de, wCounterPtr0Lo
@@ -4010,6 +4156,9 @@ RunNameEntryStateWhenNotFading_Setup_CopyArgs::
     ld [wArg5], a
     ret
 
+; HL = source, DE = destination, B = count: copies B bytes (B = 0 copies 256); HL and DE end past
+; the copy, B = 0. RunNameEntryStateWhenNotFading_Setup_CopyArgs uses it for the sprite slot and
+; graphics arguments. (C2, E-0377)
 ; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_Bank14::
     ld a, [hli]
@@ -4371,6 +4520,13 @@ RunNameEntryStateWhenNotFading_KeyCursor_ToEndKey::
     ld [wArg5], a
     ret
 
+; Runs CopyTileForNameEntryLength, then works on the last glyph of wNameEntryText (the byte before
+; the first $F0 or $9F): a plain glyph in the IsHLByteInList list gets the mark $8D appended (it
+; replaces the first $9F, and the first $F0 becomes $9F; with no $9F it overwrites the first $F0); a
+; $8D after a glyph of the IsHLByteInList_2 list becomes $8E, otherwise it is removed; a $8E is
+; removed (it becomes $9F and the last byte before the first $F0 becomes $F0). Sound $69 plays when
+; a mark is added or changed; every path clears wArg5. Nothing in src/ references it;
+; RunNameEntryStateWhenNotFading_ApplyCharacter handles the marks in play. (C1, E-0377)
 ; on the last glyph of the name entry wNameEntryText adds or cycles the marks $8D and $8E when the
 ; glyph allows them (lists IsHLByteInList_Data and 68CA), with sound $69 (E-0129)
 ToggleVoicingMarkOnNameEntry::
@@ -4496,6 +4652,9 @@ RunNameEntryStateWhenNotFading_BlinkKeyCursor::
     ld b, $55
     jr RunNameEntryStateWhenNotFading_DrawKeyTile
 
+; B = $C3 (the blank tile), then jumps to RunNameEntryStateWhenNotFading_DrawKeyTile, which writes
+; it at the keyboard key under the cursor (wNameEntryCursorX, wNameEntryCursorY). The keyboard
+; cursor routines call it to erase the cursor before a move. (C1, E-0377)
 ; B = $C3 (blank tile) and joins the tile draw at RunNameEntryStateWhenNotFading_DrawKeyTile
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was DrawBlankTileC3)
 DrawBlankTileC3::
@@ -5214,7 +5373,7 @@ RunNameEntryStateWhenNotFading_CheckName_ShowInUse::
 ; RunNameEntryStateWhenNotFading_CheckName_Validate accepts it): adds 1 to wNameEntryStep and jumps
 ; into step 3 (RunNameEntryStateWhenNotFading_CheckName_CopyName), which copies the name into
 ; wTextBuf0 and adds 1 again, so the call ends on step 4 (the confirmation). Its own DE = wTextBuf0
-; is reloaded by RunNameEntryStateWhenNotFading_CheckName_CopyName. (C1, E-0372)
+; is reloaded by RunNameEntryStateWhenNotFading_CheckName_CopyName. (C2, E-0372; probed E-0377)
 RunNameEntryStateWhenNotFading_CheckName_PlayerOK::
     ld de, wTextBuf0
     ld a, [wNameEntryStep]
@@ -5223,7 +5382,7 @@ RunNameEntryStateWhenNotFading_CheckName_PlayerOK::
     jp RunNameEntryStateWhenNotFading_CheckName_CopyName
 
 ; Name entry checks, step 3: copies the entered name (without the end marks $9F) into wTextBuf0.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 RunNameEntryStateWhenNotFading_CheckName_CopyName::
     ld hl, wNameEntryText
     ld de, wTextBuf0
@@ -5368,8 +5527,12 @@ RunNameEntryStateWhenNotFading_Finish_Blank::
     ld [wArg5], a
     ret
 
+; Name entry, end of state 6: copies wNameEntryText up to its first $F0 or $9F into wNameGlyphBuf
+; with an $F0, clears the $1D bytes from wNameEntryState, puts the text window back (tiles at
+; vTiles1, rows $02, width $12), clears hSpriteHideTile and returns wArg5 = $FF, which tells the
+; caller the name is done. The read of wSavedSpriteClipMode is discarded. (C1, E-0377)
 ; copies the entered name to wNameGlyphBuf (ending in $F0), clears the name-entry state and sets the
-; text window (E-0305)
+; text window
 RunNameEntryStateWhenNotFading_FinishNameEntry::
     ld hl, wNameEntryText
     ld de, wNameGlyphBuf
@@ -5538,6 +5701,10 @@ RunNameEntryStateWhenNotFading_DrawSprites::
     inc de
     ret
 
+; A = 0 when the byte at HL is in the $FF-terminated list IsHLByteInList_Data (42 glyphs), otherwise
+; A = $FF; DE ends at the match or the $FF and B = the last list byte compared.
+; RunNameEntryStateWhenNotFading_ApplyCharacter uses it to allow the mark $8D after a glyph. (C2,
+; E-0377)
 ; A = 0 when [HL] is in the $FF-terminated list IsHLByteInList_Data, else $FF (E-0124) (E-0344: the
 ; address in its name dropped or read as the label there; was IsHLByteInList)
 IsHLByteInList::
@@ -5568,6 +5735,9 @@ IsHLByteInList_Data::
     db $34, $35, $37, $38, $75, $76, $77, $78, $79, $60, $61, $62, $63, $64, $65, $66
     db $67, $68, $69, $6a, $6b, $6c, $6e, $6f, $26, $5a, $ff
 
+; A = 0 when the byte at HL is in the $FF-terminated list IsHLByteInList_2_Data (ten glyphs, also in
+; the first list), otherwise A = $FF. RunNameEntryStateWhenNotFading_ApplyCharacter uses it to allow
+; the mark $8E after a glyph. (C2, E-0377)
 ; A = 0 when [HL] is in the $FF-terminated list IsHLByteInList_2_Data, else $FF (E-0124) (E-0344:
 ; the address in its name dropped or read as the label there; was IsHLByteInList_2)
 IsHLByteInList_2::
@@ -5664,6 +5834,10 @@ RunNameEntryStateWhenNotFading_YesNoCursor_Input::
     ld [wMenuInputResult], a
     ret
 
+; Yes/no cursor blink of the name entry: adds 1 to wNameEntryBlink and draws the cursor tile $BB for
+; 0-$0F, the blank tile $C3 for $10-$17 (DrawBlankTileC3_3), and at $18 resets wNameEntryBlink to 0
+; and draws $BB; the tile goes to the place of wNameEntryMenuCursor
+; (RunNameEntryStateWhenNotFading_DrawYesNoTile). (C1, E-0377)
 ; cycles wNameEntryBlink through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (E-0122)
 BlinkCursorNameEntryBlink_Bank14::
@@ -5681,6 +5855,9 @@ BlinkCursorNameEntryBlink_Bank14::
     ld b, $bb
     jr RunNameEntryStateWhenNotFading_DrawYesNoTile
 
+; B = $C3 (the blank tile), then jumps to RunNameEntryStateWhenNotFading_DrawYesNoTile at the yes/no
+; place of wNameEntryMenuCursor. Used by BlinkCursorNameEntryBlink_Bank14 and by
+; RunNameEntryStateWhenNotFading_YesNoCursor_Input before a move. (C1, E-0377)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_3)
 DrawBlankTileC3_3::
@@ -5715,9 +5892,11 @@ RunNameEntryStateWhenNotFading_DrawYesNoTile::
 RunNameEntryStateWhenNotFading_DrawYesNoTile_Data::
     db $2f, $01, $6f, $01
 
+; HL = source, DE = VRAM destination: copies 16 bytes (one tile), each with interrupts off after
+; rSTAT bit 1 clears; HL and DE advance, C = 0. Used by CopyTileForNameEntryLength and
+; RunNameEntryStateWhenNotFading_Setup_DrawKeyboard. (C1, E-0377)
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; (E-0353)
 CopyTileBytesToVRAM_Bank14::
     ld c, $10
 
@@ -5785,6 +5964,9 @@ RunNameEntryStateWhenNotFading_DrawNameGlyphs::
     db $c5, $d1, $cd, $40, $2e, $7b, $ea, $33, $c5, $ea, $37, $c5, $7a, $ea, $34, $c5
     db $ea, $38, $c5, $3e, $01, $ea, $2b, $c5, $af, $ea, $2c, $c5, $ea, $4f, $c5, $c9
 
+; Writes tile B to the BG map at BGMapAddressAtScroll_Bank14_2 + $47 + wNameEntryLength (row 2,
+; column 7 of the view onward, the name line) with interrupts off after rSTAT bit 1 clears; BC kept.
+; The name-entry routines write the cursor tile $55 or the blank $C3 there. (C1, E-0377)
 ; writes B at the BG map entry BGMapAddressAtScroll_Bank14 + $47 (row 2, column 7 of the view) +
 ; wNameEntryLength, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
 WriteTileBAtScrollOffset47PlusNameEntryLength::
@@ -5805,7 +5987,11 @@ WriteTileBAtScrollOffset47PlusNameEntryLength::
     ei
     ret
 
-; fills wNameEntryText with eleven $F0 bytes, then five $9F cursor marks (E-0305)
+; Fills the 11 bytes of wNameEntryText with $F0, then overwrites the first five with $9F (the empty
+; glyph places), so an empty name is five $9F and six $F0. Called by
+; RunNameEntryStateWhenNotFading_Setup_StartName and RunNameEntryStateWhenNotFading_KeyDelete. (C2,
+; E-0377)
+; fills wNameEntryText with eleven $F0 bytes, then five $9F cursor marks
 RunNameEntryStateWhenNotFading_ClearNameEntryText::
     ld hl, wNameEntryText
     ld c, $00
@@ -5922,7 +6108,7 @@ RunNameEntryStateWhenNotFading_CheckName_NameInUse::
     ret
 
 ; Checks RejectedNameList (10-byte names, ending $FF): returns $FF when the entered name matches
-; one, otherwise 0 (the wArg1 test before the end changes nothing). (C1, E-0357)
+; one, otherwise 0 (the wArg1 test before the end changes nothing). (C2, E-0357; probed E-0377)
 IsNameRejected::
     ld hl, RejectedNameList
     ld c, $00
@@ -5993,7 +6179,12 @@ IsNameRejected::
     ld a, $ff
     ret
 
-; walks wNameEntryText to the $9F or $F0 end, tracking dakuten marks ($8D/$8E) (E-0305)
+; Checks wNameEntryText for a repeated glyph: returns A = $FF when every glyph equals the first one
+; and there are at least four of them, or any number when that glyph is the space $90; otherwise A =
+; 0. The $9F places are skipped; when the second byte is a mark ($8D or $8E) each glyph must be
+; followed by that same mark. RunNameEntryStateWhenNotFading_CheckName_Validate refuses the name on
+; $FF. (C2, E-0377)
+; walks wNameEntryText to the $9F or $F0 end, tracking dakuten marks ($8D/$8E)
 RunNameEntryStateWhenNotFading_ScanNameEntryText::
     ld hl, wNameEntryText
     ld c, $00
@@ -6150,8 +6341,11 @@ RunNameEntryStateWhenNotFading_CheckName_Message::
     xor a
     ret
 
+; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, also left in DE: the BG map entry at the
+; top-left of the visible screen, without wrapping. Clobbers A. The name-entry drawing routines use
+; it. (C2, E-0377)
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0353)
+; clobbers A, DE (the same 41 bytes appear in 3 banks)
 BGMapAddressAtScroll_Bank14_2::
     ldh a, [hScrollY]
     and $f8
@@ -6236,6 +6430,9 @@ CopyGlyphTilesFromListsAtOnce::
     ld a, $ff
     ret
 
+; Copies the plain tile CopyTileForNameEntryLength_Data2 ($FF, $00 repeated) to the VRAM address in
+; entry wNameEntryLength of CopyTileForNameEntryLength_Data1 ($9500, $9510, ... $9540), clearing the
+; glyph tile of that name place (CopyTileBytesToVRAM_Bank14). (C1, E-0377)
 ; copies the 16-byte tile at CopyTileForNameEntryLength_Data2 to the VRAM address from the word
 ; table CopyTileForNameEntryLength_Data1 + 2 * wNameEntryLength (CopyTileBytesToVRAM_Bank14)
 ; (E-0119)
@@ -6346,6 +6543,12 @@ RunNameEntryStateWhenNotFading_KeyEnd_FillName::
     call CopyF0StringAndRedrawNameEntry
     ret
 
+; Copies the $F0-terminated string at HL to DE without its $F0 (the callers pass DE =
+; wNameEntryText), then continues into CopyF0StringAndRedrawNameEntry_UpdateLength, which blanks the
+; old cursor place, recounts wNameEntryLength and draws the cursor tile $55. The old reading said it
+; redraws the name glyph by glyph; that part draws no glyphs.
+; RunNameEntryStateWhenNotFading_KeyEnd_FillName and
+; RunNameEntryStateWhenNotFading_KeyEnd_DefaultName use it to fill an empty name. (C1, E-0377)
 ; copies the $F0-terminated string at HL to DE, then erases the name-entry cursor tile and redraws
 ; wNameEntryText glyph by glyph (handling the $9F cursor end and the $8D/$8E voicing marks) (E-0175)
 CopyF0StringAndRedrawNameEntry::
@@ -7851,6 +8054,14 @@ HibernateMenu_FreeAndCompactSleepers::
     ld [rRAMB], a
     ret
 
+; With SRAM bank 0 enabled: when wArg1 is below 30 clears record wArg1 ($A5 bytes), then compacts
+; sRecords so that the records in use (MON_STATE 1 or 2) are contiguous from record 0, moving each
+; later one down (only the first byte of the old place is cleared). When wArg2 is 0 and wArg1 is
+; listed in wPartyList it removes that entry, shifting the later ones down, lowers wPartyCount and
+; sets wArg3 = 1 (else wArg3 = 0); with wArg1 below 30 the party entries above wArg1 are then
+; lowered by 1. Finally it clears the first free record and returns its number in wArg5 and its
+; address in wArg6/wArg7, or wArg5 = $FF when all 30 are in use; SRAM is disabled. Callers:
+; breeding, hibernation, the swap menu and link sessions. (C1, E-0377)
 ; clears SRAM record wArg1 (when below 30) and moves the later stored records up to fill the gap,
 ; updating the party list (E-0131)
 DeleteSRAMRecordAndCompact::
@@ -8046,7 +8257,7 @@ DeleteSRAMRecordAndCompact::
 ; DefaultMonsterNameTable goes to the address in wWorkBuf + 2/3 (the record's MON_NAME), skipping
 ; $9F bytes and stopping after the $F0 end byte; nine unreached bytes sit after a jump inside it.
 ; Far-called only by CreateMonsterRecordInSlot_Build (bank $01) when wBattleArg1 is $FF, with the
-; family from wSpeciesRecord and the name number from wRandomLo mod 14. (C1, E-0369)
+; family from wSpeciesRecord and the name number from wRandomLo mod 14. (C2, E-0369; probed E-0377)
 CreateMonsterRecordInSlot_Build_CopyDefaultName::
     ld a, [wWorkBuf]
     ld c, a

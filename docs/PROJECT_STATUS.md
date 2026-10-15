@@ -123,6 +123,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 6: unread + probe scope, banks $00-$04 (6 slices of 90) | E-0374 | 544 | 544 (378 probed, 729 probes) | 0 (54 spot checks, all correct) | PASS build/run621 | par621 OK (393, 3 skipped) |
 | 7: unread + probe scope, banks $00-$0A (6 slices of 135) | E-0375 | 816 | 816 (768 probed, 1,803 probes; re-applied from final drafts) | 0 (84 spot checks, all correct) | PASS build/run624 | par624 OK (393, 3 skipped) |
 | 8: unread + probe scope, banks $0A-$12 (6 slices of 150) | E-0376 | 912 | 912 (727 probed, 1,266 probes) | 0 (90 spot checks, all correct) | PASS build/run626 | par626 OK (393, 3 skipped) |
+| 9: unread + probe scope, banks $10-$16 (6 slices of 150-152) | E-0377 | 904 | 904 (808 probed, 1,639 probes; 14 names) | 0 (91 spot checks, all correct) | PASS build/run_E-0377 | par627 OK (394, 3 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
@@ -136,7 +137,18 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-15, E-0376)
+## Current handoff (2026-10-15, E-0377)
+
+Batch 9 (E-0377) read or probed 904 routines in banks $10-$16 (652 notes, 808 probed, 1,639 probes; 5,694 in all).
+Phases: drafting 27 min (six workers in parallel; the slowest set the pace), validation and spot checks about 25
+min, apply + regeneration + build 3m57s, parallel suite 3m54s. Decision (D-012 addendum): a probe may name the routine
+it checks with `"target"` when it has to enter through a runner; the runner then needs its own untargeted probe.
+Measures: readability.py 33,381 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN; doc_coverage.py 9,822
+code labels (7,638 with a hand reading), 23,559 data labels, all commented, no stale name. Over 50: 2 (the referrer
+aliases); over 60: 0; `Etc`: 1. Queue: unread 2,184, reader-only data 491, assets 155. Next: E-0378, the combined
+queue in six slices of 150, plus the notes reported wrong outside the E-0377 slices (READABILITY_OPEN_QUESTIONS.md).
+
+## Prior handoff (2026-10-15, E-0376)
 
 Batch 8 (E-0376) read or probed 910 routines in banks $0A-$12 (481 notes, 727 probed, 1,266 probes; 4,055 in all).
 Queue: unread 2,809, reader-only data 490, assets 155. Next: E-0377, the combined queue in six slices of 150.

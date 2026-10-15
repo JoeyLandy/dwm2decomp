@@ -5741,7 +5741,7 @@ StepTriggerReward_ShowMessage::
     ret
 
 ; Points HL at the active trigger's record: wScreenTriggers + 4 x wTriggerIndex when the screen has
-; triggers, otherwise wMapObjects + 8 x wTriggerIndex. (C1, E-0357)
+; triggers, otherwise wMapObjects + 8 x wTriggerIndex. (C2, E-0357; probed E-0377)
 ActiveTriggerRecord::
     ld a, [wScreenTriggerCount]
     or a
@@ -5765,7 +5765,7 @@ ActiveTriggerRecord::
 ; Heal the records indexed by wPartyList, for a nonzero wPartyCount: copy each maximum HP/MP word to
 ; its current HP/MP and clear the entire MON_STATUS byte. Enable SRAM while doing so and disable it
 ; on return. Does not select a cartridge RAM bank; the caller supplies the bank holding those
-; records, normally bank 0. There is no empty-party guard. (C1, E-0359)
+; records, normally bank 0. There is no empty-party guard. (C2, E-0359; probed E-0377)
 FullyHealParty::
     ld a, $0a
     ld [rRAMG], a
@@ -5816,7 +5816,8 @@ FullyHealParty::
 ; ($D2,$D2,$E2) and on CGB copy the 64 saved background bytes; otherwise write ($2D,$2D,$1D) and
 ; complement each saved background byte on CGB. Request background upload $7F only on CGB. Increment
 ; the eight-bit phase toward exact 30; on equality reset phase and advance. From phase 0 the final
-; palette group is the normal copy. Object CGB palettes are not inverted by this body. (C1, E-0362)
+; palette group is the normal copy. Object CGB palettes are not inverted by this body. (C2, E-0362;
+; probed E-0377)
 ScriptStepFlashScreenNegative::
     ld a, [wScriptParam0]
     srl a
@@ -5878,8 +5879,12 @@ ScriptStepFlashScreenNegative::
     inc [hl]
     ret
 
+; Frame counter for a script step: wScriptParam0 += 1; when it then equals B it is reset to 0 and
+; carry is set, otherwise carry is clear; A = 0 either way. Ten script steps in this bank call it
+; with B = the number of frames to wait before moving on (the same 18 bytes appear in 3 banks). (C2,
+; E-0377)
 ; wScriptParam0 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear;
-; returns A = 0 either way (the same 18 bytes appear in 3 banks) (E-0353)
+; returns A = 0 either way (the same 18 bytes appear in 3 banks)
 StepScriptParam0Counter_Bank12::
     ld a, [wScriptParam0]
     inc a
@@ -5922,28 +5927,41 @@ PartyDefeatedReturn_MoveFallenBack::
     inc [hl]
     ret
 
-; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; [HL] |= $02 (sets bit 1 of the byte at HL); A = the new byte, other registers kept. Its two
+; callers, WarpWithFollowers_StaggerDownTo50 and FollowerScene_BeginDown, set bit 1 of
+; hPlayerStateFlags with it (the same 5 bytes appear in 4 banks). (C2, E-0377)
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
 SetBit1AtHL_Bank12::
     ld a, [hl]
     or $02
     ld [hl], a
     ret
 
-; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; [HL] &= $FD (clears bit 1 of the byte at HL); A = the new byte, other registers kept. Its one
+; caller in this bank clears bit 1 of hPlayerStateFlags with it (the same 5 bytes appear in 4
+; banks). (C2, E-0377)
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
 ClearBit1AtHL_Bank12::
     ld a, [hl]
     and $fd
     ld [hl], a
     ret
 
-; sets bit 2 of the byte at [HL]; only A is clobbered (E-0353)
+; [HL] |= $04 (sets bit 2 of the byte at HL); A = the new byte, other registers kept. Steps of this
+; bank set bit 2 of hPlayerStateFlags (ObjectPath1C_HopPlayerRight and others) or of the sprite flag
+; bytes (wSpriteSlots + $D, wObject1 + OBJ_FLAGS and the next objects) with it. (C2, E-0377)
+; sets bit 2 of the byte at [HL]; only A is clobbered
 SetBit2AtHL_B12::
     ld a, [hl]
     or $04
     ld [hl], a
     ret
 
-; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; [HL] &= $FB (clears bit 2 of the byte at HL); A = the new byte, other registers kept. Callers in
+; this bank clear bit 2 of hPlayerStateFlags (FinishObjectPath) or of the sprite flag bytes
+; (wSpriteSlots + $D, wObject1 + OBJ_FLAGS and the next objects) with it (the same 5 bytes appear in
+; 4 banks). (C2, E-0377)
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
 ClearBit2AtHL_Bank12::
     ld a, [hl]
     and $fb
@@ -5954,7 +5972,7 @@ ClearBit2AtHL_Bank12::
 ; SetFollowerTargetsFromLeader in bank $02 to capture the current leader chain positions. Always
 ; far-call StepFollowersTowardTargets afterward. A controls only whether targets refresh; it is not
 ; copied into a coordinate. All three records are processed regardless of party count, and the
-; banked calls restore the calling bank. (C1, E-0361)
+; banked calls restore the calling bank. (C2, E-0361; probed E-0377)
 ; A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls
 ; SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093) (the same
 ; 17 bytes appear in 3 banks)
@@ -5967,6 +5985,13 @@ UpdateFollowersOnStep_Bank12::
     farcall StepFollowersTowardTargets
     ret
 
+; The bank-$12 message box runner, one frame per call: A = the freeze flag, kept on the stack (0
+; freezes the field animation in state 0 and resumes it in state 3). Returns at once while
+; wMessageState is $FF (idle); otherwise runs state wMessageState: 0 RunMessageBox_Bank12_Open, 1
+; RunMessageBox_Bank12_ShowText (string wMessageIndex of category 1), 2 RunMessageBox_Bank12_Close
+; and 3 RunMessageBox_Bank12_Finish, which sets $FF again. wMessageGroup bit 7 (box already open)
+; and bit 6 (keep it open) steer states 0 and 2. Only RunMessageBoxCarryWhenIdle_Bank12 calls it.
+; (C2, E-0377)
 ; the bank-$12 message runner: the same four states as RunMessageBox, with A on the stack as the
 ; freeze flag instead of wStepPtrLo (state 0 also reads hMapId; not compared in full) (E-0079)
 RunMessageBox_Bank12::
@@ -6045,7 +6070,7 @@ RunMessageBox_Bank12_ShowText::
     ret
 
 ; Bank-$12 message box, state 2: when the text has finished, goes idle at once if wMessageGroup bit
-; 6 keeps the box open; otherwise plays sound $69 and closes the window. (C1, E-0357)
+; 6 keeps the box open; otherwise plays sound $69 and closes the window. (C2, E-0357; probed E-0377)
 RunMessageBox_Bank12_Close::
     pop af
     ld a, [wTextFlags]
@@ -6081,7 +6106,7 @@ RunMessageBox_Bank12_Close::
 ; Final state (3) shared by the bank-$12 message runners (RunMessageBox_Bank12,
 ; RunMessageBoxStateIfActive_Bank12 and KeyWorldBossBattle_RunMessageBoxState): once the window is
 ; closed (wTextWindowState low bits 0), unfreezes the animation unless the flag on the stack is set
-; and sets wMessageState to $FF (idle). (C1, E-0370)
+; and sets wMessageState to $FF (idle). (C2, E-0370; probed E-0377)
 RunMessageBox_Bank12_Finish::
     ld a, [wTextWindowState]
     and $03
@@ -6100,6 +6125,12 @@ RunMessageBox_Bank12_Finish::
     ld [wMessageState], a
     ret
 
+; The bank-$12 short message box runner, one frame per call: as RunMessageBox_Bank12 (A = the freeze
+; flag on the stack, nothing while wMessageState is $FF), but its box flags are in wMessageIndex
+; (bit 7 box already open, bit 6 keep it open) and the string is wMessageIndex & $3F of category 9.
+; States: RunMessageBoxStateIfActive_Bank12_Open, RunMessageBoxStateIfActive_Bank12_ShowText,
+; RunMessageBoxStateIfActive_Bank12_Close, then RunMessageBox_Bank12_Finish. Only
+; RunMessageBoxThenContinue calls it. (C2, E-0377)
 ; unless wMessageState is $FF (idle), runs the message box step for wMessageState (jump table)
 ; (E-0122)
 RunMessageBoxStateIfActive_Bank12::
@@ -6172,7 +6203,7 @@ RunMessageBoxStateIfActive_Bank12_ShowText::
     ret
 
 ; Bank-$12 short message box, state 2: when the text has finished, goes idle if wMessageIndex bit 6
-; keeps the box open; otherwise sound $69 and closes the window. (C1, E-0357)
+; keeps the box open; otherwise sound $69 and closes the window. (C2, E-0357; probed E-0377)
 RunMessageBoxStateIfActive_Bank12_Close::
     pop af
     ld a, [wTextFlags]
@@ -6270,8 +6301,8 @@ KeyWorldBossBattle_StartMessageText::
     inc [hl]
     ret
 
-; Key world message box, state 2: when the text has finished, closes the window (no sound). (C1,
-; E-0357)
+; Key world message box, state 2: when the text has finished, closes the window (no sound). (C2,
+; E-0357; probed E-0377)
 KeyWorldBossBattle_CloseMessageBox::
     pop af
     ld a, [wTextFlags]
@@ -6294,6 +6325,11 @@ KeyWorldBossBattle_CloseMessageBox::
     inc [hl]
     ret
 
+; Starts a message box: wMessageIndex = L and wMessageGroup = H (the message word: H bits 0-5 the
+; group, bits 6-7 the box flags), wMessageState = 0 so the next RunMessageBoxFar_Bank12 call opens
+; it; returns A = 0. KeyWorldBossBattle_ShowWarubouWaheyNoGood, KeyWorldBossBattle_ShowMessage,
+; KeyWorldFloorBattle_ShowWarubouWaheyThatWas and KeyWorldFloorBattle_ShowMessage call it (the same
+; 13 bytes as StartMessageHL_B0F). (C2, E-0377)
 ; the same 13 bytes as StartMessageHL_B0F (StartMessageHL_B0F) (E-0353)
 StartMessageHL_B0F_Bank12::
     ld a, l
@@ -6304,6 +6340,10 @@ StartMessageHL_B0F_Bank12::
     ld [wMessageState], a
     ret
 
+; Starts string A: wMessageIndex = A and wMessageState = 0, so the next message box call opens the
+; window and shows it; wMessageGroup is left as it is (its bits 7 and 6 are the box flags that
+; RunMessageBox_Bank12 reads). Returns A = 0. The script steps of this bank call it before running
+; the box with RunMessageBoxCarryWhenIdle_Bank12. (C2, E-0377)
 ; wMessageIndex = A, wMessageState = 0: the next RunMessageBox call opens the window and shows that
 ; string of the group already in wMessageGroup (E-0063, E-0079)
 StartMessageA::
@@ -6312,6 +6352,11 @@ StartMessageA::
     ld [wMessageState], a
     ret
 
+; One frame of the bank-$5F message box: wStepPtrLo = A (the freeze flag of RunMessageBox: 0 freezes
+; the field animation while the box is shown), far-calls RunMessageBox, then returns carry set once
+; wMessageState is $FF (idle), otherwise A = 0 and carry clear. KeyWorldBossBattle_StartBattle and
+; KeyWorldFloorBattle_StartBattle call it with A = 0 (the same 20 bytes appear in 4 banks). (C1,
+; E-0377)
 ; wStepPtrLo = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A =
 ; 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 RunMessageBoxFar_Bank12::
@@ -6327,13 +6372,18 @@ RunMessageBoxFar_Bank12::
     scf
     ret
 
+; One frame of the bank-$12 message box: RunMessageBox_Bank12 with A = the freeze flag, then falls
+; into RunMessageBoxCarryWhenIdle_Bank12_CheckIdle: carry set once wMessageState is $FF (idle),
+; otherwise A = 0 and carry clear. Eleven script steps in this bank (CountdownMessage_Finish,
+; MonsterScene_WaitMessage and others) call it each frame with A = 0, after a step started the
+; message, and move on when carry is set. (C1, E-0377)
 ; RunMessageBox_Bank12 (A = the freeze flag), then carry set when wMessageState = $FF (idle), else A
 ; = 0 and carry clear (E-0079)
 RunMessageBoxCarryWhenIdle_Bank12::
     call RunMessageBox_Bank12
 
-; Returns carry when the message box is idle (wMessageState $FF), otherwise A = 0 and no carry. (C1,
-; E-0357)
+; Returns carry when the message box is idle (wMessageState $FF), otherwise A = 0 and no carry. (C2,
+; E-0357; probed E-0377)
 RunMessageBoxCarryWhenIdle_Bank12_CheckIdle::
     ld a, [wMessageState]
     cp $ff
@@ -6345,6 +6395,9 @@ RunMessageBoxCarryWhenIdle_Bank12_CheckIdle::
     scf
     ret
 
+; One frame of the short message box: RunMessageBoxStateIfActive_Bank12 with A = the freeze flag,
+; then RunMessageBoxCarryWhenIdle_Bank12_CheckIdle: carry set once wMessageState is $FF (idle),
+; otherwise A = 0 and carry clear. Four script steps in this bank call it. (C1, E-0377)
 ; runs RunMessageBoxStateIfActive_Bank12, then continues at
 ; RunMessageBoxCarryWhenIdle_Bank12_CheckIdle (E-0126) (E-0344: the address in its name dropped or
 ; read as the label there; was RunMessageBoxThenContinue)
@@ -6357,6 +6410,11 @@ KeyWorldBossBattle_RunMessageBox::
     call KeyWorldBossBattle_RunMessageBoxState
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckIdle
 
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 x (C / 8) + B / 8 (rows of 20 entries);
+; copies that entry and the next to wTilesUnderPoint and wTilesUnderPoint + $1, and the two entries
+; below them to wTilesUnderPoint + $2 and + $3; returns HL on the bottom-right entry, BC kept.
+; FieldScene01_Variant2_RideUntilLand calls it; ReadTileBuffer2x2AtPixel_Bank12 is an identical copy
+; in this bank (the same 63 bytes appear in 3 banks). (C2, E-0377)
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries);
 ; copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and
 ; wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry
@@ -6396,6 +6454,9 @@ ReadTileBuffer2x2AtPixel_Bank12_2::
     ld [wTilesUnderPoint + $3], a
     ret
 
+; Draws the trigger marker and the scene object for the frame: DrawTriggerMarkerSprite, then
+; RunDrawTriggerMarkerSprite_DrawSceneObject (wObject5 when its bit 6 is set). Six field states in
+; bank $02 far-call it each frame after DrawFieldSprites. (C1, E-0377)
 ; runs DrawTriggerMarkerSprite and RunDrawTriggerMarkerSprite_DrawSceneObject; shared by the field
 ; mode states (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; RunDrawTriggerMarkerSprite)
@@ -6404,6 +6465,15 @@ RunDrawTriggerMarkerSprite::
     call RunDrawTriggerMarkerSprite_DrawSceneObject
     ret
 
+; Adds a generated key: clears wKeyRetryCount, takes the first free wKeyList slot
+; (FindFreeKeySlotToTemp0; with none it returns hTemp0 = 0) and writes kind $FE there
+; (WriteKeyEntryTemp0: level from the party strength, bytes 1-2 rolled). An earlier generated key
+; (byte 3 bit 7 clear) with the same byte 2 makes it erase the entry and roll again: always when
+; byte 1 also matches, and otherwise while the incremented wKeyRetryCount is below 20. Then hTemp0 =
+; 1, the seed wKeyRandomLo/Hi is saved at wKeySeeds + 2 x hTempA, and wInventorySortFlags bit 7 is
+; set. hTempA is only set to the slot when it is not 0, so a key in slot 0 saves its seed at the
+; index left in hTempA. Called by talk events (the Magic Key chests), the library and arena code and
+; scenes. (C2, E-0377)
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing
 ; key, and saves the random seed in wKeySeeds; hTemp0 = 1, or 0 when the list is full (E-0129)
 GenerateNewKeyEntry::
@@ -6501,6 +6571,10 @@ GenerateNewKeyEntry::
     ld [wInventorySortFlags], a
     ret
 
+; hTemp0 = the index of the first free wKeyList entry (byte 0 = $FF), or $80 when the 32 entries are
+; all used or 20 of the entries before the free one are generated keys (byte 3 bit 7 clear; entries
+; with bit 7 set are not counted). GenerateNewKeyEntry and two key events in bank $0D call it. (C2,
+; E-0377)
 ; hTemp0 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack
 ; bit 7 of byte 3 (E-0125)
 FindFreeKeySlotToTemp0::
@@ -6544,6 +6618,12 @@ FindFreeKeySlotToTemp0::
     ldh [hTemp0], a
     ret
 
+; Writes key entry hTemp0 of wKeyList with kind hTemp1 in byte 0. For a kind other than $FE byte 3
+; becomes $80 and bytes 1-2 are left as they were. For kind $FE (a generated key) it far-calls
+; ComputePartyStrengthForKey and RollKeyContentsForLevelTemp0 with hTemp0 = wPartyStrength, then
+; writes hTemp1, hTemp2 and hTemp3 (the rolled name bytes and the level) to bytes 1-3. hTemp0 is
+; overwritten in that case. Called by GenerateNewKeyEntry and key events in banks $04, $0C, $0F,
+; $13, $73 and others. (C2, E-0377)
 ; writes key entry hTemp0: byte 0 = hTemp1 and byte 3 = $80; for kind $FE generates the remaining
 ; bytes (ComputePartyStrengthForKey, RollKeyContentsForLevelTemp0) from hTemp1-hTemp3 (E-0125)
 WriteKeyEntryTemp0::
@@ -6585,6 +6665,9 @@ WriteKeyEntryTemp0::
     ld [hl], a
     ret
 
+; hTemp0 = the number of wKeyList entries before the first one whose byte 0 is $FF, or $80 when all
+; 32 entries are used. Key events in banks $04, $0C, $0F, $13, $73 and others call it before giving
+; a key. (C2, E-0377)
 ; counts the 4-byte wKeyList entries before the first $FF: hTemp0 = the count, or $80 when all 32
 ; are in use (E-0074)
 CountKeysOrFull::
@@ -6610,6 +6693,13 @@ CountKeysOrFull::
     ldh [hTemp0], a
     ret
 
+; Removes key entry hTemp0: far-calls ClearKeyWorldActiveForMatchingKeyEntry (the and $7F before the
+; bit 7 test makes this unconditional); when the kind byte has bit 7 set and is not $FE, writes $FF
+; at SRAM bank 2 $A000 + $195 x (kind & $1F) with SRAM enabled, then sets rRAMG and rRAMB to 0. It
+; then moves the later entries and their wKeySeeds pairs down one place and sets the last entry to
+; $FF (the last seed pair is left); for entry $1F only the last entry is cleared. wCurrentKeyIndex
+; drops by 1 when it was above hTemp0. Called by the pause menu (bank $03) and the link code in bank
+; $1B. (C2, E-0377)
 ; removes key entry hTemp0: clears the matching wKeyWorldActive link, marks its SRAM-bank-2 slot
 ; free and shifts the later entries down (E-0130)
 DeleteKeyEntryTemp0::
@@ -6751,6 +6841,12 @@ DeleteKeyEntryTemp0::
     dec [hl]
     ret
 
+; On screen entry (two map-load paths in bank $02 far-call it after the screen is drawn): on map $7F
+; or $92 at screen (0, 0) outside the special map types, or on map type $82, runs field command $12
+; (RunFieldCommandTemp0, which loads the scene-object sprite of
+; RunFieldCommandTemp0_LoadSceneObject18) and shows the scene object: wObject5 = $40 (bit 6, drawn
+; by RunDrawTriggerMarkerSprite_DrawSceneObject) at ($40, $10) on map $7F, ($40, $40) on map $92 and
+; ($40, $30) on map type $82. (C1, E-0377)
 ; on map $7F or $92 at screen (0, 0), or with wMapType = $82, runs field command $12 and places
 ; objects at wObject5 + $4/4 and wObject5 (E-0127)
 PlaceSpecialMapObjectsOnEntry::
@@ -6813,6 +6909,12 @@ PlaceSpecialMapObjectsOnEntry::
     ld [wObject5], a
     ret
 
+; Loads the floating scene sprite drawn by DrawAnimatedMetaSprite1B: decompresses Tiles0Plus700Gfx
+; (bank $7E) to vTiles0 + $300 when hTemp0 is 0, or to vTiles0 + $700 otherwise, and sets
+; wSpriteFloatY = $30. On CGB it copies the 8 palette bytes at SharedOBJPalettes + $D8 (bank $7E) to
+; wOBJPaletteBuffer + $18 (OBJ palette 3) or + $38 (palette 7) and sets wOBJPaletteUploadRequest =
+; $7F. BossWinScene_LoadSprites (bank $5F) far-calls it with hTemp0 = 1 and a scene in bank $73 with
+; hTemp0 = 0. (C1, E-0377)
 ; decompresses Tiles0Plus700Gfx to vTiles0 + $300 (or + $700 when hTemp0 is set), wSpriteFloatY =
 ; $30, and on CGB copies an 8-byte palette from bank $7E (E-0125) (E-0344: the address in its name
 ; dropped or read as the label there; was LoadSpriteGraphics7EToTiles0)
@@ -6862,6 +6964,9 @@ LoadSpriteGraphics7EToTiles0::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; wSpriteFloatY -= 2; when the result is $C0 or more (it went below 0) it becomes $30 again, so the
+; floating sprite moves up 2 pixels a call and restarts at $30. Scene steps in banks $5F and $73
+; far-call it each frame before DrawAnimatedMetaSprite1B. (C2, E-0377)
 ; wSpriteFloatY -= 2, and when the result is $C0 or more it becomes $30 (E-0117)
 CycleSpriteFloatYDown::
     ld a, [wSpriteFloatY]
@@ -6874,6 +6979,12 @@ CycleSpriteFloatYDown::
     ld [wSpriteFloatY], a
     ret
 
+; Draws meta-sprite set $1B (DrawMetaSprite) for the sprite LoadSpriteGraphics7EToTiles0 loaded:
+; hTemp0 = 0 uses tile offset $30 and attribute bits 3, otherwise $70 and 7. The sub-index is
+; DrawAnimatedMetaSprite1B_Data[the frame counter wFrameCounterLo/Hi modulo 30] (DivideHLByA returns
+; the remainder in A): 0 for remainders 0-9, 1 for 10-19, 2 for 20-29. The origin is ($48,
+; wSpriteFloatY + $10). Scene steps in banks $5F and $73 far-call it after CycleSpriteFloatYDown.
+; (C1, E-0377)
 ; draws metasprite set $1B with a frame from DrawAnimatedMetaSprite1B_Data chosen by the frame
 ; counter / 30, at ($48, wSpriteFloatY + $10) (E-0125)
 DrawAnimatedMetaSprite1B::
@@ -7497,10 +7608,16 @@ RunDrawTriggerMarkerSprite_DrawSceneObject::
     ret z
     jr DrawFieldSprites_DrawEntry
 
+; Draws the script meta-sprite object: returns when wFieldActionRequest bit 7 is set or wObject5 bit
+; 7 is clear; otherwise falls into DrawFieldSprites_DrawEntry with DE = wObject5, which draws that
+; one entry: tile offset SCRIPTOBJ_TILE_OFFSET, set SCRIPTOBJ_SPRITE_SET & $7F (sub-index from
+; DrawFieldSprites_AnimateSubIndex when bit 7 is set, else 0), attribute bits SCRIPTOBJ_ATTR, origin
+; SCRIPTOBJ_X + 8 and SCRIPTOBJ_Y + $10 plus the 16-bit scroll, one DrawMetaSprite call. Six field
+; states in bank $02 and screens in banks $24, $F1 and $F2 far-call it each frame. (C1, E-0377)
 ; unless the map is loading or wObject5 bit 7 is clear: reads the sprite entries starting at
 ; wObject5 (tile offset, set index with bit 7 selecting a sub index, attribute, position bytes),
 ; sets the hSprite inputs and 16-bit positions from them plus the scroll, and draws each with
-; DrawMetaSprite (E-0030)
+; DrawMetaSprite
 DrawFieldSprites::
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -7564,7 +7681,8 @@ DrawFieldSprites_DrawEntry::
 ; (DrawFieldSprites_StepFrameLoop) and use the frame wObject5 + $7 as hSpriteSubIndex; set $1F steps
 ; its list and maps the frame through DrawFieldSprites_AnimateSubIndex_Data5; set $20 steps the
 ; (sub-index, duration) pairs of DrawFieldSprites_AnimateSubIndex_Data8
-; (DrawFieldSprites_StepFramePairs); any other set leaves hSpriteSubIndex unchanged. (C1, E-0370)
+; (DrawFieldSprites_StepFramePairs); any other set leaves hSpriteSubIndex unchanged. (C2, E-0370;
+; probed E-0377)
 DrawFieldSprites_AnimateSubIndex::
     push af
     ld hl, wObject5 + $6
@@ -7639,7 +7757,7 @@ DrawFieldSprites_AnimateSubIndex::
     ret
 
 ; Steps a frame-duration list: when the counter reaches the current frame's duration it restarts and
-; the frame advances, wrapping to 0 at $FF. (C1, E-0357)
+; the frame advances, wrapping to 0 at $FF. (C2, E-0357; probed E-0377)
 DrawFieldSprites_StepFrameLoop::
     ld a, [wObject5 + $7]
     add_a_to_hl
@@ -7667,7 +7785,7 @@ DrawFieldSprites_StepFrameLoop::
     ret
 
 ; Steps a list of (sub-index, duration) pairs, holding on the last frame at $FF; returns the current
-; sub-index. (C1, E-0357)
+; sub-index. (C2, E-0357; probed E-0377)
 DrawFieldSprites_StepFramePairs::
     push hl
     ld a, [wObject5 + $7]
@@ -7779,6 +7897,15 @@ FieldCommandSpriteTable::
     dw Gfx_FieldCommandSpriteTable_20 ; id 21
     db $a0, $00
 
+; Sets up the trigger of the current screen on map load: wTriggerKind = $FF (none); then, on the
+; town maps $20, $30, $48, $70, $A8, $B0 and $B8, or on a special map type whose low three bits are
+; 0, finds the first of the wMapObjectCount 8-byte wMapObjects entries whose byte 0 has bit 7 clear
+; and whose byte 4 is the screen (hMapScreenX in the high nibble, hMapScreenY in the low).
+; wTriggerIndex = its index and FindTriggerEntryForCurrentScreen_StoreTrigger stores byte 5 in
+; wTriggerCell and the kind (byte 0 & 3, or FindTriggerEntryForCurrentScreen_StoreTrigger_Data[byte
+; 1] when that is 0) in wTriggerKind, loading the marker graphics when the kind is not 0. Two
+; map-load paths in bank $02 far-call it, then FindTriggerEntryForCurrentScreen_ScreenTriggers. (C1,
+; E-0377)
 ; wTriggerKind = $FF; on town maps (or special maps of type 0) finds the wMapObjects entry for the
 ; current screen and sets wTriggerIndex, wTriggerCell and wTriggerKind from it (E-0128)
 FindTriggerEntryForCurrentScreen::
@@ -7849,6 +7976,13 @@ FindTriggerEntryForCurrentScreen::
     ld [wTriggerIndex], a
     jr FindTriggerEntryForCurrentScreen_StoreTrigger
 
+; The same search over wScreenTriggers (4-byte entries: the screen in byte 2, the cell in byte 3):
+; on maps $30 and above (not special map types) it searches the first three entries whatever
+; wScreenTriggerCount is (it returns when the count is 0), on map type $85 wScreenTriggerCount
+; entries, on maps below $30 it sets wScreenTriggerCount = 0, and on other special map types it
+; returns. A match sets wTriggerIndex = wScreenTriggerCount minus the entries left (the entry index
+; only when the count is 3) and goes on to FindTriggerEntryForCurrentScreen_StoreTrigger. Called
+; right after FindTriggerEntryForCurrentScreen. (C1, E-0377)
 ; on maps from $30 (or special map $85) finds the wScreenTriggers entry for the current screen and
 ; sets wTriggerIndex, wTriggerCell and wTriggerKind from it (E-0128)
 FindTriggerEntryForCurrentScreen_ScreenTriggers::
@@ -8028,6 +8162,15 @@ TriggerSpriteTable::
     db $40 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
 
+; Draws the trigger marker each field frame: returns when wFieldActionRequest bit 7 is set or
+; wTriggerKind is $FF; otherwise meta-sprite set DrawTriggerMarkerSprite_Data1[wTriggerKind],
+; sub-index 0, tile offset $40, attribute bits 4, drawn (DrawMetaSprite) at a position plus the
+; 16-bit scroll. With wTriggerMarkerFlags bit 7 set the position is (wTriggerCell + 8, wTriggerIndex
+; + $10); otherwise, when the screen has triggers or the map type bit 7 is clear, the cell
+; wTriggerCell (X cell in the high nibble, Y cell in the low) at (16 x X + 8, 16 x Y + $10); on
+; special maps without screen triggers the pixel pair DrawTriggerMarkerSprite_Data2[2 x
+; wTriggerCell] plus (8, $10). RunDrawTriggerMarkerSprite and one field state in bank $02 call it.
+; (C1, E-0377)
 ; unless bit 7 of wFieldActionRequest is set or no trigger is active (wTriggerKind = $FF), draws the
 ; trigger marker sprite (DrawTriggerMarkerSprite_Data1) at the trigger cell wTriggerCell (E-0130)
 DrawTriggerMarkerSprite::
@@ -8180,6 +8323,15 @@ DrawTriggerMarkerSprite_Data2::
     db $10, $20, $10, $70, $20, $10, $20, $40, $20, $60, $30, $30, $40, $50, $40, $70
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
 
+; The A button on a trigger in the field (two field states in bank $02 far-call it): returns while
+; the text window is busy (wTextWindowState low bits), wFieldActionRequest bit 7 or
+; hPlayerStateFlags bit 0 is set, A is not newly pressed (wJoypadPressed bit 0), or wTriggerKind is
+; not 2 or 3. Otherwise tests the point in front of the player (hPlayerX, hPlayerY moved by
+; hPlayerFacing: 0 Y + $11, 1 X + $11, 2 Y - 1, 3 X - 1) with IsPlayerOnTriggerCell; on the cell it
+; starts talk group $0F of category 0, Talk_StepTriggerReward (wTalkEventGroup = $0F,
+; wTalkEventIndex = 0, DispatchTalkEvent), clears wJoypadHeld and wJoypadPressed, and redraws the
+; screen (RedrawScreenBufferIfPartyWindowFlagsBit7) when wPartyWindowFlags bit 7 is set. (C1,
+; E-0377)
 ; A in the field when nothing blocks input: checks whether the player stands on a trigger cell
 ; (wTriggerKind 2 or 3, IsPlayerOnTriggerCell) (E-0339; was CheckTriggerCellOnA)
 CheckTriggerCellOnA::
@@ -8253,6 +8405,12 @@ CheckTriggerCellOnA::
 .return:
     ret
 
+; Stepping onto a trigger (the field movement update in bank $02 far-calls it): returns when
+; wTriggerEnable is 1, wFieldStepFlags is $C0, or wTriggerKind is $FF, 2 or 3 (those wait for the A
+; button, CheckTriggerCellOnA). When the player position (hPlayerX, hPlayerY) is on the trigger cell
+; (IsPlayerOnTriggerCell) it starts Talk_StepTriggerReward (talk group $0F of category 0 through
+; DispatchTalkEvent) and clears wJoypadHeld and wJoypadPressed; when a script is running with
+; wTalkEventIndex 0 and wTalkEventGroup $1D it first sets wEncounterDelay = 1. (C1, E-0377)
 ; when the player stands on a trigger (IsPlayerOnTriggerCell) and nothing blocks it, sets
 ; wTalkEventGroup = $0F and far-calls DispatchTalkEvent, clearing the joypad state (E-0125)
 CheckStepTriggerAndDispatchTalk::
@@ -8501,6 +8659,11 @@ FieldState_WalkAMenu_CheckKeyWorldItemOnA::
 FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data::
     db $01, $10, $12, $13, $20, $21, $23, $32
 
+; B = X pixel, C = Y pixel: A = 1 when the 16-pixel cell (B / 16, C / 16) is the trigger cell,
+; otherwise A = 0; BC kept. The trigger cell is wTriggerCell (X in the high nibble, Y in the low) on
+; ordinary maps and map type $85, and the (X, Y) byte pair IsPlayerOnTriggerCell_Data[2 x
+; wTriggerCell] on the other special map types. CheckTriggerCellOnA and
+; CheckStepTriggerAndDispatchTalk call it. (C2, E-0377)
 ; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wTriggerCell (or its
 ; IsPlayerOnTriggerCell_Data entry on special maps), else 0 (E-0127)
 IsPlayerOnTriggerCell::
@@ -8561,6 +8724,12 @@ IsPlayerOnTriggerCell_Data::
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 x (C / 8) + B / 8 (rows of 20 entries);
+; copies that entry and the next to wTilesUnderPoint and wTilesUnderPoint + $1, and the two entries
+; below them to wTilesUnderPoint + $2 and + $3; returns HL on the bottom-right entry, BC kept.
+; FieldState_WalkAMenu_CheckKeyWorldItemOnA and RunPendingFieldEventPendingFieldEvent_PlaceSprite
+; call it; ReadTileBuffer2x2AtPixel_Bank12_2 is an identical copy in this bank (the same 63 bytes
+; appear in 3 banks). (C2, E-0377)
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries);
 ; copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and
 ; wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry
@@ -8600,6 +8769,19 @@ ReadTileBuffer2x2AtPixel_Bank12::
     ld [wTilesUnderPoint + $3], a
     ret
 
+; Once every 100 calls on the town maps ($20, $30, $48, $70, $A8, $B0, $B8, $C8) or in the key world
+; (map type $80), tries the town events in turn until one sets wPendingFieldEvent and returns carry:
+; EventCheckGoldAtLeast10000, TriggerEventCDIfPartyHPTotalBelow100,
+; TriggerEventCEIfPartyMPTotalBelow100, TriggerEventCFIfPartyLevelTotalBelow100,
+; TriggerEventC0IfHPDigitsRepeat, TriggerEventC1IfGoldDigitSumAtMost12,
+; TriggerEventC2IfPartyHPLastDigitsMatch, TriggerEventC3IfGoldDigitSum30,
+; TriggerEventC6IfGoldAtLeast, TriggerEventCBIfMemberStatused,
+; TriggerEventC7IfGold1000AndNoItems19To1C, RunPeriodicFieldEventChecks_LowHPTownEvent,
+; TriggerEventC9IfExpDigitsRepeat and TriggerEventC4OrC5IfGold1000; A = 0 and no carry when none
+; does. wTownEventTimer counts the calls (at 99 it resets to 0 and the checks run). Returns at once
+; while a script runs or wPendingFieldEvent bit 7 is set. The field movement update in bank $02
+; far-calls it each step, and RunPendingFieldEventPendingFieldEvent_PlaceSprite calls it with the
+; timer at 99. (C2, E-0377)
 ; on town maps, every 100 calls (wTownEventTimer), tries the gold, party-stat and digit events in
 ; turn until one sets wPendingFieldEvent (E-0128)
 RunPeriodicFieldEventChecks::
@@ -8664,7 +8846,7 @@ RunPeriodicFieldEventChecks::
     ret c
     call TriggerEventC6IfGoldAtLeast
     ret c
-    call TriggerEventForStatusedMemberHP
+    call TriggerEventCBIfMemberStatused
     ret c
     call TriggerEventC7IfGold1000AndNoItems19To1C
     ret c
@@ -8677,6 +8859,9 @@ RunPeriodicFieldEventChecks::
     sub a
     ret
 
+; Town event $CC, the first check of RunPeriodicFieldEventChecks: when EVENT_KING_YOU_WILL_I_KNEW is
+; set, EVENT_KING_IF_YOU_SEE is clear and the gold is at least 10,000 ($2710), wPendingFieldEvent =
+; $CC and carry set; otherwise A = 0 and carry clear. (C2, E-0377)
 ; when story flag $192 is set, flag $193 is clear and gold >= 10,000 ($2710): wPendingFieldEvent =
 ; $CC and carry set; otherwise A = 0 and carry clear (E-0075)
 EventCheckGoldAtLeast10000::
@@ -8710,6 +8895,11 @@ EventCheckGoldAtLeast10000::
     sub a
     ret
 
+; Town event $CD: with EVENT_KING_YOU_WILL_I_KNEW_195 set and EVENT_KING_IF_YOU_SEE_196 clear, sums
+; the MON_HP words of the wPartyCount records in wPartyList (16 bits in hTemp2/hTemp3, SRAM enabled
+; for the loop and disabled after); a total below 100 sets wPendingFieldEvent = $CD and carry,
+; otherwise A = 0 and carry clear. There is no empty-party guard. Called by
+; RunPeriodicFieldEventChecks. (C2, E-0377)
 ; with story flag $195 set and $196 clear: when the party's total HP is below 100,
 ; wPendingFieldEvent = $CD and carry (E-0127)
 TriggerEventCDIfPartyHPTotalBelow100::
@@ -8771,6 +8961,11 @@ TriggerEventCDIfPartyHPTotalBelow100::
     sub a
     ret
 
+; Town event $CE: with EVENT_KING_YOU_WILL_I_KNEW_198 set and EVENT_KING_IF_YOU_SEE_199 clear, sums
+; the MON_MP words of the wPartyCount records in wPartyList (16 bits in hTemp2/hTemp3, SRAM enabled
+; for the loop and disabled after); a total below 100 sets wPendingFieldEvent = $CE and carry,
+; otherwise A = 0 and carry clear. There is no empty-party guard. Called by
+; RunPeriodicFieldEventChecks. (C2, E-0377)
 ; with story flag $198 set and $199 clear: when the party's total MP is below 100,
 ; wPendingFieldEvent = $CE and carry (E-0127)
 TriggerEventCEIfPartyMPTotalBelow100::
@@ -8832,6 +9027,10 @@ TriggerEventCEIfPartyMPTotalBelow100::
     sub a
     ret
 
+; Town event $CF: with EVENT_KING_YOU_WILL_I_KNEW_19B set and EVENT_KING_IF_YOU_SEE_19C clear, sums
+; the MON_LEVEL bytes of the wPartyCount records in wPartyList (16 bits in hTemp2/hTemp3, SRAM
+; enabled for the loop and disabled after); a total below 100 sets wPendingFieldEvent = $CF and
+; carry, otherwise A = 0 and carry clear. Called by RunPeriodicFieldEventChecks. (C2, E-0377)
 ; with story flag $19B set and $19C clear: when the party's total level is below 100,
 ; wPendingFieldEvent = $CF and carry (E-0127)
 TriggerEventCFIfPartyLevelTotalBelow100::
@@ -8892,6 +9091,10 @@ TriggerEventCFIfPartyLevelTotalBelow100::
     sub a
     ret
 
+; Town event $C9: with at least 1,000 gold, when a party member has a 24-bit MON_EXP whose ones,
+; tens and hundreds digits are equal (Number24ToPackedBCD), wPendingFieldEvent = $C9 and carry;
+; otherwise A = 0 and carry clear. SRAM is enabled for the loop and rRAMG is cleared on every
+; return. Called by RunPeriodicFieldEventChecks. (C2, E-0377)
 ; with at least 1000 gold: when a party member's EXP has its last three decimal digits equal,
 ; wPendingFieldEvent = $C9 and carry (E-0128)
 TriggerEventC9IfExpDigitsRepeat::
@@ -8970,10 +9173,15 @@ TriggerEventC9IfExpDigitsRepeat::
     sub a
     ret
 
+; Town event $CB: with at least 1,000 gold, when a party member has MON_STATUS bit 7, 2 or 0 set,
+; wPendingFieldEvent = $CB and carry; otherwise A = 0 and carry clear. For such a member it compares
+; MON_MAX_HP with half of MON_MAX_HP (both loads read MON_MAX_HP), so the HP test always passes.
+; SRAM is enabled for the loop and disabled on return. Called by RunPeriodicFieldEventChecks. (C2,
+; E-0377)
 ; with at least 1000 gold: checks party members with status bits 7, 2 or 0 of field $55 against half
 ; their max HP and may set an event (E-0128) (E-0344: the address in its name dropped or read as the
-; label there; was TriggerEventForStatusedMemberHP)
-TriggerEventForStatusedMemberHP::
+; label there; was TriggerEventCBIfMemberStatused)
+TriggerEventCBIfMemberStatused::
     ld a, [wGoldHi]
     or a
     jr nz, .read_party_count
@@ -9059,9 +9267,11 @@ TriggerEventForStatusedMemberHP::
     sub a
     ret
 
-; The low-HP town event: when wEventItemSlot is free and the gold is at least 1,000, sets pending
-; field event $C8 (carry) if the party's total HP is under 30% of its total maximum HP (total / 100
-; x 30). (C1, E-0357)
+; Town event $C8: when wEventItemSlot is $FF or 0 and the gold is at least 1,000, sums the party
+; MON_MAX_HP words, divides the sum by 100 (rounded down) and multiplies by 30; when the party total
+; MON_HP is at or below that, wPendingFieldEvent = $C8 and carry, otherwise A = 0 and carry clear.
+; SRAM is enabled for each sum and disabled after. Called by RunPeriodicFieldEventChecks. (C2,
+; E-0377)
 RunPeriodicFieldEventChecks_LowHPTownEvent::
     ld a, [wEventItemSlot]
     cp $ff
@@ -9162,6 +9372,10 @@ RunPeriodicFieldEventChecks_LowHPTownEvent::
     sub a
     ret
 
+; Town event $C7: when wEventItemSlot is $FF or 0 and the gold is at least 1,000, scans wInventory
+; up to the first $00 or $FF byte (there is no 24-slot limit); when no item before it is $19-$1C
+; (ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB, ITEM_SIRLOIN), wPendingFieldEvent = $C7 and carry;
+; otherwise A = 0 and carry clear. Called by RunPeriodicFieldEventChecks. (C2, E-0377)
 ; when wEventItemSlot is $FF or 0, the gold is at least 1000 and no inventory slot before the first
 ; empty one holds items $19-$1C: wPendingFieldEvent = $C7 and carry (E-0125)
 TriggerEventC7IfGold1000AndNoItems19To1C::
@@ -9215,6 +9429,9 @@ TriggerEventC7IfGold1000AndNoItems19To1C::
     sub a
     ret
 
+; Town event $C6: when wEventItemSlot is $FF or 0 and the gold is at least 5,000 ($1388),
+; wPendingFieldEvent = $C6 and carry; otherwise A = 0 and carry clear. Called by
+; RunPeriodicFieldEventChecks. (C2, E-0377)
 ; when wEventItemSlot is $FF or 0 and the gold is at least 5000, wPendingFieldEvent = $C6 and carry;
 ; otherwise A = 0, no carry (E-0124) (E-0344: the address in its name dropped or read as the label
 ; there; was TriggerEventC6IfGoldAtLeast)
@@ -9250,6 +9467,9 @@ TriggerEventC6IfGoldAtLeast::
     sub a
     ret
 
+; Town event $C4 or $C5, the last check of RunPeriodicFieldEventChecks: with at least 1,000 gold and
+; the last bag slot (wInventory + $17) $FF or 0, steps NextTableByte and sets wPendingFieldEvent =
+; $C4 + (wRandomHi & 1) with carry; otherwise A = 0 and carry clear. (C2, E-0377)
 ; when the gold is at least 1000 and wInventory + $17 is $FF or 0: wPendingFieldEvent = $C4 or $C5
 ; at random and carry (E-0125)
 TriggerEventC4OrC5IfGold1000::
@@ -9290,6 +9510,10 @@ TriggerEventC4OrC5IfGold1000::
     scf
     ret
 
+; Town event $C3: with at least 5,000 gold and the last bag slot (wInventory + $17) $FF or 0, adds
+; up the decimal digits of the 24-bit gold (Number24ToPackedBCD); a sum of 30 or more sets
+; wPendingFieldEvent = $C3 and carry, otherwise A = 0 and carry clear. With the last slot taken it
+; returns with carry clear and A nonzero. Called by RunPeriodicFieldEventChecks. (C2, E-0377)
 ; with at least 5000 gold and wInventory + $17 $FF or 0: when the gold's decimal digits sum to at
 ; least 30, wPendingFieldEvent = $C3 and carry (E-0128)
 TriggerEventC3IfGoldDigitSum30::
@@ -9364,6 +9588,10 @@ TriggerEventC3IfGoldDigitSum30::
     scf
     ret
 
+; Town event $C2: with at least 1,000 gold, compares the ones digits (HLToDecimalDigits) of the
+; MON_HP of the first two, or three, wPartyList members; when they all match, or the party has one
+; member, wPendingFieldEvent = $C2 and carry; otherwise A = 0 and carry clear. SRAM is enabled for
+; the check and disabled after. Called by RunPeriodicFieldEventChecks. (C2, E-0377)
 ; with at least 1000 gold: when every party member's HP ends in the same decimal digit,
 ; wPendingFieldEvent = $C2 and carry (E-0128)
 TriggerEventC2IfPartyHPLastDigitsMatch::
@@ -9444,6 +9672,10 @@ TriggerEventC2IfPartyHPLastDigitsMatch::
     sub a
     ret
 
+; Town event $C1: with the last bag slot (wInventory + $17) $FF or 0 and at least 1,000 gold, adds
+; up the decimal digits of the 24-bit gold (Number24ToPackedBCD); a sum of 12 or less sets
+; wPendingFieldEvent = $C1 and carry, otherwise A = 0 and carry clear. Called by
+; RunPeriodicFieldEventChecks. (C2, E-0377)
 ; with at least 1000 gold and wInventory + $17 $FF or 0: when the gold's decimal digits sum to at
 ; most 12, wPendingFieldEvent = $C1 and carry (E-0128)
 TriggerEventC1IfGoldDigitSumAtMost12::
@@ -9519,6 +9751,10 @@ TriggerEventC1IfGoldDigitSumAtMost12::
     scf
     ret
 
+; Town event $C0: when a party member has a MON_HP whose decimal digits (HLToDecimalDigits) are all
+; equal, such as 77 or 333, or a single-digit HP (0-9), wPendingFieldEvent = $C0 and carry;
+; otherwise A = 0 and carry clear. There is no gold condition. SRAM is enabled for the loop and
+; disabled on return. Called by RunPeriodicFieldEventChecks. (C2, E-0377)
 ; when a party member's HP has all decimal digits equal (for example 77 or 333), wPendingFieldEvent
 ; = $C0 and carry (E-0127)
 TriggerEventC0IfHPDigitsRepeat::
@@ -9582,6 +9818,9 @@ TriggerEventC0IfHPDigitsRepeat::
     scf
     ret
 
+; When wPendingFieldEvent has bit 7 set and bit 6 clear (an event whose sprite has been placed),
+; clears wPendingFieldEvent and wTownEventTimer; otherwise changes nothing. Scenes in bank $61 and
+; map code in bank $11 far-call it (nine sites). (C2, E-0377)
 ; when wPendingFieldEvent has bit 7 set and bit 6 clear: wPendingFieldEvent = 0 and wTownEventTimer
 ; = 0 (E-0117)
 ClearPendingFieldEventIfBit7AndNot6::
@@ -9595,6 +9834,12 @@ ClearPendingFieldEventIfBit7AndNot6::
     ld [wTownEventTimer], a
     ret
 
+; On map load (two map-load paths in bank $02 far-call it after the screen objects are set up):
+; returns when ClearPendingFieldEventWhenFieldIdle_BeforeCrate returns A nonzero (it cleared the
+; event itself), when wTriggerKind is not $FF, or while a script runs. Otherwise on ordinary maps it
+; clears wPendingFieldEvent, and on special map types it goes to
+; RunPendingFieldEventPendingFieldEvent_IfKeyWorld, which places the pending event sprite only in
+; the key world (map type $80). (C1, E-0377)
 ; returns unless ClearPendingFieldEventWhenFieldIdle_BeforeCrate is 0, wTriggerKind is $FF and no
 ; script runs; then, unless bit 7 of wMapType is set, wPendingFieldEvent = 0 (E-0122)
 ClearPendingFieldEventWhenFieldIdle::
@@ -9614,6 +9859,11 @@ ClearPendingFieldEventWhenFieldIdle::
     ld [wPendingFieldEvent], a
     ret
 
+; No call, jump or table entry in src/ reaches it (it follows the ret of
+; ClearPendingFieldEventWhenFieldIdle). It clears wPendingFieldEvent when the kind (low nibble) is 8
+; or the map is not one of the town maps $20, $30, $48, $70, $A8, $B0, $B8 and $C8; on those maps it
+; goes to RunPendingFieldEventPendingFieldEvent_PlaceSprite, which places and draws the pending
+; event sprite. (C1, E-0377)
 ; on town maps runs the pending event in wPendingFieldEvent (bits 7 and 6 select the stage; some
 ; kinds need wInventory + $17); otherwise clears it (E-0130)
 RunPendingFieldEventPendingFieldEvent::
@@ -9761,6 +10011,13 @@ RunPendingFieldEventPendingFieldEvent_PlaceSprite::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; Called by RunPendingFieldEventPendingFieldEvent_PlaceSprite after ReadTileBuffer2x2AtPixel_Bank12
+; filled wTilesUnderPoint. When the wMapSpriteKind low nibble is 1 and a tile there is at or below
+; wMapTallTileMin, steps NextRandomSeed once; when wKeyRandomHi & 7 is then 0, the bag holds item
+; $2C (ITEM_TINYMEDAL, FindTemp0InInventoryList), the last bag slot is $FF or 0 and the gold is at
+; least 100, it sets the low nibble of wPendingFieldEvent to $0A (high nibble kept) and returns A =
+; 0. Otherwise it returns A = 1 when any of the four tiles is at or below wMaxBlockingTile, else A =
+; 0. (C2, E-0377)
 ; on map type 1, standing on tiles at or above wMapTallTileMin, a 1-in-8 roll sets event $0A in
 ; wPendingFieldEvent unless item $2C is owned or the gold is below 100; then A = 1 when any tile
 ; under the player is blocking (E-0128)
@@ -9854,7 +10111,8 @@ PendingFieldEventSpritePositions::
     db $20, $20, $70, $60, $20, $60, $70, $20
 
 ; Returns A = 1, clearing the pending town event, on map $30 screen (5, 5) outside key worlds after
-; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD but before EVENT_SCENE_CRATE; otherwise A = 0. (C1, E-0357)
+; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD but before EVENT_SCENE_CRATE; otherwise A = 0. (C2, E-0357;
+; probed E-0377)
 ClearPendingFieldEventWhenFieldIdle_BeforeCrate::
     ld a, [wMapType]
     bit 7, a
@@ -9883,6 +10141,9 @@ ClearPendingFieldEventWhenFieldIdle_BeforeCrate::
     xor a
     ret
 
+; hTemp0/hTemp1 = a species word: hTemp0 = the party index (wPartyList order) of the first member
+; whose MON_SPECIES word equals it, or $80 when none does. SRAM is enabled for the search and
+; disabled after. Talk events in bank $13 and scenes in banks $5F and $73 far-call it. (C2, E-0377)
 ; hTemp0 = the party index whose record species (field $0B) equals the word hTemp0/7, or $80 when
 ; none (E-0125)
 FindPartyIndexOfSpeciesTemp0::
@@ -9924,8 +10185,12 @@ FindPartyIndexOfSpeciesTemp0::
     ld [rRAMG], a
     ret
 
+; hTemp0 = an item id: hTemp0 = the index of the first wInventory slot holding it, or $FF when an
+; empty slot ($00 or $FF) comes first or none of the 24 slots holds it. B, C and HL change. Talk and
+; field events in banks $04, $12, $13 and others far-call it to test whether the bag holds an item.
+; (C2, E-0377)
 ; hTemp0 = the index of the first byte of the 24-entry list at wInventory equal to hTemp0; $FF when
-; an entry is $00 or $FF first or no entry matches (E-0353)
+; an entry is $00 or $FF first or no entry matches
 FindTemp0InInventoryList::
     ldh a, [hTemp0]
     ld c, a
@@ -9956,6 +10221,10 @@ FindTemp0InInventoryList::
     ldh [hTemp0], a
     ret
 
+; hTemp0 = an inventory slot (0-$17): removes it by moving each later wInventory byte down one slot
+; and setting the last slot, wInventory + $17, to $FF; for slot $17 only that store happens. There
+; is no range check (a slot above $17 runs the copy past the bag). Item-taking events in banks $04,
+; $0F, $13 and others call it, usually with a slot from FindTemp0InInventoryList. (C2, E-0377)
 ; hTemp0 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last
 ; slot keeps its old value), then wInventory + $17 = $FF; nothing moves when the slot is $17
 ; (E-0106)
@@ -9984,6 +10253,11 @@ RemoveInventorySlotShiftDown::
     ld [wInventory + $17], a
     ret
 
+; Searches the party for a dancer: for each wPartyList record reads the MON_SKILLS bytes up to the
+; first $FF (at most 8); hTemp1 = the party index of the first member knowing one of SKILL_ODDDANCE
+; to SKILL_SIDESTEP ($76-$7D) or SKILL_DANCESHUT ($92) and hTemp2 = that skill, or hTemp1 = $80 with
+; hTemp2 unchanged. SRAM is enabled for the search and disabled after. YoldTalkEvents_MermaidPast
+; (bank $04) far-calls it. (C2, E-0377)
 ; hTemp1 = the index of the first party member knowing skill $76-$7D or $92 and hTemp2 = that skill,
 ; or hTemp1 = $80 (E-0128)
 FindPartyMemberWithSkill76To7DOr92::
@@ -10061,12 +10335,17 @@ FindPartyMemberWithSkill76To7DOr92::
     ret
 
 ; Clears hTemp1 and returns. GreatLogTalkEvents_Talk204 far-calls it and returns early only when
-; hTemp1 bit 7 is set, so its test always passes. (C1, E-0370)
+; hTemp1 bit 7 is set, so its test always passes. (C2, E-0370; probed E-0377)
 GreatLogTalkEvents_Talk204_PassCheck::
     xor a
     ldh [hTemp1], a
     ret
 
+; hTemp0/hTemp1 = an amount taken from the 24-bit gold (wGoldLo/Mid/Hi), but the floor test is
+; inverted: with wGoldHi = 0 the amount is subtracted with no check, so a larger amount wraps the
+; gold to $FFxxxx; with wGoldHi nonzero a wGoldMid:wGoldLo below the amount clears all the gold to 0
+; (65,552 - 32 gives 0), otherwise it subtracts normally. Casino and other Great Log scenes in bank
+; $73 far-call it (the casino ship takes 100 gold with it). (C2, E-0377)
 ; wGold -= the word hTemp0/hTemp1; when gold is smaller than the amount it becomes 0 instead
 ; (E-0075)
 SubtractGoldFloorZero::
@@ -10107,6 +10386,9 @@ SubtractGoldFloorZero::
     ld [wGoldHi], a
     ret
 
+; hTemp0/hTemp1 = an amount: adds it to the 24-bit gold (wGoldLo/Mid/Hi) and caps the result at
+; 99,999 ($01869F). Talk events in bank $13, Great Log scenes in bank $73 and two routines of this
+; bank call it. (C2, E-0377)
 ; adds the word hTemp0/hTemp1 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999)
 ; (E-0074)
 AddGoldCapped::
@@ -10149,8 +10431,8 @@ AddGoldCapped::
     ld [wGoldHi], a
     ret
 
-; Halves the gold (the 24-bit wGoldHi/Mid/Lo shifted right): the return message's penalty. (C1,
-; E-0357)
+; Halves the gold (the 24-bit wGoldHi/Mid/Lo shifted right): the return message's penalty. (C2,
+; E-0357; probed E-0377)
 HalveGold::
     ld a, [wGoldHi]
     srl a
@@ -10163,6 +10445,9 @@ HalveGold::
     ld [wGoldLo], a
     ret
 
+; The gold penalty of DeductGoldPenaltyAndFormatLoss (bank $73): takes all the gold when it is below
+; 150, 150 when it is below 1,500, otherwise one tenth of it rounded down (Divide24ByA by 10). (C2,
+; E-0377)
 ; takes gold: all of it when below 150, 150 when below 1,500 ($05DC), otherwise one tenth
 ; (Divide24ByA, rounded down) (E-0075)
 DeductGoldPenalty::

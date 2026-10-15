@@ -10,7 +10,9 @@ A probe file is a JSON list of probes. Each probe:
      "sram": {"1:A000": [0, 1]},                          optional save RAM bytes, "BANK:ADDR"
      "expect": {"regs": {"e": 0, "h": 0, "l": 6}, "flags": {"z": false},
                 "mem": {"C0A0": 6}, "sram": {"1:A000": [0, 1]}},
-     "claim": "the part of the note this checks"}
+     "claim": "the part of the note this checks",
+     "target": "12:668A"}                                  optional: the routine this checks, when it is entered
+                                                          through another one (a jumptable state through its runner)
 
 Values are integers or "0x.." / "$.." strings. The runner pushes a sentinel return address, runs until the routine
 returns to it (at most `max_steps` instructions, default 2,000,000) and compares. A probe passes when it returns and
@@ -110,6 +112,15 @@ def run(probe: dict, rom: bytes) -> list[str]:
         if got != want:
             bad.append(f"sram {k} = {got}, expected {want}")
     return bad
+
+
+def checks(probe: dict) -> str:
+    """'BB:AAAA' of the routine a probe checks: its target, or else the address it runs from."""
+    if probe.get("target"):
+        bank, addr = str(probe["target"]).split(":")
+    else:
+        bank, addr = str(probe["bank"]), str(probe["address"])
+    return f"{num('0x' + bank.lstrip('$')):02X}:{num('0x' + addr.lstrip('$')):04X}"
 
 
 def load(paths) -> list[dict]:

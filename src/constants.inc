@@ -782,11 +782,11 @@ DEF EVENT_HELLO_OUR_YOUNG_SAVIOR EQU $02D ; set by Script_HelloOurYoungSavior
 DEF EVENT_THAT_KEY_IUSED EQU $02E ; set by Talk04CB_ThatKeyIUsed
 DEF EVENT_SCENE_KEY_SHOP EQU $02F ; set by Script_OhGoodnessI
 DEF EVENT_WELL_WHO_WOULD_HAVE EQU $031 ; set by Script_WellWhoWouldHave
-DEF EVENT_WHEN_YOU_BREED_MONSTERS EQU $032 ; no setter found; tested by SetFlagsC9AndCAFrom32And33, Talk0B56_WhenYouBreedMonsters
-DEF EVENT_WHEN_YOU_BREED_MONSTERS_033 EQU $033 ; no setter found; tested by SetFlagsC9AndCAFrom32And33, Talk0B56_WhenYouBreedMonsters
+DEF EVENT_WHEN_YOU_BREED_MONSTERS EQU $032 ; no setter found; tested by GreatLogTalkEvents_SyncMap17ObjectFlags, Talk0B56_WhenYouBreedMonsters
+DEF EVENT_WHEN_YOU_BREED_MONSTERS_033 EQU $033 ; no setter found; tested by GreatLogTalkEvents_SyncMap17ObjectFlags, Talk0B56_WhenYouBreedMonsters
 DEF EVENT_WHEN_YOU_BREED_MONSTERS_034 EQU $034 ; no setter found; tested by Talk0B56_WhenYouBreedMonsters
-DEF EVENT_BREEDING_FIRE_AND_ICE EQU $035 ; no setter found; tested by SetFlagsCBAndCCFrom35And36, Talk0B6D_BreedingFireAndIce
-DEF EVENT_BREEDING_FIRE_AND_ICE_036 EQU $036 ; no setter found; tested by SetFlagsCBAndCCFrom35And36, Talk0B6D_BreedingFireAndIce
+DEF EVENT_BREEDING_FIRE_AND_ICE EQU $035 ; no setter found; tested by GreatLogTalkEvents_SyncMap04ObjectFlags, Talk0B6D_BreedingFireAndIce
+DEF EVENT_BREEDING_FIRE_AND_ICE_036 EQU $036 ; no setter found; tested by GreatLogTalkEvents_SyncMap04ObjectFlags, Talk0B6D_BreedingFireAndIce
 DEF EVENT_SCENE_TERRY_BATTLE EQU $037 ; set by SceneTerryBattle_Start
 DEF EVENT_SCENE_TERRY_BATTLE_038 EQU $038 ; set by SceneTerryBattle_ShowTerryWellThisProves
 DEF EVENT_SCENE_KAMEHA_KEY_BATTLE EQU $039 ; set by SceneKamehaKeyBattle_AfterBattle
@@ -898,10 +898,10 @@ DEF EVENT_SCENE_BEATEN_FAIRLY_0C5 EQU $0C5 ; set by Script_WahahahahHereAgainAre
 DEF EVENT_SCENE_BEATEN_FAIRLY_0C6 EQU $0C6 ; set by Script_WahahahahHereAgainAre, Script_YouOvercameTheTraps
 DEF EVENT_SCENE_BEATEN_FAIRLY_0C7 EQU $0C7 ; set by Script_WahahahahHereAgainAre, Script_YouOvercameTheTraps
 DEF EVENT_DESK_KEY_0C8 EQU $0C8 ; set by GreatLogTalkEvents_ShowHeroFoundAMagic, Script_HeroCheckedTheDesk_3
-DEF EVENT_MAP_17_OBJECT_REMOVED EQU $0C9 ; set by SetFlagsC9AndCAFrom32And33
-DEF EVENT_MAP_17_OBJECT_REMOVED_0CA EQU $0CA ; set by SetFlagsC9AndCAFrom32And33
-DEF EVENT_MAP_04_OBJECT_REMOVED EQU $0CB ; set by SetFlagsCBAndCCFrom35And36
-DEF EVENT_MAP_04_OBJECT_REMOVED_0CC EQU $0CC ; set by SetFlagsCBAndCCFrom35And36
+DEF EVENT_MAP_17_OBJECT_REMOVED EQU $0C9 ; set by GreatLogTalkEvents_SyncMap17ObjectFlags
+DEF EVENT_MAP_17_OBJECT_REMOVED_0CA EQU $0CA ; set by GreatLogTalkEvents_SyncMap17ObjectFlags
+DEF EVENT_MAP_04_OBJECT_REMOVED EQU $0CB ; set by GreatLogTalkEvents_SyncMap04ObjectFlags
+DEF EVENT_MAP_04_OBJECT_REMOVED_0CC EQU $0CC ; set by GreatLogTalkEvents_SyncMap04ObjectFlags
 DEF EVENT_THE_WAY_YOU_SAVED_GREAT EQU $0CD ; set by GreatLogTalkEvents_DidYouKnow
 DEF EVENT_THE_KING_IS_TOO_LENIENT EQU $0CE ; set by TalkMsg0035_TheKingIsTooLenientOn
 DEF EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR EQU $0D0 ; set by Script_DarckFawahahahYouChased

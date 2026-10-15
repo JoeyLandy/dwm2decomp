@@ -169,8 +169,7 @@ def main() -> int:
         import label_map
         import probe
         at = {v: k for k, v in label_map.snapshot(ROOT / "build/listing").items()}
-        probed = {f"{int(str(p['bank']), 16):02X}:{int(str(p['address']), 16):04X}"
-                  for p in probe.load(sorted((ROOT / "config/probes").glob("*.json")))}
+        probed = {probe.checks(p) for p in probe.load(sorted((ROOT / "config/probes").glob("*.json")))}
         exp = ROOT / "config/probe_exclusions.json"
         excluded = {k: v for k, v in _json.loads(exp.read_text(encoding="utf-8")).items()
                     if not k.startswith("_")} if exp.exists() else {}

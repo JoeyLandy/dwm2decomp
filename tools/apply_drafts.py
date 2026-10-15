@@ -88,7 +88,7 @@ def validate_probes(probes: list[dict], entries: list[dict], rom: bytes | None =
             problems.append(f"{Path(pr['_draft']).name} probe {pid}: missing or repeated id")
         seen.add(pid)
         try:
-            k = key(pr)
+            k = probe_mod.checks(pr)
         except (KeyError, ValueError):
             problems.append(f"{Path(pr['_draft']).name} probe {pid}: no bank/address")
             continue

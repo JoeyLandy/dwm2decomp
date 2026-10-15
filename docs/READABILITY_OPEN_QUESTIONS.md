@@ -1055,3 +1055,59 @@ reading itself. Labels are as named when the batch was applied; later renames ar
 - `DrawScriptMetaSpriteAtScrollOffset` (12:5BD9): The dead wMapSpriteKind read suggests set $23 + kind - 1 was intended; no evidence beyond the code shape.
 - `SetupScriptSpriteInFrontOfPlayer` (12:5C31): What does Gfx7E_7 show (the sprite of the RandomGoldOrItem find and of the strongest-master scene)?
 - `SpawnScriptSpriteInFrontOfPlayer` (12:5C3F): Is SpawnScriptSpriteInFrontOfPlayer reached through a computed jump, or is it unused?
+
+## E-0377
+
+- `GenerateNewKeyEntry` (12:689A): When the new key lands in slot 0, hTempA is not written and the seed goes to wKeySeeds + 2 x the stale hTempA; do the callers leave hTempA at 0?
+- `FindTriggerEntryForCurrentScreen_ScreenTriggers` (12:710A): On maps $30 and above the loop always checks three entries and wTriggerIndex = wScreenTriggerCount - remaining; with a count below 3 a match can give an index past the count or $FF. Is the count always 3 when screen triggers exist?
+- `DrawTriggerMarkerSprite` (12:722A): src/ram.asm says wTriggerMarkerFlags bit 7 hides the marker, but here bit 7 selects raw pixel coordinates (wTriggerCell, wTriggerIndex); which reading is right for the other users?
+- `TriggerEventCBIfMemberStatused` (12:781E): The HP comparison loads MON_MAX_HP twice, so any statused member triggers $CB; was MON_HP meant for the second load (the name and the old note speak of HP)?
+- `RunPendingFieldEventPendingFieldEvent` (12:7BCC): Is this routine reached at all (a computed jump, or dead code)? ClearPendingFieldEventWhenFieldIdle clears the pending event on ordinary maps instead of running it.
+- `RollFieldEventOnTallTiles` (12:7CD9): src/ram.asm describes wMapTallTileMin as tiles at or above it; here and in banks $02 and $04 the tiles that count are those at or below it.
+- `SubtractGoldFloorZero` (12:7E84): Do the bank $73 callers check the gold first, so the inverted floor never matters in play?
+- `FhuntTalkEvents_ShowHeroCheckedTheSmall` (13:46EF): FhuntTalkEvents_IsDisguisedAsListedMonster only returns hTemp0 = 0 or 2, so the message $045C branch (hTemp0 = 1) looks unreachable from this caller; not confirmed in play.
+- `FhuntTalkEvents_PowerOfJustice` (13:475B): What hTemp0 holds when the talk handler runs with a qualifying disguise decides between the script and the message; the earlier reading assumed the helper answers in hTemp0.
+- `FhuntTalkEvents_Sound` (13:4977): The existing note reads clearing wObject1 + OBJ_STATE as facing down; the probe only shows the byte is cleared, OBJ_STATE meaning is not established here.
+- `FhuntTalkEvents_PowerOfJustice2` (13:499C): As for FhuntTalkEvents_PowerOfJustice: with a qualifying disguise the result rests on the hTemp0 left by earlier code.
+- `FhuntTalkEvents_PowerOfJustice3` (13:49B5): As for FhuntTalkEvents_PowerOfJustice: with a qualifying disguise the result rests on the hTemp0 left by earlier code.
+- `ToggleMapBetween7FAnd92` (13:49D5): Which talk spot raises talk group $72 in category 5, and on which maps ($7F, $92) it is placed, is not read here.
+- `TalkMsg0DDB_WhatIsItLeave` (13:5732): Why EVENT_SCENE_MEDICINE_GIVEN alone clears wSpriteSlots + $7 and starts no message or script.
+- `TalkMsg00FF_Composing_13` (13:5777): Message $00FF reads 'Composing'; whether this is a placeholder entry.
+- `NordenTalkEvents_SecondShieldScene` (13:5894): Whether the Crest is always carried when this entry is reachable (the map object selectors would decide).
+- `GreatLogTalkEvents` (13:5941): Which map areas the later entries (77 onward: hibernation, the casket, the hole, signs) belong to.
+- `TalkMsg003C_YoureTheKidsFromTheNew` (13:6048): EVENT_YOURE_THE_KIDS_FROM_THE is set on every talk in the food-scene phase but not tested here; its reader is elsewhere.
+- `TalkMsg003A_ThatWeirdApeThingIsWarubou` (13:618F): What story flag $300 (bit 0 of wStoryFlags + $60) records; nothing here tests it.
+- `TalkMsg0A3C_KingIfYouSee` (13:70D9): What sets EVENT_KING_IF_YOU_SEE and EVENT_KING_YOU_WILL_I_KNEW in each round (the scripts started here or a battle)?
+- `TalkMsg0A3C_KingIfYouSee` (13:70D9): tools/probe_scope.py classes this routine as hardware only because the source writes the gold amount 40,000 ($9C40) as ld hl, vBGMap1 + $40; the source would read better as ld hl, 40000.
+- `GreatLogTalkEvents_SetObject0XAfter50Species` (13:7F31): What object is slot 0 on this map, and why does a talk-table entry move it?
+- `StartRecordListOrNoneMessage` (14:43CC): No reference to StartRecordListOrNoneMessage ($14:43CC) was found; is it an unused fourth option of HibernateMenu_DoOption, the only way into state 6 (HibernateMenu_ChooseWithStats)?
+- `HibernateMenu_ChooseWithStats` (14:5492): How is HibernateMenu state 6 reached in play, if at all (see StartRecordListOrNoneMessage)?
+- `DrawBox1D4AndCopyRect` (14:556D): DrawBox1D4AndCopyRect ($14:556D) has no reference in src/; unused?
+- `ToggleVoicingMarkOnNameEntry` (14:60E6): ToggleVoicingMarkOnNameEntry ($14:60E6) has no reference in src/; unused?
+- `DeleteSRAMRecordAndCompact` (14:7E96): The compaction reads one source record past record 29 (the first byte of sCompactRecords); does that byte ever hold 1 or 2?
+- `BreedMenu_ChooseParents_CheckChildSeen` (15:4BBE): What wMonsterLibraryBuf holds at this step (BreedMenu_ChooseParents_ComputeChild also tests it).
+- `RemoveRecordBFromParty` (15:4F4C): RemoveRecordBFromParty ($15:4F4C) has no reference in src/; unused?
+- `BreedMenu_NameEntry` (15:55D2): Why the named record is deleted and written back into the first free record: does this move the child to the end of the farm list?
+- `BreedMenu_ReturnToMap_CopySixteenTiles` (15:5A2D): Off by one: does the write of glyph $D0 to $0021-$0030 leave cartridge RAM enabled or disabled (it ends with the last byte of that glyph tile)?
+- `DrawScreenBufferRect_Bank15` (15:65F1): Why wStringIndex $10-$12 keep the text cursor (which strings are shown with it)?
+- `CopyEligibleRecordNameToTextBuf3Row` (16:42C4): What MON_STATUS bit 0 means (the Laurel and field skill 11 clear it; field skill 10 cures bit 2, read as poison).
+- `RefuseItemIfRecordFallen` (16:4636): Whether ListPartyMembersWithField55Bit0 refusing whenever a fallen member is tested is intended.
+- `SaveForbiddenHere` (16:4645): Why a special map with encounters forbids saving while one without allows it (the wMapType case is a reading only).
+- `ApplyItemEffect` (16:468E): Which entry is reached for ids above $62 (the table has 99 entries and no bound check).
+- `ItemApply_WorldDew_HealMember` (16:4790): Whether a caller reads wItemId after ApplyItemEffect, where a fallen member makes it $FF.
+- `EquipItemOnRecordTargetRecord` (16:4A48): Which caller uses hTemp0 (0 = new equipment, 1 = swap with the old name in wTextBuf3).
+- `AddWItemIdToInventory` (16:4C78): Whether it is dead code or reached through a pointer not found by the listing.
+- `RemoveWItemIdFromInventory` (16:4C9E): Whether it is dead code or reached through a pointer not found by the listing.
+- `FieldSkillUsable_CurePartyPoison` (16:5333): What MON_STATUS bit 0 means; the skill is named a party poison cure from an earlier note, but it works on bit 0, not bit 2.
+- `FieldSkillUsable_CurePartyPoison` (16:5333): Whether the refusal when a fallen party member is met (wItemId $FF with names still listed) is visible in the game.
+
+### E-0377: notes reported wrong outside the reporting worker's slice
+
+Reported by batch-9 workers, not verified by the integrator yet, and queued for re-reading in the next batch:
+
+- `HealRecordHPByRandomAmount`: the note says wRandomLo / (wItemEffectAmount + 1); DivideBByA's remainder is used (mod).
+- `FieldSkillEffect_HealPartyHurt`: the note says 30-120 HP; by the arithmetic of FieldSkillEffect_HealOne it is 90-120.
+- `ItemUsable_MoonHerb`: its bit 3 test result is reported unused, so it would always refuse unless the target has fallen.
+- `ListPartyMembersWithField55Bit0`: the note leaves out the refusal when a fallen member is tested.
+- `BreedMenu_ChooseParents_CheckChildIsNew`: may share the "in the library's list" wording that was wrong for BreedMenu_ChooseParents_CheckChildSeen.
+- RAM notes in src/ram.asm: wItemMessage names the old SetWD08D12IfItemRefused/SetWD08D14IfItemRefused; wTriggerMarkerFlags bit 7 selects raw pixel coordinates in DrawTriggerMarkerSprite (it does not hide the marker); wMapTallTileMin is tested as "at or below" (banks $02, $04, $12), not "at or above".

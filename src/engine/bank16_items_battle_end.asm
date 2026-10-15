@@ -4,8 +4,10 @@
 SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $f0, $c6, $cd, $92, $4a, $c9
 
+; Copies the 13-byte ItemTable record of item wItemId (ItemTable + 13 x id) to wItemRecord. Called
+; by the pause item menu, the gift menu, LoadSelectedInventoryItemRecord and
+; RunBattleActions_UseItem_ConsumeItem. (C2, E-0377)
 ; wItemId (wItemId) = item id: copies the 13-byte ItemTable record to wItemRecord (wItemRecord)
-; (E-0034)
 LoadItemRecord::
     ld de, wItemRecord
     push de
@@ -29,6 +31,11 @@ LoadItemRecord::
     jr nz, .loop
     ret
 
+; Returns at once when wItemId is $FF; otherwise jumps through a table of usability checks by
+; wItemId (ItemUsable_Herb for 1-2, ItemUsable_WorldDew for 3 and 11, ItemUsable_Potion for 4-5, and
+; so on to the belts). A check refuses by setting wItemId = $FF and may set wItemUseMessage and the
+; names in wTextBuf3; ApplyItemEffect then performs the use. Called by the pause item menu use
+; steps. (C2, E-0377)
 ; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id
 ; (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most
 ; entries are the shared ItemUsable_VITbelt; for example ItemUsable_Herb refuses use when the words
@@ -139,17 +146,21 @@ CheckItemUsable::
     dw ItemUsable_VITbelt
     dw ItemUsable_VITbelt
 
-; Item 0: no check (always usable). (C1, E-0357)
+; Item 0: no check (always usable). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 0 (no name); item names from StringTable_ItemNames (E-0085)
 ItemUsable_Item00::
     ret
 
+; Usability check for items 1 and 2 ('Herb', 'LoveWater'), also used by FieldSkillUsable_HealOne:
+; refused (wItemId = $FF) when the target wTargetRecord (party slot, through wPartyList) has fallen
+; (MON_STATUS bit 7, RefuseItemIfTargetFallen) or its MON_HP equals MON_MAX_HP; usable otherwise.
+; (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 1 Herb, 2 LoveWater; item names from StringTable_ItemNames; the body is not
 ; interpreted (E-0085)
 ItemUsable_Herb::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_HP
@@ -172,6 +183,11 @@ ItemUsable_Herb::
     ld [wItemId], a
     ret
 
+; Usability check for items 3 and 11 ('WorldDew', 'SageRock'), also used by
+; FieldSkillUsable_HealParty: refused (wItemId = $FF) when no party member is below full HP without
+; having fallen (MON_STATUS bit 7), or with an empty party. Otherwise copies the names of those
+; members into wTextBuf3, 16 bytes apart (ItemUsable_WorldDew_CountHealable), and sets
+; wItemUseMessage = $27 + their count. (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 3 WorldDew, 11 SageRock; item names from StringTable_ItemNames; the body is not
 ; interpreted (E-0085)
@@ -276,7 +292,7 @@ ItemUsable_WorldDew::
 
 ; WorldDew check for party member A: skips one that is not in the party, has fallen (MON_STATUS bit
 ; 7) or is at full HP; otherwise copies its name (five glyphs and marks) into wTextBuf3 at 16 x D
-; and counts it (D + 1). (C1, E-0357)
+; and counts it (D + 1). (C2, E-0357; probed E-0377)
 ItemUsable_WorldDew_CountHealable::
     ld [wTargetRecord], a
     ld hl, wPartyCount
@@ -324,11 +340,14 @@ ItemUsable_WorldDew_CountHealable::
     inc d
     ret
 
+; Usability check for items 4 and 5 ('Potion', 'ElfWater'), also used by FieldSkillUsable_GiveMP:
+; refused (wItemId = $FF) when the target wTargetRecord has fallen (MON_STATUS bit 7) or its MON_MP
+; equals MON_MAX_MP; usable otherwise. (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 4 Potion, 5 ElfWater; item names from StringTable_ItemNames; the body is not
 ; interpreted (E-0085)
 ItemUsable_Potion::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_MP
@@ -352,11 +371,11 @@ ItemUsable_Potion::
     ret
 
 ; Antidote: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 2;
-; usable otherwise. (C1, E-0357)
+; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Antidote::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -368,11 +387,11 @@ ItemUsable_Antidote::
     ret
 
 ; MoonHerb: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 3;
-; usable otherwise. (C1, E-0357)
+; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 7 MoonHerb; item names from StringTable_ItemNames (E-0085)
 ItemUsable_MoonHerb::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -384,11 +403,11 @@ ItemUsable_MoonHerb::
     ret
 
 ; Laurel: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 0;
-; usable otherwise. (C1, E-0357)
+; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 8 Laurel; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Laurel::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -399,6 +418,10 @@ ItemUsable_Laurel::
     ld [wItemId], a
     ret
 
+; Check of field skill 11 (FieldSkillUsable_CurePartyPoison): when a party member has MON_STATUS bit
+; 0 (poison) and not bit 7 (fallen), copies the names of all such members into wTextBuf3, 16 bytes
+; apart (CopyEligibleRecordNameToTextBuf3Row), and sets wItemUseMessage = $32 + their count;
+; otherwise, or with an empty party, wItemId = $FF. (C2, E-0377)
 ; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to
 ; wTextBuf3 and wItemUseMessage = $32 + their count; otherwise wItemId = $FF (E-0127)
 ListPartyMembersWithField55Bit0::
@@ -406,7 +429,7 @@ ListPartyMembersWithField55Bit0::
     and a
     jr z, .set_item_id_to_FF
     xor a
-    call CheckRecordFlag55Bit7
+    call RefuseItemIfRecordFallen
     jr nz, .check_party_count
     xor a
     ld c, MON_STATUS
@@ -419,7 +442,7 @@ ListPartyMembersWithField55Bit0::
     cp $02
     jr c, .set_item_id_to_FF
     ld a, $01
-    call CheckRecordFlag55Bit7
+    call RefuseItemIfRecordFallen
     jr nz, .check_party_count2
     ld a, $01
     ld c, MON_STATUS
@@ -432,7 +455,7 @@ ListPartyMembersWithField55Bit0::
     cp $03
     jr c, .set_item_id_to_FF
     ld a, $02
-    call CheckRecordFlag55Bit7
+    call RefuseItemIfRecordFallen
     jr nz, .set_item_id_to_FF
     ld a, $02
     ld c, MON_STATUS
@@ -458,6 +481,11 @@ ListPartyMembersWithField55Bit0::
     ld [wItemUseMessage], a
     ret
 
+; Step of ListPartyMembersWithField55Bit0, called for party slots 0, 1 and 2. A = party slot, D =
+; names listed so far: sets wTargetRecord = A; when A is below wPartyCount and the MON_STATUS byte
+; of that member has bit 7 clear and bit 0 set, copies its name (five glyphs plus any $8D/$8E marks,
+; then $F0; CopyFiveGlyphsPlusMarks) to wTextBuf3 + 16 * D and increments D. Otherwise D is
+; unchanged and nothing is written. (C2, E-0377)
 ; if record A (< wPartyCount) has field $55 bit 7 clear and bit 0 set, copies its name and marks
 ; (field 1) to wTextBuf3 + 16 * D and increments D (E-0121)
 CopyEligibleRecordNameToTextBuf3Row::
@@ -496,11 +524,11 @@ CopyEligibleRecordNameToTextBuf3Row::
     ret
 
 ; AwakeSand: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit
-; 1; usable otherwise. (C1, E-0357)
+; 1; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 9 AwakeSand; item names from StringTable_ItemNames (E-0085)
 ItemUsable_AwakeSand::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -512,11 +540,11 @@ ItemUsable_AwakeSand::
     ret
 
 ; SkyBell: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 4;
-; usable otherwise. (C1, E-0357)
+; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 10 SkyBell; item names from StringTable_ItemNames (E-0085)
 ItemUsable_SkyBell::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -527,7 +555,8 @@ ItemUsable_SkyBell::
     ld [wItemId], a
     ret
 
-; WorldLeaf: usable only on a fallen monster (status bit 7); refused otherwise. (C1, E-0357)
+; WorldLeaf: usable only on a fallen monster (status bit 7); refused otherwise. (C2, E-0357; probed
+; E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames (E-0085)
 ItemUsable_WorldLeaf::
@@ -541,11 +570,11 @@ ItemUsable_WorldLeaf::
     ret
 
 ; ATKseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
-; for its ATK (ShowRaiseAmountOrRefuse). (C1, E-0357)
+; for its ATK (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 13 ATKseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_ATKseed::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_ATK
@@ -558,11 +587,11 @@ ItemUsable_ATKseed::
     ret
 
 ; DEFseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
-; for its DEF (ShowRaiseAmountOrRefuse). (C1, E-0357)
+; for its DEF (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 14 DEFseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_DEFseed::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_DEF
@@ -575,11 +604,11 @@ ItemUsable_DEFseed::
     ret
 
 ; AGLseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
-; for its AGL (ShowRaiseAmountOrRefuse). (C1, E-0357)
+; for its AGL (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 15 AGLseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_AGLseed::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_AGL
@@ -592,11 +621,11 @@ ItemUsable_AGLseed::
     ret
 
 ; INTseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
-; for its INT (ShowRaiseAmountOrRefuse). (C1, E-0357)
+; for its INT (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 16 INTseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_INTseed::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_INT
@@ -609,11 +638,11 @@ ItemUsable_INTseed::
     ret
 
 ; LifeAcorn: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
-; for its max HP (ShowRaiseAmountOrRefuse). (C1, E-0357)
+; for its max HP (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames (E-0085)
 ItemUsable_LifeAcorn::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_MAX_HP
@@ -626,11 +655,11 @@ ItemUsable_LifeAcorn::
     ret
 
 ; MysticNut: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
-; for its max MP (ShowRaiseAmountOrRefuse). (C1, E-0357)
+; for its max MP (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 18 MysticNut; item names from StringTable_ItemNames (E-0085)
 ItemUsable_MysticNut::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_MAX_MP
@@ -643,11 +672,11 @@ ItemUsable_MysticNut::
     ret
 
 ; Quest: refused for a fallen monster or when personality byte 0 (MON_PERSONALITY) is already $FF.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 19 Quest?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Quest::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_PERSONALITY
@@ -660,11 +689,11 @@ ItemUsable_Quest::
     ret
 
 ; Horror: refused for a fallen monster or when personality byte 0 (MON_PERSONALITY) is already 0.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 20 Horror?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Horror::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_PERSONALITY
@@ -677,11 +706,11 @@ ItemUsable_Horror::
     ret
 
 ; BeNice: refused for a fallen monster or when personality byte 1 (MON_PERSONALITY) is already $FF.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 21 BeNice?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_BeNice::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_PERSONALITY + 1
@@ -694,11 +723,11 @@ ItemUsable_BeNice::
     ret
 
 ; Cheater: refused for a fallen monster or when personality byte 1 (MON_PERSONALITY) is already 0.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 22 Cheater?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Cheater::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_PERSONALITY + 1
@@ -711,11 +740,11 @@ ItemUsable_Cheater::
     ret
 
 ; Smart: refused for a fallen monster or when personality byte 3 (MON_PERSONALITY) is already $FF.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 23 Smart?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Smart::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_PERSONALITY + 3
@@ -728,11 +757,11 @@ ItemUsable_Smart::
     ret
 
 ; Comedy: refused for a fallen monster or when personality byte 3 (MON_PERSONALITY) is already 0.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 24 Comedy?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Comedy::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_PERSONALITY + 3
@@ -744,22 +773,23 @@ ItemUsable_Comedy::
     ld [wItemId], a
     ret
 
-; BeefJerky: refused only for a fallen monster. (C1, E-0357)
+; BeefJerky: refused only for a fallen monster. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin, 29 BadMeat, 30 MeteOrb; item names
 ; from StringTable_ItemNames (E-0085)
 ItemUsable_BeefJerky::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ret
 
-; BeastTail: no check. (C1, E-0357)
+; BeastTail: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 31 BeastTail; item names from StringTable_ItemNames (E-0085)
 ItemUsable_BeastTail::
     ret
 
-; Repellent: refused where there are no encounters (wEncounterRate & $7F = 0). (C1, E-0357)
+; Repellent: refused where there are no encounters (wEncounterRate & $7F = 0). (C2, E-0357; probed
+; E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Repellent::
@@ -770,14 +800,14 @@ ItemUsable_Repellent::
     ld [wItemId], a
     ret
 
-; Mist: no check. (C1, E-0357)
+; Mist: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 34 Mist?, 35 Friend?, 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?, 43 Bookmark; item
 ; names from StringTable_ItemNames (E-0085)
 ItemUsable_Mist::
     ret
 
-; Warp: the WarpWing's check (ItemUsable_WarpWing). (C1, E-0357)
+; Warp: the WarpWing's check (ItemUsable_WarpWing). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 40 Warp?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Warp::
@@ -786,7 +816,7 @@ ItemUsable_Warp::
 
 ; LogTwig: in a key world only in map type $80, otherwise only on the region maps $20, $30, $48,
 ; $70, $A0, $A8, $B0, $B8, $C8, $D1 and $DA; then ItemUsable_LogTwig_Check decides, and when it
-; finds nothing (hTempA = 0) wItemId becomes $FE (no effect here). (C1, E-0357)
+; finds nothing (hTempA = 0) wItemId becomes $FE (no effect here). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames (E-0085)
 ItemUsable_LogTwig::
@@ -836,6 +866,10 @@ ItemUsable_LogTwig::
     ld [wItemId], a
     ret
 
+; Usability check of items $29 WarpWing and $36 TidalBell (CheckItemUsable), also run by
+; ItemUsable_Warp and FieldSkillUsable_MapAroundPlayer: on a special map (wMapType bit 7) usable
+; only when wMapType is $80; on any other map usable only when the MapItemUseFlags byte for hMapId
+; has bit 6 set. A refusal sets wItemId = $FF. (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 41 WarpWing, 54 TidalBell; item names from StringTable_ItemNames; the body is not
 ; interpreted (E-0085)
@@ -860,7 +894,7 @@ ItemUsable_WarpWing::
     ret
 
 ; ExitBell: in a key world only in map types $81, $85 and $86; elsewhere only where the map's
-; MapItemUseFlags byte has bit 5. (C1, E-0357)
+; MapItemUseFlags byte has bit 5. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames (E-0085)
 ItemUsable_ExitBell::
@@ -887,20 +921,22 @@ ItemUsable_ExitBell::
     ld [wItemId], a
     ret
 
+; Usability check of items $2C TinyMedal and $2D GoldPass: no check; it returns at once, so wItemId
+; is kept and the item passes. (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 44 TinyMedal, 45 GoldPass; item names from StringTable_ItemNames; the body is not
 ; interpreted (E-0085)
 ItemUsable_TinyMedal::
     ret
 
-; Item $2F: no check. (C1, E-0357)
+; Item $2F: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 47 (no name); item names from StringTable_ItemNames (E-0085)
 ItemUsable_Item2F::
     ret
 
 ; WaterCall: only outside key worlds on map $2F, screen (0, 1), standing at ($40, $30) facing right
-; or at ($50, $40) facing up, and before EVENT_SCENE_MONSTERS_IN_TOW. (C1, E-0357)
+; or at ($50, $40) facing up, and before EVENT_SCENE_MONSTERS_IN_TOW. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 48 WaterCall; item names from StringTable_ItemNames (E-0085)
 ItemUsable_WaterCall::
@@ -951,7 +987,7 @@ ItemUsable_WaterCall::
     ret
 
 ; MoonRock: only on map $40, screen (0, 0), at Y $40 with X $40-$50 facing up, and before
-; EVENT_THE_PIRATES_WERE_SWALLOWED_BY. (C1, E-0357)
+; EVENT_THE_PIRATES_WERE_SWALLOWED_BY. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames (E-0085)
 ItemUsable_MoonRock::
@@ -990,7 +1026,7 @@ ItemUsable_MoonRock::
     ret
 
 ; Crest: only on map $49, screen (0, 0), at ($40, $40) facing up, after EVENT_SCENE_SHIELD_1E4 and
-; before EVENT_SCENE_SHIELD2_1E5. (C1, E-0357)
+; before EVENT_SCENE_SHIELD2_1E5. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 50 Crest; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Crest::
@@ -1029,14 +1065,14 @@ ItemUsable_Crest::
 .return:
     ret
 
-; YunaSoul: no check. (C1, E-0357)
+; YunaSoul: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 51 YunaSoul; item names from StringTable_ItemNames (E-0085)
 ItemUsable_YunaSoul::
     ret
 
 ; SleepHerb: only on map $61, screen (0, 0), at ($40, $40) facing up, before
-; EVENT_SCENE_SHIELD_GUARDIAN. (C1, E-0357)
+; EVENT_SCENE_SHIELD_GUARDIAN. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames (E-0085)
 ItemUsable_SleepHerb::
@@ -1073,7 +1109,7 @@ ItemUsable_SleepHerb::
     ret
 
 ; Change: only outside key worlds on maps $70-$9F except $76, $9A, $9B and map $7A's screen row 1,
-; and only while wScreenSavedFlag is set. (C1, E-0357)
+; and only while wScreenSavedFlag is set. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 53 Change?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Change::
@@ -1107,42 +1143,53 @@ ItemUsable_Change::
     ld [wItemId], a
     ret
 
+; Usability check of items $37 HarMirror and $38 Sky: no check; it returns at once, so wItemId is
+; kept and the item passes. (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 55 HarMirror, 56 Sky?; item names from StringTable_ItemNames; the body is not
 ; interpreted (E-0085)
 ItemUsable_HarMirror::
     ret
 
-; Heaven: no check. (C1, E-0357)
+; Heaven: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; item names from
 ; StringTable_ItemNames (E-0085)
 ItemUsable_Heaven::
     ret
 
-; Accessory: no check. (C1, E-0357)
+; Accessory: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 62 Accessory, 63 Accessory; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Accessory::
     ret
 
-; VITbelt: refused only for a fallen monster. (C1, E-0357)
+; VITbelt: refused only for a fallen monster. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 64 VITbelt, 65 DracoBelt, 66 MagicBelt, 67 OddBelt, 68 StoneFang, 69 SteelFang,
 ; 70 MermScale, 71 DrakScale, 72 AGL?, 73 Starry? ...; item names from StringTable_ItemNames
 ; (E-0085)
 ItemUsable_VITbelt::
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret
 
-; A = wTargetRecord, then CheckRecordFlag55Bit7 (E-0066)
-CheckTargetRecordFlag55Bit7::
+; Loads A = wTargetRecord and falls through into RefuseItemIfRecordFallen: when the target has
+; MON_STATUS bit 7 (fallen) set the item is refused (wItemId = $FF, A = $FF, Z clear); otherwise Z
+; is set and wItemId kept. Most ItemUsable_ checks and ItemApply_WorldDew_HealMember call it first.
+; (C2, E-0377)
+; A = wTargetRecord, then RefuseItemIfRecordFallen (E-0066)
+RefuseItemIfTargetFallen::
     ld a, [wTargetRecord]
 
+; A = party slot (SRAMRecordAddressMapped; the caller has enabled SRAM): tests bit 7 of its
+; MON_STATUS byte, the fallen bit by the MON_STATUS note. Clear: returns Z set, wItemId kept. Set:
+; wItemId = $FF, A = $FF and Z clear. ListPartyMembersWithField55Bit0 calls it directly for each
+; slot, so a fallen member leaves wItemId = $FF there even when another member is listed. (C2,
+; E-0377)
 ; A = record (SRAMRecordAddressMapped, offset $55; SRAM must be enabled): returns Z set when bit 7
 ; of that byte is clear; when it is set, wItemId = $FF, A = $FF and Z is clear. What the bit means
 ; is not known (E-0066)
-CheckRecordFlag55Bit7::
+RefuseItemIfRecordFallen::
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
@@ -1152,6 +1199,12 @@ CheckRecordFlag55Bit7::
     or a
     ret
 
+; Returns C = 1 when the game refuses to save here and C = 0 when saving is allowed: on a special
+; map (wMapType bit 7) saving is refused while wEncounterRate & $7F is non-zero; on any other map it
+; is refused when bit 4 of the MapItemUseFlags byte for hMapId is clear. TestSaveForbiddenHere
+; far-calls it for the Journal entry of the Plan page, which then shows the refusal String_08_08_0D.
+; An earlier emulator run saw that refusal on map $20, whose flag byte $C0 has bit 4 clear; bit 4 is
+; set for the GreatLog maps $00-$1F and the towns $21-$26. (C2, E-0377)
 ; C = 1 when the game refuses to save here: when wMapType bit 7 is set, while wEncounterRate & $7F
 ; is non-zero; otherwise when bit 4 of MapItemUseFlags + hMapId is clear (C2 for the map flag from
 ; E-0322: in the Desert world, map $20, whose flag byte $C0 has bit 4 clear, PLAN's Journal shows
@@ -1183,6 +1236,10 @@ SaveForbiddenHere::
 .return:
     ret
 
+; HL = cap, BC = current value (the seed checks pass 999 and the stat word): when they are equal
+; sets wItemId = $FF (refused). Otherwise writes the raise as a decimal string ending in $F0 at
+; wTextBuf3 (WriteDecimalByteString): wItemEffectAmount, or HL - BC when that is smaller; a
+; difference of 256 or more always shows wItemEffectAmount. (C2, E-0377)
 ; HL = cap, BC = current value: when they are equal sets wItemId = $FF (refuse); otherwise writes
 ; min(HL - BC, wItemEffectAmount) (wItemEffectAmount when the difference is 256 or more) as a
 ; decimal string at wTextBuf3 (WriteDecimalByteString) (E-0103)
@@ -1215,6 +1272,13 @@ ShowRaiseAmountOrRefuse::
     ld [wItemId], a
     ret
 
+; Uses item wItemId on party slot wTargetRecord; the pause menu far-calls it with SRAM bank 0
+; enabled (PauseMenu_Items_UseItem_Apply, PauseMenu_Items_UseItem_ApplyAgain,
+; PauseMenu_Items_UseItem_ChoiceCursor). Returns at once when wItemId is $FF; otherwise jumps
+; through a 99-entry table indexed by wItemId (ids 0-$62) to one ItemApply_ routine per item, the
+; counterpart of the CheckItemUsable table. The effects change the target record, wEncounterDelay,
+; wDataBankSave, wTownEventTimer or MON_ITEM, and most end in ConsumeSelectedItemByChance. (C2,
+; E-0377)
 ; returns when wItemId is $FF; otherwise jumps through a 95-entry table with one effect per item id.
 ; The Herb entry adds (wRandomLo after NextTableByte) / 11 + wItemEffectAmount to record
 ; wTargetRecord (AddHLToRecordHPCapped) and then runs ConsumeSelectedItemByChance; CheckItemUsable
@@ -1299,7 +1363,7 @@ ApplyItemEffect::
     dw ItemApply_DrakScale
     dw ItemApply_AGL
     dw ItemApply_Starry
-    dw ItemApply_Smart_2
+    dw ItemApply_SmartEquipment
     dw ItemApply_Wise
     dw ItemApply_MagicCape
     dw ItemApply_MagicCape
@@ -1325,13 +1389,13 @@ ApplyItemEffect::
     dw ItemApply_Life
     dw ItemApply_Item62
 
-; Item 0: no effect. (C1, E-0357)
+; Item 0: no effect. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 0 (no name) (E-0089)
 ItemApply_Item00::
     ret
 
 ; Herb: adds the item's amount (wItemEffectAmount) plus a random 0-10 to the target's HP, capped at
-; its max, and uses the item up by its chance. (C1, E-0357)
+; its max, and uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater
 ; (E-0089) (C2 from E-0326: a Herb on a record at 50 of 138 HP leaves 89; at 5 of 21, 21)
 ItemApply_Herb::
@@ -1351,7 +1415,7 @@ ItemApply_Herb::
     ret
 
 ; WorldDew: heals each of the three party places in turn (the helper skips fallen monsters) and uses
-; the item up by its chance. (C1, E-0357)
+; the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew (E-0089)
 ItemApply_WorldDew::
     ld a, $00
@@ -1363,14 +1427,15 @@ ItemApply_WorldDew::
     call ConsumeSelectedItemByChance
     ret
 
-; WorldDew effect for party member A: unless it is not in the party or has fallen
-; (CheckTargetRecordFlag55Bit7), sets its HP to its maximum. (C1, E-0357)
+; WorldDew effect for party slot A: returns when A is not below wPartyCount; otherwise sets
+; wTargetRecord = A and, unless the member has fallen (RefuseItemIfTargetFallen, which then also
+; sets wItemId = $FF), sets its HP to its maximum. (C2, E-0377)
 ItemApply_WorldDew_HealMember::
     ld hl, wPartyCount
     cp [hl]
     ret nc
     ld [wTargetRecord], a
-    call CheckTargetRecordFlag55Bit7
+    call RefuseItemIfTargetFallen
     ret nz
     ld a, [wTargetRecord]
     ld c, MON_MAX_HP
@@ -1382,7 +1447,7 @@ ItemApply_WorldDew_HealMember::
     ret
 
 ; Potion: adds the item's amount plus a random 0-10 to the target's MP, capped at its max, and uses
-; the item up by its chance. (C1, E-0357)
+; the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion (E-0089)
 ItemApply_Potion::
     call NextTableByte
@@ -1400,7 +1465,8 @@ ItemApply_Potion::
     call ConsumeSelectedItemByChance
     ret
 
-; ElfWater: refills the target's MP to its max and uses the item up by its chance. (C1, E-0357)
+; ElfWater: refills the target's MP to its max and uses the item up by its chance. (C2, E-0357;
+; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 5 ElfWater (E-0089)
 ItemApply_ElfWater::
     ld a, [wTargetRecord]
@@ -1413,7 +1479,8 @@ ItemApply_ElfWater::
     call ConsumeSelectedItemByChance
     ret
 
-; Antidote: clears the target's status bit 2 and uses the item up by its chance. (C1, E-0357)
+; Antidote: clears the target's status bit 2 and uses the item up by its chance. (C2, E-0357; probed
+; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 6 Antidote (E-0089)
 ItemApply_Antidote::
     ld a, [wTargetRecord]
@@ -1423,7 +1490,8 @@ ItemApply_Antidote::
     call ConsumeSelectedItemByChance
     ret
 
-; MoonHerb: clears the target's status bit 3 and uses the item up by its chance. (C1, E-0357)
+; MoonHerb: clears the target's status bit 3 and uses the item up by its chance. (C2, E-0357; probed
+; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 7 MoonHerb (E-0089)
 ItemApply_MoonHerb::
     ld a, [wTargetRecord]
@@ -1433,7 +1501,8 @@ ItemApply_MoonHerb::
     call ConsumeSelectedItemByChance
     ret
 
-; Laurel: clears the target's status bit 0 and uses the item up by its chance. (C1, E-0357)
+; Laurel: clears the target's status bit 0 and uses the item up by its chance. (C2, E-0357; probed
+; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 8 Laurel (E-0089)
 ItemApply_Laurel::
     ld a, [wTargetRecord]
@@ -1443,7 +1512,8 @@ ItemApply_Laurel::
     call ConsumeSelectedItemByChance
     ret
 
-; AwakeSand: clears the target's status bit 1 and uses the item up by its chance. (C1, E-0357)
+; AwakeSand: clears the target's status bit 1 and uses the item up by its chance. (C2, E-0357;
+; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 9 AwakeSand (E-0089)
 ItemApply_AwakeSand::
     ld a, [wTargetRecord]
@@ -1453,7 +1523,8 @@ ItemApply_AwakeSand::
     call ConsumeSelectedItemByChance
     ret
 
-; SkyBell: clears the target's status bit 4 and uses the item up by its chance. (C1, E-0357)
+; SkyBell: clears the target's status bit 4 and uses the item up by its chance. (C2, E-0357; probed
+; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 10 SkyBell (E-0089)
 ItemApply_SkyBell::
     ld a, [wTargetRecord]
@@ -1463,13 +1534,13 @@ ItemApply_SkyBell::
     call ConsumeSelectedItemByChance
     ret
 
-; SageRock: no effect here. (C1, E-0357)
+; SageRock: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 11 SageRock (E-0089)
 ItemApply_SageRock::
     ret
 
 ; WorldLeaf: revives the target (status cleared, HP to max), sets wLevelUpGains to 1 and uses the
-; item up by its chance. (C1, E-0357)
+; item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 12 WorldLeaf (E-0089)
 ItemApply_WorldLeaf::
     ld a, [wTargetRecord]
@@ -1489,7 +1560,7 @@ ItemApply_WorldLeaf::
     ret
 
 ; ATKseed: applies the item's amount (wItemEffectAmount) to the target's ATK through its helper,
-; then uses the item up by its chance. (C1, E-0357)
+; then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 13 ATKseed (E-0089)
 ItemApply_ATKseed::
     ld a, [wItemEffectAmount]
@@ -1501,7 +1572,7 @@ ItemApply_ATKseed::
     ret
 
 ; DEFseed: applies the item's amount (wItemEffectAmount) to the target's DEF through its helper,
-; then uses the item up by its chance. (C1, E-0357)
+; then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 14 DEFseed (E-0089)
 ItemApply_DEFseed::
     ld a, [wItemEffectAmount]
@@ -1513,7 +1584,7 @@ ItemApply_DEFseed::
     ret
 
 ; AGLseed: applies the item's amount (wItemEffectAmount) to the target's AGL through its helper,
-; then uses the item up by its chance. (C1, E-0357)
+; then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 15 AGLseed (E-0089)
 ItemApply_AGLseed::
     ld a, [wItemEffectAmount]
@@ -1525,7 +1596,7 @@ ItemApply_AGLseed::
     ret
 
 ; INTseed: applies the item's amount (wItemEffectAmount) to the target's INT through its helper,
-; then uses the item up by its chance. (C1, E-0357)
+; then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 16 INTseed (E-0089)
 ItemApply_INTseed::
     ld a, [wItemEffectAmount]
@@ -1537,7 +1608,7 @@ ItemApply_INTseed::
     ret
 
 ; LifeAcorn: applies the item's amount (wItemEffectAmount) to the target's max HP through its
-; helper, then uses the item up by its chance. (C1, E-0357)
+; helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn (E-0089)
 ItemApply_LifeAcorn::
     ld a, [wItemEffectAmount]
@@ -1549,7 +1620,7 @@ ItemApply_LifeAcorn::
     ret
 
 ; MysticNut: applies the item's amount (wItemEffectAmount) to the target's max MP through its
-; helper, then uses the item up by its chance. (C1, E-0357)
+; helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 18 MysticNut (E-0089)
 ItemApply_MysticNut::
     ld a, [wItemEffectAmount]
@@ -1561,7 +1632,7 @@ ItemApply_MysticNut::
     ret
 
 ; Quest: applies the item's amount (wItemEffectAmount) to the target's personality byte 0 through
-; its helper, then uses the item up by its chance. (C1, E-0357)
+; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 19 Quest? (E-0089)
 ItemApply_Quest::
     ld a, [wItemEffectAmount]
@@ -1573,7 +1644,7 @@ ItemApply_Quest::
     ret
 
 ; Horror: applies the item's amount (wItemEffectAmount) to the target's personality byte 0 through
-; its helper, then uses the item up by its chance. (C1, E-0357)
+; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 20 Horror? (E-0089)
 ItemApply_Horror::
     ld a, [wItemEffectAmount]
@@ -1585,7 +1656,7 @@ ItemApply_Horror::
     ret
 
 ; BeNice: applies the item's amount (wItemEffectAmount) to the target's personality byte 1 through
-; its helper, then uses the item up by its chance. (C1, E-0357)
+; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 21 BeNice? (E-0089)
 ItemApply_BeNice::
     ld a, [wItemEffectAmount]
@@ -1597,7 +1668,7 @@ ItemApply_BeNice::
     ret
 
 ; Cheater: applies the item's amount (wItemEffectAmount) to the target's personality byte 1 through
-; its helper, then uses the item up by its chance. (C1, E-0357)
+; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 22 Cheater? (E-0089)
 ItemApply_Cheater::
     ld a, [wItemEffectAmount]
@@ -1609,7 +1680,7 @@ ItemApply_Cheater::
     ret
 
 ; Smart: applies the item's amount (wItemEffectAmount) to the target's personality byte 3 through
-; its helper, then uses the item up by its chance. (C1, E-0357)
+; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 23 Smart? (E-0089)
 ItemApply_Smart::
     ld a, [wItemEffectAmount]
@@ -1621,7 +1692,7 @@ ItemApply_Smart::
     ret
 
 ; Comedy: applies the item's amount (wItemEffectAmount) to the target's personality byte 3 through
-; its helper, then uses the item up by its chance. (C1, E-0357)
+; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 24 Comedy? (E-0089)
 ItemApply_Comedy::
     ld a, [wItemEffectAmount]
@@ -1633,7 +1704,7 @@ ItemApply_Comedy::
     ret
 
 ; BeefJerky: lowers the target's record field $6B by the item's amount, not below 0
-; (ApplyMeatToRecordField6B), and uses the item up by its chance. (C1, E-0357)
+; (ApplyMeatToRecordField6B), and uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 25 BeefJerky, 26
 ; PorkChop, 27 Rib, 28 Sirloin (E-0089)
 ItemApply_BeefJerky::
@@ -1646,7 +1717,7 @@ ItemApply_BeefJerky::
     ret
 
 ; BadMeat: lowers field $6B as the other meats do, poisons the target (status bit 2) and uses the
-; item up by its chance. (C1, E-0357)
+; item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 29 BadMeat (E-0089)
 ItemApply_BadMeat::
     ld a, [wItemEffectAmount]
@@ -1661,18 +1732,18 @@ ItemApply_BadMeat::
     call ConsumeSelectedItemByChance
     ret
 
-; MeteOrb: no effect here. (C1, E-0357)
+; MeteOrb: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 30 MeteOrb (E-0089)
 ItemApply_MeteOrb::
     ret
 
-; BeastTail: no effect here. (C1, E-0357)
+; BeastTail: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 31 BeastTail (E-0089)
 ItemApply_BeastTail::
     ret
 
 ; Repellent: no encounters for 200 steps (wEncounterDelay = $C8); the item is used up by its chance.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 32 Repellent (E-0089)
 ItemApply_Repellent::
     ld a, $c8
@@ -1681,7 +1752,7 @@ ItemApply_Repellent::
     ret
 
 ; ShinyHarp: sets the field's return action to 1 (wDataBankSave), which the field runs on return,
-; and uses the item up by its chance. (C1, E-0357)
+; and uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 33 ShinyHarp (E-0089)
 ItemApply_ShinyHarp::
     ld a, $01
@@ -1689,14 +1760,14 @@ ItemApply_ShinyHarp::
     call ConsumeSelectedItemByChance
     ret
 
-; Mist: no effect here. (C1, E-0357)
+; Mist: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 34 Mist?, 35 Friend?,
 ; 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire? (E-0089)
 ItemApply_Mist::
     ret
 
 ; Warp: sets the field's return action to 2 (wDataBankSave), which the field runs on return, and
-; uses the item up by its chance. (C1, E-0357)
+; uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 40 Warp? (E-0089)
 ItemApply_Warp::
     ld a, $02
@@ -1705,7 +1776,7 @@ ItemApply_Warp::
     ret
 
 ; WarpWing: sets the field's return action to 3 (wDataBankSave), which the field runs on return, and
-; uses the item up by its chance. (C1, E-0357)
+; uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 41 WarpWing (E-0089)
 ItemApply_WarpWing::
     ld a, $03
@@ -1714,7 +1785,7 @@ ItemApply_WarpWing::
     ret
 
 ; ExitBell: sets the field's return action to 4 (wDataBankSave), which the field runs on return, and
-; uses the item up by its chance. (C1, E-0357)
+; uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 42 ExitBell (E-0089)
 ItemApply_ExitBell::
     ld a, $04
@@ -1722,20 +1793,20 @@ ItemApply_ExitBell::
     call ConsumeSelectedItemByChance
     ret
 
-; Bookmark: only uses the item up by its chance. (C1, E-0357)
+; Bookmark: only uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 43 Bookmark (E-0089)
 ItemApply_Bookmark::
     call ConsumeSelectedItemByChance
     ret
 
-; TinyMedal: no effect here. (C1, E-0357)
+; TinyMedal: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 44 TinyMedal, 45
 ; GoldPass (E-0089)
 ItemApply_TinyMedal::
     ret
 
 ; LogTwig: sets the field's return action to 9 (wDataBankSave), which the field runs on return, and
-; uses the item up by its chance. (C1, E-0357)
+; uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 46 LogTwig (E-0089)
 ItemApply_LogTwig::
     ld a, $09
@@ -1743,52 +1814,57 @@ ItemApply_LogTwig::
     call ConsumeSelectedItemByChance
     ret
 
-; Item $2F: no effect here. (C1, E-0357)
+; Item $2F: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 47 (no name) (E-0089)
 ItemApply_Item2F::
     ret
 
-; WaterCall: sets the field's return action to 5 (wDataBankSave); the item is kept. (C1, E-0357)
+; WaterCall: sets the field's return action to 5 (wDataBankSave); the item is kept. (C2, E-0357;
+; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 48 WaterCall (E-0089)
 ItemApply_WaterCall::
     ld a, $05
     ld [wDataBankSave], a
     ret
 
-; MoonRock: sets the field's return action to 6 (wDataBankSave); the item is kept. (C1, E-0357)
+; MoonRock: sets the field's return action to 6 (wDataBankSave); the item is kept. (C2, E-0357;
+; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 49 MoonRock (E-0089)
 ItemApply_MoonRock::
     ld a, $06
     ld [wDataBankSave], a
     ret
 
-; Crest: sets the field's return action to 7 (wDataBankSave); the item is kept. (C1, E-0357)
+; Crest: sets the field's return action to 7 (wDataBankSave); the item is kept. (C2, E-0357; probed
+; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 50 Crest (E-0089)
 ItemApply_Crest::
     ld a, $07
     ld [wDataBankSave], a
     ret
 
-; YunaSoul: no effect here. (C1, E-0357)
+; YunaSoul: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 51 YunaSoul (E-0089)
 ItemApply_YunaSoul::
     ret
 
-; SleepHerb: sets the field's return action to 8 (wDataBankSave); the item is kept. (C1, E-0357)
+; SleepHerb: sets the field's return action to 8 (wDataBankSave); the item is kept. (C2, E-0357;
+; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 52 SleepHerb (E-0089)
 ItemApply_SleepHerb::
     ld a, $08
     ld [wDataBankSave], a
     ret
 
-; Change: sets the field's return action to $0A (wDataBankSave); the item is kept. (C1, E-0357)
+; Change: sets the field's return action to $0A (wDataBankSave); the item is kept. (C2, E-0357;
+; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 53 Change? (E-0089)
 ItemApply_Change::
     ld a, $0a
     ld [wDataBankSave], a
     ret
 
-; TidalBell: adds 50 to wTownEventTimer, at most $F0. (C1, E-0357)
+; TidalBell: adds 50 to wTownEventTimer, at most $F0. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 54 TidalBell (E-0089)
 ItemApply_TidalBell::
     ld a, [wTownEventTimer]
@@ -1805,13 +1881,13 @@ ItemApply_TidalBell::
     ld [wTownEventTimer], a
     ret
 
-; HarMirror: no effect here. (C1, E-0357)
+; HarMirror: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 55 HarMirror, 56
 ; Sky?, 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty? (E-0089)
 ItemApply_HarMirror::
     ret
 
-; Accessory: no effect here. (C1, E-0357)
+; Accessory: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 62 Accessory, 63
 ; Accessory (E-0089)
 ItemApply_Accessory::
@@ -1819,7 +1895,7 @@ ItemApply_Accessory::
 
 ; VITbelt: equips it: raises the target's max HP (and the current value with it) by 30
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
-; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; (EquipItemOnRecordTargetRecord). (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 64 VITbelt (E-0089)
 ItemApply_VITbelt::
     ld a, $1e
@@ -1830,7 +1906,7 @@ ItemApply_VITbelt::
 
 ; DracoBelt: equips it: raises the target's max HP (and the current value with it) by 80
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
-; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; (EquipItemOnRecordTargetRecord). (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 65 DracoBelt (E-0089)
 ItemApply_DracoBelt::
     ld a, $50
@@ -1841,7 +1917,7 @@ ItemApply_DracoBelt::
 
 ; MagicBelt: equips it: raises the target's max MP (and the current value with it) by 30
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
-; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; (EquipItemOnRecordTargetRecord). (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 66 MagicBelt (E-0089)
 ItemApply_MagicBelt::
     ld a, $1e
@@ -1852,7 +1928,7 @@ ItemApply_MagicBelt::
 
 ; OddBelt: equips it: raises the target's max MP (and the current value with it) by 80
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
-; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; (EquipItemOnRecordTargetRecord). (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 67 OddBelt (E-0089)
 ItemApply_OddBelt::
     ld a, $50
@@ -1862,7 +1938,7 @@ ItemApply_OddBelt::
     ret
 
 ; StoneFang: equips it: raises the target's ATK by 10, capped at 999 (AddAToRecordWordCapped), and
-; stores the equipment in field $A4. (C1, E-0357)
+; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 68 StoneFang (E-0089)
 ItemApply_StoneFang::
     ld a, $0a
@@ -1872,7 +1948,7 @@ ItemApply_StoneFang::
     ret
 
 ; SteelFang: equips it: raises the target's ATK by 50, capped at 999 (AddAToRecordWordCapped), and
-; stores the equipment in field $A4. (C1, E-0357)
+; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 69 SteelFang (E-0089)
 ItemApply_SteelFang::
     ld a, $32
@@ -1882,7 +1958,7 @@ ItemApply_SteelFang::
     ret
 
 ; MermScale: equips it: raises the target's DEF by 10, capped at 999 (AddAToRecordWordCapped), and
-; stores the equipment in field $A4. (C1, E-0357)
+; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 70 MermScale (E-0089)
 ItemApply_MermScale::
     ld a, $0a
@@ -1892,7 +1968,7 @@ ItemApply_MermScale::
     ret
 
 ; DrakScale: equips it: raises the target's DEF by 50, capped at 999 (AddAToRecordWordCapped), and
-; stores the equipment in field $A4. (C1, E-0357)
+; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 71 DrakScale (E-0089)
 ItemApply_DrakScale::
     ld a, $32
@@ -1902,7 +1978,7 @@ ItemApply_DrakScale::
     ret
 
 ; ITEM_AGL ($48): equips it: raises the target's AGL by 10, capped at 999 (AddAToRecordWordCapped),
-; and stores the equipment in field $A4. (C1, E-0357)
+; and stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 72 AGL? (E-0089)
 ItemApply_AGL::
     ld a, $0a
@@ -1912,7 +1988,7 @@ ItemApply_AGL::
     ret
 
 ; Starry: equips it: raises the target's AGL by 50, capped at 999 (AddAToRecordWordCapped), and
-; stores the equipment in field $A4. (C1, E-0357)
+; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 73 Starry? (E-0089)
 ItemApply_Starry::
     ld a, $32
@@ -1922,10 +1998,10 @@ ItemApply_Starry::
     ret
 
 ; Item $4A (Smart): equips it: raises the target's INT by 50, capped at 999
-; (AddAToRecordWordCapped), and stores the equipment in field $A4. (C1, E-0357)
+; (AddAToRecordWordCapped), and stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 74 Smart? (E-0089)
-; (E-0344: the address in its name dropped or read as the label there; was ItemApply_Smart_2)
-ItemApply_Smart_2::
+; (E-0344: the address in its name dropped or read as the label there; was ItemApply_SmartEquipment)
+ItemApply_SmartEquipment::
     ld a, $32
     ld c, MON_INT
     call AddAToRecordWordCapped
@@ -1933,7 +2009,7 @@ ItemApply_Smart_2::
     ret
 
 ; Wise: equips it: raises the target's INT by 100, capped at 999 (AddAToRecordWordCapped), and
-; stores the equipment in field $A4. (C1, E-0357)
+; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 75 Wise? (E-0089)
 ItemApply_Wise::
     ld a, $64
@@ -1942,6 +2018,9 @@ ItemApply_Wise::
     call EquipItemOnRecordTargetRecord
     ret
 
+; Effect of the capes, items $4C-$52 (MagicCape to BraveCape): only EquipItemOnRecordTargetRecord,
+; which stores item - $3F ($0D-$13) in MON_ITEM of the target with no stat change. By the
+; RemoveEquipmentBonus_Capes note their resistances are applied when a battle loads. (C2, E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 76 MagicCape, 77
 ; DracoCape, 78 SilvrCape, 79 GoldCape, 80 PltnmCape, 81 OrcaCape, 82 BraveCape; the body is not
 ; interpreted beyond the Herb case (E-0089)
@@ -1950,7 +2029,7 @@ ItemApply_MagicCape::
     ret
 
 ; DScale: equips it: raises the target's DEF by 5, capped at 999 (AddAToRecordWordCapped), and
-; stores the equipment in field $A4. (C1, E-0357)
+; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 83 D-Scale (E-0089)
 ItemApply_DScale::
     ld a, $05
@@ -1959,24 +2038,31 @@ ItemApply_DScale::
     call EquipItemOnRecordTargetRecord
     ret
 
-; None (ITEM_NONE): no effect here. (C1, E-0357)
+; None (ITEM_NONE): no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 84 None, 85 None, 86
 ; None, 87 None, 88 None, 89 None (E-0089)
 ItemApply_None::
     ret
 
-; Life: equips it (field $A4) with no stat change. (C1, E-0357)
+; Life: equips it (field $A4) with no stat change. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 90 Life?, 91 Divine?,
 ; 92 War?, 93 Mage?, 94 Fight?, 95 Sailor?, 96 Thief?, 97 Cleric? (E-0089)
 ItemApply_Life::
     call EquipItemOnRecordTargetRecord
     ret
 
-; Item $62: no effect here. (C1, E-0357)
+; Item $62: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 98 (no name) (E-0089)
 ItemApply_Item62::
     ret
 
+; Equips item wItemId on party slot wTargetRecord by storing wItemId - $3F in MON_ITEM. When that
+; field was 0 it runs ConsumeSelectedItemByChance and sets hTemp0 = 0. Otherwise it swaps: wItemId =
+; $FF, the old item (old value + $3F) goes into wInventory at wInventorySlot, the slot of the new
+; item, and CompactInventory closes the bag; RemoveEquipmentBonusKeepA takes the old bonus back, the
+; old item name (string category 5) is copied to wTextBuf3 (CopyStringHLToDE) and hTemp0 = 1. The
+; callers (ItemApply_VITbelt and the other equipment effects) add the new bonus before calling it.
+; (C2, E-0377)
 ; stores item wItemId - $3F in field $A4 of record wTargetRecord: an empty field consumes the item
 ; (hTemp0 = 0); otherwise the old item goes back to the inventory and its name to wTextBuf3 (hTemp0
 ; = 1) (E-0125)
@@ -2022,7 +2108,7 @@ EquipItemOnRecordTargetRecord::
 
 ; Preserving A, takes back the stat bonus of equipment item A (ids $40-$62) from the record in
 ; wTargetRecord by running RemoveEquipmentBonus. EquipItemOnRecordTargetRecord calls it with the
-; item a monster gives up when it is given another one. (C1, E-0370)
+; item a monster gives up when it is given another one. (C2, E-0370; probed E-0377)
 ; preserving A, runs the routine for item A - $40 (a jump table over the equipment items;
 ; EquipItemOnRecordTargetRecord calls it) (E-0122, E-0259)
 RemoveEquipmentBonusKeepA::
@@ -2034,7 +2120,8 @@ RemoveEquipmentBonusKeepA::
 ; A = equipment item id ($40-$62): jumps by A - $40 to the step that takes that item's bonus back,
 ; lowering one or two stat words of the record (RemoveEquipmentBonus_VITbelt and the others; a
 ; negative result becomes 1, a word at 999 is left), or to a step that changes nothing (the capes,
-; whose resistances are applied when a battle loads, and the items read at level up). (C1, E-0370)
+; whose resistances are applied when a battle loads, and the items read at level up). (C2, E-0370;
+; probed E-0377)
 ; jumps by (item id - $40) to a step that subtracts A from one or two record words with a floor of
 ; 1, or returns
 RemoveEquipmentBonus::
@@ -2078,8 +2165,8 @@ RemoveEquipmentBonus::
 
 ; Removing ITEM_VITBELT (item $40, entry 0 of RemoveEquipmentBonus): unless the max HP of record
 ; wTargetRecord is 999, lowers it (MON_MAX_HP) and the HP word before it by 30
-; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
-; E-0370)
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C2,
+; E-0370; probed E-0377)
 RemoveEquipmentBonus_VITbelt::
     ld a, $1e
     ld c, MON_MAX_HP
@@ -2088,8 +2175,8 @@ RemoveEquipmentBonus_VITbelt::
 
 ; Removing ITEM_DRACOBELT (item $41, entry 1 of RemoveEquipmentBonus): unless the max HP of record
 ; wTargetRecord is 999, lowers it (MON_MAX_HP) and the HP word before it by 80
-; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
-; E-0370)
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C2,
+; E-0370; probed E-0377)
 RemoveEquipmentBonus_DracoBelt::
     ld a, $50
     ld c, MON_MAX_HP
@@ -2098,8 +2185,8 @@ RemoveEquipmentBonus_DracoBelt::
 
 ; Removing ITEM_MAGICBELT (item $42, entry 2 of RemoveEquipmentBonus): unless the max MP of record
 ; wTargetRecord is 999, lowers it (MON_MAX_MP) and the MP word before it by 30
-; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
-; E-0370)
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C2,
+; E-0370; probed E-0377)
 RemoveEquipmentBonus_MagicBelt::
     ld a, $1e
     ld c, MON_MAX_MP
@@ -2108,8 +2195,8 @@ RemoveEquipmentBonus_MagicBelt::
 
 ; Removing ITEM_ODDBELT (item $43, entry 3 of RemoveEquipmentBonus): unless the max MP of record
 ; wTargetRecord is 999, lowers it (MON_MAX_MP) and the MP word before it by 80
-; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C1,
-; E-0370)
+; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C2,
+; E-0370; probed E-0377)
 RemoveEquipmentBonus_OddBelt::
     ld a, $50
     ld c, MON_MAX_MP
@@ -2118,7 +2205,7 @@ RemoveEquipmentBonus_OddBelt::
 
 ; Removing ITEM_STONEFANG (item $44, entry 4 of RemoveEquipmentBonus): unless the ATK of record
 ; wTargetRecord is 999, lowers it (MON_ATK) by 10 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_StoneFang::
     ld a, $0a
     ld c, MON_ATK
@@ -2127,7 +2214,7 @@ RemoveEquipmentBonus_StoneFang::
 
 ; Removing ITEM_STEELFANG (item $45, entry 5 of RemoveEquipmentBonus): unless the ATK of record
 ; wTargetRecord is 999, lowers it (MON_ATK) by 50 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_SteelFang::
     ld a, $32
     ld c, MON_ATK
@@ -2136,7 +2223,7 @@ RemoveEquipmentBonus_SteelFang::
 
 ; Removing ITEM_MERMSCALE (item $46, entry 6 of RemoveEquipmentBonus): unless the DEF of record
 ; wTargetRecord is 999, lowers it (MON_DEF) by 10 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_MermScale::
     ld a, $0a
     ld c, MON_DEF
@@ -2145,7 +2232,7 @@ RemoveEquipmentBonus_MermScale::
 
 ; Removing ITEM_DRAKSCALE (item $47, entry 7 of RemoveEquipmentBonus): unless the DEF of record
 ; wTargetRecord is 999, lowers it (MON_DEF) by 50 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_DrakScale::
     ld a, $32
     ld c, MON_DEF
@@ -2154,7 +2241,7 @@ RemoveEquipmentBonus_DrakScale::
 
 ; Removing ITEM_AGL (item $48, entry 8 of RemoveEquipmentBonus): unless the AGL of record
 ; wTargetRecord is 999, lowers it (MON_AGL) by 10 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_AGL::
     ld a, $0a
     ld c, MON_AGL
@@ -2163,7 +2250,7 @@ RemoveEquipmentBonus_AGL::
 
 ; Removing ITEM_STARRY (item $49, entry 9 of RemoveEquipmentBonus): unless the AGL of record
 ; wTargetRecord is 999, lowers it (MON_AGL) by 50 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_Starry::
     ld a, $32
     ld c, MON_AGL
@@ -2172,7 +2259,7 @@ RemoveEquipmentBonus_Starry::
 
 ; Removing ITEM_SMART_4A (item $4A, entry 10 of RemoveEquipmentBonus): unless the INT of record
 ; wTargetRecord is 999, lowers it (MON_INT) by 50 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_Smart::
     ld a, $32
     ld c, MON_INT
@@ -2181,7 +2268,7 @@ RemoveEquipmentBonus_Smart::
 
 ; Removing ITEM_WISE (item $4B, entry 11 of RemoveEquipmentBonus): unless the INT of record
 ; wTargetRecord is 999, lowers it (MON_INT) by 100 (SubtractAFromRecordWordFloor1); a result below
-; zero becomes 1, but an exact 0 stays 0. (C1, E-0370)
+; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_Wise::
     ld a, $64
     ld c, MON_INT
@@ -2192,12 +2279,13 @@ RemoveEquipmentBonus_Wise::
 ; RemoveEquipmentBonus): returns with no stat change. Their equipped values $0D-$13 (item - $3F in
 ; MON_ITEM) are read when a battle loads instead, where GameMode4_Init_CopyPartyToBattlers_Member
 ; raises listed resistance bytes of the battler record by one, up to 3
-; (ApplyIncrementOffsetRows19ForA0DTo13). (C1, E-0370)
+; (ApplyIncrementOffsetRows19ForA0DTo13). (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_Capes::
     ret
 
-; Removing the DScale (item $53, ITEM_DSCALE; entry 19 of RemoveEquipmentBonus): DEF down by 5, at
-; least 1 (SubtractAFromRecordWordFloor1 with C = MON_DEF). (C1, E-0370)
+; Removing the DScale (item $53, ITEM_DSCALE; entry 19 of RemoveEquipmentBonus): unless the DEF of
+; record wTargetRecord is 999, lowers it by 5 (SubtractAFromRecordWordFloor1 with C = MON_DEF); a
+; result below zero becomes 1, but an exact 0 stays 0. (C2, E-0377)
 RemoveEquipmentBonus_DScale::
     ld a, $05
     ld c, MON_DEF
@@ -2205,22 +2293,26 @@ RemoveEquipmentBonus_DScale::
     ret
 
 ; Removing an item $54-$59 (ITEM_NONE to ITEM_NONE_59, entries 20-25 of RemoveEquipmentBonus):
-; returns with no change. (C1, E-0370)
+; returns with no change. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_NoneItems::
     ret
 
 ; Removing an item $5A-$61 (ITEM_LIFE to ITEM_CLERIC, entries 26-33 of RemoveEquipmentBonus):
 ; returns with no stat change. The equipped values of War to Cleric ($1D-$22 in MON_ITEM) are read
 ; at level up instead (ComputeLevelUpStatGainsForBattleArg1_ItemBonus); no reader of the Life and
-; Divine values ($1B, $1C) was found in this reading. (C1, E-0370)
+; Divine values ($1B, $1C) was found in this reading. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_LevelUpItems::
     ret
 
 ; Removing item $62 (ITEM_62, entry 34, the last of RemoveEquipmentBonus): returns with no change.
-; (C1, E-0370)
+; (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_LastItem::
     ret
 
+; A = amount, C = field offset, record of party slot wTargetRecord (SRAMRecordAddressMapped): the
+; word at field C += A, then CapDETo999 limits it to 999, so a word already above 999 also comes
+; back as 999. hTemp0 = A. Used by the equipment effects ItemApply_StoneFang to ItemApply_DScale.
+; (C2, E-0377)
 ; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: the word there += A,
 ; capped at 999 (CapDETo999) (E-0103)
 AddAToRecordWordCapped::
@@ -2245,6 +2337,9 @@ AddAToRecordWordCapped::
     ld [hl], a
     ret
 
+; Like AddAToRecordWordCapped for the word at field C and then for the word two bytes before it
+; (MON_HP before MON_MAX_HP, MON_MP before MON_MAX_MP): A is added to both, each capped at 999. Used
+; by ItemApply_VITbelt, ItemApply_DracoBelt, ItemApply_MagicBelt and ItemApply_OddBelt. (C2, E-0377)
 ; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: adds A to the word at
 ; field C and to the word two bytes before it, each capped at 999 (E-0103)
 AddAToRecordWordPairCapped::
@@ -2287,6 +2382,9 @@ AddAToRecordWordPairCapped::
     ld [hl], a
     ret
 
+; A = amount, C = field offset, record of party slot wTargetRecord: leaves the word unchanged when
+; it is 999; otherwise word -= A, and a result below zero (bit 15 set) becomes 1, while an exact 0
+; stays 0. hTemp0 = A. The RemoveEquipmentBonus steps for ATK, DEF, AGL and INT use it. (C2, E-0377)
 ; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: leaves the word
 ; unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
 SubtractAFromRecordWordFloor1::
@@ -2326,8 +2424,11 @@ SubtractAFromRecordWordFloor1::
     ld [hl], a
     ret
 
-; Takes an equipment bonus back: unless the word at field C of record wTargetRecord is 999,
-; subtracts A from it and from the word before it, keeping each at least 1. (C1, E-0357)
+; Takes an equipment bonus back: unless the word at field C of the record of party slot
+; wTargetRecord is 999, subtracts A from it and from the word two bytes before it (the current HP or
+; MP); a result below zero becomes 1, but an exact 0 stays 0. Only the field C word is tested for
+; 999. RemoveEquipmentBonus_VITbelt, RemoveEquipmentBonus_DracoBelt, RemoveEquipmentBonus_MagicBelt
+; and RemoveEquipmentBonus_OddBelt use it. (C2, E-0377)
 SubtractAFromRecordWordPairFloor1::
     ldh [hTemp0], a
     ld a, [wTargetRecord]
@@ -2390,6 +2491,8 @@ SubtractAFromRecordWordPairFloor1::
     ld [hl], a
     ret
 
+; DE = min(DE, 999 ($03E7)); A is clobbered. AddAToRecordWordCapped and AddAToRecordWordPairCapped
+; call it. (C2, E-0377)
 ; DE = min(DE, 999 ($03E7)) (E-0103)
 CapDETo999::
     ld a, d
@@ -2405,6 +2508,12 @@ CapDETo999::
     ld d, $03
     ret
 
+; Advances the random table (NextTableByte), takes A = (wRandomHi:wRandomLo) mod 100 (DivideHLByA)
+; and compares it with the byte at wItemRecord + 3: when A is below it, wItemId = $FF,
+; wInventory[wInventorySlot] = $FF and CompactInventory closes the bag; otherwise only wRandomHi and
+; wRandomLo have changed (carry clear). A byte of 100 or more always consumes, 0 never. Most
+; ItemApply_ effects, EquipItemOnRecordTargetRecord and RunBattleActions_UseItem_ConsumeItem call
+; it. (C2, E-0377)
 ; advances the random table (NextTableByte), takes A = (wRandomHi:wRandomLo) mod 100 and, when A <
 ; wItemRecord + $3, sets wItemId = $FF, clears wInventory[wInventorySlot] to $FF and runs
 ; CompactInventory; otherwise returns with carry clear and nothing changed (E-0063)
@@ -2428,6 +2537,9 @@ ConsumeSelectedItemByChance::
     call CompactInventory
     ret
 
+; Copies the 24 wInventory bytes to wWorkBuf, fills wInventory with $FF, then copies back in order
+; every byte that is neither $FF nor $00, so the items close up at the front and the rest is $FF. An
+; earlier emulator run saw a used Herb leave the bag, which closed up. (C2, E-0377)
 ; copies the 24 wInventory bytes to wWorkBuf, refills wInventory with $FF, then copies back every
 ; byte that is neither $FF nor $00, closing the gaps (E-0063) (C2 from E-0326: the used Herb leaves
 ; the bag, which closes up)
@@ -2464,6 +2576,9 @@ CompactInventory::
     jr nz, .loop2
     ret
 
+; Puts wItemId in the first wInventory slot holding $00 or $FF, or sets wItemId = $FF when all 24
+; slots are taken; returns at once when wItemId is ITEM_00 or $FF. No call or jump to it was found.
+; (C2, E-0377)
 ; puts wItemId in the first empty inventory slot; sets wItemId = $FF when all 24 are full (E-0124)
 AddWItemIdToInventory::
     ld a, [wItemId]
@@ -2492,6 +2607,9 @@ AddWItemIdToInventory::
     ld [hl], a
     ret
 
+; Sets the first wInventory slot holding wItemId to $FF and closes up the bag (CompactInventory), or
+; sets wItemId = $FF when no slot holds it; returns at once when wItemId is ITEM_00 or $FF. No call
+; or jump to it was found. (C2, E-0377)
 ; removes the first inventory slot holding wItemId and compacts the inventory; sets wItemId = $FF
 ; when not found (E-0124)
 RemoveWItemIdFromInventory::
@@ -3093,7 +3211,7 @@ MapItemUseFlags::
 
 ; The usability check of field skill wInventorySlot (20 skills; a larger index refuses with wItemId
 ; $FF): most reuse an item's check (the Herb, WorldDew, Potion, WorldLeaf, Antidote, Repellent,
-; ExitBell, Warp and WarpWing checks) and set the refusal message. (C1, E-0357)
+; ExitBell, Warp and WarpWing checks) and set the refusal message. (C2, E-0357; probed E-0377)
 FieldSkillUsable::
     ld a, [wInventorySlot]
     cp $14
@@ -3125,21 +3243,22 @@ FieldSkillUsable::
     dw FieldSkillUsable_Warp
     dw FieldSkillUsable_MapAroundPlayer
 
-; Field skills 0-2 (one-monster HP healing): the Herb's check, refusing with message $12. (C1,
-; E-0357)
+; Field skills 0-2 (one-monster HP healing): the Herb's check, refusing with message $12. (C2,
+; E-0357; probed E-0377)
 FieldSkillUsable_HealOne::
     call ItemUsable_Herb
     call SetItemMessage12IfItemRefused
     ret
 
-; Field skills 3-4 (party HP healing): the WorldDew's check, refusing with message $12. (C1, E-0357)
+; Field skills 3-4 (party HP healing): the WorldDew's check, refusing with message $12. (C2, E-0357;
+; probed E-0377)
 FieldSkillUsable_HealParty::
     call ItemUsable_WorldDew
     call SetItemMessage12IfItemRefused
     ret
 
 ; Field skills 5-7 (MP to another monster): refuses when the target is the caster itself, otherwise
-; the Potion's check; refusal message $12. (C1, E-0357)
+; the Potion's check; refusal message $12. (C2, E-0357; probed E-0377)
 FieldSkillUsable_GiveMP::
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -3157,20 +3276,26 @@ FieldSkillUsable_GiveMP::
     call SetItemMessage12IfItemRefused
     ret
 
-; Field skills 8-9 (revival): the WorldLeaf's check, refusing with message $12. (C1, E-0357)
+; Field skills 8-9 (revival): the WorldLeaf's check, refusing with message $12. (C2, E-0357; probed
+; E-0377)
 FieldSkillUsable_Revive::
     call ItemUsable_WorldLeaf
     call SetItemMessage12IfItemRefused
     ret
 
-; Field skill 10 (poison cure): the Antidote's check, refusing with message $12. (C1, E-0357)
+; Field skill 10 (poison cure): the Antidote's check, refusing with message $12. (C2, E-0357; probed
+; E-0377)
 FieldSkillUsable_CurePoison::
     call ItemUsable_Antidote
     call SetItemMessage12IfItemRefused
     ret
 
-; Field skill 11 (party poison cure): lists the poisoned party members
-; (ListPartyMembersWithField55Bit0), refusing with message $12. (C1, E-0357)
+; Field skill 11: ListPartyMembersWithField55Bit0 lists the party members with MON_STATUS bit 0 set
+; (the bit ItemUsable_Laurel tests and FieldSkillEffect_CurePartyPoison clears, not the poison bit 2
+; of FieldSkillUsable_CurePoison): their names go to wTextBuf3 and wItemUseMessage = $32 + their
+; count. With none it refuses, and SetItemMessage12IfItemRefused gives message $12. A fallen member
+; met on the way also leaves wItemId = $FF (refused, message $12) even when another member is
+; listed. (C2, E-0377)
 FieldSkillUsable_CurePartyPoison::
     call ListPartyMembersWithField55Bit0
     call SetItemMessage12IfItemRefused
@@ -3178,7 +3303,7 @@ FieldSkillUsable_CurePartyPoison::
 
 ; Field skills 12-14 and 16: the Repellent's check; skill 16 refused gives message $15, otherwise
 ; collects the area's encounter ids (CollectUniqueEncounterIdsToWorkBuf2); the others refuse with
-; message $14. (C1, E-0357)
+; message $14. (C2, E-0357; probed E-0377)
 FieldSkillUsable_Encounters::
     call ItemUsable_Repellent
     ld a, [wInventorySlot]
@@ -3199,14 +3324,15 @@ FieldSkillUsable_Encounters::
     call CollectUniqueEncounterIdsToWorkBuf2
     ret
 
-; Field skill 15 (leaving a dungeon): the ExitBell's check, refusing with message $14. (C1, E-0357)
+; Field skill 15 (leaving a dungeon): the ExitBell's check, refusing with message $14. (C2, E-0357;
+; probed E-0377)
 FieldSkillUsable_LeaveDungeon::
     call ItemUsable_ExitBell
     call SetItemMessage14IfItemRefused
     ret
 
 ; Field skill 17: the Repellent's check; then refuses with message $17 when the gold is under 100,
-; or $16 when the last inventory slot is taken. (C1, E-0357)
+; or $16 when the last inventory slot is taken. (C2, E-0357; probed E-0377)
 FieldSkillUsable_DrawRandomItem::
     call ItemUsable_Repellent
     call SetItemMessage14IfItemRefused
@@ -3239,7 +3365,7 @@ FieldSkillUsable_DrawRandomItem::
     ret
 
 ; Field skill 18: the Warp's check; then refuses with message $18 when there are no map objects or
-; every one has bit 7 set. (C1, E-0357)
+; every one has bit 7 set. (C2, E-0357; probed E-0377)
 FieldSkillUsable_Warp::
     call ItemUsable_Warp
     call SetItemMessage14IfItemRefused
@@ -3273,12 +3399,15 @@ FieldSkillUsable_Warp::
 .return:
     ret
 
-; Field skill 19: the WarpWing's check, refusing with message $14. (C1, E-0357)
+; Field skill 19: the WarpWing's check, refusing with message $14. (C2, E-0357; probed E-0377)
 FieldSkillUsable_MapAroundPlayer::
     call ItemUsable_WarpWing
     call SetItemMessage14IfItemRefused
     ret
 
+; When wItemId is $FF (the check refused) sets wItemMessage = $12 and returns Z set; otherwise
+; returns Z clear with nothing changed. The healing, MP, revival and cure field skills
+; (FieldSkillUsable_HealOne and others) call it after their item check. (C2, E-0377)
 ; when wItemId is $FF (refused): wItemMessage = $12 (E-0119) (E-0340: the address in its name read
 ; as its RAM name; was SetItemMessage12IfItemRefused)
 SetItemMessage12IfItemRefused::
@@ -3289,6 +3418,10 @@ SetItemMessage12IfItemRefused::
     ld [wItemMessage], a
     ret
 
+; When wItemId is $FF (the check refused) sets wItemMessage = $14 and returns Z set; otherwise
+; returns Z clear with nothing changed. FieldSkillUsable_Encounters, FieldSkillUsable_LeaveDungeon,
+; FieldSkillUsable_DrawRandomItem, FieldSkillUsable_Warp and FieldSkillUsable_MapAroundPlayer call
+; it; FieldSkillUsable_DrawRandomItem and FieldSkillUsable_Warp return on its Z. (C2, E-0377)
 ; when wItemId is $FF (refused): wItemMessage = $14 (E-0119) (E-0340: the address in its name read
 ; as its RAM name; was SetItemMessage14IfItemRefused)
 SetItemMessage14IfItemRefused::
@@ -3300,7 +3433,7 @@ SetItemMessage14IfItemRefused::
     ret
 
 ; The effect of field skill wInventorySlot (unless refused): one routine per skill (healing, MP,
-; revival, cures, field effects). (C1, E-0357)
+; revival, cures, field effects). (C2, E-0357; probed E-0377)
 FieldSkillEffect::
     ld a, [wItemId]
     cp $ff
@@ -3328,8 +3461,9 @@ FieldSkillEffect::
     dw FieldSkillEffect_SenseTreasure
     dw FieldSkillEffect_MapAroundPlayer
 
-; Field skill 0: heals the target 10-40 HP (HealRecordHPByRandomAmount, amount 10 and range 30);
-; message 6. (C1, E-0357)
+; Field skill 0: wItemEffectAmount = 10 and wItemEffectRange = 30, then HealRecordHPByRandomAmount
+; heals the target by (wRandomLo mod 11) + 30, so 30-40 HP, capped at its max HP; wItemMessage = 6.
+; (C2, E-0377)
 FieldSkillEffect_HealOne::
     ld a, $0a
     ld [wItemEffectAmount], a
@@ -3340,7 +3474,9 @@ FieldSkillEffect_HealOne::
     ld [wItemMessage], a
     ret
 
-; Field skill 1: heals the target 15-90 HP (amount 15, range 75); message 6. (C1, E-0357)
+; Field skill 1: wItemEffectAmount = 15 and wItemEffectRange = 75, then HealRecordHPByRandomAmount
+; heals the target by (wRandomLo mod 16) + 75, so 75-90 HP, capped at its max HP; wItemMessage = 6.
+; (C2, E-0377)
 FieldSkillEffect_HealOneMore::
     ld a, $0f
     ld [wItemEffectAmount], a

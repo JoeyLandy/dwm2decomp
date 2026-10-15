@@ -3215,7 +3215,7 @@ ScriptCommand6B::
 ; ExecuteScriptCommand while wScriptCommandType = $6C): calls GiveMonster in bank $85 and returns.
 ; GiveMonster creates a monster record (CreateMonsterRecordOfKindTemp1 with hTemp1 = 1, hTemp2 =
 ; wArg5, hTemp3 = 1) and sets wScriptStartRequest = $80. Scripts start it with SCRIPT_GIVE_MONSTER:
-; Script_You_8. (C1, E-0376)
+; Script_You_8. (C2, E-0376; probed E-0377)
 ; runs one frame of script command type 6C (entry 107 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6C::
     farcall GiveMonster

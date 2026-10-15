@@ -4,10 +4,15 @@
 SECTION "Bank 13", ROMX[$4000], BANK[$13]
     db $13
 
+; Starts message word HL through script command $09: wScriptParam0 = L, wScriptParam1 = H,
+; wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
+; wScriptStartRequest = 0 (the $80 stored to it first is overwritten). Command 9 shows the message
+; by the same group dispatch as ShowMessageHL. Most talk handlers of this bank end with it. (C2,
+; E-0377)
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as
 ; ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1
 ; (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
-; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten) (E-0353)
+; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten)
 StartMessageCommand09HL_B13::
     ld a, l
     ld [wScriptParam0], a
@@ -26,6 +31,11 @@ StartMessageCommand09HL_B13::
     ld [wScriptStep], a
     ret
 
+; Starts a one-time treasure through script command $0A (RunOneTimeTreasure): DE = the story flag,
+; stored in wMessageIndex (low) and wMessageGroup (high), which that command tests and sets; the
+; caller has put the kind in wScriptParam0 and the item in wScriptParam1. Then wModeState = 1,
+; wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep = 0 and wScriptStartRequest = 0 (the $80
+; stored to it first is overwritten). The chest and vase handlers of this bank call it. (C2, E-0377)
 ; starts script command $0A (RunOneTimeTreasure) with DE = the treasure's story flag, stored in
 ; wMessageIndex/wMessageGroup (which that command passes to TestFlagBit and SetFlagBit; it is not a
 ; message word, correcting E-0081); then wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep =
@@ -48,6 +58,9 @@ StartTreasureFlagDE_B13::
     ld [wScriptStep], a
     ret
 
+; Starts the event script at HL: wScriptPointerLo/Hi = HL, wScriptStartRequest = $80 and wModeState
+; = 1, so the script engine starts fetching there; wScriptRunning and wScriptStep are not touched.
+; The talk handlers of this bank that run a script call it. (C2, E-0377)
 ; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the
 ; script engine starts fetching at HL (E-0082)
 StartScriptAtHL_B13::
@@ -146,7 +159,7 @@ DispatchTalkEvent::
     dw DispatchTalkEvent_KeyWorld
     dw DispatchTalkEvent_Readable
 
-; Talk category 0: the field events (FieldTalkEvents). (C1, E-0357)
+; Talk category 0: the field events (FieldTalkEvents). (C2, E-0357; probed E-0377)
 DispatchTalkEvent_Field::
     farcall FieldTalkEvents
     ret
@@ -156,17 +169,17 @@ DispatchTalkEvent_Readable::
     farcall ReadableTalkEvents
     ret
 
-; Talk category 7: the Elven village world (ElvenVillageTalkEvents). (C1, E-0357)
+; Talk category 7: the Elven village world (ElvenVillageTalkEvents). (C2, E-0357; probed E-0377)
 DispatchTalkEvent_ElvenVillage::
     farcall ElvenVillageTalkEvents
     ret
 
-; Talk category 9: the key worlds (KeyWorldTalkEvents). (C1, E-0357)
+; Talk category 9: the key worlds (KeyWorldTalkEvents). (C2, E-0357; probed E-0377)
 DispatchTalkEvent_KeyWorld::
     farcall KeyWorldTalkEvents
     ret
 
-; Talk category 6: Darck's talk (DarckTalkEvents). (C1, E-0357)
+; Talk category 6: Darck's talk (DarckTalkEvents). (C2, E-0357; probed E-0377)
 DispatchTalkEvent_Darck::
     farcall DarckTalkEvents
     ret
@@ -176,13 +189,17 @@ DispatchTalkEvent_Kalka::
     farcall KalkaTalkEvents
     ret
 
-; Talk category 3: Yold, Polona and Port Ritz (YoldTalkEvents). (C1, E-0357)
+; Talk category 3: Yold, Polona and Port Ritz (YoldTalkEvents). (C2, E-0357; probed E-0377)
 DispatchTalkEvent_Yold::
     farcall YoldTalkEvents
     ret
 
+; Talk category 5 (entry 5 of DispatchTalkEvent): jumps by wTalkEventGroup through 115 entries to
+; the talk handlers of Fhunt village, Pei, the Castle of Hitano and the places around them (messages
+; mostly $0400-$04AF); entry $71 is a zero word (an unused index) and entry $72 is
+; ToggleMapBetween7FAnd92. There is no range check. (C2, E-0377)
 ; talk category 5: jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages
-; $0400-$04AF) (E-0288)
+; $0400-$04AF)
 FhuntTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -233,7 +250,7 @@ FhuntTalkEvents::
     dw ChestItem_WorldDew_Flag00AA
     dw TalkMsg0437_ThisIsTheCastleOfHitano
     dw TalkMsg0438_AMonsterKingHasAppearedTo
-    dw Talk_IELivedHereFor2Hero
+    dw Talk_IveLivedHereFor200
     dw TalkMsg043C_TheCastleIsUnderTheMonster
     dw TalkMsg043E_TheCaveToTheSouthThat
     dw TalkMsg043F_TheNewMonsterKingIsSaid
@@ -302,6 +319,9 @@ FhuntTalkEvents::
     dw $0000 ; unused index (E-0207)
     dw ToggleMapBetween7FAnd92
 
+; Fhunt talk group $00 (FhuntTalkEvents): starts message $0400 (with 'This is the village of
+; Fhunt.') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0400 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is the village of Fhunt. We' (E-0268, the E-0082 shape; was
 ; TalkMsg0400_ThisIsTheVillageOfFhunt)
@@ -310,6 +330,9 @@ TalkMsg0400_ThisIsTheVillageOfFhunt::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $01 (FhuntTalkEvents): starts message $0401 (with 'The Great Sage Ugor saved the
+; world') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0401 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The Great Sage Ugor saved the world' (E-0268, the E-0082 shape; was
 ; TalkMsg0401_TheGreatSageUgorSavedThe)
@@ -318,6 +341,9 @@ TalkMsg0401_TheGreatSageUgorSavedThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $02 (FhuntTalkEvents): starts message $0402 (with 'time to pay your respect to
+; Ugor.') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0402 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'You've come all this way, take' (E-0268, the E-0082 shape; was TalkMsg0402_YouveComeAllThisWay)
 ; (E-0324: was TalkMsg0402_YouveComeAllThisWay; read before $42 was known as 'v)
@@ -326,6 +352,9 @@ TalkMsg0402_YouveComeAllThisWay::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $03 (FhuntTalkEvents): starts message $0403 (with 'The Great Sage, after saving
+; the world,') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the
+; message word). (C2, E-0377)
 ; starts message $0403 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The Great Sage, after saving the world,' (E-0268, the E-0082 shape; was
 ; TalkMsg0403_TheGreatSageAfterSavingThe)
@@ -334,6 +363,9 @@ TalkMsg0403_TheGreatSageAfterSavingThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $04 (FhuntTalkEvents): starts message $0404 (with 'I suggest you lose that
+; thought now.') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the
+; message word). (C2, E-0377)
 ; starts message $0404 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'You're not about to go after the' (E-0268, the E-0082 shape; was
 ; TalkMsg0404_YoureNotAboutToGoAfter)
@@ -342,6 +374,9 @@ TalkMsg0404_YoureNotAboutToGoAfter::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $05 (FhuntTalkEvents): message $0492 (with 'Some time ago, lightning struck')
+; once EVENT_SCENE_THREE_ITEMS_0C2 is set; otherwise message $0405 (with 'Some time ago, lightning
+; struck the tower,'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg0405_SomeTimeAgoLightningStruck.call_start_message_command09_hl_b13); starts message $0405
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Some time ago,
@@ -360,6 +395,9 @@ TalkMsg0405_SomeTimeAgoLightningStruck::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $06 (FhuntTalkEvents): starts message $0407 (with 'A suspension bridge is in the
+; south,') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0407 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'A suspension bridge is in the south,' (E-0268, the E-0082 shape; was
 ; TalkMsg0407_ASuspensionBridgeIsInThe)
@@ -368,6 +406,9 @@ TalkMsg0407_ASuspensionBridgeIsInThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $07 (FhuntTalkEvents): starts message $0406 (with 'Nobody can defy the Orb')
+; through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2,
+; E-0377)
 ; starts message $0406 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Nobody can defy the Orb's bearer. It' (E-0268, the E-0082 shape; was
 ; TalkMsg0406_NobodyCanDefyTheOrbsBearer)
@@ -376,6 +417,9 @@ TalkMsg0406_NobodyCanDefyTheOrbsBearer::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $08 (FhuntTalkEvents): message $0D2C (with 'That giant bird') once
+; EVENT_SCENE_THREE_ITEMS is set; otherwise message $0408 (with 'A huge bird perches atop the
+; tower'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 0024 then jr c,
 ; TalkMsg0408_AHugeBirdPerchesAtopThe.call_start_message_command09_hl_b13); starts message $0408
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'A huge bird perches
@@ -393,6 +437,9 @@ TalkMsg0408_AHugeBirdPerchesAtopThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $09 (FhuntTalkEvents): starts message $0409 (with 'is tightly sealed. Anyone with
+; any trace of wildness is kept out of the tower by magic.') through StartMessageCommand09HL_B13
+; (script command $09; wScriptParam0/1 = the message word). (C2, E-0377)
 ; starts message $0409 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The tower's gate is tightly sealed. Anyone' (E-0268, the E-0082 shape; was
 ; TalkMsg0409_TheTowersGateIsTightlySealed)
@@ -401,6 +448,10 @@ TalkMsg0409_TheTowersGateIsTightlySealed::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $0A (FhuntTalkEvents): message $0D2D (with 'Was that bird going after') once
+; EVENT_SCENE_THREE_ITEMS is set; else message $0414 (with 'What? What? What happened?') once
+; EVENT_SCENE_MADCONDOR is set; otherwise message $040A (with 'The top of the tower collapsed
+; when'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 0024 then jr c,
 ; TalkMsg040A_TheTopOfTheTowerCollapsed.call_start_message_command09_hl_b132; flag 00A4 then jr c,
 ; TalkMsg040A_TheTopOfTheTowerCollapsed.call_start_message_command09_hl_b13); starts message $040A
@@ -427,6 +478,8 @@ TalkMsg040A_TheTopOfTheTowerCollapsed::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $0B (FhuntTalkEvents): sets wDataBank = $1F, then starts Script_HowMayWeServe
+; with StartScriptAtHL_B13 (its first message has 'How may we serve your mortal'). (C2, E-0377)
 ; sets wDataBank = $1F, then starts Script_HowMayWeServe (StartScriptAtHL_B13); its first message
 ; begins 'How may we serve your mortal' (E-0271; was Talk_HowMayWeServeYourMortal) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_HowMayWeServeYourMortal;
@@ -439,6 +492,9 @@ Talk_HowMayWeServeYourMortal::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $0C (FhuntTalkEvents): starts message $040E (with '0 checked the grave. The
+; tombstone was') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the
+; message word). (C2, E-0377)
 ; starts message $040E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the grave. The tombstone was' (E-0268, the E-0082 shape; was
 ; TalkMsg040E_HeroCheckedTheGraveTheTombstone)
@@ -450,7 +506,7 @@ TalkMsg040E_HeroCheckedTheGraveTheTombstone::
 ; Fhunt talk group $0D (wTalkEventGroup): checking the grave starts Script_HeroCheckedTheGrave ('0
 ; checked the grave. There was', SCRIPT_SCENE_GRAVE, then sets EVENT_SCENE_GRAVE) the first time,
 ; and Script_HeroCheckedTheGrave_2 (the same message and scene without the flag) once
-; EVENT_SCENE_GRAVE is set. (C1, E-0370)
+; EVENT_SCENE_GRAVE is set. (C2, E-0370; probed E-0377)
 ; starts Script_HeroCheckedTheGrave: '0 checked the grave. There was' (E-0248)
 FhuntTalkEvents_Grave::
     ld de, EVENT_SCENE_GRAVE
@@ -465,6 +521,8 @@ FhuntTalkEvents_Grave::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $0E (FhuntTalkEvents): sets wDataBank = $10, then starts Script_WelcomeToOurInn_9
+; with StartScriptAtHL_B13 (its first message has 'Welcome to our inn!'). (C2, E-0377)
 ; sets wDataBank = $10, then starts Script_WelcomeToOurInn_9 (StartScriptAtHL_B13); its first
 ; message begins 'Welcome to our inn!' (E-0271; was Talk_WelcomeToOurInn) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_WelcomeToOurInn; shortened from
@@ -477,9 +535,11 @@ Talk_WelcomeToOurInn::
     call StartScriptAtHL_B13
     ret
 
-; Fhunt talk 15, the grave's voice: silent once tile $68 is in the screen buffer; with every
-; standing party monster's wildness (MON_WLD) at 0 the script 'Fine! You've done well to ...',
-; otherwise 'Be gone! If your soul ...' (message $0410). (C1, E-0357)
+; Fhunt talk group $0F, the voice at the grave: does nothing when the screen buffer entry
+; wScreenTileBuffer + $D2 (row 10, column 10) is tile $68; otherwise far-calls
+; FhuntTalkEvents_PartyIsTame and starts Script_FineYou ('Fine!') when every party member without
+; MON_STATUS bit 7 has a MON_WLD of 0 (and the party is not empty), otherwise message $0410 ('Be
+; gone! If your soul'). (C2, E-0377)
 FhuntTalkEvents_ShowBeGoneIfYour::
     ld a, [wScreenTileBuffer + $d2]
     cp $68
@@ -497,6 +557,10 @@ FhuntTalkEvents_ShowBeGoneIfYour::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $10 (FhuntTalkEvents), a one-time treasure chest: wScriptParam0 = 0 (the kind),
+; wScriptParam1 = $2A and DE = story flag $00A1, then StartTreasureFlagDE_B13 (script command $0A);
+; while the flag is clear that command gives item $2A (ExitBell) and sets the flag (message $A0 of
+; group 0; $A1 when the flag is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $2A, story flag $00A1 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -510,6 +574,9 @@ ChestItem_ExitBell_Flag00A1::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk group $11 (FhuntTalkEvents): starts message $0413 (with '0 checked the treasure chest.
+; The chest') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0413 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the treasure chest. The chest' (E-0268, the E-0082 shape; was
 ; TalkMsg0413_HeroCheckedTheTreasureChest)
@@ -518,6 +585,10 @@ TalkMsg0413_HeroCheckedTheTreasureChest::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $12 (FhuntTalkEvents), a one-time treasure chest: wScriptParam0 = 0 (the kind),
+; wScriptParam1 = $61 and DE = story flag $00A2, then StartTreasureFlagDE_B13 (script command $0A);
+; while the flag is clear that command gives item $61 (Cleric) and sets the flag (message $A0 of
+; group 0; $A1 when the flag is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $61, story flag $00A2 in DE: when the flag is clear it gives item $61 (Cleric) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -531,6 +602,11 @@ ChestItem_Cleric_Flag00A2::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk group $13 (FhuntTalkEvents), a one-time treasure chest: wScriptParam0 = 3 (the kind),
+; wScriptParam1 = $00 and DE = story flag $00A3, then StartTreasureFlagDE_B13 (script command $0A);
+; while the flag is clear that command gives a Magic Key (GenerateNewKeyEntry) and sets the flag
+; (message $A9 of group 0; $AA when the flag is already set, $AB when there is no room). (C2,
+; E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 3 (kind) and wScriptParam1 =
 ; $00, story flag $00A3 in DE: when the flag is clear it gives a Magic Key (GenerateNewKeyEntry) and
 ; sets the flag (message $A9 of group 0; $AA when the flag is already set, $AB when there is no
@@ -544,6 +620,8 @@ ChestMagicKey::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk group $14 (FhuntTalkEvents): starts Script_Kweeeeh with StartScriptAtHL_B13 (its first
+; message has 'Kweeeeh!'). (C2, E-0377)
 ; starts Script_Kweeeeh (StartScriptAtHL_B13); its first message begins 'Kweeeeh!' (E-0271; was
 ; Talk_Kweeeeh) (E-0344: the address in its name dropped or read as the label there; was
 ; Talk_Kweeeeh; shortened from TalkScript_Kweeeeh)
@@ -555,7 +633,7 @@ Talk_Kweeeeh::
 
 ; Fhunt talk 21, behind the grave: after agreeing at the grave (EVENT_SCENE_GRAVE_0A6) gives item
 ; $35 (the Change Staff) when the bag has room and sets EVENT_HERO_CHECKED_BEHIND_THE (message
-; $041A), says the bag is full ($041B), or after it 'There ...' ($04A2). (C1, E-0357)
+; $041A), says the bag is full ($041B), or after it 'There ...' ($04A2). (C2, E-0357; probed E-0377)
 FhuntTalkEvents_ShowHeroCheckedBehindThe::
     ld de, EVENT_SCENE_GRAVE_0A6
     call TestFlagBit
@@ -588,7 +666,7 @@ FhuntTalkEvents_ShowHeroCheckedBehindThe::
 ; Fhunt talk 22: asleep ($0DF8) after EVENT_HM_YOURE_FROM_THE_VILLAGE; to a player disguised as a
 ; monster (hPlayerSpriteOverride bit 7, bit 0 clear) standing at X $50 'Hm? You're from the
 ; village!' ($041D), elsewhere the script of that name, which sets the flag; otherwise 'Hm? You're a
-; stranger!' ($041C). (C1, E-0357)
+; stranger!' ($041C). (C2, E-0357; probed E-0377)
 FhuntTalkEvents_Sleeper::
     ld de, EVENT_HM_YOURE_FROM_THE_VILLAGE
     call TestFlagBit
@@ -624,6 +702,9 @@ FhuntTalkEvents_Sleeper::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $17 (FhuntTalkEvents): starts message $041E (with 'This is the town of Pei.')
+; through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2,
+; E-0377)
 ; starts message $041E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is the town of Pei. You'll' (E-0268, the E-0082 shape; was TalkMsg041E_ThisIsTheTownOfPei)
 TalkMsg041E_ThisIsTheTownOfPei::
@@ -631,6 +712,8 @@ TalkMsg041E_ThisIsTheTownOfPei::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $18 (FhuntTalkEvents): starts message $041F (with 'Nya? Travelers?') through
+; StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2, E-0377)
 ; starts message $041F through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Nya? Travelers? That's rare!' (E-0268, the E-0082 shape; was TalkMsg041F_NyaTravelersThatsRare)
 TalkMsg041F_NyaTravelersThatsRare::
@@ -638,6 +721,9 @@ TalkMsg041F_NyaTravelersThatsRare::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $19 (FhuntTalkEvents): starts message $0420 (with 'To the west is a mountain.')
+; through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2,
+; E-0377)
 ; starts message $0420 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'To the west is a mountain. A' (E-0268, the E-0082 shape; was TalkMsg0420_ToTheWestIsAMountain)
 TalkMsg0420_ToTheWestIsAMountain::
@@ -645,6 +731,9 @@ TalkMsg0420_ToTheWestIsAMountain::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $1A (FhuntTalkEvents): starts message $0421 (with 'You should stay well clear of
+; the') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0421 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'You should stay well clear of the' (E-0268, the E-0082 shape; was
 ; TalkMsg0421_YouShouldStayWellClearOf)
@@ -653,6 +742,9 @@ TalkMsg0421_YouShouldStayWellClearOf::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $1B (FhuntTalkEvents): message $0D2E (with 'They say the giant bird') once
+; EVENT_SCENE_THREE_ITEMS is set; otherwise message $0422 (with 'I came close to being abducted
+; by'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 0024 then jr c,
 ; TalkMsg0422_ICameCloseToBeingAbducted.call_start_message_command09_hl_b13); starts message $0422
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'I came close to
@@ -670,6 +762,9 @@ TalkMsg0422_ICameCloseToBeingAbducted::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $1C (FhuntTalkEvents): message $0D2F (with 'The giant bird took off') once
+; EVENT_SCENE_THREE_ITEMS is set; otherwise message $0423 (with 'Some time ago, a human child was'),
+; each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 0024 then jr c,
 ; TalkMsg0423_SomeTimeAgoAHumanChild.call_start_message_command09_hl_b13); starts message $0423
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Some time ago, a
@@ -687,6 +782,10 @@ TalkMsg0423_SomeTimeAgoAHumanChild::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $1D (FhuntTalkEvents): message $0494 (with 'I heard on my travels') once
+; EVENT_SCENE_THREE_ITEMS_0C2 is set; otherwise message $0424 (with 'a new king appeared recently to
+; take the vacant throne.'), each through StartMessageCommand09HL_B13 (script command $09). (C2,
+; E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg0424_ThereWasntAMonsterKingFor.call_start_message_command09_hl_b13); starts message $0424
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'There wasn't a
@@ -704,6 +803,9 @@ TalkMsg0424_ThereWasntAMonsterKingFor::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $1E (FhuntTalkEvents): message $0495 (with 'The monster King disappeared.') once
+; EVENT_SCENE_THREE_ITEMS_0C2 is set; otherwise message $0425 (with 'The new monster king makes
+; others obey'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg0425_TheNewMonsterKingMakesOthers.call_start_message_command09_hl_b13); starts message
 ; $0425 through StartMessageCommand09HL_B13 (script command $09); that string begins 'The new
@@ -723,7 +825,7 @@ TalkMsg0425_TheNewMonsterKingMakesOthers::
     ret
 
 ; Fhunt talk 31: 'You... Are you a monster?' in one of two scripts, the second for a player
-; disguised as a monster. (C1, E-0357)
+; disguised as a monster. (C2, E-0357; probed E-0377)
 FhuntTalkEvents_AreYouAMonster::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -741,6 +843,9 @@ FhuntTalkEvents_AreYouAMonster::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $20 (FhuntTalkEvents): starts message $042A (with 'This is just a rumor, but
+; the') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $042A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is just a rumor, but the' (E-0268, the E-0082 shape; was TalkMsg042A_ThisIsJustARumorBut)
 TalkMsg042A_ThisIsJustARumorBut::
@@ -748,6 +853,9 @@ TalkMsg042A_ThisIsJustARumorBut::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $21 (FhuntTalkEvents): starts message $042B (with 'The tunnel in the west will
+; take') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $042B through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The tunnel in the west will take' (E-0268, the E-0082 shape; was
 ; TalkMsg042B_TheTunnelInTheWestWill)
@@ -756,6 +864,9 @@ TalkMsg042B_TheTunnelInTheWestWill::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $22 (FhuntTalkEvents): starts message $042C (with 'Are you looking for
+; something?') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the
+; message word). (C2, E-0377)
 ; starts message $042C through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Are you looking for something? Huh? The' (E-0268, the E-0082 shape; was
 ; TalkMsg042C_AreYouLookingForSomething)
@@ -764,6 +875,8 @@ TalkMsg042C_AreYouLookingForSomething::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $23 (FhuntTalkEvents): sets wDataBank = $1F, then starts Script_HowMayWeServe_2
+; with StartScriptAtHL_B13 (its first message has 'How may we serve your mortal'). (C2, E-0377)
 ; sets wDataBank = $1F, then starts Script_HowMayWeServe_2 (StartScriptAtHL_B13); its first message
 ; begins 'How may we serve your mortal' (E-0271; was Talk_HowMayWeServeYourMortal_2) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_HowMayWeServeYourMortal_2;
@@ -777,7 +890,7 @@ Talk_HowMayWeServeYourMortal_2::
     ret
 
 ; Fhunt talk 36, a shop: shop $0D (wScreenTableIndex) with scripts in bank $10, 'Good day. How may I
-; ...'. (C1, E-0357)
+; ...'. (C2, E-0357; probed E-0377)
 FhuntTalkEvents_Shop::
     ld a, $0d
     ld [wScreenTableIndex], a
@@ -787,6 +900,9 @@ FhuntTalkEvents_Shop::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $25 (FhuntTalkEvents): starts message $0430 (with '0 peered into the vase.')
+; through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2,
+; E-0377)
 ; starts message $0430 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It appeared' (E-0268, the E-0082 shape; was
 ; TalkMsg0430_HeroPeeredIntoTheVaseIt)
@@ -795,6 +911,8 @@ TalkMsg0430_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $26 (FhuntTalkEvents): starts message $04AA (with '0 read the sign.') through
+; StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2, E-0377)
 ; starts message $04AA through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 read the sign. Determine where you' (E-0268, the E-0082 shape; was
 ; TalkMsg04AA_HeroReadTheSignDetermine)
@@ -803,6 +921,9 @@ TalkMsg04AA_HeroReadTheSignDetermine::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $27 (FhuntTalkEvents): starts message $0DD3 (with 'Inn downstairs. Rooms
+; available.') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the
+; message word). (C2, E-0377)
 ; starts message $0DD3 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Inn downstairs. Rooms available.' (E-0268, the E-0082 shape; was
 ; TalkMsg0DD3_InnDownstairsRoomsAvailable)
@@ -811,6 +932,9 @@ TalkMsg0DD3_InnDownstairsRoomsAvailable::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $28 (FhuntTalkEvents): sets wDataBank = $10, then starts
+; Script_WelcomeToTheTraveler with StartScriptAtHL_B13 (its first message has 'Welcome to the
+; traveler'). (C2, E-0377)
 ; sets wDataBank = $10, then starts Script_WelcomeToTheTraveler (StartScriptAtHL_B13); its first
 ; message begins 'Welcome to the traveler's inn.' (E-0271; was Talk_WelcomeToTheTravelersInn)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -823,9 +947,11 @@ Talk_WelcomeToTheTravelersInn::
     call StartScriptAtHL_B13
     ret
 
-; Fhunt talk 41, the giant bird: after EVENT_SCENE_MADCONDOR, 'Kweeeeeh!' when the player is
-; disguised as a monster listed in TalkEvent29WordList (FhuntTalkEvents_GiantBird_IsBirdPresent),
-; otherwise nothing. (C1, E-0357)
+; Fhunt talk group $29, the giant bird: after EVENT_SCENE_MADCONDOR, starts Script_Kweeeeeh
+; ('Kweeeeeh!') when FhuntTalkEvents_GiantBird_IsBirdPresent sets hTemp0: the player is disguised as
+; a monster (hPlayerSpriteOverride bit 7 set, bit 0 clear) whose graphics id is in
+; TalkEvent29WordList, or a party member without MON_STATUS bit 7 has a MON_SPECIES in that list;
+; otherwise nothing. (C2, E-0377)
 FhuntTalkEvents_GiantBird::
     ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
@@ -839,7 +965,7 @@ FhuntTalkEvents_GiantBird::
     ret
 
 ; Fhunt talk 42: 'When I passed too close ...' ($0434) the first time (EVENT_WHEN_IPASSED_TOO), then
-; 'I... I didn't take anything!' ($0435). (C1, E-0357)
+; 'I... I didn't take anything!' ($0435). (C2, E-0357; probed E-0377)
 FhuntTalkEvents_ShowWhenIPassedToo::
     ld de, EVENT_WHEN_IPASSED_TOO
     call TestFlagBit
@@ -855,6 +981,9 @@ FhuntTalkEvents_ShowWhenIPassedToo::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $2B (FhuntTalkEvents): starts message $0436 (with '0 opened the treasure chest.
+; But it') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0436 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 opened the treasure chest. But it' (E-0268, the E-0082 shape; was
 ; TalkMsg0436_HeroOpenedTheTreasureChest)
@@ -863,6 +992,10 @@ TalkMsg0436_HeroOpenedTheTreasureChest::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $2C (FhuntTalkEvents), a one-time treasure chest: wScriptParam0 = 0 (the kind),
+; wScriptParam1 = $03 and DE = story flag $00AA, then StartTreasureFlagDE_B13 (script command $0A);
+; while the flag is clear that command gives item $03 (WorldDew) and sets the flag (message $A0 of
+; group 0; $A1 when the flag is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $03, story flag $00AA in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -876,6 +1009,9 @@ ChestItem_WorldDew_Flag00AA::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk group $2D (FhuntTalkEvents): starts message $0437 (with 'This is the Castle of
+; Hitano.') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0437 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is the Castle of Hitano. It' (E-0268, the E-0082 shape; was
 ; TalkMsg0437_ThisIsTheCastleOfHitano)
@@ -884,6 +1020,9 @@ TalkMsg0437_ThisIsTheCastleOfHitano::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $2E (FhuntTalkEvents): message $0496 (with 'When the monster King disappeared,')
+; once EVENT_SCENE_THREE_ITEMS_0C2 is set; otherwise message $0438 (with 'A monster king has
+; appeared to take'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg0438_AMonsterKingHasAppearedTo.call_start_message_command09_hl_b13); starts message $0438
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'A monster king has
@@ -901,15 +1040,21 @@ TalkMsg0438_AMonsterKingHasAppearedTo::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $2F (FhuntTalkEvents): starts Script_I_15 with StartScriptAtHL_B13 (its first
+; message has 'lived here for 200'). (C2, E-0377)
 ; starts Script_I_15 (StartScriptAtHL_B13); its first message begins 'I've lived here for 200'
-; (E-0271; was Talk_IELivedHereFor2Hero) (E-0344: the address in its name dropped or read as the
-; label there; was Talk_IELivedHereFor2Hero; shortened from TalkScript_IELivedHereFor2Hero)
+; (E-0271; was Talk_IveLivedHereFor200) (E-0344: the address in its name dropped or read as the
+; label there; was Talk_IveLivedHereFor200; shortened from TalkScript_IELivedHereFor2Hero)
 ; starts Script_I_15: '*: I've lived here for 200' (E-0248)
-Talk_IELivedHereFor2Hero::
+Talk_IveLivedHereFor200::
     ld hl, Script_I_15 ; script '*: I've lived here for 200'
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $30 (FhuntTalkEvents): message $0497 (with 'The Castle is now managed') once
+; EVENT_SCENE_THREE_ITEMS_0C2 is set; else message $043D (with 'Did you see the monster') once
+; EVENT_SCENE_MADCONDOR_CRY is set; otherwise message $043C (with 'The Castle is under the
+; monster'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg043C_TheCastleIsUnderTheMonster.call_start_message_command09_hl_b132; flag 00A8 then jr c,
 ; TalkMsg043C_TheCastleIsUnderTheMonster.call_start_message_command09_hl_b13); starts message $043C
@@ -936,6 +1081,9 @@ TalkMsg043C_TheCastleIsUnderTheMonster::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $31 (FhuntTalkEvents): starts message $043E (with 'The cave to the south')
+; through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2,
+; E-0377)
 ; starts message $043E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The cave to the south That has' (E-0268, the E-0082 shape; was TalkMsg043E_TheCaveToTheSouthThat)
 TalkMsg043E_TheCaveToTheSouthThat::
@@ -943,6 +1091,9 @@ TalkMsg043E_TheCaveToTheSouthThat::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $32 (FhuntTalkEvents): starts message $043F (with 'The new monster King is said
+; to') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word).
+; (C2, E-0377)
 ; starts message $043F through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The new monster King is said to' (E-0268, the E-0082 shape; was
 ; TalkMsg043F_TheNewMonsterKingIsSaid)
@@ -951,6 +1102,9 @@ TalkMsg043F_TheNewMonsterKingIsSaid::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $33 (FhuntTalkEvents): message $0498 (with 'Rumor has it that almost') once
+; EVENT_SCENE_THREE_ITEMS_0C2 is set; otherwise message $0440 (with 'Hardly no one has seen the
+; new'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg0440_HardlyNoOneHasSeenThe.call_start_message_command09_hl_b13); starts message $0440
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Hardly no one has
@@ -970,7 +1124,7 @@ TalkMsg0440_HardlyNoOneHasSeenThe::
 
 ; Fhunt talk 52, a soldier: after EVENT_SCENE_THREE_ITEMS_0C2 'Where has our King gone?' ($0499);
 ; carrying all three of items $39-$3B the script 'What? You have the three ...'; otherwise $0441, or
-; $0442 after EVENT_SCENE_MADCONDOR_CRY. (C1, E-0357)
+; $0442 after EVENT_SCENE_MADCONDOR_CRY. (C2, E-0357; probed E-0377)
 FhuntTalkEvents_SoldierThreeItems::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1020,7 +1174,8 @@ FhuntTalkEvents_SoldierThreeItems::
 
 ; Fhunt talk 53: after EVENT_SCENE_THREE_ITEMS_0C2 $049A; after EVENT_WHAT_YOU_HAVE_THE_THREE_0B7
 ; $046C; carrying items $39-$3B 'What? You have the three ...' ($046B), setting that flag; otherwise
-; $0443, or 'Give away the LightOrb?' ($0444) after EVENT_SCENE_MADCONDOR_CRY. (C1, E-0357)
+; $0443, or 'Give away the LightOrb?' ($0444) after EVENT_SCENE_MADCONDOR_CRY. (C2, E-0357; probed
+; E-0377)
 FhuntTalkEvents_SoldierThreeItems2::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1078,6 +1233,9 @@ FhuntTalkEvents_SoldierThreeItems2::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $36 (FhuntTalkEvents): message $04A3 once EVENT_SCENE_THREE_ITEMS_0C2 is set;
+; otherwise message $0445 (with 'If you have the LightOrb, you can'), each through
+; StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg0445_IfYouHaveTheLightOrbYou.call_start_message_command09_hl_b13); starts message $0445
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'If you have the
@@ -1095,6 +1253,9 @@ TalkMsg0445_IfYouHaveTheLightOrbYou::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $37 (FhuntTalkEvents): message $049B (with 'If I had the LightOrb,') once
+; EVENT_SCENE_THREE_ITEMS_0C2 is set; otherwise message $0446 (with 'If I had the LightOrb, even
+; I'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg0446_IfIHadTheLightOrbEven.call_start_message_command09_hl_b13); starts message $0446
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'If I had the
@@ -1112,6 +1273,8 @@ TalkMsg0446_IfIHadTheLightOrbEven::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $38 (FhuntTalkEvents): starts Script_WantToKnowThe with StartScriptAtHL_B13 (its
+; first message has 'Want to know the most fundamental'). (C2, E-0377)
 ; starts Script_WantToKnowThe (StartScriptAtHL_B13); its first message begins 'Want to know the most
 ; fundamental' (E-0271; was Talk_WantToKnowTheMostFundamental) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_WantToKnowTheMostFundamental; shortened from
@@ -1122,6 +1285,9 @@ Talk_WantToKnowTheMostFundamental::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $39 (FhuntTalkEvents): starts message $044A (with 'Hear me out if you wish to')
+; through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2,
+; E-0377)
 ; starts message $044A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Hear me out if you wish to' (E-0268, the E-0082 shape; was TalkMsg044A_HearMeOutIfYouWish)
 TalkMsg044A_HearMeOutIfYouWish::
@@ -1129,8 +1295,8 @@ TalkMsg044A_HearMeOutIfYouWish::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 58, a shop: shop $0E with scripts in bank $10, 'Welcome! How may I serve ...'. (C1,
-; E-0357)
+; Fhunt talk 58, a shop: shop $0E with scripts in bank $10, 'Welcome! How may I serve ...'. (C2,
+; E-0357; probed E-0377)
 FhuntTalkEvents_Shop2::
     ld a, $0e
     ld [wScreenTableIndex], a
@@ -1140,6 +1306,8 @@ FhuntTalkEvents_Shop2::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $3B (FhuntTalkEvents): sets wDataBank = $1F, then starts Script_HowMayOurChurch_4
+; with StartScriptAtHL_B13 (its first message has 'How may our church help you?'). (C2, E-0377)
 ; sets wDataBank = $1F, then starts Script_HowMayOurChurch_4 (StartScriptAtHL_B13); its first
 ; message begins 'How may our church help you?' (E-0271; was Talk_HowMayOurChurchHelpYou) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_HowMayOurChurchHelpYou;
@@ -1152,6 +1320,9 @@ Talk_HowMayOurChurchHelpYou::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $3C (FhuntTalkEvents): message $049C once EVENT_SCENE_THREE_ITEMS_0C2 is set;
+; else message $044E once EVENT_SCENE_MADCONDOR_CRY is set; otherwise message $044D (with '0 read
+; the sign.'), each through StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg044D_HeroReadTheSignTheFinder.call_start_message_command09_hl_b132; flag 00A8 then jr c,
 ; TalkMsg044D_HeroReadTheSignTheFinder.call_start_message_command09_hl_b13); starts message $044D
@@ -1178,6 +1349,9 @@ TalkMsg044D_HeroReadTheSignTheFinder::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $3D (FhuntTalkEvents): starts message $0450 (with '0 peered into the vase. A
+; face') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0450 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. A face' (E-0268, the E-0082 shape; was
 ; TalkMsg0450_HeroPeeredIntoTheVaseA)
@@ -1186,6 +1360,9 @@ TalkMsg0450_HeroPeeredIntoTheVaseA::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $3E (FhuntTalkEvents): starts message $0314 (with '0 tried to open the chest.
+; But') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0314 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 tried to open the chest. But' (E-0268, the E-0082 shape; was
 ; TalkMsg0314_HeroTriedToOpenTheChest)
@@ -1194,6 +1371,9 @@ TalkMsg0314_HeroTriedToOpenTheChest::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $3F (FhuntTalkEvents): sets wDataBank = $10, then starts
+; Script_WelcomeToTheTraveler with StartScriptAtHL_B13 (its first message has 'Welcome to the
+; traveler'). (C2, E-0377)
 ; sets wDataBank = $10, then starts Script_WelcomeToTheTraveler (StartScriptAtHL_B13); its first
 ; message begins 'Welcome to the traveler's inn.' (E-0271; was Talk_WelcomeToTheTravelersInn_13)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -1206,6 +1386,9 @@ Talk_WelcomeToTheTravelersInn_13::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk group $40 (FhuntTalkEvents): starts message $0452 (with 'The Change Staff will open
+; paths.') through StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message
+; word). (C2, E-0377)
 ; starts message $0452 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The Change Staff will open paths. I' (E-0268, the E-0082 shape; was
 ; TalkMsg0452_TheChangeStaffWillOpenPaths)
@@ -1214,6 +1397,8 @@ TalkMsg0452_TheChangeStaffWillOpenPaths::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $41 (FhuntTalkEvents): starts message $0453 (with 'Hey, kiddo!') through
+; StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2, E-0377)
 ; starts message $0453 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Hey, kiddo! You're new here. Don't cause' (E-0268, the E-0082 shape; was
 ; TalkMsg0453_HeyKiddoYoureNewHereDont)
@@ -1222,6 +1407,8 @@ TalkMsg0453_HeyKiddoYoureNewHereDont::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $42 (FhuntTalkEvents): starts message $0454 (with 'Hey, kiddo!') through
+; StartMessageCommand09HL_B13 (script command $09; wScriptParam0/1 = the message word). (C2, E-0377)
 ; starts message $0454 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Hey, kiddo! You're new here. Don't cause' (E-0268, the E-0082 shape; was
 ; TalkMsg0454_HeyKiddoYoureNewHereDont)
@@ -1230,6 +1417,9 @@ TalkMsg0454_HeyKiddoYoureNewHereDont::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk group $43 (FhuntTalkEvents): message $0456 (with 'Hey, kiddo! You treasure hunting?')
+; once EVENT_SCENE_MADCONDOR_CRY is set; otherwise message $0455 (with 'Hey, kiddo!'), each through
+; StartMessageCommand09HL_B13 (script command $09). (C2, E-0377)
 ; tests story flags (flag 00A8 then jr c,
 ; TalkMsg0455_HeyKiddoYoureNewHereDont.call_start_message_command09_hl_b13); starts message $0455
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Hey, kiddo! You're
@@ -1247,6 +1437,8 @@ TalkMsg0455_HeyKiddoYoureNewHereDont::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 68 ($44): starts message $0457 ('On the island to the west, there is the Wind Tower.
+; ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0457 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'On the island to the west, there' (E-0268, the E-0082 shape; was
 ; TalkMsg0457_OnTheIslandToTheWest)
@@ -1255,6 +1447,8 @@ TalkMsg0457_OnTheIslandToTheWest::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 69 ($45): starts message $0458 ('To the east is a suspension bridge. ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0458 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'To the east is a suspension bridge.' (E-0268, the E-0082 shape; was
 ; TalkMsg0458_ToTheEastIsASuspension)
@@ -1263,6 +1457,9 @@ TalkMsg0458_ToTheEastIsASuspension::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 70 ($46): starts message $0459 ('Those inside the haunted castle speak only amongst
+; themselves. ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; starts message $0459 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Those inside the haunted castle speak only' (E-0268, the E-0082 shape; was
 ; TalkMsg0459_ThoseInsideTheHauntedCastle)
@@ -1273,7 +1470,7 @@ TalkMsg0459_ThoseInsideTheHauntedCastle::
 
 ; Fhunt talk 71, the small hole: by FhuntTalkEvents_IsDisguisedAsListedMonster's answer (the
 ; player's monster disguise listed in TalkEvent47WordList): message $045B, $045C, or the script
-; 'checked the small hole. It ...'. (C1, E-0357)
+; 'checked the small hole. It ...'. (C2, E-0357; probed E-0377)
 FhuntTalkEvents_ShowHeroCheckedTheSmall::
     farcall FhuntTalkEvents_IsDisguisedAsListedMonster
     ldh a, [hTemp0]
@@ -1295,6 +1492,11 @@ FhuntTalkEvents_ShowHeroCheckedTheSmall::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 72 ($48), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_SILVRCAPE ($4E) and
+; story flag $00AB in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the
+; first time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room.
+; (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $4E, story flag $00AB in DE: when the flag is clear it gives item $4E (SilvrCape) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -1308,6 +1510,11 @@ ChestItem_SilvrCape_Flag00AB::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk 73 ($49), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HEAVEN ($39) and story
+; flag $00AC in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the first
+; time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room. (C2,
+; E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $39, story flag $00AC in DE: when the flag is clear it gives item $39 (Heaven) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -1324,7 +1531,7 @@ ChestItem_Heaven::
 ; Fhunt talk group $4A: before EVENT_YOU_CAN_TAKE_THIS_TREASURE starts Script_YouCanTakeThis ('You
 ; can take this treasure,' and sets that flag), afterwards Script_I_16 ('I'm up for your
 ; challenge'); both go on to scripted encounter 6, 'Heh, you're not half bad!', two walks of object
-; 0, hiding it, EVENT_HEH_YOU and SCRIPT_HIDE_SPRITES. (C1, E-0370)
+; 0, hiding it, EVENT_HEH_YOU and SCRIPT_HIDE_SPRITES. (C2, E-0370; probed E-0377)
 ; starts Script_YouCanTakeThis: '*: You can take this treasure,' (E-0248)
 FhuntTalkEvents_YouCanTakeThis::
     ld de, EVENT_YOU_CAN_TAKE_THIS_TREASURE
@@ -1339,6 +1546,11 @@ FhuntTalkEvents_YouCanTakeThis::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 75 ($4B), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HEAVEN_3A ($3A) and
+; story flag $00AF in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the
+; first time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room.
+; (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $3A, story flag $00AF in DE: when the flag is clear it gives item $3A (Heaven) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -1352,8 +1564,12 @@ ChestItem_Heaven_Flag00AF::
     call StartTreasureFlagDE_B13
     ret
 
-; Fhunt talk 76: 'Let the power of justice ...' unless FhuntTalkEvents_PowerOfJustice_IsDisguised
-; says otherwise (by the player's disguise), then 'Step once on each of ...' ($0461). (C1, E-0357)
+; Fhunt talk 76 ($4C): calls FhuntTalkEvents_PowerOfJustice_IsDisguised, then reads hTemp0: 0 starts
+; Script_LetThePowerOf ('Let the power of justice ...') through StartScriptAtHL_B13, non-zero shows
+; message $0461 ('Step once on each of the two floor tiles on the right.') through
+; StartMessageCommand09HL_B13. The helper clears hTemp0 when the player is not disguised as sprite
+; $00F6-$00FF or any $01xx sprite; for such a disguise it only sets hTemp1 = 1, so the choice then
+; rests on whatever hTemp0 held on entry. (C2, E-0377)
 FhuntTalkEvents_PowerOfJustice::
     farcall FhuntTalkEvents_PowerOfJustice_IsDisguised
     ldh a, [hTemp0]
@@ -1368,6 +1584,8 @@ FhuntTalkEvents_PowerOfJustice::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 77 ($4D): starts message $0462 (the player checks the notice: 'Lay the souls to eternal
+; rest.') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0462 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the notice. Lay the souls' (E-0268, the E-0082 shape; was
 ; TalkMsg0462_HeroCheckedTheNoticeLayThe)
@@ -1377,6 +1595,9 @@ TalkMsg0462_HeroCheckedTheNoticeLayThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 78 ($4E): starts Script_SceneJustice, whose one command is SCRIPT_SCENE_JUSTICE through
+; StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1).
+; (C2, E-0377)
 ; starts Script_SceneJustice (StartScriptAtHL_B13) (E-0271; was Talk_SceneJustice) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_SceneJustice; named after the
 ; script it starts, Script_SceneJustice)
@@ -1386,6 +1607,8 @@ Talk_SceneJustice::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 79 ($4F): starts message $04A8 ('Where is my casket...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $04A8 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Where is my casket Where Ring the' (E-0268, the E-0082 shape; was
 ; TalkMsg04A8_WhereIsMyCasketWhereRing)
@@ -1394,6 +1617,8 @@ TalkMsg04A8_WhereIsMyCasketWhereRing::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 80 ($50): starts message $04A9 (the player checks the notice: 'Guide the lost
+; souls...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $04A9 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the notice. Guide the lost' (E-0268, the E-0082 shape; was
 ; TalkMsg04A9_HeroCheckedTheNoticeGuide)
@@ -1403,6 +1628,9 @@ TalkMsg04A9_HeroCheckedTheNoticeGuide::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 81 ($51): starts Script_SceneGravestone (sound $9B, then SCRIPT_SCENE_GRAVESTONE)
+; through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80,
+; wModeState = 1). (C2, E-0377)
 ; starts Script_SceneGravestone (StartScriptAtHL_B13) (E-0271; was Talk_SceneGravestone) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_SceneGravestone; named after
 ; the script it starts, Script_SceneGravestone)
@@ -1412,6 +1640,9 @@ Talk_SceneGravestone::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 82 ($52): starts message $0463 (the player checks the notice: 'Follow the eyes of the
+; undead. The key lies at the end.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $0463 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the notice. Follow the eyes' (E-0268, the E-0082 shape; was
 ; TalkMsg0463_HeroCheckedTheNoticeFollow)
@@ -1420,6 +1651,9 @@ TalkMsg0463_HeroCheckedTheNoticeFollow::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 83 ($53): starts message $040E (the name of the player, then 'checked the grave. The
+; tombstone was covered in moss.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $040E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the grave. The tombstone was' (E-0268, the E-0082 shape; was
 ; TalkMsg040E_HeroCheckedTheGraveTheTombstone_13) (E-0344: the address in its name dropped or read
@@ -1434,7 +1668,7 @@ TalkMsg040E_HeroCheckedTheGraveTheTombstone_13::
 ; Script_ADoorOpenedSomewhere, which plays sound $66, waits 60 frames, shows 'A door opened
 ; somewhere...', runs SCRIPT_SET_FLAG_322 and sets EVENT_SET_FLAG_322; the other shows '0 released
 ; the grave's button.'); afterwards shows message $040E ('0 checked the grave. The tombstone was
-; covered in moss.') with StartMessageCommand09HL_B13. (C1, E-0370)
+; covered in moss.') with StartMessageCommand09HL_B13. (C2, E-0370; probed E-0377)
 ; starts Script_HeroCheckedTheGravestone: '0 checked the gravestone. There was' (E-0248)
 FhuntTalkEvents_GravestoneButton::
     ld de, EVENT_SET_FLAG_322
@@ -1453,7 +1687,7 @@ FhuntTalkEvents_GravestoneButton::
 ; ('You overcame the traps I' and sets that flag), afterwards Script_WahahahahHereAgainAre
 ; ('Wahahahah! Here again, are you?'); both go on to scripted encounter 8, 'You've beaten me
 ; fairly... Take', SCRIPT_SCENE_BEATEN_FAIRLY and the flags EVENT_SCENE_BEATEN_FAIRLY and
-; EVENT_SCENE_BEATEN_FAIRLY_0C5 to EVENT_SCENE_BEATEN_FAIRLY_0C7. (C1, E-0370)
+; EVENT_SCENE_BEATEN_FAIRLY_0C5 to EVENT_SCENE_BEATEN_FAIRLY_0C7. (C2, E-0370; probed E-0377)
 ; starts Script_YouOvercameTheTraps: '*: You overcame the traps I' (E-0248)
 FhuntTalkEvents_YouOvercameTheTraps::
     ld de, EVENT_YOU_OVERCAME_THE_TRAPS_I
@@ -1468,6 +1702,11 @@ FhuntTalkEvents_YouOvercameTheTraps::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 86 ($56), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HEAVEN_3B ($3B) and
+; story flag $00B5 in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the
+; first time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room.
+; (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $3B, story flag $00B5 in DE: when the flag is clear it gives item $3B (Heaven) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -1481,6 +1720,10 @@ ChestItem_Heaven_Flag00B5::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk 87 ($57): tests story flags with TestFlagBit and shows message $049D ('The Mayor is
+; beyond here. ...') when EVENT_SCENE_THREE_ITEMS_0C2 is set; otherwise message $046D ('... You had
+; better be on your best behavior.'). The message starts through StartMessageCommand09HL_B13 (script
+; command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 00C2 then jr c,
 ; TalkMsg046D_TheMonsterArmysGeneralIs.call_start_message_command09_hl_b13); starts message $046D
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The monster army's
@@ -1498,6 +1741,9 @@ TalkMsg046D_TheMonsterArmysGeneralIs::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 88 ($58): starts message $046E ('... is an invincible fortress that is guarded by the
+; elite in the monster army.') through StartMessageCommand09HL_B13 (script command $09, wModeState =
+; 1). (C2, E-0377)
 ; starts message $046E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Our King's castle is an invincible fortress' (E-0268, the E-0082 shape; was
 ; TalkMsg046E_OurKingsCastleIsAnInvincible)
@@ -1506,6 +1752,8 @@ TalkMsg046E_OurKingsCastleIsAnInvincible::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 89 ($59): starts message $046F ('What? ... That means you get the LightOrb...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $046F through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'What? You've got the three items?' (E-0268, the E-0082 shape; was
 ; TalkMsg046F_WhatYouveGotTheThree) (E-0324: was TalkMsg046F_WhatYouveGotTheThree; read before $42
@@ -1517,7 +1765,7 @@ TalkMsg046F_WhatYouveGotTheThree::
 
 ; Fhunt talk 90, the mayor: after EVENT_SCENE_THREE_ITEMS_0C2 $049E; after EVENT_SCENE_FOUND_ME
 ; $0472; carrying items $39-$3B the script 'I'm surprised anyone managed to ...'; otherwise 'Hm? How
-; did you get ...' ($0470). (C1, E-0357)
+; did you get ...' ($0470). (C2, E-0357; probed E-0377)
 FhuntTalkEvents_Mayor::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1565,6 +1813,11 @@ FhuntTalkEvents_Mayor::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 91 ($5B), a one-time vase: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_TINYMEDAL ($2C) and story
+; flag $0200 in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the first
+; time (group-0 message $A3), shows $A4 once the flag is set and $A5 when there is no room. (C2,
+; E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
 ; flag $0200 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -1578,6 +1831,9 @@ VaseItem_TinyMedal_Flag0200::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk 92 ($5C): starts Script_SceneFoundMeBattle, whose one command is
+; SCRIPT_SCENE_FOUND_ME_BATTLE through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_SceneFoundMeBattle (StartScriptAtHL_B13) (E-0271; was Talk_SceneFoundMeBattle)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_SceneFoundMeBattle;
 ; named after the script it starts, Script_SceneFoundMeBattle)
@@ -1587,6 +1843,9 @@ Talk_SceneFoundMeBattle::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 93 ($5D): starts Script_Kweeeeeh_2 (message $0433 'Kweeeeeh!', scripted encounter 5
+; with MadCondor and two Slimes, then it sets EVENT_SCENE_MADCONDOR_CRY) through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_Kweeeeeh_2 (StartScriptAtHL_B13); its first message begins 'Kweeeeeh!' (E-0271; was
 ; Talk_Kweeeeeh) (E-0344: the address in its name dropped or read as the label there; was
 ; Talk_Kweeeeeh; shortened from TalkScript_Kweeeeeh)
@@ -1596,6 +1855,9 @@ Talk_Kweeeeeh::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 94 ($5E): starts message $0DE2 (the name of the player, then 'checked the tombstone.
+; There appeared to be nothing.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $0DE2 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the tombstone. There appeared to' (E-0268, the E-0082 shape; was
 ; TalkMsg0DE2_HeroCheckedTheTombstoneThere)
@@ -1604,6 +1866,8 @@ TalkMsg0DE2_HeroCheckedTheTombstoneThere::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 95 ($5F): starts message $0476 ('Awaargh, ... They overwork us terribly here.') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0476 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Awaargh, I'm late, I'm late! They overwork' (E-0268, the E-0082 shape; was
 ; TalkMsg0476_AwaarghImLateImLateThey)
@@ -1612,6 +1876,8 @@ TalkMsg0476_AwaarghImLateImLateThey::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 96 ($60): starts message $0477 ('They keep piling on these ludicrous orders. ...')
+; through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0477 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'They keep piling on these ludicrous orders.' (E-0268, the E-0082 shape; was
 ; TalkMsg0477_TheyKeepPilingOnTheseLudicrous)
@@ -1620,6 +1886,8 @@ TalkMsg0477_TheyKeepPilingOnTheseLudicrous::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 97 ($61): starts message $0478 ('Gaah! You found me while I was sluffing off from
+; work...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0478 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Gaah! You found me while I was' (E-0268, the E-0082 shape; was TalkMsg0478_GaahYouFoundMeWhileI)
 TalkMsg0478_GaahYouFoundMeWhileI::
@@ -1627,6 +1895,11 @@ TalkMsg0478_GaahYouFoundMeWhileI::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 98 ($62), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WORLDDEW ($03) and story
+; flag $00BC in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the first
+; time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room. (C2,
+; E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $03, story flag $00BC in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -1640,6 +1913,9 @@ ChestItem_WorldDew_Flag00BC::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk 99 ($63): starts message $0450 (the name of the player, then 'peered into the vase. A
+; face grinned up from the darkness. The vase actually was an EvilPot.') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0450 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. A face' (E-0268, the E-0082 shape; was
 ; TalkMsg0450_HeroPeeredIntoTheVaseA_13) (E-0344: the address in its name dropped or read as the
@@ -1649,6 +1925,11 @@ TalkMsg0450_HeroPeeredIntoTheVaseA_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 100 ($64), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_THIEF ($60) and story
+; flag $00BD in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the first
+; time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room. (C2,
+; E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $60, story flag $00BD in DE: when the flag is clear it gives item $60 (Thief) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -1662,6 +1943,11 @@ ChestItem_Thief_Flag00BD::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk 101 ($65), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_BOLT ($25) and story
+; flag $00BE in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the first
+; time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room. (C2,
+; E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $25, story flag $00BE in DE: when the flag is clear it gives item $25 (Bolt) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -1675,6 +1961,11 @@ ChestItem_Bolt::
     call StartTreasureFlagDE_B13
     ret
 
+; Fhunt talk 102 ($66), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_STEELFANG ($45) and
+; story flag $00BF in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the
+; first time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room.
+; (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $45, story flag $00BF in DE: when the flag is clear it gives item $45 (SteelFang) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -1690,7 +1981,7 @@ ChestItem_SteelFang_Flag00BF::
 
 ; Fhunt talk 103: after EVENT_GOOD_YOU_HAVE_BROUGHT_THE the script 'Fwahahaha! Don't you ever give
 ; ...'; carrying items $39-$3B takes all three and runs 'Ah, so good of you ...'; otherwise message
-; $0479. (C1, E-0357)
+; $0479. (C2, E-0357; probed E-0377)
 FhuntTalkEvents_Fwahahaha::
     ld de, EVENT_GOOD_YOU_HAVE_BROUGHT_THE
     call TestFlagBit
@@ -1742,6 +2033,10 @@ FhuntTalkEvents_Fwahahaha::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 104 ($68): starts Script_KamehaSoItWas (sound $28, walks of object 0, Kameha: 'So it
+; was you who got the three treasures' ($0481), more walks, message $0482, then
+; SCRIPT_SCENE_THREE_ITEMS) through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_KamehaSoItWas (StartScriptAtHL_B13); its first message begins 'Kameha So it was you
 ; who' (E-0271; was Talk_KamehaSoItWasYouWho) (E-0344: the address in its name dropped or read as
 ; the label there; was Talk_KamehaSoItWasYouWho; shortened from TalkScript_KamehaSoItWasYouWho)
@@ -1751,6 +2046,9 @@ Talk_KamehaSoItWasYouWho::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 105 ($69): starts Script_ThisWayHereHere (message $04A7 '......This way... ...Here...',
+; then SCRIPT_SCENE_THIS_WAY) through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_ThisWayHereHere (StartScriptAtHL_B13); its first message begins 'This way Here Here'
 ; (E-0271; was Talk_ThisWayHereHere) (E-0344: the address in its name dropped or read as the label
 ; there; was Talk_ThisWayHereHere; shortened from TalkScript_ThisWayHereHere)
@@ -1760,8 +2058,8 @@ Talk_ThisWayHereHere::
     call StartScriptAtHL_B13
     ret
 
-; Fhunt talk 106: object 1 faces down; unless the player stands at Y $70, runs Script_Sound. (C1,
-; E-0357)
+; Fhunt talk 106: object 1 faces down; unless the player stands at Y $70, runs Script_Sound. (C2,
+; E-0357; probed E-0377)
 FhuntTalkEvents_Sound::
     xor a
     ld [wObject1 + OBJ_STATE], a
@@ -1772,6 +2070,8 @@ FhuntTalkEvents_Sound::
     call StartScriptAtHL_B13
     ret
 
+; Fhunt talk 107 ($6B): starts message $04A6 ('I was taking a walk outside with my friend Roboster
+; ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $04A6 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I was taking a walk outside with' (E-0268, the E-0082 shape; was
 ; TalkMsg04A6_IWasTakingAWalkOutside)
@@ -1780,6 +2080,8 @@ TalkMsg04A6_IWasTakingAWalkOutside::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 108 ($6C): starts message $04A4 ('South beyond the mountains is the ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $04A4 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'South beyond the mountains is the King's' (E-0268, the E-0082 shape; was
 ; TalkMsg04A4_SouthBeyondTheMountainsIs)
@@ -1788,6 +2090,9 @@ TalkMsg04A4_SouthBeyondTheMountainsIs::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 109 ($6D): starts message $04A5 ('Several ancient ruins remain in the southern part of
+; the continent. ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1).
+; (C2, E-0377)
 ; starts message $04A5 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Several ancient ruins remain in the southern' (E-0268, the E-0082 shape; was
 ; TalkMsg04A5_SeveralAncientRuinsRemain)
@@ -1796,8 +2101,12 @@ TalkMsg04A5_SeveralAncientRuinsRemain::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 110: 'Let the power of justice ...' unless FhuntTalkEvents_PowerOfJustice_IsDisguised
-; says otherwise, then 'The castle's lord summons monsters...' ($04A0). (C1, E-0357)
+; Fhunt talk 110 ($6E): calls FhuntTalkEvents_PowerOfJustice_IsDisguised, then reads hTemp0: 0
+; starts Script_LetThePowerOf ('Let the power of justice ...') through StartScriptAtHL_B13, non-zero
+; shows message $04A0 ('... lord summons monsters...') through StartMessageCommand09HL_B13. The
+; helper clears hTemp0 when the player is not disguised as sprite $00F6-$00FF or any $01xx sprite;
+; for such a disguise it only sets hTemp1 = 1, so the choice then rests on whatever hTemp0 held on
+; entry. (C2, E-0377)
 FhuntTalkEvents_PowerOfJustice2::
     farcall FhuntTalkEvents_PowerOfJustice_IsDisguised
     ldh a, [hTemp0]
@@ -1812,8 +2121,12 @@ FhuntTalkEvents_PowerOfJustice2::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 111: 'Let the power of justice ...' unless FhuntTalkEvents_PowerOfJustice_IsDisguised
-; says otherwise, then 'A button hides behind a ...' ($04A1). (C1, E-0357)
+; Fhunt talk 111 ($6F): calls FhuntTalkEvents_PowerOfJustice_IsDisguised, then reads hTemp0: 0
+; starts Script_LetThePowerOf ('Let the power of justice ...') through StartScriptAtHL_B13, non-zero
+; shows message $04A1 ('A button hides behind a grave... A button that opens a door...') through
+; StartMessageCommand09HL_B13. The helper clears hTemp0 when the player is not disguised as sprite
+; $00F6-$00FF or any $01xx sprite; for such a disguise it only sets hTemp1 = 1, so the choice then
+; rests on whatever hTemp0 held on entry. (C2, E-0377)
 FhuntTalkEvents_PowerOfJustice3::
     farcall FhuntTalkEvents_PowerOfJustice_IsDisguised
     ldh a, [hTemp0]
@@ -1828,6 +2141,9 @@ FhuntTalkEvents_PowerOfJustice3::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 112 ($70): starts message $0413 (the name of the player, then 'checked the treasure
+; chest. The chest was empty. Could the LightOrb have been in it?') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0413 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the treasure chest. The chest' (E-0268, the E-0082 shape; was
 ; TalkMsg0413_HeroCheckedTheTreasureChest_13) (E-0344: the address in its name dropped or read as
@@ -1837,6 +2153,12 @@ TalkMsg0413_HeroCheckedTheTreasureChest_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Fhunt talk 114 ($72), the last entry of FhuntTalkEvents (113 is an unused $0000 word): returns at
+; once when wMapToggleRequest is 0. Otherwise it clears the request and swaps maps: on map $7F it
+; sets hMapId = $92 with wWarpDestX/Y = $40, $40; on any other map hMapId = $7F with wWarpDestX/Y =
+; $40, $10. It then clears wJoypadHeld, wJoypadPressed, wWarpDestFacing, wMapToggleFlag, wMenuState
+; and wMenuSubState and sets wFieldTransitionKind = 1 and wModeState = 6 (FieldState_FieldMenu,
+; which runs WarpEffect). (C2, E-0377)
 ; when wMapToggleRequest is set: clears it and warps between map $7F and $92 (position $40, $40 or
 ; $40, $10) through mode state 6 (E-0125)
 ToggleMapBetween7FAnd92::
@@ -1881,8 +2203,12 @@ ToggleMapBetween7FAnd92::
     ld [wFieldTransitionKind], a
     ret
 
+; Talk category 4 (entry 4 of the DispatchTalkEvent table, picked by wTalkEventIndex): jumps by
+; wTalkEventGroup through a 171-entry table (groups $00-$AA) to the talk handlers of the Norden
+; kingdom, its port of Nofor and the border mine, Weston and Westania Castle in the west, and the
+; castle of Estria. Nothing checks the group against the table size. (C2, E-0377)
 ; talk category 4: jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port
-; (messages $0300-$03BF, $0AB0-$0ACF) (E-0288)
+; (messages $0300-$03BF, $0AB0-$0ACF)
 NordenTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -2058,6 +2384,8 @@ NordenTalkEvents::
     dw ChestItem_MeteOrb
     dw Talk_SceneShieldGuardian
 
+; Norden talk 0 ($00): starts message $0300 ('This is Norden, the kingdom of the north.') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0300 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is Norden, the kingdom of the' (E-0268, the E-0082 shape; was
 ; TalkMsg0300_ThisIsNordenTheKingdomOf)
@@ -2066,6 +2394,8 @@ TalkMsg0300_ThisIsNordenTheKingdomOf::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 1 ($01): starts message $0301 ('There are three kingdoms situated around a lake. ...')
+; through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0301 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'There are three kingdoms situated around a' (E-0268, the E-0082 shape; was
 ; TalkMsg0301_ThereAreThreeKingdomsSituated)
@@ -2074,6 +2404,8 @@ TalkMsg0301_ThereAreThreeKingdomsSituated::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 2 ($02): starts message $0302 ('Travel north along the mountain range, and ...')
+; through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0302 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Travel north along the mountain range, and' (E-0268, the E-0082 shape; was
 ; TalkMsg0302_TravelNorthAlongTheMountain)
@@ -2082,6 +2414,8 @@ TalkMsg0302_TravelNorthAlongTheMountain::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 3 ($03): starts message $0303 ('The winter here is harsh. ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0303 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The winter here is harsh. Stay outside' (E-0268, the E-0082 shape; was
 ; TalkMsg0303_TheWinterHereIsHarshStay)
@@ -2090,6 +2424,10 @@ TalkMsg0303_TheWinterHereIsHarshStay::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 4 ($04): tests story flags with TestFlagBit and shows message $0355 ('... Squabbling
+; over gold that ...') when EVENT_SCENE_GOT_TO is set; otherwise message $0304 ('Listen, did you
+; hear? ...'). The message starts through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0086 then jr c,
 ; TalkMsg0304_ListenDidYouHearTheyFound.call_start_message_command09_hl_b13); starts message $0304
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Listen, did you
@@ -2107,6 +2445,11 @@ TalkMsg0304_ListenDidYouHearTheyFound::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 5 ($05): tests story flags with TestFlagBit and shows message $0356 ('... no telling
+; what greed will make people do...') when EVENT_SCENE_GOT_TO is set; otherwise message $0305
+; ('Urrrrrgh! The western wretches! The mine on the border is on a rich vein of pure gold!'). The
+; message starts through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0086 then jr c,
 ; TalkMsg0305_UrrrrrghTheWesternWretches.call_start_message_command09_hl_b13); starts message $0305
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Urrrrrgh! The
@@ -2125,6 +2468,10 @@ TalkMsg0305_UrrrrrghTheWesternWretches::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 6 ($06): tests story flags with TestFlagBit and shows message $0357 ('Did you know?
+; ...') when EVENT_SCENE_GOT_TO is set; otherwise message $0306 ('... Even the King has
+; changed...'). The message starts through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0086 then jr c,
 ; TalkMsg0306_EveryonesBeenActingStrangely.call_start_message_command09_hl_b13); starts message
 ; $0306 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Everyone's
@@ -2143,6 +2490,10 @@ TalkMsg0306_EveryonesBeenActingStrangely::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 7 ($07): tests story flags with TestFlagBit and shows message $0A0B ('... However cold
+; it may be, spring always comes, I guess.') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message
+; $0307 ('The spring in the north, where the elemental lives, has frozen. ...'). The message starts
+; through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0307_TheSpringInTheNorthWhere.call_start_message_command09_hl_b13); starts message $0307
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The spring in the
@@ -2160,6 +2511,11 @@ TalkMsg0307_TheSpringInTheNorthWhere::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 8 ($08): starts Script_HaveYouHeardAbout_2: message word $4308 ('Have you heard about
+; the spirit in the spring?'); script_skip_if_no goes on to Script_ALongTimeAgo (word $8309, 'A long
+; time ago the spirit made a shield using her mystical powers.'), otherwise word $830A ('Many years
+; ago, our ancestors came to this land after a long journey.') through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_HaveYouHeardAbout_2 (StartScriptAtHL_B13); its first message begins 'Have you heard
 ; about the spirit' (E-0271; was Talk_HaveYouHeardAboutTheSpirit) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_HaveYouHeardAboutTheSpirit; shortened from
@@ -2170,6 +2526,10 @@ Talk_HaveYouHeardAboutTheSpirit::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 9 ($09): tests story flags with TestFlagBit and shows message $0D21 ('Star spuds grow
+; plentifully around these parts. ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $030B
+; ('Around these parts, we get a lot of star spuds ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg030B_AroundThesePartsWeGetA.call_start_message_command09_hl_b13); starts message $030B
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Around these parts,
@@ -2187,6 +2547,10 @@ TalkMsg030B_AroundThesePartsWeGetA::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 10 ($0A): tests story flags with TestFlagBit and shows message $0DF2 ('The weather has
+; been mild. ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $030C ('... We may need
+; the help of the spirit again to ...'). The message starts through StartMessageCommand09HL_B13
+; (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg030C_ItsBecomeMuchColderWeMay.call_start_message_command09_hl_b13); starts message $030C
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'It's become much
@@ -2206,7 +2570,7 @@ TalkMsg030C_ItsBecomeMuchColderWeMay::
 
 ; Norden talk 11, the castle guard: after EVENT_WHAT_IS_THAT_DIRTY_MEDAL 'Please enter, your
 ; envoyship!' ($031D); carrying item $32 (the Crest) the script 'What is that dirty medal?';
-; otherwise 'His Majesty is in talks ...' ($030E). (C1, E-0357)
+; otherwise 'His Majesty is in talks ...' ($030E). (C2, E-0357; probed E-0377)
 NordenTalkEvents_ShowHisMajestyIsIn::
     ld de, EVENT_WHAT_IS_THAT_DIRTY_MEDAL
     call TestFlagBit
@@ -2231,6 +2595,10 @@ NordenTalkEvents_ShowHisMajestyIsIn::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 12 ($0C): tests story flags with TestFlagBit and shows message $037A ('The border with
+; the west is open! ...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise message $030F ('The
+; mine on the western border is closed right now. ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg030F_TheMineOnTheWesternBorder.call_start_message_command09_hl_b13); starts message $030F
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The mine on the
@@ -2248,8 +2616,8 @@ TalkMsg030F_TheMineOnTheWesternBorder::
     call StartMessageCommand09HL_B13
     ret
 
-; Norden talk 13, a shop: shop 7 with scripts in bank $10, 'Welcome! How may I serve ...'. (C1,
-; E-0357)
+; Norden talk 13, a shop: shop 7 with scripts in bank $10, 'Welcome! How may I serve ...'. (C2,
+; E-0357; probed E-0377)
 NordenTalkEvents_Shop::
     ld a, $07
     ld [wScreenTableIndex], a
@@ -2259,6 +2627,9 @@ NordenTalkEvents_Shop::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 14 ($0E): starts message $0311 ('peered into the vase. It was filled with lumpy
+; potatoes.', after a '*:' speaker mark rather than the name of the player) through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0311 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0311_HeroPeeredIntoTheVaseIt)
@@ -2267,6 +2638,11 @@ TalkMsg0311_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 15 ($0F), a one-time vase: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_TINYMEDAL ($2C) and story
+; flag $01E6 in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the first
+; time (group-0 message $A3), shows $A4 once the flag is set and $A5 when there is no room. (C2,
+; E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
 ; flag $01E6 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -2280,6 +2656,9 @@ VaseItem_TinyMedal_Flag01E6::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 16 ($10): starts message $0313 (the name of the player, then 'peered into the oven. It
+; felt just a little warm.') through StartMessageCommand09HL_B13 (script command $09, wModeState =
+; 1). (C2, E-0377)
 ; starts message $0313 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was
 ; TalkMsg0313_HeroPeeredIntoTheOvenIt)
@@ -2288,6 +2667,9 @@ TalkMsg0313_HeroPeeredIntoTheOvenIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 17 ($11): starts message $0314 (the name of the player, then 'tried to open the chest.
+; But the treasure chest was locked.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $0314 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 tried to open the chest. But' (E-0268, the E-0082 shape; was
 ; TalkMsg0314_HeroTriedToOpenTheChest_13) (E-0344: the address in its name dropped or read as the
@@ -2299,7 +2681,8 @@ TalkMsg0314_HeroTriedToOpenTheChest_13::
     ret
 
 ; Norden talk 18, an inn: starts Script_WelcomeToOurInn_5 ('Welcome to our inn!', then a jump to the
-; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C2, E-0370;
+; probed E-0377)
 ; starts Script_WelcomeToOurInn_5: '*: Welcome to our inn!' (E-0248)
 NordenTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn_5 ; script '*: Welcome to our inn!'
@@ -2308,6 +2691,8 @@ NordenTalkEvents_Inn::
     ld [wDataBank], a
     ret
 
+; Norden talk 19 ($13): starts message $0315 ('The border is closed, so I ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0315 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The border is closed, so I can't' (E-0268, the E-0082 shape; was
 ; TalkMsg0315_TheBorderIsClosedSoI)
@@ -2319,7 +2704,7 @@ TalkMsg0315_TheBorderIsClosedSoI::
 ; Norden talk 20, the shield: after EVENT_SCENE_SHIELD_1E4 it fakes a press of A
 ; (wJoypadHeld/wJoypadPressed = 1); after EVENT_SCENE_SHIELD_GUARDIAN_1E2 the shield scene script,
 ; or 'checked the shield.' before EVENT_SCENE_SHIELD; after EVENT_BLINK_SPRITES 'If you restore this
-; world's ...' ($031B); otherwise 'checked the shield. A beautiful ...'. (C1, E-0357)
+; world's ...' ($031B); otherwise 'checked the shield. A beautiful ...'. (C2, E-0357; probed E-0377)
 NordenTalkEvents_Shield::
     ld de, EVENT_SCENE_SHIELD_1E4
     call TestFlagBit
@@ -2359,6 +2744,12 @@ NordenTalkEvents_Shield::
     ld [wJoypadPressed], a
     ret
 
+; Norden talk 21 ($15): tests story flags with TestFlagBit and shows message $0379 ('Who was that
+; boy who came out of the dungeon ...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise message
+; $0ABA ('Am I dreaming? ...') when EVENT_SCENE_REPORT_TO_KING is set; otherwise message $0358 ('...
+; But the King still suspects the west...') when EVENT_SCENE_GOT_TO is set; otherwise message $031E
+; ('His Majesty has been cranky...'). The message starts through StartMessageCommand09HL_B13 (script
+; command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg031E_HisMajestyHasBeenCrankyIs.call_start_message_command09_hl_b133; flag 0087 then jr c,
 ; TalkMsg031E_HisMajestyHasBeenCrankyIs.call_start_message_command09_hl_b132; flag 0086 then jr c,
@@ -2394,6 +2785,11 @@ TalkMsg031E_HisMajestyHasBeenCrankyIs::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 22 ($16): tests story flags with TestFlagBit and shows message $0377 ('Well, we
+; managed to avoid war with the west. ...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise
+; message $031F ('After the gold discovery, our relationship with the west soured. ...'). The
+; message starts through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg031F_AfterTheGoldDiscoveryOur.call_start_message_command09_hl_b13); starts message $031F
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'After the gold
@@ -2412,6 +2808,10 @@ TalkMsg031F_AfterTheGoldDiscoveryOur::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 23 ($17): tests story flags with TestFlagBit and shows message $0378 ('This is just
+; between you and me, but the fake ...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise message
+; $0320 ('I remember the King to be placid, but he has ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg0320_IRememberTheKingToBe.call_start_message_command09_hl_b13); starts message $0320
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'I remember the King
@@ -2432,7 +2832,7 @@ TalkMsg0320_IRememberTheKingToBe::
 ; Norden talk 24: by story progress: $0376 after EVENT_SCENE_PLAN_RUINED_094, 'What? Why are there
 ; two ...' ($0ABB) after EVENT_SCENE_REPORT_TO_KING, 'We reported to the King ...' after
 ; EVENT_SCENE_GOT_TO, 'His Majesty is furious ...' ($0323) after EVENT_SCENE_SPIRIT_ENVOY, else 'Ah,
-; you are the spirit's ...'. (C1, E-0357)
+; you are the spirit's ...'. (C2, E-0357; probed E-0377)
 NordenTalkEvents_TwoKings::
     ld de, EVENT_SCENE_PLAN_RUINED_094
     call TestFlagBit
@@ -2470,6 +2870,9 @@ NordenTalkEvents_TwoKings::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 25 ($19): starts message $0ABD (the player checks the bookshelf: 'History of the Lake
+; Kingdoms... The three Kingdoms surrounding the lake were once a single kingdom' ...) through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0ABD through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was
 ; TalkMsg0ABD_HeroCheckedTheBookshelfHistory)
@@ -2478,6 +2881,9 @@ TalkMsg0ABD_HeroCheckedTheBookshelfHistory::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 26 ($1A): starts message $0ABE (the player checks the bookshelf: 'History of the Lake
+; Kingdoms... The elemental spirit in the spring is a kind- hearted being' ...) through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0ABE through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was
 ; TalkMsg0ABE_HeroCheckedTheBookshelfHistory)
@@ -2486,6 +2892,9 @@ TalkMsg0ABE_HeroCheckedTheBookshelfHistory::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 27 ($1B): starts message $0ABC (the name of the player, then 'peered into the oven. It
+; felt just a little warm.') through StartMessageCommand09HL_B13 (script command $09, wModeState =
+; 1). (C2, E-0377)
 ; starts message $0ABC through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was
 ; TalkMsg0ABC_HeroPeeredIntoTheOvenIt)
@@ -2494,6 +2903,10 @@ TalkMsg0ABC_HeroPeeredIntoTheOvenIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 28 ($1C): tests story flags with TestFlagBit and shows message $0AC3 ('This tunnel
+; leads to a port.') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $0324 ('This tunnel goes
+; to a port. ...'). The message starts through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0324_ThisTunnelGoesToAPort.call_start_message_command09_hl_b13); starts message $0324
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'This tunnel goes to
@@ -2511,6 +2924,8 @@ TalkMsg0324_ThisTunnelGoesToAPort::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 29 ($1D): starts message $0325 ('This is the port of Nofor.') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0325 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is the port of Nofor.' (E-0268, the E-0082 shape; was TalkMsg0325_ThisIsThePortOfNofor)
 TalkMsg0325_ThisIsThePortOfNofor::
@@ -2518,6 +2933,11 @@ TalkMsg0325_ThisIsThePortOfNofor::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 30 ($1E): tests story flags with TestFlagBit and shows message $0A0C ('The ice
+; blocking the harbor finally broke up and melted away. ...') when EVENT_SCENE_SHIELD2_1E5 is set;
+; otherwise message $0326 ('... Beyond useless! The ice has the port clogged. No ships can sail.').
+; The message starts through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0326_ItsUselessBeyondUselessThe.call_start_message_command09_hl_b13); starts message $0326
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'It's useless! Beyond
@@ -2535,6 +2955,10 @@ TalkMsg0326_ItsUselessBeyondUselessThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 31 ($1F): tests story flags with TestFlagBit and shows message $0AC4 ('The ice melted
+; away! ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $0327 ('In all my years, ...').
+; The message starts through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0327_InAllMyYearsIve.call_start_message_command09_hl_b13); starts message $0327 through
 ; StartMessageCommand09HL_B13 (script command $09); that string begins 'In all my years, I've never'
@@ -2553,6 +2977,8 @@ TalkMsg0327_InAllMyYearsIve::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 32 ($20): starts message $0328 ('Three kingdoms ring this lake. ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0328 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Three kingdoms ring this lake. They are' (E-0268, the E-0082 shape; was
 ; TalkMsg0328_ThreeKingdomsRingThisLake)
@@ -2561,6 +2987,10 @@ TalkMsg0328_ThreeKingdomsRingThisLake::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 33 ($21): tests story flags with TestFlagBit and shows message $0A0D ('The long winter
+; seems to be over. ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $0329 ('The border?
+; ...'). The message starts through StartMessageCommand09HL_B13 (script command $09, wModeState =
+; 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0329_TheBorderItsNotHereThe.call_start_message_command09_hl_b13); starts message $0329
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The border? It's not
@@ -2578,6 +3008,8 @@ TalkMsg0329_TheBorderItsNotHereThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 34 ($22): starts message $032A ('Mama said to stay off the ice. ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $032A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Mama said to stay off the ice.' (E-0268, the E-0082 shape; was TalkMsg032A_MamaSaidToStayOffThe)
 TalkMsg032A_MamaSaidToStayOffThe::
@@ -2585,6 +3017,10 @@ TalkMsg032A_MamaSaidToStayOffThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 35 ($23): tests story flags with TestFlagBit and shows message $0A0E ('We were
+; visiting from the east. ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $032B ('We
+; were passing through from the east, but the ice ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg032B_WeWerePassingThroughFrom.call_start_message_command09_hl_b13); starts message $032B
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'We were passing
@@ -2602,6 +3038,10 @@ TalkMsg032B_WeWerePassingThroughFrom::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 36 ($24): tests story flags with TestFlagBit and shows message $037B ('The discovery
+; of gold was a bust...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise message $032C ('They
+; discovered gold at the mine on the western border! ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg032C_TheyDiscoveredGoldAtTheMine.call_start_message_command09_hl_b13); starts message $032C
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'They discovered gold
@@ -2619,6 +3059,10 @@ TalkMsg032C_TheyDiscoveredGoldAtTheMine::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 37 ($25): tests story flags with TestFlagBit and shows message $0DF5 ('The kingdoms of
+; the north and west have reconciled from ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise
+; message $032D ('I hear the west and the north are locking horns ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg032D_IHearTheWestAndThe.call_start_message_command09_hl_b13); starts message $032D through
 ; StartMessageCommand09HL_B13 (script command $09); that string begins 'I hear the west and the
@@ -2636,6 +3080,8 @@ TalkMsg032D_IHearTheWestAndThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 38 ($26): starts message $032E ('Do you know Lady Yuna of the west? ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $032E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Do you know Lady Yuna of the' (E-0268, the E-0082 shape; was TalkMsg032E_DoYouKnowLadyYunaOf)
 TalkMsg032E_DoYouKnowLadyYunaOf::
@@ -2643,6 +3089,10 @@ TalkMsg032E_DoYouKnowLadyYunaOf::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 39 ($27): tests story flags with TestFlagBit and shows message $0DF6 ('The scholar who
+; was in the tavern? ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $032F ('The
+; scholar in the tavern said he came from the eastern kingdom. ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg032F_TheScholarInTheTavernSaid.call_start_message_command09_hl_b13); starts message $032F
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The scholar in the
@@ -2660,6 +3110,8 @@ TalkMsg032F_TheScholarInTheTavernSaid::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 40 ($28): starts message $0330 (too expensive ... 'If I had a Gold Pass' ...) through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0330 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Don't you think it's too expensive? If' (E-0268, the E-0082 shape; was
 ; TalkMsg0330_DontYouThinkItsTooExpensive)
@@ -2668,8 +3120,8 @@ TalkMsg0330_DontYouThinkItsTooExpensive::
     call StartMessageCommand09HL_B13
     ret
 
-; Norden talk 41, a shop: shop $0A with scripts in bank $10, 'Welcome! What can I do ...'. (C1,
-; E-0357)
+; Norden talk 41, a shop: shop $0A with scripts in bank $10, 'Welcome! What can I do ...'. (C2,
+; E-0357; probed E-0377)
 NordenTalkEvents_Shop0A::
     ld a, $0a
     ld [wScreenTableIndex], a
@@ -2679,8 +3131,8 @@ NordenTalkEvents_Shop0A::
     call StartScriptAtHL_B13
     ret
 
-; Norden talk 42, a shop: shop 8 with scripts in bank $10, 'Greetings! How shall I serve ...'. (C1,
-; E-0357)
+; Norden talk 42, a shop: shop 8 with scripts in bank $10, 'Greetings! How shall I serve ...'. (C2,
+; E-0357; probed E-0377)
 NordenTalkEvents_Shop08::
     ld a, $08
     ld [wScreenTableIndex], a
@@ -2690,7 +3142,8 @@ NordenTalkEvents_Shop08::
     call StartScriptAtHL_B13
     ret
 
-; Norden talk 43, a shop: shop 9 with scripts in bank $10, 'Hello! Have a look at ...'. (C1, E-0357)
+; Norden talk 43, a shop: shop 9 with scripts in bank $10, 'Hello! Have a look at ...'. (C2, E-0357;
+; probed E-0377)
 NordenTalkEvents_Shop09::
     ld a, $09
     ld [wScreenTableIndex], a
@@ -2700,6 +3153,10 @@ NordenTalkEvents_Shop09::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 44 ($2C): sets wDataBank = $1F, then starts Script_HowMayOurChurch_2 (message word
+; $4820, 'How may our church serve you?'), which jumps to Script_Priest in the data bank through
+; StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1).
+; (C2, E-0377)
 ; sets wDataBank = $1F, then starts Script_HowMayOurChurch_2 (StartScriptAtHL_B13); its first
 ; message begins 'How may our church serve you?' (E-0271; was Talk_HowMayOurChurchServeYou_2)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -2712,6 +3169,9 @@ Talk_HowMayOurChurchServeYou_2::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 45 ($2D): starts message $0312 (the name of the player, then 'peered into the barrel.
+; It was filled with black rocks.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $0312 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0312_HeroPeeredIntoTheBarrelIt)
@@ -2720,6 +3180,8 @@ TalkMsg0312_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 46 ($2E): starts message $0D3B ('Whinny!') through StartMessageCommand09HL_B13 (script
+; command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0D3B through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Whinny!' (E-0268, the E-0082 shape; was TalkMsg0D3B_Whinny)
 TalkMsg0D3B_Whinny::
@@ -2727,6 +3189,9 @@ TalkMsg0D3B_Whinny::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 47 ($2F): starts message $0314 (the name of the player, then 'tried to open the chest.
+; But the treasure chest was locked.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $0314 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 tried to open the chest. But' (E-0268, the E-0082 shape; was
 ; TalkMsg0314_HeroTriedToOpenTheChest_13_2) (E-0344: the address in its name dropped or read as the
@@ -2736,6 +3201,9 @@ TalkMsg0314_HeroTriedToOpenTheChest_13_2::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 48 ($30): starts message $0313 (the name of the player, then 'peered into the oven. It
+; felt just a little warm.') through StartMessageCommand09HL_B13 (script command $09, wModeState =
+; 1). (C2, E-0377)
 ; starts message $0313 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was
 ; TalkMsg0313_HeroPeeredIntoTheOvenIt_13) (E-0344: the address in its name dropped or read as the
@@ -2745,6 +3213,10 @@ TalkMsg0313_HeroPeeredIntoTheOvenIt_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 49 ($31): tests story flags with TestFlagBit and shows message $0A0F ('... the sailors
+; went away with it...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $0334 ('... I can
+; understand why a landlocked sailor would be down, but...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0334_WeveBeenFullUpWith.call_start_message_command09_hl_b13); starts message $0334 through
 ; StartMessageCommand09HL_B13 (script command $09); that string begins 'We've been full up with
@@ -2763,6 +3235,9 @@ TalkMsg0334_WeveBeenFullUpWith::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 50 ($32): starts message $0335 ('Urrrp! Hoo, listen to this! My ship, she froze solid
+; in ice, hey?') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; starts message $0335 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Urrrp! Hoo, listen to this! My ship,' (E-0268, the E-0082 shape; was
 ; TalkMsg0335_UrrrpHooListenToThisMy)
@@ -2771,6 +3246,10 @@ TalkMsg0335_UrrrpHooListenToThisMy::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 51 ($33): tests story flags with TestFlagBit and shows message $0A10 ('Welcome! Oh?
+; Hi, there! ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $0336 ('... The intellect
+; in his eyes...'). The message starts through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0336_SighIsntThatScholarAppealing.call_start_message_command09_hl_b13); starts message
 ; $0336 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Sigh Isn't
@@ -2789,6 +3268,12 @@ TalkMsg0336_SighIsntThatScholarAppealing::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 52 ($34): before EVENT_SCENE_PRINCESS_MEDICINE_09D shows message $0337 ('I came from
+; the eastern kingdom.'). After it, searches wInventory for item $34 (ITEM_SLEEPHERB) with
+; FindTemp0InInventoryList: carrying it shows message $0D20 ('Oh! That blue flower! ...'); without
+; it shows message $0AE6 ('... SleepHerb is the one plant that assures a deep and dreamless sleep.')
+; and sets EVENT_ICAME_FROM_THE_EASTERN_KINGDOM. Each message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c, TalkMsg0337_ICameFromTheEasternKingdom.set_temp0_to_34);
 ; starts message $0337 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I came from the eastern kingdom. I'm' (E-0268, the E-0082 shape; was
@@ -2819,6 +3304,9 @@ TalkMsg0337_ICameFromTheEasternKingdom::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 53 ($35): starts message $0ABF (the name of the player, then 'peered into the barrel.
+; It was filled with a noxious fluid.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $0ABF through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0ABF_HeroPeeredIntoTheBarrelIt)
@@ -2829,7 +3317,8 @@ TalkMsg0ABF_HeroPeeredIntoTheBarrelIt::
     ret
 
 ; Norden talk 54, an inn: starts Script_WelcomeToOurInn_6 ('Welcome to our inn!', then a jump to the
-; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C2, E-0370;
+; probed E-0377)
 ; starts Script_WelcomeToOurInn_6: '*: Welcome to our inn!' (E-0248)
 NordenTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_6 ; script '*: Welcome to our inn!'
@@ -2838,6 +3327,8 @@ NordenTalkEvents_SecondInn::
     ld [wDataBank], a
     ret
 
+; Norden talk 55 ($37): starts message $0338 ('The King of the west is said to dote on ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0338 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The King of the west is said' (E-0268, the E-0082 shape; was TalkMsg0338_TheKingOfTheWestIs)
 TalkMsg0338_TheKingOfTheWestIs::
@@ -2845,6 +3336,10 @@ TalkMsg0338_TheKingOfTheWestIs::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 56 ($38): tests story flags with TestFlagBit and shows message $034E ('We almost went
+; to war with the west over a ...') when EVENT_SCENE_GOT_TO is set; otherwise message $0339 ('This
+; is the border we share with the western kingdom. ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0086 then jr c,
 ; TalkMsg0339_ThisIsTheBorderWeShare.call_start_message_command09_hl_b13); starts message $0339
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'This is the border
@@ -2862,6 +3357,11 @@ TalkMsg0339_ThisIsTheBorderWeShare::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 57 ($39): tests story flags with TestFlagBit and shows message $037C ('The King gave
+; word to lift the blockade of the border. ...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise
+; message $034F ('The King has sealed the border. ...') when EVENT_SCENE_GOT_TO is set; otherwise
+; message $033A ('The border has been sealed by the ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg033A_TheBorderHasBeenSealedBy.call_start_message_command09_hl_b132; flag 0086 then jr c,
 ; TalkMsg033A_TheBorderHasBeenSealedBy.call_start_message_command09_hl_b13); starts message $033A
@@ -2888,6 +3388,11 @@ TalkMsg033A_TheBorderHasBeenSealedBy::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 58 ($3A): tests story flags with TestFlagBit and shows message $037D ('A monster was
+; playing the part of our King...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise message $0350
+; ('... This, despite the absence of gold.') when EVENT_SCENE_GOT_TO is set; otherwise message $033B
+; ('A traveler, are you? ...'). The message starts through StartMessageCommand09HL_B13 (script
+; command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg033B_ATravelerAreYouSorryBut.call_start_message_command09_hl_b132; flag 0086 then jr c,
 ; TalkMsg033B_ATravelerAreYouSorryBut.call_start_message_command09_hl_b13); starts message $033B
@@ -2914,6 +3419,10 @@ TalkMsg033B_ATravelerAreYouSorryBut::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 59 ($3B): tests story flags with TestFlagBit and shows message $0351 ('Was that really
+; all the gold? ...') when EVENT_SCENE_GOT_TO is set; otherwise message $033C ('Our tunneling found
+; gold, but we also ran into the ...'). The message starts through StartMessageCommand09HL_B13
+; (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0086 then jr c,
 ; TalkMsg033C_OurTunnelingFoundGoldBut.call_start_message_command09_hl_b13); starts message $033C
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Our tunneling found
@@ -2931,6 +3440,11 @@ TalkMsg033C_OurTunnelingFoundGoldBut::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 60 ($3C): tests story flags with TestFlagBit and shows message $0D1C ('The King of the
+; north was a fake, or so ...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise message $0352
+; ('... There was almost no gold at all.') when EVENT_SCENE_GOT_TO is set; otherwise message $033D
+; ('This side is the western kingdom! ...'). The message starts through StartMessageCommand09HL_B13
+; (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg033D_ThisSideIsTheWesternKingdom.call_start_message_command09_hl_b132; flag 0086 then jr c,
 ; TalkMsg033D_ThisSideIsTheWesternKingdom.call_start_message_command09_hl_b13); starts message $033D
@@ -2957,6 +3471,11 @@ TalkMsg033D_ThisSideIsTheWesternKingdom::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 61 ($3D): tests story flags with TestFlagBit and shows message $0D1D ('If you go
+; south, ...') when EVENT_SCENE_PLAN_RUINED_094 is set; otherwise message $0353 ('... King still
+; suspects us.') when EVENT_SCENE_GOT_TO is set; otherwise message $033E ('The northerners want our
+; gold! ...'). The message starts through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0094 then jr c,
 ; TalkMsg033E_TheNorthernersWantOurGold.call_start_message_command09_hl_b132; flag 0086 then jr c,
 ; TalkMsg033E_TheNorthernersWantOurGold.call_start_message_command09_hl_b13); starts message $033E
@@ -2983,6 +3502,10 @@ TalkMsg033E_TheNorthernersWantOurGold::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 62 ($3E): tests story flags with TestFlagBit and shows message $0354 ('... keep
+; picking away.') when EVENT_SCENE_GOT_TO is set; otherwise message $033F ('The northerners muscled
+; in on the gold mine that we discovered. ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0086 then jr c,
 ; TalkMsg033F_TheNorthernersMuscledInOn.call_start_message_command09_hl_b13); starts message $033F
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The northerners
@@ -3000,6 +3523,8 @@ TalkMsg033F_TheNorthernersMuscledInOn::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 63 ($3F): starts message $0340 ('Heh, ... The monsters are tough down here!') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0340 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Heh, you've come way down deep.' (E-0268, the E-0082 shape; was TalkMsg0340_HehYouveComeWayDown)
 ; (E-0324: was TalkMsg0340_HehYouveComeWayDown; read before $42 was known as 'v)
@@ -3008,6 +3533,8 @@ TalkMsg0340_HehYouveComeWayDown::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 64 ($40): starts message $0345 ('Kid, you have guts to be here.') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0345 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Kid, you have guts to be here.' (E-0268, the E-0082 shape; was TalkMsg0345_KidYouHaveGutsToBe)
 TalkMsg0345_KidYouHaveGutsToBe::
@@ -3015,6 +3542,9 @@ TalkMsg0345_KidYouHaveGutsToBe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 65 ($41): starts message $0341 ('There is a boulder blocking the way a little further
+; ahead. ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; starts message $0341 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'There is a boulder blocking the way' (E-0268, the E-0082 shape; was
 ; TalkMsg0341_ThereIsABoulderBlockingThe)
@@ -3023,6 +3553,8 @@ TalkMsg0341_ThereIsABoulderBlockingThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 66 ($42): starts message $0342 ('Hurry! We have to beat the swine of the west to the
+; mine!') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0342 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Hurry! We have to beat the swine' (E-0268, the E-0082 shape; was
 ; TalkMsg0342_HurryWeHaveToBeatThe)
@@ -3031,6 +3563,8 @@ TalkMsg0342_HurryWeHaveToBeatThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 67 ($43): starts message $0344 ('The gold is ours! ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0344 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The gold is ours! The west must' (E-0268, the E-0082 shape; was TalkMsg0344_TheGoldIsOursTheWest)
 TalkMsg0344_TheGoldIsOursTheWest::
@@ -3038,6 +3572,8 @@ TalkMsg0344_TheGoldIsOursTheWest::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 68 ($44): starts message $0343 ('The vein of gold is just ahead! ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0343 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The vein of gold is just ahead!' (E-0268, the E-0082 shape; was TalkMsg0343_TheVeinOfGoldIsJust)
 ; starts Script_WhatWhatWasThat: '*: What? What was that explosion?' (E-0248)
@@ -3046,6 +3582,10 @@ TalkMsg0343_TheVeinOfGoldIsJust::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 69 ($45): starts Script_WhatWhatWasThat (sound $65, SCRIPT_SCENE_EXPLOSION, walks of
+; objects 1 and 2, messages $0349-$034D from 'What? What was that explosion?', then
+; SCRIPT_SCENE_GOT_TO and EVENT_SCENE_GOT_TO set) through StartScriptAtHL_B13 (wScriptPointerLo/Hi =
+; the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_WhatWhatWasThat (StartScriptAtHL_B13); its first message begins 'What? What was that
 ; explosion?' (E-0271; was Talk_WhatWhatWasThatExplosion) (E-0344: the address in its name dropped
 ; or read as the label there; was Talk_WhatWhatWasThatExplosion; shortened from
@@ -3056,6 +3596,10 @@ Talk_WhatWhatWasThatExplosion::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 70 ($46): starts Script_WhatWhatWasThat_2 (Script_WhatWhatWasThat without its first
+; sound: SCRIPT_SCENE_EXPLOSION, walks, messages $0349-$034D from 'What? What was that explosion?',
+; then SCRIPT_SCENE_GOT_TO and EVENT_SCENE_GOT_TO set) through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_WhatWhatWasThat_2 (StartScriptAtHL_B13); its first message begins 'What? What was
 ; that explosion?' (E-0271; was Talk_WhatWhatWasThatExplosion_2) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_WhatWhatWasThatExplosion_2; shortened from
@@ -3066,6 +3610,11 @@ Talk_WhatWhatWasThatExplosion_2::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 71 ($47), a one-time treasure chest: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_VITBELT ($40) and story
+; flag $0084 in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the first
+; time (group-0 message $A0), shows $A1 once the flag is set and $A2 when there is no room. (C2,
+; E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $40, story flag $0084 in DE: when the flag is clear it gives item $40 (VITbelt) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -3082,7 +3631,7 @@ ChestItem_VITbelt::
 ; Norden talk 72, the king in the cell: by story progress $0AC2, $0375, 'Awaaargh! A m-m-monster!'
 ; ($0373) after the plan is ruined; before that a run of pleas set in turn by flags: 'Ah, saved at
 ; last!' ($035C), $035D, then after EVENT_SCENE_REAL_KING 'I'm real!' ($0367), $0368, $0369 and
-; $036A. (C1, E-0357)
+; $036A. (C2, E-0357; probed E-0377)
 NordenTalkEvents_ShowAhSavedAtLast::
     ld de, EVENT_SCENE_SHIELD2_1E5
     call TestFlagBit
@@ -3161,7 +3710,7 @@ NordenTalkEvents_ShowAhSavedAtLast::
     ret
 
 ; Norden talk 73: Kameha's 'Where's the exit? We'll starve ...' ($035E the first time, setting
-; EVENT_KAMEHA_WHERES_THE_EXIT, then $035F). (C1, E-0357)
+; EVENT_KAMEHA_WHERES_THE_EXIT, then $035F). (C2, E-0357; probed E-0377)
 NordenTalkEvents_ShowKamehaWheresTheExit::
     ld de, EVENT_KAMEHA_WHERES_THE_EXIT
     call TestFlagBit
@@ -3177,6 +3726,10 @@ NordenTalkEvents_ShowKamehaWheresTheExit::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 74 ($4A): starts Script_HeroTappedOnThe (message $0360, the player 'tapped on the
+; wall. The wall sounded heavy and solid.', a face command, then SCRIPT_SCENE_WALL_EXIT) through
+; StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1).
+; (C2, E-0377)
 ; starts Script_HeroTappedOnThe (StartScriptAtHL_B13); its first message begins '0 tapped on the
 ; wall. The' (E-0271; was Talk_HeroTappedOnTheWallThe) (E-0344: the address in its name dropped or
 ; read as the label there; was Talk_HeroTappedOnTheWallThe; shortened from
@@ -3187,6 +3740,10 @@ Talk_HeroTappedOnTheWallThe::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 75 ($4B): starts Script_HeroTappedOnThe_2 (message $0363, the player 'tapped on the
+; wall. Sound echoed as if it were hollow.', SCRIPT_SCENE_WALL_EXIT, Kameha message $0364, walks,
+; hides objects 1 and 0, sets EVENT_SCENE_WALL_EXIT) through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_HeroTappedOnThe_2 (StartScriptAtHL_B13); its first message begins '0 tapped on the
 ; wall. Sound' (E-0271; was Talk_HeroTappedOnTheWallSound) (E-0344: the address in its name dropped
 ; or read as the label there; was Talk_HeroTappedOnTheWallSound; shortened from
@@ -3197,6 +3754,10 @@ Talk_HeroTappedOnTheWallSound::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 76 ($4C): starts Script_I_14 (SCRIPT_SCENE_REAL_KING, messages $0365 and $0366 from
+; the two kings, 'How dare you, impostor!', then it sets EVENT_SCENE_REAL_KING) through
+; StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1).
+; (C2, E-0377)
 ; starts Script_I_14 (StartScriptAtHL_B13); its first message begins 'I'm the real King, you fake!'
 ; (E-0271; was Talk_ImTheRealKingYouFake) (E-0344: the address in its name dropped or read as the
 ; label there; was Talk_ImTheRealKingYouFake; shortened from TalkScript_ImTheRealKingYouFake)
@@ -3208,7 +3769,8 @@ Talk_ImTheRealKingYouFake::
 
 ; Norden talk 77, the false king: after EVENT_SCENE_PLAN_RUINED the script 'It almost worked to
 ; perfection!'; before it a run of claims set in turn by flags ('I am real! Don't believe ...'
-; $036C, $036D, $036E, $036F), then the script 'Arrgh, you've ruined my plan ...'. (C1, E-0357)
+; $036C, $036D, $036E, $036F), then the script 'Arrgh, you've ruined my plan ...'. (C2, E-0357;
+; probed E-0377)
 NordenTalkEvents_ShowIAmRealDont::
     ld de, EVENT_SCENE_PLAN_RUINED
     call TestFlagBit
@@ -3262,6 +3824,8 @@ NordenTalkEvents_ShowIAmRealDont::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 78 ($4E): starts message $037E ('This is the town of Weston. ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $037E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is the town of Weston. It's' (E-0268, the E-0082 shape; was
 ; TalkMsg037E_ThisIsTheTownOfWeston)
@@ -3270,6 +3834,11 @@ TalkMsg037E_ThisIsTheTownOfWeston::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 79 ($4F): tests story flags with TestFlagBit and shows message $0D3D ('They say Lady
+; Yuna is back to her usual cheerful self. ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise
+; message $037F ('... castle has seen a steady stream of visitors and gifts.' and a reward for
+; cheering up Lady Yuna). The message starts through StartMessageCommand09HL_B13 (script command
+; $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg037F_TheWestsCastleHasSeenA.call_start_message_command09_hl_b13); starts message $037F
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The west's castle
@@ -3287,6 +3856,10 @@ TalkMsg037F_TheWestsCastleHasSeenA::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 80 ($50): tests story flags with TestFlagBit and shows message $0A11 ('... Rumor has
+; it that Queen Helen has recovered from her illness.') when EVENT_SCENE_SHIELD2_1E5 is set;
+; otherwise message $0380 ('Across from us on the lake is the eastern kingdom. ...'). The message
+; starts through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0380_AcrossFromUsOnTheLake.call_start_message_command09_hl_b13); starts message $0380
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Across from us on
@@ -3304,6 +3877,9 @@ TalkMsg0380_AcrossFromUsOnTheLake::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 81 ($51): starts message $0381 ('I saw Lady Yuna riding towards the forest in the
+; southeast. ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; starts message $0381 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I saw Lady Yuna riding towards the' (E-0268, the E-0082 shape; was
 ; TalkMsg0381_ISawLadyYunaRidingTowards)
@@ -3312,6 +3888,10 @@ TalkMsg0381_ISawLadyYunaRidingTowards::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 82 ($52): tests story flags with TestFlagBit and shows message $0DC8 ('Lady Yuna has
+; always been highly energetic and rambunctious. ...') when EVENT_SCENE_PRINCESS_MEDICINE_09D is
+; set; otherwise message $0382 ('Lady Yuna has been a lively girl for as long ...'). The message
+; starts through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg0382_LadyYunaHasBeenALively.call_start_message_command09_hl_b13); starts message $0382
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Lady Yuna has been a
@@ -3329,6 +3909,10 @@ TalkMsg0382_LadyYunaHasBeenALively::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 83 ($53): tests story flags with TestFlagBit and shows message $0A12 ('The harbor has
+; been busy with boats coming and going recently. ...') when EVENT_SCENE_SHIELD2_1E5 is set;
+; otherwise message $0383 ('... I wonder why that could be.'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0383_IHaventBeenSeeingTooMany.call_start_message_command09_hl_b13); starts message $0383
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'I haven't been
@@ -3346,6 +3930,12 @@ TalkMsg0383_IHaventBeenSeeingTooMany::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 84 ($54): tests story flags with TestFlagBit and shows message $0D22 ('Out at the
+; western castle, I heard that no one ...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message
+; $0AE0 ('Lady Yuna seems to be her cheerful old self again. ...') when
+; EVENT_SCENE_PRINCESS_MEDICINE_09D is set; otherwise message $0384 ('Lady Yuna is said to be quiet
+; and withdrawn these days. ...'). The message starts through StartMessageCommand09HL_B13 (script
+; command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0384_LadyYunaIsSaidToBe.call_start_message_command09_hl_b132; flag 009D then jr c,
 ; TalkMsg0384_LadyYunaIsSaidToBe.call_start_message_command09_hl_b13); starts message $0384 through
@@ -3372,6 +3962,10 @@ TalkMsg0384_LadyYunaIsSaidToBe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 85 ($55): tests story flags with TestFlagBit and shows message $0DF3 ('Lady Yuna has
+; come out of her depression. ...') when EVENT_SCENE_PRINCESS_MEDICINE_09D is set; otherwise message
+; $0385 ('... I wonder what it could be?'). The message starts through StartMessageCommand09HL_B13
+; (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg0385_IveHeardRumorsThatSomething.call_start_message_command09_hl_b13); starts message $0385
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'I've heard rumors
@@ -3390,6 +3984,8 @@ TalkMsg0385_IveHeardRumorsThatSomething::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 86 ($56): starts message $0386 ('The King dotes over Lady Yuna. ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0386 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The King dotes over Lady Yuna. He' (E-0268, the E-0082 shape; was
 ; TalkMsg0386_TheKingDotesOverLadyYuna)
@@ -3398,6 +3994,9 @@ TalkMsg0386_TheKingDotesOverLadyYuna::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 87 ($57): starts message $0387 ('The road to the eastern kingdom is teeming with tough
+; monsters. ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2,
+; E-0377)
 ; starts message $0387 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The road to the eastern kingdom is' (E-0268, the E-0082 shape; was
 ; TalkMsg0387_TheRoadToTheEasternKingdom)
@@ -3406,6 +4005,10 @@ TalkMsg0387_TheRoadToTheEasternKingdom::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 88 ($58): tests story flags with TestFlagBit and shows message $0AE1 ('Lady Yuna tries
+; to bolt from the Castle every day. ...') when EVENT_SCENE_PRINCESS_MEDICINE_09D is set; otherwise
+; message $0388 ('Lady Yuna locks herself in her room all day long and ...'). The message starts
+; through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg0388_LadyYunaLocksHerselfInHer.call_start_message_command09_hl_b13); starts message $0388
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Lady Yuna locks
@@ -3423,6 +4026,10 @@ TalkMsg0388_LadyYunaLocksHerselfInHer::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 89 ($59): tests story flags with TestFlagBit and shows message $0AE2 ('All the people
+; swarming to the Castle have gone away...') when EVENT_SCENE_PRINCESS_MEDICINE_09D is set;
+; otherwise message $0389 ('If you can cheer up the princess, you can earn ...'). The message starts
+; through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg0389_IfYouCanCheerUpThe.call_start_message_command09_hl_b13); starts message $0389 through
 ; StartMessageCommand09HL_B13 (script command $09); that string begins 'If you can cheer up the
@@ -3440,6 +4047,10 @@ TalkMsg0389_IfYouCanCheerUpThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 90 ($5A): tests story flags with TestFlagBit and shows message $0D23 ('I just heard a
+; rumor...') when EVENT_SCENE_SHIELD2_1E5 is set; otherwise message $038A ('A woodsman came by a
+; while back. ...'). The message starts through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg038A_AWoodsmanCameByAWhile.call_start_message_command09_hl_b13); starts message $038A
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'A woodsman came by a
@@ -3457,6 +4068,9 @@ TalkMsg038A_AWoodsmanCameByAWhile::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 91 ($5B): starts message $0312 (the name of the player, then 'peered into the barrel.
+; It was filled with black rocks.') through StartMessageCommand09HL_B13 (script command $09,
+; wModeState = 1). (C2, E-0377)
 ; starts message $0312 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0312_HeroPeeredIntoTheBarrelIt_13) (E-0344: the address in its name dropped or read as the
@@ -3466,6 +4080,11 @@ TalkMsg0312_HeroPeeredIntoTheBarrelIt_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 92 ($5C), a one-time barrel: StartTreasureFlagDE_B13 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_TINYMEDAL ($2C) and
+; story flag $01E7 in wMessageIndex/wMessageGroup. That command gives the item and sets the flag the
+; first time (group-0 message $A6), shows $A7 once the flag is set and $A8 when there is no room.
+; (C2, E-0377)
 ; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story
 ; flag $01E7 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
@@ -3479,6 +4098,9 @@ BarrelItem_TinyMedal_Flag01E7::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 93 ($5D): starts message $0313 (the name of the player, then 'peered into the oven. It
+; felt just a little warm.') through StartMessageCommand09HL_B13 (script command $09, wModeState =
+; 1). (C2, E-0377)
 ; starts message $0313 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was
 ; TalkMsg0313_HeroPeeredIntoTheOvenIt_13_2) (E-0344: the address in its name dropped or read as the
@@ -3490,7 +4112,8 @@ TalkMsg0313_HeroPeeredIntoTheOvenIt_13_2::
     ret
 
 ; Norden talk 94, an inn: starts Script_WelcomeToOurInn_7 ('Welcome to our inn!', then a jump to the
-; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C2, E-0370;
+; probed E-0377)
 ; starts Script_WelcomeToOurInn_7: '*: Welcome to our inn!' (E-0248)
 NordenTalkEvents_ThirdInn::
     ld hl, Script_WelcomeToOurInn_7 ; script '*: Welcome to our inn!'
@@ -3499,8 +4122,8 @@ NordenTalkEvents_ThirdInn::
     ld [wDataBank], a
     ret
 
-; Norden talk 95, a shop: shop $0B with scripts in bank $10, 'Hello! How may I serve ...'. (C1,
-; E-0357)
+; Norden talk 95, a shop: shop $0B with scripts in bank $10, 'Hello! How may I serve ...'. (C2,
+; E-0357; probed E-0377)
 NordenTalkEvents_Shop0B::
     ld a, $0b
     ld [wScreenTableIndex], a
@@ -3510,6 +4133,10 @@ NordenTalkEvents_Shop0B::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 96 ($60): tests story flags with TestFlagBit and shows message $0A13 ('The piled up
+; ice floes disappeared from the harbor just like that. ...') when EVENT_SCENE_SHIELD2_1E5 is set;
+; otherwise message $038C ('The lake is frozen, so I ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg038C_TheLakeIsFrozenSoI.call_start_message_command09_hl_b13); starts message $038C through
 ; StartMessageCommand09HL_B13 (script command $09); that string begins 'The lake is frozen, so I
@@ -3527,6 +4154,8 @@ TalkMsg038C_TheLakeIsFrozenSoI::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 97 ($61): starts message $038D ('This is Westania Castle. ...') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $038D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is Westania Castle. Westania is the' (E-0268, the E-0082 shape; was
 ; TalkMsg038D_ThisIsWestaniaCastleWestania)
@@ -3535,6 +4164,8 @@ TalkMsg038D_ThisIsWestaniaCastleWestania::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 98 ($62): starts message $038E ('Nobody fails to be impressed when I breathe fire, and
+; ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $038E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Nobody fails to be impressed when I' (E-0268, the E-0082 shape; was
 ; TalkMsg038E_NobodyFailsToBeImpressed)
@@ -3543,6 +4174,8 @@ TalkMsg038E_NobodyFailsToBeImpressed::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 99 ($63): starts message $038F ('... Any woman would be delighted by it!') through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $038F through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I've brought with me a necklace' (E-0268, the E-0082 shape; was TalkMsg038F_IveBroughtWithMeA)
 ; (E-0324: was TalkMsg038F_IveBroughtWithMeA; read before $42 was known as 'v)
@@ -3551,6 +4184,8 @@ TalkMsg038F_IveBroughtWithMeA::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 100 ($64): starts message $0390 ('When I balance on my ball, people simply go wild.
+; ...') through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0390 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'When I balance on my ball, people' (E-0268, the E-0082 shape; was
 ; TalkMsg0390_WhenIBalanceOnMyBall)
@@ -3559,6 +4194,8 @@ TalkMsg0390_WhenIBalanceOnMyBall::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 101 ($65): starts message $0391 ('I hurl knives with incredible accuracy. ...')
+; through StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; starts message $0391 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I hurl knives with incredible accuracy. I' (E-0268, the E-0082 shape; was
 ; TalkMsg0391_IHurlKnivesWithIncredible)
@@ -3567,6 +4204,11 @@ TalkMsg0391_IHurlKnivesWithIncredible::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 102 ($66): tests story flags with TestFlagBit and shows message $0ACB ('The crowds
+; that flocked to the castle have all left. ...') when EVENT_SCENE_CHEER_YUNA is set; otherwise
+; message $0AB9 ('... Someone else could win the reward!') when EVENT_GATHER_FOLLOWERS is set;
+; otherwise message $0392 ('Please, line up! ...'). The message starts through
+; StartMessageCommand09HL_B13 (script command $09, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0096 then jr c,
 ; TalkMsg0392_PleaseLineUpAndQuitPushing.call_start_message_command09_hl_b132; flag 0095 then jr c,
 ; TalkMsg0392_PleaseLineUpAndQuitPushing.call_start_message_command09_hl_b13); starts message $0392
@@ -3593,6 +4235,12 @@ TalkMsg0392_PleaseLineUpAndQuitPushing::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 103 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0ADE ('Lady Yuna is back to ...'); else with
+; EVENT_YOU_WILL_THANK_YOU_LET set, message $0D1E ('Oh... Lady Yuna... I miss ...'); otherwise,
+; message $0393 ('Oh... Lady Yuna... To think ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg0393_OhLadyYunaToThinkThat.call_start_message_command09_hl_b132; flag 009B then jr c,
 ; TalkMsg0393_OhLadyYunaToThinkThat.call_start_message_command09_hl_b13); starts message $0393
@@ -3620,7 +4268,8 @@ TalkMsg0393_OhLadyYunaToThinkThat::
     ret
 
 ; Norden talk 104, the sign: 'Lady Yuna ...' ($0ADF) after EVENT_SCENE_PRINCESS_MEDICINE_09D; 'Come
-; all ...' as message $0394 after EVENT_GATHER_FOLLOWERS, otherwise as a script. (C1, E-0357)
+; all ...' as message $0394 after EVENT_GATHER_FOLLOWERS, otherwise as a script. (C2, E-0357; probed
+; E-0377)
 NordenTalkEvents_Sign::
     ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call TestFlagBit
@@ -3642,6 +4291,9 @@ NordenTalkEvents_Sign::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 105 (NordenTalkEvents): starts message $0397 ('The Castle is in an ...'). A message
+; starts through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0397 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The Castle is in an uproar.' (E-0268, the E-0082 shape; was TalkMsg0397_TheCastleIsInAnUproar)
 TalkMsg0397_TheCastleIsInAnUproar::
@@ -3649,6 +4301,11 @@ TalkMsg0397_TheCastleIsInAnUproar::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 106 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0AD8 ('Lady Yuna has regained her ...');
+; otherwise, message $0398 ('Lady Yuna used to be ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg0398_LadyYunaUsedToBeVery.call_start_message_command09_hl_b13); starts message $0398
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Lady Yuna used to be
@@ -3666,6 +4323,9 @@ TalkMsg0398_LadyYunaUsedToBeVery::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 107 (NordenTalkEvents): starts message $0399 ('In the east lives an ...'). A message
+; starts through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0399 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'In the east lives an old man' (E-0268, the E-0082 shape; was TalkMsg0399_InTheEastLivesAnOld)
 TalkMsg0399_InTheEastLivesAnOld::
@@ -3673,6 +4333,11 @@ TalkMsg0399_InTheEastLivesAnOld::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 108 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0DE1 ('Seeing the liveliness of Lady ...');
+; otherwise, message $039A ('What happened to Lady Yuna? ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg039A_WhatHappenedToLadyYunaIts.call_start_message_command09_hl_b13); starts message $039A
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'What happened to
@@ -3690,6 +4355,11 @@ TalkMsg039A_WhatHappenedToLadyYunaIts::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 109 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0AD9 ('Lady Yuna snuck out again. ...');
+; otherwise, message $039B ('Before, Lady Yuna would be ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg039B_BeforeLadyYunaWouldBeUp.call_start_message_command09_hl_b13); starts message $039B
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Before, Lady Yuna
@@ -3708,7 +4378,7 @@ TalkMsg039B_BeforeLadyYunaWouldBeUp::
     ret
 
 ; Norden talk 110: 'Oh? How did you get ...' ($0ADA) to a player at Y $30, otherwise 'This leads to
-; Lady Yuna's ...' ($039C). (C1, E-0357)
+; Lady Yuna's ...' ($039C). (C2, E-0357; probed E-0377)
 NordenTalkEvents_ShowOhHowDidYou::
     ldh a, [hPlayerY]
     cp $30
@@ -3724,7 +4394,7 @@ NordenTalkEvents_ShowOhHowDidYou::
 
 ; Norden talk 111: by story progress $0ADB, $0ACD, $03A5; otherwise 'You're here to cheer Lady ...'
 ; in versions by the player's spot (X $50: $039D), a party of three with nobody fallen (the script),
-; a fallen member ($039E) or a smaller party ($039F). (C1, E-0357)
+; a fallen member ($039E) or a smaller party ($039F). (C2, E-0357; probed E-0377)
 NordenTalkEvents_ShowYoureHereToCheer::
     ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call TestFlagBit
@@ -3779,6 +4449,10 @@ NordenTalkEvents_ShowYoureHereToCheer::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 112 (NordenTalkEvents): starts Script_KingMagnificentDon (plays sound $28, runs script
+; command SCRIPT_SCENE_CHEER_YUNA, then 'King: Magnificent! ...'). A script starts through
+; StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1).
+; (C2, E-0377)
 ; starts Script_KingMagnificentDon (StartScriptAtHL_B13); its first message begins 'King
 ; Magnificent! Don't you agree?' (E-0271; was Talk_KingMagnificentDontYouAgree) (E-0344: the address
 ; in its name dropped or read as the label there; was Talk_KingMagnificentDontYouAgree; shortened
@@ -3789,6 +4463,12 @@ Talk_KingMagnificentDontYouAgree::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 113 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0ADC ('King: Yuna is back to being ...'); else
+; with EVENT_YOU_WILL_THANK_YOU_LET set, message $0ACC ('King: Yuna has locked herself away ...');
+; otherwise, message $03A4 ('King: ...Sigh... Not even this... You ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 009D then jr c,
 ; TalkMsg03A4_KingSighNotEvenThisYou.call_start_message_command09_hl_b132; flag 009B then jr c,
 ; TalkMsg03A4_KingSighNotEvenThisYou.call_start_message_command09_hl_b13); starts message $03A4
@@ -3818,7 +4498,8 @@ TalkMsg03A4_KingSighNotEvenThisYou::
 ; Norden talk 114, Yuna: 'I heard that you saved ...' ($0AC5) after EVENT_SCENE_SHIELD2_1E5, 'Their
 ; next target is Queen ...' ($0AD7) after the medicine scene's end, the medicine script once
 ; EVENT_SCENE_PRINCESS_MEDICINE is set; after EVENT_YOU_WILL_THANK_YOU_LET and carrying item $33
-; (YunaSoul) the script '............!', otherwise '............' ($03A3). (C1, E-0357)
+; (YunaSoul) the script '............!', otherwise '............' ($03A3). (C2, E-0357; probed
+; E-0377)
 NordenTalkEvents_Yuna::
     ld de, EVENT_SCENE_SHIELD2_1E5
     call TestFlagBit
@@ -3864,6 +4545,9 @@ NordenTalkEvents_Yuna::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 115 (NordenTalkEvents): starts message $03A6 ('This is the Castle of ...'). A message
+; starts through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $03A6 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is the Castle of Estria, the' (E-0268, the E-0082 shape; was
 ; TalkMsg03A6_ThisIsTheCastleOfEstria)
@@ -3872,6 +4556,10 @@ TalkMsg03A6_ThisIsTheCastleOfEstria::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 116 (NordenTalkEvents): picks the reply by story flags: with EVENT_SCENE_SHIELD2_1E5
+; set, message $0AC6 ('Queen Helen came by the ...'); otherwise, message $03A7 ('Queen Helen came by
+; a ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg03A7_QueenHelenCameByAWhile.call_start_message_command09_hl_b13); starts message $03A7
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Queen Helen came by
@@ -3889,6 +4577,10 @@ TalkMsg03A7_QueenHelenCameByAWhile::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 117 (NordenTalkEvents): picks the reply by story flags: with EVENT_SCENE_SHIELD2_1E5
+; set, message $0A14 ('The warm weather melted the ...'); otherwise, message $03A8 ('... spring has
+; frozen. ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the
+; word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg03A8_TheSpiritsSpringHasFrozen.call_start_message_command09_hl_b13); starts message $03A8
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'The spirit's spring
@@ -3906,6 +4598,10 @@ TalkMsg03A8_TheSpiritsSpringHasFrozen::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 118 (NordenTalkEvents): picks the reply by story flags: with EVENT_SCENE_SHIELD2_1E5
+; set, message $0AC7 ('... dreams come true ...'); otherwise, message $03A9 ('... dreams come true.
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg03A9_QueenHelensDreamsComeTrue.call_start_message_command09_hl_b13); starts message $03A9
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Queen Helen's dreams
@@ -3923,6 +4619,10 @@ TalkMsg03A9_QueenHelensDreamsComeTrue::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 119 (NordenTalkEvents): picks the reply by story flags: with EVENT_SCENE_SHIELD2_1E5
+; set, message $0DF4 ('... lost her scary ...'); otherwise, message $03AA ('Our Queen is a kind
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg03AA_OurQueenIsAKindPerson.call_start_message_command09_hl_b13); starts message $03AA
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Our Queen is a kind
@@ -3940,6 +4640,9 @@ TalkMsg03AA_OurQueenIsAKindPerson::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 120 (NordenTalkEvents): starts message $03AB ('A teacher from the west ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $03AB through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'A teacher from the west lives over' (E-0268, the E-0082 shape; was
 ; TalkMsg03AB_ATeacherFromTheWestLives)
@@ -3948,6 +4651,11 @@ TalkMsg03AB_ATeacherFromTheWestLives::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 121 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_SHIELD_GUARDIAN_1E2 set, message $0A00 ('Queen Helen has become healthy. ...');
+; otherwise, message $03AE ('The Queen looks haggard recently. ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E2 then jr c,
 ; TalkMsg03AE_TheQueenLooksHaggardRecently.call_start_message_command09_hl_b13); starts message
 ; $03AE through StartMessageCommand09HL_B13 (script command $09); that string begins 'The Queen
@@ -3966,6 +4674,11 @@ TalkMsg03AE_TheQueenLooksHaggardRecently::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 122 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_SHIELD_GUARDIAN_1E2 set, message $0AFF ('I heard from my sister ...'); otherwise,
+; message $03AD ('I heard this on the ...'). A message starts through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 01E2 then jr c,
 ; TalkMsg03AD_IHeardThisOnTheSly.call_start_message_command09_hl_b13); starts message $03AD through
 ; StartMessageCommand09HL_B13 (script command $09); that string begins 'I heard this on the sly
@@ -3983,6 +4696,9 @@ TalkMsg03AD_IHeardThisOnTheSly::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 123 (NordenTalkEvents): starts message $03AF ('Around these parts, there are ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $03AF through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Around these parts, there are times of' (E-0268, the E-0082 shape; was
 ; TalkMsg03AF_AroundThesePartsThereAre)
@@ -3991,9 +4707,14 @@ TalkMsg03AF_AroundThesePartsThereAre::
     call StartMessageCommand09HL_B13
     ret
 
-; Norden talk 116: after EVENT_OH_AN_ENVOY_FROM_THE 'I beg your pardon, please!' ($03B2); carrying
-; item $32 one of two scripts 'This is no place for ...' by the player's X ($41 or more); otherwise
-; message $03B0. (C1, E-0357)
+; Norden talk 124 (NordenTalkEvents): after EVENT_OH_AN_ENVOY_FROM_THE message $03B2 ('I beg your
+; pardon, please! ...'); otherwise, when item $32 (ITEM_CREST) is in the bag
+; (FindTemp0InInventoryList), Script_ThisIsNoPlace_2 for a player X (hPlayerX) of $41 or more and
+; Script_ThisIsNoPlace below it (both say 'This is no place for ...' and 'Oh? An envoy from the
+; ...'); without the item message $03B0. Messages start through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1) and scripts
+; through StartScriptAtHL_B13 (wScriptPointerLo/Hi, wScriptStartRequest = $80, wModeState = 1). (C2,
+; E-0377)
 NordenTalkEvents_ShowThisIsNoPlace::
     ld de, EVENT_OH_AN_ENVOY_FROM_THE
     call TestFlagBit
@@ -4026,8 +4747,9 @@ NordenTalkEvents_ShowThisIsNoPlace::
     call StartMessageCommand09HL_B13
     ret
 
-; Norden talk 121, a shop: shop $0C with scripts in bank $10, 'Hello! What may I do ...'. (C1,
-; E-0357)
+; Norden talk 125 (NordenTalkEvents), a shop: sets wScreenTableIndex = $0C and wDataBank = $10, then
+; starts Script_HelloWhatMayI ('Hello! What may I do ...', then a jump to Script_Shop_5 in the data
+; bank) through StartScriptAtHL_B13. (C2, E-0377)
 NordenTalkEvents_Shop0C::
     ld a, $0c
     ld [wScreenTableIndex], a
@@ -4037,6 +4759,10 @@ NordenTalkEvents_Shop0C::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 126 (NordenTalkEvents): picks the reply by story flags: with EVENT_SCENE_SHIELD2_1E5
+; set, message $0A15 ('The scholar came back finally ...'); otherwise, message $03B4 ('A botanist
+; does live here... ...'). A message starts through StartMessageCommand09HL_B13 (script command 9
+; with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg03B4_ABotanistDoesLiveHereBut.call_start_message_command09_hl_b13); starts message $03B4
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'A botanist does live
@@ -4054,6 +4780,9 @@ TalkMsg03B4_ABotanistDoesLiveHereBut::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 127 (NordenTalkEvents): starts Script_IRetiredAsA (first message 'I retired as a
+; teacher ...'). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_IRetiredAsA (StartScriptAtHL_B13); its first message begins 'I retired as a teacher
 ; and' (E-0271; was Talk_IRetiredAsATeacher) (E-0344: the address in its name dropped or read as the
 ; label there; was Talk_IRetiredAsATeacher; shortened from TalkScript_IRetiredAsATeacher)
@@ -4063,6 +4792,11 @@ Talk_IRetiredAsATeacher::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 128 (NordenTalkEvents), a church: sets wDataBank = $1F and starts
+; Script_HowMayOurChurch_3 (message $4820 'How may our church serve ...', then a jump to
+; Script_Priest in the data bank) through StartScriptAtHL_B13 (wScriptPointerLo/Hi,
+; wScriptStartRequest = $80, wModeState = 1). Norden talks 128, 130 and 131 are three identical
+; copies of this routine. (C2, E-0377)
 ; sets wDataBank = $1F, then starts Script_HowMayOurChurch_3 (StartScriptAtHL_B13); its first
 ; message begins 'How may our church serve you?' (E-0271; was Talk_HowMayOurChurchServeYou_3)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -4075,6 +4809,9 @@ Talk_HowMayOurChurchServeYou_3::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 129 (NordenTalkEvents): starts Script_SceneChestServant (runs script command
+; SCRIPT_SCENE_CHEST_SERVANT). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi =
+; the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_SceneChestServant (StartScriptAtHL_B13) (E-0271; was Talk_SceneChestServant)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_SceneChestServant;
 ; named after the script it starts, Script_SceneChestServant)
@@ -4084,6 +4821,11 @@ Talk_SceneChestServant::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 130 (NordenTalkEvents), a church: sets wDataBank = $1F and starts
+; Script_HowMayOurChurch_3 (message $4820 'How may our church serve ...', then a jump to
+; Script_Priest in the data bank) through StartScriptAtHL_B13 (wScriptPointerLo/Hi,
+; wScriptStartRequest = $80, wModeState = 1). Norden talks 128, 130 and 131 are three identical
+; copies of this routine. (C2, E-0377)
 ; sets wDataBank = $1F, then starts Script_HowMayOurChurch_3 (StartScriptAtHL_B13); its first
 ; message begins 'How may our church serve you?' (E-0271; was Talk_HowMayOurChurchServeYou_13)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -4096,6 +4838,11 @@ Talk_HowMayOurChurchServeYou_13::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 131 (NordenTalkEvents), a church: sets wDataBank = $1F and starts
+; Script_HowMayOurChurch_3 (message $4820 'How may our church serve ...', then a jump to
+; Script_Priest in the data bank) through StartScriptAtHL_B13 (wScriptPointerLo/Hi,
+; wScriptStartRequest = $80, wModeState = 1). Norden talks 128, 130 and 131 are three identical
+; copies of this routine. (C2, E-0377)
 ; sets wDataBank = $1F, then starts Script_HowMayOurChurch_3 (StartScriptAtHL_B13); its first
 ; message begins 'How may our church serve you?' (E-0271; was Talk_HowMayOurChurchServeYou_13_2)
 ; (E-0344: the address in its name dropped or read as the label there; was
@@ -4108,6 +4855,9 @@ Talk_HowMayOurChurchServeYou_13_2::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 132 (NordenTalkEvents): starts message $0313 ('<BUF0> peered into the oven. It ...').
+; A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0313 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was
 ; TalkMsg0313_HeroPeeredIntoTheOvenIt_13_3) (E-0344: the address in its name dropped or read as the
@@ -4117,6 +4867,9 @@ TalkMsg0313_HeroPeeredIntoTheOvenIt_13_3::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 133 (NordenTalkEvents): starts message $0312 ('<BUF0> peered into the barrel. It
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0312 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0312_HeroPeeredIntoTheBarrelIt_13_2) (E-0344: the address in its name dropped or read as
@@ -4128,7 +4881,8 @@ TalkMsg0312_HeroPeeredIntoTheBarrelIt_13_2::
     ret
 
 ; Norden talk 134, an inn: starts Script_WelcomeToOurInn_8 ('Welcome to our inn!', then a jump to
-; the inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0370)
+; the inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C2, E-0370;
+; probed E-0377)
 ; starts Script_WelcomeToOurInn_8: '*: Welcome to our inn!' (E-0248)
 NordenTalkEvents_FourthInn::
     ld hl, Script_WelcomeToOurInn_8 ; script '*: Welcome to our inn!'
@@ -4137,6 +4891,9 @@ NordenTalkEvents_FourthInn::
     ld [wDataBank], a
     ret
 
+; Norden talk 135 (NordenTalkEvents): starts message $03B8 ('I want to return to ...'). A message
+; starts through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $03B8 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I want to return to the north,' (E-0268, the E-0082 shape; was TalkMsg03B8_IWantToReturnToThe)
 TalkMsg03B8_IWantToReturnToThe::
@@ -4144,6 +4901,9 @@ TalkMsg03B8_IWantToReturnToThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 136 (NordenTalkEvents): starts message $03AC ('There is a spring in ...'). A message
+; starts through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $03AC through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'There is a spring in the far' (E-0268, the E-0082 shape; was TalkMsg03AC_ThereIsASpringInThe)
 TalkMsg03AC_ThereIsASpringInThe::
@@ -4151,6 +4911,9 @@ TalkMsg03AC_ThereIsASpringInThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 137 (NordenTalkEvents): starts message $0396 ('... a mean old world ...'). A message
+; starts through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0396 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'It's a mean old world out there.' (E-0268, the E-0082 shape; was TalkMsg0396_ItsAMeanOldWorldOut)
 TalkMsg0396_ItsAMeanOldWorldOut::
@@ -4158,6 +4921,12 @@ TalkMsg0396_ItsAMeanOldWorldOut::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 138 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_SHIELD_GUARDIAN_1E2 set, message $0AFB ('Queen Helen ...'); else with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0AE3 ('Queen Helen had been suffering ...');
+; otherwise, message $03B9 ('Queen Helen has been suffering ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E2 then jr c,
 ; TalkMsg03B9_QueenHelenHasBeenSuffering.call_start_message_command09_hl_b132; flag 009D then jr c,
 ; TalkMsg03B9_QueenHelenHasBeenSuffering.call_start_message_command09_hl_b13); starts message $03B9
@@ -4184,6 +4953,11 @@ TalkMsg03B9_QueenHelenHasBeenSuffering::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 139 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_SHIELD_GUARDIAN_1E2 set, message $0AFC ('Queen Helen has had a ...'); otherwise,
+; message $0DD6 ('Nightmares so horrible that they ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E2 then jr c,
 ; TalkMsg0DD6_NightmaresSoHorribleThat.call_start_message_command09_hl_b13); starts message $0DD6
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Nightmares so
@@ -4202,6 +4976,12 @@ TalkMsg0DD6_NightmaresSoHorribleThat::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 140 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_SHIELD_GUARDIAN_1E2 set, message $0AFD ('The skies are clear, but ...'); else with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0DC9 ('How can we save Queen ...'); otherwise,
+; message $0DD7 ('Our hearts are like the ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $01E2 set: jr to
 ; TalkMsg0DD7_OurHeartsAreLike.call_start_message_command09_hl_b132; flag $009D set: jr to
 ; TalkMsg0DD7_OurHeartsAreLike.call_start_message_command09_hl_b13); when none of them branches,
@@ -4233,7 +5013,7 @@ TalkMsg0DD7_OurHeartsAreLike::
 ; hero checked the blue flower, with the princess-medicine scene set, the medicine script
 ; (Script_PardonMeYouHave) when a SleepHerb (item $34) is in the bag, else 'You can't come in here.'
 ; ($0AE4); before that 'Queen Helen is wracked by...' ($0DD8), or 'You can't come in here.' once the
-; medicine scene is set. (C1, E-0357)
+; medicine scene is set. (C2, E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5
 ; constant message(s) depending on story flags and state; the first one in the code is $0DD8, whose
 ; string begins 'Queen Helen is wracked by awful' (E-0097)
@@ -4294,7 +5074,7 @@ Talk0DD8_QueenHelenIsWracked::
     ret
 
 ; Talk: 'The reception hall is past...' ($0AE5) between the princess-medicine scene and the second
-; shield scene; otherwise 'The reception hall is beyond...' ($0DD9). (C1, E-0357)
+; shield scene; otherwise 'The reception hall is beyond...' ($0DD9). (C2, E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0DD9, whose
 ; string begins 'The reception hall is beyond here.' (E-0097)
@@ -4316,6 +5096,11 @@ Talk0DD9_TheReceptionHallIs::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 143 (NordenTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_SHIELD_GUARDIAN_1E2 set, message $0AFE ('It has been getting warmer. ...'); else with
+; EVENT_SCENE_PRINCESS_MEDICINE_09D set, message $0D1F ('How can we help Queen ...'); otherwise,
+; message $0DDA ('Our Queen ...'). A message starts through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $01E2 set: jr to
 ; TalkMsg0DDA_OurQueenHelensPremonition.call_start_message_command09_hl_b132; flag $009D set: jr to
 ; TalkMsg0DDA_OurQueenHelensPremonition.call_start_message_command09_hl_b13); when none of them
@@ -4342,6 +5127,15 @@ TalkMsg0DDA_OurQueenHelensPremonition::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 144 (NordenTalkEvents): with EVENT_SCENE_SHIELD2_1E5 set starts message $0DE0 ('Helen:
+; I thank you from the ...'); else with EVENT_SCENE_SHIELD_GUARDIAN_1E2 set $0AF7 ('Helen: Thank you
+; so much. Please ...'); else with EVENT_SCENE_SHIELD_GUARDIAN set it clears wSpriteSlots + $7
+; (OBJ_STATE of sprite slot 0) and starts Script_SceneShieldGuardian_2 (script command
+; SCRIPT_SCENE_SHIELD_GUARDIAN); else with EVENT_SCENE_MEDICINE_GIVEN set it only clears
+; wSpriteSlots + $7 and starts nothing; otherwise $0DDB ('What is it? Leave at ...'). Messages start
+; through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1) and scripts through StartScriptAtHL_B13 (wScriptPointerLo/Hi,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $01E5 set: jr to
 ; TalkMsg0DDB_WhatIsItLeave.call_start_message_command09_hl_b132; flag $01E2 set: jr to
 ; TalkMsg0DDB_WhatIsItLeave.call_start_message_command09_hl_b13; flag $01E1 set: jr to
@@ -4388,6 +5182,9 @@ TalkMsg0DDB_WhatIsItLeave::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 145 (NordenTalkEvents): starts message $00FF ('Composing ...'). A message starts
+; through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $00FF through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Composing' (E-0268, the E-0082 shape; was TalkMsg00FF_Composing_13) (E-0344: the address in its
 ; name dropped or read as the label there; was TalkMsg00FF_Composing_13)
@@ -4396,6 +5193,10 @@ TalkMsg00FF_Composing_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 146 (NordenTalkEvents): picks the reply by story flags: with EVENT_SCENE_SHIELD2_1E5
+; set, message $0D24 ('Now that I think about ...'); otherwise, message $0DDC ('This happened when I
+; was ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 01E5 then jr c,
 ; TalkMsg0DDC_ThisHappenedWhenIWasDeep.call_start_message_command09_hl_b13); starts message $0DDC
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'This happened when I
@@ -4413,6 +5214,9 @@ TalkMsg0DDC_ThisHappenedWhenIWasDeep::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 147 (NordenTalkEvents): starts message $0DDD ('My father is so cowardly ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0DDD through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'My father is so cowardly, getting all' (E-0268, the E-0082 shape; was
 ; TalkMsg0DDD_MyFatherIsSoCowardlyGetting)
@@ -4421,6 +5225,9 @@ TalkMsg0DDD_MyFatherIsSoCowardlyGetting::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talks 148 and 149 (NordenTalkEvents): starts message $0AC0 ('<BUF0> checked the bookshelf.'
+; 'History of ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the
+; word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0AC0 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was
 ; TalkMsg0AC0_HeroCheckedTheBookshelfHistory)
@@ -4429,6 +5236,9 @@ TalkMsg0AC0_HeroCheckedTheBookshelfHistory::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 150 (NordenTalkEvents): starts message $0AC1 ('<BUF0> checked the bookshelf.' 'History
+; of ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0AC1 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was
 ; TalkMsg0AC1_HeroCheckedTheBookshelfHistory)
@@ -4437,6 +5247,9 @@ TalkMsg0AC1_HeroCheckedTheBookshelfHistory::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 151 (NordenTalkEvents): starts message $0ABC ('<BUF0> peered into the oven. It ...').
+; A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0ABC through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was
 ; TalkMsg0ABC_HeroPeeredIntoTheOvenIt_13) (E-0344: the address in its name dropped or read as the
@@ -4447,6 +5260,9 @@ TalkMsg0ABC_HeroPeeredIntoTheOvenIt_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 152 (NordenTalkEvents): starts Script_SceneSpiritEnvoy2 (runs script command
+; SCRIPT_SCENE_SPIRIT_ENVOY_2). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi =
+; the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_SceneSpiritEnvoy2 (StartScriptAtHL_B13) (E-0271; was Talk_SceneSpiritEnvoy2)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_SceneSpiritEnvoy2;
 ; named after the script it starts, Script_SceneSpiritEnvoy2)
@@ -4456,9 +5272,11 @@ Talk_SceneSpiritEnvoy2::
     call StartScriptAtHL_B13
     ret
 
-; Norden talk 127: before EVENT_GIVE_ITEM_BLINK_09A 'You startled me...' and after it 'I don't
-; remember who I ...', each in three scripts: before EVENT_SCENE_CHEER_YUNA, then with or without
-; room in the bag. (C1, E-0357)
+; Norden talk 153 (NordenTalkEvents): before EVENT_GIVE_ITEM_BLINK_09A one of three 'You startled me
+; ...' scripts, after it one of three 'remember who I ...' scripts: Script_YouStartledMeI or
+; Script_IDon_2 before EVENT_SCENE_CHEER_YUNA, then Script_YouStartledMeI_2 or Script_IDon_3 when
+; InventoryHasFreeSlotCheck_Bank13 finds room in the bag, and Script_YouStartledMeI_3 or
+; Script_IDon_4 when it is full. Scripts start through StartScriptAtHL_B13. (C2, E-0377)
 NordenTalkEvents_Startled::
     ld de, EVENT_GIVE_ITEM_BLINK_09A
     call TestFlagBit
@@ -4502,8 +5320,13 @@ NordenTalkEvents_Startled::
     call StartScriptAtHL_B13
     ret
 
-; Norden talk 133, the marionette: with object 1 at ($80, $10) 'checked the marionette. It sagged
-; ...' ($0ACE), otherwise the '............' script. (C1, E-0357)
+; Norden talk 154 (NordenTalkEvents), the marionette: with object 1 at X $80 and Y $10 (wObject1 +
+; OBJ_X, OBJ_Y) message $0ACE ('<BUF0> checked the marionette. It sagged ...'), otherwise
+; Script_Message_2 (the '............' script that ends in script command
+; SCRIPT_SCENE_PRINCESS_MEDICINE). Messages start through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1) and scripts
+; through StartScriptAtHL_B13 (wScriptPointerLo/Hi, wScriptStartRequest = $80, wModeState = 1). (C2,
+; E-0377)
 NordenTalkEvents_ShowHeroCheckedTheMarionette::
     ld a, [wObject1 + OBJ_X]
     cp $80
@@ -4520,6 +5343,9 @@ NordenTalkEvents_ShowHeroCheckedTheMarionette::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 155 (NordenTalkEvents): starts message $0A16 ('My maid is angry that ...'). A message
+; starts through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A16 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'My maid is angry that I left' (E-0268, the E-0082 shape; was TalkMsg0A16_MyMaidIsAngryThatI)
 TalkMsg0A16_MyMaidIsAngryThatI::
@@ -4527,9 +5353,11 @@ TalkMsg0A16_MyMaidIsAngryThatI::
     call StartMessageCommand09HL_B13
     ret
 
-; Norden talk 134, the blue flower: gives item $34 (SleepHerb) when the bag has room and sets
-; EVENT_HERO_CHECKED_THE_BLUE_FLOWER ($0AE7), says it cannot be carried ($0AE9), or after the flag
-; $0AE8. (C1, E-0357)
+; Norden talk 156 (NordenTalkEvents), the blue flower: after EVENT_HERO_CHECKED_THE_BLUE_FLOWER
+; message $0AE8; otherwise, when InventoryHasFreeSlotCheck_Bank13 finds room, it writes item $34
+; (ITEM_SLEEPHERB) to the first free slot, sets bit 6 of wInventorySortFlags, says $0AE7 and sets
+; the flag; with a full bag it says $0AE9 (it cannot be carried) and changes nothing else. Messages
+; start through StartMessageCommand09HL_B13 (script command 9). (C2, E-0377)
 NordenTalkEvents_BlueFlower::
     ld de, EVENT_HERO_CHECKED_THE_BLUE_FLOWER
     call TestFlagBit
@@ -4559,6 +5387,12 @@ NordenTalkEvents_BlueFlower::
     call StartMessageCommand09HL_B13
     ret
 
+; Norden talk 157 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 3 (the kind)
+; and wScriptParam1 = 0, then StartTreasureFlagDE_B13 with DE = $01E0 (the story flag, stored in
+; wMessageIndex = $E0 and wMessageGroup = $01) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives a Magic Key (GenerateNewKeyEntry) and sets the flag (message $A9 of
+; group 0; $AA when the flag is already set, $AB when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 3 (kind) and wScriptParam1 =
 ; $00, story flag $01E0 in DE: when the flag is clear it gives a Magic Key (GenerateNewKeyEntry) and
 ; sets the flag (message $A9 of group 0; $AA when the flag is already set, $AB when there is no
@@ -4575,13 +5409,16 @@ ChestMagicKey_Flag01E0::
 ; Norden talk 158: sets wObject2 + OBJ_STATE = 0, the facing value other readings take as down
 ; (hPlayerFacing 0 moves the interaction check 16 pixels down), and starts no message or script. The
 ; generated comment above it ('starts Script_SceneShield') belongs to the next entry,
-; Talk_SceneShield. (C1, E-0370)
+; Talk_SceneShield. (C2, E-0370; probed E-0377)
 ; starts Script_SceneShield (E-0248)
 NordenTalkEvents_FaceObject2Down::
     xor a
     ld [wObject2 + OBJ_STATE], a
     ret
 
+; Norden talk 159 (NordenTalkEvents): starts Script_SceneShield (runs script command
+; SCRIPT_SCENE_SHIELD). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the
+; script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_SceneShield (StartScriptAtHL_B13) (E-0271; was Talk_SceneShield) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_SceneShield; named after the
 ; script it starts, Script_SceneShield)
@@ -4591,8 +5428,11 @@ Talk_SceneShield::
     call StartScriptAtHL_B13
     ret
 
-; Norden talk 135, a treasure chest: gives item $32 (the Crest) with the script 'checked the
-; treasure chest. <hero> ...' when the bag has room, otherwise message $0D27. (C1, E-0357)
+; Norden talk 160 (NordenTalkEvents), a treasure chest: with room in the bag
+; (InventoryHasFreeSlotCheck_Bank13) it writes item $32 (ITEM_CREST) to the first free slot, sets
+; bit 6 of wInventorySortFlags and starts Script_HeroCheckedTheTreasure_2 ('<BUF0> checked the
+; treasure chest. ...', which hides object 1 and sets EVENT_HERO_CHECKED_THE_TREASURE_CHEST); with a
+; full bag message $0D27. (C2, E-0377)
 NordenTalkEvents_ShowHeroCheckedTheTreasure::
     call InventoryHasFreeSlotCheck_Bank13
     jr c, .read_inventory_sort_flags
@@ -4609,8 +5449,12 @@ NordenTalkEvents_ShowHeroCheckedTheTreasure::
     call StartScriptAtHL_B13
     ret
 
-; Norden talk 136: takes item $32 from the inventory and runs the second shield scene script. (C1,
-; E-0357)
+; Norden talk 161 (NordenTalkEvents): finds item $32 (ITEM_CREST) in the bag
+; (FindTemp0InInventoryList), removes that slot (RemoveInventorySlotShiftDown: later slots move down
+; one and wInventory + $17 becomes $FF) and starts Script_SceneShield2 (script command
+; SCRIPT_SCENE_SHIELD_2). It does not check that the item was found: with hTemp0 = $FF the remove
+; shifts the 24 bytes at wInventory + $100-$117 down by one instead and still sets wInventory + $17
+; = $FF. (C2, E-0377)
 NordenTalkEvents_SecondShieldScene::
     ld a, $32
     ldh [hTemp0], a
@@ -4620,6 +5464,12 @@ NordenTalkEvents_SecondShieldScene::
     call StartScriptAtHL_B13
     ret
 
+; Norden talk 162 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $25 (ITEM_BOLT), then StartTreasureFlagDE_B13 with DE = $01E9 (the story flag,
+; stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $25, story flag $01E9 in DE: when the flag is clear it gives item $25 (Bolt) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4633,6 +5483,12 @@ ChestItem_Bolt_Flag01E9::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 163 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $41 (ITEM_DRACOBELT), then StartTreasureFlagDE_B13 with DE = $01EA (the story
+; flag, stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $41, story flag $01EA in DE: when the flag is clear it gives item $41 (DracoBelt) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -4646,6 +5502,12 @@ ChestItem_DracoBelt::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 164 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $52 (ITEM_BRAVECAPE), then StartTreasureFlagDE_B13 with DE = $01EB (the story
+; flag, stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $52, story flag $01EB in DE: when the flag is clear it gives item $52 (BraveCape) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -4659,6 +5521,12 @@ ChestItem_BraveCape_Flag01EB::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 165 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $17 (ITEM_SMART), then StartTreasureFlagDE_B13 with DE = $01EC (the story
+; flag, stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $17, story flag $01EC in DE: when the flag is clear it gives item $17 (Smart) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4672,6 +5540,12 @@ ChestItem_Smart_Flag01EC::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 166 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $23 (ITEM_FRIEND), then StartTreasureFlagDE_B13 with DE = $01ED (the story
+; flag, stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $23, story flag $01ED in DE: when the flag is clear it gives item $23 (Friend) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4685,6 +5559,12 @@ ChestItem_Friend_Flag01ED::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 167 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $5D (ITEM_MAGE), then StartTreasureFlagDE_B13 with DE = $01EE (the story flag,
+; stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $5D, story flag $01EE in DE: when the flag is clear it gives item $5D (Mage) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4698,6 +5578,12 @@ ChestItem_Mage_Flag01EE::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 168 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $5B (ITEM_DIVINE), then StartTreasureFlagDE_B13 with DE = $01EF (the story
+; flag, stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $5B, story flag $01EF in DE: when the flag is clear it gives item $5B (Divine) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4711,6 +5597,12 @@ ChestItem_Divine_Flag01EF::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 169 (NordenTalkEvents), a one-time treasure chest: sets wScriptParam0 = 0 (the kind)
+; and wScriptParam1 = $1E (ITEM_METEORB), then StartTreasureFlagDE_B13 with DE = $01F0 (the story
+; flag, stored in wMessageIndex/wMessageGroup) starts script command $0A, RunOneTimeTreasure
+; (wScriptCommandType = $0A, wScriptRunning = 1, wModeState = 1). By the earlier reading of that
+; command, a clear flag gives the item and sets the flag (message $A0 of group 0; $A1 when the flag
+; is already set, $A2 when there is no room). (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $1E, story flag $01F0 in DE: when the flag is clear it gives item $1E (MeteOrb) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4724,6 +5616,9 @@ ChestItem_MeteOrb::
     call StartTreasureFlagDE_B13
     ret
 
+; Norden talk 170 (NordenTalkEvents): starts Script_SceneShieldGuardian (runs script command
+; SCRIPT_SCENE_SHIELD_GUARDIAN). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi =
+; the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_SceneShieldGuardian (StartScriptAtHL_B13) (E-0271; was Talk_SceneShieldGuardian)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_SceneShieldGuardian;
 ; named after the script it starts, Script_SceneShieldGuardian)
@@ -4733,6 +5628,9 @@ Talk_SceneShieldGuardian::
     call StartScriptAtHL_B13
     ret
 
+; Talk category 8 (DispatchTalkEvent entry 8, wTalkEventIndex = 8): starts Script_TravelerEvent
+; (runs script command SCRIPT_TRAVELER_EVENT) through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the
+; script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_TravelerEvent (StartScriptAtHL_B13) (E-0271; was Talk_TravelerEvent) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_TravelerEvent; named after the
 ; script it starts; E-0364: was Talk_TravelerEvent)
@@ -4742,8 +5640,15 @@ Talk_TravelerEvent::
     call StartScriptAtHL_B13
     ret
 
+; Talk category 1 (DispatchTalkEvent entry 1, wTalkEventIndex = 1): jumps by wTalkEventGroup through
+; its table of 247 handlers, with no bound check. The first entries are the Great Log island talks
+; (0 GreatLogTalkEvents_NoEvent, 1 Talk_SceneTerry, 2 GreatLogTalkEvents_Mama, then townspeople,
+; bookshelves and vases) and the last three are GreatLogTalkEvents_SyncMap17ObjectFlags,
+; GreatLogTalkEvents_SyncMap04ObjectFlags and GreatLogTalkEvents_YoureTheChildAfterRival. The
+; handlers read here start messages up to $0DEF as well as scripts, so the range $0000-$02DF of the
+; earlier note is too narrow. (C1, E-0377)
 ; talk category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island
-; (messages from $0000-$02DF: Warubou, Prince Kameha, the arena sign) (E-0288)
+; (messages from $0000-$02DF: Warubou, Prince Kameha, the arena sign)
 GreatLogTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -4905,7 +5810,7 @@ GreatLogTalkEvents::
     dw ChestItem_Quest
     dw Talk04C0_AllRightyWellDo
     dw Talk0276_IfYouWantTo
-    dw StartScriptOrIfFlagD1
+    dw GreatLogTalkEvents_CongratulationsAfterDarck
     dw Talk_SlimeEncounter
     dw TalkMsg0024_HeroCheckedTheDresserChildrens
     dw TalkMsg0025_HeroCheckedTheDresserItSmelled
@@ -4919,7 +5824,7 @@ GreatLogTalkEvents::
     dw Talk0043_HeroCheckedTheOdd
     dw Talk0036_ThereWereManyWild
     dw Talk0037_HeroTriedToOpen
-    dw StartScriptWithBank0E
+    dw GreatLogTalkEvents_TravelingMerchant
     dw TalkMsg0268_YepShesTakingGood
     dw TalkMsg022E_SnivelThisBookIsSoSad
     dw TalkMsg022F_EvenICanCastSpellsIf
@@ -4956,7 +5861,7 @@ GreatLogTalkEvents::
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt_13
     dw Talk00FC_YouHaveToEat
     dw TalkMsg0A74_TheMedalMasterWas
-    dw IfFlag0023StartScript
+    dw GreatLogTalkEvents_PrinceKamehaMissing
     dw BarrelItem_TinyMedal_Flag013C
     dw VaseItem_Sirloin
     dw TalkMsg0A35_ImABugSo
@@ -4990,17 +5895,21 @@ GreatLogTalkEvents::
     dw Talk0B56_WhenYouBreedMonsters
     dw Talk0B6D_BreedingFireAndIce
     dw Talk0D90_HumphImTerry
-    dw SetSpriteSlotsB30IfFlag25AndCountAtLeast50
-    dw SetFlagsC9AndCAFrom32And33
-    dw SetFlagsCBAndCCFrom35And36
-    dw IfFlag0021StartScript
+    dw GreatLogTalkEvents_SetObject0XAfter50Species
+    dw GreatLogTalkEvents_SyncMap17ObjectFlags
+    dw GreatLogTalkEvents_SyncMap04ObjectFlags
+    dw GreatLogTalkEvents_YoureTheChildAfterRival
 
 ; Great Log talk 0: returns at once; this entry starts nothing. The generated comment above it
-; ('starts Script_SceneTerry') belongs to the next entry, Talk_SceneTerry. (C1, E-0370)
+; ('starts Script_SceneTerry') belongs to the next entry, Talk_SceneTerry. (C2, E-0370; probed
+; E-0377)
 ; starts Script_SceneTerry (E-0248)
 GreatLogTalkEvents_NoEvent::
     ret
 
+; Great Log talk 1 (GreatLogTalkEvents): starts Script_SceneTerry (plays sound $60, runs script
+; command SCRIPT_SCENE_TERRY). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi =
+; the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_SceneTerry (StartScriptAtHL_B13) (E-0271; was Talk_SceneTerry) (E-0344: the address
 ; in its name dropped or read as the label there; was Talk_SceneTerry; named after the script it
 ; starts, Script_SceneTerry)
@@ -5135,7 +6044,7 @@ GreatLogTalkEvents_Mama::
 ; EVENT_SCENE_MERMAID_KINGDOM_022; then the ITEM_SIRLOIN errand: Script_IWasGoingTo (or
 ; Script_IWasGoingTo_2 behind EVENT_NEVER_SET) until EVENT_MAMA_HANDED_OVER_1_200, the reminder
 ; $0A27, Script_TheyDidn when the item is taken, and $0A2A once EVENT_HERO_HANDED_OVER_THE_SIRLOIN
-; is set. (C1, E-0370)
+; is set. (C2, E-0370; probed E-0377)
 GreatLogTalkEvents_Mama_Errands::
     ld de, EVENT_ILL_GET_YOU_TO_RUN
     call TestFlagBit
@@ -5285,6 +6194,9 @@ GreatLogTalkEvents_Mama_Errands::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 3 (GreatLogTalkEvents): starts message $0023 ('<BUF0> checked the bookshelf.'
+; 'Behavior of ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with
+; the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0023 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Behavior of Wild' (E-0268, the E-0082 shape; was
 ; TalkMsg0023_HeroCheckedTheBookshelfBehavior)
@@ -5293,6 +6205,13 @@ TalkMsg0023_HeroCheckedTheBookshelfBehavior::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 4 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_MERMAID_KINGDOM_022 set and EVENT_THIS_IS_AGREAT set, Script_HaveYouEverFound (first
+; message 'Have you ever found a ...'); else with EVENT_SCENE_MERMAID_KINGDOM_022 set,
+; Script_ThisIsAGreat; otherwise, message $001B ('This hay is pretty good. ...'). A message starts
+; through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1); a script starts through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0022 then jr c, TalkMsg001B_ThisHayIsPrettyGoodMaybe.call_test_flag_bit);
 ; starts message $001B through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This hay is pretty good. Maybe I' (E-0268, the E-0082 shape; was
@@ -5318,6 +6237,9 @@ TalkMsg001B_ThisHayIsPrettyGoodMaybe::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 5 (GreatLogTalkEvents): starts message $0026 ('<BUF0> checked the oven. It smelled
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0026 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the oven. It smelled of' (E-0268, the E-0082 shape; was
 ; TalkMsg0026_HeroCheckedTheOvenItSmelled)
@@ -5326,6 +6248,9 @@ TalkMsg0026_HeroCheckedTheOvenItSmelled::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 6 (GreatLogTalkEvents): starts message $0027 ('<BUF0> peered into the vase. It
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0027 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0027_HeroPeeredIntoTheVaseIt)
@@ -5334,11 +6259,30 @@ TalkMsg0027_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 7 (GreatLogTalkEvents): picks the reply by story flags, latest first. With
+; EVENT_THANKS_FOR_COMING_BY_025 set it counts the species flagged or listed
+; (TotalSpeciesFlaggedOrListed, total in hTemp1:hTemp0) and says $0B01 ('You and your monsters saved
+; ...') below 20; $0DE7, $0DE8, $0DE9, $0DEA, $0DEB, $0DEC and $0DED ('Hey, <BUF0>! ...') for 20-29,
+; 30-39, 40-49, 50-99, 100-149, 150-199 and 200-249; $0DEE for 250-311; and $0DEF ('Congratulations,
+; <BUF0>! ...') for 312 or more. Else EVENT_SCENE_THREE_ITEMS: $0501; EVENT_SCENE_SHIELD2_023: $0A2B
+; ('MadGopher helped me excavate. Look ...'); EVENT_SCENE_MERMAID_KINGDOM_022:
+; TalkMsg0016_ItSeemsToMeThatThe_MadGopher; EVENT_SCENE_RIVAL_DEFEATED_021: $0204 ('A bridge to the
+; island ...'); EVENT_SCENE_LONG_FACES_002: the first time, with room in the bag, item $1A
+; (ITEM_PORKCHOP) goes into the first free slot (without setting bit 6 of wInventorySortFlags),
+; Script_WhyDoYouHave starts and EVENT_IT_SEEMS_TO_ME_THAT is set ($0107 when the bag is full);
+; after that $0107 with one monster, $0108 once with two or more (setting
+; EVENT_IT_SEEMS_TO_ME_THAT_101) and then $0109; EVENT_LOOK_AN_ISLAND_JUST_DOESN: $0064;
+; EVENT_SCENE_WARUBOU_FOOD2_00C: Script_HahTheIsland (Script_HahTheIsland_2 behind EVENT_NEVER_SET);
+; EVENT_FOLLOWER_FACE_PLAYER: $002E ('Go help your mother now. ...'); EVENT_SCENE_VAULT_SETTLED:
+; Script_I_5 (Script_I_6 behind EVENT_NEVER_SET); otherwise $0016 ('It seems to me that ...').
+; Messages start through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1) and scripts through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jp c,
 ; TalkMsg0016_ItSeemsToMeThatThe.call_total_species_flagged_or_listed; flag 0024 then jp c,
 ; TalkMsg0016_ItSeemsToMeThatThe.call_start_message_command09_hl_b136; flag 0023 then jp c,
 ; TalkMsg0016_ItSeemsToMeThatThe.call_start_message_command09_hl_b135; flag 0022 then jp c,
-; TalkMsg0016_ItSeemsToMeThatThe.call_talk_msg0016_it_seems_to_me_that_the; flag 0021 then jp c,
+; TalkMsg0016_ItSeemsToMeThatThe.call_talk_msg0016_it_seems_to_me_that_the_mad; flag 0021 then jp c,
 ; TalkMsg0016_ItSeemsToMeThatThe.call_start_message_command09_hl_b134; flag 0002 then jp c,
 ; TalkMsg0016_ItSeemsToMeThatThe.call_test_flag_bit3; flag 000E then jr c,
 ; TalkMsg0016_ItSeemsToMeThatThe.call_start_message_command09_hl_b132; flag 000C then jr c,
@@ -5359,7 +6303,7 @@ TalkMsg0016_ItSeemsToMeThatThe::
     jp c, .call_start_message_command09_hl_b135
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
-    jp c, .call_talk_msg0016_it_seems_to_me_that_the
+    jp c, .call_talk_msg0016_it_seems_to_me_that_the_mad
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
     jp c, .call_start_message_command09_hl_b134
@@ -5464,8 +6408,8 @@ TalkMsg0016_ItSeemsToMeThatThe::
     call StartMessageCommand09HL_B13
     ret
 
-.call_talk_msg0016_it_seems_to_me_that_the:
-    call TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit
+.call_talk_msg0016_it_seems_to_me_that_the_mad:
+    call TalkMsg0016_ItSeemsToMeThatThe_MadGopher
     ret
 
 .call_start_message_command09_hl_b135:
@@ -5555,8 +6499,8 @@ TalkMsg0016_ItSeemsToMeThatThe::
 ; Great Log talk, the carpenter: after EVENT_REWARD_ITEM_OR_KEY 'MadGopher's been a great help.'
 ; ($08B6); with a MadGopher (species $5A) in a party of two or more 'A MadGopher joined you? Could
 ; ...' in three scripts (the reward given, the bag full or not); without it 'Beavern helped put up
-; the ...', or $08B2 with only one monster. (C1, E-0357)
-TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
+; the ...', or $08B2 with only one monster. (C2, E-0357; probed E-0377)
+TalkMsg0016_ItSeemsToMeThatThe_MadGopher::
     ld de, EVENT_REWARD_ITEM_OR_KEY
     call TestFlagBit
     jp c, .call_start_message_command09_hl_b132
@@ -5618,7 +6562,8 @@ TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
     ret
 
 ; Great Log talk, Slash: 'Yo, did you enjoy the ...' ($0017) the first time, then 'If you're in need
-; of ...' ($0018); after Warubou's food scene 'The island's going to sink?' ($0065). (C1, E-0357)
+; of ...' ($0018); after Warubou's food scene 'The island's going to sink?' ($0065). (C2, E-0357;
+; probed E-0377)
 GreatLogTalkEvents_ShowYoDidYouEnjoy::
     ld de, EVENT_SCENE_WARUBOU_FOOD2_00C
     call TestFlagBit
@@ -5642,6 +6587,14 @@ GreatLogTalkEvents_ShowYoDidYouEnjoy::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 9 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B08 ('The items you find in ...'); else with
+; EVENT_SCENE_LONG_FACES_002 set, message $010A ('Off to another world! There ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $0066 ('This island is going to ...'); else with
+; EVENT_SCENE_VAULT_SETTLED set, message $002F ('If some monster masters keep ...'); otherwise,
+; message $0019 ('... many friends here. ...'). A message starts through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0025 then jp c,
 ; TalkMsg0019_ThereArentManyFriendsHere.call_start_message_command09_hl_b134; flag 0002 then jr c,
 ; TalkMsg0019_ThereArentManyFriendsHere.call_start_message_command09_hl_b133; flag 000C then jr c,
@@ -5686,6 +6639,15 @@ TalkMsg0019_ThereArentManyFriendsHere::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 10 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set message $0B0D; else with EVENT_SCENE_DARCK_DEFEATED set $053F;
+; else with EVENT_SCENE_THREE_ITEMS set $0505 ('People have been saying that ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set $020B ('Take the ladder up ahead ...'); else with
+; EVENT_SCENE_LONG_FACES_002 set $010C; else with EVENT_SCENE_WARUBOU_FOOD2_00C set $0068 ('Huh? The
+; island is going ...') the first time, setting EVENT_HELLO_THERE_YOU_MUST_BE, then $0069 ('Prince
+; Kameha was saying the ...'); otherwise $0032 ('Hello, there! You must be ...'). Messages start
+; through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0032_HelloThereYouMustBeThe.call_start_message_command09_hl_b136; flag 00D1 then jr c,
 ; TalkMsg0032_HelloThereYouMustBeThe.call_start_message_command09_hl_b135; flag 0024 then jr c,
@@ -5758,6 +6720,17 @@ TalkMsg0032_HelloThereYouMustBeThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 11 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set message $0D88 ('I teased you as a ...'); else with
+; EVENT_SCENE_THREE_ITEMS set $0D30 ('What if the island sinks ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set $0D0D ('While I was on the ...'); else with
+; EVENT_SCENE_LONG_FACES_002 set $011B ('Hm? Are you a master ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set $0073 ('Hm? Warubou wants you to ...') and
+; EVENT_YOURE_THE_KIDS_FROM_THE is set (on every such talk; the routine never tests it); else with
+; EVENT_THANKS_FOR_COMING_BY set Script_HaveYouHeardAbout ('Have you heard about Magic ...');
+; otherwise $003C. Messages start through StartMessageCommand09HL_B13 (script command 9 with the
+; word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1) and scripts through
+; StartScriptAtHL_B13 (wScriptPointerLo/Hi, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg003C_YoureTheKidsFromTheNew.call_start_message_command09_hl_b135; flag 0024 then jr c,
 ; TalkMsg003C_YoureTheKidsFromTheNew.call_start_message_command09_hl_b134; flag 0021 then jr c,
@@ -5822,6 +6795,16 @@ TalkMsg003C_YoureTheKidsFromTheNew::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 12 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B11 ('... traveling, you can ...'); else with
+; EVENT_SCENE_DARCK_DEFEATED set, message $0541 ('I hate myself for not ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $050C ('My beloved island is sinking... ...'); else with
+; EVENT_SCENE_MERMAID_KINGDOM_022 set, message $08CE ('Many trees have submerged... The ...'); else
+; with EVENT_SCENE_LONG_FACES_002 set, message $011A ('Even the most ordinary of ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $0072 ('This island is sinking? If ...'); otherwise,
+; message $0040 ('On this island, every day ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0040_OnThisIslandEveryDayGoes.call_start_message_command09_hl_b136; flag 00D1 then jr c,
 ; TalkMsg0040_OnThisIslandEveryDayGoes.call_start_message_command09_hl_b135; flag 0024 then jr c,
@@ -5885,7 +6868,7 @@ TalkMsg0040_OnThisIslandEveryDayGoes::
     ret
 
 ; Great Log talk: gives item $2C when the bag has room, with 'Hey, that's mine! <hero> obtained ...'
-; ($00FD). (C1, E-0357)
+; ($00FD). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_GiveTinyMedal::
     call InventoryHasFreeSlotCheck_Bank13
     jr c, .read_inventory_sort_flags
@@ -5900,6 +6883,14 @@ GreatLogTalkEvents_GiveTinyMedal::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 14 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B19 ('Prince Kameha is in training ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set, message $020C ('The castle is in an ...'); else with
+; EVENT_SCENE_LONG_FACES_002 set, message $0114 ('... seen Prince Kameha ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $0074 ('... after a monster master? ...'); otherwise,
+; message $0034 ('The horrid Prince and that ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0034_TheHorridPrinceAndThatElemental.call_start_message_command09_hl_b134; flag 0021 then
 ; jr c, TalkMsg0034_TheHorridPrinceAndThatElemental.call_start_message_command09_hl_b133; flag 0002
@@ -5945,6 +6936,12 @@ TalkMsg0034_TheHorridPrinceAndThatElemental::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 15 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B18 ('... shops buy and sell ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $0507 ('Prince Kameha came back! What ...'); otherwise,
+; message $020F ('There are some items that ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg020F_ThereAreSomeItemsThatCan.call_start_message_command09_hl_b132; flag 0024 then jr c,
 ; TalkMsg020F_ThereAreSomeItemsThatCan.call_start_message_command09_hl_b13); starts message $020F
@@ -5971,6 +6968,17 @@ TalkMsg020F_ThereAreSomeItemsThatCan::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 16 (GreatLogTalkEvents): with EVENT_THANKS_FOR_COMING_BY_025 set it sets
+; wScreenTableIndex = 2 and wDataBank = $10 and starts Script_HelloHowMayI ('Hello! How may I serve
+; ...') once EVENT_THAT_WEIRD_APE_THING_IS_12C is set, otherwise Script_I_12 (which sets that flag
+; first); else with EVENT_SCENE_THREE_ITEMS set message $0506; else with
+; EVENT_SCENE_MERMAID_KINGDOM_022 set $08C1 the first time, setting EVENT_THAT_WEIRD_APE_THING_IS,
+; then $08C2 ('I have nothing for a ...'); else with EVENT_SCENE_WARUBOU_FOOD2_00C set, the first
+; time it sets bit 0 of wStoryFlags + $60 directly (flag $300, which SetFlagBit cannot set), says
+; $0077 and sets EVENT_HERO_RECEIVED_THE_GREAT_LOG, then $0078; otherwise $003A ('That weird ape
+; thing is ...'). Messages start through StartMessageCommand09HL_B13 (script command 9 with the word
+; in wScriptParam0/1, wScriptRunning = 1, wModeState = 1) and scripts through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg003A_ThatWeirdApeThingIsWarubou.set_screen_table_index_to_02; flag 0024 then jr c,
 ; TalkMsg003A_ThatWeirdApeThingIsWarubou.call_start_message_command09_hl_b133; flag 0022 then jr c,
@@ -6050,6 +7058,17 @@ TalkMsg003A_ThatWeirdApeThingIsWarubou::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 17 (GreatLogTalkEvents): with EVENT_THANKS_FOR_COMING_BY_025 set it sets
+; wScreenTableIndex = 0 and wDataBank = $10 and starts Script_WellWellIfIt the first time (setting
+; EVENT_THE_KING_IS_TOO_LENIENT), then Script_WelcomeHowMayI ('Welcome! How may I serve ...'); else
+; with EVENT_SCENE_RIVAL_DEFEATED_021 set: Script_WelcomeHowMayI (same bank setup) once
+; EVENT_THE_KING_IS_TOO_LENIENT_106 is set, Script_You_5 (setting EVENT_THE_KING_IS_TOO_LENIENT_106)
+; when EVENT_YOUVE_BEEN_GOING_OUT_A is set, otherwise message $0115 ('I am a dealer- a ...'); else
+; with EVENT_SCENE_LONG_FACES_002 set $0115; else with EVENT_SCENE_WARUBOU_FOOD2_00C set $0075;
+; otherwise $0035 ('The King is too lenient ...'). Messages start through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1) and scripts through StartScriptAtHL_B13 (wScriptPointerLo/Hi,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c, TalkMsg0035_TheKingIsTooLenientOn.call_test_flag_bit2;
 ; flag 0021 then jr c, TalkMsg0035_TheKingIsTooLenientOn.call_test_flag_bit; flag 0002 then jr c,
 ; TalkMsg0035_TheKingIsTooLenientOn.loop; flag 000C then jr c,
@@ -6123,6 +7142,15 @@ TalkMsg0035_TheKingIsTooLenientOn::
     call SetFlagBit
     ret
 
+; Great Log talk 18 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B0F ('Have you found another world ...'); else with
+; EVENT_SCENE_DARCK_DEFEATED set, message $0540 ('Oh, wow! ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set, message $0D0E ('... really trying to become ...'); else with
+; EVENT_SCENE_LONG_FACES_002 set, message $0116 ('You have such cute monsters! ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $006D ('... going to sink? ...'); otherwise, message
+; $003B ('This palm tree is GreatLog. ...'). A message starts through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg003B_ThisPalmTreeIsGreatLogWe.call_start_message_command09_hl_b135; flag 00D1 then jr c,
 ; TalkMsg003B_ThisPalmTreeIsGreatLogWe.call_start_message_command09_hl_b134; flag 0021 then jr c,
@@ -6176,6 +7204,9 @@ TalkMsg003B_ThisPalmTreeIsGreatLogWe::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 19 (GreatLogTalkEvents): starts message $0038 ('<BUF0> peered into the vase. A
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0038 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. A large,' (E-0268, the E-0082 shape; was
 ; TalkMsg0038_HeroPeeredIntoTheVaseA)
@@ -6184,6 +7215,11 @@ TalkMsg0038_HeroPeeredIntoTheVaseA::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 20 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_SCENE_LONG_FACES_002 set, message $0119 ('Monster masters are people who ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $0070 ('The island ...'); otherwise, message $0041
+; ('Warubou is the ...'). A message starts through StartMessageCommand09HL_B13 (script command 9
+; with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0002 then jr c,
 ; TalkMsg0041_WarubouIsTheIslandsSpirit.call_start_message_command09_hl_b132; flag 000C then jr c,
 ; TalkMsg0041_WarubouIsTheIslandsSpirit.call_start_message_command09_hl_b13); starts message $0041
@@ -6210,6 +7246,17 @@ TalkMsg0041_WarubouIsTheIslandsSpirit::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 21 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B1A ('I heard that ...'); else with
+; EVENT_SCENE_DARCK_DEFEATED set, message $0542 ('... sorry for doubting you. ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $0508 ('Hi! Have you heard? GreatLog ...'); else with
+; EVENT_SCENE_MERMAID_KINGDOM_022 set, message $08C3 ('To take off an accessory ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set, message $0210 ('Oh, my... Where did the ...'); else with
+; EVENT_SCENE_LONG_FACES_002 set, message $0117 ('... seen Prince Kameha ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $006E ('The island is sinking? Prince ...'); otherwise,
+; message $003D ('We live inside here. ...'). A message starts through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg003D_WeLiveInsideHereImKeeping.call_start_message_command09_hl_b137; flag 00D1 then jr c,
 ; TalkMsg003D_WeLiveInsideHereImKeeping.call_start_message_command09_hl_b136; flag 0024 then jr c,
@@ -6281,6 +7328,16 @@ TalkMsg003D_WeLiveInsideHereImKeeping::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 22 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B1B ('The woman next to me ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $0509 ('My neighbor is buying all ...'); else with
+; EVENT_SCENE_MERMAID_KINGDOM_022 set, message $08C4 ('The woman next to me ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set, message $0211 ('I hear rumors that Prince ...'); else with
+; EVENT_SCENE_LONG_FACES_002 set, message $0118 ('Warubou has gone down the ...'); else with
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $006F ('Oh, you kids! You ...'); else with
+; EVENT_SCENE_WARUBOU_SMELLS set, message $0052 ('Oh my, the well ...'); otherwise, message $003F
+; ('Inside the well is the ...'). A message starts through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg003F_InsideTheWellIsTheLogs.call_start_message_command09_hl_b137; flag 0024 then jr c,
 ; TalkMsg003F_InsideTheWellIsTheLogs.call_start_message_command09_hl_b136; flag 0022 then jr c,
@@ -6402,7 +7459,7 @@ GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit::
     ret
 
 ; Great Log talk, Kameha: 'I'm Prince Kameha of GreatLog!' ($0048) the first time, then 'Wahahah! No
-; going by me!' ($0049). (C1, E-0357)
+; going by me!' ($0049). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowImPrinceKamehaOf::
     ld de, EVENT_IM_PRINCE_KAMEHA_OF
     call TestFlagBit
@@ -6613,6 +7670,19 @@ GreatLogTalkEvents_WarubouInCastle::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 26 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B04 ('I heard about a world ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set and EVENT_OH_YOU_BOUGHT_THE_LOVE set and
+; EVENT_SCENE_MERMAID_KINGDOM_022 set, message $08AE ('My father was a Slime ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 set and EVENT_OH_YOU_BOUGHT_THE_LOVE set, message $0215 ('Aooh,
+; LoveWater soothes sunburn... ...'); else with EVENT_SCENE_RIVAL_DEFEATED_021 set and
+; EVENT_OH_YOU_BOUGHT_THE_LOVE clear, message $0203 ('I was taking a nap ...'); else with
+; EVENT_SCENE_RIVAL_DEFEATED_021 clear and EVENT_SCENE_LONG_FACES_002 set, message $010B ('A
+; tropical isle is too ...'); else with EVENT_SCENE_RIVAL_DEFEATED_021 clear and
+; EVENT_SCENE_WARUBOU_FOOD2_00C set, message $0067 ('... going to sink? I ...'); otherwise, message
+; $001A ('I accidentally went outside. People ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg001A_IAccidentallyWentOutside.call_start_message_command09_hl_b134; flag 0021 then jr c,
 ; TalkMsg001A_IAccidentallyWentOutside.call_test_flag_bit; flag 0002 then jr c,
@@ -6676,7 +7746,7 @@ TalkMsg001A_IAccidentallyWentOutside::
 ; Great Log talk, Cobi (the scripts in bank $1F): a line for each story phase ('while you're gone,
 ; I'll ...', 'Hi, I'm helping Papa ...', 'what was it like ...' after each key world, 'tell me about
 ; what ...', 'I envied you ...'), each phase's first talk setting its flag, then 'Hi, <hero>! What's
-; up today?'. (C1, E-0357)
+; up today?'. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld a, $1f
     ld [wDataBank], a
@@ -6757,7 +7827,7 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
 
 ; Great Log talk, Tara (scripts in bank $1F): the same phases as Cobi's talk with Tara's lines ('Big
 ; brother, while you're in ...', 'Big brother, tell me about ...', 'I was a little ...'), then 'Hi!
-; How are you?'. (C1, E-0357)
+; How are you?'. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld a, $1f
     ld [wDataBank], a
@@ -6836,6 +7906,10 @@ GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 29 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B1D ('If you have a lot ...'); otherwise, message
+; $011E ('If your party is wiped ...'). A message starts through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg011E_IfYourPartyIsWipedOut.call_start_message_command09_hl_b13); starts message $011E
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'If your party is
@@ -6853,6 +7927,12 @@ TalkMsg011E_IfYourPartyIsWipedOut::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 30 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B14 ('You know how to commune ...'); else with
+; EVENT_SCENE_SHIELD2_023 set, message $0DE5 ('The water flowed right over ...'); otherwise, message
+; $021F ('Do you know about LogTwig? ...'). A message starts through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg021F_DoYouKnowAboutLogTwigIts.call_start_message_command09_hl_b132; flag 0023 then jp c,
 ; TalkMsg021F_DoYouKnowAboutLogTwigIts.call_start_message_command09_hl_b13); starts message $021F
@@ -6879,6 +7959,9 @@ TalkMsg021F_DoYouKnowAboutLogTwigIts::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 31 (GreatLogTalkEvents): starts message $04D0 ('<BUF0> read the sign.' 'Monster
+; Arena ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word
+; in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $04D0 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 read the sign. Monster Arena, where' (E-0268, the E-0082 shape; was
 ; TalkMsg04D0_HeroReadTheSignMonsterArena)
@@ -6887,10 +7970,17 @@ TalkMsg04D0_HeroReadTheSignMonsterArena::
     call StartMessageCommand09HL_B13
     ret
 
-; Great Log talk, a guide: 'GreatLog's major facilities ...' ($003E), 'Looking for a monster
-; master?' ($0071) after Warubou's food scene, 'This leads to GreatLog Castle!' ($021B) after the
-; rival is defeated; after the second shield 'Prince Kameha has been missing ...' once, then $0A3D;
-; after the three items 'If the island sink, is ...' once, then $0A3D. (C1, E-0357)
+; Great Log talk 32 (GreatLogTalkEvents), a guide: after the three items (EVENT_SCENE_THREE_ITEMS)
+; Script_IfTheIslandSink ('If the island sink, is ...', which sets EVENT_WHAT first) until
+; EVENT_WHAT is set, then $0A3D ('Prince Kameha wandered off like ...'); else after
+; EVENT_SCENE_SHIELD2_023 Script_PrinceKamehaHasBeen ('Prince Kameha has been missing ...'; only its
+; Script_What branch sets EVENT_WHAT, so it repeats until that branch is taken), then $0A3D; else
+; $021B ('This leads to GreatLog Castle! ...') after EVENT_SCENE_RIVAL_DEFEATED_021, $003E (about
+; the major facilities of GreatLog) after EVENT_SCENE_LONG_FACES_002, $0071 ('Looking for a monster
+; master? ...') after EVENT_SCENE_WARUBOU_FOOD2_00C, otherwise $003E. Messages start through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1) and scripts through StartScriptAtHL_B13 (wScriptPointerLo/Hi,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 GreatLogTalkEvents_Guide::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
@@ -6945,7 +8035,7 @@ GreatLogTalkEvents_Guide::
     ret
 
 ; Great Log talk: the slide: 'Take this slide as a ...' the first time, then 'It's easy to get down,
-; ...' ($021E); at the end 'The rope in the farm ...' ($0B10). (C1, E-0357)
+; ...' ($021E); at the end 'The rope in the farm ...' ($0B10). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_Slide::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -6969,6 +8059,11 @@ GreatLogTalkEvents_Slide::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 34 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B0E ('... beginning to feel that ...'); otherwise,
+; message $021C ('Monsters hate being away from ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg021C_MonstersHateBeingAwayFrom.call_start_message_command09_hl_b13); starts message $021C
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Monsters hate being
@@ -6986,6 +8081,12 @@ TalkMsg021C_MonstersHateBeingAwayFrom::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 35 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B2F ('... great hero! How ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $0521 ('The Arena is closed under ...'); otherwise, message
+; $0221 ('Hello there, youngster! Take these ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0221_HelloThereYoungsterTakeThese.call_start_message_command09_hl_b132; flag 0024 then jr
 ; c, TalkMsg0221_HelloThereYoungsterTakeThese.call_start_message_command09_hl_b13); starts message
@@ -7013,6 +8114,12 @@ TalkMsg0221_HelloThereYoungsterTakeThese::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 36 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B30 ('Well, well ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $0522 ('... been decided to shut ...'); otherwise, message
+; $0222 ('Hey, a little bitty master! ...'). A message starts through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0222_HeyALittleBittyMasterHi.call_start_message_command09_hl_b132; flag 0024 then jr c,
 ; TalkMsg0222_HeyALittleBittyMasterHi.call_start_message_command09_hl_b13); starts message $0222
@@ -7040,7 +8147,7 @@ TalkMsg0222_HeyALittleBittyMasterHi::
     ret
 
 ; Great Log talk, a grandparent: 'I like my grandchildren to ...' ($0543) after Darck's defeat until
-; the end, otherwise 'Well, you're a mighty lively ...' ($0223). (C1, E-0357)
+; the end, otherwise 'Well, you're a mighty lively ...' ($0223). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_Grandparent::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7059,6 +8166,9 @@ GreatLogTalkEvents_Grandparent::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 38 (GreatLogTalkEvents): starts message $0224 ('Take care to find Tiny ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0224 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Take care to find Tiny Medals. Look' (E-0268, the E-0082 shape; was
 ; TalkMsg0224_TakeCareToFindTinyMedals)
@@ -7069,7 +8179,7 @@ TalkMsg0224_TakeCareToFindTinyMedals::
 
 ; Great Log talk, a master: 'I became a master because ...' at the end; after the three items $0D32
 ; or $0528; after the master's thanks $0267; otherwise 'Oh... You're so lucky to ...', as a script
-; when a species-2 monster is in a party of two or more. (C1, E-0357)
+; when a species-2 monster is in a party of two or more. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_Master::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7126,6 +8236,9 @@ GreatLogTalkEvents_Master::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 40 (GreatLogTalkEvents): starts message $0D8C ('Wata, wata. Terry battled in ...').
+; A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0D8C through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Wata, wata. Terry battled in the Starry' (E-0268, the E-0082 shape; was
 ; TalkMsg0D8C_WataWataTerryBattledInThe)
@@ -7134,6 +8247,9 @@ TalkMsg0D8C_WataWataTerryBattledInThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 41 (GreatLogTalkEvents): starts message $0D8D ('Fwahahahaha! How amusing! Even I
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0D8D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Fwahahahaha! How amusing! Even I fell before' (E-0268, the E-0082 shape; was
 ; TalkMsg0D8D_FwahahahahaHowAmusingEven)
@@ -7142,6 +8258,9 @@ TalkMsg0D8D_FwahahahahaHowAmusingEven::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 42 (GreatLogTalkEvents): starts message $022D ('WarpWing returns you instantly to
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $022D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'WarpWing returns you instantly to GreatLog, so' (E-0268, the E-0082 shape; was
 ; TalkMsg022D_WarpWingReturnsYouInstantly)
@@ -7151,6 +8270,9 @@ TalkMsg022D_WarpWingReturnsYouInstantly::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 43 (GreatLogTalkEvents): starts Script_DoYouHaveAny (first message 'Do you have any
+; idea ...'). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_DoYouHaveAny (StartScriptAtHL_B13); its first message begins 'Do you have any idea
 ; about' (E-0271; was Talk_DoYouHaveAnyIdeaAbout) (E-0344: the address in its name dropped or read
 ; as the label there; was Talk_DoYouHaveAnyIdeaAbout; shortened from
@@ -7161,6 +8283,9 @@ Talk_DoYouHaveAnyIdeaAbout::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 44 (GreatLogTalkEvents): starts message $022C ('There are books that change ...').
+; A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $022C through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'There are books that change your personality' (E-0268, the E-0082 shape; was
 ; TalkMsg022C_ThereAreBooksThatChangeYour)
@@ -7169,6 +8294,9 @@ TalkMsg022C_ThereAreBooksThatChangeYour::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 45 (GreatLogTalkEvents): starts message $0005 ('You folks run a monster ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0005 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'You folks run a monster farm? We' (E-0268, the E-0082 shape; was
 ; TalkMsg0005_YouFolksRunAMonsterFarm)
@@ -7177,6 +8305,9 @@ TalkMsg0005_YouFolksRunAMonsterFarm::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 46 (GreatLogTalkEvents): starts message $0006 ('... a spirit in GreatLog ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0006 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'There's a spirit in GreatLog that's famous' (E-0268, the E-0082 shape; was
 ; TalkMsg0006_TheresASpiritInGreatLogThats)
@@ -7187,7 +8318,7 @@ TalkMsg0006_TheresASpiritInGreatLogThats::
 
 ; Great Log talk on the ship: message $0004 before EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED; after it
 ; Tara's 'Big brother! GreatLog will be ...'; Cobi's script sits behind a constant test (ld a, 1 /
-; or a) for the other edition. (C1, E-0357)
+; or a) for the other edition. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_OnTheShip::
     ld de, EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED
     call TestFlagBit
@@ -7210,6 +8341,9 @@ GreatLogTalkEvents_OnTheShip::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 48 (GreatLogTalkEvents): starts Script_SailingIsSureExhilarating (first message
+; 'Sailing is sure exhilarating. Right? ...'). A script starts through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_SailingIsSureExhilarating (StartScriptAtHL_B13); its first message begins 'Sailing
 ; is sure exhilarating. Right?' (E-0271; was Talk_SailingIsSureExhilarating) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_SailingIsSureExhilarating; shortened from
@@ -7220,6 +8354,11 @@ Talk_SailingIsSureExhilarating::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 49 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED set, message $000E ('Worried about your monsters? ...');
+; otherwise, message $000A ('... soon be reaching GreatLog. ...'). A message starts through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0013 then jr c,
 ; TalkMsg000A_WellSoonBeReachingGreatLog.call_start_message_command09_hl_b13); starts message $000A
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'We'll soon be
@@ -7240,7 +8379,7 @@ TalkMsg000A_WellSoonBeReachingGreatLog::
 
 ; Great Log talk on the ship: message $000B (the constant $02 & 1 + $0B: the edition choice) the
 ; first time, setting EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED, then 'When our farm gets established
-; ...' ($000D). (C1, E-0357)
+; ...' ($000D). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_EditionChoice::
     ld de, EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED
     call TestFlagBit
@@ -7290,6 +8429,9 @@ GreatLogTalkEvents_ShowTheFarmIsFull::
     farcall CreateMonsterRecordOfKindTemp1
     ret
 
+; Great Log talk 54 (GreatLogTalkEvents): starts message $0BAC ('You need to strike the ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0BAC through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'You need to strike the right balance' (E-0268, the E-0082 shape; was
 ; TalkMsg0BAC_YouNeedToStrikeTheRight)
@@ -7298,6 +8440,9 @@ TalkMsg0BAC_YouNeedToStrikeTheRight::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 55 (GreatLogTalkEvents): starts message $0D84 ('Some monsters may be tough ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0D84 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Some monsters may be tough, but they' (E-0268, the E-0082 shape; was
 ; TalkMsg0D84_SomeMonstersMayBeToughBut)
@@ -7306,6 +8451,11 @@ TalkMsg0D84_SomeMonstersMayBeToughBut::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 56 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0D8B ('You might know this already ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $0523 ('... be fooled by those ...'); otherwise, message
+; $023F ('I was on my way ...'). A message starts through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg023F_IWasOnMyWayTo.call_start_message_command09_hl_b132; flag 0024 then jr c,
 ; TalkMsg023F_IWasOnMyWayTo.call_start_message_command09_hl_b13); starts message $023F through
@@ -7332,6 +8482,11 @@ TalkMsg023F_IWasOnMyWayTo::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 57 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B31 ('Make sure ...'); else with
+; EVENT_SCENE_THREE_ITEMS set, message $0524 ('He can talk tough now ...'); otherwise, message $0240
+; ('Pack properly if ...'). A message starts through StartMessageCommand09HL_B13 (script command 9
+; with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0240_PackProperlyIfYoureGoing.call_start_message_command09_hl_b132; flag 0024 then jr c,
 ; TalkMsg0240_PackProperlyIfYoureGoing.call_start_message_command09_hl_b13); starts message $0240
@@ -7358,6 +8513,10 @@ TalkMsg0240_PackProperlyIfYoureGoing::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 58 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B32 ('Have you used the rope ...'); otherwise,
+; message $0241 ('Try the slide! ...'). A message starts through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0241_TryTheSlideItsAShortcut.call_start_message_command09_hl_b13); starts message $0241
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Try the slide! It's
@@ -7375,6 +8534,9 @@ TalkMsg0241_TryTheSlideItsAShortcut::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 59 (GreatLogTalkEvents): starts message $0243 ('<BUF0> checked the bookshelf.'
+; 'Bookmark... Place ...'). A message starts through StartMessageCommand09HL_B13 (script command 9
+; with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0243 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Bookmark Place inside' (E-0268, the E-0082 shape; was
 ; TalkMsg0243_HeroCheckedTheBookshelfBookmark)
@@ -7383,6 +8545,9 @@ TalkMsg0243_HeroCheckedTheBookshelfBookmark::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 60 (GreatLogTalkEvents): starts message $0244 ('<BUF0> checked the bookshelf.'
+; 'Journal... A ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with
+; the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0244 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Journal A book' (E-0268, the E-0082 shape; was
 ; TalkMsg0244_HeroCheckedTheBookshelfJournal)
@@ -7391,6 +8556,9 @@ TalkMsg0244_HeroCheckedTheBookshelfJournal::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 61 (GreatLogTalkEvents): starts message $0245 ('<BUF0> peered into the vase. It
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0245 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0245_HeroPeeredIntoTheVaseIt)
@@ -7400,7 +8568,7 @@ TalkMsg0245_HeroPeeredIntoTheVaseIt::
     ret
 
 ; Great Log talk: 'Hey, let me ask you ...' (script), 'If GreatLog were to sink, ...' ($0526) after
-; the three items, 'The girl next door? Well, ...' ($0B42) at the end. (C1, E-0357)
+; the three items, 'The girl next door? Well, ...' ($0B42) at the end. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_LetMeAsk::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7422,6 +8590,9 @@ GreatLogTalkEvents_LetMeAsk::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 63 (GreatLogTalkEvents): starts message $0249 ('<BUF0> checked the bookshelf.'
+; 'Diary... A ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the
+; word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0249 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Diary A girl' (E-0268, the E-0082 shape; was
 ; TalkMsg0249_HeroCheckedTheBookshelfDiary)
@@ -7430,6 +8601,9 @@ TalkMsg0249_HeroCheckedTheBookshelfDiary::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 64 (GreatLogTalkEvents): starts message $0256 ('<BUF0> checked the dresser. It was
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0256 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the dresser. It was jammed' (E-0268, the E-0082 shape; was
 ; TalkMsg0256_HeroCheckedTheDresserItWas)
@@ -7438,6 +8612,9 @@ TalkMsg0256_HeroCheckedTheDresserItWas::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 65 (GreatLogTalkEvents): starts message $02B0 ('<BUF0> peered into the barrel. It
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $02B0 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg02B0_HeroPeeredIntoTheBarrelIt)
@@ -7497,6 +8674,9 @@ GreatLogTalkEvents_DidYouKnow::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 67 (GreatLogTalkEvents): starts message $025A ('<BUF0> checked the dresser. It was
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $025A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the dresser. It was tidily' (E-0268, the E-0082 shape; was
 ; TalkMsg025A_HeroCheckedTheDresserItWas)
@@ -7505,6 +8685,9 @@ TalkMsg025A_HeroCheckedTheDresserItWas::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 68 (GreatLogTalkEvents): starts message $025B ('<BUF0> checked the bookshelf.'
+; 'This is ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the
+; word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $025B through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. This is the' (E-0268, the E-0082 shape; was
 ; TalkMsg025B_HeroCheckedTheBookshelfThis)
@@ -7513,6 +8696,10 @@ TalkMsg025B_HeroCheckedTheBookshelfThis::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 69 (GreatLogTalkEvents): returns at once, starting nothing, unless
+; EVENT_REWARD_ITEM_OR_KEY_2 is set; then starts message $0314 ('<BUF0> tried to open the chest.
+; ...') through StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0134 then ret nc); starts message $0314 through
 ; StartMessageCommand09HL_B13 (script command $09); that string begins '0 tried to open the chest.
 ; But' (E-0268, the E-0082 shape; was IfFlag134Msg0314_HeroTriedToOpenTheChest)
@@ -7525,7 +8712,7 @@ IfFlag134Msg0314_HeroTriedToOpenTheChest::
     ret
 
 ; Great Log talk, the Christener (scripts in bank $96): 'Welcome. I'm the Christener. I ...' the
-; first time, then '... Do ...'. (C1, E-0357)
+; first time, then '... Do ...'. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_Christener::
     ld a, $96
     ld [wDataBank], a
@@ -7543,6 +8730,9 @@ GreatLogTalkEvents_Christener::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 71 (GreatLogTalkEvents): starts message $04C5 ('<BUF0> checked the bookshelf.'
+; 'Handbook on ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with
+; the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $04C5 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Handbook on Naming' (E-0268, the E-0082 shape; was
 ; TalkMsg04C5_HeroCheckedTheBookshelfHandbook)
@@ -7551,6 +8741,9 @@ TalkMsg04C5_HeroCheckedTheBookshelfHandbook::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 72 (GreatLogTalkEvents): starts message $04C6 ('<BUF0> checked the bookshelf.'
+; 'Handbook on ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with
+; the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $04C6 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Handbook on Naming' (E-0268, the E-0082 shape; was
 ; TalkMsg04C6_HeroCheckedTheBookshelfHandbook)
@@ -7559,6 +8752,9 @@ TalkMsg04C6_HeroCheckedTheBookshelfHandbook::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 73 (GreatLogTalkEvents): starts message $04C7 ('<BUF0> checked the bookshelf.'
+; 'Handbook on ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with
+; the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $04C7 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Handbook on Naming' (E-0268, the E-0082 shape; was
 ; TalkMsg04C7_HeroCheckedTheBookshelfHandbook)
@@ -7567,6 +8763,9 @@ TalkMsg04C7_HeroCheckedTheBookshelfHandbook::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 74 (GreatLogTalkEvents): starts message $08C0 ('We get more and more ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $08C0 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'We get more and more stubborn as' (E-0268, the E-0082 shape; was
 ; TalkMsg08C0_WeGetMoreAndMoreStubborn)
@@ -7577,7 +8776,7 @@ TalkMsg08C0_WeGetMoreAndMoreStubborn::
 
 ; Great Log talk: after EVENT_REWARD_ITEM_OR_KEY_1A3 and before receiving it, a TinyMedal (item $2C)
 ; with 'Here's that TinyMedal.' when the bag has room, or $0D4A; otherwise 'You have to tamp the
-; ...' ($08BB), or 'GreatLog is a floating island?' ($0D87) at the end. (C1, E-0357)
+; ...' ($08BB), or 'GreatLog is a floating island?' ($0D87) at the end. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
     ld de, EVENT_REWARD_ITEM_OR_KEY_1A3
     call TestFlagBit
@@ -7619,7 +8818,7 @@ GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
 ; welcome! This is') and sets EVENT_HELLO_HERO_WELCOME_THIS_IS; afterwards starts
 ; Script_HelloHeroWelcomeWant ('Hello, 0, welcome! Want to'). Both scripts jump to Script_Hibernate
 ; in the data bank (script command SCRIPT_HIBERNATE, HibernateMenu), so it sets wDataBank = $1D.
-; (C1, E-0370)
+; (C2, E-0370; probed E-0377)
 ; starts Script_HelloHeroWelcomeThis: '*: Hello, 0, welcome! This is' (E-0248)
 GreatLogTalkEvents_Hibernation::
     ld de, EVENT_HELLO_HERO_WELCOME_THIS_IS
@@ -7640,6 +8839,9 @@ GreatLogTalkEvents_Hibernation::
     ld [wDataBank], a
     ret
 
+; Great Log talk 77 (GreatLogTalkEvents): starts message $0A50 ('Zzzz... Yawn... Huh? Is it ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A50 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Zzzz Yawn Huh? Is it morning already?' (E-0268, the E-0082 shape; was
 ; TalkMsg0A50_ZzzzYawnHuhIsItMorning)
@@ -7648,6 +8850,9 @@ TalkMsg0A50_ZzzzYawnHuhIsItMorning::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 78 (GreatLogTalkEvents): starts message $0A52 ('Our kind always stays near ...'). A
+; message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A52 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Our kind always stays near water. Go' (E-0268, the E-0082 shape; was
 ; TalkMsg0A52_OurKindAlwaysStaysNearWater)
@@ -7656,6 +8861,9 @@ TalkMsg0A52_OurKindAlwaysStaysNearWater::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 79 (GreatLogTalkEvents): starts message $0A53 ('Zzz... Zzz... Zzz... Whoops! Was
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A53 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Zzz Zzz Zzz Whoops! Was I breathing' (E-0268, the E-0082 shape; was
 ; TalkMsg0A53_ZzzZzzZzzWhoopsWasI)
@@ -7664,6 +8872,9 @@ TalkMsg0A53_ZzzZzzZzzWhoopsWasI::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 80 (GreatLogTalkEvents): starts message $0A59 ('<BUF0> read the sign.' 'Ssh...
+; Monsters ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the
+; word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A59 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 read the sign. Ssh Monsters are' (E-0268, the E-0082 shape; was
 ; TalkMsg0A59_HeroReadTheSignSshMonsters)
@@ -7673,6 +8884,9 @@ TalkMsg0A59_HeroReadTheSignSshMonsters::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 81 (GreatLogTalkEvents): starts Script_HeroCheckedTheCasket (first message '<BUF0>
+; checked the casket. ...'). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the
+; script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_HeroCheckedTheCasket (StartScriptAtHL_B13); its first message begins '0 checked the
 ; casket.' (E-0271; was Talk_HeroCheckedTheCasket) (E-0344: the address in its name dropped or read
 ; as the label there; was Talk_HeroCheckedTheCasket; shortened from TalkScript_HeroCheckedTheCasket)
@@ -7682,6 +8896,9 @@ Talk_HeroCheckedTheCasket::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 82 (GreatLogTalkEvents): starts Script_HeroCheckedTheCasket_2 (first message
+; '<BUF0> checked the casket. ...'). A script starts through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_HeroCheckedTheCasket_2 (StartScriptAtHL_B13); its first message begins '0 checked
 ; the casket.' (E-0271; was Talk_HeroCheckedTheCasket_2) (E-0344: the address in its name dropped or
 ; read as the label there; was Talk_HeroCheckedTheCasket_2; shortened from
@@ -7692,6 +8909,9 @@ Talk_HeroCheckedTheCasket_2::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 83 (GreatLogTalkEvents): starts message $0A5D ('<BUF0> read the sign.' 'Watch your
+; ...'). A message starts through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A5D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 read the sign. Watch your step!' (E-0268, the E-0082 shape; was
 ; TalkMsg0A5D_HeroReadTheSignWatchYour)
@@ -7701,6 +8921,9 @@ TalkMsg0A5D_HeroReadTheSignWatchYour::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 84 (GreatLogTalkEvents): starts Script_HeroPeeredIntoThe (first message '<BUF0>
+; peered into the hole. ...'). A script starts through StartScriptAtHL_B13 (wScriptPointerLo/Hi =
+; the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; starts Script_HeroPeeredIntoThe (StartScriptAtHL_B13); its first message begins '0 peered into the
 ; hole.' (E-0271; was Talk_HeroPeeredIntoTheHole) (E-0344: the address in its name dropped or read
 ; as the label there; was Talk_HeroPeeredIntoTheHole; shortened from
@@ -7711,6 +8934,11 @@ Talk_HeroPeeredIntoTheHole::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 85 (GreatLogTalkEvents): picks the reply by story flags: with
+; EVENT_THANKS_FOR_COMING_BY_025 set, message $0B79 ('You have to pay an ...'); otherwise, message
+; $0292 ('They take entry fees from ...'). A message starts through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0292_TheyTakeEntryFeesFromMasters.call_start_message_command09_hl_b13); starts message
 ; $0292 through StartMessageCommand09HL_B13 (script command $09); that string begins 'They take
@@ -7729,6 +8957,10 @@ TalkMsg0292_TheyTakeEntryFeesFromMasters::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 86 (GreatLogTalkEvents): message $0B75 ('I've learned how to tell') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $027D ('What do you suppose monsters are
+; thinking?'); both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg027D_WhatDoYouSupposeMonsters.call_start_message_command09_hl_b13); starts message $027D
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'What do you suppose
@@ -7746,6 +8978,9 @@ TalkMsg027D_WhatDoYouSupposeMonsters::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 87 (GreatLogTalkEvents): starts message $027E ('GRAH, HUNGRY. LOOK DELICIOUS...')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $027E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'GRAH, HUNGRY. LOOK DELICIOUS' (E-0268, the E-0082 shape; was TalkMsg027E_GRAHHUNGRYLOOKDELICIOUS)
 TalkMsg027E_GRAHHUNGRYLOOKDELICIOUS::
@@ -7753,6 +8988,9 @@ TalkMsg027E_GRAHHUNGRYLOOKDELICIOUS::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 88 (GreatLogTalkEvents): starts message $028C ('Listen, to win you need balance.
+; Attack,') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $028C through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Listen, to win you need balance. Attack,' (E-0268, the E-0082 shape; was
 ; TalkMsg028C_ListenToWinYouNeedBalance)
@@ -7761,6 +8999,9 @@ TalkMsg028C_ListenToWinYouNeedBalance::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 89 (GreatLogTalkEvents): starts message $028D ('It's not all about winning. We
+; should,') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $028D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'It's not all about winning. We should,' (E-0268, the E-0082 shape; was
 ; TalkMsg028D_ItsNotAllAboutWinningWe)
@@ -7769,6 +9010,9 @@ TalkMsg028D_ItsNotAllAboutWinningWe::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 90 (GreatLogTalkEvents): starts message $028E ('Arrrrroooh! My blood burns! I can
+; taste') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $028E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Arrrrroooh! My blood burns! I can taste' (E-0268, the E-0082 shape; was
 ; TalkMsg028E_ArrrrrooohMyBloodBurnsICan)
@@ -7777,6 +9021,9 @@ TalkMsg028E_ArrrrrooohMyBloodBurnsICan::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 91 (GreatLogTalkEvents): starts message $0287 ('Monsters can grow only so much.
+; They') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0287 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Monsters can grow only so much. They' (E-0268, the E-0082 shape; was
 ; TalkMsg0287_MonstersCanGrowOnlySoMuch)
@@ -7785,6 +9032,9 @@ TalkMsg0287_MonstersCanGrowOnlySoMuch::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 92 (GreatLogTalkEvents): starts message $0286 ('The Arena is where masters can
+; test') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0286 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The Arena is where masters can test' (E-0268, the E-0082 shape; was
 ; TalkMsg0286_TheArenaIsWhereMastersCan)
@@ -7793,6 +9043,9 @@ TalkMsg0286_TheArenaIsWhereMastersCan::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 93 (GreatLogTalkEvents): starts message $028F ('If you come across a monster that')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $028F through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'If you come across a monster that' (E-0268, the E-0082 shape; was
 ; TalkMsg028F_IfYouComeAcrossAMonster)
@@ -7801,6 +9054,10 @@ TalkMsg028F_IfYouComeAcrossAMonster::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 94 (GreatLogTalkEvents): message $0B7A ('I've never heard of a') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0294 ('If you win an Arena tourney, your'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0294_IfYouWinAnArenaTourney.call_start_message_command09_hl_b13); starts message $0294
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'If you win an Arena
@@ -7818,6 +9075,9 @@ TalkMsg0294_IfYouWinAnArenaTourney::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 95 (GreatLogTalkEvents): starts message $0290 ('Sirloin is the tops, harrumph! It
+; just') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0290 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Sirloin is the tops, harrumph! It just' (E-0268, the E-0082 shape; was
 ; TalkMsg0290_SirloinIsTheTopsHarrumph)
@@ -7826,6 +9086,9 @@ TalkMsg0290_SirloinIsTheTopsHarrumph::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 96 (GreatLogTalkEvents): starts message $0291 ('I... I didn't fall for') through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0291 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I I didn't fall for any meat.' (E-0268, the E-0082 shape; was TalkMsg0291_IIDidntFallForAny)
 TalkMsg0291_IIDidntFallForAny::
@@ -7835,7 +9098,7 @@ TalkMsg0291_IIDidntFallForAny::
 
 ; Great Log talk, the arena receptionist: by wArenaRank 'Oh, a cute little master!', then 'Oh,
 ; you're the Kids/C/B/A Class ...' (each in a second script behind EVENT_NEVER_SET), or 'You have to
-; pay an ...' ($0B78) above A class. (C1, E-0357)
+; pay an ...' ($0B78) above A class. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ArenaReceptionist::
     ld a, [wArenaRank]
     or a
@@ -7917,6 +9180,9 @@ GreatLogTalkEvents_ArenaReceptionist::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 98 (GreatLogTalkEvents): starts message $0296 ('<BUF0> peered into the vase. It
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0296 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0296_HeroPeeredIntoTheVaseIt)
@@ -7925,6 +9191,11 @@ TalkMsg0296_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 99 (GreatLogTalkEvents), a one-time vase: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_TINYMEDAL and
+; story flag $010C in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A3),
+; shows $A4 when the flag is already set and $A5 when the bag is full. (C2, E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
 ; flag $010C in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -7938,6 +9209,10 @@ VaseItem_TinyMedal_Flag010C::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 100 (GreatLogTalkEvents): message $0B67 ('Listen, this is a secret.') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $027A ('Listen, this is a secret. There's a');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg027A_ListenThisIsASecretTheres.call_start_message_command09_hl_b13); starts message $027A
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Listen, this is a
@@ -7955,10 +9230,16 @@ TalkMsg027A_ListenThisIsASecretTheres::
     call StartMessageCommand09HL_B13
     ret
 
-; Great Log talk, the arena (scripts in bank $0C): clears the arena data; rank 0 'Welcome to the
-; Arena! Masters ...'; rank 1 the class choice ('Welcome to the Arena! The ...' once, then 'Hello,
-; which Class will it ...'); rank 5 'Welcome! Do you wish to ...'; other ranks first hand over the
-; prize key (GenerateNewKeyEntry into wArenaOutcome, 'Here's the Magic Key you ...'). (C1, E-0357)
+; Great Log talk 101, the arena desk (scripts in bank $0C): sets wDataBank = $0C and
+; wScreenTableIndex = 0 and clears the arena data (GreatLogTalkEvents_ClearArenaData, $20F bytes
+; from wArenaEntry); then by wArenaRank: rank 0 starts Script_WelcomeToTheArena ('Welcome to the
+; Arena! Masters'); rank 1 starts Script_WelcomeToTheArena_2 ('Welcome to the Arena! The', which
+; sets EVENT_WELCOME_TO_THE_ARENA) until that flag is set, then Script_HelloWhichClassWill ('Hello,
+; which Class will it'); rank 5 starts Script_WelcomeDoYouWish ('Welcome! Do you wish to'). Ranks
+; 2-4 first hand over the prize key while wArenaOutcome is 0: GenerateNewKeyEntry, its result (1
+; made, 0 key list full) into wArenaOutcome, then Script_Here_2 ('received a Magic Key') or
+; Script_Here ('Oh? But your key ring'); once wArenaOutcome is set they get the rank-1 scripts. (C2,
+; E-0377)
 GreatLogTalkEvents_ArenaClassChoice::
     ld a, $0c
     ld [wDataBank], a
@@ -8047,6 +9328,12 @@ GreatLogTalkEvents_Breeder::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 103 (GreatLogTalkEvents): by story progress, latest first: after
+; EVENT_THANKS_FOR_COMING_BY_025 message $0B6E ('My frigid breath chills even'), after
+; EVENT_SCENE_SHIELD2_023 $04C1 ('Arr, matey! I'm CaptDead!'), after EVENT_SCENE_MERMAID_KINGDOM_022
+; $04BB ('NoctoKing is my name! Darkness'), otherwise $04B5 ('Do you know all the kinds of'); each
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg04B5_DoYouKnowAllTheKinds.call_start_message_command09_hl_b133; flag 0023 then jr c,
 ; TalkMsg04B5_DoYouKnowAllTheKinds.call_start_message_command09_hl_b132; flag 0022 then jr c,
@@ -8082,6 +9369,12 @@ TalkMsg04B5_DoYouKnowAllTheKinds::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 104 (GreatLogTalkEvents): by story progress, latest first: after
+; EVENT_THANKS_FOR_COMING_BY_025 message $0B6F ('As I level up, my'), after EVENT_SCENE_SHIELD2_023
+; $04C2 ('I strike with my eight'), after EVENT_SCENE_MERMAID_KINGDOM_022 $04BC ('I learned how to
+; Massacre!'), otherwise $04B6 ('If you eat any BadMeat like me,'); each through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg04B6_IfYouEatAnyBadMeatLike.call_start_message_command09_hl_b133; flag 0023 then jr c,
 ; TalkMsg04B6_IfYouEatAnyBadMeatLike.call_start_message_command09_hl_b132; flag 0022 then jr c,
@@ -8118,8 +9411,8 @@ TalkMsg04B6_IfYouEatAnyBadMeatLike::
     ret
 
 ; Great Log talk, the Egg Evaluator (scripts in bank $96): 'Um... I'm the Egg Evaluator.' the first
-; time, then 'I'm the Egg Evaluator. May ...'; at the end 'Oh, the savior of GreatLog.' once. (C1,
-; E-0357)
+; time, then 'I'm the Egg Evaluator. May ...'; at the end 'Oh, the savior of GreatLog.' once. (C2,
+; E-0357; probed E-0377)
 GreatLogTalkEvents_EggEvaluator::
     ld a, $96
     ld [wDataBank], a
@@ -8177,6 +9470,9 @@ GreatLogTalkEvents_StarryShrine::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 107 (GreatLogTalkEvents): starts Script_I_8 ('I'm the Prof's assistant. Do')
+; through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80,
+; wModeState = 1). (C2, E-0377)
 ; starts Script_I_8 (StartScriptAtHL_B13); its first message begins 'I'm the Prof's assistant. Do
 ; you' (E-0271; was Talk_ImTheProfsAssistantDoYou) (E-0344: the address in its name dropped or read
 ; as the label there; was Talk_ImTheProfsAssistantDoYou; shortened from
@@ -8187,6 +9483,10 @@ Talk_ImTheProfsAssistantDoYou::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 108 (GreatLogTalkEvents): starts message $08D8 ('<BUF0> checked the bookshelf.
+; "Breeding Guide..."') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). The next entry,
+; TalkMsg08D9_HeroCheckedTheBookshelfBreeding, shows $08D9, which begins the same way. (C2, E-0377)
 ; starts message $08D8 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Breeding Guide In' (E-0268, the E-0082 shape; was
 ; TalkMsg08D8_HeroCheckedTheBookshelfBreeding)
@@ -8195,6 +9495,10 @@ TalkMsg08D8_HeroCheckedTheBookshelfBreeding::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 109 (GreatLogTalkEvents): starts message $08D9 ('<BUF0> checked the bookshelf.
+; "Breeding Guide..."') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). The entry before,
+; TalkMsg08D8_HeroCheckedTheBookshelfBreeding, shows $08D8, which begins the same way. (C2, E-0377)
 ; starts message $08D9 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Breeding Guide In' (E-0268, the E-0082 shape; was
 ; TalkMsg08D9_HeroCheckedTheBookshelfBreeding)
@@ -8203,6 +9507,9 @@ TalkMsg08D9_HeroCheckedTheBookshelfBreeding::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 110 (GreatLogTalkEvents): starts message $08CD ('<BUF0> checked the door. The door
+; won't') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $08CD through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the door. The door won't' (E-0268, the E-0082 shape; was
 ; TalkMsg08CD_HeroCheckedTheDoorTheDoor)
@@ -8211,6 +9518,9 @@ TalkMsg08CD_HeroCheckedTheDoorTheDoor::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 111 (GreatLogTalkEvents): starts message $02DC ('GreatLog's Starry Shrine wasn't in
+; use for') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $02DC through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'GreatLog's Starry Shrine wasn't in use for' (E-0268, the E-0082 shape; was
 ; TalkMsg02DC_GreatLogsStarryShrineWasnt)
@@ -8219,6 +9529,9 @@ TalkMsg02DC_GreatLogsStarryShrineWasnt::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 112 (GreatLogTalkEvents): starts message $0DD4 ('If you breed, the parents go
+; away') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0DD4 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'If you breed, the parents go away' (E-0268, the E-0082 shape; was
 ; TalkMsg0DD4_IfYouBreedTheParentsGo)
@@ -8227,6 +9540,9 @@ TalkMsg0DD4_IfYouBreedTheParentsGo::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 113 (GreatLogTalkEvents): starts message $02DD ('Parents pass on abilities to their
+; children,') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $02DD through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Parents pass on abilities to their children,' (E-0268, the E-0082 shape; was
 ; TalkMsg02DD_ParentsPassOnAbilitiesTo)
@@ -8236,7 +9552,7 @@ TalkMsg02DD_ParentsPassOnAbilitiesTo::
     ret
 
 ; Great Log talk (scripts in bank $0C): 'You can call me the ...' in two versions; at the end 'Well,
-; who would have thought ...' once. (C1, E-0357)
+; who would have thought ...' once. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_YouCanCallMe::
     ld a, $0c
     ld [wDataBank], a
@@ -8263,6 +9579,9 @@ GreatLogTalkEvents_YouCanCallMe::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 115 (GreatLogTalkEvents): starts message $0A6F ('My husband loves to collect things
+; that') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A6F through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'My husband loves to collect things that' (E-0268, the E-0082 shape; was
 ; TalkMsg0A6F_MyHusbandLovesToCollectThings)
@@ -8271,6 +9590,11 @@ TalkMsg0A6F_MyHusbandLovesToCollectThings::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 116 (GreatLogTalkEvents): starts message $0A75 ('<BUF0> checked the dresser. It
+; overflowed with') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). The next entry,
+; TalkMsg0A76_HeroCheckedTheDresserItOverflowed, shows $0A76, which begins the same way. (C2,
+; E-0377)
 ; starts message $0A75 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the dresser. It overflowed with' (E-0268, the E-0082 shape; was
 ; TalkMsg0A75_HeroCheckedTheDresserItOverflowed)
@@ -8279,6 +9603,11 @@ TalkMsg0A75_HeroCheckedTheDresserItOverflowed::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 117 (GreatLogTalkEvents): starts message $0A76 ('<BUF0> checked the dresser. It
+; overflowed with') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). The entry before,
+; TalkMsg0A75_HeroCheckedTheDresserItOverflowed, shows $0A75, which begins the same way. (C2,
+; E-0377)
 ; starts message $0A76 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the dresser. It overflowed with' (E-0268, the E-0082 shape; was
 ; TalkMsg0A76_HeroCheckedTheDresserItOverflowed)
@@ -8287,6 +9616,9 @@ TalkMsg0A76_HeroCheckedTheDresserItOverflowed::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 118 (GreatLogTalkEvents): starts message $0A77 ('<BUF0> checked the oven. There was
+; an') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A77 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the oven. There was an' (E-0268, the E-0082 shape; was
 ; TalkMsg0A77_HeroCheckedTheOvenThereWas)
@@ -8295,6 +9627,17 @@ TalkMsg0A77_HeroCheckedTheOvenThereWas::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 119 (GreatLogTalkEvents): after EVENT_THANKS_FOR_COMING_BY_025 message $0B46 ('My
+; granddaughter became a master.'); after EVENT_SCENE_THREE_ITEMS $0527 ('I'm an adult so I') with
+; EVENT_SCENE_MASTER_THANKS, else $0D31 ('For the sake of my'); after
+; EVENT_HERO_RECEIVED_A_LIFE_ACORN $0262 ('My granddaughter now insists that'); after
+; EVENT_SCENE_MASTER_THANKS the gift: with a free bag slot (InventoryHasFreeSlotCheck_Bank13) it
+; writes ITEM_LIFEACORN ($11) into that slot, sets bit 6 of wInventorySortFlags and starts
+; Script_I_9 ('I've never seen my granddaughter', 'received a LifeAcorn.', which sets
+; EVENT_HERO_RECEIVED_A_LIFE_ACORN), with a full bag only message $0261; before all of these $025E
+; ('My granddaughter is painfully shy.'). Messages go through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg025E_MyGranddaughterIsPainfully.call_start_message_command09_hl_b133; flag 0024 then jr c,
 ; TalkMsg025E_MyGranddaughterIsPainfully.call_test_flag_bit; flag 012E then jr c,
@@ -8359,6 +9702,9 @@ TalkMsg025E_MyGranddaughterIsPainfully::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 120 (GreatLogTalkEvents): starts message $0269 ('<BUF0> checked the dresser. Girls'
+; clothes') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0269 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the dresser. Girls clothes were' (E-0268, the E-0082 shape; was
 ; TalkMsg0269_HeroCheckedTheDresserGirls)
@@ -8367,6 +9713,11 @@ TalkMsg0269_HeroCheckedTheDresserGirls::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 121 (GreatLogTalkEvents), a one-time vase: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_LOGTWIG and
+; story flag $0114 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A3),
+; shows $A4 when the flag is already set and $A5 when the bag is full. (C2, E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2E, story
 ; flag $0114 in DE: when the flag is clear it gives item $2E (LogTwig) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -8380,6 +9731,9 @@ VaseItem_LogTwig::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 122 (GreatLogTalkEvents): starts message $026A ('<BUF0> checked the plush doll. It
+; had') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $026A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the plush doll. It had' (E-0268, the E-0082 shape; was
 ; TalkMsg026A_HeroCheckedThePlushDollIt)
@@ -8388,6 +9742,9 @@ TalkMsg026A_HeroCheckedThePlushDollIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 123 (GreatLogTalkEvents): starts message $0A32 ('There are powers that let you
+; cross') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A32 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'There are powers that let you cross' (E-0268, the E-0082 shape; was
 ; TalkMsg0A32_ThereArePowersThatLetYou)
@@ -8396,6 +9753,10 @@ TalkMsg0A32_ThereArePowersThatLetYou::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 124 (GreatLogTalkEvents): message $0B06 ('Many kinds of monsters result') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0A33 ('Have you been to the Starry Shrine?');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jp c,
 ; TalkMsg0A33_HaveYouBeenToTheStarry.call_start_message_command09_hl_b13); starts message $0A33
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Have you been to the
@@ -8413,6 +9774,10 @@ TalkMsg0A33_HaveYouBeenToTheStarry::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 125 (GreatLogTalkEvents): message $0B0B ('Members of the dragon family,') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $020A ('I'm chopping some trees down to make');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jp c,
 ; TalkMsg020A_ImChoppingSomeTreesDownTo.call_start_message_command09_hl_b13); starts message $020A
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'I'm chopping some
@@ -8430,6 +9795,10 @@ TalkMsg020A_ImChoppingSomeTreesDownTo::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 126 (GreatLogTalkEvents): message $0B0C ('The master's battle plan alters') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $08BF ('Master only makes me charge. It made');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jp c,
 ; TalkMsg08BF_MasterOnlyMakesMeChargeIt.call_start_message_command09_hl_b13); starts message $08BF
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Master only makes me
@@ -8447,10 +9816,16 @@ TalkMsg08BF_MasterOnlyMakesMeChargeIt::
     call StartMessageCommand09HL_B13
     ret
 
-; Great Log talk, the shopkeeper: before EVENT_REWARD_ITEM_OR_KEY_2, with an ArmyAnt (species $B9)
-; in a party of two or more 'Wait! Could I get you ...' in three scripts, otherwise 'I want to open
-; up ...' ($08C5); after it shop 1 opens: 'ArmyAnt helped me get my ...' once, then 'Welcome! How
-; may I serve ...', or $0D25 unless object 1 is at X $10 after the second shield. (C1, E-0357)
+; Great Log talk 127, the shopkeeper (scripts in bank $10): before EVENT_REWARD_ITEM_OR_KEY_2: the
+; first time sets EVENT_I_WANT_TO_OPEN_UP and says $08C5 ('I want to open up'); later, with an
+; ArmyAnt (MONSTER_ARMYANT, $B9, FindPartyIndexOfSpeciesTemp0) in the party, $08C7 ('Wait! Could I
+; get you') when it is the only member, else the 'Wait! Could I get you' scripts:
+; Script_WaitCouldIGet after EVENT_REWARD_ITEM_OR_KEY, otherwise Script_WaitCouldIGet_3 when the
+; last bag slot (wInventory + $17) is free ($00 or $FF) and Script_WaitCouldIGet_2 when it is not;
+; without an ArmyAnt $08C5 again. After EVENT_REWARD_ITEM_OR_KEY_2 it sets wScreenTableIndex = 1;
+; after EVENT_SCENE_SHIELD2_023 with object 1 at X $10 the shop opens (wDataBank = $10):
+; Script_ArmyAntHelpedMeGet once (setting EVENT_ARMY_ANT_HELPED_ME_GET), then
+; Script_WelcomeHowMayI_2; otherwise message $0D25 ('ArmyAnt's help means I can'). (C2, E-0377)
 GreatLogTalkEvents_Shopkeeper::
     ld de, EVENT_REWARD_ITEM_OR_KEY_2
     call TestFlagBit
@@ -8538,6 +9913,9 @@ GreatLogTalkEvents_Shopkeeper::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 128 (GreatLogTalkEvents): starts message $0A39 ('The man here has rare keys.
+; Doesn't') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A39 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The man here has rare keys. Doesn't' (E-0268, the E-0082 shape; was
 ; TalkMsg0A39_TheManHereHasRareKeys)
@@ -8546,6 +9924,21 @@ TalkMsg0A39_TheManHereHasRareKeys::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 129 (GreatLogTalkEvents), the King. Before EVENT_THANKS_FOR_COMING_BY_025: after
+; EVENT_SCENE_DARCK_DEFEATED message $053D ('King: GreatLog's crisis has passed.'); after
+; EVENT_SCENE_THREE_ITEMS $050F ('King: There have been many quakes.') once EVENT_SCENE_KAMEHA_BACK
+; is set, else $050E ('King: Kameha came back safely from') which sets EVENT_WHAT and
+; EVENT_SCENE_KAMEHA_BACK; otherwise $0A3C ('King: If you see Kameha again,'). After it, four rounds
+; of the same shape, each gated by the previous round's EVENT_HERO_RECEIVED_10_000_G / _20_000_G /
+; _30_000_G: with that round's EVENT_KING_IF_YOU_SEE flag (EVENT_KING_IF_YOU_SEE, _196, _199, _19C)
+; it adds 10,000, 20,000, 30,000 or 40,000 gold (AddGoldCapped) and starts
+; Script_KingAhYou(_2/_3/_4) ('King: Ah, you've finally caught the'); with its
+; EVENT_KING_YOU_WILL_I_KNEW flag (EVENT_KING_YOU_WILL_I_KNEW, _195, _198, _19B) message
+; $0B7F/$0B85/$0B88/$0B8B ('King: There is an evil master'); otherwise Script_KingOhIt(_2/_3/_4)
+; when TotalSpeciesFlaggedOrListed reaches 100, 120, 140 or 160, else $0B7B (round 1) or $0B82
+; ('King: I was right to trust'). After EVENT_HERO_RECEIVED_40_000_G, message $0B8D. Messages go
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to TalkMsg0A3C_KingIfYouSee.call_test_flag_bit2;
 ; flag $00D1 set: jr to TalkMsg0A3C_KingIfYouSee.call_start_message_command09_hl_b132; flag $0024
 ; set: jp to TalkMsg0A3C_KingIfYouSee.call_test_flag_bit); when none of them branches, starts
@@ -8760,6 +10153,15 @@ TalkMsg0A3C_KingIfYouSee::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 130 (GreatLogTalkEvents): before EVENT_THANKS_FOR_COMING_BY_025, message $0510
+; ('The frequent quakes have raised') after EVENT_SCENE_THREE_ITEMS, else $0A3E ('You're free to go
+; anywhere in'). After it, $0D93 ('We've had reports of rogue') until EVENT_KING_YOU_WILL_I_KNEW is
+; set; then it tests the King round flags latest first (EVENT_KING_IF_YOU_SEE_19C,
+; EVENT_KING_YOU_WILL_I_KNEW_19B, _199, _198, _196, _195, then EVENT_KING_IF_YOU_SEE): the first set
+; EVENT_KING_IF_YOU_SEE flag gives $0D94 ('Ah, bless you! As GreatLog's'), the first set
+; EVENT_KING_YOU_WILL_I_KNEW flag (or none) gives $0B8E ('It would be our Kingdom's'). Messages go
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to TalkMsg0A3E_YoureFreeToGo.call_test_flag_bit;
 ; flag $0024 set: jp to TalkMsg0A3E_YoureFreeToGo.call_start_message_command09_hl_b13); when none of
 ; them branches, starts message $0A3E through StartMessageCommand09HL_B13 (script command $09); that
@@ -8821,6 +10223,12 @@ TalkMsg0A3E_YoureFreeToGo::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 131 (GreatLogTalkEvents): message $0511 ('Beyond here is his Majesty') after
+; EVENT_THANKS_FOR_COMING_BY_025 or, before it, after EVENT_SCENE_KAMEHA_BACK; $0544 ('I can't eat
+; another... Zzz') after EVENT_SCENE_DARCK_DEFEATED (tested before EVENT_SCENE_KAMEHA_BACK);
+; otherwise $0A3F ('The King and Prince's chamber is'); each through StartMessageCommand09HL_B13
+; (script command 9 with the word in wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState =
+; 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A3F_TheKingAndPrinces.call_start_message_command09_hl_b13; flag $00D1 set: jr to
 ; TalkMsg0A3F_TheKingAndPrinces.call_start_message_command09_hl_b132; flag $0122 set: jr to
@@ -8852,8 +10260,8 @@ TalkMsg0A3F_TheKingAndPrinces::
     ret
 
 ; Talk: 'You're today's guest of honor!' ($0545) after Darck's defeat until
-; EVENT_THANKS_FOR_COMING_BY_025 is set; otherwise 'This is GreatLog Castle...' ($0A41). (C1,
-; E-0357)
+; EVENT_THANKS_FOR_COMING_BY_025 is set; otherwise 'This is GreatLog Castle...' ($0A41). (C2,
+; E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0A41, whose
 ; string begins 'This is GreatLog Castle. The reception' (E-0097)
@@ -8875,6 +10283,9 @@ Talk0A41_ThisIsGreatLogCastle::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 133 (GreatLogTalkEvents): starts message $0A42 ('The tavern just outside the Castle
+; is') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A42 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The tavern just outside the Castle is' (E-0268, the E-0082 shape; was
 ; TalkMsg0A42_TheTavernJustOutsideTheCastle)
@@ -8883,6 +10294,10 @@ TalkMsg0A42_TheTavernJustOutsideTheCastle::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 134 (GreatLogTalkEvents): message $0B52 ('Ah, the savior of GreatLog!') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0A43 ('Hey, welcome! All masters are welcome
+; here,'); both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0A43_HeyWelcomeAllMastersAreWelcome.call_start_message_command09_hl_b13); starts message
 ; $0A43 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Hey, welcome!
@@ -8901,6 +10316,9 @@ TalkMsg0A43_HeyWelcomeAllMastersAreWelcome::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 135 (GreatLogTalkEvents): starts message $0A44 ('When you breed, notice a number
+; after') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A44 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'When you breed, notice a number after' (E-0268, the E-0082 shape; was
 ; TalkMsg0A44_WhenYouBreedNoticeANumber)
@@ -8909,6 +10327,9 @@ TalkMsg0A44_WhenYouBreedNoticeANumber::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 136 (GreatLogTalkEvents): starts message $0A45 ('If you want to make a certain')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A45 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'If you want to make a certain' (E-0268, the E-0082 shape; was TalkMsg0A45_IfYouWantToMakeA)
 TalkMsg0A45_IfYouWantToMakeA::
@@ -8965,6 +10386,11 @@ Talk0A49_BreedingCouldResultIn::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 138 (GreatLogTalkEvents): message $0BB9 ('GreatLog appears to have returned') after
+; EVENT_THANKS_FOR_COMING_BY_025, $0517 ('GreatLog is sinking I heard,') after
+; EVENT_SCENE_THREE_ITEMS, otherwise $0A4A ('From up here people look like'); each through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A4A_FromUpHerePeople.call_start_message_command09_hl_b132; flag $0024 set: jp to
 ; TalkMsg0A4A_FromUpHerePeople.call_start_message_command09_hl_b13); when none of them branches,
@@ -8991,6 +10417,11 @@ TalkMsg0A4A_FromUpHerePeople::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 139 (GreatLogTalkEvents), a one-time vase: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_DRAKSCALE and
+; story flag $0126 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A3),
+; shows $A4 when the flag is already set and $A5 when the bag is full. (C2, E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $47, story
 ; flag $0126 in DE: when the flag is clear it gives item $47 (DrakScale) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -9004,6 +10435,11 @@ VaseItem_DrakScale::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 140 (GreatLogTalkEvents): message $0BBB ('Ah, GreatLog's savior! Are you') after
+; EVENT_THANKS_FOR_COMING_BY_025, $051F ('Right now, we are investigating') after
+; EVENT_SCENE_THREE_ITEMS, otherwise $0A4C ('GreatLog Castle was made by hollowing'); each through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A4C_GreatLogCastleWasMade.call_start_message_command09_hl_b132; flag $0024 set: jp to
 ; TalkMsg0A4C_GreatLogCastleWasMade.call_start_message_command09_hl_b13); when none of them
@@ -9030,6 +10466,11 @@ TalkMsg0A4C_GreatLogCastleWasMade::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 141 (GreatLogTalkEvents): message $0BBC ('The island has become more') after
+; EVENT_THANKS_FOR_COMING_BY_025, $0520 ('I've studied GreatLog over a') after
+; EVENT_SCENE_THREE_ITEMS, otherwise $0A4D ('The island used to be lush'); each through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A4D_TheIslandUsedTo.call_start_message_command09_hl_b132; flag $0024 set: jr to
 ; TalkMsg0A4D_TheIslandUsedTo.call_start_message_command09_hl_b13); when none of them branches,
@@ -9081,12 +10522,15 @@ Talk04BA_IfYouGetAn::
     ret
 
 ; Talk (the old key keeper): before EVENT_THANKS_FOR_COMING_BY_025, the 'I was once a great...'
-; script until EVENT_YOU_11D, then 'That key, I used on...' ($04CB). After it: with
-; EVENT_DESK_KEY_0C8 'There are still many things...'; with EVENT_DESK_KEY, the 'How good of you
-; to...' script (setting EVENT_THAT_KEY_IUSED_03E) once both chest battles 206 and 207 are done,
-; else 'Obtain the other key that...'; otherwise the first time 'I heard that you went...' (setting
-; EVENT_THAT_KEY_IUSED), later the 'Oh! Goodness!' script when an SRAM record byte is set
-; (Talk04CB_ThatKeyIUsed_CheckPartySpecies), else 'Those monsters don't surprise me.'. (C1, E-0357)
+; script (Script_IWasOnceA) until EVENT_YOU_11D, then 'That key, I used on...' ($04CB). After it:
+; with EVENT_DESK_KEY_0C8 'There are still many things...' ($0BB4); with EVENT_DESK_KEY, the 'How
+; good of you to...' script (Script_HowGoodOfYou, setting EVENT_THAT_KEY_IUSED_03E) once both
+; EVENT_SCENE_CHEST_BATTLE and EVENT_SCENE_CHEST_BATTLE_207 are set, else 'Obtain the other key
+; that...' ($0B4D); otherwise the first time 'I heard that you went...' ($0B4A, setting
+; EVENT_THAT_KEY_IUSED), later the 'Oh! Goodness!' script (Script_OhGoodnessI) when
+; Talk04CB_ThatKeyIUsed_CheckPartySpecies returns hTemp0 nonzero (a living party member is
+; LordDraco, Genosidoh, AsuraZoma, PsychoPiz or Darck; with an empty party hTemp0 is left as it
+; was), else 'Those monsters don't surprise me.' ($0B4B). (C2, E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5
 ; constant message(s) depending on story flags and state; the first one in the code is $04CB, whose
 ; string begins 'That key, I used on my' (E-0097)
@@ -9163,7 +10607,7 @@ Talk04CB_ThatKeyIUsed::
 
 ; Checking the shelf: after EVENT_HERO_CHECKED_THE_SHELF 'Souvenirs from...' ($04CC); otherwise
 ; tries a new key (GenerateNewKeyEntry): got one, '0 obtained...' ($04CD) and the flag is set; else
-; '0 found...' ($04CE). (C1, E-0357)
+; '0 found...' ($04CE). (C2, E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $04CE, whose
 ; string begins '0 checked the shelf. 0 found' (E-0097)
@@ -9191,6 +10635,9 @@ Talk04CE_HeroCheckedTheShelf::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 145 (GreatLogTalkEvents): starts message $04CF ('<BUF0> peered into the vase. It
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $04CF through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg04CF_HeroPeeredIntoTheVaseIt)
@@ -9239,6 +10686,9 @@ GreatLogTalkEvents_ShowItsExcitingToThink::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 147 (GreatLogTalkEvents): starts message $0299 ('I'm apprenticing under the boss.
+; He told') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0299 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I'm apprenticing under the boss. He told' (E-0268, the E-0082 shape; was
 ; TalkMsg0299_ImApprenticingUnderTheBoss)
@@ -9247,6 +10697,9 @@ TalkMsg0299_ImApprenticingUnderTheBoss::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 148 (GreatLogTalkEvents): starts message $029A ('Day after day, I examine keys.
+; But') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $029A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Day after day, I examine keys. But' (E-0268, the E-0082 shape; was
 ; TalkMsg029A_DayAfterDayIExamineKeys)
@@ -9255,10 +10708,14 @@ TalkMsg029A_DayAfterDayIExamineKeys::
     call StartMessageCommand09HL_B13
     ret
 
-; Returns at once (a Great Log talk with nothing to say). (C1, E-0357)
+; Returns at once (a Great Log talk with nothing to say). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_NothingToSay::
     ret
 
+; Great Log talk 152 (GreatLogTalkEvents): message $0B05 ('This rope, it was not') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0504 ('If the island sink, is no'); both through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jp to
 ; TalkMsg0504_IfTheIslandSink.call_start_message_command09_hl_b13); when none of them branches,
 ; starts message $0504 through StartMessageCommand09HL_B13 (script command $09); that string begins
@@ -9276,6 +10733,20 @@ TalkMsg0504_IfTheIslandSink::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 153 (GreatLogTalkEvents), Kameha. Before EVENT_THANKS_FOR_COMING_BY_025: message
+; $053E ('Kameha: I couldn't do anything, so') after EVENT_SCENE_DARCK_DEFEATED, else $0512
+; ('Kameha: Yo, <BUF0>. Thanks for coming.'). After it, two rounds, the second after
+; EVENT_HERO_RECEIVED_THE_ELF_KEY: after its key battle flag (EVENT_SCENE_KAMEHA_KEY_BATTLE, then
+; EVENT_SCENE_KAMEHA_KEY_BATTLE2) Kameha gives a key of kind 7 (round 2: kind 9): when that kind is
+; already in wKeyList a random one (GenerateNewKeyEntry, Script_KamehaWhatOhIt_2/_4); otherwise,
+; with room, WriteKeyEntryTemp0 writes kind 7 or 9 to the next free entry, with bit 6 set ($47/$49)
+; after EVENT_KEY_BOSS_BEATEN_203 / EVENT_KEY_BOSS_BEATEN_2_205, and starts Script_KamehaWhatOhIt /
+; _3; a full key list gives message $0B96 ('Kameha: What? Oh, it's <BUF0>. Did'). Before the battle
+; flag: Script_KamehaI / _2 ('Kameha: I've gone to other worlds') when TotalSpeciesFlaggedOrListed
+; reaches 50 (round 2: 150), else $0D92 ('Kameha: I think I have the') or $0B98 ('Kameha: Watch me,
+; I'm going to'). After EVENT_HERO_RECEIVED_THE_TRAVELER_KEY, message $0B98. Messages go through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0512_KamehaYoHeroThanks.call_test_flag_bit; flag $00D1 set: jr to
 ; TalkMsg0512_KamehaYoHeroThanks.call_start_message_command09_hl_b13); when none of them branches,
@@ -9431,6 +10902,11 @@ TalkMsg0512_KamehaYoHeroThanks::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 154 (GreatLogTalkEvents), a one-time chest: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_LIFEACORN
+; and story flag $011B in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
+; wModeState = 1). That command gives the item and sets the flag when the flag is clear (group-0
+; message $A0), shows $A1 when the flag is already set and $A2 when the bag is full. (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $11, story flag $011B in DE: when the flag is clear it gives item $11 (LifeAcorn) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -9444,6 +10920,11 @@ ChestItem_LifeAcorn_Flag011B::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 155 (GreatLogTalkEvents), a one-time chest: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_QUEST and
+; story flag $011C in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A0),
+; shows $A1 when the flag is already set and $A2 when the bag is full. (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $13, story flag $011C in DE: when the flag is clear it gives item $13 (Quest) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -9483,7 +10964,8 @@ Talk04C0_AllRightyWellDo::
     ret
 
 ; Arena desk: 'If you want to enter,...' ($0276) at arena rank 0; the 'Welcome to the Arena!' script
-; at ranks 1-4 (Script_WelcomeToTheArena_3) and at rank 5 (Script_WelcomeToTheArena_4). (C1, E-0357)
+; at ranks 1-4 (Script_WelcomeToTheArena_3) and at rank 5 (Script_WelcomeToTheArena_4). (C2, E-0357;
+; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0276, whose
 ; string begins 'If you want to enter, please' (E-0097)
@@ -9507,6 +10989,9 @@ Talk0276_IfYouWantTo::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 159 (GreatLogTalkEvents): starts Script_Encounter through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is a
+; single script_encounter command (encounter words $1A: Slime, Slime, Slime). (C2, E-0377)
 ; starts Script_Encounter (StartScriptAtHL_B13) (E-0271; was Talk_SlimeEncounter) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_SlimeEncounter; named after the
 ; script it starts, Script_Encounter, which is script_encounter $1A: Slime, Slime, Slime)
@@ -9516,9 +11001,15 @@ Talk_SlimeEncounter::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 158 (GreatLogTalkEvents): returns at once until EVENT_SCENE_DARCK_DEFEATED is set;
+; then starts Script_TaraHeroCongratulationsI ('Tara: <BUF0>, congratulations! I was sad'), or
+; Script_CobiHeroCongratulationsI ('Cobi: <BUF0>, congratulations!') when EVENT_NEVER_SET (flag 0)
+; is set; either through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest
+; = $80, wModeState = 1). (C2, E-0377)
 ; map event: with story flag $D1 set, starts script $56F5 if flag 0 is set, else $5709 (E-0122)
-; (E-0344: the address in its name dropped or read as the label there; was StartScriptOrIfFlagD1)
-StartScriptOrIfFlagD1::
+; (E-0344: the address in its name dropped or read as the label there; was
+; GreatLogTalkEvents_CongratulationsAfterDarck)
+GreatLogTalkEvents_CongratulationsAfterDarck::
     ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
@@ -9534,6 +11025,9 @@ StartScriptOrIfFlagD1::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 160 (GreatLogTalkEvents): starts message $0024 ('<BUF0> checked the dresser.
+; Children's clothes were') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0024 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the dresser. Children's clothes were' (E-0268, the E-0082 shape; was
 ; TalkMsg0024_HeroCheckedTheDresserChildrens)
@@ -9542,6 +11036,9 @@ TalkMsg0024_HeroCheckedTheDresserChildrens::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 161 (GreatLogTalkEvents): starts message $0025 ('<BUF0> checked the dresser. It
+; smelled of') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0025 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the dresser. It smelled of' (E-0268, the E-0082 shape; was
 ; TalkMsg0025_HeroCheckedTheDresserItSmelled)
@@ -9550,6 +11047,9 @@ TalkMsg0025_HeroCheckedTheDresserItSmelled::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 162 (GreatLogTalkEvents): starts message $001D ('<BUF0> peered into the barrel. It
+; is') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $001D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the barrel. It is' (E-0268, the E-0082 shape; was
 ; TalkMsg001D_HeroPeeredIntoTheBarrelIt)
@@ -9558,6 +11058,9 @@ TalkMsg001D_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 163 (GreatLogTalkEvents): starts message $001C ('<BUF0> checked the pump. It's
+; rusted and') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $001C through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the pump. It's rusted and' (E-0268, the E-0082 shape; was
 ; TalkMsg001C_HeroCheckedThePumpItsRusted)
@@ -9578,6 +11081,10 @@ GreatLogTalkEvents_Healer::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; Great Log talk 165 (GreatLogTalkEvents): starts message $0037 ('<BUF0> tried to open the chest.
+; But') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). Talk0037_HeroTriedToOpen (talk
+; 171) shows the same message only when a screen tile matches. (C2, E-0377)
 ; starts message $0037 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 tried to open the chest. But' (E-0268, the E-0082 shape; was
 ; TalkMsg0037_HeroTriedToOpenTheChest_13) (E-0344: the address in its name dropped or read as the
@@ -9587,8 +11094,8 @@ TalkMsg0037_HeroTriedToOpenTheChest_13::
     call StartMessageCommand09HL_B13
     ret
 
-; Great Log talk, a shop: shop $17 with scripts in bank $10, 'Hello! What can I do ...'. (C1,
-; E-0357)
+; Great Log talk, a shop: shop $17 with scripts in bank $10, 'Hello! What can I do ...'. (C2,
+; E-0357; probed E-0377)
 GreatLogTalkEvents_Shop::
     ld a, $17
     ld [wScreenTableIndex], a
@@ -9599,7 +11106,7 @@ GreatLogTalkEvents_Shop::
     ret
 
 ; Great Log talk, Terry: gives 10,000 gold (AddGoldCapped) with 'Here, just take this. <hero> ...'
-; ($00FE). (C1, E-0357)
+; ($00FE). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowTerryHereJustTake::
     ld hl, $2710
     ld a, l
@@ -9611,6 +11118,9 @@ GreatLogTalkEvents_ShowTerryHereJustTake::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 168 (GreatLogTalkEvents): starts message $0D4E ('I'm digging here because I think
+; this') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0D4E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I'm digging here because I think this' (E-0268, the E-0082 shape; was
 ; TalkMsg0D4E_ImDiggingHereBecauseIThink)
@@ -9620,7 +11130,7 @@ TalkMsg0D4E_ImDiggingHereBecauseIThink::
     ret
 
 ; The odd object: '0 checked the odd object...' ($0043) before the Warubou food scene and after
-; EVENT_THANKS_FOR_COMING_BY_025; nothing in between. (C1, E-0357)
+; EVENT_THANKS_FOR_COMING_BY_025; nothing in between. (C2, E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0043, whose
 ; string begins '0 checked the odd object. It' (E-0097)
@@ -9640,7 +11150,7 @@ Talk0043_HeroCheckedTheOdd::
 ; Talk: 'There were many wild monsters...' ($0036) at first and after
 ; EVENT_THANKS_FOR_COMING_BY_025; after the Warubou food scene 'The island is sinking? Hahah,...'
 ; ($0076), after the long-faces scene 'They say you use Magic...' ($0D00), after the three-items
-; scene 'When things are tough, you...' ($050A). (C1, E-0357)
+; scene 'When things are tough, you...' ($050A). (C2, E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4
 ; constant message(s) depending on story flags and state; the first one in the code is $0036, whose
 ; string begins 'There were many wild monsters in' (E-0097)
@@ -9678,8 +11188,8 @@ Talk0036_ThereWereManyWild::
     call StartMessageCommand09HL_B13
     ret
 
-; The chest: '0 tried to open the chest.' ($0037) when the tile at screen buffer $D2 is $1A. (C1,
-; E-0357)
+; The chest: '0 tried to open the chest.' ($0037) when the tile at screen buffer $D2 is $1A. (C2,
+; E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0037, whose
 ; string begins '0 tried to open the chest.' (E-0097)
@@ -9691,10 +11201,15 @@ Talk0037_HeroTriedToOpen::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 172 (GreatLogTalkEvents): sets wScreenTableIndex = 1, starts Script_I_10 ('I'm a
+; traveling merchant.') through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script,
+; wScriptStartRequest = $80, wModeState = 1), then sets wDataBank = $0E; the same start as the first
+; branch of Talk0A49_BreedingCouldResultIn, without its flag tests. (C2, E-0377)
 ; wScreenTableIndex = 1, StartScriptAtHL_B13 with HL = $5660, then wDataBank = $0E (E-0119) (E-0344:
-; the address in its name dropped or read as the label there; was StartScriptWithBank0E)
+; the address in its name dropped or read as the label there; was
+; GreatLogTalkEvents_TravelingMerchant)
 ; starts Script_I_10: '*: I'm a traveling merchant. I'm' (E-0248)
-StartScriptWithBank0E::
+GreatLogTalkEvents_TravelingMerchant::
     ld a, $01
     ld [wScreenTableIndex], a
     ld hl, Script_I_10 ; script '*: I'm a traveling merchant. I'm'
@@ -9703,6 +11218,11 @@ StartScriptWithBank0E::
     ld [wDataBank], a
     ret
 
+; Great Log talk 173 (GreatLogTalkEvents): message $0B48 ('My master has gotten good.') after
+; EVENT_THANKS_FOR_COMING_BY_025, $0529 ('Grandpa and the others are') after
+; EVENT_SCENE_THREE_ITEMS, otherwise $0268 ('Yep, she's taking good care of'); each through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0268_YepShesTakingGood.call_start_message_command09_hl_b132; flag $0024 set: jr to
 ; TalkMsg0268_YepShesTakingGood.call_start_message_command09_hl_b13); when none of them branches,
@@ -9729,6 +11249,9 @@ TalkMsg0268_YepShesTakingGood::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 174 (GreatLogTalkEvents): starts message $022E ('Snivel... This book is so')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $022E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Snivel This book is so sad' (E-0268, the E-0082 shape; was TalkMsg022E_SnivelThisBookIsSoSad)
 TalkMsg022E_SnivelThisBookIsSoSad::
@@ -9736,6 +11259,9 @@ TalkMsg022E_SnivelThisBookIsSoSad::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 175 (GreatLogTalkEvents): starts message $022F ('Even I can cast spells if I')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $022F through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Even I can cast spells if I' (E-0268, the E-0082 shape; was TalkMsg022F_EvenICanCastSpellsIf)
 TalkMsg022F_EvenICanCastSpellsIf::
@@ -9743,6 +11269,10 @@ TalkMsg022F_EvenICanCastSpellsIf::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 176 (GreatLogTalkEvents): message $0B33 ('Papa is a famous monster') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0242 ('My dad's a famous monster master. I'm');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg0242_MyDadsAFamousMonsterMaster.call_start_message_command09_hl_b13); starts message $0242
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'My dad's a famous
@@ -9760,6 +11290,10 @@ TalkMsg0242_MyDadsAFamousMonsterMaster::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 177 (GreatLogTalkEvents): starts message $02B1 ('<BUF0> peered into the oven. It
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). Great Log talk 200
+; (TalkMsg02B1_HeroPeeredIntoTheOvenIt_13) is an identical copy. (C2, E-0377)
 ; starts message $02B1 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg02B1_HeroPeeredIntoTheOvenIt)
@@ -9769,7 +11303,7 @@ TalkMsg02B1_HeroPeeredIntoTheOvenIt::
     ret
 
 ; Great Log talk: 'Want to know how the ...' in three scripts by progress (after the rival, after
-; the mermaid kingdom). (C1, E-0357)
+; the mermaid kingdom). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_WantToKnowHow::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
@@ -9791,6 +11325,10 @@ GreatLogTalkEvents_WantToKnowHow::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 179 (GreatLogTalkEvents): message $0B07 ('A world with lots of') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $02A6 ('Putting up a bridge is easy!'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jp c,
 ; TalkMsg02A6_PuttingUpABridgeIsEasy.call_start_message_command09_hl_b13); starts message $02A6
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Putting up a bridge
@@ -9808,6 +11346,10 @@ TalkMsg02A6_PuttingUpABridgeIsEasy::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 180 (GreatLogTalkEvents): message $0B09 ('Listen, even in other worlds,') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0209 ('Did you know? You can record in'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jp c,
 ; TalkMsg0209_DidYouKnowYouCanRecord.call_start_message_command09_hl_b13); starts message $0209
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Did you know? You
@@ -9825,6 +11367,9 @@ TalkMsg0209_DidYouKnowYouCanRecord::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 181 (GreatLogTalkEvents): starts message $0A51 ('When a', then a star mark,
+; 'appears by a monster's level') through StartMessageCommand09HL_B13 (script command 9 with the
+; word in wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A51 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'When a appears by a monster's level' (E-0268, the E-0082 shape; was
 ; TalkMsg0A51_WhenAAppearsByAMonsters)
@@ -9834,6 +11379,9 @@ TalkMsg0A51_WhenAAppearsByAMonsters::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 182 (GreatLogTalkEvents): starts Script_DoYouWantTo ('Do you want to know') through
+; StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1).
+; (C2, E-0377)
 ; starts Script_DoYouWantTo (StartScriptAtHL_B13); its first message begins 'Do you want to know
 ; how' (E-0271; was Talk_DoYouWantToKnowHow) (E-0344: the address in its name dropped or read as the
 ; label there; was Talk_DoYouWantToKnowHow; shortened from TalkScript_DoYouWantToKnowHow)
@@ -9879,7 +11427,7 @@ Talk08D1_TheEvaluatorSaidI::
 
 ; Talk: 'Up ahead is the Starry...' ($04D2 at arena rank 0, $0D0C later); after the mermaid kingdom
 ; scene 'Go down these stairs to...' ($08D2); after EVENT_THANKS_FOR_COMING_BY_025 'The Evaluator's
-; singing is magic.' ($0B25). (C1, E-0357)
+; singing is magic.' ($0B25). (C2, E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4
 ; constant message(s) depending on story flags and state; the first one in the code is $04D2, whose
 ; string begins 'Up ahead is the Starry Shrine' (E-0097)
@@ -9912,6 +11460,10 @@ Talk04D2_UpAheadIsThe::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 185 (GreatLogTalkEvents): message $0B12 ('A bard demanded to battle') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $021F ('Do you know about LogTwig? It's'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg021F_DoYouKnowAbout.call_start_message_command09_hl_b13); when none of them branches,
 ; starts message $021F through StartMessageCommand09HL_B13 (script command $09); that string begins
@@ -9929,6 +11481,11 @@ TalkMsg021F_DoYouKnowAbout::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 186 (GreatLogTalkEvents): message $0B13 ('I just happened to come') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0220 ('In other worlds, you'll meet other');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). Great Log talk 235
+; (TalkMsg0220_InOtherWorldsYoull_2) is an identical copy. (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0220_InOtherWorldsYoull.call_start_message_command09_hl_b13); when none of them branches,
 ; starts message $0220 through StartMessageCommand09HL_B13 (script command $09); that string begins
@@ -9946,6 +11503,10 @@ TalkMsg0220_InOtherWorldsYoull::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 187 (GreatLogTalkEvents): message $0B76 ('Have you become a pro') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $027F ('It's not easy to win right'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg027F_ItsNotEasyTo.call_start_message_command09_hl_b13); when none of them branches, starts
 ; message $027F through StartMessageCommand09HL_B13 (script command $09); that string begins 'It's
@@ -9963,6 +11524,10 @@ TalkMsg027F_ItsNotEasyTo::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 188 (GreatLogTalkEvents): message $0B77 ('My Mama gets so ahead') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0280 ('Mama is a big worrier...'); both through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0280_MamaIsABig.call_start_message_command09_hl_b13); when none of them branches, starts
 ; message $0280 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Mama
@@ -9980,6 +11545,9 @@ TalkMsg0280_MamaIsABig::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 189 (GreatLogTalkEvents): starts message $0284 ('I come to watch every day. The')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0284 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I come to watch every day. The' (E-0268, the E-0082 shape; was TalkMsg0284_IComeToWatchEveryDay)
 TalkMsg0284_IComeToWatchEveryDay::
@@ -9987,6 +11555,9 @@ TalkMsg0284_IComeToWatchEveryDay::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 190 (GreatLogTalkEvents): starts message $0285 ('Monsters mirror their masters. The
+; plans you') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0285 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Monsters mirror their masters. The plans you' (E-0268, the E-0082 shape; was
 ; TalkMsg0285_MonstersMirrorTheirMasters)
@@ -9995,6 +11566,9 @@ TalkMsg0285_MonstersMirrorTheirMasters::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 191 (GreatLogTalkEvents): starts message $0288 ('My husband is a master still. He')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0288 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'My husband is a master still. He' (E-0268, the E-0082 shape; was
 ; TalkMsg0288_MyHusbandIsAMasterStill)
@@ -10004,6 +11578,9 @@ TalkMsg0288_MyHusbandIsAMasterStill::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 192 (GreatLogTalkEvents): starts Script_HelloThereDoYou ('Hello there. Do you
+; know') through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80,
+; wModeState = 1). (C2, E-0377)
 ; starts Script_HelloThereDoYou (StartScriptAtHL_B13); its first message begins 'Hello there. Do you
 ; know about' (E-0271; was Talk_HelloThereDoYouKnowAbout) (E-0344: the address in its name dropped
 ; or read as the label there; was Talk_HelloThereDoYouKnowAbout; shortened from
@@ -10014,6 +11591,9 @@ Talk_HelloThereDoYouKnowAbout::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 193 (GreatLogTalkEvents): starts message $0293 ('If you win in the S Class,')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0293 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'If you win in the S Class,' (E-0268, the E-0082 shape; was TalkMsg0293_IfYouWinInTheS)
 TalkMsg0293_IfYouWinInTheS::
@@ -10021,6 +11601,9 @@ TalkMsg0293_IfYouWinInTheS::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 194 (GreatLogTalkEvents): starts message $0295 ('In an Arena battle, you can't
+; command') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0295 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'In an Arena battle, you can't command' (E-0268, the E-0082 shape; was
 ; TalkMsg0295_InAnArenaBattleYouCant)
@@ -10029,6 +11612,10 @@ TalkMsg0295_InAnArenaBattleYouCant::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 195 (GreatLogTalkEvents): message $0B68 ('Monsters that are caught at') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $027B ('Which to take? Monsters you've raised,');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg027B_WhichToTakeMonstersYouve.call_start_message_command09_hl_b13); starts message $027B
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'Which to take?
@@ -10047,6 +11634,10 @@ TalkMsg027B_WhichToTakeMonstersYouve::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 196 (GreatLogTalkEvents): message $0B69 ('When you're at the pro') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $027C ('You need luck on your side to'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags (flag 0025 then jr c,
 ; TalkMsg027C_YouNeedLuckOnYourSide.call_start_message_command09_hl_b13); starts message $027C
 ; through StartMessageCommand09HL_B13 (script command $09); that string begins 'You need luck on
@@ -10064,6 +11655,9 @@ TalkMsg027C_YouNeedLuckOnYourSide::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 197 (GreatLogTalkEvents): starts message $029C ('<BUF0> peered into the oven. It
+; greedily') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $029C through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It greedily' (E-0268, the E-0082 shape; was
 ; TalkMsg029C_HeroPeeredIntoTheOvenIt)
@@ -10072,6 +11666,9 @@ TalkMsg029C_HeroPeeredIntoTheOvenIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 198 (GreatLogTalkEvents): starts message $029D ('<BUF0> peered into the vase. It
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $029D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg029D_HeroPeeredIntoTheVaseIt)
@@ -10080,6 +11677,11 @@ TalkMsg029D_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 199 (GreatLogTalkEvents), a one-time vase: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_TINYMEDAL and
+; story flag $0132 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A3),
+; shows $A4 when the flag is already set and $A5 when the bag is full. (C2, E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
 ; flag $0132 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -10093,6 +11695,10 @@ VaseItem_TinyMedal_Flag0132::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 200 (GreatLogTalkEvents): starts message $02B1 ('<BUF0> peered into the oven. It
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). An identical copy of Great Log
+; talk 177 (TalkMsg02B1_HeroPeeredIntoTheOvenIt). (C2, E-0377)
 ; starts message $02B1 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the oven. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg02B1_HeroPeeredIntoTheOvenIt_13) (E-0344: the address in its name dropped or read as the
@@ -10102,6 +11708,9 @@ TalkMsg02B1_HeroPeeredIntoTheOvenIt_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 201 (GreatLogTalkEvents): starts message $0225 ('<BUF0> peered into the vase. There
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0225 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. There was' (E-0268, the E-0082 shape; was
 ; TalkMsg0225_HeroPeeredIntoTheVaseThere)
@@ -10110,6 +11719,11 @@ TalkMsg0225_HeroPeeredIntoTheVaseThere::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 202 (GreatLogTalkEvents), a one-time vase: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_TINYMEDAL and
+; story flag $0130 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A3),
+; shows $A4 when the flag is already set and $A5 when the bag is full. (C2, E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
 ; flag $0130 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -10123,6 +11737,9 @@ VaseItem_TinyMedal_Flag0130::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 203 (GreatLogTalkEvents): starts message $024A ('<BUF0> checked the plush doll. It
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $024A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the plush doll. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg024A_HeroCheckedThePlushDollIt)
@@ -10133,7 +11750,7 @@ TalkMsg024A_HeroCheckedThePlushDollIt::
 
 ; Great Log talk 204: far-calls GreatLogTalkEvents_Talk204_PassCheck, which clears hTemp1, so the
 ; bit-7 test never returns early: sets the tile action to 0 and runs the strongest-master scene
-; script. (C1, E-0357)
+; script. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_Talk204::
     farcall GreatLogTalkEvents_Talk204_PassCheck
     ldh a, [hTemp1]
@@ -10146,7 +11763,7 @@ GreatLogTalkEvents_Talk204::
 
 ; Great Log talk: after EVENT_REWARD_ITEM_OR_KEY_2_1A5 and before receiving it, a TinyMedal (item
 ; $2C) with 'Here it is-the TinyMedal.' (or $0D45 when the bag is full); otherwise 'Hup, hup, hup!'
-; ($0D26), or 'When master's shop starts making ...' ($0B15) at the end. (C1, E-0357)
+; ($0D26), or 'When master's shop starts making ...' ($0B15) at the end. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowHereItIstheTinyMedal::
     ld de, EVENT_REWARD_ITEM_OR_KEY_2_1A5
     call TestFlagBit
@@ -10184,6 +11801,9 @@ GreatLogTalkEvents_ShowHereItIstheTinyMedal::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 206 (GreatLogTalkEvents): starts message $0245 ('<BUF0> peered into the vase. It
+; was') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0245 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg0245_HeroPeeredIntoTheVaseIt_13) (E-0344: the address in its name dropped or read as the
@@ -10194,7 +11814,7 @@ TalkMsg0245_HeroPeeredIntoTheVaseIt_13::
     ret
 
 ; Talk: adds 100 to the party's INT (capped at 999; AddHundredToPartyINTCapped999) and says 'You
-; have to eat your...' ($00FC). (C1, E-0357)
+; have to eat your...' ($00FC). (C2, E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $00FC, whose
 ; string begins 'You have to eat your vegetables!' (E-0097)
@@ -10204,6 +11824,10 @@ Talk00FC_YouHaveToEat::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 208 (GreatLogTalkEvents): message $0B51 ('If you find even more') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0A74 ('The Medal Master was famous as'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A74_TheMedalMasterWas.call_start_message_command09_hl_b13); when none of them branches,
 ; starts message $0A74 through StartMessageCommand09HL_B13 (script command $09); that string begins
@@ -10221,10 +11845,14 @@ TalkMsg0A74_TheMedalMasterWas::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 209 (GreatLogTalkEvents): returns at once until EVENT_SCENE_SHIELD2_023 is set;
+; then starts Script_PrinceKamehaHasBeen_2 (sets EVENT_PRINCE_KAMEHA_HAS_BEEN, runs
+; SCRIPT_SCENE_KAMEHA_MISSING, 'Prince Kameha has been missing') through StartScriptAtHL_B13
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; when story flag $23 is set, StartScriptAtHL_B13 with HL = $57A2 (E-0119) (E-0344: the address in
-; its name dropped or read as the label there; was IfFlag0023StartScript)
+; its name dropped or read as the label there; was GreatLogTalkEvents_PrinceKamehaMissing)
 ; starts Script_PrinceKamehaHasBeen_2: '*: Prince Kameha has been missing' (E-0248)
-IfFlag0023StartScript::
+GreatLogTalkEvents_PrinceKamehaMissing::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
     ret nc
@@ -10232,6 +11860,11 @@ IfFlag0023StartScript::
     call StartScriptAtHL_B13
     ret
 
+; Great Log talk 210 (GreatLogTalkEvents), a one-time barrel: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_TINYMEDAL
+; and story flag $013C in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
+; wModeState = 1). That command gives the item and sets the flag when the flag is clear (group-0
+; message $A6), shows $A7 when the flag is already set and $A8 when the bag is full. (C2, E-0377)
 ; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story
 ; flag $013C in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
@@ -10245,6 +11878,11 @@ BarrelItem_TinyMedal_Flag013C::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 211 (GreatLogTalkEvents), a one-time vase: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_SIRLOIN and
+; story flag $013D in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A3),
+; shows $A4 when the flag is already set and $A5 when the bag is full. (C2, E-0377)
 ; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $1C, story
 ; flag $013D in DE: when the flag is clear it gives item $1C (Sirloin) and sets the flag (message
 ; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
@@ -10258,6 +11896,10 @@ VaseItem_Sirloin::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 212 (GreatLogTalkEvents): message $0B0A ('Bugs like me grow super-quick!') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0A35 ('I'm a bug, so I'm not'); both through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jp to
 ; TalkMsg0A35_ImABugSo.call_start_message_command09_hl_b13); when none of them branches, starts
 ; message $0A35 through StartMessageCommand09HL_B13 (script command $09); that string begins 'I'm a
@@ -10275,6 +11917,9 @@ TalkMsg0A35_ImABugSo::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 213 (GreatLogTalkEvents): starts message $0A34 ('Uheheheh, did you know this?
+; Zombies like') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0A34 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Uheheheh, did you know this? Zombies like' (E-0268, the E-0082 shape; was
 ; TalkMsg0A34_UhehehehDidYouKnowThisZombies)
@@ -10283,6 +11928,10 @@ TalkMsg0A34_UhehehehDidYouKnowThisZombies::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 214 (GreatLogTalkEvents): message $0BBD ('There's something wrong with Emyu...')
+; once EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0A68 ('My Emyu is very timid. I'); both
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A68_MyEmyuIsVery.call_start_message_command09_hl_b13); when none of them branches, starts
 ; message $0A68 through StartMessageCommand09HL_B13 (script command $09); that string begins 'My
@@ -10300,6 +11949,12 @@ TalkMsg0A68_MyEmyuIsVery::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 215 (GreatLogTalkEvents): message $0BBE ('Hey, hey, hey! We have') after
+; EVENT_THANKS_FOR_COMING_BY_025, $0A6C ('I should be more assertive.') after
+; EVENT_MONSTERS_LOOK_SO_FRIGHTENING, otherwise $0A6B ('Monsters look so frightening... Yes, I');
+; each through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). This routine does not set
+; EVENT_MONSTERS_LOOK_SO_FRIGHTENING. (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A6B_MonstersLookSoFrightening.call_start_message_command09_hl_b132; flag $0136 set: jr to
 ; TalkMsg0A6B_MonstersLookSoFrightening.call_start_message_command09_hl_b13); when none of them
@@ -10327,7 +11982,8 @@ TalkMsg0A6B_MonstersLookSoFrightening::
     ret
 
 ; Talk: 'You're today's guest of honor!' ($0545) after Darck's defeat until
-; EVENT_THANKS_FOR_COMING_BY_025; otherwise 'Please enter. The King awaits...' ($0A40). (C1, E-0357)
+; EVENT_THANKS_FOR_COMING_BY_025; otherwise 'Please enter. The King awaits...' ($0A40). (C2, E-0357;
+; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0A40, whose
 ; string begins 'Please enter. The King awaits you' (E-0097)
@@ -10349,6 +12005,11 @@ Talk0A40_PleaseEnterTheKing::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 217 (GreatLogTalkEvents): message $0BBA ('I'm feeling invigorated too.') after
+; EVENT_THANKS_FOR_COMING_BY_025, $0518 ('I've never once left the') after EVENT_SCENE_THREE_ITEMS,
+; otherwise $0A4B ('On the horizon, you can see'); each through StartMessageCommand09HL_B13 (script
+; command 9 with the word in wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2,
+; E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0A4B_OnTheHorizonYou.call_start_message_command09_hl_b132; flag $0024 set: jp to
 ; TalkMsg0A4B_OnTheHorizonYou.call_start_message_command09_hl_b13); when none of them branches,
@@ -10375,6 +12036,9 @@ TalkMsg0A4B_OnTheHorizonYou::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 218 (GreatLogTalkEvents): starts message $04D1 ('There are times when you have to')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $04D1 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'There are times when you have to' (E-0268, the E-0082 shape; was
 ; TalkMsg04D1_ThereAreTimesWhenYouHave)
@@ -10387,7 +12051,7 @@ TalkMsg04D1_ThereAreTimesWhenYouHave::
 ; other edition's), later kind $0C after EVENT_THAT_KEY_IUSED_03E; with bit 6 when the matching
 ; EVENT_SCENE_CHEST_BATTLE flag is set; 'checked the desk.' scripts; a random new key
 ; (GenerateNewKeyEntry) instead when the kind is already held, setting EVENT_DESK_KEY/_0C8; 'found a
-; Magic Key. But ...' when the key list is full. (C1, E-0357)
+; Magic Key. But ...' when the key list is full. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld de, EVENT_DESK_KEY_0C8
     call TestFlagBit
@@ -10556,6 +12220,9 @@ GreatLogTalkEvents_ShowHeroFoundAMagic::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 220 (GreatLogTalkEvents): starts message $0519 ('This is a time we need Warubou's')
+; through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0519 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'This is a time we need Warubou's' (E-0268, the E-0082 shape; was TalkMsg0519_ThisIsATimeWeNeed)
 TalkMsg0519_ThisIsATimeWeNeed::
@@ -10563,6 +12230,9 @@ TalkMsg0519_ThisIsATimeWeNeed::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 221 (GreatLogTalkEvents): starts message $051A ('I didn't want to believe GreatLog
+; is') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $051A through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I didn't want to believe GreatLog is' (E-0268, the E-0082 shape; was
 ; TalkMsg051A_IDidntWantToBelieveGreatLog)
@@ -10571,6 +12241,9 @@ TalkMsg051A_IDidntWantToBelieveGreatLog::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 222 (GreatLogTalkEvents): starts message $051B ('I won't believe that GreatLog is
+; sinking.') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $051B through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'I won't believe that GreatLog is sinking.' (E-0268, the E-0082 shape; was
 ; TalkMsg051B_IWontBelieveThatGreatLog)
@@ -10579,6 +12252,9 @@ TalkMsg051B_IWontBelieveThatGreatLog::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 223 (GreatLogTalkEvents): starts message $051C ('The King said that GreatLog will
+; not') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $051C through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The King said that GreatLog will not' (E-0268, the E-0082 shape; was
 ; TalkMsg051C_TheKingSaidThatGreatLogWill)
@@ -10587,6 +12263,9 @@ TalkMsg051C_TheKingSaidThatGreatLogWill::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 224 (GreatLogTalkEvents): starts message $051D ('Everyone, please remain calm. Even
+; if GreatLog') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $051D through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Everyone, please remain calm. Even if GreatLog' (E-0268, the E-0082 shape; was
 ; TalkMsg051D_EveryonePleaseRemainCalm)
@@ -10595,6 +12274,9 @@ TalkMsg051D_EveryonePleaseRemainCalm::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 225 (GreatLogTalkEvents): starts message $051E ('The GreatLog tree appeared to be
+; healthy') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $051E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'The GreatLog tree appeared to be healthy' (E-0268, the E-0082 shape; was
 ; TalkMsg051E_TheGreatLogTreeAppearedTo)
@@ -10603,6 +12285,9 @@ TalkMsg051E_TheGreatLogTreeAppearedTo::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 226 (GreatLogTalkEvents): starts message $055E ('<BUF0> checked the bookshelf.
+; "Magic Keys..."') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $055E through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; '0 checked the bookshelf. Magic Keys The' (E-0268, the E-0082 shape; was
 ; TalkMsg055E_HeroCheckedTheBookshelfMagic)
@@ -10611,6 +12296,9 @@ TalkMsg055E_HeroCheckedTheBookshelfMagic::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 227 (GreatLogTalkEvents): starts message $0DD5 ('Monster skills are passed on from
+; parents') through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; starts message $0DD5 through StartMessageCommand09HL_B13 (script command $09); that string begins
 ; 'Monster skills are passed on from parents' (E-0268, the E-0082 shape; was
 ; TalkMsg0DD5_MonsterSkillsArePassedOn)
@@ -10634,7 +12322,8 @@ GreatLogTalkEvents_ShowEgg::
     ret
 
 ; Great Log talk, the egg: when it receives gifts, 'What will you give to the ...' with no gift
-; pending, otherwise '<item> has been given to the ...' with the pending item's name. (C1, E-0357)
+; pending, otherwise '<item> has been given to the ...' with the pending item's name. (C2, E-0357;
+; probed E-0377)
 GreatLogTalkEvents_Egg::
     ld a, [wGiftRecord]
     cp $01
@@ -10654,7 +12343,7 @@ GreatLogTalkEvents_Egg::
     ret
 
 ; Great Log talk: by the player's X ($30, $40 or other) message $0D66, $0D67 or $0D68 and the
-; matching species-flag preset 0, 1 or 2 (LoadSpeciesFlagsPresetC). (C1, E-0357)
+; matching species-flag preset 0, 1 or 2 (LoadSpeciesFlagsPresetC). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_SpeciesPreset::
     ldh a, [hPlayerX]
     cp $30
@@ -10682,12 +12371,16 @@ GreatLogTalkEvents_SpeciesPreset::
 ; Great Log talk 231: clears wGreatLogEventFlag, the byte KeyAppraisalMenu_ChooseKey_PayAndAppraise
 ; sets to 1 after the save that follows an appraisal; while it is 1,
 ; GreatLogTalkEvents_ShowItsExcitingToThink only shows message $0DC2 instead of opening the Key
-; Shop. (C1, E-0370)
+; Shop. (C2, E-0370; probed E-0377)
 GreatLogTalkEvents_ResetKeyShopTalk::
     xor a
     ld [wGreatLogEventFlag], a
     ret
 
+; Great Log talk 233 (GreatLogTalkEvents): message $0B1F ('My grandpa gave me a') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $029B ('I found a key in another'); both through
+; StartMessageCommand09HL_B13 (script command 9 with the word in wScriptParam0/wScriptParam1,
+; wScriptRunning = 1, wModeState = 1). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg029B_IFoundAKey.call_start_message_command09_hl_b13); when none of them branches, starts
 ; message $029B through StartMessageCommand09HL_B13 (script command $09); that string begins 'I
@@ -10706,7 +12399,8 @@ TalkMsg029B_IFoundAKey::
     ret
 
 ; Talk: 'Huh? Has the sea risen?' ($0DE4) after the mermaid kingdom scene until
-; EVENT_THANKS_FOR_COMING_BY_025; otherwise 'The sea is huge and...' ($0DE3). (C1, E-0357)
+; EVENT_THANKS_FOR_COMING_BY_025; otherwise 'The sea is huge and...' ($0DE3). (C2, E-0357; probed
+; E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0DE3, whose
 ; string begins 'The sea is huge and mysterious.' (E-0097)
@@ -10728,6 +12422,11 @@ Talk0DE3_TheSeaIsHuge::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 235 (GreatLogTalkEvents): message $0B13 ('I just happened to come') once
+; EVENT_THANKS_FOR_COMING_BY_025 is set, otherwise $0220 ('In other worlds, you'll meet other');
+; both through StartMessageCommand09HL_B13 (script command 9 with the word in
+; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). An identical copy of Great Log
+; talk 186 (TalkMsg0220_InOtherWorldsYoull). (C2, E-0377)
 ; tests story flags in turn (flag $0025 set: jr to
 ; TalkMsg0220_InOtherWorldsYoull_2.call_start_message_command09_hl_b13); when none of them branches,
 ; starts message $0220 through StartMessageCommand09HL_B13 (script command $09); that string begins
@@ -10746,6 +12445,11 @@ TalkMsg0220_InOtherWorldsYoull_2::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 236 (GreatLogTalkEvents), a one-time chest: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_SNOW and
+; story flag $013E in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState =
+; 1). That command gives the item and sets the flag when the flag is clear (group-0 message $A0),
+; shows $A1 when the flag is already set and $A2 when the bag is full. (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $26, story flag $013E in DE: when the flag is clear it gives item $26 (Snow) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -10759,6 +12463,11 @@ ChestItem_Snow::
     call StartTreasureFlagDE_B13
     ret
 
+; Great Log talk 237 (GreatLogTalkEvents), a one-time chest: StartTreasureFlagDE_B13 starts script
+; command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_MAGICBELT
+; and story flag $013F in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
+; wModeState = 1). That command gives the item and sets the flag when the flag is clear (group-0
+; message $A0), shows $A1 when the flag is already set and $A2 when the bag is full. (C2, E-0377)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $42, story flag $013F in DE: when the flag is clear it gives item $42 (MagicBelt) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -10772,7 +12481,7 @@ ChestItem_MagicBelt::
     call StartTreasureFlagDE_B13
     ret
 
-; Great Log talk: 'checked the bookshelf. 'Magic Keys...' ($055F). (C1, E-0357)
+; Great Log talk: 'checked the bookshelf. 'Magic Keys...' ($055F). (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_Msg055F_HeroCheckedTheBookshelf::
     ld hl, $055f ; '0 checked the bookshelf. 'Magic Keys…'
     call StartMessageCommand09HL_B13
@@ -10924,8 +12633,8 @@ Talk0B6D_BreedingFireAndIce::
     ret
 
 ; Terry: after the Terry battle scene 'Terry: I hope you'll stay a...' ($0BB3); otherwise his battle
-; script (Script_HumphI) with 150 species or more, else 'Humph... I'm Terry...' ($0D90). (C1,
-; E-0357)
+; script (Script_HumphI) with 150 species or more, else 'Humph... I'm Terry...' ($0D90). (C2,
+; E-0357; probed E-0377)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0D90, whose
 ; string begins 'Humph I'm Terry. Terry I'm a' (E-0097)
@@ -10954,10 +12663,13 @@ Talk0D90_HumphImTerry::
     call StartMessageCommand09HL_B13
     ret
 
+; Great Log talk 243 (GreatLogTalkEvents): after EVENT_THANKS_FOR_COMING_BY_025, when
+; TotalSpeciesFlaggedOrListed is 50 or more, sets wSpriteSlots + $B (byte OBJ_X of the first 16-byte
+; object slot) to $30; otherwise returns without a change. Starts no message or script. (C2, E-0377)
 ; map event: with story flag $25 set, sets wSpriteSlots + $B = $30 when the count from
 ; TotalSpeciesFlaggedOrListed is at least 50 (E-0122) (E-0340: the address in its name read as its
-; RAM name; was SetSpriteSlotsB30IfFlag25AndCountAtLeast50)
-SetSpriteSlotsB30IfFlag25AndCountAtLeast50::
+; RAM name; was GreatLogTalkEvents_SetObject0XAfter50Species)
+GreatLogTalkEvents_SetObject0XAfter50Species::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     ret nc
@@ -10974,8 +12686,12 @@ SetSpriteSlotsB30IfFlag25AndCountAtLeast50::
     ld [wSpriteSlots + $b], a
     ret
 
+; Great Log talk 244 (GreatLogTalkEvents): sets EVENT_MAP_17_OBJECT_REMOVED when
+; EVENT_WHEN_YOU_BREED_MONSTERS is set and EVENT_MAP_17_OBJECT_REMOVED_0CA when
+; EVENT_WHEN_YOU_BREED_MONSTERS_033 is set (the flags of the breeding master talks,
+; Talk0B56_WhenYouBreedMonsters); clears nothing and starts no message. (C2, E-0377)
 ; sets story flag $C9 if flag $32 is set and flag $CA if flag $33 is set (E-0122)
-SetFlagsC9AndCAFrom32And33::
+GreatLogTalkEvents_SyncMap17ObjectFlags::
     ld de, EVENT_WHEN_YOU_BREED_MONSTERS
     call TestFlagBit
     jr nc, .call_test_flag_bit
@@ -10990,8 +12706,12 @@ SetFlagsC9AndCAFrom32And33::
     call SetFlagBit
     ret
 
+; Great Log talk 245 (GreatLogTalkEvents): sets EVENT_MAP_04_OBJECT_REMOVED when
+; EVENT_BREEDING_FIRE_AND_ICE is set and EVENT_MAP_04_OBJECT_REMOVED_0CC when
+; EVENT_BREEDING_FIRE_AND_ICE_036 is set (the flags of the breeding master talks,
+; Talk0B6D_BreedingFireAndIce); clears nothing and starts no message. (C2, E-0377)
 ; sets story flag $CB if flag $35 is set and flag $CC if flag $36 is set (E-0122)
-SetFlagsCBAndCCFrom35And36::
+GreatLogTalkEvents_SyncMap04ObjectFlags::
     ld de, EVENT_BREEDING_FIRE_AND_ICE
     call TestFlagBit
     jr nc, .call_test_flag_bit
@@ -11006,10 +12726,14 @@ SetFlagsCBAndCCFrom35And36::
     call SetFlagBit
     ret
 
+; Great Log talk 246 (GreatLogTalkEvents): returns at once until EVENT_SCENE_RIVAL_DEFEATED_021 is
+; set; then starts Script_You_9 (a walk, 'You're the child of the', 'What? You don't know about',
+; sets EVENT_WHAT_YOU_DON) through StartScriptAtHL_B13 (wScriptPointerLo/Hi = the script,
+; wScriptStartRequest = $80, wModeState = 1). (C2, E-0377)
 ; when story flag $21 is set, StartScriptAtHL_B13 with HL = $5988 (E-0119) (E-0344: the address in
-; its name dropped or read as the label there; was IfFlag0021StartScript)
+; its name dropped or read as the label there; was GreatLogTalkEvents_YoureTheChildAfterRival)
 ; starts Script_You_9: '*: You're the child of the' (E-0248)
-IfFlag0021StartScript::
+GreatLogTalkEvents_YoureTheChildAfterRival::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
     ret nc
@@ -11017,6 +12741,10 @@ IfFlag0021StartScript::
     call StartScriptAtHL_B13
     ret
 
+; Bank-$13 copy of InventoryHasFreeSlotCheck: when the last bag slot (wInventory + $17) holds an
+; item (not $00 or $FF) it returns A = 0 and carry clear (bag full); otherwise it returns carry set
+; with HL = the first slot of wInventory that is $00 or $FF (A = that byte).
+; TalkMsg025E_MyGranddaughterIsPainfully writes its gift through that HL. (C2, E-0377)
 ; the same 28 bytes as InventoryHasFreeSlotCheck (InventoryHasFreeSlotCheck) (E-0124)
 InventoryHasFreeSlotCheck_Bank13::
     ld a, [wInventory + $17]
@@ -11043,6 +12771,12 @@ InventoryHasFreeSlotCheck_Bank13::
     scf
     ret
 
+; Copies wSpriteSlots + 7, hPlayerX, hPlayerY, hPlayerFacing and the follower bytes wFollowerRecords
+; + 0, 1, 2, 5, 6, 7, $A, $B and $C into the 13 bytes wSavedPlayerState to wSavedPlayerState + $C,
+; in that order. The Great Log talks that start a breeding or shrine script
+; (GreatLogTalkEvents_Breeder, GreatLogTalkEvents_StarryShrine, Talk0A49_BreedingCouldResultIn,
+; Talk04BA_IfYouGetAn, Talk04C0_AllRightyWellDo, Talk0B56_WhenYouBreedMonsters,
+; Talk0B6D_BreedingFireAndIce) call it after SaveScreenBufferToBGMap1. (C2, E-0377)
 ; copies wSpriteSlots + $7, the player position and facing, wFollowerRecords and wFollowerRecords +
 ; $1-wFollowerRecords + $C fields into wSavedPlayerState-wSavedPlayerState + $C (E-0121)
 SavePlayerPositionState::

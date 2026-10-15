@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import apply_drafts  # noqa: E402
+import probe  # noqa: E402
 
 SNAP = {"05:4001": "Inn", "05:4002": "Inn_Skip", "05:4010": "Inn_Data", "05:4020": "ShopMenu"}
 NAMES = ('{\n  "_comment": "x",\n  "05:4001": {\n    "name": "Inn",\n    "evidence": "E-0001"\n  },\n'
@@ -122,6 +123,16 @@ class Probes(unittest.TestCase):
         self.assertTrue(any("has no probe" in p for p in apply_drafts.validate_probes([], [dict(self.MUL)])))
         twice = apply_drafts.validate_probes([dict(self.PROBE), dict(self.PROBE)], [dict(self.MUL)])
         self.assertTrue(any("repeated id" in p for p in twice))
+
+    def test_a_probe_entered_through_another_routine_counts_for_its_target(self):
+        state = dict(self.MUL, label="SomeState", address="16B0")
+        through = dict(self.PROBE, id="00:16B0#1", target="00:16B0")
+        self.assertEqual(apply_drafts.validate_probes([through], [state]), [])
+        self.assertEqual(probe.checks(through), "00:16B0")
+        self.assertEqual(probe.checks(self.PROBE), "00:16AA")
+        orphan = apply_drafts.validate_probes([dict(self.PROBE, target="00:16B0")], [dict(self.MUL)])
+        self.assertTrue(any("not a drafted label marked probed" in p for p in orphan))
+        self.assertTrue(any("has no probe" in p for p in orphan))
 
     def test_c2_needs_a_probe(self):
         probs = apply_drafts.validate_probes([], [dict(self.MUL, probe_status="not_probed", confidence="C2")])

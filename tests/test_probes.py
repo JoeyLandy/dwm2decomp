@@ -46,7 +46,7 @@ class ProbedNotes(unittest.TestCase):
         ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
         c2 = {k for k, v in ann.items() if not k.startswith("_") and (
             re.search(r"; probed E-\d{4}\)$", v) or re.search(r"\(C2, E-(?:037[1-9]|03[89]\d|0[4-9]\d\d)\)$", v))}
-        probed = {f"{int(str(p['bank']), 16):02X}:{int(str(p['address']), 16):04X}" for p in probe.load(PROBES)}
+        probed = {probe.checks(p) for p in probe.load(PROBES)}
         self.assertEqual(sorted(c2 - probed)[:10], [], "C2 notes without a probe")
         self.assertEqual(sorted(probed - c2)[:10], [], "probes whose routine's note is not C2")
 
