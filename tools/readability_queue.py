@@ -5,7 +5,8 @@ Five queues, in the order the readability goal works them (docs/PROJECT_STATUS.m
 1. instruction: code labels the generator named from their instructions or a callee (`Parent_WriteXAndY`,
    `Parent_ReadByteAtHLPlusA`, `Parent_ToFoo`, `Parent_Skip`): every global code label whose name is not given by
    config/names.json, except per-bank copies of a given name (`Foo_Bank05`), names made from the message a step
-   shows (`Parent_Show...`, `TalkMsg...`) and table-index names (`ScriptCommandEE`, `BattleTextPrep01`);
+   shows (`Parent_Show...`, `TalkMsg...`), table-index names (`ScriptCommandEE`, `BattleTextPrep01`) and the cases
+   config/indexed_dispatch.json names from id constants (`RemoveEquipmentBonus_VITbelt`);
 2. long: global labels longer than 50 characters;
 3. unread: code labels without a hand-written whole-routine note (doc_coverage.HAND_NOTE);
 4. data: data labels described only by their reader and size (`; data read by Foo (8 bytes)`), by their own
@@ -42,16 +43,25 @@ def given_names(root: Path = ROOT) -> set[str]:
     return given
 
 
-def instruction_named(name: str, given: set[str]) -> bool:
-    if name in given or MESSAGE.search(name) or INDEX.match(name):
+def indexed_prefixes(root: Path = ROOT) -> tuple[str, ...]:
+    """Case-name prefixes of config/indexed_dispatch.json: its cases are named <name>_<Id> from the id constants."""
+    p = root / "config/indexed_dispatch.json"
+    if not p.exists():
+        return ()
+    return tuple(t["name"] + "_" for t in json.loads(p.read_text(encoding="utf-8")).get("tables", []))
+
+
+def instruction_named(name: str, given: set[str], indexed: tuple[str, ...] = ()) -> bool:
+    if name in given or MESSAGE.search(name) or INDEX.match(name) or (indexed and name.startswith(indexed)):
         return False
     m = COPY.match(name)
-    return not (m and (m.group(1) in given or not instruction_named(m.group(1), given)))
+    return not (m and (m.group(1) in given or not instruction_named(m.group(1), given, indexed)))
 
 
 def queues(files=None, root: Path = ROOT) -> dict[str, list[str]]:
     files = files if files is not None else present.bank_files(root)
     given = given_names(root)
+    indexed = indexed_prefixes(root)
     q: dict[str, list[str]] = {"instruction": [], "long": [], "unread": [], "data": [], "asset": []}
     for f in files:
         header = ""
@@ -61,7 +71,7 @@ def queues(files=None, root: Path = ROOT) -> dict[str, list[str]]:
                 q["long"].append(where)
             if kind == "code":
                 header = ""
-                if instruction_named(name, given):
+                if instruction_named(name, given, indexed):
                     q["instruction"].append(where)
                 if not doc_coverage.HAND_NOTE.search(comment.split("; why: ")[0]):
                     q["unread"].append(where)

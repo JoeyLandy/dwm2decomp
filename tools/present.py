@@ -44,8 +44,8 @@ THIN_NOTE = re.compile(r"^(?:unless .{0,40}?, )?runs the (?:routine|field comman
 GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
 # E-0365: a hand-written reading of the whole routine (config/annotations.json) answers such a gap itself;
 # E-0368: the readability batches from E-0369 on write such readings too (tools/apply_drafts.py)
-HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370")
-HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")\)")
+HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370", "E-0371")
+HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")(?:; probed E-\d{4})?\)")  # D-012
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")
 ADDR_NAME = re.compile(r"^(?:Func|Jump|Data)_([0-9A-F]{3})_([0-9A-F]{4})$")
 LABEL_TAG = re.compile(r"^([A-Za-z_][\w.]*::?) ; (?:heuristic: .*|code pointer of the table .*)$")
@@ -505,7 +505,9 @@ def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names")
 LD_BC = re.compile(r"^(\s+)ld (bc|de|hl), \$([0-9a-f]{2})([0-9a-f]{2})(\s*;.*)?$")
 # routines that take two separate bytes in a register pair: rectangles (B = width, C = rows), resolve messages
 # (B = argument, C = flags, H = target, L = actor; E-0073), and sprite steps toward a point (D = X, E = Y, E-0127)
-PAIR_CALLEE = {"bc": re.compile(r"Rect|ResolveMsg"), "de": re.compile(r"Toward"), "hl": re.compile(r"ResolveMsg")}
+# E-0371: the resolve-message stores were renamed Store<Kind>Message_BankNN / StoreMessageFlags_BankNN
+PAIR_CALLEE = {"bc": re.compile(r"Rect|ResolveMsg|^Store\w*Message|^StoreMessageFlags"), "de": re.compile(r"Toward"),
+               "hl": re.compile(r"ResolveMsg|^Store\w*Message|^StoreMessageFlags")}
 CALL_TO = re.compile(r"^\s+(?:call|farcall|farcall_b|jp|jr)(?: \w+,)? ([A-Za-z_]\w*)$")
 LD_RAW = re.compile(r"^(\s+)ld (bc|de|hl), \$([0-9a-f]{4})(\s*;.*)?$")
 # a jump table or table index right after the load: the register is a pointer into this bank

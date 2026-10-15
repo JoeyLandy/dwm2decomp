@@ -105,7 +105,7 @@ class Coverage(unittest.TestCase):
         """E-0368 (D-011): the labels the generator named after their instructions or a callee, and the labels over
         60 characters, never grow; lower the bounds as the readability batches name them from their readings."""
         import readability_queue
-        INSTRUCTION_AT_MOST, LONG60_AT_MOST, ETC_AT_MOST = 655, 108, 1
+        INSTRUCTION_AT_MOST, LONG60_AT_MOST, ETC_AT_MOST = 130, 57, 1
         q = readability_queue.queues(FILES)
         self.assertLessEqual(len(q["instruction"]), INSTRUCTION_AT_MOST, q["instruction"][:10])
         names = [name for f in FILES for name, *_ in doc_coverage.scan(f)]

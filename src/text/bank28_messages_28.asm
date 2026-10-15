@@ -5,12 +5,12 @@ SECTION "Bank 28", ROMX[$4000], BANK[$28]
     db $28
 
 ; if wStringIndex < $DA, BeginStringDisplay with this bank's table; otherwise far-calls
-; BeginStringDisplay_Bank28_BeginStringDisplay (E-0353)
+; BeginStringDisplay_Bank28_Overflow (E-0353)
 BeginStringDisplay_Bank28::
     ld a, [wStringIndex]
     cp $da
     jr c, .call_begin_string_display
-    farcall BeginStringDisplay_Bank28_BeginStringDisplay
+    farcall BeginStringDisplay_Bank28_Overflow
     ret
 
 .call_begin_string_display:

@@ -73,8 +73,8 @@ Map92Attrs0_Y0X0::
 
 ; Starts a string of category wStringCategory - 9 from this bank's categories (the ones after bank
 ; $08's nine). (C1, E-0357)
-BeginStringDisplay_Bank08_BeginStringDisplay::
-    ld de, BeginStringDisplay_Bank08_StringCategories
+BeginStringDisplay_Bank08_Overflow::
+    ld de, BeginStringDisplay_Bank08_Overflow_StringCategories
     ld a, [wStringCategory]
     sub $09
     ld [wStringCategory], a
@@ -83,8 +83,8 @@ BeginStringDisplay_Bank08_BeginStringDisplay::
 
 ; Copies a string of category wStringCategory - 9 from this bank's categories to the buffer
 ; (CopyStringToBuffer). (C1, E-0357)
-CopyStringToBuffer_Bank08_CopyStringToBuffer::
-    ld de, BeginStringDisplay_Bank08_StringCategories
+CopyStringToBuffer_Bank08_Overflow::
+    ld de, BeginStringDisplay_Bank08_Overflow_StringCategories
     ld a, [wStringCategory]
     sub $09
     ld [wStringCategory], a
@@ -95,7 +95,7 @@ CopyStringToBuffer_Bank08_CopyStringToBuffer::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-BeginStringDisplay_Bank08_StringCategories::
+BeginStringDisplay_Bank08_Overflow_StringCategories::
     dw StringList_95 ; id 0
     dw StringList_95_2 ; id 1
     dw StringList_95_3 ; id 2
@@ -109,7 +109,8 @@ BeginStringDisplay_Bank08_StringCategories::
     dw StringList_95_11 ; id 10
     dw StringList_95_12 ; id 11
 
-; category list of BeginStringDisplay_Bank08_StringCategories; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank08_Overflow_StringCategories; one pointer per wStringIndex
+; (E-0217)
 ; record: string
 StringList_95::
 StringTable95_Cat09_SkillDescriptions::

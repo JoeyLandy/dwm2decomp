@@ -1999,7 +1999,7 @@
           "name": "offset into wScreenTileBuffer"
         }
       ],
-      "note": "E-0151 (C1: ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match and the story flag is set, ApplyMapScreenFlagEvents_WriteSVBK writes the tile and tile + 1 at wScreenTileBuffer + offset (tile $FF takes another path); 108 entries)."
+      "note": "E-0151 (C1: ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match and the story flag is set, ApplyMapScreenFlagEvents_DrawTiles writes the tile and tile + 1 at wScreenTileBuffer + offset (tile $FF takes another path); 108 entries)."
     },
     {
       "bank": "1A",
@@ -2261,7 +2261,7 @@
           "name": "a map number ($20, $30, $48 ...) and three zero bytes; not read here"
         }
       ],
-      "note": "E-0167 (C1: RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE)."
+      "note": "E-0167 (C1: RunWorldMapState_DrawOverview_Region takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE)."
     },
     {
       "bank": "5D",
@@ -2588,7 +2588,7 @@
           "name": "combined action id ($D0-$E3)"
         }
       ],
-      "note": "E-0172 (C1: SaveActionChoicesAndPickFormations_DivideBByA walks these 5-byte records until a 0 byte; a record applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock, SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll when byte 3 is 1 or in link mode 2)."
+      "note": "E-0172 (C1: SaveActionChoicesAndPickFormations_ApplyFormation walks these 5-byte records until a 0 byte; a record applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock, SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll when byte 3 is 1 or in link mode 2)."
     },
     {
       "bank": "A3",
@@ -6247,7 +6247,7 @@
         }
       ],
       "record": "ten base room records, then six zero bytes; one row per exit of the previous room",
-      "note": "E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_ReadByteInBank; 6 rows end at that routine). E-0364: the sum is the next room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered from, so these are room bases, not monster bases."
+      "note": "E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_PickOtherExit; 6 rows end at that routine). E-0364: the sum is the next room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered from, so these are room bases, not monster bases."
     },
     {
       "bank": "84",
@@ -12577,7 +12577,7 @@
           "name": "chance class 0-3"
         }
       ],
-      "note": "E-0204 (C1: RollRandomLoBelowChance_WriteTemp0 reads the byte at $4B57 + the actor's wBattleMonsterId for the party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id)."
+      "note": "E-0204 (C1: RollRandomLoBelowChance_LoadActorChance reads the byte at $4B57 + the actor's wBattleMonsterId for the party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id)."
     },
     {
       "bank": "A3",
@@ -12593,7 +12593,7 @@
           "name": "chance class 0-3"
         }
       ],
-      "note": "E-0204 (C1: RollRandomLoBelowChance_WriteTemp0 reads the byte at $4CD7 + the actor's wBattleMonsterId for battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id)."
+      "note": "E-0204 (C1: RollRandomLoBelowChance_LoadActorChance reads the byte at $4CD7 + the actor's wBattleMonsterId for battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id)."
     },
     {
       "bank": "05",
@@ -13188,7 +13188,7 @@
           "name": "sound effect number"
         }
       ],
-      "note": "E-0213 (C1: DrawHexByteAtBGMap8A_QueueSoundEffect (debug menu) plays QueueSoundEffect with the byte at $55BF + wDebugSubState; 60 bytes end at EffectTestEntries)."
+      "note": "E-0213 (C1: RunDebugState_E0_PlayEffectSound (debug menu) plays QueueSoundEffect with the byte at $55BF + wDebugSubState; 60 bytes end at EffectTestEntries)."
     },
     {
       "bank": "E0",
@@ -13457,7 +13457,7 @@
           "name": "message word ($0000 = none)"
         }
       ],
-      "note": "E-0214 (C1: SceneChestBattle_Case00 passes $530C to SceneChestBattle_StartMessageHL_B73b, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at KeyBossBeaten2)."
+      "note": "E-0214 (C1: SceneChestBattle_Case00 passes $530C to SceneChestBattle_StartMapMessage, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at KeyBossBeaten2)."
     },
     {
       "bank": "A1",

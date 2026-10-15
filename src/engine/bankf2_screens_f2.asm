@@ -85,7 +85,7 @@ GameMode8_Update::
     ld a, [wScreenSubStep]
     and a
     jr z, .check_text_flags
-    call GameMode8_Update_UpdateAndDrawSpriteSlots
+    call GameMode8_Update_DrawSprites
 
 .check_text_flags:
     ld a, [wTextFlags]
@@ -93,25 +93,25 @@ GameMode8_Update::
     ret nz
     ld a, [wScreenSubStep]
     jumptable
-    dw GameMode8_Update_WriteScreenSubStep
+    dw GameMode8_Update_Start
     dw GameMode8_Update_Wait
     dw GameMode8_Update_WalkObject1
     dw GameMode8_Update_Wait
-    dw GameMode8_Update_SetObject5
+    dw GameMode8_Update_ShowEgg
     dw GameMode8_Update_WalkSprite0
     dw GameMode8_Update_Wait
     dw GameMode8_Update_Wait
-    dw GameMode8_Update_SetObject5_SetObject5
+    dw GameMode8_Update_HideEgg
     dw GameMode8_Update_Wait
     dw GameMode8_Update_Wait
     dw GameMode8_Update_WalkSprite0Off
     dw GameMode8_Update_ShowHeroReceivedGsEgg
     dw GameMode8_Update_BackToField
 
-; Egg hand-over, step 0: sets up the figures and graphics (GameMode8_Update_TestFlagBit); next step.
+; Egg hand-over, step 0: sets up the figures and graphics (GameMode8_Update_SetUpScene); next step.
 ; (C1, E-0357)
-GameMode8_Update_WriteScreenSubStep::
-    call GameMode8_Update_TestFlagBit
+GameMode8_Update_Start::
+    call GameMode8_Update_SetUpScene
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -154,7 +154,7 @@ GameMode8_Update_WalkObject1::
     ret
 
 ; Egg hand-over, step 4: shows object 5 and sets wArg1 to 1; next step. (C1, E-0357)
-GameMode8_Update_SetObject5::
+GameMode8_Update_ShowEgg::
     ld a, $80
     ld [wObject5], a
     ld a, $01
@@ -185,7 +185,7 @@ GameMode8_Update_WalkSprite0::
     ret
 
 ; Egg hand-over, step 8: hides object 5 and clears wArg1; next step. (C1, E-0357)
-GameMode8_Update_SetObject5_SetObject5::
+GameMode8_Update_HideEgg::
     ld a, $00
     ld [wObject5], a
     ld [wArg1], a
@@ -341,15 +341,15 @@ GameMode8_Update_EndMode::
 ; Sets up the egg hand-over: sprite slot 0 and its graphics from one of two sets by EVENT_NEVER_SET
 ; (the other set is never used), object 1 from one of two sets by wLinkHatchData, field command $0D,
 ; object 5 hidden at ($48, $40), two sprite slots, and the object palettes on CGB. (C1, E-0357)
-GameMode8_Update_TestFlagBit::
+GameMode8_Update_SetUpScene::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .skip
-    ld hl, GameMode8_Update_TestFlagBit_Data5
+    ld hl, GameMode8_Update_SetUpScene_Data5
     jr .call_copy_bytes_de_from_hl_bank_f2
 
 .skip:
-    ld hl, GameMode8_Update_TestFlagBit_SpriteSlotsInit
+    ld hl, GameMode8_Update_SetUpScene_SpriteSlotsInit
 
 .call_copy_bytes_de_from_hl_bank_f2:
     ld de, wSpriteSlots
@@ -358,7 +358,7 @@ GameMode8_Update_TestFlagBit::
     ld a, [wLinkHatchData]
     and a
     jr nz, .skip2
-    ld hl, GameMode8_Update_TestFlagBit_Data6
+    ld hl, GameMode8_Update_SetUpScene_Data6
     jr .call_copy_bytes_de_from_hl_bank_f22
 
 .skip2:
@@ -371,11 +371,11 @@ GameMode8_Update_TestFlagBit::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .skip3
-    ld hl, GameMode8_Update_TestFlagBit_Data1
+    ld hl, GameMode8_Update_SetUpScene_Data1
     jr .call_copy_bytes_de_from_hl_bank_f23
 
 .skip3:
-    ld hl, GameMode8_Update_TestFlagBit_Data2
+    ld hl, GameMode8_Update_SetUpScene_Data2
 
 .call_copy_bytes_de_from_hl_bank_f23:
     ld de, hTemp0
@@ -385,11 +385,11 @@ GameMode8_Update_TestFlagBit::
     ld a, [wLinkHatchData]
     and a
     jr nz, .skip4
-    ld hl, GameMode8_Update_TestFlagBit_Data3
+    ld hl, GameMode8_Update_SetUpScene_Data3
     jr .call_copy_bytes_de_from_hl_bank_f24
 
 .skip4:
-    ld hl, GameMode8_Update_TestFlagBit_Data4
+    ld hl, GameMode8_Update_SetUpScene_Data4
 
 .call_copy_bytes_de_from_hl_bank_f24:
     ld de, hTemp0
@@ -425,28 +425,28 @@ CopyBytesDEFromHL_BankF2::
     jr nz, CopyBytesDEFromHL_BankF2
     ret
 
-; data read by GameMode8_Update_TestFlagBit (6 bytes) (E-0347)
-GameMode8_Update_TestFlagBit_Data1::
+; data read by GameMode8_Update_SetUpScene (6 bytes) (E-0347)
+GameMode8_Update_SetUpScene_Data1::
     db $00, $00, $01, $04, $00, $80
 
-GameMode8_Update_TestFlagBit_Data2::
+GameMode8_Update_SetUpScene_Data2::
     db $01, $00, $01, $01, $00, $80
 
-GameMode8_Update_TestFlagBit_Data3::
+GameMode8_Update_SetUpScene_Data3::
     db $0c, $00, $01, $05, $00, $81
 
-GameMode8_Update_TestFlagBit_Data4::
+GameMode8_Update_SetUpScene_Data4::
     db $0c, $00, $01, $05, $00, $81, $00, $00, $00, $02, $00, $82
 
-GameMode8_Update_TestFlagBit_Data5::
+GameMode8_Update_SetUpScene_Data5::
     db $00, $01, $00, $00, $f0, $40, $04, $01, $00, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
-GameMode8_Update_TestFlagBit_SpriteSlotsInit::
+GameMode8_Update_SetUpScene_SpriteSlotsInit::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
-GameMode8_Update_TestFlagBit_Data6::
+GameMode8_Update_SetUpScene_Data6::
     db $00, $01, $0c, $00, $f0, $40, $05, $03, $10, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wObject1 (E-0264)
@@ -535,7 +535,7 @@ DrawScreenBufferRectToBGMap_1B_BankF2::
     ret
 
 ; Updates and draws the sprite slots, then the field sprites. (C1, E-0357)
-GameMode8_Update_UpdateAndDrawSpriteSlots::
+GameMode8_Update_DrawSprites::
     farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
     ret
@@ -1096,26 +1096,29 @@ ShowSpeciesCategory13StringAtTiles2680::
     farcall ShowString_Bank08
     ret
 
-; runs RunF2_LoadTemp0WordFromRecordBufB and RunF2_LoadTemp0WordFromRecordBufB_2 (E-0126) (E-0344:
-; the address in its name dropped or read as the label there; was RunF2)
+; runs RunF2_DrawParentNames and RunF2_DrawParentIcons (E-0126) (E-0344: the address in its name
+; dropped or read as the label there; was RunF2)
 RunF2::
-    call RunF2_LoadTemp0WordFromRecordBufB
-    call RunF2_LoadTemp0WordFromRecordBufB_2
+    call RunF2_DrawParentNames
+    call RunF2_DrawParentIcons
     ret
 
-; Writes the names of record B's parents (the layout table chosen by family bit 4): a parent whose
-; word is $FFFF shows three $98 glyphs, otherwise its name from the record
-; (ShowRecordBufBEntryStringAtArg1), and the next entries in the same way. (C1, E-0357)
-RunF2_LoadTemp0WordFromRecordBufB::
+; Draws record B's two parents, parent 1 first when wRecordBufB's MON_FAMILY bit 4 is clear and
+; parent 2 first when it is set (two 4-byte tables after it: species offset, name offset, species
+; offset, master offset). For the first, when the parent species word's high byte is $FF it puts
+; three $98 glyphs ('???') at vTiles2 + $200, otherwise the parent's name glyphs there and its
+; species name (ShowRecordBufBEntryStringAtArg1) at $9250; then its master's name glyphs at vTiles2
+; + $2F0. The second goes the same way at vTiles2 + $340, $9390 and vTiles2 + $430. (C1, E-0371)
+RunF2_DrawParentNames::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
     and a
     jr nz, .skip
-    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data1
+    ld de, RunF2_DrawParentNames_Data1
     jr .call_load_temp0_word_from_record_buf_b
 
 .skip:
-    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data2
+    ld de, RunF2_DrawParentNames_Data2
 
 .call_load_temp0_word_from_record_buf_b:
     ld a, [de]
@@ -1264,26 +1267,26 @@ ShowRecordBufBEntryStringAtArg1::
     farcall ShowString_Bank08
     ret
 
-; data read by RunF2_LoadTemp0WordFromRecordBufB (8 bytes) (E-0347)
-RunF2_LoadTemp0WordFromRecordBufB_Data1::
+; data read by RunF2_DrawParentNames (8 bytes) (E-0347)
+RunF2_DrawParentNames_Data1::
     db $1a, $8e, $1a, $1e, $1c, $99, $1c, $29
 
-RunF2_LoadTemp0WordFromRecordBufB_Data2::
+RunF2_DrawParentNames_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
 ; Draws the species icons of record B's parents (the layout by family bit 4): an unknown parent
 ; ($FFFF) gets a copy of tile $8430, otherwise its icon (DrawSpeciesIconForRecordBufBEntry) and a
 ; mark tile beside it. (C1, E-0357)
-RunF2_LoadTemp0WordFromRecordBufB_2::
+RunF2_DrawParentIcons::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
     and a
     jr nz, .skip
-    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data1_2
+    ld de, RunF2_DrawParentIcons_Data1
     jr .call_load_temp0_word_from_record_buf_b
 
 .skip:
-    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data2_2
+    ld de, RunF2_DrawParentIcons_Data2
 
 .call_load_temp0_word_from_record_buf_b:
     ld a, [de]
@@ -1401,11 +1404,11 @@ PickNameBufferForFirstByte_BankF2::
 .return:
     ret
 
-; data read by RunF2_LoadTemp0WordFromRecordBufB_2 (6 bytes) (E-0347)
-RunF2_LoadTemp0WordFromRecordBufB_Data1_2::
+; data read by RunF2_DrawParentIcons (6 bytes) (E-0347)
+RunF2_DrawParentIcons_Data1::
     db $1a, $98, $1a, $1c, $a3, $1c
 
-RunF2_LoadTemp0WordFromRecordBufB_Data2_2::
+RunF2_DrawParentIcons_Data2::
     db $1c, $a3, $1c, $1a, $98, $1a
 
 ; A = byte offset: hTemp0/hTemp1 = the word at wRecordBufB + A (E-0079)
@@ -1879,7 +1882,7 @@ WriteThreeDigitsAtHL::
     ret
 
 ; hTemp0/7 = the word wRecordBufB[wArg5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues
-; at DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1 (E-0126)
+; at DrawRecordBufBPlusValue (E-0126)
 DrawSpeciesIconForRecordBufBEntry::
     push bc
     ld hl, wRecordBufB
@@ -1891,7 +1894,7 @@ DrawSpeciesIconForRecordBufBEntry::
     ldh [hTemp1], a
     farcall DrawSpeciesAndFamilyIconForTemp0
     pop bc
-    jp DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1
+    jp DrawRecordBufBPlusValue
 
 ; loads the family icon of wRecordBufB + $D & $0F into tile wArg4; the next entry draws tile $1E and
 ; the count wRecordBufB[wArg1] at the scroll offset wArg2/3 (E-0127) (E-0340: the address in its
@@ -1906,9 +1909,14 @@ DrawFamilyIconAndCountForRecordBufBFamily::
     farcall LoadFamilyIconTileForWorkBuf
     pop bc
 
-; When record B's byte wArg1 is not 0, writes tile $1E and then the count in two digits (a leading
-; blank for 0-9) at the BG map offset wArg2:wArg3 from the scroll. (C1, E-0357)
-DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
+; wArg1 = a record offset (MON_PLUS from the bank-$F1 and bank-$37 callers, MON_PARENT1_PLUS or
+; MON_PARENT2_PLUS from RunF2_DrawParentIcons): when wRecordBufB's byte there is non-zero, writes
+; tile $1E at the BG map address of the scroll position plus wArg2:wArg3 (stepping back on a scroll
+; wrap), then the value's tens digit (skipped when it is a leading zero, BlankLeadingZeroDigits_F)
+; and ones digit as tiles $E0 + digit right after it. The tail of
+; DrawFamilyIconAndCountForRecordBufBFamily, also jumped to by DrawSpeciesIconForRecordBufBEntry.
+; (C1, E-0371)
+DrawRecordBufBPlusValue::
     ld a, [wArg1]
     ld hl, wRecordBufB
     add_a_to_hl
@@ -3626,7 +3634,7 @@ ReturnStub_3::
 
 ; Choosing a key, Select: reorders the key list (ReorderKeyList), copies it back
 ; (CopyWorkBuf1ToKeyList) and returns to step 0. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_ListCursor_ReorderKeyList::
+KeyAppraisalMenu_ChooseKey_ListCursor_SortKeys::
     call ReorderKeyList
     call CopyWorkBuf1ToKeyList
     xor a
@@ -3684,18 +3692,18 @@ ReorderKeyList::
     call CopyFlaggedKeys
     ret
 
-; Copies the keys that do not have byte 3 bit 7 with a kind below 7 (CopyUnflaggedKeys_Loop loop
-; over 32 entries). (C1, E-0357)
+; Copies the keys that do not have byte 3 bit 7 with a kind below 7 (CopyUnflaggedKeys_CheckEntry
+; loop over 32 entries). (C1, E-0357)
 CopyUnflaggedKeys::
     ld b, $00
     ld c, $20
 
 ; For each of the 32 key entries ($FF skips): copies it and its seed (wKeySeeds) onward unless byte
 ; 3 bit 7 is set with a kind (byte 0 & $3F) below 7. (C1, E-0357)
-CopyUnflaggedKeys_Loop::
+CopyUnflaggedKeys_CheckEntry::
     ld a, [hl]
     cp $ff
-    jr z, CopyUnflaggedKeys_Skip
+    jr z, CopyUnflaggedKeys_NextEntry
     push hl
     inc hl
     inc hl
@@ -3753,13 +3761,16 @@ CopyUnflaggedKeys_Loop::
 .restore2:
     pop hl
 
-; Steps to the next 4-byte key entry; loops over the 32. (C1, E-0357)
-CopyUnflaggedKeys_Skip::
+; HL += 4 (the next 4-byte key entry), B += 1 (its index into wKeySeeds); loops back to
+; CopyUnflaggedKeys_CheckEntry until C, the remaining count of the 32 entries, reaches 0. Also the
+; $FF-entry skip of CopyFlaggedKeys, which then continues in this loop of the unflagged copy. (C1,
+; E-0371)
+CopyUnflaggedKeys_NextEntry::
     ld a, $04
     add_a_to_hl
     inc b
     dec c
-    jr nz, CopyUnflaggedKeys_Loop
+    jr nz, CopyUnflaggedKeys_CheckEntry
     ret
 
 ; Copies the keys whose byte 3 has bit 7 set and kind below 7, with their seeds. (C1, E-0357)
@@ -3770,7 +3781,7 @@ CopyFlaggedKeys::
 .loop:
     ld a, [hl]
     cp $ff
-    jr z, CopyUnflaggedKeys_Skip
+    jr z, CopyUnflaggedKeys_NextEntry
     push hl
     inc hl
     inc hl
@@ -3832,13 +3843,13 @@ CopyFlaggedKeys::
     ret
 
 ; in state 3 continues at RunUnlessScreenStateIs3_ToggleBagOrder; otherwise runs
-; RunUnlessScreenStateIs3_WriteCounterPtr0Lo (E-0126) (E-0344: the address in its name dropped or
-; read as the label there; was RunUnlessScreenStateIs3)
+; RunUnlessScreenStateIs3_SortStorage (E-0126) (E-0344: the address in its name dropped or read as
+; the label there; was RunUnlessScreenStateIs3)
 RunUnlessScreenStateIs3::
     ld a, [wScreenState]
     cp $03
     jr z, RunUnlessScreenStateIs3_ToggleBagOrder
-    call RunUnlessScreenStateIs3_WriteCounterPtr0Lo
+    call RunUnlessScreenStateIs3_SortStorage
     ret
 
 ; Far-called by VaultMenu_Store_MoveItems after an item has been stored (wScreenState 3): clears 24
@@ -3954,7 +3965,7 @@ VaultMenu_Store_MapItemsToInventory::
 ; Sorts storage: switches the order list as RunUnlessScreenStateIs3_ToggleBagOrder, rebuilds the 100
 ; two-byte entries of wItemStorage in the list's order in wWorkBuf (entries whose item is not in the
 ; list are not copied) and copies them back. (C1, E-0357)
-RunUnlessScreenStateIs3_WriteCounterPtr0Lo::
+RunUnlessScreenStateIs3_SortStorage::
     ld hl, wWorkBuf
     ld b, $c8
 

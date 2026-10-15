@@ -483,15 +483,15 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_ShowItemText
     dw RunBattleActions_UseItem_ThrowMeat
     dw RunBattleActions_UseItem_ShowHeroIsAHunk
-    dw RunBattleActions_DispatchActionEffectTable_Bank3BAndStep
+    dw RunBattleActions_UseItem_RunEffect
     dw RunBattleActions_UseItem_MarkUsed
     dw RunBattleActions_UseItem_ShowResultText
-    dw RunBattleActions_UseItem_Return
+    dw RunBattleActions_UseItem_DoNothing
     dw RunBattleActions_UseItem_ApplyAmount
-    dw RunBattleActions_UseItem_ToRunBattleSubStep2_2
+    dw RunBattleActions_UseItem_DefeatTarget
     dw RunBattleActions_UseItem_BeastTail
     dw RunBattleActions_UseItem_ConsumeItem
-    dw RunBattleActions_UseItem_SetMultiHitCount
+    dw RunBattleActions_UseItem_EndAction
     dw RunBattleActions_UseItem_ShowButNothingHappened
 
 ; Item use, step 0: clears the counters and picks the target: item target $10 is the user's own side
@@ -674,12 +674,12 @@ RunBattleActions_UseItem_ThrowMeat::
     ld [wBattleResolveStep], a
     ret
 
-; hTemp0 = wBattleFoeCount, then far-calls CallWithBattleFoeCount_WriteBattleStatResultLo (E-0122)
-; (E-0344: the address in its name dropped or read as the label there; was CallWithBattleFoeCount)
+; hTemp0 = wBattleFoeCount, then far-calls NameTargetsInTextBuf0 (E-0122) (E-0344: the address in
+; its name dropped or read as the label there; was CallWithBattleFoeCount)
 CallWithBattleFoeCount::
     ld a, [wBattleFoeCount]
     ldh [hTemp0], a
-    farcall CallWithBattleFoeCount_WriteBattleStatResultLo
+    farcall NameTargetsInTextBuf0
     ret
 
 ; Item use, step 3: when the target's status 5 has bit 6 or 7 set, shows text $66 and goes to the
@@ -700,7 +700,7 @@ RunBattleActions_UseItem_ShowHeroIsAHunk::
 
 ; Item use, step 4: runs the item's effect from the effect table (DispatchActionEffectTable_Bank3B).
 ; (C1, E-0357)
-RunBattleActions_DispatchActionEffectTable_Bank3BAndStep::
+RunBattleActions_UseItem_RunEffect::
     ld hl, wBattleResolveStep
     inc [hl]
     call DispatchActionEffectTable_Bank3B
@@ -833,7 +833,7 @@ SetResolveStep0AUnlessResolveMsgFlagsBit4::
     ret
 
 ; Item use, step 7: nothing. (C1, E-0357)
-RunBattleActions_UseItem_Return::
+RunBattleActions_UseItem_DoNothing::
     ret
 
 ; Item use, step 8 (and skips 9): by message argument bits 6-7: 0 nothing; $40 only marks the
@@ -895,8 +895,9 @@ RunBattleActions_UseItem_ApplyAmount::
 .return:
     ret
 
-; Item use, step 9: the fall sub-steps (RunBattleSubStep2_2). (C1, E-0357)
-RunBattleActions_UseItem_ToRunBattleSubStep2_2::
+; Item use, step 9: far-calls RunBattleSubStep2_2, the defeat sub-steps picked by wBattleSubStep2
+; (lower the target's mark and DefeatTarget, blank its picture, show the defeat text). (C1, E-0371)
+RunBattleActions_UseItem_DefeatTarget::
     farcall RunBattleSubStep2_2
     ret
 
@@ -1106,7 +1107,7 @@ RunBattleActions_UseItem_ConsumeItem::
     ret
 
 ; Item use, step 12: ends the action (battle sub-phase 7, counters cleared). (C1, E-0357)
-RunBattleActions_UseItem_SetMultiHitCount::
+RunBattleActions_UseItem_EndAction::
     xor a
     ld [wMultiHitCount], a
     ld a, $07
@@ -1381,7 +1382,7 @@ RestoreTargetHPByActionAmount::
 
 ; The MP an item restores: the ElfWater ($05) the target's whole max MP, other items a random 20-30;
 ; added to the target's MP and capped at its max (the amount becomes what was added). (C1, E-0357)
-RestoreTargetMPIfLow_SetDamageRandomInRange::
+RestoreTargetMPIfLow_AddItemMP::
     ld a, [wBattleActionId]
     cp ITEM_ELFWATER
     jr z, .read_battle_target
@@ -1649,9 +1650,11 @@ RollTableDamageScaledByResistance::
 RollTableDamageScaledByResistance_Data::
     db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8c, $00, $b4, $00, $c8, $00
 
-; Rolls the chance from bits 0-1 of the target's resistance byte 2, the way bits 6-7 of its status
-; byte 8 choose (RollChanceByHLBits6And7_Bank3B). (C1, E-0357)
-InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B::
+; HL = the target's wBattleStatus8 entry and A = bits 1-0 of its wSlotResistances byte 2 (the
+; RESIST_STOPSPELL level), then RollChanceByHLBits6And7_Bank3B: bits 6 and 7 of that status byte
+; pick the chance table. Carry set means InflictTargetStatus0Bit0 goes on to set
+; BSTAT1_SPELLS_SEALED; no carry takes StoreUnaffectedMessage_Bank3B. (C1, E-0371)
+InflictTargetStatus0Bit0_RollStopSpell::
     call HLToBattleStatus8EntryOfBattleTarget_Bank3B
     call TargetSlotResistances2Byte
     and $03
@@ -1679,28 +1682,27 @@ HLToBattleStatus8EntryOfBattleTarget_Bank3B::
 ; A = byte 0 of the target's 7-byte wSlotResistances record (E-0126)
 TargetSlotResistancesByte0_Bank3B::
     ld de, wSlotResistances
-    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
+    jr GetTargetResistanceByte_Bank3B
 
 ; A = byte 1 of the target's 7-byte wSlotResistances record (E-0126)
 TargetSlotResistancesByte1_Bank3B::
     ld de, wSlotResistances + $1
-    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
+    jr GetTargetResistanceByte_Bank3B
 
 ; A = byte 2 of the target's 7-byte wSlotResistances record (wSlotResistances + $2 + 7 * target)
 ; (E-0124) (E-0340: the address in its name read as its RAM name; was TargetSlotResistances2Byte)
 TargetSlotResistances2Byte::
     ld de, wSlotResistances + $2
-    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
+    jr GetTargetResistanceByte_Bank3B
 
-; A = byte 3 of the target's 7-byte resistance record
-; (GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget). (C1, E-0357)
+; A = byte 3 of the target's 7-byte resistance record (GetTargetResistanceByte_Bank3B). (C1, E-0357)
 GetTargetSlotResistancesByte3_Bank3B::
     ld de, wSlotResistances + $3
-    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
+    jr GetTargetResistanceByte_Bank3B
     db $11, $76, $da, $18, $08, $11, $77, $da, $18, $03, $11, $78, $da
 
 ; A = the byte at DE + 7 x wBattleTarget. (C1, E-0357)
-GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget::
+GetTargetResistanceByte_Bank3B::
     ld a, [wBattleTarget]
     ld b, a
     add a
@@ -1716,12 +1718,12 @@ GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget::
     ld a, [de]
     ret
 
-; bit 6 of [HL]: RollChanceByHLBits6And7_Bank3B_ReadRandomLo; else bit 7:
+; bit 6 of [HL]: RollChanceForLevel100Down_Bank3B; else bit 7:
 ; RollChanceByLevel_100_100_75_0_Bank3B; else RollChanceForLevelA_Bank3B (E-0122)
 RollChanceByHLBits6And7_Bank3B::
     bit 6, [hl]
     jr z, .skip
-    call RollChanceByHLBits6And7_Bank3B_ReadRandomLo
+    call RollChanceForLevel100Down_Bank3B
     jr .return
 
 .skip:
@@ -1746,12 +1748,12 @@ RollChanceForLevelA_Bank3B::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom
+    jp RollChance84Percent_Bank3B
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom3
+    jp RollChance50Percent_Bank3B
 
 .done:
     scf
@@ -1768,17 +1770,19 @@ RollChanceByLevel_100_100_75_0_Bank3B::
 
 .skip:
     jr nz, .done
-    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2
+    jp RollChance75Percent_Bank3B
 
 .done:
     scf
     ccf
     ret
 
-; Rolls by band A: 0 always succeeds (carry), 1 succeeds 3 times in 4
-; (RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2), 2 two times in 5
-; (RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4), 3 never. (C1, E-0357)
-RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
+; A = level 0-3: success (carry) always for 0, about 75% for 1 (RollChance75Percent_Bank3B), about
+; 40% for 2 (RollChance40Percent_Bank3B), never for 3; the same shape as
+; RollChanceByLevel_100_75_40_0 in bank $36. RollChanceByHLBits6And7_Bank3B uses it when bit 6 of
+; [HL] is set, where the bank-$36 RollChanceByHLBits6And7 uses RollChanceByLevelAndSide. (C1,
+; E-0371)
+RollChanceForLevel100Down_Bank3B::
     and a
     jr nz, .cp_01
     scf
@@ -1787,12 +1791,12 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2
+    jp RollChance75Percent_Bank3B
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4
+    jp RollChance40Percent_Bank3B
 
 .done:
     scf
@@ -1800,28 +1804,28 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
     ret
 
 ; Carry when the random byte is below $D8 (216 in 256). (C1, E-0357)
-RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom::
+RollChance84Percent_Bank3B::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $d8
     ret
 
 ; Carry when the random byte is below $BF (191 in 256). (C1, E-0357)
-RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2::
+RollChance75Percent_Bank3B::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $bf
     ret
 
 ; Carry when the random byte is below $7F (127 in 256). (C1, E-0357)
-RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom3::
+RollChance50Percent_Bank3B::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $7f
     ret
 
 ; Carry when the random byte is below $66 (102 in 256). (C1, E-0357)
-RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4::
+RollChance40Percent_Bank3B::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $66
@@ -1934,17 +1938,17 @@ RestoreTargetHPIfHurt::
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank3_b
     call RestoreTargetHPByActionAmount
     ld l, $37
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
+    jp StoreActorMessage_Bank3B
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
-; if the target's MP is below its max, runs RestoreTargetMPIfLow_SetDamageRandomInRange and shows
-; message $C3; otherwise the no-effect path (E-0124)
+; if the target's MP is below its max, runs RestoreTargetMPIfLow_AddItemMP and shows message $C3;
+; otherwise the no-effect path (E-0124)
 RestoreTargetMPIfLow::
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -1957,21 +1961,21 @@ RestoreTargetMPIfLow::
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
-    jr z, .skip
-    call RestoreTargetMPIfLow_SetDamageRandomInRange
+    jr z, .to_store_nothing_happened_message_bank3_b
+    call RestoreTargetMPIfLow_AddItemMP
     ld l, $c3
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
+    jp StoreActorMessage_Bank3B
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
 ; clears status byte 0 bits 0-1 of the target when set (message $4E); otherwise takes the no-effect
 ; path (E-0122)
 CureTargetStatus0Bits01::
     call ClearDamageAndReadTargetStatus0
     and $03
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank3_b
     ld a, [hl]
     and $fc
     ld [hl], a
@@ -1979,15 +1983,15 @@ CureTargetStatus0Bits01::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
 ; clears status byte 0 bit 6 of the target when set (message $4F, wSlotMarks[target] = 3); otherwise
 ; takes the no-effect path (E-0122)
 CureTargetStatus0Bit6::
     call ClearDamageAndReadTargetStatus0
     and $40
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank3_b
     ld a, [hl]
     and $bf
     ld [hl], a
@@ -1999,15 +2003,15 @@ CureTargetStatus0Bit6::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
 ; clears status byte 0 bit 5 of the target when set (message $51); otherwise takes the no-effect
 ; path (E-0122)
 CureTargetStatus0Bit5::
     call ClearDamageAndReadTargetStatus0
     and $20
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank3_b
     ld a, [hl]
     and $df
     ld [hl], a
@@ -2015,15 +2019,15 @@ CureTargetStatus0Bit5::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
 ; clears status byte 0 bits 2, 3 and 7 of the target when set (message $82, wSlotMarks[target] = 3);
 ; otherwise takes the no-effect path (E-0122)
 CureTargetStatus0Bits237::
     call ClearDamageAndReadTargetStatus0
     and $8c
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank3_b
     ld a, [hl]
     and $73
     ld [hl], a
@@ -2035,15 +2039,15 @@ CureTargetStatus0Bits237::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
 ; clears status byte 0 bit 4 of the target when set (message $83, wSlotMarks[target] = 3); otherwise
 ; takes the no-effect path (E-0122)
 CureTargetStatus0Bit4::
     call ClearDamageAndReadTargetStatus0
     and $10
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank3_b
     ld a, [hl]
     and $ef
     ld [hl], a
@@ -2055,23 +2059,23 @@ CureTargetStatus0Bit4::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
 ; if the target slot is occupied, far-calls ApplyTargetMaxHPAmount; otherwise one of two failure
 ; paths (E-0122)
 ApplyTargetMaxHPIfPresent::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, .skip
-    jr z, .skip2
+    jr nc, .to_store_nothing_happened_message_bank3_b
+    jr z, .skip
     farcall ApplyTargetMaxHPAmount
     ret
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
-.skip2:
+.skip:
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
 ; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239) (E-0344: the address in
@@ -2127,25 +2131,25 @@ ApplyTargetBattleWordArray3FReduction::
 .skip2:
     ld h, $e6
     lb bc, $00, $80
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank3B
 
 .call_show_battle_text_category0:
     ld d, $7b
     farcall ShowBattleTextCategory0
     lb bc, $00, $00
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp StoreMessageFlags_Bank3B
 
 .call_show_battle_text_category02:
     ld d, $7d
     farcall ShowBattleTextCategory0
     lb bc, $00, $00
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp StoreMessageFlags_Bank3B
 
 .call_show_battle_text_category03:
     ld d, $7c
     farcall ShowBattleTextCategory0
     lb bc, $00, $00
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp StoreMessageFlags_Bank3B
 
 ; reduces the target's wBattleExtraStat (or adds to wBattleMeter for local targets); when status
 ; bits 0-1 are clear and the chance roll passes, sets status bit 0 (message $75) (E-0129)
@@ -2239,25 +2243,25 @@ InflictStatus0Bit0WithBattleWordArray3FReduction::
 .skip:
     ld h, $e6
     lb bc, $00, $80
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank3B
 
 .call_show_battle_text_category0:
     ld d, $7b
     farcall ShowBattleTextCategory0
     lb bc, $00, $00
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp StoreMessageFlags_Bank3B
 
 .call_show_battle_text_category02:
     ld d, $7d
     farcall ShowBattleTextCategory0
     lb bc, $00, $00
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp StoreMessageFlags_Bank3B
 
 .call_show_battle_text_category03:
     ld d, $7c
     farcall ShowBattleTextCategory0
     lb bc, $00, $00
-    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp StoreMessageFlags_Bank3B
 
 ; wBattleEndFlag = 1 and stores message $98 (ClearDamageAndStoreResolveMsgFlags_Bank3B) (E-0122)
 SetBattleEndFlagAndMessage98::
@@ -2274,17 +2278,16 @@ SetBattleEndFlagAndMessage98::
 JumpToEffectFailurePath::
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
-; unless already set, rolls the chance
-; (InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B) and sets bit 0 of the
-; target's wBattleStatus1 status (message $3B); otherwise one of two failure paths (E-0124)
+; unless already set, rolls the chance (InflictTargetStatus0Bit0_RollStopSpell) and sets bit 0 of
+; the target's wBattleStatus1 status (message $3B); otherwise one of two failure paths (E-0124)
 InflictTargetStatus0Bit0::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_SPELLS_SEALED, [hl]
     jr nz, .skip
-    call InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B
-    jr nc, .skip2
+    call InflictTargetStatus0Bit0_RollStopSpell
+    jr nc, .to_store_unaffected_message_bank3_b
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -2296,8 +2299,8 @@ InflictTargetStatus0Bit0::
 .skip:
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
-.skip2:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2
+.to_store_unaffected_message_bank3_b:
+    jp StoreUnaffectedMessage_Bank3B
 
 ; sets bit 2 of the target's status byte 0 (message $43); if already set takes the failure path
 ; (E-0122)
@@ -2320,7 +2323,7 @@ InflictTargetStatus0Bit2::
 ; caller)
 RollTableDamageWithMessage35:: ; configured code entry (E-0236); C0
     call RollTableDamageScaledByResistance
-    jp RaiseWord3FAndRestoreHP_Skip
+    jp RollTableDamageWithMessage35_StoreMessage
 
 ; adds 30 to the target's wBattleExtraStat word capped at 999, then if its HP is below max runs
 ; RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; entry of
@@ -2357,21 +2360,22 @@ RaiseWord3FAndRestoreHP::
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
-    jr z, .skip2
+    jr z, .to_store_nothing_happened_message_bank3_b
     call RestoreTargetHPByActionAmount
     ld l, $37
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
+    jp StoreActorMessage_Bank3B
 
-.skip2:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
+.to_store_nothing_happened_message_bank3_b:
+    jp StoreNothingHappenedMessage_Bank3B
 
-; Resolve message actor $35, target $B5, flags $A8, argument $80
-; (UnreferencedStoreResolveMessage35D0_SetResolveMsgActor). (C1, E-0357)
-RaiseWord3FAndRestoreHP_Skip::
+; The resolve message of RollTableDamageWithMessage35: actor-side battle text $35 ('<BUF0> took
+; <BUF1> damage!'), target-side $B5 ('But <BUF0> was unaffected!'), flags $A8, argument $80, stored
+; by StoreResolveMessage_Bank3B. (C1, E-0371)
+RollTableDamageWithMessage35_StoreMessage::
     lb hl, $b5, $35
     lb bc, $80, $a8
-    jr UnreferencedStoreResolveMessage35D0_SetResolveMsgActor
+    jr StoreResolveMessage_Bank3B
 
 ; HL = $D035, BC = $88A8, then falls into the resolve-message store at $4EBE; skipped by the jr
 ; before it and no caller found (E-0236)
@@ -2380,7 +2384,7 @@ UnreferencedStoreResolveMessage35D0:: ; configured code entry (E-0236); C0
     lb bc, $88, $a8
 
 ; Stores the resolve message: actor L, target H, flags C, argument B. (C1, E-0357)
-UnreferencedStoreResolveMessage35D0_SetResolveMsgActor::
+StoreResolveMessage_Bank3B::
     ld a, l
     ld [wResolveMsgActor], a
     ld a, h
@@ -2400,7 +2404,7 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B::
 
 ; Stores the resolve message actor L, flags C and argument B (the target is left alone). (C1,
 ; E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
+StoreActorMessage_Bank3B::
     ld a, l
     ld [wResolveMsgActor], a
     ld a, c
@@ -2409,19 +2413,20 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
     ld [wResolveMsgArg], a
     ret
 
-; Target $CC, flags $80, argument 0
-; (SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget). (C1, E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip::
+; The no-effect message: target-side battle text $CC ('But nothing happened!'), flags $80, argument
+; 0, stored by StoreTargetMessage_Bank3B; the failure path of nine bank-$3B effect routines such as
+; RestoreTargetHPIfHurt and RestoreTargetMPIfLow. (C1, E-0371)
+StoreNothingHappenedMessage_Bank3B::
     ld h, $cc
     lb bc, $00, $80
-    jr SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jr StoreTargetMessage_Bank3B
 
-; Target $B5, flags $80, argument 0
-; (SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget). (C1, E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2::
+; Target-side battle text $B5 ('But <BUF0> was unaffected!'), flags $80, argument 0, stored by
+; StoreTargetMessage_Bank3B; InflictTargetStatus0Bit0 takes it when its roll fails. (C1, E-0371)
+StoreUnaffectedMessage_Bank3B::
     ld h, $b5
     lb bc, $00, $80
-    jr SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jr StoreTargetMessage_Bank3B
 
 ; wResolveMsgTarget = $B5 and the word wResolveMsgFlags = $0180 (E-0122) (E-0340: the address in its
 ; name read as its RAM name; was SetResolveMsgTargetB5AndResolveMsgFlagsTo0180)
@@ -2429,14 +2434,14 @@ SetResolveMsgTargetB5AndResolveMsgFlagsTo0180::
     ld h, $b5
     lb bc, $01, $80
 
-; Stores the resolve message target H, then flags and argument
-; (SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags). (C1, E-0357)
-SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
+; Stores the target-side message H in wResolveMsgTarget, then falls into StoreMessageFlags_Bank3B
+; for flags C and argument B. (C1, E-0371)
+StoreTargetMessage_Bank3B::
     ld a, h
     ld [wResolveMsgTarget], a
 
 ; Stores the resolve message flags C and argument B. (C1, E-0357)
-SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
+StoreMessageFlags_Bank3B::
     ld a, c
     ld [wResolveMsgFlags], a
     ld a, b
@@ -2465,26 +2470,26 @@ ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A::
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
 GetBattleMaxHP_Bank3B::
     ld hl, wBattleMaxHP
-    jr GetBattleMP_Bank3B_Skip
+    jr GetBattleStatWord_Bank3B
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 GetBattleMaxMP_Bank3B::
     ld hl, wBattleMaxMP
-    jr GetBattleMP_Bank3B_Skip
+    jr GetBattleStatWord_Bank3B
 
-; HL = wBattleHP, then the slot's word (GetBattleMP_Bank3B_Skip). (C1, E-0357)
+; HL = wBattleHP, then the slot's word (GetBattleStatWord_Bank3B). (C1, E-0357)
 GetBattleHP_Bank3B::
     ld hl, wBattleHP
-    jr GetBattleMP_Bank3B_Skip
+    jr GetBattleStatWord_Bank3B
 
-; HL = wBattleMP, then the slot's word (GetBattleMP_Bank3B_Skip). (C1, E-0357)
+; HL = wBattleMP, then the slot's word (GetBattleStatWord_Bank3B). (C1, E-0357)
 GetBattleMP_Bank3B::
     ld hl, wBattleMP
-    jr GetBattleMP_Bank3B_Skip
+    jr GetBattleStatWord_Bank3B
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
 ; HL = the word at HL + 2 x slot A (the value, not a pointer). (C1, E-0357)
-GetBattleMP_Bank3B_Skip::
+GetBattleStatWord_Bank3B::
     add a
     add_a_to_hl
     deref_hl

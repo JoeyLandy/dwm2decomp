@@ -50,7 +50,7 @@
     "24:70A1": {"bank": "1F", "why": "the glyph font"},
     "30:4F3D": {"bank": "30", "label": "FlagBitHandlerTable", "why": "the 16-word handler table indexed by E and dispatched with JumpToWordAtHL: entries 0-7 are RollPersonalityHiHighFlag01 ... RollSlotTraitLowFlag80, entries 8-15 all point at $4FC6"},
     "31:728F": {"bank": "31", "why": "a word table indexed by C, its words passed to CopyGlyphTilesToVRAM"},
-    "73:52B2": {"bank": "73", "why": "a map message table position read by SceneChestBattle_StartMessageHL_B73b"},
+    "73:52B2": {"bank": "73", "why": "a map message table position read by SceneChestBattle_StartMapMessage"},
     "73:5FEE": {"bank": "73", "why": "the other table beside ScriptCommand4C_Run_RunFieldCommandTemp0_Data"},
     "73:6816": {"bank": "56", "why": "compressed graphics, B = $56"},
     "73:681E": {"bank": "56", "why": "compressed graphics, B = $56"},

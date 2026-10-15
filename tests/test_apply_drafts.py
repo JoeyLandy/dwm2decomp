@@ -102,5 +102,41 @@ class Apply(unittest.TestCase):
                                                 "note": "Eight prices, one word each, in gold. (C1, E-0369)"})
 
 
+@unittest.skipUnless((ROOT / "local/roms/dwm2-cobi-us.gbc").is_file(), "reference ROM not present")
+class Probes(unittest.TestCase):
+    """D-012: a draft's probes must pass and belong to labels it marks probed; a kept note becomes C2."""
+
+    MUL = {"label": "Multiply8By16", "bank": "00", "address": "16AA", "kind": "code", "proposed_name": None,
+           "note": None, "confidence": "C1", "probe_status": "probed", "evidence_read": ["body"], "_draft": "d.json"}
+    PROBE = {"id": "00:16AA#1", "label": "Multiply8By16", "bank": "00", "address": "16AA",
+             "regs": {"a": 3, "b": 1, "c": 2}, "expect": {"regs": {"e": 0, "h": 3, "l": 6}}, "_draft": "d.json"}
+
+    def test_a_passing_probe_of_a_probed_label(self):
+        self.assertEqual(apply_drafts.validate_probes([dict(self.PROBE)], [dict(self.MUL)]), [])
+
+    def test_failing_orphan_and_missing_probes(self):
+        bad = dict(self.PROBE, expect={"regs": {"l": 7}})
+        self.assertTrue(any("fails" in p for p in apply_drafts.validate_probes([bad], [dict(self.MUL)])))
+        orphan = apply_drafts.validate_probes([dict(self.PROBE)], [dict(self.MUL, probe_status="not_probed")])
+        self.assertTrue(any("not a drafted label marked probed" in p for p in orphan))
+        self.assertTrue(any("has no probe" in p for p in apply_drafts.validate_probes([], [dict(self.MUL)])))
+        twice = apply_drafts.validate_probes([dict(self.PROBE), dict(self.PROBE)], [dict(self.MUL)])
+        self.assertTrue(any("repeated id" in p for p in twice))
+
+    def test_c2_needs_a_probe(self):
+        probs = apply_drafts.validate_probes([], [dict(self.MUL, probe_status="not_probed", confidence="C2")])
+        self.assertTrue(any("C2 without a probe" in p for p in probs))
+
+    def test_a_kept_hand_note_becomes_c2(self):
+        with Root() as root:
+            (root / "config/annotations.json").write_text(json.dumps(
+                {"_comment": "x", "00:16AA": "E:H:L = A * BC. (C1, E-0357)"}, indent=2) + "\n", encoding="utf-8")
+            apply_drafts.apply([dict(self.MUL)], {"00:16AA": "Multiply8By16"}, "E-0372", root)
+            ann = json.loads((root / "config/annotations.json").read_text(encoding="utf-8"))
+            self.assertEqual(ann["00:16AA"], "E:H:L = A * BC. (C2, E-0357; probed E-0372)")
+            import present
+            self.assertTrue(present.HAND_NOTE.search(ann["00:16AA"]))  # still a hand reading
+
+
 if __name__ == "__main__":
     unittest.main()

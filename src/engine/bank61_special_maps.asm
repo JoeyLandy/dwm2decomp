@@ -371,7 +371,7 @@ LoadMapHeaderByMapType::
     dw LoadMapHeaderByMapType_Type3
     dw LoadMapHeaderByMapType_Type3
     dw LoadMapType5TilesetAndHeader
-    dw LoadMapHeaderByMapType_WriteTemp0
+    dw LoadMapHeaderByMapType_Type6
     dw LoadMapHeaderByMapType_Type7
 
 ; Map type 7's header: special map record $66 (LoadSpecialMapHeader). (C1, E-0357)
@@ -383,7 +383,7 @@ LoadMapHeaderByMapType_Type7::
 
 ; Map type 6's header: special map record $50 or $51 by bit 0 of the floor's wKeyWorldFloorInfo byte
 ; 1, with C = 2 x bit 0 of its wKeyWorldFloorState byte 3. (C1, E-0357)
-LoadMapHeaderByMapType_WriteTemp0::
+LoadMapHeaderByMapType_Type6::
     ld a, [wKeyWorldFloor]
     sla a
     sla a
@@ -720,13 +720,15 @@ LoadKeyWorldTilesetAndHeader::
 LoadKeyWorldTilesetAndHeader_Data::
     db $11, $11, $21, $11, $12, $12, $11, $11, $11, $31
 
-; Loads a key-world screen by map type (wMapType & 7). (C1, E-0357)
-LoadMapScreen_ReadMapType::
+; Far-called by LoadMapScreen when wMapType bit 7 is set (a special map: $80 key world, $82-$87
+; other kinds): runs the screen loader for wMapType & 7 (LoadMapScreen_Type0 to LoadMapScreen_Type7;
+; type 4 reuses LoadMapScreen_Type3, and LoadMapScreen_Type1 loads nothing). (C1, E-0371)
+LoadMapScreen_SpecialMap::
     ld a, [wMapType]
     and $07
     jumptable
     dw LoadMapScreen_Type0
-    dw LoadMapScreen_Return
+    dw LoadMapScreen_Type1
     dw LoadMapScreen_Type2
     dw LoadMapScreen_Type3
     dw LoadMapScreen_Type3
@@ -1573,7 +1575,7 @@ KeyWorldScreenSpotRecords::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 191
 
 ; Map type 1's screen: nothing to load. (C1, E-0357)
-LoadMapScreen_Return::
+LoadMapScreen_Type1::
     ret
     db $c9
 
@@ -2175,43 +2177,44 @@ KeyWorldTilesetTable::
     dfar KeyWorldTiles9 ; id 9: compressed BG tiles decompressed to vTiles2 (128 tiles)
     dfar KeyWorldPalettes9 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
 
-; The warp check for a key world, by map type (wMapType & 7). (C1, E-0357)
-CheckWarpAtPlayer_ReadMapType::
+; Far-called by CheckWarpAtPlayer (bank $11) when wMapType bit 7 is set (a special map): runs the
+; warp check for wMapType & 7; types 0, 1 and 6 return C = 0 at once. (C1, E-0371)
+CheckWarpAtPlayer_SpecialMap::
     ld a, [wMapType]
     and $07
     jumptable
-    dw CheckWarpAtPlayer_ReturnAfterSetup
-    dw CheckWarpAtPlayer_ReturnAfterSetup_2
-    dw CheckWarpAtPlayer_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1
-    dw CheckWarpAtPlayer_ToCheckKeyWorldWarpTable
-    dw CheckWarpAtPlayer_ToWarpToScreen01Event83
+    dw CheckWarpAtPlayer_NoWarp
+    dw CheckWarpAtPlayer_Type1
+    dw CheckWarpAtPlayer_AreaExit
+    dw CheckWarpAtPlayer_WarpList
+    dw CheckWarpAtPlayer_SpecialMap_Type4
     dw CheckWarpAtPlayer_ToWarpByKeyWorldFloorInfo1EntryAtScreen14
-    dw CheckWarpAtPlayer_ReturnAfterSetup
-    dw CheckWarpAtPlayer_ToCallFOnScreenY1
+    dw CheckWarpAtPlayer_NoWarp
+    dw CheckWarpAtPlayer_LinkedMap
 
 ; Map types 0 and 6: no warp here (C = 0). (C1, E-0357)
-CheckWarpAtPlayer_ReturnAfterSetup::
+CheckWarpAtPlayer_NoWarp::
     ld c, $00
     ret
 
 ; Map type 1: no warp here (C = 0). (C1, E-0357)
-CheckWarpAtPlayer_ReturnAfterSetup_2::
+CheckWarpAtPlayer_Type1::
     ld c, $00
     ret
 
 ; Map type 2: warps by the floor's area exit on screen row 1
 ; (WarpByKeyWorldAreaExitsEntryAtScreenRow1). (C1, E-0357)
-CheckWarpAtPlayer_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1::
+CheckWarpAtPlayer_AreaExit::
     call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
 ; Map type 3: the floor's warp list (CheckKeyWorldWarpTable). (C1, E-0357)
-CheckWarpAtPlayer_ToCheckKeyWorldWarpTable::
+CheckWarpAtPlayer_WarpList::
     call CheckKeyWorldWarpTable
     ret
 
 ; Map type 4: on screen row 1 warps to screen (0, 1) (WarpToScreen01Event83). (C1, E-0357)
-CheckWarpAtPlayer_ToWarpToScreen01Event83::
+CheckWarpAtPlayer_SpecialMap_Type4::
     call WarpToScreen01Event83
     ret
 
@@ -2222,7 +2225,7 @@ CheckWarpAtPlayer_ToWarpByKeyWorldFloorInfo1EntryAtScreen14::
     ret
 
 ; Map type 7: on screen row 1 warps to the linked map (CallFOnScreenY1). (C1, E-0357)
-CheckWarpAtPlayer_ToCallFOnScreenY1::
+CheckWarpAtPlayer_LinkedMap::
     call CallFOnScreenY1
     ret
 
@@ -2519,16 +2522,16 @@ CheckWarpsByMapType::
     and $07
     jumptable
     dw CheckWarpsByMapType_RunThreeWarpChecks
-    dw CheckWarpsByMapType_ToReturnStub_2
+    dw CheckWarpsByMapType_Type1
     dw CheckWarpsByMapType_Type2
     dw CheckWarpsByMapType_Type3
-    dw CheckWarpsByMapType_Return
+    dw CheckWarpsByMapType_NoWarps
     dw CheckWarpsByMapType_Type5
     dw CheckWarpsByMapType_Type6
-    dw CheckWarpsByMapType_Return
+    dw CheckWarpsByMapType_NoWarps
 
-; Key-world warps, map type 4: nothing. (C1, E-0357)
-CheckWarpsByMapType_Return::
+; Map types 4 and 7 of CheckWarpsByMapType: nothing (a bare ret). (C1, E-0371)
+CheckWarpsByMapType_NoWarps::
     ret
 
 ; entry 0 of the rst $00 table in CheckWarpsByMapType: calls CheckWarpsByMapType_KeyWorldGoalWarp
@@ -2547,7 +2550,7 @@ CheckWarpsByMapType_RunThreeWarpChecks::
     ret
 
 ; Key-world warps, map type 1: nothing (ReturnStub_2). (C1, E-0357)
-CheckWarpsByMapType_ToReturnStub_2::
+CheckWarpsByMapType_Type1::
     call ReturnStub_2
     ret
 
@@ -4240,7 +4243,7 @@ KeyWorldWarps63::
 
 ; SetupTownObjectsForMap case 0 (band 0 (SetupTownObjectsForMap.set_map_object_count_to_0A),
 ; wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching;
-; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen inside wMapWidthScreens x
+; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen inside wMapWidthScreens x
 ; wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width +
 ; screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot,
 ; otherwise its nibbles place the object; 64 screens (E-0194, C1)
@@ -4313,7 +4316,7 @@ TownObjectSpotGrid0::
     db $03, $04, $05, $01, $05, $05, $08, $03 ; id 63
 
 ; SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
 ; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
 ; $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
 ; screen, $FF a new spot, otherwise its nibbles place the object; 64 screens (E-0194, C1)
@@ -4384,7 +4387,7 @@ TownObjectSpotGrid1::
     db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 63
 
 ; SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
 ; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
 ; $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
 ; screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
@@ -4535,7 +4538,7 @@ TownObjectSpotGrid2::
     db $02, $02, $03, $04, $05, $05, $07, $03 ; id 143
 
 ; SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
 ; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
 ; $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
 ; screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
@@ -4686,7 +4689,7 @@ TownObjectSpotGrid3::
     db $02, $04, $03, $02, $04, $05, $06, $03 ; id 143
 
 ; SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
 ; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
 ; $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
 ; screen, $FF a new spot, otherwise its nibbles place the object; 36 screens (E-0194, C1)
@@ -4731,7 +4734,7 @@ TownObjectSpotGrid4::
     db $03, $06, $06, $02, $03, $06, $06, $02 ; id 35
 
 ; SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
 ; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
 ; $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
 ; screen, $FF a new spot, otherwise its nibbles place the object; 6 screens (E-0194, C1)
@@ -4744,7 +4747,7 @@ TownObjectSpotGrid5::
     db $02, $01, $03, $04, $07, $02, $ff, $ff ; id 5
 
 ; SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
 ; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
 ; $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
 ; screen, $FF a new spot, otherwise its nibbles place the object; 25 screens (E-0194, C1)

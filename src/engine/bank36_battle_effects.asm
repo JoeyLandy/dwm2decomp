@@ -1260,7 +1260,7 @@ ResolveStepDamageMessage::
     ld a, [wBattleActor]
     ld b, a
     call LoadBattleMonsterPictureForSlotB
-    call ResolveStepDamageMessage_WaitLinkMode
+    call ResolveStepDamageMessage_SetTransformNameByte
     ret
 
 .skip:
@@ -1351,12 +1351,12 @@ ResolveStepAdvanceSubPhase::
     ld [wBattleResolveStep], a
     ret
 
-; Carry when wRandomLo is below the actor's resolve chance (RollRandomLoBelowChance_WriteTemp0), a
-; chance of 3 taken as 4. (C1, E-0357)
+; Carry when wRandomLo is below the actor's resolve chance
+; (RollRandomLoBelowChance_LoadActorChance), a chance of 3 taken as 4. (C1, E-0357)
 RollRandomLoBelowChance::
     push bc
     push hl
-    farcall RollRandomLoBelowChance_WriteTemp0
+    farcall RollRandomLoBelowChance_LoadActorChance
     pop hl
     pop bc
     ldh a, [hTemp0]
@@ -1634,7 +1634,7 @@ ResolveStepDamageMessage_ReadSoundChannelSlots::
     ret nz
     ld a, [wBattleSubStep]
     or a
-    jr z, .call_resolve_step_damage_message_set_slot
+    jr z, .call_lower_target_agl
     ld hl, wBattleSubPhase
     inc [hl]
     xor a
@@ -1662,8 +1662,8 @@ ResolveStepDamageMessage_ReadSoundChannelSlots::
     call ResolveStepDamageMessage_RestartForTarget
     ret
 
-.call_resolve_step_damage_message_set_slot:
-    call ResolveStepDamageMessage_SetSlotStatus6Bit7
+.call_lower_target_agl:
+    call LowerTargetAGL
     ld a, [wResolveMsgFlags]
     bit 4, a
     ld a, $87
@@ -3034,7 +3034,7 @@ RollVsSapResistance::
 
 ; Lowers the target's DEF by a third of its base DEF (a half for Sap), not below 0, with the drop in
 ; wBattleDamage; no effect (A = 0) when DEF is already 0 or below 2. (C1, E-0357)
-ActionEffect_UltraDown_GetBattleDEF::
+LowerTargetDEF_GetBattleDEF::
     ld a, [wBattleTarget]
     call GetBattleDEF
     ld b, h
@@ -3188,7 +3188,7 @@ RollVsSlowResistance::
 
 ; Lowers the target's AGL by a third of its base AGL (a half for Slow), keeping at least 1, with the
 ; drop in wBattleDamage; no effect (A = 0) when AGL is below 2. (C1, E-0357)
-ResolveStepDamageMessage_GetBaseAGLOfSlotA::
+LowerTargetAGL_ApplyDrop::
     ld a, [wBattleTarget]
     call GetBaseAGLOfSlotA
     ld a, [wBattleActionId]
@@ -3476,7 +3476,7 @@ ActionEffect_RobMagic_DrainTargetMPAmount::
     ld [hli], a
     ld [hl], b
     ld a, [wBattleActor]
-    call ActionEffect_RobMagic_GetBattleMP
+    call ActionEffect_RobMagic_MPAboveMax
     jr nc, .return
     ld a, [wBattleActor]
     ld bc, wBattleMaxMP + $1
@@ -3605,15 +3605,15 @@ ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36::
 
 ; Transform: the actor takes the target's body flags, its base HP and MP as maximums (current values
 ; capped), base ATK, DEF and AGL, then its resistances and the rest. (C1, E-0357)
-ActionEffect_Transform_SlotSpeciesNibblesD00AD00B::
+ActionEffect_Transform_TakeTargetStats::
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_SlotSpeciesNibblesD00AD00B_2
+    call ActionEffect_Transform_GetBodyFlags
     ld a, [wBattleActor]
     ld hl, wSlotBodyFlags
     add_a_to_hl
     ld [hl], c
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_GetBaseHP
+    call ActionEffect_Transform_CappedBaseHP
     ld a, [wBattleActor]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -3636,7 +3636,7 @@ ActionEffect_Transform_SlotSpeciesNibblesD00AD00B::
     ld [hli], a
     ld [hl], b
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_GetBaseMP
+    call ActionEffect_Transform_CappedBaseMP
     ld a, [wBattleActor]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -3683,7 +3683,7 @@ ActionEffect_Transform_SlotSpeciesNibblesD00AD00B::
     ld [hli], a
     ld [hl], b
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_BattlerRecordFieldAddress
+    call ActionEffect_Transform_ResistancesAddress
     ld a, [wBattleActor]
     ld de, wSlotResistances
     ld b, a
@@ -3707,7 +3707,7 @@ ActionEffect_Transform_SlotSpeciesNibblesD00AD00B::
     ld [wBattleArg3], a
     farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_BattlerRecordFieldAddress_2
+    call ActionEffect_Transform_SkillListAddress
     ld a, [wBattleActor]
     ld de, wBattleSkillsPrefix
     swap a
@@ -4858,7 +4858,7 @@ ActionEffect_BeDragon_LoadMonsterRecord::
     call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleHP
-    call ActionEffect_BeDragon_CompareHLToBC
+    call ActionEffect_BeDragon_CapAtNewMax
     ld a, [wRecordBufferData + $a]
     ld c, a
     ld a, [wRecordBufferData + $b]
@@ -4867,7 +4867,7 @@ ActionEffect_BeDragon_LoadMonsterRecord::
     call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleMP
-    call ActionEffect_BeDragon_CompareHLToBC
+    call ActionEffect_BeDragon_CapAtNewMax
     ld a, [wRecordBufferData + $c]
     ld c, a
     ld a, [wRecordBufferData + $d]
@@ -5464,12 +5464,12 @@ RollChanceByLevel_100_84_50_0::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_CallAdvanceRandom
+    jp RollChance84Percent
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_2_CallAdvanceRandom3
+    jp RollChance50Percent
 
 .done:
     scf
@@ -5485,7 +5485,7 @@ RollChanceByLevel_100_100_75_0::
 
 .skip:
     jr nz, .done
-    jp RollChanceForLevelA_2_CallAdvanceRandom2
+    jp RollChance75Percent
 
 .done:
     scf
@@ -5504,12 +5504,12 @@ RollChanceByLevel_100_75_40_0::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_CallAdvanceRandom2
+    jp RollChance75Percent
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_2_CallAdvanceRandom4
+    jp RollChance40Percent
 
 .done:
     scf
@@ -5529,23 +5529,23 @@ RollChanceByLevelAndSide::
     cp $04
     jr nc, .restore
     pop af
-    jp RollChanceForLevelA_2_Skip
+    jp RollChanceForLevel50Down
 
 .restore:
     pop af
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_2_CallAdvanceRandom2
+    jp RollChance75Percent
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_CallAdvanceRandom3
+    jp RollChance50Percent
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_2_CallAdvanceRandom6
+    jp RollChance25Percent
 
 .done:
     scf
@@ -5559,15 +5559,15 @@ ScaleDamageByLevel_1_085_05_0::
     ret z
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_ReadBattleDamageLo3
+    jp ScaleDamageTo85Percent
 
 .cp_02:
     cp $02
-    jr nz, .skip
-    jp RollChanceForLevelA_2_ReadBattleDamageLo5
+    jr nz, .to_clear_damage
+    jp HalveDamage
 
-.skip:
-    jp ScaleDamageTo40Percent_ClearBattleDamageLo
+.to_clear_damage:
+    jp ClearDamage
 
 ; A = level 0-3: scales the damage word wBattleDamageLo/wBattleDamageHi by 1 (unchanged), 3/4, 0.4
 ; or 0 (E-0095)
@@ -5576,55 +5576,55 @@ ScaleDamageByLevel_1_075_04_0::
     ret z
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_ReadBattleDamageLo4
+    jp ScaleDamageTo75Percent
 
 .cp_02:
     cp $02
-    jr nz, .skip
+    jr nz, .to_clear_damage
     jp ScaleDamageTo40Percent
 
-.skip:
-    jp ScaleDamageTo40Percent_ClearBattleDamageLo
+.to_clear_damage:
+    jp ClearDamage
 
 ; A = level 0-3: scales the damage word wBattleDamageLo/wBattleDamageHi by 21/16, 37/32, 3/4 or 0.3
 ; (E-0095)
 ScaleDamageByLevel_131_116_075_03::
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_2_ReadBattleDamageLo
+    jp ScaleDamageBy21Over16
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_ReadBattleDamageLo2
+    jp ScaleDamageBy37Over32
 
 .cp_02:
     cp $02
-    jr nz, .skip
-    jp RollChanceForLevelA_2_ReadBattleDamageLo4
+    jr nz, .to_scale_damage_to30_percent
+    jp ScaleDamageTo75Percent
 
-.skip:
-    jp ScaleDamageTo40Percent_ReadBattleDamageLo
+.to_scale_damage_to30_percent:
+    jp ScaleDamageTo30Percent
 
 ; A = level 0-3: scales the damage word wBattleDamageLo/wBattleDamageHi by 3/4, 1/2, 1/4 or 0
 ; (E-0095)
 ScaleDamageByLevel_075_05_025_0::
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_2_ReadBattleDamageLo4
+    jp ScaleDamageTo75Percent
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_ReadBattleDamageLo5
+    jp HalveDamage
 
 .cp_02:
     cp $02
-    jr nz, .skip
-    jp ScaleDamageTo40Percent_ReadBattleDamageLo2
+    jr nz, .to_clear_damage
+    jp QuarterDamage
 
-.skip:
-    jp ScaleDamageTo40Percent_ClearBattleDamageLo
+.to_clear_damage:
+    jp ClearDamage
 
 ; level A: 0 returns carry; 1, 2 and 3 take three different chance rolls (E-0122) (E-0344: the
 ; address in its name dropped or read as the label there; was RollChanceForLevelA)
@@ -5637,15 +5637,15 @@ RollChanceForLevelA::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_CallAdvanceRandom2
+    jp RollChance75Percent
 
 .cp_02:
     cp $02
-    jr nz, .skip
-    jp RollChanceForLevelA_2_CallAdvanceRandom3
+    jr nz, .to_roll_chance25_percent
+    jp RollChance50Percent
 
-.skip:
-    jp RollChanceForLevelA_2_CallAdvanceRandom6
+.to_roll_chance25_percent:
+    jp RollChance25Percent
 
 ; level A: 0 and 1 return, 2 and 3 take chance rolls; the following entries roll random values
 ; against $D8, $BF, $7F, $66, $4C, $3F and $26 (E-0130) (E-0344: the address in its name dropped or
@@ -5656,28 +5656,29 @@ RollChanceForLevelA_2::
     ret
 
 .skip:
-    jr nz, .skip2
-    jp RollChanceForLevelA_2_CallAdvanceRandom2
+    jr nz, .to_roll_chance40_percent
+    jp RollChance75Percent
 
-.skip2:
-    jp RollChanceForLevelA_2_CallAdvanceRandom4
+.to_roll_chance40_percent:
+    jp RollChance40Percent
 
-; The level-2-and-up chances: level 0 rolls below $7F, 1 below $4C, 2 below $26, higher fails (NC).
-; (C1, E-0357)
-RollChanceForLevelA_2_Skip::
+; A = level 0-3: carry (success) when a new random byte (AdvanceRandom, wRandomLo) is below $7F for
+; level 0, $4C for 1 and $26 for 2 (about 50%, 30% and 15%); level 3 or more returns NC.
+; RollChanceByLevelAndSide uses it for a target in slots 0-3 outside link mode 1. (C1, E-0371)
+RollChanceForLevel50Down::
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_2_CallAdvanceRandom3
+    jp RollChance50Percent
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_2_CallAdvanceRandom5
+    jp RollChance30Percent
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_2_CallAdvanceRandom7
+    jp RollChance15Percent
 
 .done:
     scf
@@ -5685,56 +5686,56 @@ RollChanceForLevelA_2_Skip::
     ret
 
 ; Carry when a new random byte is below $D8 (216 in 256). (C1, E-0357)
-RollChanceForLevelA_2_CallAdvanceRandom::
+RollChance84Percent::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $d8
     ret
 
 ; Carry when a new random byte is below $BF. (C1, E-0357)
-RollChanceForLevelA_2_CallAdvanceRandom2::
+RollChance75Percent::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $bf
     ret
 
 ; Carry when a new random byte is below $7F. (C1, E-0357)
-RollChanceForLevelA_2_CallAdvanceRandom3::
+RollChance50Percent::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $7f
     ret
 
 ; Carry when a new random byte is below $66. (C1, E-0357)
-RollChanceForLevelA_2_CallAdvanceRandom4::
+RollChance40Percent::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $66
     ret
 
 ; Carry when a new random byte is below $4C. (C1, E-0357)
-RollChanceForLevelA_2_CallAdvanceRandom5::
+RollChance30Percent::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $4c
     ret
 
 ; Carry when a new random byte is below $3F. (C1, E-0357)
-RollChanceForLevelA_2_CallAdvanceRandom6::
+RollChance25Percent::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $3f
     ret
 
 ; Carry when a new random byte is below $26. (C1, E-0357)
-RollChanceForLevelA_2_CallAdvanceRandom7::
+RollChance15Percent::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $26
     ret
 
 ; Damage times 21/16. (C1, E-0357)
-RollChanceForLevelA_2_ReadBattleDamageLo::
+ScaleDamageBy21Over16::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5747,7 +5748,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo::
     ret
 
 ; Damage times 37/32. (C1, E-0357)
-RollChanceForLevelA_2_ReadBattleDamageLo2::
+ScaleDamageBy37Over32::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5760,7 +5761,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo2::
     ret
 
 ; Damage times 85%. (C1, E-0357)
-RollChanceForLevelA_2_ReadBattleDamageLo3::
+ScaleDamageTo85Percent::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5773,7 +5774,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo3::
     ret
 
 ; Damage times 75%. (C1, E-0357)
-RollChanceForLevelA_2_ReadBattleDamageLo4::
+ScaleDamageTo75Percent::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5786,7 +5787,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo4::
     ret
 
 ; Damage halved. (C1, E-0357)
-RollChanceForLevelA_2_ReadBattleDamageLo5::
+HalveDamage::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5812,7 +5813,7 @@ ScaleDamageTo40Percent::
     ret
 
 ; Damage cut to 30%. (C1, E-0357)
-ScaleDamageTo40Percent_ReadBattleDamageLo::
+ScaleDamageTo30Percent::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5825,7 +5826,7 @@ ScaleDamageTo40Percent_ReadBattleDamageLo::
     ret
 
 ; Damage cut to a quarter. (C1, E-0357)
-ScaleDamageTo40Percent_ReadBattleDamageLo2::
+QuarterDamage::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5838,7 +5839,7 @@ ScaleDamageTo40Percent_ReadBattleDamageLo2::
     ret
 
 ; Damage 0. (C1, E-0357)
-ScaleDamageTo40Percent_ClearBattleDamageLo::
+ClearDamage::
     xor a
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
@@ -5965,14 +5966,14 @@ DivideHLBy3::
     ret
 
 ; HL = 15% of HL (60%, then a quarter). (C1, E-0357)
-ActionEffect_Geyser_ScaleHLTo60Percent::
+ActionEffect_Geyser_ScaleHLTo15Percent::
     call ScaleHLTo60Percent
     call ShiftHLRight1
     call ShiftHLRight1
     ret
 
 ; HL = 5% of HL (80%, then a sixteenth). (C1, E-0357)
-ActionEffect_Geyser_ScaleHLTo80Percent_Bank36::
+ActionEffect_Geyser_ScaleHLTo5Percent::
     call ScaleHLTo80Percent_Bank36
     call ShiftHLRight1
     call ShiftHLRight1
@@ -6027,38 +6028,40 @@ SlotDEFBelowBuffCap::
     call GetBattleDEF
     ld bc, $03e7
     call CompareHLToBC
-    jr nc, SlotDEFBelowBuffCap_Skip3
+    jr nc, SlotDEFBelowBuffCap_NotBelow
     push hl
     ld a, [wBattleArg0]
     call GetBaseDEFOfSlotA
     ld a, [wLinkMode]
     cp $01
-    jr z, SlotDEFBelowBuffCap_Skip
+    jr z, SlotDEFBelowBuffCap_QuadrupleCap
     ld a, [wBattleArg0]
     cp $04
-    jr nc, SlotDEFBelowBuffCap_Skip2
+    jr nc, SlotDEFBelowBuffCap_CompareCap
 
 ; Doubles the base DEF in BC a second time (the 4x cap). (C1, E-0357)
-SlotDEFBelowBuffCap_Skip::
+SlotDEFBelowBuffCap_QuadrupleCap::
     sla c
     rl b
 
 ; Doubles the base DEF in BC and compares the slot's DEF with it: carry when below. (C1, E-0357)
-SlotDEFBelowBuffCap_Skip2::
+SlotDEFBelowBuffCap_CompareCap::
     sla c
     rl b
     pop hl
     call CompareHLToBC
-    jr nc, SlotDEFBelowBuffCap_Skip3
+    jr nc, SlotDEFBelowBuffCap_NotBelow
 
 ; Returns carry (DEF may still rise). (C1, E-0357)
-SlotDEFBelowBuffCap_Loop::
+SlotDEFBelowBuffCap_Below::
     scf
     ret
 
-; Equal counts as below the cap (carry); otherwise A = 0, NC. (C1, E-0357)
-SlotDEFBelowBuffCap_Skip3::
-    jr z, SlotDEFBelowBuffCap_Loop
+; Entered with NC from CompareHLToBC (the DEF at or above 999 or at or above the cap): equal still
+; returns carry (SlotDEFBelowBuffCap_Below), so a DEF exactly at 999 or at the cap counts as below;
+; above it returns A = 0 with NC. (C1, E-0371)
+SlotDEFBelowBuffCap_NotBelow::
+    jr z, SlotDEFBelowBuffCap_Below
     xor a
     ret
 
@@ -6077,7 +6080,7 @@ SlotAGLBelowBuffCap::
     call GetBaseAGLOfSlotA
     ld a, [wLinkMode]
     cp $01
-    jr z, SlotDEFBelowBuffCap_Skip
+    jr z, SlotDEFBelowBuffCap_QuadrupleCap
     ld a, [wBattleArg0]
     cp $04
     jr nc, .skip
@@ -6149,7 +6152,7 @@ ForceLevel4IfActorConcentrated::
 
 ; Compares slot A's MP with its max MP: carry when the MP is above the max (HL and BC kept). (C1,
 ; E-0357)
-ActionEffect_RobMagic_GetBattleMP::
+ActionEffect_RobMagic_MPAboveMax::
     push hl
     push bc
     ld b, a
@@ -6164,7 +6167,7 @@ ActionEffect_RobMagic_GetBattleMP::
     ret
 
 ; BC = slot A's base HP, at most 999. (C1, E-0357)
-ActionEffect_Transform_GetBaseHP::
+ActionEffect_Transform_CappedBaseHP::
     push hl
     ld c, a
     farcall GetBaseHP
@@ -6182,7 +6185,7 @@ ActionEffect_Transform_GetBaseHP::
     ret
 
 ; BC = slot A's base MP, at most 999. (C1, E-0357)
-ActionEffect_Transform_GetBaseMP::
+ActionEffect_Transform_CappedBaseMP::
     push hl
     ld c, a
     farcall GetBaseMP
@@ -6237,7 +6240,7 @@ GetBaseAGLOfSlotA::
 
 ; HL = where slot A's resistances come from: its battler record's resistance field, or for slot 3 or
 ; 7 the special monster's species record. (C1, E-0357)
-ActionEffect_Transform_BattlerRecordFieldAddress::
+ActionEffect_Transform_ResistancesAddress::
     ld b, a
     and $03
     cp $03
@@ -6273,7 +6276,7 @@ ActionEffect_Transform_BattlerRecordFieldAddress::
 
 ; HL and B = slot A's skill list and length: its battler record's eight skills, or for slot 3 or 7
 ; the special monster record's four. (C1, E-0357)
-ActionEffect_Transform_BattlerRecordFieldAddress_2::
+ActionEffect_Transform_SkillListAddress::
     ld b, a
     and $03
     cp $03
@@ -6305,7 +6308,7 @@ ActionEffect_Transform_BattlerRecordFieldAddress_2::
     ret
 
 ; C = slot A's body nibbles (SlotSpeciesNibblesD00AD00B), HL kept. (C1, E-0357)
-ActionEffect_Transform_SlotSpeciesNibblesD00AD00B_2::
+ActionEffect_Transform_GetBodyFlags::
     push hl
     ld c, a
     farcall SlotSpeciesNibblesD00AD00B
@@ -6339,7 +6342,7 @@ ComputeAttackDamageWithHalvedDEF::
 
 ; Stores BC in word A of the table at HL, but no more than the value already there (caps HP or MP at
 ; a new maximum). (C1, E-0357)
-ActionEffect_BeDragon_CompareHLToBC::
+ActionEffect_BeDragon_CapAtNewMax::
     add a
     add_a_to_hl
     push hl
@@ -6625,7 +6628,7 @@ ActionEffectTable::
 ActionEffect_ActionD0::
     call RollSkillDamageScaledByBoltResistance
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Action $D1: skill damage scaled by resistance level 0; marks the formation partner; the damage
 ; message. (C1, E-0357)
@@ -6635,7 +6638,7 @@ ActionEffect_ActionD0::
 ActionEffect_ActionD1::
     call ActionEffect_ActionD1_RollSkillDamageFromRecord
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Action $D2: skill damage scaled by GigaSlash resistance; marks the formation partner; the hit
 ; message ('took G damage!' / 'Miss! ... was unharmed!'). (C1, E-0357)
@@ -6771,13 +6774,13 @@ ActionEffect_ActionDA::
 .check_temp0:
     ldh a, [hTemp0]
     or a
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank36
     ld l, $37
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
 ; Action $DB: marks the formation partner and, by wRandomLo bits 2-3, gives the target one of four
 ; statuses with no resistance roll: badly poisoned ('terribly poisoned!'), cursed, paralyzed or
@@ -6840,7 +6843,7 @@ ActionEffect_ActionDB::
     ld a, [de]
     ld l, a
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 ; data read by ActionEffect_ActionDB (16 bytes) (E-0347)
 ActionEffect_ActionDB_Data::
@@ -6953,8 +6956,8 @@ ActionEffect_ActionE1::
     jp ActionEffect_PanicAll
 
 ; Action $E2: marks the formation partner; sets BSTAT7_DAMAGE_X10 on every present slot of the
-; actor's side (four from its first), then ends the sub-phase
-; (SetSubPhase2AndResetResolveStep_CheckOriginalTarget). (C1, E-0357)
+; actor's side (four from its first), then ends the sub-phase (RestoreTargetAndEndEffect). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E2; ids below 175 are skills named from StringTable_SkillNames
 ; (E-0084)
@@ -6980,7 +6983,7 @@ ActionEffect_ActionE2::
     inc [hl]
     dec b
     jr nz, .loop
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Action $E3: marks the formation partner; every present ally gets a forced critical
 ; (BSTAT1_CRITICAL) and status 4's Focus field set to 2 (bit 7 set, bit 6 cleared); then ends the
@@ -7015,7 +7018,7 @@ ActionEffect_ActionE3::
     inc [hl]
     dec b
     jr nz, .loop
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Action $AF (and 190, 228-231): does nothing. (C1, E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -7042,7 +7045,7 @@ ActionEffect_Fight::
 ; from StringTable_SkillNames (E-0084)
 ActionEffect_Blaze::
     call ActionEffect_Blaze_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Firebal: skill damage scaled by Firebal resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7050,7 +7053,7 @@ ActionEffect_Blaze::
 ; from StringTable_SkillNames (E-0084)
 ActionEffect_Firebal::
     call ActionEffect_Firebal_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Bang: skill damage scaled by Bang resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7058,7 +7061,7 @@ ActionEffect_Firebal::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Bang::
     call ActionEffect_Bang_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Infernos: skill damage with its resistance scaling; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7066,7 +7069,7 @@ ActionEffect_Bang::
 ; named from StringTable_SkillNames (E-0084)
 ActionEffect_Infernos::
     call ActionEffect_Infernos_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Bolt: skill damage scaled by Bolt resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7074,7 +7077,7 @@ ActionEffect_Infernos::
 ; skills named from StringTable_SkillNames (E-0084)
 ActionEffect_Bolt::
     call RollSkillDamageScaledByBoltResistance
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; IceBolt: skill damage scaled by IceBolt resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7082,7 +7085,7 @@ ActionEffect_Bolt::
 ; named from StringTable_SkillNames (E-0084)
 ActionEffect_IceBolt::
     call ActionEffect_IceBolt_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Beat: when the roll gets through Beat resistance (RollVsBeatResistance), the target's HP becomes 0
 ; with 1000 as the damage and '<name> was instantly slain!' ($8E); otherwise 'But ... was
@@ -7092,7 +7095,7 @@ ActionEffect_IceBolt::
 ; from StringTable_SkillNames (E-0084)
 ActionEffect_Beat::
     call RollVsBeatResistance
-    jr nc, .skip
+    jr nc, .to_store_unaffected_message_bank36
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -7106,10 +7109,10 @@ ActionEffect_Beat::
     ld [wBattleDamageHi], a
     lb hl, $b5, $8e
     lb bc, $80, $a8
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
 ; Sacrifice: no effect for an ally in battle kind 2 or 3 or when the Sacrifice resistance roll fails
 ; ('But ... was unaffected!'); otherwise on a coin flip the target loses all but a hundredth of its
@@ -7120,7 +7123,7 @@ ActionEffect_Beat::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Sacrifice::
     call ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3
-    jr nc, .skip
+    jr nc, .to_store_unaffected_message_bank36
     call AdvanceRandom
     ld a, [wRandomLo]
     and $01
@@ -7152,7 +7155,7 @@ ActionEffect_Sacrifice::
     ld [wBattleDamageLo], a
     ld a, b
     ld [wBattleDamageHi], a
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -7168,10 +7171,10 @@ ActionEffect_Sacrifice::
     ld [wBattleDamageHi], a
     lb hl, $b5, $8f
     lb bc, $80, $a8
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 22 Heal, 23 HealMore, 24 HealAll, 25 HealUs, 26 HealUsAll, 124
@@ -7181,8 +7184,8 @@ ActionEffect_Heal::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, .read_battle_target
-    jr z, .skip2
-    jr .skip
+    jr z, .to_restore_target_and_end_effect
+    jr .to_store_nothing_happened_message_bank36
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -7196,17 +7199,17 @@ ActionEffect_Heal::
     call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank36
     call HealTargetHP
     ld l, $37
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; MPass (MPassMore, MPassMost): an absent target ends the sub-phase or has no effect; at full MP
 ; 'But nothing happened!'; otherwise restores MP (ActionEffect_MPass_GiveMP) with '<name>'s MP was
@@ -7218,8 +7221,8 @@ ActionEffect_MPass::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, .read_battle_target
-    jr z, .skip2
-    jr .skip
+    jr z, .to_restore_target_and_end_effect
+    jr .to_store_nothing_happened_message_bank36
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -7233,35 +7236,35 @@ ActionEffect_MPass::
     call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank36
     call ActionEffect_MPass_GiveMP
-    jr nc, .skip
+    jr nc, .to_store_nothing_happened_message_bank36
     ld l, $c3
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; Vivify: a present target gets 'But nothing happened!' and an empty slot ends the sub-phase; a
-; fallen one comes back on a coin flip with half its max HP
-; (ActionEffect_Vivify_CallAddDoubleAToHL_Bank36: HP set, picture reloaded on the far side, back in
-; with its status cleared, message $50), otherwise message $67. (C1, E-0357)
+; fallen one comes back on a coin flip with half its max HP (ReviveTarget: HP set, picture reloaded
+; on the far side, back in with its status cleared, message $50), otherwise message $67. (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 30 Vivify; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Vivify::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp nc, ApplyTargetMaxHPAmount_Skip
-    jp z, ApplyTargetMaxHPAmount_Skip2
+    jp nc, ActionEffect_Revive_NothingHappened
+    jp z, ActionEffect_Revive_NoEffect
     call AdvanceRandom
     ld a, [wRandomLo]
     and $01
-    jr z, ActionEffect_Vivify_Skip
+    jr z, ActionEffect_Vivify_Fail
     ld a, [wBattleTarget]
     ld b, a
     ld hl, wBattleMaxHP
@@ -7272,9 +7275,13 @@ ActionEffect_Vivify::
     srl d
     rr e
 
-; Vivify's success: sets the target's HP to DE, reloads a far-side target's picture, brings it back
-; (in, status cleared, mark 3) and sets the resolve message $50 (flags $90). (C1, E-0357)
-ActionEffect_Vivify_CallAddDoubleAToHL_Bank36::
+; Shared revival tail (Vivify falls in; ApplyTargetMaxHPAmount jumps here for Revive, Farewell and
+; ActionEffect_LifeSong): B = the target slot, DE = its new HP. Stores DE in its wBattleHP word,
+; reloads the picture of a target that is not on the local side (TargetOnLocalSide_Bank36,
+; LoadBattleMonsterPictureForSlotB with its wBattleMonsterId entry), brings it back
+; (BringTargetBack) and clears the damage with actor message $50 '<name> came back to life!' (flags
+; $90, argument $40). (C1, E-0371)
+ReviveTarget::
     ld a, b
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -7302,11 +7309,12 @@ ActionEffect_Vivify_CallAddDoubleAToHL_Bank36::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-; Vivify's failure: target message $67 (flags $80). (C1, E-0357)
-ActionEffect_Vivify_Skip::
+; Vivify's failed coin flip: target message $67 '<name> did not come back to life!' (flags $80,
+; argument 0). (C1, E-0371)
+ActionEffect_Vivify_Fail::
     ld h, $67
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Revive: no effect on a side's fourth slot, 'But nothing happened!' on a present target, nothing
 ; for an empty slot; a fallen target comes back with its full max HP (ApplyTargetMaxHPAmount). (C1,
@@ -7318,14 +7326,13 @@ ActionEffect_Revive::
     ld a, [wBattleTarget]
     and $03
     cp $03
-    jr z, ApplyTargetMaxHPAmount_Skip2
+    jr z, ActionEffect_Revive_NoEffect
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp nc, ApplyTargetMaxHPAmount_Skip
-    jp z, ApplyTargetMaxHPAmount_Skip2
+    jp nc, ActionEffect_Revive_NothingHappened
+    jp z, ActionEffect_Revive_NoEffect
 
-; DE = the target's max HP and continues with the shared HP amount path
-; (ActionEffect_Vivify_CallAddDoubleAToHL_Bank36) (E-0122)
+; DE = the target's max HP and continues with the shared HP amount path (ReviveTarget) (E-0122)
 ApplyTargetMaxHPAmount::
     ld a, [wBattleTarget]
     ld b, a
@@ -7334,15 +7341,17 @@ ApplyTargetMaxHPAmount::
     ld a, [hli]
     ld d, [hl]
     ld e, a
-    jp ActionEffect_Vivify_CallAddDoubleAToHL_Bank36
+    jp ReviveTarget
 
-; The no-effect message (ClearDamageAndStoreResolveMsgFlags_Bank36_Skip). (C1, E-0357)
-ApplyTargetMaxHPAmount_Skip::
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+; Vivify and Revive on a target that has not fallen: 'But nothing happened!'
+; (StoreNothingHappenedMessage_Bank36). (C1, E-0371)
+ActionEffect_Revive_NothingHappened::
+    jp StoreNothingHappenedMessage_Bank36
 
-; Ends without an effect (SetSubPhase2AndResetResolveStep_CheckOriginalTarget). (C1, E-0357)
-ApplyTargetMaxHPAmount_Skip2::
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+; Vivify, Revive and Farewell with no target to act on (an empty slot, a side's fourth slot, or for
+; Farewell the actor itself): ends without a message (RestoreTargetAndEndEffect). (C1, E-0371)
+ActionEffect_Revive_NoEffect::
+    jp RestoreTargetAndEndEffect
 
 ; Farewell: never the actor itself or a side's fourth slot; a present target is healed as by Heal
 ; (message flag 6 cleared); a fallen one comes back with full max HP (flag 6 set); an empty slot
@@ -7354,15 +7363,15 @@ ActionEffect_Farewell::
     ld a, [wBattleTarget]
     ld hl, wBattleActor
     cp [hl]
-    jr z, ApplyTargetMaxHPAmount_Skip2
+    jr z, ActionEffect_Revive_NoEffect
     ld a, [wBattleTarget]
     and $03
     cp $03
-    jr z, ApplyTargetMaxHPAmount_Skip2
+    jr z, ActionEffect_Revive_NoEffect
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, .call_action_effect_heal
-    jr z, ApplyTargetMaxHPAmount_Skip2
+    jr z, ActionEffect_Revive_NoEffect
     call ApplyTargetMaxHPAmount
     ld hl, wResolveMsgFlags
     set 6, [hl]
@@ -7382,7 +7391,7 @@ ActionEffect_Farewell::
 ActionEffect_Antidote::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $03
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank36
     ld a, [hl]
     and $fc
     ld [hl], a
@@ -7390,8 +7399,8 @@ ActionEffect_Antidote::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
 ; DeChaos: cures confusion (BSTAT0_CONFUSED), marks the target (wSlotMarks 3) and says '<name>
 ; snapped out of confusion!' ($83); otherwise 'But nothing happened!'. (C1, E-0357)
@@ -7401,7 +7410,7 @@ ActionEffect_Antidote::
 ActionEffect_DeChaos::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $10
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank36
     ld a, [hl]
     and $ef
     ld [hl], a
@@ -7413,8 +7422,8 @@ ActionEffect_DeChaos::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
 ; NumbOff: when the target is asleep or paralyzed (status 0 & $CC) says '<name> is no longer
 ; paralyzed.' ($4F) for paralysis, else '<name> woke up!' ($82), clears both with the sleep counter
@@ -7425,7 +7434,7 @@ ActionEffect_DeChaos::
 ActionEffect_NumbOff::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $cc
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank36
     push hl
     bit 6, [hl]
     jr z, .call_clear_damage_and_store_resolve_msg_flags
@@ -7448,8 +7457,8 @@ ActionEffect_NumbOff::
     ld [hl], $03
     ret
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
 ; CurseOff: lifts the curse (BSTAT0_CURSED) with '<name> was uncursed!' ($51); otherwise 'But
 ; nothing happened!'. (C1, E-0357)
@@ -7459,7 +7468,7 @@ ActionEffect_NumbOff::
 ActionEffect_CurseOff::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $20
-    jr z, .skip
+    jr z, .to_store_nothing_happened_message_bank36
     ld a, [hl]
     and $df
     ld [hl], a
@@ -7467,8 +7476,8 @@ ActionEffect_CurseOff::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
 ; Upper (and action $25): raises the target's DEF (RaiseTargetDEF), marking BSTAT6_STATS_RAISED when
 ; it rose; '<name>'s DEF rose by G!' ($45) when the amount is not zero, otherwise 'But nothing
@@ -7490,38 +7499,40 @@ ActionEffect_Upper::
     jr z, .skip
     ld l, $45
     lb bc, $00, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 .skip:
     ld h, $cc
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Sap: when the roll gets through Sap resistance (RollVsSapResistance), lowers the target's DEF
-; (ActionEffect_UltraDown_SetSlotStatus6Bit7: '<name>'s DEF fell by G!', marking
-; BSTAT6_STATS_LOWERED); otherwise 'But ... was unaffected!'. (C1, E-0357)
+; (LowerTargetDEF: '<name>'s DEF fell by G!', marking BSTAT6_STATS_LOWERED); otherwise 'But ... was
+; unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 39 Sap, 40 Defense; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Sap::
     call RollVsSapResistance
-    jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+    jp nc, StoreUnaffectedMessage_Bank36
 
-; UltraDown's DEF drop: when it works marks the target (status 6 bit 7) with message $39 (flags
-; $98); otherwise target message $CC (flags $84). (C1, E-0357)
-ActionEffect_UltraDown_SetSlotStatus6Bit7::
-    call ActionEffect_UltraDown_GetBattleDEF
+; Lowers the target's DEF (LowerTargetDEF_GetBattleDEF); when it fell marks BSTAT6_STATS_LOWERED
+; (SetSlotStatus6Bit7) with actor message $39 '<name>'s DEF fell by G!' (flags $98); otherwise
+; target message $CC 'But nothing happened!' (flags $84). ActionEffect_Sap falls into it and
+; ActionEffect_UltraDown calls it. (C1, E-0371)
+LowerTargetDEF::
+    call LowerTargetDEF_GetBattleDEF
     jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
     ld l, $39
     lb bc, $00, $98
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 .skip:
     ld h, $cc
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Speed (SpeedUp): raises the target's AGL (RaiseTargetAGL), marking BSTAT6_STATS_RAISED when it
 ; rose; '<name>'s AGL rose by G!' ($49) when the amount is not zero, otherwise 'But nothing
@@ -7543,37 +7554,39 @@ ActionEffect_Speed::
     jr z, .skip
     ld l, $49
     lb bc, $00, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 .skip:
     ld h, $cc
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
-; Slow: when the roll gets through Slow resistance, cuts the target's AGL
-; (ResolveStepDamageMessage_SetSlotStatus6Bit7: '<name>'s AGL was cut by G!', marking
-; BSTAT6_STATS_LOWERED); otherwise 'But ... was unaffected!'. (C1, E-0357)
+; Slow: when the roll gets through Slow resistance, cuts the target's AGL (LowerTargetAGL: '<name>'s
+; AGL was cut by G!', marking BSTAT6_STATS_LOWERED); otherwise 'But ... was unaffected!'. (C1,
+; E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 43 Slow, 44 SlowAll; the misaligned decoding before E-0126 hid this entry (E-0126)
 ActionEffect_Slow::
     call RollVsSlowResistance
-    jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+    jp nc, StoreUnaffectedMessage_Bank36
 
-; Slow's AGL drop: when it works marks the target with message $48 (flags $98); otherwise target
-; message $CC (flags $84). (C1, E-0357)
-ResolveStepDamageMessage_SetSlotStatus6Bit7::
-    call ResolveStepDamageMessage_GetBaseAGLOfSlotA
+; Lowers the target's AGL (LowerTargetAGL_ApplyDrop); when it fell marks BSTAT6_STATS_LOWERED
+; (SetSlotStatus6Bit7) with actor message $48 '<name>'s AGL was cut by G!' (flags $98); otherwise
+; target message $CC 'But nothing happened!' (flags $84). ActionEffect_Slow falls into it and
+; ResolveStepDamageMessage_ReadSoundChannelSlots calls it on its first pass. (C1, E-0371)
+LowerTargetAGL::
+    call LowerTargetAGL_ApplyDrop
     jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
     ld l, $48
     lb bc, $00, $98
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 .skip:
     ld h, $cc
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; TwinHits: doubles the target's ATK once (BSTAT1_ATK_DOUBLED) with '<name>'s ATK doubled!' ($43);
 ; already doubled, it ends the sub-phase without a message. (C1, E-0357)
@@ -7585,14 +7598,14 @@ ActionEffect_TwinHits::
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_ATK_DOUBLED, [hl]
-    jr nz, .skip
+    jr nz, .to_restore_target_and_end_effect
     set BSTAT1_ATK_DOUBLED, [hl]
     ld l, $43
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; RollVsRadiantResistance during the damage message step (E-0338)
 ResolveStepDamageMessage_RollVsRadiantResistance::
@@ -7602,7 +7615,7 @@ ResolveStepDamageMessage_RollVsRadiantResistance::
     bit BSTAT1_BLINDED, [hl]
     jr nz, .check_resolve_msg_flags
     call RollVsRadiantResistance
-    jr nc, .skip
+    jr nc, .to_store_unaffected_message_bank36
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -7615,10 +7628,10 @@ ResolveStepDamageMessage_RollVsRadiantResistance::
     ld a, [wResolveMsgFlags]
     and $ef
     ld [wResolveMsgFlags], a
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
 ; Sleep (SleepAir ...): an already sleeping target gets '<name> is already asleep!' ($D4); when the
 ; roll gets through Sleep resistance, sets asleep with the sleep counter at 3 (or $8C) and '<name>
@@ -7654,12 +7667,12 @@ ActionEffect_Sleep::
 
 .skip:
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 .skip2:
     ld h, $d4
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; TakeMagic: sets BSTAT2_TAKE_MAGIC on the actor once with '<name> started glowing!' ($3F); already
 ; set, it ends the sub-phase. (C1, E-0357)
@@ -7671,14 +7684,14 @@ ActionEffect_TakeMagic::
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit BSTAT2_TAKE_MAGIC, [hl]
-    jr nz, .skip
+    jr nz, .to_restore_target_and_end_effect
     set BSTAT2_TAKE_MAGIC, [hl]
     ld l, $3f
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; RobMagic (and action $DF): needs MP on the target and, except for $DF, the actor below its max MP;
 ; when the roll gets through RobMagic resistance, the actor takes MP from the target
@@ -7694,7 +7707,7 @@ ActionEffect_RobMagic::
     call AddDoubleAToHL_Bank36
     ld a, [hli]
     or [hl]
-    jp z, .skip3
+    jp z, .to_restore_target_and_end_effect
     ld a, [wBattleActionId]
     cp $df
     jr z, .call_roll_vs_rob_magic_resistance
@@ -7715,11 +7728,11 @@ ActionEffect_RobMagic::
     ld a, [de]
     ld b, a
     call CompareHLToBC
-    jr nc, .skip3
+    jr nc, .to_restore_target_and_end_effect
 
 .call_roll_vs_rob_magic_resistance:
     call RollVsRobMagicResistance
-    jr nc, .skip3
+    jr nc, .to_restore_target_and_end_effect
     ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -7765,10 +7778,10 @@ ActionEffect_RobMagic::
 .skip2:
     ld l, $3d
     lb bc, $40, $98
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
-.skip3:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; StopSpell: an already sealed target ends the sub-phase; when the StopSpell roll succeeds
 ; (ActionEffect_StopSpell_HLToBattleStatus8EntryOfBattleTarget_Bank36) seals its spells
@@ -7782,9 +7795,9 @@ ActionEffect_StopSpell::
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_SPELLS_SEALED, [hl]
-    jr nz, .skip
+    jr nz, .to_restore_target_and_end_effect
     call ActionEffect_StopSpell_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, .skip2
+    jr nc, .to_store_unaffected_message_bank36
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -7793,11 +7806,11 @@ ActionEffect_StopSpell::
     lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
-.skip2:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
 ; PanicAll (and action $E1): an already confused target gets '<name> became more confused!' ($CF);
 ; when the PanicAll roll succeeds, confuses it (BSTAT0_CONFUSED) with '<name> became confused!'
@@ -7812,7 +7825,7 @@ ActionEffect_PanicAll::
     bit BSTAT0_CONFUSED, [hl]
     jr nz, .skip
     call ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, .skip2
+    jr nc, .to_store_unaffected_message_bank36
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -7824,10 +7837,10 @@ ActionEffect_PanicAll::
 .skip:
     ld h, $cf
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
-.skip2:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
 ; Ironize: turns to iron (status 5 | $C0, the Ironize field at 3) only the target when it is a foe
 ; outside link mode 1, otherwise every present slot of the target's side; message $46 or $47 by
@@ -7913,7 +7926,7 @@ ActionEffect_MagicBack::
 .skip2:
     ld h, $cc
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Barrier: every present slot of the target's side without BSTAT2_DAMAGE_HALVED gets it (absent ones
 ; lose it); when any gained it, 'A barrier of light appeared.' ($4D), otherwise it ends the
@@ -7950,13 +7963,13 @@ ActionEffect_Barrier::
     jr nz, .loop
     ld a, d
     or a
-    jr z, .skip2
+    jr z, .to_restore_target_and_end_effect
     ld l, $4d
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; MagicWall: sets BSTAT8_MAGIC_WALL on every present slot of the actor's side and ends the
 ; sub-phase. (C1, E-0357)
@@ -7982,11 +7995,11 @@ ActionEffect_MagicWall::
     inc c
     dec b
     jr nz, .loop
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Transform: stores '<name> assumed G's form!' ($52), takes the target's stats, resistances and the
-; rest (ActionEffect_Transform_SlotSpeciesNibblesD00AD00B), clears the low three bits of the actor's
-; side control, and sets BSTAT1_TRANSFORMED (clearing the dragon form). (C1, E-0357)
+; rest (ActionEffect_Transform_TakeTargetStats), clears the low three bits of the actor's side
+; control, and sets BSTAT1_TRANSFORMED (clearing the dragon form). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 58 Transform; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
@@ -7994,7 +8007,7 @@ ActionEffect_Transform::
     ld l, $52
     lb bc, $40, $90
     call ClearDamageAndStoreResolveMsgFlags_Bank36
-    call ActionEffect_Transform_SlotSpeciesNibblesD00AD00B
+    call ActionEffect_Transform_TakeTargetStats
     ld a, [wBattleActor]
     ld hl, wSideControl
     add_a_to_hl
@@ -8008,9 +8021,10 @@ ActionEffect_Transform::
     res BSTAT1_DRAGON_FORM, [hl]
     ret
 
-; Outside link mode 1 a foe actor remembers its target in its name byte (wSlotNameBytes). (C1,
-; E-0357)
-ResolveStepDamageMessage_WaitLinkMode::
+; After Transform's picture reload: unless wLinkMode is 1, a foe actor (slot 4 and up) stores
+; wBattleTarget in its wSlotNameBytes entry (actor & 3), the byte CopySlotNameToHL_HighSlot checks
+; before naming a foe. (C1, E-0371)
+ResolveStepDamageMessage_SetTransformNameByte::
     ld a, [wLinkMode]
     cp $01
     ret z
@@ -8060,14 +8074,14 @@ ActionEffect_BeDragon::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-; Chance: picks one of its effects at random (ActionEffect_Chance_AdvanceRandom), makes it the
-; actor's action choice and wBattleActionId, loads its skill record, chooses a new target
+; Chance: picks one of its effects at random (ActionEffect_Chance_PickEffect), makes it the actor's
+; action choice and wBattleActionId, loads its skill record, chooses a new target
 ; (ChooseTargetForActor) and restarts the resolution at step 3 of sub-phase 0. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 60 Chance; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Chance::
-    farcall ActionEffect_Chance_AdvanceRandom
+    farcall ActionEffect_Chance_PickEffect
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
     add a
@@ -8103,9 +8117,9 @@ ActionEffect_MegaMagic::
     ld h, a
     ld a, l
     or h
-    jp z, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+    jp z, StoreUnaffectedMessage_Bank36
     call ActionEffect_MegaMagic_Damage
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; BigBang: skill damage scaled by Blaze resistance with the alternative table; the damage message.
 ; (C1, E-0357)
@@ -8114,7 +8128,7 @@ ActionEffect_MegaMagic::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_BigBang::
     call ActionEffect_BigBang_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; FireAir: skill damage scaled by FireAir resistance, halved under a barrier (BSTAT2_DAMAGE_HALVED);
 ; the damage message. (C1, E-0357)
@@ -8124,7 +8138,7 @@ ActionEffect_BigBang::
 ActionEffect_FireAir::
     call ActionEffect_FireAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; FrigidAir: skill damage scaled by FrigidAir resistance, halved under a barrier; the damage
 ; message. (C1, E-0357)
@@ -8134,7 +8148,7 @@ ActionEffect_FireAir::
 ActionEffect_FrigidAir::
     call ActionEffect_FrigidAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; WindBeast: damage from the actor's level (ActionEffect_WindBeast_ShiftBCRight1: 3 x level + 10, at
 ; most 180, +-15%, Vacuum-scaled); the damage message. (C1, E-0357)
@@ -8143,7 +8157,7 @@ ActionEffect_FrigidAir::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_WindBeast::
     call ActionEffect_WindBeast_ShiftBCRight1
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Vacuum: damage from the actor's level (2 x level + 30, at most 150, +-10%, Vacuum-scaled); the
 ; damage message. (C1, E-0357)
@@ -8152,7 +8166,7 @@ ActionEffect_WindBeast::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Vacuum::
     call ActionEffect_Vacuum_ShiftBCRight1
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Lightning: damage from the actor's level (2 x level + 20, at most 180, +-10%, Bolt-scaled); the
 ; damage message. (C1, E-0357)
@@ -8161,7 +8175,7 @@ ActionEffect_Vacuum::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Lightning::
     call ActionEffect_Lightning_ShiftBCRight1
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; RockThrow: skill damage scaled by RockThrow resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8169,7 +8183,7 @@ ActionEffect_Lightning::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_RockThrow::
     call ActionEffect_RockThrow_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; Watershot: skill damage scaled by Watershot resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8177,7 +8191,7 @@ ActionEffect_RockThrow::
 ; StringTable_SkillNames (E-0084)
 ActionEffect_Watershot::
     call ActionEffect_Watershot_RollSkillDamageFromRecord
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; CallHelp: the first time, on a roll of $80 or more sets BSTAT6_CALLED_HELP and shows 'Help arrived
 ; from seemingly nowhere!' at once (sub-phase 3, step 0), otherwise 'But the call went unheard!'
@@ -8210,7 +8224,7 @@ ActionEffect_CallHelp::
 .skip:
     ld h, $69
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 .call_action_effect_call_help_damage:
     call ActionEffect_CallHelp_Damage
@@ -8409,7 +8423,7 @@ ActionEffect_ChargeUp::
     ld a, [hl]
     or $03
     ld [hl], a
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; PsycheUp: the attack damage times 1.5 (ScaleHLBy3Over2); the hit message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8430,7 +8444,7 @@ ActionEffect_PsycheUp::
 
 ; HighJump: on the first turn sets the actor's HighJump field (status 4 | $0C) and ends the
 ; sub-phase (it is up in the air); with the field set, clears it and lands with PsycheUp's damage
-; (ActionEffect_HighJump_Skip). (C1, E-0357)
+; (ActionEffect_HighJump_Land). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 106 HighJump; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
@@ -8440,14 +8454,14 @@ ActionEffect_HighJump::
     call AddAx9ToHL
     ld a, [hl]
     and $0c
-    jr nz, ActionEffect_HighJump_Skip
+    jr nz, ActionEffect_HighJump_Land
     ld a, [hl]
     or $0c
     ld [hl], a
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; HighJump: clears bits 2-3 of the status byte at HL, then goes on as PsycheUp. (C1, E-0357)
-ActionEffect_HighJump_Skip::
+ActionEffect_HighJump_Land::
     ld a, [hl]
     and $f3
     ld [hl], a
@@ -8482,12 +8496,12 @@ ActionEffect_EvilSlash::
     ld [wBattleDamageHi], a
     lb hl, $d2, $35
     lb bc, $80, $a8
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
 .skip:
     ld h, $d2
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Massacre: clears the actor's critical roll and deals its ATK within 5% as damage ('took G damage!'
 ; / 'But ... was unaffected!'). (C1, E-0357)
@@ -8508,7 +8522,7 @@ ActionEffect_Massacre::
     ld [wBattleDamageHi], a
     lb hl, $b5, $35
     lb bc, $80, $a8
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
 ; TwinSlash: clears the actor's critical roll, then PsycheUp's damage (attack damage x 1.5). (C1,
 ; E-0357)
@@ -8562,7 +8576,7 @@ ActionEffect_Ramming::
 ; interpreted (E-0126)
 ActionEffect_Kamikaze::
     call ActionEffect_Kamikaze_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; PalsyAir: an already paralyzed target ends the sub-phase; when the roll gets through PalsyAir
 ; resistance, paralyzes it with '<name> became paralyzed!' ($76); otherwise 'But ... was
@@ -8575,14 +8589,14 @@ ActionEffect_PalsyAir::
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit BSTAT0_PARALYZED, [hl]
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     push hl
     call RollVsPalsyAirResistance
     pop hl
     jr c, .skip
     ld h, $b5
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 .skip:
     set 6, [hl]
@@ -8590,8 +8604,8 @@ ActionEffect_PalsyAir::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; PoisonGas and PoisonAir: PoisonAir badly poisons ('<name> was terribly poisoned!', $77; skipped
 ; when already badly poisoned), the others poison ('<name> was poisoned!', $75; skipped when
@@ -8609,12 +8623,12 @@ ActionEffect_PoisonGas::
     jr z, .skip
     ld a, [hl]
     and $03
-    jr nz, .skip4
+    jr nz, .to_restore_target_and_end_effect
     jr .call_roll_vs_poison_gas_resistance
 
 .skip:
     bit 1, [hl]
-    jr nz, .skip4
+    jr nz, .to_restore_target_and_end_effect
 
 .call_roll_vs_poison_gas_resistance:
     push hl
@@ -8623,7 +8637,7 @@ ActionEffect_PoisonGas::
     jr c, .check_battle_action_id
     ld h, $b5
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
@@ -8643,8 +8657,8 @@ ActionEffect_PoisonGas::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip4:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; Curse: an already cursed target ends the sub-phase; when the Curse roll succeeds
 ; (ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36) curses it with '<name> was
@@ -8657,14 +8671,14 @@ ActionEffect_Curse::
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit BSTAT0_CURSED, [hl]
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     push hl
     call ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36
     pop hl
     jr c, .skip
     ld h, $b5
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 .skip:
     set 5, [hl]
@@ -8672,8 +8686,8 @@ ActionEffect_Curse::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; OddDance: a target without MP ends the sub-phase; when the roll gets through RobMagic resistance,
 ; drains its MP (DrainTargetMPAmount) with '<name> lost GMP!' ($57); otherwise 'But ... was
@@ -8687,16 +8701,16 @@ ActionEffect_OddDance::
     call AddDoubleAToHL_Bank36
     ld a, [hli]
     or [hl]
-    jr z, .skip
+    jr z, .to_restore_target_and_end_effect
     call RollVsRobMagicResistance
-    jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+    jp nc, StoreUnaffectedMessage_Bank36
     call DrainTargetMPAmount
     ld l, $57
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; LureDance: an already dancing target ends the sub-phase; when the roll gets through LegSweep
 ; resistance, sets BSTAT3_DANCING, clears its SideStep and status 7 bits 0-2, and says '<name>
@@ -8707,9 +8721,9 @@ ActionEffect_OddDance::
 ActionEffect_LureDance::
     call TargetStatus3Address
     bit BSTAT3_DANCING, [hl]
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     call RollVsLegSweepResistance
-    jr nc, .skip
+    jr nc, .to_store_unaffected_message_bank36
     call TargetStatus3Address
     set BSTAT3_DANCING, [hl]
     call ClearTargetStatus5Bits23And7Bits012
@@ -8717,11 +8731,11 @@ ActionEffect_LureDance::
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; LifeDance: on a repeated hit, or on a coin flip, Farewell's effect; otherwise shows 'But nothing
 ; happened!' at once and jumps to resolve step $0E of sub-phase 1 (screen flag bit 0 set). (C1,
@@ -8765,7 +8779,7 @@ ActionEffect_SideStep::
     call AddAx9ToHL
     ld a, [hl]
     and $0c
-    jr nz, .skip
+    jr nz, .to_restore_target_and_end_effect
     ld a, [wRandomLo]
     and $04
     add $04
@@ -8775,17 +8789,17 @@ ActionEffect_SideStep::
     or b
     ld [hl], a
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
-; SandStorm: the blinding with D = 2 (BSTAT5_SANDSTORM_BLIND;
-; ActionEffect_Radiant_ReadBattleTarget): '<name> was blinded by sand!'. (C1, E-0357)
+; SandStorm: the blinding with D = 2 (BSTAT5_SANDSTORM_BLIND; ActionEffect_Radiant_Blind): '<name>
+; was blinded by sand!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 126 SandStorm; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
 ActionEffect_SandStorm::
     ld d, $02
-    jr ActionEffect_Radiant_ReadBattleTarget
+    jr ActionEffect_Radiant_Blind
 
 ; Radiant: the blinding with D = 1 (BSTAT5_RADIANT_BLIND): a target with bit D or BSTAT1_BLINDED
 ; ends the sub-phase; when the roll gets through Radiant resistance sets bit D with message action -
@@ -8799,18 +8813,18 @@ ActionEffect_Radiant::
 ; Radiant and SandStorm's blinding: no effect when the target already has the blinding bit D or is
 ; blinded; otherwise a roll against its Radiant resistance either sets bit D in status 5 (message
 ; action - $2A, flags $90) or fails (target message $B5, flags $88). (C1, E-0357)
-ActionEffect_Radiant_ReadBattleTarget::
+ActionEffect_Radiant_Blind::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and d
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_BLINDED, [hl]
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     push de
     call RollVsRadiantResistance
     pop de
@@ -8830,10 +8844,10 @@ ActionEffect_Radiant_ReadBattleTarget::
 .skip:
     ld h, $b5
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; EerieLite: when the target already has BSTAT8_EERIE_LITE, 'But nothing happened!'; when the
 ; EerieLite roll succeeds sets it with '<name> is now weak to spells!' ($D5); otherwise 'But ... was
@@ -8860,12 +8874,12 @@ ActionEffect_EerieLite::
 .skip:
     ld h, $b5
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 .skip2:
     ld h, $cc
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Surge: cures the target (ActionEffect_Surge_SetTargetSlotMarksTo3: status 0, the seals and
 ; blindings, and stats lowered back to base) with '<name> was fully cured!' ($60). (C1, E-0357)
@@ -8879,9 +8893,8 @@ ActionEffect_Surge::
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; UltraDown: when the roll gets through Beat resistance and the target can still be lowered
-; (ActionEffect_UltraDown_ReadBattleTarget), lowers its DEF
-; (ActionEffect_UltraDown_SetSlotStatus6Bit7) and clears the sub-step; otherwise 'But ... was
-; unaffected!'. (C1, E-0357)
+; (ActionEffect_UltraDown_ReadBattleTarget), lowers its DEF (LowerTargetDEF) and clears the
+; sub-step; otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 130 UltraDown; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
@@ -8890,7 +8903,7 @@ ActionEffect_UltraDown::
     jr nc, .skip
     call ActionEffect_UltraDown_ReadBattleTarget
     jr nc, .skip
-    call ActionEffect_UltraDown_SetSlotStatus6Bit7
+    call LowerTargetDEF
     xor a
     ld [wBattleSubStep], a
     ret
@@ -8898,7 +8911,7 @@ ActionEffect_UltraDown::
 .skip:
     ld h, $b5
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; DeMagic: clears most of the target's applied statuses
 ; (ActionEffect_DeMagic_SetTargetSlotMarksTo3), clears the sub-step and says '<name> lost all
@@ -8977,12 +8990,12 @@ ActionEffect_TatsuCall::
 .skip:
     ld h, $72
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 .skip2:
     ld h, $cc
     lb bc, $00, $84
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; SuckAir: sets the actor's SuckAir field (status 4 | $30) and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8995,7 +9008,7 @@ ActionEffect_SuckAir::
     ld a, [hl]
     or $30
     ld [hl], a
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Focus: sets BSTAT4_FOCUS on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9006,7 +9019,7 @@ ActionEffect_Focus::
     ld hl, wBattleStatus4
     call AddAx9ToHL
     set BSTAT4_FOCUS, [hl]
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; LushLicks and SickLick: a shivering target ends the sub-phase; when the roll gets through LegSweep
 ; resistance (Sap resistance for SickLick), sets BSTAT3_SHIVERING and clears its SideStep and status
@@ -9019,7 +9032,7 @@ ActionEffect_Focus::
 ActionEffect_LushLicks::
     call TargetStatus3Address
     bit BSTAT3_SHIVERING, [hl]
-    jr nz, .skip3
+    jr nz, .to_restore_target_and_end_effect
     ld a, [wBattleActionId]
     cp SKILL_SICKLICK
     jr z, .call_roll_vs_sap_resistance
@@ -9056,10 +9069,10 @@ ActionEffect_LushLicks::
 .skip2:
     ld h, $71
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
-.skip3:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; LegSweep: a tripped target ends the sub-phase; when the roll gets through LegSweep resistance,
 ; sets BSTAT3_TRIPPED, clears its SideStep and status 7 bits 0-2, and says '<name> wiped out!'
@@ -9071,7 +9084,7 @@ ActionEffect_LushLicks::
 ActionEffect_LegSweep::
     call TargetStatus3Address
     bit BSTAT3_TRIPPED, [hl]
-    jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp nz, RestoreTargetAndEndEffect
     call ActionEffect_LegSweep_RollVsLegSweepResistance
     jr nc, .read_battle_target
     call TargetStatus3Address
@@ -9092,7 +9105,7 @@ ActionEffect_LegSweep::
 
 .skip:
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Ahhh: a vacant target ends the sub-phase; when the roll gets through LegSweep resistance, sets
 ; BSTAT3_VACANT, clears its SideStep and status 7 bits 0-2, and says '<name> looks content!' ($59);
@@ -9103,7 +9116,7 @@ ActionEffect_LegSweep::
 ActionEffect_Ahhh::
     call TargetStatus3Address
     bit BSTAT3_VACANT, [hl]
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
@@ -9116,10 +9129,10 @@ ActionEffect_Ahhh::
 .skip:
     ld h, $b5
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; WarCry: a cowering target ends the sub-phase; when the roll gets through LegSweep resistance, sets
 ; BSTAT3_COWERING, clears its SideStep and status 7 bits 0-2, and says '<name> was shocked!' ($5C);
@@ -9130,7 +9143,7 @@ ActionEffect_Ahhh::
 ActionEffect_WarCry::
     call TargetStatus3Address
     bit BSTAT3_COWERING, [hl]
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
@@ -9143,15 +9156,16 @@ ActionEffect_WarCry::
 .skip:
     ld h, $6b
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
-; Geyser: when the actor's own airborne field is 1 it backfires (ActionEffect_Geyser_Skip); when the
-; roll gets through Watershot resistance the target's status 3 becomes $40 (airborne, its other byte
-; 3 bits cleared), its personality acts are cleared, '<name> was blown sky-high!' is shown at once
-; and the resolve step restarts; otherwise '<name> quickly dodged the attack!' ($6E). (C1, E-0357)
+; Geyser: when the actor's own airborne field is 1 it backfires (ActionEffect_Geyser_Backfire); when
+; the roll gets through Watershot resistance the target's status 3 becomes $40 (airborne, its other
+; byte 3 bits cleared), its personality acts are cleared, '<name> was blown sky-high!' is shown at
+; once and the resolve step restarts; otherwise '<name> quickly dodged the attack!' ($6E). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 145 Geyser; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
@@ -9162,7 +9176,7 @@ ActionEffect_Geyser::
     ld a, [hl]
     and $c0
     cp $40
-    jr z, ActionEffect_Geyser_Skip
+    jr z, ActionEffect_Geyser_Backfire
     call ActionEffect_Geyser_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jr nc, .skip
     ld a, [wBattleTarget]
@@ -9183,12 +9197,12 @@ ActionEffect_Geyser::
 .skip:
     ld h, $6e
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Geyser's backlash: clears bits 6-7 of the status byte at HL and turns on the actor: a paralyzed or
 ; sleeping actor always, others half the time, take 5-15% of their max HP (at least 1; messages
 ; $AD/$D0); otherwise target message $AF. (C1, E-0357)
-ActionEffect_Geyser_Skip::
+ActionEffect_Geyser_Backfire::
     ld a, [hl]
     and $3f
     ld [hl], a
@@ -9209,12 +9223,12 @@ ActionEffect_Geyser_Skip::
     ld a, [wBattleActor]
     call GetBattleMaxHP
     push hl
-    call ActionEffect_Geyser_ScaleHLTo60Percent
+    call ActionEffect_Geyser_ScaleHLTo15Percent
     ld c, l
     ld b, h
     pop hl
     push bc
-    call ActionEffect_Geyser_ScaleHLTo80Percent_Bank36
+    call ActionEffect_Geyser_ScaleHLTo5Percent
     pop bc
     call RandomInRange
     ld a, d
@@ -9229,12 +9243,12 @@ ActionEffect_Geyser_Skip::
     ld [wBattleDamageHi], a
     lb hl, $d0, $ad
     lb bc, $88, $a8
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
 .skip:
     ld h, $af
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; DanceShut: an already dance-sealed target ends the sub-phase; when the DanceShut roll succeeds
 ; seals its dances (BSTAT1_DANCE_SEALED) with '<name> can't dance anymore!' ($DE); otherwise 'But
@@ -9247,9 +9261,9 @@ ActionEffect_DanceShut::
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_DANCE_SEALED, [hl]
-    jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp nz, RestoreTargetAndEndEffect
     call ActionEffect_DanceShut_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, .skip
+    jr nc, .to_store_unaffected_message_bank36
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -9258,8 +9272,8 @@ ActionEffect_DanceShut::
     lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
 ; MouthShut: an already breath-sealed target ends the sub-phase; when the MouthShut roll succeeds
 ; seals its breaths (BSTAT1_BREATH_SEALED) with '<name>'s mouth was sealed!' ($64); otherwise 'But
@@ -9272,9 +9286,9 @@ ActionEffect_MouthShut::
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit BSTAT1_BREATH_SEALED, [hl]
-    jr nz, .skip2
+    jr nz, .to_restore_target_and_end_effect
     call ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, .skip
+    jr nc, .to_store_unaffected_message_bank36
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -9283,11 +9297,11 @@ ActionEffect_MouthShut::
     lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
+.to_store_unaffected_message_bank36:
+    jp StoreUnaffectedMessage_Bank36
 
-.skip2:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; StrongD (BladeD, action $E0): sets the low nibble of the actor's status 7 to 2
 ; (BSTAT7_DAMAGE_X10), 4 for BladeD (BSTAT7_COUNTER) or $0C for $E0 (doubled and counter), then ends
@@ -9308,14 +9322,14 @@ ActionEffect_StrongD::
     and $f0
     or $0c
     ld [hl], a
-    jr .skip3
+    jr .to_restore_target_and_end_effect
 
 .skip:
     ld a, [hl]
     and $f0
     or $02
     ld [hl], a
-    jr .skip3
+    jr .to_restore_target_and_end_effect
 
 .skip2:
     ld a, [hl]
@@ -9323,8 +9337,8 @@ ActionEffect_StrongD::
     or $04
     ld [hl], a
 
-.skip3:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; Dodge: sets BSTAT6_DODGE on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9335,7 +9349,7 @@ ActionEffect_Dodge::
     ld hl, wBattleStatus6
     call AddAx9ToHL
     set BSTAT6_DODGE, [hl]
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Cover and Guardian: once Guardian has been used on a side (side flag bit 4) nothing more; Cover
 ; guards only the target, Guardian (setting the flag) every present slot of the target's side; each
@@ -9352,7 +9366,7 @@ ActionEffect_Cover::
     ld hl, wSideFlags0
     add_a_to_hl
     bit 4, [hl]
-    jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp nz, RestoreTargetAndEndEffect
     ld a, [wBattleActionId]
     cp SKILL_GUARDIAN
     jr z, .check_battle_target
@@ -9392,7 +9406,7 @@ ActionEffect_Cover::
     inc c
     dec b
     jr nz, .loop
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; TailWind and StormWind: TailWind gives the target BSTAT2_WIND_GUARD; StormWind gives it to every
 ; present slot of the target's side and sets that side's flag bit 5; then ends the sub-phase. (C1,
@@ -9408,7 +9422,7 @@ ActionEffect_TailWind::
     ld hl, wBattleStatus2
     call AddAx9ToHL
     set BSTAT2_WIND_GUARD, [hl]
-    jr .skip
+    jr .to_restore_target_and_end_effect
 
 .check_battle_target:
     ld a, [wBattleTarget]
@@ -9437,8 +9451,8 @@ ActionEffect_TailWind::
     add_a_to_hl
     set 5, [hl]
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; AquaWall: sets BSTAT2_AQUA_WALL on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9449,7 +9463,7 @@ ActionEffect_AquaWall::
     ld hl, wBattleStatus2
     call AddAx9ToHL
     set BSTAT2_AQUA_WALL, [hl]
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; SealPray: sets BSTAT8_SEAL_PRAY on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9460,7 +9474,7 @@ ActionEffect_SealPray::
     ld hl, wBattleStatus8
     call AddAx9ToHL
     set BSTAT8_SEAL_PRAY, [hl]
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; SuckAll: once per side (side flag bit 6): records the actor's slot (x 4) in the side's
 ; wSlotPairBytes entry and sets BSTAT6_SUCK_ALL on it; then ends the sub-phase. (C1, E-0357)
@@ -9476,7 +9490,7 @@ ActionEffect_SuckAll::
     ld hl, wSideFlags0
     add_a_to_hl
     bit 6, [hl]
-    jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp nz, RestoreTargetAndEndEffect
     set 6, [hl]
     ld a, b
     ld hl, wSlotPairBytes
@@ -9491,7 +9505,7 @@ ActionEffect_SuckAll::
     ld hl, wBattleStatus6
     call AddAx9ToHL
     set BSTAT6_SUCK_ALL, [hl]
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Imitate: sets BSTAT6_IMITATE on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9502,20 +9516,20 @@ ActionEffect_Imitate::
     ld hl, wBattleStatus6
     call AddAx9ToHL
     set BSTAT6_IMITATE, [hl]
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 159 Meditate; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_Meditate::
     call ActionEffect_Meditate_Heal
-    jr nc, .skip
+    jr nc, .to_store_nothing_happened_message_bank36
     ld l, $37
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
-.skip:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+.to_store_nothing_happened_message_bank36:
+    jp StoreNothingHappenedMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 160 LifeSong; the misaligned decoding before E-0126 hid this entry; the body is not
@@ -9526,7 +9540,7 @@ ActionEffect_LifeSong::
     call AddAx9ToHL
     ld a, [hl]
     and $10
-    jr nz, ActionEffect_LifeSong_CheckMultiHitCount
+    jr nz, ActionEffect_LifeSong_Revive
     ld a, [hl]
     and $cf
     or $20
@@ -9536,7 +9550,7 @@ ActionEffect_LifeSong::
 ; LifeSong: on its first hit half the time ends with battle text $72; otherwise a fallen target (not
 ; slot 3 or 7) comes back with full HP (ApplyTargetMaxHPAmount); anything else has no effect. (C1,
 ; E-0357)
-ActionEffect_LifeSong_CheckMultiHitCount::
+ActionEffect_LifeSong_Revive::
     ld a, [wMultiHitCount]
     or a
     jr nz, .read_battle_target
@@ -9551,22 +9565,22 @@ ActionEffect_LifeSong_CheckMultiHitCount::
 .read_battle_target:
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, .skip
-    jr z, .skip
+    jr nc, .to_restore_target_and_end_effect
+    jr z, .to_restore_target_and_end_effect
     ld a, [wBattleTarget]
     and $03
     cp $03
-    jr z, .skip
+    jr z, .to_restore_target_and_end_effect
     call ApplyTargetMaxHPAmount
     ret
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; LoveRain: the first time, stores a random heal kind (0, 1 or 2 by wRandomLo's low nibble, from
 ; ActionEffect_LoveRain_Data) in the actor's wHealFlags entry, sets BSTAT8_LOVE_RAIN and ends with
 ; sub-phase 7; with BSTAT8_LOVE_RAIN_FORCED set, heals when wLoveRainFlag is set
-; (ActionEffect_LoveRain_CheckLoveRainFlag). (C1, E-0357)
+; (ActionEffect_LoveRain_HealIfFlagSet). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 161 LoveRain; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
@@ -9576,7 +9590,7 @@ ActionEffect_LoveRain::
     call AddAx9ToHL
     ld a, [hl]
     and $01
-    jr nz, ActionEffect_LoveRain_CheckLoveRainFlag
+    jr nz, ActionEffect_LoveRain_HealIfFlagSet
     push hl
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -9596,7 +9610,7 @@ ActionEffect_LoveRain::
 
 ; LoveRain: heals (ActionEffect_Heal) when the LoveRain flag is set, otherwise ends (sub-phase 7).
 ; (C1, E-0357)
-ActionEffect_LoveRain_CheckLoveRainFlag::
+ActionEffect_LoveRain_HealIfFlagSet::
     ld a, [wLoveRainFlag]
     or a
     jr z, .to_set_sub_phase7_and_reset_resolve_step
@@ -9633,7 +9647,7 @@ ActionEffect_Ahhh_2::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp ActionEffect_ActionCF_Skip
+    jp StoreHitOrUnaffectedMessage
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 172 Guard; the misaligned decoding before E-0126 hid this entry; the body is not
@@ -9646,7 +9660,7 @@ ActionEffect_Guard::
     and $f0
     or $01
     ld [hl], a
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Action $B0 (a Chance effect): only for a player-side actor outside link play; a foe target is
 ; removed (HP 0, out $FF, slot bytes cleared, picture blanked) with '<name> fled!' ($D8) and sound
@@ -9658,10 +9672,10 @@ ActionEffect_Guard::
 ActionEffect_ActionB0::
     ld a, [wLinkMode]
     or a
-    jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp nz, RestoreTargetAndEndEffect
     ld a, [wBattleActor]
     cp $04
-    jp nc, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp nc, RestoreTargetAndEndEffect
     ld a, [wBattleTarget]
     cp $04
     jr c, .check_battle_action_id
@@ -9695,7 +9709,7 @@ ActionEffect_ActionB0::
     farcall ShowBattleText
     ld a, $82
     call QueueSoundEffect
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
@@ -9706,7 +9720,7 @@ ActionEffect_ActionB0::
 
 .call_show_battle_text:
     farcall ShowBattleText
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Action $B4: every present slot of the actor's side gets a forced critical (BSTAT1_CRITICAL); then
 ; the sub-phase ends. (C1, E-0357)
@@ -9732,7 +9746,7 @@ ActionEffect_ActionB4::
     inc c
     dec b
     jr nz, .loop
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Action $B5: puts the target to sleep (status 0 | $8C) unless it already sleeps ('<name> is already
 ; asleep!'), with '<name> was put to sleep!' ($73), or '<name> fell asleep!' ($74) on the local
@@ -9762,7 +9776,7 @@ ActionEffect_ActionB5::
 .skip2:
     ld h, $d4
     lb bc, $00, $80
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Action $B6: empties the target's MP with '<name> lost its MP!' ($DF); a target without MP ends the
 ; sub-phase. (C1, E-0357)
@@ -9775,13 +9789,13 @@ ActionEffect_ActionB6::
     call AddDoubleAToHL_Bank36
     ld a, [hli]
     or [hl]
-    jp z, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp z, RestoreTargetAndEndEffect
     xor a
     ld [hld], a
     ld [hl], a
     ld l, $df
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 185; the misaligned decoding before E-0126 hid this entry; the body is not
@@ -9798,12 +9812,12 @@ ActionEffect_ActionB9::
 ActionEffect_ActionBA::
     call TargetStatus3Address
     bit BSTAT3_FROZEN, [hl]
-    jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp nz, RestoreTargetAndEndEffect
     set 0, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $78
     lb bc, $00, $98
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 ; Action $BC: fills the target's MP to its max with '<name>'s MP was restored!' ($C3); at full MP
 ; the sub-phase ends. (C1, E-0357)
@@ -9824,7 +9838,7 @@ ActionEffect_ActionBC::
     deref_hl
     call CompareHLToBC
     pop bc
-    jp z, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp z, RestoreTargetAndEndEffect
     ld a, l
     ld [bc], a
     inc bc
@@ -9832,7 +9846,7 @@ ActionEffect_ActionBC::
     ld [bc], a
     ld l, $c3
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 ; Action $BD: a target at 1 HP takes 1 damage ('took G damage!'); any other target's HP becomes 1
 ; with '<name> was brutalized!' ($38). (C1, E-0357)
@@ -9858,7 +9872,7 @@ ActionEffect_ActionBD::
     ld [wBattleDamageHi], a
     ld l, $35
     lb bc, $88, $a8
-    jr .skip2
+    jr .to_store_actor_message_bank36
 
 .skip:
     ld a, $01
@@ -9869,8 +9883,8 @@ ActionEffect_ActionBD::
     ld l, $38
     lb bc, $40, $90
 
-.skip2:
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+.to_store_actor_message_bank36:
+    jp StoreActorMessage_Bank36
 
 ; Action $C0: on a roll of $40 or more the attack damage ('took G damage!', $36); otherwise 'Miss!
 ; <name> avoided damage!' ($D1). (C1, E-0357)
@@ -9885,12 +9899,12 @@ ActionEffect_ActionC0::
     call ComputeAttackDamage
     lb hl, $d1, $36
     lb bc, $80, $a8
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
 .skip:
     ld h, $d1
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Action $C1: on a roll of $C0 or more the attack damage with the hit message; otherwise 'Miss!
 ; <name> was unharmed!' ($D0). (C1, E-0357)
@@ -9908,7 +9922,7 @@ ActionEffect_ActionC1::
 .skip:
     ld h, $d0
     lb bc, $08, $88
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jp StoreTargetMessage_Bank36
 
 ; Action $C2: Fight's effect. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9923,7 +9937,7 @@ ActionEffect_ActionC2::
 ; for action(s) 171 ZoneOut, 183, 195, 196; the misaligned decoding before E-0126 hid this entry
 ; (E-0126)
 ActionEffect_ZoneOut::
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Action $C5: the actor trips itself (BSTAT3_TRIPPED); ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9934,7 +9948,7 @@ ActionEffect_ActionC5::
     ld hl, wBattleStatus3
     call AddAx9ToHL
     set BSTAT3_TRIPPED, [hl]
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+    jp RestoreTargetAndEndEffect
 
 ; Action $C6: the actor becomes paralyzed (BSTAT0_PARALYZED) with '<name> became paralyzed!' ($76).
 ; (C1, E-0357)
@@ -9948,7 +9962,7 @@ ActionEffect_ActionC6::
     set BSTAT0_PARALYZED, [hl]
     ld l, $76
     lb bc, $40, $90
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+    jp StoreActorMessage_Bank36
 
 ; Action $C8: takes the target out of the battle (wBattleSlotOut $FF), clearing its slot bytes and
 ; blanking its picture on the far side; ends the sub-phase. (C1, E-0357)
@@ -9961,7 +9975,7 @@ ActionEffect_ActionC8::
     add_a_to_hl
     ld [hl], $ff
     call TargetOnLocalSide_Bank36
-    jr c, .skip
+    jr c, .to_restore_target_and_end_effect
     ld a, [wBattleTarget]
     and $03
     ld hl, wBattleSlotTriples
@@ -9975,8 +9989,8 @@ ActionEffect_ActionC8::
     ld [hl], a
     farcall BlankTargetMonsterPicture
 
-.skip:
-    jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+.to_restore_target_and_end_effect:
+    jp RestoreTargetAndEndEffect
 
 ; Action $C9: the actor comes down: clears its airborne and HighJump fields and takes a tenth of its
 ; HP (at least 1) as damage ('took G damage!', target message 'landed safely!'). (C1, E-0357)
@@ -10009,7 +10023,7 @@ ActionEffect_ActionC9::
     ld [wBattleDamageHi], a
     lb hl, $af, $36
     lb bc, $80, $a8
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
 ; Action $BF: clears the actor's airborne and HighJump fields; with its sleep counter set it falls
 ; as in action $C9; otherwise '<name> landed safely!' ($AF) with no damage. (C1, E-0357)
@@ -10039,9 +10053,9 @@ ActionEffect_ActionBF::
     ld [wBattleDamageHi], a
     lb hl, $af, $af
     lb bc, $00, $80
-    jp StoreHitMessage_Bank36_SetResolveMsgActor
+    jp StoreResolveMessage_Bank36
 
-; Action $CC (the forced HighJump landing): ActionEffect_HighJump_Skip on the actor's status 4
+; Action $CC (the forced HighJump landing): ActionEffect_HighJump_Land on the actor's status 4
 ; (clears the field, then PsycheUp's damage). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $CC; ids below 175 are skills named from StringTable_SkillNames
@@ -10050,9 +10064,9 @@ ActionEffect_ActionCC::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
-    jp ActionEffect_HighJump_Skip
+    jp ActionEffect_HighJump_Land
 
-; Action $CD: Geyser's backlash on the actor (ActionEffect_Geyser_Skip with its status 3). (C1,
+; Action $CD: Geyser's backlash on the actor (ActionEffect_Geyser_Backfire with its status 3). (C1,
 ; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $CD; ids below 175 are skills named from StringTable_SkillNames
@@ -10061,29 +10075,32 @@ ActionEffect_ActionCD::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    jp ActionEffect_Geyser_Skip
+    jp ActionEffect_Geyser_Backfire
 
-; Action $CE (the forced LifeSong turn): LifeSong's second path
-; (ActionEffect_LifeSong_CheckMultiHitCount). (C1, E-0357)
+; Action $CE (the forced LifeSong turn): LifeSong's second path (ActionEffect_LifeSong_Revive). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $CE; ids below 175 are skills named from StringTable_SkillNames
 ; (E-0084)
 ActionEffect_ActionCE::
-    jp ActionEffect_LifeSong_CheckMultiHitCount
+    jp ActionEffect_LifeSong_Revive
 
 ; Action $CF (the forced LoveRain turn): heals when wLoveRainFlag is set
-; (ActionEffect_LoveRain_CheckLoveRainFlag). (C1, E-0357)
+; (ActionEffect_LoveRain_HealIfFlagSet). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $CF; ids below 175 are skills named from StringTable_SkillNames
 ; (E-0084)
 ActionEffect_ActionCF::
-    jp ActionEffect_LoveRain_CheckLoveRainFlag
+    jp ActionEffect_LoveRain_HealIfFlagSet
 
-; Action $CF's message: actor $35, target $B5, flags $A8, argument $80. (C1, E-0357)
-ActionEffect_ActionCF_Skip::
+; Stores the resolve message of a hit that can fail, keeping the damage word: actor message $35
+; '<name> took G damage!', target message $B5 'But <name> was unaffected!', flags $A8, argument $80
+; (StoreResolveMessage_Bank36). About twenty effect routines jump here after computing damage, among
+; them ActionEffect_ActionD0 and ActionEffect_Ahhh_2. (C1, E-0371)
+StoreHitOrUnaffectedMessage::
     lb hl, $b5, $35
     lb bc, $80, $a8
-    jr StoreHitMessage_Bank36_SetResolveMsgActor
+    jr StoreResolveMessage_Bank36
 
 ; the resolve message of a hit: actor message $35 'took G damage!', target message $D0 'Miss! ...
 ; was unharmed!', flags $A8, argument $88; the same bytes as UnreferencedStoreResolveMessage35D0 in
@@ -10094,7 +10111,7 @@ StoreHitMessage_Bank36::
     lb bc, $88, $a8
 
 ; Stores the resolve message: actor L, target H, flags C, argument B. (C1, E-0357)
-StoreHitMessage_Bank36_SetResolveMsgActor::
+StoreResolveMessage_Bank36::
     ld a, l
     ld [wResolveMsgActor], a
     ld a, h
@@ -10113,7 +10130,7 @@ ClearDamageAndStoreResolveMsgFlags_Bank36::
     ld [wBattleDamageHi], a
 
 ; Stores the actor message L, flags C and argument B. (C1, E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor::
+StoreActorMessage_Bank36::
     ld a, l
     ld [wResolveMsgActor], a
     ld a, c
@@ -10122,24 +10139,26 @@ ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor::
     ld [wResolveMsgArg], a
     ret
 
-; The no-effect message: target $CC, flags $80. (C1, E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank36_Skip::
+; 'But nothing happened!': target message $CC, flags $80, argument 0 (StoreTargetMessage_Bank36);
+; the damage word is kept. (C1, E-0371)
+StoreNothingHappenedMessage_Bank36::
     ld h, $cc
     lb bc, $00, $80
-    jr ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
+    jr StoreTargetMessage_Bank36
 
-; Target message $B5, flags $80. (C1, E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2::
+; 'But <name> was unaffected!': target message $B5, flags $80, argument 0; the damage word is kept.
+; (C1, E-0371)
+StoreUnaffectedMessage_Bank36::
     ld h, $b5
     lb bc, $00, $80
 
 ; Stores the target message H, then flags C and argument B. (C1, E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget::
+StoreTargetMessage_Bank36::
     ld a, h
     ld [wResolveMsgTarget], a
 
 ; Stores the message flags C and argument B. (C1, E-0357)
-ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgFlags::
+StoreMessageFlags_Bank36::
     ld a, c
     ld [wResolveMsgFlags], a
     ld a, b
@@ -10154,9 +10173,12 @@ SetSubPhase2AndResetResolveStep::
     ld [wBattleResolveStep], a
     ret
 
-; Puts back a redirected target as the target and choice; after a follow-up clears the message
-; flags, otherwise restarts the resolve at sub-phase 3. (C1, E-0357)
-SetSubPhase2AndResetResolveStep_CheckOriginalTarget::
+; Ends an effect routine without a result: when wOriginalTarget holds a redirected target (not $FF)
+; puts it back as wBattleTarget and the actor's wBattleTargetChoice and sets wOriginalTarget to $FF;
+; then during a follow-up action (wFollowUpAction non-zero) only clears the message flags and
+; argument (RestoreTargetAndEndEffect_ClearMessage), otherwise sets wBattleSubPhase 3
+; (RunBattleActions_AfterAction) with wBattleResolveStep 0. HL is kept. (C1, E-0371)
+RestoreTargetAndEndEffect::
     ld a, [wOriginalTarget]
     cp $ff
     jr z, .check_follow_up_action
@@ -10176,7 +10198,7 @@ SetSubPhase2AndResetResolveStep_CheckOriginalTarget::
 .check_follow_up_action:
     ld a, [wFollowUpAction]
     or a
-    jr nz, SetSubPhase7AndResetResolveStep_Skip
+    jr nz, RestoreTargetAndEndEffect_ClearMessage
     ld a, $03
     ld [wBattleSubPhase], a
     xor a
@@ -10192,9 +10214,9 @@ SetSubPhase7AndResetResolveStep::
     ret
 
 ; Clears the message flags and argument. (C1, E-0357)
-SetSubPhase7AndResetResolveStep_Skip::
+RestoreTargetAndEndEffect_ClearMessage::
     lb bc, $00, $00
-    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgFlags
+    jp StoreMessageFlags_Bank36
 
 ; when the target's status byte 2 (wBattleStatus2) bit 2 is set, the damage word is halved (E-0118)
 HalveDamageIfTargetStatus2Bit2::

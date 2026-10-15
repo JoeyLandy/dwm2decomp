@@ -7,36 +7,38 @@ SECTION "Bank A3", ROMX[$4000], BANK[$A3]
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 GetBattleATK_BankA3::
     ld hl, wBattleATK
-    jr GetBattleMP_BankA3_Skip
+    jr GetBattleStatWord_BankA3
 
-; HL = wBattleDEF, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
+; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
 GetBattleDEF_BankA3::
     ld hl, wBattleDEF
-    jr GetBattleMP_BankA3_Skip
+    jr GetBattleStatWord_BankA3
 
-; HL = wBattleMaxHP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
+; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
 GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
-    jr GetBattleMP_BankA3_Skip
+    jr GetBattleStatWord_BankA3
 
-; HL = wBattleMaxMP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
+; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
 GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
-    jr GetBattleMP_BankA3_Skip
+    jr GetBattleStatWord_BankA3
 
-; HL = wBattleHP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
+; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
 GetBattleHP_BankA3::
     ld hl, wBattleHP
-    jr GetBattleMP_BankA3_Skip
+    jr GetBattleStatWord_BankA3
 
-; HL = wBattleMP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
+; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
 GetBattleMP_BankA3::
     ld hl, wBattleMP
-    jr GetBattleMP_BankA3_Skip
+    jr GetBattleStatWord_BankA3
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; HL = the word at HL + 2 x slot A (the value, not a pointer). (C1, E-0357)
-GetBattleMP_BankA3_Skip::
+; HL = array base, A = battle slot: HL = the 16-bit word at HL + 2 * A (the value, not a pointer); A
+; = its low byte. The shared tail of GetBattleATK_BankA3 through GetBattleMP_BankA3, the same bytes
+; as ReadBattleWordFromArray in bank $36. (C1, E-0371)
+GetBattleStatWord_BankA3::
     add a
     add_a_to_hl
     deref_hl
@@ -303,7 +305,7 @@ ActorFormationSlotToTemp0_Data::
 
 ; copies 16 bytes of wBattleActionChoice to wSavedActionChoices, clears wFormationSlot0/4, and
 ; outside link battles sets the formation for each side from FindFormationForSide and
-; SaveActionChoicesAndPickFormations_DivideBByA (E-0125)
+; SaveActionChoicesAndPickFormations_ApplyFormation (E-0125)
 SaveActionChoicesAndPickFormations::
     ld b, $10
     ld hl, wBattleActionChoice
@@ -326,7 +328,7 @@ SaveActionChoicesAndPickFormations::
     or a
     jr z, .check_link_mode
     ld de, wBattleActionChoice
-    call SaveActionChoicesAndPickFormations_DivideBByA
+    call SaveActionChoicesAndPickFormations_ApplyFormation
     ld [wFormationSlot0], a
 
 .check_link_mode:
@@ -340,7 +342,7 @@ SaveActionChoicesAndPickFormations::
     or a
     ret z
     ld de, wBattleActionChoice + $8
-    call SaveActionChoicesAndPickFormations_DivideBByA
+    call SaveActionChoicesAndPickFormations_ApplyFormation
     ld [wFormationSlot1], a
     ret
 
@@ -488,10 +490,10 @@ SlotHasStatus3Or4Bits_BankA3_2::
     pop hl
     ret
 
-; SaveActionChoicesAndPickFormations_DivideBByA walks these 5-byte records until a 0 byte; a record
-; applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock,
-; SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll
-; when byte 3 is 1 or in link mode 2 (E-0172, C1)
+; SaveActionChoicesAndPickFormations_ApplyFormation walks these 5-byte records until a 0 byte; a
+; record applies when each slot of the side chose the given action and can act
+; (CheckSlotStatusBlock, SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after
+; the compatibility roll when byte 3 is 1 or in link mode 2 (E-0172, C1)
 ; record: action each of the three slots must have chosen ($FF = any); 1 = roll
 ; FormationCompatibilityRoll (always rolled in link mode 2); combined action id ($D0-$E3)
 FormationTable::
@@ -819,10 +821,12 @@ PersonalityCompatibility::
     db $03, $05, $08, $02, $02, $08, $08, $02, $07, $08, $08, $07, $08, $08, $07, $02, $07, $07, $09, $08, $02, $02, $08, $07, $08, $08, $09, $00, $00, $00, $00, $00 ; id 25
     db $04, $09, $03, $03, $05, $04, $05, $05, $04, $05, $05, $04, $05, $09, $05, $04, $05, $05, $05, $06, $05, $04, $09, $04, $09, $09, $05, $00, $00, $00, $00, $00 ; id 26
 
-; Places hTemp0 into the formation bytes at DE by B mod 3: 0 in bytes 0 and 2 (bytes 1 and 3 = $FF),
-; 1 in bytes 0 and 4 (1 and 5 = $FF), 2 in bytes 2 and 4 (3 and 5 = $FF); returns A = the case. (C1,
-; E-0357)
-SaveActionChoicesAndPickFormations_DivideBByA::
+; B = the index of the FormationTable record FindFormationForSide matched, hTemp0 = its combined
+; action, DE = the side's three action words in wBattleActionChoice (action byte, target byte): by B
+; mod 3 writes hTemp0 to the actions of two slots and $FF to their targets - case 0 slots 0 and 1
+; (bytes 0 and 2), case 1 slots 0 and 2 (bytes 0 and 4), case 2 slots 1 and 2 (bytes 2 and 4).
+; Returns A = the case, which the parent stores in wFormationSlot0 or wFormationSlot1. (C1, E-0371)
+SaveActionChoicesAndPickFormations_ApplyFormation::
     push bc
     push de
     ld a, $03
@@ -967,9 +971,11 @@ PersonalityIndexOfSlot_BankA3_2::
     pop hl
     ret
 
-; hTemp0 = the actor's resolve chance by its monster id: from MonsterResolveChanceTable_Foes for a
-; foe-side actor outside link mode 1, otherwise from MonsterResolveChanceTable. (C1, E-0357)
-RollRandomLoBelowChance_WriteTemp0::
+; hTemp0 = the actor's resolve chance class, indexed by its monster id (the word at wBattleMonsterId
+; + 2 * wBattleActor): from MonsterResolveChanceTable_Foes when wLinkMode is 0 or 2 and wBattleActor
+; is 4 or more (a foe), otherwise from MonsterResolveChanceTable. Far-called by
+; RollRandomLoBelowChance. (C1, E-0371)
+RollRandomLoBelowChance_LoadActorChance::
     ld a, [wLinkMode]
     or a
     jr z, .check_battle_actor
@@ -1117,16 +1123,18 @@ PickDuckBehindAlly::
     ld c, a
     ret
 
-; Chance picks one of 14 effects (random mod 14, from its table): outside link battles of kind 2, 3
-; or 5 it rolls again on $B3, $B4, $B6 and $BD; a player-side actor in other battles keeps any; foe
-; actors, link battles and those kinds also roll again on $B0 and $B2. (C1, E-0357)
-ActionEffect_Chance_AdvanceRandom::
+; Returns C (and A) = one of the 14 actions $B0-$BD from the table after it, picked by AdvanceRandom
+; then wRandomLo mod 14. When wLinkMode is 0 and wBattleKind is 2, 3 or 5 it rolls again on $B3,
+; $B4, $B6 and $BD; when wLinkMode is 0 in other kinds a player-side actor (wBattleActor bit 2
+; clear) keeps any pick; foe actors, link battles and those three kinds also roll again on $B0 and
+; $B2. Far-called by ActionEffect_Chance, which makes C the actor's action. (C1, E-0371)
+ActionEffect_Chance_PickEffect::
     call AdvanceRandom
     ld a, [wRandomLo]
     ld b, a
     ld a, $0e
     call DivideBByA
-    ld hl, ActionEffect_Chance_AdvanceRandom_Data
+    ld hl, ActionEffect_Chance_PickEffect_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -1148,24 +1156,24 @@ ActionEffect_Chance_AdvanceRandom::
 .skip:
     ld a, c
     cp $b3
-    jr z, ActionEffect_Chance_AdvanceRandom
+    jr z, ActionEffect_Chance_PickEffect
     cp $b4
-    jr z, ActionEffect_Chance_AdvanceRandom
+    jr z, ActionEffect_Chance_PickEffect
     cp $b6
-    jr z, ActionEffect_Chance_AdvanceRandom
+    jr z, ActionEffect_Chance_PickEffect
     cp $bd
-    jr z, ActionEffect_Chance_AdvanceRandom
+    jr z, ActionEffect_Chance_PickEffect
 
 .skip2:
     ld a, c
     cp $b0
-    jr z, ActionEffect_Chance_AdvanceRandom
+    jr z, ActionEffect_Chance_PickEffect
     cp $b2
-    jr z, ActionEffect_Chance_AdvanceRandom
+    jr z, ActionEffect_Chance_PickEffect
     ret
 
-; data read by ActionEffect_Chance_AdvanceRandom (14 bytes) (E-0347)
-ActionEffect_Chance_AdvanceRandom_Data::
+; data read by ActionEffect_Chance_PickEffect (14 bytes) (E-0347)
+ActionEffect_Chance_PickEffect_Data::
     db $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd
 
 ; the same 76 bytes as StoreBattleStateToPartyRecords (StoreBattleStateToPartyRecords) (E-0289)
@@ -1223,8 +1231,8 @@ StoreBattleStateToPartyRecords_BankA3::
     ld [rRAMG], a
     ret
 
-; RollRandomLoBelowChance_WriteTemp0 reads the byte at $4B57 + the actor's wBattleMonsterId for the
-; party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance
+; RollRandomLoBelowChance_LoadActorChance reads the byte at $4B57 + the actor's wBattleMonsterId for
+; the party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance
 ; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
 ; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)
 ; record: chance class 0-3
@@ -1614,7 +1622,7 @@ MonsterResolveChanceTable::
     db $03 ; id 382 Kagebou
     db $00 ; id 383 ?
 
-; RollRandomLoBelowChance_WriteTemp0 reads the byte at $4CD7 + the actor's wBattleMonsterId for
+; RollRandomLoBelowChance_LoadActorChance reads the byte at $4CD7 + the actor's wBattleMonsterId for
 ; battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance
 ; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
 ; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)

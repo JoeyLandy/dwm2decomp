@@ -726,7 +726,7 @@ RunLinkSession5Exchange_Receive::
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkSession5Exchange_Receive_WaitFadeState
+    farcall RunLinkSession5Exchange_RunScreen
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
@@ -847,7 +847,7 @@ RunLinkSession8Exchange_Receive::
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkSession8Exchange_Receive_WriteTitleScreenState
+    farcall RunLinkSession8Exchange_Receive_DreamEggScreen
     ld hl, wVBlankFlags
     res 1, [hl]
     ret

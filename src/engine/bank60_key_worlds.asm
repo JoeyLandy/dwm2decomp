@@ -4,10 +4,12 @@
 SECTION "Bank 60", ROMX[$4000], BANK[$60]
     db $60
 
-; Entering a key world: finds a free SRAM slot for it (FindSRAMSlotMarkerIndex; none returns), keeps
-; it in wKeyWorldSlot and in the key's list entry (byte 3, with bit 7), and loads the key's seed
-; into wKeyRandomLo/Hi. (C1, E-0357)
-WarpEffect_Warp_FindSRAMSlotMarkerIndex::
+; Far-called by WarpEffect_Warp when byte 0 of the current key's wKeyList entry (wKeyList + 4 *
+; wCurrentKeyIndex) has bit 7 clear: FindSRAMSlotMarkerIndex picks the first SRAM slot whose marker
+; is not $50 + its index (returns at once when none); the slot goes to wKeyWorldSlot and, with bit 7
+; set, into that entry byte 0; the key's wKeySeeds word goes to wKeyRandomLo/Hi, and the code falls
+; through into GenerateKeyWorld. (C1, E-0371)
+WarpEffect_Warp_StartNewKeyWorld::
     ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
@@ -40,7 +42,7 @@ WarpEffect_Warp_FindSRAMSlotMarkerIndex::
 ; Generates the key world from the key's seed: the size and areas (repeated until
 ; KeyWorldLayout_NumberCellsAndPlaceEntrances accepts the layout), the rooms, the floor menus, the
 ; objects, the monsters and the goal; then marks the key's list entry generated (bit 7 set, bit 6
-; clear). WarpEffect_Warp_FindSRAMSlotMarkerIndex falls through into it after loading the seed, and
+; clear). WarpEffect_Warp_StartNewKeyWorld falls through into it after loading the seed, and
 ; DebugAutomap_Update_EnterKeyWorld (bank $01) far-calls it. (C1, E-0369)
 GenerateKeyWorld::
     call KeyWorldLayout_Start
@@ -2922,7 +2924,7 @@ RollKeyWorldObjectKind_Data::
 ; Rolls a screen trigger's contents for the band: a random 0-99 against the band's cumulative chance
 ; row (64 bytes per band) picks the kind, then further rolls (scaled by the band) its amount,
 ; written at DE. (C1, E-0357)
-FieldState_MapTransition_NextRandomSeed::
+FieldState_MapTransition_RollTriggerContents::
     ld a, [wKeyWorldBand]
     and $0f
     ld l, a
@@ -2981,7 +2983,7 @@ FieldState_MapTransition_NextRandomSeed::
     jr nc, .loop2
     ld c, a
     ld a, [wKeyWorldBand]
-    ld hl, FieldState_MapTransition_NextRandomSeed_Data
+    ld hl, FieldState_MapTransition_RollTriggerContents_Data
     add_a_to_hl
     ld a, [hl]
     cp c
@@ -3047,8 +3049,8 @@ FieldState_MapTransition_NextRandomSeed::
     ld [de], a
     ret
 
-; data read by FieldState_MapTransition_NextRandomSeed (530 bytes) (E-0347)
-FieldState_MapTransition_NextRandomSeed_Data::
+; data read by FieldState_MapTransition_RollTriggerContents (530 bytes) (E-0347)
+FieldState_MapTransition_RollTriggerContents_Data::
     ds $13, $00
     db $55
     ds $26, $00
@@ -3219,26 +3221,26 @@ RunRandomPatternCase::
     and $0f
     jumptable
     dw RunRandomPatternCase_SingleChunk
-    dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_3
-    dw RunRandomPatternCase_WriteTempA_2
-    dw RunRandomPatternCase_WriteTempA_3
-    dw RunRandomPatternCase_WriteTempA
+    dw RunRandomPatternCase_TallBlock
+    dw RunRandomPatternCase_WideBlock
+    dw RunRandomPatternCase_Block2x2
+    dw RunRandomPatternCase_WideBlock
+    dw RunRandomPatternCase_TallBlock
     dw RunRandomPatternCase_SingleChunk
-    dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_3
-    dw RunRandomPatternCase_WriteTempA_2
-    dw RunRandomPatternCase_WriteTempA_3
-    dw RunRandomPatternCase_WriteTempA
+    dw RunRandomPatternCase_TallBlock
+    dw RunRandomPatternCase_WideBlock
+    dw RunRandomPatternCase_Block2x2
+    dw RunRandomPatternCase_WideBlock
+    dw RunRandomPatternCase_TallBlock
     dw RunRandomPatternCase_SingleChunk
-    dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_3
-    dw RunRandomPatternCase_WriteTempA_2
+    dw RunRandomPatternCase_TallBlock
+    dw RunRandomPatternCase_WideBlock
+    dw RunRandomPatternCase_Block2x2
     db $c9, $c9
 
 ; Chunk pattern 3, a 2 x 2 block: only in an even left column with the three other slots free; picks
 ; one of 32 patterns, fills the four slots (0-3) and writes the area's cells. (C1, E-0357)
-RunRandomPatternCase_WriteTempA_2::
+RunRandomPatternCase_Block2x2::
     ld a, b
     and $01
     cp $01
@@ -3287,7 +3289,7 @@ RunRandomPatternCase_WriteTempA_2::
     ld c, a
     add a
     add c
-    ld de, RunRandomPatternCase_WriteTempA_Data_3
+    ld de, RunRandomPatternCase_Block2x2_Data
     add e
     ld e, a
     jr nc, .call_store_three_bytes_before_temp0_pointer
@@ -3352,7 +3354,7 @@ RunRandomPatternCase_WriteTempA_2::
 
 ; Chunk pattern 2, a block two wide: only in an even column with the slot to the right free; picks
 ; one of 32, fills both slots and the area's cells. (C1, E-0357)
-RunRandomPatternCase_WriteTempA_3::
+RunRandomPatternCase_WideBlock::
     ld a, b
     and $01
     cp $01
@@ -3380,7 +3382,7 @@ RunRandomPatternCase_WriteTempA_3::
     ld c, a
     sla a
     add c
-    ld de, RunRandomPatternCase_WriteTempA_Data_2
+    ld de, RunRandomPatternCase_WideBlock_Data
     add e
     ld e, a
     jr nc, .call_store_three_bytes_before_temp0_pointer
@@ -3427,7 +3429,7 @@ RunRandomPatternCase_WriteTempA_3::
 
 ; Chunk pattern 1, a block two tall: only in the top row with the slot below free; picks one of 32,
 ; fills both slots and the area's cells. (C1, E-0357)
-RunRandomPatternCase_WriteTempA::
+RunRandomPatternCase_TallBlock::
     ld a, b
     cp $02
     jr c, .read_temp0
@@ -3452,7 +3454,7 @@ RunRandomPatternCase_WriteTempA::
     ld c, a
     sla a
     add c
-    ld de, RunRandomPatternCase_WriteTempA_Data
+    ld de, RunRandomPatternCase_TallBlock_Data
     add e
     ld e, a
     jr nc, .call_store_three_bytes_before_temp0_pointer
@@ -3621,7 +3623,7 @@ KeyWorldChunkLists::
     dfar KeyWorldChunkGroup02 ; id 29
     dfar KeyWorldChunkGroup01 ; id 30
     dfar KeyWorldChunkGroup00 ; id 31
-RunRandomPatternCase_WriteTempA_Data::
+RunRandomPatternCase_TallBlock_Data::
     dfar KeyWorldChunkGroup10 ; id 32
     dfar KeyWorldChunkGroup11 ; id 33
     dfar KeyWorldChunkGroup12 ; id 34
@@ -3662,7 +3664,7 @@ RunRandomPatternCase_WriteTempA_Data::
     dfar KeyWorldChunkGroup20 ; id 69
     dfar KeyWorldChunkGroup20 ; id 70
     dfar KeyWorldChunkGroup20 ; id 71
-RunRandomPatternCase_WriteTempA_Data_2::
+RunRandomPatternCase_WideBlock_Data::
     dfar KeyWorldChunkGroup20 ; id 72
     dfar KeyWorldChunkGroup21 ; id 73
     dfar KeyWorldChunkGroup22 ; id 74
@@ -3695,7 +3697,7 @@ RunRandomPatternCase_WriteTempA_Data_2::
     dfar KeyWorldChunkGroup22 ; id 101
     dfar KeyWorldChunkGroup21 ; id 102
     dfar KeyWorldChunkGroup20 ; id 103
-RunRandomPatternCase_WriteTempA_Data_3::
+RunRandomPatternCase_Block2x2_Data::
     dfar KeyWorldChunkGroup30 ; id 104
     dfar KeyWorldChunkGroup31 ; id 105
     dfar KeyWorldChunkGroup32 ; id 106
@@ -3983,8 +3985,8 @@ SetupTownObjectsForMap::
     ret
 
 ; clears bit 7 of wKeyWorldRefresh; walks the wMapObjectCount 8-byte entries at wMapObjects and
-; drops the count at the first entry for which RemoveMapObjectsEntryMatching_NextRandomSeed returns
-; 0 (E-0125)
+; drops the count at the first entry for which RemoveMapObjectsEntryMatching_PlaceObject returns 0
+; (E-0125)
 RemoveMapObjectsEntryMatching::
     ld a, l
     ldh [hTemp6], a
@@ -4003,7 +4005,7 @@ RemoveMapObjectsEntryMatching::
     ld a, b
     ldh [hTemp0], a
     call RollKeyWorldObjectKind
-    call RemoveMapObjectsEntryMatching_NextRandomSeed
+    call RemoveMapObjectsEntryMatching_PlaceObject
     or a
     jr z, .read_map_object_count
     pop bc
@@ -4064,10 +4066,13 @@ MarkMapObjectsEntryForKeyWorldGoalCell::
     jr nz, .loop
     ret
 
-; Places a map object on a random screen that no other object uses (giving up with A = 0 after 100
-; tries), then at one of four random spots of that screen from the chunk data in bank $61, trying
-; again when the spot is $FE. (C1, E-0357)
-RemoveMapObjectsEntryMatching_NextRandomSeed::
+; DE = the object's 8-byte wMapObjects entry, hTemp0 = the entries left, hTemp6/hTemp7 = the spot
+; table: picks a random screen (X below wMapWidthScreens, Y below wMapHeightScreens, kept in hTemp5
+; as X * 16 + Y) that no earlier entry's byte 4 holds, giving up with A = 0 after 100 clashes. It
+; then reads one of the screen's four 2-byte spots from bank $61 (8 bytes per screen): $FE picks a
+; new screen, $FF another spot, otherwise entry byte 5 = (first << 4) | second and byte 4 = hTemp5,
+; returning A = 1. (C1, E-0371)
+RemoveMapObjectsEntryMatching_PlaceObject::
     push de
     xor a
     ldh [hTempA], a
@@ -4275,7 +4280,7 @@ FieldState_MapTransition_AfterWarp::
 .loop2:
     push de
     push bc
-    call FieldState_MapTransition_NextRandomSeed
+    call FieldState_MapTransition_RollTriggerContents
     call WriteKeyContentsWordRowsEntryForTemp2Temp3
     ld hl, hTemp3
     inc [hl]
@@ -4430,7 +4435,7 @@ FieldState_MapTransition_RoomWarp::
 .loop2:
     push de
     push bc
-    call FieldState_MapTransition_NextRandomSeed
+    call FieldState_MapTransition_RollTriggerContents
     call WriteRandomEntryFromTable
     pop bc
     pop de

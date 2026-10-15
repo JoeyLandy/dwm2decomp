@@ -5,12 +5,12 @@ SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
 ; if wStringCategory < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls
-; BeginStringDisplay_Bank08_BeginStringDisplay (E-0353)
+; BeginStringDisplay_Bank08_Overflow (E-0353)
 BeginStringDisplay_Bank08::
     ld a, [wStringCategory]
     cp $09
     jr c, .call_begin_string_display
-    farcall BeginStringDisplay_Bank08_BeginStringDisplay
+    farcall BeginStringDisplay_Bank08_Overflow
     ret
 
 .call_begin_string_display:
@@ -19,12 +19,12 @@ BeginStringDisplay_Bank08::
     ret
 
 ; if wStringCategory < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls
-; CopyStringToBuffer_Bank08_CopyStringToBuffer (E-0353)
+; CopyStringToBuffer_Bank08_Overflow (E-0353)
 CopyStringToBuffer_Bank08::
     ld a, [wStringCategory]
     cp $09
     jr c, .call_copy_string_to_buffer
-    farcall CopyStringToBuffer_Bank08_CopyStringToBuffer
+    farcall CopyStringToBuffer_Bank08_Overflow
     ret
 
 .call_copy_string_to_buffer:

@@ -4,7 +4,7 @@
 SECTION "Bank 11", ROMX[$4000], BANK[$11]
     db $11, $c9
 
-; unless a special mode is set (wMapType bit 7 hands over to CheckWarpAtPlayer_ReadMapType): walks
+; unless a special mode is set (wMapType bit 7 hands over to CheckWarpAtPlayer_SpecialMap): walks
 ; the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its
 ; screen nibbles starts a map change: wWarpPending = 1, sound effect $60 is queued, and the entry's
 ; new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored (E-0036)
@@ -12,7 +12,7 @@ CheckWarpAtPlayer::
     ld a, [wMapType]
     bit 7, a
     jr z, .read_map_id
-    farcall CheckWarpAtPlayer_ReadMapType
+    farcall CheckWarpAtPlayer_SpecialMap
     ret
 
 .read_map_id:

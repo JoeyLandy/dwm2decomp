@@ -15,7 +15,7 @@ RunDebugSubState_E0::
     dw RunDebugSubState_E0_SkillField
     dw RunDebugSubState_E0_CountField
     dw RunDebugSubState_E0_BattleEndField
-    dw RunDebugSubState_E0_SetDebugSubState
+    dw RunDebugSubState_E0_Exit
 
 ; Debug skill editor, sub-state 0: shows its heading strings, draws its 20 x 18 layout
 ; (RunDebugSubState_E0_ShowHeading_Data) and the four fields (the side, the skill number and name, a
@@ -56,10 +56,10 @@ RunDebugSubState_E0_ShowHeading::
     pop bc
     dec c
     jr nz, .loop
-    call RunDebugSubState_E0_WriteVRAMByte_2
+    call RunDebugSubState_E0_DrawSideMarks
     call ShowSkillNumberAndName_BankE0
-    call RunDebugSubState_E0_HLToDecimalDigits
-    call RunDebugSubState_E0_WriteVRAMByte
+    call RunDebugSubState_E0_DrawCount
+    call RunDebugSubState_E0_DrawBattleEndMarks
     ld hl, wDebugSubState
     inc [hl]
     ld a, $bb
@@ -99,7 +99,7 @@ RunDebugSubState_E0_SideField::
     and $01
     xor $01
     ld [wDebugCursor], a
-    call RunDebugSubState_E0_WriteVRAMByte_2
+    call RunDebugSubState_E0_DrawSideMarks
     ret
 
 .set_debug_sub_state:
@@ -215,7 +215,7 @@ RunDebugSubState_E0_CountField::
     ld a, [wDebugValue1]
     dec a
     ld [wDebugValue1], a
-    jr .call_run_debug_sub_state_e0_hl_to_decimal
+    jr .call_run_debug_sub_state_e0_draw_count
 
 .check_bit4:
     bit 4, a
@@ -224,8 +224,8 @@ RunDebugSubState_E0_CountField::
     inc a
     ld [wDebugValue1], a
 
-.call_run_debug_sub_state_e0_hl_to_decimal:
-    call RunDebugSubState_E0_HLToDecimalDigits
+.call_run_debug_sub_state_e0_draw_count:
+    call RunDebugSubState_E0_DrawCount
     ret
 
 .set_debug_sub_state:
@@ -269,7 +269,7 @@ RunDebugSubState_E0_BattleEndField::
     and $01
     xor $01
     ld [wBattleEndFlag], a
-    call RunDebugSubState_E0_WriteVRAMByte
+    call RunDebugSubState_E0_DrawBattleEndMarks
     ret
 
 .set_debug_sub_state:
@@ -282,20 +282,23 @@ RunDebugSubState_E0_BattleEndField::
     ret
 
 ; Debug skill editor, sub-state 5: returns to the debug viewer's state 3. (C1, E-0357)
-RunDebugSubState_E0_SetDebugSubState::
+RunDebugSubState_E0_Exit::
     xor a
     ld [wDebugSubState], a
     ld a, $03
     ld [wDebugState], a
     ret
 
-; Draws the side field's two marks by wDebugCursor bit 0 (RunDebugSubState_E0_WriteVRAMByte_Data).
-; (C1, E-0357)
-RunDebugSubState_E0_WriteVRAMByte_2::
+; Draws the side field's two marks from the 3-byte table RunDebugSubState_E0_DrawSideMarks_Data
+; ($BB, $C3, $BB) indexed by (wDebugCursor bit 0) XOR 1: tiles at vBGMap0 + $69 and + $6D, so one of
+; the two shows the $BB cursor mark and the other $C3 (blank). Called by
+; RunDebugSubState_E0_ShowHeading and RunDebugSubState_E0_SideField after Left/Right toggles
+; wDebugCursor bit 0. (C1, E-0371)
+RunDebugSubState_E0_DrawSideMarks::
     ld a, [wDebugCursor]
     and $01
     xor $01
-    ld de, RunDebugSubState_E0_WriteVRAMByte_Data
+    ld de, RunDebugSubState_E0_DrawSideMarks_Data
     add e
     ld e, a
     jr nc, .call_write_vram_byte
@@ -311,8 +314,8 @@ RunDebugSubState_E0_WriteVRAMByte_2::
     call WriteVRAMByte
     ret
 
-; data read by RunDebugSubState_E0_WriteVRAMByte_2 (3 bytes) (E-0347)
-RunDebugSubState_E0_WriteVRAMByte_Data::
+; data read by RunDebugSubState_E0_DrawSideMarks (3 bytes) (E-0347)
+RunDebugSubState_E0_DrawSideMarks_Data::
     db $bb, $c3, $bb
 
 ; writes the two nibbles of wDebugValue0, each plus 1, as tiles at vBGMap0 + $CA; copies string
@@ -342,7 +345,7 @@ ShowSkillNumberAndName_BankE0::
     ret
 
 ; Draws wDebugValue1 as up to three digits (leading zeros blank) at the count field. (C1, E-0357)
-RunDebugSubState_E0_HLToDecimalDigits::
+RunDebugSubState_E0_DrawCount::
     ld a, [wDebugValue1]
     ld l, a
     ld h, $00
@@ -381,12 +384,15 @@ RunDebugSubState_E0_HLToDecimalDigits::
     call WriteVRAMByte
     ret
 
-; Draws the battle-end flag field's two marks by wBattleEndFlag bit 0. (C1, E-0357)
-RunDebugSubState_E0_WriteVRAMByte::
+; Draws the battle-end flag field's two marks from the same 3-byte table as
+; RunDebugSubState_E0_DrawSideMarks, indexed by (wBattleEndFlag bit 0) XOR 1: tiles at vBGMap0 +
+; $1A9 and + $1AD, one $BB mark and one $C3 blank. Called by RunDebugSubState_E0_ShowHeading and
+; RunDebugSubState_E0_BattleEndField. (C1, E-0371)
+RunDebugSubState_E0_DrawBattleEndMarks::
     ld a, [wBattleEndFlag]
     and $01
     xor $01
-    ld de, RunDebugSubState_E0_WriteVRAMByte_Data
+    ld de, RunDebugSubState_E0_DrawSideMarks_Data
     add e
     ld e, a
     jr nc, .call_write_vram_byte
@@ -492,15 +498,15 @@ RunDebugState_E0::
     dw RunDebugState_E0_DrawSlotStats
     dw RunDebugState_E0_Input
     dw RunDebugState_E0_MarkGains
-    dw RunDebugState_E0_ToDrawTileMapAndStep
+    dw RunDebugState_E0_DrawResistanceFrame
     dw RunDebugState_E0_DrawResistances
-    dw RunDebugState_E0_WaitJoypadPressed
+    dw RunDebugState_E0_ReturnOnA
     dw DrawTileMapAndStep
     dw RunDebugState_E0_DrawSkillBytes
-    dw RunDebugState_E0_WaitJoypadPressed_SetDebugState
+    dw RunDebugState_E0_ReturnOnB
     dw RunDebugState_E0_EffectViewer
     dw RunDebugState_E0_EditStatusBits
-    dw RunDebugState_E0_ToRunDebugSubState_E0
+    dw RunDebugState_E0_SkillEditor
     dw RunDebugState_E0_ChooseActionTargets
 
 ; Debug battle viewer, state 0: shows its heading (string 4 of category 2), draws the screen and
@@ -549,7 +555,7 @@ RunDebugState_E0_DrawSlotStats::
     call DrawSlotHPMPStats_BankE0
     ld hl, vBGMap0 + $20b
     ld de, wBattleMeter
-    call RunDebugState_E0_DrawSlotStats_WordAtDEToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawWordAtDE
     ld hl, wDebugState
     inc [hl]
     ret
@@ -586,55 +592,57 @@ DrawSlotHPMPStats_BankE0::
     call DrawSlotHPMPStats_BankE0_IndexWordC
     inc hl
     ld de, wBattleLevel
-    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawByteStat
     ld de, wBattleATK
-    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawWordStat
     ld de, wBattleDEF
-    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawWordStat
     ld de, wBattleAGL
-    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawWordStat
     ld de, wBattleINT
-    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawWordStat
     ld de, wSlotPersonalityHi
-    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawByteStat
     ld de, wSlotPersonalityMid
-    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawByteStat
     ld de, wSlotPersonalityLo
-    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawByteStat
     ld de, wSlotTrait
-    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
+    call DrawSlotHPMPStats_BankE0_DrawByteStat
     dec hl
     ld de, wBattleExtraStat
     call DrawSlotHPMPStats_BankE0_IndexWordC
     call DrawSlotHPMPStats_BankE0_DrawAIModeGlyph
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte
+    call DrawSlotHPMPStats_BankE0_DrawSuffixMark
     ret
 
 .clear_temp0:
     xor a
     ldh [hTemp0], a
     ldh [hTemp1], a
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_3
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_3
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_3
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_3
+    call DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow
     inc hl
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
     dec hl
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_3
+    call DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow
     ret
 
-; Draws battle word C of the table at DE as digits (WordAtDEToPackedBCD) and moves to the next row.
-; (C1, E-0357)
-DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD::
+; C = battle slot, DE = a word-per-slot battle array (wBattleATK and the like), HL = VRAM position:
+; converts the word at DE + 2 * C (WordAtDEToPackedBCD) and draws its low three digits with leading
+; zeros left unwritten, then moves HL down one BG map row (falls into
+; DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow). (C1, E-0371)
+DrawSlotHPMPStats_BankE0_DrawWordStat::
     ld a, c
     add a
     add e
@@ -644,10 +652,13 @@ DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD::
 
 .call_word_at_de_to_packed_bcd:
     call WordAtDEToPackedBCD
-    jr DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
+    jr DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
 
-; Draws battle byte C of the table at DE as digits and moves to the next row. (C1, E-0357)
-DrawSlotHPMPStats_BankE0_Number24ToPackedBCD::
+; C = battle slot, DE = a byte-per-slot battle array (wBattleLevel, wSlotPersonalityHi and the
+; like), HL = VRAM position: converts the byte at DE + C (Number24ToPackedBCD with wDigits + 1 and +
+; 2 cleared) and falls into DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow, which draws three
+; digits and moves HL down a row. BC and HL are kept across the conversion. (C1, E-0371)
+DrawSlotHPMPStats_BankE0_DrawByteStat::
     ld a, c
     add e
     ld e, a
@@ -667,10 +678,10 @@ DrawSlotHPMPStats_BankE0_Number24ToPackedBCD::
     pop hl
 
 ; Draws the packed number's three digits and moves HL down a row. (C1, E-0357)
-DrawSlotHPMPStats_BankE0_WriteVRAMByte_2::
+DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow::
     ld b, $00
     push hl
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_5
+    call DrawSlotHPMPStats_BankE0_DrawThreeDigits
     pop hl
     ld a, l
     add $20
@@ -686,17 +697,22 @@ DrawSlotHPMPStats_BankE0_IndexWordC::
     add a
     add e
     ld e, a
-    jr nc, RunDebugState_E0_DrawSlotStats_WordAtDEToPackedBCD
+    jr nc, DrawSlotHPMPStats_BankE0_DrawWordAtDE
     inc d
 
-; Draws the word at DE as digits (the battle meter). (C1, E-0357)
-RunDebugState_E0_DrawSlotStats_WordAtDEToPackedBCD::
+; DE = address of a 16-bit value, HL = VRAM position: converts the word (WordAtDEToPackedBCD) and
+; falls into DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow, which draws its low four digits and
+; moves HL down a row. Called by RunDebugState_E0_DrawSlotStats for wBattleMeter and reached from
+; DrawSlotHPMPStats_BankE0_IndexWordC for the HP, MP and extra-stat words. (C1, E-0371)
+DrawSlotHPMPStats_BankE0_DrawWordAtDE::
     call WordAtDEToPackedBCD
 
-; Draws the packed number's five digits and moves HL down a row. (C1, E-0357)
-DrawSlotHPMPStats_BankE0_WriteVRAMByte_3::
+; HL = VRAM position: draws the low four digits of the packed number in hTemp1/hTemp0
+; (DrawSlotHPMPStats_BankE0_DrawFourDigits), then moves HL down one BG map row ($20); HL's other
+; bits are kept. (C1, E-0371)
+DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow::
     push hl
-    call DrawSlotHPMPStats_BankE0_WriteVRAMByte_4
+    call DrawSlotHPMPStats_BankE0_DrawFourDigits
     pop hl
     ld a, l
     add $20
@@ -706,9 +722,11 @@ DrawSlotHPMPStats_BankE0_WriteVRAMByte_3::
     ld h, a
     ret
 
-; Draws the packed number's five digits, leading zeros blank (the top digit from hTemp1's high
-; nibble). (C1, E-0357)
-DrawSlotHPMPStats_BankE0_WriteVRAMByte_4::
+; HL = VRAM position: draws four decimal digits from the packed number (thousands from hTemp1's high
+; nibble, then DrawSlotHPMPStats_BankE0_DrawThreeDigits for hundreds, tens and ones) as tiles $E0 +
+; digit; leading zero digits are not written (their tiles are left as they were) and the ones digit
+; is always drawn. B = 1 once a digit is drawn. (C1, E-0371)
+DrawSlotHPMPStats_BankE0_DrawFourDigits::
     ld b, $00
     ldh a, [hTemp1]
     swap a
@@ -722,8 +740,11 @@ DrawSlotHPMPStats_BankE0_WriteVRAMByte_4::
 .next:
     inc hl
 
-; Draws the low four digits of the packed number in hTemp1/hTemp0, leading zeros blank. (C1, E-0357)
-DrawSlotHPMPStats_BankE0_WriteVRAMByte_5::
+; HL = VRAM position, B bit 0 = a higher digit was already drawn: draws the hundreds (hTemp1 low
+; nibble), tens and ones (hTemp0) of the packed number as tiles $E0 + digit at HL, HL + 1 and HL +
+; 2; a zero is skipped (not written) until some digit has been drawn, and the ones digit is always
+; drawn. (C1, E-0371)
+DrawSlotHPMPStats_BankE0_DrawThreeDigits::
     ldh a, [hTemp1]
     and $0f
     or a
@@ -795,8 +816,10 @@ DrawSlotHPMPStats_BankE0_DrawAIModeGlyph::
     call WriteVRAMByte
     ret
 
-; Draws battle slot C's sex mark ($CC + wSlotNameSuffix bit 0) at its row. (C1, E-0357)
-DrawSlotHPMPStats_BankE0_WriteVRAMByte::
+; C = battle slot: writes tile $CC + (wSlotNameSuffix[C] bit 0), so $CC or $CD, at the VRAM address
+; for slot C & 3 in the 3-word table after it ($98C6, $98CC, $98D2). The last step of
+; DrawSlotHPMPStats_BankE0. (C1, E-0371)
+DrawSlotHPMPStats_BankE0_DrawSuffixMark::
     ld a, c
     ld de, wSlotNameSuffix
     add e
@@ -807,7 +830,7 @@ DrawSlotHPMPStats_BankE0_WriteVRAMByte::
 .skip:
     ld a, c
     and $03
-    ld hl, DrawSlotHPMPStats_BankE0_WriteVRAMByte_Data
+    ld hl, DrawSlotHPMPStats_BankE0_DrawSuffixMark_Data
     add a
     add_a_to_hl
     deref_hl
@@ -817,8 +840,8 @@ DrawSlotHPMPStats_BankE0_WriteVRAMByte::
     call WriteVRAMByte
     ret
 
-; data read by DrawSlotHPMPStats_BankE0_WriteVRAMByte (6 bytes) (E-0347)
-DrawSlotHPMPStats_BankE0_WriteVRAMByte_Data::
+; data read by DrawSlotHPMPStats_BankE0_DrawSuffixMark (6 bytes) (E-0347)
+DrawSlotHPMPStats_BankE0_DrawSuffixMark_Data::
     db $c6, $98, $cc, $98, $d2, $98
 
 DrawSlotHPMPStats_BankE0_Data::
@@ -950,8 +973,10 @@ RunDebugState_E0_MarkGains::
     ld [wDebugValue3], a
     ret
 
-; Debug battle viewer, state 4: draws the resistance page's tile map. (C1, E-0357)
-RunDebugState_E0_ToDrawTileMapAndStep::
+; Debug battle viewer, state 4: draws the 20 x 16 tile map of the resistance page at vBGMap0 + $20
+; and advances wDebugState (DrawTileMapAndStep); state 5 (RunDebugState_E0_DrawResistances) then
+; fills in the values. (C1, E-0371)
+RunDebugState_E0_DrawResistanceFrame::
     call DrawTileMapAndStep
     ret
 
@@ -981,8 +1006,7 @@ RunDebugState_E0_DrawResistances::
     ret
 
 ; Draws the 2-bit fields of the bytes at DE (a resistance record) as digits, six rows of five with
-; each row $1B tiles further on, the last digit through DrawBits10OfDEAsDigit_CallWriteVRAMByteInc.
-; (C1, E-0357)
+; each row $1B tiles further on, the last digit through DrawLowTwoBitsAsDigit. (C1, E-0357)
 DrawPacked2BitFieldsInRows::
     ld a, [de]
     ld c, a
@@ -1045,7 +1069,7 @@ DrawPacked2BitFieldsInRows::
     ld a, c
     rlca
     rlca
-    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
+    jr DrawLowTwoBitsAsDigit
 
 ; DE += 1, then writes bits 7-6 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc)
 ; (E-0112)
@@ -1054,34 +1078,37 @@ DrawBits76OfNextDEAsDigit::
     ld a, [de]
     rlca
     rlca
-    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
+    jr DrawLowTwoBitsAsDigit
 
 ; writes bits 5-4 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 DrawBits54OfDEAsDigit::
     ld a, [de]
     swap a
-    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
+    jr DrawLowTwoBitsAsDigit
 
 ; writes bits 3-2 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 DrawBits32OfDEAsDigit::
     ld a, [de]
     rrca
     rrca
-    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
+    jr DrawLowTwoBitsAsDigit
 
 ; writes bits 1-0 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 DrawBits10OfDEAsDigit::
     ld a, [de]
 
-; Writes bits 1-0 as a digit tile. (C1, E-0357)
-DrawBits10OfDEAsDigit_CallWriteVRAMByteInc::
+; A = value: writes tile $E0 + (A & 3), the digit 0-3, at VRAM address HL and advances HL
+; (WriteVRAMByteInc). The shared tail of DrawBits10OfDEAsDigit, DrawBits32OfDEAsDigit,
+; DrawBits54OfDEAsDigit, DrawBits76OfNextDEAsDigit and DrawPacked2BitFieldsInRows, which rotate the
+; wanted 2-bit field into bits 1-0 first. (C1, E-0371)
+DrawLowTwoBitsAsDigit::
     and $03
     add $e0
     call WriteVRAMByteInc
     ret
 
 ; Debug battle viewer, state 6: waits for A, then back to state 0. (C1, E-0357)
-RunDebugState_E0_WaitJoypadPressed::
+RunDebugState_E0_ReturnOnA::
     ld a, [wJoypadPressed]
     and $01
     ret z
@@ -1304,7 +1331,7 @@ RunForThreeBattlerRecords_Number24ToPackedBCD_Data::
     db $e2, $99, $e8, $99, $ee, $99
 
 ; Debug battle viewer, state 9: waits for B, then back to state 0. (C1, E-0357)
-RunDebugState_E0_WaitJoypadPressed_SetDebugState::
+RunDebugState_E0_ReturnOnB::
     ld a, [wJoypadPressed]
     and $02
     ret z
@@ -1352,7 +1379,7 @@ RunDebugState_E0_EffectViewer::
     ld a, [wEffectId]
     cp $ff
     jr z, .check_joypad_pressed
-    farcall RunDebugState_E0_EffectViewer_DecompressGraphicsAToTiles0
+    farcall RunDebugState_E0_EffectViewer_PlayEffect
     ret
 
 .check_joypad_pressed:
@@ -1371,7 +1398,7 @@ RunDebugState_E0_EffectViewer::
 .check_joypad_pressed2:
     ld a, [wJoypadPressed]
     and $20
-    jr z, DrawHexByteAtBGMap8A_CheckJoypadPressed
+    jr z, RunDebugState_E0_EffectViewer_Buttons
     ld hl, wDebugSubState
     dec [hl]
     ld a, [hl]
@@ -1413,20 +1440,25 @@ DrawHexByteAtBGMap8A::
     call DrawSkillDebugDigitsAndRecord
     ret
 
-; The effect viewer's buttons: A starts the effect and its sound; Select restores the battle counts
-; and goes to the status viewer (state $0B); B (below) leaves. (C1, E-0357)
-DrawHexByteAtBGMap8A_CheckJoypadPressed::
+; The effect viewer's buttons (reached from RunDebugState_E0_EffectViewer when Right and Left are
+; not pressed): A starts debug effect wDebugSubState (RunDebugState_E0_EffectViewer_StartEffect in
+; bank $3A) and plays its sound (RunDebugState_E0_PlayEffectSound); Select restores
+; wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget and wBattleActionId from wWorkBuf,
+; sets wDebugState to $0B (RunDebugState_E0_EditStatusBits) with wDebugSubState and wDebugCounter 0,
+; draws that screen and its status bits and reads the cursor cell; otherwise it goes on to
+; RunDebugState_E0_RestoreBattleOnB for B. (C1, E-0371)
+RunDebugState_E0_EffectViewer_Buttons::
     ld a, [wJoypadPressed]
     and $01
     jr z, .check_joypad_pressed
-    farcall DrawHexByteAtBGMap8A_FillBytes
-    call DrawHexByteAtBGMap8A_QueueSoundEffect
+    farcall RunDebugState_E0_EffectViewer_StartEffect
+    call RunDebugState_E0_PlayEffectSound
     ret
 
 .check_joypad_pressed:
     ld a, [wJoypadPressed]
     and $04
-    jr z, DrawHexByteAtBGMap8A_CheckJoypadPressed2
+    jr z, RunDebugState_E0_RestoreBattleOnB
     ld hl, wWorkBuf
     ld a, [hli]
     ld [wBattlePartyCount], a
@@ -1442,15 +1474,18 @@ DrawHexByteAtBGMap8A_CheckJoypadPressed::
     ld [wDebugState], a
     xor a
     ld [wDebugSubState], a
-    call DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM
+    call RunDebugState_E0_DrawStatusBitsScreen
     call DrawSlotStatusBitsDebug
     xor a
     ld [wDebugCounter], a
     call ReadBGTileAtDebugCounterCell
     ret
 
-; The effect viewer's B: restores the battle counts and actor and returns to state 0. (C1, E-0357)
-DrawHexByteAtBGMap8A_CheckJoypadPressed2::
+; Returns unless B is pressed; then restores wBattlePartyCount, wBattleFoeCount, wBattleActor,
+; wBattleTarget and wBattleActionId from the 5 bytes at wWorkBuf, sets wDebugState to 0 and
+; wEffectId to $FF (no effect playing). Reached from the effect viewer's buttons and from
+; RunDebugState_E0_EditStatusBits. (C1, E-0371)
+RunDebugState_E0_RestoreBattleOnB::
     ld a, [wJoypadPressed]
     and $02
     ret z
@@ -1602,7 +1637,7 @@ RunDebugState_E0_EditStatusBits::
 .check_joypad_pressed5:
     ld a, [wJoypadPressed]
     and $01
-    jr z, .skip8
+    jr z, .to_run_debug_state_e0_restore_battle_on_b
     ld a, [wMenuRowCount]
     xor $01
     ld [wMenuRowCount], a
@@ -1654,8 +1689,8 @@ RunDebugState_E0_EditStatusBits::
     ld [hl], a
     ret
 
-.skip8:
-    jp DrawHexByteAtBGMap8A_CheckJoypadPressed2
+.to_run_debug_state_e0_restore_battle_on_b:
+    jp RunDebugState_E0_RestoreBattleOnB
 
 ; data read by RunDebugState_E0_EditStatusBits (8 bytes) (E-0347)
 RunDebugState_E0_EditStatusBits_Data1::
@@ -1682,7 +1717,7 @@ BlinkTemp0Tile::
     ret
 
 ; Debug battle viewer, state 12: runs the skill editor (RunDebugSubState_E0). (C1, E-0357)
-RunDebugState_E0_ToRunDebugSubState_E0::
+RunDebugState_E0_SkillEditor::
     call RunDebugSubState_E0
     ret
 
@@ -1693,10 +1728,10 @@ RunDebugState_E0_ChooseActionTargets::
     jumptable
     dw RunDebugState_E0_ChooseActionTargets_Start
     dw RunDebugState_E0_ChooseActionTargets_AIChoice
-    dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubState
+    dw RunDebugState_E0_ChooseActionTargets_ShowActor
     dw RunDebugState_E0_ChooseActionTargets_Input
     dw RunDebugState_E0_ChooseActionTargets_End
-    dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_2
+    dw RunDebugState_E0_ChooseActionTargets_RerunAI
 
 ; Choosing actions, sub-state 0: shows the headings, draws the layout and starts with actor 0. (C1,
 ; E-0357)
@@ -1752,9 +1787,11 @@ RunDebugState_E0_ChooseActionTargets_AIChoice::
     ld [wDebugSubState], a
     ret
 
-; Choosing actions, sub-state 2: draws the actor's details. (C1, E-0357)
-RunDebugState_E0_ChooseActionTargets_WriteDebugSubState::
-    farcall RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor
+; Choosing actions, sub-state 2: draws the actor's details (far-calls
+; RunDebugState_E0_ChooseActionTargets_DrawDetails), then sets wDebugSubState to 3 (the input step).
+; (C1, E-0371)
+RunDebugState_E0_ChooseActionTargets_ShowActor::
+    farcall RunDebugState_E0_ChooseActionTargets_DrawDetails
     ld a, $03
     ld [wDebugSubState], a
     ret
@@ -1835,9 +1872,11 @@ RunDebugState_E0_ChooseActionTargets_End::
     ld bc, $0010
     jp FillBytes
 
-; Choosing actions, sub-state 5: runs the AI's full choice for the actor, then redraws. (C1, E-0357)
-RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_2::
-    farcall RunDebugState_E0_ChooseActionTargets_AIChooseActionForActor
+; Choosing actions, sub-state 5 (Select in the input step): runs the AI's full choice for the actor
+; (RunDebugState_E0_ChooseActionTargets_RunFullAI), then sets wDebugSubState to 2 to redraw the
+; details. (C1, E-0371)
+RunDebugState_E0_ChooseActionTargets_RerunAI::
+    farcall RunDebugState_E0_ChooseActionTargets_RunFullAI
     ld a, $02
     ld [wDebugSubState], a
     ret
@@ -2005,12 +2044,12 @@ DrawFourTileStripForA_Data_Entry06::
 DrawFourTileStripForA_Data_Entry07::
     db $f8, $f9, $e3, $c3
 
-; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_LoadSkillRecord, then far-calls
+; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_DrawRecordWords, then far-calls
 ; DrawSkillDebugPage (E-0122) (E-0345: draws the skill's debug digits, loads the skill record and
 ; far-calls the battle-argument writer; was DrawSkillDebugDigitsAndRecord)
 DrawSkillDebugDigitsAndRecord::
     call DrawSkillRecordFirstByteDigits
-    call DrawSkillDebugDigitsAndRecord_LoadSkillRecord
+    call DrawSkillDebugDigitsAndRecord_DrawRecordWords
     farcall DrawSkillDebugPage
     ret
 
@@ -2049,9 +2088,11 @@ DrawSkillRecordFirstByteDigits::
     call WriteVRAMByte
     ret
 
-; Draws the chosen skill's numbers from its record (LoadSkillRecord): two words and their sums with
-; the following bytes, as three digits each. (C1, E-0357)
-DrawSkillDebugDigitsAndRecord_LoadSkillRecord::
+; Loads the record of skill wDebugValue0 (LoadSkillRecord into wRecordBufferData) and draws four
+; three-digit numbers (HLToDecimalDigits, tiles $E0 + digit): the word at record bytes 9-10 at
+; vBGMap0 + $1C3, that word plus byte 11 at + $1E3, the word at bytes 13-14 at + $1C7, and that word
+; plus byte 15 at + $1E7. What these record fields mean is not read here. (C1, E-0371)
+DrawSkillDebugDigitsAndRecord_DrawRecordWords::
     ld a, [wDebugValue0]
     ld [wRecordBuffer], a
     xor a
@@ -2151,10 +2192,13 @@ DrawFullScreenFromBankE0_2::
     call CopyRectFromBankToVRAM
     ret
 
-; Draws the effect viewer's 20 x 18 screen from its tile map. (C1, E-0357)
-DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM::
+; Copies the 20 x 18 tile map that follows it in bank $E0 to vBGMap0 (CopyRectFromBankToVRAM). Its
+; only caller is the effect viewer's Select branch, which has just switched to state $0B
+; (RunDebugState_E0_EditStatusBits) and draws the status bits next, so this is that screen's layout.
+; (C1, E-0371)
+RunDebugState_E0_DrawStatusBitsScreen::
     ld hl, vBGMap0
-    ld de, DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM_TileRect
+    ld de, RunDebugState_E0_DrawStatusBitsScreen_TileRect
     lb bc, $14, $12
     ld a, $e0
     call CopyRectFromBankToVRAM
@@ -2203,7 +2247,7 @@ DrawFullScreenFromBankE0_2_TileRect::
     db $b6, $ec, $01, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $e3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM_TileRect::
+RunDebugState_E0_DrawStatusBitsScreen_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $09, $f0, $ff, $c3, $e0, $e1, $e2, $e3, $e4, $e5, $e6, $e7, $c3, $c3, $b7 ; id 2
@@ -2259,7 +2303,7 @@ ShowStringBank09AtTilesHL_BankE0::
     ret
 
 ; Plays the sound of effect wDebugSubState (DebugSoundEffectList). (C1, E-0357)
-DrawHexByteAtBGMap8A_QueueSoundEffect::
+RunDebugState_E0_PlayEffectSound::
     ld a, [wDebugSubState]
     ld hl, DebugSoundEffectList
     add_a_to_hl
@@ -2286,7 +2330,7 @@ RunEffectTestEntryA::
     farcall SelectEffectByEffectFlags2Flags
     ret
 
-; DrawHexByteAtBGMap8A_QueueSoundEffect (debug menu) plays QueueSoundEffect with the byte at $55BF +
+; RunDebugState_E0_PlayEffectSound (debug menu) plays QueueSoundEffect with the byte at $55BF +
 ; wDebugSubState; 60 bytes end at EffectTestEntries (E-0213, C1)
 ; record: sound effect number
 DebugSoundEffectList::
@@ -2466,11 +2510,18 @@ ChooseTargetIfUnset::
 .return:
     ret
 
-; Draws the actor's details: its name tiles, its tactic (string 2-5 of category $0E), AI mode digit,
-; personality name and, for this side's slots, more of its state. (C1, E-0357)
-RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor::
+; Far-called by RunDebugState_E0_ChooseActionTargets_ShowActor: draws the actor's 4 name tiles at
+; vBGMap0 + $23 (word table after it, indexed by DisplayedSlotOfActor); unless the actor is slot 3
+; or 7, its tactic name (string wSlotTactic & 3 + 2 of category $0E); its wSlotAIMode as tile $8D +
+; mode; its personality name (category 7, PersonalityIndexOfSlot_BankE0); for a foe outside link
+; battles three digits from its wEncounterMonsters word, else three blanks; 8 rows of its skill
+; bytes from wBattleSkillsPrefix + 16 * actor; the ten wAIWeights words in decimal (shown as 9999
+; above that, or raw hex when both bytes are $FF); its chosen action's name (category 4, or string 1
+; of category $0E for none) and number; the target's 4 name tiles (DisplayedTargetChoiceOfActor);
+; and the three wAIChoiceOrder entries. (C1, E-0371)
+RunDebugState_E0_ChooseActionTargets_DrawDetails::
     call DisplayedSlotOfActor
-    ld hl, RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor_Data
+    ld hl, RunDebugState_E0_ChooseActionTargets_DrawDetails_Data
     call ReadWordTableEntry_Bank00
     ld d, h
     ld e, l
@@ -2762,7 +2813,7 @@ RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor::
     call WriteVRAMByteInc
     ei
     call DisplayedTargetChoiceOfActor
-    ld hl, RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor_Data
+    ld hl, RunDebugState_E0_ChooseActionTargets_DrawDetails_Data
     call ReadWordTableEntry_Bank00
     ld d, h
     ld e, l
@@ -2937,44 +2988,44 @@ WriteLowHexDigitTilesOfTemp1Temp0::
     ei
     ret
 
-; data read by RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor (8 words) (E-0347)
-RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor_Data::
-    dw RunDebugState_E0_ChooseActionTargets_Entry00
-    dw RunDebugState_E0_ChooseActionTargets_Entry01
-    dw RunDebugState_E0_ChooseActionTargets_Entry02
-    dw RunDebugState_E0_ChooseActionTargets_Entry03
-    dw RunDebugState_E0_ChooseActionTargets_Entry04
-    dw RunDebugState_E0_ChooseActionTargets_Entry05
-    dw RunDebugState_E0_ChooseActionTargets_Entry06
-    dw RunDebugState_E0_ChooseActionTargets_Entry07
+; data read by RunDebugState_E0_ChooseActionTargets_DrawDetails (8 words) (E-0347)
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Data::
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry00
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry01
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry02
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry03
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry04
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry05
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry06
+    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry07
 
-RunDebugState_E0_ChooseActionTargets_Entry00::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry00::
     db $80, $81, $82, $01
 
-RunDebugState_E0_ChooseActionTargets_Entry01::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry01::
     db $80, $81, $82, $02
 
-RunDebugState_E0_ChooseActionTargets_Entry02::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry02::
     db $80, $81, $82, $03
 
-RunDebugState_E0_ChooseActionTargets_Entry03::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry03::
     db $80, $81, $82, $04
 
-RunDebugState_E0_ChooseActionTargets_Entry04::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry04::
     db $83, $84, $01, $c3
 
-RunDebugState_E0_ChooseActionTargets_Entry05::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry05::
     db $83, $84, $02, $c3
 
-RunDebugState_E0_ChooseActionTargets_Entry06::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry06::
     db $83, $84, $03, $c3
 
-RunDebugState_E0_ChooseActionTargets_Entry07::
+RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry07::
     db $83, $84, $04, $c3
 
 ; Runs the AI's full choice for the actor (AIChooseActionForActor, ChooseActionTarget), keeping the
 ; random seeds in a link session. (C1, E-0357)
-RunDebugState_E0_ChooseActionTargets_AIChooseActionForActor::
+RunDebugState_E0_ChooseActionTargets_RunFullAI::
     ld a, [wLinkMode]
     or a
     jr z, .call_ai_choose_action_for_actor
@@ -3055,9 +3106,11 @@ ShowStringBank09AtHLSizeDEThenDefault_BankE0::
     ld [wTextWindowWidth], a
     ret
 
-; The debug staff roll's update: once started, runs the field event and the sprite counters and the
-; current scene (wWorkBuf + 2: scenes 0-4). (C1, E-0357)
-DebugStaffRoll_Update_RunFieldEventFieldEventKind::
+; The debug staff roll's update, far-called by DebugStaffRoll_Update: while wWorkBuf is 0 it runs
+; DebugStaffRoll_Credits instead; otherwise it runs the field event (RunFieldEventFieldEventKind),
+; steps the sprite slot counters (IncrementSpriteSlotCounters) and dispatches on wWorkBuf + 2 (1-5)
+; to DebugStaffRoll_Scene00 through DebugStaffRoll_Scene04. (C1, E-0371)
+DebugStaffRoll_Update_RunScene::
     ld a, [wWorkBuf]
     or a
     jp z, DebugStaffRoll_Credits
@@ -5974,14 +6027,14 @@ DebugStaffRoll_Credits::
     jumptable
     dw DebugStaffRoll_Credits_ShowLines
     dw DebugStaffRoll_Credits_Caption
-    dw DebugStaffRoll_Credits_WaitFadeState
+    dw DebugStaffRoll_Credits_NextCaption
 
 .read_work_buf:
     ld a, [wWorkBuf + $1]
     jumptable
     dw DebugStaffRoll_Credits_TitleCard
     dw DebugStaffRoll_Credits_TitleCardFadeOut
-    dw DebugStaffRoll_Update_AdvanceWorkBuf
+    dw DebugStaffRoll_Credits_StartFirstScene
 
 ; Staff roll credits, step 0: on the first call clears a tile and loads the scene's credit list
 ; (WorkBufSequenceTable); then draws its lines one by one (strings of the staff list, each in an 18
@@ -6445,9 +6498,11 @@ DebugStaffRoll_Credits_Caption::
     inc [hl]
     ret
 
-; Staff roll credits, step 2: after the fade, the next caption of the scene, or with none left the
-; next scene. (C1, E-0357)
-DebugStaffRoll_Credits_WaitFadeState::
+; Staff roll credits, step 2: returns while wFadeState is non-zero; then decrements the caption
+; count in wWorkBuf + 4 and, while captions remain, goes back to step 0 (wWorkBuf + 1 = 0) for the
+; scene's next caption; when none remain it advances the scene number (wWorkBuf + 2) and wWorkBuf
+; and restarts at step 0 for the next scene. (C1, E-0371)
+DebugStaffRoll_Credits_NextCaption::
     ld a, [wFadeState]
     or a
     ret nz
@@ -6546,8 +6601,10 @@ DebugStaffRoll_Credits_TitleCardFadeOut::
     inc [hl]
     ret
 
-; The title card, step 2: after the fade, the first scene. (C1, E-0357)
-DebugStaffRoll_Update_AdvanceWorkBuf::
+; The staff roll's title card, step 2 (DebugStaffRoll_Credits with wWorkBuf + 2 = 0): returns while
+; wFadeState is non-zero; then increments the scene number wWorkBuf + 2 (to scene 1) and wWorkBuf,
+; and clears the step wWorkBuf + 1. (C1, E-0371)
+DebugStaffRoll_Credits_StartFirstScene::
     ld a, [wFadeState]
     or a
     ret nz
@@ -7011,12 +7068,12 @@ WorkBufSequence005::
     db $06, $02, $1b, $02, $1b, $01, $1c, $01, $1c, $02, $1d, $02, $1d, $01, $1e, $01, $1e, $00, $1f, $06, $1f, $01, $20, $00, $20 ; id 0
 
 ; if wStringCategory < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls
-; BeginStringDisplay_BankE0_BeginStringDisplay (E-0353)
+; BeginStringDisplay_BankE0_FromBankA2Table (E-0353)
 BeginStringDisplay_BankE0::
     ld a, [wStringCategory]
     cp $01
     jr c, .call_begin_string_display
-    farcall BeginStringDisplay_BankE0_BeginStringDisplay
+    farcall BeginStringDisplay_BankE0_FromBankA2Table
     ret
 
 .call_begin_string_display:
@@ -7186,37 +7243,39 @@ String_E0_00_20::
 ; the battle library, after a string; E-0213)
 GetBattleATK_BankE0:: ; configured code entry (E-0213); C0
     ld hl, wBattleATK
-    jr GetBattleMP_BankE0_Skip
+    jr GetBattleStatWord_BankE0
 
 ; Bank-$E0 copy of GetBattleDEF: HL = battle slot A's DEF word. (C1, E-0357)
 GetBattleDEF_BankE0::
     ld hl, wBattleDEF
-    jr GetBattleMP_BankE0_Skip
+    jr GetBattleStatWord_BankE0
 
 ; Bank-$E0 copy of GetBattleMaxHP: HL = battle slot A's max HP word. (C1, E-0357)
 GetBattleMaxHP_BankE0::
     ld hl, wBattleMaxHP
-    jr GetBattleMP_BankE0_Skip
+    jr GetBattleStatWord_BankE0
 
 ; Bank-$E0 copy of GetBattleMaxMP: HL = battle slot A's max MP word. (C1, E-0357)
 GetBattleMaxMP_BankE0::
     ld hl, wBattleMaxMP
-    jr GetBattleMP_BankE0_Skip
+    jr GetBattleStatWord_BankE0
 
 ; Bank-$E0 copy of GetBattleHP: HL = battle slot A's HP word. (C1, E-0357)
 GetBattleHP_BankE0::
     ld hl, wBattleHP
-    jr GetBattleMP_BankE0_Skip
+    jr GetBattleStatWord_BankE0
 
 ; Bank-$E0 copy of GetBattleMP: HL = battle slot A's MP word; 15 unreached bytes follow the jump
 ; (two more getters). (C1, E-0357)
 GetBattleMP_BankE0::
     ld hl, wBattleMP
-    jr GetBattleMP_BankE0_Skip
+    jr GetBattleStatWord_BankE0
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Reads the word for slot A from the array at HL. (C1, E-0357)
-GetBattleMP_BankE0_Skip::
+; HL = array base, A = battle slot: HL = the 16-bit word at HL + 2 * A (the value, not a pointer); A
+; = its low byte. The shared tail of GetBattleATK_BankE0 through GetBattleMP_BankE0, the same bytes
+; as ReadBattleWordFromArray in bank $36. (C1, E-0371)
+GetBattleStatWord_BankE0::
     add a
     add_a_to_hl
     deref_hl

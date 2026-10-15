@@ -4355,13 +4355,13 @@ LoadMapScreenFromChunk::
 ; pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute
 ; stream into wScreenAttrBuffer (WRAM bank 2); then runs the map's tile-replacement table
 ; (ApplyMapScreenFlagEvents) and two map-specific fix-ups (LoadMapScreen_PatchStrongestMasterTiles,
-; LoadMapScreen_DrawMarker); hands over to LoadMapScreen_ReadMapType when wMapType bit 7 is set
+; LoadMapScreen_DrawMarker); hands over to LoadMapScreen_SpecialMap when wMapType bit 7 is set
 ; (E-0037)
 LoadMapScreen::
     ld a, [wMapType]
     bit 7, a
     jr z, .skip
-    farcall LoadMapScreen_ReadMapType
+    farcall LoadMapScreen_SpecialMap
     ret
 
 .skip:
@@ -7992,8 +7992,8 @@ ShowStringHL_Bank08::
 
 ; H = string category, L = string index, DE = destination: stores them in wStringDestLo/Hi,
 ; wStringCategory and wStringIndex and far-calls CopyStringToBuffer_Bank08, which copies the string
-; with its $F0 terminator to DE (categories 9 and above go to
-; CopyStringToBuffer_Bank08_CopyStringToBuffer) (E-0059)
+; with its $F0 terminator to DE (categories 9 and above go to CopyStringToBuffer_Bank08_Overflow)
+; (E-0059)
 CopyStringHLToDE::
     ld a, e
     ld [wStringDestLo], a

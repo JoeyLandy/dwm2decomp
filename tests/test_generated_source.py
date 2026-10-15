@@ -441,7 +441,7 @@ class NumericArguments(unittest.TestCase):
 
     def test_message_argument_pairs_are_numeric(self):
         text = (BANKS / "bank36.asm").read_text(encoding="utf-8")
-        self.assertIn("    ld hl, $B58E\n    ld bc, $80A8\n    jp StoreHitMessage_Bank36_SetResolveMsgActor", text)
+        self.assertIn("    ld hl, $B58E\n    ld bc, $80A8\n    jp StoreResolveMessage_Bank36", text)
         self.assertNotIn("sB58E", text)
         self.assertNotRegex(text, r"ld bc, vTiles[01] \+ \$A8")
 

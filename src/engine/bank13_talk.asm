@@ -9086,7 +9086,7 @@ Talk04BA_IfYouGetAn::
 ; to...' script (setting EVENT_THAT_KEY_IUSED_03E) once both chest battles 206 and 207 are done,
 ; else 'Obtain the other key that...'; otherwise the first time 'I heard that you went...' (setting
 ; EVENT_THAT_KEY_IUSED), later the 'Oh! Goodness!' script when an SRAM record byte is set
-; (Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte), else 'Those monsters don't surprise me.'. (C1, E-0357)
+; (Talk04CB_ThatKeyIUsed_CheckPartySpecies), else 'Those monsters don't surprise me.'. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5
 ; constant message(s) depending on story flags and state; the first one in the code is $04CB, whose
 ; string begins 'That key, I used on my' (E-0097)
@@ -9115,15 +9115,15 @@ Talk04CB_ThatKeyIUsed::
     jr c, .call_test_flag_bit2
     ld de, EVENT_THAT_KEY_IUSED
     call TestFlagBit
-    jr c, .call_talk04_cb_that_key_i_used_load_sram
+    jr c, .call_talk04_cb_that_key_i_used_check_party
     ld hl, $0b4a ; '*: I heard that you went'
     call StartMessageCommand09HL_B13
     ld de, EVENT_THAT_KEY_IUSED
     call SetFlagBit
     ret
 
-.call_talk04_cb_that_key_i_used_load_sram:
-    farcall Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte
+.call_talk04_cb_that_key_i_used_check_party:
+    farcall Talk04CB_ThatKeyIUsed_CheckPartySpecies
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_script_at_hl_b13

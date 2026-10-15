@@ -2236,7 +2236,7 @@ DebugShowMonsterRecord_DrawLowHexDigit::
 ; update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI
 ; HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
 DebugStaffRoll_Update::
-    farcall DebugStaffRoll_Update_RunFieldEventFieldEventKind
+    farcall DebugStaffRoll_Update_RunScene
     ret
 
 ; update for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)

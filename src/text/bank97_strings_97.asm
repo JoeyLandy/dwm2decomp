@@ -6,7 +6,7 @@ SECTION "Bank 97", ROMX[$4000], BANK[$97]
 
 ; Starts string wStringIndex - $DA of bank $28's overflow table (MessageStrings_Bank28_Overflow).
 ; (C1, E-0357)
-BeginStringDisplay_Bank28_BeginStringDisplay::
+BeginStringDisplay_Bank28_Overflow::
     ld de, MessageStrings_Bank28_Overflow
     ld a, [wStringIndex]
     sub $da
@@ -92,7 +92,7 @@ CopyStringToBuffer_Bank83_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_97::
-; data read by BeginStringDisplay_Bank28_BeginStringDisplay (1 word) (E-0347)
+; data read by BeginStringDisplay_Bank28_Overflow (1 word) (E-0347)
 MessageStrings_Bank28_Overflow::
     dw StringList_Bank28_Overflow_0 ; id 0
 

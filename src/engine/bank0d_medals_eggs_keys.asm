@@ -2930,8 +2930,8 @@ KeyAppraisalMenu_ChooseKey_RedrawScreen::
     ret
 
 ; Choosing a key, step 5: the paged key cursor: Select copies a key list back
-; (KeyAppraisalMenu_ChooseKey_ListCursor_ReorderKeyList); page changes redraw; A picks the key and
-; asks to confirm the price; B cancels. (C1, E-0357)
+; (KeyAppraisalMenu_ChooseKey_ListCursor_SortKeys); page changes redraw; A picks the key and asks to
+; confirm the price; B cancels. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_ListCursor::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -2953,7 +2953,7 @@ KeyAppraisalMenu_ChooseKey_ListCursor::
     ret
 
 .call_key_appraisal_menu_choose_key_list:
-    farcall KeyAppraisalMenu_ChooseKey_ListCursor_ReorderKeyList
+    farcall KeyAppraisalMenu_ChooseKey_ListCursor_SortKeys
     ret
 
 .read_screen_step:

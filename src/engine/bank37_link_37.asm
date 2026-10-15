@@ -106,9 +106,9 @@ StringList_Bank37_StringCategories_1::
     dw String_37_01_1A ; id 26
     dw String_37_01_1B ; id 27
     dw String_37_01_1C ; id 28
-    dw RunLinkSession5Exchange_Receive_WaitFadeState ; id 29
-    dw RunLinkSession5Exchange_Receive_WaitFadeState ; id 30
-    dw RunLinkSession5Exchange_Receive_WaitFadeState ; id 31
+    dw RunLinkSession5Exchange_RunScreen ; id 29
+    dw RunLinkSession5Exchange_RunScreen ; id 30
+    dw RunLinkSession5Exchange_RunScreen ; id 31
 
 String_37_00_00::
     db "The <BUF2><LINE>"
@@ -564,42 +564,43 @@ String_37_01_1C::
 ; Link session 5's screen (breeding with Terry's Wonderland): once no fade runs, by wScreenState:
 ; the swap menu, leaving, the start, the messages, the breeding steps, the handshake, the stats
 ; screens and the chosen record. (C1, E-0357)
-RunLinkSession5Exchange_Receive_WaitFadeState::
+RunLinkSession5Exchange_RunScreen::
     ld a, [wFadeState]
     and a
     ret nz
     ld a, [wScreenState]
     jumptable
-    dw RunLinkSession5Exchange_Receive_ToSwapMonstersMenuAndStep
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
-    dw RunLinkSession5Exchange_Receive_SetScreenState
+    dw RunLinkSession5Exchange_SwapMenu
+    dw RunLinkSession5Exchange_ExitAfterText
+    dw RunLinkSession5Exchange_SignalPartner
     dw RunLinkSession5Exchange_ShowMessages
     dw LinkBreed
-    dw RunLinkSession5Exchange_Receive_SetLinkSendByte
-    dw RunLinkSession5Exchange_Receive_WaitLinkMessage
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_SendLeave
+    dw RunLinkSession5Exchange_WaitPartnerLeave
+    dw RunLinkSession5Exchange_ExitAfterText
+    dw RunLinkSession5Exchange_ExitAfterText
+    dw RunLinkSession5Exchange_ExitAfterText
+    dw RunLinkSession5Exchange_ExitAfterText
+    dw RunLinkSession5Exchange_ExitAfterText
     dw RunLinkSession5Exchange_RunStatsScreen
     dw PartnerStats
     dw RunLinkSession5Exchange_ResetListAndShowString
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
-    dw RunLinkSession5Exchange_Receive_WaitTextFlags
+    dw RunLinkSession5Exchange_ExitAfterText
+    dw RunLinkSession5Exchange_ExitAfterText
     dw RunLinkSession5Exchange_ShowChosenRecord
 
 ; Session 5, state 0: runs the swap menu (SwapMonstersMenu) and goes on. (C1, E-0357)
-RunLinkSession5Exchange_Receive_ToSwapMonstersMenuAndStep::
+RunLinkSession5Exchange_SwapMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; Session 5, state 1: after the text clears $6F bytes of screen state and returns to game mode 5,
-; state 1 (the link menu). (C1, E-0357)
-RunLinkSession5Exchange_Receive_WaitTextFlags::
+; Session 5, states 1, 7-11, 15 and 16: once wTextFlags bit 0 is clear, zero-fills the $6F bytes
+; from wScreenState and requests game mode 5, state 1 (wGameMode, wModeState, wModeChangeRequest).
+; (C1, E-0371)
+RunLinkSession5Exchange_ExitAfterText::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -622,7 +623,7 @@ RunLinkSession5Exchange_Receive_WaitTextFlags::
     ret
 
 ; Session 5, state 5: after the text sends 3. (C1, E-0357)
-RunLinkSession5Exchange_Receive_SetLinkSendByte::
+RunLinkSession5Exchange_SendLeave::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -633,7 +634,7 @@ RunLinkSession5Exchange_Receive_SetLinkSendByte::
     ret
 
 ; Session 5, state 6: on the partner's 3 goes to leaving (state 1). (C1, E-0357)
-RunLinkSession5Exchange_Receive_WaitLinkMessage::
+RunLinkSession5Exchange_WaitPartnerLeave::
     ld a, [wLinkMessage]
     cp $03
     ret nz
@@ -643,8 +644,9 @@ RunLinkSession5Exchange_Receive_WaitLinkMessage::
     ld [wScreenState], a
     ret
 
-; Session 5, state 2: sends 2 and goes on. (C1, E-0357)
-RunLinkSession5Exchange_Receive_SetScreenState::
+; Session 5, state 2: moves to state 3, queues link byte 2 (wLinkSendByte) and increments
+; wTitleScreenState. (C1, E-0371)
+RunLinkSession5Exchange_SignalPartner::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -845,11 +847,11 @@ LinkBreed_AskChoose::
     ld a, [wScreenSubStep]
     jumptable
     dw LinkBreed_AskChoose_PleaseWait
-    dw RunLinkSession5Exchange_Receive_SetScreenSubStep
+    dw LinkBreed_AskChoose_SendReady
     dw LinkBreed_AskChoose_AskAgain
     dw LinkBreed_AskChoose_RunList
     dw LinkBreed_AskChoose_PleaseWait
-    dw RunLinkSession5Exchange_Receive_SetScreenSubStep
+    dw LinkBreed_AskChoose_SendReady
     dw LinkBreed_AskChoose_AskAgain
     dw LinkBreed_AskChoose_RunList
     dw LinkBreed_AskChoose_PleaseWait
@@ -870,8 +872,9 @@ LinkBreed_AskChoose_PleaseWait::
     call ShowStringIndexA_Bank37
     ret
 
-; Re-asking, sub-step 1: after the text sends 1. (C1, E-0357)
-RunLinkSession5Exchange_Receive_SetScreenSubStep::
+; Re-asking, sub-steps 1 and 5: after the text queues link byte 1 (wLinkSendByte) and moves to the
+; next sub-step, where LinkBreed_AskChoose_AskAgain waits for the partner's 1. (C1, E-0371)
+LinkBreed_AskChoose_SendReady::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1642,12 +1645,12 @@ LinkBreed_WaitText::
 RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner::
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession5Exchange_WaitTextFlags
-    dw RunLinkSession5Exchange_WaitLinkMessage
+    dw LinkBreed_StartClosingExchange
+    dw LinkBreed_EndClosingExchange
 
 ; The closing exchange, sub-step 0: after the text starts an exchange of wWorkBuf: $64 bytes for the
 ; leader, $48 for the follower ($45 after the partner cancelled). (C1, E-0357)
-RunLinkSession5Exchange_WaitTextFlags::
+LinkBreed_StartClosingExchange::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1687,7 +1690,7 @@ RunLinkSession5Exchange_WaitTextFlags::
 
 ; The closing exchange, sub-step 1: when it ends clears $6F bytes of screen state and returns to
 ; game mode 5, state 1. (C1, E-0357)
-RunLinkSession5Exchange_WaitLinkMessage::
+LinkBreed_EndClosingExchange::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1840,31 +1843,31 @@ RunLinkSession5Exchange_ShowChosenRecord_DrawName::
 PartnerStats::
     ld a, [wScreenStep]
     jumptable
-    dw PartnerStats_ToClearBGMapAndLoadFrameTilesAndStep
+    dw PartnerStats_ClearScreen
     dw PartnerStats_ShowHeading
-    dw PartnerStats_AdvanceScreenStep
+    dw PartnerStats_HeadingDone
     dw PartnerStats_DrawFrame
-    dw PartnerStats_ToDrawRecordBufBStatsScreenAndStep
-    dw PartnerStats_ToDrawRecordBufBSpeciesMonsterPictureInTwoSteps
+    dw PartnerStats_DrawStats
+    dw PartnerStats_DrawPicture
     dw PartnerStats_Cursor
     dw PartnerStats_Leave
-    dw PartnerStats_Return
-    dw PartnerStats_Return
-    dw PartnerStats_Return
-    dw PartnerStats_Return
-    dw PartnerStats_Return
-    dw PartnerStats_Return
+    dw PartnerStats_Idle
+    dw PartnerStats_Idle
+    dw PartnerStats_Idle
+    dw PartnerStats_Idle
+    dw PartnerStats_Idle
+    dw PartnerStats_Idle
     dw PartnerStats_ClearPage2
     dw PartnerStats_ClearPage2Names
-    dw PartnerStats_ToDrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37AndStep
+    dw PartnerStats_DrawNames
     dw PartnerStats_DrawPage2Frame
     dw PartnerStats_ShowPersonality
     dw PartnerStats_DrawFamilyIcon
     dw PartnerStats_LoadSprite
     dw PartnerStats_Page2Keys
     dw PartnerStats_DrawLevelRow
-    dw PartnerStats_ToDrawRects_2AndStep
-    dw PartnerStats_ToClearTilesAndDrawRectsAndStep
+    dw PartnerStats_DrawSkillsFrames
+    dw PartnerStats_ClearSkillsText
     dw PartnerStats_ShowSkillNames
     dw PartnerStats_ShowDescription
     dw PartnerStats_SkillsKeys
@@ -1874,12 +1877,12 @@ PartnerStats::
     dw PartnerStats_DrawParents
     dw PartnerStats_PedigreeKeys
 
-; The partner's monster stats, step 8: nothing (a bare ret). (C1, E-0357)
-PartnerStats_Return::
+; The partner's monster stats, steps 8-13: nothing (a bare ret). (C1, E-0371)
+PartnerStats_Idle::
     ret
 
 ; The partner's monster stats, step 0: clears the BG map and loads the frame tiles. (C1, E-0357)
-PartnerStats_ToClearBGMapAndLoadFrameTilesAndStep::
+PartnerStats_ClearScreen::
     farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
     inc a
@@ -1893,8 +1896,9 @@ PartnerStats_ShowHeading::
     farcall LoadSixteenGlyphTilesFromTable
     call DrawRecordBufBNameNameAtTiles1500
 
-; The partner's monster stats, step 2: moves on. (C1, E-0357)
-PartnerStats_AdvanceScreenStep::
+; The partner's monster stats, step 2 and the end of step 1 (PartnerStats_ShowHeading falls in):
+; moves to the next step. (C1, E-0371)
+PartnerStats_HeadingDone::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1937,7 +1941,7 @@ PartnerStats_DrawFrame::
     ret
 
 ; The partner's monster stats, step 4: draws its level, status and stats. (C1, E-0357)
-PartnerStats_ToDrawRecordBufBStatsScreenAndStep::
+PartnerStats_DrawStats::
     farcall DrawRecordBufBStatsScreen
     ld a, [wScreenStep]
     inc a
@@ -1945,7 +1949,7 @@ PartnerStats_ToDrawRecordBufBStatsScreenAndStep::
     ret
 
 ; The partner's monster stats, step 5: draws its picture in two calls. (C1, E-0357)
-PartnerStats_ToDrawRecordBufBSpeciesMonsterPictureInTwoSteps::
+PartnerStats_DrawPicture::
     farcall DrawRecordBufBSpeciesMonsterPictureInTwoSteps
     ret
 
@@ -2066,7 +2070,7 @@ PartnerStats_ClearPage2Names::
     ret
 
 ; The second page, step 16: draws the name and species name. (C1, E-0357)
-PartnerStats_ToDrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37AndStep::
+PartnerStats_DrawNames::
     call DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37
     ld a, [wScreenStep]
     inc a
@@ -2191,7 +2195,7 @@ PartnerStats_DrawLevelRow::
     ret
 
 ; The skills page, step 23: draws its frames. (C1, E-0357)
-PartnerStats_ToDrawRects_2AndStep::
+PartnerStats_DrawSkillsFrames::
     farcall DrawRects_2
     ld a, [wScreenStep]
     inc a
@@ -2199,7 +2203,7 @@ PartnerStats_ToDrawRects_2AndStep::
     ret
 
 ; The skills page, step 24: clears the text tiles and draws the frames. (C1, E-0357)
-PartnerStats_ToClearTilesAndDrawRectsAndStep::
+PartnerStats_ClearSkillsText::
     farcall ClearTilesAndDrawRects
     ld a, [wScreenStep]
     inc a
@@ -2392,7 +2396,7 @@ PartnerStats_PedigreeKeys::
 RunLinkSession5Exchange_ResetListAndShowString::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession5Exchange_ResetListAndShowString_SetListCursor
+    dw RunLinkSession5Exchange_RestoreListCursor
     dw ShowString0EAndStep_Bank37
     dw RunLinkSession5Exchange_ResetListAndShowString_RunList
     dw RunLinkSession5Exchange_ResetListAndShowString_RunList
@@ -2400,11 +2404,11 @@ RunLinkSession5Exchange_ResetListAndShowString::
     dw LinkBreed_DrawPanel
     dw RunLinkSession5Exchange_ShowChosenRecord_ClearTiles
     dw RunLinkSession5Exchange_ShowChosenRecord_DrawName
-    dw RunLinkSession5Exchange_CallCopyRectToScreenBufferAndClearAttributes_37
+    dw RunLinkSession5Exchange_ShowPartnerMonster
     dw RunLinkSession5Exchange_ResetListAndShowString_RunListAgain
 
 ; Back to the list, step 0: restores the list cursor and page. (C1, E-0357)
-RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
+RunLinkSession5Exchange_RestoreListCursor::
     ld a, [wItemGridX]
     ld [wListCursor], a
     ld a, [wItemGridY]
@@ -2436,9 +2440,11 @@ RunLinkSession5Exchange_ResetListAndShowString_RunList::
     ld [wScreenState], a
     ret
 
-; Back to the list, step 8: draws the choice box and shows the partner's monster (string $0F, 13 x 1
-; at VRAM $9600). (C1, E-0357)
-RunLinkSession5Exchange_CallCopyRectToScreenBufferAndClearAttributes_37::
+; Back to the list, step 8: copies the 9 x 7 choice box (LinkBreed_DrawChoiceBox_TileRect) into
+; wWindowTileBuffer + $E7 (CopyRectToScreenBufferAndClearAttributes_37), shows string $0F of
+; category 0 (the partner's monster) as 13 x 1 tiles at vTiles2 + $600, sets the string window back
+; to vTiles1 with size $1202, then falls into BlinkCursorScreenCounter_Bank37. (C1, E-0371)
+RunLinkSession5Exchange_ShowPartnerMonster::
     ld de, LinkBreed_DrawChoiceBox_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
@@ -2717,23 +2723,23 @@ BlinkCursorScreenCounter_Bank37::
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
 DrawCursorTileBB_Bank37::
     ld b, $bb
-    jr DrawArrowTileBCAtTwoChoiceEntry_Bank37_ReadTwoChoiceCursor
+    jr DrawTileBAtTwoChoiceEntry_Bank37
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_Bank37::
     ld b, $c3
-    jr DrawArrowTileBCAtTwoChoiceEntry_Bank37_ReadTwoChoiceCursor
+    jr DrawTileBAtTwoChoiceEntry_Bank37
 
 ; B = $BC, then writes B at the scroll position +
-; DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data[wTwoChoiceCursor] (E-0124)
+; DrawTileBAtTwoChoiceEntry_Bank37_Data[wTwoChoiceCursor] (E-0124)
 DrawArrowTileBCAtTwoChoiceEntry_Bank37::
     ld b, $bc
 
 ; Writes tile B at choice wTwoChoiceCursor's place, stepping back on a scroll wrap. (C1, E-0357)
-DrawArrowTileBCAtTwoChoiceEntry_Bank37_ReadTwoChoiceCursor::
+DrawTileBAtTwoChoiceEntry_Bank37::
     ld a, [wTwoChoiceCursor]
     sla a
-    ld hl, DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data
+    ld hl, DrawTileBAtTwoChoiceEntry_Bank37_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -2751,8 +2757,8 @@ DrawArrowTileBCAtTwoChoiceEntry_Bank37_ReadTwoChoiceCursor::
     ei
     ret
 
-; data read by DrawArrowTileBCAtTwoChoiceEntry_Bank37_ReadTwoChoiceCursor (6 bytes) (E-0347)
-DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data::
+; data read by DrawTileBAtTwoChoiceEntry_Bank37 (6 bytes) (E-0347)
+DrawTileBAtTwoChoiceEntry_Bank37_Data::
     db $ec, $00, $2c, $01, $6c, $01
 
 ; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL for rows B to C,

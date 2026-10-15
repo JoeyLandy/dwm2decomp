@@ -53,7 +53,7 @@ TargetRandomFoe::
     ld a, [wBattleActor]
     and $04
     xor $04
-    jp TargetRandomOtherSlot_Skip
+    jp TargetRandomPresentOfThree
 
 ; target = the slot in wSavedActionChoices + $1[2 * actor] when that slot is present, else
 ; TargetRandomFoe (E-0061)
@@ -105,7 +105,7 @@ TargetFirstFoe::
 TargetRandomAlly::
     ld a, [wBattleActor]
     and $04
-    jp TargetRandomOtherSlot_Skip
+    jp TargetRandomPresentOfThree
 
 ; target = the first present slot of the actor's own three (the actor included); base + 3 when none
 ; is present (E-0061)
@@ -258,7 +258,7 @@ TargetRandomOtherSlot::
 ; Picks a target among the three slots from A: the first present one, then each later present one
 ; takes its place on a coin flip (random bit 7); stores it as the actor's target choice ($FF when
 ; none is present). (C1, E-0357)
-TargetRandomOtherSlot_Skip::
+TargetRandomPresentOfThree::
     ld c, a
     ld b, $03
     ld d, $ff
@@ -2888,7 +2888,7 @@ ChooseTarget_SquallHit_2::
     ld [hl], a
     ret
 
-; Heal: E = the actor's side, D = 3, then the most-hurt search (ChooseTarget_Heal_Loop). (C1,
+; Heal: E = the actor's side, D = 3, then the most-hurt search (ChooseTarget_Heal_RateAllies). (C1,
 ; E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
@@ -2902,7 +2902,7 @@ ChooseTarget_Heal::
 ; For each of D ally slots from E: how hurt it is, as max HP / HP (quotient in wTargetEstimates,
 ; remainder in wBattleTempBuf); full HP counts as 0 remainder 1 and an absent slot as 0; then picks
 ; the most hurt (ChooseTarget_Heal_MostHurt). (C1, E-0357)
-ChooseTarget_Heal_Loop::
+ChooseTarget_Heal_RateAllies::
     ld a, e
     ld [wBattleArg3], a
     ld a, d
@@ -2966,14 +2966,14 @@ ChooseTarget_Heal_Loop::
     ld d, a
     inc e
     dec d
-    jr nz, ChooseTarget_Heal_Loop
+    jr nz, ChooseTarget_Heal_RateAllies
     call ChooseTarget_Heal_MostHurt
     ret
 
 ; Heal (another): a threshold from the present allies' max HP (thirty times it for a slot with body
 ; flag bit 0), divided by their number twice; targets the ally with the lowest HP below its max and
-; under that threshold (ties at random); with none, the most-hurt search (ChooseTarget_Heal_Loop).
-; (C1, E-0357)
+; under that threshold (ties at random); with none, the most-hurt search
+; (ChooseTarget_Heal_RateAllies). (C1, E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
 ; target to wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the
@@ -3129,7 +3129,7 @@ ChooseTarget_Heal_2::
     and $04
     ld e, a
     ld d, $03
-    jp ChooseTarget_Heal_Loop
+    jp ChooseTarget_Heal_RateAllies
 
 ; Vivify's target: one of the fallen allies (wBattleSlotOut 1), each later one replacing the first
 ; on a coin flip; with none, the actor itself. (C1, E-0357)
@@ -4674,7 +4674,7 @@ ChooseTarget_Beat::
 ; Blaze's target: loads the action's skill record part (kind 9, or $0D for the enemy side outside
 ; link play) for its damage estimate in hTemp8/9; for each foe without bounce or MagicBack (status 2
 ; & $22) and Blaze resistance (byte 0 bits 4-5) below 3, scales the estimate by the level
-; (ChooseTarget_Blaze_Multiply8By16); prefers the foe the hit would finish (HP below it) with the
+; (ChooseTarget_Blaze_ScaleEstimate); prefers the foe the hit would finish (HP below it) with the
 ; most HP; otherwise the lowest level, the lower HP on ties; with neither, the last present foe.
 ; (C1, E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -4745,7 +4745,7 @@ ChooseTarget_Blaze::
     jr z, .restore
     ldh [hTemp6], a
     push bc
-    call ChooseTarget_Blaze_Multiply8By16
+    call ChooseTarget_Blaze_ScaleEstimate
     pop bc
     push hl
     ld a, c
@@ -5770,9 +5770,9 @@ ChooseTarget_Watershot::
 
 ; MegaMagic's target: for each present foe with MegaMagic resistance (byte 4 bits 6-7) below 3, the
 ; damage estimate from the actor's MP and level scaled by that level
-; (ChooseTarget_MegaMagic_GetBattleMP_Bank39); prefers the foe the hit would finish (HP below it)
-; with the most HP; otherwise the lowest level, the lower HP on ties; with neither, the last present
-; foe. (C1, E-0357)
+; (ChooseTarget_MegaMagic_EstimateDamage); prefers the foe the hit would finish (HP below it) with
+; the most HP; otherwise the lowest level, the lower HP on ties; with neither, the last present foe.
+; (C1, E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -5812,7 +5812,7 @@ ChooseTarget_MegaMagic::
     jr z, .restore
     ldh [hTemp6], a
     push bc
-    call ChooseTarget_MegaMagic_GetBattleMP_Bank39
+    call ChooseTarget_MegaMagic_EstimateDamage
     pop bc
     push hl
     ld a, c
@@ -6871,8 +6871,7 @@ ChooseTarget_MegaMagic_2::
     jp ChooseTarget_MegaMagic
 
 ; Antidote's third routine: a poisoned or badly poisoned ally (status 0 & 3), picked by
-; PickWeightedTargetCandidate; with none, the actor itself
-; (TargetAllyWithStatusBit20_CallAddAx9ToHL). (C1, E-0357)
+; PickWeightedTargetCandidate; with none, the actor itself (TargetAllyWithStatusMask). (C1, E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
@@ -6882,7 +6881,7 @@ ChooseTarget_Antidote_3::
     and $04
     ld hl, wBattleStatus
     ld d, $03
-    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
+    jp TargetAllyWithStatusMask
 
 ; Upper's third routine: lists the present allies whose DEF differs from the BuffCapOfBaseDEF value
 ; in slot order and picks one (PickWeightedTargetCandidate: one sure, two 171:85, three 128:85:43);
@@ -6994,21 +6993,20 @@ ChooseTarget_Speed_3::
     ret
 
 ; Sap's third routine: a foe with DEF at least 2, picked by PickWeightedTargetCandidate, else any
-; foe by slot order (TargetAllyWithStatusBit20_CheckBattleActor with GetBattleDEF_Bank39). (C1,
-; E-0357)
+; foe by slot order (TargetFoeWithStatAboveOne with GetBattleDEF_Bank39). (C1, E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
 ; wBattleTargetChoice (E-0086) (E-0344: the address in its name dropped or read as the label there;
 ; was ChooseTarget_Sap_3)
 ChooseTarget_Sap_3::
     ld de, GetBattleDEF_Bank39
-    jp TargetAllyWithStatusBit20_CheckBattleActor
+    jp TargetFoeWithStatAboveOne
 
 ; per-action target routine: DE = GetBattleAGL_Bank39, then the shared stat comparison at $6C30
 ; (E-0219)
 TargetByAllyAGL::
     ld de, GetBattleAGL_Bank39
-    jp TargetAllyWithStatusBit20_CheckBattleActor
+    jp TargetFoeWithStatAboveOne
 
 ; per-action target routine: scans the actor's side for wBattleStatus (+9 * slot) bit mask $10
 ; (shared code at $6BE3) (E-0219)
@@ -7017,7 +7015,7 @@ TargetAllyWithStatusBit10::
     and $04
     ld hl, wBattleStatus
     ld d, $10
-    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
+    jp TargetAllyWithStatusMask
 
 ; as TargetAllyWithStatusBit10 with mask $40 (E-0219)
 TargetAllyWithStatusBit40::
@@ -7025,7 +7023,7 @@ TargetAllyWithStatusBit40::
     and $04
     ld hl, wBattleStatus
     ld d, $40
-    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
+    jp TargetAllyWithStatusMask
 
 ; as TargetAllyWithStatusBit10 with mask $20 (E-0219)
 TargetAllyWithStatusBit20::
@@ -7033,12 +7031,12 @@ TargetAllyWithStatusBit20::
     and $04
     ld hl, wBattleStatus
     ld d, $20
-    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
+    jp TargetAllyWithStatusMask
 
 ; Lists the present slots of the side from A whose status byte (HL, 9 bytes per slot) has a bit of
 ; mask D, and picks one (PickWeightedTargetCandidate); with none the actor targets itself. (C1,
 ; E-0357)
-TargetAllyWithStatusBit20_CallAddAx9ToHL::
+TargetAllyWithStatusMask::
     ld c, a
     ld b, $03
     call AddAx9ToHL
@@ -7084,7 +7082,7 @@ TargetAllyWithStatusBit20_CallAddAx9ToHL::
 
 ; Lists the present opposite slots for which the check at DE returns 2 or more, and picks one
 ; (PickWeightedTargetCandidate); with none falls back on TargetFoeWeightedBySlotOrder. (C1, E-0357)
-TargetAllyWithStatusBit20_CheckBattleActor::
+TargetFoeWithStatAboveOne::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -7969,9 +7967,11 @@ TargetRandomFoeOfFamilyD::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
-; Scales the damage estimate hTemp8:hTemp9 by resistance level A: 0 keeps it, 1 takes 85%, 2 half, 3
-; gives 0. (C1, E-0357)
-ChooseTarget_Blaze_Multiply8By16::
+; A = resistance level: HL = the damage estimate hTemp8:hTemp9 for level 0, half of it (signed
+; shift) for 2 and 0 for 3. For level 1 it runs Multiply8By16 and Divide24ByA by $55 / $64 without
+; loading BC from HL, so the result is 85% of the caller's BC (the loop pair: B = slots left, C =
+; slot), not of the estimate. (C1, E-0371)
+ChooseTarget_Blaze_ScaleEstimate::
     push af
     ldh a, [hTemp8]
     ld l, a
@@ -8004,9 +8004,11 @@ ChooseTarget_Blaze_Multiply8By16::
 .return:
     ret
 
-; MegaMagic's damage estimate: (the actor's MP + 2 x its level) x 90%, then scaled by resistance
-; level A as ChooseTarget_Blaze_Multiply8By16. (C1, E-0357)
-ChooseTarget_MegaMagic_GetBattleMP_Bank39::
+; A = resistance level. Loads HL = the actor's MP + 2 x its level, but then runs Multiply8By16 with
+; A = $5A, which multiplies BC (the caller's loop pair: B = slots left, C = slot) and discards HL,
+; so HL = BC x 90 / 100. Level 0 returns that, 2 halves it, 3 gives 0; level 1 multiplies the BC
+; left by the first product (B = $64 after Divide24ByA) by $55 / $64. (C1, E-0371)
+ChooseTarget_MegaMagic_EstimateDamage::
     push af
     ld a, [wBattleActor]
     call GetBattleMP_Bank39
@@ -8079,37 +8081,37 @@ TestSlotStatus2Bit3OrStatus5Bits67::
 ; GetBattleATK) (E-0060)
 GetBattleATK_Bank39::
     ld hl, wBattleATK
-    jr ReadSlotAIModeIndexed_Bank39_Skip
+    jr ReadSlotWord_Bank39
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)
 GetBattleDEF_Bank39::
     ld hl, wBattleDEF
-    jr ReadSlotAIModeIndexed_Bank39_Skip
+    jr ReadSlotWord_Bank39
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0060)
 GetBattleMaxHP_Bank39::
     ld hl, wBattleMaxHP
-    jr ReadSlotAIModeIndexed_Bank39_Skip
+    jr ReadSlotWord_Bank39
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0060)
 GetBattleMaxMP_Bank39::
     ld hl, wBattleMaxMP
-    jr ReadSlotAIModeIndexed_Bank39_Skip
+    jr ReadSlotWord_Bank39
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0060)
 GetBattleHP_Bank39::
     ld hl, wBattleHP
-    jr ReadSlotAIModeIndexed_Bank39_Skip
+    jr ReadSlotWord_Bank39
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)
 GetBattleMP_Bank39::
     ld hl, wBattleMP
-    jr ReadSlotAIModeIndexed_Bank39_Skip
+    jr ReadSlotWord_Bank39
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0060)
 GetBattleAGL_Bank39::
     ld hl, wBattleAGL
-    jr ReadSlotAIModeIndexed_Bank39_Skip
+    jr ReadSlotWord_Bank39
 
 ; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
 ReadSlotAIModeIndexed_Bank39::
@@ -8119,7 +8121,7 @@ ReadSlotAIModeIndexed_Bank39::
     ret
 
 ; HL = the word at HL + 2 x A. (C1, E-0357)
-ReadSlotAIModeIndexed_Bank39_Skip::
+ReadSlotWord_Bank39::
     add a
     add_a_to_hl
     deref_hl

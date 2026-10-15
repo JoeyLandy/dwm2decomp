@@ -111,12 +111,12 @@ TitleOpening_LoadNextScreen_BGPaletteBufferData::
 GameMode5_Update_LoadScreens_OBJPaletteBufferData::
     db $20, $7c, $ff, $7f, $a8, $14, $00, $00, $20, $7c, $ff, $7f, $35, $04, $00, $00
 
-; runs RunBankE1Routine_WaitOamNextEntry with DE = RunBankE1Routine_Data (E-0122) (E-0344: the
-; address in its name dropped or read as the label there; was RunBankE1Routine; a trailing
-; preposition left by the dropped address removed)
+; runs RunBankE1Routine_BuildOam with DE = RunBankE1Routine_Data (E-0122) (E-0344: the address in
+; its name dropped or read as the label there; was RunBankE1Routine; a trailing preposition left by
+; the dropped address removed)
 RunBankE1Routine::
     ld de, RunBankE1Routine_Data
-    call RunBankE1Routine_WaitOamNextEntry
+    call RunBankE1Routine_BuildOam
     ret
 
 ; data read by RunBankE1Routine (2 bytes) (E-0347)
@@ -125,7 +125,7 @@ RunBankE1Routine_Data::
 
 ; Builds the meta-sprite into OAM; the same code as DrawMetaSpriteSet_Bank27_BuildOam with this
 ; bank's frames. (C1, E-0357)
-RunBankE1Routine_WaitOamNextEntry::
+RunBankE1Routine_BuildOam::
     ldh a, [hOamNextEntry]
     cp $27
     ret nc

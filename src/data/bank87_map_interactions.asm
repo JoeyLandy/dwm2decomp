@@ -4,12 +4,15 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
-; Step events on maps: once per step (wStepTriggerFlag) when no window, field action or bit 0 freeze
-; is active, walks the map's list (the table at $40A0 by hMapId; $FF ends): a kind-0 entry for this
-; map and screen, at the given player position ($FF for anywhere) and with its flag clear ($FFFF for
-; none), starts talk event wTalkEventGroup / wTalkEventIndex (DispatchTalkEvent), clearing the held
-; and pressed buttons when the mode state is then 1. (C1, E-0357)
-FieldState_WalkATalks_WaitTextWindowState::
+; Step triggers on maps, called each frame by FieldState_WalkATalks: returns while a text window is
+; open (wTextWindowState & 3), a field action is pending (wFieldActionRequest bit 7), the player is
+; frozen (hPlayerStateFlags bit 0) or wStepTriggerFlag is already set; otherwise sets
+; wStepTriggerFlag and walks the map's list from MapStepTriggerTable (word hMapId; $0000 = none) in
+; 10-byte entries until $FF. The first entry with byte 0 = 0 for this map (hMapId) and screen
+; (hMapScreenX/Y), at the player's position (hPlayerX/Y; X $FF means anywhere) and whose story flag
+; word is $FFFF or clear starts talk event wTalkEventGroup / wTalkEventIndex (DispatchTalkEvent),
+; then clears wJoypadHeld and wJoypadPressed when wModeState is 1. (C1, E-0371)
+FieldState_WalkATalks_RunStepTriggers::
     ld a, [wTextWindowState]
     and $03
     ret nz

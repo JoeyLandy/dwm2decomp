@@ -280,7 +280,7 @@ RunMessageBox::
     dw RunMessageBox_Open
     dw RunMessageBox_ShowText
     dw RunMessageBox_Close
-    dw RunMessageBox_WriteMessageState
+    dw RunMessageBox_Finish
 
 ; Message step 0: unless a step pointer is set, freezes the player and objects (bit 1); unless
 ; wMessageGroup bit 7, clears the window tiles, plays sound $69 and opens the text window at the
@@ -368,7 +368,7 @@ RunMessageBox_Close::
 
 ; Message step 3: once the window has closed (or at once with wMessageGroup bit 6), unfreezes the
 ; player and objects unless a step pointer is set, and marks the message idle ($FF). (C1, E-0357)
-RunMessageBox_WriteMessageState::
+RunMessageBox_Finish::
     ld a, [wMessageGroup]
     bit 6, a
     jr nz, .check_step_ptr_lo
@@ -914,7 +914,7 @@ SetWStepArrivedIfPartyHasField55Bit7::
 
 ; wStepArrived = 1 when any party monster has status bit 2 (poison) set, otherwise 0 (SRAM enabled
 ; around the reads). (C1, E-0357)
-TravelerEvents_LoadSRAMRecordByte::
+TravelerEvents_PartyHasPoison::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -950,7 +950,7 @@ TravelerEvents_LoadSRAMRecordByte::
 
 ; wStepArrived = 1 when any party monster has status bit 0 set, otherwise 0 (SRAM enabled around the
 ; reads). (C1, E-0357)
-TravelerEvents_LoadSRAMRecordByte_2::
+TravelerEvents_PartyHasStatusBit0::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -1118,7 +1118,7 @@ DrawFullScreenBufferAtScroll::
     call DrawFullScreenBufferToBGMap
     ret
 
-; DE = the BG map row at hScrollY (& $F8); calls RedrawColumnsBesideScreen_WriteVRAMByte for the
+; DE = the BG map row at hScrollY (& $F8); calls RedrawColumnsBesideScreen_FillColumn for the
 ; columns at hScrollX - 8 and hScrollX + $A0, just off the left and right edges (E-0121)
 RedrawColumnsBesideScreen::
     ldh a, [hScrollY]
@@ -1141,16 +1141,18 @@ RedrawColumnsBesideScreen::
     push de
     ldh a, [hScrollX]
     sub $08
-    call RedrawColumnsBesideScreen_WriteVRAMByte
+    call RedrawColumnsBesideScreen_FillColumn
     pop de
     ldh a, [hScrollX]
     add $a0
-    call RedrawColumnsBesideScreen_WriteVRAMByte
+    call RedrawColumnsBesideScreen_FillColumn
     ret
 
-; Fills the 18-row BG map column at the scroll's column (DE + hScrollX / 8) with tile $C4, wrapping
-; within the map. (C1, E-0357)
-RedrawColumnsBesideScreen_WriteVRAMByte::
+; A = pixel X, DE = the BG map row address: fills 18 ($12) entries down the column at DE + A / 8
+; with tile $C4 (WriteVRAMByte), 32 bytes apart with H masked by $9B so the column wraps inside
+; vBGMap0. RedrawColumnsBesideScreen calls it for hScrollX - 8 and hScrollX + $A0, just off the left
+; and right edges. (C1, E-0371)
+RedrawColumnsBesideScreen_FillColumn::
     srl a
     srl a
     srl a
@@ -1181,23 +1183,23 @@ RedrawColumnsBesideScreen_WriteVRAMByte::
 SceneDancing_DanceSteps::
     ld a, [wScriptSubStep]
     jumptable
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
     dw SceneDancing_DanceSteps_FaceLeft
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
     dw SceneDancing_DanceSteps_FaceRight
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
     dw SceneDancing_DanceSteps_FaceUp
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
     dw SceneDancing_DanceSteps_FaceDown
     dw SceneDancing_DanceSteps_HopAll
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerStateFlags
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_End
 
 ; Dance step 11: the player and the three followers face down; next step. (C1, E-0357)
 SceneDancing_DanceSteps_FaceDown::
@@ -1213,20 +1215,23 @@ SceneDancing_DanceSteps_FaceDown::
 ; Dance step 8: everyone faces up (6E99). (C1, E-0357)
 SceneDancing_DanceSteps_FaceUp::
     ld a, $02
-    jr SceneDancing_DanceSteps_FaceLeft_SetPlayerFacing
+    jr SceneDancing_DanceSteps_TurnAll
 
 ; Dance step 5: everyone faces right (6E99). (C1, E-0357)
 SceneDancing_DanceSteps_FaceRight::
     ld a, $01
-    jr SceneDancing_DanceSteps_FaceLeft_SetPlayerFacing
+    jr SceneDancing_DanceSteps_TurnAll
 
 ; Dance step 2: everyone faces left (6E99). (C1, E-0357)
 SceneDancing_DanceSteps_FaceLeft::
     ld a, $03
 
-; Turns the player and the three followers to facing A, standing still (bit 1 clear), for 64 frames;
-; then freezes them again (bit 1) and goes to the next step. (C1, E-0357)
-SceneDancing_DanceSteps_FaceLeft_SetPlayerFacing::
+; A = facing (entered from SceneDancing_DanceSteps_FaceUp, SceneDancing_DanceSteps_FaceRight and
+; SceneDancing_DanceSteps_FaceLeft): each frame sets hPlayerFacing and the three wFollowerRecords
+; directions to A and clears bit 1 of hPlayerStateFlags (the animation counter runs); after 64 ($40)
+; frames counted in wScriptParam0 it sets bit 1 again, clears wScriptParam0 and advances
+; wScriptSubStep. (C1, E-0371)
+SceneDancing_DanceSteps_TurnAll::
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
     ld [wFollowerRecords + $5], a
@@ -1253,24 +1258,25 @@ SceneDancing_DanceSteps_FaceLeft_SetPlayerFacing::
 SceneMermaidSong2_MoveSteps::
     ld a, [wScriptSubStep]
     jumptable
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
     dw SceneMermaidSong2_MoveSteps_StepPair
     dw SceneMermaidSong2_MoveSteps_HopFollowers
     dw SceneMermaidSong2_MoveSteps_StepPairBack
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
     dw SceneMermaidSong2_TurnAround
-    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_Pause
     dw SceneDancing_DanceSteps_HopAll
     dw SceneMermaidSong2_TurnAround
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerStateFlags
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_Pause
+    dw SceneDancing_DanceSteps_End
 
-; Dance step 16: unfreezes the player (bit 1 clear) and ends the dance (next script step). (C1,
-; E-0357)
-SceneDancing_DanceSteps_WritePlayerStateFlags::
+; The last entry of SceneDancing_DanceSteps (sub-step 16) and of SceneMermaidSong2_MoveSteps
+; (sub-step 13): clears bit 1 of hPlayerStateFlags (the animation freeze) and advances wScriptStep,
+; ending the sub-steps. (C1, E-0371)
+SceneDancing_DanceSteps_End::
     ldh a, [hPlayerStateFlags]
     and $fd
     ldh [hPlayerStateFlags], a
@@ -1428,8 +1434,10 @@ SceneMermaidSong2_MoveSteps_HopFollowers::
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
 
-; Dance step 0: waits 32 frames; next step. (C1, E-0357)
-SceneDancing_DanceSteps_WriteScriptParam0::
+; Counts wScriptParam0 up to 32 ($20), then clears it and advances wScriptSubStep: the pause entry
+; of SceneDancing_DanceSteps (sub-steps 0, 1, 3, 4, 6, 7, 9, 10 and 13-15) and
+; SceneMermaidSong2_MoveSteps (sub-steps 0, 1, 5, 6, 8, 11 and 12). (C1, E-0371)
+SceneDancing_DanceSteps_Pause::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -1918,10 +1926,10 @@ BossWinScene::
     dw BossWinScene_WaitMessageAgain
     dw BossWinScene_HopAndTurn
     dw BossWinScene_CheckDarck
-    dw BossWinScene_AdvanceScriptStep
+    dw BossWinScene_End
 
 ; Boss-win scene, step 17: next script step. (C1, E-0357)
-BossWinScene_AdvanceScriptStep::
+BossWinScene_End::
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3015,65 +3023,68 @@ ScriptCommand0E_Run::
     ld [wScriptStartRequest], a
     ld a, [wScriptParam0]
     jumptable
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_SetSpriteSlotCount
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_HideSprites
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
+    dw ScriptCommand0E_Run_DoNothing
 
-; Command 0E, step 30: clears the sprite slot count. (C1, E-0357)
-ScriptCommand0E_Run_SetSpriteSlotCount::
+; After command 0E's scripted encounter (wScriptStep not 0), ScriptCommand0E_Run indexes a table by
+; wScriptParam0 (the encounter id); this is entry $1E: wSpriteSlotCount = 0, so DrawSpriteSlots
+; draws no slots. (C1, E-0371)
+ScriptCommand0E_Run_HideSprites::
     xor a
     ld [wSpriteSlotCount], a
     ret
 
-; Command 0E, step 0: does nothing. (C1, E-0357)
-ScriptCommand0E_Run_Return::
+; After command 0E's scripted encounter: nothing more for every wScriptParam0 except $1E (entries
+; 0-29 and 31-50 of the table); a bare ret. (C1, E-0371)
+ScriptCommand0E_Run_DoNothing::
     ret
     ds $4bf, $00

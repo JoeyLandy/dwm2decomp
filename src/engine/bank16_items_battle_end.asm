@@ -3712,8 +3712,8 @@ FieldSkillEffect_DrawRandomItem::
 
 ; Field skill 18 (first message '<name> scanned the area sharply.'; FieldSkillUsable_Warp refuses
 ; with 'There are no treasures nearby.' when no map object lacks bit 7): sets wWorldMapByFieldSkill
-; to 1, which RunWorldMapState_WaitWorldMapByFieldSkill reads to mark the map objects on the world
-; map; message $11 ('<name> sensed a treasure nearby.'); wItemId = $FF. (C1, E-0370)
+; to 1, which RunWorldMapState_DrawObjectMarkers reads to mark the map objects on the world map;
+; message $11 ('<name> sensed a treasure nearby.'); wItemId = $FF. (C1, E-0370)
 FieldSkillEffect_SenseTreasure::
     ld a, $01
     ld [wWorldMapByFieldSkill], a

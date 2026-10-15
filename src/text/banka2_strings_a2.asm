@@ -1763,10 +1763,12 @@ MonsterTableA2::
     db $01 ; byte 24 ($71)
     db $01 ; personality axis $72
 
-; Starts string wStringIndex of category wStringCategory - 1 from this bank's category table
-; (BeginStringDisplay). (C1, E-0357)
-BeginStringDisplay_BankE0_BeginStringDisplay::
-    ld de, BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories
+; Far-called by BeginStringDisplay_BankE0 when wStringCategory is 1 or more: decrements
+; wStringCategory and starts string wStringIndex of that category from the category table in this
+; bank (DE) with BeginStringDisplay. The 7 bytes after its ret (call to itself, call $2611, ret)
+; have no read caller. (C1, E-0371)
+BeginStringDisplay_BankE0_FromBankA2Table::
+    ld de, BeginStringDisplay_BankE0_FromBankA2Table_StringCategories
     ld a, [wStringCategory]
     sub $01
     ld [wStringCategory], a
@@ -1777,14 +1779,14 @@ BeginStringDisplay_BankE0_BeginStringDisplay::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories::
-    dw StringList_BankE0_BeginStringDisplay_StringCategories_0 ; id 0
-    dw StringList_BankE0_BeginStringDisplay_StringCategories_1 ; id 1
+BeginStringDisplay_BankE0_FromBankA2Table_StringCategories::
+    dw StringList_BankE0_FromBankA2Table_StringCategories_0 ; id 0
+    dw StringList_BankE0_FromBankA2Table_StringCategories_1 ; id 1
 
-; category list of BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories; one pointer per
+; category list of BeginStringDisplay_BankE0_FromBankA2Table_StringCategories; one pointer per
 ; wStringIndex (E-0217)
 ; record: string
-StringList_BankE0_BeginStringDisplay_StringCategories_0::
+StringList_BankE0_FromBankA2Table_StringCategories_0::
     dw String_A2_00_00 ; id 0
     dw String_A2_00_01 ; id 1
     dw String_A2_00_02 ; id 2
@@ -1819,7 +1821,7 @@ StringList_BankE0_BeginStringDisplay_StringCategories_0::
     dw String_A2_00_1F ; id 31
     dw String_A2_00_20 ; id 32
 
-StringList_BankE0_BeginStringDisplay_StringCategories_1::
+StringList_BankE0_FromBankA2Table_StringCategories_1::
     dw String_A2_01_00 ; id 0
 
 String_A2_00_00::

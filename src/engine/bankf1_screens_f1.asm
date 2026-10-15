@@ -139,11 +139,11 @@ PauseMenu_State4_GiftMenu_ShowChoices_ItemCursor::
 PauseMenu_State4_GiftMenu_ChooseGift::
     ld a, [wTemp1]
     jumptable
-    dw PauseMenu_State4_BuildScreenBlock32WithCursor_BankF1AndStep
+    dw PauseMenu_State4_GiftMenu_ChooseGift_DrawYesNo
     dw PauseMenu_State4_GiftMenu_ChooseGift_YesNoCursor
 
 ; Choosing to give, step 0: draws the yes/no block with its cursor (two rows). (C1, E-0357)
-PauseMenu_State4_BuildScreenBlock32WithCursor_BankF1AndStep::
+PauseMenu_State4_GiftMenu_ChooseGift_DrawYesNo::
     call BuildScreenBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
     ld a, $02
@@ -196,8 +196,8 @@ PauseMenu_State4_GiftMenu_GiveGift::
     jumptable
     dw PauseMenu_State4_GiftMenu_GiveGift_Check
     dw PauseMenu_State4_GiftMenu_GiveGift_RedrawYesNo
-    dw PauseMenu_State4_GiftMenu_BeginStringDisplay_BankF0_2AndStep
-    dw PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags
+    dw PauseMenu_State4_GiftMenu_GiveGift_ShowCantGive
+    dw PauseMenu_State4_GiftMenu_GiveGift_BackToItems
 
 ; Giving, step 0: items that cannot be given (BeastTail, ShinyHarp, $2B-$2D, $2F-$3F) show 'Can't be
 ; given to ...' (string $22); any other is recorded as the gift (RecordGiftAndMaybeApplyPrevious),
@@ -269,8 +269,11 @@ PauseMenu_State4_GiftMenu_GiveGift_RedrawYesNo::
     inc [hl]
     ret
 
-; Giving, step 2: starts the message (category 0, bank $F0). (C1, E-0357)
-PauseMenu_State4_GiftMenu_BeginStringDisplay_BankF0_2AndStep::
+; Giving, step 2: starts string wStringIndex of category 0 from bank $F0's table
+; (BeginStringDisplay_BankF0_2) and advances wTemp1. Only the refused branch of
+; PauseMenu_State4_GiftMenu_GiveGift_Check reaches it, with wStringIndex = $22 ('... can't be given
+; to ...'); a given item leaves the pause menu instead. (C1, E-0371)
+PauseMenu_State4_GiftMenu_GiveGift_ShowCantGive::
     xor a
     ld [wStringCategory], a
     farcall BeginStringDisplay_BankF0_2
@@ -279,7 +282,7 @@ PauseMenu_State4_GiftMenu_BeginStringDisplay_BankF0_2AndStep::
     ret
 
 ; Giving, step 3: after the text returns to the item list. (C1, E-0357)
-PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags::
+PauseMenu_State4_GiftMenu_GiveGift_BackToItems::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -1490,36 +1493,37 @@ RunScreenStateWhenNotFading_F1::
     ret nz
     ld a, [wScreenState]
     jumptable
-    dw RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
+    dw RunScreenStateWhenNotFading_F1_SwapMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
     dw RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster
     dw RunScreenStateWhenNotFading_F1_LinkBreed
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
     dw RunScreenStateWhenNotFading_F1_RunStatsScreen
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats
     dw RunScreenStateWhenNotFading_F1_ResetListAndShowString
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
+    dw RunScreenStateWhenNotFading_F1_ExitToLinkMenu
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord
 
 ; Link breeding screens, state 0: runs the swap menu (SwapMonstersMenu) and goes on. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep::
+RunScreenStateWhenNotFading_F1_SwapMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; Link breeding screens, state 1: after the text clears $6F bytes of screen state and returns to
-; game mode 5, state 1. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_WaitTextFlags::
+; Link breeding screens, states 1, 5-11, 15 and 16: once the text is done (wTextFlags bit 0 clear)
+; clears the $6F bytes from wScreenState and requests game mode 5, state 1 (wGameMode, wModeState,
+; wModeChangeRequest). (C1, E-0371)
+RunScreenStateWhenNotFading_F1_ExitToLinkMenu::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1562,9 +1566,9 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster::
     ld a, [wScreenStep]
     jumptable
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags
+    dw RunScreenStateWhenNotFading_F1_ChooseSendSync
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor
-    dw RunScreenStateWhenNotFading_F1_SetScreenStep
+    dw RunScreenStateWhenNotFading_F1_ChooseFinish
 
 ; Choosing the breeding monster, step 0: after the text 'Please wait.' (string 7). (C1, E-0357)
 RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait::
@@ -1579,7 +1583,7 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait::
     ret
 
 ; Choosing the breeding monster, step 1: after the text sends 1. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags::
+RunScreenStateWhenNotFading_F1_ChooseSendSync::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1606,7 +1610,7 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor::
     ret
 
 ; Choosing the breeding monster, step 3: after the text the next state. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_SetScreenStep::
+RunScreenStateWhenNotFading_F1_ChooseFinish::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1630,13 +1634,13 @@ RunScreenStateWhenNotFading_F1_LinkBreed::
     dw RunScreenStateWhenNotFading_F1_LinkBreed_RunList
     dw RunScreenStateWhenNotFading_F1_LinkBreed_RunList
     dw RunScreenStateWhenNotFading_F1_LinkBreed_RunList
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding
+    dw RunScreenStateWhenNotFading_F1_ShowYourPalRefusedBreeding
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitPartner
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowPleaseWait
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK
     dw RunScreenStateWhenNotFading_F1_LinkBreed_RunList
-    dw RunScreenStateWhenNotFading_F1_YourPalRefusedBreeding
+    dw RunScreenStateWhenNotFading_F1_ListOrPalRefusal
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitText
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ReAsk
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo
@@ -1658,7 +1662,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed::
 
 ; Link breeding, step 14: the partner's refusal ($FE) shows 'Your pal refused breeding.' (string 3)
 ; and step 9, answering $FE; otherwise the list's steps. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_YourPalRefusedBreeding::
+RunScreenStateWhenNotFading_F1_ListOrPalRefusal::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1679,7 +1683,7 @@ RunScreenStateWhenNotFading_F1_YourPalRefusedBreeding::
 
 ; Link breeding, step 8: the partner's refusal as above; otherwise the list's steps, and B there
 ; shows 'You refused breeding.' (string 2), step 9, sending $FE. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding::
+RunScreenStateWhenNotFading_F1_ShowYourPalRefusedBreeding::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1733,11 +1737,11 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ReAsk::
     ld a, [wScreenSubStep]
     jumptable
     dw RunScreenStateWhenNotFading_F1_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags_2
+    dw RunScreenStateWhenNotFading_F1_ReAskSendSync
     dw RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ReAsk_RunList
     dw RunScreenStateWhenNotFading_F1_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_F1_WaitTextFlags_2
+    dw RunScreenStateWhenNotFading_F1_ReAskSendSync
     dw RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ReAsk_RunList
 
@@ -1756,7 +1760,7 @@ RunScreenStateWhenNotFading_F1_ShowPleaseWait::
     ret
 
 ; Re-asking, sub-step 1: after the text sends 1. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_WaitTextFlags_2::
+RunScreenStateWhenNotFading_F1_ReAskSendSync::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2592,7 +2596,7 @@ RunScreenStateWhenNotFading_F1_RunStatsScreen::
 RunScreenStateWhenNotFading_F1_ShowChosenRecord::
     ld a, [wScreenStep]
     jumptable
-    dw RunScreenStateWhenNotFading_F1_AdvanceScreenStep
+    dw RunScreenStateWhenNotFading_F1_ChosenRecordStart
     dw ShowString0EAndStep_BankF1
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
@@ -2609,7 +2613,7 @@ RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu::
     ret
 
 ; The chosen record, step 0: moves on. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_AdvanceScreenStep::
+RunScreenStateWhenNotFading_F1_ChosenRecordStart::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2667,10 +2671,10 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
     jumptable
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Clear
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_AdvanceScreenStep
+    dw RunScreenStateWhenNotFading_F1_PartnerStatsNext
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFrame
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawStats
-    dw RunScreenStateWhenNotFading_F1_CallDrawRecordBufBSpeciesMonsterPictureInTwoSteps
+    dw RunScreenStateWhenNotFading_F1_DrawPartnerPicture
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_PageKeys
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Leave
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Return
@@ -2679,7 +2683,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Return
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Return
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Return
-    dw RunScreenStateWhenNotFading_F1_ToFillTilesBxCAndStep
+    dw RunScreenStateWhenNotFading_F1_Page2ClearTiles
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Clear
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_2
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Frame
@@ -2688,8 +2692,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Sprite
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Keys
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2LevelRow
-    dw RunScreenStateWhenNotFading_F1_ToDrawRects_2AndStep
-    dw RunScreenStateWhenNotFading_F1_ToClearTilesAndDrawRectsAndStep
+    dw RunScreenStateWhenNotFading_F1_SkillsPageFrames
+    dw RunScreenStateWhenNotFading_F1_SkillsPageClear
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_SkillNames
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Description
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_SkillsKeys
@@ -2719,7 +2723,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep::
     call DrawShortStringRecordBufBNameAtTiles1500
 
 ; The partner's monster stats, step 2: moves on. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_ShowRecordStats_AdvanceScreenStep::
+RunScreenStateWhenNotFading_F1_PartnerStatsNext::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2765,7 +2769,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawStats::
     ret
 
 ; The partner's monster stats, step 5: draws its picture in two calls. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_CallDrawRecordBufBSpeciesMonsterPictureInTwoSteps::
+RunScreenStateWhenNotFading_F1_DrawPartnerPicture::
     farcall DrawRecordBufBSpeciesMonsterPictureInTwoSteps
     ret
 
@@ -2839,7 +2843,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_Leave::
     ret
 
 ; The second page, step 14: clears $0F x 2 tiles at VRAM $9200. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_ToFillTilesBxCAndStep::
+RunScreenStateWhenNotFading_F1_Page2ClearTiles::
     ld hl, vTiles2 + $200
     ld bc, $0f02
     call FillTilesBxC
@@ -2987,7 +2991,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2LevelRow::
     ret
 
 ; The skills page, step 23: draws its frames. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_ToDrawRects_2AndStep::
+RunScreenStateWhenNotFading_F1_SkillsPageFrames::
     farcall DrawRects_2
     ld a, [wScreenStep]
     inc a
@@ -2995,7 +2999,7 @@ RunScreenStateWhenNotFading_F1_ToDrawRects_2AndStep::
     ret
 
 ; The skills page, step 24: clears the text tiles and draws the frames. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_ToClearTilesAndDrawRectsAndStep::
+RunScreenStateWhenNotFading_F1_SkillsPageClear::
     farcall ClearTilesAndDrawRects
     ld a, [wScreenStep]
     inc a
@@ -3178,7 +3182,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_PedigreeKeys::
 RunScreenStateWhenNotFading_F1_ResetListAndShowString::
     ld a, [wScreenStep]
     jumptable
-    dw RunScreenStateWhenNotFading_F1_SetListCursor
+    dw RunScreenStateWhenNotFading_F1_RestoreListCursor
     dw ShowString0EAndStep_BankF1
     dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_RunList
     dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_RunList
@@ -3190,7 +3194,7 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString::
     dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_RunListAgain
 
 ; Back to the list, step 0: restores the list cursor and page. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_SetListCursor::
+RunScreenStateWhenNotFading_F1_RestoreListCursor::
     ld a, [wItemGridX]
     ld [wListCursor], a
     ld a, [wItemGridY]
@@ -3493,24 +3497,24 @@ BlinkCursorScreenCounter_BankF1::
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
 DrawCursorTileBB_BankF1::
     ld b, $bb
-    jr DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor
+    jr DrawTileBAtTwoChoiceEntry_BankF1
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_BankF1::
     ld b, $c3
-    jr DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor
+    jr DrawTileBAtTwoChoiceEntry_BankF1
 
 ; B = $BC, then writes B at the scroll position +
-; DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data[wTwoChoiceCursor] (E-0124)
+; DrawTileBAtTwoChoiceEntry_BankF1_Data[wTwoChoiceCursor] (E-0124)
 DrawArrowTileBCAtTwoChoiceEntry_BankF1::
     ld b, $bc
 
-; Writes tile B at choice wTwoChoiceCursor's place (DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data),
-; stepping back on a scroll wrap. (C1, E-0357)
-DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor::
+; Writes tile B at choice wTwoChoiceCursor's place (DrawTileBAtTwoChoiceEntry_BankF1_Data), stepping
+; back on a scroll wrap. (C1, E-0357)
+DrawTileBAtTwoChoiceEntry_BankF1::
     ld a, [wTwoChoiceCursor]
     add a
-    ld hl, DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data
+    ld hl, DrawTileBAtTwoChoiceEntry_BankF1_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3527,8 +3531,8 @@ DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor::
     ei
     ret
 
-; data read by DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor (6 bytes) (E-0347)
-DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data::
+; data read by DrawTileBAtTwoChoiceEntry_BankF1 (6 bytes) (E-0347)
+DrawTileBAtTwoChoiceEntry_BankF1_Data::
     db $ec, $00, $2c, $01, $6c, $01
 
 ; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with

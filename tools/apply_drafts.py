@@ -62,6 +62,51 @@ def load(paths) -> list[dict]:
     return out
 
 
+def load_probes(paths) -> list[dict]:
+    """The passing probes a draft carries (D-012), each tagged with its draft."""
+    out = []
+    for p in paths:
+        data = json.loads(Path(p).read_text(encoding="utf-8"))
+        for pr in (data.get("probes") or []) if isinstance(data, dict) else []:
+            pr["_draft"] = str(p)
+            out.append(pr)
+    return out
+
+
+def validate_probes(probes: list[dict], entries: list[dict], rom: bytes | None = None) -> list[str]:
+    """Probe ids are unique, each probe belongs to a drafted label marked probed, each probed label has a probe,
+    a C2 note is probed, and every probe passes on the reference ROM."""
+    import probe as probe_mod
+    problems = []
+    probed = {key(e): e for e in entries if e.get("probe_status") == "probed"}
+    seen: set[str] = set()
+    has: set[str] = set()
+    rom = rom if rom is not None else probe_mod.ROM.read_bytes()
+    for pr in probes:
+        pid = pr.get("id")
+        if not pid or pid in seen:
+            problems.append(f"{Path(pr['_draft']).name} probe {pid}: missing or repeated id")
+        seen.add(pid)
+        try:
+            k = key(pr)
+        except (KeyError, ValueError):
+            problems.append(f"{Path(pr['_draft']).name} probe {pid}: no bank/address")
+            continue
+        if k not in probed:
+            problems.append(f"{Path(pr['_draft']).name} probe {pid}: {k} is not a drafted label marked probed")
+        has.add(k)
+        bad = probe_mod.run({x: y for x, y in pr.items() if x != "_draft"}, rom)
+        if bad:
+            problems.append(f"{Path(pr['_draft']).name} probe {pid} fails: {'; '.join(bad)}")
+    for k, e in probed.items():
+        if k not in has:
+            problems.append(f"{Path(e['_draft']).name} {e['label']}: marked probed but has no probe")
+    for e in entries:
+        if e.get("confidence") == "C2" and key(e) not in probed:
+            problems.append(f"{Path(e['_draft']).name} {e['label']}: C2 without a probe")
+    return problems
+
+
 def validate(entries: list[dict], snap: dict[str, str], root: Path = ROOT) -> list[str]:
     problems = []
     labels = set(snap.values())
@@ -165,6 +210,10 @@ def apply(entries: list[dict], snap: dict[str, str], evidence: str, root: Path =
         elif note:
             ann[k] = f"{note} ({conf}, {evidence})"
             counts["code_notes"] += 1
+        elif e.get("probe_status") == "probed" and k in ann:
+            # a kept hand note whose mechanical claims a probe of this batch checked (D-012)
+            ann[k] = re.sub(r"\(C1, (E-\d{4})\)$", rf"(C2, \1; probed {evidence})", ann[k])
+            counts["probed_notes"] = counts.get("probed_notes", 0) + 1
     write_entries(names_p, {k: names[k] for k in dict.fromkeys(changed_names) if k in names})
     for p, obj in ((ann_p, ann), (tab_p, tables)):  # both files are plain indent-2 dumps
         p.write_text(json.dumps(obj, indent=2) + "\n", encoding="utf-8", newline="\n")
@@ -202,11 +251,22 @@ def main() -> int:
     args = ap.parse_args()
     snap = json.loads(args.snapshot.read_text(encoding="utf-8"))
     entries = load(args.drafts)
+    probes = load_probes(args.drafts)
     problems = validate(entries, snap)
-    print("\n".join(problems) if problems else f"{len(entries)} entries valid")
+    if probes or any(e.get("probe_status") == "probed" for e in entries):
+        problems += validate_probes(probes, entries)
+    print("\n".join(problems) if problems else f"{len(entries)} entries valid, {len(probes)} probes pass")
     if args.cmd == "validate" or problems:
         return 1 if problems else 0
     print(apply(entries, snap, args.evidence))
+    if probes:
+        out = ROOT / "config/probes" / f"{args.evidence}.json"
+        out.parent.mkdir(exist_ok=True)
+        old = json.loads(out.read_text(encoding="utf-8")) if out.exists() else []
+        ids = {p["id"] for p in old}
+        new = old + [{x: y for x, y in p.items() if x != "_draft"} for p in probes if p["id"] not in ids]
+        out.write_text("[\n" + ",\n".join(json.dumps(p) for p in new) + "\n]\n", encoding="utf-8", newline="\n")
+        print(f"{len(new)} probes in {out.relative_to(ROOT)}")
     return 0
 
 

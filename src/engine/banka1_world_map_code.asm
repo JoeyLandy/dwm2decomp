@@ -7,36 +7,36 @@ SECTION "Bank A1", ROMX[$4000], BANK[$A1]
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 GetBattleATK_BankA1::
     ld hl, wBattleATK
-    jr GetBattleMP_BankA1_Skip
+    jr GetBattleStatWord_BankA1
 
-; HL = wBattleDEF, then the slot's word (GetBattleMP_BankA1_Skip). (C1, E-0357)
+; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
 GetBattleDEF_BankA1::
     ld hl, wBattleDEF
-    jr GetBattleMP_BankA1_Skip
+    jr GetBattleStatWord_BankA1
 
-; HL = wBattleMaxHP, then the slot's word (GetBattleMP_BankA1_Skip). (C1, E-0357)
+; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
 GetBattleMaxHP_BankA1::
     ld hl, wBattleMaxHP
-    jr GetBattleMP_BankA1_Skip
+    jr GetBattleStatWord_BankA1
 
-; HL = wBattleMaxMP, then the slot's word (GetBattleMP_BankA1_Skip). (C1, E-0357)
+; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
 GetBattleMaxMP_BankA1::
     ld hl, wBattleMaxMP
-    jr GetBattleMP_BankA1_Skip
+    jr GetBattleStatWord_BankA1
 
-; HL = wBattleHP, then the slot's word (GetBattleMP_BankA1_Skip). (C1, E-0357)
+; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
 GetBattleHP_BankA1::
     ld hl, wBattleHP
-    jr GetBattleMP_BankA1_Skip
+    jr GetBattleStatWord_BankA1
 
-; HL = wBattleMP, then the slot's word (GetBattleMP_BankA1_Skip). (C1, E-0357)
+; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
 GetBattleMP_BankA1::
     ld hl, wBattleMP
-    jr GetBattleMP_BankA1_Skip
+    jr GetBattleStatWord_BankA1
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
 ; HL = the word at HL + 2 x slot A (the value, not a pointer). (C1, E-0357)
-GetBattleMP_BankA1_Skip::
+GetBattleStatWord_BankA1::
     add a
     add_a_to_hl
     deref_hl
@@ -265,7 +265,7 @@ RunBattleCommandEntry_BankA1::
     jumptable
     dw RunBattleCommandEntry_BankA1_MarkEnemySlots
     dw RunBattleCommandEntry_BankA1_NextActor
-    dw RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep
+    dw RunBattleCommandEntry_BankA1_ChooseAIAction
     dw RunBattleCommandEntry_BankA1_ChooseTarget
     dw RunBattleCommandEntry_BankA1_ListSpeeds
     dw RunBattleCommandEntry_BankA1_SortBySpeed
@@ -351,7 +351,7 @@ RunBattleCommandEntry_BankA1_NextActor::
 
 ; Turn order, step 2: the computer's command entry for the slot (RunCommandEntryResolveStep). (C1,
 ; E-0357)
-RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep::
+RunBattleCommandEntry_BankA1_ChooseAIAction::
     farcall RunCommandEntryResolveStep
     ret
 
@@ -375,8 +375,8 @@ RunBattleCommandEntry_BankA1_ChooseTarget::
     ret
 
 ; Turn order, step 4: clears the action queue and the speed list, then for each present slot marked
-; 2 works out a speed (RunBattleCommandEntry_BankA1_ListSpeeds_RandomInRange plus the action's
-; bonus, AddActionSpeedBonus_BankA1) and lists it with the slot number; next step. (C1, E-0357)
+; 2 works out a speed (RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed plus the action's bonus,
+; AddActionSpeedBonus_BankA1) and lists it with the slot number; next step. (C1, E-0357)
 RunBattleCommandEntry_BankA1_ListSpeeds::
     ld hl, wActionQueue
     ld bc, $0009
@@ -411,7 +411,7 @@ RunBattleCommandEntry_BankA1_ListSpeeds::
     cp $02
     jr nz, .next
     ld a, e
-    call RunBattleCommandEntry_BankA1_ListSpeeds_RandomInRange
+    call RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed
     call AddActionSpeedBonus_BankA1
     ld hl, wBattleTempPtrLo
     deref_hl
@@ -607,7 +607,7 @@ SetBerserkForAction6E_BankA1::
 
 ; BC = a random speed for slot E between 3/10 of its agility and its agility (second random stream).
 ; (C1, E-0357)
-RunBattleCommandEntry_BankA1_ListSpeeds_RandomInRange::
+RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed::
     push de
     call NextTableByteSecondStream
     ld a, e
@@ -766,7 +766,7 @@ MarkVisitedMapScreenInVisitedScreens::
 
 ; Marks the current floor's exit screen (wKeyWorldAreaExits, second byte when wKeyWorldFloor bit 7)
 ; as visited: sets its bit in wVisitedScreens. (C1, E-0357)
-WarpEffect_Warp_ReadKeyWorldFloor::
+WarpEffect_Warp_MarkExitVisited::
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
     bit 7, a
@@ -890,11 +890,11 @@ RunWorldMapState::
     jumptable
     dw RunWorldMapState_BlankPalettes
     dw RunWorldMapState_DrawOverview
-    dw RunWorldMapState_WriteWorldMapState
+    dw RunWorldMapState_OverviewInput
     dw RunWorldMapState_BlankPalettes
     dw RunWorldMapState_DrawCloseUp
     dw RunWorldMapState_CloseUpInput
-    dw RunWorldMapState_ToEnterGameMode1WithDefaultPalettes
+    dw RunWorldMapState_ReturnToField
 
 ; World map, step 4 (the close-up): loads the tiles, fills the map with tile $57 (attributes cleared
 ; on CGB), draws the visited screens (key world or region), sets the palettes; next step. (C1,
@@ -921,15 +921,15 @@ RunWorldMapState_DrawCloseUp::
     ld hl, vTiles2
     call DecompressToVRAM
     call FillBGMap0With57
-    call RunWorldMapState_DrawCloseUp_WriteVRAMByteInc
+    call RunWorldMapState_DrawCloseUp_ClearAttributes
     ld a, [wMapType]
     bit 7, a
-    jr nz, .call_run_world_map_state_draw_close_up_store
-    call RunWorldMapState_DrawCloseUp_RunWorldMapState_SetUpCloseUp
+    jr nz, .call_run_world_map_state_draw_close_up_key
+    call RunWorldMapState_DrawCloseUp_Region
     jr .skip
 
-.call_run_world_map_state_draw_close_up_store:
-    call RunWorldMapState_DrawCloseUp_StoreTemp5ValuesToCursorCellX
+.call_run_world_map_state_draw_close_up_key:
+    call RunWorldMapState_DrawCloseUp_KeyWorld
 
 .skip:
     ld hl, wDMGPaletteBGP
@@ -977,8 +977,8 @@ RunWorldMapState_DrawCloseUp::
 ; Draws the key world's close-up: each map screen is a 5 x 5 tile block, centred on the player's
 ; screen; only screens inside the world and visited are drawn (RunWorldMapState_DrawCloseUpCell).
 ; (C1, E-0357)
-RunWorldMapState_DrawCloseUp_StoreTemp5ValuesToCursorCellX::
-    call RunWorldMapState_DrawCloseUp_RunGameMode2MapTypeState
+RunWorldMapState_DrawCloseUp_KeyWorld::
+    call RunWorldMapState_DrawCloseUp_CenterKeyWorld
     call StoreTemp5ValuesToCursorCellX
     ld hl, vBGMap0
     ld c, $12
@@ -1163,7 +1163,7 @@ RunWorldMapState_DrawCloseUpCell::
 ; Finds where the player is for the close-up: runs the map-type position routine
 ; (RunGameMode2MapTypeState), then sets the first screen and the cell within it (hTemp5-hTemp8) so
 ; the player's screen is in the middle; the player's position is restored. (C1, E-0357)
-RunWorldMapState_DrawCloseUp_RunGameMode2MapTypeState::
+RunWorldMapState_DrawCloseUp_CenterKeyWorld::
     ldh a, [hPlayerX]
     ld l, a
     ldh a, [hMapScreenX]
@@ -1235,7 +1235,7 @@ RunGameMode2MapTypeState::
     ld a, [wMapType]
     and $07
     jumptable
-    dw RunGameMode2MapTypeState_Return
+    dw RunGameMode2MapTypeState_KeepPlace
     dw RunGameMode2MapTypeState_PlaceAtExit
     dw RunGameMode2MapTypeState_PlaceAtExit
     dw RunGameMode2MapTypeState_PlaceAtFloor
@@ -1245,7 +1245,7 @@ RunGameMode2MapTypeState::
     dw RunGameMode2MapTypeState_PlaceAtGoal
 
 ; Map type 0: nothing to do. (C1, E-0357)
-RunGameMode2MapTypeState_Return::
+RunGameMode2MapTypeState_KeepPlace::
     ret
 
 ; Map type 1: places the player at the current floor's exit screen (wKeyWorldAreaExits). (C1,
@@ -1327,7 +1327,7 @@ SetMapScreenFromAAndCenterPlayer::
 
 ; Draws a region's close-up: copies the 5 x 5 tile block of each screen in view from the region's
 ; screen tiles (WorldMapScreenCellTable) in ROM. (C1, E-0357)
-RunWorldMapState_DrawCloseUp_RunWorldMapState_SetUpCloseUp::
+RunWorldMapState_DrawCloseUp_Region::
     call RunWorldMapState_SetUpCloseUp
     call StoreTemp5ValuesToCursorCellX
     ldh a, [hTemp0]
@@ -1799,17 +1799,21 @@ StoreTemp5ValuesToCursorCellX::
     ld [wCursorCellH], a
     ret
 
-; World map, step 5 (the close-up): B or Select closes the map (RunWorldMapState_UploadBGPalettes);
+; World map, step 5 (the close-up): B or Select closes the map (RunWorldMapState_WhiteOutScreen);
 ; otherwise draws the blinking player marker and the other markers. (C1, E-0357)
 RunWorldMapState_CloseUpInput::
     ld a, [wJoypadPressed]
     bit 1, a
-    jr nz, RunWorldMapState_UploadBGPalettes
+    jr nz, RunWorldMapState_WhiteOutScreen
     bit 2, a
-    jr z, RunWorldMapState_CallDrawBlinkingMetaSprite8
+    jr z, RunWorldMapState_DrawCloseUpMarkers
 
-; Fades the screen to white (palettes $FF), uploads them, and goes to the next step. (C1, E-0357)
-RunWorldMapState_UploadBGPalettes::
+; Turns the screen white at once: clears the three DMG palette bytes at wDMGPaletteBGP and, on the
+; GBC, fills $50 bytes of wBGPaletteBuffer with $FF, requests BG and OBJ palette uploads and uploads
+; the BG palettes now (UploadBGPalettes); then advances wWorldMapState. Used to close the map from
+; the overview (RunWorldMapState_OverviewInput, which then sets step 6) and from the close-up
+; (RunWorldMapState_CloseUpInput). (C1, E-0371)
+RunWorldMapState_WhiteOutScreen::
     ld hl, wDMGPaletteBGP
     ld a, $00
     ld [hli], a
@@ -1835,18 +1839,18 @@ RunWorldMapState_UploadBGPalettes::
 
 ; Close-up markers: the blinking player marker, the region's markers, the key-world objects, those
 ; shown by the field skill, and the goal marker. (C1, E-0357)
-RunWorldMapState_CallDrawBlinkingMetaSprite8::
+RunWorldMapState_DrawCloseUpMarkers::
     call DrawBlinkingMetaSprite8
     call RunWorldMapState_DrawRegionMarkers
-    call RunWorldMapState_WaitMapType
-    call RunWorldMapState_WaitWorldMapByFieldSkill
+    call RunWorldMapState_DrawKeyWorldMarkers
+    call RunWorldMapState_DrawObjectMarkers
     call RunWorldMapState_GoalMarker
     ret
 
 ; Close-up goal marker: in a region, the key world's goal when its key is active (region by hMapId:
 ; below $30 is 1, below $48 2, ... $DA and over 11), otherwise the region's start position
 ; (WorldMapStartPositions); in a key world, its goal or goal screen; drawn by
-; RunWorldMapState_GoalMarker_Multiply8. (C1, E-0357)
+; RunWorldMapState_GoalMarker_Draw. (C1, E-0357)
 RunWorldMapState_GoalMarker::
     ld a, [wMapType]
     bit 7, a
@@ -1895,7 +1899,7 @@ RunWorldMapState_GoalMarker::
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
-    call RunWorldMapState_GoalMarker_Multiply8
+    call RunWorldMapState_GoalMarker_Draw
     ret
 
 .skip:
@@ -1909,7 +1913,7 @@ RunWorldMapState_GoalMarker::
     ldh [hTemp1], a
     ld a, [hl]
     ldh [hTemp2], a
-    call RunWorldMapState_GoalMarker_Multiply8
+    call RunWorldMapState_GoalMarker_Draw
     ret
 
 .check_key_world_active2:
@@ -1928,7 +1932,7 @@ RunWorldMapState_GoalMarker::
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
-    call RunWorldMapState_GoalMarker_Multiply8
+    call RunWorldMapState_GoalMarker_Draw
     ret
 
 .read_key_world_goal_screen:
@@ -1942,13 +1946,13 @@ RunWorldMapState_GoalMarker::
     swap a
     or c
     ldh [hTemp2], a
-    call RunWorldMapState_GoalMarker_Multiply8
+    call RunWorldMapState_GoalMarker_Draw
     ret
 
 ; Draws marker set $28 at screen hTemp1 (x high nibble, y low nibble), position hTemp2, when the
 ; screen is within the 5 x 5 screens in view: 40 pixels a screen plus 8 per half-tile step. (C1,
 ; E-0357)
-RunWorldMapState_GoalMarker_Multiply8::
+RunWorldMapState_GoalMarker_Draw::
     ld a, [wCursorCellY]
     ld c, a
     ldh a, [hTemp1]
@@ -2025,10 +2029,14 @@ RunWorldMapState_GoalMarker_Multiply8::
 .return:
     ret
 
-; With the map opened by the field skill (wWorldMapByFieldSkill), draws marker set $27 for each map
-; object (wMapObjects, skipping those with bit 7) whose screen is in view; in a key world uses the
-; key-world objects instead. (C1, E-0357)
-RunWorldMapState_WaitWorldMapByFieldSkill::
+; Close-up markers of the map objects, only when the map was opened by the field skill
+; (wWorldMapByFieldSkill): for each of the wMapObjectCount 8-byte entries of wMapObjects without bit
+; 7 in byte 0 whose screen (byte 4: x high nibble, y low) lies within the 5 x 5 screens in view,
+; draws marker set $27 (tile offset $10, attribute xor 2) at 40 pixels per screen plus 8 per
+; half-tile step of its position byte (byte 5), less the view's cell offset (wCursorCellX,
+; wCursorCellW). In a key world (wMapType bit 7) the same entries are used, but byte 5 is an index
+; into the 16-byte position table that follows this routine. (C1, E-0371)
+RunWorldMapState_DrawObjectMarkers::
     ld a, [wWorldMapByFieldSkill]
     or a
     ret z
@@ -2189,7 +2197,7 @@ RunWorldMapState_WaitWorldMapByFieldSkill::
     ldh [hSpriteOriginY], a
     inc de
     ld a, [de]
-    ld hl, RunWorldMapState_WaitWorldMapByFieldSkill_Data
+    ld hl, RunWorldMapState_DrawObjectMarkers_Data
     add_a_to_hl
     ld a, [wCursorCellX]
     sla a
@@ -2252,7 +2260,7 @@ RunWorldMapState_WaitWorldMapByFieldSkill::
     ret
 
 ; data read by RunWorldMapState (16 bytes) (E-0347)
-RunWorldMapState_WaitWorldMapByFieldSkill_Data::
+RunWorldMapState_DrawObjectMarkers_Data::
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
 ; Draws the region's markers (WorldMapMarkerLists for wWorldMapRegion: a count, then screen and
@@ -2469,9 +2477,11 @@ RunWorldMapState_DrawRegionMarkers::
     inc de
     jp .skip2
 
-; In a key world, draws a marker for both screens of each key-world object entry ($FF ends the
-; list). (C1, E-0357)
-RunWorldMapState_WaitMapType::
+; In a key world (wMapType bit 7) walks wKeyWorldObjects in 4-byte steps until an entry whose first
+; byte is $FF, and for each draws the screen marker (RunWorldMapState_DrawKeyWorldMarkers_Screen)
+; for the two bytes three and two bytes before that first byte, so the first entry reads the two
+; bytes just before wKeyWorldObjects. (C1, E-0371)
+RunWorldMapState_DrawKeyWorldMarkers::
     ld a, [wMapType]
     bit 7, a
     ret z
@@ -2489,9 +2499,9 @@ RunWorldMapState_WaitMapType::
     dec de
     dec de
     dec de
-    call RunWorldMapState_Multiply8
+    call RunWorldMapState_DrawKeyWorldMarkers_Screen
     inc de
-    call RunWorldMapState_Multiply8
+    call RunWorldMapState_DrawKeyWorldMarkers_Screen
     pop de
     inc de
     inc de
@@ -2501,7 +2511,7 @@ RunWorldMapState_WaitMapType::
 
 ; Draws marker set $28 near the middle of key-world screen [DE] when it is in view and visited (or
 ; the field skill shows everything). (C1, E-0357)
-RunWorldMapState_Multiply8::
+RunWorldMapState_DrawKeyWorldMarkers_Screen::
     ld a, [wCursorCellY]
     ld c, a
     ld a, [de]
@@ -2668,15 +2678,15 @@ RunWorldMapState_DrawOverview::
     ld hl, vBGMap0
     call CopyRectFromBankToVRAM
     call DrawRect12x12FromBankA1
-    call RunWorldMapState_DrawOverview_WriteVRAMByteInc
+    call RunWorldMapState_DrawOverview_SetAttributes
     ld a, [wMapType]
     bit 7, a
-    jr nz, .call_run_world_map_state_draw_overview
-    call RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC
+    jr nz, .call_run_world_map_state_draw_overview_key
+    call RunWorldMapState_DrawOverview_Region
     jr .skip
 
-.call_run_world_map_state_draw_overview:
-    call RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC_SetTemp0
+.call_run_world_map_state_draw_overview_key:
+    call RunWorldMapState_DrawOverview_KeyWorld
 
 .skip:
     ld hl, wDMGPaletteBGP
@@ -2726,40 +2736,42 @@ RunWorldMapState_DrawOverview::
     inc [hl]
     ret
 
-; World map, step 2 (the overview): B closes the map (RunWorldMapState_UploadBGPalettes, then step
-; 6); Select goes on to the close-up; otherwise draws the blinking player marker and the other
-; markers. (C1, E-0357)
-RunWorldMapState_WriteWorldMapState::
+; World map, step 2 (the overview): B whites out the screen (RunWorldMapState_WhiteOutScreen) and
+; sets step 6 (back to the field); Select goes on to step 3 (the close-up's set-up); otherwise draws
+; the blinking player marker (RunWorldMapState_DrawOverviewPlayerMarker), the other markers
+; (RunWorldMapState_DrawOverviewMarkers, RunWorldMapState_DrawKeyWorldObjectMarkers) and the goal
+; marker (RunWorldMapState_DrawOverviewGoalMarker). (C1, E-0371)
+RunWorldMapState_OverviewInput::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit2
-    call RunWorldMapState_UploadBGPalettes
+    call RunWorldMapState_WhiteOutScreen
     ld a, $06
     ld [wWorldMapState], a
     ret
 
 .check_bit2:
     bit 2, a
-    jr z, .call_run_world_map_state_wait_frame_counter
+    jr z, .call_run_world_map_state_draw_overview_player
     ld hl, wWorldMapState
     inc [hl]
     ret
 
-.call_run_world_map_state_wait_frame_counter:
-    call RunWorldMapState_WaitFrameCounterLo
+.call_run_world_map_state_draw_overview_player:
+    call RunWorldMapState_DrawOverviewPlayerMarker
     call RunWorldMapState_DrawOverviewMarkers
-    call RunWorldMapState_WaitMapType_2
-    call RunWorldMapState_WriteTemp1
+    call RunWorldMapState_DrawKeyWorldObjectMarkers
+    call RunWorldMapState_DrawOverviewGoalMarker
     ret
 
 ; World map, step 6: returns to the field (EnterGameMode1WithDefaultPalettes). (C1, E-0357)
-RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
+RunWorldMapState_ReturnToField::
     call EnterGameMode1WithDefaultPalettes
     ret
 
 ; Draws the key world's overview centred on the screen: two tiles per screen, only for visited
 ; screens, read through the chunk list (wKeyWorldChunks). (C1, E-0357)
-RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC_SetTemp0::
+RunWorldMapState_DrawOverview_KeyWorld::
     ld a, [wKeyWorldHeight]
     ld c, a
     ld a, [wKeyWorldWidth]
@@ -2816,10 +2828,10 @@ RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC_SetTemp0::
     ldh a, [hTemp5]
     ld d, a
     ld a, [de]
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
     push af
     ldh a, [hTemp0]
     ld e, a
@@ -2837,10 +2849,10 @@ RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC_SetTemp0::
     ld a, d
     ldh [hTemp1], a
     pop af
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -2866,10 +2878,10 @@ RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC_SetTemp0::
     ld a, d
     ldh [hTemp5], a
     ld a, [de]
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
     push af
     ldh a, [hTemp0]
     ld e, a
@@ -2887,10 +2899,10 @@ RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC_SetTemp0::
     ld a, d
     ldh [hTemp1], a
     pop af
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
-    call RunWorldMapState_DrawOverview_WriteTemp0
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
+    call RunWorldMapState_DrawOverview_KeyWorldCell
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -3009,7 +3021,7 @@ RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC_SetTemp0::
 
 ; Shifts the next visited bit out of A; when set, draws the chunk's overview tile (its byte 5) at
 ; hTemp0; steps hTemp0 and the chunk pointer. (C1, E-0357)
-RunWorldMapState_DrawOverview_WriteTemp0::
+RunWorldMapState_DrawOverview_KeyWorldCell::
     sra a
     push af
     jr c, .skip
@@ -3122,7 +3134,7 @@ RunGameMode2State_CenterName::
 ; Draws the region's overview (WorldMapViewTable for wWorldMapRegion: picture and size) centred,
 ; then clears the name tiles and writes string hMapId + $0A of bank $08 (read as the place name)
 ; centred under it. (C1, E-0357)
-RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC::
+RunWorldMapState_DrawOverview_Region::
     ld a, [wWorldMapRegion]
     add a
     add a
@@ -3180,10 +3192,10 @@ RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC::
     jr nz, .loop2
     ret
 
-; RunWorldMapState_DrawOverview_CenteredBGMapOriginForSizeBC takes entry 8 * wGameMode2Byte44,
-; centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank
-; $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE
-; (E-0167, C1)
+; RunWorldMapState_DrawOverview_Region takes entry 8 * wGameMode2Byte44, centres a rectangle of
+; these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with
+; CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE (E-0167,
+; C1)
 ; record: tile rectangle in bank $5D; rows, width; a map number ($20, $30, $48 ...) and three zero
 ; bytes; not read here
 WorldMapViewTable::
@@ -3223,7 +3235,7 @@ WorldMapViewTable::
 
 ; Overview goal marker: as RunWorldMapState_GoalMarker, but drawn with DrawCursorSpriteAtTemp1Cell
 ; at the screen only. (C1, E-0357)
-RunWorldMapState_WriteTemp1::
+RunWorldMapState_DrawOverviewGoalMarker::
     ld a, [wMapType]
     bit 7, a
     jp nz, .check_key_world_active2
@@ -3353,47 +3365,47 @@ DrawCursorSpriteAtTemp1Cell::
 ; entrance map at the region start or the active key's goal; on maps $20, $30, ... $DA at the
 ; player's own screen; elsewhere from WorldMapCursorCellTable (the second position when the last
 ; warp was 2). (C1, E-0357)
-RunWorldMapState_WaitFrameCounterLo::
+RunWorldMapState_DrawOverviewPlayerMarker::
     ld a, [wFrameCounterLo]
     bit 5, a
     ret z
     ld a, [wMapType]
     bit 7, a
-    jp nz, SetSpriteYFromCursorCellY_CheckMapType
+    jp nz, RunWorldMapState_WaitFrameCounterLo_KeyWorldMarker
     ldh a, [hMapId]
     ld c, $01
     cp $29
-    jp z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jp z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $02
     cp $45
-    jp z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jp z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $03
     cp $68
-    jp z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jp z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $04
     cp $9d
-    jp z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jp z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $05
     cp $a4
-    jp z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jp z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $06
     cp $af
-    jp z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jp z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $07
     cp $b2
-    jp z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jp z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $08
     cp $c5
-    jr z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jr z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $09
     cp $d0
-    jr z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jr z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $0a
     cp $d9
-    jr z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jr z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     ld c, $0b
     cp $e2
-    jr z, SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive
+    jr z, RunWorldMapState_WaitFrameCounterLo_GoalMarker
     cp $20
     jr z, SetSpriteYFromCursorCellY_PlayerMarker
     cp $30
@@ -3462,9 +3474,11 @@ SetSpriteYFromCursorCellY_PlayerMarker::
     call DrawMetaSpriteSet08
     ret
 
-; Draws the overview player marker at the key world's goal cell when region C's key is active,
-; otherwise at wKeyWorldGoalScreen. (C1, E-0357)
-SetSpriteYFromCursorCellY_PlayerMarker_CheckKeyWorldActive::
+; C = 1-11, the entrance map number the parent picked from hMapId: when wKeyWorldActive is non-zero
+; and wKeyWorldKey equals C, draws the blinking overview marker (DrawMetaSpriteSet08) at the cell in
+; wKeyWorldGoalCell, otherwise at the cell in wKeyWorldGoalScreen (high nibble = column, low nibble
+; = row, 8 pixels each). (C1, E-0371)
+RunWorldMapState_WaitFrameCounterLo_GoalMarker::
     ld a, [wKeyWorldActive]
     or a
     jr z, .check_key_world_goal_screen
@@ -3529,7 +3543,7 @@ SetSpriteYFromCursorCellY::
     ret
 
 ; In a key world, places the player marker by map type (wMapType & 7). (C1, E-0357)
-SetSpriteYFromCursorCellY_CheckMapType::
+RunWorldMapState_WaitFrameCounterLo_KeyWorldMarker::
     ld a, [wMapType]
     and $07
     jumptable
@@ -3766,9 +3780,12 @@ DrawMetaSpriteSet26::
     farcall DrawMetaSprite
     ret
 
-; In a key world, draws an overview marker for both screens of each key-world object entry ($FF ends
-; the list). (C1, E-0357)
-RunWorldMapState_WaitMapType_2::
+; Returns at once unless wMapType bit 7 is set (a key world). Otherwise walks the 4-byte key-world
+; object entries: DE starts at wKeyWorldObjects and the walk ends when [DE] is $FF; for each entry
+; it calls RunWorldMapState_DrawVisitedScreenMarker on the bytes 3 and 2 before DE, then advances DE
+; by 4. Called by RunWorldMapState_OverviewInput (the overview step) after the player marker and
+; RunWorldMapState_DrawOverviewMarkers. (C1, E-0371)
+RunWorldMapState_DrawKeyWorldObjectMarkers::
     ld a, [wMapType]
     bit 7, a
     ret z
@@ -3782,9 +3799,9 @@ RunWorldMapState_WaitMapType_2::
     dec de
     dec de
     dec de
-    call RunWorldMapState_IsMapScreenAVisited
+    call RunWorldMapState_DrawVisitedScreenMarker
     inc de
-    call RunWorldMapState_IsMapScreenAVisited
+    call RunWorldMapState_DrawVisitedScreenMarker
     pop de
     ld a, $04
     add e
@@ -3795,9 +3812,12 @@ RunWorldMapState_WaitMapType_2::
 .skip2:
     jr .skip
 
-; Draws overview marker set $26 at key-world screen [DE] when it is visited (or the field skill
-; shows everything). (C1, E-0357)
-RunWorldMapState_IsMapScreenAVisited::
+; DE = address of a key-world screen byte (high nibble = column, low nibble = row): unless
+; wWorldMapByFieldSkill is set, returns when IsMapScreenAVisited says the screen was not visited;
+; otherwise draws overview metasprite set $26 (tile offset $10, attribute XOR 1) at X = 8 *
+; (wCursorCellX + column), Y = 8 * (wCursorCellY + row) through DrawMetaSprite. DE is kept. (C1,
+; E-0371)
+RunWorldMapState_DrawVisitedScreenMarker::
     ld a, [wWorldMapByFieldSkill]
     or a
     jr nz, .skip
@@ -3894,7 +3914,7 @@ FillBGMap0With57::
     ret
 
 ; On CGB, clears all BG map attributes (VRAM bank 1) to 0. (C1, E-0357)
-RunWorldMapState_DrawCloseUp_WriteVRAMByteInc::
+RunWorldMapState_DrawCloseUp_ClearAttributes::
     ld a, [wIsCGB]
     or a
     ret z
@@ -3918,7 +3938,7 @@ RunWorldMapState_DrawCloseUp_WriteVRAMByteInc::
 
 ; On CGB, sets all BG map attributes to palette 1, then the 12 x 12 map area (from row 3, column 4)
 ; to palette 0. (C1, E-0357)
-RunWorldMapState_DrawOverview_WriteVRAMByteInc::
+RunWorldMapState_DrawOverview_SetAttributes::
     ld a, [wIsCGB]
     or a
     ret z

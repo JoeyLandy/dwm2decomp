@@ -1707,14 +1707,14 @@ FieldState_WalkATalks::
     jp nz, .call_draw_field_sprites
     ld a, [wJoypadPressed]
     bit 2, a
-    jr z, .call_field_state_walk_a_talks_wait_text
+    jr z, .call_field_state_walk_a_talks_run_step
     farcall TryOpenWorldMap
     ldh a, [hTemp0]
     or a
     ret nz
 
-.call_field_state_walk_a_talks_wait_text:
-    farcall FieldState_WalkATalks_WaitTextWindowState
+.call_field_state_walk_a_talks_run_step:
+    farcall FieldState_WalkATalks_RunStepTriggers
     call FieldState_WalkATalks_TalkAtSpotOnDown
     call UpdatePlayerMovement
     call RunFieldActionRequestActionIfBit7
@@ -7067,7 +7067,7 @@ WarpEffect_Warp::
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
-    farcall WarpEffect_Warp_ReadKeyWorldFloor
+    farcall WarpEffect_Warp_MarkExitVisited
     ret
 
 .check_map_type:
@@ -7162,7 +7162,7 @@ WarpEffect_Warp::
     inc hl
     ld a, [hl]
     ld [wPartyStrength], a
-    farcall WarpEffect_Warp_FindSRAMSlotMarkerIndex
+    farcall WarpEffect_Warp_StartNewKeyWorld
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     jr .set_key_world_refresh_to_80
 

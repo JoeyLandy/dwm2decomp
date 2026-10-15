@@ -65,20 +65,20 @@ KeyWorldLayout_FillEntrances::
 RunDebugAutomapCaseTemp0::
     ldh a, [hTemp0]
     jumptable
-    dw RunDebugAutomapCaseTemp0_Return
+    dw RunDebugAutomapCaseTemp0_LeaveEntranceBlank
     dw RunDebugAutomapCaseTemp0_Entrance1
     dw RunDebugAutomapCaseTemp0_Entrance2
     dw RunDebugAutomapCaseTemp0_Entrance3
     dw RunDebugAutomapCaseTemp0_Entrance4
     dw RunDebugAutomapCaseTemp0_Entrance5
-    dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
+    dw RunDebugAutomapCaseTemp0_FixedStateEntrance
 
 ; Entrance kind 0: nothing. (C1, E-0357)
-RunDebugAutomapCaseTemp0_Return::
+RunDebugAutomapCaseTemp0_LeaveEntranceBlank::
     ret
 
 ; Entrance kind 6: floor state byte 0 = $54. (C1, E-0357)
-RunDebugAutomapCaseTemp0_ReturnAfterSetup::
+RunDebugAutomapCaseTemp0_FixedStateEntrance::
     ld a, $54
     ld [de], a
     ret
@@ -182,7 +182,7 @@ RunDebugAutomapCaseTemp0_Entrance3::
 
 ; Entrance kind 4 (rooms): byte 0 = the room count from the layout, byte 1 = the first room's
 ; number, byte 2 = one of four from the goal kind's row, bytes 3-15 from the layout with a random
-; 0-7 in bytes 5 and 7 when they are used; then the rooms (RunDebugAutomapCaseTemp0_RandomBelowC,
+; 0-7 in bytes 5 and 7 when they are used; then the rooms (RunDebugAutomapCaseTemp0_GenerateRooms,
 ; kind 4). (C1, E-0357)
 RunDebugAutomapCaseTemp0_Entrance4::
     ldh a, [hTemp8]
@@ -224,7 +224,7 @@ RunDebugAutomapCaseTemp0_Entrance4::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_random
+    jr z, .call_run_debug_automap_case_temp0_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -235,7 +235,7 @@ RunDebugAutomapCaseTemp0_Entrance4::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_random
+    jr z, .call_run_debug_automap_case_temp0_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -243,13 +243,13 @@ RunDebugAutomapCaseTemp0_Entrance4::
     inc de
     ld [de], a
 
-.call_run_debug_automap_case_temp0_random:
+.call_run_debug_automap_case_temp0_generate:
     ld a, $01
-    call RunDebugAutomapCaseTemp0_RandomBelowC
+    call RunDebugAutomapCaseTemp0_GenerateRooms
     ret
 
 ; Entrance kind 5 (rooms): as kind 4, but byte 2 is one of eight from its own table; then the rooms
-; (RunDebugAutomapCaseTemp0_RandomBelowC, kind 5). (C1, E-0357)
+; (RunDebugAutomapCaseTemp0_GenerateRooms, kind 5). (C1, E-0357)
 RunDebugAutomapCaseTemp0_Entrance5::
     ldh a, [hTemp8]
     ld l, a
@@ -286,7 +286,7 @@ RunDebugAutomapCaseTemp0_Entrance5::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_random
+    jr z, .call_run_debug_automap_case_temp0_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -297,7 +297,7 @@ RunDebugAutomapCaseTemp0_Entrance5::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_random
+    jr z, .call_run_debug_automap_case_temp0_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -305,9 +305,9 @@ RunDebugAutomapCaseTemp0_Entrance5::
     inc de
     ld [de], a
 
-.call_run_debug_automap_case_temp0_random:
+.call_run_debug_automap_case_temp0_generate:
     xor a
-    call RunDebugAutomapCaseTemp0_RandomBelowC
+    call RunDebugAutomapCaseTemp0_GenerateRooms
     ret
 
 ; data read by RunDebugAutomapCaseTemp0 (10 bytes) (E-0347)
@@ -325,13 +325,17 @@ RunDebugAutomapCaseTemp0_Entrance4_Data::
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0b, $01, $00, $0b, $00, $0b
 
-; Fills wKeyWorldRoomTable for the entrance's rooms, two bytes each (the room record, then its two
-; exits in the nibbles): the first room is a random record ($00-$47 for kind 4; $A0 + 8 x 0-3 + 0-4
-; for kind 5) with two different random exits (RunDebugAutomapCaseTemp0_ReadByteInBank_2); each
-; further room (room count - 2 of them) is a byte from the 16-byte row of KeyWorldNextRoomRows for
-; the previous room's exit (one of its first ten) plus 0-7, entered by that exit and left by another
-; (RunDebugAutomapCaseTemp0_ReadByteInBank); wKeyWorldGenRoom counts them. (C1, E-0357)
-RunDebugAutomapCaseTemp0_RandomBelowC::
+; Fills wKeyWorldRoomTable for an entrance's rooms from entry wKeyWorldGenRoom on, two bytes each:
+; the room record, then the exits in the nibbles (high = the exit it is left by, low = the one it is
+; entered by). A picks the first room: non-zero (entrance kind 4,
+; RunDebugAutomapCaseTemp0_Entrance4) gives $A0 + 8 x 0-3 + 0-4 with one random exit and $F in the
+; low nibble; zero (kind 5, RunDebugAutomapCaseTemp0_Entrance5) gives 8 x 0-8 + 0-7 ($00-$47) with
+; two different random exits (RunDebugAutomapCaseTemp0_PickTwoExits). Each further room (hTemp0 - 2
+; of them, hTemp0 being the room count, so a count of 2 would run 256 times) is a byte from the
+; 16-byte row of KeyWorldNextRoomRows for the previous room's leaving exit (one of the row's first
+; ten) plus 0-7, entered by that exit and left by another (RunDebugAutomapCaseTemp0_PickOtherExit);
+; wKeyWorldGenRoom counts every room written. (C1, E-0371)
+RunDebugAutomapCaseTemp0_GenerateRooms::
     push af
     ld a, [wKeyWorldGenRoom]
     add a
@@ -363,7 +367,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_ReadByteInBank_2
+    call RunDebugAutomapCaseTemp0_PickTwoExits
     ldh a, [hTemp4]
     swap a
     or $0f
@@ -399,7 +403,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_ReadByteInBank_2
+    call RunDebugAutomapCaseTemp0_PickTwoExits
     ldh a, [hTemp4]
     swap a
     ld c, a
@@ -448,7 +452,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     rl d
     ldh a, [hTemp4]
     ldh [hTemp3], a
-    call RunDebugAutomapCaseTemp0_ReadByteInBank
+    call RunDebugAutomapCaseTemp0_PickOtherExit
     ldh a, [hTemp3]
     ld c, a
     ldh a, [hTemp4]
@@ -463,9 +467,9 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     jr nz, .loop
     ret
 
-; E-0193 (C1: RunDebugAutomapCaseTemp0_RandomBelowC.loop reads the byte at $42C7 + 16 * (hTemp4 &
+; E-0193 (C1: RunDebugAutomapCaseTemp0_GenerateRooms.loop reads the byte at $42C7 + 16 * (hTemp4 &
 ; $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for
-; RunDebugAutomapCaseTemp0_ReadByteInBank; 6 rows end at that routine). E-0364: the sum is the next
+; RunDebugAutomapCaseTemp0_PickOtherExit; 6 rows end at that routine). E-0364: the sum is the next
 ; room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered
 ; from, so these are room bases, not monster bases.
 ; record: ten base room records, then six zero bytes; one row per exit of the previous room
@@ -479,7 +483,7 @@ KeyWorldNextRoomRows::
 
 ; hTemp4 = a random one of the three exits of room record DE (bank $72, the table at $4001) other
 ; than hTemp3. (C1, E-0357)
-RunDebugAutomapCaseTemp0_ReadByteInBank::
+RunDebugAutomapCaseTemp0_PickOtherExit::
     push hl
     ld a, e
     add $01
@@ -518,7 +522,7 @@ RunDebugAutomapCaseTemp0_ReadByteInBank::
 
 ; hTemp3 = a random one of the three exits of room record DE (bank $72), and hTemp4 another one
 ; different from it. (C1, E-0357)
-RunDebugAutomapCaseTemp0_ReadByteInBank_2::
+RunDebugAutomapCaseTemp0_PickTwoExits::
     push hl
     ld a, e
     add $01
@@ -584,7 +588,7 @@ RandomBelowC::
     ret
 
 ; for each 8-byte entry of MapScreenFlagTiles matching hMapId and the screen position, with its
-; story flag set, runs ApplyMapScreenFlagEvents_WriteSVBK (hTemp0 = its value) (E-0125)
+; story flag set, runs ApplyMapScreenFlagEvents_DrawTiles (hTemp0 = its value) (E-0125)
 ApplyMapScreenFlagEvents::
     ld hl, MapScreenFlagTiles
 
@@ -621,7 +625,7 @@ ApplyMapScreenFlagEvents::
     jr nc, .restore
     pop hl
     push hl
-    call ApplyMapScreenFlagEvents_WriteSVBK
+    call ApplyMapScreenFlagEvents_DrawTiles
 
 .restore:
     pop hl
@@ -631,7 +635,7 @@ ApplyMapScreenFlagEvents::
 
 ; Writes a map flag event's tiles into wScreenTileBuffer at the entry's offset: tiles hTemp0 and
 ; hTemp0 + 1, or for $FF the 2 x 2 block $40/$41 over $50/$51 with CGB palette 5. (C1, E-0357)
-ApplyMapScreenFlagEvents_WriteSVBK::
+ApplyMapScreenFlagEvents_DrawTiles::
     ldh a, [hTemp0]
     cp $ff
     jr z, .skip
@@ -717,7 +721,7 @@ ApplyMapScreenFlagEvents_WriteSVBK::
     ret
 
 ; ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match
-; and the story flag is set, ApplyMapScreenFlagEvents_WriteSVBK writes the tile and tile + 1 at
+; and the story flag is set, ApplyMapScreenFlagEvents_DrawTiles writes the tile and tile + 1 at
 ; wScreenTileBuffer + offset (tile $FF takes another path); 108 entries (E-0151, C1)
 ; record: map number, screen X, screen Y, tile; story flag number (TestFlagBit); offset into
 ; wScreenTileBuffer
@@ -1444,15 +1448,14 @@ IsPlayerOnTriggerCell_Bank84::
 
 ; Back in the field after the LogTwig, on a region map: finds the map's region; with a recorded key
 ; world for this region whose goal cell is this screen, marks the goal there
-; (RunFieldReturnPhase_AfterLogTwig_WriteSVBK), otherwise marks the table's spot when the screen
-; matches; then the key-world goal (RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal). (C1,
-; E-0357)
+; (RunFieldReturnPhase_AfterLogTwig_DrawMarker), otherwise marks the table's spot when the screen
+; matches; then the key-world goal (RunFieldReturnPhase_AfterLogTwig_DrawGoal). (C1, E-0357)
 RunFieldReturnPhase_AfterLogTwig::
     xor a
     ldh [hSpriteWindowClipMode], a
     ld a, [wMapType]
     bit 7, a
-    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_ReadMapScreenX
+    jr nz, RunFieldReturnPhase_AfterLogTwig_InKeyWorld
     ldh a, [hMapId]
     ld c, a
     ld hl, RunFieldReturnPhase_AfterLogTwig_Data
@@ -1486,23 +1489,23 @@ RunFieldReturnPhase_AfterLogTwig::
     jr nz, .next
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jp nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    jp nz, RunFieldReturnPhase_AfterLogTwig_DrawGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
-    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
-    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_DrawMarker
+    jr RunFieldReturnPhase_AfterLogTwig_DrawGoal
 
 .next:
     inc hl
     inc hl
     ld a, [hl]
     cp c
-    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_AfterLogTwig_DrawGoal
     dec hl
     ld a, [hl]
     ld c, a
-    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
-    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_DrawMarker
+    jr RunFieldReturnPhase_AfterLogTwig_DrawGoal
 
 ; data read by RunFieldReturnPhase (34 bytes) (E-0347)
 RunFieldReturnPhase_AfterLogTwig_Data::
@@ -1512,7 +1515,7 @@ RunFieldReturnPhase_AfterLogTwig_Data::
 
 ; The same in a key world: the recorded goal when the key's slot matches and the screen is its cell,
 ; otherwise wKeyWorldGoalPos on wKeyWorldGoalScreen. (C1, E-0357)
-RunFieldReturnPhase_AfterLogTwig_Data_ReadMapScreenX::
+RunFieldReturnPhase_AfterLogTwig_InKeyWorld::
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1532,16 +1535,16 @@ RunFieldReturnPhase_AfterLogTwig_Data_ReadMapScreenX::
     jr nz, .check_key_world_goal_screen
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_AfterLogTwig_DrawGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
-    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
-    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_DrawMarker
+    jr RunFieldReturnPhase_AfterLogTwig_DrawGoal
 
 .check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     cp c
-    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_AfterLogTwig_DrawGoal
     ld a, [wKeyWorldGoalPos]
     and $f0
     ld c, a
@@ -1550,13 +1553,13 @@ RunFieldReturnPhase_AfterLogTwig_Data_ReadMapScreenX::
     swap a
     or c
     ld c, a
-    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
-    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_DrawMarker
+    jr RunFieldReturnPhase_AfterLogTwig_DrawGoal
 
 ; Draws the key-world goal tiles ($46/$47 over $56/$57) at wKeyWorldGoal in wScreenTileBuffer with
 ; the CGB palette (5 in key worlds, 3 for regions 4 and $0A, 5 for 5-7, otherwise 1), then copies
 ; them to the BG map at the scroll. (C1, E-0357)
-RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal::
+RunFieldReturnPhase_AfterLogTwig_DrawGoal::
     ld a, [wKeyWorldGoal]
     and $0f
     ld l, a
@@ -1672,7 +1675,7 @@ RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal::
 
 ; Draws the 2 x 2 marker ($40/$41 over $50/$51) at position C (x high nibble, y low) in
 ; wScreenTileBuffer, with the region's CGB palette from the table (1 in key worlds). (C1, E-0357)
-RunFieldReturnPhase_AfterLogTwig_WriteSVBK::
+RunFieldReturnPhase_AfterLogTwig_DrawMarker::
     ld a, c
     and $0f
     ld l, a
@@ -1719,7 +1722,7 @@ RunFieldReturnPhase_AfterLogTwig_WriteSVBK::
     bit 7, a
     jr nz, .skip2
     ld a, b
-    ld de, RunFieldReturnPhase_AfterLogTwig_WriteSVBK_Data
+    ld de, RunFieldReturnPhase_AfterLogTwig_DrawMarker_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1751,7 +1754,7 @@ RunFieldReturnPhase_AfterLogTwig_WriteSVBK::
     ret
 
 ; data read by RunFieldReturnPhase (5 bytes) (E-0347)
-RunFieldReturnPhase_AfterLogTwig_WriteSVBK_Data::
+RunFieldReturnPhase_AfterLogTwig_DrawMarker_Data::
     db $01, $01, $03, $02, $02
 
 ; when wKeyWorldActive is set and key entry hTemp0 matches wKeyWorldKey, clears wKeyWorldActive

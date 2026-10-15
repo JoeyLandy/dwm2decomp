@@ -37,6 +37,20 @@ class Runner(unittest.TestCase):
         self.assertEqual(probe.run(dict(self.mul, max_steps=3), self.rom), ["did not return"])
 
 
+class ProbedNotes(unittest.TestCase):
+    """A note raised to C2 by a probe ('(C2, E-xxxx; probed E-yyyy)', or a batch note '(C2, E-yyyy)' from E-0371 on)
+    has a probe at its routine's address, and every probe's routine has such a note."""
+
+    def test_c2_notes_and_probes_match(self):
+        import re
+        ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
+        c2 = {k for k, v in ann.items() if not k.startswith("_") and (
+            re.search(r"; probed E-\d{4}\)$", v) or re.search(r"\(C2, E-(?:037[1-9]|03[89]\d|0[4-9]\d\d)\)$", v))}
+        probed = {f"{int(str(p['bank']), 16):02X}:{int(str(p['address']), 16):04X}" for p in probe.load(PROBES)}
+        self.assertEqual(sorted(c2 - probed)[:10], [], "C2 notes without a probe")
+        self.assertEqual(sorted(probed - c2)[:10], [], "probes whose routine's note is not C2")
+
+
 @unittest.skipUnless(probe.ROM.is_file() and PROBES, "reference ROM or probe files not present")
 class Probes(unittest.TestCase):
     def test_every_probe_passes(self):

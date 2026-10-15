@@ -5181,11 +5181,11 @@ KeyWorldDoorItem::
     dw KeyWorldDoorItem_WaitForMessage
     dw KeyWorldDoorItem_OpenDoor
 
-; Key world door item, step 4: runs KeyWorldDoorItem_OpenDoor_RandomModulo29_BankF0, marks the
-; floor's door opened (state byte 3 = $FF), redraws the door tiles and the screen and resumes the
-; script. (C1, E-0357)
+; Key world door item, step 4: runs KeyWorldDoorItem_OpenDoor_BuildGiftRecord, marks the floor's
+; door opened (state byte 3 = $FF), redraws the door tiles and the screen and resumes the script.
+; (C1, E-0357)
 KeyWorldDoorItem_OpenDoor::
-    farcall KeyWorldDoorItem_OpenDoor_RandomModulo29_BankF0
+    farcall KeyWorldDoorItem_OpenDoor_BuildGiftRecord
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $3
