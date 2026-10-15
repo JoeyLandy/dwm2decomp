@@ -28,3 +28,7 @@ The source in `src/` rebuilds the US release (SHA-256 `8e38a742...766d4e`) byte 
 3. We work in small investigations with a reproducible question, bounded changes, and a durable handoff. You set priorities; I own technical coherence, verification, and clear explanations.
 
 The first implementation milestone is a fully matching scaffold with explicitly unknown regions. The first learning milestone is explaining one short routine and showing the evidence for its behavior.
+
+## License
+
+Original work here (tools, tests, documentation, labels, and comments) is MIT licensed; see [LICENSE](LICENSE). The license does not cover the game's own code and data reproduced in `src/`, which remain the property of their rights holders. No ROM is included; supply your own copy to build.

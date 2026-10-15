@@ -1,0 +1,13 @@
+{
+  "game": "Dragon Warrior Monsters 2: Cobi's Journey",
+  "system": "Game Boy Color",
+  "type": "decomp",
+  "original": [{ "region": "USA", "revision": "0" }],
+  "project": "dwm2decomp",
+  "status": "in-progress",
+  "toolchain": ["RGBDS"],
+  "approach": "Reproducible RGBDS disassembly that rebuilds the US release byte for byte; semantic labels carry confidence and evidence IDs.",
+  "notes": "Matching build verified by length, SHA-256 and a full byte comparison. Most labels are still address-derived; readability and semantic review is ongoing.",
+  "tags": ["gbc", "rgbds", "disassembly"],
+  "links": [{ "label": "Docs", "url": "https://github.com/JoeyLandy/dwm2decomp/tree/master/docs" }]
+}
