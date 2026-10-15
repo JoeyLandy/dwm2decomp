@@ -725,13 +725,13 @@ LoadMapScreen_ReadMapType::
     ld a, [wMapType]
     and $07
     jumptable
-    dw LoadMapScreen_WriteSVBK_2
+    dw LoadMapScreen_Type0
     dw LoadMapScreen_Return
     dw LoadMapScreen_Type2
     dw LoadMapScreen_Type3
     dw LoadMapScreen_Type3
     dw LoadMapScreen_Type5
-    dw LoadMapScreen_WriteTemp0_2
+    dw LoadMapScreen_Type6
     dw LoadMapScreen_Type7
 
 ; Map type 7's screen: from special map $66's chunks. (C1, E-0357)
@@ -743,7 +743,7 @@ LoadMapScreen_Type7::
 
 ; Map type 6's screen: from special map $50 or $51 (bit 0 of floor info byte 1), the variant from
 ; floor state byte 3 ($FF read as 0); then the door tiles when that byte is $FF or odd. (C1, E-0357)
-LoadMapScreen_WriteTemp0_2::
+LoadMapScreen_Type6::
     ld a, [wKeyWorldFloor]
     sla a
     sla a
@@ -1608,7 +1608,7 @@ LoadMapScreen_Type3::
 ; (screens in blocks of 4 x 4), reads the screen's far pointer (3 bytes per screen, 12 per row) and
 ; decompresses it into wScreenTileBuffer and, on CGB, its attributes; then draws the key-world
 ; objects on it. (C1, E-0357)
-LoadMapScreen_WriteSVBK_2::
+LoadMapScreen_Type0::
     ldh a, [hMapScreenY]
     and $fc
     add a

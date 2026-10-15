@@ -1168,17 +1168,17 @@ UpdateMenuCursor_BankF1::
     ld a, [hl]
     and $0f
     cp b
-    jr z, .call_update_menu_cursor_bank_f1_wait_for_vram
+    jr z, .call_update_menu_cursor_draw_cursor_bank_f1
     push de
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess
+    call UpdateMenuCursor_EraseCursor_BankF1
     pop de
     ld a, $69
     call QueueSoundEffect
 
-.call_update_menu_cursor_bank_f1_wait_for_vram:
+.call_update_menu_cursor_draw_cursor_bank_f1:
     ld [hl], b
     ld a, b
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_2
+    call UpdateMenuCursor_DrawCursor_BankF1
     xor a
     ld [wFrameCounterLo], a
     jr .return
@@ -1200,11 +1200,11 @@ UpdateMenuCursor_BankF1::
     push de
     ld a, [hl]
     and $0f
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess
+    call UpdateMenuCursor_EraseCursor_BankF1
     pop de
     pop af
     ld [hl], a
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_2
+    call UpdateMenuCursor_DrawCursor_BankF1
 
 .clear_frame_counter_lo:
     set 7, [hl]
@@ -1220,16 +1220,16 @@ UpdateMenuCursor_BankF1::
     jr nz, .return
     ld a, [wFrameCounterLo]
     bit 4, a
-    jr z, .call_update_menu_cursor_bank_f1_wait_for_vram2
+    jr z, .call_update_menu_cursor_erase_cursor_bank_f1
     ld a, [hl]
     and $0f
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_2
+    call UpdateMenuCursor_DrawCursor_BankF1
     jr .return
 
-.call_update_menu_cursor_bank_f1_wait_for_vram2:
+.call_update_menu_cursor_erase_cursor_bank_f1:
     ld a, [hl]
     and $0f
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess
+    call UpdateMenuCursor_EraseCursor_BankF1
     ld a, [wFrameCounterLo]
     set 3, a
     ld [wFrameCounterLo], a
@@ -1238,7 +1238,8 @@ UpdateMenuCursor_BankF1::
     ret
 
 ; Erases the menu cursor (tile $C3) at the place for row A in the table at DE. (C1, E-0357)
-UpdateMenuCursor_BankF1_WaitForVRAMAccess::
+; the same 22 bytes as UpdateMenuCursor_EraseCursor (UpdateMenuCursor_EraseCursor) (E-0369)
+UpdateMenuCursor_EraseCursor_BankF1::
     add a
     add e
     ld e, a
@@ -1261,7 +1262,8 @@ UpdateMenuCursor_BankF1_WaitForVRAMAccess::
     ret
 
 ; Draws the menu cursor (tile $BB) at the place for row A in the table at DE. (C1, E-0357)
-UpdateMenuCursor_BankF1_WaitForVRAMAccess_2::
+; the same 22 bytes as UpdateMenuCursor_DrawCursor (UpdateMenuCursor_DrawCursor) (E-0369)
+UpdateMenuCursor_DrawCursor_BankF1::
     add a
     add e
     ld e, a
@@ -3807,10 +3809,12 @@ RunScreenStateWhenNotFading_F1_LinkBreed_DrawChoiceBox_TileRect::
 RunScreenStateWhenNotFading_F1_LinkBreed_ReadChoice_Data::
     db $fc, $c3, $24, $c4, $4c, $c4
 
-; Game mode 5, state 7 frame: exchanges the joypad over the link; on the title screen at
-; wMenuCounter 2 sends the SGB palettes and fades in; otherwise draws the save's sprite, and from
-; screen state 7 the sprite slots, the list sprites and the naming screen. (C1, E-0357)
-GameMode5_Update_LinkExchangeJoypadPerFrame_2::
+; Game mode 5, state 7 frame: exchanges the joypad over the link (LinkExchangeJoypadPerFrame); only
+; with wTitleScreenState 1 does it do more: at wMenuCounter 2 it sends the SGB palettes, starts a
+; fade ($FC) and clears wMenuCounter; otherwise it draws the completion mark, and from wScreenState
+; 7 on the sprite slots, the link screens' sprites (DrawLinkScreenSprites) and, while wMenuCounter
+; is non-zero, the naming of the gift egg's monster. (C1, E-0369)
+ExchangeJoypadAndDrawSprites::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
     cp $01
@@ -3820,7 +3824,7 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_2::
 .check_menu_counter:
     ld a, [wMenuCounter]
     cp $02
-    jr nz, .call_game_mode5_update_wait_pick_count
+    jr nz, .call_exchange_joypad_and_draw_sprites_draw
     farcall SendSGBPaletteSetForSGBPaletteSet
     ld a, $fc
     call StartPaletteFade
@@ -3828,22 +3832,24 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_2::
     ld [wMenuCounter], a
     ret
 
-.call_game_mode5_update_wait_pick_count:
-    call GameMode5_Update_WaitPickCount
+.call_exchange_joypad_and_draw_sprites_draw:
+    call ExchangeJoypadAndDrawSprites_DrawCompletionMark
     ld a, [wScreenState]
     cp $07
     ret c
-    call GameMode5_Update_UpdateAndDrawSpriteSlots
+    call ExchangeJoypadAndDrawSprites_DrawSpriteSlots
     call DrawLinkScreenSprites
     ld a, [wMenuCounter]
     and a
     ret z
-    call GameMode5_Update_RunNameEntryStateWhenNotFading
+    call ExchangeJoypadAndDrawSprites_NameGiftEgg
     ret
 
-; When wPickCount is set and the save's flag ($022B past sSavedPlayerName in SRAM bank 1) is set,
-; draws sprite part $0090 at ($88, $28). (C1, E-0357)
-GameMode5_Update_WaitPickCount::
+; When wPickCount is non-zero and the save's sSavedGameCompleted ($022B past sSavedPlayerName, SRAM
+; bank 1) is set, draws the completion mark (DrawSpritePart9000At88_28: sprite part $0090 at ($88,
+; $28)), as KeyAppraisalMenu_DrawCompletionMark does; otherwise it maps SRAM bank 0 and disables
+; SRAM. (C1, E-0369)
+ExchangeJoypadAndDrawSprites_DrawCompletionMark::
     ld a, [wPickCount]
     and a
     ret z
@@ -3917,7 +3923,7 @@ DrawLinkScreenSprites::
     ret
 
 ; Draws the sprite slots and, with wArg1 set, the field sprites. (C1, E-0357)
-GameMode5_Update_UpdateAndDrawSpriteSlots::
+ExchangeJoypadAndDrawSprites_DrawSpriteSlots::
     ld a, [wSpriteSlotCount]
     and a
     ret z
@@ -3928,10 +3934,12 @@ GameMode5_Update_UpdateAndDrawSpriteSlots::
     farcall DrawFieldSprites
     ret
 
-; Naming the dream egg's monster: runs the name entry for the gift record's species; when done
-; writes the name into the gift record, copies it to wRecordBufB (not an egg), clears $D8 bytes from
-; wGM2TimerFrames and ends. (C1, E-0357)
-GameMode5_Update_RunNameEntryStateWhenNotFading::
+; Names the gift egg's monster (wGiftRecord): runs the name entry (RunNameEntryStateWhenNotFading
+; with wArg1 = 1, wArg2 = MON_SEX, wArg3 = MON_FAMILY, wArg4/wArg5 = MON_SPECIES); when wArg5 comes
+; back $FF it writes the name from wNameGlyphBuf (up to 10 bytes or $F0) to wGiftRecord + MON_NAME,
+; copies the $A5-byte record to wRecordBufB with MON_EGG cleared, clears the $D8 bytes from
+; wGM2TimerFrames and clears wMenuCounter, which stops these calls. (C1, E-0369)
+ExchangeJoypadAndDrawSprites_NameGiftEgg::
     ld a, $01
     ld [wArg1], a
     ld a, [wGiftRecord + MON_SEX]

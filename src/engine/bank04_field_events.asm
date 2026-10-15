@@ -100,7 +100,7 @@ SetupKeyWorldObjectsForMapType::
     add a
     ld hl, KeyWorldObjectGridTable
     add_a_to_hl
-    call SetupKeyWorldObjectsForMapType_Multiply8
+    call SetupKeyWorldObjectsForMapType_LoadObjects
     ld a, [wKeyWorldObjFlag]
     or a
     ret z
@@ -120,7 +120,7 @@ SetupKeyWorldObjectsForMapType::
     ld a, c
     ld hl, KeyWorldObjectGridTable
     add_a_to_hl
-    call SetupKeyWorldObjectsForMapType_Multiply8
+    call SetupKeyWorldObjectsForMapType_LoadObjects
     ret
 
 .read_key_world_floor3:
@@ -148,7 +148,7 @@ SetupKeyWorldObjectsForMapType::
     ld a, $08
     ld hl, KeyWorldObjectGridTable
     add_a_to_hl
-    call SetupKeyWorldObjectsForMapType_Multiply8
+    call SetupKeyWorldObjectsForMapType_LoadObjects
     ret
 
 .clear_temp92:
@@ -177,7 +177,7 @@ SetupKeyWorldObjectsForMapType::
     ld a, $0c
     ld hl, KeyWorldObjectGridTable
     add_a_to_hl
-    call SetupKeyWorldObjectsForMapType_Multiply8
+    call SetupKeyWorldObjectsForMapType_LoadObjects
     ret
 
 ; Loads the objects of the current key-world screen into the sprite slots: from the floor's table of
@@ -187,7 +187,7 @@ SetupKeyWorldObjectsForMapType::
 ; wKeyWorldEncounterTable), and goal objects their graphics from KeyWorldGoalGraphicsTable by
 ; wKeyWorldGoalKind. A screen with no list ($0000) keeps its objects; an $FFFF list clears them.
 ; (C1, E-0357)
-SetupKeyWorldObjectsForMapType_Multiply8::
+SetupKeyWorldObjectsForMapType_LoadObjects::
     ld a, [hli]
     ld e, a
     ld a, [hl]
@@ -398,8 +398,8 @@ SetupKeyWorldObjectsForMapType_Multiply8::
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; SetupKeyWorldObjectsForMapType_Multiply8, for an object whose graphics number (hTemp0) is below 9
-; and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 +
+; SetupKeyWorldObjectsForMapType_LoadObjects, for an object whose graphics number (hTemp0) is below
+; 9 and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 +
 ; wKeyWorldGoalKind; 9 rows end at the code at $42CD (E-0221, C1)
 ; record: replacement graphics number for each goal kind 0-9, then six zero bytes
 KeyWorldGoalGraphicsTable::
@@ -844,32 +844,32 @@ UpdateSpriteSlots::
 
 ; The loop over the sprite slots: runs the routine for each 16-byte slot's type byte (types 0-5).
 ; (C1, E-0357)
-UpdateSpriteSlots_Loop::
+UpdateSpriteSlots_RunSlot::
     push bc
     push hl
     push hl
     ld a, [hl]
     jumptable
-    dw UpdateSpriteSlots_RestoreRegisters
-    dw UpdateSpriteSlots_Return
+    dw UpdateSpriteSlots_Still
+    dw UpdateSpriteSlots_NoHandler
     dw UpdateSpriteSlots_Wander
     dw UpdateSpriteSlots_FixedMoves
     dw UpdateSpriteSlots_FollowPath4
     dw UpdateSpriteSlots_FollowPath5
 
 ; Moves to the next sprite slot (16 bytes on) and continues the loop. (C1, E-0357)
-UpdateSpriteSlots_Restore::
+UpdateSpriteSlots_NextSlot::
     pop hl
     pop bc
     ld a, $10
     add_a_to_hl
     dec b
-    jr nz, UpdateSpriteSlots_Loop
+    jr nz, UpdateSpriteSlots_RunSlot
     ret
 
 ; Sprite slot type 0, a still object: unless its flags (slot byte $0D) have bit 1 set, counts its
 ; animation timer up; then picks its animation frame. (C1, E-0357)
-UpdateSpriteSlots_RestoreRegisters::
+UpdateSpriteSlots_Still::
     pop hl
     ld a, $0d
     add_a_to_hl
@@ -887,10 +887,12 @@ UpdateSpriteSlots_RestoreRegisters::
 .skip:
     ld a, [hl]
 
-; Picks a sprite slot's animation frame from its timer: one bit of the timer (bit 3 with flag bit 2,
-; else bit 4) alternates two frames; objects of kind 3 store frame $82 or $83 in the slot. (C1,
-; E-0357)
-UpdateSpriteSlots_RestoreRegisters_Skip::
+; A = the slot's timer (slot byte 9), HL = slot + 9: picks the animation frame bit, bit 3 of the
+; timer when flag bit 2 (slot byte $0D) is set, otherwise bit 5; stores slot byte $0E = $82 + that
+; bit when slot byte 7 is 3, otherwise byte 7 * 2 + that bit. Then moves to the next slot (pops the
+; loop's HL and BC, HL += $10) and continues UpdateSpriteSlots_RunSlot. Types 0 (by fallthrough), 2
+; and 3 end here. (C1, E-0369)
+UpdateSpriteSlots_PickFrame::
     ld c, a
     inc hl
     inc hl
@@ -936,7 +938,7 @@ UpdateSpriteSlots_RestoreRegisters_Skip::
     ld a, $10
     add_a_to_hl
     dec b
-    jr nz, UpdateSpriteSlots_Loop
+    jr nz, UpdateSpriteSlots_RunSlot
     ret
 
 .skip3:
@@ -952,7 +954,7 @@ UpdateSpriteSlots_RestoreRegisters_Skip::
     ld a, $10
     add_a_to_hl
     dec b
-    jp nz, UpdateSpriteSlots_Loop
+    jp nz, UpdateSpriteSlots_RunSlot
     ret
 
 ; Sprite slot type 2, a wandering object: counts its timer, and while a move is in progress (bit 7
@@ -1139,10 +1141,12 @@ UpdateSpriteSlots_Wander::
     ld a, $09
     add_a_to_hl
     ld a, [hl]
-    jp UpdateSpriteSlots_RestoreRegisters_Skip
+    jp UpdateSpriteSlots_PickFrame
 
-; Sprite slot type 1: nothing. (C1, E-0357)
-UpdateSpriteSlots_Return::
+; Sprite slot type 1: a bare ret. UpdateSpriteSlots_RunSlot pushes BC and the slot pointer twice
+; before the jump table (rst $00 consumes its own return address), so this ret would jump to the
+; slot's own address in wSpriteSlots instead of returning to the loop. (C1, E-0369)
+UpdateSpriteSlots_NoHandler::
     ret
 
 ; Sprite slot type 3, an object that moves along fixed directions: like type 2, but the direction of
@@ -1392,10 +1396,10 @@ UpdateSpriteSlots_FixedMoves::
     ld a, $09
     add_a_to_hl
     ld a, [hl]
-    jp UpdateSpriteSlots_RestoreRegisters_Skip
+    jp UpdateSpriteSlots_PickFrame
 
-; runs RunPendingFieldEventType0AOrOther_ReadMapTallTileMin when wPendingFieldEvent & $0F = $0A,
-; else IsTileUnderCellBlocking (E-0122)
+; runs RunPendingFieldEventType0AOrOther_IsCellTall when wPendingFieldEvent & $0F = $0A, else
+; IsTileUnderCellBlocking (E-0122)
 RunPendingFieldEventType0AOrOther::
     ld a, [wPendingFieldEvent]
     and $0f
@@ -1405,7 +1409,7 @@ RunPendingFieldEventType0AOrOther::
     ret
 
 .call_run_pending_field_event_type0_a_or_other:
-    call RunPendingFieldEventType0AOrOther_ReadMapTallTileMin
+    call RunPendingFieldEventType0AOrOther_IsCellTall
     ret
 
 ; Sprite slot type 4, an object that follows the path at UpdateSpriteSlots_FollowPath4_Data. (C1,
@@ -1507,7 +1511,7 @@ UpdateSpriteSlots_StepPath::
     inc hl
     inc hl
     ld [hl], a
-    jp UpdateSpriteSlots_Restore
+    jp UpdateSpriteSlots_NextSlot
 
 ; data read by UpdateSpriteSlots (36 bytes) (E-0347)
 UpdateSpriteSlots_FollowPath4_Data::
@@ -1583,10 +1587,13 @@ IsTileUnderCellBlocking::
     pop bc
     ret
 
-; Copies the four tiles under the cell at pixel (B, C) from wScreenTileBuffer to wTilesUnderPoint
-; and tests them against the map's tall-tile limit, returning whether the cell blocks movement. (C1,
-; E-0357)
-RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
+; B = pixel X, C = pixel Y: copies the 2 x 2 tiles of wScreenTileBuffer under that cell to
+; wTilesUnderPoint (as IsTileUnderCellBlocking does) and returns A = 1 when all four tile ids are
+; above wMapTallTileMin, A = 0 when any is at or below it; BC and DE kept.
+; RunPendingFieldEventType0AOrOther uses it in place of IsTileUnderCellBlocking while the pending
+; field event kind (wPendingFieldEvent low nibble) is $0A, and its caller
+; UpdateSpriteSlots_FixedMoves treats A = 1 as a blocked cell. (C1, E-0369)
+RunPendingFieldEventType0AOrOther_IsCellTall::
     push bc
     push de
     ld a, c
@@ -1898,7 +1905,7 @@ LoadPlayerAndFollowerSpriteGraphics::
     or a
     jr nz, .skip
     call LoadPlayerSpriteGraphics
-    call LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte
+    call LoadPlayerAndFollowerSpriteGraphics_Followers
     ret
 
 .skip:
@@ -1945,7 +1952,7 @@ LoadPlayerAndFollowerSpriteGraphics::
 
 .call_load_player_sprite_graphics:
     call LoadPlayerSpriteGraphics
-    call LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte
+    call LoadPlayerAndFollowerSpriteGraphics_Followers
     call LoadAltObjectGraphicsIfPlayerStateFlagsBit3
     ret
 
@@ -2018,7 +2025,7 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
     ld a, e
     add $08
     ld e, a
@@ -2936,7 +2943,7 @@ MonsterSpriteTable::
     dfar MonsterSprite_Kagebou ; id 382 Kagebou
 
 ; SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E (goal kind 7) for the
-; goal room, to SetupKeyWorldObjectsForMapType_Multiply8; it follows MonsterSpriteTable, which
+; goal room, to SetupKeyWorldObjectsForMapType_LoadObjects; it follows MonsterSpriteTable, which
 ; therefore has 383 entries, not 384 (E-0196, C1)
 ; record: object grid for this map kind
 KeyWorldObjectGridTable::
@@ -2957,7 +2964,7 @@ KeyWorldObjectGridTable::
     dw KeyWorldObjectGrid_6 ; id 14
     dw KeyWorldObjectGrid_7 ; id 15
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_0::
@@ -2990,7 +2997,7 @@ KeyWorldObjectList_0_1_1::
     db $86, $01, $01, $00, $00, $60, $60, $06, $00, $60, $03 ; object 1
     db $87, $01, $06, $00, $00, $70, $10, $07, $00, $70, $fa ; object 2
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_1::
@@ -3052,7 +3059,7 @@ KeyWorldObjectList_1_3_1::
     db $87, $01, $02, $00, $00, $50, $30, $07, $00, $70, $07 ; object 2
     db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $fa ; object 3
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_9::
@@ -3115,7 +3122,7 @@ KeyWorldObjectList_9_3_1::
     db $87, $01, $05, $00, $02, $40, $40, $07, $01, $70, $03 ; object 2
     db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $fa ; object 3
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_2::
@@ -3149,7 +3156,7 @@ KeyWorldObjectList_2_1_1::
     db $87, $01, $05, $00, $02, $40, $70, $07, $01, $70, $03 ; object 2
     db $84, $01, $06, $00, $00, $20, $20, $04, $00, $40, $fa ; object 3
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_10::
@@ -3182,7 +3189,7 @@ KeyWorldObjectList_10_1_1::
     db $86, $01, $04, $00, $00, $60, $30, $06, $00, $60, $00 ; object 1
     db $87, $01, $06, $00, $00, $20, $20, $07, $00, $70, $fa ; object 2
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_3::
@@ -3202,7 +3209,7 @@ KeyWorldObjectList_3_0_1::
     db $01 ; entry 0
     db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $fc
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_7::
@@ -3222,7 +3229,7 @@ KeyWorldObjectList_7_0_1::
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $30, $20, $05, $00, $50, $fc
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_4::
@@ -3242,7 +3249,7 @@ KeyWorldObjectList_4_0_1::
     db $01 ; entry 0
     db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $fe
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5::
@@ -3262,7 +3269,7 @@ KeyWorldObjectList_5_0_1::
     db $01 ; entry 0
     db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $fe
 
-; SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY *
+; SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY *
 ; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_6::
@@ -3344,7 +3351,7 @@ StartScriptAtHL_B04::
 ReadableTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
-    dw ReadableTalkEvents_TestFlagBit
+    dw ReadableTalkEvents_AtSeaScene
     dw Talk_HehSoTheseAreTheNewcomers
     dw Talk_ListenYouTwoQuitYourHorsing
     dw $0000 ; unused index (E-0207)
@@ -3380,8 +3387,12 @@ ReadableTalkEvents::
     dw IfFlag00D1Msg0D39_AhGreatLogsMightyHero
     dw IfFlag00D1Msg0D3A_ToBeHonestI
 
+; Readable talk 0: starts the 'In the middle of the sea' scene, Script_InTheMiddleOf (its second
+; message 'Tara: There you are, big brother!') when EVENT_IN_THE_MIDDLE_OF_THE is set, otherwise
+; Script_InTheMiddleOf_2 (second message 'Papa's calling'); both scripts set EVENT_SCENE_AT_SEA.
+; (C1, E-0369)
 ; starts Script_InTheMiddleOf: 'In the middle of the sea' (E-0248)
-ReadableTalkEvents_TestFlagBit::
+ReadableTalkEvents_AtSeaScene::
     ld de, EVENT_IN_THE_MIDDLE_OF_THE
     call TestFlagBit
     jr nc, .call_start_script_at_hl_b04
@@ -3857,7 +3868,7 @@ YoldTalkEvents::
     dw TalkMsg080E_ImFromThePortInThe
     dw TalkMsg080F_YoureNotSupposedToGoNear
     dw YoldTalkEvents_MermaidPast
-    dw YoldTalkEvents_StartScriptAtHL_B04
+    dw YoldTalkEvents_Inn
     dw Talk_HaveYouHeardTheLegendAbout
     dw TalkMsg081B_AhhThisIsHeavenlyItMakes
     dw TalkMsg081C_ICameFromFarAwayTo
@@ -3881,7 +3892,7 @@ YoldTalkEvents::
     dw Talk_HeroTriedToCheckTheChest
     dw TalkMsg082E_HeroPeeredIntoTheBarrelIt
     dw BarrelItem_TinyMedal_Flag0063
-    dw YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn
+    dw YoldTalkEvents_SecondInn
     dw TalkMsg082F_ThisAreaWasALotMore
     dw TalkMsg0830_WhenYoureOutAtSeaYou
     dw TalkScript
@@ -3898,7 +3909,7 @@ YoldTalkEvents::
     dw ChestItem_Warp
     dw TalkMsg0843_ISawAChildCrossThe
     dw TalkMsg0844_WatchMeDanceAndYoullWant
-    dw YoldTalkEvents_TestFlagBit
+    dw YoldTalkEvents_OfferMap41Warp
     dw YoldTalkEvents_ShowThisIsTheMermaid
     dw TalkMsg084F_IKnowNotAllHumansAre
     dw TalkMsg0850_ThePiratesCaughtUsInNets
@@ -3911,10 +3922,10 @@ YoldTalkEvents::
     dw Talk_HowCouldWeDieBeforeEnjoying
     dw Talk_TheTreasuresAreOursNoOne
     dw Talk_ItNagsAndNagsThatWe
-    dw YoldTalkEvents_TestFlagBit_WhoDisturbsUsIn
+    dw YoldTalkEvents_WhoDisturbsUs
     dw YoldTalkEvents_ShowHeroCheckedTheTreasure
-    dw YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate
-    dw YoldTalkEvents_SetSpriteSlotsPlus7
+    dw YoldTalkEvents_CheckCrate
+    dw YoldTalkEvents_ResetFirstSlotState
     dw ChestItem_LogTwig
     dw YoldTalkEvents_ShowHeroCheckedThePedestal
     dw YoldTalkEvents_KamehaThanks
@@ -3943,7 +3954,7 @@ YoldTalkEvents::
     dw BarrelItem_INTseed
     dw TalkMsg0862_HeroPeeredIntoTheBarrelThere
     dw TalkMsg0864_HeroCheckedTheLedgerVoyage
-    dw YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
+    dw YoldTalkEvents_KamehaEscape
     dw TalkMsg00FF_Composing
     dw Talk_ThickSuctionCuppedTentacles
     dw YoldTalkEvents_Church
@@ -4227,8 +4238,10 @@ YoldTalkEvents_MermaidPast::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 20, an inn: starts Script_WelcomeToOurInn_3 ('Welcome to our inn!', then a jump to the
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0369)
 ; starts Script_WelcomeToOurInn_3: '*: Welcome to our inn!' (E-0248)
-YoldTalkEvents_StartScriptAtHL_B04::
+YoldTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn_3 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
     ld a, $10
@@ -4490,8 +4503,11 @@ BarrelItem_TinyMedal_Flag0063::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 44, a second inn with the same code as YoldTalkEvents_Inn (talk 20): starts
+; Script_WelcomeToOurInn_4 ('Welcome to our inn!', then the inn script Script_It_3 in the data bank)
+; and sets wDataBank = $10. (C1, E-0369)
 ; starts Script_WelcomeToOurInn_4: '*: Welcome to our inn!' (E-0248)
-YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn::
+YoldTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_4 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
     ld a, $10
@@ -4797,8 +4813,11 @@ TalkMsg0844_WatchMeDanceAndYoullWant::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 61: does nothing until EVENT_IN_THE_PAST_MERMAIDS_ARE is set (WarpToMap41 sets it); then
+; starts Script_DoYouWantTo_2, which asks 'Do you want to go ...' and on yes says 'Close your eyes a
+; little ...' and warps to map $41 (SCRIPT_WARP_MAP41), on no 'Come back for a visit'. (C1, E-0369)
 ; starts Script_DoYouWantTo_2: '*: Do you want to go' (E-0248)
-YoldTalkEvents_TestFlagBit::
+YoldTalkEvents_OfferMap41Warp::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
     ret nc
@@ -4989,8 +5008,12 @@ Talk_ItNagsAndNagsThatWe::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 74: the first time starts Script_WhoDisturbsUsIn ('Who disturbs us in our ...') and sets
+; EVENT_WHO_DISTURBS_US_IN_OUR; afterwards Script_YouSeemToNot ('...You seem to not understand...').
+; Both scripts run encounter $02, give an item (SCRIPT_GIVE_ITEM_BLINK) and set
+; EVENT_GIVE_ITEM_BLINK. (C1, E-0369)
 ; starts Script_WhoDisturbsUsIn: '*: Who disturbs us in our' (E-0248)
-YoldTalkEvents_TestFlagBit_WhoDisturbsUsIn::
+YoldTalkEvents_WhoDisturbsUs::
     ld de, EVENT_WHO_DISTURBS_US_IN_OUR
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -5024,8 +5047,11 @@ YoldTalkEvents_ShowHeroCheckedTheTreasure::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 76, a crate: starts Script_HeroCheckedTheCrate ('<PLAYER> checked the crate. There was
+; ...', then SCRIPT_SET_TILES_FLAG_310, which redraws a 2 x 2 tile block and sets story flag $310)
+; and sets EVENT_HERO_CHECKED_THE_CRATE_THERE. (C1, E-0369)
 ; starts Script_HeroCheckedTheCrate: '0 checked the crate. There was' (E-0248)
-YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate::
+YoldTalkEvents_CheckCrate::
     ld hl, Script_HeroCheckedTheCrate ; script '0 checked the crate. There was'
     call StartScriptAtHL_B04
     ld de, EVENT_HERO_CHECKED_THE_CRATE_THERE
@@ -5033,7 +5059,7 @@ YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate::
     ret
 
 ; Yold talk 77: clears byte 7 of the first sprite slot. (C1, E-0357)
-YoldTalkEvents_SetSpriteSlotsPlus7::
+YoldTalkEvents_ResetFirstSlotState::
     xor a
     ld [wSpriteSlots + $7], a
     ret
@@ -5387,8 +5413,12 @@ TalkMsg0864_HeroCheckedTheLedgerVoyage::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 106: starts Script_SceneKamehaEscape (SCRIPT_SCENE_KAMEHA_ESCAPE), removes ITEM_MOONROCK
+; ($31) from the inventory (FindTemp0InInventoryList, then RemoveInventorySlotShiftDown on the slot
+; found) and sets EVENT_THE_PIRATES_WERE_SWALLOWED_BY. The slot is not checked: with no
+; ITEM_MOONROCK, hTemp0 is $FF when RemoveInventorySlotShiftDown runs. (C1, E-0369)
 ; starts Script_SceneKamehaEscape (E-0248)
-YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList::
+YoldTalkEvents_KamehaEscape::
     ld hl, Script_SceneKamehaEscape
     call StartScriptAtHL_B04
     ld a, $31
@@ -5472,7 +5502,7 @@ KalkaTalkEvents::
     dw IfFlag056Msg018F_WeDidntHelpTheThievesOne
     dw TalkMsg01BE_HeroCheckedTheDresserThere
     dw TalkMsg0037_HeroTriedToOpenTheChest_04
-    dw KalkaTalkEvents_StartScriptAtHL_B04
+    dw KalkaTalkEvents_SecondInn
     dw TalkMsg0150_IHeardThatTheThievesDisappear
     dw TalkMsg0154_SeveralOfOurMembersCameBack
     dw TalkMsg0155_WhenTheThievesRaidedUsWe
@@ -5482,12 +5512,12 @@ KalkaTalkEvents::
     dw TalkMsg0159_WhatSeeHisMajestysTreasure
     dw KalkaTalkEvents_Snooping
     dw TalkMsg015A_HisMajestyIsHonestAndMost
-    dw KalkaTalkEvents_StartScriptAtHL_B04_2
+    dw KalkaTalkEvents_PoorChurchScene
     dw TalkMsg015F_HeroCheckedTheDresserThere
     dw KalkaTalkEvents_King
     dw TalkMsg0166_ThatFoolIsATerribleSwindler
     dw TalkMsg0167_HumphAMirageLakeHeSays
-    dw KalkaTalkEvents_TestFlagBit
+    dw KalkaTalkEvents_CanalGate
     dw VaseItem_Herb_Flag004B
     dw VaseItem_PorkChop
     dw VaseItem_TinyMedal
@@ -5496,9 +5526,9 @@ KalkaTalkEvents::
     dw ChestItem_Wind
     dw ChestItem_WarpWing
     dw ChestItem_AGL
-    dw KalkaTalkEvents_TestFlagBit_I
+    dw KalkaTalkEvents_MakingANewHome
     dw KalkaTalkEvents_WhereIsEverybody
-    dw KalkaTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
+    dw KalkaTalkEvents_MonstersInTow
     dw TalkMsg0194_ThievesDroveUsFromOurHomes
     dw TalkMsg0195_TheLeaderOfTheThievesIs
     dw KalkaTalkEvents_MonsterFan
@@ -5508,7 +5538,7 @@ KalkaTalkEvents::
     dw TalkMsg01C0_HeroCheckedTheTreasureChest
     dw TalkMsg01BF_HeroPeeredIntoTheVaseThe
     dw VaseItem_BeefJerky
-    dw KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04
+    dw KalkaTalkEvents_RivalFade
     dw KalkaTalkEvents_WaitStoryFlagsPlus61
     dw KalkaTalkEvents_Church2
 
@@ -6029,8 +6059,11 @@ TalkMsg0037_HeroTriedToOpenTheChest_04::
     call StartMessageCommand09HL_B04
     ret
 
+; Kalka talk 31, a second inn (the first is KalkaTalkEvents_Inn): starts Script_WelcomeToOurInn_2
+; ('Welcome to our inn!', then the inn script Script_It_3 in the data bank) and sets wDataBank =
+; $10; unlike KalkaTalkEvents_Inn it does not turn the innkeeper. (C1, E-0369)
 ; starts Script_WelcomeToOurInn_2: '*: Welcome to our inn!' (E-0248)
-KalkaTalkEvents_StartScriptAtHL_B04::
+KalkaTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_2 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
     ld a, $10
@@ -6224,8 +6257,11 @@ TalkMsg015A_HisMajestyIsHonestAndMost::
     call StartMessageCommand09HL_B04
     ret
 
+; Kalka talk 41: unless bit 3 of story byte $61 (wStoryFlags + $61) is set, starts
+; Script_ScenePoorChurch (a 20-frame wait, then SCRIPT_SCENE_POOR_CHURCH).
+; KalkaTalkEvents_WaitStoryFlagsPlus61 clears that bit again unless bit 4 is set. (C1, E-0369)
 ; starts Script_ScenePoorChurch (E-0248)
-KalkaTalkEvents_StartScriptAtHL_B04_2::
+KalkaTalkEvents_PoorChurchScene::
     ld a, [wStoryFlags + $61]
     bit 3, a
     ret nz
@@ -6340,8 +6376,11 @@ TalkMsg0167_HumphAMirageLakeHeSays::
     call StartMessageCommand09HL_B04
     ret
 
+; Kalka talk 46: does nothing until EVENT_KING_WHAT_NEVER_MIND_THEN is set; then starts
+; Script_WhatOpenTheCanal ('What? Open the Canal Gate ...', SCRIPT_SCENE_CANAL_GATE, the speaker
+; walks off and is hidden) and sets EVENT_WHAT_OPEN_THE_CANAL_GATE. (C1, E-0369)
 ; starts Script_WhatOpenTheCanal: '*: What? Open the Canal Gate' (E-0248)
-KalkaTalkEvents_TestFlagBit::
+KalkaTalkEvents_CanalGate::
     ld de, EVENT_KING_WHAT_NEVER_MIND_THEN
     call TestFlagBit
     ret nc
@@ -6455,8 +6494,12 @@ ChestItem_AGL::
     call StartTreasureFlagDE_B04
     ret
 
+; Kalka talk 55: before EVENT_SCENE_RIVAL_DEFEATED_05A starts Script_I_13 ('I'm making a new home',
+; encounter $16, 'Gaah! You're too strong!', lines from the King, then hides the speaker and sets
+; EVENT_YOU_WILL_SO_WE_CAN); afterwards Script_SceneWaterReward (SCRIPT_SCENE_WATER_REWARD). (C1,
+; E-0369)
 ; starts Script_I_13: '*: I'm making a new home' (E-0248)
-KalkaTalkEvents_TestFlagBit_I::
+KalkaTalkEvents_MakingANewHome::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6517,8 +6560,12 @@ KalkaTalkEvents_WhereIsEverybody::
     call StartMessageCommand09HL_B04
     ret
 
+; Kalka talk 57: sets bit 4 of story byte $61 (wStoryFlags + $61), starts Script_SceneMonstersInTow
+; (sets EVENT_SCENE_MONSTERS_IN_TOW and runs SCRIPT_SCENE_MONSTERS_IN_TOW) and removes
+; ITEM_WATERCALL ($30) from the inventory (FindTemp0InInventoryList, then
+; RemoveInventorySlotShiftDown on the slot found, unchecked). (C1, E-0369)
 ; starts Script_SceneMonstersInTow (E-0248)
-KalkaTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList::
+KalkaTalkEvents_MonstersInTow::
     ld a, [wStoryFlags + $61]
     set 4, a
     ld [wStoryFlags + $61], a
@@ -6635,8 +6682,10 @@ VaseItem_BeefJerky::
     call StartTreasureFlagDE_B04
     ret
 
+; Kalka talk 67: does nothing until EVENT_SCENE_MONSTERS_IN_TOW is set; then starts
+; Script_SceneRivalFade (sound $60 and SCRIPT_SCENE_RIVAL_FADE). (C1, E-0369)
 ; starts Script_SceneRivalFade (E-0248)
-KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04::
+KalkaTalkEvents_RivalFade::
     ld de, EVENT_SCENE_MONSTERS_IN_TOW
     call TestFlagBit
     ret nc
@@ -6678,7 +6727,7 @@ DarckTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
     dw DarckTalkEvents_HeardFromLord
-    dw DarckTalkEvents_TestFlagBit
+    dw DarckTalkEvents_FightDarck
 
 ; Darck talk 0: before EVENT_TAKE_ITEM, 'I heard from Lord ...' in one of two versions by whether
 ; the inventory holds any of items $36-$38; afterwards 'You seem to still ...'. (C1, E-0357)
@@ -6718,8 +6767,12 @@ DarckTalkEvents_HeardFromLord::
     call StartScriptAtHL_B04
     ret
 
+; Darck talk 1: the first time starts Script_DarckFawahahahYouChased ('Darck: Fawahahah! You chased
+; your treasures', which sets EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR), afterwards
+; Script_DarckFwahahahahBravoSplendid ('Darck: Fwahahahah! Bravo! Splendid! ...'); both run
+; encounter $0A and then SCRIPT_SCENE_DARCK_DEFEATED. (C1, E-0369)
 ; starts Script_DarckFawahahahYouChased: 'Darck: Fawahahah! You chased your treasures' (E-0248)
-DarckTalkEvents_TestFlagBit::
+DarckTalkEvents_FightDarck::
     ld de, EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6737,10 +6790,10 @@ DarckTalkEvents_TestFlagBit::
 FieldTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
-    dw FieldTalkEvents_Return
+    dw FieldTalkEvents_NoEvent
     dw Talk_FieldScene01
     dw Talk_RandomGoldOrItem
-    dw FieldTalkEvents_Return
+    dw FieldTalkEvents_NoEvent
     dw Talk_PartyDefeatedReturn
     dw Talk_ReturnMessage
     dw Talk_ReturnWarp
@@ -6774,9 +6827,9 @@ FieldTalkEvents::
     dw FieldTalkEvents_TalkToFollower
     dw FieldTalkEvents_TalkToSecondFollower
     dw FieldTalkEvents_TalkToThirdFollower
-    dw FieldTalkEvents_StartScriptAtHL_B04
-    dw FieldTalkEvents_SetFollowerDelay
-    dw FieldTalkEvents_Return
+    dw FieldTalkEvents_KamehaStoleScene
+    dw FieldTalkEvents_ResumeFollowers
+    dw FieldTalkEvents_NoEvent
 
 ; starts Script_CountdownMessage (StartScriptAtHL_B04) (E-0271; was Talk_CountdownMessage) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_CountdownMessage; named after
@@ -6960,8 +7013,10 @@ FieldTalkEvents_TalkToThirdFollower::
     call StartScriptAtHL_B04
     ret
 
+; Field talk 37: when wFollowerDelay is 0, starts Script_SceneKamehaStole (a facing command, then
+; SCRIPT_SCENE_KAMEHA_STOLE); otherwise does nothing. (C1, E-0369)
 ; starts Script_SceneKamehaStole (E-0248)
-FieldTalkEvents_StartScriptAtHL_B04::
+FieldTalkEvents_KamehaStoleScene::
     ld a, [wFollowerDelay]
     or a
     ret nz
@@ -6969,8 +7024,11 @@ FieldTalkEvents_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
+; Field talk 38: clears wFollowerDelay, so StepFollowersTowardTargets moves the followers again and
+; UpdatePlayerMovement_AdvanceStep_SnapFollowers stops holding them on the player
+; (FieldTalkEvents_TalkToThirdFollower sets it to 1). It starts no script. (C1, E-0369)
 ; starts Script_FollowersStep10 (E-0248)
-FieldTalkEvents_SetFollowerDelay::
+FieldTalkEvents_ResumeFollowers::
     xor a
     ld [wFollowerDelay], a
     ret
@@ -7020,8 +7078,9 @@ Talk_FollowersStep14::
     call StartScriptAtHL_B04
     ret
 
+; Field talk 0, 3 and 39: returns at once; these entries start nothing. (C1, E-0369)
 ; starts Script_FieldScene01 (E-0248)
-FieldTalkEvents_Return::
+FieldTalkEvents_NoEvent::
     ret
 
 ; starts Script_FieldScene01 (StartScriptAtHL_B04) (E-0271; was Talk_FieldScene01) (E-0344: the
@@ -7137,7 +7196,7 @@ Talk_StepTriggerReward::
 ElvenVillageTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
-    dw ElvenVillageTalkEvents_TestFlagBit
+    dw ElvenVillageTalkEvents_CyalScenes
     dw ElvenVillageTalkEvents_ShowYoureAHumanHow
     dw ElvenVillageTalkEvents_Cyal
     dw TalkMsg0708_HelloMunchkinEnjoyYourStay
@@ -7149,13 +7208,13 @@ ElvenVillageTalkEvents::
     dw TalkMsg0752_IveHeardThatHumansAre
     dw ElvenVillageTalkEvents_Shop
     dw ElvenVillageTalkEvents_ShowWellWellItIs
-    dw ElvenVillageTalkEvents_TestFlagBit_MasterAgDevilAHuman
+    dw ElvenVillageTalkEvents_MasterAgDevil
     dw TalkMsg0723_TchWeHaveToEatThe
-    dw ElvenVillageTalkEvents_TestFlagBit_That
+    dw ElvenVillageTalkEvents_ThatsWhatWellDo
     dw TalkMsg072F_ThisIsElvensLookoutPostWe
     dw TalkMsg0730_HorridMonstersThatAttack
-    dw ElvenVillageTalkEvents_TestFlagBit_TheHumanInThe
-    dw ElvenVillageTalkEvents_TestFlagBit_RoltI
+    dw ElvenVillageTalkEvents_KeyBossBattle
+    dw ElvenVillageTalkEvents_RoltFoundYou
     dw VaseItem_TinyMedal_Flag0153
     dw VaseItem_INTseed
     dw VaseItem_Potion
@@ -7323,8 +7382,12 @@ ElvenVillageTalkEvents::
     dw ChestItem_LoveWater_Flag01FA
     ds $10, $00
 
+; Elven village talk 0: before EVENT_SCENE_CYAL_SHINE starts Script_SceneCyalShine (which sets it);
+; afterwards, once EVENT_CYAL_LISTEN_HERO_WE_SHOULD is set and while EVENT_CYAL_EEEK_HERO_HELP_ME is
+; clear, starts Script_CyalOhHeroI ('Cyal: Oh! <PLAYER>! I'm over here!' ... 'Cyal: Eeek, <PLAYER>!
+; Help me!', which sets EVENT_CYAL_EEEK_HERO_HELP_ME); otherwise nothing. (C1, E-0369)
 ; starts Script_SceneCyalShine (E-0248)
-ElvenVillageTalkEvents_TestFlagBit::
+ElvenVillageTalkEvents_CyalScenes::
     ld de, EVENT_SCENE_CYAL_SHINE
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -7734,8 +7797,11 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
     call StartMessageCommand09HL_B04
     ret
 
+; Elven village talk 12: does nothing until EVENT_CYAL_EEEK_HERO_HELP_ME is set; then starts
+; Script_MasterAgDevilAHuman ('Master ..., a human, ruff!', 'What shall we do, ruff?' ...). (C1,
+; E-0369)
 ; starts Script_MasterAgDevilAHuman: '*: Master AgDevil, a human, ruff!' (E-0248)
-ElvenVillageTalkEvents_TestFlagBit_MasterAgDevilAHuman::
+ElvenVillageTalkEvents_MasterAgDevil::
     ld de, EVENT_CYAL_EEEK_HERO_HELP_ME
     call TestFlagBit
     ret nc
@@ -7760,8 +7826,12 @@ TalkMsg0723_TchWeHaveToEatThe::
     call StartMessageCommand09HL_B04
     ret
 
+; Elven village talk 14: the first time starts Script_That_3 ('That's what we'll do, kid.', setting
+; EVENT_THAT), afterwards Script_You_11 ('You've come back again, ruff?'); both run encounter $09,
+; then '...Too strong... Arroooh!', SCRIPT_SCENE_TOO_STRONG and set EVENT_SCENE_TOO_STRONG. (C1,
+; E-0369)
 ; starts Script_That_3: '*: That's what we'll do, kid.' (E-0248)
-ElvenVillageTalkEvents_TestFlagBit_That::
+ElvenVillageTalkEvents_ThatsWhatWellDo::
     ld de, EVENT_THAT
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -7837,8 +7907,12 @@ TalkMsg0730_HorridMonstersThatAttack::
     call StartMessageCommand09HL_B04
     ret
 
+; Elven village talk 17: the first time starts Script_TheHumanInThe ('The human in the forest ...')
+; and sets EVENT_THE_HUMAN_IN_THE_FOREST; afterwards Script_WhatYouAgainRude ('What, you again?
+; Rude, rude, ...'). Both run encounter $0B, then SCRIPT_KEY_BOSS_BEATEN and 'Rolt: Wow... <PLAYER>,
+; you're tough.' (C1, E-0369)
 ; starts Script_TheHumanInThe: '*: The human in the forest' (E-0248)
-ElvenVillageTalkEvents_TestFlagBit_TheHumanInThe::
+ElvenVillageTalkEvents_KeyBossBattle::
     ld de, EVENT_THE_HUMAN_IN_THE_FOREST
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -7853,8 +7927,11 @@ ElvenVillageTalkEvents_TestFlagBit_TheHumanInThe::
     call StartScriptAtHL_B04
     ret
 
+; Elven village talk 18: does nothing until EVENT_ROLT_WAIT_GONE_ALREADY is set; then starts
+; Script_RoltI ('Rolt: I've found you at last!' ... 'Rolt: Shut up! Give back Cyal!',
+; SCRIPT_SCENE_GIVE_BACK_CYAL) and sets EVENT_ROLT_IVE_FOUND_YOU_AT. (C1, E-0369)
 ; starts Script_RoltI: 'Rolt: I've found you at last!' (E-0248)
-ElvenVillageTalkEvents_TestFlagBit_RoltI::
+ElvenVillageTalkEvents_RoltFoundYou::
     ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     ret nc
@@ -10091,7 +10168,7 @@ KeyWorldTalkEvents::
     jumptable
     dw Talk_KeyWorldBossBattle
     dw KeyWorldTalkEvents_Warubou
-    dw KeyWorldTalkEvents_StartScriptAtHL_B04
+    dw KeyWorldTalkEvents_WarubouInn
     dw Talk_KeyWorldFloorBattle
     dw TalkMsg0120_WarubouQuitDawdlingWarooh
     dw TalkMsg0122_WarubouWaheyYouDidItHero
@@ -10144,8 +10221,13 @@ KeyWorldTalkEvents_Warubou::
     call StartScriptAtHL_B04
     ret
 
+; Key world talk 2: on map type $84 (wMapType) starts Script_WarubouWaHeyYou_3 ('Warubou: Wa-hey!
+; You did it, <PLAYER>!'); otherwise only when IsPlayerAtKeyWorldGoalKindTriggerColumn gives A = 1
+; starts Script_WarubouWaHeyThat ('Warubou: Wa-hey! That ...'), else returns. Then turns the first
+; object to face the player (wSpriteSlots + OBJ_STATE = hPlayerFacing + 2, low 2 bits) and sets
+; wDataBank = $10; both scripts jump on to the inn script Script_It_3. (C1, E-0369)
 ; starts Script_WarubouWaHeyYou_3: 'Warubou: Wa-hey! You did it, 0!' (E-0248)
-KeyWorldTalkEvents_StartScriptAtHL_B04::
+KeyWorldTalkEvents_WarubouInn::
     ld a, [wMapType]
     cp $84
     jr nz, .call_is_player_at_key_world_goal_kind_trigger

@@ -329,7 +329,7 @@ SGBPaletteSets::
     db $de, $6f, $1f, $33, $3c, $12, $00, $00, $de, $6f, $1f, $33, $3c, $12, $00, $00
 
 ; LZSS-compressed: 7 bytes that expand to 90 (E-0016, E-0017)
-BootAndMainLoop_Gfx::
+BootAndMainLoop_StartUp_Gfx::
     db $5a, $00, $01, $01, $a0, $ff, $47
 
 ; Super Game Boy border set 0: border tiles $00-$7F (4096 bytes, sent with packet set $10);

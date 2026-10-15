@@ -165,7 +165,7 @@ OBJPaletteBufferPlus8Data::
 ; with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes
 ; (E-0238, C1)
 LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData::
-LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2::
+LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData::
     dw $0000, $037f, $027f, $0000 ; id 0
     dw $0000, $4f5d, $1415, $0000 ; id 1
     dw $0000, $4f5d, $02b0, $0000 ; id 2
@@ -340,8 +340,8 @@ Gfx_FieldCommandSpriteTable_18::
     INCBIN "gfx/misc/gfx_field_command_sprite_table_18.lz"
 
 ; LZSS-compressed: 181 bytes that expand to 192 (E-0016, E-0017)
-LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_Data::
-    INCBIN "gfx/misc/load_player_and_follower_sprite_graphics_load_sramrecord_byte_data.lz"
+LoadPlayerAndFollowerSpriteGraphics_Followers_Data::
+    INCBIN "gfx/misc/load_player_and_follower_sprite_graphics_followers_data.lz"
 
 ; LZSS-compressed: 130 bytes that expand to 128 (E-0016, E-0017)
 Gfx_FieldCommandSpriteTable_11::

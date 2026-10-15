@@ -139,7 +139,7 @@ GameMode6_Init::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $01
-    jp ClearSGBPacketBuffer_CheckLinkMode
+    jp ResumeAfterModeChange
 
 ; game mode 6, the egg and save screens after a link or the priest: by wScreenState it shows an
 ; obtained egg, the save prompt and the save, record lists, the monster swap menu and the egg or

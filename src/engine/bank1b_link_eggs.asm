@@ -1795,7 +1795,7 @@ UnreferencedScreenInitFromBank46:: ; configured code entry (E-0197); C0
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $01
-    jp ClearSGBPacketBuffer_CheckLinkMode
+    jp ResumeAfterModeChange
 
 ; on CGB copies the 8-byte palette LoadPalette0FromData_3_Data into wBGPaletteBuffer and sets
 ; wBGPaletteUploadRequest = $7F (E-0118) (E-0344: the address in its name dropped or read as the
@@ -4563,9 +4563,12 @@ LinkKeyTrade_SendReady_Data::
 LinkKeyTrade_SwapKeys_Data::
     db $a0, $a1, $a2
 
-; Link session 4's screen set-up: clears the menu state, decompresses Tiles1Gfx (bank $46) into VRAM
-; $8800, clears the screen buffer and opens the text window, waiting until it is open. (C1, E-0357)
-RunLinkSession4ScreenState_DecompressToVRAM::
+; Link session 4's screen set-up before LinkBattleSetupMenu: clears 256 bytes from wScreenState (B
+; starts at 0, so the $6F loaded into C is unused), decompresses Tiles1Gfx (bank $46) into vTiles1,
+; clears the screen buffer (ClearScreenBufferAndAttributes_BankF1), opens a text window at vTiles1
+; (wTextWindowRows = $02, wTextWindowWidth = $12) and waits until it is open
+; (StepTextWindowOpenClose). (C1, E-0369)
+RunLinkSession4ScreenState_PrepareSetupMenu_Run::
     ld hl, wScreenState
     ld bc, $006f
 

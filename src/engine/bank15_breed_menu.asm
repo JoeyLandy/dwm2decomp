@@ -1072,7 +1072,7 @@ BreedMenu_ChooseParents_ComputeChild::
     ld a, [wArg7]
     ld [wArg2], a
     ld [wSpeciesIdHi], a
-    ld de, NpcBreedMenu_ChooseAndBreed_ComputeChild_Data
+    ld de, NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -1486,7 +1486,7 @@ BreedMenu_ChooseParents_CheckChildIsNew::
     ld [wArg1], a
     ld a, [hl]
     ld [wArg2], a
-    ld hl, NpcBreedMenu_ChooseAndBreed_ComputeChild_Data
+    ld hl, NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data
     ld a, l
     ld [wArg3], a
     ld a, h
@@ -6989,7 +6989,7 @@ BreedMenu_ChooseParents_ClearBoxes_TileRect_2::
     db $b6, $ff, $77, $78, $70, $71, $72, $73, $74, $75, $76, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-NpcBreedMenu_ChooseAndBreed_ComputeChild_Data::
+NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data::
     db $ff, $ff, $dc, $00, $0f, $ff, $ff, $f1, $01, $ff, $ff, $3f, $36, $3f, $ff, $e2
     db $88, $07, $ff, $ff, $c3, $00, $ff, $ff, $fc, $40, $1f, $ff, $fe, $f8, $83, $ff
     db $fe, $63, $00, $7f, $fb, $f9, $f9, $0f, $ff, $ff, $c4, $30, $00, $00, $00, $00

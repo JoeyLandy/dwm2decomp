@@ -4,13 +4,16 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0e
 
-; Message test, library $28: strings below $88 from bank $0E's table, the rest from the overflow
-; table in bank $96. (C1, E-0357)
-DebugMessageTest_Update_BeginStringDisplay::
+; Starts message wStringIndex of message bank $0E: below $88 from this bank's table
+; MessageStrings_Bank0E (BeginStringDisplay); from $88 on it far-calls
+; BeginMessageDisplay_Bank0E_Overflow in bank $96, which subtracts $88 and uses
+; MessageStrings_Bank0E_Overflow. The only caller read is the message test's library 28 ($1C),
+; DebugMessageTest_Update_ShowBank0E. (C1, E-0369)
+BeginMessageDisplay_Bank0E::
     ld a, [wStringIndex]
     cp $88
     jr c, .call_begin_string_display
-    farcall DebugMessageTest_Update_BeginStringDisplay_2
+    farcall BeginMessageDisplay_Bank0E_Overflow
     ret
 
 .call_begin_string_display:
@@ -37,7 +40,7 @@ CopyStringToBuffer_Bank0E::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_0E::
-; data read by DebugMessageTest_Update_BeginStringDisplay (1 word) (E-0347)
+; data read by BeginMessageDisplay_Bank0E (1 word) (E-0347)
 MessageStrings_Bank0E::
     dw StringList_Bank0E_0 ; id 0
 

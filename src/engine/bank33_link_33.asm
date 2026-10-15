@@ -698,7 +698,7 @@ TileRect_ScreenBlockTable_45::
 ; Game mode 5, state 5 frame: exchanges the joypad over the link and, on the link screens, draws the
 ; monster sprites (in screen state $0C the list entry's or the party's at steps $15/$20, in state
 ; $0D the partner's monster's). (C1, E-0357)
-GameMode5_Update_LinkExchangeJoypadPerFrame::
+ExchangeJoypadAndDrawMonsters::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
     or a

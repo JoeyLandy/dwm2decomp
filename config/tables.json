@@ -2878,7 +2878,7 @@
           "names": "monster_table"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_ReadArenaRound copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaRounds_LoadRoundFoes copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "0C",
@@ -2894,7 +2894,7 @@
           "names": "monster_table"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_ReadArenaRound copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaRounds_LoadRoundFoes copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "0C",
@@ -2910,7 +2910,7 @@
           "names": "monster_table"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_ReadArenaRound copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaRounds_LoadRoundFoes copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "0C",
@@ -2926,7 +2926,7 @@
           "names": "monster_table"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_ReadArenaRound copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaRounds_LoadRoundFoes copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "A1",
@@ -6470,7 +6470,7 @@
           "reason": "key-world object grid"
         }
       ],
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E (goal kind 7) for the goal room, to SetupKeyWorldObjectsForMapType_Multiply8; it follows MonsterSpriteTable, which therefore has 383 entries, not 384)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E (goal kind 7) for the goal room, to SetupKeyWorldObjectsForMapType_LoadObjects; it follows MonsterSpriteTable, which therefore has 383 entries, not 384)."
     },
     {
       "bank": "04",
@@ -6486,7 +6486,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6502,7 +6502,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6518,7 +6518,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6534,7 +6534,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6550,7 +6550,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6566,7 +6566,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6582,7 +6582,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6598,7 +6598,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6614,7 +6614,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -6630,7 +6630,7 @@
         }
       ],
       "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
-      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Multiply8 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_LoadObjects reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
     },
     {
       "bank": "04",
@@ -14122,7 +14122,7 @@
         }
       ],
       "record": "replacement graphics number for each goal kind 0-9, then six zero bytes",
-      "note": "E-0221 (C1: SetupKeyWorldObjectsForMapType_Multiply8, for an object whose graphics number (hTemp0) is below 9 and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 + wKeyWorldGoalKind; 9 rows end at the code at $42CD)."
+      "note": "E-0221 (C1: SetupKeyWorldObjectsForMapType_LoadObjects, for an object whose graphics number (hTemp0) is below 9 and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 + wKeyWorldGoalKind; 9 rows end at the code at $42CD)."
     },
     {
       "bank": "31",
@@ -19879,7 +19879,7 @@
           "reason": "default monster name list"
         }
       ],
-      "note": "E-0254 (C1: the code before Jump_014_6CB4 indexes it with wArg3 & $0F (the family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6 Demon, 7 Zombie, 8 Material, 9 Water, 10 '????' (boss)) and then takes name 7 * wArg2 + n; CreateMonsterRecordOfKindTemp1_ReadWorkBuf indexes it with wWorkBuf and wWorkBuf + 1 and copies the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14 names)."
+      "note": "E-0254 (C1: the code before Jump_014_6CB4 indexes it with wArg3 & $0F (the family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6 Demon, 7 Zombie, 8 Material, 9 Water, 10 '????' (boss)) and then takes name 7 * wArg2 + n; CreateMonsterRecordInSlot_Build_CopyDefaultName indexes it with wWorkBuf and wWorkBuf + 1 and copies the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14 names)."
     },
     {
       "bank": "14",

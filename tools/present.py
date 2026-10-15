@@ -611,6 +611,20 @@ def header(listing_name: str, titles: dict[int, dict]) -> str:
     return f"; ROM bank ${b:02X}: {title}\n; The annotated listing of this bank is build/listing/{listing_name}.\n\n"
 
 
+def write_text(path: Path, text: str) -> None:
+    """E-0369: write a source file, retrying while Windows briefly refuses it (a file watcher holding it open
+    raised OSError 22 twice during regeneration); the text written is unchanged."""
+    import time
+    for attempt in range(20):
+        try:
+            path.write_text(text, encoding="utf-8", newline="\n")
+            return
+        except OSError:
+            if attempt == 19:
+                raise
+            time.sleep(0.25)
+
+
 def main(argv: list[str]) -> int:
     src = Path(argv[0]) if argv else ROOT / "build/listing"
     dest = ROOT / "src"
@@ -622,7 +636,7 @@ def main(argv: list[str]) -> int:
     for name, text in texts.items():
         out = src_name(name, titles)
         (dest / out).parent.mkdir(parents=True, exist_ok=True)
-        (dest / out).write_text(header(name, titles) + present(text, names, int(name[4:6], 16)), encoding="utf-8", newline="\n")
+        write_text(dest / out, header(name, titles) + present(text, names, int(name[4:6], 16)))
         written.append(out)
     for stale in {p.relative_to(dest).as_posix() for p in bank_files()} - set(written):
         (dest / stale).unlink()  # a bank file under an earlier name or directory
@@ -638,11 +652,11 @@ def main(argv: list[str]) -> int:
     for ln in lines:
         m = re.match(r'INCLUDE "(?:\w+/)?(bank[0-9a-f]{2})(?:_\w+)?\.asm"', ln)
         out_lines.append(f'INCLUDE "{src_name(m.group(1) + ".asm", titles)}"' if m else ln)
-    main_asm.write_text("\n".join(out_lines), encoding="utf-8", newline="\n")
-    (ROOT / "src/assets.txt").write_text(
+    write_text(main_asm, "\n".join(out_lines))
+    write_text(ROOT / "src/assets.txt",
         "# D-008: the asset files src/ includes, as slices of the reference ROM: path, file offset, length.\n"
         "# tools/build.py extracts them from local/roms/ into the build directory; they are never tracked.\n"
-        + "".join(f"{p}\t${o:06X}\t${n:X}\n" for p, (o, n) in sorted(ASSETS.items())), encoding="utf-8", newline="\n")
+        + "".join(f"{p}\t${o:06X}\t${n:X}\n" for p, (o, n) in sorted(ASSETS.items())))
     print(f"presented {len(texts)} bank files from {src} into {dest}/<dir>/")
     return 0
 

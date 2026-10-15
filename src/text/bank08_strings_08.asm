@@ -51,7 +51,7 @@ StringDatabase::
 CopyNameStringFromBank08Database_Data1::
     dw StringList_08_4 ; id 3
     dw StringList_08_5 ; id 4
-ArenaMenu_PickPrize_ReadFarPointerAtDEInBankB_Data::
+ArenaMenu_PickPrize_GiveItem_CopyName_Data::
     dw StringList_08_6 ; id 5
     dw StringList_08_7 ; id 6
     dw StringList_08_8 ; id 7

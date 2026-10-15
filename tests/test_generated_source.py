@@ -250,19 +250,25 @@ class RoutineNames(unittest.TestCase):
 class CrossReferences(unittest.TestCase):
     def test_header_call_counts_match_the_call_sites_in_the_source(self):
         import json
+        from collections import Counter
         names = json.loads((BANKS.parents[1] / "config" / "names.json").read_text(encoding="utf-8"))
         files = {f.name: f.read_text(encoding="utf-8").splitlines() for f in BANKS.glob("bank*.asm")}
         header = re.compile(r"^; (\d+) call sites? from ")
+        # E-0368: one pass over the listing counts every call operand (the same lines a per-name
+        # `^\s+(?:call(?: [a-z]+,)?|farcall(?:_b)?) <name>$` matches), and indexes each bank's label lines
+        call = re.compile(r"^\s+(?:call(?: [a-z]+,)?|farcall(?:_b)?) (.+)$")
+        calls = Counter(m.group(1) for lines in files.values() for l in lines if (m := call.match(l)))
+        heads = {fname: {l.split("::")[0]: k for k, l in reversed(list(enumerate(lines))) if "::" in l}
+                 for fname, lines in files.items()}
         wrong, checked = [], 0
         for key, info in names.items():
             if key.startswith("_"):
                 continue
             name = info["name"]
-            call = re.compile(r"^\s+(?:call(?: [a-z]+,)?|farcall(?:_b)?) " + re.escape(name) + r"$")
-            actual = sum(1 for lines in files.values() for l in lines if call.match(l))
+            actual = calls[name]
             bank = int(key.split(":")[0], 16)
             lines = files[f"bank{bank:02x}.asm"]
-            i = next(k for k, l in enumerate(lines) if l.startswith(name + "::"))
+            i = heads[f"bank{bank:02x}.asm"][name]
             claimed = next((int(m.group(1)) for k in range(i - 1, max(0, i - 8), -1)
                             if (m := header.match(lines[k]))), 0)
             checked += 1

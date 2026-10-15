@@ -5,14 +5,14 @@ SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
     db $0a
 
 ; Field state 7, a harmful floor: flashes the screen for five frames
-; (FieldState_StepChecks_HarmfulFloor_QueueSoundEffect), then hurts the party: on a floor of the
-; first kind (wMenuSubState 0) it subtracts the floor's HP damage
-; (FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte), on the other kind the poison damage
-; (FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte_3), and in both cases the MP drain. If a
-; member fell (wStatusFieldStep low bits) it starts talk event group 4; otherwise it returns to
-; field state 0 (5 in a key world). (C1, E-0357)
+; (FieldState_StepChecks_HarmfulFloor_Flash), then hurts the party: on a floor of the first kind
+; (wMenuSubState 0) it subtracts the floor's HP damage
+; (FieldState_StepChecks_HarmfulFloor_FloorDamage), on the other kind the poison damage
+; (FieldState_StepChecks_HarmfulFloor_PoisonDamage), and in both cases the MP drain. If a member
+; fell (wStatusFieldStep low bits) it starts talk event group 4; otherwise it returns to field state
+; 0 (5 in a key world). (C1, E-0357)
 FieldState_StepChecks_HarmfulFloor::
-    call FieldState_StepChecks_HarmfulFloor_QueueSoundEffect
+    call FieldState_StepChecks_HarmfulFloor_Flash
     ld a, [wMenuState]
     inc a
     ld [wMenuState], a
@@ -23,13 +23,13 @@ FieldState_StepChecks_HarmfulFloor::
     ld a, [wMenuSubState]
     or a
     jr nz, .call_field_state_step_checks_harmful_floor
-    call FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte
-    call FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte_2
+    call FieldState_StepChecks_HarmfulFloor_FloorDamage
+    call FieldState_StepChecks_HarmfulFloor_DrainMP
     jr .check_status_field_step
 
 .call_field_state_step_checks_harmful_floor:
-    call FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte_3
-    call FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte_2
+    call FieldState_StepChecks_HarmfulFloor_PoisonDamage
+    call FieldState_StepChecks_HarmfulFloor_DrainMP
 
 .check_status_field_step:
     xor a
@@ -59,7 +59,7 @@ FieldState_StepChecks_HarmfulFloor::
 
 ; The MP loss of a harmful floor (when wStatusStepFlags bit 0 is set): each standing party member
 ; with status bit 0 set and MP left loses 1 MP. (C1, E-0357)
-FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte_2::
+FieldState_StepChecks_HarmfulFloor_DrainMP::
     ld a, [wStatusStepFlags]
     and $01
     ret z
@@ -116,10 +116,11 @@ SetFieldStepFlagsBit7::
     ld [wFieldStepFlags], a
     ret
 
-; The poison damage of a step: each standing party member with status bit 2 loses 1 HP; one that
-; reaches 0 falls (status bit 7, wFieldStepFlags bit 7 and its bit in wStatusFieldStep). (C1,
-; E-0357)
-FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte_3::
+; The poison damage of a step: each standing party member (MON_STATUS bit 7 clear) with status bit 2
+; loses 1 HP; one that reaches 0 or below falls: SetFieldStepFlagsBit7, its bit (party position) set
+; in wStatusFieldStep, its status bits 2 and 3 cleared and bit 7 set, and its HP written as 0. (C1,
+; E-0369)
+FieldState_StepChecks_HarmfulFloor_PoisonDamage::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -201,7 +202,7 @@ FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte_3::
 ; wFieldStepFlags to $40) unless wStatusFieldStep bit 7 is set, in which case it loses 2 HP, or 5 on
 ; map $3A outside key worlds; a member that reaches 0 falls (status bit 7, its bit in
 ; wStatusFieldStep). (C1, E-0357)
-FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte::
+FieldState_StepChecks_HarmfulFloor_FloorDamage::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -295,9 +296,13 @@ FieldState_StepChecks_HarmfulFloor_LoadSRAMRecordByte::
     jr nz, .loop
     ret
 
-; The flash of a harmful floor: on the first frame plays sound $66 and saves the palettes; then
-; alternates the palettes every four frames between the saved ones and a flash. (C1, E-0357)
-FieldState_StepChecks_HarmfulFloor_QueueSoundEffect::
+; The flash of a harmful floor or status step, by wMenuState (which
+; FieldState_StepChecks_HarmfulFloor counts 0-4): at 0 plays sound $66, sets the DMG palettes
+; $D2/$D2/$E2 and on CGB saves wBGPaletteBuffer to wBGPaletteCopy; at 1-3 (bit 2 clear) shows the
+; flash, DMG $2D/$2D/$1D and on CGB the saved colours inverted into wBGPaletteBuffer; at 4 restores
+; $D2/$D2/$E2 and the saved colours. On CGB each change sets wBGPaletteUploadRequest to $7F. (C1,
+; E-0369)
+FieldState_StepChecks_HarmfulFloor_Flash::
     ld a, [wMenuState]
     or a
     jr nz, .read_menu_state
@@ -375,7 +380,7 @@ FieldState_StepChecks_HarmfulFloor_QueueSoundEffect::
 RunPlayerMoveTypeMapMoveType::
     ld a, [wMapMoveType]
     jumptable
-    dw RunPlayerMoveTypeMapMoveType_Return
+    dw RunPlayerMoveTypeMapMoveType_None
     dw RunPlayerMoveTypeMapMoveType_HurtFloor1
     dw RunPlayerMoveTypeMapMoveType_HurtFloor2
     dw RunPlayerMoveTypeMapMoveType_HurtFloor3
@@ -385,7 +390,7 @@ RunPlayerMoveTypeMapMoveType::
     dw RunPlayerMoveTypeMapMoveType_HurtFloor7
 
 ; Map movement type 0: no harmful floor. (C1, E-0357)
-RunPlayerMoveTypeMapMoveType_Return::
+RunPlayerMoveTypeMapMoveType_None::
     ret
 
 ; Map movement type 6: floor tile $50 hurts, the lighter kind (wStatusFieldStep $80: 2 HP per step;
@@ -397,7 +402,7 @@ RunPlayerMoveTypeMapMoveType_LightHurtFloor::
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; Map movement type 7: floor tile $52 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_HurtFloor7::
@@ -405,7 +410,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor7::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; Map movement type 1: floor tile $44 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_HurtFloor1::
@@ -413,7 +418,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor1::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; Map movement type 2: floor tile $56 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_HurtFloor2::
@@ -421,7 +426,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor2::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; Map movement type 3: floor tile $44 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_HurtFloor3::
@@ -429,7 +434,7 @@ RunPlayerMoveTypeMapMoveType_HurtFloor3::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; Map movement type 4: floor tile $44 hurts, the lighter kind (wStatusFieldStep $80, wFieldStepFlags
 ; $40). (C1, E-0357)
@@ -440,7 +445,7 @@ RunPlayerMoveTypeMapMoveType_LightHurtFloor4::
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; Map movement type 5: floor tile $44 hurts. (C1, E-0357)
 RunPlayerMoveTypeMapMoveType_HurtFloor::
@@ -448,11 +453,11 @@ RunPlayerMoveTypeMapMoveType_HurtFloor::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
 ; When no fade, script or talk countdown is running and one of the four tiles under the player is
 ; the harmful tile in hTemp1, switches to field state 7 (the floor damage). (C1, E-0357)
-RunPlayerMoveTypeMapMoveType_HurtFloor_CheckFadeState::
+RunPlayerMoveTypeMapMoveType_CheckHurtTile::
     ld a, [wFadeState]
     or a
     ret nz
@@ -2472,8 +2477,7 @@ RunBattleIntroKindCase_SetBattleKindTo02::
 
 ; Battle intro kind 1, a key-world encounter: picks a random encounter kind (one of four) and the
 ; area's monster group from wKeyWorldAreas (or the floor's entry in wKeyWorldFloorInfo), draws the
-; foes (RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed) and sets battle kind 1. (C1,
-; E-0357)
+; foes (RunBattleIntroKindCase_KeyWorldEncounter_RollFoes) and sets battle kind 1. (C1, E-0357)
 RunBattleIntroKindCase_KeyWorldEncounter::
     call NextTableByte
     ld a, [wRandomLo]
@@ -2506,7 +2510,7 @@ RunBattleIntroKindCase_KeyWorldEncounter::
     add a
     add c
     ld c, a
-    call RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed
+    call RunBattleIntroKindCase_KeyWorldEncounter_RollFoes
     ld a, $01
     ld [wBattleKind], a
     ret
@@ -2536,7 +2540,7 @@ RunBattleIntroKindCase_KeyWorldEncounter::
     add a
     add a
     ld c, a
-    call RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed
+    call RunBattleIntroKindCase_KeyWorldEncounter_RollFoes
     ld a, $01
     ld [wBattleKind], a
     ret
@@ -2548,9 +2552,13 @@ FillEncounterFromEntry_Data1::
 FillEncounterFromEntry_Data2::
     db $00, $01, $00, $01
 
-; Draws three key-world foes: each a random one of eight entries from wKeyWorldMonsters starting at
-; the area's group, with its level; skipped when hPlayerStateFlags bit 3 is set. (C1, E-0357)
-RunBattleIntroKindCase_KeyWorldEncounter_NextRandomSeed::
+; Fills the three foes of a key-world encounter from wKeyWorldMonsters (id byte, then level * 2 with
+; the id's high bit in bit 0). Normally each foe is entry C + (wKeyRandomLo & 7) after
+; NextRandomSeed, capped at entry $1F, where C is the group the caller computed; with
+; hPlayerStateFlags bit 3 set each is entry $20 + (wKeyRandomLo & 7) instead, past the 32 rolled
+; entries, and C is ignored. The id word goes to wEncounterMonsters and the level (byte / 2) to
+; wWildLevel + foe index. (C1, E-0369)
+RunBattleIntroKindCase_KeyWorldEncounter_RollFoes::
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .skip2
@@ -2778,7 +2786,7 @@ RunBattleTransitionStep_StagedSteps::
     ld a, [wBattleTransitionSubStep]
     jumptable
     dw RunBattleTransitionStep_CheckStage
-    dw RunBattleTransitionStep_StagedSteps_ReadTransitionCounter
+    dw RunBattleTransitionStep_StagedSteps_Spiral
     dw RunBattleTransitionStep_SetCounts
 
 ; (E-0345: was RunBattleTransitionStep_CheckStage) reads the transition stage, then advances the
@@ -2786,12 +2794,15 @@ RunBattleTransitionStep_StagedSteps::
 RunBattleTransitionStep_CheckStage::
     ld a, [wTransitionCounter]
     jumptable
-    dw RunBattleTransitionStep_CheckStage_ReadTransitionStage
-    dw RunBattleTransitionStep_AdvanceBattleTransitionStep
+    dw RunBattleTransitionStep_CheckStage_CloseColumns
+    dw RunBattleTransitionStep_CheckStage_End
 
-; Battle transition, closing columns: each frame blanks one more column pair of the screen from both
-; sides with tile $C4 (20 stages), then moves on. (C1, E-0357)
-RunBattleTransitionStep_CheckStage_ReadTransitionStage::
+; Battle transition, closing columns (entry 0 of RunBattleTransitionStep_CheckStage): for stage
+; wTransitionStage (0-19) blanks with tile $C4 (WriteTileC4AtTransitionBGPtrLoAndClearAttr) column
+; wTransitionStage on rows 0, 2, ... 16 and column 19 - wTransitionStage on rows 1, 3, ... 17 of the
+; transition area, then counts the stage; at stage 20 it moves wTransitionCounter to the next entry.
+; (C1, E-0369)
+RunBattleTransitionStep_CheckStage_CloseColumns::
     ld a, [wTransitionStage]
     cp $14
     jr nz, .read_transition_stage
@@ -2846,16 +2857,15 @@ RunBattleTransitionStep_CheckStage_ReadTransitionStage::
     ret
 
 ; Ends the closing transition: next transition step. (C1, E-0357)
-RunBattleTransitionStep_AdvanceBattleTransitionStep::
+RunBattleTransitionStep_CheckStage_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
-; writes tile $C4 at the BG map address from
-; WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap and, on CGB, attribute
-; 0 in VRAM bank 1 (E-0122)
+; writes tile $C4 at the BG map address from WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate and,
+; on CGB, attribute 0 in VRAM bank 1 (E-0122)
 WriteTileC4AtTransitionBGPtrLoAndClearAttr::
-    call WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap
+    call WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate
     ld a, $c4
     call WriteVRAMByte
     ld a, [wIsCGB]
@@ -2871,7 +2881,7 @@ WriteTileC4AtTransitionBGPtrLoAndClearAttr::
 
 ; Moves HL to the BG map position of offset L from the transition origin: row by the high bits, then
 ; L & $1F columns to the right with wrapping. (C1, E-0357)
-WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap::
+WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate::
     push bc
     ld b, l
     ld a, l
@@ -2926,17 +2936,17 @@ AddHLToTransitionBGPtrLoInBGMap::
     ret
 
 ; The spiral transition: six tiles per frame. (C1, E-0357)
-RunBattleTransitionStep_StagedSteps_ReadTransitionCounter::
+RunBattleTransitionStep_StagedSteps_Spiral::
     ld b, $06
 
 ; Runs the spiral transition's current pass (wTransitionCounter): pass 0, pass 1, or the end. (C1,
 ; E-0357)
-RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter::
+RunBattleTransitionStep_StagedSteps_SpiralPass::
     ld a, [wTransitionCounter]
     jumptable
     dw SpiralTransition_Pass0
     dw SpiralTransition_Pass1
-    dw AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep
+    dw SpiralTransition_End
 
 ; Spiral pass 0: picks the direction of the next tile from the stage (right, down, left or up along
 ; shrinking rings) and blanks it. (C1, E-0357)
@@ -2944,40 +2954,40 @@ SpiralTransition_Pass0::
     push bc
     ld a, [wTransitionStage]
     cp $11
-    jp c, SpiralTransition_Pass1_Skip
+    jp c, SpiralTransition_BlankMoveUp
     cp $23
-    jp c, SpiralTransition_Pass1_Skip2
+    jp c, SpiralTransition_BlankMoveLeft
     cp $33
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA
+    jp c, SpiralTransition_BlankMoveDown
     cp $43
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jp c, SpiralTransition_BlankMoveRight
     cp $51
-    jp c, SpiralTransition_Pass1_Skip
+    jp c, SpiralTransition_BlankMoveUp
     cp $5f
-    jp c, SpiralTransition_Pass1_Skip2
+    jp c, SpiralTransition_BlankMoveLeft
     cp $6b
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA
+    jp c, SpiralTransition_BlankMoveDown
     cp $77
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jp c, SpiralTransition_BlankMoveRight
     cp $81
-    jr c, SpiralTransition_Pass1_Skip
+    jr c, SpiralTransition_BlankMoveUp
     cp $8b
-    jp c, SpiralTransition_Pass1_Skip2
+    jp c, SpiralTransition_BlankMoveLeft
     cp $93
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA
+    jp c, SpiralTransition_BlankMoveDown
     cp $9b
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jp c, SpiralTransition_BlankMoveRight
     cp $a1
-    jr c, SpiralTransition_Pass1_Skip
+    jr c, SpiralTransition_BlankMoveUp
     cp $a7
-    jp c, SpiralTransition_Pass1_Skip2
+    jp c, SpiralTransition_BlankMoveLeft
     cp $ab
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA
+    jp c, SpiralTransition_BlankMoveDown
     cp $af
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jp c, SpiralTransition_BlankMoveRight
     cp $b1
-    jr c, SpiralTransition_Pass1_Skip
-    jr SpiralTransition_Pass1_Skip2
+    jr c, SpiralTransition_BlankMoveUp
+    jr SpiralTransition_BlankMoveLeft
 
 ; Spiral pass 1: the reverse spiral, the direction from the stage by a second table of ring
 ; boundaries. (C1, E-0357)
@@ -2985,44 +2995,44 @@ SpiralTransition_Pass1::
     push bc
     ld a, [wTransitionStage]
     cp $02
-    jr c, SpiralTransition_Pass1_Skip2
+    jr c, SpiralTransition_BlankMoveLeft
     cp $04
-    jr c, SpiralTransition_Pass1_Skip
+    jr c, SpiralTransition_BlankMoveUp
     cp $08
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jp c, SpiralTransition_BlankMoveRight
     cp $0c
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA
+    jp c, SpiralTransition_BlankMoveDown
     cp $12
-    jr c, SpiralTransition_Pass1_Skip2
+    jr c, SpiralTransition_BlankMoveLeft
     cp $18
-    jr c, SpiralTransition_Pass1_Skip
+    jr c, SpiralTransition_BlankMoveUp
     cp $20
-    jp c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jp c, SpiralTransition_BlankMoveRight
     cp $28
-    jr c, SpiralTransition_Pass1_ReadTransitionCountA
+    jr c, SpiralTransition_BlankMoveDown
     cp $32
-    jr c, SpiralTransition_Pass1_Skip2
+    jr c, SpiralTransition_BlankMoveLeft
     cp $3c
-    jr c, SpiralTransition_Pass1_Skip
+    jr c, SpiralTransition_BlankMoveUp
     cp $48
-    jr c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jr c, SpiralTransition_BlankMoveRight
     cp $54
-    jr c, SpiralTransition_Pass1_ReadTransitionCountA
+    jr c, SpiralTransition_BlankMoveDown
     cp $62
-    jr c, SpiralTransition_Pass1_Skip2
+    jr c, SpiralTransition_BlankMoveLeft
     cp $70
-    jr c, SpiralTransition_Pass1_Skip
+    jr c, SpiralTransition_BlankMoveUp
     cp $80
-    jr c, SpiralTransition_Pass1_ReadTransitionCountA2
+    jr c, SpiralTransition_BlankMoveRight
     cp $90
-    jr c, SpiralTransition_Pass1_ReadTransitionCountA
+    jr c, SpiralTransition_BlankMoveDown
     cp $a2
-    jr c, SpiralTransition_Pass1_Skip2
-    jr SpiralTransition_Pass1_Skip
+    jr c, SpiralTransition_BlankMoveLeft
+    jr SpiralTransition_BlankMoveUp
 
 ; Blanks the tile at the spiral position and moves up a row (starting at offset $233 on the first
 ; stage). (C1, E-0357)
-SpiralTransition_Pass1_Skip::
+SpiralTransition_BlankMoveUp::
     or a
     jr nz, .read_transition_count_a
     ld hl, $0233
@@ -3045,11 +3055,11 @@ SpiralTransition_Pass1_Skip::
     ld a, h
     sbc $00
     ld h, a
-    jr SpiralTransition_Pass1_SetTransitionCountA
+    jr SpiralTransition_NextStage
 
 ; Blanks the tile at the spiral position and moves left a column (starting at offset $12A on the
 ; first stage). (C1, E-0357)
-SpiralTransition_Pass1_Skip2::
+SpiralTransition_BlankMoveLeft::
     or a
     jr nz, .read_transition_count_a
     ld hl, $012a
@@ -3072,10 +3082,10 @@ SpiralTransition_Pass1_Skip2::
     ld a, h
     sbc $00
     ld h, a
-    jr SpiralTransition_Pass1_SetTransitionCountA
+    jr SpiralTransition_NextStage
 
 ; Blanks the tile at the spiral position and moves down a row. (C1, E-0357)
-SpiralTransition_Pass1_ReadTransitionCountA::
+SpiralTransition_BlankMoveDown::
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3089,10 +3099,10 @@ SpiralTransition_Pass1_ReadTransitionCountA::
     ld a, h
     adc $00
     ld h, a
-    jr SpiralTransition_Pass1_SetTransitionCountA
+    jr SpiralTransition_NextStage
 
 ; Blanks the tile at the spiral position and moves right a column. (C1, E-0357)
-SpiralTransition_Pass1_ReadTransitionCountA2::
+SpiralTransition_BlankMoveRight::
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3109,7 +3119,7 @@ SpiralTransition_Pass1_ReadTransitionCountA2::
 
 ; Stores the spiral position and counts the stage; after $B4 stages the pass ends. Repeats for the
 ; frame's tile count. (C1, E-0357)
-SpiralTransition_Pass1_SetTransitionCountA::
+SpiralTransition_NextStage::
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
@@ -3127,11 +3137,11 @@ SpiralTransition_Pass1_SetTransitionCountA::
 .restore:
     pop bc
     dec b
-    jp nz, RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter
+    jp nz, RunBattleTransitionStep_StagedSteps_SpiralPass
     ret
 
 ; Ends the spiral transition: next transition step. (C1, E-0357)
-AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep::
+SpiralTransition_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
@@ -3142,8 +3152,8 @@ RunBattleTransitionStep_SetCounts::
     ld a, [wTransitionCounter]
     jumptable
     dw StripeTransition_BlankStripes
-    dw RunBattleTransitionStep_SetCounts_ReturnAfterSetup
-    dw RunBattleTransitionStep_SetCounts_AdvanceBattleTransitionStep
+    dw StripeTransition_IdleFrame
+    dw StripeTransition_End
 
 ; The stripe transition: blanks the rows or columns listed for the stage (row steps from
 ; TransitionRowStepTable, counts from RunBattleTransitionStep_SetCounts_Data1). (C1, E-0357)
@@ -3270,13 +3280,13 @@ StripeTransition_BlankStripes::
     ret
 
 ; The stripe transition's wait step: goes back one pass. (C1, E-0357)
-RunBattleTransitionStep_SetCounts_ReturnAfterSetup::
+StripeTransition_IdleFrame::
     ld hl, wTransitionCounter
     dec [hl]
     ret
 
 ; Ends the stripe transition: next transition step. (C1, E-0357)
-RunBattleTransitionStep_SetCounts_AdvanceBattleTransitionStep::
+StripeTransition_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
@@ -3554,7 +3564,7 @@ AdvanceStepCounterAndUpdateStoredRecords::
 ; Each step after the long-faces scene (EVENT_SCENE_LONG_FACES_002), outside scripts and with
 ; encounters on: a standing party member holding item $1B regains 1 HP, one holding item $1C regains
 ; 1 MP, up to the maximum. (C1, E-0357)
-UpdatePlayerMovement_TestFlagBit::
+UpdatePlayerMovement_HeldItemRegen::
     ld a, [wEncounterRate]
     and $7f
     ret z

@@ -42,6 +42,8 @@ def known_symbols(root: Path = ROOT) -> set[str]:
         if p.exists():
             t = p.read_text(encoding="utf-8")
             known |= set(re.findall(r"^(?:DEF|MACRO) (\w+)", t, re.M))
+    for p in root.glob("src/*/bank[0-9a-f][0-9a-f]_*.asm"):  # labels the listing gives no address alias (scripts)
+        known |= set(re.findall(r"^([A-Za-z_]\w*)::", p.read_text(encoding="utf-8"), re.M))
     return known
 
 

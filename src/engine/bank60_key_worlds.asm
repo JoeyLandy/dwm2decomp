@@ -40,21 +40,22 @@ WarpEffect_Warp_FindSRAMSlotMarkerIndex::
 ; Generates the key world from the key's seed: the size and areas (repeated until
 ; KeyWorldLayout_NumberCellsAndPlaceEntrances accepts the layout), the rooms, the floor menus, the
 ; objects, the monsters and the goal; then marks the key's list entry generated (bit 7 set, bit 6
-; clear). (C1, E-0357)
-DebugAutomap_Update_KeyWorldLayout_Start::
+; clear). WarpEffect_Warp_FindSRAMSlotMarkerIndex falls through into it after loading the seed, and
+; DebugAutomap_Update_EnterKeyWorld (bank $01) far-calls it. (C1, E-0369)
+GenerateKeyWorld::
     call KeyWorldLayout_Start
-    call DebugAutomap_Update_RunRandomPatternCase
-    call DebugAutomap_Update_NextRandomSeed
+    call GenerateKeyWorld_FillChunkSlots
+    call GenerateKeyWorld_ShuffleAreaNumbers
     call DebugAutomap_Update_MergeKeyWorldAreas
     call KeyWorldLayout_PlaceAreaExits
-    call DebugAutomap_Update_Return
+    call GenerateKeyWorld_EmptyStep
     call KeyWorldLayout_NumberCellsAndPlaceEntrances
     or a
-    jr nz, DebugAutomap_Update_KeyWorldLayout_Start
+    jr nz, GenerateKeyWorld
     farcall KeyWorldLayout_FillEntrances
     call KeyWorldLayout_SetEntranceFlags
-    call DebugAutomap_Update_SetKeyWorldBandForA
-    call DebugAutomap_Update_LoadKeyWorldLevelBaseTripleForPartyStrength
+    call GenerateKeyWorld_PlaceObjects
+    call GenerateKeyWorld_RollMonsters
     call KeyWorldLayout_PlaceGoal
     ld a, [wCurrentKeyIndex]
     ld l, a
@@ -75,7 +76,7 @@ DebugAutomap_Update_KeyWorldLayout_Start::
 
 ; The key world's monsters: the level base for the party strength, the key's parameters, 32 normal
 ; and 8 boss monsters with their levels, the monster ids and the encounter table. (C1, E-0357)
-DebugAutomap_Update_LoadKeyWorldLevelBaseTripleForPartyStrength::
+GenerateKeyWorld_RollMonsters::
     call LoadKeyWorldLevelBaseTripleForPartyStrength
     call LoadKeyWorldParamsForCurrentKeyIndex
     call RollKeyWorldMonsterTableKeyWorldMonsters
@@ -1466,7 +1467,7 @@ KeyWorldGoalKindRows::
 
 ; Fills each of the four chunk slots that is still empty with a random chunk pattern
 ; (RunRandomPatternCase, retried until one fits), counting the areas in hTemp7. (C1, E-0357)
-DebugAutomap_Update_RunRandomPatternCase::
+GenerateKeyWorld_FillChunkSlots::
     ld b, $00
     ld hl, wKeyWorldChunks + $3
     ld a, l
@@ -1543,9 +1544,11 @@ DebugAutomap_Update_MergeKeyWorldAreas::
     jr nz, .loop
     ret
 
-; With more than one area, swaps random pairs of area numbers (once per area), then walks the areas
-; by number to settle their cells' order. (C1, E-0357)
-DebugAutomap_Update_NextRandomSeed::
+; With more than one area (hTemp7), swaps random pairs of area numbers (the high nibbles of
+; wKeyWorldAreas, once per area), then walks the areas by number to settle their cells' order
+; (SwapDEByteWithMatchingKeyWorldAreas); finally copies the four area numbers (high nibbles of
+; wKeyWorldAreas) into wKeyWorldAreaInfo. (C1, E-0369)
+GenerateKeyWorld_ShuffleAreaNumbers::
     ldh a, [hTemp7]
     cp $01
     jp z, .skip4
@@ -2073,8 +2076,9 @@ ReadKeyWorldCellIsSolid::
     pop hl
     ret
 
-; Does nothing. (C1, E-0357)
-DebugAutomap_Update_Return::
+; An empty step of GenerateKeyWorld (called between KeyWorldLayout_PlaceAreaExits and
+; KeyWorldLayout_NumberCellsAndPlaceEntrances): only a ret. (C1, E-0369)
+GenerateKeyWorld_EmptyStep::
     ret
 
 ; Sets the menu flag of each floor entrance of kind 4 or 5 ($FF ends the list): floor state 1 gives
@@ -2189,8 +2193,7 @@ KeyWorldLayout_SetEntranceFlags_Data::
 ; With more than one area, numbers the areas' cells one after another; then places the floor
 ; entrances (their number from the area count's entry in KeyWorldAreaLayoutTable_Bank60, bank $84)
 ; spread evenly over the cells into wKeyWorldFloorInfo (PlaceObjectInAreaC); A = 0 when all fit,
-; otherwise non-zero, which makes DebugAutomap_Update_KeyWorldLayout_Start generate the layout
-; again. (C1, E-0357)
+; otherwise non-zero, which makes GenerateKeyWorld generate the layout again. (C1, E-0357)
 KeyWorldLayout_NumberCellsAndPlaceEntrances::
     ldh a, [hTemp7]
     cp $01
@@ -2512,16 +2515,18 @@ PlaceObjectInAreaC::
     ld a, $01
     ret
 
-; Places the key world's objects: the band from the party strength (SetKeyWorldBandForA) gives the
-; object count; each gets a kind (RollKeyWorldObjectKind) and a random free cell; when one cannot be
-; placed the count is cut to those placed. (C1, E-0357)
-DebugAutomap_Update_SetKeyWorldBandForA::
+; Places the key world's objects: the band from the party strength (SetKeyWorldBandForA on
+; wPartyStrength) picks the object count (wMapObjectCount: 10, 15 or 20 from the 16-byte table after
+; it); each object in wMapObjects (8 bytes each) gets a kind (RollKeyWorldObjectKind) and a random
+; free cell (PlaceKeyWorldObjectAtRandomCell). When one cannot be placed the count is cut to those
+; placed; when none were placed it starts again with wKeyWorldBand = 0 (10 objects). (C1, E-0369)
+GenerateKeyWorld_PlaceObjects::
     ld a, [wPartyStrength]
     call SetKeyWorldBandForA
 
 .loop:
     ld [wKeyWorldBand], a
-    ld hl, DebugAutomap_Update_SetKeyWorldBandForA_Data
+    ld hl, GenerateKeyWorld_PlaceObjects_Data
     add_a_to_hl
     ld a, [hl]
     ld [wMapObjectCount], a
@@ -2559,8 +2564,8 @@ DebugAutomap_Update_SetKeyWorldBandForA::
     jr z, .loop
     ret
 
-; data read by DebugAutomap_Update_SetKeyWorldBandForA (16 bytes) (E-0347)
-DebugAutomap_Update_SetKeyWorldBandForA_Data::
+; data read by GenerateKeyWorld (16 bytes) (E-0347)
+GenerateKeyWorld_PlaceObjects_Data::
     db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0f, $0f, $0f, $0f, $14, $14, $14, $14
 
 ; wKeyWorldBand = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)

@@ -73,7 +73,7 @@ GameMode8_Init::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $01
-    jp ClearSGBPacketBuffer_CheckLinkMode
+    jp ResumeAfterModeChange
 
 ; game mode 8, the egg hand-over scene: by wScreenSubStep it moves the scene's objects and sprite
 ; slots, shows '0 received G's egg' and returns to the game mode the link scene set (E-0354; was:

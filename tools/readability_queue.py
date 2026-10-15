@@ -34,8 +34,12 @@ LONG = 50
 
 def given_names(root: Path = ROOT) -> set[str]:
     names = json.loads((root / "config/names.json").read_text(encoding="utf-8"))
-    return {v if isinstance(v, str) else v["name"] for k, v in names.items()
-            if not k.startswith("_") and (isinstance(v, str) or "name" in v)}
+    given = {v if isinstance(v, str) else v["name"] for k, v in names.items()
+             if not k.startswith("_") and (isinstance(v, str) or "name" in v)}
+    fam = root / "config/name_families.json"  # a per-bank helper family's chosen name
+    if fam.exists():
+        given |= {f["name"] for f in json.loads(fam.read_text(encoding="utf-8")).get("families", [])}
+    return given
 
 
 def instruction_named(name: str, given: set[str]) -> bool:

@@ -7,47 +7,53 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 GetBattleATK_Bank05::
     ld hl, wBattleATK
-    jr ReadSlotAIModeIndexed_Bank05_2_Skip
+    jr GetBattleStatWord_Bank05
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
 GetBattleDEF_Bank05::
     ld hl, wBattleDEF
-    jr ReadSlotAIModeIndexed_Bank05_2_Skip
+    jr GetBattleStatWord_Bank05
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
 GetBattleMaxHP_Bank05::
     ld hl, wBattleMaxHP
-    jr ReadSlotAIModeIndexed_Bank05_2_Skip
+    jr GetBattleStatWord_Bank05
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 GetBattleMaxMP_Bank05::
     ld hl, wBattleMaxMP
-    jr ReadSlotAIModeIndexed_Bank05_2_Skip
+    jr GetBattleStatWord_Bank05
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
 GetBattleHP_Bank05::
     ld hl, wBattleHP
-    jr ReadSlotAIModeIndexed_Bank05_2_Skip
+    jr GetBattleStatWord_Bank05
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
 GetBattleMP_Bank05::
     ld hl, wBattleMP
-    jr ReadSlotAIModeIndexed_Bank05_2_Skip
+    jr GetBattleStatWord_Bank05
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
 GetBattleAGL_Bank05::
     ld hl, wBattleAGL
-    jr ReadSlotAIModeIndexed_Bank05_2_Skip
+    jr GetBattleStatWord_Bank05
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
+; A = battle slot: returns A = wSlotAIMode[slot] (the byte at wSlotAIMode + A); clobbers HL. The
+; same code appears again in this bank as ReadSlotAIModeIndexed_Bank05; this copy is called by
+; FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_SpeedAndHPCheck,
+; AIScore_Ramming_LastFoeHPAndResist and AIScore_Kamikaze_HealerAllyAndFoeHP. (C1, E-0369)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ReadSlotAIModeIndexed_Bank05_2::
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     ret
 
-; The end of a word-table read: HL = the word at HL + 2 * A. (C1, E-0357)
-ReadSlotAIModeIndexed_Bank05_2_Skip::
+; The shared tail of GetBattleATK_Bank05 ... GetBattleAGL_Bank05: HL = a per-slot word table, A =
+; slot: returns HL = the word at HL + 2 * A (A doubled in 8 bits) and A = its low byte (deref_hl).
+; (C1, E-0369)
+GetBattleStatWord_Bank05::
     add a
     add_a_to_hl
     deref_hl
@@ -516,7 +522,7 @@ AnyFoeHasMPReadsWrongOffset::
 ; (LoadSkillRecordPart, field 7) has bit 0 set, i.e. a skill TakeMagic could act on; C = 0 when none
 ; does; C = 1 when the actor's AI mode is below 2 (the check is skipped). Keeps wRecordBuffer. (C1,
 ; E-0357)
-AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05::
+AIScore_TakeMagic_Conditions_FoeHasTakeableSkill::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
@@ -715,7 +721,7 @@ AnyFoeHasSkillFlag10::
 
 ; DanceShut AI condition: passes when some present foe is not yet dance-sealed (BSTAT1_DANCE_SEALED)
 ; and knows a skill with flag $20 (a dance); C = 1 below AI mode 2. (C1, E-0357)
-AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05::
+AIScore_DanceShut_Conditions_UnsealedDancer::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
@@ -877,8 +883,9 @@ AIScore_SquallHit_Conditions_AnyFoeAGL2::
     ld c, $ff
     ret
 
-; FireAir: passes when some present foe lacks status 2 bit 6. (C1, E-0357)
-AIScore_FireAir_AnySlotLacksStatusMask::
+; Condition of AIScore_FireAir_Conditions: C = $FF when some present foe lacks BSTAT2_WIND_GUARD
+; (status 2 bit 6), else C = 0 (AnySlotLacksStatusMask). (C1, E-0369)
+AIScore_FireAir_Conditions_FoeLacksWindGuard::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -900,9 +907,10 @@ AnyFoeLacksStatus0Bit4::
     call AnySlotLacksStatusMask
     ret
 
-; PoisonAir AI condition: passes when some present foe is not yet poisoned (status 0 bit 1 clear).
-; (C1, E-0357)
-AIScore_PoisonAir_Conditions_AnySlotLacksStatusMask::
+; Condition of AIScore_PoisonAir_Conditions: C = $FF when some present foe lacks
+; BSTAT0_BADLY_POISONED (status 0 bit 1), else C = 0 (AnySlotLacksStatusMask); BSTAT0_POISONED is
+; not tested. (C1, E-0369)
+AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -936,9 +944,11 @@ AnyFoeLacksStatus0MaskCC::
     call AnySlotLacksStatusMask
     ret
 
-; AquaWall AI condition: passes when some present foe without status 1 bits 0, 6 or 7 knows a skill
-; with flag $08; C = 1 below AI mode 2. (C1, E-0357)
-AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05::
+; Condition of AIScore_AquaWall_Conditions: C = $FF when some present foe with none of
+; BSTAT1_SPELLS_SEALED, BSTAT1_DANCE_SEALED and BSTAT1_BREATH_SEALED (status 1 & $C1) knows a skill
+; with flag $08 (SlotHasSkillWithFlagD); C = 0 when none does; C = 1 when the actor's AI mode is
+; below 2. Keeps wRecordBuffer. (C1, E-0369)
+AIScore_AquaWall_Conditions_UnsealedFoeSkill::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
@@ -1132,7 +1142,7 @@ AnyFoeLacksStatus1Bit7::
     ret
 
 ; DanceShut AI condition: passes when some present foe lacks status 1 bit 6. (C1, E-0357)
-AIScore_DanceShut_Conditions_AnySlotLacksStatusMask::
+AIScore_DanceShut_Conditions_FoeNotDanceSealed::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1277,7 +1287,7 @@ AIGateFoeStatus1Mask22::
 ; FireAir AI condition: for an elemental skill with resistance class 3 (wRecordBufferData + 1),
 ; fails when a present foe has status 2 bit 6 set; passes otherwise; C = 1 below AI mode 2. (C1,
 ; E-0357)
-AIScore_FireAir_ReadSlotAIModeIndexed_Bank05::
+AIScore_FireAir_WindGuardCheck::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
@@ -1460,7 +1470,7 @@ AllOtherAlliesHaveStatus0Bit6::
     ret
 
 ; Antidote AI condition: passes when some present ally is poisoned (status 0 bits 0-1). (C1, E-0357)
-AIScore_Antidote_Conditions_AnySlotHasStatusMask::
+AIScore_Antidote_Conditions_AllyPoisoned::
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1471,7 +1481,7 @@ AIScore_Antidote_Conditions_AnySlotHasStatusMask::
 
 ; NumbOff AI condition: passes when some present ally is paralysed or asleep (status 0 & $CC). (C1,
 ; E-0357)
-AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
+AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep::
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1481,7 +1491,7 @@ AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
     ret
 
 ; DeChaos AI condition: passes when some present ally is confused (status 0 bit 4). (C1, E-0357)
-AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
+AIScore_DeChaos_Conditions_AllyConfused::
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1491,7 +1501,7 @@ AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
     ret
 
 ; CurseOff AI condition: passes when some present ally is cursed (status 0 bit 5). (C1, E-0357)
-AIScore_CurseOff_Conditions_AnySlotHasStatusMask::
+AIScore_CurseOff_Conditions_AllyCursed::
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1507,9 +1517,12 @@ AnyAllySlotResistances4Bits2To5NotAllSet::
     ld a, [wBattleActor]
     and $04
 
-; Passes when some present slot of the side starting at A has resistance byte 4 & $3C not equal to
-; $3C, i.e. is not fully resistant in that field (7-byte entries of wSlotResistances). (C1, E-0357)
-AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
+; A = first slot of a side (0 or 4): C = $FF when some present slot of that side has
+; wSlotResistances byte 4 & $3C not $3C, that is, is not at level 3 in both its RESIST_FRIGIDAIR
+; (bits 3-2) and RESIST_FIREAIR (bits 5-4) fields; C = 0 otherwise.
+; AnyAllySlotResistances4Bits2To5NotAllSet falls into it for the actor's side and
+; AIScore_SuckAir_Conditions_FoeNotAirResistant jumps to it for the foes. (C1, E-0369)
+AnySideSlotLacksMaxAirResistances::
     ld c, a
     ld b, $03
     ld hl, wSlotResistances + $4
@@ -1543,68 +1556,68 @@ AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
 
 ; SuckAir AI condition: the resistance test of AnyAllySlotResistances4Bits2To5NotAllSet applied to
 ; the foes. (C1, E-0357)
-AIScore_SuckAir_Conditions_ReadBattleActor::
+AIScore_SuckAir_Conditions_FoeNotAirResistant::
     ld a, [wBattleActor]
     and $04
     xor $04
-    jp AnyAllySlotResistances4Bits2To5NotAllSet_Skip
+    jp AnySideSlotLacksMaxAirResistances
 
 ; SlimeBlow AI condition: a foe of family 0 (slimes) is present (FoeOfFamilyEPresent). (C1, E-0357)
-AIScore_SlimeBlow_Conditions_ToFoeOfFamilyEPresent::
+AIScore_SlimeBlow_Conditions_SlimeFoePresent::
     ld e, $00
     call FoeOfFamilyEPresent
     ret
 
 ; DrakSlash AI condition: a foe of family 1 (dragons) is present. (C1, E-0357)
-AIScore_DrakSlash_Conditions_ToFoeOfFamilyEPresent::
+AIScore_DrakSlash_Conditions_DragonFoePresent::
     ld e, $01
     call FoeOfFamilyEPresent
     ret
 
 ; BeastCut AI condition: a foe of family 2 (beasts) is present. (C1, E-0357)
-AIScore_BeastCut_Conditions_ToFoeOfFamilyEPresent::
+AIScore_BeastCut_Conditions_BeastFoePresent::
     ld e, $02
     call FoeOfFamilyEPresent
     ret
 
 ; BirdBlow AI condition: a foe of family 3 (birds) is present. (C1, E-0357)
-AIScore_BirdBlow_Conditions_ToFoeOfFamilyEPresent::
+AIScore_BirdBlow_Conditions_BirdFoePresent::
     ld e, $03
     call FoeOfFamilyEPresent
     ret
 
 ; BugBlow AI condition: a foe of family 5 (bugs) is present. (C1, E-0357)
-AIScore_BugBlow_Conditions_ToFoeOfFamilyEPresent::
+AIScore_BugBlow_Conditions_BugFoePresent::
     ld e, $05
     call FoeOfFamilyEPresent
     ret
 
 ; Shears AI condition: a foe of family 4 (plants) is present. (C1, E-0357)
-AIScore_Shears_Conditions_ToFoeOfFamilyEPresent::
+AIScore_Shears_Conditions_PlantFoePresent::
     ld e, $04
     call FoeOfFamilyEPresent
     ret
 
 ; DevilCut AI condition: a foe of family 6 (devils) is present. (C1, E-0357)
-AIScore_DevilCut_Conditions_ToFoeOfFamilyEPresent::
+AIScore_DevilCut_Conditions_DevilFoePresent::
     ld e, $06
     call FoeOfFamilyEPresent
     ret
 
 ; ZombieCut AI condition: a foe of family 7 (zombies) is present. (C1, E-0357)
-AIScore_ZombieCut_Conditions_ToFoeOfFamilyEPresent::
+AIScore_ZombieCut_Conditions_ZombieFoePresent::
     ld e, $07
     call FoeOfFamilyEPresent
     ret
 
 ; CleanCut AI condition: a foe of family 8 (materials) is present. (C1, E-0357)
-AIScore_CleanCut_Conditions_ToFoeOfFamilyEPresent::
+AIScore_CleanCut_Conditions_MaterialFoePresent::
     ld e, $08
     call FoeOfFamilyEPresent
     ret
 
 ; AquaCut AI condition: a foe of family 9 (water) is present. (C1, E-0357)
-AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent::
+AIScore_AquaCut_Conditions_WaterFoePresent::
     ld e, $09
     call FoeOfFamilyEPresent
     ret
@@ -2181,7 +2194,7 @@ AtLeastTwoFoesPresent::
 
 ; TatsuCall AI condition: passes only when the actor's side has its fourth slot free (wBattleSlotOut
 ; of slot 3 of the side is set), so a called monster has a place. (C1, E-0357)
-AIScore_TatsuCall_Conditions_ReadBattleActor::
+AIScore_TatsuCall_Conditions_FourthSlotFree::
     ld a, [wBattleActor]
     and $04
     or $03
@@ -2331,7 +2344,7 @@ AnyAllyMPAtMostThreeQuarters::
     ret
 
 ; Upper AI condition: passes when some present ally's DEF can still be raised
-; (AIScore_Upper_Conditions_AnyAllyRaisable_GetBattleDEF_Bank05). (C1, E-0357)
+; (AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise). (C1, E-0357)
 AIScore_Upper_Conditions_AnyAllyRaisable::
     ld a, [wBattleActor]
     and $04
@@ -2342,7 +2355,7 @@ AIScore_Upper_Conditions_AnyAllyRaisable::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
-    call AIScore_Upper_Conditions_AnyAllyRaisable_GetBattleDEF_Bank05
+    call AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise
     jr c, .done
 
 .next:
@@ -2357,7 +2370,7 @@ AIScore_Upper_Conditions_AnyAllyRaisable::
     ret
 
 ; Speed AI condition: passes when some present ally's AGL can still be raised
-; (AIScore_Speed_Conditions_AnyAllyRaisable_GetBattleAGL_Bank05). (C1, E-0357)
+; (AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise). (C1, E-0357)
 AIScore_Speed_Conditions_AnyAllyRaisable::
     ld a, [wBattleActor]
     and $04
@@ -2368,7 +2381,7 @@ AIScore_Speed_Conditions_AnyAllyRaisable::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
-    call AIScore_Speed_Conditions_AnyAllyRaisable_GetBattleAGL_Bank05
+    call AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise
     jr c, .done
 
 .next:
@@ -2557,7 +2570,7 @@ AnyAllyLacksStatus1Bits23And4Bits01::
     ret
 
 ; MagicWall AI condition: passes when some present ally lacks status 8 bit 6. (C1, E-0357)
-AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
+AIScore_MagicWall_Conditions_AllyLacksMagicWall::
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -2717,9 +2730,11 @@ CheckBattleKindNot4Or5::
     ld c, $ff
     ret
 
-; SealPray AI condition: fails when the queued action (wQueuedActionId) is one of $3D-$3F, $43, $47,
-; $66 or $67; passes otherwise. (C1, E-0357)
-AIScore_SealPray_ReadQueuedActionId::
+; Check of AIScore_SealPray: C = 0 when wQueuedActionId is SKILL_MEGAMAGIC, SKILL_BIGBANG,
+; SKILL_HELLBLAST, SKILL_WHITEFIRE, SKILL_WHITEAIR, SKILL_MULTICUT or SKILL_GIGASLASH; C = $FF
+; otherwise (also when it is 0). AIScore_SealPray adds weight row $8D to wAISkillScore2 when it
+; gives 0. (C1, E-0369)
+AIScore_SealPray_QueuedSkillInList::
     ld a, [wQueuedActionId]
     and a
     jr z, .done2
@@ -3372,7 +3387,7 @@ PassIfTwiceATKAboveLowestFoeDEF::
 
 ; TwinHits AI check: passes when the actor's ATK is more than twice, or less than half, the lowest
 ; foe DEF found by FindLowestFoeDEF; fails when it lies between; C = 1 below AI mode 2. (C1, E-0357)
-AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
+AIScore_TwinHits_CompareATKWithFoeDEF::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
@@ -3802,9 +3817,11 @@ FailIfFoeKnowsSkills42To47::
     ld c, $01
     ret
 
-; Transform AI condition: fails when some present foe beats the actor in at least three of max HP,
-; max MP, ATK and DEF; passes otherwise; C = 1 below AI mode 2. (C1, E-0357)
-AIScore_Transform_ReadSlotAIModeIndexed_Bank05::
+; Check of AIScore_Transform: for each present foe counts how many of max HP, max MP, ATK and DEF
+; are below the actor's (in hTemp8); C = 0 when some foe is below the actor in at least three of
+; them, C = $FF otherwise; C = 1 when the actor's AI mode is below 2. Uses hTemp0-hTemp8. (C1,
+; E-0369)
+AIScore_Transform_NoWeakerFoe::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
@@ -4476,10 +4493,11 @@ CheckFoeStatus6Bit3::
     ld c, $01
     ret
 
-; Sacrifice AI condition: considered only when the actor's HP is below a tenth of its max and
-; another ally is present; then passes when some present foe has resistance byte 3 & $03 of 2 or
-; more, fails otherwise. (C1, E-0357)
-AIScore_Sacrifice_GetBattleMaxHP_Bank05::
+; Check of AIScore_Sacrifice: C = 0 only when the actor's HP is below a tenth of its max HP, another
+; ally on its side is present, and no present foe has its RESIST_SACRIFICE field (wSlotResistances
+; byte 3 bits 1-0) at 2 or more; C = $FF otherwise. AIScore_Sacrifice adds weight row $19 to
+; wAISkillScore when it gives 0. (C1, E-0369)
+AIScore_Sacrifice_LowHPAndFoesVulnerable::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, $0a
@@ -5176,7 +5194,7 @@ FailIfAbleAllyWithStatus6KnowsSkill78To92::
 
 ; BeDragon AI check: counts how many of the actor's stats are already high (max HP 999, max MP 300,
 ; ATK 300, DEF 200, AGL 286 or more); fails with three or more, passes otherwise. (C1, E-0357)
-AIScore_BeDragon_GetBattleMaxHP_Bank05::
+AIScore_BeDragon_CountHighStats::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, l
@@ -5382,7 +5400,7 @@ CheckBattleKindNot2Or3::
     ret
 
 ; Passes in normal and type-2 link battles, fails in other link modes. (C1, E-0357)
-AIScore_MegaMagic_ReadLinkMode::
+AIScore_MegaMagic_LinkModeAllows::
     ld a, [wLinkMode]
     and a
     jr z, .done
@@ -5762,10 +5780,12 @@ AIScore_EvilSlash_CheckFoes::
     ld c, $00
     ret
 
-; One of AIAddScoresForTwoLists' conditions (AI mode 4 or more and wAIFlag set): fails when an
-; unblocked foe marked 2 in wSlotMarks, whose chosen action is not $9C, $33, $92 or $93, has both
-; bits 2-3 of its resistance byte 5; passes otherwise; C = 1 below mode 4. (C1, E-0357)
-AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05::
+; First check of AIAddScoresForTwoLists: C = 1 when the actor's AI mode is below 4; C = $FF when
+; wAIFlag is 0; otherwise C = 0 when some foe that is not blocked (CheckSlotStatusBlock), is marked
+; 2 in wSlotMarks and has chosen SKILL_SEALPRAY, SKILL_STOPSPELL, SKILL_DANCESHUT or SKILL_MOUTHSHUT
+; (SlotActionIs9C33Or92Or93) does not have its RESIST_LEGSWEEP field (wSlotResistances byte 5 bits
+; 3-2) at level 3 (AIAddScoresForTwoLists_SealingFoes_MaxLegSweep); C = $FF otherwise. (C1, E-0369)
+AIAddScoresForTwoLists_SealingFoes::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $04
@@ -5833,6 +5853,10 @@ SlotActionIs9C33Or92Or93::
     cp $93
     ret
 
+; C = slot: Z set when the slot's RESIST_LEGSWEEP field (bits 3-2 of wSlotResistances byte 5, 7-byte
+; entries) is 3, the strongest level; returns A = that byte & $0C and HL pointing at it. The same
+; code is SlotResistances5EntryHasBits2And3_Bank05 later in this bank; this copy is used only by
+; AIAddScoresForTwoLists_SealingFoes. (C1, E-0369)
 ; C = index: Z set when bits 2 and 3 are both set in the byte at wSlotResistances + $5 + 7 * C
 ; (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2
 ; banks)
@@ -5952,10 +5976,13 @@ SlotCLacksSkill63Or64WithMP::
     jr c, .loop2
     ret
 
-; The other condition of AIAddScoresForTwoLists: fails when an unblocked ally other than the actor,
-; marked below 3, without 3 MP or skill $6B, has both bits 2-3 of resistance byte 5; passes
-; otherwise; C = 1 below mode 4. (C1, E-0357)
-AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05_2::
+; Second check of AIAddScoresForTwoLists: C = 1 when the actor's AI mode is below 4; C = $FF when
+; wAIFlag is 0; otherwise C = 0 when some ally other than the actor that is not blocked
+; (CheckSlotStatusBlock), is marked below 3 in wSlotMarks and has at least 3 MP does not have its
+; RESIST_LEGSWEEP field (wSlotResistances byte 5 bits 3-2) at level 3
+; (SlotResistances5EntryHasBits2And3_Bank05); C = $FF otherwise. The skill test of
+; SlotCHasMP3AndSkill6B is not used: only its carry (under 3 MP) is tested. (C1, E-0369)
+AIAddScoresForTwoLists_OtherAllies::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $04
@@ -6329,7 +6356,7 @@ UnreferencedEstimateStrongestFoeHit:: ; configured code entry (E-0237); C0
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
-    jr c, UnreferencedReturnC0_Done
+    jr c, UnreferencedResultC1
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6396,12 +6423,12 @@ UnreferencedReturnC0:: ; configured code entry (E-0237); C0
     ret
 
 ; The code after UnreferencedReturnC0: C = 1, return; not reached by any jump found. (C1, E-0357)
-UnreferencedReturnC0_Done::
+UnreferencedResultC1::
     ld c, $01
     ret
 
 ; Curse AI condition: passes when some present foe is not yet cursed (status 0 bit 5). (C1, E-0357)
-AIScore_Curse_Conditions_AnySlotLacksStatusMask::
+AIScore_Curse_Conditions_FoeNotCursed::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6411,8 +6438,13 @@ AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     call AnySlotLacksStatusMask
     ret
 
-; SuckAir AI condition: passes when one of the actor's eight skills has flag $02. (C1, E-0357)
-AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD::
+; Condition of AIScore_SuckAir_Conditions, as written: steps through the actor's eight skill ids at
+; wBattleSkillsPrefix + 16 * actor, storing each in wRecordBuffer, and each time calls
+; SlotHasSkillWithFlagD with D = $02; but that routine reads slot C's list itself (overwriting
+; wRecordBuffer), and C here is the $FF left by ActorLacksStatus4Bits45, so every pass tests the
+; same eight bytes from wBattleSkills + $FF. C = $FF when that finds flag $02, else C = 0;
+; wRecordBuffer is restored. (C1, E-0369)
+AIScore_SuckAir_Conditions_SkillFlagCheck::
     ld a, [wBattleActor]
     swap a
     ld hl, wBattleSkillsPrefix
@@ -6441,8 +6473,8 @@ AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD::
     ld c, $ff
     ret
 
-; C = $FF when an occupied ally's HP is below AnyAllyHPBelow_GetBattleMaxHP_Bank05 for it, else $00
-; (E-0125) (E-0344: the address in its name dropped or read as the label there; was AnyAllyHPBelow)
+; C = $FF when an occupied ally's HP is below AnyAllyHPBelow_HealThreshold for it, else $00 (E-0125)
+; (E-0344: the address in its name dropped or read as the label there; was AnyAllyHPBelow)
 AnyAllyHPBelow::
     ld a, [wBattleActor]
     and $04
@@ -6452,7 +6484,7 @@ AnyAllyHPBelow::
 .loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, .call_any_ally_hp_below_get_battle_max_hp
+    jr nc, .call_any_ally_hp_below_heal_threshold
 
 .next:
     inc c
@@ -6460,10 +6492,10 @@ AnyAllyHPBelow::
     jr nz, .loop
     jr .done
 
-.call_any_ally_hp_below_get_battle_max_hp:
+.call_any_ally_hp_below_heal_threshold:
     push bc
     ld a, c
-    call AnyAllyHPBelow_GetBattleMaxHP_Bank05
+    call AnyAllyHPBelow_HealThreshold
     push hl
     ld a, c
     call GetBattleHP_Bank05
@@ -6481,10 +6513,11 @@ AnyAllyHPBelow::
     ld c, $ff
     ret
 
-; The HP threshold for AnyAllyHPBelow, by healing skill: max HP minus a tenth for most, three
-; quarters of max HP for skills $17, $19, $7C and $A1, and another fraction for $18 and $1A. (C1,
-; E-0357)
-AnyAllyHPBelow_GetBattleMaxHP_Bank05::
+; A = slot: returns HL = the HP threshold AnyAllyHPBelow compares that slot's HP with, by the skill
+; id in wRecordBuffer: three quarters of max HP (max / 2 + max / 4) for SKILL_HEALMORE,
+; SKILL_HEALUS, SKILL_HUSTLE and SKILL_LOVERAIN; two thirds (max / 3 * 2) for SKILL_HEALALL and
+; SKILL_HEALUSALL; max HP minus a tenth for SKILL_HEAL and every other skill. BC kept. (C1, E-0369)
+AnyAllyHPBelow_HealThreshold::
     push bc
     call GetBattleMaxHP_Bank05
     ld a, [wRecordBuffer]
@@ -6672,7 +6705,7 @@ HPBandOfSlotTemp0_2::
 
 ; MegaMagic AI condition: passes when some present foe has HP + DEF of at least $578 (1,400); C = 1
 ; below AI mode 3. (C1, E-0357)
-AIScore_MegaMagic_ReadSlotAIModeIndexed_Bank05::
+AIScore_MegaMagic_FoeHPPlusDEFHigh::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $03
@@ -6923,7 +6956,7 @@ CheckActorSlot0To3OrLinkModeSet::
     ret
 
 ; Meditate AI condition: passes when the actor's HP is below two thirds of its max. (C1, E-0357)
-AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05::
+AIScore_Meditate_Conditions_HPBelowTwoThirds::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, $03
@@ -7426,10 +7459,11 @@ AIScore_BiAttack_FoeHPCheck::
     ld c, $ff
     ret
 
-; Berserker AI check: needs at least two foes; when the actor's AGL is below 120% of the last foe's
-; AGL it passes; otherwise it fails if that foe's HP is at most twice its damage estimate
-; (wAIDamageEstimates), passes if more; C = 1 below AI mode 2. (C1, E-0357)
-AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
+; Check of AIScore_Berserker: C = 1 when the actor's AI mode is below 2; C = $FF when fewer than two
+; foes are present or when the actor's AGL is at most 120% of the AGL of the last present foe;
+; otherwise C = 0 when that foe's HP is at most twice its wAIDamageEstimates entry, C = $FF when it
+; is more. (C1, E-0369)
+AIScore_Berserker_SpeedAndHPCheck::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
     cp $02
@@ -7499,10 +7533,12 @@ AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
     ld c, $01
     ret
 
-; Ramming AI check: needs at least two foes and an elemental class for the skill; fails when the
-; last foe's resistance to it (2-bit field) is 2 or more or its HP is at least 60% of the actor's
-; HP, passes otherwise; C = 1 below AI mode 2. (C1, E-0357)
-AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
+; Check of AIScore_Ramming: C = 1 when the actor's AI mode is below 2; C = $FF when fewer than two
+; foes are present, when the skill has no resistance class (wRecordBufferData + 1 = 0), or when the
+; last present foe's resistance field for that class (AnyFoeNotFullyResistant_Data,
+; Get2BitFieldEOfHL) is 2 or more; otherwise C = 0 when that foe's HP is above 60% of the actor's
+; HP, C = $FF when it is at most that. (C1, E-0369)
+AIScore_Ramming_LastFoeHPAndResist::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
     cp $02
@@ -7579,13 +7615,14 @@ AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
     ld c, $01
     ret
 
-; Kamikaze AI condition: only in normal battles (not linked, battle kind below 2, wAIFlag set, AI
-; mode 3 or more). It looks for another ally of AI mode 3 or more with no healing skill ($16-$1A,
-; $7C, $A1), unblocked and marked below 3. It then compares the actor's HP with half of the actor's
-; own HP, which always passes, so the foe checks after it (a foe with HP at least the actor's HP +
-; 100 and resistance below 2 fails) are never reached: likely a bug where a different slot's HP was
-; meant. C = 1 below mode 3. (C1, E-0357)
-AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_2::
+; Check of AIScore_Kamikaze: C = 1 when the actor's AI mode is below 3; C = $FF in link battles
+; (wLinkMode), battle kind 2 or more, with wAIFlag 0, or when no other ally is present with AI mode
+; 3 or more, a healing skill id found by AIScore_Kamikaze_CheckSkills (Z), no status block and a
+; wSlotMarks value below 3. Otherwise it compares the actor's HP with half of the actor's own HP,
+; which never gives carry, so it always returns C = $FF; the foe checks after it (a foe with HP at
+; least the actor's HP + 100 whose resistance field is below 2 gives C = 0) are never reached,
+; likely a bug where another slot's HP was meant. (C1, E-0369)
+AIScore_Kamikaze_HealerAllyAndFoeHP::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
     cp $03
@@ -8016,10 +8053,11 @@ ReadSlotAIModeIndexed_Bank05::
     ld a, [hl]
     ret
 
-; Whether slot C's DEF can still be raised: no when it is 999 or more; otherwise yes (carry) while
-; it is below its base DEF (GetBaseDEF) times 2, or times 4 for an AI slot in a normal battle. (C1,
-; E-0357)
-AIScore_Upper_Conditions_AnyAllyRaisable_GetBattleDEF_Bank05::
+; A = C = slot: whether that slot's DEF can still be raised: A = 0 and no carry when its DEF is 999
+; or more; otherwise carry while DEF is below its base DEF (GetBaseDEF, in wBattleStatResultLo and
+; wBattleStatResultHi) times 4, or times 2 for slots 4-7 when wLinkMode is 0 or 2; no carry
+; otherwise. (C1, E-0369)
+AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise::
     call GetBattleDEF_Bank05
     ld a, l
     sub $e7
@@ -8068,9 +8106,11 @@ AIScore_Upper_Conditions_AnyAllyRaisable_GetBattleDEF_Bank05::
     scf
     ret
 
-; Whether slot C's AGL can still be raised: no when it is 999 or more; otherwise yes (carry) while
-; it is below its base AGL times 2, or times 4 for an AI slot in a normal battle. (C1, E-0357)
-AIScore_Speed_Conditions_AnyAllyRaisable_GetBattleAGL_Bank05::
+; A = C = slot: whether that slot's AGL can still be raised: A = 0 and no carry when its AGL is 999
+; or more; otherwise carry while AGL is below its base AGL (GetBaseAGL, in wBattleStatResultLo and
+; wBattleStatResultHi) times 4, or times 2 for slots 4-7 when wLinkMode is 0 or 2; no carry
+; otherwise. (C1, E-0369)
+AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise::
     call GetBattleAGL_Bank05
     ld a, l
     sub $e7
@@ -9127,10 +9167,13 @@ AIScore_Beat_Conditions::
     call ResetAISkillScore
     ret
 
-; Sacrifice AI conditions in turn: MP cost, status 1 bit 0, side flag 3, repeat, foes lacking status
-; 2 & $22, status 5 bits 6-7 and status 0 bit 6, a foe not fully resistant, the status-1 gate, and
-; the side flag; any failure resets the skill's AI score (ResetAISkillScore). (C1, E-0357)
-AIScore_Sacrifice_ActorCanPayMPCost_Bank05::
+; The conditions of AIScore_Sacrifice: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit0Check,
+; SkillPassesSideFlagBit3Check, SkillPassesRepeatCheck, AnyFoeLacksStatus2Mask22,
+; AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus0Bit6, AnyFoeNotFullyResistant, AIGateFoeStatus1Mask22
+; (a result of 1 also passes), CheckSide0FlagNot1 and CheckBattleKindNot2Or3 in turn; the first that
+; gives C = 0 resets the skill's score (ResetAISkillScore). AIScore_Sacrifice returns at once when
+; it gives 0. (C1, E-0369)
+AIScore_Sacrifice_Conditions::
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -9214,9 +9257,11 @@ AIHealUsable::
     call ResetAISkillScore
     ret
 
-; MPass AI conditions: the actor lacks status 4 bits 6-7, another ally has status 0 bit 6, then a
-; step that always fails (SetCToZero), so MPass's score is always reset here. (C1, E-0357)
-AIScore_MPass_ActorLacksStatus4Bits67::
+; The conditions of AIScore_MPass: resets the skill's score (ResetAISkillScore) when C is already 0
+; on entry, then when ActorLacksStatus4Bits67 or AllOtherAlliesHaveStatus0Bit6 gives 0; the next
+; step, SetCToZero, always gives 0, so every path resets the score and AIScore_MPass_AnyAllyLowMP is
+; never reached. (C1, E-0369)
+AIScore_MPass_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9294,7 +9339,7 @@ AIScore_Antidote_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_Antidote_Conditions_AnySlotHasStatusMask
+    call AIScore_Antidote_Conditions_AllyPoisoned
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9314,7 +9359,7 @@ AIScore_DeChaos_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_DeChaos_Conditions_AnySlotHasStatusMask
+    call AIScore_DeChaos_Conditions_AllyConfused
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9334,7 +9379,7 @@ AIScore_NumbOff_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_NumbOff_Conditions_AnySlotHasStatusMask
+    call AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9354,7 +9399,7 @@ AIScore_CurseOff_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_CurseOff_Conditions_AnySlotHasStatusMask
+    call AIScore_CurseOff_Conditions_AllyCursed
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9473,7 +9518,7 @@ AIScore_Slow_Conditions::
 
 ; TwinHits AI conditions: the usual usability checks, then an ally lacking status 1 bits 2-3 and
 ; status 4 bits 0-1; otherwise the score is reset. (C1, E-0357)
-AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore::
+AIScore_TwinHits_Conditions::
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -9544,7 +9589,7 @@ AIScore_TakeMagic_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05
+    call AIScore_TakeMagic_Conditions_FoeHasTakeableSkill
     ld a, c
     cp $01
     jr z, .call_any_foe_lacks_status0_bit6
@@ -9821,7 +9866,7 @@ AIScore_MagicWall_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_MagicWall_Conditions_AnySlotLacksStatusMask
+    call AIScore_MagicWall_Conditions_AllyLacksMagicWall
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9876,7 +9921,7 @@ CheckSkillUsableStatusElseResetAISkillScore::
 
 ; MegaMagic AI conditions: an attack skill usable, the actor lacks status 4 bits 6-7, and the battle
 ; is a link battle or of kind 2 or more; otherwise the score is reset. (C1, E-0357)
-AIScore_MegaMagic_AIAttackSkillUsable::
+AIScore_MegaMagic_Conditions::
     call AIAttackSkillUsable
     ld a, c
     and a
@@ -9927,7 +9972,7 @@ AIAttackSkillUsable::
 
 ; FireAir AI conditions: an attack skill usable, the skill's status-0 check passes, and a foe lacks
 ; status 2 bit 6; otherwise the score is reset. (C1, E-0357)
-AIScore_FireAir_AIAttackSkillUsable::
+AIScore_FireAir_Conditions::
     call AIAttackSkillUsable
     ld a, c
     and a
@@ -9936,7 +9981,7 @@ AIScore_FireAir_AIAttackSkillUsable::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_FireAir_AnySlotLacksStatusMask
+    call AIScore_FireAir_Conditions_FoeLacksWindGuard
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9972,7 +10017,7 @@ AIScore_SlimeBlow_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_SlimeBlow_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_SlimeBlow_Conditions_SlimeFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -9992,7 +10037,7 @@ AIScore_DrakSlash_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_DrakSlash_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_DrakSlash_Conditions_DragonFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10012,7 +10057,7 @@ AIScore_BeastCut_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_BeastCut_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_BeastCut_Conditions_BeastFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10032,7 +10077,7 @@ AIScore_BirdBlow_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_BirdBlow_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_BirdBlow_Conditions_BirdFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10052,7 +10097,7 @@ AIScore_BugBlow_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_BugBlow_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_BugBlow_Conditions_BugFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10072,7 +10117,7 @@ AIScore_Shears_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_Shears_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_Shears_Conditions_PlantFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10092,7 +10137,7 @@ AIScore_DevilCut_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_DevilCut_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_DevilCut_Conditions_DevilFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10112,7 +10157,7 @@ AIScore_ZombieCut_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_ZombieCut_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_ZombieCut_Conditions_ZombieFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10132,7 +10177,7 @@ AIScore_CleanCut_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_CleanCut_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_CleanCut_Conditions_MaterialFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10152,7 +10197,7 @@ AIScore_AquaCut_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent
+    call AIScore_AquaCut_Conditions_WaterFoePresent
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10336,7 +10381,7 @@ AIScore_SquallHit_Conditions::
 
 ; BiAttack AI conditions: usable, and the DEF check (AIScore_BiAttack_ATKCheck); otherwise the score
 ; is reset and C = 0. (C1, E-0357)
-AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore::
+AIScore_BiAttack_Conditions::
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -10562,9 +10607,11 @@ AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call ResetAISkillScore
     ret
 
-; Kamikaze AI conditions: usable with a foe not fully resistant and HP not 1, an unblocked foe, and
-; another ally with status 0 bit 6; otherwise the score is reset. (C1, E-0357)
-AIScore_Kamikaze_AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
+; The conditions of AIScore_Kamikaze: returns when AIAndAnyFoeNotFullyResistantAndActorHPNotOne
+; gives C = 0; then resets the skill's score (ResetAISkillScore) when AnyFoeNotBlocked or
+; AllOtherAlliesHaveStatus0Bit6 gives 0 (the latter passes when some other present ally lacks
+; BSTAT0_PARALYZED, or none is present). (C1, E-0369)
+AIScore_Kamikaze_Conditions::
     call AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
     and a
@@ -10681,7 +10728,7 @@ AIScore_PoisonAir_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_PoisonAir_Conditions_AnySlotLacksStatusMask
+    call AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10719,7 +10766,7 @@ AIScore_Curse_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_Curse_Conditions_AnySlotLacksStatusMask
+    call AIScore_Curse_Conditions_FoeNotCursed
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11125,7 +11172,7 @@ AIScore_TatsuCall_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_TatsuCall_Conditions_ReadBattleActor
+    call AIScore_TatsuCall_Conditions_FourthSlotFree
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11147,7 +11194,7 @@ AIScore_SuckAir_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_SuckAir_Conditions_ReadBattleActor
+    call AIScore_SuckAir_Conditions_FoeNotAirResistant
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11155,7 +11202,7 @@ AIScore_SuckAir_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD
+    call AIScore_SuckAir_Conditions_SkillFlagCheck
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11324,15 +11371,15 @@ AIScore_DanceShut_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05
+    call AIScore_DanceShut_Conditions_UnsealedDancer
     ld a, c
     cp $01
-    jr z, .call_ai_score_dance_shut_conditions_any_slot
+    jr z, .call_ai_score_dance_shut_conditions_foe_not
     and a
     jr z, .call_reset_ai_skill_score
 
-.call_ai_score_dance_shut_conditions_any_slot:
-    call AIScore_DanceShut_Conditions_AnySlotLacksStatusMask
+.call_ai_score_dance_shut_conditions_foe_not:
+    call AIScore_DanceShut_Conditions_FoeNotDanceSealed
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11576,7 +11623,7 @@ AIScore_AquaWall_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05
+    call AIScore_AquaWall_Conditions_UnsealedFoeSkill
     ld a, c
     cp $01
     jr z, .call_ai_score_aqua_wall_conditions_not_yet
@@ -11595,7 +11642,7 @@ AIScore_AquaWall_Conditions::
     ret
 
 ; SealPray AI condition: the actor can pay the MP cost; otherwise the score is reset. (C1, E-0357)
-AIScore_SealPray_ActorCanPayMPCost_Bank05::
+AIScore_SealPray_Conditions::
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -11726,7 +11773,7 @@ AIScore_Meditate_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05
+    call AIScore_Meditate_Conditions_HPBelowTwoThirds
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score

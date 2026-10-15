@@ -943,7 +943,7 @@ RunWorldMapState_DrawCloseUp::
     or a
     jr z, .done
     ld a, $40
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
     add e
     ld e, a
     jr nc, .skip2
@@ -2690,7 +2690,7 @@ RunWorldMapState_DrawOverview::
     or a
     jr z, .done
     ld a, $40
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
     add e
     ld e, a
     jr nc, .skip2

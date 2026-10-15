@@ -2335,7 +2335,7 @@ GameMode7_Init::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $0b
-    jp ClearSGBPacketBuffer_CheckLinkMode
+    jp ResumeAfterModeChange
 
 ; per-frame routine for wGameMode = 7 (E-0029)
 GameMode7_Update::

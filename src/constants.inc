@@ -772,7 +772,7 @@ DEF EVENT_SCENE_RIVAL_DEFEATED_021 EQU $021 ; set by SceneRivalDefeated_GiveKey
 DEF EVENT_SCENE_MERMAID_KINGDOM_022 EQU $022 ; set by SceneMermaidKingdom_GiveKey
 DEF EVENT_SCENE_SHIELD2_023 EQU $023 ; set by SceneShield2_GiveKey
 DEF EVENT_SCENE_THREE_ITEMS EQU $024 ; set by SceneThreeItems_ShowWarubouWaheyHeroAnd
-DEF EVENT_THANKS_FOR_COMING_BY_025 EQU $025 ; set by PauseMenu_State4_CheckWorldMapState
+DEF EVENT_THANKS_FOR_COMING_BY_025 EQU $025 ; set by GameMode2_Update_OpenPage
 DEF EVENT_OH_THE_SAVIOR_OF EQU $028 ; set by Script_OhTheSaviorOf
 DEF EVENT_GIVE_MONSTER EQU $029 ; set by Script_You_8
 DEF EVENT_SCENE_LIMBO_MONSTER EQU $02A ; set by SceneLimboMonster_SpinLeft
@@ -803,7 +803,7 @@ DEF EVENT_KING_YOU_WISH_TO EQU $044 ; set by Script_KingYouWishTo
 DEF EVENT_KING_THEN_MAKE_WAY_TO EQU $045 ; set by Script_KingThenMakeWay, Script_KingThenMakeWay_2
 DEF EVENT_STRONG_MONSTERS_ARE_IN_THE EQU $048 ; set by TalkMsg013D_StrongMonstersAreInTheWell
 DEF EVENT_KING_WHAT_NEVER_MIND_THEN EQU $049 ; set by Script_SoHaveYouDiscovered
-DEF EVENT_WHAT_OPEN_THE_CANAL_GATE EQU $04A ; set by KalkaTalkEvents_TestFlagBit
+DEF EVENT_WHAT_OPEN_THE_CANAL_GATE EQU $04A ; set by KalkaTalkEvents_CanalGate
 DEF EVENT_YOU_WILL_SO_WE_CAN EQU $053 ; set by Script_I_13
 DEF EVENT_SCENE_WATER_SOLVED EQU $054 ; set by Script_I_13
 DEF EVENT_KING_THE_TOWN EQU $055 ; set by Script_KingTheTown
@@ -827,12 +827,12 @@ DEF EVENT_WELCOME_YOUNG_HUMAN_I_HEARD EQU $070 ; set by Script_WelcomeYoungHuman
 DEF EVENT_HOW_COULD_WE_DIE_BEFORE EQU $071 ; set by Script_HowCouldWeDie
 DEF EVENT_THE_TREASURES_ARE_OURS_NO EQU $072 ; set by Script_TheTreasuresAreOurs
 DEF EVENT_IT_NAGS_AND_NAGS_THAT EQU $073 ; set by Script_ItNagsAndNags
-DEF EVENT_WHO_DISTURBS_US_IN_OUR EQU $074 ; set by YoldTalkEvents_TestFlagBit_WhoDisturbsUsIn
+DEF EVENT_WHO_DISTURBS_US_IN_OUR EQU $074 ; set by YoldTalkEvents_WhoDisturbsUs
 DEF EVENT_GIVE_ITEM_BLINK EQU $075 ; set by Script_WhoDisturbsUsIn, Script_YouSeemToNot
 DEF EVENT_SCENE_CRATE EQU $076 ; set by Script_HeroCheckedTheTreasure
-DEF EVENT_HERO_CHECKED_THE_CRATE_THERE EQU $077 ; set by YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate
+DEF EVENT_HERO_CHECKED_THE_CRATE_THERE EQU $077 ; set by YoldTalkEvents_CheckCrate
 DEF EVENT_SCENE_WATCH_OUT_078 EQU $078 ; set by SceneWatchOut_Finish, UnreferencedScriptStepDispatch_73_MakeMonster
-DEF EVENT_THE_PIRATES_WERE_SWALLOWED_BY EQU $07A ; set by YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
+DEF EVENT_THE_PIRATES_WERE_SWALLOWED_BY EQU $07A ; set by YoldTalkEvents_KamehaEscape
 DEF EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING EQU $07B ; set by YoldTalkEvents_KamehaThanks
 DEF EVENT_SCENE_CREW_FOLLOWS EQU $07C ; set by Script_KamehaUrkHowYou
 DEF EVENT_SCENE_CREW_FOLLOWS_07D EQU $07D ; set by SceneCrewFollows_ShakeScreen
@@ -970,14 +970,14 @@ DEF EVENT_YOURE_AHUMAN_HOW_145 EQU $145 ; set by ElvenVillageTalkEvents_Cyal, El
 DEF EVENT_SCENE_ROLT_ELDER EQU $146 ; set by Script_I_18, Script_WellWellAHuman
 DEF EVENT_CYAL_LISTEN_HERO_WE_SHOULD EQU $147 ; set by Script_CyalListenHeroWe
 DEF EVENT_CYAL_EEEK_HERO_HELP_ME EQU $148 ; set by Script_CyalOhHeroI
-DEF EVENT_ROLT_IVE_FOUND_YOU_AT EQU $149 ; set by ElvenVillageTalkEvents_TestFlagBit_RoltI, Script_MasterAgDevilAHuman
+DEF EVENT_ROLT_IVE_FOUND_YOU_AT EQU $149 ; set by ElvenVillageTalkEvents_RoltFoundYou, Script_MasterAgDevilAHuman
 DEF EVENT_THAT EQU $14A ; set by Script_That_3
 DEF EVENT_SCENE_TOO_STRONG EQU $14B ; set by Script_That_3, Script_You_11
 DEF EVENT_ROLT_WAIT_GONE_ALREADY EQU $14C ; set by Script_RoltWhatCyalWas
 DEF EVENT_WELL_WELL_IT_IS_14D EQU $14D ; set by ElvenVillageTalkEvents_ShowWellWellItIs
 DEF EVENT_THIS_IS_ELVENS_LOOKOUT_POST EQU $14E ; set by TalkMsg072F_ThisIsElvensLookoutPostWe
 DEF EVENT_SCENE_GIVE_BACK_CYAL EQU $14F ; set by Script_RoltI
-DEF EVENT_THE_HUMAN_IN_THE_FOREST EQU $150 ; set by ElvenVillageTalkEvents_TestFlagBit_TheHumanInThe
+DEF EVENT_THE_HUMAN_IN_THE_FOREST EQU $150 ; set by ElvenVillageTalkEvents_KeyBossBattle
 DEF EVENT_KEY_BOSS_BEATEN EQU $151 ; set by Script_TheHumanInThe, Script_WhatYouAgainRude
 DEF EVENT_CYAL_I_HOPE_YOULL_STAY EQU $152 ; set by ElvenVillageTalkEvents_Cyal
 DEF EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR EQU $159 ; set by Script_HohAhExcuseMy

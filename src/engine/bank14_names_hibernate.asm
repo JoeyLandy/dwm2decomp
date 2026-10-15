@@ -6607,9 +6607,9 @@ RejectedNameList::
 ; the code before RunNameEntryStateWhenNotFading_KeyEnd_CheckArg1.skip3 indexes it with wArg3 & $0F
 ; (the family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6
 ; Demon, 7 Zombie, 8 Material, 9 Water, 10 '????' (boss)) and then takes name 7 * wArg2 + n;
-; CreateMonsterRecordOfKindTemp1_ReadWorkBuf indexes it with wWorkBuf and wWorkBuf + 1 and copies
-; the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14 names
-; (E-0254, C1)
+; CreateMonsterRecordInSlot_Build_CopyDefaultName indexes it with wWorkBuf and wWorkBuf + 1 and
+; copies the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14
+; names (E-0254, C1)
 ; record: 14 name pointers for this family
 DefaultMonsterNameTable::
     dw DefaultMonsterNames_Slime ; id 0
@@ -7986,10 +7986,12 @@ DeleteSRAMRecordAndCompact::
     ld [rRAMG2], a
     ret
 
-; Copies a default monster name (DefaultMonsterNameTable, by wWorkBuf and wWorkBuf + 1) to the
-; address in wWorkBuf + 2/3, skipping $9F; nine unreached bytes sit after a jump inside it. (C1,
-; E-0357)
-CreateMonsterRecordOfKindTemp1_ReadWorkBuf::
+; Copies a default monster name into a new record: name wWorkBuf + 1 (0-13) of family wWorkBuf in
+; DefaultMonsterNameTable goes to the address in wWorkBuf + 2/3 (the record's MON_NAME), skipping
+; $9F bytes and stopping after the $F0 end byte; nine unreached bytes sit after a jump inside it.
+; Far-called only by CreateMonsterRecordInSlot_Build (bank $01) when wBattleArg1 is $FF, with the
+; family from wSpeciesRecord and the name number from wRandomLo mod 14. (C1, E-0369)
+CreateMonsterRecordInSlot_Build_CopyDefaultName::
     ld a, [wWorkBuf]
     ld c, a
     ld b, $00

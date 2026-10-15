@@ -691,7 +691,7 @@ ArenaRounds_AfterSecondBattle::
 
 .call_inc_arena_round_and_copy_area_graphics:
     farcall IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
-    farcall ArenaRounds_RandomModulo52_SetBattleIntroKind
+    farcall ArenaRounds_SetUpBattle
     ret
 
 ; Decrement the arena counter. A result of exactly 2 selects closing column 7 and stage 22; every
@@ -718,7 +718,7 @@ ArenaRounds_AfterFirstBattle::
 
 .call_inc_arena_round_and_copy_area_graphics:
     farcall IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
-    farcall ArenaRounds_RandomModulo52_SetBattleIntroKind
+    farcall ArenaRounds_SetUpBattle
     ret
 
 ; Hold field draw mask $0E while the opening message runs. Once idle, set the player moving and
@@ -6716,7 +6716,7 @@ LoadSpriteGraphics7EToTiles0::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $d8
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
     add e
     ld e, a
     jr nc, .call_copy_from_bank
@@ -7822,7 +7822,7 @@ RandomGoldOrItem_DecompressToVRAM::
     or a
     ret z
     ld a, [hl]
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
     add e
     ld e, a
     jr nc, .skip

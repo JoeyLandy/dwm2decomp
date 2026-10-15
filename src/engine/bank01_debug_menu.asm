@@ -30,7 +30,7 @@ GameMode0_Init::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $01
-    jp ClearSGBPacketBuffer_CheckLinkMode
+    jp ResumeAfterModeChange
 
 ; jumps by wModeState to the init routine of each debug screen (menu, map editor, automap, picture
 ; viewer, sound test, battle setup, results, staff roll, skill viewer, record viewer, message test)
@@ -859,7 +859,7 @@ DebugMessageTest_Update::
     ret nz
     ld a, [wJoypadPressed]
     and $01
-    jp z, DebugMessageTest_Update_CheckJoypadPressedRepeat
+    jp z, DebugMessageTest_Update_HandleInput
     ld a, [wMenuRowCount]
     ld [wStringIndex], a
     ld a, [wTemp1]
@@ -876,243 +876,243 @@ DebugMessageTest_Update::
     ld [wTextWindowTileHi], a
     ld a, [wTemp0]
     jumptable
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank08
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank09
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank28
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank29
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2A
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2B
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2C
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2D
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2E
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank7C
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank80
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank82
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank86
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank89
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank07
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2F
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank37
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank88
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank83
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1D
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank8A
-    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_2
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1F
-    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0_2
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0D
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank24
-    dw DebugMessageTest_Update_CallUpdate_BeginStringDisplay
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0E
-    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF2
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_2
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0B
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B
+    dw DebugMessageTest_Update_ShowBank08
+    dw DebugMessageTest_Update_ShowBank09
+    dw DebugMessageTest_Update_ShowBank28
+    dw DebugMessageTest_Update_ShowBank29
+    dw DebugMessageTest_Update_ShowBank2A
+    dw DebugMessageTest_Update_ShowBank2B
+    dw DebugMessageTest_Update_ShowBank2C
+    dw DebugMessageTest_Update_ShowBank2D
+    dw DebugMessageTest_Update_ShowBank2E
+    dw DebugMessageTest_Update_ShowBank7C
+    dw DebugMessageTest_Update_ShowBank80
+    dw DebugMessageTest_Update_ShowBank82
+    dw DebugMessageTest_Update_ShowBank86
+    dw DebugMessageTest_Update_ShowBank89
+    dw DebugMessageTest_Update_ShowBank07
+    dw DebugMessageTest_Update_ShowBank2F
+    dw DebugMessageTest_Update_ShowBank37
+    dw DebugMessageTest_Update_ShowBank88
+    dw DebugMessageTest_Update_ShowBank83
+    dw DebugMessageTest_Update_ShowBank1D
+    dw DebugMessageTest_Update_ShowBank8A
+    dw DebugMessageTest_Update_ShowBankF0
+    dw DebugMessageTest_Update_ShowBank1BSecond
+    dw DebugMessageTest_Update_ShowBank1F
+    dw DebugMessageTest_Update_ShowBankF0Second
+    dw DebugMessageTest_Update_ShowBank0D
+    dw DebugMessageTest_Update_ShowBank33
+    dw DebugMessageTest_Update_ShowBank24
+    dw DebugMessageTest_Update_ShowBank0E
+    dw DebugMessageTest_Update_ShowBank0ESecond
+    dw DebugMessageTest_Update_ShowBankF2
+    dw DebugMessageTest_Update_ShowBank33Second
+    dw DebugMessageTest_Update_ShowBank0B
+    dw DebugMessageTest_Update_ShowBank1B
 
 ; Message test, library 0 ($00): shows the chosen message from the message table of bank $08 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank08::
+DebugMessageTest_Update_ShowBank08::
     farcall BeginStringDisplay_Bank08
     ret
 
 ; Message test, library 1 ($01): shows the chosen message from the message table of bank $09 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank09::
+DebugMessageTest_Update_ShowBank09::
     farcall BeginStringDisplay_Bank09
     ret
 
 ; Message test, library 2 ($02): shows the chosen message from the message table of bank $28 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank28::
+DebugMessageTest_Update_ShowBank28::
     farcall BeginStringDisplay_Bank28
     ret
 
 ; Message test, library 3 ($03): shows the chosen message from the message table of bank $29 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank29::
+DebugMessageTest_Update_ShowBank29::
     farcall BeginStringDisplay_Bank29
     ret
 
 ; Message test, library 4 ($04): shows the chosen message from the message table of bank $2A by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank2A::
+DebugMessageTest_Update_ShowBank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; Message test, library 5 ($05): shows the chosen message from the message table of bank $2B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank2B::
+DebugMessageTest_Update_ShowBank2B::
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; Message test, library 6 ($06): shows the chosen message from the message table of bank $2C by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank2C::
+DebugMessageTest_Update_ShowBank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; Message test, library 7 ($07): shows the chosen message from the message table of bank $2D by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank2D::
+DebugMessageTest_Update_ShowBank2D::
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; Message test, library 8 ($08): shows the chosen message from the message table of bank $2E by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank2E::
+DebugMessageTest_Update_ShowBank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; Message test, library 9 ($09): shows the chosen message from the message table of bank $7C by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank7C::
+DebugMessageTest_Update_ShowBank7C::
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; Message test, library 10 ($0A): shows the chosen message from the message table of bank $80 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank80::
+DebugMessageTest_Update_ShowBank80::
     farcall BeginStringDisplay_Bank80
     ret
 
 ; Message test, library 11 ($0B): shows the chosen message from the message table of bank $82 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank82::
+DebugMessageTest_Update_ShowBank82::
     farcall BeginStringDisplay_Bank82
     ret
 
 ; Message test, library 12 ($0C): shows the chosen message from the message table of bank $86 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank86::
+DebugMessageTest_Update_ShowBank86::
     farcall BeginStringDisplay_Bank86
     ret
 
 ; Message test, library 13 ($0D): shows the chosen message from the message table of bank $89 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank89::
+DebugMessageTest_Update_ShowBank89::
     farcall BeginStringDisplay_Bank89
     ret
 
 ; Message test, library 14 ($0E): shows the chosen message from the message table of bank $07 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank07::
+DebugMessageTest_Update_ShowBank07::
     farcall BeginStringDisplay_Bank07
     ret
 
 ; Message test, library 15 ($0F): shows the chosen message from the message table of bank $2F by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank2F::
+DebugMessageTest_Update_ShowBank2F::
     farcall BeginStringDisplay_Bank2F
     ret
 
 ; Message test, library 16 ($10): shows the chosen message from the message table of bank $37 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank37::
+DebugMessageTest_Update_ShowBank37::
     farcall BeginStringDisplay_Bank37
     ret
 
 ; Message test, library 17 ($11): shows the chosen message from the message table of bank $88 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank88::
+DebugMessageTest_Update_ShowBank88::
     farcall BeginStringDisplay_Bank88
     ret
 
 ; Message test, library 18 ($12): shows the chosen message from the message table of bank $83 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank83::
+DebugMessageTest_Update_ShowBank83::
     farcall BeginStringDisplay_Bank83
     ret
 
 ; Message test, library 19 ($13): shows the chosen message from the message table of bank $1D by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1D::
+DebugMessageTest_Update_ShowBank1D::
     farcall BeginStringDisplay_Bank1D
     ret
 
 ; Message test, library 20 ($14): shows the chosen message from the message table of bank $8A by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank8A::
+DebugMessageTest_Update_ShowBank8A::
     farcall BeginStringDisplay_Bank8A
     ret
 
 ; Message test, library 21 ($15): shows the chosen message from the message table of bank $F0 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_BankF0::
+DebugMessageTest_Update_ShowBankF0::
     farcall BeginStringDisplay_BankF0
     ret
 
 ; Message test, library 22 ($16): shows the chosen message from the message table of bank $1B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_2::
+DebugMessageTest_Update_ShowBank1BSecond::
     farcall BeginStringDisplay_Bank1B_2
     ret
 
 ; Message test, library 23 ($17): shows the chosen message from the message table of bank $1F by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1F::
+DebugMessageTest_Update_ShowBank1F::
     farcall BeginStringDisplay_Bank1F
     ret
 
 ; Message test, library 24 ($18): shows the chosen message from the message table of bank $F0 (a
 ; second table in that bank) by far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_BankF0_2::
+DebugMessageTest_Update_ShowBankF0Second::
     farcall BeginStringDisplay_BankF0_2
     ret
 
 ; Message test, library 25 ($19): shows the chosen message from the message table of bank $0D by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank0D::
+DebugMessageTest_Update_ShowBank0D::
     farcall BeginStringDisplay_Bank0D
     ret
 
 ; Message test, library 26 ($1A): shows the chosen message from the message table of bank $33 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank33::
+DebugMessageTest_Update_ShowBank33::
     farcall BeginStringDisplay_Bank33
     ret
 
 ; Message test, library 27 ($1B): shows the chosen message from the message table of bank $24 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank24::
+DebugMessageTest_Update_ShowBank24::
     farcall BeginStringDisplay_Bank24
     ret
 
-; Message test, library 28: shows the chosen message with
-; DebugMessageTest_Update_BeginStringDisplay, this bank's own message routine (not one of the
-; message banks). (C1, E-0357)
-DebugMessageTest_Update_CallUpdate_BeginStringDisplay::
-    farcall DebugMessageTest_Update_BeginStringDisplay
+; Message test, library 28 ($1C): shows the chosen message from bank $0E's message table
+; MessageStrings_Bank0E by far-calling BeginMessageDisplay_Bank0E in bank $0E, which takes indexes
+; from $88 on from an overflow table in bank $96. (C1, E-0369)
+DebugMessageTest_Update_ShowBank0E::
+    farcall BeginMessageDisplay_Bank0E
     ret
 
 ; Message test, library 29 ($1D): shows the chosen message from the message table of bank $0E by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank0E::
+DebugMessageTest_Update_ShowBank0ESecond::
     farcall BeginStringDisplay_Bank0E
     ret
 
 ; Message test, library 30 ($1E): shows the chosen message from the message table of bank $F2 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_BankF2::
+DebugMessageTest_Update_ShowBankF2::
     farcall BeginStringDisplay_BankF2
     ret
 
 ; Message test, library 31 ($1F): shows the chosen message from the message table of bank $33 (a
 ; second table in that bank) by far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank33_2::
+DebugMessageTest_Update_ShowBank33Second::
     farcall BeginStringDisplay_Bank33_2
     ret
 
 ; Message test, library 32 ($20): shows the chosen message from the message table of bank $0B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank0B::
+DebugMessageTest_Update_ShowBank0B::
     farcall BeginStringDisplay_Bank0B
     ret
 
 ; Message test, library 33 ($21): shows the chosen message from the message table of bank $1B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1B::
+DebugMessageTest_Update_ShowBank1B::
     farcall BeginStringDisplay_Bank1B
     ret
 
@@ -1124,19 +1124,19 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B::
 ; limit from DebugMessageTestTable for that library. B leaves the screen (wModeState = 0 and a mode
 ; change request). The selected number blinks (8 frames blank, 8 shown). Sound $69 plays on each
 ; change. (C1, E-0357)
-DebugMessageTest_Update_CheckJoypadPressedRepeat::
+DebugMessageTest_Update_HandleInput::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
     ld a, [wMenuState]
     cp $00
-    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE
+    call z, DebugMessageTest_Update_DrawLibrary
     ld a, [wMenuState]
     cp $01
-    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_2
+    call z, DebugMessageTest_Update_DrawCategory
     ld a, [wMenuState]
     cp $02
-    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_3
+    call z, DebugMessageTest_Update_DrawMessageIndex
     ld a, [wMenuState]
     sub $01
     jr nc, .set_menu_state
@@ -1153,13 +1153,13 @@ DebugMessageTest_Update_CheckJoypadPressedRepeat::
     jr z, .read_menu_state
     ld a, [wMenuState]
     cp $00
-    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE
+    call z, DebugMessageTest_Update_DrawLibrary
     ld a, [wMenuState]
     cp $01
-    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_2
+    call z, DebugMessageTest_Update_DrawCategory
     ld a, [wMenuState]
     cp $02
-    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_3
+    call z, DebugMessageTest_Update_DrawMessageIndex
     ld a, [wMenuState]
     add $01
     cp $03
@@ -1269,70 +1269,70 @@ DebugMessageTest_Update_CheckJoypadPressedRepeat::
 .check_menu_state3:
     ld a, [wMenuState]
     cp $00
-    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_CheckMenuState
+    jr nz, DebugMessageTest_Update_BlinkCategory
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE
+    jr nz, DebugMessageTest_Update_DrawLibrary
     xor a
     ld hl, vBGMap0 + $6d
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
+    jr DebugMessageTest_Update_DrawUnselectedNumbers
 
 ; Redraws the message test's library number (wTemp0) at BG row 3, column 13, then the other two
 ; numbers. (C1, E-0357)
-DebugMessageTest_Update_WriteHexByteTilesAtDE::
+DebugMessageTest_Update_DrawLibrary::
     ld a, [wTemp0]
     ld de, vBGMap0 + $6d
     call WriteHexByteTilesAtDE
-    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
+    jr DebugMessageTest_Update_DrawUnselectedNumbers
 
 ; Blinks the message test's second number when it is selected: on frames with bit 3 of
 ; wFrameCounterLo clear it blanks its two digits at BG row 5; otherwise it is drawn. Then redraws
 ; the unselected numbers. (C1, E-0357)
-DebugMessageTest_Update_WriteHexByteTilesAtDE_CheckMenuState::
+DebugMessageTest_Update_BlinkCategory::
     ld a, [wMenuState]
     cp $01
-    jr nz, DebugMessageTest_Update_CheckFrameCounterLo
+    jr nz, DebugMessageTest_Update_BlinkMessageIndex
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_2
+    jr nz, DebugMessageTest_Update_DrawCategory
     xor a
     ld hl, vBGMap0 + $ad
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
+    jr DebugMessageTest_Update_DrawUnselectedNumbers
 
 ; Redraws the message test's second number (wTemp1) at BG row 5, column 13, then the others. (C1,
 ; E-0357)
-DebugMessageTest_Update_WriteHexByteTilesAtDE_2::
+DebugMessageTest_Update_DrawCategory::
     ld a, [wTemp1]
     ld de, vBGMap0 + $ad
     call WriteHexByteTilesAtDE
-    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
+    jr DebugMessageTest_Update_DrawUnselectedNumbers
 
 ; Blinks the message test's third number (wMenuRowCount) the same way at BG row 7. (C1, E-0357)
-DebugMessageTest_Update_CheckFrameCounterLo::
+DebugMessageTest_Update_BlinkMessageIndex::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_3
+    jr nz, DebugMessageTest_Update_DrawMessageIndex
     xor a
     ld hl, vBGMap0 + $ed
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
+    jr DebugMessageTest_Update_DrawUnselectedNumbers
 
 ; Redraws the message test's third number (wMenuRowCount) at BG row 7, column 13, then the others.
 ; (C1, E-0357)
-DebugMessageTest_Update_WriteHexByteTilesAtDE_3::
+DebugMessageTest_Update_DrawMessageIndex::
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ed
     call WriteHexByteTilesAtDE
-    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
+    jr DebugMessageTest_Update_DrawUnselectedNumbers
 
 ; Redraws the message test's numbers that are not selected (wMenuState), so only the selected one
 ; blinks. (C1, E-0357)
-DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState::
+DebugMessageTest_Update_DrawUnselectedNumbers::
     ld a, [wMenuState]
     cp $00
     jr z, .check_menu_state
@@ -1430,9 +1430,9 @@ DebugMessageTest_ClearDependentNumbers::
 .return:
     ret
 
-; DebugMessageTest_Update_ToBeginStringDisplay_Bank1B reads the word at $4E54 + 2 * wTemp0; a zero
-; high byte takes the value directly, otherwise the word points at a sub-list (the bytes from $4E98
-; on); 34 words up to the first sub-list (E-0233, C1)
+; DebugMessageTest_Update_ShowBank1B reads the word at $4E54 + 2 * wTemp0; a zero high byte takes
+; the value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up
+; to the first sub-list (E-0233, C1)
 ; record: value (high byte 0) or pointer to a sub-list
 DebugMessageTestTable::
     dw $4e98 ; id 0
@@ -1533,7 +1533,7 @@ DebugMonsterRecordViewer_Update::
 .check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     bit 4, a
-    jp z, DebugShowMonsterRecord_Return
+    jp z, DebugShowMonsterRecord_Done
     ld a, [wJoypadHeld]
     bit 2, a
     jr nz, .read_debug_cursor3
@@ -1591,7 +1591,7 @@ DebugShowMonsterRecord::
     call WriteHexByteTilesAtHL
     ld a, [wMonsterId + $1]
     ld hl, vBGMap0 + $24
-    call DebugShowMonsterRecord_WriteTileDPlusBAtHL
+    call DebugShowMonsterRecord_DrawLowHexDigit
     ld a, [wMonsterId + $1]
     ld [wStringCategory], a
     ld a, [wMonsterId]
@@ -1633,7 +1633,7 @@ DebugShowMonsterRecord::
     call WriteHexByteTilesAtHL
     ld a, [wRecordBuffer + $1]
     ld hl, vBGMap0 + $4f
-    call DebugShowMonsterRecord_WriteTileDPlusBAtHL
+    call DebugShowMonsterRecord_DrawLowHexDigit
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $66
     ld bc, $0100
@@ -1721,9 +1721,10 @@ DebugShowMonsterRecord::
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
 
-; The debug monster viewer's exit when Right is not pressed this frame (its input code jumps here
-; from the Right check): returns. (C1, E-0357)
-DebugShowMonsterRecord_Return::
+; Ends DebugShowMonsterRecord (its drawing falls through to here) and is the exit
+; DebugMonsterRecordViewer_Update jumps to when Right is not pressed this frame: returns. (C1,
+; E-0369)
+DebugShowMonsterRecord_Done::
     ret
 
 ; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
@@ -1851,27 +1852,27 @@ DebugSkillViewer_Update::
     ld a, [wRecordBufferData + $5]
     ld hl, vBGMap0 + $14b
     ld bc, $0801
-    call DebugSkillViewer_Update_WriteVRAMByte
+    call DebugSkillViewer_Update_DrawFlagBits
     ld a, [wRecordBufferData + $6]
     ld hl, vBGMap0 + $16b
     ld bc, $0801
-    call DebugSkillViewer_Update_WriteVRAMByte
+    call DebugSkillViewer_Update_DrawFlagBits
     ld a, [wRecordBufferData + $7]
     ld hl, vBGMap0 + $18b
     ld bc, $0801
-    call DebugSkillViewer_Update_WriteVRAMByte
+    call DebugSkillViewer_Update_DrawFlagBits
     ld a, [wRecordBufferData + $8]
     ld hl, vBGMap0 + $1ab
     ld bc, $0801
-    call DebugSkillViewer_Update_WriteVRAMByte
+    call DebugSkillViewer_Update_DrawFlagBits
     ld a, [wRecordBufferData + $9]
     ld l, a
     ld a, [wRecordBufferData + $a]
     ld h, a
-    call DebugSkillViewer_Update_Number24ToPackedBCD
+    call DebugSkillViewer_Update_ToCappedBCD
     ld hl, vBGMap0 + $1ea
     ld bc, $0100
-    call DebugSkillViewer_Update_WriteVRAMByteInc
+    call DebugSkillViewer_Update_DrawFourDigits
     ld a, [wRecordBufferData + $9]
     ld l, a
     ld a, [wRecordBufferData + $a]
@@ -1881,18 +1882,18 @@ DebugSkillViewer_Update::
     ld a, [wRecordBufferData + $c]
     ld d, a
     add hl, de
-    call DebugSkillViewer_Update_Number24ToPackedBCD
+    call DebugSkillViewer_Update_ToCappedBCD
     ld hl, vBGMap0 + $1ef
     ld bc, $0100
-    call DebugSkillViewer_Update_WriteVRAMByteInc
+    call DebugSkillViewer_Update_DrawFourDigits
     ld a, [wRecordBufferData + $d]
     ld l, a
     ld a, [wRecordBufferData + $e]
     ld h, a
-    call DebugSkillViewer_Update_Number24ToPackedBCD
+    call DebugSkillViewer_Update_ToCappedBCD
     ld hl, vBGMap0 + $20a
     ld bc, $0100
-    call DebugSkillViewer_Update_WriteVRAMByteInc
+    call DebugSkillViewer_Update_DrawFourDigits
     ld a, [wRecordBufferData + $d]
     ld l, a
     ld a, [wRecordBufferData + $e]
@@ -1902,15 +1903,15 @@ DebugSkillViewer_Update::
     ld a, [wRecordBufferData + $10]
     ld d, a
     add hl, de
-    call DebugSkillViewer_Update_Number24ToPackedBCD
+    call DebugSkillViewer_Update_ToCappedBCD
     ld hl, vBGMap0 + $20f
     ld bc, $0100
-    call DebugSkillViewer_Update_WriteVRAMByteInc
+    call DebugSkillViewer_Update_DrawFourDigits
     ret
 
 ; For the debug skill viewer: converts HL to packed decimal digits (Number24ToPackedBCD) and caps
 ; the display at 9999: when the value has a digit above the thousands it shows $99 $99. (C1, E-0357)
-DebugSkillViewer_Update_Number24ToPackedBCD::
+DebugSkillViewer_Update_ToCappedBCD::
     ld a, l
     ld [wDigits], a
     ld a, h
@@ -1931,7 +1932,7 @@ DebugSkillViewer_Update_Number24ToPackedBCD::
 ; Draws the four packed-decimal digits in hTemp1 and hTemp0 at HL for the debug skill viewer,
 ; suppressing leading zeros: a digit is drawn as tile B + digit once any digit so far was non-zero,
 ; otherwise as the blank tile C; the last digit is always drawn. (C1, E-0357)
-DebugSkillViewer_Update_WriteVRAMByteInc::
+DebugSkillViewer_Update_DrawFourDigits::
     ld e, $00
     ldh a, [hTemp1]
     and $f0
@@ -2024,16 +2025,16 @@ DebugSkillViewer_Update_IndexOfFlagValue::
     ret
 
 ; Draws B flag tiles at HL for the debug skill viewer: for each bit tested by the mask bytes at
-; DebugSkillViewer_Update_WriteVRAMByte_Data, tile C + 1 when that bit of D is set, otherwise tile
-; C. (C1, E-0357)
-DebugSkillViewer_Update_WriteVRAMByte::
+; DebugSkillViewer_Update_DrawFlagBits_Data, tile C + 1 when that bit of D is set, otherwise tile C.
+; (C1, E-0357)
+DebugSkillViewer_Update_DrawFlagBits::
     ld d, a
     ld e, $00
 
 .loop:
     push hl
     ld a, e
-    ld hl, DebugSkillViewer_Update_WriteVRAMByte_Data
+    ld hl, DebugSkillViewer_Update_DrawFlagBits_Data
     add_a_to_hl
     ld a, d
     and [hl]
@@ -2052,8 +2053,8 @@ DebugSkillViewer_Update_WriteVRAMByte::
     jr nz, .loop
     ret
 
-; data read by DebugSkillViewer_Update_WriteVRAMByte (8 bytes) (E-0347)
-DebugSkillViewer_Update_WriteVRAMByte_Data::
+; data read by DebugSkillViewer_Update_DrawFlagBits (8 bytes) (E-0347)
+DebugSkillViewer_Update_DrawFlagBits_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; Draws the number DE as up to five decimal digits at HL for the debug monster viewer
@@ -2226,7 +2227,7 @@ WriteHexByteTilesAtHL::
 
 ; Draws the low nibble of A as one hex-digit tile (tile B + nibble) at HL: the second half of a hex
 ; byte on the debug monster viewer. (C1, E-0357)
-DebugShowMonsterRecord_WriteTileDPlusBAtHL::
+DebugShowMonsterRecord_DrawLowHexDigit::
     and $0f
     ld d, a
     call WriteTileDPlusBAtHL
@@ -2242,29 +2243,29 @@ DebugStaffRoll_Update::
 DebugResultsDisplay_Update::
     ld a, [wScreenState]
     and a
-    jp z, DebugResultsDisplay_ResistanceAddress_CheckJoypadPressedRepeat
+    jp z, DebugResultsDisplay_Update_HandleInput
     cp $01
-    jp z, DebugResultsDisplay_ResistanceAddress_Data2_CheckArg1
+    jp z, DebugResultsDisplay_Update_ShowChild
     ld a, [wJoypadPressedRepeat]
     bit 0, a
-    jp nz, DebugToggleArg1Marker_CheckScreenCounter
+    jp nz, DebugResultsDisplay_Update_BuildParents
     bit 1, a
-    jp nz, DebugToggleArg1Marker_ClearDebugCursor
+    jp nz, DebugResultsDisplay_Update_ExitToMenu
     bit 4, a
-    jp nz, .call_debug_results_display_update_hl_to2
+    jp nz, .call_debug_results_display_update_draw2
     bit 5, a
-    jp nz, .call_debug_results_display_update_hl_to3
+    jp nz, .call_debug_results_display_update_draw3
     bit 6, a
     jp nz, .check_debug_cursor
     bit 7, a
     jp nz, .check_debug_cursor2
     bit 3, a
-    jr nz, .call_debug_results_display_update_hl_to
-    call DebugResultsDisplay_Update_WriteDebugCounter
+    jr nz, .call_debug_results_display_update_draw
+    call DebugResultsDisplay_Update_BlinkResistance
     ret
 
-.call_debug_results_display_update_hl_to:
-    call DebugResultsDisplay_Update_HLToDecimalDigits
+.call_debug_results_display_update_draw:
+    call DebugResultsDisplay_Update_DrawResistance
     xor a
     ld [wScreenState], a
     ld [wSharedMenuWork], a
@@ -2285,13 +2286,13 @@ DebugResultsDisplay_Update::
     add_a_to_hl
     ld a, [hl]
     and a
-    jr nz, .call_debug_results_display_update_write_debug
+    jr nz, .call_debug_results_display_update_blink
     ld a, $04
 
-.call_debug_results_display_update_write_debug:
+.call_debug_results_display_update_blink:
     dec a
     ld [hl], a
-    call DebugResultsDisplay_Update_WriteDebugCounter
+    call DebugResultsDisplay_Update_BlinkResistance
     ret
 
 .check_debug_cursor2:
@@ -2309,17 +2310,17 @@ DebugResultsDisplay_Update::
     add_a_to_hl
     ld a, [hl]
     cp $03
-    jr c, .call_debug_results_display_update_write_debug2
+    jr c, .call_debug_results_display_update_blink2
     ld a, $ff
 
-.call_debug_results_display_update_write_debug2:
+.call_debug_results_display_update_blink2:
     inc a
     ld [hl], a
-    call DebugResultsDisplay_Update_WriteDebugCounter
+    call DebugResultsDisplay_Update_BlinkResistance
     ret
 
-.call_debug_results_display_update_hl_to2:
-    call DebugResultsDisplay_Update_HLToDecimalDigits
+.call_debug_results_display_update_draw2:
+    call DebugResultsDisplay_Update_DrawResistance
     ld a, [wSharedMenuWork]
     cp $1a
     jr c, .set_shared_menu_work
@@ -2328,11 +2329,11 @@ DebugResultsDisplay_Update::
 .set_shared_menu_work:
     inc a
     ld [wSharedMenuWork], a
-    call DebugResultsDisplay_Update_WriteDebugCounter
+    call DebugResultsDisplay_Update_BlinkResistance
     ret
 
-.call_debug_results_display_update_hl_to3:
-    call DebugResultsDisplay_Update_HLToDecimalDigits
+.call_debug_results_display_update_draw3:
+    call DebugResultsDisplay_Update_DrawResistance
     ld a, [wSharedMenuWork]
     and a
     jr nz, .set_shared_menu_work2
@@ -2341,26 +2342,26 @@ DebugResultsDisplay_Update::
 .set_shared_menu_work2:
     dec a
     ld [wSharedMenuWork], a
-    call DebugResultsDisplay_Update_WriteDebugCounter
+    call DebugResultsDisplay_Update_BlinkResistance
     ret
 
 ; The debug breeding screen's blink timer: wDebugCounter counts 0 to $17; for counts below $10 the
 ; selected value is drawn, for $10-$17 it is blanked, then the count restarts. (C1, E-0357)
-DebugResultsDisplay_Update_WriteDebugCounter::
+DebugResultsDisplay_Update_BlinkResistance::
     ld a, [wDebugCounter]
     inc a
     ld [wDebugCounter], a
     cp $10
-    jr c, DebugResultsDisplay_Update_HLToDecimalDigits
+    jr c, DebugResultsDisplay_Update_DrawResistance
     cp $18
-    jr c, DebugResultsDisplay_Update_CallDebugResultsDisplay_ResistanceAddress
+    jr c, DebugResultsDisplay_Update_BlankResistance
     xor a
     ld [wDebugCounter], a
 
 ; Draws the selected resistance digit on the debug breeding screen: the byte at index
 ; wSharedMenuWork of parent A's resistance list (wGridCursorY, when wDebugCursor = 4) or parent B's
 ; (wDebugResultsBuf), as one digit tile at its place on the screen. (C1, E-0357)
-DebugResultsDisplay_Update_HLToDecimalDigits::
+DebugResultsDisplay_Update_DrawResistance::
     ld a, [wDebugCursor]
     cp $04
     jr nz, .read_shared_menu_work
@@ -2390,7 +2391,7 @@ DebugResultsDisplay_Update_HLToDecimalDigits::
 
 ; Blanks the selected resistance digit on the debug breeding screen (the off phase of its blink).
 ; (C1, E-0357)
-DebugResultsDisplay_Update_CallDebugResultsDisplay_ResistanceAddress::
+DebugResultsDisplay_Update_BlankResistance::
     call DebugResultsDisplay_ResistanceAddress
     di
     call WaitForVRAMAccess
@@ -2438,13 +2439,20 @@ DebugResultsDisplay_ResistanceAddress_Data1::
 DebugResultsDisplay_ResistanceAddress_Data2::
     db $e6, $99, $06, $9a
 
-; Computes and shows the child on the debug breeding screen. Runs ComputeBreedingChild on the two
-; parent records built from the entered values; when the result is a valid species it checks the
-; child's species against the field at DebugResultsDisplay_ResistanceAddress_Data3
-; (TestBitInFieldAtArg3) and draws its name, or the unknown-name placeholder when that bit is clear;
-; then draws the child's species number, sex mark, plus value, level, maximum level and its 27
-; resistance digits. With no valid child it shows the placeholder and number 0. (C1, E-0357)
-DebugResultsDisplay_ResistanceAddress_Data2_CheckArg1::
+; State 1 of DebugResultsDisplay_Update (entered from DebugResultsDisplay_Update_BuildParents):
+; computes and shows the child on the debug breeding screen. A wArg1 other than 0 or 2 (the marker
+; DebugToggleArg1Marker toggles) becomes 0; it runs ComputeBreedingChild on wRecordBufA and
+; wRecordBufB and returns at once unless wArg5 is then $FF. With a child species (wArg6/wArg7 not
+; both $FF) it tests that species with TestBitInFieldAtArg3 against the address of
+; DebugResultsDisplay_Update_ShowChild_Data ($75C5), which, read while bank $15 is mapped, is the
+; bit field NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg_Data; with the bit clear it draws the
+; unknown-name placeholder at vTiles2 + $500 (otherwise it blanks that field), then draws the
+; child's name at vTiles2 + $200, its species number, sex mark, plus value, level and maximum level
+; (DebugResultsDisplay_Update_ShowChild_DrawBCD) and its 27 resistance digits, restores wArg1 and
+; clears wScreenState and wNameEntryState. With no child it draws the placeholder in both name
+; fields and number 0, clears wScreenState and wNameEntryState and returns without popping the saved
+; wArg1, so its ret takes that pushed AF as the return address (as read, not run). (C1, E-0369)
+DebugResultsDisplay_Update_ShowChild::
     ld a, [wArg1]
     and a
     jr z, .call_compute_breeding_child
@@ -2472,7 +2480,7 @@ DebugResultsDisplay_ResistanceAddress_Data2_CheckArg1::
     ld [wArg1], a
     ld a, [wArg7]
     ld [wArg2], a
-    ld de, DebugResultsDisplay_ResistanceAddress_Data3
+    ld de, DebugResultsDisplay_Update_ShowChild_Data
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -2573,19 +2581,19 @@ DebugResultsDisplay_ResistanceAddress_Data2_CheckArg1::
     ld c, a
     ld de, vBGMap0 + $2
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess
+    call DebugResultsDisplay_Update_ShowChild_DrawBCD
     ld hl, wChildRecord + MON_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $22
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess
+    call DebugResultsDisplay_Update_ShowChild_DrawBCD
     ld hl, wChildRecord + MON_MAX_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $42
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess
+    call DebugResultsDisplay_Update_ShowChild_DrawBCD
     ld hl, wChildRecord + MON_RESISTANCES
     ld de, vBGMap0 + $6
     ld c, $00
@@ -2626,7 +2634,7 @@ DebugResultsDisplay_ResistanceAddress_Data2_CheckArg1::
 
 ; Writes C as two hex-digit tiles ($10 + each nibble) at DE, waiting for VRAM access before each.
 ; (C1, E-0357)
-DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess::
+DebugResultsDisplay_Update_ShowChild_DrawBCD::
     ld a, c
     and $f0
     swap a
@@ -2649,28 +2657,30 @@ DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess::
     ei
     ret
 
-; Input of the debug breeding screen ('RESULTS DISPLAY'). A computes the child
-; (DebugToggleArg1Marker_CheckScreenCounter), B leaves, Up and Down move between the ten fields,
-; Right and Left change the selected field, Start opens the resistance editor for a parent. Select
-; loads both parents' default resistances from their species records (LoadSpeciesRecord,
-; CopySpeciesResistancesFromIndexCToDE) into wGridCursorY (parent A) and wDebugResultsBuf (parent
-; B). With no button it blinks the selected field. (C1, E-0357)
-DebugResultsDisplay_ResistanceAddress_CheckJoypadPressedRepeat::
+; State 0 of DebugResultsDisplay_Update, the input of the debug breeding screen ('RESULTS DISPLAY').
+; A builds the parents and computes the child (DebugResultsDisplay_Update_BuildParents), B leaves
+; (DebugResultsDisplay_Update_ExitToMenu), Up and Down move between the ten fields, Right and Left
+; change the selected field, Start opens the resistance editor for a parent
+; (DebugResultsDisplay_Update_PressStart). Select loads both parents' default resistances from their
+; species records (LoadSpeciesRecord, CopySpeciesResistancesFromIndexCToDE) into wGridCursorY
+; (parent A) and wDebugResultsBuf (parent B) and draws them as digit tiles. With no button it blinks
+; the selected field (StepDebugCursorDebugCounter). (C1, E-0369)
+DebugResultsDisplay_Update_HandleInput::
     ld a, [wJoypadPressedRepeat]
     bit 0, a
-    jp nz, DebugToggleArg1Marker_CheckScreenCounter
+    jp nz, DebugResultsDisplay_Update_BuildParents
     bit 1, a
-    jp nz, DebugToggleArg1Marker_ClearDebugCursor
+    jp nz, DebugResultsDisplay_Update_ExitToMenu
     bit 6, a
-    jp nz, DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor
+    jp nz, DebugResultsDisplay_Update_PrevField
     bit 7, a
-    jp nz, DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2
+    jp nz, DebugResultsDisplay_Update_NextField
     bit 4, a
-    jp nz, DebugToggleArg1Marker_CheckDebugCursor2
+    jp nz, DebugResultsDisplay_Update_IncreaseField
     bit 5, a
-    jp nz, DebugToggleArg1Marker_CheckDebugCursor3
+    jp nz, DebugResultsDisplay_Update_DecreaseField
     bit 3, a
-    jp nz, DebugToggleArg1Marker_CheckDebugCursor
+    jp nz, DebugResultsDisplay_Update_PressStart
     bit 2, a
     jp nz, .read_debug_value0
     call StepDebugCursorDebugCounter
@@ -2812,7 +2822,7 @@ DebugToggleArg1Marker::
 ; Start on the debug breeding screen: on parent A's plus-value field (4) or parent B's (7) it opens
 ; the resistance editor (wScreenState + 2, starting at resistance 0); on other fields it toggles the
 ; marker at the top left (DebugToggleArg1Marker). (C1, E-0357)
-DebugToggleArg1Marker_CheckDebugCursor::
+DebugResultsDisplay_Update_PressStart::
     ld a, [wDebugCursor]
     cp $04
     jr z, .call_draw_debug_field_value_debug_cursor
@@ -2834,7 +2844,7 @@ DebugToggleArg1Marker_CheckDebugCursor::
 
 ; Up on the debug breeding screen: redraws the current field and moves to the previous one (stops at
 ; field 0). (C1, E-0357)
-DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor::
+DebugResultsDisplay_Update_PrevField::
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
     and a
@@ -2846,7 +2856,7 @@ DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor::
 
 ; Down on the debug breeding screen: redraws the current field and moves to the next one (stops at
 ; field 9). (C1, E-0357)
-DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
+DebugResultsDisplay_Update_NextField::
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
     cp $09
@@ -2858,8 +2868,9 @@ DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
 
 ; Right on the debug breeding screen: increases the selected field. The species fields (0 and 2)
 ; count 0-$174, wrapping to 0, and the species name is redrawn; the sex fields (1 and 3) toggle
-; between 0 and 1; the other fields go on to DebugToggleArg1Marker_Cp04. (C1, E-0357)
-DebugToggleArg1Marker_CheckDebugCursor2::
+; between 0 and 1; the other fields go on to DebugResultsDisplay_Update_IncreaseField_Number. (C1,
+; E-0357)
+DebugResultsDisplay_Update_IncreaseField::
     ld a, [wDebugCursor]
     and a
     jr z, .skip6
@@ -2869,7 +2880,7 @@ DebugToggleArg1Marker_CheckDebugCursor2::
     jr z, .skip5
     cp $03
     jr z, .skip2
-    jp DebugToggleArg1Marker_Cp04
+    jp DebugResultsDisplay_Update_IncreaseField_Number
 
 .skip:
     ld hl, wDebugValue2
@@ -2925,19 +2936,19 @@ DebugToggleArg1Marker_CheckDebugCursor2::
     call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
     cp $02
-    jr z, DebugToggleArg1Marker_Loop
+    jr z, DebugResultsDisplay_Update_DrawParentBName
     ld de, wDebugValue0
     ld hl, vTiles2 + $300
-    jr DebugToggleArg1Marker_Skip
+    jr DebugResultsDisplay_Update_DrawSpeciesName
 
 ; Redraws parent B's species name (from wDebugValue3) at vTiles2 + $400. (C1, E-0357)
-DebugToggleArg1Marker_Loop::
+DebugResultsDisplay_Update_DrawParentBName::
     ld de, wDebugValue3
     ld hl, vTiles2 + $400
 
 ; Clears a 9 x 1 tile name field at HL and draws the name of the species whose id word is at DE
 ; there (DrawMonsterNameForWordAtDE_Bank01). (C1, E-0357)
-DebugToggleArg1Marker_Skip::
+DebugResultsDisplay_Update_DrawSpeciesName::
     push de
     push hl
     ld a, l
@@ -2956,8 +2967,9 @@ DebugToggleArg1Marker_Skip::
     ret
 
 ; Left on the debug breeding screen: decreases the selected field. The species fields wrap from 0 to
-; $174, the sex fields toggle, the other fields go on to DebugToggleArg1Marker_Cp042. (C1, E-0357)
-DebugToggleArg1Marker_CheckDebugCursor3::
+; $174, the sex fields toggle, the other fields go on to
+; DebugResultsDisplay_Update_DecreaseField_Number. (C1, E-0357)
+DebugResultsDisplay_Update_DecreaseField::
     ld a, [wDebugCursor]
     and a
     jr z, .skip5
@@ -2967,7 +2979,7 @@ DebugToggleArg1Marker_CheckDebugCursor3::
     jr z, .skip6
     cp $03
     jr z, .skip2
-    jp DebugToggleArg1Marker_Cp042
+    jp DebugResultsDisplay_Update_DecreaseField_Number
 
 .skip:
     ld hl, wDebugValue2
@@ -3020,16 +3032,16 @@ DebugToggleArg1Marker_CheckDebugCursor3::
     call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
     cp $02
-    jp z, DebugToggleArg1Marker_Loop
+    jp z, DebugResultsDisplay_Update_DrawParentBName
     ld de, wDebugValue0
     ld hl, vTiles2 + $300
-    jp DebugToggleArg1Marker_Skip
+    jp DebugResultsDisplay_Update_DrawSpeciesName
 
 ; Right on the numeric fields of the debug breeding screen: parent A's plus value (field 4,
 ; wScreenStep), level (5, wScreenCounter) and item (6, wGlyphListStart), and parent B's plus value
 ; (7, wScreenSubStep), level (8, wGlyphListPos) and item (9, wGridCursorX). Plus values and levels
 ; count 0-99, items 0-$1B, wrapping to 0. (C1, E-0357)
-DebugToggleArg1Marker_Cp04::
+DebugResultsDisplay_Update_IncreaseField_Number::
     cp $04
     jr z, .skip
     cp $05
@@ -3087,7 +3099,7 @@ DebugToggleArg1Marker_Cp04::
 
 ; Left on the numeric fields of the debug breeding screen: the same fields counted down, wrapping
 ; from 0 to 99 (or $1B for items). (C1, E-0357)
-DebugToggleArg1Marker_Cp042::
+DebugResultsDisplay_Update_DecreaseField_Number::
     cp $04
     jr z, .skip
     cp $05
@@ -3145,7 +3157,7 @@ DebugToggleArg1Marker_Cp042::
 
 ; B on the debug breeding screen: clears all its values and leaves for the debug menu (wModeState =
 ; 0 and a mode change request). (C1, E-0357)
-DebugToggleArg1Marker_ClearDebugCursor::
+DebugResultsDisplay_Update_ExitToMenu::
     xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
@@ -3161,11 +3173,14 @@ DebugToggleArg1Marker_ClearDebugCursor::
     inc [hl]
     ret
 
-; A on the debug breeding screen: when both levels are at least 10 and the parents' sexes differ,
-; builds two parent records in wRecordBufA and wRecordBufB (cleared first) from the entered species,
-; family (FamilyForSpeciesIdArg6), sex, plus value, level, item and resistances, and moves to the
-; step that computes the child. (C1, E-0357)
-DebugToggleArg1Marker_CheckScreenCounter::
+; A on the debug breeding screen: when both levels (wScreenCounter, wGlyphListPos) are at least 10
+; and the parents' sexes (wDebugValue2, wDebugSubState) differ, clears $1EF bytes from wRecordBufA
+; and builds the two parent records in wRecordBufA and wRecordBufB from the entered species, family
+; (FamilyForSpeciesIdArg6), sex, plus value, level, item and resistances, then adds 1 to
+; wScreenState and clears wNameEntryState. From state 0 this moves to state 1,
+; DebugResultsDisplay_Update_ShowChild; the resistance editor (state 2 or more) also jumps here on
+; A, and the same increment leaves it in the editor. (C1, E-0369)
+DebugResultsDisplay_Update_BuildParents::
     ld a, [wScreenCounter]
     cp $0a
     ret c
@@ -3272,7 +3287,7 @@ DebugToggleArg1Marker_CheckScreenCounter::
     ret
 
 ; debug: wDebugCounter += 1; below $10 continues at DrawDebugFieldValueDebugCursor, below $18 at
-; PackTwoDigitsOfCAsBCD_ReadDebugCursor, then wraps to 0 (E-0126)
+; StepDebugCursorDebugCounter_BlankField, then wraps to 0 (E-0126)
 StepDebugCursorDebugCounter::
     ld a, [wDebugCounter]
     inc a
@@ -3280,7 +3295,7 @@ StepDebugCursorDebugCounter::
     cp $10
     jr c, DrawDebugFieldValueDebugCursor
     cp $18
-    jp c, PackTwoDigitsOfCAsBCD_ReadDebugCursor
+    jp c, StepDebugCursorDebugCounter_BlankField
     xor a
     ld [wDebugCounter], a
 
@@ -3374,7 +3389,7 @@ PackTwoDigitsOfCAsBCD::
 
 ; Blanks the three digit tiles of debug field wDebugCursor (screen address from
 ; DrawDebugFieldValueDebugCursor_Data2): the off phase of the field's blink. (C1, E-0357)
-PackTwoDigitsOfCAsBCD_ReadDebugCursor::
+StepDebugCursorDebugCounter_BlankField::
     ld a, [wDebugCursor]
     sla a
     ld hl, DrawDebugFieldValueDebugCursor_Data2
@@ -3490,13 +3505,13 @@ DebugAutomap_Update::
     jp z, .check_bit1
     ld a, [wDebugState]
     cp $ff
-    jr z, .call_debug_automap_update_roll_key_contents
+    jr z, .call_debug_automap_update_enter_key_world
     ld a, [wDebugSubState]
     bit 7, a
     jr nz, .check_debug_state
 
-.call_debug_automap_update_roll_key_contents:
-    call DebugAutomap_Update_RollKeyContentsForLevelTemp0
+.call_debug_automap_update_enter_key_world:
+    call DebugAutomap_Update_EnterKeyWorld
     ret
 
 .check_bit1:
@@ -3674,7 +3689,7 @@ DebugAutomap_Update::
     ld a, [wDebugValue0]
     bit 7, a
     jr z, .check_debug_value02
-    call DebugAutomap_Update_CopyGlyphTilesToVRAM
+    call DebugAutomap_Update_DrawKeyName
 
 .check_debug_value02:
     ld a, [wDebugValue0]
@@ -3699,7 +3714,7 @@ DebugAutomap_Update::
     ld a, [wDebugValue1]
     and $7f
     ld [wDebugValue1], a
-    call DebugAutomap_Update_WriteHexByteTilesAtDE
+    call DebugAutomap_Update_DrawLevel
 
 .read_debug_value2:
     ld a, [wDebugValue2]
@@ -3742,7 +3757,7 @@ DebugAutomap_Update_Data::
 ; the key world record, sets the map size from the key world, places the player and the followers at
 ; the key world's goal position, and enters the field (game mode 1, wModeState 5, wMapType $80).
 ; (C1, E-0357)
-DebugAutomap_Update_RollKeyContentsForLevelTemp0::
+DebugAutomap_Update_EnterKeyWorld::
     ld a, [wDebugValue1]
     ldh [hTemp0], a
     farcall RollKeyContentsForLevelTemp0
@@ -3784,7 +3799,7 @@ DebugAutomap_Update_RollKeyContentsForLevelTemp0::
     ldh a, [hTemp3]
     ld [hl], a
     ld [wPartyStrength], a
-    farcall DebugAutomap_Update_KeyWorldLayout_Start
+    farcall GenerateKeyWorld
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
@@ -3852,7 +3867,7 @@ LoadKeyEntryFieldsToDebugState::
 ; Draws the debug automap's level number (wDebugValue1 & $7F) at BG row 9, column 10; for a slot
 ; from SRAM (wDebugState $FF) or a key whose bit 7 of wDebugSubState is set it shows and stores 0.
 ; (C1, E-0357)
-DebugAutomap_Update_WriteHexByteTilesAtDE::
+DebugAutomap_Update_DrawLevel::
     ld a, [wDebugState]
     cp $ff
     jr z, .clear_debug_value1
@@ -3876,7 +3891,7 @@ DebugAutomap_Update_WriteHexByteTilesAtDE::
 ; five-glyph string when the slot is from SRAM and wDebugSubState bit 7 is set, the name of the
 ; debug menu entry (DebugMenuNames, 16 bytes each, by wDebugState) when only bit 7 is set, or the
 ; key's name (WriteKeyNameToDE for wDebugValue0 & $1F). (C1, E-0357)
-DebugAutomap_Update_CopyGlyphTilesToVRAM::
+DebugAutomap_Update_DrawKeyName::
     ld a, $90
     ld [wNameGlyphBuf], a
     ld [wNameGlyphBuf + $1], a
@@ -4716,12 +4731,12 @@ DebugSoundTest_Update::
     jr z, .read_menu_state2
     ld a, [wMenuState]
     or a
-    jr nz, .call_debug_sound_test_update_write_hex_byte
-    call DebugSoundTest_Update_WriteHexByteTilesAtDE
+    jr nz, .call_debug_sound_test_update_draw_effect
+    call DebugSoundTest_Update_DrawMusicNumber
     jr .read_menu_state
 
-.call_debug_sound_test_update_write_hex_byte:
-    call DebugSoundTest_Update_WriteHexByteTilesAtDE_2
+.call_debug_sound_test_update_draw_effect:
+    call DebugSoundTest_Update_DrawEffectNumber
 
 .read_menu_state:
     ld a, [wMenuState]
@@ -4780,43 +4795,43 @@ DebugSoundTest_Update::
 .check_menu_state:
     ld a, [wMenuState]
     or a
-    jr nz, DebugSoundTest_Update_CheckFrameCounterLo
+    jr nz, DebugSoundTest_Update_BlinkEffectNumber
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE
+    jr nz, DebugSoundTest_Update_DrawMusicNumber
     xor a
     ld hl, vBGMap0 + $e9
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
+    jr DebugSoundTest_Update_Done
 
 ; Redraws the sound test's music number (wTemp0) at BG row 7, column 9. (C1, E-0357)
-DebugSoundTest_Update_WriteHexByteTilesAtDE::
+DebugSoundTest_Update_DrawMusicNumber::
     ld a, [wTemp0]
     ld de, vBGMap0 + $e9
     call WriteHexByteTilesAtDE
-    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
+    jr DebugSoundTest_Update_Done
 
 ; Blinks the sound test's sound-effect number when it is selected: blank on frames with bit 3 of
 ; wFrameCounterLo clear, otherwise drawn. (C1, E-0357)
-DebugSoundTest_Update_CheckFrameCounterLo::
+DebugSoundTest_Update_BlinkEffectNumber::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_2
+    jr nz, DebugSoundTest_Update_DrawEffectNumber
     xor a
     ld hl, vBGMap0 + $109
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
+    jr DebugSoundTest_Update_Done
 
 ; Redraws the sound test's sound-effect number (wTemp1) at BG row 8, column 9. (C1, E-0357)
-DebugSoundTest_Update_WriteHexByteTilesAtDE_2::
+DebugSoundTest_Update_DrawEffectNumber::
     ld a, [wTemp1]
     ld de, vBGMap0 + $109
     call WriteHexByteTilesAtDE
 
 ; The sound test's shared exit: returns. (C1, E-0357)
-DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return::
+DebugSoundTest_Update_Done::
     ret
 
 ; Wraps the selected sound-test number to its count B (B wraps to 0, $FF to B - 1) and draws the
@@ -4992,24 +5007,26 @@ DebugSoundTestEffects::
 DebugBattleSetup_Update::
     ld a, [wJoypadPressed]
     and $08
-    jp z, DebugBattleSetupLoadWords_CheckJoypadPressed
+    jp z, DebugBattleSetup_Update_HandleInput
     ld a, [wWorkBuf]
     ld [wEncounterKind], a
     ld a, [wWorkBuf + $8]
     sra a
     ld [wBattleKind], a
     or a
-    jr nz, DebugBattleSetupLoadWords_SetEncounterMonsters
+    jr nz, DebugBattleSetup_Update_LoadEncounter
     ld hl, wEncounterMonsters
     ld de, wWorkBuf + $2
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
 
-; Starts the debug battle: clears the menu values, creates the save data the battle needs (a fresh
-; default game when wWorkBuf + 8 is set, otherwise DebugBattleSetup_Update_SRAMRecordAddressMapped),
-; switches to game mode 4 and fades out. (C1, E-0357)
-DebugBattleSetup_Update_ClearMenuState::
+; Starts the debug battle (DebugBattleSetup_Update falls through to here after loading the foes, and
+; DebugBattleSetup_Update_LoadEncounter jumps here): clears the menu values, creates the save data
+; the battle needs (a fresh default game when wWorkBuf + 8 is set, otherwise
+; DebugBattleSetup_Update_EnsureSave), switches to game mode 4 (wModeState 0) with a mode change
+; request and wBGFillFlag, and starts palette fade 4. (C1, E-0369)
+DebugBattleSetup_Update_StartBattle::
     xor a
     ld [wMenuState], a
     xor a
@@ -5019,7 +5036,7 @@ DebugBattleSetup_Update_ClearMenuState::
     ld a, [wWorkBuf + $8]
     or a
     jr nz, .call_debug_battle_setup_create_default_game
-    call DebugBattleSetup_Update_SRAMRecordAddressMapped
+    call DebugBattleSetup_Update_EnsureSave
     jr .set_game_mode_to_04
 
 .call_debug_battle_setup_create_default_game:
@@ -5060,7 +5077,7 @@ DebugBattleSetupLoadWords::
 ; Copies the debug battle set-up into the encounter: from wWorkBuf + $C, three foes' monster ids
 ; (wEncounterMonsters), a level (wWildLevel), a band (wWildBand) and a class (wEncounterClass), then
 ; starts the battle. (C1, E-0357)
-DebugBattleSetupLoadWords_SetEncounterMonsters::
+DebugBattleSetup_Update_LoadEncounter::
     ld hl, wWorkBuf + $c
     ld a, [hli]
     ld [wEncounterMonsters], a
@@ -5082,13 +5099,13 @@ DebugBattleSetupLoadWords_SetEncounterMonsters::
     ld [wEncounterMonsters + $5], a
     ld a, [hli]
     ld [wEncounterClass], a
-    jr DebugBattleSetup_Update_ClearMenuState
+    jr DebugBattleSetup_Update_StartBattle
 
 ; Input of the debug battle set-up screen ('? BATTLE ?'): A clears the selected value, B stores the
 ; foe count and the three monster words and leaves, Up and Down move between the 12 values, Right
 ; and Left change the selected one by 1 (by 16 with Select held, clamped to its limit). The selected
 ; value blinks; any change redraws it and the field's description string. (C1, E-0357)
-DebugBattleSetupLoadWords_CheckJoypadPressed::
+DebugBattleSetup_Update_HandleInput::
     ld a, [wJoypadPressed]
     and $01
     jr z, .check_joypad_pressed
@@ -5230,7 +5247,7 @@ DebugBattleSetupLoadWords_CheckJoypadPressed::
 
 .read_menu_state:
     ld a, [wMenuState]
-    ld hl, DebugBattleSetupLoadWords_Data
+    ld hl, DebugBattleSetup_Update_HandleInput_Data
     add a
     add_a_to_hl
     deref_hl
@@ -5265,10 +5282,10 @@ DebugBattleSetupLoadWords_CheckJoypadPressed::
     ret
 
 ; writes the word wWorkBuf[wMenuState] as three hex digits at the address
-; DebugBattleSetupLoadWords_Data[wMenuState] (E-0122)
+; DebugBattleSetup_Update_HandleInput_Data[wMenuState] (E-0122)
 DrawDebugValueHexForMenuState::
     ld a, [wMenuState]
-    ld hl, DebugBattleSetupLoadWords_Data
+    ld hl, DebugBattleSetup_Update_HandleInput_Data
     add a
     add_a_to_hl
     ld a, [hli]
@@ -5360,9 +5377,11 @@ ClampDebugValueToTableLimit::
 
 ; Makes sure the debug battle has usable party data: when the party has 1-3 members, the farm level
 ; is below 3 and each member's record index is below 10, 20 or 30 (by farm level) and its record
-; state is 2, nothing is done. Otherwise it loads the save (CheckSaveData, RunLoadGameSteps) or,
-; with no save, creates the default debug game (DebugBattleSetup_CreateDefaultGame). (C1, E-0357)
-DebugBattleSetup_Update_SRAMRecordAddressMapped::
+; state is 2 (DebugBattleSetup_Update_EnsureSave_InParty), nothing is done. Otherwise it checks the
+; save (CheckSaveData): a valid save (hTemp0 = 0) gets one call of RunLoadGameSteps, and a missing
+; or damaged one (hTemp0 not 0) is replaced by the default debug game
+; (DebugBattleSetup_CreateDefaultGame). (C1, E-0369)
+DebugBattleSetup_Update_EnsureSave::
     ld a, [wPartyCount]
     or a
     jr z, .call_check_save_data
@@ -5387,7 +5406,7 @@ DebugBattleSetup_Update_SRAMRecordAddressMapped::
     jr nc, .call_check_save_data
     push bc
     push hl
-    call DebugBattleSetup_Update_SRAMRecordAddressMapped_2
+    call DebugBattleSetup_Update_EnsureSave_InParty
     pop hl
     pop bc
     jr nz, .call_check_save_data
@@ -5408,15 +5427,15 @@ DebugBattleSetup_Update_SRAMRecordAddressMapped::
     ret
 
 ; Returns Z when party record A has state 2 (MON_STATE). (C1, E-0357)
-DebugBattleSetup_Update_SRAMRecordAddressMapped_2::
+DebugBattleSetup_Update_EnsureSave_InParty::
     ld c, MON_STATE
     call SRAMRecordAddressMapped
     ld a, [hl]
     cp $02
     ret
 
-; data read by DebugBattleSetupLoadWords (24 bytes) (E-0347)
-DebugBattleSetupLoadWords_Data::
+; data read by DebugBattleSetup_Update_HandleInput (24 bytes) (E-0347)
+DebugBattleSetup_Update_HandleInput_Data::
     db $87, $98, $a7, $98, $c7, $98, $e7, $98, $07, $99, $27, $99, $47, $99, $67, $99
     db $87, $99, $a7, $99, $c7, $99, $e7, $99
 
@@ -5668,8 +5687,7 @@ WriteThreeHexDigitsAtDE::
 ; Creates the default debug game: the player at map 0, screen (2, 0), position ($40, $40) with the
 ; followers on the same spot, a fixed six-glyph player name, 99,999 gold ($01869F), three party
 ; members (records 0-2), 24 inventory items, 80 tiny medals (wTinyMedals), an empty key list, and 30
-; random monster records (DebugBattleSetup_CreateDefaultGame_PickRandomMonsterSkipping7ETo82). (C1,
-; E-0357)
+; random monster records (DebugBattleSetup_CreateDefaultGame_RandomMonsters). (C1, E-0357)
 DebugBattleSetup_CreateDefaultGame::
     ld a, $00
     ldh [hMapId], a
@@ -5786,13 +5804,13 @@ DebugBattleSetup_CreateDefaultGame::
     xor a
     ld [wTinyMedalsHi], a
     call DebugBattleSetup_ClearKeyList
-    call DebugBattleSetup_CreateDefaultGame_PickRandomMonsterSkipping7ETo82
+    call DebugBattleSetup_CreateDefaultGame_RandomMonsters
     ret
 
 ; Fills the debug save with 30 random monsters (PickRandomMonsterSkipping7ETo82 for records 0 to
 ; $1D), then marks records 0-2 with state 2 (in the party) and the next 27 with state 1. (C1,
 ; E-0357)
-DebugBattleSetup_CreateDefaultGame_PickRandomMonsterSkipping7ETo82::
+DebugBattleSetup_CreateDefaultGame_RandomMonsters::
     ld b, $1e
     xor a
     ld [wBattleArg0], a
@@ -5859,12 +5877,14 @@ PickRandomMonsterSkipping7ETo82::
     ret
 
 ; Builds monster record wBattleArg0 in SRAM from MonsterTable entry DE (LoadMonsterRecord): state
-; hTemp3, species, sex (random when wBattleArg1 is $FF, otherwise from a per-kind table), the player
-; as owner, placeholder parent names, the template's level, HP and MP (capped at 999), stats and
-; other fields, a random personality word when wBattleArg2 is set, the species' family, starting
-; skills, maximum level and resistances; a name (random from 14, or from a per-kind table), the
-; experience for its level, and the species marked as seen (SetSpeciesFlag). (C1, E-0357)
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord::
+; hTemp3, species, sex (random when wBattleArg1 is $FF, otherwise from
+; CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data1 by kind), the player as owner, placeholder
+; parent names, the template's level (also stored in wRecordBufA + MON_LEVEL), HP (a template value
+; of $400 or more becomes 999) and MP, stats and other fields, a random personality word when
+; wBattleArg2 is set, the species' family, starting skills, maximum level and resistances; a name
+; (random from 14, or from the per-kind table CreateMonsterRecordInSlot_Build_Data2), the experience
+; for its level, and the species marked as seen (SetSpeciesFlag). (C1, E-0369)
+CreateMonsterRecordInSlot_Build::
     ldh a, [hTemp3]
     push af
     ld a, e
@@ -5897,7 +5917,7 @@ CreateMonsterRecordOfKindTemp1_LoadMonsterRecord::
 
 .skip:
     push hl
-    ld hl, CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data1
+    ld hl, CreateMonsterRecordInSlot_Build_Data1
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -6083,12 +6103,12 @@ CreateMonsterRecordOfKindTemp1_LoadMonsterRecord::
     ld [wWorkBuf + $2], a
     ld a, h
     ld [wWorkBuf + $3], a
-    farcall CreateMonsterRecordOfKindTemp1_ReadWorkBuf
+    farcall CreateMonsterRecordInSlot_Build_CopyDefaultName
     jr .read_species_id_lo
 
 .skip6:
     push hl
-    ld hl, CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2
+    ld hl, CreateMonsterRecordInSlot_Build_Data2
     add a
     add_a_to_hl
     ld e, [hl]
@@ -6181,7 +6201,7 @@ CreateMonsterRecordOfKindTemp1::
     xor a
     ld [wBattleArg2], a
     ldh a, [hTemp2]
-    call CreateMonsterRecordOfKindTemp1_WriteBattleArg0
+    call CreateMonsterRecordInSlot
     ldh a, [hTemp1]
     cp $01
     jr z, .read_battle_arg0
@@ -6209,11 +6229,12 @@ PickRandomMonsterSkipping7ETo82_CreateRecord::
     ldh [hTemp3], a
     ld a, [wBattleArg0]
 
-; Creates the record in slot A (wBattleArg0) with CreateMonsterRecordOfKindTemp1_LoadMonsterRecord.
-; (C1, E-0357)
-CreateMonsterRecordOfKindTemp1_WriteBattleArg0::
+; Creates the record in slot A (stored in wBattleArg0) with CreateMonsterRecordInSlot_Build.
+; CreateMonsterRecordOfKindTemp1 calls it, and PickRandomMonsterSkipping7ETo82_CreateRecord falls
+; through into it. (C1, E-0369)
+CreateMonsterRecordInSlot::
     ld [wBattleArg0], a
-    call CreateMonsterRecordOfKindTemp1_LoadMonsterRecord
+    call CreateMonsterRecordInSlot_Build
     ret
 
 ; copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this
@@ -6272,47 +6293,47 @@ CreateMonsterRecordOfKindTemp1_Data::
     db $83, $01, $63, $02, $64, $02, $58, $02, $59, $02, $1b, $00, $7a, $02, $79, $02
     db $78, $02
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data1::
+CreateMonsterRecordInSlot_Build_Data1::
     db $00, $00, $01, $00, $00, $00, $01, $00, $00
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2::
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry00
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry01
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry02
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry03
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry04
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry05
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry06
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry07
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry08
+CreateMonsterRecordInSlot_Build_Data2::
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry00
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry01
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry02
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry03
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry04
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry05
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry06
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry07
+    dw CreateMonsterRecordInSlot_Build_Data2_Entry08
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry00::
+CreateMonsterRecordInSlot_Build_Data2_Entry00::
     db $0b, $2c, $2c, $31, $32, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry01::
+CreateMonsterRecordInSlot_Build_Data2_Entry01::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry02::
+CreateMonsterRecordInSlot_Build_Data2_Entry02::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry03::
+CreateMonsterRecordInSlot_Build_Data2_Entry03::
     db $20, $24, $35, $38, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry04::
+CreateMonsterRecordInSlot_Build_Data2_Entry04::
     db $19, $28, $37, $2c, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry05::
+CreateMonsterRecordInSlot_Build_Data2_Entry05::
     db $1c, $34, $38, $2c, $3d, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry06::
+CreateMonsterRecordInSlot_Build_Data2_Entry06::
     db $15, $24, $30, $2c, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry07::
+CreateMonsterRecordInSlot_Build_Data2_Entry07::
     db $1c, $24, $37, $30, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry08::
+CreateMonsterRecordInSlot_Build_Data2_Entry08::
     db $0b, $35, $24, $25, $32, $f0, $f0, $f0, $f0, $f0
     ds $4a6, $00
 
-DebugResultsDisplay_ResistanceAddress_Data3::
+DebugResultsDisplay_Update_ShowChild_Data::
     ds $a3b, $00

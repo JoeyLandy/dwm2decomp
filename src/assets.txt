@@ -198,7 +198,7 @@ gfx/misc/gfx_field_command_sprite_table_6.lz	$1F91A8	$DD
 gfx/misc/gfx_field_command_sprite_table_7.lz	$1F92F9	$77
 gfx/misc/gfx_trigger_sprite_table_5.lz	$1F8D8A	$42
 gfx/misc/gfx_trigger_sprite_table_8.lz	$1F8E37	$42
-gfx/misc/load_player_and_follower_sprite_graphics_load_sramrecord_byte_data.lz	$1F945E	$B5
+gfx/misc/load_player_and_follower_sprite_graphics_followers_data.lz	$1F945E	$B5
 gfx/misc/map_x59_e4_screens0_y0_x0.lz	$241B6E	$A4
 gfx/misc/map_x59_e4_tileset.lz	$2418E9	$23F
 gfx/misc/map_x6248_attrs0_y0_x0.lz	$24F9B6	$4C

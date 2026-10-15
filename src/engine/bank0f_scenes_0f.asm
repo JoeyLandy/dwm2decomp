@@ -159,9 +159,9 @@ SceneHomecoming::
     dw SceneHomecoming_ShowWarubouNoOneKnows
     dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_FaceUp
-    dw SceneHomecoming_StartPaletteFadeAndStep
+    dw SceneHomecoming_FadeAndChangeMode
     dw SceneHomecoming_ShowObject
-    dw SceneHomecoming_ToScriptStepSetObjectBit2AndWait
+    dw SceneHomecoming_ShiftObjects
     dw SceneHomecoming_ShowWarubouWaheyIWas
     dw SceneHomecoming_ShowWarubouWaheyIWas
     dw SceneHomecoming_WaitMessage
@@ -184,15 +184,15 @@ SceneHomecoming::
     dw SceneHomecoming_MoveBack
     dw SceneHomecoming_Msg0DB8_WarubouWaheyIHave
     dw SceneHomecoming_WaitMessage
-    dw SceneHomecoming_WriteFollowerRecords
+    dw SceneHomecoming_WalkFirstFollowerLeft
     dw SceneHomecoming_HopFollower
     dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_MoveTogether
     dw SceneHomecoming_MoveBack
     dw SceneHomecoming_MoveTogether
     dw SceneHomecoming_HopAndWalk
-    dw SceneHomecoming_ToStartPaletteFadeAndStep
-    dw SceneHomecoming_WaitFadeState
+    dw SceneHomecoming_StartFinalFade
+    dw SceneHomecoming_FinishFinalFade
     dw SceneHomecoming_ShowTHEEND
     dw SceneHomecoming_CountDelay
     dw SceneHomecoming_GoToMap6
@@ -356,7 +356,7 @@ OBJPaletteBufferPlus20Init_2::
     db $de, $67, $1f, $33, $3c, $12, $00, $00 ; entry 0
 
 ; Homecoming scene, step 40: waits for the fade to finish. (C1, E-0357)
-SceneHomecoming_WaitFadeState::
+SceneHomecoming_FinishFinalFade::
     ld a, [wFadeState]
     or a
     ret nz
@@ -365,7 +365,7 @@ SceneHomecoming_WaitFadeState::
     ret
 
 ; Homecoming scene, step 39: starts fade $3F. (C1, E-0357)
-SceneHomecoming_ToStartPaletteFadeAndStep::
+SceneHomecoming_StartFinalFade::
     ld a, $3f
     call StartPaletteFade
     ld hl, wScriptStep
@@ -410,7 +410,7 @@ SceneHomecoming_HopFollower::
 
 ; Homecoming scene, step 32: walks the first follower left to X $78 and turns it to face up. (C1,
 ; E-0357)
-SceneHomecoming_WriteFollowerRecords::
+SceneHomecoming_WalkFirstFollowerLeft::
     ld a, [wFollowerRecords + $1]
     dec a
     dec a
@@ -657,9 +657,10 @@ SceneHomecoming_ShowWarubouWaheyIWas::
     inc [hl]
     ret
 
-; Homecoming scene, step 9: sets both objects moving and shows the scene object
-; (ScriptStepSetObjectBit2AndWait). (C1, E-0357)
-SceneHomecoming_ToScriptStepSetObjectBit2AndWait::
+; Homecoming scene, step 9: runs ScriptStepSetObjectBit2AndWait (bank $73): sets bit 2 of OBJ_FLAGS
+; of objects 1 and 2, shows the scene object (wObject5 = $80), shifts the objects by
+; ShiftObjectsYByTable each frame and moves on once wScriptParam0 is back to 0. (C1, E-0369)
+SceneHomecoming_ShiftObjects::
     farcall ScriptStepSetObjectBit2AndWait
     ret
 
@@ -679,8 +680,9 @@ SceneHomecoming_ShowObject::
     inc [hl]
     ret
 
-; Homecoming scene, step 7: fades out and switches to game mode 0, state 8. (C1, E-0357)
-SceneHomecoming_StartPaletteFadeAndStep::
+; Homecoming scene, step 7: starts palette fade $10, requests game mode 0 at mode state 8 (wGameMode
+; = 0, wModeState = 8, wModeChangeRequest += 1) and moves on. (C1, E-0369)
+SceneHomecoming_FadeAndChangeMode::
     ld a, $10
     call StartPaletteFade
     ld a, $00
@@ -1063,7 +1065,7 @@ SceneDarckDefeated_WarpToMap03::
     ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
     ld [wObject5 + SCRIPTOBJ_Y], a
-    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
+    call SceneDarckDefeated_StartMapChange
     ret
 
 ; steps objects 2 and 3 toward ($81, $B0) and ($81, $C0) (StepObjectTowardCoord); advances
@@ -1198,7 +1200,7 @@ SceneDarckDefeated_WarpToMap71::
     ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
     ld [wObject5 + SCRIPTOBJ_Y], a
-    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
+    call SceneDarckDefeated_StartMapChange
     ret
 
 ; Darck defeated scene, step 121: walks object 0 down to Y $60. (C1, E-0357)
@@ -1270,7 +1272,7 @@ SceneDarckDefeated_WalkObject4Left::
     ld [wStepPtrLo], a
     ld a, $03
     ld [wStepTarget], a
-    jr SceneDarckDefeated_WalkObject4Right_SetStepPtrHiTo04
+    jr SceneDarckDefeated_WalkObject4ToTarget
 
 ; Darck defeated scene, step 115: walks object 4 right to X $50. (C1, E-0357)
 SceneDarckDefeated_WalkObject4Right::
@@ -1280,7 +1282,7 @@ SceneDarckDefeated_WalkObject4Right::
     ld [wStepTarget], a
 
 ; Walks object 4 toward the target set, then it faces up. (C1, E-0357)
-SceneDarckDefeated_WalkObject4Right_SetStepPtrHiTo04::
+SceneDarckDefeated_WalkObject4ToTarget::
     ld a, $04
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -1364,7 +1366,7 @@ SceneDarckDefeated_WarpToMap60::
     ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
     ld [wObject5 + SCRIPTOBJ_Y], a
-    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
+    call SceneDarckDefeated_StartMapChange
     ret
 
 ; Darck defeated scene, step 104: makes a sprite flicker for $78 frames (shown at Y $30 or hidden at
@@ -1597,7 +1599,7 @@ SceneDarckDefeated_WarpToMap49::
     xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
+    call SceneDarckDefeated_StartMapChange
     ret
 
 ; Darck defeated scene, step 86: objects 1-3 hop together while turning every four frames (and a
@@ -1741,7 +1743,7 @@ SceneDarckDefeated_WarpToMap41::
     xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
+    call SceneDarckDefeated_StartMapChange
     ret
 
 ; Darck defeated scene, step 75: makes object 3 hop once. (C1, E-0357)
@@ -1979,7 +1981,7 @@ SceneDarckDefeated_WarpToMap33::
     xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
+    call SceneDarckDefeated_StartMapChange
     ret
 
 ; Darck defeated scene, step 60: object 2 faces left and drifts left while hopping once, then stops.
@@ -2006,7 +2008,7 @@ SceneDarckDefeated_WalkObject2Down::
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr SceneDarckDefeated_WalkObject0DownFar_SetStepTargetTo80
+    jr SceneDarckDefeated_WalkDownAndTurnObject0Left
 
 ; Darck defeated scene, step 58: walks object 0 left to X $E0 (two pixels a frame) while object 1
 ; drifts right and hops; then puts object 2 at Y $30. (C1, E-0357)
@@ -2047,7 +2049,7 @@ SceneDarckDefeated_WalkObjectsApart::
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr SceneDarckDefeated_WalkObject0DownFar_SetStepTargetTo80
+    jr SceneDarckDefeated_WalkDownAndTurnObject0Left
 
 ; Darck defeated scene, step 56: the first sprite drifts left while hopping; then object 1 is put at
 ; Y $30. (C1, E-0357)
@@ -2070,9 +2072,13 @@ SceneDarckDefeated_WalkObject0DownFar::
     ld a, $60
     ld [wStepPtrLo], a
 
-; Walks the object set up down two pixels a frame to the target, then turns the first sprite left
-; (direction 3). (C1, E-0357)
-SceneDarckDefeated_WalkObject0DownFar_SetStepTargetTo80::
+; Shared tail of steps 55 (SceneDarckDefeated_WalkObject0DownFar), 57
+; (SceneDarckDefeated_WalkObjectsApart, for object 1) and 59 (SceneDarckDefeated_WalkObject2Down):
+; with wStepPtrHi = the object and wStepPtrLo = the target Y set by the caller, sets wStepTarget =
+; $80 (down, two pixels a frame) and steps the object (StepObjectTowardCoord); on arrival sets
+; direction 3 (left) at wSpriteSlots + $7, object 0's slot whichever object walked, and advances
+; wScriptStep. (C1, E-0369)
+SceneDarckDefeated_WalkDownAndTurnObject0Left::
     ld a, $80
     ld [wStepTarget], a
     farcall StepObjectTowardCoord
@@ -2120,7 +2126,7 @@ SceneDarckDefeated_WarpToMap2F::
     ldh [hMapScreenX], a
     xor a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
+    call SceneDarckDefeated_StartMapChange
     ret
 
 ; Darck defeated scene, step 49: the scene object rises one pixel every other frame for $40 frames,
@@ -2221,7 +2227,7 @@ SceneDarckDefeated_WarpToMap26::
 
 ; Starts a scene map change: the player at X $E0 (the same Y), transition kind 4, the fade
 ; (ScriptStartFadeAndAdvanceStep), the scene object hidden. (C1, E-0357)
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep::
+SceneDarckDefeated_StartMapChange::
     ld a, $e0
     ld [wWarpDestX], a
     ldh a, [hPlayerY]
@@ -2704,17 +2710,17 @@ SceneDarckDefeated_ObjectPath::
 SceneThreeItems::
     ld a, [wScriptStep]
     jumptable
-    dw SceneThreeItems_ToRedrawColumnsBesideScreenAndStep
-    dw SceneThreeItems_ToScriptStepShakeScreen
+    dw SceneThreeItems_RedrawSideColumns
+    dw SceneThreeItems_ShakeScreen
     dw SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat
     dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_PlayMusic
     dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg0485_GreetingsIAmDarck
     dw SceneHomecoming_WaitMessage
-    dw SceneThreeItems_ToScriptStepDeltaThenMessage
+    dw SceneThreeItems_Object0HopThenKamehaWhatWhy
     dw SceneHomecoming_WaitMessage
-    dw SceneThreeItems_Msg_DarckWellForMe
+    dw SceneThreeItems_Msg0487_DarckWellForMe
     dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ShowDarckIImagineThat
     dw SceneHomecoming_WaitMessage
@@ -2725,10 +2731,10 @@ SceneThreeItems::
     dw SceneThreeItems_Msg048E_DarckIWillBe
     dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_SavePalettes
-    dw SceneThreeItems_WriteSpriteSlotCount
+    dw SceneThreeItems_LimitSpritesAndFlash
     dw SceneThreeItems_SetFlags
     dw SceneThreeItems_TurnObject0
-    dw SceneThreeItems_ToScriptStepDeltaThenMessage_3
+    dw SceneThreeItems_Object2HopThenKamehaOurTreasures
     dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_Msg0490_AVoiceEchoedFrom
     dw SceneHomecoming_WaitMessage
@@ -2737,16 +2743,16 @@ SceneThreeItems::
     dw SceneThreeItems_ShowWarubouWaheyHeroAnd
     dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_PlaySound
-    dw SceneThreeItems_ToScriptStepFlashScreenNegative
+    dw SceneThreeItems_FlashScreenNegative
     dw SceneThreeItems_ShowWarubouThereAllHealed
     dw SceneHomecoming_WaitMessage
-    dw SceneThreeItems_ToRedrawColumnsBesideScreenAndStep
-    dw SceneThreeItems_ToScriptStepShakeScreen
+    dw SceneThreeItems_RedrawSideColumns
+    dw SceneThreeItems_ShakeScreen
     dw SceneThreeItems_Msg0A7C_KamehaIIHave
     dw SceneHomecoming_WaitMessage
     dw SceneThreeItems_ShowWarubouWaheyThereIs
     dw SceneHomecoming_WaitMessage
-    dw SceneThreeItems_ToScriptStepDeltaThenMessage_2
+    dw SceneThreeItems_PlayerHopThenWarubouWeDontHave
     dw SceneThreeItems_GiveKeys
 
 ; Three items scene, step 43: after the message box closes, marks the key of kind 5, sets bit 4 of
@@ -2772,8 +2778,9 @@ SceneThreeItems_GiveKeys::
     ld [wScriptStartRequest], a
     ret
 
-; Three items scene, step 42: makes the player hop, then message $0A7E. (C1, E-0357)
-SceneThreeItems_ToScriptStepDeltaThenMessage_2::
+; Three items scene, step 42: the player hops (ScriptStepDeltaThenMessage on hPlayerY), then message
+; $0A7E, Warubou's 'Wa-hey, we don't have the time to be in shock'. (C1, E-0369)
+SceneThreeItems_PlayerHopThenWarubouWeDontHave::
     ld de, hPlayerY
     ld hl, $0a7e
     call ScriptStepDeltaThenMessage
@@ -2866,8 +2873,9 @@ SceneThreeItems_Msg0490_AVoiceEchoedFrom::
     inc [hl]
     ret
 
-; Three items scene, step 24: makes object 2 hop, then message $048F. (C1, E-0357)
-SceneThreeItems_ToScriptStepDeltaThenMessage_3::
+; Three items scene, step 24: object 2 hops (ScriptStepDeltaThenMessage on wObject2 + OBJ_Y), then
+; message $048F, Kameha's 'Our treasures!'. (C1, E-0369)
+SceneThreeItems_Object2HopThenKamehaOurTreasures::
     ld de, wObject2 + OBJ_Y
     ld hl, $048f
     call ScriptStepDeltaThenMessage
@@ -2919,13 +2927,13 @@ SceneThreeItems_SetFlags::
 
 ; Three items scene, step 21: draws one sprite slot only, then falls into the negative screen flash
 ; below. (C1, E-0357)
-SceneThreeItems_WriteSpriteSlotCount::
+SceneThreeItems_LimitSpritesAndFlash::
     ld a, $01
     ld [wSpriteSlotCount], a
 
-; Three items scene, step 33: runs the negative screen flash (ScriptStepFlashScreenNegative). (C1,
-; E-0357)
-SceneThreeItems_ToScriptStepFlashScreenNegative::
+; Three items scene, step 33, also reached from step 21 (SceneThreeItems_LimitSpritesAndFlash): runs
+; the negative screen flash (ScriptStepFlashScreenNegative). (C1, E-0369)
+SceneThreeItems_FlashScreenNegative::
     farcall ScriptStepFlashScreenNegative
     ret
 
@@ -3027,16 +3035,16 @@ SceneThreeItems_ShowDarckIImagineThat::
 
 ; Three items scene, step 10: Darck's 'Well, for me, anything that ...' (message $0487, the box kept
 ; open). (C1, E-0357)
-SceneThreeItems_Msg_DarckWellForMe::
+SceneThreeItems_Msg0487_DarckWellForMe::
     ld hl, MSG_KEEP_OPEN | $0487 ; 'Darck: Well, for me, anything that'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; Three items scene, step 8: object 0 hops; then message $0486 (ScriptStepDeltaThenMessage). (C1,
-; E-0357)
-SceneThreeItems_ToScriptStepDeltaThenMessage::
+; Three items scene, step 8: object 0 hops (ScriptStepDeltaThenMessage on wSpriteSlots + $C), then
+; message $0486, Kameha's 'What? Why do you do that?'. (C1, E-0369)
+SceneThreeItems_Object0HopThenKamehaWhatWhy::
     ld de, wSpriteSlots + $c
     ld hl, $0486
     call ScriptStepDeltaThenMessage
@@ -3112,14 +3120,16 @@ SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat::
     inc [hl]
     ret
 
-; Three items scene, step 1: shakes the screen for $78 frames. (C1, E-0357)
-SceneThreeItems_ToScriptStepShakeScreen::
+; Three items scene, steps 1 and 37: shakes the screen for $78 frames (ScriptStepShakeScreen), then
+; moves on. (C1, E-0369)
+SceneThreeItems_ShakeScreen::
     ld b, $78
     call ScriptStepShakeScreen
     ret
 
-; Three items scene, step 0: redraws the columns beside the screen and moves on. (C1, E-0357)
-SceneThreeItems_ToRedrawColumnsBesideScreenAndStep::
+; Three items scene, steps 0 and 36: redraws the BG map columns just off the screen's left and right
+; edges (RedrawColumnsBesideScreen) and moves on. (C1, E-0369)
+SceneThreeItems_RedrawSideColumns::
     farcall RedrawColumnsBesideScreen
     ld hl, wScriptStep
     inc [hl]

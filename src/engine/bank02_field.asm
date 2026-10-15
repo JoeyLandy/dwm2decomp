@@ -531,10 +531,11 @@ LoadPalette0FromData_2::
 LoadPalette0FromData_2_Data::
     db $00, $7c, $ff, $7f, $e0, $01, $00, $00
 
-; CGB step of the field menu's palette effect: runs one palette upload step
-; (RunScreenStateStepEveryOtherFrame), then copies any changed DMG palette bytes (BGP, then OBP0)
-; into wDMGPaletteBytes so the CGB palettes made from them follow. (C1, E-0357)
-WarpEffect_FadePalette_RunScreenStateStepEveryOtherFrame::
+; CGB step of the warp effect's palette animation, called by WarpEffect_FadePalette: returns at once
+; unless wIsCGB is set; runs one palette upload step (RunScreenStateStepEveryOtherFrame), then
+; copies wDMGPaletteBGP into wDMGPaletteBytes when it has changed and goes on to
+; WarpEffect_FadePalette_SyncCGB_OBP0 for wDMGPaletteOBP0. (C1, E-0369)
+WarpEffect_FadePalette_SyncCGB::
     ld a, [wIsCGB]
     or a
     ret z
@@ -542,10 +543,10 @@ WarpEffect_FadePalette_RunScreenStateStepEveryOtherFrame::
     ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp [hl]
-    jp z, BrightenFieldMenuColors_Data_CheckDMGPaletteOBP0
+    jp z, WarpEffect_FadePalette_SyncCGB_OBP0
     ld a, [wDMGPaletteBGP]
     ld [wDMGPaletteBytes], a
-    jp BrightenFieldMenuColors_Data_CheckDMGPaletteOBP0
+    jp WarpEffect_FadePalette_SyncCGB_OBP0
 
 ; wScreenStep += 1; on odd values, unless wScreenState is $FF, runs the step for wScreenState (jump
 ; table) (E-0122)
@@ -562,14 +563,14 @@ RunScreenStateStepEveryOtherFrame::
     cp $ff
     ret z
     jumptable
-    dw RunScreenStateStepEveryOtherFrame_WriteScreenState
-    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_2
-    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_3
+    dw RunScreenStateStepEveryOtherFrame_UploadBGPal01
+    dw RunScreenStateStepEveryOtherFrame_UploadBGPal23
+    dw RunScreenStateStepEveryOtherFrame_UploadBGPal45
     dw AnimateFieldMenuPalette67
 
 ; Uploads BG palettes 0-1 (8 colours) for frame wScreenCounter of a palette animation: from wWorkBuf
 ; + wScreenCounter * $40, starting at palette index 0 (rBGPI = $80). (C1, E-0357)
-RunScreenStateStepEveryOtherFrame_WriteScreenState::
+RunScreenStateStepEveryOtherFrame_UploadBGPal01::
     ld hl, wWorkBuf
     ld a, [wScreenCounter]
     swap a
@@ -591,7 +592,7 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState::
 
 ; Writes 16 bytes (8 colours) from HL to the palette data register DE, each pair after waiting for
 ; VRAM access, then moves to the next upload step (wScreenState + 1). (C1, E-0357)
-AnimateFieldMenuPalette67_WriteScreenState::
+RunScreenStateStepEveryOtherFrame_UploadColors::
     di
 
 .loop:
@@ -673,7 +674,7 @@ AnimateFieldMenuPalette67_WriteScreenState::
 
 ; Uploads BG palettes 2-3 for the current animation frame: from wWorkBuf + $10 + wScreenCounter *
 ; $40, starting at palette index $10. (C1, E-0357)
-RunScreenStateStepEveryOtherFrame_WriteScreenState_2::
+RunScreenStateStepEveryOtherFrame_UploadBGPal23::
     ld hl, wWorkBuf + $10
     ld a, [wScreenCounter]
     swap a
@@ -692,11 +693,11 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_2::
     ld a, $90
     ld [de], a
     inc de
-    jp AnimateFieldMenuPalette67_WriteScreenState
+    jp RunScreenStateStepEveryOtherFrame_UploadColors
 
 ; Uploads BG palettes 4-5 for the current animation frame: from wWorkBuf + $20 + wScreenCounter *
 ; $40, starting at palette index $20. (C1, E-0357)
-RunScreenStateStepEveryOtherFrame_WriteScreenState_3::
+RunScreenStateStepEveryOtherFrame_UploadBGPal45::
     ld hl, wWorkBuf + $20
     ld a, [wScreenCounter]
     swap a
@@ -715,7 +716,7 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_3::
     ld a, $a0
     ld [de], a
     inc de
-    jp AnimateFieldMenuPalette67_WriteScreenState
+    jp RunScreenStateStepEveryOtherFrame_UploadColors
 
 ; Uploads BG palettes 6-7 for the current animation frame (wWorkBuf + $30, index $30), then moves to
 ; the next frame; after 8 frames the animation stops (wScreenState = $FF). (C1, E-0357)
@@ -738,7 +739,7 @@ AnimateFieldMenuPalette67::
     ld a, $b0
     ld [de], a
     inc de
-    call AnimateFieldMenuPalette67_WriteScreenState
+    call RunScreenStateStepEveryOtherFrame_UploadColors
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
@@ -757,10 +758,11 @@ AnimateFieldMenuPalette67::
     ld [wScreenState], a
     ret
 
-; Precomputes the 8 frames of the field menu's palette animation into wWorkBuf: for each frame
-; (wScreenCounter 0-7) it brightens all eight palettes of wBGPaletteBuffer (64 bytes) by that
-; frame's step. (C1, E-0357)
-WarpEffect_Cover_BrightenFieldMenuColors::
+; Called by WarpEffect_Cover (warp effect step 1): precomputes the 8 frames of the warp effect's
+; palette animation into wWorkBuf, 64 bytes per frame: for each frame (wScreenCounter 0-7) it
+; brightens all eight palettes of wBGPaletteBuffer by that frame's step (BrightenFieldMenuColors, 16
+; bytes at a time), then resets wScreenCounter to 0. (C1, E-0369)
+WarpEffect_Cover_BuildBrightPalettes::
     ld hl, wBGPaletteBuffer
     ld de, wWorkBuf
     ld c, $04
@@ -875,14 +877,14 @@ BrightenFieldMenuColors_Data::
     db $04, $08, $0c, $10, $14, $18, $1c, $20, $24
 
 ; Copies wDMGPaletteOBP0 into wDMGPaletteBytes + 1 when it has changed. (C1, E-0357)
-BrightenFieldMenuColors_Data_CheckDMGPaletteOBP0::
+WarpEffect_FadePalette_SyncCGB_OBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp [hl]
-    jp z, WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return
+    jp z, WarpEffect_FadePalette_SyncCGB_Done
     ld a, [wDMGPaletteOBP0]
     ld [wDMGPaletteBytes + $1], a
-    jp WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return
+    jp WarpEffect_FadePalette_SyncCGB_Done
 
 ; writes four colours of the palette at HL to rOBPD, each chosen by a 2-bit shade of wDMGPaletteOBP0
 ; through WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data; HL += 8 (E-0129)
@@ -981,8 +983,9 @@ WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0::
     ld h, a
     ret
 
-; A shared return. (C1, E-0357)
-WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return::
+; The end of WarpEffect_FadePalette_SyncCGB_OBP0 (both of its paths jump here): returns. (C1,
+; E-0369)
+WarpEffect_FadePalette_SyncCGB_Done::
     ret
 
 ; data read by WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0 (4 bytes) (E-0347)
@@ -1036,7 +1039,7 @@ GameMode1_Init::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $03
-    jp ClearSGBPacketBuffer_CheckLinkMode
+    jp ResumeAfterModeChange
 
 ; enters the field: loads the map header, resets scroll and timers, reorders the party, loads names
 ; and sprites, finds triggers, draws the map screen and places objects (E-0129)
@@ -1376,7 +1379,7 @@ RunFieldReturnPhase_AfterBattle::
 RunFieldReturnPhase_RunReturnAction::
     xor a
     ld [wFieldReturnPhase], a
-    call RunFieldReturnPhase_RunReturnAction_WaitMapType
+    call RunFieldReturnPhase_RunReturnAction_ShowGiftEgg
     ld a, [wDataBankSave]
     cp $40
     jr nz, .skip
@@ -1606,7 +1609,7 @@ ResetLeadRecordFields55And5B::
 
 ; On map 0 at screen (0, 3), outside a key world, when wGiftRecord is 1: places script object 5,
 ; running field command $15 once first (when wCounterPtr0Lo is $FF). (C1, E-0357)
-RunFieldReturnPhase_RunReturnAction_WaitMapType::
+RunFieldReturnPhase_RunReturnAction_ShowGiftEgg::
     ld a, [wMapType]
     bit 7, a
     ret nz
@@ -1678,7 +1681,7 @@ GameMode1_Init_Data2::
 GameMode1_Update::
     ld a, [wFieldInitStage]
     cp $02
-    jp z, SendSGBFieldPaletteSet_ClearJoypadHeld
+    jp z, GameMode1_Update_FinishFieldSetup
 
 ; advances the play time, then runs the routine for wModeState & $0F (nine states) (E-0122)
 FieldModeStateDispatch::
@@ -1712,7 +1715,7 @@ FieldState_WalkATalks::
 
 .call_field_state_walk_a_talks_wait_text:
     farcall FieldState_WalkATalks_WaitTextWindowState
-    call FieldState_WalkATalks_WaitFadeState
+    call FieldState_WalkATalks_TalkAtSpotOnDown
     call UpdatePlayerMovement
     call RunFieldActionRequestActionIfBit7
     ld a, [wJoypadPressed]
@@ -1795,7 +1798,7 @@ FieldState_MapTransition::
     farcall FieldState_MapTransition_AfterWarp
     ld a, [wWarpDestFacing]
     cp $f0
-    jr nz, .call_field_state_map_transition_test_flag_bit
+    jr nz, .call_field_state_map_transition_place_player
     push af
     ld a, $80
     ld [wMapType], a
@@ -1805,8 +1808,8 @@ FieldState_MapTransition::
     ld [wMapHeightScreens], a
     pop af
 
-.call_field_state_map_transition_test_flag_bit:
-    call FieldState_MapTransition_TestFlagBit
+.call_field_state_map_transition_place_player:
+    call FieldState_MapTransition_PlacePlayer
     ret
 
 .check_field_transition_step:
@@ -1840,12 +1843,15 @@ FieldState_MapTransition::
     call InitFieldScreen
     ret
 
-; Field transition: places the player after a warp. A return warp (wReturnWarpFlag) goes to map 5,
-; screen (1, 0), facing up after EVENT_THANKS_FOR_COMING_BY_025. The position comes from the saved
-; player state when wSavedPositionValid is set (restoring the followers too), otherwise from the
-; warp destination (wWarpDestX/Y) with the followers on the player. Then the next transition step;
-; arriving on map 5 also clears the map type and the sprite override. (C1, E-0357)
-FieldState_MapTransition_TestFlagBit::
+; Field transition: places the player after a warp. A non-zero wFieldTransitionKind first sets
+; hPlayerFacing to the kind - 1. A return warp (wReturnWarpFlag, cleared here) goes to map 5, screen
+; (1, 0) with wMapType 0, facing up when EVENT_THANKS_FOR_COMING_BY_025 is set. The position comes
+; from the saved player state when wSavedPositionValid is set (restoring the followers too and
+; clearing that flag), otherwise from the warp destination (wWarpDestX/Y) with the followers on the
+; player. Then the next transition step (wFieldTransitionStep + 1); on the warp-destination path,
+; arriving on map 5 outside a key world also clears the map type, hPlayerSpriteOverride and
+; wWorldMapByFieldSkill. (C1, E-0369)
+FieldState_MapTransition_PlacePlayer::
     ld a, [wFieldTransitionKind]
     or a
     jr z, .check_return_warp_flag
@@ -1969,7 +1975,7 @@ FieldState_WalkAMenu::
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .call_draw_field_sprites
-    call FieldState_WalkAMenu_WaitFadeState
+    call FieldState_WalkAMenu_CheckAButtonExit
     farcall CheckTriggerCellOnA
     farcall FieldState_WalkAMenu_WaitTextWindowState
     farcall CheckMapInteractionOnA
@@ -2283,7 +2289,7 @@ CheckTallTileInFront::
 ; Field state 5's A button: when no fade, text, pending action or step is in progress and A is
 ; pressed, runs the check for the map type (wMapType & 7): key-world maps 3 and 7 can be left from
 ; here. (C1, E-0357)
-FieldState_WalkAMenu_WaitFadeState::
+FieldState_WalkAMenu_CheckAButtonExit::
     ld a, [wFadeState]
     or a
     ret nz
@@ -2302,17 +2308,17 @@ FieldState_WalkAMenu_WaitFadeState::
     ld a, [wMapType]
     and $07
     jumptable
-    dw FieldState_WalkAMenu_Return
-    dw FieldState_WalkAMenu_Return
-    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_NoExit
+    dw FieldState_WalkAMenu_NoExit
+    dw FieldState_WalkAMenu_NoExit
     dw FieldState_WalkAMenu_CheckKeyWorldExit
-    dw FieldState_WalkAMenu_Return
-    dw FieldState_WalkAMenu_Return
-    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_NoExit
+    dw FieldState_WalkAMenu_NoExit
+    dw FieldState_WalkAMenu_NoExit
     dw FieldState_WalkAMenu_CheckExitFacingUp
 
 ; Map types without an A-button exit: returns. (C1, E-0357)
-FieldState_WalkAMenu_Return::
+FieldState_WalkAMenu_NoExit::
     ret
 
 ; A-button exit check on a key-world floor (map type 3): only on floors whose info byte is 1, facing
@@ -2340,7 +2346,7 @@ FieldState_WalkAMenu_CheckKeyWorldExit::
     ldh a, [hPlayerY]
     cp $10
     ret nz
-    jr FieldState_WalkAMenu_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
+    jr FieldState_WalkAMenu_LeaveKeyWorld
 
 .return:
     ret
@@ -2356,11 +2362,15 @@ FieldState_WalkAMenu_CheckExitFacingUp::
     ldh a, [hPlayerY]
     cp $40
     ret nz
-    jr FieldState_WalkAMenu_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
+    jr FieldState_WalkAMenu_LeaveKeyWorld
 
-; Leaves the key world through the field menu: saves the key world record, saves the screen, queues
-; field entry phase 1 and sound $69, and switches to game mode 2 at wModeState $0B. (C1, E-0357)
-FieldState_WalkAMenu_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl::
+; Leaves the key world from field state 5 (FieldState_WalkAMenu_CheckKeyWorldExit and
+; FieldState_WalkAMenu_CheckExitFacingUp jump here at their exit spots): saves the key world record
+; (SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot), redraws and saves the screen, sets
+; wFieldReturnPhase to 1, queues sound $69, switches to game mode 2 (the pause menu) with wModeState
+; $0B (the plan page, 3, with bit 3 set, which PauseMenu_State4_BuildPlanPage reads as going
+; straight to a step chosen by the story), and clears wWorldMapState and the joypad. (C1, E-0369)
+FieldState_WalkAMenu_LeaveKeyWorld::
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     call RedrawScreenBufferIfPartyWindowFlagsBit7
     call SaveScreenBufferToBGMap1
@@ -2487,35 +2497,35 @@ RunFieldEventFieldEventKind::
     ld a, [wFieldEventKind]
     and $0f
     jumptable
-    dw RunFieldEventFieldEventKind_Return
+    dw RunFieldEventFieldEventKind_None
     dw AnimateTilesByRotatingVTiles2
     dw AnimateTilesByRotatingVTiles2
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_2
+    dw RunFieldEventFieldEventKind_AnimateTiles3
+    dw RunFieldEventFieldEventKind_AnimateTiles4
     dw RunFieldEventFieldEventKind_AnimateTiles5
     dw RunFieldEventFieldEventKind_SwapTilePairs
-    dw RunFieldEventFieldEventKind_ReadFrameCounterLo
-    dw RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_3
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_4
-    dw RunFieldEventFieldEventKind_WaitMapScreenY
+    dw RunFieldEventFieldEventKind_SwapTilePairs7
+    dw RunFieldEventFieldEventKind_PaletteCycle
+    dw RunFieldEventFieldEventKind_AnimateTiles9
+    dw RunFieldEventFieldEventKind_AnimateTiles10
+    dw RunFieldEventFieldEventKind_SwapTilePairsRow0
     dw RunFieldEventFieldEventKind_ScrollShake
     dw RunFieldEventFieldEventKind_RotateTile
     dw RunFieldEventFieldEventKind_RotateTiles
-    dw RunFieldEventFieldEventKind_WaitMapScreenX
+    dw RunFieldEventFieldEventKind_AnimateTiles15
 
 ; Field event 12: scroll shake (RunFieldEventFieldEventKind_ScrollShakeSteps). (C1, E-0357)
 RunFieldEventFieldEventKind_ScrollShake::
     call RunFieldEventFieldEventKind_ScrollShakeSteps
     ret
 
-; Field event 8: palette cycling (RunFieldEventFieldEventKind_CopyBytes). (C1, E-0357)
-RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes::
-    call RunFieldEventFieldEventKind_CopyBytes
+; Field event 8: palette cycling (RunFieldEventFieldEventKind_PaletteCycleSteps). (C1, E-0369)
+RunFieldEventFieldEventKind_PaletteCycle::
+    call RunFieldEventFieldEventKind_PaletteCycleSteps
     ret
 
 ; Field event 0: none. (C1, E-0357)
-RunFieldEventFieldEventKind_Return::
+RunFieldEventFieldEventKind_None::
     ret
 
 ; every 8 frames rotates each byte pair of the first 16 tile rows at vTiles2 left by one bit (tile
@@ -2606,23 +2616,23 @@ RunFieldEventFieldEventKind_RotateTiles::
 
 ; Field event 3: every 16 frames swaps animated tile frames between vTiles2 + $300 and + $320. (C1,
 ; E-0357)
-RunFieldEventFieldEventKind_WaitFrameCounterLo::
+RunFieldEventFieldEventKind_AnimateTiles3::
     ld a, [wFrameCounterLo]
     and $0f
     ret nz
     ld de, vTiles2 + $300
     ld hl, vTiles2 + $320
-    jp RunFieldEventFieldEventKind_CheckFrameCounterLo
+    jp RunFieldEventFieldEventKind_CycleTwoFrames
 
 ; Field event 4: every 4 frames cycles the animated tile at vTiles2 + $280 through the four frames
 ; at + $2C0. (C1, E-0357)
-RunFieldEventFieldEventKind_WaitFrameCounterLo_2::
+RunFieldEventFieldEventKind_AnimateTiles4::
     ld a, [wFrameCounterLo]
     and $03
     ret nz
     ld de, vTiles2 + $280
     ld hl, vTiles2 + $2c0
-    jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
+    jr RunFieldEventFieldEventKind_CycleFourFrames
 
 ; Field event 5: rotates the first tiles (AnimateTilesByRotatingVTiles2) and every 4 frames cycles
 ; the tile at vTiles2 + $140 through the frames at + $180. (C1, E-0357)
@@ -2633,31 +2643,31 @@ RunFieldEventFieldEventKind_AnimateTiles5::
     ret nz
     ld de, vTiles2 + $140
     ld hl, vTiles2 + $180
-    jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
+    jr RunFieldEventFieldEventKind_CycleFourFrames
 
 ; Field event 9: every 4 frames cycles the animated tile at vTiles2 + $280 through the frames at +
 ; $2C0. (C1, E-0357)
-RunFieldEventFieldEventKind_WaitFrameCounterLo_3::
+RunFieldEventFieldEventKind_AnimateTiles9::
     ld a, [wFrameCounterLo]
     and $03
     ret nz
     ld de, vTiles2 + $280
     ld hl, vTiles2 + $2c0
-    jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
+    jr RunFieldEventFieldEventKind_CycleFourFrames
 
 ; Field event 10: every 4 frames cycles the animated tile at vTiles2 + $480 through the frames at +
 ; $4C0. (C1, E-0357)
-RunFieldEventFieldEventKind_WaitFrameCounterLo_4::
+RunFieldEventFieldEventKind_AnimateTiles10::
     ld a, [wFrameCounterLo]
     and $03
     ret nz
     ld de, vTiles2 + $480
     ld hl, vTiles2 + $4c0
-    jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
+    jr RunFieldEventFieldEventKind_CycleFourFrames
 
 ; Field event 15: except at screen X 1, every 4 frames cycles the tile at vTiles2 through the frames
 ; at + $40. (C1, E-0357)
-RunFieldEventFieldEventKind_WaitMapScreenX::
+RunFieldEventFieldEventKind_AnimateTiles15::
     ldh a, [hMapScreenX]
     cp $01
     ret z
@@ -2666,11 +2676,11 @@ RunFieldEventFieldEventKind_WaitMapScreenX::
     ret nz
     ld de, vTiles2
     ld hl, vTiles2 + $40
-    jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
+    jr RunFieldEventFieldEventKind_CycleFourFrames
 
 ; Tile animation by swapping: frame (wFrameCounterLo / 4) & 3 picks a 16-byte frame at HL + frame *
 ; 16, which is exchanged with the 16-byte tile at DE + frame * 16 in VRAM. (C1, E-0357)
-RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo::
+RunFieldEventFieldEventKind_CycleFourFrames::
     ld a, [wFrameCounterLo]
     srl a
     srl a
@@ -2712,7 +2722,7 @@ RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo::
 
 ; Two-frame tile animation: bit 4 of the frame counter picks which 16-byte halves of DE and HL are
 ; exchanged. (C1, E-0357)
-RunFieldEventFieldEventKind_CheckFrameCounterLo::
+RunFieldEventFieldEventKind_CycleTwoFrames::
     ld a, [wFrameCounterLo]
     and $10
     push af
@@ -2773,7 +2783,7 @@ RunFieldEventFieldEventKind_SwapTilePairs::
     ld a, [hl]
     ld h, a
     ld l, c
-    jp RunFieldEventFieldEventKind_CallWaitForVRAMAccess
+    jp RunFieldEventFieldEventKind_ExchangeTiles
 
 ; data read by RunFieldEventFieldEventKind (48 bytes) (E-0347)
 RunFieldEventFieldEventKind_SwapTilePairs_Data::
@@ -2783,14 +2793,14 @@ RunFieldEventFieldEventKind_SwapTilePairs_Data::
 
 ; Field event 7: in the first 12 of every 32 frames swaps one tile pair from
 ; RunFieldEventFieldEventKind_ReadFrameCounterLo_Data. (C1, E-0357)
-RunFieldEventFieldEventKind_ReadFrameCounterLo::
+RunFieldEventFieldEventKind_SwapTilePairs7::
     ld a, [wFrameCounterLo]
     and $1f
     cp $0c
     ret nc
     sla a
     sla a
-    ld hl, RunFieldEventFieldEventKind_ReadFrameCounterLo_Data
+    ld hl, RunFieldEventFieldEventKind_SwapTilePairs7_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -2801,17 +2811,17 @@ RunFieldEventFieldEventKind_ReadFrameCounterLo::
     ld a, [hl]
     ld h, a
     ld l, c
-    jr RunFieldEventFieldEventKind_CallWaitForVRAMAccess
+    jr RunFieldEventFieldEventKind_ExchangeTiles
 
 ; data read by RunFieldEventFieldEventKind (48 bytes) (E-0347)
-RunFieldEventFieldEventKind_ReadFrameCounterLo_Data::
+RunFieldEventFieldEventKind_SwapTilePairs7_Data::
     db $30, $93, $50, $93, $40, $93, $60, $93, $20, $94, $40, $94, $30, $94, $50, $94
     db $c0, $94, $e0, $94, $d0, $94, $f0, $94, $60, $95, $80, $95, $70, $95, $90, $95
     db $20, $96, $60, $96, $30, $96, $70, $96, $a0, $96, $e0, $96, $b0, $96, $f0, $96
 
 ; Field event 11: on screen row 0, in the first 4 of every 64 frames swaps one tile pair from
 ; RunFieldEventFieldEventKind_WaitMapScreenY_Data. (C1, E-0357)
-RunFieldEventFieldEventKind_WaitMapScreenY::
+RunFieldEventFieldEventKind_SwapTilePairsRow0::
     ldh a, [hMapScreenY]
     or a
     ret nz
@@ -2821,7 +2831,7 @@ RunFieldEventFieldEventKind_WaitMapScreenY::
     ret nc
     sla a
     sla a
-    ld hl, RunFieldEventFieldEventKind_WaitMapScreenY_Data
+    ld hl, RunFieldEventFieldEventKind_SwapTilePairsRow0_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -2832,15 +2842,15 @@ RunFieldEventFieldEventKind_WaitMapScreenY::
     ld a, [hl]
     ld h, a
     ld l, c
-    jp RunFieldEventFieldEventKind_CallWaitForVRAMAccess
+    jp RunFieldEventFieldEventKind_ExchangeTiles
 
 ; data read by RunFieldEventFieldEventKind (16 bytes) (E-0347)
-RunFieldEventFieldEventKind_WaitMapScreenY_Data::
+RunFieldEventFieldEventKind_SwapTilePairsRow0_Data::
     db $e0, $94, $00, $95, $f0, $94, $10, $95, $40, $95, $60, $95, $50, $95, $70, $95
 
 ; Exchanges 16 bytes between VRAM tiles DE and HL, waiting for VRAM access around each byte. (C1,
 ; E-0357)
-RunFieldEventFieldEventKind_CallWaitForVRAMAccess::
+RunFieldEventFieldEventKind_ExchangeTiles::
     ld b, $10
 
 .loop:
@@ -2866,11 +2876,15 @@ RunFieldEventFieldEventKind_CallWaitForVRAMAccess::
     jr nz, .loop
     ret
 
-; Field event 8, palette cycling: on the first call saves the BG palettes to wBGPaletteCopy;
-; afterwards every 8 frames it steps a 16-step cycle and recomputes BG palettes 1-4 from the saved
-; copy, shifted by the step's amount, then requests their upload. Skipped while script command $ED
-; runs or a saved position is pending. (C1, E-0357)
-RunFieldEventFieldEventKind_CopyBytes::
+; Field event 8, palette cycling: skipped while script command $ED runs (wScriptCommandType) or a
+; saved position is pending (wSavedPositionValid). On the first call (wMenuSubState bit 7 clear) it
+; sets wMenuSubState to $80 and saves the 64 bytes of wBGPaletteBuffer to wBGPaletteCopy.
+; Afterwards, every 8 calls it steps a 16-step cycle (wMenuState / 8 counts 0-7, then wMenuSubState
+; bit 0 picks the second half), recomputes the first colour of BG palettes 1, 3 and 4 from the saved
+; copy (RunFieldEventFieldEventKind_ShiftColourPair) and sets wBGPaletteUploadRequest to $7F. The
+; addresses for palette 2 are loaded but replaced before any call, so palette 2 is not changed (as
+; read). (C1, E-0369)
+RunFieldEventFieldEventKind_PaletteCycleSteps::
     ld a, [wScriptCommandType]
     cp $ed
     ret z
@@ -3080,7 +3094,7 @@ UpdatePlayerMovement::
 .check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     bit 0, a
-    jp nz, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    jp nz, UpdatePlayerMovement_AdvanceStep
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -3141,7 +3155,7 @@ UpdatePlayerMovement::
     ld a, h
     ldh [hPlayerStepDXHi], a
     call SetFollowerTargetsFromLeader
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
     ret
 
 .check_player_state_flags3:
@@ -3170,7 +3184,7 @@ UpdatePlayerMovement::
     ldh [hPlayerStepDXLo], a
     ld a, h
     ldh [hPlayerStepDXHi], a
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
     ret
 
 .check_joypad_pressed:
@@ -3228,7 +3242,7 @@ UpdatePlayerMovement::
     ld a, h
     ldh [hPlayerStepDXHi], a
     call SetFollowerTargetsFromLeader
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
     ret
 
 .check_player_state_flags5:
@@ -3258,7 +3272,7 @@ UpdatePlayerMovement::
     ldh [hPlayerStepDXLo], a
     ld a, h
     ldh [hPlayerStepDXHi], a
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
     ret
 
 .check_joypad_pressed2:
@@ -3328,7 +3342,7 @@ UpdatePlayerMovement::
     ld a, h
     ldh [hPlayerStepDYHi], a
     call SetFollowerTargetsFromLeader
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
     ret
 
 .check_player_state_flags7:
@@ -3361,7 +3375,7 @@ UpdatePlayerMovement::
     ldh [hPlayerStepDYLo], a
     ld a, h
     ldh [hPlayerStepDYHi], a
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
 
 .check_joypad_pressed3:
     ld a, [wJoypadPressed]
@@ -3430,7 +3444,7 @@ UpdatePlayerMovement::
     ld a, h
     ldh [hPlayerStepDYHi], a
     call SetFollowerTargetsFromLeader
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
     ret
 
 .check_player_state_flags9:
@@ -3459,14 +3473,22 @@ UpdatePlayerMovement::
     ldh [hPlayerStepDYLo], a
     ld a, h
     ldh [hPlayerStepDYHi], a
-    call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
+    call UpdatePlayerMovement_AdvanceStep
     ret
 
-; Moves the player one pixel (or 8 during a field action) toward the end of the current step, kept
-; in hPlayerStepDX/DY, and steps the followers after. When the step finishes it clears the walking
-; flags and runs the per-step checks: step triggers, the step counter, periodic events, encounters,
-; warps, the map's movement type, status effects and talk countdowns. (C1, E-0357)
-UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
+; Called by UpdatePlayerMovement during a step: first redraws the screen buffer when
+; wPartyWindowFlags bit 7 is set (RedrawScreenBufferIfPartyWindowFlagsBit7). It moves the player one
+; pixel (or 8, with the followers, during a field action: wFieldActionRequest bit 7) toward the end
+; of the current step, kept in the words hPlayerStepDXLo/Hi and hPlayerStepDYLo/Hi, and steps the
+; followers. When the step finishes it sets wMapToggleRequest, clears the walking flags of
+; hPlayerStateFlags and, unless a field action runs, clears wStepTriggerFlag and runs the per-step
+; routines: UpdatePlayerMovement_HeldItemRegen, AdvanceStepCounterAndUpdateStoredRecords,
+; RunPeriodicFieldEventChecks, UpdatePlayerMovement_WaitPlayerSpriteOverride,
+; TickRandomEncounterCounter, CheckStepTriggerAndDispatchTalk, CheckWarpsAtPlayerPosition,
+; RunPlayerMoveTypeMapMoveType, EnterStatusEffectFieldState and
+; CountDownTalkCountdownThenDispatchTalkEvent. With no step left on entry it clears bit 0 of
+; hPlayerStateFlags and wStepTriggerFlag and runs the same routines. (C1, E-0369)
+UpdatePlayerMovement_AdvanceStep::
     call RedrawScreenBufferIfPartyWindowFlagsBit7
     ldh a, [hPlayerStepDXLo]
     ld l, a
@@ -3487,7 +3509,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     ldh [hPlayerStateFlags], a
     xor a
     ld [wStepTriggerFlag], a
-    jp .call_update_player_movement_test_flag_bit
+    jp .call_update_player_movement_held_item_regen
 
 .read_player_step_dx_lo:
     ldh a, [hPlayerStepDXLo]
@@ -3518,7 +3540,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_wait_follower
+    jr nz, .call_update_player_movement_advance_step_snap
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDXLo]
     ld l, a
@@ -3533,8 +3555,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     dec [hl]
     jp .read_player_step_dx_lo2
 
-.call_update_player_movement_wait_follower:
-    call UpdatePlayerMovement_WaitFollowerDelay
+.call_update_player_movement_advance_step_snap:
+    call UpdatePlayerMovement_AdvanceStep_SnapFollowers
     ldh a, [hPlayerStepDXLo]
     ld l, a
     ldh a, [hPlayerStepDXHi]
@@ -3564,7 +3586,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request2:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_wait_follower2
+    jr nz, .call_update_player_movement_advance_step_snap2
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDXLo]
     ld l, a
@@ -3579,8 +3601,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     inc [hl]
     jp .read_player_step_dx_lo2
 
-.call_update_player_movement_wait_follower2:
-    call UpdatePlayerMovement_WaitFollowerDelay
+.call_update_player_movement_advance_step_snap2:
+    call UpdatePlayerMovement_AdvanceStep_SnapFollowers
     ldh a, [hPlayerStepDXLo]
     ld l, a
     ldh a, [hPlayerStepDXHi]
@@ -3614,7 +3636,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request3:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_wait_follower3
+    jr nz, .call_update_player_movement_advance_step_snap3
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDYLo]
     ld l, a
@@ -3629,8 +3651,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     dec [hl]
     jp .read_player_step_dx_lo2
 
-.call_update_player_movement_wait_follower3:
-    call UpdatePlayerMovement_WaitFollowerDelay
+.call_update_player_movement_advance_step_snap3:
+    call UpdatePlayerMovement_AdvanceStep_SnapFollowers
     ldh a, [hPlayerStepDYLo]
     ld l, a
     ldh a, [hPlayerStepDYHi]
@@ -3660,7 +3682,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request4:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_wait_follower4
+    jr nz, .call_update_player_movement_advance_step_snap4
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDYLo]
     ld l, a
@@ -3675,8 +3697,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     inc [hl]
     jr .read_player_step_dx_lo2
 
-.call_update_player_movement_wait_follower4:
-    call UpdatePlayerMovement_WaitFollowerDelay
+.call_update_player_movement_advance_step_snap4:
+    call UpdatePlayerMovement_AdvanceStep_SnapFollowers
     ldh a, [hPlayerStepDYLo]
     ld l, a
     ldh a, [hPlayerStepDYHi]
@@ -3737,8 +3759,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     xor a
     ld [wStepTriggerFlag], a
 
-.call_update_player_movement_test_flag_bit:
-    farcall UpdatePlayerMovement_TestFlagBit
+.call_update_player_movement_held_item_regen:
+    farcall UpdatePlayerMovement_HeldItemRegen
     farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
     farcall UpdatePlayerMovement_WaitPlayerSpriteOverride
@@ -3752,7 +3774,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 
 ; Puts all three followers on the player's position and facing while wFollowerDelay is set. (C1,
 ; E-0357)
-UpdatePlayerMovement_WaitFollowerDelay::
+UpdatePlayerMovement_AdvanceStep_SnapFollowers::
     ld a, [wFollowerDelay]
     or a
     ret z
@@ -4148,10 +4170,10 @@ UpdatePlayerMovement_IsTriggerAtCell_Data::
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
-; Field state 0's Down-held check: at a spot listed in FieldState_WalkATalks_WaitFadeState_Data
+; Field state 0's Down-held check: at a spot listed in FieldState_WalkATalks_TalkAtSpotOnDown_Data
 ; (map, screen, X, Y; ends with $FF) it starts talk event group $10 + the entry's index and clears
 ; the joypad. (C1, E-0357)
-FieldState_WalkATalks_WaitFadeState::
+FieldState_WalkATalks_TalkAtSpotOnDown::
     ld a, [wFadeState]
     or a
     ret nz
@@ -4169,7 +4191,7 @@ FieldState_WalkATalks_WaitFadeState::
     ld d, a
     ldh a, [hMapId]
     ld e, a
-    ld hl, FieldState_WalkATalks_WaitFadeState_Data
+    ld hl, FieldState_WalkATalks_TalkAtSpotOnDown_Data
     ld b, $00
 
 .skip:
@@ -4217,8 +4239,8 @@ FieldState_WalkATalks_WaitFadeState::
     inc b
     jr .skip
 
-; data read by FieldState_WalkATalks_WaitFadeState (21 bytes) (E-0347)
-FieldState_WalkATalks_WaitFadeState_Data::
+; data read by FieldState_WalkATalks_TalkAtSpotOnDown (21 bytes) (E-0347)
+FieldState_WalkATalks_TalkAtSpotOnDown_Data::
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1a, $10, $70, $70
     db $85, $10, $50, $60, $ff
 
@@ -4262,14 +4284,14 @@ RunFieldActionRequestActionIfBit7::
     ret z
     and $03
     jumptable
-    dw RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep
+    dw RunFieldActionRequestActionIfBit7_LoadScreen
     dw RunFieldActionRequestActionIfBit7_ScrollScreen
     dw RunFieldActionRequestActionIfBit7_EnterScreen
     dw RunFieldActionRequestActionIfBit7_StepChecks
 
 ; Field action step 0: loads the new screen (LoadMapScreen) and moves to the scroll step. (C1,
 ; E-0357)
-RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep::
+RunFieldActionRequestActionIfBit7_LoadScreen::
     call LoadMapScreen
     xor a
     ld [wFieldActionStep], a
@@ -4885,11 +4907,13 @@ SendSGBFieldPaletteSet::
     ld [wFieldInitStage], a
     ret
 
-; The end of the field's set-up: clears the joypad state, runs the first frame of the field state
-; (FieldModeStateDispatch), sets the default DMG palettes (BGP $D2, OBP0 $D2, OBP1 $E2) and their
-; fade copies, on the SGB copies the target object palettes into place, then starts the fade in.
-; (C1, E-0357)
-SendSGBFieldPaletteSet_ClearJoypadHeld::
+; The end of the field's set-up, reached from GameMode1_Update when wFieldInitStage is 2: clears the
+; joypad state and wFieldFrameFlag, runs the first frame of the field state
+; (FieldModeStateDispatch), clears wFieldInitStage, sets the default DMG palettes (BGP $D2, OBP0
+; $D2, OBP1 $E2) and their fade copies (wDMGPaletteBytes, ResetFadeFromDMGPaletteBGP), on the SGB
+; copies the 32 bytes at wOBJPaletteBuffer + $20 to wOBJPaletteBuffer, then starts palette fade $FD.
+; (C1, E-0369)
+GameMode1_Update_FinishFieldSetup::
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadHeldPrev], a
@@ -4947,16 +4971,16 @@ RestartMapMusic::
 PlayMapMusic::
     ld a, [wMapType]
     bit 7, a
-    jr z, PlayMapMusic_ReadMapId
+    jr z, PlayMapMusic_ByMapId
     ld c, $22
     cp $86
-    jr z, PlayMapMusic_CheckCurrentMusic
+    jr z, PlayMapMusic_QueueIfNew
     ld c, $25
     cp $85
-    jr z, PlayMapMusic_CheckCurrentMusic
+    jr z, PlayMapMusic_QueueIfNew
     ld c, $19
     cp $84
-    jr z, PlayMapMusic_CheckCurrentMusic
+    jr z, PlayMapMusic_QueueIfNew
     cp $83
     jr nz, .check_player_state_flags
     ld a, [wKeyWorldFloor]
@@ -4966,17 +4990,17 @@ PlayMapMusic::
     add_a_to_hl
     ld a, [hl]
     cp $06
-    jr nz, PlayMapMusic_CheckCurrentMusic
+    jr nz, PlayMapMusic_QueueIfNew
 
 .check_player_state_flags:
     ld c, $2b
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, PlayMapMusic_CheckCurrentMusic
+    jr nz, PlayMapMusic_QueueIfNew
     ld c, $35
 
 ; Queues music C unless it is already playing (wCurrentMusic). (C1, E-0357)
-PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_QueueIfNew::
     ld a, [wCurrentMusic]
     cp c
     ret z
@@ -4985,7 +5009,7 @@ PlayMapMusic_CheckCurrentMusic::
     ret
 
 ; Queues sound effect C unless it is already requested. (C1, E-0357)
-PlayMapMusic_CheckSoundEffectRequest::
+PlayMapMusic_QueueSoundIfNew::
     ld a, [wSoundEffectRequest]
     cp c
     ret z
@@ -4996,79 +5020,79 @@ PlayMapMusic_CheckSoundEffectRequest::
 ; Chooses the field music by map: a 227-entry jump table indexed by hMapId. Most entries pick one
 ; song; some check the screen or story flags first (the PlayMapMusic_Map01 cases), and a few entries
 ; are 0 (maps that are never looked up). (C1, E-0357)
-PlayMapMusic_ReadMapId::
+PlayMapMusic_ByMapId::
     ldh a, [hMapId]
     jumptable
-    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_Music16
     dw PlayMapMusic_Map01
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
     dw PlayMapMusic_Map04
     dw PlayMapMusic_Map05
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_2
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_2
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music0C
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music0C
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
     dw PlayMapMusic_Map04
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_Return
-    dw PlayMapMusic_ReadSoundEffectRequest
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Music16
+    dw PlayMapMusic_Map1C
+    dw PlayMapMusic_Map1D
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music25
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music1C
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music25
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_InitSoundHardware
-    dw PlayMapMusic_TestFlagBit
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_TestFlagBit_2
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Map38
+    dw PlayMapMusic_Map39
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Map3B
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music1C
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag23_2
@@ -5082,27 +5106,27 @@ PlayMapMusic_ReadMapId::
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23_2
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_Music22
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
     dw MapMusicByFlag23_2
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -5111,149 +5135,149 @@ PlayMapMusic_ReadMapId::
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_TestFlagBit_3
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Map9B
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_Music1C
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag25
-    dw PlayMapMusic_ReadCurrentMusic_5
-    dw PlayMapMusic_ReadCurrentMusic_5
-    dw PlayMapMusic_ReadCurrentMusic_5
+    dw PlayMapMusic_MusicCC
+    dw PlayMapMusic_MusicCC
+    dw PlayMapMusic_MusicCC
     dw MapMusicByFlag25
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
-    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
+    dw PlayMapMusic_Music25
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_3
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music19
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music1C
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_4
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
-    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music1C
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
+    dw PlayMapMusic_Music22
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_Music1C
     db $00, $00
 
 ; Map music $16 (the default for most town and outdoor maps in the table). (C1, E-0357)
-PlayMapMusic_ReadCurrentMusic::
+PlayMapMusic_Music16::
     ld c, $16
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map 1's music: on screen row 2 at screen X 0 or 2, after EVENT_THANKS_FOR_COMING_BY and before
 ; EVENT_SCENE_WARUBOU_SMELLS, music $28; otherwise $16. (C1, E-0357)
 PlayMapMusic_Map01::
     ldh a, [hMapScreenY]
     cp $02
-    jr nz, PlayMapMusic_ReadCurrentMusic
+    jr nz, PlayMapMusic_Music16
     ldh a, [hMapScreenX]
     or a
     jr z, .call_test_flag_bit
     cp $02
-    jr nz, PlayMapMusic_ReadCurrentMusic
+    jr nz, PlayMapMusic_Music16
 
 .call_test_flag_bit:
     ld de, EVENT_THANKS_FOR_COMING_BY
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic
+    jr nc, PlayMapMusic_Music16
     ld de, EVENT_SCENE_WARUBOU_SMELLS
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic
+    jr c, PlayMapMusic_Music16
     ld c, $28
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map 5's music: at screen X 0, after EVENT_SCENE_WARUBOU_SMELLS, music $28 until the three-item
 ; scene is under way (EVENT_SCENE_WARUBOU_FOOD2_00C set, then 0C2 set and 0C3 clear also give $28);
@@ -5261,62 +5285,62 @@ PlayMapMusic_Map01::
 PlayMapMusic_Map05::
     ldh a, [hMapScreenX]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic
+    jr nz, PlayMapMusic_Music16
     ld de, EVENT_SCENE_WARUBOU_SMELLS
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic
+    jr nc, PlayMapMusic_Music16
     ld de, EVENT_SCENE_WARUBOU_FOOD2_00C
     call TestFlagBit
     jr nc, .skip
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic
+    jr nc, PlayMapMusic_Music16
     ld de, EVENT_SCENE_THREE_ITEMS_0C3
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic
+    jr c, PlayMapMusic_Music16
 
 .skip:
     ld c, $28
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map music $0C (maps $0D and $14). (C1, E-0357)
-PlayMapMusic_ReadCurrentMusic_2::
+PlayMapMusic_Music0C::
     ld c, $0c
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Maps 4 and $18: after EVENT_MAP_04_OBJECT_REMOVED_0CC and before EVENT_SCENE_TERRY_BATTLE_038,
 ; music $CF; otherwise $16. (C1, E-0357)
 PlayMapMusic_Map04::
     ld de, EVENT_MAP_04_OBJECT_REMOVED_0CC
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic
+    jr nc, PlayMapMusic_Music16
     ld de, EVENT_SCENE_TERRY_BATTLE_038
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic
+    jr c, PlayMapMusic_Music16
     ld c, $cf
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map $1D: requests sound $76 (unless already requested) instead of music. (C1, E-0357)
-PlayMapMusic_ReadSoundEffectRequest::
+PlayMapMusic_Map1D::
     ld c, $76
-    jp PlayMapMusic_CheckSoundEffectRequest
+    jp PlayMapMusic_QueueSoundIfNew
 
 ; Map $1C: leaves the music unchanged. (C1, E-0357)
-PlayMapMusic_Return::
+PlayMapMusic_Map1C::
     ret
 
 ; Map music $19. (C1, E-0357)
-PlayMapMusic_ReadCurrentMusic_3::
+PlayMapMusic_Music19::
     ld c, $19
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122)
 MapMusicByFlag23::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_3
+    jr c, PlayMapMusic_Music19
     ld c, $2e
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; map music case: on hMapScreenY 0, without flag $87, or with flag $8A uses the flag-$23 case;
 ; otherwise music $28 (E-0122)
@@ -5331,110 +5355,110 @@ MapMusicByScreenAndFlags87And8A::
     call TestFlagBit
     jr c, MapMusicByFlag23
     ld c, $28
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map music $1C. (C1, E-0357)
-PlayMapMusic_ReadCurrentMusic_4::
+PlayMapMusic_Music1C::
     ld c, $1c
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; map music case: music $2B when bit 3 of hPlayerStateFlags is set, else $1C (E-0122)
 MapMusicByPlayerStateFlagsBit3::
     ld c, $1c
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jp z, PlayMapMusic_CheckCurrentMusic
+    jp z, PlayMapMusic_QueueIfNew
     ld c, $2b
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122) (E-0344: the address in
 ; its name dropped or read as the label there; was MapMusicByFlag23_2)
 MapMusicByFlag23_2::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_4
+    jr c, PlayMapMusic_Music1C
     ld c, $2e
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; map music case: if story flag $25 is set uses music $1C, else $1F (E-0122)
 MapMusicByFlag25::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_4
+    jr c, PlayMapMusic_Music1C
     ld c, $1f
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map music $CC. (C1, E-0357)
-PlayMapMusic_ReadCurrentMusic_5::
+PlayMapMusic_MusicCC::
     ld c, $cc
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map music $25. (C1, E-0357)
-PlayMapMusic_ReadCurrentMusic_6::
+PlayMapMusic_Music25::
     ld c, $25
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; At screen (0, 0) of its map, silences the sound (InitSoundHardware) instead of playing music;
 ; elsewhere music $25. (C1, E-0357)
-PlayMapMusic_InitSoundHardware::
+PlayMapMusic_Map38::
     ldh a, [hMapScreenX]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_6
+    jr nz, PlayMapMusic_Music25
     ldh a, [hMapScreenY]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_6
+    jr nz, PlayMapMusic_Music25
     call InitSoundHardware
     ret
 
 ; At screen (1, 1) of its map, before EVENT_SCENE_CREW_FOLLOWS, music $28; otherwise $25. (C1,
 ; E-0357)
-PlayMapMusic_TestFlagBit::
+PlayMapMusic_Map39::
     ldh a, [hMapScreenX]
     cp $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_6
+    jr nz, PlayMapMusic_Music25
     ldh a, [hMapScreenY]
     cp $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_6
+    jr nz, PlayMapMusic_Music25
     ld de, EVENT_SCENE_CREW_FOLLOWS
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_6
+    jr c, PlayMapMusic_Music25
     ld c, $28
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Before EVENT_SCENE_MERMAID_KINGDOM_022, music $28; afterwards $25. (C1, E-0357)
-PlayMapMusic_TestFlagBit_2::
+PlayMapMusic_Map3B::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_6
+    jr c, PlayMapMusic_Music25
     ld c, $28
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Map music $22. (C1, E-0357)
-PlayMapMusic_ReadCurrentMusic_7::
+PlayMapMusic_Music22::
     ld c, $22
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; On screen row 0 while the three-item scene is under way (EVENT_SCENE_THREE_ITEMS_0C2 set, 0C3
 ; clear), music $28; otherwise $22. (C1, E-0357)
-PlayMapMusic_TestFlagBit_3::
+PlayMapMusic_Map9B::
     ldh a, [hMapScreenY]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_7
+    jr nz, PlayMapMusic_Music22
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic_7
+    jr nc, PlayMapMusic_Music22
     ld de, EVENT_SCENE_THREE_ITEMS_0C3
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_7
+    jr c, PlayMapMusic_Music22
     ld c, $28
-    jp PlayMapMusic_CheckCurrentMusic
+    jp PlayMapMusic_QueueIfNew
 
 ; Field state 2, the field menu's choice of page: B closes it (back to field state 0, or 5 in a key
 ; world); A opens the chosen page in game mode 2 (wModeState = wMenuState, sound $69); Left/Right
 ; and Up/Down move in the 2 x 2 grid (wMenuState xor 1 or xor 2). The cursor is drawn each frame
 ; first. (C1, E-0357)
 FieldState_Still_ChoosePage::
-    call FieldState_Still_ChoosePage_WriteMenuSubState
+    call FieldState_Still_ChoosePage_DrawCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -5511,10 +5535,12 @@ FieldState_Still_ChoosePage::
 .return:
     ret
 
-; Draws the field menu's four cursor positions (offsets from
-; FieldState_Still_WriteMenuSubState_Data, relative to the scroll position): the chosen one as a
-; blinking cursor ($BB, or $BC when wMenuState bit 7 is set), the others as tile $C3. (C1, E-0357)
-FieldState_Still_ChoosePage_WriteMenuSubState::
+; Draws the field menu's four cursor positions into BG map 0 relative to the scroll position
+; (hScrollY, hScrollX), from four (column, row) byte pairs in the table after this routine: position
+; wMenuState gets cursor tile $BB, blanked to $C3 while bit 3 of the frame count in wMenuSubState is
+; set (wMenuSubState += 1 each call), the others tile $C3. A $BC branch tests wMenuState bit 7 only
+; after wMenuState has matched a position number 0-3, so it is never taken. (C1, E-0369)
+FieldState_Still_ChoosePage_DrawCursor::
     ldh a, [hScrollY]
     and $f8
     ld e, a
@@ -5542,7 +5568,7 @@ FieldState_Still_ChoosePage_WriteMenuSubState::
     ld l, e
     ld h, d
     ld b, $00
-    ld de, FieldState_Still_ChoosePage_WriteMenuSubState_Data
+    ld de, FieldState_Still_ChoosePage_DrawCursor_Data
 
 .loop:
     push hl
@@ -5612,8 +5638,8 @@ FieldState_Still_ChoosePage_WriteMenuSubState::
     jr nz, .loop
     ret
 
-; data read by FieldState_Still_ChoosePage_WriteMenuSubState (8 bytes) (E-0347)
-FieldState_Still_ChoosePage_WriteMenuSubState_Data::
+; data read by FieldState_Still_ChoosePage_DrawCursor (8 bytes) (E-0347)
+FieldState_Still_ChoosePage_DrawCursor_Data::
     db $01, $01, $06, $01, $01, $03, $06, $03
 
 ; Redraws the whole screen buffer at the scroll position (closing the field menu's window) and
@@ -6684,12 +6710,13 @@ WarpEffect::
     dw WarpEffect_GrowWave
     dw WarpEffect_FadePalette
     dw WarpEffect_Warp
-    dw WarpEffect_Return
-    dw WarpEffect_Return
-    dw WarpEffect_Return
+    dw WarpEffect_Idle
+    dw WarpEffect_Idle
+    dw WarpEffect_Idle
 
-; Warp effect step 6: nothing (the effect waits here). (C1, E-0357)
-WarpEffect_Return::
+; Warp effect steps 6, 7 and 8 (wMenuState & $0F in WarpEffect): returns at once and does nothing.
+; (C1, E-0369)
+WarpEffect_Idle::
     ret
 
 ; Field state 6, the warp effect, step 0: queues music 2 and silences the channels; in a key world
@@ -6752,7 +6779,7 @@ WarpEffect_Cover::
     xor a
     ld [wScreenState], a
     ld [wScreenSubStep], a
-    call WarpEffect_Cover_BrightenFieldMenuColors
+    call WarpEffect_Cover_BuildBrightPalettes
     xor a
     ld [wScreenState], a
     ret
@@ -6949,7 +6976,7 @@ WarpEffect_FadePalette::
     ld [wSubMenuCursor], a
     cp $04
     jr nz, .read_sub_menu_cursor
-    call WarpEffect_FadePalette_RunScreenStateStepEveryOtherFrame
+    call WarpEffect_FadePalette_SyncCGB
     ld hl, wMenuState
     inc [hl]
     xor a
@@ -6961,7 +6988,7 @@ WarpEffect_FadePalette::
     add_a_to_hl
     ld a, [hl]
     ld [wDMGPaletteBGP], a
-    call WarpEffect_FadePalette_RunScreenStateStepEveryOtherFrame
+    call WarpEffect_FadePalette_SyncCGB
     jp WarpEffect_FillScrollTable
 
 ; data read by WarpEffect (5 bytes) (E-0347)
@@ -7824,11 +7851,11 @@ RunSaveGameSteps::
     ld [rRAMG], a
     ld a, [wSaveStep]
     or a
-    jr nz, RunSaveGameSteps_2_Skip
+    jr nz, RunSaveGameSteps_CopyRecordOrFinish
     inc a
     ld [wSaveStep], a
     call CopySaveBlocksToSRAMWithSum
-    jr RunSaveGameSteps_CallRunSaveGameSteps_2_ClearSRAMBanks2And3
+    jr RunSaveGameSteps_FirstStage
 
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then
 ; the final stage marked by bit 7 of wSaveStep) (E-0124) (E-0344: the address in its name dropped or
@@ -7838,28 +7865,32 @@ RunSaveGameSteps_2::
     ld [rRAMG], a
     ld a, [wSaveStep]
     or a
-    jr nz, RunSaveGameSteps_2_Skip
+    jr nz, RunSaveGameSteps_CopyRecordOrFinish
     inc a
     ld [wSaveStep], a
     call SnapshotSpritesForSave
 
-; Save stage 0: backs up SRAM bank 2 into bank 3 (RunSaveGameSteps_2_ClearSRAMBanks2And3), backs up
-; the monster records into bank 1 (BackupRecordsToSRAMBank1) and saves the timer block, then closes
-; SRAM. (C1, E-0357)
-RunSaveGameSteps_CallRunSaveGameSteps_2_ClearSRAMBanks2And3::
-    call RunSaveGameSteps_2_ClearSRAMBanks2And3
+; Save stage 0, shared by RunSaveGameSteps (jumps here after CopySaveBlocksToSRAMWithSum) and
+; RunSaveGameSteps_2 (falls in after SnapshotSpritesForSave), both having set wSaveStep = 1: backs
+; up SRAM bank 2 into bank 3 (RunSaveGameSteps_FirstStage_BackupBank2), backs up the monster records
+; into bank 1 (BackupRecordsToSRAMBank1) and saves the timer block
+; (SaveGM2TimerFramesBlockToSRAMBank1), then closes SRAM (RunSaveGameSteps_CloseSRAM). (C1, E-0369)
+RunSaveGameSteps_FirstStage::
+    call RunSaveGameSteps_FirstStage_BackupBank2
     call BackupRecordsToSRAMBank1
     call SaveGM2TimerFramesBlockToSRAMBank1
-    jr RunSaveGameSteps_2_Skip2
+    jr RunSaveGameSteps_CloseSRAM
 
-; Save stages 1 and 2: stage 1 copies one bank-1 record (SaveStepCopyBank1RecordSaveRecordIndex);
-; stage 2 writes the bank-1 checksum and marks the save done (wSaveStep bit 7). Then closes SRAM.
-; (C1, E-0357)
-RunSaveGameSteps_2_Skip::
+; Save stages after the first, for both RunSaveGameSteps and RunSaveGameSteps_2 (A = wSaveStep, not
+; 0): stage 1 copies one bank-1 record per call (SaveStepCopyBank1RecordSaveRecordIndex, which moves
+; wSaveStep to 2 after 30 records); any later value writes the bank-1 checksum
+; (ComputeSRAMBank1RecordChecksum) and sets wSaveStep bit 7 (the save is done). Then falls into
+; RunSaveGameSteps_CloseSRAM. (C1, E-0369)
+RunSaveGameSteps_CopyRecordOrFinish::
     dec a
     jr nz, .call_compute_sram_bank1_record_checksum
     call SaveStepCopyBank1RecordSaveRecordIndex
-    jr RunSaveGameSteps_2_Skip2
+    jr RunSaveGameSteps_CloseSRAM
 
 .call_compute_sram_bank1_record_checksum:
     call ComputeSRAMBank1RecordChecksum
@@ -7868,7 +7899,7 @@ RunSaveGameSteps_2_Skip::
     ld [wSaveStep], a
 
 ; Closes SRAM (rRAMG = 0, bank 0). (C1, E-0357)
-RunSaveGameSteps_2_Skip2::
+RunSaveGameSteps_CloseSRAM::
     xor a
     ld [rRAMG], a
     ld [rRAMB], a
@@ -8094,7 +8125,7 @@ ClearSRAMBanks2And3::
 ; Backs up SRAM bank 2 (the key-world slots): clears banks 2 and 3 first when wSaveClearFlag is set,
 ; saves the current key world when in one, then copies $1FFE bytes from $A000 in bank 2 to bank 3
 ; and stores (~sum + $1234) of those bytes in the last word ($BFFE) as a checksum. (C1, E-0357)
-RunSaveGameSteps_2_ClearSRAMBanks2And3::
+RunSaveGameSteps_FirstStage_BackupBank2::
     ld a, [wSaveClearFlag]
     or a
     jr z, .check_map_type
@@ -8418,6 +8449,10 @@ VerifySaveChecksum::
     ld c, $ff
     ret
 
+; The second copy in this bank of CopyBytesWithChecksum_Bank02 (same 20 bytes), used only by
+; VerifySaveChecksum to read the four save blocks back from SRAM bank 1: HL = source, DE =
+; destination, BC = count; copies BC bytes, adding each to the 16-bit sum in hTemp2 (low) and hTemp3
+; (high); returns BC = 0, A = 0, HL and DE past the copied bytes. (C1, E-0369)
 ; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in
 ; hTemp2/hTemp3; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
 CopyBytesWithChecksum_Bank02_2::

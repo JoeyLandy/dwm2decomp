@@ -1401,7 +1401,7 @@ Script_Rename_3::
 
 ; Starts string wStringIndex - $88 of bank $0E's overflow table (MessageStrings_Bank0E_Overflow).
 ; (C1, E-0357)
-DebugMessageTest_Update_BeginStringDisplay_2::
+BeginMessageDisplay_Bank0E_Overflow::
     ld de, MessageStrings_Bank0E_Overflow
     ld a, [wStringIndex]
     sub $88
@@ -1424,7 +1424,7 @@ CopyStringToBuffer_Bank0E_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_96_3::
-; data read by DebugMessageTest_Update_BeginStringDisplay_2 (1 word) (E-0347)
+; data read by BeginMessageDisplay_Bank0E_Overflow (1 word) (E-0347)
 MessageStrings_Bank0E_Overflow::
     dw StringList_Bank0E_Overflow_0 ; id 0
 

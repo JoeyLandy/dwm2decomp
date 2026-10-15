@@ -102,13 +102,29 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | Batch | Evidence | Drafted | Accepted | Rejected (reason) | Identity | Suite |
 | --- | --- | --- | --- | --- | --- | --- |
 | E-0368 (finish E-0367 continuation, tools) | E-0368 | - | 591 names | - | PASS build/run604 | suite604 OK (377, 3 skipped); par604 identical |
+| 1: instruction-named, banks $00-$0F (6 slices of 80-109, plus 18 derived) | E-0369 | 547 | 547 (5 names withheld: helper families) | 0 (54 spot checks, all correct) | PASS build/run606 | suite606 OK; par606b identical |
+
+**Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
+doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
+Queue: instruction 1,182; long (over 50) 764; over 60: 172; `Etc`: 1; unread 4,548; reader-only data 524;
+unidentified assets 155. Batch E-0369 phases: drafting about 18 min (six workers in parallel, then 8 min for the
+derived labels); validation and spot checks about 20 min; regeneration 3m50s; build 13s; parallel suite 3m52s
+(test_generated_source.py fixed: 476s to 24s); serial suite 18m33s (OK, 377 tests; parallel par606b identical: agreement 2 of 3). Rejection rate 0% (first batch below 5%).
 
 **Measures after E-0368.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN
 (all named asset files). doc_coverage.py: 9,822 code labels (5,246 with a hand reading), 23,489 data labels, all
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-14, E-0368)
+## Current handoff (2026-10-14, E-0369)
+
+Batch 1 (E-0369) named 547 instruction-named routines in banks $00-$0F from readings by six read-only workers
+(0 rejected) and corrected about 40 earlier notes. Binary identity: **PASS**, `build/run606/report.json`.
+Open questions: [READABILITY_OPEN_QUESTIONS.md](READABILITY_OPEN_QUESTIONS.md). Next: batch E-0370, the next six
+slices of the instruction-named queue (from bank $0F on), slice size 80 (grows by half after a second batch
+below 5% rejection).
+
+## Prior handoff (2026-10-14, E-0368)
 
 E-0368 finished the uncommitted continuation of E-0367 (588 routines named after the RAM they touch, now named
 from their E-0357 notes) and added the batch tools: tools/run_tests.py, tools/readability_queue.py,
