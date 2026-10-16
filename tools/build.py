@@ -23,9 +23,14 @@ def run(cmd, log):
         sys.exit(f"FAIL: {cmd[0]} exited {p.returncode}")
 
 
-def extract_assets(dest: Path) -> int:
-    """D-008: write the asset files listed in src/assets.txt (path, file offset, length) from the reference ROM,
-    after checking the reference's SHA-256 against the target manifest, so src/ includes them by name."""
+DELTAS: dict[str, int] = {}  # edited assets whose files changed size (E-0394)
+
+
+def extract_assets(dest: Path, mod: Path | None = None) -> int:
+    """D-008: write the asset files listed in src/assets.txt, after checking the reference's SHA-256 against the
+    target manifest, so src/ includes them by name. E-0394: each LZSS stream is decoded from the reference and
+    encoded again with tools/lzss_encode.py (the result is checked against the reference's bytes); with `mod`,
+    edited files (.png tiles or .bin data) replace the decoded data (tools/assets.py)."""
     listing = ROOT / "src/assets.txt"
     if not listing.exists():
         return 0
@@ -33,32 +38,41 @@ def extract_assets(dest: Path) -> int:
     data = REF.read_bytes()
     if hashlib.sha256(data).hexdigest() != want:
         sys.exit("FAIL: the reference ROM does not match the target manifest; assets not extracted")
-    n = 0
-    for line in listing.read_text(encoding="utf-8").splitlines():
-        if not line.strip() or line.startswith("#"):
-            continue
-        path, off, size = line.split("\t")
-        o, s = int(off.lstrip("$"), 16), int(size.lstrip("$"), 16)
-        target = dest / path
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(data[o:o + s])
-        n += 1
-    return n
+    sys.path.insert(0, str(ROOT / "tools"))  # python -I leaves the script's directory off the path
+    import assets
+    counts = assets.build_assets(dest, mod, data)
+    DELTAS.clear()
+    DELTAS.update(counts["deltas"])
+    if mod is not None:
+        print(f"assets: {counts['png']} from PNG and {counts['bin']} from .bin changed; {counts['unchanged']} edited "
+              f"files hold the original data; {counts['rom'] - counts['unchanged']} from the reference")
+    return counts["rom"] + counts["png"] + counts["bin"]
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="build/run1")
-    out = (ROOT / ap.parse_args().out).resolve()
+    ap.add_argument("--mod", type=Path, help="edited assets (tools/assets.py): a modded ROM, not the matching target")
+    args = ap.parse_args()
+    out = (ROOT / args.out).resolve()
+    mod = args.mod.resolve() if args.mod else None
     if (ROOT / "build").resolve() not in out.parents:
         sys.exit("output dir must be beneath build/")
     shutil.rmtree(out, ignore_errors=True)
     out.mkdir(parents=True)
     log: list = []
     obj, rom = out / "main.o", out / "dwm2.gbc"
-    assets = extract_assets(out / "assets")
-    run([RGBDS / "rgbasm.exe", "-I", "src", "-I", out / "assets", "-I", "local/roms", "-o", obj, "src/main.asm"], log)
-    layout = ["-l", ROOT / "src/layout.link"] if (ROOT / "src/layout.link").exists() else []  # E-0393
+    src = ROOT / "src"
+    if mod:  # E-0394: a scratch copy of src/, whose bank fills take up the edited assets' changes in size
+        src = out / "src"
+        shutil.copytree(ROOT / "src", src)
+    assets = extract_assets(out / "assets", mod)
+    if mod and DELTAS:
+        import assets as asset_tools
+        for note in asset_tools.absorb_size_changes(src, DELTAS):
+            print("size change:", note)
+    run([RGBDS / "rgbasm.exe", "-I", src, "-I", out / "assets", "-I", "local/roms", "-o", obj, src / "main.asm"], log)
+    layout = ["-l", src / "layout.link"] if (src / "layout.link").exists() else []  # E-0393
     run([RGBDS / "rgblink.exe", *layout, "-m", out / "dwm2.map", "-n", out / "dwm2.sym", "-o", rom, obj], log)
     tools = {n: subprocess.run([str(RGBDS / f"{n}.exe"), "--version"], capture_output=True, text=True).stdout.strip()
              for n in ("rgbasm", "rgblink")}
@@ -71,8 +85,12 @@ def main() -> int:
                source_tree_sha256=hashlib.sha256(b"".join(
                    p.read_bytes() for p in sorted((ROOT / "src").rglob("*.asm")) + [ROOT / "src/assets.txt", ROOT / "src/layout.link"]
                    if p.exists())).hexdigest(),
-               assets_extracted=assets)
+               assets_extracted=assets, mod=str(mod) if mod else None)
     (out / "report.json").write_text(json.dumps(rep, indent=2))
+    if mod:  # E-0394: a modded ROM is not the matching target; its difference is reported, not judged
+        print("MODDED BUILD (not the matching target) | bytes differing from the reference:",
+              rep.get("differing_bytes"), "|", rom)
+        return 0
     print("RESULT:", "PASS" if rep["pass"] else "FAIL", "| differing bytes:", rep.get("differing_bytes"))
     return v.returncode
 

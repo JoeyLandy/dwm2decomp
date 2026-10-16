@@ -2431,6 +2431,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0394 — M3: a byte-identical LZSS encoder; assets built from decoded, editable data
+
+- Date: 2026-10-16. Kind: OBSERVATION and DECISION. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit a68afb6 (E-0393). Guide: [editable assets](ASSETS.md).
+- **What the streams show** (all 3,546 of src/assets.txt, decoded with tools/lzss_gfx.py):
+  - the marker is always the lowest byte value absent from the data;
+  - the parse is greedy (no literal stands where a match of 4 or more existed);
+  - no reference is longer than 96 bytes (967 are exactly 96, where longer matches existed);
+  - no stream decodes to more than 4,096 bytes;
+  - ties between equally long matches follow no simple first or last rule, which points to a tree search.
+- **Encoder.** tools/lzss_encode.py is Okumura's LZSS.C (public-domain 1989 reference code) with N = 4096, F = 96, THRESHOLD = 3 and the game's token format.
+  - The ring starts at 0, zero-filled, with r = 0 and s = r + F.
+  - The 96 positions 4000-4095 are inserted first, with the ring's mirror holding the start of the data, so the strings there run on into it: the first reference of many streams reads leading zeros from 4095.
+  - All 3,546 streams re-encode byte for byte (`tools/lzss_encode.py --check`; tests/test_lzss_encode.py). Two first attempts failed: an unfilled mirror (6 of 3,546 matched) and s = 0 (9).
+- **Build.** tools/build.py writes every asset file by decoding the reference's stream and encoding it again (tools/assets.py); it stops if a stream differs. Raw bytes are kept for three slices with bytes after their stream (8, 161 and 3 bytes) and four streams ending inside the next slice.
+- **Editing.** `tools/assets.py export` writes `.bin` for every asset and PNG (rgbgfx) for 1,020 tile assets. `build.py --mod DIR` takes edited files from DIR in a scratch copy of src/, where each bank's trailing fill absorbs the edited assets' change in size, and reports a MODDED BUILD.
+  - A full export built with --mod gives the reference byte for byte (0 differing bytes; every PNG converts back exactly).
+  - The Slime picture with inverted colours grows by 1 byte, and bank $74's fill goes from 74 to 73 bytes. MonsterPic_Slime decodes to the edited data; the 51 other pictures of the bank decode as before, 42 of them moved; the ROM runs 3,000 frames (tools/sm83.py).
+- **Checks.** build/run672 PASS (approved size and SHA-256, zero differing bytes) with every asset encoded from decoded data; serial full suite build/logs/suite672.log OK (427 tests, 3 skipped).
+
 ### E-0393 — M2 batch 5: floating sections placed by src/layout.link; code moved between banks
 
 - Date: 2026-10-16. Kind: DECISION and OBSERVATION (layout change; bytes unchanged; moves observed on tools/sm83.py, not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 22111cb (E-0392).

@@ -159,7 +159,15 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0393): M2 done, code can move between banks
+## Current handoff (2026-10-16, E-0394): M3 done, editable assets
+
+tools/lzss_encode.py (Okumura's LZSS.C with the game's ring start, 96-byte lookahead and marker format) reproduces
+all 3,546 compressed streams byte for byte. tools/build.py now builds every asset from decoded data, and
+`build.py --mod DIR` builds from edited PNG (rgbgfx) and .bin files, with bank fills absorbing size changes; a
+recoloured Slime builds and runs. docs/ASSETS.md is the guide. build/run672 PASS; serial suite OK (427 tests, 3 skipped). Next:
+M4 (leftover code bytes) or M5 (mechanics).
+
+## Prior handoff (2026-10-16, E-0393): M2 done, code can move between banks
 
 src/ is 9,071 floating sections placed by src/layout.link (rgblink -l). tools/bank_check.py finds jumps and
 pointers that would break when a section changes bank. tools/move_section.py lists 255 sections free to move, and
