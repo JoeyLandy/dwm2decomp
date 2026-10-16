@@ -2209,10 +2209,10 @@ AddSkillBaseWeightAndLoadSkill::
     ld h, $00
     add hl, hl
     ld a, l
-    add $f3
+    add LOW(SkillAIBaseWeightTable)
     ld l, a
     ld a, h
-    adc $55
+    adc HIGH(SkillAIBaseWeightTable)
     ld h, a
     ld a, [hli]
     or [hl]

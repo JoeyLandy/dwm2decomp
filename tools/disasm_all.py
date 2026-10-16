@@ -2121,6 +2121,8 @@ class Rom:
         (the target is where the code reads, so a label belongs there); a target inside a decoded instruction is
         reported, not named."""
         lab = self.labels[tb].get(imm) if imm in self.insn[tb] else None
+        if tb == 0 and imm not in self.insn[0]:
+            self.__dict__.setdefault("confirmed_bank0", set()).add(imm)  # E-0389: a bank-0 data target read by hand
         if lab or imm in self.dlabels[tb]:
             self.dref[(bank, a)] = (tb, imm)
             log(f"operands.json: {bank:02X}:{a:04X} -> existing label {lab or self.dlabels[tb][imm]}")
@@ -2411,6 +2413,16 @@ class Rom:
                     strong += 1
                 else:
                     weak += 1
+        # E-0389 (M2): a bank-$00 data address that config/operands.json labelled by hand is the same pointer
+        # wherever `ld hl|de|bc` loads exactly that value (LibraryMenu_LeaveReloadNames copies SolidColor1Tile).
+        same = 0
+        for bank in range(self.nbanks):
+            for a, v in self.insn[bank].items():
+                m = ld16.match(v[1]) if v[0] != "dw" else None
+                if m and int(m.group(2), 16) in getattr(self, "confirmed_bank0", set()) and (bank, a) not in self.dref:
+                    self.dref[(bank, a)] = (0, int(m.group(2), 16))
+                    same += 1
+        log(f"loads of a hand-confirmed bank-0 data address labelled: {same}")
         log(f"banked-call operands resolved to code labels: {coded}")
         log(f"data references: {strong} with a bank evidence (helper call or RAM variable), "
             f"{weak} same-bank loads, "
@@ -2613,6 +2625,56 @@ class Rom:
                     if t.get(k):
                         t[k] = pat.sub(lambda m: gone[m.group(1)], t[k])
         log(f"tables with two names folded into one: {folded}; entry-0 labels of a series kept: {kept}")
+
+    def name_split_addresses(self) -> None:
+        """E-0389 (M2): `add a, $LO` followed, before any control transfer and within four instructions, by
+        `adc a, $HI`, where $HI$LO is exactly a labelled data start in the instruction's own switchable bank, is a
+        table address split into two immediates (LoadMapObjectsForScreen: hMapId * 2 + MapObjectTable). The two
+        operands are written LOW(Label) and HIGH(Label), so they follow the table if it moves; the bytes are the
+        same; they go in split_ptr, which E-0150 uses for stream addresses. A sum that lands on code or on no label
+        is left as numbers (tools/hardcoded_refs.py counts them)."""
+        made = 0
+        add = re.compile(r"add a, \$([0-9A-F]{2})$")
+        adc = re.compile(r"adc a, \$([0-9A-F]{2})$")
+        for b in range(1, self.nbanks):
+            ins = self.insn[b]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                m = add.match(ins[a][1])
+                if not m:
+                    continue
+                for x in order[k + 1:k + 5]:
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    mh = adc.match(ins[x][1])
+                    if mh:
+                        v = int(mh.group(1), 16) << 8 | int(m.group(1), 16)
+                        if 0x4000 <= v < 0x8000 and v in self.dlabels[b] and v not in self.insn[b]:
+                            self.split_ptr[(b, a)] = ("LOW", b, v)
+                            self.split_ptr[(b, x)] = ("HIGH", b, v)
+                            made += 1
+                        break
+        log(f"split table addresses written LOW/HIGH(label): {made}")
+
+    def rom_word_expr(self, tb: int, v: int) -> str | None:
+        """E-0389 (M2): a word that is an address in ROM bank tb as Label or Label + $offset: the table that holds
+        it (GlyphFont + $A0: the offset / 16 is the glyph), else the nearest data label at or below it in that bank;
+        None outside the bank's window or below its first label."""
+        if not self.base(tb) <= v < self.base(tb) + BANK:
+            return None
+        for (b, a), t in self.table_at.items():
+            if b == tb and a <= v < t["end"]:
+                return t["label"] if a == v else f"{t['label']} + ${v - a:X}"
+        cache = self.__dict__.setdefault("_rom_word_labels", {})
+        if tb not in cache:
+            cache[tb] = sorted(self.dlabels[tb].items())
+        import bisect
+        labs = cache[tb]
+        i = bisect.bisect_right(labs, (v, "￿")) - 1
+        if i < 0:
+            return None
+        a, name = labs[i]
+        return name if a == v else f"{name} + ${v - a:X}"
 
     def name_data_by_reader(self) -> None:
         """E-0285: a data label that still has only an address name and that code loads (`ld rr, n`) is
@@ -4418,7 +4480,8 @@ class Rom:
                                      "count": 1, "fields": [{"type": "words", "size": size, "per_line": 8,
                                                              "ram": kind == "Dest",
                                                              "name": "VRAM destinations, then $FFxx" if kind == "Dest"
-                                                             else "bank-$1F tile sources"}],
+                                                             else "bank-$1F tile sources",
+                                                             **({} if kind == "Dest" else {"rom_bank": 0x1F})}],
                                      "note": "E-0225 (derived: a list passed to a tile-list copier, which copies 16 "
                                              "bytes from bank $1F per destination until a low byte of $FF)"})
                 made += 1
@@ -5728,6 +5791,8 @@ class Rom:
         out.append(f"; {t['note']}")
         out.append("; record: " + (t.get("record") or "; ".join(f["name"] for f in fields)))
         out.append(f"{t['label']}::")
+        if t.get("assert"):  # E-0389: a layout requirement the code relies on, checked at link time (no bytes)
+            out.append(f'    ASSERT {t["assert"][0]}, "{t["assert"][1]}"')
         for i in range(t["count"]):
             p = t["addr"] + i * stride
             vals, raws, q = [], [], p
@@ -5795,6 +5860,9 @@ class Rom:
                     enum = self.consts.get(f["enum"].upper(), {}) if f.get("enum") and self.consts else {}
                     for j in range(0, len(words) if not f.get("names") else 0, per):
                         out.append("    dw " + ", ".join((f.get("ram") and self.sym_name(v, True))
+                                                         or ("rom_bank" in f and self.rom_word_expr(
+                                                             int(f["rom_bank"], 16) if isinstance(f["rom_bank"], str)
+                                                             else f["rom_bank"], v))
                                                          or (enum[v][0] if v in enum and v else None)  # D-007
                                                          or (str(v) if f.get("decimal") else f"${v:04X}")
                                                          for v in words[j:j + per]) + suffix(f if j == 0 else None))
@@ -5930,6 +5998,7 @@ class Rom:
         self.refresh_to_names()
         self.name_data_by_reader()
         self.fold_table_names()
+        self.name_split_addresses()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 

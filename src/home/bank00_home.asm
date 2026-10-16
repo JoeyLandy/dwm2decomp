@@ -4534,18 +4534,19 @@ ReadByteInBank::
     ret
 
 ; HL = VRAM destination, B = width, C = height in tiles: writes B * C copies of the 16-byte tile
-; pattern at $2940 ($FF, $00 repeated: every pixel colour 1, the bytes after FillTilesFromRequest)
-; one after another from HL, each byte with interrupts disabled after rSTAT bit 1 clears. Keeps B in
-; wTextWindowTileLo between rows and leaves it there. HL ends past the last tile. (C1, E-0373)
-; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each
-; byte after waiting for VRAM access; wTextWindowTileLo holds B between rows
+; pattern at SolidColor1Tile ($FF, $00 repeated: every pixel colour 1, the bytes after
+; FillTilesFromRequest) one after another from HL, each byte with interrupts disabled after rSTAT
+; bit 1 clears. Keeps B in wTextWindowTileLo between rows and leaves it there. HL ends past the last
+; tile. (C1, E-0373)
+; HL = destination, B = width, C = height: writes the 16-byte pattern at SolidColor1Tile B * C
+; times, each byte after waiting for VRAM access; wTextWindowTileLo holds B between rows
 FillTilesBxC::
     ld a, b
     ld [wTextWindowTileLo], a
 
 .loop:
     push bc
-    ld de, $2940
+    ld de, SolidColor1Tile
     ld c, $10
 
 .loop2:
@@ -4921,11 +4922,11 @@ LoadMapScreen::
     ret
 
 ; Draws a map's special 2x2 marker, unless wMapType bit 7 is set. The table after the routine (code
-; at $1AB4) holds 3-byte entries (map id, position, screen) for 11 maps ending with $FF; for the
-; entry matching hMapId it draws the marker with LoadMapScreen_DrawMarker_IfOnScreen, passing the
-; entry's index in hTemp0. In a key world (wKeyWorldActive) whose key (wKeyWorldKey) is that index +
-; 1, the position comes from wKeyWorldGoal instead. What the marker shows in play is not yet
-; confirmed. (C2, E-0369; probed E-0374)
+; at MapMarkerRecords) holds 3-byte entries (map id, position, screen) for 11 maps ending with $FF;
+; for the entry matching hMapId it draws the marker with LoadMapScreen_DrawMarker_IfOnScreen,
+; passing the entry's index in hTemp0. In a key world (wKeyWorldActive) whose key (wKeyWorldKey) is
+; that index + 1, the position comes from wKeyWorldGoal instead. What the marker shows in play is
+; not yet confirmed. (C2, E-0369; probed E-0374)
 LoadMapScreen_DrawMarker::
     ld a, [wMapType]
     bit 7, a
@@ -4933,7 +4934,7 @@ LoadMapScreen_DrawMarker::
     ldh a, [hMapId]
     ld c, a
     ld b, $00
-    ld hl, $1ab4
+    ld hl, MapMarkerRecords
 
 .skip:
     ld a, [hl]
@@ -4975,6 +4976,13 @@ LoadMapScreen_DrawMarker::
 
 .return:
     ret
+
+; Map marker records of 3 bytes up to $FF: the map id, the marker position (column in the high
+; nibble, metatile row in the low) and its screen (screen X in the high nibble, Y in the low).
+; LoadMapScreen_DrawMarker walks them comparing the first byte with hMapId;
+; LoadMapScreen_DrawMarker_IfOnScreen compares the third byte with the current screen and draws the
+; marker at the position. (C1, E-0389)
+MapMarkerRecords::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
@@ -5334,7 +5342,7 @@ PatchTilesOnMap1Or2::
     ld hl, vTiles2 + $510
     ld b, $10
     call CopyBBytesToVRAMFromDE
-    ld de, $1d07
+    ld de, Tiles_00_1D07
     ld hl, vTiles2 + $120
     ld b, $40
     call CopyBBytesToVRAMFromDE
@@ -5345,7 +5353,7 @@ PatchTilesOnMap1Or2::
     ld hl, vTiles2 + $410
     ld b, $10
     call CopyBBytesToVRAMFromDE
-    ld de, $1d07
+    ld de, Tiles_00_1D07
     ld hl, vTiles2 + $2a0
     ld b, $40
     call CopyBBytesToVRAMFromDE
@@ -7757,14 +7765,14 @@ GlyphTileSourceForL::
     ld h, a
     ret
 
-; Fills the text window tiles at wTextWindowTileLo/Hi with the 16-byte pattern at $2940 (eight $FF,
-; $00 pairs, right after this routine): wTextWindowWidth passes of wTextWindowRows tiles, one after
-; another, waiting for VRAM access before each byte. It returns at once only when both counts are 0;
-; a 0 in just one of them counts as 256. FillTilesRequest sets the counts and calls it;
-; BeginStringDisplay and TextCmd_Clear use it to blank the window. (C1, E-0373)
-; fills a block of tiles at wTextWindowTileLo/wTextWindowTileHi with the 16-byte pattern at $2940:
-; width wTextWindowRows, height wTextWindowWidth tiles (each byte waits for VRAM access); returns at
-; once if either is zero
+; Fills the text window tiles at wTextWindowTileLo/Hi with the 16-byte pattern at SolidColor1Tile
+; (eight $FF, $00 pairs, right after this routine): wTextWindowWidth passes of wTextWindowRows
+; tiles, one after another, waiting for VRAM access before each byte. It returns at once only when
+; both counts are 0; a 0 in just one of them counts as 256. FillTilesRequest sets the counts and
+; calls it; BeginStringDisplay and TextCmd_Clear use it to blank the window. (C1, E-0373)
+; fills a block of tiles at wTextWindowTileLo/wTextWindowTileHi with the 16-byte pattern at
+; SolidColor1Tile: width wTextWindowRows, height wTextWindowWidth tiles (each byte waits for VRAM
+; access); returns at once if either is zero
 FillTilesFromRequest::
     ld hl, wTextWindowRows
     ld a, [hli]
@@ -7784,7 +7792,7 @@ FillTilesFromRequest::
 .loop2:
     push bc
     ld b, $10
-    ld de, $2940
+    ld de, SolidColor1Tile
 
 .loop3:
     di
@@ -7805,6 +7813,11 @@ FillTilesFromRequest::
     dec c
     jr nz, .loop
     ret
+
+; One 2bpp tile, 16 bytes $FF, $00: eight rows of colour 1. FillTilesBxC and FillTilesFromRequest
+; copy it into each tile they fill, and LibraryMenu_LeaveReloadNames copies it with
+; CopyTileBytesToVRAM_Bank0C. (C1, E-0389)
+SolidColor1Tile::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
 
 ; A = command byte $E0-$FF: stores it in wTextLastChar and jumps to entry A - $E0 of its 32-entry
@@ -8785,10 +8798,10 @@ CopyStringHLToDE::
 
 ; HL = first tile address, D = width, E = rows: stores HL in wTextWindowTileLo/Hi, E in
 ; wTextWindowRows and D in wTextWindowWidth (the text window layout the printer also uses), then
-; FillTilesFromRequest fills D * E consecutive tiles from HL with the 16-byte pattern at $2940 ($FF,
-; $00 repeated: every pixel color 1), each byte waiting for VRAM access. FillTilesFromRequest
-; returns at once only when both counts are 0. GameMode0_Init clears 112 tiles at vTiles1 and at
-; vTiles2 with DE = $1007. (C1, E-0373)
+; FillTilesFromRequest fills D * E consecutive tiles from HL with the 16-byte pattern at
+; SolidColor1Tile ($FF, $00 repeated: every pixel color 1), each byte waiting for VRAM access.
+; FillTilesFromRequest returns at once only when both counts are 0. GameMode0_Init clears 112 tiles
+; at vTiles1 and at vTiles2 with DE = $1007. (C1, E-0373)
 ; HL = tile destination, DE = size: E goes to wTextWindowRows (the tiles FillTilesFromRequest fills
 ; in each pass) and D to wTextWindowWidth (the number of passes); then calls FillTilesFromRequest
 ; (E-0353: corrected; was: HL = destination, DE = size (E = width, D = height); stores them and

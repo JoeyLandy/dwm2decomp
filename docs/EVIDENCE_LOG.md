@@ -2431,6 +2431,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0389 — M2 batch 1: the located hard-coded references written as labels
+
+- Date: 2026-10-16. Kind: OBSERVATION and DECISION (generator changes; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e9e76a0 (E-0388). Details: [shiftability](SHIFTABILITY.md).
+- **References.**
+  - config/operands.json labels the bank-$00 targets read through numbers: SolidColor1Tile ($2940; FillTilesBxC, FillTilesFromRequest), MapMarkerRecords ($1AB4; LoadMapScreen_DrawMarker) and Tiles_00_1D07 (PatchTilesOnMap1Or2).
+  - New rule: a `ld hl/de/bc` of exactly a hand-confirmed bank-$00 address is that pointer (17 more, LibraryMenu_LeaveReloadNames and kin, which copy SolidColor1Tile with CopyTileBytesToVRAM_Bank0C).
+  - `name_split_addresses` writes 35 `add $LO` / `adc $HI` pairs as LOW/HIGH(Label) when the sum is exactly a data label of the instruction's bank (MapObjectTable, MapStepTriggerTable, SkillTable, ExpTable, ...).
+  - The bank-$1F source lists (generated `TileCopySrcList` tables and the eight declared ones, `rom_bank`) print each word as the table holding it plus an offset (`GlyphFont + $a0`; 532 words).
+  - GlyphFont carries `ASSERT (GlyphFont & 1) == 0`, the requirement of DrawTextGlyph's `inc e`. Padding bank $1F by 1 now fails the link with that message.
+  - Notes: SolidColor1Tile and MapMarkerRecords in config/names.json (C1). tools/present.py, tools/doc_coverage.py and tools/probe_scope.py skip `ASSERT` lines when they decide code or data.
+- **Timing.** A 16-byte shift of bank $00 changes RandomByteTable's low byte, so `add_a_to_hl` carries where it did not. With bank $00 padded, the random calls and values were the same, but one call fell after the frame-1369 boundary; later random effects (OBJ palettes 6-7) differed, and a frame was dropped at 1418. VRAM and OAM were identical. tools/shift_test.py therefore gained `--persist N` (a frame difference counts when it lasts N frames) and `--reads BB|all`, which compares the order of ROM data reads mapped through the padding. Read order does not depend on timing. It found MapMarkerRecords, and the reader handles MBC5 bank 0 selected at $4000 (SoundTick).
+- **Gate.** With all 152 paddable banks padded by 16, ROM data reads over 10,000 frames with --explore: PASS, all 1,202,485 reads match (build/m2_readsall). With every bank except $00 padded by 16, the 10,000 frames match exactly (0 differing frames).
+- **Static counts** (build/run659): code_split 124 to 89; data_tiles 592 to 60 (all remaining are palette colours); code_address 86 to 84 (none real: message ids, flag ids, step values, a byte count); code_bank 468 (unchanged).
+- Binary verification: build/run659 PASS (approved size and SHA-256, zero differing bytes); parallel full suite build/logs/par659.log OK (411 tests, 3 skipped).
+
 ### E-0388 — Shiftability audit (M1): what breaks when code and data move
 
 - Date: 2026-10-16. Kind: OBSERVATION (project emulator tools/sm83.py, not hardware; C2 for the routines named below, C1 for the static counts). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit d4f8d17 (source as eb9066a). Details and the M2 plan: [shiftability](SHIFTABILITY.md).

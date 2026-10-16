@@ -965,24 +965,24 @@ ShowInfoOKLabelTiles::
     ret
 
 ; Draws the master name of the record in wRecordBufB as tiles. It copies the 16-byte plain tile
-; pattern at $2940 (the one FillTilesFromRequest uses) five times to vTiles2 + $290 onward with
-; CopyTileBytesToVRAMCounted_BankF2, copies the up to 10 bytes at wRecordBufB + MON_MASTER_NAME into
-; wNameGlyphBuf (CopyShortStringToNameGlyphBuf_BankF2), stores $F0 at wNameGlyphBuf + $A and draws
-; its glyph tiles from vTiles2 + $290 with CopyGlyphTilesToVRAM. Called by
+; pattern at SolidColor1Tile (the one FillTilesFromRequest uses) five times to vTiles2 + $290 onward
+; with CopyTileBytesToVRAMCounted_BankF2, copies the up to 10 bytes at wRecordBufB + MON_MASTER_NAME
+; into wNameGlyphBuf (CopyShortStringToNameGlyphBuf_BankF2), stores $F0 at wNameGlyphBuf + $A and
+; draws its glyph tiles from vTiles2 + $290 with CopyGlyphTilesToVRAM. Called by
 ; ShowRecordBufBPersonalityAndMasterName after ShowCombinedPersonalityName. (C1, E-0386)
 ; clears five tiles at vTiles2 + $290 (copying $2940) and draws the name at wRecordBufB + $F there
 ; (E-0121) (E-0340: the address in its name read as its RAM name; was DrawRecordBufBMasterNameTiles)
 DrawRecordBufBMasterNameTiles::
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     ld de, vTiles2 + $290
     call CopyTileBytesToVRAMCounted_BankF2
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAMCounted_BankF2
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAMCounted_BankF2
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAMCounted_BankF2
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAMCounted_BankF2
     ld hl, wRecordBufB + MON_MASTER_NAME
     call CopyShortStringToNameGlyphBuf_BankF2
@@ -1076,10 +1076,10 @@ PersonalityGradeOfA::
 ; Draws the two name lines of the second record page for wRecordBufB. ShowCombinedPersonalityName
 ; shows the personality name (category 7 string CombinedPersonalityLevelIndex, one row of 9 tiles at
 ; vTiles2 + $200) and puts the default text window back; then DrawRecordBufBMasterNameTiles fills
-; five tiles at vTiles2 + $290 with the plain pattern at $2940 (bank 0) and draws the master name
-; MON_MASTER_NAME there. No inputs; all registers are clobbered. Step 18 of the record stats screen
-; (RunScreenStateWhenNotFading_F1_StatsPersonality) and PartnerStats_ShowPersonality use it. (C1,
-; E-0386)
+; five tiles at vTiles2 + $290 with the plain pattern at SolidColor1Tile (bank 0) and draws the
+; master name MON_MASTER_NAME there. No inputs; all registers are clobbered. Step 18 of the record
+; stats screen (RunScreenStateWhenNotFading_F1_StatsPersonality) and PartnerStats_ShowPersonality
+; use it. (C1, E-0386)
 ; ShowCombinedPersonalityName, then DrawRecordBufBMasterNameTiles (E-0122) (E-0340: the address in
 ; its name read as its RAM name; was ShowRecordBufBPersonalityAndMasterName)
 ShowRecordBufBPersonalityAndMasterName::

@@ -64,11 +64,29 @@ class Frames(unittest.TestCase):
         self.assertEqual(shift_test.first_difference(["a", "b", "c"], ["a", "x", "c"]), 1)
         self.assertEqual(shift_test.first_difference(["a", "b"], ["a"]), 1)  # a run that stopped early differs
 
+    def test_short_differences_are_timing_unless_they_last(self):
+        a, b = list("abcdefgh"), list("aXcdeXYZ")
+        self.assertEqual(shift_test.first_difference(a, b, 3), 5)  # the blip at 1 is skipped
+        self.assertIsNone(shift_test.first_difference(a, list("aXcdefgh"), 2))
+        self.assertEqual(shift_test.transient_frames(a, b), 4)
+        self.assertEqual(shift_test.first_difference(a, list("abcdeX"), 3), 5)  # stopped early during a difference
+
     def test_a_crashing_rom_stops_early_and_so_differs(self):
         rom = bytes([0xD3]) * 0x8000  # $D3 is not an SM83 opcode: the CPU stops at $0100
         hashes = shift_test.frame_hashes(rom, 3)
         self.assertLess(len(hashes), 3)
         self.assertIsNotNone(shift_test.first_difference(["x"] * 3, hashes))
+
+    def test_bank_0_in_the_switchable_window_is_bank_0(self):
+        self.assertEqual(shift_test.rom_place(5, 0x0150), (0, 0x0150))
+        self.assertEqual(shift_test.rom_place(0, 0x4000), (0, 0x0000))  # MBC5 bank 0 at $4000: ROM byte 0
+        self.assertEqual(shift_test.rom_place(1, 0x4000), (1, 0x4000))
+
+    def test_read_order_ignores_the_reading_pc_but_not_the_address(self):
+        a = [(0, 0x150, 1), (5, 0x4000, 2)]
+        self.assertIsNone(shift_test.first_read_difference(a, [(0, 0x150, 9), (5, 0x4000, 9)]))
+        self.assertEqual(shift_test.first_read_difference(a, [(0, 0x150, 1), (5, 0x4010, 2)]), 1)
+        self.assertEqual(shift_test.first_read_difference(a, a[:1]), 1)
 
     def test_bad_arguments_are_refused(self):
         with self.assertRaises(SystemExit):

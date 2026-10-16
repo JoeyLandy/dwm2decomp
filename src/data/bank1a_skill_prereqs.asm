@@ -18,10 +18,10 @@ LoadSkillRecord::
     ld a, $11
     call Multiply8By16
     ld a, l
-    add $d4
+    add LOW(SkillTable)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(SkillTable)
     ld h, a
     ld de, wRecordBufferData
     ld b, $11
@@ -55,10 +55,10 @@ LoadSkillRecordPart::
     ld a, $11
     call Multiply8By16
     ld a, l
-    add $d4
+    add LOW(SkillTable)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(SkillTable)
     ld h, a
     ld a, [wBattleArg0]
     add_a_to_hl
@@ -105,10 +105,10 @@ ComputeDamageEstimateForAction_FromSkillRecord::
     ld a, $11
     call Multiply8By16
     ld a, l
-    add $d4
+    add LOW(SkillTable)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(SkillTable)
     ld h, a
     ld bc, $0009
     ld a, [wLinkMode]
@@ -2528,10 +2528,10 @@ StatFromGrowthRow::
     ld c, $63
     call Multiply8
     ld a, l
-    add $16
+    add LOW(StatGrowthTable)
     ld l, a
     ld a, h
-    adc $66
+    adc HIGH(StatGrowthTable)
     ld h, a
     ldh a, [hTemp1]
     ld b, a
@@ -2571,10 +2571,10 @@ ReadStatGrowthGainToTemp2:: ; configured code entry (E-0175); C0
     ld c, $63
     call Multiply8
     ld a, l
-    add $16
+    add LOW(StatGrowthTable)
     ld l, a
     ld a, h
-    adc $66
+    adc HIGH(StatGrowthTable)
     ld h, a
     ldh a, [hTemp1]
     add_a_to_hl
@@ -2857,10 +2857,10 @@ ReadStatGrowthGain::
     ld c, $63
     call Multiply8
     ld a, l
-    add $16
+    add LOW(StatGrowthTable)
     ld l, a
     ld a, h
-    adc $66
+    adc HIGH(StatGrowthTable)
     ld h, a
     pop de
     ld a, d

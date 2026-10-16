@@ -135,10 +135,10 @@ GenerateKeyWorld_RollMonsters_Normal::
     sla e
     rl d
     ld a, e
-    add $23
+    add LOW(KeyWorldBossBandPickRows)
     ld e, a
     ld a, d
-    adc $41
+    adc HIGH(KeyWorldBossBandPickRows)
     ld d, a
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -1109,10 +1109,10 @@ LoadKeyWorldLevelBaseTripleForPartyStrength::
     add hl, hl
     add hl, hl
     ld a, l
-    add $c5
+    add LOW(KeyWorldLevelTable)
     ld l, a
     ld a, h
-    adc $47
+    adc HIGH(KeyWorldLevelTable)
     ld h, a
     ld a, [hli]
     ld [wKeyWorldLevelBase], a
@@ -4518,10 +4518,10 @@ WriteKeyContentsWordRowsEntryForTemp2Temp3::
     add hl, hl
     add hl, hl
     ld a, l
-    add $9c
+    add LOW(KeyContentsWordRows)
     ld l, a
     ld a, h
-    adc $66
+    adc HIGH(KeyContentsWordRows)
     ld h, a
     push hl
     ldh a, [hTemp3]

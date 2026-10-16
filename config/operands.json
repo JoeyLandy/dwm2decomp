@@ -1,6 +1,11 @@
 {
   "_comment": "E-0350: 16-bit operands read by hand, keyed by the instruction's bank:address. 'bank' names the ROM bank a pointer operand points into (tools/disasm_all.py then writes the label there, or Label + $offset inside a labelled table); 'lb' writes a register pair holding two separate bytes as `lb rr, $HI, $LO`; 'expr' replaces the number with an expression of the same value (the build checks every byte). 'label' names a label the entry creates; 'why' is the reading behind each entry (C1).",
   "pointers": {
+    "00:1886": {"bank": "00", "why": "E-0389: FillTilesBxC copies 16 bytes from DE to each tile; $2940 is the 16 bytes $FF, $00 (eight rows of colour 1) right after FillTilesFromRequest's ret, which tools/shift_test.py found read through this fixed number"},
+    "00:2927": {"bank": "00", "why": "E-0389: FillTilesFromRequest copies the same 16 bytes ($2940) to each requested tile"},
+    "00:1A80": {"bank": "00", "why": "E-0389: LoadMapScreen_DrawMarker walks 3-byte records (map id, screen, position) from $1AB4, right after its own ret, comparing the first byte with hMapId until $FF; tools/shift_test.py --reads 00 found it read through this fixed number"},
+    "00:1CD6": {"bank": "00", "why": "E-0389: PatchTilesOnMap1Or2 copies $40 bytes from Tiles_00_1D07 with CopyBBytesToVRAMFromDE"},
+    "00:1CED": {"bank": "00", "why": "E-0389: PatchTilesOnMap1Or2 copies $40 bytes from Tiles_00_1D07 with CopyBBytesToVRAMFromDE"},
     "04:438C": {"bank": "7E", "why": "indexes the table with E and then loads B = $7E for DecompressToVRAM"},
     "04:4863": {"bank": "04", "why": "kept in hTemp0/hTemp1 for UpdateSpriteSlots, which reads it in this bank"},
     "04:486E": {"bank": "04", "why": "as 04:4863"},

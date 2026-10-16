@@ -2020,8 +2020,8 @@ EggPriceGlyphDestList::
 ; at the end), then $FFFF. (C1, E-0376)
 ; record: bank-$1F tile sources
 EggPriceGlyphSrcList::
-    dw $40f0, $43a0, $4250, $4300, $4390, $4380, $4290, $40c0 ; entry 0
-    dw $4370, $43c0, $42d0, $4910, $4910, $4910, $ffff
+    dw GlyphFont + $e0, GlyphFont + $390, GlyphFont + $240, GlyphFont + $2f0, GlyphFont + $380, GlyphFont + $370, GlyphFont + $280, GlyphFont + $b0 ; entry 0
+    dw GlyphFont + $360, GlyphFont + $3b0, GlyphFont + $2c0, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, $ffff
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -2071,7 +2071,7 @@ EggListGlyphTileDests::
 ; source. (C1, E-0372)
 ; record: bank-$1F tile sources
 EggListGlyphTileSources::
-    dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
+    dw GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff ; entry 0
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -7683,7 +7683,7 @@ NpcBreedMenu_YesNoGlyphDestList::
 ; E-0372)
 ; record: bank-$1F tile sources
 NpcBreedMenu_YesNoGlyphSrcList::
-    dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
+    dw GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff ; entry 0
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)

@@ -3807,10 +3807,10 @@ NamingScreenTileDestListB::
 ; low byte of $FF (E-0225)
 ; record: bank-$1F tile sources
 HibernateMenu_PartyGlyphSrcList::
-    dw $41d0, $4300, $4290, $4340, $4210, $4250, $42f0, $41c0 ; entry 0
-    dw $4370, $40f0, $43c0, $42d0, $4380, $4180, $4910, $4910
-    dw $4910, $4910, $4910, $4120, $4170, $41a0, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4a70, $4910, $ffff
+    dw GlyphFont + $1c0, GlyphFont + $2f0, GlyphFont + $280, GlyphFont + $330, GlyphFont + $200, GlyphFont + $240, GlyphFont + $2e0, GlyphFont + $1b0 ; entry 0
+    dw GlyphFont + $360, GlyphFont + $e0, GlyphFont + $3b0, GlyphFont + $2c0, GlyphFont + $370, GlyphFont + $170, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $110, GlyphFont + $160, GlyphFont + $190, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $a60, GlyphFont + $900, $ffff
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -3881,16 +3881,16 @@ HibernateMenu_ListGlyphDestList::
 ; (C1, E-0372)
 ; record: bank-$1F tile sources
 HibernateMenu_ListGlyphSrcList::
-    dw $4340, $4210, $4250, $42f0, $41c0, $4370, $40f0, $43c0 ; entry 0
-    dw $42d0, $ffff
+    dw GlyphFont + $330, GlyphFont + $200, GlyphFont + $240, GlyphFont + $2e0, GlyphFont + $1b0, GlyphFont + $360, GlyphFont + $e0, GlyphFont + $3b0 ; entry 0
+    dw GlyphFont + $2c0, $ffff
 
 HibernateMenu_ChooseRecords_TileCopyDestList::
     dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $700, vTiles1 + $710, vTiles1 + $720, vTiles1 + $730, vTiles1 + $740 ; entry 0
     dw vTiles1 + $4e0, vTiles1 + $4f0, rIE
 
 HibernateMenu_ChooseRecords_TileCopySrcList::
-    dw $41d0, $4300, $4290, $4910, $4910, $4910, $4910, $4910 ; entry 0
-    dw $4230, $4290, $ffff
+    dw GlyphFont + $1c0, GlyphFont + $2f0, GlyphFont + $280, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900 ; entry 0
+    dw GlyphFont + $220, GlyphFont + $280, $ffff
 
 ; VRAM destinations: seven words vTiles2 + $700 to vTiles2 + $760 (BG tile ids $70-$76, used by
 ; HibernateMenu_YesNoAgainTileRect), then rIE. Read by HibernateMenu_ChooseRecords_CopyListGlyphs2
@@ -3908,7 +3908,7 @@ HibernateMenu_YesNoGlyphDestList::
 ; $4150, then $FFFF (the same six words as GlyphCopySrcList3). (C1, E-0372)
 ; record: bank-$1F tile sources
 HibernateMenu_YesNoGlyphSrcList::
-    dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
+    dw GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff ; entry 0
 
 ; The name-entry screen: returns while wFadeState is non-zero, otherwise runs the state
 ; wNameEntryState: 0 RunNameEntryStateWhenNotFading_Setup, 1 _Keyboard, 2 _DrawMessageWindow, 3
@@ -6726,32 +6726,32 @@ NameEntryTileDestListEmpty::
 ; (RunNameEntryStateWhenNotFading_SwapGlyphsBack) (E-0224, C1)
 ; record: 80 bank-$1F tile sources (the last is $FFFF)
 NameEntryTileSrcListA::
-    dw $40b0, $40c0, $40d0, $40e0, $40f0, $4100, $4110, $4120 ; entry 0
-    dw $4130, $4140, $4150, $4160, $4170, $4010, $4020, $4030
-    dw $4040, $4180, $4190, $41a0, $41b0, $41c0, $41d0, $41e0
-    dw $41f0, $4200, $4210, $4220, $4230, $4240, $4050, $4060
-    dw $4070, $4080, $4250, $4260, $4270, $4280, $4290, $42a0
-    dw $42b0, $42c0, $42d0, $42e0, $42f0, $4300, $4310, $4090
-    dw $40a0, $49a0, $4990, $4320, $4330, $4340, $4350, $4360
-    dw $4370, $4380, $4390, $43a0, $43b0, $43c0, $43d0, $43e0
-    dw $40c0, $40b0, $40d0, $4150, $4960, $4ac0, $4b60, $4950
-    dw $4940, $4b00, $4a00, $4a00, $4a00, $4a00, $4a00, $ffff
+    dw GlyphFont + $a0, GlyphFont + $b0, GlyphFont + $c0, GlyphFont + $d0, GlyphFont + $e0, GlyphFont + $f0, GlyphFont + $100, GlyphFont + $110 ; entry 0
+    dw GlyphFont + $120, GlyphFont + $130, GlyphFont + $140, GlyphFont + $150, GlyphFont + $160, GlyphFont, GlyphFont + $10, GlyphFont + $20
+    dw GlyphFont + $30, GlyphFont + $170, GlyphFont + $180, GlyphFont + $190, GlyphFont + $1a0, GlyphFont + $1b0, GlyphFont + $1c0, GlyphFont + $1d0
+    dw GlyphFont + $1e0, GlyphFont + $1f0, GlyphFont + $200, GlyphFont + $210, GlyphFont + $220, GlyphFont + $230, GlyphFont + $40, GlyphFont + $50
+    dw GlyphFont + $60, GlyphFont + $70, GlyphFont + $240, GlyphFont + $250, GlyphFont + $260, GlyphFont + $270, GlyphFont + $280, GlyphFont + $290
+    dw GlyphFont + $2a0, GlyphFont + $2b0, GlyphFont + $2c0, GlyphFont + $2d0, GlyphFont + $2e0, GlyphFont + $2f0, GlyphFont + $300, GlyphFont + $80
+    dw GlyphFont + $90, GlyphFont + $990, GlyphFont + $980, GlyphFont + $310, GlyphFont + $320, GlyphFont + $330, GlyphFont + $340, GlyphFont + $350
+    dw GlyphFont + $360, GlyphFont + $370, GlyphFont + $380, GlyphFont + $390, GlyphFont + $3a0, GlyphFont + $3b0, GlyphFont + $3c0, GlyphFont + $3d0
+    dw GlyphFont + $b0, GlyphFont + $a0, GlyphFont + $c0, GlyphFont + $140, GlyphFont + $950, GlyphFont + $ab0, GlyphFont + $b50, GlyphFont + $940
+    dw GlyphFont + $930, GlyphFont + $af0, GlyphFont + $9f0, GlyphFont + $9f0, GlyphFont + $9f0, GlyphFont + $9f0, GlyphFont + $9f0, $ffff
 
 ; passed with the empty destination list by RunNameEntryStateWhenNotFading_SwapGlyphs; 82 words and
 ; $FFFF, then 16 bytes of $FF before NameEntryKeyboard (E-0224, C1)
 ; record: 82 bank-$1F tile sources, then $FFFF
 NameEntryTileSrcListB::
-    dw $4570, $4590, $45b0, $45d0, $45f0, $4610, $4620, $4630 ; entry 0
-    dw $4640, $4650, $4660, $4670, $4680, $4690, $46a0, $46b0
-    dw $46c0, $46d0, $46f0, $4700, $4710, $4720, $4730, $4740
-    dw $4750, $4020, $4030, $4040, $4050, $4060, $4760, $4770
-    dw $4780, $4790, $47a0, $47b0, $47c0, $47d0, $47e0, $47f0
-    dw $4800, $4820, $4840, $4860, $4870, $4880, $4890, $48a0
-    dw $48b0, $48c0, $48d0, $46e0, $49d0, $4070, $4080, $4090
-    dw $40a0, $4010, $4580, $45a0, $45c0, $45e0, $4600, $4810
-    dw $4830, $4850, $48e0, $48f0, $4400, $44f0, $42a0, $43a0
-    dw $4480, $4510, $4290, $4540, $4510, $4a00, $4a00, $4a00
-    dw $4a00, $4a00, $ffff
+    dw GlyphFont + $560, GlyphFont + $580, GlyphFont + $5a0, GlyphFont + $5c0, GlyphFont + $5e0, GlyphFont + $600, GlyphFont + $610, GlyphFont + $620 ; entry 0
+    dw GlyphFont + $630, GlyphFont + $640, GlyphFont + $650, GlyphFont + $660, GlyphFont + $670, GlyphFont + $680, GlyphFont + $690, GlyphFont + $6a0
+    dw GlyphFont + $6b0, GlyphFont + $6c0, GlyphFont + $6e0, GlyphFont + $6f0, GlyphFont + $700, GlyphFont + $710, GlyphFont + $720, GlyphFont + $730
+    dw GlyphFont + $740, GlyphFont + $10, GlyphFont + $20, GlyphFont + $30, GlyphFont + $40, GlyphFont + $50, GlyphFont + $750, GlyphFont + $760
+    dw GlyphFont + $770, GlyphFont + $780, GlyphFont + $790, GlyphFont + $7a0, GlyphFont + $7b0, GlyphFont + $7c0, GlyphFont + $7d0, GlyphFont + $7e0
+    dw GlyphFont + $7f0, GlyphFont + $810, GlyphFont + $830, GlyphFont + $850, GlyphFont + $860, GlyphFont + $870, GlyphFont + $880, GlyphFont + $890
+    dw GlyphFont + $8a0, GlyphFont + $8b0, GlyphFont + $8c0, GlyphFont + $6d0, GlyphFont + $9c0, GlyphFont + $60, GlyphFont + $70, GlyphFont + $80
+    dw GlyphFont + $90, GlyphFont, GlyphFont + $570, GlyphFont + $590, GlyphFont + $5b0, GlyphFont + $5d0, GlyphFont + $5f0, GlyphFont + $800
+    dw GlyphFont + $820, GlyphFont + $840, GlyphFont + $8d0, GlyphFont + $8e0, GlyphFont + $3f0, GlyphFont + $4e0, GlyphFont + $290, GlyphFont + $390
+    dw GlyphFont + $470, GlyphFont + $500, GlyphFont + $280, GlyphFont + $530, GlyphFont + $500, GlyphFont + $9f0, GlyphFont + $9f0, GlyphFont + $9f0
+    dw GlyphFont + $9f0, GlyphFont + $9f0, $ffff
     db $ff, $00, $ff, $ff, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; end
 
 ; RunNameEntryStateWhenNotFading_TypeKey reads the byte at $6F4E + 17 * wNameEntryCursorY +

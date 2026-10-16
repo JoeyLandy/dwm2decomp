@@ -63,10 +63,10 @@ LoadMapObjectsForScreen::
     ld h, $00
     add hl, hl
     ld a, l
-    add $74
+    add LOW(MapObjectTable)
     ld l, a
     ld a, h
-    adc $41
+    adc HIGH(MapObjectTable)
     ld h, a
     ld a, [hli]
     ld e, a

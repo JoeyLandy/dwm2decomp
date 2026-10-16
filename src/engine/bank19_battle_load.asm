@@ -1458,10 +1458,10 @@ GameMode4_Init_BuildFoeRecord::
     ld a, [wSpeciesIdHi]
     ld h, a
     ld a, l
-    add $1c
+    add LOW(SpeciesNewRecordByteTable)
     ld l, a
     ld a, h
-    adc $74
+    adc HIGH(SpeciesNewRecordByteTable)
     ld h, a
     ld a, [hl]
     pop hl
@@ -3005,10 +3005,10 @@ LoadExpTableEntryToTemp2::
     add hl, bc
     add hl, bc
     ld a, l
-    add $60
+    add LOW(ExpTable)
     ld l, a
     ld a, h
-    adc $4e
+    adc HIGH(ExpTable)
     ld h, a
     ld a, [hli]
     ldh [hTemp2], a
@@ -3050,10 +3050,10 @@ LoadTableEntryForRecordBufASpeciesToRecordBufAExp::
     add hl, bc
     add hl, bc
     ld a, l
-    add $60
+    add LOW(ExpTable)
     ld l, a
     ld a, h
-    adc $4e
+    adc HIGH(ExpTable)
     ld h, a
     ld de, wRecordBufA + MON_EXP
     ld a, [hli]
@@ -3096,10 +3096,10 @@ LoadTableEntryForRecordBufBSpeciesToRecordBufBExp::
     add hl, bc
     add hl, bc
     ld a, l
-    add $60
+    add LOW(ExpTable)
     ld l, a
     ld a, h
-    adc $4e
+    adc HIGH(ExpTable)
     ld h, a
     ld de, wRecordBufB + MON_EXP
     ld a, [hli]

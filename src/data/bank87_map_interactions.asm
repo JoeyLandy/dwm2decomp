@@ -32,10 +32,10 @@ FieldState_WalkATalks_RunStepTriggers::
     ld h, $00
     add hl, hl
     ld a, l
-    add $a0
+    add LOW(MapStepTriggerTable)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(MapStepTriggerTable)
     ld h, a
     ld a, [hli]
     ld e, a
@@ -644,10 +644,10 @@ CheckMapInteractionOnA::
     ld h, $00
     add hl, hl
     ld a, l
-    add $39
+    add LOW(MapInteractionTable)
     ld l, a
     ld a, h
-    adc $45
+    adc HIGH(MapInteractionTable)
     ld h, a
     ld a, [hli]
     ld e, a

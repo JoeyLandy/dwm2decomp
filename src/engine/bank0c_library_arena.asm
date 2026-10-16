@@ -602,15 +602,15 @@ LibraryMenu_LeaveRestoreScreen::
 ; Library, state 8 (leaving): reloads the name and party tiles, clears the library's state and puts
 ; the player's name in the text buffer for the closing message. (C1, E-0357)
 LibraryMenu_LeaveReloadNames::
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     ld de, vTiles1 + $500
     call CopyTileBytesToVRAM_Bank0C
     call LibraryMenu_LeaveReloadNames_BlankFourTiles
     call LibraryMenu_LeaveReloadNames_BlankFourTiles
     call LibraryMenu_LeaveReloadNames_BlankFourTiles
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank0C
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank0C
     farcall DrawRecordListNameTiles_Bank1D
     farcall LoadTilesForPartyRecords
@@ -641,15 +641,15 @@ LibraryMenu_LeaveReloadNames::
     ld [wScriptStartRequest], a
     ret
 
-; Clears four tiles of the name area (the blank pattern at $2940). (C1, E-0357)
+; Clears four tiles of the name area (the blank pattern at SolidColor1Tile). (C1, E-0357)
 LibraryMenu_LeaveReloadNames_BlankFourTiles::
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank0C
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank0C
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank0C
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank0C
     ret
 

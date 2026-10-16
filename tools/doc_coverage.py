@@ -36,7 +36,7 @@ def scan(path: Path):
             comment.insert(0, lines[j])
             j -= 1
         first = next((x for x in lines[i + 1:i + 6] if x.strip() and not x.startswith(";")
-                      and not re.match(r"^\.?\w+:", x)), "")
+                      and not re.match(r"^\.?\w+:", x) and not x.strip().startswith("ASSERT")), "")  # E-0389
         kind = "data" if DATA_FIRST.match(first) else "code"
         text_body = kind == "data" and re.match(r'^\s+db "', first) is not None
         yield m.group(1), kind, " ".join(comment), i + 1, text_body

@@ -798,10 +798,10 @@ TickRandomEncounterCounter::
     sla l
     rl h
     ld a, l
-    add $fe
+    add LOW(EncounterRateTable)
     ld l, a
     ld a, h
-    adc $44
+    adc HIGH(EncounterRateTable)
     ld h, a
     ld a, [hli]
     or a
@@ -1209,10 +1209,10 @@ StartScriptedEncounterTemp0::
     sla l
     rl h
     ld a, l
-    add $1c
+    add LOW(ScriptedEncounterTable)
     ld l, a
     ld a, h
-    adc $48
+    adc HIGH(ScriptedEncounterTable)
     ld h, a
     ld a, [hli]
     ld [wEncounterKind], a

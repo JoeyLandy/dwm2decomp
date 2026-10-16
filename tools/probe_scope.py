@@ -51,6 +51,8 @@ def routines(listing: Path = ROOT / "build/listing") -> dict[str, dict]:
             if not code.strip():
                 continue
             op = code.split()[0]
+            if op == "ASSERT":  # E-0389: a link-time check, not an instruction
+                continue
             if op in ("db", "dw", "INCBIN", "ds", "DS", "dfar") and cur["insns"] == 0:
                 cur["data"] = True
             if cur["data"]:

@@ -43,10 +43,10 @@ CopyMonsterTableBytesFromMonsterTable::
     ld a, $1a
     call Multiply8By16
     ld a, l
-    add $75
+    add LOW(MonsterTable)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(MonsterTable)
     ld h, a
     pop bc
     ld b, $00
@@ -81,10 +81,10 @@ LoadMonsterRecordTo::
     ld a, $1a
     call Multiply8By16
     ld a, l
-    add $75
+    add LOW(MonsterTable)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(MonsterTable)
     ld h, a
     pop de
     ld b, $1a

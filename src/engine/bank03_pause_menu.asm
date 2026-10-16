@@ -9278,7 +9278,7 @@ TacticsGlyphTileDests::
 ; E-0372)
 ; record: bank-$1F tile sources
 TacticsGlyphTileSources::
-    dw $40e0, $4370, $42b0, $42d0, $4310, $42c0, $43b0, $ffff ; entry 0
+    dw GlyphFont + $d0, GlyphFont + $360, GlyphFont + $2a0, GlyphFont + $2c0, GlyphFont + $300, GlyphFont + $2b0, GlyphFont + $3a0, $ffff ; entry 0
 
 ; HL = list of destination words, DE = list of source words in bank $1F: for entries 0, 1, ...
 ; copies 16 bytes from the source to the destination with CopyFromBankWaitVRAM, stopping at the

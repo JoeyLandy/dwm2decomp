@@ -591,10 +591,10 @@ LoadMapHeaderByMapType_Type1::
 
 .skip:
     ld a, e
-    add $05
+    add LOW(TownObjectSpotGrid0)
     ld e, a
     ld a, d
-    adc $67
+    adc HIGH(TownObjectSpotGrid0)
     ld d, a
     ld a, [de]
     ld l, a
@@ -662,10 +662,10 @@ LoadKeyWorldTilesetAndHeader::
     ld l, a
     ld h, $00
     ld a, l
-    add $28
+    add LOW(KeyWorldTilesetTable)
     ld l, a
     ld a, h
-    adc $57
+    adc HIGH(KeyWorldTilesetTable)
     ld h, a
     ld a, [hli]
     ld e, a
@@ -1271,10 +1271,10 @@ LookupKeyWorldScreenSpotRecordsNibblePairForTemp0::
     add a
     add_a_to_hl
     ld a, l
-    add $18
+    add LOW(KeyWorldScreenSpotRecords)
     ld l, a
     ld a, h
-    adc $48
+    adc HIGH(KeyWorldScreenSpotRecords)
     ld h, a
     ld a, [hli]
     swap a
@@ -3307,10 +3307,10 @@ CheckWarpsByMapType_FloorEntrances::
     sla e
     rl d
     ld a, e
-    add $d8
+    add LOW(SpecialMapTable)
     ld e, a
     ld a, d
-    adc $60
+    adc HIGH(SpecialMapTable)
     ld d, a
     ld b, $61
     call ReadByteInBank

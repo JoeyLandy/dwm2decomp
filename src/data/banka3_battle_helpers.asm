@@ -731,10 +731,10 @@ FormationCompatibilityRoll::
     pop af
     add_a_to_hl
     ld a, l
-    add $b7
+    add LOW(PersonalityCompatibility)
     ld l, a
     ld a, h
-    adc $45
+    adc HIGH(PersonalityCompatibility)
     ld h, a
     ld a, [hl]
     inc a
@@ -767,10 +767,10 @@ FormationCompatibilityRoll::
     pop af
     add_a_to_hl
     ld a, l
-    add $b7
+    add LOW(PersonalityCompatibility)
     ld l, a
     ld a, h
-    adc $45
+    adc HIGH(PersonalityCompatibility)
     ld h, a
     ld a, [hl]
     inc a
@@ -803,10 +803,10 @@ FormationCompatibilityRoll::
     pop af
     add_a_to_hl
     ld a, l
-    add $b7
+    add LOW(PersonalityCompatibility)
     ld l, a
     ld a, h
-    adc $45
+    adc HIGH(PersonalityCompatibility)
     ld h, a
     ld a, [hl]
     inc a

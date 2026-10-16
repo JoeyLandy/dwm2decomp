@@ -7211,18 +7211,18 @@ CloseBreedMenu_RestoreGlyphs_TileCopyDestList::
 
 ; record: bank-$1F tile sources
 DrawPairAndStep_2_TileCopySrcList::
-    dw $40c0, $4360, $4280, $4120, $4250, $4380, $4270, $42c0 ; entry 0
-    dw $40f0, $43c0, $42d0, $4290, $4910, $ffff
+    dw GlyphFont + $b0, GlyphFont + $350, GlyphFont + $270, GlyphFont + $110, GlyphFont + $240, GlyphFont + $370, GlyphFont + $260, GlyphFont + $2b0 ; entry 0
+    dw GlyphFont + $e0, GlyphFont + $3b0, GlyphFont + $2c0, GlyphFont + $280, GlyphFont + $900, $ffff
 
 BreedMenu_ChooseParents_AskYesNo_TileCopyDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 BreedMenu_ChooseParents_AskYesNo_TileCopySrcList::
-    dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
+    dw GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff ; entry 0
 
 CloseBreedMenu_RestoreGlyphs_TileCopySrcList::
-    dw $4130, $4180, $4100, $4190, $41e0, $40f0, $41d0, $4150 ; entry 0
-    dw $4160, $41a0, $40b0, $4910, $4910, $ffff
+    dw GlyphFont + $120, GlyphFont + $170, GlyphFont + $f0, GlyphFont + $180, GlyphFont + $1d0, GlyphFont + $e0, GlyphFont + $1c0, GlyphFont + $140 ; entry 0
+    dw GlyphFont + $150, GlyphFont + $190, GlyphFont + $a0, GlyphFont + $900, GlyphFont + $900, $ffff
 
 BreedMenu_CopyParentListGlyphs_Data::
     db $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0, $8c, $b0, $8c

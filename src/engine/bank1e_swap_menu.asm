@@ -6644,25 +6644,25 @@ DrawRecordParentNames_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
 ; HL = address of a byte holding the record number, SRAM enabled: first overwrites the five tiles at
-; vTiles2 + $290 with the 16-byte tile pattern at $2940 (five CopyTileBytesToVRAM_Bank1E calls),
-; then copies MON_MASTER_NAME of the record to wNameGlyphBuf, ends it with $F0 and draws its glyphs
-; at vTiles2 + $290 with CopyGlyphTilesToVRAM. Step 18 of the stats screens
+; vTiles2 + $290 with the 16-byte tile pattern at SolidColor1Tile (five CopyTileBytesToVRAM_Bank1E
+; calls), then copies MON_MASTER_NAME of the record to wNameGlyphBuf, ends it with $F0 and draws its
+; glyphs at vTiles2 + $290 with CopyGlyphTilesToVRAM. Step 18 of the stats screens
 ; (SwapMonstersMenu_ShowMonsterDetails_Personality) calls it after the personality name. (C1,
 ; E-0379)
-; clears five tiles at vTiles2 + $290 (copying the tile at $2940), then copies the name at record
-; [HL] field $0F (CopyRecordNameToNameGlyphBuf) and draws it there (E-0120)
+; clears five tiles at vTiles2 + $290 (copying the tile at SolidColor1Tile), then copies the name at
+; record [HL] field $0F (CopyRecordNameToNameGlyphBuf) and draws it there (E-0120)
 DrawRecordMasterNameTiles::
     push hl
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     ld de, vTiles2 + $290
     call CopyTileBytesToVRAM_Bank1E
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank1E
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank1E
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank1E
-    ld hl, $2940
+    ld hl, SolidColor1Tile
     call CopyTileBytesToVRAM_Bank1E
     pop hl
     ld a, [hl]
@@ -8473,10 +8473,10 @@ GlyphCopyDestList0::
 ; the source list paired with GlyphCopyDestList0; its own $FFFF is not read (E-0200, C1)
 ; record: 32 source addresses in bank $1F, then $FFFF (not read)
 GlyphCopySrcList0::
-    dw $41c0, $42d0, $4330, $4340, $42a0, $40e0, $4270, $42f0 ; entry 0
-    dw $4390, $40d0, $42c0, $4360, $4300, $4250, $40f0, $43c0
-    dw $4380, $4180, $41a0, $4120, $4170, $41a0, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4a40
+    dw GlyphFont + $1b0, GlyphFont + $2c0, GlyphFont + $320, GlyphFont + $330, GlyphFont + $290, GlyphFont + $d0, GlyphFont + $260, GlyphFont + $2e0 ; entry 0
+    dw GlyphFont + $380, GlyphFont + $c0, GlyphFont + $2b0, GlyphFont + $350, GlyphFont + $2f0, GlyphFont + $240, GlyphFont + $e0, GlyphFont + $3b0
+    dw GlyphFont + $370, GlyphFont + $170, GlyphFont + $190, GlyphFont + $110, GlyphFont + $160, GlyphFont + $190, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $a30
     dw $ffff
 
 ; passed in HL, with GlyphCopySrcList1 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16
@@ -8489,8 +8489,8 @@ GlyphCopyDestList1::
 ; the source list paired with GlyphCopyDestList1; its own $FFFF is not read (E-0200, C1)
 ; record: 9 source addresses in bank $1F, then $FFFF (not read)
 GlyphCopySrcList1::
-    dw $4340, $42a0, $40e0, $4270, $42f0, $4390, $40d0, $42c0 ; entry 0
-    dw $4360, $ffff
+    dw GlyphFont + $330, GlyphFont + $290, GlyphFont + $d0, GlyphFont + $260, GlyphFont + $2e0, GlyphFont + $380, GlyphFont + $c0, GlyphFont + $2b0 ; entry 0
+    dw GlyphFont + $350, $ffff
 
 ; passed in HL, with GlyphCopySrcList2 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16
 ; bytes from bank $1F at each source to each destination until a destination of $FFFF (E-0200, C1)
@@ -8502,8 +8502,8 @@ GlyphCopyDestList2::
 ; the source list paired with GlyphCopyDestList2; its own $FFFF is not read (E-0200, C1)
 ; record: 10 source addresses in bank $1F, then $FFFF (not read)
 GlyphCopySrcList2::
-    dw $41c0, $42d0, $4330, $40f0, $43c0, $4380, $4180, $41a0 ; entry 0
-    dw $4230, $4290, $ffff
+    dw GlyphFont + $1b0, GlyphFont + $2c0, GlyphFont + $320, GlyphFont + $e0, GlyphFont + $3b0, GlyphFont + $370, GlyphFont + $170, GlyphFont + $190 ; entry 0
+    dw GlyphFont + $220, GlyphFont + $280, $ffff
 
 ; passed in HL, with GlyphCopySrcList3 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16
 ; bytes from bank $1F at each source to each destination until a destination of $FFFF (E-0200, C1)
@@ -8514,7 +8514,7 @@ GlyphCopyDestList3::
 ; the source list paired with GlyphCopyDestList3; its own $FFFF is not read (E-0200, C1)
 ; record: 6 source addresses in bank $1F, then $FFFF (not read)
 GlyphCopySrcList3::
-    dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
+    dw GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff ; entry 0
 
 ; StoreBAtWordTableEntry_Bank1E writes a tile at entry wListCursor of $7880 (cursor blanking);
 ; entries from 5 on are SwapMenuCursorCellsFrom5, the table at $788A; E-0345: were
@@ -8551,17 +8551,17 @@ GlyphCopyDestList4::
 ; the source list paired with GlyphCopyDestList4; its own $FFFF is not read (E-0200, C1)
 ; record: 32 source addresses in bank $1F, then $FFFF (not read)
 GlyphCopySrcList4::
-    dw $40b0, $41e0, $4150, $40e0, $40f0, $4100, $4110, $4160 ; entry 0
-    dw $4130, $4180, $4210, $4170, $4290, $43c0, $4380, $43a0
-    dw $4300, $40c0, $4250, $4370, $4910, $4910, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4a30, $4910, $4ad0, $4a70
+    dw GlyphFont + $a0, GlyphFont + $1d0, GlyphFont + $140, GlyphFont + $d0, GlyphFont + $e0, GlyphFont + $f0, GlyphFont + $100, GlyphFont + $150 ; entry 0
+    dw GlyphFont + $120, GlyphFont + $170, GlyphFont + $200, GlyphFont + $160, GlyphFont + $280, GlyphFont + $3b0, GlyphFont + $370, GlyphFont + $390
+    dw GlyphFont + $2f0, GlyphFont + $b0, GlyphFont + $240, GlyphFont + $360, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $a20, GlyphFont + $900, GlyphFont + $ac0, GlyphFont + $a60
     dw $ffff
 
 ; the source list paired with GlyphCopyDestList5; its own $FFFF is not read (E-0200, C1)
 ; record: 15 source addresses in bank $1F, then $FFFF (not read)
 GlyphCopySrcList5::
-    dw $4170, $4330, $4320, $4380, $4370, $4290, $4360, $40f0 ; entry 0
-    dw $42b0, $4130, $4320, $42a0, $4330, $4190, $4150, $ffff
+    dw GlyphFont + $160, GlyphFont + $320, GlyphFont + $310, GlyphFont + $370, GlyphFont + $360, GlyphFont + $280, GlyphFont + $350, GlyphFont + $e0 ; entry 0
+    dw GlyphFont + $2a0, GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff
 
 ; passed in HL, with GlyphCopySrcList5 in DE, to SwapMonstersMenu_CopyGlyphTiles, which copies 16
 ; bytes from bank $1F at each source to each destination until a destination of $FFFF (E-0200, C1)

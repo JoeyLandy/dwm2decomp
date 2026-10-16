@@ -5228,21 +5228,21 @@ ShopMenu_Setup_LoadTiles_TileCopyDestList::
 
 ; record: bank-$1F tile sources
 ShopMenu_Setup_LoadTiles_TileCopySrcList::
-    dw $40c0, $4390, $43d0, $41d0, $4330, $4300, $4910, $4910 ; entry 0
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $43c0, $42d0
-    dw $4380, $41b0, $4a40, $4910, $4910, $4910, $4910, $4a00
+    dw GlyphFont + $b0, GlyphFont + $380, GlyphFont + $3c0, GlyphFont + $1c0, GlyphFont + $320, GlyphFont + $2f0, GlyphFont + $900, GlyphFont + $900 ; entry 0
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $3b0, GlyphFont + $2c0
+    dw GlyphFont + $370, GlyphFont + $1a0, GlyphFont + $a30, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $9f0
     dw $ffff
 
 VaultMenu_Setup_LoadTiles_TileCopySrcList::
-    dw $4210, $42d0, $43d0, $42c0, $4280, $4360, $4910, $4910 ; entry 0
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
-    dw $4910, $4910, $4910, $4910, $4910, $4910, $4250, $43b0
-    dw $4380, $41b0, $4a40, $4910, $4910, $4910, $4910, $4a00
+    dw GlyphFont + $200, GlyphFont + $2c0, GlyphFont + $3c0, GlyphFont + $2b0, GlyphFont + $270, GlyphFont + $350, GlyphFont + $900, GlyphFont + $900 ; entry 0
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900
+    dw GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $240, GlyphFont + $3a0
+    dw GlyphFont + $370, GlyphFont + $1a0, GlyphFont + $a30, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $900, GlyphFont + $9f0
     dw $ffff
 
 ShopMenu_Buy_WriteWindowMap_Data::

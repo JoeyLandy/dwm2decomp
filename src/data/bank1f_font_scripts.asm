@@ -9,6 +9,7 @@ SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
 ; the character code; 259 glyphs up to SendSGBPacketSet at $5040 (E-0169, C1)
 ; record: glyph tile (2bpp, 16 bytes)
 GlyphFont::
+    ASSERT (GlyphFont & 1) == 0, "DrawTextGlyph steps a glyph's 2-byte rows with inc e (E-0388): rows must not cross a 256-byte page"
     db $ff, $7c, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $7c, $ff, $00 ; id 0 '0'
     db $ff, $10, $ff, $30, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $7c, $ff, $00 ; id 1 '1'
     db $ff, $7c, $ff, $82, $ff, $02, $ff, $0c, $ff, $30, $ff, $40, $ff, $fe, $ff, $00 ; id 2 '2'

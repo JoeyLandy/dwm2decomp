@@ -150,8 +150,7 @@ def locate(base: bytes, rom: bytes, bank: int, start: int, pad: int, frames: int
     from sm83 import GameBoy
 
     def moved(rb: int, a: int) -> int:
-        b = 0 if a < 0x4000 else rb
-        return a + pad if b == bank and a >= start and a < 0x8000 else a
+        return a + pad if a < 0x8000 and rom_place(rb, a) >= (bank, start) and rom_place(rb, a)[0] == bank else a
 
     def traced(gb) -> list:
         reads = []
@@ -159,7 +158,7 @@ def locate(base: bytes, rom: bytes, bank: int, start: int, pad: int, frames: int
 
         def rb(a: int) -> int:
             if a < 0x8000:
-                reads.append((0 if a < 0x4000 else gb.rombank, a))
+                reads.append((gb.rombank, a))
             return orig(a)
         gb.rb = rb
         return reads
@@ -177,10 +176,53 @@ def locate(base: bytes, rom: bytes, bank: int, start: int, pad: int, frames: int
         ga.run(1)
         gb_.run(1)
         if moved(*pa) != pb or [moved(*r) for r in ra] != [r[1] for r in rb_]:
-            return {"instruction": n, "frame": frame, "base_pc": f"{pa[0]:02X}:{pa[1]:04X}",
+            kind = "read" if moved(*pa) == pb else "control flow"  # a split can be a benign carry (E-0389)
+            return {"kind": kind, "instruction": n, "frame": frame, "base_pc": f"{pa[0]:02X}:{pa[1]:04X}",
                     "padded_pc": f"{pa[0]:02X}:{pb:04X}", "base_reads": [f"{b:02X}:{a:04X}" for b, a in ra],
                     "padded_reads": [f"{b:02X}:{a:04X}" for b, a in rb_]}
     return None
+
+
+def rom_place(rombank: int, a: int) -> tuple[int, int]:
+    """(bank, address in that bank's own space) of a CPU read below $8000: bank $00 at $0000-$3FFF, also when the
+    MBC selects bank 0 into the switchable window (SoundTick reads $4000 that way: ROM byte $0000)."""
+    if a < 0x4000:
+        return 0, a
+    return (0, a - 0x4000) if rombank == 0 else (rombank, a)
+
+
+def data_reads(rom: bytes, starts: dict[int, int], pad: int, frames: int, mapit: bool) -> list[tuple[int, int, int]]:
+    """Every ROM data read (opcode and operand fetches left out) as (bank, address, PC) over `frames` frames; with
+    mapit, addresses in each padded bank from its start (`starts`: bank -> address) on are moved by `pad`, as the
+    padded ROM should read them. Unlike the
+    frame comparison this does not depend on timing: an address whose low byte moved can make code take a few
+    cycles more (an `add a, l` that now carries), which moves later events across frame boundaries, but the order
+    of reads stays the same unless something reads an address the padding did not move (E-0389)."""
+    from sm83 import GameBoy
+    gb = GameBoy(rom)
+    out = []
+    orig = gb.rb
+
+    def rb(a: int) -> int:
+        if a < 0x8000 and not gb.cur_pc <= a < gb.cur_pc + 3:
+            b, ia = rom_place(gb.rombank, a)
+            out.append((b, a + pad if mapit and b in starts and ia >= starts[b] else a, gb.cur_pc))
+        return orig(a)
+    gb.rb = rb
+    while gb.cycles // 70224 < frames:
+        gb.joy = buttons(gb.cycles // 70224)
+        try:
+            gb.run(1)
+        except RuntimeError:
+            break
+    return out
+
+
+def first_read_difference(a: list, b: list) -> int | None:
+    for i, (x, y) in enumerate(zip(a, b)):
+        if x[:2] != y[:2]:
+            return i
+    return None if len(a) == len(b) else min(len(a), len(b))
 
 
 def label_of(sym: dict[str, tuple[int, int]], bank: int, addr: int) -> str:
@@ -190,11 +232,28 @@ def label_of(sym: dict[str, tuple[int, int]], bank: int, addr: int) -> str:
     return f"{best[1]}+${addr - best[0]:X}" if best else f"{bank:02X}:{addr:04X}"
 
 
-def first_difference(a: list[str], b: list[str]) -> int | None:
+PERSIST = 8  # --persist: frames a difference must last to count
+
+
+def first_difference(a: list[str], b: list[str], persist: int = 1) -> int | None:
+    """The first frame from which the two runs differ for `persist` frames in a row (or to the end of the shorter
+    run). Shorter differences are timing: an address whose low byte moved can make `add a, l` carry where it did
+    not, a few cycles more, and a palette upload then lands one frame boundary later (E-0389). A run that stopped
+    early differs from where it stopped."""
+    run = 0
     for i, (x, y) in enumerate(zip(a, b)):
-        if x != y:
-            return i
-    return None if len(a) == len(b) else min(len(a), len(b))
+        run = run + 1 if x != y else 0
+        if run >= persist:
+            return i - persist + 1
+    n = min(len(a), len(b))
+    if len(a) != len(b):
+        return n - run if run else n
+    return None
+
+
+def transient_frames(a: list[str], b: list[str]) -> int:
+    """Frames that differ, counted whether or not the difference lasts."""
+    return sum(1 for x, y in zip(a, b) if x != y)
 
 
 def padded_rom(out: Path, pristine: Path, files: dict[int, Path], sym: dict, banks: list[int], pad: int, tag: str
@@ -226,11 +285,14 @@ def main(argv: list[str] | None = None) -> int:
                     help="when the frames differ, find up to K banks whose padding alone makes them differ")
     ap.add_argument("--locate", metavar="BB", help="pad only bank BB and report the first instruction that "
                     "reads or jumps to an address the padding did not move with it")
+    ap.add_argument("--reads", metavar="BB", help="pad only bank BB (or all) and compare the order of ROM data "
+                    "reads, which timing does not change, instead of the frames")
     ap.add_argument("--explore", action="store_true", help="from frame 4000 walk, talk and open menus")
+    ap.add_argument("--persist", type=int, default=8, help="frames a difference must last to count (default 8)")
     ap.add_argument("--out", default="build/shift")
     args = ap.parse_args(argv)
-    global EXPLORE
-    EXPLORE = args.explore
+    global EXPLORE, PERSIST
+    EXPLORE, PERSIST = args.explore, max(1, args.persist)
     out = (ROOT / args.out).resolve()
     if (ROOT / "build").resolve() not in out.parents:
         sys.exit("output dir must be beneath build/")
@@ -248,8 +310,8 @@ def main(argv: list[str] | None = None) -> int:
     sym = read_sym(out / "base/dwm2.sym")
     files = bank_files(pristine)
     chosen = sorted(files) if args.banks == "all" else [int(b, 16) for b in args.banks.split(",")]
-    if args.locate:
-        chosen = [int(args.locate, 16)]
+    if args.locate or (args.reads and args.reads != "all"):
+        chosen = [int(args.locate or args.reads, 16)]
     for b in chosen:
         if b not in files:
             sys.exit(f"no bank file for bank ${b:02X}")
@@ -262,7 +324,25 @@ def main(argv: list[str] | None = None) -> int:
         report["labels_moved"] = sum(1 for k, v in sym.items() if moved.get(k) != v)
         report["frames"] = args.frames
         ha = frame_hashes(base, args.frames)
-        report["first_differing_frame"] = first_difference(ha, frame_hashes(rom, args.frames))
+        if args.reads:
+            starts = {int(b, 16): sym[label][1] for b, label in padded.items()}
+            ra = data_reads(base, starts, args.pad, args.frames, True)
+            rp = data_reads(rom, starts, args.pad, args.frames, False)
+            i = first_read_difference(ra, rp)
+            report["data_reads"] = len(ra)
+            report["first_differing_read"] = None if i is None else {
+                "index": i, "base": f"{ra[i][0]:02X}:{ra[i][1]:04X}" if i < len(ra) else None,
+                "padded": f"{rp[i][0]:02X}:{rp[i][1]:04X}" if i < len(rp) else None,
+                "routine": label_of(sym, ra[i][0], ra[i][2]) if i < len(ra) else None}
+            ok = report["first_differing_read"] is None
+            (out / "report.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
+            print(json.dumps({k: report[k] for k in ("pad", "data_reads", "first_differing_read")}, indent=1))
+            print(f"{'PASS' if ok else 'FAIL'}: data reads with {len(padded)} banks padded by {args.pad}")
+            return 0 if ok else 1
+        hb = frame_hashes(rom, args.frames)
+        report["persist"] = PERSIST
+        report["first_differing_frame"] = first_difference(ha, hb, PERSIST)
+        report["differing_frames"] = transient_frames(ha, hb)
         if args.locate and padded:
             b = chosen[0]
             start = sym[padded[f"{b:02X}"]][1]
@@ -291,7 +371,7 @@ def bisect(out: Path, pristine: Path, files: dict, sym: dict, banks: list[int], 
         rom, _p, _s, _log = padded_rom(out, pristine, files, sym, bs, args.pad, "trial")
         if rom is None:
             return -1  # does not assemble
-        return first_difference(ha, frame_hashes(rom, args.frames))
+        return first_difference(ha, frame_hashes(rom, args.frames), PERSIST)
 
     found, rest = [], list(banks)
     while rest and len(found) < args.bisect:

@@ -4261,20 +4261,20 @@ LinkRecordScreen_CopyGlyphTiles_TileCopyDestList::
 
 ; record: bank-$1F tile sources
 LinkRecordScreen_CopyGlyphTiles_TileCopySrcList::
-    dw $42d0, $42b0, $4300, $44c0, $4400, $4ab0, $4310, $43f0 ; entry 0
-    dw $42e0, $42f0, $42a0, $4320, $4260, $4390, $47b0, $4680
-    dw $46b0, $49d0, $42b0, $43e0, $4890, $4790, $4880, $4440
-    dw $4380, $4500, $44e0, $42c0, $4a30, $4270, $4ad0, $ffff
+    dw GlyphFont + $2c0, GlyphFont + $2a0, GlyphFont + $2f0, GlyphFont + $4b0, GlyphFont + $3f0, GlyphFont + $aa0, GlyphFont + $300, GlyphFont + $3e0 ; entry 0
+    dw GlyphFont + $2d0, GlyphFont + $2e0, GlyphFont + $290, GlyphFont + $310, GlyphFont + $250, GlyphFont + $380, GlyphFont + $7a0, GlyphFont + $670
+    dw GlyphFont + $6a0, GlyphFont + $9c0, GlyphFont + $2a0, GlyphFont + $3d0, GlyphFont + $880, GlyphFont + $780, GlyphFont + $870, GlyphFont + $430
+    dw GlyphFont + $370, GlyphFont + $4f0, GlyphFont + $4d0, GlyphFont + $2b0, GlyphFont + $a20, GlyphFont + $260, GlyphFont + $ac0, $ffff
 
 LinkRecordScreen_CopyGlyphs_TileCopyDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 LinkRecordScreen_CopyGlyphs_TileCopySrcList::
-    dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
+    dw GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff ; entry 0
 
 LinkRecordScreen_ShowInfoOK_TileCopySrcList::
-    dw $4440, $4480, $43e0, $42e0, $46b0, $47b0, $4650, $4400 ; entry 0
-    dw $42b0, $4130, $4320, $42a0, $4330, $4190, $4150, $ffff
+    dw GlyphFont + $430, GlyphFont + $470, GlyphFont + $3d0, GlyphFont + $2d0, GlyphFont + $6a0, GlyphFont + $7a0, GlyphFont + $640, GlyphFont + $3f0 ; entry 0
+    dw GlyphFont + $2a0, GlyphFont + $120, GlyphFont + $310, GlyphFont + $290, GlyphFont + $320, GlyphFont + $180, GlyphFont + $140, $ffff
 
 LinkRecordScreen_ShowInfoOK_TileCopyDestList::
     dw vTiles2 + $7c0, vTiles2 + $7d0, vTiles2 + $7e0, vTiles2 + $7f0, vTiles1 + $5f0, vTiles1 + $7e0, vTiles1 + $7f0, vTiles2 + $770 ; entry 0

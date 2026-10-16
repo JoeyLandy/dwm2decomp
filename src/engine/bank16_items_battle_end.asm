@@ -15,10 +15,10 @@ LoadItemRecord::
     ld c, $0d
     call Multiply8
     ld a, l
-    add $c2
+    add LOW(ItemTable)
     ld l, a
     ld a, h
-    adc $4c
+    adc HIGH(ItemTable)
     ld h, a
     pop de
     ld b, $0d
@@ -8305,10 +8305,10 @@ BattleMonsterTableAtLeast6::
     pop af
     ld l, a
     ld a, l
-    add $ac
+    add LOW(MonsterClassByteTable_1)
     ld l, a
     ld a, h
-    adc $71
+    adc HIGH(MonsterClassByteTable_1)
     ld h, a
     ld a, [hl]
     cp $06

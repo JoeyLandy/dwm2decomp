@@ -3663,10 +3663,10 @@ AppendSpeciesToLinkCodeByteForWordAtDE::
     ld h, a
     inc de
     ld a, l
-    add $75
+    add LOW(SpeciesToLinkCodeTable)
     ld l, a
     ld a, h
-    adc $61
+    adc HIGH(SpeciesToLinkCodeTable)
     ld h, a
     ld a, [hl]
     pop hl
@@ -3940,10 +3940,10 @@ AppendLinkCodeToSpeciesWordForByteAtDE::
     ld h, $00
     add hl, hl
     ld a, l
-    add $c7
+    add LOW(LinkCodeToSpeciesTable)
     ld l, a
     ld a, h
-    adc $5f
+    adc HIGH(LinkCodeToSpeciesTable)
     ld h, a
     ld a, [hli]
     ld b, [hl]

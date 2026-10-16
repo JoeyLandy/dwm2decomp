@@ -64,10 +64,10 @@ CheckBreedingRecipes::
     ld h, a
     add hl, hl
     ld a, l
-    add $67
+    add LOW(SpeciesPairCheckTable)
     ld l, a
     ld a, h
-    adc $41
+    adc HIGH(SpeciesPairCheckTable)
     ld h, a
     deref_hl
     push hl
@@ -1958,10 +1958,10 @@ PackRecordBufAToLinkWorkBuf_LoadExp::
     ld l, a
     ld h, $00
     ld a, l
-    add $86
+    add LOW(ExpCurveIndex81)
     ld l, a
     ld a, h
-    adc $54
+    adc HIGH(ExpCurveIndex81)
     ld h, a
     ld a, [hl]
     ld bc, $0129
@@ -1974,10 +1974,10 @@ PackRecordBufAToLinkWorkBuf_LoadExp::
     add hl, bc
     add hl, bc
     ld a, l
-    add $5d
+    add LOW(ExpTable81)
     ld l, a
     ld a, h
-    adc $55
+    adc HIGH(ExpTable81)
     ld h, a
     ld de, wLinkMenuEntryBytes
     ld a, [hli]

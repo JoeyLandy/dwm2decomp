@@ -159,7 +159,21 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0388): M1 shiftability audit done
+## Current handoff (2026-10-16, E-0389): M2 batch 1
+
+Every hard-coded reference the shift test found is now a label expression, made by the generator:
+- SolidColor1Tile, MapMarkerRecords and Tiles_00_1D07 for bank-$00 numbers (config/operands.json, plus a rule for
+  repeats);
+- LOW/HIGH(Label) for 35 split table addresses;
+- GlyphFont + offset for the glyph source lists;
+- a link-time ASSERT for GlyphFont's alignment.
+
+tools/shift_test.py now has a timing-proof read comparison (`--reads all`), because padding bank $00 shifts timing.
+With all 152 paddable banks padded by 16: PASS, all 1,202,485 reads match (build/m2_readsall). Left for M2: 89 split sums that are not exactly a label,
+468 literal bank numbers, and widening what the scripted runs reach (under 5% of routines).
+Branch claude/m2-labels, not merged.
+
+## Prior handoff (2026-10-16, E-0388): M1 shiftability audit done
 
 tools/shift_test.py pads a copy of src/ and compares the padded ROM's video state with the original's, frame by
 frame, in tools/sm83.py; tools/hardcoded_refs.py counts numbers that stand for labels. Padding banks $00, $1F, $69

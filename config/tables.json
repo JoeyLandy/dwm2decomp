@@ -2454,6 +2454,7 @@
       "bank": "1F",
       "addr": "4010",
       "label": "GlyphFont",
+      "assert": ["(GlyphFont & 1) == 0", "DrawTextGlyph steps a glyph's 2-byte rows with inc e (E-0388): rows must not cross a 256-byte page"],
       "count": 259,
       "id_base": 0,
       "id_names": "charmap",
@@ -8423,6 +8424,7 @@
           "type": "words",
           "size": 66,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "bank-$1F tile sources, then $FFFF"
         }
       ],
@@ -8456,6 +8458,7 @@
           "type": "words",
           "size": 20,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "bank-$1F tile sources, then $FFFF"
         }
       ],
@@ -8489,6 +8492,7 @@
           "type": "words",
           "size": 22,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "bank-$1F tile sources, then $FFFF"
         }
       ],
@@ -8522,6 +8526,7 @@
           "type": "words",
           "size": 14,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "bank-$1F tile sources, then $FFFF"
         }
       ],
@@ -8555,6 +8560,7 @@
           "type": "words",
           "size": 66,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "bank-$1F tile sources, then $FFFF"
         }
       ],
@@ -8588,6 +8594,7 @@
           "type": "words",
           "size": 32,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "bank-$1F tile sources, then $FFFF"
         }
       ],
@@ -14415,6 +14422,7 @@
           "type": "words",
           "size": 160,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "80 bank-$1F tile sources (the last is $FFFF)"
         }
       ],
@@ -14431,6 +14439,7 @@
           "type": "words",
           "size": 166,
           "per_line": 8,
+          "rom_bank": "1F",
           "name": "82 bank-$1F tile sources, then $FFFF"
         }
       ],

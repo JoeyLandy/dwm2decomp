@@ -74,13 +74,47 @@ Other limits on moving things, seen while building the test:
 - **What this does not cover.** RAM layout (src/ram.asm), the order of records inside tables, and code that the
   scripted runs never reach.
 
+## M2 batch 1 (E-0389)
+
+Every reference the runs found is now a label expression, made by tools/disasm_all.py (no hand edits in src/):
+
+| Was | Now | How |
+| --- | --- | --- |
+| `ld de, $2940` (FillTilesBxC, FillTilesFromRequest) and 17 `ld hl, $2940` in bank $0C | `SolidColor1Tile` | config/operands.json names the target by hand; then every `ld hl/de/bc` of exactly a hand-confirmed bank-$00 address uses its label |
+| `ld de, $1d07` (PatchTilesOnMap1Or2) | `Tiles_00_1D07` | config/operands.json |
+| `ld hl, $1ab4` (LoadMapScreen_DrawMarker), found by `--reads 00` | `MapMarkerRecords` | config/operands.json |
+| `add $74` / `adc $41` and 34 more split addresses | `add LOW(MapObjectTable)` / `adc HIGH(MapObjectTable)` | `name_split_addresses`: the sum is exactly a data label in the instruction's own bank (35 pairs) |
+| glyph and tile source lists, `dw $40b0, ...` (532 words; the other 60 of the 592 counted were palette colours) | `dw GlyphFont + $a0, ...` | words of `TileCopySrcList` tables and of the eight tables.json lists of bank-$1F sources (`rom_bank`) are written as the table that holds them plus an offset |
+| DrawTextGlyph's `inc e` | `ASSERT (GlyphFont & 1) == 0, ...` under GlyphFont | tables.json `assert`; padding bank $1F by 1 now fails the link with the reason instead of building a broken ROM |
+
+The shift test gained two checks, because bank $00 showed that frames are not enough:
+
+- `--persist N` (default 8): a frame difference counts only when it lasts N frames.
+- `--reads BB` or `--reads all`: compares the order of every ROM data read (fetches left out), mapped through the
+  padding, instead of the frames.
+
+Why frames are not enough: a 16-byte shift changes RandomByteTable's low byte, so `add_a_to_hl` carries where it did
+not and the code takes a few cycles more. With bank $00 padded, the random calls and their values were identical
+but one call fell after the frame-1369 boundary, and from then on the random effects differed. A read comparison
+does not depend on timing. It found MapMarkerRecords, and after the fix all 234,924 reads of 3,000 frames matched.
+
+**Result.** With all 152 paddable banks padded by 16, every ROM data read of 10,000 frames with --explore lands
+where the padded build put it: PASS, all 1,202,485 reads match (build/m2_readsall).
+
+Static counts after batch 1 (src/ at this commit, build/run659):
+
+| Kind | Before | After | What is left |
+| --- | --- | --- | --- |
+| `code_split` | 124 | 89 | sums that are not exactly a label: an index base before a table (`Label - 2`), sums into the middle of a block, and arithmetic constants such as `$0400` |
+| `data_tiles` | 592 | 60 | none real: palette colours such as `$7C00`, which are multiples of 16 |
+| `code_address` | 86 | 84 | none real: message ids, flag ids, step values and a byte count |
+| `code_bank` | 468 | 468 | literal bank numbers; they matter when data moves to another bank |
+
 ## Next (M2)
 
-1. Write the five confirmed references with labels: `ld de, FillTilesFromRequest_Pattern`; `ld de, Tiles_00_1D07`;
-   the split additions as `LOW(MapObjectTable)` and `HIGH(MapObjectTable)` with carry; the glyph lists as
-   `GlyphFont + $A0`-style expressions; an `ALIGN` or assert for DrawTextGlyph's rows.
-2. Work through `code_split` and `data_tiles` bank by bank. These are the generator's job: tools/disasm_all.py emits
-   them, so the fix belongs there, with an identity build after each batch.
-3. Then `code_bank` as `BANK(label)`, which is needed before anything moves between banks.
-4. Rerun tools/shift_test.py after each batch. The M2 gate: no difference over a long `--explore` run with every
-   bank padded, and the static counts of the confirmed kinds at 0.
+1. Read the 89 remaining `code_split` sums: write each real one as `Label + offset` or `Label - offset` (by hand
+   in config/operands.json, or by a rule once a pattern is clear), and mark the constants as such.
+2. `code_bank` as `BANK(label)`, needed before anything moves between banks, and per-bank sections in place of one
+   fixed section per bank.
+3. Widen what runs: the scripted runs reach under 5% of the routines. Longer --explore scripts, or save states at
+   later points of the game, would extend the read gate.
