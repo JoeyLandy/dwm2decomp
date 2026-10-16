@@ -2691,6 +2691,34 @@ class Rom:
                     break
         log(f"split table addresses written LOW/HIGH(label): {made}")
 
+    def name_bank_literals(self) -> None:
+        """E-0391 (M2): a literal bank number that names the bank of a pointer loaded next to it is written
+        BANK(Label), so it follows the label if the label moves to another bank. `ld b, $NN` qualifies when an
+        instruction within three of it loads a pointer (a resolved operand or a split table address) into bank $NN
+        (far calls and far copies: B = bank, HL or DE = address); `ld a, $NN` only when the next instruction makes A
+        a bank: `ld b, a`, `ld [rROMB0], a` or `ld [wDataBank], a`. Bank $00 and numbers that match no nearby
+        pointer stay numbers (tools/hardcoded_refs.py counts those as code_bank)."""
+        self.bank_ops: dict[tuple[int, int], tuple[int, int]] = {}
+        ldr = re.compile(r"ld ([ab]), \$([0-9A-F]{2})$")
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                m = ldr.match(ins[a][1])
+                if not m or int(m.group(2), 16) == 0:
+                    continue
+                nn = int(m.group(2), 16)
+                if m.group(1) == "a":
+                    nx = ins.get(order[k + 1], ("", ""))[1] if k + 1 < len(order) else ""
+                    if nx not in ("ld b, a", "ld [$2100], a", "ld [$D7FE], a"):
+                        continue
+                for x in order[max(0, k - 3):k + 4]:
+                    t = self.dref.get((b, x)) or (lambda se: se and (se[1], se[2]))(self.split_expr.get((b, x)))
+                    if t and t[0] == nn:
+                        self.bank_ops[(b, a)] = t
+                        break
+        log(f"literal banks written BANK(label): {len(self.bank_ops)}")
+
     def rom_word_expr(self, tb: int, v: int) -> str | None:
         """E-0389 (M2): a word that is an address in ROM bank tb as Label or Label + $offset: the table that holds
         it (GlyphFont + $A0: the offset / 16 is the glyph), else the nearest data label at or below it in that bank;
@@ -6038,6 +6066,7 @@ class Rom:
         self.name_data_by_reader()
         self.fold_table_names()
         self.name_split_addresses()
+        self.name_bank_literals()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 
@@ -6158,7 +6187,7 @@ class Rom:
             i = k
 
     _FC_HL = re.compile(r"^    ld hl, ([A-Za-z_][A-Za-z0-9_]*)$")
-    _FC_B = re.compile(r"^    ld b, \$([0-9A-F]{2})$")
+    _FC_B = re.compile(r"^    ld b, (?:\$([0-9A-F]{2})|BANK\(([A-Za-z_][A-Za-z0-9_]*)\))$")  # E-0391: or BANK(L)
 
     def _label_banks(self) -> dict[str, int]:
         if not hasattr(self, "_lb"):
@@ -6179,12 +6208,14 @@ class Rom:
             if i + 2 < len(out) and out[i + 2] == "    rst $10":
                 a, b = out[i], out[i + 1]
                 m1, m2 = self._FC_HL.match(a), self._FC_B.match(b)
-                if m1 and m2 and banks.get(m1.group(1)) == int(m2.group(1), 16):
+                if m1 and m2 and (m2.group(2) == m1.group(1) if m2.group(2) else
+                                  banks.get(m1.group(1)) == int(m2.group(1), 16)):
                     res.append(f"    farcall {m1.group(1)}")
                     i += 3
                     continue
                 m1, m2 = self._FC_B.match(a), self._FC_HL.match(b)
-                if m1 and m2 and banks.get(m2.group(1)) == int(m1.group(1), 16):
+                if m1 and m2 and (m1.group(2) == m2.group(1) if m1.group(2) else
+                                  banks.get(m2.group(1)) == int(m1.group(1), 16)):
                     res.append(f"    farcall_b {m2.group(1)}")
                     i += 3
                     continue
@@ -6492,6 +6523,12 @@ class Rom:
                 nm = self.dlabels[rb_].get(ra) or (self.labels[rb_].get(ra) if ra in self.insn[rb_] else None)
                 if nm:
                     text = re.sub(r"\$[0-9A-F]{4}$", nm, text)
+            bo = getattr(self, "bank_ops", {}).get((bank, pc))
+            if bo:  # E-0391: a bank number written as the bank of the pointer next to it
+                ex = self.dlabels[bo[0]].get(bo[1]) or (self.labels[bo[0]].get(bo[1]) if bo[1] in self.insn[bo[0]]
+                                                        else None) or self.rom_word_expr(bo[0], bo[1])
+                if ex:
+                    text = re.sub(r"\$[0-9A-F]{2}$", f"BANK({ex.split(' ')[0]})", text)
             if "{T}" in text:
                 r = self.resolve(bank, tgt)
                 nm = None

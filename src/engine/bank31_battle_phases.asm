@@ -56,11 +56,11 @@ GameMode4_Init::
     ld a, h
     ld [wTextCursorHi], a
     farcall GameMode4_Init_SetUpBattle
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
@@ -1319,11 +1319,11 @@ BattleEnd_OfferJoin_RunSwapMenu::
     ld a, [wSavedSpriteSlotCount]
     ld [wSpriteSlotCount], a
     call BuildBattleScreenBuffer
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToVRAM
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToVRAM
@@ -1509,7 +1509,7 @@ BattleEnd_ReturnToField_PlayTransitionMusic::
     ld [wGameMode2Arg], a
     ld [wNewRecordFamily], a
     ld [wScreenState], a
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM

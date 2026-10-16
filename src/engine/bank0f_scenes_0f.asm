@@ -3942,7 +3942,7 @@ SceneShieldGuardian_HopObject1::
 ; $0F facing right; then 'That was a lovely sleep.' (message $0AF3). (C1, E-0357)
 SceneShieldGuardian_ShowThatWasALovely::
     ld de, FieldSpriteGfx0F
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx0F)
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     xor a
@@ -6110,7 +6110,7 @@ SceneMermaidKingdom_ShowKamehaIWasStupid::
     call StepScriptParam0Counter_Bank0F
     ret nc
     ld de, FieldSpriteGfx03
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx03)
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $03
@@ -6537,7 +6537,7 @@ SceneMermaidKingdom_WalkObject1::
     ld hl, wObject1 + OBJ_FLAGS
     call ClearBit2AtHL_Bank0F
     ld de, FieldSpriteGfx45
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx45)
     ld hl, vTiles0 + $700
     call DecompressToVRAM
     ld a, $45
@@ -7796,7 +7796,7 @@ SceneRivalDefeated_WalkObjectsDown::
     ld a, $01
     ld [wSpriteSlotCount], a
     ld de, FieldSpriteGfx22
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx22)
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $22
@@ -7820,13 +7820,13 @@ SceneRivalDefeated_PlaceObjects::
     ld a, $c0
     ld [wObject1 + OBJ_Y], a
     ld de, FieldSpriteGfx27
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx27)
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $27
     ld [wSpriteSlots + $2], a
     ld de, FieldSpriteGfx27
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx27)
     ld hl, vTiles0 + $600
     call DecompressToVRAM
     ld a, $27

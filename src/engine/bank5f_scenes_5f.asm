@@ -2170,7 +2170,7 @@ BossWinScene_HopAndTurn::
     ld a, $72
     call QueueSoundEffect
     ld de, FieldSpriteGfx49
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx49)
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $49
@@ -2416,7 +2416,7 @@ BossWinScene_LoadSprite2::
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
     ld de, FieldSpriteGfx02
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx02)
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $02

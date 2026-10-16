@@ -542,7 +542,7 @@ KeyWorldLayout_BuildEntrance_PickOtherExit::
     ld a, d
     adc HIGH(KeyWorldRoomPointers)
     ld d, a
-    ld a, $72
+    ld a, BANK(KeyWorldRoomPointers)
     ld b, a
     call ReadByteInBank
     ld l, c
@@ -585,7 +585,7 @@ KeyWorldLayout_BuildEntrance_PickTwoExits::
     ld a, d
     adc HIGH(KeyWorldRoomPointers)
     ld d, a
-    ld a, $72
+    ld a, BANK(KeyWorldRoomPointers)
     ld b, a
     call ReadByteInBank
     ld a, c

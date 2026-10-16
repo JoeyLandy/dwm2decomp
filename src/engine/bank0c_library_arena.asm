@@ -1060,22 +1060,22 @@ LibraryMenu_ShowMonsterEntry_LoadTiles::
     call CopyTileBytesToVRAM_Bank0C
     ld de, Tiles2Plus250Tiles
     ld hl, vTiles2 + $7c0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus250Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus240Tiles
     ld hl, vTiles2 + $7d0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus240Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus200Tiles
     ld hl, vTiles2 + $7e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus200Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus7F0Tiles
     ld hl, vTiles2 + $7f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus7F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -1119,15 +1119,15 @@ LibraryMenu_ShowMonsterEntry_LoadScreen::
     call FillTilesFromRequest
     ld de, LibraryEntryPageTiles
     ld hl, vTiles1
-    ld b, $f1
+    ld b, BANK(LibraryEntryPageTiles)
     call DecompressToVRAM
     ld de, LibraryEntryPageTilemap
     ld hl, wWindowTileBuffer + $64
-    ld b, $f1
+    ld b, BANK(LibraryEntryPageTilemap)
     call DecompressToVRAM
     ld de, LibraryEntryBottomBoxTileMap
     ld hl, wWindowTileBuffer
-    ld b, $f1
+    ld b, BANK(LibraryEntryBottomBoxTileMap)
     call DecompressToVRAM
     ld a, [wIsCGB]
     and a
@@ -1136,11 +1136,11 @@ LibraryMenu_ShowMonsterEntry_LoadScreen::
     ldh [rSVBK], a
     ld de, WindowAttrBufferPlus64Gfx
     ld hl, wWindowAttrBuffer + $64
-    ld b, $f1
+    ld b, BANK(WindowAttrBufferPlus64Gfx)
     call DecompressToVRAM
     ld de, LibraryEntryBottomBoxAttrMap
     ld hl, wWindowAttrBuffer
-    ld b, $f1
+    ld b, BANK(LibraryEntryBottomBoxAttrMap)
     call DecompressToVRAM
     xor a
     ldh [rSVBK], a
@@ -1472,12 +1472,12 @@ LibraryMenu_ShowMonsterEntry_DrawParents::
     jr z, .check_screen_step
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles2 + $420
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles2 + $430
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -1781,7 +1781,7 @@ LibraryMenu_ShowMonsterEntry_BrowseFamily::
 ; window buffer. (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_Close::
     call LibraryMenu_ClearBGMap
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -2025,7 +2025,7 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree_Icon::
     ld de, vTiles2
     add hl, de
     ld de, Tiles2Plus420Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
@@ -8101,7 +8101,7 @@ ArenaMenu_PickPrize_GiveItem::
 ; E-0357; probed E-0376)
 ArenaMenu_PickPrize_GiveItem_CopyName::
     ld de, StringDatabase_ItemNames
-    ld b, $08
+    ld b, BANK(StringDatabase_ItemNames)
     call ReadFarPointerAtDEInBankB
     ld c, l
     ld b, h

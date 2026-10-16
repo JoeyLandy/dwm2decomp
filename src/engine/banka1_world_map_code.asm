@@ -975,19 +975,19 @@ RunWorldMapState_DrawCloseUp::
     ldh [hScrollY], a
     call CopyScrollToHardware
     ld de, Tiles0Gfx_2
-    ld b, $7e
+    ld b, BANK(Tiles0Gfx_2)
     ld hl, vTiles0
     call DecompressToVRAM
     ld de, Tiles0Plus100Gfx_2
-    ld b, $7e
+    ld b, BANK(Tiles0Plus100Gfx_2)
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld de, Tiles0Plus200Gfx
-    ld b, $7e
+    ld b, BANK(Tiles0Plus200Gfx)
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld de, WorldMapCloseUpTerrainTiles
-    ld b, $5d
+    ld b, BANK(WorldMapCloseUpTerrainTiles)
     ld hl, vTiles2
     call DecompressToVRAM
     call FillBGMap0With57
@@ -1025,14 +1025,14 @@ RunWorldMapState_DrawCloseUp::
     ld c, $08
     call CopyFromBank
     ld de, OBJPaletteBufferPlus8Data_3
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data_3)
     ld hl, wOBJPaletteBuffer + $8
     ld c, $10
     call CopyFromBank
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ld de, RunWorldMapState_DrawCloseUp_BGPaletteBufferData
-    ld b, $5d
+    ld b, BANK(RunWorldMapState_DrawCloseUp_BGPaletteBufferData)
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
@@ -2755,19 +2755,19 @@ RunWorldMapState_DrawOverview::
     ldh [hScrollY], a
     call CopyScrollToHardware
     ld de, Tiles0Gfx_2
-    ld b, $7e
+    ld b, BANK(Tiles0Gfx_2)
     ld hl, vTiles0
     call DecompressToVRAM
     ld de, Tiles0Plus100Gfx
-    ld b, $7e
+    ld b, BANK(Tiles0Plus100Gfx)
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld de, WorldMapOverviewLandTiles
-    ld b, $5d
+    ld b, BANK(WorldMapOverviewLandTiles)
     ld hl, vTiles2
     call DecompressToVRAM
     ld de, WorldMapOverviewFrameTiles
-    ld b, $5e
+    ld b, BANK(WorldMapOverviewFrameTiles)
     ld hl, vTiles2 + $500
     call DecompressToVRAM
     ld de, RunWorldMapState_DrawOverview_TileRect
@@ -2810,19 +2810,19 @@ RunWorldMapState_DrawOverview::
     ld c, $08
     call CopyFromBank
     ld de, OBJPaletteBufferPlus8Data_3
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data_3)
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ld de, WorldMapOverviewPalettes
-    ld b, $5d
+    ld b, BANK(WorldMapOverviewPalettes)
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld de, BGPaletteBufferPlus8Data
-    ld b, $5e
+    ld b, BANK(BGPaletteBufferPlus8Data)
     ld hl, wBGPaletteBuffer + $8
     ld c, $08
     call CopyFromBank

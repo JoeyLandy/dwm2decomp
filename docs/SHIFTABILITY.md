@@ -125,10 +125,17 @@ KeyWorldRoomPointers in bank $72, and StringTable_ItemNames in bank $08. Two wer
 
 Gate: all 152 paddable banks padded by 16, all 1,202,485 ROM data reads of 10,000 explore frames match.
 
+## M2 batch 3 (E-0391)
+
+Bank numbers that name the bank of a pointer loaded next to them are written BANK(Label): `ld b, $NN` beside a
+pointer into bank $NN, and `ld a, $NN` that goes straight into B, rROMB0 or wDataBank. There are 382 `ld b,
+BANK(...)` setups and 14 `ld a, BANK(...)` switches; the `farcall` fold also accepts the BANK form, so the 3,842
+`farcall` lines stay as they were. tools/hardcoded_refs.py `code_bank`: 468 to 96, and the 96 left are not banks.
+
 ## Next (M2)
 
 1. The nine unresolved split sums of E-0390 (a label or a reading each).
-2. `code_bank` as `BANK(label)`, needed before anything moves between banks, and per-bank sections in place of one
-   fixed section per bank.
+2. Per-bank sections in place of one fixed section per bank, now that code bank numbers are BANK(label) (E-0391);
+   data far pointers already use `dfar`.
 3. Widen what runs: the scripted runs reach under 5% of the routines. Longer --explore scripts, or save states at
    later points of the game, would extend the read gate.

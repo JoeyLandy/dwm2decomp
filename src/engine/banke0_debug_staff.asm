@@ -3396,27 +3396,27 @@ DebugStaffRoll_Scene00::
 ; Staff roll scene 0, step 0: loads the field sprites, the area tileset, map 0's screen (and on the
 ; GBC its attributes and palettes) and places four sprites. (C1, E-0357)
 DebugStaffRoll_Scene00_Load::
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx01)
     ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld b, $7e
+    ld b, BANK(FacetedGrayLumpSpriteTiles)
     ld de, FacetedGrayLumpSpriteTiles
     ld hl, vTiles0 + $300
     call DecompressToVRAM
-    ld b, $93
+    ld b, BANK(AreaTileset0)
     ld de, AreaTileset0
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $46
+    ld b, BANK(Map00Screens0_Y2X1)
     ld de, Map00Screens0_Y2X1
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -3425,33 +3425,33 @@ DebugStaffRoll_Scene00_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $46
+    ld b, BANK(Map00Attrs0_Y2X1)
     ld de, Map00Attrs0_Y2X1
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $48
+    ld b, BANK(AreaPalettes0)
     ld de, AreaPalettes0
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(DebugStaffRoll_Scene00_Load_OBJPaletteBufferData)
     ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data)
     ld de, OBJPaletteBufferPlus8Data
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus10Data_2)
     ld de, OBJPaletteBufferPlus10Data_2
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus18Data_2)
     ld de, OBJPaletteBufferPlus18Data_2
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
@@ -3876,23 +3876,23 @@ DebugStaffRoll_Scene01::
 ; Staff roll scene 1, step 0: loads the field sprites, map 2's tileset and screen (and on the GBC
 ; its attributes and palettes) and places the sprites. (C1, E-0357)
 DebugStaffRoll_Scene01_Load::
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx01)
     ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld b, $46
+    ld b, BANK(Map02Tileset)
     ld de, Map02Tileset
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $46
+    ld b, BANK(Map02Tileset)
     ld de, Map02Screens0_Y0X2
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -3901,28 +3901,28 @@ DebugStaffRoll_Scene01_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $46
+    ld b, BANK(Map02Attrs0_Y0X2)
     ld de, Map02Attrs0_Y0X2
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $48
+    ld b, BANK(Map02Palettes)
     ld de, Map02Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(DebugStaffRoll_Scene00_Load_OBJPaletteBufferData)
     ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data)
     ld de, OBJPaletteBufferPlus8Data
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus10Data_2)
     ld de, OBJPaletteBufferPlus10Data_2
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
@@ -4476,35 +4476,35 @@ DebugStaffRoll_Scene02::
 ; tileset and screen (and on the GBC its attributes and palettes) and places the sprites. (C1,
 ; E-0357)
 DebugStaffRoll_Scene02_Load::
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld b, $7e
+    ld b, BANK(FieldSpriteGfx5F)
     ld de, FieldSpriteGfx5F
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld b, $21
+    ld b, BANK(MonsterSprite_Watabou)
     ld de, MonsterSprite_Watabou
     ld hl, vTiles0 + $300
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx03)
     ld de, FieldSpriteGfx03
     ld hl, vTiles0 + $400
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx03)
     ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $500
     call DecompressToVRAM
-    ld b, $48
+    ld b, BANK(Map18Tileset)
     ld de, Map18Tileset
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $48
+    ld b, BANK(Map18Tileset)
     ld de, Map18Screens0_Y0X1
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -4513,43 +4513,43 @@ DebugStaffRoll_Scene02_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $48
+    ld b, BANK(Map18Attrs0_Y0X1)
     ld de, Map18Attrs0_Y0X1
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $48
+    ld b, BANK(Map18Palettes)
     ld de, Map18Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(DebugStaffRoll_Scene00_Load_OBJPaletteBufferData)
     ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data)
     ld de, OBJPaletteBufferPlus8Data
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus10Data)
     ld de, OBJPaletteBufferPlus10Data
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $27
+    ld b, BANK(OBJPaletteBufferPlus18Data)
     ld de, OBJPaletteBufferPlus18Data
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus20Data)
     ld de, OBJPaletteBufferPlus20Data
     ld hl, wOBJPaletteBuffer + $20
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus10Data_2)
     ld de, OBJPaletteBufferPlus10Data_2
     ld hl, wOBJPaletteBuffer + $28
     ld c, $08
@@ -5292,39 +5292,39 @@ DebugStaffRoll_Scene03::
 ; Staff roll scene 3, step 0: loads the field sprites and others, map $19's tileset and screen (and
 ; on the GBC its attributes and palettes) and places the sprites. (C1, E-0357)
 DebugStaffRoll_Scene03_Load::
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx01)
     ld de, FieldSpriteGfx03
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx03)
     ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $300
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx02)
     ld de, FieldSpriteGfx12
     ld hl, vTiles0 + $400
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx12)
     ld de, FieldSpriteGfx0E
     ld hl, vTiles0 + $500
     call DecompressToVRAM
-    ld b, $7e
+    ld b, BANK(Tiles0Plus600Gfx)
     ld de, Tiles0Plus600Gfx
     ld hl, vTiles0 + $600
     call DecompressToVRAM
-    ld b, $48
+    ld b, BANK(Map19Tileset)
     ld de, Map19Tileset
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $48
+    ld b, BANK(Map19Tileset)
     ld de, Map19Screens0_Y0X0
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -5333,53 +5333,53 @@ DebugStaffRoll_Scene03_Load::
     jp z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $48
+    ld b, BANK(Map19Attrs0_Y0X0)
     ld de, Map19Attrs0_Y0X0
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $94
+    ld b, BANK(Map19Palettes)
     ld de, Map19Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
-    ld b, $48
+    ld b, BANK(Map18Palettes)
     ld de, Map18Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(DebugStaffRoll_Scene00_Load_OBJPaletteBufferData)
     ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data)
     ld de, OBJPaletteBufferPlus8Data
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus20Data)
     ld de, OBJPaletteBufferPlus20Data
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus10Data_2)
     ld de, OBJPaletteBufferPlus10Data_2
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus10Data)
     ld de, OBJPaletteBufferPlus10Data
     ld hl, wOBJPaletteBuffer + $20
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus28Data)
     ld de, OBJPaletteBufferPlus28Data
     ld hl, wOBJPaletteBuffer + $28
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus30Data)
     ld de, OBJPaletteBufferPlus30Data
     ld hl, wOBJPaletteBuffer + $30
     ld c, $08
@@ -5822,27 +5822,27 @@ DebugStaffRoll_Scene04::
 ; Staff roll scene 4, step 0: loads the field sprites, map $1A's tileset and screen (and on the GBC
 ; its attributes and palettes) and places the sprites. (C1, E-0357)
 DebugStaffRoll_Scene04_Load::
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx01)
     ld de, FieldSpriteGfx03
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx03)
     ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $300
     call DecompressToVRAM
-    ld b, $49
+    ld b, BANK(Map1ATileset)
     ld de, Map1ATileset
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $49
+    ld b, BANK(Map1ATileset)
     ld de, Map1AScreens0_Y0X0
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -5851,33 +5851,33 @@ DebugStaffRoll_Scene04_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $49
+    ld b, BANK(Map1AAttrs0_Y0X0)
     ld de, Map1AAttrs0_Y0X0
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $49
+    ld b, BANK(Map1APalettes)
     ld de, Map1APalettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(DebugStaffRoll_Scene00_Load_OBJPaletteBufferData)
     ld de, DebugStaffRoll_Scene00_Load_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data)
     ld de, OBJPaletteBufferPlus8Data
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus20Data)
     ld de, OBJPaletteBufferPlus20Data
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus10Data_2)
     ld de, OBJPaletteBufferPlus10Data_2
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
@@ -6867,7 +6867,7 @@ DebugStaffRoll_Credits_TitleCard::
     ld a, [wIsCGB]
     or a
     jr z, .skip
-    ld b, $48
+    ld b, BANK(AreaPalettes0)
     ld de, AreaPalettes0
     ld hl, wBGPaletteBuffer
     ld c, $08

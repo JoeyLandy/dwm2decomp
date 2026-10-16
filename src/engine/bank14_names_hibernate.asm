@@ -1380,7 +1380,7 @@ DrawBoxAndMenuAndStep_TileRect::
 HibernateMenu_ChooseRecords_DrawOptionYesNo::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $6c
@@ -2060,12 +2060,12 @@ HibernateMenu_RestoreYesNoBox::
     call DrawScreenBufferRect_Bank14
     ld de, Tiles2Plus210Tiles
     ld hl, vTiles2 + $700
-    ld b, $1f
+    ld b, BANK(Tiles2Plus210Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles_2
     ld hl, vTiles2 + $710
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
@@ -2115,7 +2115,7 @@ HibernateMenu_CopyBoxRows::
 HibernateMenu_ChooseRecords_DrawYesNo::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $6c
@@ -2126,17 +2126,17 @@ HibernateMenu_ChooseRecords_DrawYesNo::
     call CopyRectTo20ByteRows_Bank14
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles2 + $700
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles2 + $710
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $760
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     call BGMapAddressAtScroll_Bank14
@@ -3993,32 +3993,32 @@ RunNameEntryStateWhenNotFading_Setup_Clear::
     ldh [hSpriteWindowClipMode], a
     ld de, Tiles2Plus710Tiles_3
     ld hl, vTiles2
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles1 + $4f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7E0Tiles
     ld hl, vTiles1 + $4c0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7F0Tiles_2
     ld hl, vTiles1 + $4d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7F0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wNameEntrySubState]
@@ -5165,7 +5165,7 @@ RunNameEntryStateWhenNotFading_SwapGlyphs::
     ld [wNameEntrySubState], a
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $480
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
 

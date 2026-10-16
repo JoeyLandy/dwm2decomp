@@ -443,17 +443,17 @@ BGMap1TileRun_2::
 LoadThreeTilesAndDrawRows::
     ld hl, vTiles2 + $7a0
     ld de, Tiles2Plus210Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus210Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $7b0
     ld de, Tiles2Plus7B0Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus7B0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $7c0
     ld de, Tiles1Plus7C0Tiles
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7C0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     call BGMapAddressAtScroll_Bank1D
@@ -4217,7 +4217,7 @@ DrawRecordNameAndSpeciesNameTiles::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04
@@ -4945,7 +4945,7 @@ DrawRecordListPageSpeciesNames::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04

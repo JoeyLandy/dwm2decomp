@@ -106,32 +106,32 @@ DebugMessageTest_Init::
     ld [wTextCursorHi], a
     ld hl, vTiles2 + $200
     ld de, Tiles2Plus200Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus200Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $210
     ld de, Tiles2Plus210Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus210Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $220
     ld de, Tiles1Plus6E0Tiles
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $230
     ld de, Tiles2Plus230Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus230Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $240
     ld de, Tiles2Plus240Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus240Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $250
     ld de, Tiles2Plus250Tiles
-    ld b, $1f
+    ld b, BANK(Tiles2Plus250Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -341,32 +341,32 @@ DebugResultsDisplay_Init::
     ld [vBGMap0 + $221], a
     ld de, Tiles1Plus7E0Tiles
     ld hl, vTiles1 + $7e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7F0Tiles_2
     ld hl, vTiles1 + $7f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7F0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7C0Tiles_2
     ld hl, vTiles1 + $7c0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7C0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, CopyGlyphTilesToVRAM_Data2
     ld hl, vTiles1 + $7c0
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data2)
     ld c, $10
     call OrFromBankWaitVRAM
     ld de, Tiles2Plus200Tiles
     ld hl, vTiles1 + $7d0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus200Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7B0Tiles
     ld hl, vTiles1 + $7b0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7B0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $200
@@ -3668,7 +3668,7 @@ CopyMonsterNameToBuffer_B01::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04

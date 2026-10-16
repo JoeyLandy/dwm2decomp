@@ -159,7 +159,14 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0390): M2 batch 2
+## Current handoff (2026-10-16, E-0391): M2 batch 3
+
+Bank numbers beside pointers are BANK(label) (382 `ld b` setups, 14 `ld a` bank switches; farcall folding
+unchanged at 3,842). Literal-bank candidates fall from 468 to 96, none of them real. build/run665 PASS; parallel suite
+OK (411 tests, 3 skipped); the read gate still passes with every bank padded by 16. Next in M2: the nine unresolved
+split sums (E-0390), then per-bank sections so code can move between banks.
+
+## Prior handoff (2026-10-16, E-0390): M2 batch 2
 
 Split table addresses are now resolved in other banks too (the bank of a following far read), and inside tables or
 data blocks: 59 add/adc pairs are LOW/HIGH(label expression). The 65 sums left are 56 constants and 9 addresses

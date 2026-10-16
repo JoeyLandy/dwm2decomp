@@ -2117,7 +2117,7 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     bit 3, a
     ret z
     ld de, ScallopShellSpriteTiles
-    ld b, $7e
+    ld b, BANK(ScallopShellSpriteTiles)
     ld hl, vTiles0 + $700
     call DecompressToVRAM
     ld de, SharedOBJPalettes

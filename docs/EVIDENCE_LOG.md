@@ -2431,6 +2431,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0391 — M2 batch 3: literal bank numbers written BANK(label)
+
+- Date: 2026-10-16. Kind: DECISION (generator change; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit df12480 (E-0390).
+- **Rule.** `name_bank_literals` writes a bank number as BANK(Label) when it names the bank of a pointer loaded next to it:
+  - `ld b, $NN` when an instruction within three of it loads a resolved pointer or split table address into bank $NN (B = bank for far calls and far copies);
+  - `ld a, $NN` only when the next instruction is `ld b, a`, `ld [rROMB0], a` or `ld [wDataBank], a`.
+  - Bank $00 and numbers that match no nearby pointer stay numbers.
+- **Results.**
+  - 4,222 setups qualify. compress_farcalls now also folds `ld hl, L` / `ld b, BANK(L)` / `rst $10`, so the 3,842 `farcall` lines are unchanged.
+  - The visible change is 382 `ld b, BANK(...)` setups for copy and decompress helpers and 14 `ld a, BANK(...)` bank switches (`ld a, BANK(StringDatabase)` / `ld [wDataBank], a`).
+  - tools/hardcoded_refs.py code_bank 468 to 96; the 96 are not banks: skill slot numbers and argument bytes that equal a nearby label's bank.
+- **Tests.** test_generated_source's helper-call audit reads `ld b, BANK(L)` as L's bank and still compares it with the pointer labels of the setup.
+- **Gate.** All 152 paddable banks padded by 16 still pass the read comparison over 10,000 explore frames. build/run665 PASS (approved size and SHA-256, zero differing bytes); parallel full suite build/logs/par665.log OK (411 tests, 3 skipped).
+
 ### E-0390 — M2 batch 2: split table addresses in other banks, inside tables and data blocks
 
 - Date: 2026-10-16. Kind: OBSERVATION and DECISION (generator changes; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 785747f (E-0389). Details: [shiftability](SHIFTABILITY.md).

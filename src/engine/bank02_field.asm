@@ -1104,7 +1104,7 @@ GameMode1_Init::
     call nz, InitSoundHardware
     call GameMode1_Init_PickSGBBorderSet
     call LoadSGBBorderForSetA
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM

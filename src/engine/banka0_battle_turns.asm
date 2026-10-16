@@ -2539,11 +2539,11 @@ GameMode7_Init::
     ld [wTextCursorLo], a
     ld a, h
     ld [wTextCursorHi], a
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked

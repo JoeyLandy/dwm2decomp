@@ -1729,7 +1729,7 @@ LoadBlankedBlocks00_09_0AWithCursor::
 ; decompresses LatinKanaLabelGlyphTiles (bank $16) to vTiles1 + $6E0, then runs
 ; DrawRecordMonsterPictureForMenuSelectedMember (E-0122)
 DecompressMenuTilesTo16E0::
-    ld b, $16
+    ld b, BANK(LatinKanaLabelGlyphTiles)
     ld de, LatinKanaLabelGlyphTiles
     ld hl, vTiles1 + $6e0
     call DecompressToVRAM
@@ -6690,17 +6690,17 @@ PauseMenu_Plan_Keys::
 PauseMenu_Plan_Keys_Build::
     ld hl, vTiles2 + $710
     ld de, Tiles2Plus710Tiles_3
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $720
     ld de, Tiles2Plus710Tiles_3
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $730
     ld de, Tiles2Plus710Tiles_3
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     call BuildScreenBlocks21To23
@@ -8251,7 +8251,7 @@ PauseMenu_Plan_Record_DrawYesNo::
     ret nz
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles1 + $740
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $6c

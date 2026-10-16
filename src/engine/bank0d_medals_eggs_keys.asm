@@ -831,7 +831,7 @@ DrawBoxWithPageIndicator::
 EggServiceMenu_ChooseAndPay_RedrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $01
@@ -1233,11 +1233,11 @@ EggServiceMenu_DrawListAndPrice::
 EggServiceMenu_DrawListAndPrice_LoadTiles::
     ld hl, vTiles2
     ld de, Map0ATileset
-    ld b, $49
+    ld b, BANK(Map0ATileset)
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
     ld de, Map0APalettes
-    ld b, $49
+    ld b, BANK(Map0APalettes)
     ld c, $40
     call CopyFromBankWaitVRAM
     ld a, $7f
@@ -1300,7 +1300,7 @@ EggServiceMenu_DrawListAndPrice_DrawSpeciesNames::
 EggServiceMenu_DrawListAndPrice_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $01
@@ -2111,17 +2111,17 @@ CloseRenameMenu_ReloadTilesAndFinish::
     call LoadRecordListNameTiles
     ld de, Tiles2Plus710Tiles_3
     ld hl, vTiles1 + $700
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles_3
     ld hl, vTiles1 + $710
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles_3
     ld hl, vTiles1 + $720
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -2195,22 +2195,22 @@ RenameMenu_DrawFrame::
 LoadFourFrameTilesAndStep::
     ld de, Tiles1Plus700Tiles
     ld hl, vTiles1 + $700
-    ld b, $1f
+    ld b, BANK(Tiles1Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus710Tiles
     ld hl, vTiles1 + $710
-    ld b, $1f
+    ld b, BANK(Tiles1Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus230Tiles
     ld hl, vTiles1 + $720
-    ld b, $1f
+    ld b, BANK(Tiles2Plus230Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles1 + $730
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -2423,11 +2423,11 @@ RenameMenu_PickMonster::
 RenameMenu_PickMonster_LoadTiles::
     ld hl, vTiles2
     ld de, Map13Tileset
-    ld b, $49
+    ld b, BANK(Map13Tileset)
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
     ld de, Map13Palettes
-    ld b, $49
+    ld b, BANK(Map13Palettes)
     ld c, $40
     call CopyFromBankWaitVRAM
     ld a, $7f
@@ -2790,17 +2790,17 @@ KeyAppraisalMenu_Init::
     ldh [hSpriteHideTile], a
     ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles1 + $4a0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4A0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $760
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, wScreenState
@@ -4094,7 +4094,7 @@ DrawKeyListPageNames::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $09
+    ld a, BANK(BeginStringDisplay_Bank09_StringCategories)
     ld [wDataBank], a
     ld hl, BeginStringDisplay_Bank09_StringCategories
     ld a, $0c
@@ -4954,37 +4954,37 @@ MedalPrizeMenu_DrawCountBox::
 MedalPrizeMenu_DrawCountBox_LoadTiles::
     ld de, Tiles2Plus240Tiles
     ld hl, vTiles1 + $2d0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus240Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus2E0Tiles
     ld hl, vTiles1 + $2e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus2F0Tiles
     ld hl, vTiles1 + $2f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7C0Tiles
     ld hl, vTiles1 + $7c0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7C0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7D0Tiles
     ld hl, vTiles1 + $7d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7D0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $760
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -6749,12 +6749,12 @@ NpcBreedMenu_ChooseAndBreed_RunRecordList::
     farcall BreedMenu
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles_2
     ld hl, vTiles1 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
@@ -7004,22 +7004,22 @@ NpcBreedMenu_ChooseAndBreed_DrawYesNo::
     call QueueSoundEffect
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles2 + $700
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles2 + $710
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles2 + $720
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $760
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -7355,12 +7355,12 @@ NpcBreedMenu_RedrawListScreen_LoadGlyphs::
     call CopyGlyphTileListFromBank1F
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles_2
     ld hl, vTiles1 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -7538,7 +7538,7 @@ CopyMonsterNameToBuffer_B0D::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04

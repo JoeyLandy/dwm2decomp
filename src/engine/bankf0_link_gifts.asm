@@ -1263,12 +1263,12 @@ RunLinkSession8Exchange_Saving_DrawYesNo::
     call CopyScreenBufferRectWithAttrs_F0
     ld de, Tiles1Plus6A0Tiles
     ld hl, vTiles1 + $6a0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6A0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7D0Tiles
     ld hl, vTiles1 + $6d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7D0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, RunLinkSession8Exchange_Saving_DrawYesNo_TileRect
@@ -3030,7 +3030,7 @@ LinkEggList_DrawSpeciesNames::
 LinkEggList_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -3122,22 +3122,22 @@ LinkEggList_RedrawScreen::
     call DrawScreenBufferRect_BankF0
     ld de, Tiles1Plus4F0Tiles
     ld hl, vTiles1 + $4f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus710Tiles
     ld hl, vTiles1 + $750
-    ld b, $1f
+    ld b, BANK(Tiles1Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus240Tiles
     ld hl, vTiles1 + $760
-    ld b, $1f
+    ld b, BANK(Tiles2Plus240Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus770Tiles
     ld hl, vTiles1 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus770Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -3219,12 +3219,12 @@ LinkRecordScreen_Clear::
     call ClearBGMapAtScrollAndResetScroll_BankF0
     ld de, Tiles1Plus2F0Tiles
     ld hl, vTiles1 + $7e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7F0Tiles
     ld hl, vTiles1 + $7f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
@@ -3281,32 +3281,32 @@ LinkRecordScreen_CopyGlyphTiles::
 LinkRecordScreen_OrGlyphs::
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $20
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $60
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $90
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $140
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $170
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles2 + $1a0
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -3322,7 +3322,7 @@ LinkRecordScreen_ClearText::
     call FillTilesBxC
     ld de, Tiles1Plus7D0Tiles
     ld hl, vTiles1 + $6d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7D0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wListPageIndex]
@@ -3393,12 +3393,12 @@ LinkRecordScreen_DrawParents::
     jr c, .check_screen_step
     ld de, Tiles2Plus20Tiles
     ld hl, vTiles2 + $20
-    ld b, $1f
+    ld b, BANK(Tiles2Plus20Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus30Tiles
     ld hl, vTiles2 + $30
-    ld b, $1f
+    ld b, BANK(Tiles2Plus30Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     call BGMapAddressAtScroll_BankF0
@@ -3592,7 +3592,7 @@ LinkRecordScreen_ShowInfoOK::
     call ShowString_BankF0
     ld de, CopyGlyphTilesToVRAM_Data1
     ld hl, vTiles1 + $7f0
-    ld b, $1f
+    ld b, BANK(CopyGlyphTilesToVRAM_Data1)
     ld c, $10
     call OrFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -3699,7 +3699,7 @@ LinkRecordScreen_DrawSpeciesNames::
 LinkRecordScreen_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $01
@@ -7798,7 +7798,7 @@ CopyNameStringFromBank08Database::
 
 .call_read_far_pointer_at_de_in_bank_b:
     push hl
-    ld b, $08
+    ld b, BANK(StringDatabase_MonsterNames2)
     call ReadFarPointerAtDEInBankB
     ld c, l
     ld b, h

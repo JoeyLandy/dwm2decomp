@@ -307,7 +307,7 @@ class BankSwitchingCallSites(unittest.TestCase):
                 for lab in re.findall(r"^([A-Za-z_]\w*)::", f.read_text(encoding="utf-8"), re.M):
                     bank_of[lab] = b
         ld_ptr = re.compile(r"\s+ld (?:hl|de|bc), ([A-Za-z_]\w*)$")
-        ld_b = re.compile(r"\s+ld b, \$([0-9A-F]{2})$")
+        ld_b = re.compile(r"\s+ld b, (?:\$([0-9A-F]{2})|BANK\(([A-Za-z_]\w*)\))$")  # E-0391: or BANK(label)
         barrier = re.compile(r"(\S+::|\s+(?:call|ret|reti|jp|jr|farcall|farcall_b|rst|add_a_to_hl)\b)")  # add_a_to_hl hides a jr
         checked, wrong = 0, []
         for f in sorted(BANKS.glob("bank*.asm")):
@@ -327,11 +327,12 @@ class BankSwitchingCallSites(unittest.TestCase):
                     m = ld_ptr.match(back)
                     if m and m.group(1) in bank_of:
                         ptrs.append(m.group(1))
-                if bnk and ptrs:
+                if bnk and ptrs and (bnk.group(1) or bnk.group(2) in bank_of):
+                    want = int(bnk.group(1), 16) if bnk.group(1) else bank_of[bnk.group(2)]
                     for lab in ptrs:
                         checked += 1
-                        if bank_of[lab] != int(bnk.group(1), 16):
-                            wrong.append(f"{f.name}:{i + 1} {lab} with ld b,${bnk.group(1)}")
+                        if bank_of[lab] != want:
+                            wrong.append(f"{f.name}:{i + 1} {lab} with ld b,{bnk.group(1) or bnk.group(2)}")
         self.assertGreater(checked, 100)
         self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} pointer labels disagree with ld b")
 

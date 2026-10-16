@@ -1986,12 +1986,12 @@ RunScreenStateWhenNotFading_F1_LinkBreed_AskOK::
     farcall BreedMenu
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles_2
     ld hl, vTiles1 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -2529,22 +2529,22 @@ RunScreenStateWhenNotFading_F1_BreedAskToRecord::
     ld [wScreenSubStep], a
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles2 + $700
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles2 + $710
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles2 + $720
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $760
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -3386,7 +3386,7 @@ RunScreenStateWhenNotFading_F1_StatsBackToPage2::
     call DrawRecordBufBNameNameAndRecordBufBSpeciesString
     ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles2 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4A0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, wTextWindowTileLo

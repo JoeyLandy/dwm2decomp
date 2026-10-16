@@ -7294,11 +7294,11 @@ RunBattleEndStep5SubSteps_EnterName::
     ld a, [wArg5]
     cp $ff
     ret nz
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToVRAM
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToVRAM
@@ -7910,11 +7910,11 @@ BattleEnd_AddJoinedMonster_RunStatsScreen::
     ldh [hFieldDrawFlags], a
     ld a, [wSavedSpriteSlotCount]
     ld [wSpriteSlotCount], a
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToVRAM
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToVRAM
@@ -9409,7 +9409,7 @@ DecompressA4GraphicsAndContinue::
 ; loads the summary graphics and palette, the save file summary, and draws the player name, party
 ; icons, names, levels and key name on the title screen (E-0131)
 DrawTitleSaveSummaryScreen::
-    ld b, $7e
+    ld b, BANK(Tiles0Gfx_3)
     ld de, Tiles0Gfx_3
     ld hl, vTiles0
     call DecompressToVRAM
@@ -9417,7 +9417,7 @@ DrawTitleSaveSummaryScreen::
     or a
     jr z, DrawTitleSaveSummaryScreen_DrawSummary
     ld de, DrawTitleSaveSummaryScreen_OBJPaletteBufferData
-    ld b, $7e
+    ld b, BANK(DrawTitleSaveSummaryScreen_OBJPaletteBufferData)
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank

@@ -2279,17 +2279,17 @@ ClearBGMapAndLoadFrameTiles::
     call FillTileRectWithArg1Tile
     ld de, Tiles1Plus2F0Tiles
     ld hl, vTiles1 + $7e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7F0Tiles
     ld hl, vTiles1 + $7f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles2 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4A0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ret

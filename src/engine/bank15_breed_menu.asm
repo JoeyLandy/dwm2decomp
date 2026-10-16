@@ -81,17 +81,17 @@ CloseBreedMenu_BlankNameTiles::
     call FillTilesBxC
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles1 + $4f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenList]
@@ -1174,7 +1174,7 @@ BreedMenu_ChooseParents_ComputeChild::
     ld [hl], a
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $490
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     jr .set_arg5_to_04
@@ -2517,7 +2517,7 @@ BreedMenu_ChooseEgg_DrawSpeciesNames::
 BreedMenu_ChooseEgg_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -3243,7 +3243,7 @@ BreedMenu_ReturnToMap::
 ; Returning to the map, step 0: decompresses LetterFrameIconDigitTiles (bank $46) into VRAM $8800
 ; and restores the player's position. (C1, E-0357)
 BreedMenu_ReturnToMap_LoadTiles::
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -3363,12 +3363,12 @@ BreedMenu_ReturnToMap_CopyName::
 BreedMenu_ChooseParents_DrawPayYesNo::
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     call BreedMenu_ChooseParents_DrawLinkSprite
@@ -3517,12 +3517,12 @@ BreedMenu_ReturnToMap_CopySixWideAttrRows::
 BreedMenu_ReturnToMap_DrawOptionBox::
     ld de, Tiles1Plus2D0Tiles
     ld hl, vTiles1 + $2d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2D0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus2E0Tiles_2
     ld hl, vTiles1 + $2e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, BreedMenu_Setup_DrawOptionBox_TileRect
@@ -3932,12 +3932,12 @@ BreedMenu_ReturnToMap_ListCursor::
 BreedMenu_ReturnToMap_DrawYesNoTop::
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld c, $09
@@ -3980,12 +3980,12 @@ BreedMenu_ReturnToMap_RedrawPairBox::
 BreedMenu_ReturnToMap_DrawYesNoBox::
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld c, $05
@@ -4172,12 +4172,12 @@ BreedMenu_ReturnToMap_DrawOptionAndGoldBoxes::
     call CopyScreenBufferRectWithAttrs_Bank15
     ld de, Tiles1Plus2D0Tiles
     ld hl, vTiles1 + $2d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2D0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus2E0Tiles_2
     ld hl, vTiles1 + $2e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, BreedMenu_Setup_DrawOptionBox_TileRect
@@ -4508,11 +4508,11 @@ BreedMenu_RedrawListScreen::
 BreedMenu_RedrawListScreen_LoadTileset::
     ld hl, vTiles2
     ld de, Map0DTileset
-    ld b, $47
+    ld b, BANK(Map0DTileset)
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
     ld de, Map0DPalettes
-    ld b, $47
+    ld b, BANK(Map0DPalettes)
     ld c, $40
     call CopyFromBankWaitVRAM
     ld a, $7f
@@ -4583,7 +4583,7 @@ BreedMenu_RedrawListScreen_DrawSpeciesNames::
 LoadTilesAndDrawRecordListPageMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $01
@@ -4750,17 +4750,17 @@ BreedMenu_ChooseParents_ReloadLinkFrameTiles::
     call BreedMenu_ChooseParents_DrawLinkSprite
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles1 + $4f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -6392,7 +6392,7 @@ CopyMonsterNameToBuffer_B15::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04
@@ -8097,7 +8097,7 @@ HibernateMenu_DrawSleeperNameTiles::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04

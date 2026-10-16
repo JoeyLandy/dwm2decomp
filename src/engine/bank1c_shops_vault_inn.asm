@@ -1092,7 +1092,7 @@ CloseShopMenu_ResumeScript::
 ; Closing the shop, step 2: reloads the text tiles, clears $0F tiles at VRAM $8D00 and resets the
 ; text window. (C1, E-0357)
 CloseShopMenu_ReloadTextTiles::
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -1722,7 +1722,7 @@ ShopMenu_Buy_DrawItemNames::
     ld a, [de]
     ld h, a
     ld de, Tiles2Plus710Tiles_3
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     pop de
@@ -3645,7 +3645,7 @@ ShopMenu_Sell_DrawItemNames::
     ld a, [de]
     ld h, a
     ld de, Tiles2Plus710Tiles_3
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     pop de
@@ -6968,22 +6968,22 @@ VaultMenu_Setup_CountItems::
 VaultMenu_Setup_LoadFrameTiles::
     ld hl, vTiles1 + $240
     ld de, Tiles1Plus2D0Tiles
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2D0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles1 + $250
     ld de, Tiles1Plus250Tiles
-    ld b, $1f
+    ld b, BANK(Tiles1Plus250Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles1 + $260
     ld de, Tiles1Plus260Tiles
-    ld b, $1f
+    ld b, BANK(Tiles1Plus260Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles1 + $270
     ld de, Tiles1Plus6F0Tiles
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -7559,7 +7559,7 @@ VaultMenu_Store_CopyTile::
     call CopyTileBytesToVRAM_Bank1C
     ld hl, vTiles1 + $4c0
     ld de, Tiles1Plus4C0Tiles
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4C0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -7783,7 +7783,7 @@ VaultMenu_Store_BlankNameTiles::
     ld a, [de]
     ld h, a
     ld de, Tiles2Plus710Tiles_3
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles_3)
     ld c, $10
     call CopyFromBankWaitVRAM
     pop de

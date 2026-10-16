@@ -1896,7 +1896,7 @@ UnreferencedScreenInitFromBank46:: ; configured code entry (E-0197); C0
     ld a, b
     or c
     jr nz, .loop
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
@@ -2001,12 +2001,12 @@ LinkKeyTrade_Start_SaveScreen::
 .skip:
     ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles2 + $700
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4A0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $710
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -4030,7 +4030,7 @@ LinkKeyTrade_WriteStoryKeyName::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $09
+    ld a, BANK(BeginStringDisplay_Bank09_StringCategories)
     ld [wDataBank], a
     ld hl, BeginStringDisplay_Bank09_StringCategories
     ld a, $0c
@@ -4866,7 +4866,7 @@ RunLinkSession4ScreenState_PrepareSetupMenu_Run::
     ld [hli], a
     dec b
     jr nz, .loop
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM

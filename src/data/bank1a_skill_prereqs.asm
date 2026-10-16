@@ -3478,7 +3478,7 @@ CopyRectRecordsAndPlaySound6C::
 LoadCursorTileAndRect::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles1 + $6d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, LoadCursorTileAndRect_TileRect

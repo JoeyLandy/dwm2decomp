@@ -5238,7 +5238,7 @@ LoadMapHeader::
     ld hl, vTiles1
     call DecompressToVRAM
     ld de, MonsterSceneBackdropTiles
-    ld b, $48
+    ld b, BANK(MonsterSceneBackdropTiles)
     ld hl, vTiles2
     call DecompressToVRAM
     pop hl
@@ -5979,7 +5979,7 @@ LoadMonsterPicture::
     add hl, de
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, $38
+    ld a, BANK(MonsterPictureTable)
     ld [rROMB0], a
     ld de, MonsterPictureTable
     add hl, de
@@ -6567,7 +6567,7 @@ LoadPlayerAndFollowerSpriteGraphics_Followers::
     inc bc
     ld [bc], a
     ld de, FallenFollowerCoffinTiles
-    ld b, $7e
+    ld b, BANK(FallenFollowerCoffinTiles)
     ldh a, [hTemp2]
     ld l, a
     ldh a, [hTemp3]
@@ -8570,12 +8570,12 @@ OpenTextChoice_DrawWindow::
     call SaveTwoTilesToScriptTileBuf
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles1 + $6e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles1 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, $0100

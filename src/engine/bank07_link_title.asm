@@ -481,7 +481,7 @@ GameMode5_Init_Boot::
     ldh [rVBK], a
 
 .skip:
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
@@ -618,7 +618,7 @@ GameMode5_Init_TitleMenu::
     ld [wBattleTextSpeed], a
     ld a, $01
     ld [wTextSpeed], a
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
@@ -863,7 +863,7 @@ GameMode5_Init_ReturnToTitle::
 .call_start_palette_fade:
     ld a, $fc
     call StartPaletteFade
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
@@ -966,7 +966,7 @@ GameMode5_Init_ReloadTitle::
 .call_start_palette_fade:
     ld a, $fc
     call StartPaletteFade
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
@@ -1059,11 +1059,11 @@ GameMode5_Init_LinkBattleSetup::
 .call_start_palette_fade:
     ld a, $fc
     call StartPaletteFade
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
-    ld b, $31
+    ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
@@ -1264,7 +1264,7 @@ GameMode5_Init_AfterLinkBattle::
     farcall FullyHealParty
     ld a, $fc
     call StartPaletteFade
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
@@ -1909,11 +1909,11 @@ GameMode5_Update_LoadScreens_Screen0_Load::
     ld a, [wTitleScreenSubState]
     or a
     jr z, .skip
-    ld b, $e1
+    ld b, BANK(LicensedByNintendoTiles)
     ld de, LicensedByNintendoTiles
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(LicensedByNintendoTiles)
     ld de, IntroScreen0TileMap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -1922,13 +1922,13 @@ GameMode5_Update_LoadScreens_Screen0_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(IntroScreen0AttrMap)
     ld de, IntroScreen0AttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(IntroScreen0Palette)
     ld de, IntroScreen0Palette
     ld hl, wBGPaletteBuffer
     ld c, $08
@@ -2016,11 +2016,11 @@ GameMode5_Update_LoadScreens_Screen1_Load::
     ld a, [wTitleScreenSubState]
     or a
     jr z, .skip
-    ld b, $e1
+    ld b, BANK(CopyrightCreditsTiles)
     ld de, CopyrightCreditsTiles
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(CopyrightCreditsTiles)
     ld de, IntroScreen1TileMap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -2029,13 +2029,13 @@ GameMode5_Update_LoadScreens_Screen1_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(IntroScreen1AttrMap)
     ld de, IntroScreen1AttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(IntroScreen1Palette)
     ld de, IntroScreen1Palette
     ld hl, wBGPaletteBuffer
     ld c, $08
@@ -2122,11 +2122,11 @@ GameMode5_Update_LoadScreens_Screen2_Load::
     ld a, [wTitleScreenSubState]
     or a
     jr z, .skip
-    ld b, $e1
+    ld b, BANK(EnixPresentsLogoTiles)
     ld de, EnixPresentsLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(EnixPresentsLogoTiles)
     ld de, IntroScreen2TileMap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -2135,13 +2135,13 @@ GameMode5_Update_LoadScreens_Screen2_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(IntroScreen2AttrMap)
     ld de, IntroScreen2AttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(IntroScreen2Palette)
     ld de, IntroScreen2Palette
     ld hl, wBGPaletteBuffer
     ld c, $08
@@ -2240,11 +2240,11 @@ TitleOpening_Load::
     ld a, [wFadeState]
     or a
     ret nz
-    ld b, $7e
+    ld b, BANK(Tiles0Gfx)
     ld de, Tiles0Gfx
     ld hl, vTiles0
     call DecompressToVRAM
-    ld b, $7e
+    ld b, BANK(Tiles0Gfx)
     ld de, SparkleSpriteTiles
     ld hl, vTiles0 + $100
     call DecompressToVRAM
@@ -2293,12 +2293,12 @@ TitleOpening_Load::
     ld hl, wBGPaletteBuffer
     ld bc, $0040
     call FillBytes
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)
     ld de, SharedOBJPalettes
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
-    ld b, $7e
+    ld b, BANK(OBJPaletteBufferPlus8Data_2)
     ld de, OBJPaletteBufferPlus8Data_2
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
@@ -2409,11 +2409,11 @@ TitleOpening_LoadNextScreen::
     ld a, [wFadeState]
     or a
     jp nz, TitleOpening_MoveSparkles
-    ld b, $e1
+    ld b, BANK(DragonWarriorLogoTiles)
     ld de, DragonWarriorLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(DragonWarriorLogoTiles)
     ld de, DragonWarriorLogoTilemap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -2422,13 +2422,13 @@ TitleOpening_LoadNextScreen::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(TitleOpening_LoadNextScreen_ScreenAttrBufferGfx)
     ld de, TitleOpening_LoadNextScreen_ScreenAttrBufferGfx
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(TitleOpening_LoadNextScreen_BGPaletteBufferData)
     ld de, TitleOpening_LoadNextScreen_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $08
@@ -2467,15 +2467,15 @@ TitleOpening_LoadTitle::
     ld a, [wFadeState]
     or a
     ret nz
-    ld b, $e1
+    ld b, BANK(TitleKeyAndTarasAdventureTiles)
     ld de, TitleKeyAndTarasAdventureTiles
     ld hl, vTiles1
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(TitleKeyAndTarasAdventureTiles)
     ld de, TitleLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(TitleLogoTiles)
     ld de, TitleOpeningKeyBGMap
     ld hl, vBGMap0
     call DecompressToVRAM
@@ -2484,13 +2484,13 @@ TitleOpening_LoadTitle::
     jr z, .call_reset_link_screen_palettes
     ld a, $01
     ldh [rVBK], a
-    ld b, $e1
+    ld b, BANK(BGMap0Gfx)
     ld de, BGMap0Gfx
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, $00
     ldh [rVBK], a
-    ld b, $e1
+    ld b, BANK(TitleOpening_LoadTitle_BGPaletteBufferData)
     ld de, TitleOpening_LoadTitle_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -2852,19 +2852,19 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_Load::
     ld a, [wFadeState]
     or a
     ret nz
-    ld b, $e1
+    ld b, BANK(Tiles0Gfx_4)
     ld de, Tiles0Gfx_4
     ld hl, vTiles0
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(Tiles0Gfx_4)
     ld de, TitleKeyAndTarasAdventureTiles
     ld hl, vTiles1
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(TitleKeyAndTarasAdventureTiles)
     ld de, TitleLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
-    ld b, $e1
+    ld b, BANK(TitleLogoTiles)
     ld de, TitleScreenTilemap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
@@ -2873,18 +2873,18 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_Load::
     jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(TitleScreenAttrMap)
     ld de, TitleScreenAttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
-    ld b, $e1
+    ld b, BANK(TitleOpening_LoadTitle_BGPaletteBufferData)
     ld de, TitleOpening_LoadTitle_BGPaletteBufferData
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
-    ld b, $e1
+    ld b, BANK(GameMode5_Update_LoadScreens_OBJPaletteBufferData)
     ld de, GameMode5_Update_LoadScreens_OBJPaletteBufferData
     ld hl, wOBJPaletteBuffer
     ld c, $10

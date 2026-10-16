@@ -67,7 +67,7 @@ GameMode6_Init::
     jr nz, .loop3
 
 .skip:
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -106,7 +106,7 @@ GameMode6_Init::
     cp $80
     jr nz, .skip2
     ld de, LinkResultDrawTiles
-    ld b, $24
+    ld b, BANK(LinkResultDrawTiles)
     jr .call_decompress_to_ram_locked
 
 .skip2:
@@ -114,12 +114,12 @@ GameMode6_Init::
     and a
     jr nz, .skip3
     ld de, LinkResultYouWinTiles
-    ld b, $24
+    ld b, BANK(LinkResultYouWinTiles)
     jr .call_decompress_to_ram_locked
 
 .skip3:
     ld de, LinkResultYouLoseTiles
-    ld b, $24
+    ld b, BANK(LinkResultYouLoseTiles)
 
 .call_decompress_to_ram_locked:
     ld hl, vTiles1 + $600
@@ -696,12 +696,12 @@ GameMode6_Update_TakePrize_RedrawBoxes::
 ; which?' or 'Switch which egg?' (string 8 + choice) and goes to state 4 (the monster list) or 5
 ; (the egg list). (C1, E-0357)
 GameMode6_Update_TakePrize_AskSwitchWhich::
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld de, vTiles1
-    ld b, $24
+    ld b, BANK(GameMode6_Update_TakePrize_AskSwitchWhich_Tiles)
 
 .loop:
     push bc
@@ -1256,7 +1256,7 @@ GameMode6_Update_ChooseEgg_DrawSpeciesNames::
 GameMode6_Update_ChooseEgg_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -1568,7 +1568,7 @@ GameMode6_Update_SwitchEgg::
 ; Back from the stats screen to the egg list, step 0: reloads the text tiles and 'Info / OK', clears
 ; the tile areas, redraws the boxes and marks the entry. (C1, E-0357)
 GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -1651,7 +1651,7 @@ GameMode6_Update_SwitchEgg_DrawSpeciesNames::
 GameMode6_Update_SwitchEgg_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $01
@@ -1761,7 +1761,7 @@ GameMode6_Update_SwitchMonster::
 ; clears the tile areas, redraws the boxes (for a link battle with the chosen monster's picture) and
 ; marks the entry. (C1, E-0357)
 GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -2346,7 +2346,7 @@ CopyMonsterNameToBuffer_B24::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04
@@ -2477,12 +2477,12 @@ GameMode6_Update_LoadBannerTiles::
     and a
     jr nz, .skip
     ld de, LinkResultYouWinTiles
-    ld b, $24
+    ld b, BANK(LinkResultYouWinTiles)
     jr .call_decompress_to_vram
 
 .skip:
     ld de, LinkResultYouLoseTiles
-    ld b, $24
+    ld b, BANK(LinkResultYouLoseTiles)
 
 .call_decompress_to_vram:
     ld hl, vTiles2

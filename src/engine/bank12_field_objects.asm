@@ -4334,12 +4334,12 @@ SpawnScriptSpriteInFrontOfPlayer::
     dec a
     jr nz, .skip
     ld de, SpawnScriptSpriteInFrontOfPlayer_Data
-    ld b, $7e
+    ld b, BANK(SpawnScriptSpriteInFrontOfPlayer_Data)
     jr SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace
 
 .skip:
     ld de, SparkleAndCurvedStreakTiles
-    ld b, $7e
+    ld b, BANK(SparkleAndCurvedStreakTiles)
 
 ; DE = compressed sprite graphics, B = their bank: decompresses them to vTiles0 + $700; on the GBC
 ; copies eight palette bytes from bank $7E ($4BBD + 8 * $23 every time, since the wMapSpriteKind
@@ -4372,7 +4372,7 @@ SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace::
     ld a, d
     adc HIGH(SharedOBJPalettes)
     ld d, a
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)
     ld a, $38
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
@@ -4699,7 +4699,7 @@ FieldScene01_DrawSprite_Data::
 ; (wMessageIndex/wMessageGroup) and turns the followers the player's way. (C1, E-0357)
 FieldScene01_LoadSprite::
     ld de, ScallopShellSpriteTiles
-    ld b, $7e
+    ld b, BANK(ScallopShellSpriteTiles)
     ld hl, vTiles0 + $700
     call DecompressToVRAM
     ld de, $0108
@@ -4709,7 +4709,7 @@ FieldScene01_LoadSprite::
     ld a, d
     adc HIGH(SharedOBJPalettes)
     ld d, a
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)
     ld a, $38
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
@@ -5182,7 +5182,7 @@ DrawScriptMetaSprite21AtScrollOffset::
 ; player and turns the followers the player's way. (C1, E-0357)
 FieldScene01_LoadSprite2::
     ld de, LumpyBlobSpriteTiles
-    ld b, $7e
+    ld b, BANK(LumpyBlobSpriteTiles)
     ld hl, vTiles0 + $700
     call DecompressToVRAM
     ld de, $0108
@@ -5192,7 +5192,7 @@ FieldScene01_LoadSprite2::
     ld a, d
     adc HIGH(SharedOBJPalettes)
     ld d, a
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)
     ld a, $38
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
@@ -6932,7 +6932,7 @@ LoadSpriteGraphics7EToTiles0::
 
 .call_decompress_to_vram:
     ld de, FloatingOrbSpriteTiles
-    ld b, $7e
+    ld b, BANK(FloatingOrbSpriteTiles)
     call DecompressToVRAM
     ld a, $30
     ld [wSpriteFloatY], a
@@ -7531,7 +7531,7 @@ RunFieldCommandTemp0_LoadGfxPalette4::
     ld a, d
     adc HIGH(SharedOBJPalettes)
     ld d, a
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)
     ld a, $20
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
@@ -7586,7 +7586,7 @@ RunFieldCommandTemp0_LoadGfxPalette3::
     ld a, d
     adc HIGH(SharedOBJPalettes)
     ld d, a
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)
     ld a, $18
     ld hl, wOBJPaletteBuffer
     add_a_to_hl

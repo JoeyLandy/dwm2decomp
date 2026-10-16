@@ -255,7 +255,7 @@ TravelerEvents_CasinoShip_PayOut::
     ret nz
     farcall RestoreScreenBufferFromBGMap1
     farcall DrawFullScreenBufferAtScroll
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -6783,18 +6783,18 @@ SceneKamehaEscape_FlickerScreenVersions::
     bit 0, a
     jr z, .call_scene_kameha_escape_load_screen_attrs
     ld de, Map30Attrs0_Y4X5
-    ld b, $56
+    ld b, BANK(Map30Attrs0_Y4X5)
     call SceneKamehaEscape_LoadScreenAttrs
     ld de, Map30Screens0_Y4X5
-    ld b, $56
+    ld b, BANK(Map30Screens0_Y4X5)
     jp SceneKamehaEscape_DrawScreen
 
 .call_scene_kameha_escape_load_screen_attrs:
     ld de, Map30Attrs2_Y4X5
-    ld b, $56
+    ld b, BANK(Map30Attrs2_Y4X5)
     call SceneKamehaEscape_LoadScreenAttrs
     ld de, Map30Screens2_Y4X5
-    ld b, $56
+    ld b, BANK(Map30Screens2_Y4X5)
     jr SceneKamehaEscape_DrawScreen
 
 ; Kameha escape: sets screen (5, 4) and warps there on map $30 (the same warp setup as the step
@@ -6824,18 +6824,18 @@ SceneKamehaEscape_FlickerTwoScreens::
     bit 0, a
     jr z, .call_scene_kameha_escape_load_screen_attrs
     ld de, Map30Attrs0_Y5X6
-    ld b, $56
+    ld b, BANK(Map30Attrs0_Y5X6)
     call SceneKamehaEscape_LoadScreenAttrs
     ld de, Map30Screens0_Y5X6
-    ld b, $56
+    ld b, BANK(Map30Screens0_Y5X6)
     jr SceneKamehaEscape_DrawScreen
 
 .call_scene_kameha_escape_load_screen_attrs:
     ld de, Map30Attrs0_Y0X0
-    ld b, $56
+    ld b, BANK(Map30Attrs0_Y0X0)
     call SceneKamehaEscape_LoadScreenAttrs
     ld de, Map30Screens0_Y0X0
-    ld b, $56
+    ld b, BANK(Map30Screens0_Y0X0)
 
 ; Decompresses the screen at DE (bank B) into wScreenTileBuffer and redraws the field. (C1, E-0357)
 SceneKamehaEscape_DrawScreen::
@@ -8300,7 +8300,7 @@ SceneWarubouFood2_HopSprite::
     ld a, $72
     call QueueSoundEffect
     ld de, FieldSpriteGfx49
-    ld b, $7d
+    ld b, BANK(FieldSpriteGfx49)
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $49

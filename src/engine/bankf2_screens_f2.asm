@@ -36,7 +36,7 @@ GameMode8_Init::
     ld a, [wSaveStep]
     bit 7, a
     jr z, .loop2
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -311,7 +311,7 @@ CopyMonsterNameToBuffer_BF2::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld a, $04
@@ -954,12 +954,12 @@ ShowInfoOKLabelTiles::
     ld [wTextWindowWidth], a
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles_2
     ld hl, vTiles1 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ret

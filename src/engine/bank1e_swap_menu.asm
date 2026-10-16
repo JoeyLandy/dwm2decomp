@@ -55,7 +55,7 @@ CloseMenuE9_RestoreGlyphs::
 ; Closing the menu session, step 2: decompresses LetterFrameIconDigitTiles (bank $46) into VRAM
 ; $8800 and blanks the name tiles. (C1, E-0357)
 CloseMenuE9_LoadTiles::
-    ld b, $46
+    ld b, BANK(LetterFrameIconDigitTiles)
     ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
@@ -1247,7 +1247,7 @@ SwapMonstersMenu_MoveRecords_FindFarmMonster::
 SwapMonstersMenu_MoveRecords_DrawYesNo::
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $6c
@@ -2580,12 +2580,12 @@ SwapMonstersMenu_Check_BackToOptions::
     call DrawScreenBufferRect_Bank1E
     ld de, Tiles1Plus7F0Tiles
     ld hl, vTiles1 + $7f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, GlyphCopyDestList5 + $8c
@@ -2949,7 +2949,7 @@ SwapMonstersMenu_Check_DrawEggNames::
 SwapMonstersMenu_Check_DrawEggMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -3024,27 +3024,27 @@ SwapMonstersMenu_Check_DrawSmallBox::
     call DrawScreenBufferRect_Bank1E
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles1 + $4f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus710Tiles
     ld hl, vTiles1 + $750
-    ld b, $1f
+    ld b, BANK(Tiles1Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus240Tiles
     ld hl, vTiles1 + $760
-    ld b, $1f
+    ld b, BANK(Tiles2Plus240Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus770Tiles
     ld hl, vTiles1 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus770Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -3637,32 +3637,32 @@ SwapMonstersMenu_Release_ReloadTiles::
 SwapMonstersMenu_Release_ReloadFrameTiles::
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles1 + $4f0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus710Tiles
     ld hl, vTiles1 + $750
-    ld b, $1f
+    ld b, BANK(Tiles1Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus240Tiles
     ld hl, vTiles1 + $760
-    ld b, $1f
+    ld b, BANK(Tiles2Plus240Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus770Tiles
     ld hl, vTiles1 + $770
-    ld b, $1f
+    ld b, BANK(Tiles1Plus770Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -4148,7 +4148,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor2::
 .skip:
     ld hl, vTiles2 + $730
     ld de, Tiles1Plus2E0Tiles_2
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     farcall UploadTilesFromData
@@ -4726,7 +4726,7 @@ SwapMonstersMenu_ShowMonsterDetails3_Clear::
     call ClearBGMapAtScrollAndResetScroll
     ld de, Tiles1Plus7F0Tiles
     ld hl, vTiles1 + $7f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7F0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
@@ -4912,7 +4912,7 @@ SwapMonstersMenu_ShowParents2_ClearText::
     call FillTilesBxC
     ld de, Tiles1Plus7D0Tiles
     ld hl, vTiles1 + $6d0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus7D0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wListPageIndex]
@@ -4984,12 +4984,12 @@ SwapMonstersMenu_ShowParents2_DrawParents::
     jr c, .check_screen_step
     ld de, Tiles2Plus20Tiles
     ld hl, vTiles2 + $20
-    ld b, $1f
+    ld b, BANK(Tiles2Plus20Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus30Tiles
     ld hl, vTiles2 + $30
-    ld b, $1f
+    ld b, BANK(Tiles2Plus30Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     call BGMapAddressAtScroll_Bank1E
@@ -5272,7 +5272,7 @@ SwapMonstersMenu_ShowParents2_DrawEggBox_TileRect::
 SwapMonstersMenu_ShowParents2_DrawMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
-    ld b, $1f
+    ld b, BANK(Tiles2Plus420Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $01
@@ -6097,7 +6097,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_Cursor::
 .skip:
     ld hl, vTiles2 + $730
     ld de, Tiles1Plus2E0Tiles_2
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     farcall UploadTilesFromData
@@ -6209,7 +6209,7 @@ SwapMonstersMenu_ShowMonsterDetails_LevelAndName::
     farcall DrawRecordNameAndSpeciesNameTiles
     ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles2 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4A0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, wTextWindowTileLo
@@ -6596,7 +6596,7 @@ DrawMonsterNameOfRecordField::
     push hl
     ld a, [wDataBank]
     push af
-    ld a, $08
+    ld a, BANK(StringDatabase)
     ld [wDataBank], a
     ld hl, StringDatabase
     ld bc, $0004

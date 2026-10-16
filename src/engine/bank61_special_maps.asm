@@ -545,14 +545,14 @@ MapType5TilesetTable::
 ; (C1, E-0357)
 LoadMapHeaderByMapType_Type1::
     ld de, MapType5Tiles5
-    ld b, $6e
+    ld b, BANK(MapType5Tiles5)
     ld hl, vTiles2
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a
     jr z, .set_max_blocking_tile_to_3F
     ld de, MapType5Palettes5
-    ld b, $6e
+    ld b, BANK(MapType5Palettes5)
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
@@ -928,7 +928,7 @@ LoadMapScreen_Type5::
     ld a, d
     adc HIGH(KeyWorldRoomPointers)
     ld d, a
-    ld b, $72
+    ld b, BANK(KeyWorldRoomPointers)
     call ReadByteInBank
     ld l, c
     inc de
@@ -3312,7 +3312,7 @@ CheckWarpsByMapType_FloorEntrances::
     ld a, d
     adc HIGH(SpecialMapTable)
     ld d, a
-    ld b, $61
+    ld b, BANK(SpecialMapTable)
     call ReadByteInBank
     ld l, c
     inc de

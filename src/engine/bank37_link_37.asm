@@ -975,12 +975,12 @@ LinkBreed_AskIsThisOK::
     farcall BreedMenu
     ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles_2
     ld hl, vTiles1 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6F0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -1472,22 +1472,22 @@ LinkBreed_DrawYesNo::
     ret nz
     ld de, Tiles2Plus700Tiles
     ld hl, vTiles2 + $700
-    ld b, $1f
+    ld b, BANK(Tiles2Plus700Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus710Tiles
     ld hl, vTiles2 + $710
-    ld b, $1f
+    ld b, BANK(Tiles2Plus710Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles2Plus720Tiles
     ld hl, vTiles2 + $720
-    ld b, $1f
+    ld b, BANK(Tiles2Plus720Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $760
-    ld b, $1f
+    ld b, BANK(Tiles1Plus6E0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
@@ -2354,7 +2354,7 @@ PartnerStats_SkillsKeys::
 .skip:
     ld hl, vTiles2 + $730
     ld de, Tiles1Plus2E0Tiles_2
-    ld b, $1f
+    ld b, BANK(Tiles1Plus2E0Tiles_2)
     ld c, $10
     call CopyFromBankWaitVRAM
     call PartnerStats_UploadSummaryTiles
@@ -2400,7 +2400,7 @@ PartnerStats_DrawSummaryLevelRow::
     call PartnerStats_DrawNameAndSpecies
     ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles2 + $6f0
-    ld b, $1f
+    ld b, BANK(Tiles1Plus4A0Tiles)
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles1
