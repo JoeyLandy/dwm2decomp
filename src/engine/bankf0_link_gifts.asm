@@ -6130,10 +6130,10 @@ ClearRollCounterWhenGM2TimerMinutesIs59::
     ld [wGiftCount], a
 
 ; Runs the effect of the gift item in wPendingGiftItem: a jump table of 98 entries indexed by item
-; id ($00-$61); items with no effect share GiftEffect_BookmarkEtc. The index is not range checked.
-; Each effect adds to one stat word of wGiftRecord (at most 999) and to or from entries of
-; wFamilyScores, then clears wPendingGiftItem. Reached from RecordGiftAndMaybeApplyPrevious after a
-; successful roll, and by fall-through from ClearRollCounterWhenGM2TimerMinutesIs59. (C2, E-0385)
+; id ($00-$61); items with no effect share GiftEffect_None. The index is not range checked. Each
+; effect adds to one stat word of wGiftRecord (at most 999) and to or from entries of wFamilyScores,
+; then clears wPendingGiftItem. Reached from RecordGiftAndMaybeApplyPrevious after a successful
+; roll, and by fall-through from ClearRollCounterWhenGM2TimerMinutesIs59. (C2, E-0385)
 ; jumps by wPendingGiftItem (the item id of the previous gift, stored by
 ; RecordGiftAndMaybeApplyPrevious) to that item's effect; each effect adds to the gift record's
 ; MON_MAX_HP (wGiftRecord, capped at 999) and to or from entries of wFamilyScores, then clears
@@ -6184,27 +6184,27 @@ ApplyGiftEffectByItem::
     dw GiftEffect_Warp
     dw GiftEffect_WarpWing
     dw GiftEffect_ExitBell
-    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_None
     dw GiftEffect_TinyMedal
     dw GiftEffect_GoldPass
     dw GiftEffect_LogTwig
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
     dw GiftEffect_VITbelt
     dw GiftEffect_DracoBelt
     dw GiftEffect_MagicBelt
@@ -6225,12 +6225,12 @@ ApplyGiftEffectByItem::
     dw GiftEffect_OrcaCape
     dw GiftEffect_BraveCape
     dw GiftEffect_DScale
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
-    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
+    dw GiftEffect_None
     dw GiftEffect_Life
     dw GiftEffect_Divine
     dw GiftEffect_War
@@ -7063,7 +7063,7 @@ GiftEffect_ExitBell::
 ; except clearing wPendingGiftItem. (C2, E-0385)
 ; gift effect for item $2B Bookmark, $2F , $30 WaterCall, $31 MoonRock, $32 Crest, $33 YunaSoul ...:
 ; case of ApplyGiftEffectByItem
-GiftEffect_BookmarkEtc::
+GiftEffect_None::
     xor a
     ld [wPendingGiftItem], a
     ret

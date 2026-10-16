@@ -1845,14 +1845,14 @@ RunLinkSession5Exchange_ChosenRecordStart::
     ld [wScreenStep], a
     ret
 
-; Farcalls ShowString0EBank0EAtTiles2700AndLoadTiles (it shows string $0E of the bank $0E table at
-; vTiles2 + $700, puts the default text window back and copies two tiles into vTiles1), then adds 1
-; to wScreenStep. Used as a step by RunLinkSession5Exchange_ShowChosenRecord and
+; Farcalls ShowInfoOKLabelTiles (it shows string $0E of the bank $0E table at vTiles2 + $700, puts
+; the default text window back and copies two tiles into vTiles1), then adds 1 to wScreenStep. Used
+; as a step by RunLinkSession5Exchange_ShowChosenRecord and
 ; RunLinkSession5Exchange_ResetListAndShowString, and called by PartnerStats_DrawSummaryFrames. (C1,
 ; E-0382)
-; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1 (E-0122)
+; far-calls ShowInfoOKLabelTiles, then wScreenStep += 1 (E-0122)
 ShowString0EAndStep_Bank37::
-    farcall ShowString0EBank0EAtTiles2700AndLoadTiles
+    farcall ShowInfoOKLabelTiles
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1977,7 +1977,7 @@ PartnerStats_ClearScreen::
 ; The partner's monster stats, step 1: shows the heading (bank-$0E string $10), loads sixteen glyph
 ; tiles and draws the monster's name. (C1, E-0357)
 PartnerStats_ShowHeading::
-    farcall ShowString10Bank0EAtTiles2020ThenDefault
+    farcall ShowStatsHeadingTiles
     farcall LoadSixteenGlyphTilesFromTable
     call PartnerStats_DrawHeadingName
 
@@ -2187,7 +2187,7 @@ PartnerStats_DrawPage2Frame::
 
 ; The second page, step 18: shows its personality name and master's name. (C1, E-0357)
 PartnerStats_ShowPersonality::
-    farcall ShowPersonalityNameAndRecordBufBMasterNameName
+    farcall ShowRecordBufBPersonalityAndMasterName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2203,8 +2203,8 @@ PartnerStats_DrawFamilyIcon::
     ld [wArg3], a
     ld a, $c7
     ld [wArg4], a
-    farcall DrawFamilyIconAndCountForRecordBufBFamily
-    farcall DrawRecordBufBExpExpAndToNextLevel
+    farcall DrawRecordBufBFamilyIconAndPlus
+    farcall DrawRecordBufBExpAndExpToNextLevel
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2224,7 +2224,7 @@ PartnerStats_LoadSprite::
     farcall DecompressGraphicsArg1ToArg4
     ld a, $f0
     ldh [hSpriteHideTile], a
-    farcall ShowRecordBufBItemCategory11StringAtTiles2320
+    farcall ShowRecordBufBEquippedItemName
     call BGMapAddressAtScroll_Bank37
     ld de, $0160
     add hl, de
@@ -2309,7 +2309,7 @@ PartnerStats_ShowSkillNames::
 
 ; The skills page, step 26: shows the species' description. (C1, E-0357)
 PartnerStats_ShowDescription::
-    farcall ShowSpeciesCategory13StringAtTiles2680
+    farcall ShowSpeciesFieldAbilityName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2368,15 +2368,15 @@ PartnerStats_SkillsKeys::
 PartnerStats_DrawSummaryFrames::
     ld a, [wScreenSubStep]
     and a
-    jr nz, .call_show_string10_bank0_e_at_tiles2020_then
+    jr nz, .call_show_stats_heading_tiles
     farcall MonsterDetails_DrawSummaryPanelFrames
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-.call_show_string10_bank0_e_at_tiles2020_then:
-    farcall ShowString10Bank0EAtTiles2020ThenDefault
+.call_show_stats_heading_tiles:
+    farcall ShowStatsHeadingTiles
     call ShowString0EAndStep_Bank37
     xor a
     ld [wScreenSubStep], a
@@ -2439,7 +2439,7 @@ PartnerStats_DrawPedigreeFrame::
 
 ; The pedigree page, step 31: draws the parents and hides sprite tile $F0. (C1, E-0357)
 PartnerStats_DrawParents::
-    farcall RunF2
+    farcall DrawRecordBufBParents
     ld a, $f0
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]

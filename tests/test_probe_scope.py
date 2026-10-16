@@ -90,5 +90,26 @@ class Scope(unittest.TestCase):
         self.assertNotIn("Table", self.cls)
 
 
+@unittest.skipUnless((ROOT / "build/listing").is_dir(), "generated listing not present")
+class EveryInScopeRoutineIsProbed(unittest.TestCase):
+    """E-0386: every routine a probe can observe has a passing probe in config/probes/ or a documented reason in
+    config/probe_exclusions.json (the goal's probe criterion; docs/PROBE_SCOPE.md lists them)."""
+
+    def test_no_routine_in_scope_is_pending(self):
+        import json
+        import doc_coverage
+        import label_map
+        import present
+        import probe
+        code = {n for f in present.bank_files() for n, kind, *_ in doc_coverage.scan(f) if kind == "code"}
+        cls = probe_scope.classify(probe_scope.routines())
+        at = {v: k for k, v in label_map.snapshot(ROOT / "build/listing").items()}
+        probed = {probe.checks(p) for p in probe.load(sorted((ROOT / "config/probes").glob("*.json")))}
+        excluded = json.loads((ROOT / "config/probe_exclusions.json").read_text(encoding="utf-8"))
+        pending = sorted(n for n in code if cls.get(n) == "probe" and at.get(n) not in probed
+                         and at.get(n) not in excluded)
+        self.assertEqual(pending[:10], [], f"{len(pending)} in-scope routines without a probe or a reason")
+
+
 if __name__ == "__main__":
     unittest.main()

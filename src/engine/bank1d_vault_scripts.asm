@@ -874,11 +874,11 @@ VaultMenu_SaveListAreaToBGMap1::
 ; Saves the vault quantity box area: copies 3 rows of 7 tiles from the BG map at the scroll origin +
 ; $0140 (row 10, column 0, around the digits at + $0161) to BG map 1 at $9FE0 (vBGMap1 + $3E0) with
 ; attributes (SaveBGMapRectWithAttrs). In state 3 (wScreenState = 3) it then calls
-; ListDistinctInventoryItemsToItemGrid and RunUnlessScreenStateIs3 (which in that state switches the
-; bag order list and rebuilds wItemGrid in that order). Adds 1 to wScreenStep. Step 6 of
-; VaultMenu_Store and VaultMenu_TakeOut (through VaultMenu_Store_SaveArea). (C1, E-0379)
+; ListDistinctInventoryItemsToItemGrid and VaultMenu_ReorderBagOrStorage (which in that state
+; switches the bag order list and rebuilds wItemGrid in that order). Adds 1 to wScreenStep. Step 6
+; of VaultMenu_Store and VaultMenu_TakeOut (through VaultMenu_Store_SaveArea). (C1, E-0379)
 ; draws rect $0140 (3 x 7) at vBGMap1 + $3E0; in state 3 also runs
-; ListDistinctInventoryItemsToItemGrid and RunUnlessScreenStateIs3; wScreenStep += 1 (E-0122)
+; ListDistinctInventoryItemsToItemGrid and VaultMenu_ReorderBagOrStorage; wScreenStep += 1 (E-0122)
 VaultMenu_SaveQuantityAreaToBGMap1::
     ld hl, $0140
     ld de, vBGMap1 + $3e0
@@ -888,7 +888,7 @@ VaultMenu_SaveQuantityAreaToBGMap1::
     cp $03
     jr nz, .check_screen_step
     farcall ListDistinctInventoryItemsToItemGrid
-    farcall RunUnlessScreenStateIs3
+    farcall VaultMenu_ReorderBagOrStorage
 
 .check_screen_step:
     ld a, [wScreenStep]
@@ -1373,12 +1373,13 @@ VaultMenu_Store_DrawCount_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
 
-; Storing, step 11: the item cursor: Select (RunUnlessScreenStateIs3) back four steps; Right/Left
-; turn the page; Up/Down move; A picks; B leaves with answer 2 and resumes the script. (C1, E-0357)
+; Storing, step 11: the item cursor: Select (VaultMenu_ReorderBagOrStorage) back four steps;
+; Right/Left turn the page; Up/Down move; A picks; B leaves with answer 2 and resumes the script.
+; (C1, E-0357)
 VaultMenu_Store_ItemCursor::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
-    jr nz, .call_run_unless_screen_state_is3
+    jr nz, .call_vault_menu_reorder_bag_or_storage
     bit 4, a
     jr nz, .check_saved_sprite_slot_count
     bit 5, a
@@ -1407,8 +1408,8 @@ VaultMenu_Store_ItemCursor::
     ld [wScriptStartRequest], a
     ret
 
-.call_run_unless_screen_state_is3:
-    farcall RunUnlessScreenStateIs3
+.call_vault_menu_reorder_bag_or_storage:
+    farcall VaultMenu_ReorderBagOrStorage
     ld a, [wScreenStep]
     sub $04
     ld [wScreenStep], a
@@ -2321,11 +2322,11 @@ VaultMenu_Store_AfterStoring::
     ld [wTwoChoiceCursor], a
 
 ; Ends the store and take-out steps: clears wTextCounter1 and wTextCounter3, flips wCounterPtr0Lo
-; and runs RunUnlessScreenStateIs3, which flips it back (so it ends as it began) and then rebuilds
-; wItemGrid from the bag in state 3, or sorts wItemStorage in the other states, in the order list of
-; wCounterPtr0Lo (1: ItemOrderListA, 0: ItemOrderListB). Adds 1 to wScreenStep. Jumped to by
-; VaultMenu_Store_AfterStoring and VaultMenu_Store_MoveItems_TakeOut with the answer already in
-; wTwoChoiceCursor. (C2, E-0379)
+; and runs VaultMenu_ReorderBagOrStorage, which flips it back (so it ends as it began) and then
+; rebuilds wItemGrid from the bag in state 3, or sorts wItemStorage in the other states, in the
+; order list of wCounterPtr0Lo (1: ItemOrderListA, 0: ItemOrderListB). Adds 1 to wScreenStep. Jumped
+; to by VaultMenu_Store_AfterStoring and VaultMenu_Store_MoveItems_TakeOut with the answer already
+; in wTwoChoiceCursor. (C2, E-0379)
 VaultMenu_Store_AfterStoring_Finish::
     xor a
     ld [wTextCounter1], a
@@ -2334,7 +2335,7 @@ VaultMenu_Store_AfterStoring_Finish::
     inc a
     and $01
     ld [wCounterPtr0Lo], a
-    farcall RunUnlessScreenStateIs3
+    farcall VaultMenu_ReorderBagOrStorage
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a

@@ -2431,6 +2431,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0386 — Readability batch 18 and completion: the last 89 routines; every queue at 0
+
+- Date: 2026-10-16. Kind: REVIEW and OBSERVATION (static readings C1; probed claims C2 on tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit bf033a8.
+- **Method.** The rest of the combined queue (89 routines in banks $F1-$F2: 71 without a hand note, 40 in probe scope without a probe) in four Sonnet slices of 20-23. 89 entries: 74 notes, 40 routines probed (109 probes, all passing; config/probes/E-0386.json). The integrator read 20 entries against the code: all correct. Integrator changes: nine child and data labels took the new prefix of their renamed parents (DrawRecordBufBParents_DrawNames and _DrawIcons, DrawRecordBufBHpMpDigits_Data1); GiftEffect_BookmarkEtc, the shared gift case that only clears wPendingGiftItem, became GiftEffect_None, which leaves no `Etc` name.
+- **Tools and tests.** tools/probe_scope.py writes docs/PROBE_SCOPE.md with a Limits paragraph (WRAM bank 2 writes are not observed by a probe; a video-RAM symbol used as a number puts a routine out of scope). New tests: tests/test_probe_scope.py checks that every in-scope routine has a passing probe or a documented reason; the ratchet in tests/test_doc_coverage.py now holds the unread, instruction-named, data, asset and `Etc` counts at 0.
+- **Final measures** (tools/readability.py, tools/doc_coverage.py, tools/readability_queue.py, tools/probe_scope.py on build/run643): 33,383 labels, 0 mechanical labels, 0 raw pointer operands; 9,822 code labels, all 9,822 with a hand-written reading note and none named after its instructions; 23,561 data labels, all commented, none described only by its reader; no label over 60 characters (two second-name aliases of 56 and 57 characters, documented in docs/ROADMAP.md); 3,550 INCBIN slices, 140 of the 153 that were opaque identified and 13 listed in docs/UNIDENTIFIED_ASSETS.md; 5,874 routines in probe scope, all with a passing probe (16,782 probes in config/probes/), and 3,948 out of scope with the reason in docs/PROBE_SCOPE.md; no stale name in any src file.
+- **Checks.** build/run643 PASS (approved size and SHA-256, zero differing bytes); no stale name; serial full suite build/logs/suite643.log OK (397 tests, 3 skipped). docs/ROADMAP.md marks the readability goal complete.
+
 ### E-0385 — Readability batch 17: 900 routines in banks $85-$F1 read or probed (742 probed, 2,281 probes)
 
 - Date: 2026-10-16. Kind: REVIEW and OBSERVATION (static readings C1; probed claims C2 on tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 9a0cd8c (E-0384).

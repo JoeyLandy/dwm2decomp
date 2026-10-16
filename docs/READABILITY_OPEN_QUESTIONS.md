@@ -1901,3 +1901,19 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `ClearRollCounterWhenGM2TimerMinutesIs59` (F0:72B4): Whether applying the pending gift on this fall-through is intended is not known; the code has no ret before ApplyGiftEffectByItem.
 - `CopyNameStringFromBank08Database` (F0:7C96): CopyNameStringFromBank08Database_Data is a label in this bank but the code uses its address as an entry of bank $08 (StringDatabase list 2); the label is misplaced, not data of this bank.
 - `ClearScreenBufferAndAttributes_BankF1` (F1:4AA8): The probes check the tile fill and the CGB branch, but the runner cannot read WRAM bank 2 after rSVBK is restored, so the attribute clear is C1 (code reading).
+
+## E-0386
+
+- `CopyScreenBufferRectAt024FAndDrawBox_BankF1` (F1:5812): what the 9 x 7 block at wScreenTileBuffer + $83 holds (the screen as it was before the box was drawn?)
+- `GameMode8_Init` (F2:4001): Why the clear covers 256 bytes while GameMode8_Update_EndMode clears $6F is unknown (the B-only loop looks accidental but is kept by the byte match).
+- `GameMode8_Init` (F2:4001): What the fade value $FC selects is not worked out here.
+- `ShowStatsHeadingTiles` (F2:49CF): The glyph codes of the 30-tile strip are not decoded into the individual stat names here.
+- `ShowInfoOKLabelTiles` (F2:4A0B): Which on-screen buttons the 'InfoOK' tiles label is not confirmed by this reading.
+- `PickNameBufferForFirstByte_BankF2` (F2:4E26): Whether tiles $CC and $CD beside the two parent icons are the male and female marks is not confirmed on screen.
+- `DrawLevelAndStatusRowForRecordBufBLevel` (F2:4F47): The tiles $EA and $ED are probably the 'Lv' label; the tile numbers $C0-$C2 have not been matched with status icons on screen.
+- `DrawRecordBufBFamilyIconAndPlus` (F2:50E2): Whether tile $1E, written before the number, is the plus sign glyph was not checked on screen.
+- `PermuteArg5To7ByMonster` (F2:5181): Why the rows differ per monster (some are 0,1,2, others rotations) is not known; every row is a permutation of 0, 1, 2.
+- `ReturnStub_3` (F2:6333): Whether the 7 unreferenced bytes are a leftover of an earlier version of this stub is not known.
+- `ReorderKeyList` (F2:6355): What byte 3 bit 7 and a value below 7 in byte 0 mean for a key is not read here (another note reads byte 3 bit 7 as a key marked as leaving its key world).
+- `VaultMenu_ReorderBagOrStorage` (F2:6449): The other wScreenState values that reach the storage branch were not enumerated.
+- `GreatLogTalkEvents_ClearArenaData` (F2:6692): What else lives in wArenaEntry through wArenaEntry + $20E besides wScreenState and wScreenStep is not read here.

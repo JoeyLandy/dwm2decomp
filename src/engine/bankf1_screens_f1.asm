@@ -2855,11 +2855,11 @@ RunScreenStateWhenNotFading_F1_ChosenRecordStart::
     ld [wScreenStep], a
     ret
 
-; Far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1. It is a step of the
-; chosen-record screen and is also used as a step by other screen tables. (C1, E-0385)
-; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1 (E-0122)
+; Far-calls ShowInfoOKLabelTiles, then wScreenStep += 1. It is a step of the chosen-record screen
+; and is also used as a step by other screen tables. (C1, E-0385)
+; far-calls ShowInfoOKLabelTiles, then wScreenStep += 1 (E-0122)
 ShowString0EAndStep_BankF1::
-    farcall ShowString0EBank0EAtTiles2700AndLoadTiles
+    farcall ShowInfoOKLabelTiles
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2966,13 +2966,12 @@ RunScreenStateWhenNotFading_F1_StatsClearScreen::
     ld [wScreenStep], a
     ret
 
-; The record stats screen, step 1: shows the heading (string $10,
-; ShowString10Bank0EAtTiles2020ThenDefault), loads sixteen glyph tiles
-; (LoadSixteenGlyphTilesFromTable), draws the short name of wRecordBufB
+; The record stats screen, step 1: shows the heading (string $10, ShowStatsHeadingTiles), loads
+; sixteen glyph tiles (LoadSixteenGlyphTilesFromTable), draws the short name of wRecordBufB
 ; (DrawShortStringRecordBufBNameAtTiles1500) and falls into
 ; RunScreenStateWhenNotFading_F1_PartnerStatsNext (wScreenStep += 1). (C1, E-0373)
 RunScreenStateWhenNotFading_F1_StatsShowHeading::
-    farcall ShowString10Bank0EAtTiles2020ThenDefault
+    farcall ShowStatsHeadingTiles
     farcall LoadSixteenGlyphTilesFromTable
     call DrawShortStringRecordBufBNameAtTiles1500
 
@@ -3154,18 +3153,18 @@ RunScreenStateWhenNotFading_F1_StatsPage2Frame::
     ret
 
 ; The second page, step 18: shows the personality name and the master name of wRecordBufB
-; (ShowPersonalityNameAndRecordBufBMasterNameName), wScreenStep += 1, and falls into
+; (ShowRecordBufBPersonalityAndMasterName), wScreenStep += 1, and falls into
 ; RunScreenStateWhenNotFading_F1_StatsFamilyIcon and RunScreenStateWhenNotFading_F1_StatsLoadSprite,
 ; so steps 18-20 run in one call and leave wScreenStep at 21. (C1, E-0373)
 RunScreenStateWhenNotFading_F1_StatsPersonality::
-    farcall ShowPersonalityNameAndRecordBufBMasterNameName
+    farcall ShowRecordBufBPersonalityAndMasterName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
 ; The second page, step 19: with wArg1-wArg4 = $6D, 0, $EA, $C7 draws the family icon and count
-; (DrawFamilyIconAndCountForRecordBufBFamily) and the experience and the amount still needed
-; (DrawRecordBufBExpExpAndToNextLevel), wScreenStep += 1, and falls into
+; (DrawRecordBufBFamilyIconAndPlus) and the experience and the amount still needed
+; (DrawRecordBufBExpAndExpToNextLevel), wScreenStep += 1, and falls into
 ; RunScreenStateWhenNotFading_F1_StatsLoadSprite. (C1, E-0373)
 RunScreenStateWhenNotFading_F1_StatsFamilyIcon::
     ld a, $6d
@@ -3176,17 +3175,16 @@ RunScreenStateWhenNotFading_F1_StatsFamilyIcon::
     ld [wArg3], a
     ld a, $c7
     ld [wArg4], a
-    farcall DrawFamilyIconAndCountForRecordBufBFamily
-    farcall DrawRecordBufBExpExpAndToNextLevel
+    farcall DrawRecordBufBFamilyIconAndPlus
+    farcall DrawRecordBufBExpAndExpToNextLevel
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
 ; The second page, step 20: decompresses the graphics of the species of wRecordBufB
 ; (DecompressGraphicsArg1ToArg4, wArg1/wArg2 = MON_SPECIES, wArg4/wArg5 = $00, $80), sets
-; hSpriteHideTile = $F0, shows its item name (ShowRecordBufBItemCategory11StringAtTiles2320), draws
-; the 8 x 7 item box MonsterDetailsItemBoxTileRect at the scroll origin + $160 and goes on. (C1,
-; E-0373)
+; hSpriteHideTile = $F0, shows its item name (ShowRecordBufBEquippedItemName), draws the 8 x 7 item
+; box MonsterDetailsItemBoxTileRect at the scroll origin + $160 and goes on. (C1, E-0373)
 RunScreenStateWhenNotFading_F1_StatsLoadSprite::
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
@@ -3200,7 +3198,7 @@ RunScreenStateWhenNotFading_F1_StatsLoadSprite::
     farcall DecompressGraphicsArg1ToArg4
     ld a, $f0
     ldh [hSpriteHideTile], a
-    farcall ShowRecordBufBItemCategory11StringAtTiles2320
+    farcall ShowRecordBufBEquippedItemName
     call BGMapAddressAtScroll_BankF1
     ld de, $0160
     add hl, de
@@ -3293,7 +3291,7 @@ RunScreenStateWhenNotFading_F1_StatsSkillNames::
 
 ; The skills page, step 26: shows the species' description (category $0D). (C1, E-0357)
 RunScreenStateWhenNotFading_F1_StatsDescription::
-    farcall ShowSpeciesCategory13StringAtTiles2680
+    farcall ShowSpeciesFieldAbilityName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3343,13 +3341,13 @@ RunScreenStateWhenNotFading_F1_StatsSkillsKeys::
 ; The record stats screen, step 28 (B on the skills page), by wScreenSubStep: sub-step 0 sets the
 ; text window to vTiles2 + $200 with size $1504, clears it (FillTilesFromRequest), draws
 ; MonsterDetails_DrawSummaryPanelFrames (a 12 x 3 frame at the scroll origin + 8 and the item box)
-; and advances the sub-step; sub-step 1 shows the heading (ShowString10Bank0EAtTiles2020ThenDefault)
-; and string $0E 'InfoOK' with its tiles (ShowString0EAndStep_BankF1, wScreenStep += 1) and clears
-; the sub-step. (C1, E-0373)
+; and advances the sub-step; sub-step 1 shows the heading (ShowStatsHeadingTiles) and string $0E
+; 'InfoOK' with its tiles (ShowString0EAndStep_BankF1, wScreenStep += 1) and clears the sub-step.
+; (C1, E-0373)
 RunScreenStateWhenNotFading_F1_StatsLeaveSkills::
     ld a, [wScreenSubStep]
     and a
-    jr nz, .call_show_string10_bank0_e_at_tiles2020_then
+    jr nz, .call_show_stats_heading_tiles
     ld hl, vTiles2 + $200
     ld a, l
     ld [wTextWindowTileLo], a
@@ -3367,8 +3365,8 @@ RunScreenStateWhenNotFading_F1_StatsLeaveSkills::
     ld [wScreenSubStep], a
     ret
 
-.call_show_string10_bank0_e_at_tiles2020_then:
-    farcall ShowString10Bank0EAtTiles2020ThenDefault
+.call_show_stats_heading_tiles:
+    farcall ShowStatsHeadingTiles
     call ShowString0EAndStep_BankF1
     xor a
     ld [wScreenSubStep], a
@@ -3424,9 +3422,10 @@ RunScreenStateWhenNotFading_F1_StatsPedigreeFrame::
     ld [wScreenStep], a
     ret
 
-; The pedigree page, step 31: draws the parents (RunF2) and hides sprite tile $F0. (C1, E-0357)
+; The pedigree page, step 31: draws the parents (DrawRecordBufBParents) and hides sprite tile $F0.
+; (C1, E-0357)
 RunScreenStateWhenNotFading_F1_StatsDrawParents::
-    farcall RunF2
+    farcall DrawRecordBufBParents
     ld a, $f0
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -3493,7 +3492,7 @@ RunScreenStateWhenNotFading_F1_RedrawBreedScreen::
     dw RunScreenStateWhenNotFading_F1_RedrawChoiceBox
     dw RunScreenStateWhenNotFading_F1_RunBreedListFinal
 
-; Back to the list, step 0: restores the list cursor and page. (C1, E-0357)
+; Back to the list, step 0: restores the list cursor and page. (C2, E-0357; probed E-0386)
 RunScreenStateWhenNotFading_F1_RestoreListCursor::
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -3564,6 +3563,16 @@ RunScreenStateWhenNotFading_F1_RedrawChoiceBox::
     ld [wScreenStep], a
     ret
 
+; Draws the monster of wRecordBufB (the partner record on the link screens) as a meta-sprite on the
+; record stats screen: wArg1 and wArg2 = its species word (MON_SPECIES), wArg3 = 0 (tile offset),
+; wArg4 = $90 and wArg5 = $40 (screen position, added to the scroll), wArg6 = 0 (attribute xor),
+; then far-calls DrawMetaSpritePartC0, which takes the animation frame from bit 4 of wFrameCounterLo
+; and draws the meta-sprite set. The link-session update routines (GameMode5_Update_LinkSession,
+; GameMode5_Update_ExchangeJoypadOnRecords, GameMode5_Update_LinkSession_Breeding and
+; ExchangeJoypadAndDrawMonsters) far-call it every frame while wScreenState is $0D and wScreenStep
+; is $15 (RunScreenStateWhenNotFading_F1_StatsPage2Keys); at step $20
+; (RunScreenStateWhenNotFading_F1_StatsPedigreeKeys) they call DrawRecordBufBSpeciesSprites instead.
+; (C1, E-0386)
 ; wArg1/2 = the species wRecordBufB + $B/7, wArg3-6 = $00, $90, $40, $00, then far-calls
 ; DrawMetaSpritePartC0 (E-0122) (E-0340: the address in its name read as its RAM name; was
 ; DrawRecordBufBSpeciesSpritePart_BankF1)
@@ -3583,6 +3592,13 @@ DrawRecordBufBSpeciesSpritePart_BankF1::
     farcall DrawMetaSpritePartC0
     ret
 
+; Copies the five 16-byte tiles of UploadTilesFromData_BankF1_Tiles to VRAM with
+; CopyTileBytesToVRAM_BankF1: the first two to vTiles2 + $6E0 (BG tiles $6E and $6F) and the next
+; three to vTiles2 + $7C0 (tiles $7C, $7D and $7E). These are the tile numbers
+; MonsterDetailsPedigreeLowerLeftTileRect uses, the small shape that DrawSummaryFrames draws at BG
+; row 11, column 0. Its only caller, RunScreenStateWhenNotFading_F1_StatsSkillsKeys, runs it when A
+; is pressed on the skills page, just before DrawSummaryFrames. It clobbers A, HL and DE. (C1,
+; E-0386)
 ; copies tiles from UploadTilesFromData_BankF1_Tiles: two to vTiles2 + $6E0 and three to vTiles2 +
 ; $7C0 (E-0118) (E-0344: the address in its name dropped or read as the label there; was
 ; UploadTilesFromData_BankF1)
@@ -3606,6 +3622,10 @@ UploadTilesFromData_BankF1_Tiles::
     db $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $ff, $ff, $ff ; entry 3
     db $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0 ; entry 4
 
+; HL = source, DE = VRAM destination: copies 16 bytes (one tile) one byte at a time, each with
+; interrupts off after waiting for rSTAT bit 1 to clear, so the write happens while the LCD allows
+; VRAM access. HL and DE end 16 bytes further, A = 0 and interrupts are enabled again.
+; UploadTilesFromData_BankF1 calls it five times in a row. (C1, E-0386)
 ; copies 16 bytes from [HL] to [DE], each written with interrupts off after waiting for rSTAT bit 1
 ; to clear; HL and DE advance (a counter variant of CopyTileBytesToVRAM_BankF1) (E-0238)
 CopyTileBytesToVRAM_BankF1::
@@ -3628,8 +3648,14 @@ CopyTileBytesToVRAM_BankF1::
     jr nz, .loop
     ret
 
+; HL = source: copies up to 10 bytes to wNameGlyphBuf, stopping before a $F0 byte, then stores a $F0
+; terminator after the copied bytes; when the first 10 bytes hold no $F0 the 11th byte is not read.
+; HL ends after the last byte read (after the $F0 when it stopped the copy), DE at the terminator, A
+; = $F0. Both callers pass HL = wRecordBufB + MON_NAME and then draw the glyph tiles of the buffer
+; with CopyGlyphTilesToVRAM: DrawShortStringRecordBufBNameAtTiles1500 and
+; DrawRecordBufBNameNameAndRecordBufBSpeciesString. (C2, E-0386)
 ; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0
-; terminator (the same 19 bytes appear in 2 banks) (E-0353)
+; terminator (the same 19 bytes appear in 2 banks)
 CopyShortStringToNameGlyphBuf_BankF1::
     ld de, wNameGlyphBuf
     ld c, $0a
@@ -3648,6 +3674,14 @@ CopyShortStringToNameGlyphBuf_BankF1::
     ld [de], a
     ret
 
+; Draws the name and the species name of the record in wRecordBufB for the record stats screen. The
+; name (MON_NAME, copied with CopyShortStringToNameGlyphBuf_BankF1) becomes glyph tiles at vTiles1 +
+; $780 (CopyGlyphTilesToVRAM). Then wStringIndex = the low byte and wStringCategory = the high byte
+; + 2 of the species word (MON_SPECIES), the text window is set to vTiles1 + $270 ($8A70) with 1 row
+; of 9 tiles (wTextWindowTileLo/Hi, wTextWindowRows, wTextWindowWidth), and ShowString_Bank08 prints
+; that string, the monster name, into those tiles at once. Called by
+; RunScreenStateWhenNotFading_F1_StatsPage2Names (second page, step 16) and
+; RunScreenStateWhenNotFading_F1_StatsBackToPage2 (step 29, back from the skills page). (C1, E-0386)
 ; draws the name at wRecordBufB + $1 at vTiles1 + $780 and shows string [wRecordBufB + $B] of
 ; category [wRecordBufB + $C] + 2 at $8A70 with size $0109 (E-0121) (E-0340: the address in its name
 ; read as its RAM name; was DrawRecordBufBNameNameAndRecordBufBSpeciesString)
@@ -3673,6 +3707,14 @@ DrawRecordBufBNameNameAndRecordBufBSpeciesString::
     farcall ShowString_Bank08
     ret
 
+; HL = BG map address, DE = packed tiles: stores H and L in wArg5 and wArg6 and D and E in wArg1 and
+; wArg2, then far-calls DrawTileRectFromArg1Params. That routine takes the width from wArg3, the
+; rows from wArg4, and wArg7 (non-zero keeps the CGB attributes); every caller sets those three
+; first, with wArg7 = 0. Callers, all stats screen steps:
+; RunScreenStateWhenNotFading_F1_StatsDrawFrame, RunScreenStateWhenNotFading_F1_StatsPage1Keys (the
+; blank picture cover), RunScreenStateWhenNotFading_F1_StatsPage2Frame,
+; RunScreenStateWhenNotFading_F1_StatsLoadSprite and
+; RunScreenStateWhenNotFading_F1_StatsPedigreeFrame. (C1, E-0386)
 ; wArg5/wArg6 = HL (destination), wArg1/wArg2 = DE (source), then far-calls
 ; DrawTileRectFromArg1Params (width and rows already in wArg3/wArg4) (E-0093) (the same 23 bytes
 ; appear in 4 banks)
@@ -3688,6 +3730,13 @@ DrawTileRectAtHLFromDE_BankF1::
     farcall DrawTileRectFromArg1Params
     ret
 
+; Takes the three-entry choice box off the breeding screen. It copies 7 rows of 9 bytes from
+; wScreenTileBuffer + $83 to wScreenTileBuffer + $24F, which is wWindowTileBuffer + $E7, where
+; BreedChoiceBoxTileRect was copied (CopyScreenBufferRectWithAttrs_F1 with B = 0, C = 7, HL = $024F,
+; DE = $0083, wArg1 = 0, wArg2 = 9; the CGB attributes too), then redraws the 20 x 13 area at
+; wScreenTileBuffer + $1CC onto the BG map from the scroll origin (DrawScreenBufferRect_BankF1).
+; Both calls are in RunScreenStateWhenNotFading_F1_BreedHandleChoice, before it shows 'Your pal
+; refused breeding.' or 'You refused breeding.'. (C1, E-0386)
 ; runs CopyScreenBufferRectWithAttrs_F1 (C = 7, HL = $024F, DE = $0083, wArg1/2 = 0/9), then draws
 ; the box at scroll + $1CC (E-0122) (E-0344: the address in its name dropped or read as the label
 ; there; was CopyScreenBufferRectAt024FAndDrawBox_BankF1; shortened from
@@ -3707,7 +3756,12 @@ CopyScreenBufferRectAt024FAndDrawBox_BankF1::
     call DrawScreenBufferRect_BankF1
     ret
 
-; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E (E-0353)
+; A = string index: sets wStringIndex = A and wStringCategory = 0, then far-calls
+; BeginStringDisplay_Bank0E, which starts showing that string of the breeding text list (for example
+; 7 'Please wait.', 2 'You refused breeding.'). The text is printed over the following frames
+; (wTextFlags stays non-zero until it is done), so the link breeding steps of this bank wait for
+; wTextFlags = 0 before they go on. (C1, E-0386)
+; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E
 BeginString_Bank0E_Cat0::
     ld [wStringIndex], a
     xor a
@@ -3715,6 +3769,17 @@ BeginString_Bank0E_Cat0::
     farcall BeginStringDisplay_Bank0E
     ret
 
+; Input handler of a three-entry choice box; the cursor is wTwoChoiceCursor (0-2). Up (bit 6 of
+; wJoypadPressedRepeat) or Down (bit 7), Up tested first: draws the blank tile $C3 over the old
+; cursor, moves wTwoChoiceCursor with wrap-around (Up from 0 goes to 2, Down from 2 goes to 0),
+; clears wScreenCounter, draws the cursor tile $BB at the new entry, queues sound effect $69 and
+; returns wMenuInputResult = A = $FD. Otherwise A (bit 0 of wJoypadPressed) draws the tile $BC at
+; the current entry, queues sound $69 and returns $FF; B (bit 1) returns $FE with no sound; with no
+; press it calls BlinkCursorScreenCounter_BankF1 and returns 0. The three entries are at BG rows 7,
+; 9 and 11, column 12 from the scroll origin (DrawTileBAtTwoChoiceEntry_BankF1_Data). Callers:
+; RunScreenStateWhenNotFading_F1_BreedHandleChoice (the 'BredInfoExit' box) and, by farcall,
+; RunLinkSession6Exchange_FightInfo_Choice (Fight, Info, Ex) and
+; EggServiceMenu_Bank1B_StartLinkBattle_ReadChoice (Battle, Prize, Exit). (C1, E-0386)
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or
 ; cancel; otherwise blinks the cursor (E-0127)
 HandleThreeChoiceCursorInput_F1::
@@ -3783,6 +3848,12 @@ HandleThreeChoiceCursorInput_F1::
     ld [wMenuInputResult], a
     ret
 
+; Blinks the choice cursor, called once per frame while no button is pressed. While
+; wJoypadRepeatTimer is below $14 (a button is held and the repeat timer is counting down) it just
+; draws the cursor tile $BB (DrawCursorTileBB_BankF1). At $14 or more (no button held, or the frame
+; a button is first pressed) it adds 1 to wScreenCounter: below $10 it draws the cursor tile $BB,
+; from $10 to $17 the blank tile $C3 (DrawBlankTileC3_BankF1), and at $18 it resets the counter to 0
+; and draws $BB. So the cursor shows for 16 calls and is blank for 8. (C1, E-0386)
 ; once the joypad repeat timer reaches $14, cycles wScreenCounter through 0-$17 and draws the cursor
 ; tile ($BB) or a blank ($C3) (E-0122)
 BlinkCursorScreenCounter_BankF1::
@@ -3799,16 +3870,28 @@ BlinkCursorScreenCounter_BankF1::
     xor a
     ld [wScreenCounter], a
 
+; B = $BB, the cursor tile, then jumps to DrawTileBAtTwoChoiceEntry_BankF1, which writes tile B into
+; the BG map at the entry chosen by wTwoChoiceCursor (BG rows 7, 9 and 11, column 12 from the scroll
+; origin). Used by HandleThreeChoiceCursorInput_F1 after the cursor moves and by
+; BlinkCursorScreenCounter_BankF1 for the visible phase. (C1, E-0386)
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
 DrawCursorTileBB_BankF1::
     ld b, $bb
     jr DrawTileBAtTwoChoiceEntry_BankF1
 
+; B = $C3, the blank tile, then jumps to DrawTileBAtTwoChoiceEntry_BankF1, which writes it at the
+; entry chosen by wTwoChoiceCursor. It erases the cursor: HandleThreeChoiceCursorInput_F1 calls it
+; before moving the cursor, and BlinkCursorScreenCounter_BankF1 uses it for the hidden phase of the
+; blink. (C1, E-0386)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_BankF1::
     ld b, $c3
     jr DrawTileBAtTwoChoiceEntry_BankF1
 
+; B = $BC, then falls into DrawTileBAtTwoChoiceEntry_BankF1, which writes tile $BC at the entry
+; chosen by wTwoChoiceCursor. HandleThreeChoiceCursorInput_F1 calls it when A is pressed, so the
+; chosen entry shows $BC; the breeding choice later stores the same $BC for entry 0 in its window
+; buffer (RunScreenStateWhenNotFading_F1_BreedHandleChoice). (C1, E-0386)
 ; B = $BC, then writes B at the scroll position +
 ; DrawTileBAtTwoChoiceEntry_BankF1_Data[wTwoChoiceCursor] (E-0124)
 DrawArrowTileBCAtTwoChoiceEntry_BankF1::
@@ -3842,6 +3925,15 @@ DrawTileBAtTwoChoiceEntry_BankF1::
 DrawTileBAtTwoChoiceEntry_BankF1_Data::
     db $ec, $00, $2c, $01, $6c, $01
 
+; Copies a block inside the screen buffers, row by row. C = number of rows, DE = source offset and
+; HL = destination offset in wScreenTileBuffer, wArg1:wArg2 = the number of bytes in each row as a
+; 16-bit count (the callers pass wArg1 = 0 and the width in wArg2). Each row is copied with
+; CopyBytesDEToHL_BankF1, then DE and HL each advance by 20 for the next row. On a CGB (wIsCGB
+; non-zero) the same rectangle is also copied inside wScreenAttrBuffer with
+; CopyLow3BitsToWRAMBank2_BankF1, so each attribute byte keeps only its low 3 bits (the palette
+; number). On return HL and DE are 20 * C further, C = 0 and B is unchanged. Callers:
+; CopyScreenBufferRectAt0278AndStep_BankF1 and CopyScreenBufferRectAt024FAndDrawBox_BankF1. (C2,
+; E-0386)
 ; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with
 ; CGB attributes (E-0127)
 CopyScreenBufferRectWithAttrs_F1::
@@ -3903,6 +3995,9 @@ CopyScreenBufferRectWithAttrs_F1::
     jr nz, CopyScreenBufferRectWithAttrs_F1
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes (the count is tested after the first
+; byte, so BC = 0 would copy 65536). On return DE and HL are past the copy, BC = 0, A = 0 and Z is
+; set. CopyScreenBufferRectWithAttrs_F1 uses it for one row at a time. (C2, E-0386)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 CopyBytesDEToHL_BankF1::
@@ -3915,8 +4010,13 @@ CopyBytesDEToHL_BankF1::
     jr nz, CopyBytesDEToHL_BankF1
     ret
 
+; DE = source, HL = destination, BC = count: sets rSVBK = 2, copies BC bytes with each byte ANDed
+; with $07 (a CGB attribute byte keeps only its palette number), then sets rSVBK = 0. While the loop
+; runs, addresses from $D000 are WRAM bank 2; CopyScreenBufferRectWithAttrs_F1 passes
+; wScreenAttrBuffer addresses. On return DE and HL are past the copy, BC = 0, A = 0, and rSVBK is 0
+; whatever it was before. (C2, E-0386)
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 18 bytes appear in 7 banks) (E-0353)
+; 18 bytes appear in 7 banks)
 CopyLow3BitsToWRAMBank2_BankF1::
     ld a, $02
     ldh [rSVBK], a
@@ -3934,6 +4034,12 @@ CopyLow3BitsToWRAMBank2_BankF1::
     ldh [rSVBK], a
     ret
 
+; B = number of a record in save RAM (sRecords), wArg1 = BG tile number: enables SRAM bank 0, reads
+; the byte MON_FAMILY of record B (LoadSRAMRecordByte), keeps its low nibble, the family, in
+; wWorkBuf, sets wWorkBuf + 1 = wArg1 and far-calls LoadFamilyIconTileForWorkBuf, which writes the
+; 16-byte icon of that family to tile wArg1; then disables SRAM again (rRAMG2 = 0). Its one caller,
+; RunScreenStateWhenNotFading_F1_LinkBreed_DrawPanel, passes wArg1 = $C7, the tile in column 1 of
+; the fourth row of BreedRecordPanelTileRect. (C1, E-0386)
 ; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = wArg1, then
 ; LoadFamilyIconTileForWorkBuf (E-0122)
 LoadFamilyIconTileForRecordB_BankF1::
@@ -3954,9 +4060,18 @@ LoadFamilyIconTileForRecordB_BankF1::
     ld [rRAMG2], a
     ret
 
+; DE = source (packed rows), HL = destination, B = width, C = rows: copies the rectangle into a
+; buffer whose rows are 20 bytes apart. On a DMG (wIsCGB = 0) it returns with Z set, HL and BC as
+; they were and DE past the source. On a CGB it then zero-fills the same-shaped rectangle at HL +
+; $0E68 with rSVBK = 2 (for HL inside wWindowTileBuffer that is wWindowAttrBuffer, so the new tiles
+; get attribute 0), sets rSVBK = 0 and returns with HL = HL + $0E68 + 20 * C and C = 0. Callers draw
+; boxes into wWindowTileBuffer: RunScreenStateWhenNotFading_F1_LinkBreed_DrawPanel (12 x 5 panel),
+; RunScreenStateWhenNotFading_F1_BreedDrawChoiceBox and
+; RunScreenStateWhenNotFading_F1_RedrawChoiceBox (9 x 7 choice box) and
+; RunScreenStateWhenNotFading_F1_BreedAskToRecord (6 x 5 yes/no box). (C2, E-0386)
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
 ; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the
-; same 58 bytes appear in 8 banks) (E-0353)
+; same 58 bytes appear in 8 banks)
 CopyRectTo20ByteRows_BankF1::
     push hl
     push bc
@@ -4010,6 +4125,16 @@ CopyRectTo20ByteRows_BankF1::
     ldh [rSVBK], a
     ret
 
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: copies that
+; rectangle of wScreenTileBuffer to the BG map with CopyRectToBGMapWrapped, then sets wTextCursorLo
+; and wTextCursorHi to HL + $1C1 (the BG address where the next text row starts: 14 rows and one
+; column on from HL). On a CGB it also copies the matching rectangle of wScreenAttrBuffer + DE (WRAM
+; bank 2) into VRAM bank 1 at the same BG address, then sets rVBK and rSVBK back to 0. On a DMG BC,
+; DE and HL come back unchanged; on a CGB they do not. The callers redraw the 20 x 13 area (B = $14,
+; C = $0D, DE = $01CC, HL from BGMapAddressAtScroll_BankF1):
+; CopyScreenBufferRectAt024FAndDrawBox_BankF1, RunScreenStateWhenNotFading_F1_BreedLoadPick,
+; RunScreenStateWhenNotFading_F1_BreedDrawChoiceBox and
+; RunScreenStateWhenNotFading_F1_BreedAskToRecord. (C1, E-0386)
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address:
 ; CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from
 ; wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are
@@ -4055,8 +4180,12 @@ DrawScreenBufferRect_BankF1::
     ldh [rVBK], a
     ret
 
+; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8: the address in BG map 0 of the tile at the
+; current scroll position (32 entries per row). Clobbers A and DE. Nearly every drawing step of this
+; bank starts with it to place a rectangle or a cursor tile relative to the visible screen. (C1,
+; E-0386)
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_BankF1::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -4075,8 +4204,13 @@ BGMapAddressAtScroll_BankF1::
     add_a_to_hl
     ret
 
+; HL = table of words, A = index, B = value: reads the word at HL + 2 * A as an address and stores B
+; there. BC is kept; on return A = B, DE = the address and HL = the table + 2 * A + 1. Its one
+; caller, RunScreenStateWhenNotFading_F1_BreedHandleChoice, passes the table BreedChoiceMarkBufAddrs
+; with A = wTwoChoiceCursor and B = $BC, to put the mark tile at the chosen entry of the choice box
+; in wWindowTileBuffer. (C2, E-0386)
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0353)
+; A, DE, HL (the same 14 bytes appear in 8 banks)
 StoreBAtWordTableEntry_BankF1::
     push bc
     add a
@@ -4318,6 +4452,12 @@ ExchangeJoypadAndDrawSprites_NameGiftEgg::
     ld [wMenuCounter], a
     ret
 
+; Copies the $40 bytes at LoadBGPalettesFromData_Data, eight CGB palettes of four RGB555 colours, to
+; wBGPaletteBuffer. Palette 0 is $3DEE, $7FFF, $5AD6, $0063; palette 1 is $3612, $7FFF, $42D8,
+; $0066; palette 2 is $3612, $7FFF, $42D8, $30BF; palettes 3 to 7 are $7FFF (white) in all four
+; colours. Its one caller, LibraryMenu_ShowMonsterEntry_LoadScreen, far-calls it on a CGB only, then
+; sets wBGPaletteUploadRequest = $7F and calls UploadBGPalettes, so the monster library entry page
+; uses these palettes. (C2, E-0386)
 ; copies the $40 bytes at LoadBGPalettesFromData_Data to wBGPaletteBuffer (E-0122) (E-0344: the
 ; address in its name dropped or read as the label there; was LoadBGPalettesFromData; a trailing
 ; preposition left by the dropped address removed)
