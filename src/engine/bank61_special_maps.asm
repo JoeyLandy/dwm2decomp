@@ -923,10 +923,10 @@ LoadMapScreen_Type5::
     sla e
     rl d
     ld a, e
-    add $01
+    add LOW(KeyWorldRoomPointers)
     ld e, a
     ld a, d
-    adc $40
+    adc HIGH(KeyWorldRoomPointers)
     ld d, a
     ld b, $72
     call ReadByteInBank
@@ -1154,10 +1154,10 @@ SetKeyWorldEntryTileOnScreen::
 
 .skip3:
     ld a, e
-    add $19
+    add LOW(KeyWorldScreenSpotRecords + $1)
     ld e, a
     ld a, d
-    adc $48
+    adc HIGH(KeyWorldScreenSpotRecords + $1)
     ld d, a
     ld a, [de]
     push de

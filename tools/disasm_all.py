@@ -2627,33 +2627,68 @@ class Rom:
         log(f"tables with two names folded into one: {folded}; entry-0 labels of a series kept: {kept}")
 
     def name_split_addresses(self) -> None:
-        """E-0389 (M2): `add a, $LO` followed, before any control transfer and within four instructions, by
-        `adc a, $HI`, where $HI$LO is exactly a labelled data start in the instruction's own switchable bank, is a
-        table address split into two immediates (LoadMapObjectsForScreen: hMapId * 2 + MapObjectTable). The two
-        operands are written LOW(Label) and HIGH(Label), so they follow the table if it moves; the bytes are the
-        same; they go in split_ptr, which E-0150 uses for stream addresses. A sum that lands on code or on no label
-        is left as numbers (tools/hardcoded_refs.py counts them)."""
+        """E-0389, E-0390 (M2): `add a, $LO` followed, before any control transfer and within four instructions, by
+        `adc a, $HI` is a table address split into two immediates (LoadMapObjectsForScreen: hMapId * 2 +
+        MapObjectTable) when $HI$LO is in the ROM window and lands on a data label or inside a table. Its bank is
+        the one a `ld b, $NN` (or `ld a, $NN` / `ld b, a`) within the next six instructions names for a far read
+        (CopyFromBankWaitVRAM, ReadByteInBank: 7E:$4BBD is SharedOBJPalettes), else the instruction's own. The two
+        operands are written LOW(expr) and HIGH(expr) with expr = Label or Table + $offset, so they follow the table
+        if it moves; the bytes are the same. Other sums (screen-buffer offsets, checksum seeds, steps) stay numbers."""
         made = 0
+        self.split_expr: dict[tuple[int, int], tuple[str, int, int]] = {}
         add = re.compile(r"add a, \$([0-9A-F]{2})$")
         adc = re.compile(r"adc a, \$([0-9A-F]{2})$")
-        for b in range(1, self.nbanks):
+        ldb = re.compile(r"ld b, \$([0-9A-F]{2})$")
+        lda = re.compile(r"ld a, \$([0-9A-F]{2})$")
+        for b in range(self.nbanks):
             ins = self.insn[b]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
             for k, a in enumerate(order):
                 m = add.match(ins[a][1])
                 if not m:
                     continue
-                for x in order[k + 1:k + 5]:
+                for kx in range(k + 1, min(len(order), k + 5)):
+                    x = order[kx]
                     if ins[x][2] in SETUP_BARRIER:
                         break
                     mh = adc.match(ins[x][1])
-                    if mh:
-                        v = int(mh.group(1), 16) << 8 | int(m.group(1), 16)
-                        if 0x4000 <= v < 0x8000 and v in self.dlabels[b] and v not in self.insn[b]:
-                            self.split_ptr[(b, a)] = ("LOW", b, v)
-                            self.split_ptr[(b, x)] = ("HIGH", b, v)
-                            made += 1
+                    if not mh:
+                        continue
+                    v = int(mh.group(1), 16) << 8 | int(m.group(1), 16)
+                    if not 0x4000 <= v < 0x8000:
                         break
+                    hint, held = None, None  # a bank named for a far read after the sum
+                    for y in order[kx + 1:kx + 9]:
+                        if ins[y][2] in SETUP_BARRIER and ins[y][2] != "jr":
+                            break
+                        t_ = ins[y][1]
+                        if (mb := ldb.match(t_)):
+                            hint = int(mb.group(1), 16)
+                            break
+                        if (ma := lda.match(t_)):
+                            held = int(ma.group(1), 16)
+                        elif t_ in ("ld b, a", "ld [$2100], a", "ld [$D7FE], a") and held is not None:
+                            hint = held  # B for a far helper, the MBC bank register, wDataBank
+                            break
+                    sc = getattr(self, "split_cfg", {})
+                    found = None
+                    for tb in ([b] if b else []) + ([hint] if hint is not None and hint != b else []):
+                        cfg = sc.get((tb, v))
+                        if cfg and "bank" in cfg:
+                            tb = int(cfg["bank"], 16)
+                        if tb >= self.nbanks or v in self.insn[tb]:
+                            continue
+                        inside = any(bb == tb and ta <= v < t["end"] for (bb, ta), t in self.table_at.items())
+                        below = max((d for d in self.dlabels[tb] if v - 0x100 < d <= v), default=None)
+                        plain = below is not None and not any(c in self.covered[tb] for c in range(below, v + 1))
+                        if (cfg and "expr" in cfg) or v in self.dlabels[tb] or inside or plain:
+                            found = (tb, cfg.get("expr") if cfg else None)
+                            break
+                    if found:
+                        self.split_expr[(b, a)] = ("LOW", found[0], v, found[1])
+                        self.split_expr[(b, x)] = ("HIGH", found[0], v, found[1])
+                        made += 1
+                    break
         log(f"split table addresses written LOW/HIGH(label): {made}")
 
     def rom_word_expr(self, tb: int, v: int) -> str | None:
@@ -5987,6 +6022,10 @@ class Rom:
         self.drop_orphan_guess_labels()
         self.expand_families(self.families)
         self.name_dispatch_cases()
+        for (tb, v), cfg in getattr(self, "split_cfg", {}).items():  # E-0390: before config/names.json names it
+            if cfg.get("make_label") and v not in self.dlabels[tb] and v not in self.covered[tb]:
+                self.dlabels[tb][v] = f"Data_{tb:03X}_{v:04X}"
+                self.dreason[(tb, v)] = "split table address read by hand (config/operands.json, E-0390)"
         self.apply_names()
         self.name_copies()
         self.build_xrefs()
@@ -6477,6 +6516,9 @@ class Rom:
             sp = self.split_ptr.get((bank, pc))
             if sp and sp[2] in self.dlabels.get(sp[1], {}):
                 text = re.sub(r"\$[0-9A-F]{2}$", f"{sp[0]}({self.dlabels[sp[1]][sp[2]]})", text)
+            se = getattr(self, "split_expr", {}).get((bank, pc))
+            if se and (ex := se[3] or self.rom_word_expr(se[1], se[2])):  # E-0390: half of a split table address
+                text = re.sub(r"\$[0-9A-F]{2}$", f"{se[0]}({ex})", text)
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
@@ -6753,6 +6795,7 @@ def main() -> int:
     rom.operand_banks = {(int(k[:2], 16), int(k[3:], 16)): int(v["bank"], 16) for k, v in ops["pointers"].items()}
     rom.operand_labels = {(int(k[:2], 16), int(k[3:], 16)): v["label"] for k, v in ops["pointers"].items() if "label" in v}
     rom.operand_values = {(int(k[:2], 16), int(k[3:], 16)): v for k, v in ops["values"].items()}
+    rom.split_cfg = {(int(k[:2], 16), int(k[3:], 16)): v for k, v in ops.get("splits", {}).items()}
     symbols_path = ROOT / "config/symbols.json"
     if symbols_path.exists():
         for key, info in json.loads(symbols_path.read_text(encoding="utf-8")).items():

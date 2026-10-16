@@ -557,10 +557,10 @@ DecompressGraphicsTemp0ToTemp4::
     add hl, hl
     add hl, hl
     ld a, l
-    add $28
+    add LOW(MonsterSpritePalettes)
     ld l, a
     ld a, h
-    adc $73
+    adc HIGH(MonsterSpritePalettes)
     ld h, a
     ld e, l
     ld d, h

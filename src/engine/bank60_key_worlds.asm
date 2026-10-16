@@ -2877,10 +2877,10 @@ RollKeyWorldObjectKind::
     add hl, hl
     add hl, hl
     ld a, l
-    add $6f
+    add LOW(RollKeyWorldObjectKind_Data + $10)
     ld l, a
     ld a, h
-    adc $55
+    adc HIGH(RollKeyWorldObjectKind_Data + $10)
     ld h, a
 
 .loop:
@@ -3072,10 +3072,10 @@ FieldState_MapTransition_RollTriggerContents::
     add hl, hl
     add hl, hl
     ld a, l
-    add $29
+    add LOW(FieldState_MapTransition_RollTriggerContents_Data + $10)
     ld l, a
     ld a, h
-    adc $5a
+    adc HIGH(FieldState_MapTransition_RollTriggerContents_Data + $10)
     ld h, a
 
 .loop:

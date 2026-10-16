@@ -110,10 +110,24 @@ Static counts after batch 1 (src/ at this commit, build/run659):
 | `code_address` | 86 | 84 | none real: message ids, flag ids, step values and a byte count |
 | `code_bank` | 468 | 468 | literal bank numbers; they matter when data moves to another bank |
 
+## M2 batch 2 (E-0390)
+
+The split-address rule now looks for the target bank: its own bank first, then a bank named for a far read just
+after the sum (`ld b, $NN`, or `ld a, $NN` into B, rROMB0 or wDataBank). It accepts `Table + $offset` and `Data + $10`
+(within $100 bytes of a data label with no code between), and bank-$00 code is included. 59 pairs are now label
+expressions (35 after batch 1). Examples: SharedOBJPalettes from bank $12, MonsterSpritePalettes from four banks,
+KeyWorldRoomPointers in bank $72, and StringTable_ItemNames in bank $08. Two were read by hand (config/operands.json
+`splits`): SGBPaletteSets + $200, and the new label SkillTargetBoxRectIndex.
+
+| Kind | After batch 1 | After batch 2 | What is left |
+| --- | --- | --- | --- |
+| `code_split` | 89 | 65 | 56 are not addresses (buffer offsets, cursor and row steps, checksum seeds); 9 look like addresses with no label or bank yet (E-0390) |
+
+Gate: all 152 paddable banks padded by 16, all 1,202,485 ROM data reads of 10,000 explore frames match.
+
 ## Next (M2)
 
-1. Read the 89 remaining `code_split` sums: write each real one as `Label + offset` or `Label - offset` (by hand
-   in config/operands.json, or by a rule once a pattern is clear), and mark the constants as such.
+1. The nine unresolved split sums of E-0390 (a label or a reading each).
 2. `code_bank` as `BANK(label)`, needed before anything moves between banks, and per-bank sections in place of one
    fixed section per bank.
 3. Widen what runs: the scripted runs reach under 5% of the routines. Longer --explore scripts, or save states at

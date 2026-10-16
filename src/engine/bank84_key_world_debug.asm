@@ -537,10 +537,10 @@ KeyWorldNextRoomRows::
 KeyWorldLayout_BuildEntrance_PickOtherExit::
     push hl
     ld a, e
-    add $01
+    add LOW(KeyWorldRoomPointers)
     ld e, a
     ld a, d
-    adc $40
+    adc HIGH(KeyWorldRoomPointers)
     ld d, a
     ld a, $72
     ld b, a
@@ -580,10 +580,10 @@ KeyWorldLayout_BuildEntrance_PickOtherExit::
 KeyWorldLayout_BuildEntrance_PickTwoExits::
     push hl
     ld a, e
-    add $01
+    add LOW(KeyWorldRoomPointers)
     ld e, a
     ld a, d
-    adc $40
+    adc HIGH(KeyWorldRoomPointers)
     ld d, a
     ld a, $72
     ld b, a

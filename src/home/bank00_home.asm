@@ -6667,10 +6667,10 @@ LoadPlayerAndFollowerSpriteGraphics_Followers::
     add hl, hl
     add hl, hl
     ld a, l
-    add $28
+    add LOW(MonsterSpritePalettes)
     ld l, a
     ld a, h
-    adc $73
+    adc HIGH(MonsterSpritePalettes)
     ld h, a
     ld e, l
     ld d, h
@@ -6833,10 +6833,10 @@ CopySkillNameToDE::
     ld h, $00
     add hl, hl
     ld a, l
-    add $58
+    add LOW(StringTable_SkillNames)
     ld l, a
     ld a, h
-    adc $45
+    adc HIGH(StringTable_SkillNames)
     ld h, a
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -6855,10 +6855,10 @@ CopyItemNameToDE::
     ld l, a
     ld h, $00
     ld a, l
-    add $16
+    add LOW(StringTable_ItemNames)
     ld l, a
     ld a, h
-    adc $47
+    adc HIGH(StringTable_ItemNames)
     ld h, a
     ld a, [BANK_NUMBER_BYTE]
     push af

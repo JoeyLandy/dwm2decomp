@@ -2431,6 +2431,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0390 — M2 batch 2: split table addresses in other banks, inside tables and data blocks
+
+- Date: 2026-10-16. Kind: OBSERVATION and DECISION (generator changes; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 785747f (E-0389). Details: [shiftability](SHIFTABILITY.md).
+- **Rule.** `name_split_addresses` now resolves an `add $LO` / `adc $HI` sum first in the instruction's own bank. Failing that, it uses the bank named for a far read within the next eight instructions: `ld b, $NN`, or `ld a, $NN` then `ld b, a`, `ld [rROMB0], a` or `ld [wDataBank], a`. Bank-$00 code is included.
+  - A sum is written when it is exactly a data label, lies inside a table (`Table + $offset`), or lies within $100 bytes after a data label with no code between (`Data + $10`).
+  - A count in B after the sum (`ld b, $11` before a copy loop) would be taken for a bank, so the own bank wins when it matches.
+- **Results.** 59 pairs written (35 in batch 1), among them:
+  - SharedOBJPalettes from bank $12 (`ld b, $7e`); MonsterSpritePalettes from banks $00, $01, $04, $1D (`ld b, $27`); KeyWorldRoomPointers from banks $61, $84 (`ld b, $72`).
+  - StringTable_ItemNames and StringTable_SkillNames from bank $00 (rROMB0 = $08); AutomapBlocks (`ld b, $5e`); ItemTable + $1 (`ld b, $16`); KeyWorldScreenSpotRecords + $1.
+  - RollKeyWorldObjectKind_Data + $10 and FieldState_MapTransition_RollTriggerContents_Data + $10 (their notes say the first 16 bytes are never read).
+- **By hand** (config/operands.json `splits`): 17:$446C as SGBPaletteSets + $200 (LoadSGBObjectPalettesFromPointers_CopyPaletteEntry copies 8 bytes from $446C + 8 * index, after the 64 system-palette sets); 03:$6851 labelled SkillTargetBoxRectIndex (one byte per skill; note in config/names.json, C1).
+- **Left as numbers** (65 sums):
+  - 56 are not addresses: the screen-buffer offset $0E68 (with WRAM bank 2), the text-cursor step $01C1, VRAM row steps ($0160-$0240), the checksum seeds $1234 and $4321, $0400, $0180 and $0195, and $2998 added to a pointer read just before.
+  - Nine look like addresses but have no label or bank yet: 60:$4BF4 (index base below KeyWorldLayout_Start_Data, index range not read), E2:$4001 (ReadBank6TableWord, bank 6 by wDataBank, no label there), A2:$4056 x2, 00:$60D8 x2, 00:$44B8, 0F:$4000 x2 (a message bank base per wMessageGroup).
+- **Gate.** All 152 paddable banks padded by 16: all 1,202,485 ROM data reads of 10,000 frames with --explore match. Build/run663 PASS (approved size and SHA-256, zero differing bytes); parallel full suite build/logs/par663.log OK (411 tests, 3 skipped).
+
 ### E-0389 — M2 batch 1: the located hard-coded references written as labels
 
 - Date: 2026-10-16. Kind: OBSERVATION and DECISION (generator changes; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e9e76a0 (E-0388). Details: [shiftability](SHIFTABILITY.md).

@@ -159,7 +159,15 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0389): M2 batch 1
+## Current handoff (2026-10-16, E-0390): M2 batch 2
+
+Split table addresses are now resolved in other banks too (the bank of a following far read), and inside tables or
+data blocks: 59 add/adc pairs are LOW/HIGH(label expression). The 65 sums left are 56 constants and 9 addresses
+still to read, listed in E-0390. Gate: all 152 paddable banks padded by 16 pass the read comparison over 10,000
+explore frames. build/run663 PASS; parallel suite OK (411 tests, 3 skipped). Next in M2: those nine,
+then literal bank numbers as BANK(label).
+
+## Prior handoff (2026-10-16, E-0389): M2 batch 1
 
 Every hard-coded reference the shift test found is now a label expression, made by the generator:
 - SolidColor1Tile, MapMarkerRecords and Tiles_00_1D07 for bank-$00 numbers (config/operands.json, plus a rule for

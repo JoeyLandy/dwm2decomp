@@ -1216,10 +1216,10 @@ RunWorldMapState_DrawCloseUpCell::
     ldh a, [hTemp9]
     add_a_to_hl
     ld a, l
-    add $a0
+    add LOW(AutomapBlocks)
     ld l, a
     ld a, h
-    adc $43
+    adc HIGH(AutomapBlocks)
     ld h, a
     ld e, l
     ld d, h

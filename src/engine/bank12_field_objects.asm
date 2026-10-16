@@ -4367,10 +4367,10 @@ SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace::
     sla e
     rl d
     ld a, e
-    add $bd
+    add LOW(SharedOBJPalettes)
     ld e, a
     ld a, d
-    adc $4b
+    adc HIGH(SharedOBJPalettes)
     ld d, a
     ld b, $7e
     ld a, $38
@@ -4704,10 +4704,10 @@ FieldScene01_LoadSprite::
     call DecompressToVRAM
     ld de, $0108
     ld a, e
-    add $bd
+    add LOW(SharedOBJPalettes)
     ld e, a
     ld a, d
-    adc $4b
+    adc HIGH(SharedOBJPalettes)
     ld d, a
     ld b, $7e
     ld a, $38
@@ -5187,10 +5187,10 @@ FieldScene01_LoadSprite2::
     call DecompressToVRAM
     ld de, $0108
     ld a, e
-    add $bd
+    add LOW(SharedOBJPalettes)
     ld e, a
     ld a, d
-    adc $4b
+    adc HIGH(SharedOBJPalettes)
     ld d, a
     ld b, $7e
     ld a, $38
@@ -7526,10 +7526,10 @@ RunFieldCommandTemp0_LoadGfxPalette4::
     sla e
     rl d
     ld a, e
-    add $bd
+    add LOW(SharedOBJPalettes)
     ld e, a
     ld a, d
-    adc $4b
+    adc HIGH(SharedOBJPalettes)
     ld d, a
     ld b, $7e
     ld a, $20
@@ -7581,10 +7581,10 @@ RunFieldCommandTemp0_LoadGfxPalette3::
     sla e
     rl d
     ld a, e
-    add $bd
+    add LOW(SharedOBJPalettes)
     ld e, a
     ld a, d
-    adc $4b
+    adc HIGH(SharedOBJPalettes)
     ld d, a
     ld b, $7e
     ld a, $18

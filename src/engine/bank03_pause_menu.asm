@@ -5839,10 +5839,10 @@ PauseMenu_Skills_ChooseTarget_Draw_BuildScreen::
     ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
-    add $51
+    add LOW(SkillTargetBoxRectIndex)
     ld l, a
     ld a, h
-    adc $68
+    adc HIGH(SkillTargetBoxRectIndex)
     ld h, a
     ld a, [hl]
     ld hl, SkillTargetBoxRects
@@ -5900,10 +5900,10 @@ BuildSkillScreenTileBuffer::
     ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
-    add $51
+    add LOW(SkillTargetBoxRectIndex)
     ld l, a
     ld a, h
-    adc $68
+    adc HIGH(SkillTargetBoxRectIndex)
     ld h, a
     ld a, [hl]
     ld hl, SkillTargetBoxRects
@@ -6042,10 +6042,10 @@ PauseMenu_Skills_ChooseTarget_ShowHPOrMP::
     ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
-    add $51
+    add LOW(SkillTargetBoxRectIndex)
     ld l, a
     ld a, h
-    adc $68
+    adc HIGH(SkillTargetBoxRectIndex)
     ld h, a
     ld a, [hl]
     or a
@@ -6282,6 +6282,13 @@ ShowRecordSkillPageNames_Bank03::
     ld a, h
     ld [wTextWindowTileHi], a
     ret
+
+; One byte per skill number, read as $6851 + skill (add/adc).
+; PauseMenu_Skills_ChooseTarget_Draw_BuildScreen and BuildSkillScreenTileBuffer use it as the index
+; into SkillTargetBoxRects that follows, and PauseMenu_Skills_ChooseTarget_ShowHPOrMP tests it for
+; non-zero. It is 1 for SKILL_MPASS, SKILL_MPASSMORE and SKILL_MPASSMOST and 0 for the other skills
+; up to $CF. (C1, E-0390)
+SkillTargetBoxRectIndex::
     ds $1b, $00
     db $01, $01, $01
     ds $b2, $00

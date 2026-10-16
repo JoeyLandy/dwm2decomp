@@ -359,10 +359,10 @@ LoadSGBObjectPalettesFromPointers_CopyPaletteEntry::
     add hl, hl
     add hl, hl
     ld a, l
-    add $6c
+    add LOW(SGBPaletteSets + $200)
     ld l, a
     ld a, h
-    adc $44
+    adc HIGH(SGBPaletteSets + $200)
     ld h, a
     ld c, $08
 

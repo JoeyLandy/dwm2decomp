@@ -2613,10 +2613,10 @@ ReadBank16TableWord::
     ld c, $0d
     call Multiply8
     ld a, l
-    add $c3
+    add LOW(ItemTable + $1)
     ld l, a
     ld a, h
-    adc $4c
+    adc HIGH(ItemTable + $1)
     ld h, a
     ld e, l
     ld d, h

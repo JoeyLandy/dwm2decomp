@@ -87,6 +87,10 @@
     "00:28F4": {"bank": "1F", "why": "the glyph font (the note)"},
     "00:30A2": {"bank": "1F", "why": "the glyph font in bank $1F (the note)"}
   },
+  "splits": {
+    "03:6851": {"make_label": true, "why": "E-0390: one byte per skill, read as $6851 + the skill number (add/adc) and used as the index into SkillTargetBoxRects right after it: 1 for the MPass skills, 0 for the others (SkillTargetBoxRects' note, E-0381)"},
+    "17:446C": {"expr": "SGBPaletteSets + $200", "why": "E-0390: LoadSGBObjectPalettesFromPointers_CopyPaletteEntry copies 8 bytes from $446C + 8 * index: the 8-byte entries after the 64 system-palette sets of SGBPaletteSets"}
+  },
   "values": {
     "03:7B7E": {"lb": true, "why": "L goes to wTextWindowRows and H to wTextWindowWidth: two bytes"},
     "0C:528E": {"lb": true, "why": "as 03:7B7E"},
