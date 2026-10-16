@@ -2084,6 +2084,31 @@ class Rom:
                         tb = vals[f["bank_from"]] if "bank_from" in f else int(f.get("target_bank", "%X" % t["bank"]), 16)
                         from_tables += register(tb, vals[fi] + f.get("stream_skip", 0), f.get("stream_reason", f.get("reason", "stream named by a table field")))
         log(f"compressed assets from table fields: {from_tables} new streams")
+        # E-0387: a stream found only by a chain of back-to-back streams (config/stream_chains.json) is a false
+        # start when it starts inside the bytes of a stream from another source, or its bytes run over the start of
+        # one: a chain that begins in the middle of a real stream decodes the tail as a stream of its own, splits the
+        # real asset in two and walks on out of step with the real streams. Such a stream is dropped, with the label
+        # it alone created; among the remaining chain streams an earlier one keeps its bytes.
+        chain_why = "stream in a run of back-to-back compressed streams"
+        dropped = []
+        for bnk in sorted({b for b, _ in self.streams}):
+            spans = sorted((a, a + r[1]) for (b, a), r in self.streams.items()
+                           if b == bnk and self.dreason.get((b, a)) != chain_why)
+            starts = [s for s, _ in spans]
+            end = -1
+            for a in sorted(x for b, x in self.streams if b == bnk and self.dreason.get((b, x)) == chain_why):
+                hi = a + self.streams[(bnk, a)][1]
+                if a < end or any(s < a < e for s, e in spans) or any(a < s < hi for s in starts):
+                    dropped.append((bnk, a))
+                    del self.streams[(bnk, a)]
+                    self.zeroed_streams.discard((bnk, a))
+                    if self.dlabels[bnk].get(a) == f"Data_{bnk:03X}_{a:04X}":
+                        del self.dlabels[bnk][a]
+                        self.dreason.pop((bnk, a), None)
+                    continue
+                end = max(end, hi)
+        log(f"compressed assets: {len(dropped)} chain streams that split another stream dropped: "
+            + ", ".join(f"{b:02X}:{a:04X}" for b, a in dropped))
 
     def _decompress_entries(self) -> set[int]:
         """Bank-0 addresses of the decompress routines, taken from config/names.json.
@@ -2552,6 +2577,42 @@ class Rom:
                     self.shape_named.add(new)
                 named += 1
         log(f"structural steps named by the shape of their first instructions: {named}")
+
+    def fold_table_names(self) -> None:
+        """E-0387: a table whose start also carries a data label of another name keeps one name, used by its
+        header, its operands and pointer fields. A config/names.json name wins; then a config/tables.json label;
+        then the data label when the table label is a generated address name (Kind_BB_AAAA, Kind_AAAA). A data
+        label that names entry 0 of a series (another label inside the table shares its stem, as DefaultName_Slime_00
+        and _01) stays."""
+        stem = lambda n: n.rsplit("_", 1)[0] if "_" in n else re.sub(r"\d+$", "", n)
+        folded, kept, gone = 0, 0, {}
+        for (bank, addr), t in sorted(self.table_at.items()):
+            dl = self.dlabels[bank]
+            cur, lab = dl.get(addr), t.get("label")
+            if not cur or not lab or cur == lab or cur.startswith("Data_"):
+                continue
+            if (bank, addr) in self.names and self.names[(bank, addr)].get("data"):
+                win = cur
+            elif any(stem(dl[a]) == stem(cur) for a in dl if addr < a < t["end"]):
+                kept += 1
+                continue
+            elif t.get("cfg") or not re.fullmatch(r"[A-Za-z0-9]+(_[0-9A-F]{2})?_[0-9A-F]{4}", lab):
+                win = lab
+            else:
+                win = cur
+            if win == lab:
+                dl[addr] = lab
+            else:
+                t["label"] = cur
+                gone[lab] = cur
+            folded += 1
+        if gone:  # derived notes of other tables name the dropped label ("category list of StringCategories_95_4675")
+            pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(gone, key=len, reverse=True))) + r")\b")
+            for t in self.table_at.values():
+                for k in ("note", "record"):
+                    if t.get(k):
+                        t[k] = pat.sub(lambda m: gone[m.group(1)], t[k])
+        log(f"tables with two names folded into one: {folded}; entry-0 labels of a series kept: {kept}")
 
     def name_data_by_reader(self) -> None:
         """E-0285: a data label that still has only an address name and that code loads (`ld rr, n`) is
@@ -5661,6 +5722,9 @@ class Rom:
         dl = self.dlabels[bank]
         fields, sizes, stride = t["fields"], t["sizes"], t["stride"]
         out.append("")
+        dinfo = self.names.get((bank, t["addr"]))
+        if dinfo and dinfo.get("data") and dinfo.get("note") and dinfo["name"] == t["label"]:
+            out.append(f"; {dinfo['note']}")  # E-0387: the table's one name keeps its hand note
         out.append(f"; {t['note']}")
         out.append("; record: " + (t.get("record") or "; ".join(f["name"] for f in fields)))
         out.append(f"{t['label']}::")
@@ -5865,6 +5929,7 @@ class Rom:
         self.name_structural_by_shape()
         self.refresh_to_names()
         self.name_data_by_reader()
+        self.fold_table_names()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 
@@ -6647,7 +6712,7 @@ def main() -> int:
     tables_path = ROOT / "config/tables.json"
     if tables_path.exists():
         for t in json.loads(tables_path.read_text(encoding="utf-8"))["tables"]:
-            rom.schemas.append(dict(t, bank=int(t["bank"], 16), addr=int(t["addr"], 16)))
+            rom.schemas.append(dict(t, bank=int(t["bank"], 16), addr=int(t["addr"], 16), cfg=True))
         log(f"loaded {len(rom.schemas)} table layouts from {tables_path.name}")
     rom.add_map_schemas()
     rom.add_metasprite_schemas()

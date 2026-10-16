@@ -1085,7 +1085,7 @@ SkillPrerequisitePointers::
 ; several lists end in the same bytes (E-0159, C1)
 ; record: skill number, or $FF ending a list
 SkillPrerequisiteLists::
-; another name for the data at SkillPrerequisiteLists, whose note is above (E-0381)
+; entry 0 of SkillPrerequisiteLists, whose note is above (E-0381, E-0387)
 SkillPrerequisites_Blazemost::
     db $ff ; entry 0
 SkillPrerequisites_Blaze::
@@ -3827,10 +3827,13 @@ CopyRectRecordToScreenBuffer_13_TileRect::
     db $b6, $c3, $6b, $6c, $6d, $6e, $6f, $b7 ; row 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
+; A tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A: offset $0000 (top-left of
+; wScreenTileBuffer), width 8, 11 rows, then 88 tile ids: a framed box with five name rows of tile
+; ids $3B-$3F, $4B-$4F, $5B-$5F, $6B-$6F and $7B-$7F separated by blank rows.
+; CopyRectRecordToScreenBufferAndPlaySound6C copies it and plays sound $6C; it is far-called by
+; BattleEnd_AskToJoin_ShowChooseAMonsterTo and BattleEnd_AskToJoin_RedrawAfterStats. (C1, E-0372)
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $0000 (row 0, column 0); 8 x 11 tiles
-TileRect_1A::
-; another name for the data at TileRect_1A, whose note is above (E-0381)
 BattleEnd_AskToJoin_ListBoxTileRect::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $0b ; width, rows

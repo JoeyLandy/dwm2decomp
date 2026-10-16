@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-14**. Stage: **matching disassembly; source readability and semantic review in progress**. Historical planning and earlier session records below remain for provenance.
+As of **2026-10-16**. Stage: **matching disassembly; source readability and semantic review in progress**. Historical planning and earlier session records below remain for provenance.
 
 ## Target and decisions
 
@@ -159,7 +159,26 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0386): readability goal complete
+## Current handoff (2026-10-16, E-0387): the three generator follow-ups
+
+E-0387 does the three follow-ups the readability goal left (all generator changes; no ROM byte moves):
+- **Split streams.** A stream found only by config/stream_chains.json is dropped when it starts inside another
+  stream or runs over the start of one (28 streams in banks $46-$93). tests/test_asset_streams.py checks every
+  compressed slice in src/assets.txt holds its whole stream; 8 unidentified slices merged back into their streams,
+  5 remain in docs/UNIDENTIFIED_ASSETS.md.
+- **Code at bank $32 $4F00.** config/code_entries.json traces it: RunBattleActions_StatusChecks_PairRefusal, the
+  two-monster action branch. The labels $4F0A (one byte into a `jp z`), $4ECA and $7A49 and their two probes are gone.
+- **One name per table.** fold_table_names in tools/disasm_all.py folds the second label of 373 tables (a
+  config/names.json name wins, then a config/tables.json label, then the referrer's name over a generated address
+  name); 17 first-record labels of record series stay, with an "entry 0 of" comment. Table notes from names.json now
+  print in src/. No label is over 50 characters.
+
+Checks: build/run651 PASS (approved size and SHA-256, zero differing bytes); serial full suite
+build/logs/suite651.log OK (398 tests, 3 skipped). Measures: 9,820 code labels, all with a hand note; 23,160 data labels; 5,872 routines in
+probe scope, all probed (16,780 probes). Next: the open questions in docs/READABILITY_OPEN_QUESTIONS.md, or a
+semantic phase from docs/ROADMAP.md.
+
+## Prior handoff (2026-10-16, E-0386): readability goal complete
 
 The goal.md completion criteria hold on build/run643 (approved size and SHA-256, zero differing bytes) and the
 serial full suite build/logs/suite643.log (397 tests OK, 3 skipped, 28m38s): every code label (9,822) has a

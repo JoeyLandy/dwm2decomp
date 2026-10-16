@@ -41,15 +41,17 @@ CopyStringToBuffer_Bank0E::
     ret
     db $cd, $01, $40, $cd, $11, $26, $c9
 
+; The category table of message bank $0E: a single word, the pointer to StringList_Bank0E_0, a list
+; of 136 string pointers (ids 0-$87). BeginMessageDisplay_Bank0E and CopyStringToBuffer_Bank0E pass
+; it in DE to BeginStringDisplay and CopyStringToBuffer when wStringIndex is below $88; LookupString
+; takes word wStringCategory of it, so only category 0 is valid. (C1, E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_0E::
-; another name for the data at StringCategories_0E, whose note is above (E-0381)
 MessageStrings_Bank0E::
     dw StringList_Bank0E_0 ; id 0
 
-; category list of StringCategories_0E; one pointer per wStringIndex (E-0217)
+; category list of MessageStrings_Bank0E; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_Bank0E_0::
     dw MessageBank0E_00 ; id 0

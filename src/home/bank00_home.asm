@@ -6581,7 +6581,7 @@ LoadPlayerAndFollowerSpriteGraphics_Followers::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $c8
-    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
+    ld de, SharedOBJPalettes
     add e
     ld e, a
     jr nc, .call_copy_from_bank

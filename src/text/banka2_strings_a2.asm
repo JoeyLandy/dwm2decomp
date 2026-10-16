@@ -1783,19 +1783,24 @@ BeginStringDisplay_BankE0_FromBankA2Table::
     ret
     db $cd, $e2, $49, $cd, $11, $26, $c9
 
+; Two words, StaffRollNameStrings and StaffRollTitleStrings: the string table that
+; BeginStringDisplay_BankE0_FromBankA2Table passes in DE. wStringCategory is lowered by 1 before the
+; call, so categories 1 and 2 select the first and second list, and wStringIndex then selects a
+; string inside the list. (C1, E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_A2::
-; another name for the data at StringCategories_A2, whose note is above (E-0381)
 StaffRollStringCategories::
-    dw StringList_A2 ; id 0
-    dw StringList_A2_2 ; id 1
+    dw StaffRollNameStrings ; id 0
+    dw StaffRollTitleStrings ; id 1
 
-; category list of StringCategories_A2; one pointer per wStringIndex (E-0217)
+; Category 0 of StaffRollStringCategories (bank-$E0 string category 1): 33 string pointers,
+; String_A2_00_00 to String_A2_00_20, the staff credit names (one to six centred lines each, joined
+; by <LINE>), with ids 5, $0F and $20 an empty string (a lone end byte) and id $1F the copyright
+; lines. DebugStaffRoll_Credits_ShowLines takes the category and id from its WorkBufSequenceTable
+; list and shows the string with ShowString_BankE0. (C1, E-0373)
+; category list of StaffRollStringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_A2::
-; another name for the data at StringList_A2, whose note is above (E-0381)
 StaffRollNameStrings::
     dw String_A2_00_00 ; id 0
     dw String_A2_00_01 ; id 1
@@ -1831,8 +1836,9 @@ StaffRollNameStrings::
     dw String_A2_00_1F ; id 31
     dw String_A2_00_20 ; id 32
 
-StringList_A2_2::
-; another name for the data at StringList_A2_2, whose note is above (E-0381)
+; Category 1 of StaffRollStringCategories (bank-$E0 string category 2): one pointer,
+; String_A2_01_00, 'DRAGON WARRIOR' and 'MONSTERS 2' on two lines, shown by
+; DebugStaffRoll_Credits_TitleCard (wStringCategory = 2). (C1, E-0373)
 StaffRollTitleStrings::
     dw String_A2_01_00 ; id 0
 

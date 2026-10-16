@@ -257,11 +257,7 @@ KeyWorldRoom02_Y1X0_Attrs::
     db $68, $01, $00, $02, $00, $00, $03, $01, $01, $01, $01, $00, $00, $04, $00, $00
     db $0f, $35, $01, $01, $03, $03, $00, $4c, $0f, $0d, $00, $04, $02, $03, $03, $00
     db $08, $0c, $00, $84, $0f, $03, $00, $58, $02, $00, $a0, $0f, $31, $00, $5a, $02
-    db $00, $9e, $0e, $00, $fc, $0f, $01, $00, $9c
-
-; LZSS-compressed: 2358 bytes that expand to 5391 (E-0016, E-0017)
-Gfx6E_1::
-    db $0f, $15, $00, $0c, $0f, $09
+    db $00, $9e, $0e, $00, $fc, $0f, $01, $00, $9c, $0f, $15, $00, $0c, $0f, $09
 
 ; LZSS-compressed: 75 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom08_Y1X0_Attrs::
@@ -522,8 +518,6 @@ MapType5Tiles5::
 ; entry 5 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes5::
-; another name for the data at MapType5Palettes5, whose note is above (E-0381)
-LoadMapHeaderByMapType_Type1_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $150b, $5f17, $15ae, $0044 ; entry 1
     dw $1528, $5f17, $15ae, $0000 ; entry 2

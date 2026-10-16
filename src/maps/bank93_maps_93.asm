@@ -129,18 +129,6 @@ Map12Attrs0_Y0X0::
 Map2FTileset::
     INCBIN "maps/map2_f/tileset.lz"
 
-; Not a separate asset: the last 109 bytes ($6D) of the compressed tileset stream of map $2F.
-; Decompressing from the label Map2FTileset (Map2FTileset) consumes 1059 bytes ($423) and ends
-; exactly at Map2FPalettes, where Map2FPalettes starts, so the stream covers 533D-575F; the source
-; cuts it at 950 bytes ($3B6) and starts a second guessed stream, Map2FTilesetTail, at 56F3.
-; Decompressing from Map2FTilesetTail reads 359 bytes, well past its own 109-byte slot, through
-; Map2FPalettes and the screen pointer tables, and gives 366 bytes of junk (palette and far-pointer
-; bytes copied through as literals). The 109 bytes themselves look like compressed tile data (rows
-; like 55 55 AA AA). Nothing loads this label. (C1, E-0383)
-; LZSS-compressed: 359 bytes that expand to 366 (E-0016, E-0017)
-Map2FTilesetTail::
-    INCBIN "maps/map2_f/tileset_tail.lz"
-
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map2FPalettes::

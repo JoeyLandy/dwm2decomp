@@ -76,7 +76,8 @@ class Coverage(unittest.TestCase):
         RESTATED_AT_MOST = 0
         hand, restated = doc_coverage.note_counts(FILES)
         self.assertLessEqual(restated, RESTATED_AT_MOST, f"{restated} restated routines (was at most {RESTATED_AT_MOST})")
-        self.assertGreaterEqual(hand, 9822)  # E-0386: raised as the readability batches add readings
+        self.assertGreaterEqual(hand, 9820)  # E-0386: raised as the readability batches add readings; E-0387: two
+        # fewer code labels (the $32 $4F00 block decoded as code: $4F0A, $4ECA and $7A49 gone, $4F00 a routine), all read
         import json
         ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]

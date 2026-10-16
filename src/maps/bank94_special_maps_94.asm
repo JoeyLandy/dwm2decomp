@@ -4,11 +4,13 @@
 SECTION "Bank 94", ROMX[$4000], BANK[$94]
     db $94
 
+; Eight background palettes of four little-endian BGR555 colors each ($40 bytes), the palette set of
+; map $19. Palette 7 is four copies of $0020. DebugStaffRoll_Scene03_Load copies all $40 bytes into
+; wBGPaletteBuffer on a CGB, but the next statement copies Map18Palettes from bank $48 over the same
+; buffer, so this data is overwritten before it is shown. (C1, E-0381)
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map19Palettes::
-; another name for the data at Map19Palettes, whose note is above (E-0381)
-DebugStaffRoll_Scene03_Load_BGPaletteBufferData::
     dw $7d86, $7fff, $0214, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2

@@ -422,11 +422,7 @@ Map48Screens0_Y2X0::
 
 Map48Screens0_Y2X1::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
-    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
-
-; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx4C_1::
-    db $4d, $00, $f8, $0f, $0d
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y2X2::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
@@ -479,11 +475,7 @@ Map48Screens0_Y3X1::
 
 Map48Screens0_Y3X2::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
-    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
-
-; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx4C_2::
-    db $4d, $00, $f8, $0f, $0d
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y3X3::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
@@ -532,11 +524,7 @@ Map48Screens0_Y4X1::
 
 Map48Screens0_Y4X2::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
-    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
-
-; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx4C_3::
-    db $4d, $00, $f8, $0f, $0d
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y4X3::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
@@ -589,11 +577,7 @@ Map48Screens0_Y5X0::
 
 Map48Screens0_Y5X1::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
-    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
-
-; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx4C_4::
-    db $4d, $00, $f8, $0f, $0d
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y5X2::
     db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
@@ -807,17 +791,7 @@ Map48Screens2_Y8X5::
 
 ; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
 Map48Screens0_Y8X6::
-    db $68, $01, $02, $00, $01, $02, $00, $0e
-
-; Not an asset. The bytes at $725A lie 8 bytes inside the stream Map48Screens0_Y8X6 (bank $4C,
-; $7252-$72A8, 86 bytes that expand to 360), so a decompression from here only reads the middle of
-; that screen stream as if it were a header. It yields 258 bytes (not a whole number of tiles) and
-; its read runs on to $733B, past the end of that stream into Map48Screens2_Y8X6. Rendered as tiles:
-; noise. Map48Screens0_Y8X6 is a normal map screen with a table pointer, so the label Gfx4C_5 is a
-; false stream start of the scan. No loader exists to read. (C1, E-0383)
-; LZSS-compressed: 225 bytes that expand to 258 (E-0016, E-0017)
-Gfx4C_5::
-    INCBIN "gfx/misc/gfx4_c_5.lz"
+    INCBIN "maps/map48/screens0_y8_x6.lz"
 
 Map48Screens2_Y8X6::
     db $68, $01, $02, $00, $01, $02, $00, $0e, $02, $01, $0f, $00, $02, $ff, $ff, $4d

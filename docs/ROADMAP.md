@@ -17,9 +17,9 @@ tools/probe_scope.py):
 | Code labels with a hand-written reading note | 9,822 of 9,822 |
 | Labels named after their instructions (`_Etc`, `_ReadByteAtHLPlusA` and similar) | 0 |
 | Labels over 60 characters | 0 (exceptions: none needed) |
-| Labels over 50 characters | 2, each one of two names for the same palette table, made from the routine that references it from another bank: `RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData` (57; the other name is `RunWorldMapState_DrawOverview_BGPaletteBufferData`) and `LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData` (56; the other name is `SharedOBJPalettes`) |
+| Labels over 50 characters | 2 (0 after E-0387, which gives each table one name), each one of two names for the same palette table, made from the routine that references it from another bank: `RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData` (57; the other name is `RunWorldMapState_DrawOverview_BGPaletteBufferData`) and `LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData` (56; the other name is `SharedOBJPalettes`) |
 | Data labels described only by their reader and size | 0 of 23,561 |
-| Opaque INCBIN slices | 0: 140 identified and named, 13 listed with what was tried in [unidentified assets](UNIDENTIFIED_ASSETS.md) |
+| Opaque INCBIN slices | 0: 140 identified and named, 13 listed with what was tried in [unidentified assets](UNIDENTIFIED_ASSETS.md) (5 after E-0387 merged 8 split streams back) |
 | Routines a probe can check | 5,874, all with a passing probe (16,782 probes in config/probes/) |
 | Routines a probe cannot check | 3,948, each with its reason in [probe scope](PROBE_SCOPE.md) (display, sound, serial or joypad hardware 3,899; interrupt timing 5; computed jumps 44) |
 | Mechanical labels, raw pointer operands, stale names in comments | 0, 0, 0 |
@@ -28,13 +28,13 @@ The readings are C1 (static) unless a probe checks their mechanical claims (C2 o
 hardware); what a routine is for stays C1. Open questions: 1,852 entries by batch and label in
 [readability open questions](READABILITY_OPEN_QUESTIONS.md). The main ones that need work outside readability:
 
-- **Generator stream splits.** 11 of the 13 unidentified asset slices are tails or middles of another compressed
-  stream that the chaining heuristic (config/stream_chains.json) split off; merging them back is a generator change
-  that moves no ROM byte.
-- **Code typed as data.** At bank $32 $4F00 five `dw` lines are instructions that
-  RunBattleActions_StatusChecks_CheckAction_CheckMP jumps into; the bytes are preserved and the note says so.
-- **Second-name labels.** About 380 tables carry a second label at the same address, made from a referrer's name;
-  each now points at the table's note. Folding them into one name per table needs a generator change.
+- **Generator stream splits, code typed as data, second-name labels: done (E-0387).** The chaining heuristic
+  (config/stream_chains.json) no longer splits a stream: 28 chain streams that started inside another stream, or ran
+  over the start of one, are dropped, and tests/test_asset_streams.py checks that every compressed slice holds its
+  whole stream. The five `dw` lines at bank $32 $4F00 are decoded as the routine RunBattleActions_StatusChecks_PairRefusal.
+  The generator now gives each table one name (373 tables), so no label is over 50 characters. Measures after
+  E-0387 (build/run651): 9,820 code labels, all read; 23,160 data labels; 5 slices listed in
+  [unidentified assets](UNIDENTIFIED_ASSETS.md); 5,872 routines in probe scope, all probed (16,780 probes).
 - **Unused content.** 98 key-world floor screens, three map records and several routines have no reference in the
   shipped ROM (listed in their notes); some may be reached in ways the static listing does not show.
 - **Probe limits.** Writes to WRAM bank 2 (the CGB attribute buffers) are not observed by the probe runner, so those

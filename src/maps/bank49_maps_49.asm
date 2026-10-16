@@ -42,11 +42,13 @@ Map15Attrs0_Y0X0::
 Map0ATileset::
     INCBIN "maps/map0_a/tileset.lz"
 
+; The palette set of map $0A, which the egg service menu also uses: eight CGB background palettes of
+; 4 BGR555 colours ($40 bytes) that EggServiceMenu_DrawListAndPrice_LoadTiles copies to
+; wBGPaletteBuffer with CopyFromBankWaitVRAM (C = $40) after decompressing the matching tileset
+; (Map0ATileset, bank $49), then sets wBGPaletteUploadRequest = $7F. (C1, E-0372)
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map0APalettes::
-; another name for the data at Map0APalettes, whose note is above (E-0381)
-EggServicePalettes::
     dw $7d00, $7fff, $7fe1, $0000 ; entry 0
     dw $7d00, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2
@@ -80,11 +82,13 @@ Map0AAttrs0_Y0X0::
 Map13Tileset::
     INCBIN "maps/map13/tileset.lz"
 
+; The palette set of map $13, which the rename menu also uses: eight CGB background palettes of 4
+; BGR555 colours ($40 bytes) that RenameMenu_PickMonster_LoadTiles copies to wBGPaletteBuffer with
+; CopyFromBankWaitVRAM (C = $40) after decompressing the matching tileset (Map13Tileset, bank $49),
+; then sets wBGPaletteUploadRequest = $7F. (C1, E-0372)
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map13Palettes::
-; another name for the data at Map13Palettes, whose note is above (E-0381)
-RenameMenuPalettes::
     dw $7d86, $7fff, $7fe1, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2
@@ -118,8 +122,6 @@ Map1ATileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map1APalettes::
-; another name for the data at Map1APalettes, whose note is above (E-0381)
-DebugStaffRoll_Scene04_Load_BGPaletteBufferData::
     dw $7d86, $7fff, $7f26, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $01e0, $031d, $0214, $0020 ; entry 2

@@ -92,29 +92,37 @@ CopyStringToBuffer_Bank08_Overflow::
     ret
     db $cd, $50, $46, $cd, $11, $26, $c9
 
+; A table of twelve words, one per string category $09-$14 of the shared string scheme (index
+; wStringCategory - 9): lists of 176, 1, 36, 1, 7, 6, 2, 9, 11, 28, 8 and 4 string pointers, named
+; StringTable95_Cat09_SkillDescriptions, StringTable95_Cat0A, StringTable95_Cat0B,
+; StringTable95_Cat0C_FieldActions, StringTable_FieldAbilities, StringTable95_Cat0E_Tactics,
+; StringTable95_Cat0F, StringTable95_Cat10, StringTable95_Cat11_Targets,
+; StringTable95_Cat12_SkillFamilies, StringTable95_Cat13_SkillTypes and StringTable95_Cat14_Usable.
+; BeginStringDisplay_Bank08_Overflow and CopyStringToBuffer_Bank08_Overflow subtract 9 from
+; wStringCategory and pass the table in DE to BeginStringDisplay and CopyStringToBuffer. (C1,
+; E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_95::
-; another name for the data at StringCategories_95, whose note is above (E-0381)
 StringCategories_Bank95::
-    dw StringList_95 ; id 0
-    dw StringList_95_2 ; id 1
-    dw StringList_95_3 ; id 2
-    dw StringList_95_4 ; id 3
-    dw StringList_95_5 ; id 4
-    dw StringList_95_6 ; id 5
-    dw StringList_95_7 ; id 6
-    dw StringList_95_8 ; id 7
-    dw StringList_95_9 ; id 8
-    dw StringList_95_10 ; id 9
-    dw StringList_95_11 ; id 10
-    dw StringList_95_12 ; id 11
+    dw StringTable95_Cat09_SkillDescriptions ; id 0
+    dw StringTable95_Cat0A ; id 1
+    dw StringTable95_Cat0B ; id 2
+    dw StringTable95_Cat0C_FieldActions ; id 3
+    dw StringTable_FieldAbilities ; id 4
+    dw StringTable95_Cat0E_Tactics ; id 5
+    dw StringTable95_Cat0F ; id 6
+    dw StringTable95_Cat10 ; id 7
+    dw StringTable95_Cat11_Targets ; id 8
+    dw StringTable95_Cat12_SkillFamilies ; id 9
+    dw StringTable95_Cat13_SkillTypes ; id 10
+    dw StringTable95_Cat14_Usable ; id 11
 
-; category list of StringCategories_95; one pointer per wStringIndex (E-0217)
+; string table of category $09 (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): skill descriptions, for example 'Attacks an enemy with a fireball'
+; (E-0033)
+; category list of StringCategories_Bank95; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_95::
-; another name for the data at StringList_95, whose note is above (E-0381)
 StringTable95_Cat09_SkillDescriptions::
     dw String_95_00_00 ; id 0
     dw String_95_00_00 ; id 1
@@ -293,13 +301,15 @@ StringTable95_Cat09_SkillDescriptions::
     dw String_95_00_AB ; id 174
     dw String_95_00_AB ; id 175
 
-StringList_95_2::
-; another name for the data at StringList_95_2, whose note is above (E-0381)
+; string table of category $0A (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): two-line names such as 'VIT Belt', 'Draco Belt', 'Stone Fang' (the
+; table at $47EF is the same list one entry later) (E-0033)
 StringTable95_Cat0A::
     dw String_95_01_00 ; id 0
 
-StringList_95_3::
-; another name for the data at StringList_95_3, whose note is above (E-0381)
+; string table of category $0B (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): the same names as category $0A without the blank first entry
+; (E-0033)
 StringTable95_Cat0B::
     dw String_95_02_00 ; id 0
     dw String_95_02_01 ; id 1
@@ -338,13 +348,16 @@ StringTable95_Cat0B::
     dw String_95_02_22 ; id 34
     dw String_95_02_23 ; id 35
 
-StringList_95_4::
-; another name for the data at StringList_95_4, whose note is above (E-0381)
+; string table of category $0C (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): short two-line phrases such as 'Call ship', 'Call cloud', 'Smash
+; rock', 'Burn', 'Cut', 'Open door' (E-0033)
+; category list of StringCategories_Bank95; one pointer per wStringIndex (E-0217)
+; record: string
 StringTable95_Cat0C_FieldActions::
     dw String_95_03_00 ; id 0
 
-StringList_95_5::
-; another name for the data at StringList_95_5, whose note is above (E-0381)
+; string category $0D (bank $95 category 4): the field abilities indexed by species byte $0B
+; (SPECIES_FIELD_ABILITY): None, Call ship, Call cloud, Smash rock, Burn, Cut, Open door (E-0313)
 StringTable_FieldAbilities::
     dw String_95_04_00 ; id 0
     dw String_95_04_01 ; id 1
@@ -354,8 +367,8 @@ StringTable_FieldAbilities::
     dw String_95_04_05 ; id 5
     dw String_95_04_06 ; id 6
 
-StringList_95_6::
-; another name for the data at StringList_95_6, whose note is above (E-0381)
+; string table of category $0E (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): 'Attack', 'Charge', 'Mixed', 'Cautious', 'Command' (E-0033)
 StringTable95_Cat0E_Tactics::
     dw String_95_05_00 ; id 0
     dw String_95_05_00 ; id 1
@@ -364,14 +377,18 @@ StringTable95_Cat0E_Tactics::
     dw String_95_05_04 ; id 4
     dw String_95_05_05 ; id 5
 
-StringList_95_7::
-; another name for the data at StringList_95_7, whose note is above (E-0381)
+; string table of category $0F (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): 'Charge', 'Mixed', 'Cautious', 'ZoneOut' (overlaps category $0E)
+; (E-0033)
+; category list of StringCategories_Bank95; one pointer per wStringIndex (E-0217)
+; record: string
 StringTable95_Cat0F::
     dw String_95_06_00 ; id 0
     dw String_95_06_00 ; id 1
 
-StringList_95_8::
-; another name for the data at StringList_95_8, whose note is above (E-0381)
+; string table of category $10 (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): 'Charge', 'Mixed', 'Cautious', 'ZoneOut', 'Chance', 'Confusion',
+; shown for the high nibble of a skill record's byte 3 (E-0033)
 StringTable95_Cat10::
     dw String_95_06_00 ; id 0
     dw String_95_07_01 ; id 1
@@ -383,8 +400,9 @@ StringTable95_Cat10::
     dw String_95_07_07 ; id 7
     dw String_95_07_08 ; id 8
 
-StringList_95_9::
-; another name for the data at StringList_95_9, whose note is above (E-0381)
+; string table of category $11 (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): 'No area', '1 enemy', 'All enemies', 'Foes multi-hit', '1 friend',
+; 'All friends', 'Choose 1' (E-0033)
 StringTable95_Cat11_Targets::
     dw String_95_08_00 ; id 0
     dw String_95_08_01 ; id 1
@@ -398,8 +416,11 @@ StringTable95_Cat11_Targets::
     dw String_95_08_09 ; id 9
     dw String_95_08_0A ; id 10
 
-StringList_95_10::
-; another name for the data at StringList_95_10, whose note is above (E-0381)
+; string table of category $12 (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): 'None', 'Blaze', 'Firebal', 'Bang', 'Infernos', 'Bolt', 'IceBolt'
+; (E-0033)
+; category list of StringCategories_Bank95; one pointer per wStringIndex (E-0217)
+; record: string
 StringTable95_Cat12_SkillFamilies::
     dw String_95_09_00 ; id 0
     dw String_95_09_01 ; id 1
@@ -430,8 +451,8 @@ StringTable95_Cat12_SkillFamilies::
     dw String_95_09_1A ; id 26
     dw String_95_09_1B ; id 27
 
-StringList_95_11::
-; another name for the data at StringList_95_11, whose note is above (E-0381)
+; string table of category $13 (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): 'Type A' ... 'Type G' (E-0033)
 StringTable95_Cat13_SkillTypes::
     dw String_95_0A_00 ; id 0
     dw String_95_0A_01 ; id 1
@@ -442,8 +463,8 @@ StringTable95_Cat13_SkillTypes::
     dw String_95_0A_06 ; id 6
     dw String_95_0A_07 ; id 7
 
-StringList_95_12::
-; another name for the data at StringList_95_12, whose note is above (E-0381)
+; string table of category $14 (the string database extension in bank $95, selected when
+; wStringCategory is 9 or more): 'None', 'Battle', 'Field', 'Anytime' (E-0033)
 StringTable95_Cat14_Usable::
     dw String_95_0B_00 ; id 0
     dw String_95_0B_01 ; id 1

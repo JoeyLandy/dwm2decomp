@@ -3688,9 +3688,12 @@ GameMode6_Update_TakePrize_DrawYesNo_TileRect::
     db $b6, $c3, $70, $71, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; An 8 x 5 rectangle copied to wWindowTileBuffer + $110 by
+; GameMode6_Update_ChooseMonster_RedrawChoiceBox: the right 8 columns of
+; GameMode6_MonsterEggChoiceTileRect, except that column 0 holds $B1, $76, $B2, $B7, $B5 (edge and
+; corner tiles in rows 0 and 2-4, where the full box has its top edge and the first glyph of row 3).
+; (C1, E-0372)
 ; record: 8 x 5 tiles, one row per line
-TileRect_24::
-; another name for the data at TileRect_24, whose note is above (E-0381)
 GameMode6_ChooseMonsterChoiceBoxTileRect::
     db $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
@@ -3698,9 +3701,13 @@ GameMode6_ChooseMonsterChoiceBoxTileRect::
     db $b7, $7f, $7f, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b5, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; The 10 x 5 'Monster / Egg' box: text tiles $76-$7C on row 1 and $7D $7F $7F on row 3.
+; GameMode6_Update_TakePrize_DrawMonsterEggChoice (taking the prize, step 7) and
+; GameMode6_Update_PageList_Cancel copy it to wWindowTileBuffer + $10E (row 13, column 10); the
+; cursor places are GameMode6_Update_TakePrize_MonsterEggChoice_Data. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 10 x 5 tiles, one row per line
-TileRect_24_2::
-; another name for the data at TileRect_24_2, whose note is above (E-0381)
 GameMode6_MonsterEggChoiceTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
@@ -3708,8 +3715,11 @@ GameMode6_MonsterEggChoiceTileRect::
     db $b6, $c3, $7d, $7f, $7f, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-TileRect_24_3::
-; another name for the data at TileRect_24_3, whose note is above (E-0381)
+; An 8 x 5 rectangle copied to wWindowTileBuffer + $110 by
+; GameMode6_Update_ChooseEgg_RedrawChoiceBox: the right 8 columns of
+; GameMode6_MonsterEggChoiceTileRect with $B5 and $B4 in column 0 of the top and bottom rows (corner
+; and edge tiles of a neighbouring box). (C1, E-0372)
+; record: 8 x 5 tiles, one row per line
 GameMode6_ChooseEggChoiceBoxTileRect::
     db $b5, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
@@ -3723,9 +3733,14 @@ GameMode6_Update_TakePrize_MonsterEggChoice_Data::
 GameMode6_Update_ChooseMonster_ShowCursorMark_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
+; An 8 x 11 box with five text rows (tiles $D0-$D4, $D5-$D9, $DA-$DE, $F0-$F4 and $A4 $A5 $A6 $CE
+; $CF) separated by blank rows. GameMode6_Update_SwitchMonster_ShowInfoOKYesN copies it to
+; wWindowTileBuffer + $64 (row 5, column 0); the list cursor places of
+; GameMode6_Update_ChooseMonster_ShowCursorMark_Data (wWindowTileBuffer + $79 to + $119) fall in its
+; column 1 beside the five rows. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
-TileRect_24_4::
-; another name for the data at TileRect_24_4, whose note is above (E-0381)
 GameMode6_MonsterListBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
@@ -3739,8 +3754,6 @@ GameMode6_MonsterListBoxTileRect::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
-; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 9 tiles, one row per line
 GameMode6_Update_ChooseEgg_DrawListBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0

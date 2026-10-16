@@ -6286,19 +6286,26 @@ ShowRecordSkillPageNames_Bank03::
     db $01, $01, $01
     ds $b2, $00
 
+; Two pointers to 9 by 5 tile rectangle records at the same place (offset $0120 in
+; wScreenTileBuffer): SkillTargetBoxRect_Default and SkillTargetBoxRect_MPass, which differ only in
+; the tile pair of row 1 ($F3, $F4 against $F5, $F6). The index is the byte at $6851 + skill number
+; in bank $03 (the unlabelled bytes right before the table: 1 for SKILL_MPASS, SKILL_MPASSMORE and
+; SKILL_MPASSMOST, 0 for the other skills up to $CF), and
+; PauseMenu_Skills_ChooseTarget_Draw_BuildScreen and BuildSkillScreenTileBuffer pass the pointer to
+; CopyRecordRectToScreenBuffer_Bank03. (C1, E-0381)
 ; a word table of tile-rectangle records; the code derefs one entry into HL for a record copier
 ; (E-0221)
 ; record: rectangle record
-TileRectTable_03::
-; another name for the data at TileRectTable_03, whose note is above (E-0381)
 SkillTargetBoxRects::
-    dw TileRect_03 ; id 0
-    dw TileRect_03_2 ; id 1
+    dw SkillTargetBoxRect_Default ; id 0
+    dw SkillTargetBoxRect_MPass ; id 1
 
+; A rectangle record for CopyRecordRectToScreenBuffer_Bank03: offset $0120 into wScreenTileBuffer
+; (row 9, column 0), 9 x 5 tiles: a frame ($B0-$B7) whose first inner row starts with tiles $F3 $F4
+; $ED and whose third inner row has tile $BE in its middle. Entry 0 of SkillTargetBoxRects, used for
+; every skill except SKILL_MPASS, SKILL_MPASSMORE and SKILL_MPASSMOST. (C1, E-0372)
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank03 (E-0161)
 ; record: offset $0120 (row 9, column 0); 9 x 5 tiles
-TileRect_03::
-; another name for the data at TileRect_03, whose note is above (E-0381)
 SkillTargetBoxRect_Default::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $09, $05 ; width, rows
@@ -6308,8 +6315,9 @@ SkillTargetBoxRect_Default::
     db $b6, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; row 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-TileRect_03_2::
-; another name for the data at TileRect_03_2, whose note is above (E-0381)
+; The same 9 x 5 box as SkillTargetBoxRect_Default (offset $0120 into wScreenTileBuffer) except that
+; its first inner row starts with tiles $F5 $F6 instead of $F3 $F4. Entry 1 of SkillTargetBoxRects,
+; used for SKILL_MPASS, SKILL_MPASSMORE and SKILL_MPASSMOST. (C1, E-0372)
 SkillTargetBoxRect_MPass::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $09, $05 ; width, rows
@@ -9254,17 +9262,21 @@ PauseMenu_Plan_Build_BlankTiles::
     ld [wTextWindowTileHi], a
     ret
 
+; Seven VRAM tile addresses, vTiles2 + $50, + $60, ... + $B0 (tiles $05-$0B in the $9000 area), then
+; rIE ($FFFF) as the end marker. PauseMenu_Plan_Tactics_Build_DrawScreen passes this list and
+; TacticsGlyphTileSources to CopyTileListFromBank1F_Bank03, which copies 16 bytes from the matching
+; source word in bank $1F to each address until a low byte of $FF. (C1, E-0381)
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-TileCopyDestList_03::
-; another name for the data at TileCopyDestList_03, whose note is above (E-0381)
 TacticsGlyphTileDests::
     dw vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90, vTiles2 + $a0, vTiles2 + $b0, rIE ; entry 0
 
+; Source list for CopyTileListFromBank1F_Bank03: seven bank-$1F addresses inside GlyphFont ($40E0,
+; $4370, $42B0, $42D0, $4310, $42C0, $43B0: the glyphs 'D', 's', 'g', 'i', 'm', 'h', 'w'), then
+; $FFFF, which the copier never reads because it stops on the destination list's terminator. (C1,
+; E-0372)
 ; record: bank-$1F tile sources
-TileCopySrcList_03::
-; another name for the data at TileCopySrcList_03, whose note is above (E-0381)
 TacticsGlyphTileSources::
     dw $40e0, $4370, $42b0, $42d0, $4310, $42c0, $43b0, $ffff ; entry 0
 

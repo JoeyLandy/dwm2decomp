@@ -69,6 +69,9 @@ CopySpeciesRecordPrefix::
     jr nz, .loop
     ret
 
+; 384 pointers indexed by monster id (the numbering of StringTable_MonsterNames and
+; StringTable_MonsterNames2) to 47-byte species records; byte 0 is the family index of
+; StringTable_MonsterFamilies, $FF for an unused id (E-0069)
 ; CopySpeciesRecordPrefix reads the word at $403B + 2 * monster id (wSpeciesIdLo/Hi) and copies the
 ; first B bytes of the record it points at (E-0062, E-0069); 384 words, 324 distinct records
 ; (E-0253, C1)
@@ -465,7 +468,7 @@ SpeciesRecordPointers::
 ; record: family; bytes 1-5; base level cap; EXP curve; natural skills; bytes 11-15; growth row;
 ; byte 17; resistances; bytes 45-46
 SpeciesRecords::
-; another name for the data at SpeciesRecords, whose note is above (E-0381)
+; entry 0 of SpeciesRecords, whose note is above (E-0381, E-0387)
 SpeciesRecord_000::
     db $ff ; id 0: family (StringTable_MonsterFamilies index; $FF unused)
     db $00 ; sex-ratio class (C1, E-0307)

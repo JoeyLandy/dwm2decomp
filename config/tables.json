@@ -3134,7 +3134,7 @@
     {
       "bank": "5D",
       "addr": "4139",
-      "label": "RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData",
+      "label": "WorldMapOverviewPalettes",
       "count": 16,
       "id_base": 0,
       "fields": [

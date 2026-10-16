@@ -417,7 +417,7 @@ SGBPacketSetTable::
 ; (E-0179, C1)
 ; record: SGB packet (byte 0 = command * 8 + packet count)
 SGBPackets::
-; another name for the data at SGBPackets, whose note is above (E-0381)
+; entry 0 of SGBPackets, whose note is above (E-0381, E-0387)
 SgbDataSnd1F_1::
     db $79, $5d, $08, $00, $0b, $8c, $d0, $f4, $60, $00, $00, $00, $00, $00, $00, $00 ; id 0
 SgbDataSnd_SGBPacketSetTable_3::
@@ -1509,19 +1509,28 @@ FillTileRectWithArg1Tile::
 BGFillTile::
     db $c3
 
+; A 12 x 3 tile strip (36 bytes): the top border ($B0, ten $B1, $B2), a blank row between the side
+; borders ($B6, ten $C3, $B7) and a divider row ($B8, ten $B9, $BA), the same as the top three rows
+; of the right-hand box of PartyMemberDetailsScreenTileRect.
+; SwapMonstersMenu_ShowMonsterDetails_StatsFrames (stats screen, step 28) and
+; MonsterDetails_DrawSummaryPanelFrames (far-called from banks $37 and $F1) draw it at the scroll
+; origin + 8 (row 0, column 8) with wArg3 = 12 and wArg4 = 3, just before
+; MonsterDetailsItemBoxTileRect at + $160. (C1, E-0373)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 3 tiles, one row per line
-TileRect_1F::
-; another name for the data at TileRect_1F, whose note is above (E-0381)
 MonsterDetailsPanelTopTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
 
+; A 20 x 18 tile screen. Left: a box on rows 0-6 with three text rows (tiles $D0-$D4, $D5-$D9,
+; $DA-$DE), blank below. Right: a box whose blank top row is split off by a divider, with five label
+; rows (glyph tiles $02-$0C, each label followed by tile $ED), and under it a box of two rows ($F5
+; $F7 and $F6 $F7, tile $ED, and $BE between the two number places).
+; SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame (party member stats, step 3) draws it at the
+; scroll origin with DrawTileRectAtHLFromDE_Bank1E. (C1, E-0372)
 ; record: 20 x 18 tiles, one row per line
-TileRect_1F_2::
-; another name for the data at TileRect_1F_2, whose note is above (E-0381)
 PartyMemberDetailsScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1542,9 +1551,9 @@ PartyMemberDetailsScreenTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; the same box layout as TileRect_1F_2, which SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame
-; draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found
-; (E-0187, C1)
+; the same box layout as PartyMemberDetailsScreenTileRect, which
+; SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame draws as 20 x 18; the four screens are
+; contiguous, 360 bytes each; no reader of this one was found (E-0187, C1)
 TileScreen1F_1::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; entry 0: row 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
@@ -1605,9 +1614,15 @@ TileScreen1F_3::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
+; A 12 x 18 tile panel of two boxes, one per parent: each has a label of four glyph tiles and $ED, a
+; mark tile ($6C in the first box, $6D in the second) and rows of text tiles ($20-$33 in the first,
+; $34-$47 in the second) where the parents' names are drawn. Drawn at the scroll origin + 8 by
+; SwapMonstersMenu_ShowMonsterDetails_DrawPedigree (stats screen, step 30, before the parents step),
+; PartnerStats_DrawPedigreeFrame (bank $37) and RunScreenStateWhenNotFading_F1_StatsPedigreeFrame
+; (bank $F1). (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 18 tiles, one row per line
-TileRect_1F_3::
-; another name for the data at TileRect_1F_3, whose note is above (E-0381)
 MonsterDetailsPedigreeTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $13, $14, $15, $0e, $ed, $20, $21, $22, $23, $24, $b7 ; id 1
@@ -1628,11 +1643,11 @@ MonsterDetailsPedigreeTileRect::
     db $b6, $0d, $0d, $ed, $43, $44, $45, $46, $47, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
-; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
+; A 6 x 6 block of the tile numbers $20-$43 in order: the monster picture that LoadMonsterPicture
+; puts at vTiles2 + $200. SwapMonstersMenu_ShowMonsterDetails_LoadPicture (stats screen, step 5) and
+; DrawRecordBufBSpeciesMonsterPictureInTwoSteps draw it at the scroll origin + $161 (row 11, column
+; 1) in their second sub-step, after the picture tiles are loaded. (C1, E-0372)
 ; record: 6 x 6 tiles, one row per line
-TileRect_1F_4::
-; another name for the data at TileRect_1F_4, whose note is above (E-0381)
 MonsterDetailsPictureTileRect::
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2a, $2b ; id 1
@@ -1657,8 +1672,15 @@ SwapMonstersMenu_ShowParents2_LoadPicture_TileRect::
     db $60, $61, $62, $63, $64, $65 ; id 4
     db $66, $67, $68, $69, $6a, $6b ; id 5
 
-TileRect_1F_5::
-; another name for the data at TileRect_1F_5, whose note is above (E-0381)
+; A 6 x 6 block of the blank tile $C3. The picture drawers put it over the picture place before a
+; new picture is loaded: LibraryMenu_ShowMonsterEntry_DrawPicture (scroll origin + $21),
+; SwapMonstersMenu_ShowMonsterDetails_LoadPicture, DrawRecordBufBSpeciesMonsterPictureInTwoSteps and
+; the A keys of SwapMonstersMenu_ShowMonsterDetails_Cursor1,
+; SwapMonstersMenu_ShowPartyMemberDetails_ListPage, PartnerStats_Cursor and
+; RunScreenStateWhenNotFading_F1_StatsPage1Keys (scroll origin + $161), and
+; DrawRect6x6FromAtScroll41 and LinkRecordScreen_DrawBlankPicture (+ $41). (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 BlankPictureTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1667,9 +1689,11 @@ BlankPictureTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
 
+; An 8 x 7 block of the blank tile $C3 for the scroll origin + $160 (rows 11-17, columns 0-7, the
+; area that holds the picture at + $161), drawn right after MonsterDetailsStatsTileRect by
+; SwapMonstersMenu_ShowMonsterDetails_StatsCursor, SwapMonstersMenu_ShowPartyMemberDetails_StatsPage
+; and MonsterDetails_DrawStatsPageFrames. (C1, E-0372)
 ; record: 8 x 7 tiles, one row per line
-TileRect_1F_6::
-; another name for the data at TileRect_1F_6, whose note is above (E-0381)
 MonsterDetailsStatsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1679,9 +1703,13 @@ MonsterDetailsStatsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
+; A 12 x 15 tile panel drawn at the scroll origin + $68 (row 3, column 8): a box of text rows (tiles
+; $20-$28, $A7-$AF, a row with tile $C7, and a labelled row with tiles $29-$2D), then a box with two
+; rows starting $FF $ED around a word in glyph tiles $0B-$12. Drawn by
+; SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame (stats screen, step 17, before the personality
+; and experience steps), PartnerStats_DrawPage2Frame and
+; RunScreenStateWhenNotFading_F1_StatsPage2Frame (the partner's second page). (C1, E-0372)
 ; record: 12 x 15 tiles, one row per line
-TileRect_1F_7::
-; another name for the data at TileRect_1F_7, whose note is above (E-0381)
 MonsterDetailsPage2TileRect::
     db $b6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1699,8 +1727,17 @@ MonsterDetailsPage2TileRect::
     db $b6, $ff, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
-TileRect_1F_8::
-; another name for the data at TileRect_1F_8, whose note is above (E-0381)
+; A 12 x 15 tile stats panel drawn at the scroll origin + $68 (row 3, column 8): a box of five label
+; rows (glyph tiles $02 $03 $04, $05 $06 $07, $02 $BF $09, $0A $0B $03 and $0C $09 $05, each
+; followed by tile $ED) and a box with two rows ($F5 $F7 and $F6 $F7, tile $ED, and $BE between the
+; number places). DrawListEntriesCell5RecordDetails_DrawStats (MON_ATK to MON_WLD) and
+; DrawListEntriesCell5RecordDetails_DrawHPAndMP (whose offsets
+; DrawListEntriesCell5RecordDetails_HPMPOffsets land on its two lower rows) draw the numbers into
+; it. Readers: SwapMonstersMenu_ShowMonsterDetails_StatsCursor,
+; SwapMonstersMenu_ShowPartyMemberDetails_StatsPage and MonsterDetails_DrawStatsPageFrames. (C1,
+; E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 MonsterDetailsStatsTileRect::
     db $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1718,8 +1755,13 @@ MonsterDetailsStatsTileRect::
     db $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 13
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
-TileRect_1F_9::
-; another name for the data at TileRect_1F_9, whose note is above (E-0381)
+; An 8 x 7 tile area for the scroll origin + $160: a blank row, a 6 x 2 text box showing tiles
+; $32-$37 and $38-$3D, and a blank row. ShowListEntriesCell5RecordItemName writes the record's
+; MON_ITEM name (string category $0B) into exactly those tiles ($9320, 6 x 2). Drawn by
+; SwapMonstersMenu_ShowMonsterDetails_LoadSprite (step 20),
+; SwapMonstersMenu_ShowMonsterDetails_StatsFrames, MonsterDetails_DrawSummaryPanelFrames,
+; PartnerStats_LoadSprite and RunScreenStateWhenNotFading_F1_StatsLoadSprite. (C1, E-0372)
+; record: 8 x 7 tiles, one row per line
 MonsterDetailsItemBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 1
@@ -1729,9 +1771,11 @@ MonsterDetailsItemBoxTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
+; The 20 x 18 tile screen of the stats screen. Left: a box on rows 0-10 with five text rows (tiles
+; $D0-$D4, $D5-$D9, $DA-$DE, $F0-$F4 and $A4 $A5 $A6 $CE $CF), blank below. Right: the same boxes as
+; PartyMemberDetailsScreenTileRect (a divided top row, five label rows, then the two-row box).
+; SwapMonstersMenu_ShowMonsterDetails_DrawFrame (step 3) draws it at the scroll origin. (C1, E-0372)
 ; record: 20 x 18 tiles, one row per line
-TileRect_1F_10::
-; another name for the data at TileRect_1F_10, whose note is above (E-0381)
 MonsterDetailsScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1774,8 +1818,10 @@ PartnerStats_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_11::
-; another name for the data at TileRect_1F_11, whose note is above (E-0381)
+; The 20 x 18 tile screen of SwapMonstersMenu_ShowMonsterDetails3, drawn by
+; SwapMonstersMenu_ShowMonsterDetails3_DrawFrame (step 3): the layout of
+; MonsterDetailsScreenTileRect except that the left box has four text rows and ends on row 8. (C1,
+; E-0372)
 MonsterDetails3ScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1796,9 +1842,11 @@ MonsterDetails3ScreenTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
+; A 12 x 18 empty box (edges only, the bottom edge doubled) drawn at the scroll origin + 8 by
+; SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames (stats screen, step 23) and
+; MonsterDetails_DrawBlankPageFrames, together with MonsterDetailsBlankPageLowerLeftTileRect. (C1,
+; E-0372)
 ; record: 12 x 18 tiles, one row per line
-TileRect_1F_12::
-; another name for the data at TileRect_1F_12, whose note is above (E-0381)
 MonsterDetailsBlankPageTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1819,9 +1867,12 @@ MonsterDetailsBlankPageTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
+; An 8 x 7 block of the blank tile $C3 drawn at the scroll origin + $160 with
+; MonsterDetailsBlankPageTileRect by SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames and
+; MonsterDetails_DrawBlankPageFrames. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 7 tiles, one row per line
-TileRect_1F_13::
-; another name for the data at TileRect_1F_13, whose note is above (E-0381)
 MonsterDetailsBlankPageLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1831,8 +1882,12 @@ MonsterDetailsBlankPageLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-TileRect_1F_14::
-; another name for the data at TileRect_1F_14, whose note is above (E-0381)
+; A 12 x 18 box with eight text rows of nine tiles each ($20-$28, $29-$31, ... $5F-$67) separated by
+; blank rows, drawn at the scroll origin + 8 by SwapMonstersMenu_ShowMonsterDetails_DrawNextPage
+; (step 24) and MonsterDetails_DrawSkillsPageFrames after they blank the tiles from vTiles2 + $200.
+; The next stats-screen step, SwapMonstersMenu_ShowMonsterDetails_ListSkills, writes the record's
+; skill names into those tiles. (C1, E-0372)
+; record: 12 x 18 tiles, one row per line
 MonsterDetailsSkillsPageTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; id 1
@@ -1853,8 +1908,12 @@ MonsterDetailsSkillsPageTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_15::
-; another name for the data at TileRect_1F_15, whose note is above (E-0381)
+; An 8 x 7 block of the blank tile $C3 drawn at the scroll origin + $160 with
+; MonsterDetailsSkillsPageTileRect by SwapMonstersMenu_ShowMonsterDetails_DrawNextPage and
+; MonsterDetails_DrawSkillsPageFrames. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
+; record: 8 x 7 tiles, one row per line
 MonsterDetailsSkillsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1864,8 +1923,11 @@ MonsterDetailsSkillsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-TileRect_1F_16::
-; another name for the data at TileRect_1F_16, whose note is above (E-0381)
+; A 12 x 18 panel with the two boxes of MonsterDetailsPedigreeTileRect (the same label rows) but
+; without the mark and name tiles. Drawn at the scroll origin + 8 by DrawSummaryFrames,
+; SwapMonstersMenu_ShowMonsterDetails_Cursor2 and SwapMonstersMenu_ShowPartyMemberDetails_Cursor on
+; their A key, before the full pedigree panel is drawn. (C1, E-0372)
+; record: 12 x 18 tiles, one row per line
 MonsterDetailsEmptyPedigreeTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $13, $14, $15, $0e, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1886,8 +1948,15 @@ MonsterDetailsEmptyPedigreeTileRect::
     db $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_17::
-; another name for the data at TileRect_1F_17, whose note is above (E-0381)
+; An 8 x 7 tile area for the scroll origin + $160: blank except a small figure of tiles $7C, $6E
+; $7E, $6F $7E and $7D in columns 3-4 of rows 1-4 (the figure
+; SwapMonstersMenu_ShowParents2_DrawFrame_TileRect also has on its left). Drawn with
+; MonsterDetailsEmptyPedigreeTileRect by DrawSummaryFrames,
+; SwapMonstersMenu_ShowMonsterDetails_Cursor2 and SwapMonstersMenu_ShowPartyMemberDetails_Cursor.
+; (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
+; record: 8 x 7 tiles, one row per line
 MonsterDetailsPedigreeLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $7c, $c3, $c3, $c3 ; id 1
@@ -1897,6 +1966,7 @@ MonsterDetailsPedigreeLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
+; record: 20 x 18 tiles, one row per line
 SwapMonstersMenu_ShowParents2_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $13, $14, $15, $0e, $ed, $20, $21, $22, $23, $24, $b7 ; id 1
@@ -1917,8 +1987,12 @@ SwapMonstersMenu_ShowParents2_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $0d, $ed, $43, $44, $45, $46, $47, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_18::
-; another name for the data at TileRect_1F_18, whose note is above (E-0381)
+; The 20 x 18 name-entry screen: a 2 x 3 block of tile $00 at the left and a small box with text
+; tiles $50-$54 on rows 0-3, then a box with a heading row of glyph tiles, a divider, and the
+; keyboard: five rows of character tiles ($02-$4B in order, a blank column before the last four of
+; each row) separated by blank rows, the last row ending in tiles $06 $13 $05.
+; RunNameEntryStateWhenNotFading_Setup_DrawKeyboard (name entry set-up, step 2) draws it;
+; RunNameEntryStateWhenNotFading_RedrawKeyboard_Data is a second label at its row 8. (C1, E-0372)
 NameEntryKeyboardTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $00, $00, $c3, $c3, $b6, $c3, $50, $51, $52, $53, $54, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1940,9 +2014,13 @@ RunNameEntryStateWhenNotFading_RedrawKeyboard_Data::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
+; A 20 x 5 box with two rows of text tiles, $5C-$6D and $6E-$7F, separated by a blank row;
+; RunNameEntryStateWhenNotFading_DrawFrameRow_Data is a second label at that blank row.
+; RunNameEntryStateWhenNotFading_DrawFrameBottom (name entry, state 2, step 3) draws it. (C1,
+; E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 5 tiles, one row per line
-TileRect_1F_19::
-; another name for the data at TileRect_1F_19, whose note is above (E-0381)
 NameEntryTwoRowWindowTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
@@ -1951,16 +2029,14 @@ RunNameEntryStateWhenNotFading_DrawFrameRow_Data::
     db $b6, $6e, $6f, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7a, $7b, $7c, $7d, $7e, $7f, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; A 20 x 3 box with one row of text tiles $5C-$6D, drawn by
+; RunNameEntryStateWhenNotFading_DrawFramePart (name entry, state 2, step 2). (C1, E-0372)
 ; record: 20 x 3 tiles, one row per line
-TileRect_1F_20::
-; another name for the data at TileRect_1F_20, whose note is above (E-0381)
 NameEntryOneRowWindowTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
-; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
-; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
 RunNameEntryStateWhenNotFading_DrawYesNo_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0

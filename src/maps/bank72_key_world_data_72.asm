@@ -208,7 +208,7 @@ KeyWorldRoomPointers::
 ; record: 3-byte header; 16 far pointers to compressed screen tile maps (4 x 4 grid, row by row); 16
 ; far pointers to their attribute maps
 KeyWorldRooms::
-; another name for the data at KeyWorldRooms, whose note is above (E-0381)
+; entry 0 of KeyWorldRooms, whose note is above (E-0381, E-0387)
 KeyWorldRoom00::
     db $00, $01, $02 ; id 0
     dfar KeyWorldRoom00_Y0X0_Tiles

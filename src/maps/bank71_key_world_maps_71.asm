@@ -47,8 +47,8 @@ KeyWorldRoom12_Y3X3_Tiles::
 ; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows a narrow
 ; vertical corridor two blocks wide with two striped blocks at the top and three pit blocks below
 ; them; walls on both sides. Its attribute map is, by position in the attribute run, the unlabelled
-; attribute stream at 71:4E22. The same layout looks different under each of the 12 tile sets, so
-; the name describes the layout, not a theme. (C1, E-0383)
+; attribute stream at KeyWorldScreen71_1. The same layout looks different under each of the 12 tile
+; sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 105 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldFloorNarrowCorridorStripesPitsTilemap::
     INCBIN "maps/key_worlds/floor_narrow_corridor_stripes_pits_tilemap.lz"
@@ -64,9 +64,9 @@ KeyWorldFloorNarrowCorridorStripesPitsTilemap::
 ; it), so no routine is known to load it; what it is comes from its content and from sitting among
 ; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows two tall
 ; columns of pit blocks (14 pit blocks) with a striped column between them in a roomy floor. Its
-; attribute map is, by position in the attribute run, the unlabelled attribute stream at 71:4E5F.
-; The same layout looks different under each of the 12 tile sets, so the name describes the layout,
-; not a theme. (C1, E-0383)
+; attribute map is, by position in the attribute run, the unlabelled attribute stream at
+; KeyWorldScreen71_2. The same layout looks different under each of the 12 tile sets, so the name
+; describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldFloorScreenTwoPitColumnsStripeTilemap::
     INCBIN "maps/key_worlds/floor_screen_two_pit_columns_stripe_tilemap.lz"
@@ -83,8 +83,8 @@ KeyWorldFloorScreenTwoPitColumnsStripeTilemap::
 ; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows a U-shaped
 ; line of pit blocks (12) around a wall block with a row of striped blocks beneath it and cracked
 ; floor down the right edge. Its attribute map is, by position in the attribute run, the unlabelled
-; attribute stream at 71:4EC9. The same layout looks different under each of the 12 tile sets, so
-; the name describes the layout, not a theme. (C1, E-0383)
+; attribute stream at KeyWorldScreen71_3. The same layout looks different under each of the 12 tile
+; sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 218 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldFloorScreenUShapedPitWallTilemap::
     INCBIN "maps/key_worlds/floor_screen_ushaped_pit_wall_tilemap.lz"
@@ -101,8 +101,8 @@ KeyWorldFloorScreenUShapedPitWallTilemap::
 ; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows four
 ; scattered pit blocks and two thin wall columns standing in a room, with a striped patch on the
 ; left and cracked floor on the right. Its attribute map is, by position in the attribute run, the
-; unlabelled attribute stream at 71:4F32. The same layout looks different under each of the 12 tile
-; sets, so the name describes the layout, not a theme. (C1, E-0383)
+; unlabelled attribute stream at KeyWorldScreen71_4. The same layout looks different under each of
+; the 12 tile sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 191 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldFloorScreenFourPitsTwoWallColumnsTilemap::
     INCBIN "maps/key_worlds/floor_screen_four_pits_two_wall_columns_tilemap.lz"
@@ -159,21 +159,24 @@ KeyWorldRoom3A_Y3X1_Attrs::
 KeyWorldRoom12_Y3X3_Attrs::
     INCBIN "maps/key_worlds/room12_y3_x3_attrs.lz"
 
-; Not a real asset: a misaligned decode. The ROM bytes at 71:4E22 hold a run of four back-to-back
-; attribute-map streams (360 bytes each when expanded; 61, 106, 105 and 93 bytes long, ending
-; exactly where KeyWorldRoom06_Y3X1_Attrs starts at KeyWorldRoom06_Y3X1_Attrs). This label sits 18
-; bytes inside the first of them, at Gfx71_1, and the decompressor still returns 771 bytes (664
-; consumed, running on through the rest of the run). That output is not tile data: it starts with 12
-; zero bytes and then shows the same run-length attribute bytes (04 ff f5 04 77 06 ...), and a 2bpp
-; tile render of it is noise. Nothing loads it: no far pointer to Gfx71_1 exists anywhere in the
-; ROM, and 771 is not a multiple of 16 bytes per tile. The four real streams, in order, are the
-; attribute maps of KeyWorldFloorNarrowCorridorStripesPitsTilemap to
-; KeyWorldFloorScreenFourPitsTwoWallColumnsTilemap, which carry no label of their own. The label and
-; its INCBIN should probably become four 360-byte attribute streams at 71:4E22, 71:4E5F, 71:4EC9 and
-; 71:4F32. (C1, E-0383)
-; LZSS-compressed: 664 bytes that expand to 771 (E-0016, E-0017)
-Gfx71_1::
-    INCBIN "gfx/misc/gfx71_1.lz"
+; LZSS-compressed: 61 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen71_1::
+    db $68, $01, $04, $02, $04, $00, $03, $01, $01, $01, $01, $04, $00, $04, $04, $00
+    db $0f, $31, $03, $03, $03, $03, $04, $48, $0f, $11, $00, $02, $04, $ff, $f5, $04
+    db $77, $06, $04, $fd, $f7, $04, $00, $06, $04, $82, $0e, $01, $01, $04, $96, $0f
+    db $01, $04, $0a, $0f, $3b, $04, $08, $0f, $15, $04, $38, $1f, $0d
+
+; LZSS-compressed: 106 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen71_2::
+    INCBIN "maps/key_worlds/screen71_2.lz"
+
+; LZSS-compressed: 105 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen71_3::
+    INCBIN "maps/key_worlds/screen71_3.lz"
+
+; LZSS-compressed: 93 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen71_4::
+    INCBIN "maps/key_worlds/screen71_4.lz"
 
 ; LZSS-compressed: 91 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom06_Y3X1_Attrs::
@@ -343,22 +346,22 @@ KeyWorldRoom19_Y1X0_Attrs::
     INCBIN "maps/key_worlds/room19_y1_x0_attrs.lz"
 
 ; LZSS-compressed: 36 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_1::
+KeyWorldScreen71_5::
     db $68, $01, $03, $02, $03, $00, $0f, $1c, $01, $01, $01, $01, $03, $20, $0f, $4d
     db $03, $80, $0f, $4d, $03, $00, $00, $00, $02, $03, $ff, $fe, $03, $fc, $ff, $01
     db $03, $94, $0f, $35
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_2::
-    INCBIN "maps/key_worlds/screen71_2.lz"
+KeyWorldScreen71_6::
+    INCBIN "maps/key_worlds/screen71_6.lz"
 
 ; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_3::
-    INCBIN "maps/key_worlds/screen71_3.lz"
+KeyWorldScreen71_7::
+    INCBIN "maps/key_worlds/screen71_7.lz"
 
 ; LZSS-compressed: 82 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_4::
-    INCBIN "maps/key_worlds/screen71_4.lz"
+KeyWorldScreen71_8::
+    INCBIN "maps/key_worlds/screen71_8.lz"
 
 ; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom8A_Y1X1_Attrs::
@@ -526,23 +529,23 @@ KeyWorldRoom25_Y0X1_Attrs::
     INCBIN "maps/key_worlds/room25_y0_x1_attrs.lz"
 
 ; LZSS-compressed: 52 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_5::
+KeyWorldScreen71_9::
     db $68, $01, $03, $02, $03, $00, $0f, $4d, $03, $18, $0f, $04, $01, $03, $78, $03
     db $00, $03, $77, $05, $03, $76, $07, $00, $03, $82, $0f, $00, $03, $81, $0f, $16
     db $03, $d0, $00, $03, $86, $0c, $03, $fc, $f0, $03, $86, $02, $03, $ef, $0f, $4d
     db $03, $08, $1f, $05
 
 ; LZSS-compressed: 102 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_6::
-    INCBIN "maps/key_worlds/screen71_6.lz"
+KeyWorldScreen71_10::
+    INCBIN "maps/key_worlds/screen71_10.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_7::
-    INCBIN "maps/key_worlds/screen71_7.lz"
+KeyWorldScreen71_11::
+    INCBIN "maps/key_worlds/screen71_11.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_8::
-    INCBIN "maps/key_worlds/screen71_8.lz"
+KeyWorldScreen71_12::
+    INCBIN "maps/key_worlds/screen71_12.lz"
 
 ; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom1B_Y0X1_Attrs::
@@ -747,22 +750,22 @@ KeyWorldRoom3A_Y3X2_Attrs::
     db $00, $52, $04, $00, $10, $1f, $0b, $00, $00, $0f, $13
 
 ; LZSS-compressed: 39 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_9::
+KeyWorldScreen71_13::
     db $68, $01, $03, $02, $03, $00, $0f, $4d, $03, $1e, $0f, $0a, $01, $03, $7e, $01
     db $00, $03, $7d, $03, $03, $78, $09, $00, $03, $86, $0f, $00, $03, $85, $0f, $36
     db $03, $f5, $0f, $4d, $03, $08, $1e
 
 ; LZSS-compressed: 67 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_10::
-    INCBIN "maps/key_worlds/screen71_10.lz"
+KeyWorldScreen71_14::
+    INCBIN "maps/key_worlds/screen71_14.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_11::
-    INCBIN "maps/key_worlds/screen71_11.lz"
+KeyWorldScreen71_15::
+    INCBIN "maps/key_worlds/screen71_15.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_12::
-    INCBIN "maps/key_worlds/screen71_12.lz"
+KeyWorldScreen71_16::
+    INCBIN "maps/key_worlds/screen71_16.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom14_Y2X1_Attrs::
@@ -772,12 +775,12 @@ KeyWorldRoom53_Y1X0_Attrs::
     INCBIN "maps/key_worlds/room53_y1_x0_attrs.lz"
 
 ; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_13::
-    INCBIN "maps/key_worlds/screen71_13.lz"
+KeyWorldScreen71_17::
+    INCBIN "maps/key_worlds/screen71_17.lz"
 
 ; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_14::
-    INCBIN "maps/key_worlds/screen71_14.lz"
+KeyWorldScreen71_18::
+    INCBIN "maps/key_worlds/screen71_18.lz"
 
 ; LZSS-compressed: 31 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom05_Y1X0_Tiles::
@@ -785,19 +788,19 @@ KeyWorldRoom05_Y1X0_Tiles::
     db $fe, $ff, $4d, $01, $5e, $0f, $4d, $01, $be, $0f, $47, $01, $3f, $1f, $15
 
 ; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_15::
-    INCBIN "maps/key_worlds/screen71_15.lz"
+KeyWorldScreen71_19::
+    INCBIN "maps/key_worlds/screen71_19.lz"
 
 ; LZSS-compressed: 122 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_16::
-    INCBIN "maps/key_worlds/screen71_16.lz"
+KeyWorldScreen71_20::
+    INCBIN "maps/key_worlds/screen71_20.lz"
 
-KeyWorldScreen71_17::
-    INCBIN "maps/key_worlds/screen71_17.lz"
+KeyWorldScreen71_21::
+    INCBIN "maps/key_worlds/screen71_21.lz"
 
 ; LZSS-compressed: 126 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen71_18::
-    INCBIN "maps/key_worlds/screen71_18.lz"
+KeyWorldScreen71_22::
+    INCBIN "maps/key_worlds/screen71_22.lz"
 
 ; LZSS-compressed: 28 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom05_Y1X0_Attrs::

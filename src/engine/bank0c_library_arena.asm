@@ -8242,11 +8242,13 @@ TileRect0C_3::
     db $b6, $c3, $a9, $c3, $a8, $c3, $a7, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; A 6 x 5 tile rectangle, one row per line: a frame ($B0-$B7) around two choice lines, tiles $CE $CF
+; $DF on the first inner row and $AE $AF on the third, blank $C3 elsewhere.
+; ShowTwoChoiceBoxAtWindowTileBufferRow13Col14 copies it to wWindowTileBuffer + $112 (row 13, column
+; 14) with CopyRectTo20ByteRows_Bank0C and draws it for the arena's yes/no questions. (C1, E-0372)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-TileRect_0C::
-; another name for the data at TileRect_0C, whose note is above (E-0381)
 TwoChoiceBoxRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1

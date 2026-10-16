@@ -171,8 +171,6 @@ OBJPaletteBufferPlus8Data::
 ; index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes). (named from its
 ; reading, E-0372; was LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData)
 SharedOBJPalettes::
-; another name for the data at SharedOBJPalettes, whose note is above (E-0381)
-LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData::
     dw $0000, $037f, $027f, $0000 ; id 0
     dw $0000, $4f5d, $1415, $0000 ; id 1
     dw $0000, $4f5d, $02b0, $0000 ; id 2
@@ -611,8 +609,6 @@ SparkleAndCurvedStreakTiles::
 ; 16 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)
 ; record: one CGB palette: 4 BGR555 colours
-Palettes_7E::
-; another name for the data at Palettes_7E, whose note is above (E-0381)
 OBJPaletteBufferPlus8Data_3::
     dw $0000, $6bff, $0279, $0000 ; id 0
     dw $7c00, $7c00, $7c00, $7c00 ; id 1
@@ -649,8 +645,6 @@ Tiles0Gfx_3::
 ; 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)
 ; record: one CGB palette: 4 BGR555 colours
-Palettes_7E_2::
-; another name for the data at Palettes_7E_2, whose note is above (E-0381)
 DrawTitleSaveSummaryScreen_OBJPaletteBufferData::
     dw $0000, $3d7d, $2011, $0000 ; id 0
     ds $2440, $00

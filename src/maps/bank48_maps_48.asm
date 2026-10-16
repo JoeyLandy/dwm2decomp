@@ -12,8 +12,6 @@ SECTION "Bank 48", ROMX[$4000], BANK[$48]
 ; (C1: entry 0 of AreaPaletteTable).
 ; record: one CGB palette: 4 BGR555 colours
 AreaPalettes0::
-; another name for the data at AreaPalettes0, whose note is above (E-0381)
-DebugStaffRoll_Scene00_Load_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $7da0, $7fff, $5ad6, $0063 ; entry 1
     dw $02c0, $3f7f, $03e2, $0000 ; entry 2
@@ -35,8 +33,6 @@ Map01Palettes::
     dw $0000, $0000, $0000, $0000 ; entry 7
 
 Map02Palettes::
-; another name for the data at Map02Palettes, whose note is above (E-0381)
-DebugStaffRoll_Scene01_Load_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $7da0, $7fff, $5ad6, $0063 ; entry 1
     dw $02c0, $3f7f, $03e2, $0000 ; entry 2
@@ -163,8 +159,6 @@ Map18Tileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map18Palettes::
-; another name for the data at Map18Palettes, whose note is above (E-0381)
-DebugStaffRoll_Scene02_Load_BGPaletteBufferData::
     dw $7d86, $7fff, $7fe1, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2

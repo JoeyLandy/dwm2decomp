@@ -1553,13 +1553,11 @@ ShowBreedingString::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 BeginBreedingStringDisplay_StringCategories::
-    dw StringList_1B ; id 0
+    dw BreedingStrings_Category0 ; id 0
 
 ; category list of BeginBreedingStringDisplay_StringCategories; one pointer per wStringIndex
 ; (E-0217)
 ; record: string
-StringList_1B::
-; another name for the data at StringList_1B, whose note is above (E-0381)
 BreedingStrings_Category0::
     dw Text_WelcomeWhatWouldYou ; id 0
     dw Text_WelcomeWhatWouldYou ; id 1
@@ -1786,8 +1784,6 @@ Text_UnusedNoSaveData::
 ; control bytes, then text up to $F0 (E-0197, C1)
 ; record: $EA, $45 (window control bytes, as at the other entries of this pointer table); message
 Text_AccessoriesWillBeIn_2::
-; another name for the data at Text_AccessoriesWillBeIn_2, whose note is above (E-0381)
-Text_AccessoriesWillBeIn_3::
     db $ea, $45 ; entry 0
     db " Accessories will<LINE>", "be in the Vault.<WAIT>", "@"
 
@@ -7680,8 +7676,10 @@ LinkBattleSetupMenu_EraseInfoOKBox_TileRect_2::
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-TileRect_1B::
-; another name for the data at TileRect_1B, whose note is above (E-0381)
+; An 8 x 5 framed box (40 bytes) with tile ids $70-$73 in row 1 and $74, $75 in row 3: the tiles at
+; vTiles2 + $700 onward where its readers have just rendered string $1E ('Info / OK', window rows
+; $0C01). LinkBattleSetupMenu_PickRecords_ShowInfoOKYesN and EggServiceMenu_ShowInfoOKChoice copy it
+; to wWindowTileBuffer + $110. (C1, E-0372)
 EggServiceMenu_InfoOKBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
@@ -7718,9 +7716,15 @@ LinkBattleSetupMenu_DrawYesNo_TileRect::
     db $b6, $c3, $79, $73, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; A 9 x 7 framed box (63 bytes, one row of 9 tile ids per line) with tile ids $30-$35 in row 1,
+; $36-$3A in row 3 and $3B-$3E in row 5: the tiles at vTiles2 + $300 onward where its readers have
+; just rendered string $1F ('Battle / Prize / Exit', window size $0E01).
+; EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox (starting the battle, step 6) and
+; LinkBattleSetupMenu_ShowBattlePrizeExit (listing members, step 6) copy it to wWindowTileBuffer +
+; $E7 (row 11, column 11) with CopyRectTo20ByteRows. (C1, E-0373)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 9 x 7 tiles, one row per line
-TileRect_1B_2::
-; another name for the data at TileRect_1B_2, whose note is above (E-0381)
 EggServiceMenu_BattlePrizeExitBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $35, $b7 ; id 1

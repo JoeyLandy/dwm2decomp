@@ -2406,8 +2406,6 @@ DrawFullScreenFromBankE0_TileRect::
     db $b6, $c3, $c3, $c3, $c3, $fa, $fb, $fc, $fd, $fe, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_E0::
-; another name for the data at TileRect_E0, whose note is above (E-0381)
 EffectViewerScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -3434,7 +3432,7 @@ DebugStaffRoll_Scene00_Load::
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, DebugStaffRoll_Scene00_Load_BGPaletteBufferData
+    ld de, AreaPalettes0
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -3910,7 +3908,7 @@ DebugStaffRoll_Scene01_Load::
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, DebugStaffRoll_Scene01_Load_BGPaletteBufferData
+    ld de, Map02Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -4522,7 +4520,7 @@ DebugStaffRoll_Scene02_Load::
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, DebugStaffRoll_Scene02_Load_BGPaletteBufferData
+    ld de, Map18Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -5342,12 +5340,12 @@ DebugStaffRoll_Scene03_Load::
     ld a, $00
     ldh [rSVBK], a
     ld b, $94
-    ld de, DebugStaffRoll_Scene03_Load_BGPaletteBufferData
+    ld de, Map19Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $48
-    ld de, DebugStaffRoll_Scene02_Load_BGPaletteBufferData
+    ld de, Map18Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -5860,7 +5858,7 @@ DebugStaffRoll_Scene04_Load::
     ld a, $00
     ldh [rSVBK], a
     ld b, $49
-    ld de, DebugStaffRoll_Scene04_Load_BGPaletteBufferData
+    ld de, Map1APalettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -6870,7 +6868,7 @@ DebugStaffRoll_Credits_TitleCard::
     or a
     jr z, .skip
     ld b, $48
-    ld de, DebugStaffRoll_Scene00_Load_BGPaletteBufferData
+    ld de, AreaPalettes0
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM

@@ -18,8 +18,6 @@ WorldMapOverviewFrameTiles::
 ; 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)
 ; record: one CGB palette: 4 BGR555 colours
-Palettes_5E::
-; another name for the data at Palettes_5E, whose note is above (E-0381)
 BGPaletteBufferPlus8Data::
     dw $014d, $6bff, $2a55, $0000 ; id 0
     db $88

@@ -297,7 +297,7 @@ SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
 
 ; Runs ActorFormationSlotToTemp0 (hTemp0 = the formation partner slot of wBattleActor), then sets
 ; the byte of wSlotMarks for that slot to 3. With no formation hTemp0 is $FF and the byte written is
-; wSlotMarks + $FF, outside the 8 marks. Called by ApplyActionResultAndMarkFormation,
+; wSlotMarks + $FF, outside the 8 marks. Called by RunBattleActions_StatusChecks_PairRefusal,
 ; SetSubPhase2AndRestartResolve and ActionEffect_ActionD0 to ActionEffect_ActionD8. (C2, E-0385)
 ; runs ActorFormationSlotToTemp0, then wSlotMarks[hTemp0] = 3 (E-0122) (E-0340: the address in its
 ; name read as its RAM name; was RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3) (E-0344: the
@@ -317,8 +317,8 @@ RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3::
 ; (1,2) from ActorFormationSlotToTemp0_Data: hTemp0 = the second slot of the pair when the actor
 ; (wBattleActor and 3) is the first, otherwise the first slot, plus 4 on the second side; $FF when
 ; there is no formation. BC is kept. Called by RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3 and,
-; by far call, CheckFormationPartnersCanAct, ApplyActionResultAndMarkFormation, PayActorMPCost_CpD6
-; and others. (C2, E-0385)
+; by far call, CheckFormationPartnersCanAct, RunBattleActions_StatusChecks_PairRefusal,
+; PayActorMPCost_CpD6 and others. (C2, E-0385)
 ; hTemp0 = the slot for the actor through its side's wFormationSlot0 formation
 ; (ActorFormationSlotToTemp0_Data), $FF when none (E-0124)
 ActorFormationSlotToTemp0::
@@ -987,8 +987,8 @@ SaveActionChoicesAndPickFormations_ApplyFormation::
 ; hTemp0 = 1 when the action chosen by the actor (the first byte of the word at wBattleActionChoice
 ; + 2 * wBattleActor) is $D0-$E3, else 0. $D0-$E3 are the combined actions that FormationTable
 ; records give. Far-called by RunBattleActions_StatusChecks_CheckAction_CheckMP, which then goes to
-; RunBattleActions_StatusChecks_CheckAction_Skip when hTemp0 is not 0, so no MP check is made for
-; such an action. (C2, E-0385)
+; RunBattleActions_StatusChecks_PairRefusal when hTemp0 is not 0, so no MP check is made for such an
+; action. (C2, E-0385)
 ; hTemp0 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
 ActorActionIsD0ToE3::
     ld a, [wBattleActor]

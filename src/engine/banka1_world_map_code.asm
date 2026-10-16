@@ -1013,7 +1013,7 @@ RunWorldMapState_DrawCloseUp::
     or a
     jr z, .done
     ld a, $40
-    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
+    ld de, SharedOBJPalettes
     add e
     ld e, a
     jr nc, .skip2
@@ -2798,7 +2798,7 @@ RunWorldMapState_DrawOverview::
     or a
     jr z, .done
     ld a, $40
-    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
+    ld de, SharedOBJPalettes
     add e
     ld e, a
     jr nc, .skip2
@@ -2816,7 +2816,7 @@ RunWorldMapState_DrawOverview::
     call CopyFromBank
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
-    ld de, RunWorldMapState_DrawOverview_BGPaletteBufferData
+    ld de, WorldMapOverviewPalettes
     ld b, $5d
     ld hl, wBGPaletteBuffer
     ld c, $08

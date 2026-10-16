@@ -10,18 +10,6 @@ SECTION "Bank 70", ROMX[$4000], BANK[$70]
 MapType5Tiles8::
     INCBIN "gfx/map_types/5_tiles8.lz"
 
-; Not an independent asset: the last $13B bytes of the 716-byte compressed stream MapType5Tiles8
-; (entry 8 of MapType5TilesetTable, 2048 bytes = 128 BG tiles for vTiles2 of the key-world floors).
-; Decompressing MapType5Tiles8 from bank $70 address $4001 consumes exactly 716 bytes, ending where
-; MapType5Palettes8 begins, and the stream here starts $191 bytes in (the generator split it at a
-; point where the bytes happen to parse as a header). Decoding from this point gives 1478 bytes of
-; noise that run past the real end: its output contains the 64-byte palette table and the start of
-; the following attribute streams as literals, and the picture is not tiles. Nothing loads it on its
-; own; LoadMapType5TilesetAndHeader decompresses the whole stream from MapType5Tiles8. (C1, E-0383)
-; LZSS-compressed: 1418 bytes that expand to 1478 (E-0016, E-0017)
-MapType5Tiles8StreamTail::
-    INCBIN "gfx/map_types/5_tiles8_stream_tail.lz"
-
 ; entry 8 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes8::
@@ -437,10 +425,6 @@ KeyWorldRoom08_Y1X3_Attrs::
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom08_Y3X3_Attrs::
     INCBIN "maps/key_worlds/room08_y3_x3_attrs.lz"
-
-; LZSS-compressed: 3295 bytes that expand to 3359 (E-0016, E-0017)
-Gfx70_1::
-    db $1f, $0d
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen70_6::

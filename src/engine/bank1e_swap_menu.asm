@@ -746,11 +746,13 @@ SwapMonstersMenu_MoveRecords_DrawYesNoAgain::
     ld [wScreenStep], a
     ret
 
+; A tile rectangle 8 tiles wide and 5 rows high, one row per db line: a frame (tiles $B0-$B7 around
+; the edge) with blank tile $C3 inside and tiles $70-$73 on row 1 and $74-$75 on row 3 as the two
+; answer lines. SwapMonstersMenu_MoveRecords_DrawYesNoAgain copies it to wWindowTileBuffer + $110
+; (row 13, column 12) and draws it. (C1, E-0381)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
-TileRect_1E::
-; another name for the data at TileRect_1E, whose note is above (E-0381)
 SwapMonstersMenu_YesNoAgainTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1

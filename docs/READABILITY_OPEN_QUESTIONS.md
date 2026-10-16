@@ -723,9 +723,9 @@ reading itself. Labels are as named when the batch was applied; later renames ar
 - `MeatExtraStatAmounts` (3B:492A): What wBattleExtraStat means in play is not read.
 - `ItemEffect_EndForTarget` (3B:4F15): The old note 'Goes to the damage message' (E-0357) and SetResolveStep0A's note (E-0116, 'the damage-message step, ResolveStepDamageMessage') follow bank $36's RunBattleResolveStep table; in this bank wBattleResolveStep indexes RunBattleActions_UseItem, whose entry $0A is RunBattleActions_UseItem_BeastTail.
 - `ItemEffect_EndForTarget` (3B:4F15): Whether the ten trailing bytes are ever executed is not read.
-- `BreedMenuPalettes` (47:67E2): The label duplicates Map0DPalettes at the same address; the generator could point the caller at Map0DPalettes and drop this label instead.
-- `EggServicePalettes` (49:46DC): The label duplicates Map0APalettes at the same address; the generator could point the caller at Map0APalettes and drop this label instead.
-- `RenameMenuPalettes` (49:4AC5): The label duplicates Map13Palettes at the same address; the generator could point the caller at Map13Palettes and drop this label instead.
+- `BreedMenuPalettes` (47:67E2): The label duplicates Map0DPalettes at the same address; the generator could point the caller at Map0DPalettes and drop this label instead. Resolved by E-0387: one name per table, Map0DPalettes.
+- `EggServicePalettes` (49:46DC): The label duplicates Map0APalettes at the same address; the generator could point the caller at Map0APalettes and drop this label instead. Resolved by E-0387: one name per table, Map0APalettes.
+- `RenameMenuPalettes` (49:4AC5): The label duplicates Map13Palettes at the same address; the generator could point the caller at Map13Palettes and drop this label instead. Resolved by E-0387: one name per table, Map13Palettes.
 - `ShowMessageHL_OnSpecialMap` (5F:6A85): The old name said Bank89; the code starts bank $28's table.
 - `KeyWorldLayout_ClearActiveIfSameKey` (60:4C6C): wKeyWorldKey's note says its low bits are the key index + 1 while wKeyWorldSlot is a 0-19 slot; why they are compared directly is not read.
 - `TravelerEvents_MedicineMaster_AfterBattle` (73:4888): That wBattleScene = 0 means a win comes from the earlier readings; ram.asm describes wBattleScene only as the battle kind or scene.

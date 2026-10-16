@@ -4511,7 +4511,7 @@ BreedMenu_RedrawListScreen_LoadTileset::
     ld b, $47
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, BreedMenuPalettes
+    ld de, Map0DPalettes
     ld b, $47
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -7318,8 +7318,14 @@ BreedMenu_ChooseParents_ClearList_TileRect::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-TileRect_15::
-; another name for the data at TileRect_15, whose note is above (E-0381)
+; The first four rows (48 bytes) of a 12-wide box: top frame, tile ids $F8-$FC, $EA, $ED, a blank
+; row, and the family icon tile $C7 with $A7-$AF. The rows below are labelled
+; BreedMenu_ChooseParents_DrawLowerBox_Data and BreedMenu_ChooseParents_DrawPairBox_Data.
+; BreedMenu_ChooseParents_DrawFamilySexLevel copies 12 x 9 from here (through the end of
+; BreedMenu_ChooseParents_DrawPairBox_Data) to wWindowTileBuffer + $BC; a second reader at
+; bank15:1230 copies only its top row (12 x 1) to the same place. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 BreedMenu_FamilySexLevelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -7339,8 +7345,6 @@ BreedMenu_ChooseParents_DrawBaseFrame_TileRect::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
 
-; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
-; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 BreedMenu_ChooseParents_ClearBoxes_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c9, $7c, $7d, $7e, $7f, $c0, $c1, $c2, $ca, $cb, $b7 ; id 1
@@ -7374,9 +7378,13 @@ BreedMenu_ChooseParents_RedrawPair_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; A 6 x 5 tile rectangle (30 bytes): two rows of blanks ending in the right border $B7, a bottom
+; border row ($B4, corner $B5), tile ids $72-$76 with $B7, and another bottom border row.
+; BreedMenu_ChooseParents_DrawLinkBoxAndSprites copies it to wWindowTileBuffer + $112
+; (CopyRectTo20ByteRows_Bank15) on every call, before DrawRectIfLinkModeAndStep. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-TileRect_15_2::
-; another name for the data at TileRect_15_2, whose note is above (E-0381)
 BreedMenu_ChooseParents_CloseBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 1

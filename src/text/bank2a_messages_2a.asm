@@ -46,15 +46,18 @@ CopyStringToBuffer_Bank2A::
     ret
     db $cd, $01, $40, $cd, $11, $26, $c9
 
+; One little-endian word, a pointer to StringList_Bank2A_0, the list of 149 message pointers
+; Message_02_00 to Message_02_94 (message group 2, bank $2A). LookupString reads word
+; wStringCategory of it (category 0 is the only word), then word wStringIndex of that list.
+; BeginStringDisplay_Bank2A and CopyStringToBuffer_Bank2A pass it in DE for wStringIndex below $95;
+; higher ids go to their Overflow routine. (C1, E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_2A::
-; another name for the data at StringCategories_2A, whose note is above (E-0381)
 MessageStrings_Bank2A::
     dw StringList_Bank2A_0 ; id 0
 
-; category list of StringCategories_2A; one pointer per wStringIndex (E-0217)
+; category list of MessageStrings_Bank2A; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_Bank2A_0::
     dw Message_02_00 ; id 0

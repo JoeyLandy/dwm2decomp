@@ -4223,11 +4223,15 @@ StoreBAtWordTableEntry_BankF1::
     ld [de], a
     ret
 
+; A 12 by 5 tile rectangle, 60 bytes in row order: a frame of tiles $B0-$B7 around blanks, with
+; $F8-$FC, $EA and $ED in the second row and $C7 followed by $A7-$AF in the fourth.
+; RunScreenStateWhenNotFading_F1_LinkBreed_DrawPanel copies it with CopyRectTo20ByteRows_BankF1 to
+; wWindowTileBuffer + $6C (rows 20 bytes apart); it first sets wArg1 to $C7 and calls
+; LoadFamilyIconTileForRecordB_BankF1 and afterwards draws the record field marks and digits over
+; the second row. (C1, E-0381)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
-TileRect_F1::
-; another name for the data at TileRect_F1, whose note is above (E-0381)
 BreedRecordPanelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -4235,9 +4239,10 @@ BreedRecordPanelTileRect::
     db $b6, $c7, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; A 6 x 5 framed box (border tiles $B0-$B7, blank $C3) holding the yes/no glyph tiles $70-$72 on row
+; 1 and $76, $73 on row 3; the link breeding step that asks for the answer copies it into the screen
+; buffer. (C1, E-0373)
 ; record: 6 x 5 tiles, one row per line
-TileRect_F1_2::
-; another name for the data at TileRect_F1_2, whose note is above (E-0381)
 BreedYesNoBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $b7 ; id 1
@@ -4245,9 +4250,14 @@ BreedYesNoBoxTileRect::
     db $b6, $c3, $76, $73, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; A 9 x 7 framed box (border tiles $B0-$B7) with three entry rows: tiles $60 $61 $62 $62 $63,
+; $64-$67 and $68-$6B at columns 3-7 of rows 1, 3 and 5, the tiles where string $0F ('BredInfoExit')
+; is drawn at VRAM $9600; column 1 of those rows is the cursor place. Copied into wWindowTileBuffer
+; + $E7 by RunScreenStateWhenNotFading_F1_BreedDrawChoiceBox and
+; RunScreenStateWhenNotFading_F1_RedrawChoiceBox. (C1, E-0373)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 9 x 7 tiles, one row per line
-TileRect_F1_3::
-; another name for the data at TileRect_F1_3, whose note is above (E-0381)
 BreedChoiceBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $60, $61, $62, $62, $63, $b7 ; id 1

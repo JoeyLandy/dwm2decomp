@@ -260,11 +260,13 @@ Map0CAttrs0_Y0X1::
 Map0DTileset::
     INCBIN "maps/map0_d/tileset.lz"
 
+; The palette set of map $0D, which the breeding menu also uses: eight CGB background palettes of 4
+; BGR555 colours ($40 bytes) that BreedMenu_RedrawListScreen_LoadTileset copies to wBGPaletteBuffer
+; with CopyFromBankWaitVRAM (C = $40) after decompressing the matching tileset (Map0DTileset, bank
+; $47), then sets wBGPaletteUploadRequest = $7F. (C1, E-0372)
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map0DPalettes::
-; another name for the data at Map0DPalettes, whose note is above (E-0381)
-BreedMenuPalettes::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $012f, $4fff, $01d8, $0c63 ; entry 1
     dw $1528, $2bff, $00ff, $0000 ; entry 2

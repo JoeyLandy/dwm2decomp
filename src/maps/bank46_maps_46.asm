@@ -277,11 +277,6 @@ Map00Attrs3_Y1X1::
 Map00Attrs0_Y1X2::
     INCBIN "maps/map00/attrs0_y1_x2.lz"
 
-; LZSS-compressed: 257 bytes that expand to 258 (E-0016, E-0017)
-Gfx46_1::
-    db $02, $01, $40, $02, $01, $58, $0f, $0c, $01, $29, $01, $01, $19, $00, $01, $56
-    db $04, $01, $60, $03, $01, $15, $01, $01, $48, $18
-
 ; LZSS-compressed: 118 bytes that expand to 360 (E-0016, E-0017)
 Map00Attrs4_Y1X2::
     INCBIN "maps/map00/attrs4_y1_x2.lz"

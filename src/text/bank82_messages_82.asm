@@ -48,15 +48,18 @@ CopyStringToBuffer_Bank82::
     ret
     db $cd, $01, $40, $cd, $11, $26, $c9
 
+; A table of one word: category 0 points to StringList_Bank82_0, the list of 144 string pointers
+; (ids 0-$8F, Message_0B_00 to Message_0B_8F, in this bank). BeginStringDisplay_Bank82 and
+; CopyStringToBuffer_Bank82 pass it in DE to BeginStringDisplay and CopyStringToBuffer when
+; wStringIndex is below $90; higher ids go to the overflow entry in bank $96. LookupString takes
+; word wStringCategory of it and word wStringIndex of that list. (C1, E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_82::
-; another name for the data at StringCategories_82, whose note is above (E-0381)
 MessageStrings_Bank82::
     dw StringList_Bank82_0 ; id 0
 
-; category list of StringCategories_82; one pointer per wStringIndex (E-0217)
+; category list of MessageStrings_Bank82; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_Bank82_0::
     dw Message_0B_00 ; id 0

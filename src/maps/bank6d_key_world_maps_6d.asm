@@ -413,21 +413,6 @@ KeyWorldRoom05_Y0X1_Attrs::
 MapType5Tiles2::
     INCBIN "gfx/map_types/5_tiles2.lz"
 
-; not a separate asset: this label sits inside MapType5Tiles2, whose 913-byte compressed stream runs
-; from $6CA8 to $7039 (MapType5Palettes2) and decompresses to 2048 bytes (128 tiles of the type 5
-; cave tile set 2, loaded by LoadMapType5TilesetAndHeader). $6D4C is 164 bytes into that stream, so
-; the 989-byte output is the decompressor running on the middle of another stream, and its render is
-; noise (no tile structure, no repeated tiles); the 992 compressed bytes it consumes also run past
-; $7039 into MapType5Palettes2 and the screens after it. Nothing points at $6D4C (searched the ROM
-; for the 3-byte address and bank pattern: no hit) and no loader names Gfx6D_1. The generator chain
-; heuristic (config/stream_chains.json entry Gfx6D_1) started a stream in the middle of
-; MapType5Tiles2 and cut gfx/map_types/5_tiles2.lz at 164 bytes, leaving the last 749 bytes in
-; gfx/misc/gfx6_d_1.lz. Identified only as the tail of the MapType5Tiles2 compressed data; there is
-; no content to name. (C1, E-0383)
-; LZSS-compressed: 992 bytes that expand to 989 (E-0016, E-0017)
-Gfx6D_1::
-    INCBIN "gfx/misc/gfx6_d_1.lz"
-
 ; entry 2 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes2::

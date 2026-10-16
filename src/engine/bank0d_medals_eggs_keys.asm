@@ -1236,7 +1236,7 @@ EggServiceMenu_DrawListAndPrice_LoadTiles::
     ld b, $49
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, EggServicePalettes
+    ld de, Map0APalettes
     ld b, $49
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -2004,18 +2004,21 @@ CopyGlyphTileListFromBank1F::
     ld [wGlyphListPos], a
     ret
 
+; Fifteen words: 14 VRAM tile addresses, vTiles1 + $240 up to + $2F0 in steps of $10, then vTiles1 +
+; $6E0 and + $6F0, and the end mark rIE ($FFFF). CopyGlyphTileListFromBank1F copies one 16-byte tile
+; from bank $1F, taken from entry i of EggPriceGlyphSrcList, to destination i, stopping when a
+; destination low byte is $FF; EggServiceMenu_DrawPrice_LoadTiles passes both lists to it. (C1,
+; E-0381)
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-TileCopyDestList_0D::
-; another name for the data at TileCopyDestList_0D, whose note is above (E-0381)
 EggPriceGlyphDestList::
     dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2a0, vTiles1 + $2b0 ; entry 0
     dw vTiles1 + $2c0, vTiles1 + $2d0, vTiles1 + $2e0, vTiles1 + $2f0, vTiles1 + $6e0, vTiles1 + $6f0, rIE
 
+; Fourteen bank-$1F tile source addresses, one per entry of EggPriceGlyphDestList ($4910 three times
+; at the end), then $FFFF. (C1, E-0376)
 ; record: bank-$1F tile sources
-TileCopySrcList_0D::
-; another name for the data at TileCopySrcList_0D, whose note is above (E-0381)
 EggPriceGlyphSrcList::
     dw $40f0, $43a0, $4250, $4300, $4390, $4380, $4290, $40c0 ; entry 0
     dw $4370, $43c0, $42d0, $4910, $4910, $4910, $ffff
@@ -2053,17 +2056,20 @@ DrawBoxWithPageIndicator_TileRect::
 EggServiceMenu_ChooseAndPay_ListCursor_Data::
     db $d0, $c3, $f8, $c3, $20, $c4, $48, $c4
 
+; Destination list for CopyGlyphTileListFromBank1F: seven VRAM tile addresses vTiles2 + $700 to
+; vTiles2 + $760 (BG tiles $70-$76), ended by $FFFF (written rIE).
+; EggServiceMenu_DrawListAndPrice_LoadGlyphs passes it with EggListGlyphTileSources. (C1, E-0372)
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-TileCopyDestList_0D_2::
-; another name for the data at TileCopyDestList_0D_2, whose note is above (E-0381)
 EggListGlyphTileDests::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
+; Source list for CopyGlyphTileListFromBank1F: six bank-$1F addresses inside GlyphFont ($4130,
+; $4320, $42A0, $4330, $4190, $4150: the glyphs 'I', 'n', 'f', 'o', 'O', 'K') and then $FFFF. The
+; destination list has seven entries, so the seventh copy (to vTiles2 + $760) takes $FFFF as its
+; source. (C1, E-0372)
 ; record: bank-$1F tile sources
-TileCopySrcList_0D_2::
-; another name for the data at TileCopySrcList_0D_2, whose note is above (E-0381)
 EggListGlyphTileSources::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
@@ -2420,7 +2426,7 @@ RenameMenu_PickMonster_LoadTiles::
     ld b, $49
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, RenameMenuPalettes
+    ld de, Map13Palettes
     ld b, $49
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -4562,8 +4568,16 @@ KeyAppraisalMenu_ChooseKey_DrawListBox_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $ad, $ae, $af, $fd, $fe, $ff, $70, $71, $72, $73, $74, $75 ; id 6
 
-TileRect_0D::
-; another name for the data at TileRect_0D, whose note is above (E-0381)
+; A 6 x 5 tile rectangle (30 bytes, one row of 6 tile ids per line) that
+; KeyAppraisalMenu_ChooseKey_ConfirmPrice_CloseBox copies with CopyRectTo20ByteRows_Bank0D over the
+; yes/no box at wWindowTileBuffer + $112. Rows 0 and 2 are blanks ($C3) ending in the right border
+; $B7, rows 1 and 3 hold the same tile ids as the right end of rows 4 and 6 of
+; KeyAppraisalMenu_ChooseKey_DrawListBox_TileRect ($AB $AC $EE $EF $FC and $71-$75), and row 4 is
+; the bottom border ($B4, corner $B5), so it puts back the part of the list box the yes/no box
+; covered. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
+; record: 6 x 5 tiles, one row per line
 KeyAppraisalMenu_CloseBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $ab, $ac, $ee, $ef, $fc, $b7 ; id 1
@@ -7636,11 +7650,14 @@ NpcBreedMenu_ChooseAndBreed_LoadChosenRecord::
     ld [rRAMG2], a
     ret
 
+; A packed 12 x 5 tile rectangle (60 bytes, one row per 12 bytes): a frame of border tiles ($B0-$B7)
+; around three interior rows, with $C3 the blank tile and $C7 the family icon tile.
+; NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel copies it with CopyRectTo20ByteRows_Bank0D to
+; wWindowTileBuffer + $6C (row 5, column 8), then draws the sex mark and level digits over it. (C1,
+; E-0381)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
-TileRect_0D_2::
-; another name for the data at TileRect_0D_2, whose note is above (E-0381)
 NpcBreedMenu_FamilySexLevelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -7648,17 +7665,23 @@ NpcBreedMenu_FamilySexLevelTileRect::
     db $b6, $c7, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; VRAM destination list for CopyGlyphTileListFromBank1F, read by
+; NpcBreedMenu_RedrawListScreen_LoadGlyphs with NpcBreedMenu_YesNoGlyphSrcList: seven words vTiles2
+; + $700 to vTiles2 + $760 (16 bytes apart; the BG tile ids $70-$76 that the yes/no boxes such as
+; NpcBreedMenu_ChooseAndBreed_DrawYesNo_TileRect draw), then rIE ($FFFF), whose low byte $FF ends
+; the copy. The source list has only six addresses before its $FFFF word, so the seventh destination
+; ($9760) is paired with that $FFFF word. (C1, E-0372)
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-TileCopyDestList_0D_3::
-; another name for the data at TileCopyDestList_0D_3, whose note is above (E-0381)
 NpcBreedMenu_YesNoGlyphDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
+; Bank-$1F source list paired with NpcBreedMenu_YesNoGlyphDestList: six tile addresses ($4130,
+; $4320, $42A0, $4330, $4190, $4150), then $FFFF. CopyGlyphTileListFromBank1F copies 16 bytes from
+; each to the matching destination; the same six words appear as GlyphCopySrcList3 in bank $1E. (C1,
+; E-0372)
 ; record: bank-$1F tile sources
-TileCopySrcList_0D_3::
-; another name for the data at TileCopySrcList_0D_3, whose note is above (E-0381)
 NpcBreedMenu_YesNoGlyphSrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 

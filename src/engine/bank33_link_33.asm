@@ -2474,11 +2474,14 @@ RunLinkSession6Exchange_BackFromStats_DrawPanel::
     ld [wScreenStep], a
     ret
 
+; A tile rectangle 13 wide and 2 rows high, 26 bytes. Row 0: frame $B6, $EA and $ED, blanks $C3,
+; five name tiles $F8 to $FC, blank $C3, tile $C7 and frame $B7; row 1: the bottom frame $B3, $B4
+; (11 times) and $B5. RunLinkSession6Exchange_BackFromStats_DrawPanel copies it to wWindowTileBuffer
+; + $140 and then writes two level digit tiles into the blanks at columns 3 and 4 and the sex mark
+; ($CC plus MON_SEX bit 0) into the blank at column 10. (C1, E-0381)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 2 tiles, one row per line
-TileRect_33::
-; another name for the data at TileRect_33, whose note is above (E-0381)
 RunLinkSession6Exchange_PickedPanelTileRect::
     db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
@@ -3406,19 +3409,27 @@ StoreC5BEC6AtHLStride2_Bank33::
     ld [hl], a
     ret
 
+; A tile rectangle 8 wide and 3 high, 24 bytes: a top frame ($B0, $B1 six times, $B2), a middle row
+; $B6, $BF, six blanks $C3 and $B7, and a bottom frame ($B3, $B4 six times, $B5).
+; TeamMode_Screen_DrawFrameAndName copies it to wScreenTileBuffer + $C as the small box for the team
+; gold. (C1, E-0381)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
-TileRect_33_2::
-; another name for the data at TileRect_33_2, whose note is above (E-0381)
 TeamModeGoldBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
+; A 10 x 11 framed window. Row 1 holds tiles $00-$04, where DrawPlayerNameAndString0Category1 draws
+; the name of the player (wPlayerName) at vTiles2; row 2 is a divider ($B8-$BA); rows 3, 5, 7 and 9
+; hold tiles $10-$12 or $13-$15, then $16 or $17 and $ED: glyphs of string 0 of category 1
+; ('DuoOwnWL:') drawn at vTiles2 + $100, which read 'Duo W', 'Own W', 'Duo L' and 'Own L' when each
+; glyph takes one tile; DrawFourTwoDigitNumbers writes four numbers from wKeyNameBuf beside them.
+; Copied with CopyRectTo20ByteRowsJp_Bank33 to wScreenTileBuffer by Team Mode step 0 and to
+; wWindowTileBuffer + $6E by RunLinkSession6Exchange_DrawInfoWindow and
+; RunLinkSession6Exchange_BackFromStats_DrawWindows. (C1, E-0372)
 ; record: 10 x 11 tiles, one row per line
-TileRect_33_3::
-; another name for the data at TileRect_33_3, whose note is above (E-0381)
 PlayerWinLossWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $00, $01, $02, $03, $04, $c3, $c3, $c3, $b7 ; id 1
@@ -3432,8 +3443,14 @@ PlayerWinLossWindow_TileRect::
     db $b6, $13, $14, $15, $c3, $17, $ed, $c3, $c3, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-TileRect_33_4::
-; another name for the data at TileRect_33_4, whose note is above (E-0381)
+; The same 10 x 11 window as PlayerWinLossWindow_TileRect but with tiles $05-$09 in row 1, where the
+; callers draw the 10 bytes at wRandomSeed2Hi as name glyphs at vTiles2 + $50 (the partner's name in
+; the earlier readings); DrawFourTwoDigitNumbers writes four numbers from wLinkPartnerName beside
+; the 'Duo W' to 'Own L' rows. Copied to wWindowTileBuffer + $64 by
+; RunLinkSession6Exchange_FightInfo_DrawWindow, RunLinkSession6Exchange_BackFromStats_DrawInfo and
+; RunLinkSession6Exchange_BackFromStats_DrawWindows. (C1, E-0372)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 PartnerWinLossWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $05, $06, $07, $08, $09, $c3, $c3, $c3, $b7 ; id 1
@@ -3455,8 +3472,11 @@ DrawBoxAndKeyRows_TileRect::
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-TileRect_33_5::
-; another name for the data at TileRect_33_5, whose note is above (E-0381)
+; An 8 x 5 framed box whose rows 1 and 3 show tiles $70-$73 and $74-$75, the glyphs
+; ShowString_Bank1B draws for string $1E (Text_InfoOKYesN, 'InfoOKYesN') at vTiles2 + $700: 'Info'
+; and 'OK' when each glyph takes one tile. Copied to wWindowTileBuffer + $110 with
+; CopyRectTo20ByteRowsJp_Bank33 by RunLinkSession6Exchange_Pick_ShowInfoOKYesN and
+; RunLinkSession6Exchange_BackFromOwnStats_AskPick. (C1, E-0372)
 InfoOKBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
@@ -3467,9 +3487,12 @@ InfoOKBox_TileRect::
 RunLinkSession6Exchange_Pick_MarkCursor_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
+; A 9 x 7 framed box whose rows 1, 3 and 5 show tiles $30-$34, $35-$38 and $39 $3A $31 $34, the
+; glyphs ShowString_Bank1B draws for string $20 (Text_FightInfoEx, 'FightInfoEx') at vTiles2 + $300:
+; 'Fight', 'Info' and, reusing the 'i' and 't' of 'Fight', 'Exit' when each glyph takes one tile.
+; Copied to wWindowTileBuffer + $E7 by RunLinkSession6Exchange_FightInfo_DrawWindow and
+; RunLinkSession6Exchange_BackFromStats_ShowChoices. (C1, E-0372)
 ; record: 9 x 7 tiles, one row per line
-TileRect_33_6::
-; another name for the data at TileRect_33_6, whose note is above (E-0381)
 FightInfoExitBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $c3, $b7 ; id 1
@@ -3479,11 +3502,15 @@ FightInfoExitBox_TileRect::
     db $b6, $c3, $39, $3a, $31, $34, $c3, $c3, $b7 ; id 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
+; An 8 x 11 framed list box (88 bytes, one row of 8 tile ids per line) with five text rows of tile
+; ids $D0-$D4, $D5-$D9, $DA-$DE, $F0-$F4 and $A4 $A5 $A6 $CE $CF in rows 1, 3, 5, 7 and 9, blank
+; rows between them. RunLinkSession6Exchange_BackFromOwnStats_DrawBox (screen state 15, step 0)
+; copies it to wWindowTileBuffer + $64 (row 5, column 0) with CopyRectTo20ByteRowsJp_Bank33, then
+; marks the wListCursor row with tile $BC through RunLinkSession6Exchange_Pick_MarkCursor_Data. (C1,
+; E-0373)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
-TileRect_33_7::
-; another name for the data at TileRect_33_7, whose note is above (E-0381)
 RunLinkSession6Exchange_ListBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1

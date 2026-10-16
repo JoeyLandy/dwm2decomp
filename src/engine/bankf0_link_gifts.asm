@@ -4776,10 +4776,13 @@ RunWithArg1ForF0ScreenKind_SetUpScene_Data5::
 RunWithArg1ForF0ScreenKind_SetUpScene_Data6::
     db $00, $01, $00, $00, $f0, $40, $04, $01, $00, $00, $00, $f0, $40, $04, $00, $00
 
+; Sixteen bytes for wSpriteSlots (the first object slot) that RunWithArg1ForF0ScreenKind_SetUpScene
+; copies with CopyBytesDEFromHL_BankF0 only when EVENT_NEVER_SET is set; since that flag is never
+; set, RunWithArg1ForF0ScreenKind_SetUpScene_Data6 is copied instead. The two differ only in byte
+; OBJ_SPRITE_ID ($01 here, $00 there) and byte OBJ_ATTR ($01 here, $04 there); both have OBJ_X $F0
+; and OBJ_Y $40. (C1, E-0373)
 ; CopyBytesDEFromHL_BankF0 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
-SpriteSlotsInit_F0::
-; another name for the data at SpriteSlotsInit_F0, whose note is above (E-0381)
 EggSceneAltSpriteSlots::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 

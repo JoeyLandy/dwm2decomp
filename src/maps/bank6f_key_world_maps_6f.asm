@@ -390,18 +390,6 @@ KeyWorldRoom52_Y2X0_Attrs::
 MapType5Tiles7::
     INCBIN "gfx/map_types/5_tiles7.lz"
 
-; Not an independent asset: the last $1DB bytes of the 697-byte compressed stream MapType5Tiles7
-; (entry 7 of MapType5TilesetTable, 2048 bytes = 128 BG tiles for vTiles2 of the key-world floors).
-; Decompressing MapType5Tiles7 from bank $6F address $6397 consumes exactly 697 bytes, ending where
-; MapType5Palettes7 begins, and the stream here starts $DE bytes in (the generator split it at a
-; point where the bytes happen to parse as a header). Decoding from this point gives 1040 bytes of
-; noise that run past the real end: its output contains the 64-byte palette table and the start of
-; the following attribute streams as literals, and the picture is not tiles. Nothing loads it on its
-; own; LoadMapType5TilesetAndHeader decompresses the whole stream from MapType5Tiles7. (C1, E-0383)
-; LZSS-compressed: 1043 bytes that expand to 1040 (E-0016, E-0017)
-MapType5Tiles7StreamTail::
-    INCBIN "gfx/map_types/5_tiles7_stream_tail.lz"
-
 ; entry 7 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes7::

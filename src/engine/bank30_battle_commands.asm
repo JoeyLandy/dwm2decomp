@@ -3977,6 +3977,8 @@ SkillAIBaseWeightTable::
     dw 0 ; id 199
     dw 100 ; id 200
 
+; 201 three-byte far pointers (address, bank $E2) indexed by skill number: the AI scoring routine
+; for each skill, called by ScoreSkillForAI with wAISkillScore-wAISkillScore2 + $1 cleared (E-0083)
 ; ScoreActionsWithAIScoreTableA stores this table's address in wBattleExpAward / +1 (the AI's
 ; routine-table pointer) and ScoreSkillForAI far-calls entry 3 * skill; all 131 entries point at
 ; named AIScore_* routines (E-0174, C1)
@@ -4184,6 +4186,8 @@ AIScoreRoutineTableA::
     dfar AIScore_NoWeightB ; id 199
     dfar AIScore_Skill200 ; id 200
 
+; a second copy of AIScoreRoutineTableA (all 201 entries equal), selected by UseAIScoreTableB
+; instead of ScoreActionsWithAIScoreTableA (E-0083)
 ; UseAIScoreTableB stores this table's address in wBattleExpAward / +1 (the AI's routine-table
 ; pointer) and ScoreSkillForAI far-calls entry 3 * skill; all 131 entries point at named AIScore_*
 ; routines (E-0174, C1)

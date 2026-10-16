@@ -551,7 +551,7 @@ LoadMapHeaderByMapType_Type1::
     ld a, [wIsCGB]
     or a
     jr z, .set_max_blocking_tile_to_3F
-    ld de, LoadMapHeaderByMapType_Type1_BGPaletteBufferData
+    ld de, MapType5Palettes5
     ld b, $6e
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -3984,7 +3984,7 @@ SpecialMapTable::
 ; wMapHeaderByte7, wFieldEventKind; 9 bytes not read by these routines; screen tile-map array; its
 ; ROM bank; screen attribute-map array; its ROM bank
 SpecialMapRecords::
-; another name for the data at SpecialMapRecords, whose note is above (E-0381)
+; entry 0 of SpecialMapRecords, whose note is above (E-0381, E-0387)
 SpecialMapRecord00::
     dfar SpecialMap00Tileset ; id 0
     dfar SpecialMap00Palettes

@@ -103,15 +103,18 @@ CopyStringToBuffer_Bank7C_Overflow::
     ret
     db $cd, $4b, $40, $cd, $11, $26, $c9
 
+; A table of one word: category 0 points to StringList_Bank2D_Overflow_0, 43 string pointers to
+; Text_ strings in this bank. BeginStringDisplay_Bank2D_Overflow and
+; CopyStringToBuffer_Bank2D_Overflow subtract $D5 from wStringIndex and pass the table in DE to
+; BeginStringDisplay and CopyStringToBuffer, so the list covers message bank $2D ids $D5-$FF. (C1,
+; E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_99::
-; another name for the data at StringCategories_99, whose note is above (E-0381)
 MessageStrings_Bank2D_Overflow::
     dw StringList_Bank2D_Overflow_0 ; id 0
 
-; category list of StringCategories_99; one pointer per wStringIndex (E-0217)
+; category list of MessageStrings_Bank2D_Overflow; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_Bank2D_Overflow_0::
     dw Text_MakeSureYouTell ; id 0
@@ -445,12 +448,15 @@ Text_ICantBeBothered::
     db "<NEXT><WAIT>"
     db "@"
 
-StringCategories_99_2::
-; another name for the data at StringCategories_99_2, whose note is above (E-0381)
+; string-pointer table for message bank $2E, strings from $A6 up (index minus $A6) (E-0080)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
+; record: string list
 MessageStrings_Bank2E_Overflow::
     dw StringList_Bank2E_Overflow_0 ; id 0
 
-; category list of StringCategories_99_2; one pointer per wStringIndex (E-0217)
+; category list of MessageStrings_Bank2E_Overflow; one pointer per wStringIndex (E-0217)
+; record: string
 StringList_Bank2E_Overflow_0::
     dw Text_OurDaughtersOnlyMemento ; id 0
     dw Text_ItDoesntLookLike ; id 1
@@ -1073,15 +1079,14 @@ Text_MilayouPleaseDefeatThe::
 Text_Empty_8::
     db $f0
 
+; string-pointer table for message bank $7C, strings from $87 up (index minus $87) (E-0080)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_99_3::
-; another name for the data at StringCategories_99_3, whose note is above (E-0381)
 MessageStrings_Bank7C_Overflow::
     dw StringList_Bank7C_Overflow_0 ; id 0
 
-; category list of StringCategories_99_3; one pointer per wStringIndex (E-0217)
+; category list of MessageStrings_Bank7C_Overflow; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_Bank7C_Overflow_0::
     dw Text_CheckedTheTreasureChest_3 ; id 0

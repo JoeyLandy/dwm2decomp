@@ -1111,11 +1111,13 @@ HibernateMenu_ChooseRecords_DrawYesNoAgain::
     ld [wScreenStep], a
     ret
 
+; A packed 8 x 5 tile rectangle (40 bytes): a border frame of $B0-$B7 around three interior rows,
+; with $C3 blank and the glyph tiles $70-$73 in the first row and $74, $75 in the third.
+; HibernateMenu_ChooseRecords_DrawYesNoAgain copies it with CopyRectTo20ByteRows_Bank14 to
+; wWindowTileBuffer + $110 (row 13, column 12) and draws it as the yes/no box. (C1, E-0381)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
-TileRect_14::
-; another name for the data at TileRect_14, whose note is above (E-0381)
 HibernateMenu_YesNoAgainTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
@@ -1402,11 +1404,13 @@ HibernateMenu_ChooseRecords_DrawOptionYesNo::
     ld [wTwoChoiceCursor], a
     ret
 
+; A packed 6 x 5 tile rectangle (30 bytes): a border frame of $B0-$B7 around three interior rows,
+; with $C3 blank, tiles $CE, $CF, $DF in the first row and $EF, $73 in the third.
+; HibernateMenu_ChooseRecords_DrawOptionYesNo copies it with CopyRectTo20ByteRows_Bank14 to
+; wWindowTileBuffer + $112 (row 13, column 14) and draws it as the yes/no box. (C1, E-0381)
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-TileRect_14_2::
-; another name for the data at TileRect_14_2, whose note is above (E-0381)
 HibernateMenu_OptionYesNoTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
@@ -3795,11 +3799,13 @@ NamingScreenTileDestListB::
     dw vTiles1 + $480, vTiles1 + $490, vTiles1 + $4a0, vTiles1 + $4b0, vTiles1 + $3f0, vTiles1 + $6a0, vTiles1 + $6b0, vTiles1 + $6c0
     dw vTiles1 + $6d0, rIE
 
+; Bank-$1F source list for HibernateMenu_SetupPartyList_CopyGlyphs: 31 tile addresses (many $4910),
+; then $FFFF. It is paired with the destination list NamingScreenTileDestListA, which has no
+; terminator of its own and runs on into NamingScreenTileDestListB; CopyGlyphTilesFromLists_Bank14
+; stops at the rIE word that is the 32nd destination, so all 31 sources are used. (C1, E-0372)
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: bank-$1F tile sources
-TileCopySrcList_14::
-; another name for the data at TileCopySrcList_14, whose note is above (E-0381)
 HibernateMenu_PartyGlyphSrcList::
     dw $41d0, $4300, $4290, $4340, $4210, $4250, $42f0, $41c0 ; entry 0
     dw $4370, $40f0, $43c0, $42d0, $4380, $4180, $4910, $4910
@@ -3838,9 +3844,14 @@ ClearTilesAndDrawRectAndStep_TileRect::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
+; A 12 x 9 stats box (108 bytes): frame, tile ids $F8-$FC, $EA, $ED in row 1, a divider in row 2,
+; the family icon tile $C7 and $A7-$AF in row 3, and two stat rows ($F5/$F6, $F7, $ED and $BE) in
+; rows 5 and 7. HibernateMenu_ChooseRecords_DrawRecordStats,
+; HibernateMenu_ChooseRecords_DrawSleeperStats and HibernateMenu_ChooseWithStats_DrawRecordStats
+; copy it to wWindowTileBuffer + $6C. The label also covers 56 more bytes after the box: a 14-entry
+; VRAM list ($8A70-$8AF0, $8F80-$8FC0) ending $FFFF and a 14-entry list of $4910 ending $FFFF, which
+; no reference in the source reads. (C1, E-0372)
 ; record: 12 x 9 tiles, one row per line
-TileRect_14_3::
-; another name for the data at TileRect_14_3, whose note is above (E-0381)
 HibernateMenu_RecordStatsTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -3856,18 +3867,19 @@ HibernateMenu_RecordStatsTileRect::
     db $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $10, $49
     db $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $ff, $ff
 
+; VRAM destinations for HibernateMenu_ChooseRecords_CopyListGlyphs: nine words vTiles1 + $270 to
+; vTiles1 + $2F0 (BG tile ids $A7-$AF, the row-3 tiles of HibernateMenu_RecordStatsTileRect), then
+; rIE, whose low byte $FF ends CopyGlyphTilesFromLists_Bank14. (C1, E-0372)
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-TileCopyDestList_14::
-; another name for the data at TileCopyDestList_14, whose note is above (E-0381)
 HibernateMenu_ListGlyphDestList::
     dw vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2a0, vTiles1 + $2b0, vTiles1 + $2c0, vTiles1 + $2d0, vTiles1 + $2e0 ; entry 0
     dw vTiles1 + $2f0, rIE
 
+; Bank-$1F sources paired with HibernateMenu_ListGlyphDestList: nine tile addresses, then $FFFF.
+; (C1, E-0372)
 ; record: bank-$1F tile sources
-TileCopySrcList_14_2::
-; another name for the data at TileCopySrcList_14_2, whose note is above (E-0381)
 HibernateMenu_ListGlyphSrcList::
     dw $4340, $4210, $4250, $42f0, $41c0, $4370, $40f0, $43c0 ; entry 0
     dw $42d0, $ffff
@@ -3880,13 +3892,21 @@ HibernateMenu_ChooseRecords_TileCopySrcList::
     dw $41d0, $4300, $4290, $4910, $4910, $4910, $4910, $4910 ; entry 0
     dw $4230, $4290, $ffff
 
-TileCopyDestList_14_2::
-; another name for the data at TileCopyDestList_14_2, whose note is above (E-0381)
+; VRAM destinations: seven words vTiles2 + $700 to vTiles2 + $760 (BG tile ids $70-$76, used by
+; HibernateMenu_YesNoAgainTileRect), then rIE. Read by HibernateMenu_ChooseRecords_CopyListGlyphs2
+; (the step before HibernateMenu_ChooseRecords_DrawYesNoAgain) and
+; HibernateMenu_ChooseWithStats_OpenStatsScreen through CopyGlyphTilesFromLists_Bank14. Its source
+; list has six addresses, so the seventh destination ($9760) is paired with the source list's $FFFF
+; word; the bytes match the bank-$0D list NpcBreedMenu_YesNoGlyphDestList. (C1, E-0372)
+; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
+; low byte of $FF (E-0225)
+; record: VRAM destinations, then $FFxx
 HibernateMenu_YesNoGlyphDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
-TileCopySrcList_14_3::
-; another name for the data at TileCopySrcList_14_3, whose note is above (E-0381)
+; Bank-$1F sources paired with HibernateMenu_YesNoGlyphDestList: $4130, $4320, $42A0, $4330, $4190,
+; $4150, then $FFFF (the same six words as GlyphCopySrcList3). (C1, E-0372)
+; record: bank-$1F tile sources
 HibernateMenu_YesNoGlyphSrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
@@ -4212,10 +4232,11 @@ RunNameEntryStateWhenNotFading_Sprite1GfxArgs::
 RunNameEntryStateWhenNotFading_Sprite0Slot::
     db $00, $01, $00, $00, $08, $08, $04, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
+; Sixteen bytes copied to wSpriteSlots when wArg1 = 0 and wArg2 is non-zero: the same slot as
+; RunNameEntryStateWhenNotFading_Sprite0Slot but with graphics byte (offset 2) 1 and offset 6 = 1,
+; matching RunNameEntryStateWhenNotFading_Sprite1GfxArgs. (C1, E-0372)
 ; CopyBytesDEFromHL_Bank14 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
-SpriteSlotsInit_14::
-; another name for the data at SpriteSlotsInit_14, whose note is above (E-0381)
 RunNameEntryStateWhenNotFading_Sprite1Slot::
     db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00 ; entry 0
 
@@ -6750,15 +6771,19 @@ NameEntryKeyboard::
     db $74, $8a, $8b, $8c, $6d, "-<BEEP_OFF><CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "12345" ; id 9
     db $06, $07, $08, $09, $00, $ff, $ff, $ff, $ff, $ff, $ff ; end
 
+; A one-category string table (one word) for BeginStringDisplay: category 0 is
+; StringList_CheckMessages_0 with ids 0-3: 'Is <BUF0> correct?' twice, 'A monster already has that
+; name.' and 'Sorry, that name can't be used.'. RunNameEntryStateWhenNotFading_CheckName_Message
+; passes it in DE unless wArg1 = 3, which uses RunNameEntryStateWhenNotFading_RenameMessages
+; instead. (C1, E-0372)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_14::
-; another name for the data at StringCategories_14, whose note is above (E-0381)
 RunNameEntryStateWhenNotFading_CheckMessages::
     dw StringList_CheckMessages_0 ; id 0
 
-; category list of StringCategories_14; one pointer per wStringIndex (E-0217)
+; category list of RunNameEntryStateWhenNotFading_CheckMessages; one pointer per wStringIndex
+; (E-0217)
 ; record: string
 StringList_CheckMessages_0::
     dw Text_IsCorrect ; id 0
@@ -6782,12 +6807,24 @@ Text_SorryThatNameCant::
     db "can't be used.<WAIT>"
     db "@"
 
-StringCategories_14_2::
-; another name for the data at StringCategories_14_2, whose note is above (E-0381)
+; A one-category string table (one word) for BeginStringDisplay: category 0 is
+; StringList_RenameMessages_0 with ids 0-3, the same four name-check messages as
+; RunNameEntryStateWhenNotFading_CheckMessages but spoken (each starts with <VOICE2> and '*:'): '*:
+; Is <BUF0> OK?' twice, '*: That name is already in use.' and a refusal that ends 'another name.'.
+; RunNameEntryStateWhenNotFading_CheckName_Message passes it in DE when wArg1 = 3, the mode that
+; RenameMenu_EnterName sets; the other name-entry callers
+; (GameMode5_Update_NewPlayerSetup_EnterName, BreedMenu_NameEntry,
+; RunBattleEndStep5SubSteps_EnterName and the gift egg naming in bank $F1) set wArg1 to 0 or 1 and
+; get RunNameEntryStateWhenNotFading_CheckMessages. (C1, E-0373)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
+; record: string list
 RunNameEntryStateWhenNotFading_RenameMessages::
     dw StringList_RenameMessages_0 ; id 0
 
-; category list of StringCategories_14_2; one pointer per wStringIndex (E-0217)
+; category list of RunNameEntryStateWhenNotFading_RenameMessages; one pointer per wStringIndex
+; (E-0217)
+; record: string
 StringList_RenameMessages_0::
     dw Text_IsOK ; id 0
     dw Text_IsOK_2 ; id 1

@@ -49,28 +49,33 @@ ShowString_Bank08::
     call RunStringDisplayToEnd
     ret
 
+; Nine words, each the pointer to the string list of one category 0-8: StringTable_System,
+; StringTable_MonsterFamilies, StringTable_MonsterNames, StringTable_MonsterNames2,
+; StringTable_SkillNames, StringTable_ItemNames, StringTable_ItemDescriptions,
+; StringTable_PersonalityNames and StringTable_ItemMenuMessages. LookupString indexes it by
+; wStringCategory, then the chosen list by wStringIndex, through BeginStringDisplay_Bank08 and
+; CopyStringToBuffer_Bank08 (category 9 and above go to the bank $95 table); other banks read single
+; words of it (for example the word at StringDatabase + 4). (C1, E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_08::
-; another name for the data at StringCategories_08, whose note is above (E-0381)
 StringDatabase::
-    dw StringList_08 ; id 0
-    dw StringList_08_2 ; id 1
-    dw StringList_08_3 ; id 2
+    dw StringTable_System ; id 0
+    dw StringTable_MonsterFamilies ; id 1
+    dw StringTable_MonsterNames ; id 2
 StringDatabase_MonsterNames2::
-    dw StringList_08_4 ; id 3
-    dw StringList_08_5 ; id 4
+    dw StringTable_MonsterNames2 ; id 3
+    dw StringTable_SkillNames ; id 4
 StringDatabase_ItemNames::
-    dw StringList_08_6 ; id 5
-    dw StringList_08_7 ; id 6
-    dw StringList_08_8 ; id 7
-    dw StringList_08_9 ; id 8
+    dw StringTable_ItemNames ; id 5
+    dw StringTable_ItemDescriptions ; id 6
+    dw StringTable_PersonalityNames ; id 7
+    dw StringTable_ItemMenuMessages ; id 8
 
-; category list of StringCategories_08; one pointer per wStringIndex (E-0217)
+; 255 strings: debug-menu and system text, for example 'DEBUG MODE' and '? EDIT ?' (named from its
+; contents; E-0026)
+; category list of StringDatabase; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_08::
-; another name for the data at StringList_08, whose note is above (E-0381)
 StringTable_System::
     dw String_08_00_00 ; id 0
     dw String_08_00_01 ; id 1
@@ -328,8 +333,7 @@ StringTable_System::
     dw String_08_00_ED ; id 253
     dw String_08_00_ED ; id 254
 
-StringList_08_2::
-; another name for the data at StringList_08_2, whose note is above (E-0381)
+; 11 strings: Slime, Dragon, Beast, Bird, Plant, ... (named from its contents; E-0026)
 StringTable_MonsterFamilies::
     dw String_08_01_00 ; id 0
     dw String_08_01_01 ; id 1
@@ -343,8 +347,8 @@ StringTable_MonsterFamilies::
     dw String_08_01_09 ; id 9
     dw String_08_01_0A ; id 10
 
-StringList_08_3::
-; another name for the data at StringList_08_3, whose note is above (E-0381)
+; 256 strings indexed by the number the monster-name routines take in HL (entry 0 is empty):
+; 'DrakSlime', 'SpotSlime', ... (named from its contents; E-0026)
 StringTable_MonsterNames::
     dw String_08_02_00 ; id 0
     dw String_08_02_01 ; id 1
@@ -603,8 +607,9 @@ StringTable_MonsterNames::
     dw String_08_02_FE ; id 254
     dw String_08_02_FF ; id 255
 
-StringList_08_4::
-; another name for the data at StringList_08_4, whose note is above (E-0381)
+; 128 more monster names: 'Mudron', 'NiteWhip', ... (named from its contents; E-0026)
+; category list of StringDatabase; one pointer per wStringIndex (E-0217)
+; record: string
 StringTable_MonsterNames2::
     dw String_08_03_00 ; id 0
     dw String_08_03_01 ; id 1
@@ -735,8 +740,7 @@ StringTable_MonsterNames2::
     dw String_08_03_7E ; id 126
     dw String_08_03_7F ; id 127
 
-StringList_08_5::
-; another name for the data at StringList_08_5, whose note is above (E-0381)
+; 223 strings: 'Blaze', 'Blazemore', 'Blazemost', 'Firebal', ... (named from its contents; E-0026)
 StringTable_SkillNames::
     dw String_08_04_00 ; id 0
     dw String_08_04_01 ; id 1
@@ -962,8 +966,7 @@ StringTable_SkillNames::
     dw String_08_04_D0 ; id 221
     dw String_08_04_D0 ; id 222
 
-StringList_08_6::
-; another name for the data at StringList_08_6, whose note is above (E-0381)
+; 112 strings: 'Herb', 'LoveWater', 'WorldDew', 'Potion', ... (named from its contents; E-0026)
 StringTable_ItemNames::
     dw String_08_05_00 ; id 0
     dw String_08_05_01 ; id 1
@@ -1078,8 +1081,9 @@ StringTable_ItemNames::
     dw String_08_05_62 ; id 110
     dw String_08_05_62 ; id 111
 
-StringList_08_7::
-; another name for the data at StringList_08_7, whose note is above (E-0381)
+; 112 strings: 'Restores HP of one monster', ... (named from its contents; E-0026)
+; category list of StringDatabase; one pointer per wStringIndex (E-0217)
+; record: string
 StringTable_ItemDescriptions::
     dw String_08_06_00 ; id 0
     dw String_08_06_00 ; id 1
@@ -1194,8 +1198,7 @@ StringTable_ItemDescriptions::
     dw String_08_06_63 ; id 110
     dw String_08_06_6F ; id 111
 
-StringList_08_8::
-; another name for the data at StringList_08_8, whose note is above (E-0381)
+; 27 strings: 'Hotblood', 'Eager', 'Smug', 'Earnest', 'Pushy', ... (named from its contents; E-0026)
 StringTable_PersonalityNames::
     dw String_08_07_00 ; id 0
     dw String_08_07_01 ; id 1
@@ -1225,8 +1228,7 @@ StringTable_PersonalityNames::
     dw String_08_07_19 ; id 25
     dw String_08_07_1A ; id 26
 
-StringList_08_9::
-; another name for the data at StringList_08_9, whose note is above (E-0381)
+; 15 strings: 'No items', 'Toss this away?', ... (named from its contents; E-0026)
 StringTable_ItemMenuMessages::
     dw String_08_08_00 ; id 0
     dw String_08_08_01 ; id 1

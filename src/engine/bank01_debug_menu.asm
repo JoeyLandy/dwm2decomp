@@ -3658,10 +3658,10 @@ DrawMonsterNameForWordAtDE_Bank01::
     call CopyGlyphTilesToVRAM
     ret
 
-; HL = monster id: with wDataBank = $08 it reads entry 2 of StringDatabase (StringList_08_3, also
-; labelled StringTable_MonsterNames) with ReadWordFromDataBank, then the string pointer at that list
-; + 2 * HL, and copies 16 bytes from it in bank $08 to wNameGlyphBuf with CopyFromBankWaitVRAM;
-; wDataBank is restored. (C1, E-0374)
+; HL = monster id: with wDataBank = $08 it reads entry 2 of StringDatabase
+; (StringTable_MonsterNames) with ReadWordFromDataBank, then the string pointer at that list + 2 *
+; HL, and copies 16 bytes from it in bank $08 to wNameGlyphBuf with CopyFromBankWaitVRAM; wDataBank
+; is restored. (C1, E-0374)
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via
 ; wDataBank) to wNameGlyphBuf; wDataBank is restored
 CopyMonsterNameToBuffer_B01::

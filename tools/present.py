@@ -44,7 +44,7 @@ THIN_NOTE = re.compile(r"^(?:unless .{0,40}?, )?runs the (?:routine|field comman
 GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
 # E-0365: a hand-written reading of the whole routine (config/annotations.json) answers such a gap itself;
 # E-0368: the readability batches from E-0369 on write such readings too (tools/apply_drafts.py)
-HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370", "E-0371", "E-0372", "E-0373", "E-0374", "E-0375", "E-0376", "E-0377", "E-0378", "E-0379", "E-0380", "E-0381", "E-0382", "E-0383", "E-0384", "E-0385", "E-0386")
+HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370", "E-0371", "E-0372", "E-0373", "E-0374", "E-0375", "E-0376", "E-0377", "E-0378", "E-0379", "E-0380", "E-0381", "E-0382", "E-0383", "E-0384", "E-0385", "E-0386", "E-0387")
 # D-012: "(C2, E-0357; probed E-0374)"; a wrapped comment may break the line at any of its spaces (" ;")
 HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")(?:;(?: ;)? probed(?: ;)? E-\d{4})?\)")
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")
@@ -495,8 +495,9 @@ def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names")
                         out.extend(wrap("", "; code: " + text[:1].lower() + text[1:] + " (E-0347)"))
             elif documented or re.match(r'^\s+db "', first):
                 header = header or documented
-            elif out and re.match(r"^[A-Za-z_]\w*::", out[-1]):  # E-0381: a second name for the same bytes
-                out.append(f"; another name for the data at {out[-1].split('::')[0]}, whose note is above (E-0381)")
+            elif out and re.match(r"^[A-Za-z_]\w*::", out[-1]):  # E-0381: a second name for the same bytes; since
+                # E-0387 only entry 0 of a record series keeps one (the generator folds the others into one name)
+                out.append(f"; entry 0 of {out[-1].split('::')[0]}, whose note is above (E-0381, E-0387)")
                 header = True
             elif not header:
                 out.extend(wrap("", "; " + describe.data_note(label, body, labels, names.referrer.get(label))

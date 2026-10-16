@@ -54,15 +54,18 @@ ShowString_Bank28::
     call RunStringDisplayToEnd
     ret
 
+; One little-endian word, a pointer to StringList_Bank28_0, the list of 218 message pointers
+; Message_00_00 to Message_00_D9 (message group 0, bank $28). LookupString reads word
+; wStringCategory of it (category 0 is the only word), then word wStringIndex of that list.
+; BeginStringDisplay_Bank28 and CopyStringToBuffer_Bank28 pass it in DE for wStringIndex below $DA;
+; higher ids go to their Overflow routine. (C1, E-0381)
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_28::
-; another name for the data at StringCategories_28, whose note is above (E-0381)
 MessageStrings_Bank28::
     dw StringList_Bank28_0 ; id 0
 
-; category list of StringCategories_28; one pointer per wStringIndex (E-0217)
+; category list of MessageStrings_Bank28; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_Bank28_0::
     dw Message_00_00 ; id 0

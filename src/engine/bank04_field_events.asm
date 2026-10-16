@@ -2105,9 +2105,8 @@ LoadPlayerSpriteGraphics::
     ret
 
 ; When hPlayerStateFlags bit 3 is set: decompresses ScallopShellSpriteTiles from bank $7E to vTiles0
-; + $700 (DecompressToVRAM) and copies 8 bytes from bank $7E at
-; LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData + $108 into OBJ palette 7 of
-; wOBJPaletteBuffer (+ $38), then sets wOBJPaletteUploadRequest = $7F. Only
+; + $700 (DecompressToVRAM) and copies 8 bytes from bank $7E at SharedOBJPalettes + $108 into OBJ
+; palette 7 of wOBJPaletteBuffer (+ $38), then sets wOBJPaletteUploadRequest = $7F. Only
 ; LoadPlayerAndFollowerSpriteGraphics calls it, in sprite mode 2; DrawPlayerOverlaySprite21Or22 then
 ; draws with tile offset $70 and palette 7. (C1, E-0374)
 ; when hPlayerStateFlags bit 3 is set: decompresses ScallopShellSpriteTiles (bank $7E) to vTiles0 +
@@ -2121,7 +2120,7 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
-    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
+    ld de, SharedOBJPalettes
     ld a, e
     add $08
     ld e, a

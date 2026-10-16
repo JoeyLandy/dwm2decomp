@@ -2294,7 +2294,7 @@ TitleOpening_Load::
     ld bc, $0040
     call FillBytes
     ld b, $7e
-    ld de, LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData
+    ld de, SharedOBJPalettes
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM

@@ -19,8 +19,6 @@ KeyWorld06_0_Y3X1_Tiles::
 
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66::
-; another name for the data at KeyWorldScreenHeader_66, whose note is above (E-0381)
 KeyWorld05_0_Y3X2_Header::
     db $ff, $ff, $ff, $ff, $ff, $09, $ea, $00 ; entry 0
 
@@ -28,8 +26,6 @@ KeyWorld05_0_Y3X2_Header::
 KeyWorld05_0_Y3X2_Tiles::
     INCBIN "maps/key_worlds/05_0_y3_x2_tiles.lz"
 
-KeyWorldScreenHeader_66_2::
-; another name for the data at KeyWorldScreenHeader_66_2, whose note is above (E-0381)
 KeyWorld0A_0_Y1X2_Header::
     db $ff, $ff, $ff, $ff, $ff, $09, $eb, $00 ; entry 0
 
@@ -37,8 +33,6 @@ KeyWorld0A_0_Y1X2_Header::
 KeyWorld0A_0_Y1X2_Tiles::
     INCBIN "maps/key_worlds/0_a_0_y1_x2_tiles.lz"
 
-KeyWorldScreenHeader_66_3::
-; another name for the data at KeyWorldScreenHeader_66_3, whose note is above (E-0381)
 KeyWorld05_0_Y3X1_Header::
     db $ff, $ff, $ff, $ff, $ff, $09, $ec, $00 ; entry 0
 
@@ -48,8 +42,6 @@ KeyWorld05_0_Y3X1_Tiles::
 
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66_4::
-; another name for the data at KeyWorldScreenHeader_66_4, whose note is above (E-0381)
 KeyWorld04_0_Y3X2_Header::
     db $05, $00, $06, $07, $0b, $3a, $ed, $00 ; entry 0
 
@@ -57,8 +49,6 @@ KeyWorld04_0_Y3X2_Header::
 KeyWorld04_0_Y3X2_Tiles::
     INCBIN "maps/key_worlds/04_0_y3_x2_tiles.lz"
 
-KeyWorldScreenHeader_66_5::
-; another name for the data at KeyWorldScreenHeader_66_5, whose note is above (E-0381)
 KeyWorld02_0_Y2X2_Header::
     db $04, $03, $06, $07, $08, $3a, $ee, $00 ; entry 0
 
@@ -66,8 +56,6 @@ KeyWorld02_0_Y2X2_Header::
 KeyWorld02_0_Y2X2_Tiles::
     INCBIN "maps/key_worlds/02_0_y2_x2_tiles.lz"
 
-KeyWorldScreenHeader_66_6::
-; another name for the data at KeyWorldScreenHeader_66_6, whose note is above (E-0381)
 KeyWorld00_0_Y3X1_Header::
     db $ff, $00, $09, $0a, $0c, $3a, $ef, $00 ; entry 0
 
@@ -77,8 +65,6 @@ KeyWorld00_0_Y3X1_Tiles::
 
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66_7::
-; another name for the data at KeyWorldScreenHeader_66_7, whose note is above (E-0381)
 KeyWorld00_0_Y3X2_Header::
     db $ff, $00, $05, $07, $08, $3a, $f0, $00 ; entry 0
 
@@ -86,8 +72,6 @@ KeyWorld00_0_Y3X2_Header::
 KeyWorld00_0_Y3X2_Tiles::
     INCBIN "maps/key_worlds/00_0_y3_x2_tiles.lz"
 
-KeyWorldScreenHeader_66_8::
-; another name for the data at KeyWorldScreenHeader_66_8, whose note is above (E-0381)
 KeyWorld27_1_Y3X1_Header::
     db $00, $06, $07, $09, $0e, $3a, $f1, $00 ; entry 0
 
@@ -145,8 +129,6 @@ KeyWorld27_1_Y3X1_Attrs::
 
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66_9::
-; another name for the data at KeyWorldScreenHeader_66_9, whose note is above (E-0381)
 KeyWorld02_0_Y2X3_Header::
     db $00, $00, $02, $09, $0a, $3b, $f2, $00 ; entry 0
 
@@ -154,8 +136,6 @@ KeyWorld02_0_Y2X3_Header::
 KeyWorld02_0_Y2X3_Tiles::
     INCBIN "maps/key_worlds/02_0_y2_x3_tiles.lz"
 
-KeyWorldScreenHeader_66_10::
-; another name for the data at KeyWorldScreenHeader_66_10, whose note is above (E-0381)
 KeyWorld00_0_Y3X3_Header::
     db $ff, $ff, $ff, $ff, $ff, $0a, $f3, $00 ; entry 0
 
@@ -163,8 +143,6 @@ KeyWorld00_0_Y3X3_Header::
 KeyWorld00_0_Y3X3_Tiles::
     INCBIN "maps/key_worlds/00_0_y3_x3_tiles.lz"
 
-KeyWorldScreenHeader_66_11::
-; another name for the data at KeyWorldScreenHeader_66_11, whose note is above (E-0381)
 KeyWorld01_0_Y3X2_Header::
     db $ff, $00, $02, $08, $09, $24, $f4, $00 ; entry 0
 
@@ -174,8 +152,6 @@ KeyWorld01_0_Y3X2_Tiles::
 
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66_12::
-; another name for the data at KeyWorldScreenHeader_66_12, whose note is above (E-0381)
 KeyWorld01_0_Y2X3_Header::
     db $00, $ff, $ff, $ff, $ff, $24, $f5, $00 ; entry 0
 
@@ -183,8 +159,6 @@ KeyWorld01_0_Y2X3_Header::
 KeyWorld01_0_Y2X3_Tiles::
     INCBIN "maps/key_worlds/01_0_y2_x3_tiles.lz"
 
-KeyWorldScreenHeader_66_13::
-; another name for the data at KeyWorldScreenHeader_66_13, whose note is above (E-0381)
 KeyWorld08_0_Y3X3_Header::
     db $02, $00, $09, $0a, $0c, $3b, $f6, $00 ; entry 0
 
@@ -192,17 +166,6 @@ KeyWorld08_0_Y3X3_Header::
 KeyWorld08_0_Y3X3_Tiles::
     INCBIN "maps/key_worlds/08_0_y3_x3_tiles.lz"
 
-; LZSS-compressed: 560 bytes that expand to 563 (E-0016, E-0017)
-Gfx66_1::
-    db $33, $02, $90, $06, $02, $1c, $02, $00, $01, $00, $07, $02, $58, $02, $02, $aa
-    db $09, $17, $02, $6c, $02, $02, $be, $09, $0b, $02, $a0, $02, $02, $aa, $09, $02
-    db $0c, $00, $33, $02, $e4, $0b, $02, $0b, $00, $0b, $0c, $0d, $02, $20, $12, $0e
-    db $02, $01, $16, $02, $2d, $19, $02, $2d, $1f, $00, $02, $2b, $1f, $02
-
-; the 8-byte header of the screen stream that follows (E-0222)
-; record: screen header
-KeyWorldScreenHeader_66_14::
-; another name for the data at KeyWorldScreenHeader_66_14, whose note is above (E-0381)
 KeyWorld03_0_Y2X2_Header::
     db $02, $00, $06, $0d, $0f, $3b, $f7, $00 ; entry 0
 
@@ -210,8 +173,8 @@ KeyWorld03_0_Y2X2_Header::
 KeyWorld03_0_Y2X2_Tiles::
     INCBIN "maps/key_worlds/03_0_y2_x2_tiles.lz"
 
-KeyWorldScreenHeader_66_15::
-; another name for the data at KeyWorldScreenHeader_66_15, whose note is above (E-0381)
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
 KeyWorld10_1_Y3X3_Header::
     db $ff, $04, $0b, $0c, $0e, $3b, $f8, $00 ; entry 0
 
@@ -219,8 +182,6 @@ KeyWorld10_1_Y3X3_Header::
 KeyWorld10_1_Y3X3_Tiles::
     INCBIN "maps/key_worlds/10_1_y3_x3_tiles.lz"
 
-KeyWorldScreenHeader_66_16::
-; another name for the data at KeyWorldScreenHeader_66_16, whose note is above (E-0381)
 KeyWorld05_0_Y3X3_Header::
     db $ff, $07, $09, $0c, $0f, $3b, $f9, $00 ; entry 0
 
@@ -228,17 +189,6 @@ KeyWorld05_0_Y3X3_Header::
 KeyWorld05_0_Y3X3_Tiles::
     INCBIN "maps/key_worlds/05_0_y3_x3_tiles.lz"
 
-; LZSS-compressed: 560 bytes that expand to 567 (E-0016, E-0017)
-Gfx66_2::
-    db $37, $02, $c2, $0b, $27, $42, $43, $02, $34, $04, $02, $de, $04, $36, $37, $52
-    db $53, $02, $48, $04, $02, $0c, $03, $07, $02, $2e, $04, $20, $21, $0e, $02, $b3
-    db $04, $17, $02, $42, $04, $30, $00, $01, $02, $c7, $04, $0b, $02, $a0, $04, $0e
-    db $01, $00, $02, $b3, $0a, $02, $0c, $03
-
-; the 8-byte header of the screen stream that follows (E-0222)
-; record: screen header
-KeyWorldScreenHeader_66_17::
-; another name for the data at KeyWorldScreenHeader_66_17, whose note is above (E-0381)
 KeyWorld0F_0_Y3X1_Header::
     db $00, $06, $08, $09, $0d, $3b, $fa, $00 ; entry 0
 
@@ -282,13 +232,10 @@ KeyWorld03_0_Y2X2_Attrs::
 
 ; LZSS-compressed: 50 bytes that expand to 360 (E-0016, E-0017)
 KeyWorld10_1_Y3X3_Attrs::
-    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $19, $02, $06
-
-; LZSS-compressed: 501 bytes that expand to 514 (E-0016, E-0017)
-Gfx66_3::
-    db $02, $02, $28, $0f, $0b, $02, $02, $06, $02, $50, $0f, $29, $02, $fe, $f4, $02
-    db $32, $06, $02, $9e, $0f, $0f, $02, $f6, $fc, $02, $f0, $ff, $01, $02, $e4, $0f
-    db $11, $02, $1b, $1f, $39
+    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $19, $02, $06, $02, $02, $28
+    db $0f, $0b, $02, $02, $06, $02, $50, $0f, $29, $02, $fe, $f4, $02, $32, $06, $02
+    db $9e, $0f, $0f, $02, $f6, $fc, $02, $f0, $ff, $01, $02, $e4, $0f, $11, $02, $1b
+    db $1f, $39
 
 ; LZSS-compressed: 55 bytes that expand to 360 (E-0016, E-0017)
 KeyWorld05_0_Y3X3_Attrs::
@@ -303,8 +250,6 @@ KeyWorld0F_0_Y3X1_Attrs::
 
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66_18::
-; another name for the data at KeyWorldScreenHeader_66_18, whose note is above (E-0381)
 KeyWorld02_0_Y0X0_Header::
     db $07, $05, $06, $0c, $0d, $3e, $0d, $01 ; entry 0
 
@@ -312,8 +257,6 @@ KeyWorld02_0_Y0X0_Header::
 KeyWorld02_0_Y0X0_Tiles::
     INCBIN "maps/key_worlds/02_0_y0_x0_tiles.lz"
 
-KeyWorldScreenHeader_66_19::
-; another name for the data at KeyWorldScreenHeader_66_19, whose note is above (E-0381)
 KeyWorld00_0_Y0X0_Header::
     db $ff, $ff, $ff, $ff, $ff, $0d, $0e, $01 ; entry 0
 
@@ -321,8 +264,6 @@ KeyWorld00_0_Y0X0_Header::
 KeyWorld00_0_Y0X0_Tiles::
     INCBIN "maps/key_worlds/00_0_y0_x0_tiles.lz"
 
-KeyWorldScreenHeader_66_20::
-; another name for the data at KeyWorldScreenHeader_66_20, whose note is above (E-0381)
 KeyWorld01_0_Y1X0_Header::
     db $ff, $06, $07, $0c, $0f, $27, $0f, $01 ; entry 0
 
@@ -330,24 +271,14 @@ KeyWorld01_0_Y1X0_Header::
 KeyWorld01_0_Y1X0_Tiles::
     INCBIN "maps/key_worlds/01_0_y1_x0_tiles.lz"
 
-; LZSS-compressed: 522 bytes that expand to 519 (E-0016, E-0017)
-Gfx66_4::
-    db $07, $02, $d0, $08, $02, $da, $03, $17, $02, $e4, $08, $02, $ee, $03, $0b, $22
-    db $23, $02, $f8, $0d, $00, $01, $33, $02, $0c, $1d, $01, $00, $0b, $0c, $23, $02
-    db $fc, $04, $02, $2a, $15, $02, $31, $11, $02, $12, $12, $50, $51
-
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66_21::
-; another name for the data at KeyWorldScreenHeader_66_21, whose note is above (E-0381)
 KeyWorld01_0_Y0X1_Header::
     db $ff, $09, $0a, $0d, $0f, $27, $10, $01 ; entry 0
 
 KeyWorld01_0_Y0X1_Tiles::
     INCBIN "maps/key_worlds/01_0_y0_x1_tiles.lz"
 
-KeyWorldScreenHeader_66_22::
-; another name for the data at KeyWorldScreenHeader_66_22, whose note is above (E-0381)
 KeyWorld0B_0_Y0X0_Header::
     db $05, $02, $05, $06, $0c, $3e, $11, $01 ; entry 0
 
@@ -355,8 +286,6 @@ KeyWorld0B_0_Y0X0_Header::
 KeyWorld0B_0_Y0X0_Tiles::
     INCBIN "maps/key_worlds/0_b_0_y0_x0_tiles.lz"
 
-KeyWorldScreenHeader_66_23::
-; another name for the data at KeyWorldScreenHeader_66_23, whose note is above (E-0381)
 KeyWorld04_0_Y0X0_Header::
     db $07, $00, $08, $09, $07, $3e, $12, $01 ; entry 0
 
@@ -364,15 +293,6 @@ KeyWorld04_0_Y0X0_Header::
 KeyWorld04_0_Y0X0_Tiles::
     INCBIN "maps/key_worlds/04_0_y0_x0_tiles.lz"
 
-; LZSS-compressed: 519 bytes that expand to 519 (E-0016, E-0017)
-Gfx66_5::
-    db $07, $02, $f6, $0a, $02, $02, $11, $17, $02, $0a, $1a, $02, $16, $11, $0b, $0c
-    db $0d, $0c, $0d, $02, $f2, $00, $02, $24, $17, $02, $00, $02, $33, $02, $66, $06
-
-; the 8-byte header of the screen stream that follows (E-0222)
-; record: screen header
-KeyWorldScreenHeader_66_24::
-; another name for the data at KeyWorldScreenHeader_66_24, whose note is above (E-0381)
 KeyWorld17_1_Y2X1_Header::
     db $ff, $00, $03, $04, $0a, $3e, $13, $01 ; entry 0
 
@@ -380,8 +300,8 @@ KeyWorld17_1_Y2X1_Header::
 KeyWorld17_1_Y2X1_Tiles::
     INCBIN "maps/key_worlds/17_1_y2_x1_tiles.lz"
 
-KeyWorldScreenHeader_66_25::
-; another name for the data at KeyWorldScreenHeader_66_25, whose note is above (E-0381)
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
 KeyWorld10_1_Y0X0_Header::
     db $ff, $00, $03, $07, $09, $3e, $14, $01 ; entry 0
 
@@ -389,21 +309,12 @@ KeyWorld10_1_Y0X0_Header::
 KeyWorld10_1_Y0X0_Tiles::
     INCBIN "maps/key_worlds/10_1_y0_x0_tiles.lz"
 
-KeyWorldScreenHeader_66_26::
-; another name for the data at KeyWorldScreenHeader_66_26, whose note is above (E-0381)
 KeyWorld07_0_Y0X0_Header::
     db $07, $02, $06, $07, $09, $3e, $15, $01 ; entry 0
 
 ; LZSS-compressed: 200 bytes that expand to 360 (E-0016, E-0017)
 KeyWorld07_0_Y0X0_Tiles::
     INCBIN "maps/key_worlds/07_0_y0_x0_tiles.lz"
-
-; Not an asset. $59C0 lies $4D bytes inside KeyWorld07_0_Y0X0_Tiles (bank $66, $5973-$5A3B, 200
-; bytes that expand to 360). A decompression from there yields 536 bytes (not a whole number of
-; tiles) and reads on to $5BDB. Rendered as tiles: noise. No loader exists to read. (C1, E-0383)
-; LZSS-compressed: 539 bytes that expand to 536 (E-0016, E-0017)
-Gfx66_6::
-    INCBIN "gfx/misc/gfx66_6.lz"
 
 ; LZSS-compressed: 36 bytes that expand to 360 (E-0016, E-0017)
 KeyWorld02_0_Y0X0_Attrs::
@@ -456,8 +367,6 @@ KeyWorld07_0_Y0X0_Attrs::
 
 ; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
-KeyWorldScreenHeader_66_27::
-; another name for the data at KeyWorldScreenHeader_66_27, whose note is above (E-0381)
 KeyWorld52_0_Y3X3_Header::
     db $ff, $03, $08, $09, $0a, $32, $16, $01 ; entry 0
 
@@ -465,8 +374,6 @@ KeyWorld52_0_Y3X3_Header::
 KeyWorld52_0_Y3X3_Tiles::
     INCBIN "maps/key_worlds/52_0_y3_x3_tiles.lz"
 
-KeyWorldScreenHeader_66_28::
-; another name for the data at KeyWorldScreenHeader_66_28, whose note is above (E-0381)
 KeyWorld01_0_Y0X0_Header::
     db $ff, $ff, $ff, $ff, $ff, $32, $16, $01 ; entry 0
 
