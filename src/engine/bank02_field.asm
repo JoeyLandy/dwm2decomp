@@ -7984,7 +7984,7 @@ VerifySaveBank3Checksum::
 ; (RestoreRecordsFromSRAMBank1Backup) and the game-mode-2 timer block (LoadGM2TimerBlockFromSRAM); 1
 ; unpacks one saved record per call (UnpackNextSavedRecord, which moves wSaveStep to 2 after record
 ; 30); any other value sets bit 7 of wSaveStep (finished). Each call ends with rRAMG = 0 and rRAMB =
-; 0. It only reads the save. (C1, E-0374)
+; 0. It only reads the save. (C2, E-0374; probed E-0384)
 ; with SRAM enabled, steps by wSaveStep: on the first call (0) sets it to 1, loads the saved WRAM
 ; blocks (LoadSaveBlocksFromSRAM), restores SRAM bank 2 from its bank-3 copy, the records from their
 ; bank-1 backup (RestoreRecordsFromSRAMBank1Backup) and the game-mode-2 timer block; while it is 1
@@ -8025,7 +8025,7 @@ RunLoadGameSteps::
 ; Unpacks one saved record: calls UnpackRecordFromBank1Slot with wArg1 = wSaveRecordIndex, wArg2 = 1
 ; (SRAM bank 1) and wArg3/wArg4 = sBank1Records + $6F * index (its compact slot). Only when wArg5 is
 ; $FF afterwards does it advance wSaveRecordIndex, and when that reaches 30 ($1E) it increments
-; wSaveStep. (C1, E-0374)
+; wSaveStep. (C2, E-0374; probed E-0384)
 ; unpacks SRAM bank 1 record wSaveRecordIndex ($A06F + $6F * index) with UnpackRecordFromBank1Slot;
 ; when wArg5 is $FF advances wSaveRecordIndex and, after record 30, increments wSaveStep (renamed
 ; from ScanBank1RecordStepSaveRecordIndex, E-0366)
@@ -8324,7 +8324,7 @@ SaveGM2TimerFramesBlockToSRAMBank1::
 ; (PackNextSavedRecord, which moves wSaveStep to 2 after 30 records); any later value writes the
 ; bank-1 checksum and sets wSaveStep bit 7 (RunSaveGameSteps_CopyRecordOrFinish). SRAM is closed
 ; after each call. Used by the link and priest screens; RunSaveGameSteps_2 is the same with a sprite
-; snapshot. (C1, E-0374)
+; snapshot. (C2, E-0374; probed E-0384)
 ; with SRAM enabled: on the first step (wSaveStep = 0) copies the save blocks with their checksum
 ; and continues with the next save stage (E-0122)
 RunSaveGameSteps::
@@ -8341,7 +8341,8 @@ RunSaveGameSteps::
 ; As RunSaveGameSteps, except that stage 0 runs SnapshotSpritesForSave (which saves the sprite slots
 ; into wSpriteSnapshot and then falls into CopySaveBlocksToSRAMWithSum) before
 ; RunSaveGameSteps_FirstStage. Called once per frame by the pause menu save
-; (RunPauseMenuScreen_Save) and by banks $0D and $15 until wSaveStep bit 7 is set. (C1, E-0374)
+; (RunPauseMenuScreen_Save) and by banks $0D and $15 until wSaveStep bit 7 is set. (C2, E-0374;
+; probed E-0384)
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then
 ; the final stage marked by bit 7 of wSaveStep) (E-0124) (E-0344: the address in its name dropped or
 ; read as the label there; was RunSaveGameSteps_2)
@@ -8370,7 +8371,8 @@ RunSaveGameSteps_FirstStage::
 ; Save stages after the first, for both RunSaveGameSteps and RunSaveGameSteps_2 (A = wSaveStep, not
 ; 0): stage 1 copies one bank-1 record per call (PackNextSavedRecord, which moves wSaveStep to 2
 ; after 30 records); any later value writes the bank-1 checksum (ComputeSRAMBank1RecordChecksum) and
-; sets wSaveStep bit 7 (the save is done). Then falls into RunSaveGameSteps_CloseSRAM. (C1, E-0369)
+; sets wSaveStep bit 7 (the save is done). Then falls into RunSaveGameSteps_CloseSRAM. (C2, E-0369;
+; probed E-0384)
 RunSaveGameSteps_CopyRecordOrFinish::
     dec a
     jr nz, .call_compute_sram_bank1_record_checksum
@@ -8500,7 +8502,7 @@ ComputeSRAMBank1RecordChecksum::
 ; Packs one record for the save: calls PackRecordFieldsToBank1Slot with wArg1 = wSaveRecordIndex,
 ; wArg2 = 1 (SRAM bank 1) and wArg3/wArg4 = sBank1Records + $6F * index (the compact slot), then
 ; increments wSaveRecordIndex and, when it reaches 30 ($1E), wSaveStep. The counterpart of
-; UnpackNextSavedRecord. (C1, E-0374)
+; UnpackNextSavedRecord. (C2, E-0374; probed E-0384)
 ; copies SRAM bank-1 record wSaveRecordIndex ($6F bytes at sBank1Records + $6F * n) through
 ; PackRecordFieldsToBank1Slot, then wSaveRecordIndex += 1; after 30 records wSaveStep += 1 (the next
 ; save step) (E-0120)
@@ -9062,7 +9064,7 @@ CopyBytesWithChecksum_Bank02::
 ; With SRAM enabled: on the first call (wSaveStep = 0) sets wSaveStep = 1 and restores the records
 ; from their bank-1 backup (RestoreRecordsFromSRAMBank1Backup); every call then unpacks one saved
 ; record (UnpackNextSavedRecord), and once wSaveStep is 2 sets it to $80 (done); disables SRAM. No
-; caller names it in src/. (C1, E-0374)
+; caller names it in src/. (C2, E-0374; probed E-0384)
 ; with SRAM enabled: first call runs RestoreRecordsFromSRAMBank1Backup, then scans bank-1 records;
 ; after stage 2 sets wSaveStep = $80 (E-0124)
 RunRestoreAndUnpackRecordsSteps::
@@ -9092,7 +9094,7 @@ RunRestoreAndUnpackRecordsSteps::
 ; (BackupRecordsToSRAMBank1); every call then packs one record (PackNextSavedRecord), and once
 ; wSaveStep reaches 2 it writes the bank-1 checksum (ComputeSRAMBank1RecordChecksum) and sets
 ; wSaveStep = $80; disables SRAM. The battle results save calls it each frame until bit 7, then
-; SaveGameToSRAMWithChecksum. (C1, E-0374)
+; SaveGameToSRAMWithChecksum. (C2, E-0374; probed E-0384)
 ; enables SRAM; on the first step backs up the records to SRAM bank 1 (BackupRecordsToSRAMBank1),
 ; then runs PackNextSavedRecord until wSaveStep reaches 2
 RunBackupAndSaveSteps::

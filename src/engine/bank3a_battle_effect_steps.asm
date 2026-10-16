@@ -7490,8 +7490,7 @@ ActionBattleTextTable2::
 ; wTextBuf0 to wTextBuf2. Then it sets wStringIndex to D and wStringCategory to 0 and starts the
 ; string with BeginStringDisplay_Bank2F. ShowBattleText does the same for category 1 with
 ; BattleTextPrepTable. Farcalled from 22 places, among them RunBattleActions_UseItem_ThrowMeat,
-; RunBattleActions_UseItem_BeastTail, ApplyTargetBattleWordArray3FReduction and
-; InflictStatus0Bit0WithBattleWordArray3FReduction. (C1, E-0382)
+; RunBattleActions_UseItem_BeastTail, ItemEffect_Meat and ItemEffect_BadMeat. (C1, E-0382)
 ; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at
 ; BattleTextCategory0HookTable + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F
 ; shows category 0 (E-0056)
@@ -9166,6 +9165,17 @@ WriteTargetNameOrTheMonsters_Target::
     call CopyTargetNameToTextBuf0
     ret
 
+; Copies the name of the acting battler to wTextBuf0 (<BUF0>) for a battle message: wNameSlot =
+; wBattleActor, then CopySlotNameToHL with HL = wTextBuf0. CopySlotNameToHL gives, by slot: for
+; slots 0-2 the first five glyphs of BATTLER_NAME of that battler record (plus any $8D/$8E mark
+; glyphs) and $F0; for slots 3 and 7, and for foe slots 4-6 whose wSlotNameBytes entry (slot & 3) is
+; $FF, the species name (string category = the high byte of the slot word of wBattleMonsterId + 2,
+; index = its low byte), where a foe slot 4-6 also gets a letter ($0A 'A' for the first, $0B for the
+; second, ...) when another foe slot has the same species; for a foe slot 4-6 whose wSlotNameBytes
+; entry is another value, the name of the battler record that value names, then glyph $47 and a
+; letter by equal wSlotNameBytes entries (also left in wBattleArg1, 0 when none); and when wLinkMode
+; is 1 the name of the own battler record of slots 4-6. Called by the message steps of bank $3A
+; before a battle message is shown. (C2, E-0384)
 ; wNameSlot = wBattleActor, then CopySlotNameToHL with HL = wTextBuf0 (E-0113)
 CopyActorNameToTextBuf0::
     ld a, [wBattleActor]
@@ -9174,6 +9184,10 @@ CopyActorNameToTextBuf0::
     call CopySlotNameToHL
     ret
 
+; Like CopyActorNameToTextBuf0 but into wTextBuf1 (<BUF1>): wNameSlot = wBattleActor, then
+; CopySlotNameToHL with HL = wTextBuf1, which writes the name of that battle slot ($F0-terminated;
+; battler record name, or species name with a letter, per slot as described at
+; CopyActorNameToTextBuf0). (C2, E-0384)
 ; wNameSlot = wBattleActor, then CopySlotNameToHL with HL = wTextBuf1 (E-0116)
 CopyActorNameToTextBuf1::
     ld a, [wBattleActor]
@@ -9182,6 +9196,12 @@ CopyActorNameToTextBuf1::
     call CopySlotNameToHL
     ret
 
+; Far-calls ActorFormationSlotToTemp0, which leaves in hTemp0 a slot picked from the formation byte
+; of the actor side (wFormationSlot0 for actor slots 0-3, wFormationSlot1 for 4-7): the first slot
+; of the formation pair ((0,1), (0,2) or (1,2) for formation 0, 1 or 2) unless that is the actor
+; slot itself, then the second, plus 4 when the actor is in slots 4-7. Then wNameSlot = hTemp0 and
+; CopySlotNameToHL copies that slot name to wTextBuf1 (<BUF1>), in the forms described at
+; CopyActorNameToTextBuf0. (C2, E-0384)
 ; far-calls ActorFormationSlotToTemp0 (which maps the actor to a slot in hTemp0), then copies that
 ; slot's name to wTextBuf1 (CopySlotNameToHL) (E-0113)
 CopyMappedSlotNameToTextBuf1::
@@ -9192,6 +9212,10 @@ CopyMappedSlotNameToTextBuf1::
     call CopySlotNameToHL
     ret
 
+; Copies string wBattleActionId of category 4 (the skill names, String_08_04_01 and on) with its $F0
+; terminator to wTextBuf1 (<BUF1>): H = 4, L = wBattleActionId, DE = wTextBuf1, CopyStringHLToDE. Id
+; 0 gives just $F0. Called by the message steps of bank $3A for messages that name the skill used.
+; (C2, E-0384)
 ; copies string wBattleActionId of category 4 (skill names) to wTextBuf1 (CopyStringHLToDE) (E-0116)
 CopyActionSkillNameToTextBuf1::
     ld a, [wBattleActionId]
@@ -9201,6 +9225,10 @@ CopyActionSkillNameToTextBuf1::
     call CopyStringHLToDE
     ret
 
+; Like CopyActorNameToTextBuf0 but for the target: wNameSlot = wBattleTarget, then CopySlotNameToHL
+; with HL = wTextBuf0 (<BUF0>) writes the $F0-terminated name of that battle slot (battler record
+; name, or species name with a letter, per slot as described at CopyActorNameToTextBuf0). (C2,
+; E-0384)
 ; wNameSlot = wBattleTarget, then CopySlotNameToHL with HL = wTextBuf0 (E-0077)
 CopyTargetNameToTextBuf0::
     ld a, [wBattleTarget]
@@ -9209,6 +9237,9 @@ CopyTargetNameToTextBuf0::
     call CopySlotNameToHL
     ret
 
+; Like CopyActorNameToTextBuf0 but for the target and into wTextBuf1 (<BUF1>): wNameSlot =
+; wBattleTarget, then CopySlotNameToHL with HL = wTextBuf1 writes the $F0-terminated name of that
+; battle slot (forms as described at CopyActorNameToTextBuf0). (C2, E-0384)
 ; wNameSlot = wBattleTarget, then CopySlotNameToHL with HL = wTextBuf1 (E-0116)
 CopyTargetNameToTextBuf1::
     ld a, [wBattleTarget]
@@ -9217,6 +9248,9 @@ CopyTargetNameToTextBuf1::
     call CopySlotNameToHL
     ret
 
+; Like CopyActorNameToTextBuf0 but for the target and into wTextBuf2 (<BUF2>): wNameSlot =
+; wBattleTarget, then CopySlotNameToHL with HL = wTextBuf2 writes the $F0-terminated name of that
+; battle slot (forms as described at CopyActorNameToTextBuf0). (C2, E-0384)
 ; wNameSlot = wBattleTarget, then CopySlotNameToHL with HL = wTextBuf2 (E-0116)
 CopyTargetNameToTextBuf2::
     ld a, [wBattleTarget]
@@ -9225,6 +9259,10 @@ CopyTargetNameToTextBuf2::
     call CopySlotNameToHL
     ret
 
+; Writes the damage word wBattleDamageHi:wBattleDamageLo to wTextBuf1 (<BUF1>) as decimal digits for
+; a battle message: BC = the damage, HL = wTextBuf1, WriteBCAsDecimalString. One byte per digit (0 =
+; $00 ... 9 = $09), no leading zeros (0 gives one $00), then $F0. A damage of 10000 or more gives a
+; first byte above 9 (12345 gives $0C, 3, 4, 5). (C2, E-0384)
 ; wTextBuf1 = wBattleDamage as a decimal string (WriteBCAsDecimalString) (E-0210)
 WriteBattleDamageToTextBuf1::
     ld hl, wTextBuf1
@@ -9235,6 +9273,12 @@ WriteBattleDamageToTextBuf1::
     call WriteBCAsDecimalString
     ret
 
+; Sets wNameSlot to wBattleTarget & 4 (slot 0 or 4, the first slot of the target side) and calls
+; CopySlotNameToHL with HL = wTextBuf0, so wTextBuf0 gets the name of that slot. All three callers
+; (CopyTargetOrSideNameToTextBuf0_Side, CheckAllTargetsSame_SideOrTarget and
+; WriteTargetNameOrTheMonsters_SideOrTarget) call WriteMonstersWordToTextBuf0 straight after, so the
+; copied name is overwritten and only the side effects of CopySlotNameToHL (wNameSlot and the
+; scratch bytes it uses) last. (C2, E-0384)
 ; wNameSlot = wBattleTarget & 4 (the first slot of the target's side), then CopySlotNameToHL with HL
 ; = wTextBuf0 (E-0113)
 CopyTargetSideNameToTextBuf0::
@@ -9245,6 +9289,10 @@ CopyTargetSideNameToTextBuf0::
     call CopySlotNameToHL
     ret
 
+; Copies the name of the player (wPlayerName: the first 5 glyphs, a $8D or $8E mark right after them
+; if there is one, then $F0) to wTextBuf0 with CopyFiveGlyphsPlusMarks. The battle text preps
+; BattleTextPrepA0, BattleTextPrep97 and BattleTextPrep99 use it to fill <BUF0> with the name of the
+; player. (C2, E-0384)
 ; copies the name at wPlayerName (5 glyphs, CopyFiveGlyphsPlusMarks) to wTextBuf0 (E-0116)
 CopyPlayerNameToTextBuf0::
     ld de, wPlayerName
@@ -9252,6 +9300,9 @@ CopyPlayerNameToTextBuf0::
     call CopyFiveGlyphsPlusMarks
     ret
 
+; Copies the name of the player (wPlayerName: the first 5 glyphs, a $8D or $8E mark right after them
+; if there is one, then $F0) to wTextBuf1 with CopyFiveGlyphsPlusMarks. BattleTextPrep94 and
+; BattleTextPrep95 use it to fill <BUF1> with the name of the player. (C2, E-0384)
 ; copies the name at wPlayerName (5 glyphs) to wTextBuf1 (E-0116)
 CopyPlayerNameToTextBuf1::
     ld de, wPlayerName
@@ -9259,6 +9310,9 @@ CopyPlayerNameToTextBuf1::
     call CopyFiveGlyphsPlusMarks
     ret
 
+; Copies the name of item wBattleActionId (string category 5 of bank $08, through CopyStringHLToDE
+; with H = 5 and L = the id) to wTextBuf2, $F0 terminated. BattleTextPrep87, BattleTextPrepA0,
+; BattleTextPrep94 and BattleTextPrep97 use it to fill <BUF2> with the item name. (C2, E-0384)
 ; copies string wBattleActionId of category 5 (item names) to wTextBuf2 (CopyStringHLToDE) (E-0116)
 CopyActionItemNameToTextBuf2::
     ld a, [wBattleActionId]
@@ -9268,6 +9322,9 @@ CopyActionItemNameToTextBuf2::
     call CopyStringHLToDE
     ret
 
+; Sets wNameSlot to wBattleActor & 4 (slot 0 or 4, the first slot of the actor side) and calls
+; CopySlotNameToHL with HL = wTextBuf0, so wTextBuf0 gets the name of that slot. No call to it was
+; found in src/; CopyTargetSideNameToTextBuf0 is the same code for wBattleTarget. (C2, E-0384)
 ; wNameSlot = wBattleActor & 4 (the first slot of the actor's side), then CopySlotNameToHL with HL =
 ; wTextBuf0 (E-0116)
 CopyActorSideNameToTextBuf0::
@@ -9278,12 +9335,22 @@ CopyActorSideNameToTextBuf0::
     call CopySlotNameToHL
     ret
 
+; A = battle slot, HL = destination: writes the name of that slot there, $F0 terminated. Slots 0-2
+; go on into CopyBattlerNameToHL (the name of the battler record); slots 3-7 go to
+; CopySlotNameToHL_HighSlot, which names a foe by its species or by a battler record name plus a
+; letter, depending on slot, wLinkMode and wSlotNameBytes. wNameSlot is read on the letter path, so
+; callers set it first. (C2, E-0384)
 ; A = battle slot: slots 0-2 go to CopyBattlerNameToHL; other slots take paths that check slot 3/7,
 ; wLinkMode and wSlotNameBytes (not fully read) (E-0077)
 CopySlotNameToHL::
     cp $03
     jr nc, CopySlotNameToHL_HighSlot
 
+; A = battle slot (0-2 or 4-6): copies the name at BATTLER_NAME of the slot battler record (5
+; glyphs, a following $8D or $8E mark, through CopyFiveGlyphsPlusMarks) to HL, then leaves HL on the
+; $F0 terminator with A = $F0. C is kept; B ends 0. CopySlotNameToHL falls into it,
+; CopySlotNameToHL_LinkBattlerName jumps to it and CopySlotNameToHL_BattlerNameWithLetter calls it.
+; (C2, E-0384)
 ; A = battle slot (0-2 or 4-6): copies the name at offset 0 of the slot's battler record (5 glyphs,
 ; CopyFiveGlyphsPlusMarks) to HL and leaves HL on the $F0 terminator; BC kept (E-0077)
 CopyBattlerNameToHL::
@@ -9306,7 +9373,7 @@ CopyBattlerNameToHL::
     inc hl
     jr .skip
 
-; In link mode 1 copies the battler record's name (CopyBattlerNameToHL). (C1, E-0357)
+; In link mode 1 copies the battler record's name (CopyBattlerNameToHL). (C2, E-0357; probed E-0384)
 CopySlotNameToHL_LinkBattlerName::
     ld a, b
     pop bc
@@ -9314,7 +9381,7 @@ CopySlotNameToHL_LinkBattlerName::
 
 ; A foe slot's name: slot 3 or 7, or one whose name byte is $FF, gets its species name with a letter
 ; when others share it; in link mode 1 the battler record's name; otherwise the battler name with a
-; letter suffix. (C1, E-0357)
+; letter suffix. (C2, E-0357; probed E-0384)
 CopySlotNameToHL_HighSlot::
     push bc
     ld b, a
@@ -9351,7 +9418,7 @@ CopySlotNameToHL_HighSlot::
     ret
 
 ; Copies slot A's species name (category = the high byte of wBattleMonsterId + 2, index = the low
-; byte) to HL, keeping the slot and destination. (C1, E-0357)
+; byte) to HL, keeping the slot and destination. (C2, E-0357; probed E-0384)
 CopySlotSpeciesNameToHL::
     ld [wBattleTempSlot], a
     push hl
@@ -9376,7 +9443,7 @@ CopySlotSpeciesNameToHL::
 
 ; Copies the battler's name and appends glyph $47 and, when another slot of the side has the same
 ; name byte, its letter by order (A $0A, B $0B, C $0C, also in wBattleArg1); otherwise wBattleArg1 =
-; 0. (C1, E-0357)
+; 0. (C2, E-0357; probed E-0384)
 CopySlotNameToHL_BattlerNameWithLetter::
     call CopyBattlerNameToHL
     ld a, $47
@@ -9455,7 +9522,7 @@ CopySlotNameToHL_BattlerNameWithLetter::
     ret
 
 ; When another foe slot has the same species, appends the letter $0A + the number of earlier ones to
-; the species name. (C1, E-0357)
+; the species name. (C2, E-0357; probed E-0384)
 CopySlotNameToHL_SpeciesLetter::
     call ListSideMonsterIdsToTemp0
     inc b
@@ -9540,6 +9607,14 @@ CopySlotNameToHL_SpeciesLetter::
     ld [hl], a
     ret
 
+; Clears the $10 bytes at wTemp0, then lists the species words (wBattleMonsterId entries) of the
+; occupied slots (CarryUnlessBattleSlotOutSlotEmpty clear) of slots 0-2 at wTemp0 and of slots 4-6
+; at wPauseMenuStep (= wTemp0 + 8), packed in slot order. For the link follower (wLinkMode 1 with
+; wLinkRole bit 1) slots 4-6 are listed first and 0-2 second. Returns E = the number of words in the
+; first list and D = B = the number in the second. The battle text preps (BattleTextPrep21,
+; BattleTextPrep94 and others), ActionEffect_Ironize_Text and the meat effects use the counts to
+; choose between one name and 'Monsters'; GroupTargetsBySpeciesToSpeciesGroups and
+; CopySlotNameToHL_SpeciesLetter read the lists. (C2, E-0384)
 ; clears wTemp0 ($10 bytes) and lists the species ids of the occupied slots of the shown side at
 ; wTemp0 and of the other side at wPauseMenuStep (E-0129) (E-0340: the address in its name read as
 ; its RAM name; was ListSideMonsterIdsToTemp0)
@@ -9636,8 +9711,11 @@ ListSideMonsterIdsToTemp0::
     ld b, d
     ret
 
-; Ironize's text: D = $47 for a foe outside link mode 1 or a side of one species, otherwise $46.
-; (C1, E-0357)
+; Chooses the message for Ironize in D: $47 ('turned into iron!', one monster) for a foe target
+; (wBattleTarget >= 4) outside link mode 1; otherwise ListSideMonsterIdsToTemp0 runs and D = $47
+; when it lists exactly one occupied slot among slots 0-2 (E = 1; slots 4-6 for the link follower),
+; else $46 (the message that names the party). ActionEffect_Ironize far-calls it after setting the
+; Ironize bits and stores D as the actor message. (C2, E-0384)
 ActionEffect_Ironize_Text::
     ld a, [wLinkMode]
     cp $01
@@ -9658,6 +9736,11 @@ ActionEffect_Ironize_Text::
     ld d, $46
     ret
 
+; Writes the text 'Monsters' (glyphs $16 $32 $31 $36 $37 $28 $35 $36) and the $F0 terminator to
+; wTextBuf0; HL ends on the $F0 byte. CopyTargetOrSideNameToTextBuf0_Monsters,
+; CheckAllTargetsSame_Monsters, WriteTargetNameOrTheMonsters_Monsters and
+; BattleText0HookTargetNameAndGroupWord call it when a message names a group of monsters. (C2,
+; E-0384)
 ; writes the glyphs of 'Monsters' (decoded with the charmap) and $F0 to wTextBuf0 (E-0113)
 WriteMonstersWordToTextBuf0::
     ld hl, wTextBuf0
@@ -9790,37 +9873,49 @@ ListFarSideSlots_ShowSlotName::
     ret
     db $21, $ff, $d8, $18, $28, $21, $0f, $d9, $18, $23
 
+; A = battle slot: HL = the wBattleMaxHP word of that slot, A = its low byte (a jump to
+; GetBattleStatWord_Bank3A with HL = wBattleMaxHP). Bank $3A copy of the helper. (C2, E-0384)
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
 GetBattleMaxHP_Bank3A::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_Bank3A
 
+; A = battle slot: HL = the wBattleMaxMP word of that slot, A = its low byte (a jump to
+; GetBattleStatWord_Bank3A with HL = wBattleMaxMP). Bank $3A copy of the helper. (C2, E-0384)
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 GetBattleMaxMP_Bank3A::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_Bank3A
     db $21, $bf, $d8, $18, $14
 
+; A = battle slot: HL = the wBattleMP word of that slot, A = its low byte (a jump to
+; GetBattleStatWord_Bank3A with HL = wBattleMP). Bank $3A copy of the helper. (C2, E-0384)
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
 GetBattleMP_Bank3A::
     ld hl, wBattleMP
     jr GetBattleStatWord_Bank3A
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; HL = word A of the array at HL. (C1, E-0357)
+; HL = word A of the array at HL. (C2, E-0357; probed E-0384)
 GetBattleStatWord_Bank3A::
     add a
     add_a_to_hl
     deref_hl
     ret
 
+; HL += 2 * A, with A doubled in 8 bits first (so a slot number above $7F wraps); A is clobbered. It
+; points HL at the word of slot A in a word array such as wBattleHP. The same 7 bytes appear in 12
+; banks. (C2, E-0384)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0353)
+; appear in 12 banks)
 AddDoubleAToHL_Bank3A::
     add a
     add_a_to_hl
     ret
 
+; Carry set when wBattleActor is a slot 0-3; when wLinkMode is 1 and wLinkRole bit 1 is set the test
+; is reversed (carry set for slots 4-7). Which side is local is inferred from that reversal, not
+; checked. A = wBattleActor on return. The same 27 bytes appear in 12 banks. (C2, E-0384)
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
@@ -9841,6 +9936,9 @@ ActorOnLocalSide_Bank3A::
     cp $04
     ret
 
+; Carry set when wBattleTarget is a slot 0-3; when wLinkMode is 1 and wLinkRole bit 1 is set the
+; test is reversed (carry set for slots 4-7). Which side is local is inferred from that reversal,
+; not checked. A = wBattleTarget on return. The same 27 bytes appear in 12 banks. (C2, E-0384)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
@@ -9861,8 +9959,8 @@ TargetOnLocalSide_Bank3A::
     cp $04
     ret
 
-; ANDs status byte 0 of slot E with entry D of ClearBattleStatusBitsWithMaskD_Bank3A_Data. (C1,
-; E-0357)
+; ANDs status byte 0 of slot E with entry D of ClearBattleStatusBitsWithMaskD_Bank3A_Data. (C2,
+; E-0357; probed E-0384)
 ClearBattleStatusBitsWithMaskD_Bank3A::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank3A_Data
@@ -9885,8 +9983,10 @@ ClearBattleStatusBitsWithMaskD_Bank3A::
 ClearBattleStatusBitsWithMaskD_Bank3A_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
+; Sets bit 0 of the byte at wLevelUpGains + A (A = slot); HL is kept, A is clobbered. The same 13
+; bytes appear in 12 banks. (C2, E-0384)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit0OfLevelUpGainsIndexed_Bank3A::
     push hl
     ld hl, wLevelUpGains
@@ -9895,8 +9995,10 @@ SetBit0OfLevelUpGainsIndexed_Bank3A::
     pop hl
     ret
 
+; Sets bit 1 of the byte at wLevelUpGains + A (A = slot); HL is kept, A is clobbered. The same 13
+; bytes appear in 12 banks. (C2, E-0384)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit1OfLevelUpGainsIndexed_Bank3A::
     push hl
     ld hl, wLevelUpGains
@@ -9905,8 +10007,10 @@ SetBit1OfLevelUpGainsIndexed_Bank3A::
     pop hl
     ret
 
+; Sets bit 2 of the byte at wLevelUpGains + A (A = slot); HL is kept, A is clobbered. The same 13
+; bytes appear in 12 banks. (C2, E-0384)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit2OfLevelUpGainsIndexed_Bank3A::
     push hl
     ld hl, wLevelUpGains
@@ -9915,6 +10019,11 @@ SetBit2OfLevelUpGainsIndexed_Bank3A::
     pop hl
     ret
 
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]), where g(v) is 0 for v >= $C0, 1 for v >= $40 and 2 below that; HL and BC
+; are kept. The result (0-26) is the same kind of personality index that PersonalityIndexOfRecord
+; builds from a save record. No call to this bank copy was found in src/; the same 87 bytes appear
+; in 13 banks. (C2, E-0384)
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
@@ -9974,6 +10083,11 @@ PersonalityIndexOfSlot_Bank3A::
     pop hl
     ret
 
+; A = battle slot: carry set when the slot cannot act: CheckSlotStatusBlock sets carry (slot out, or
+; a blocking status), or status byte 3 has bit 6 or 7 set ($C0), or status byte 4 has bit 2 or 3 set
+; ($0C); otherwise carry clear. A, BC and HL are kept. RunBattleActions_ShowHeroBlewBackG and
+; RunActionResolveStep_Imitate_TryStrikeBack test the target with it before looking at its
+; BSTAT6_SUCK_ALL and BSTAT6_IMITATE bits. (C2, E-0384)
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
@@ -10003,6 +10117,9 @@ CheckSlotStatusBlockWide_Bank3A::
     pop hl
     ret
 
+; A = battle slot: A = status byte 3 of the slot & $C0, or byte 4 & $0C when that is zero; Z set
+; when both are clear; HL is kept. No call to this bank copy was found in src/; the same 17 bytes
+; appear in 13 banks. (C2, E-0384)
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)

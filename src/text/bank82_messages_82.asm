@@ -4,6 +4,11 @@
 SECTION "Bank 82", ROMX[$4000], BANK[$82]
     db $82
 
+; Starts displaying string wStringIndex of category wStringCategory from message bank $82: below $90
+; it calls BeginStringDisplay with the table MessageStrings_Bank82; from $90 up it far-calls
+; BeginStringDisplay_Bank82_Overflow in bank $96, which subtracts $90 from wStringIndex and uses its
+; own overflow table. Reached by farcall from ShowMessageHL_ToBeginStringDisplay_Bank82 and
+; StartMessageForGroup_Group0B (message group 11) and the debug message test. (C1, E-0384)
 ; message bank $82: when wStringIndex < $90, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank82; otherwise far-calls BeginStringDisplay_Bank82_Overflow (E-0080)
 BeginStringDisplay_Bank82::
@@ -18,6 +23,13 @@ BeginStringDisplay_Bank82::
     call BeginStringDisplay
     ret
 
+; Meant to copy one string of message bank $82 to a buffer: when wStringIndex is below $90 it calls
+; CopyStringToBuffer with the table MessageStrings_Bank82 (string wStringIndex of category
+; wStringCategory, copied with its $F0 terminator to the address in wStringDestLo/wStringDestHi).
+; From $90 up it far-calls BeginStringDisplay_Bank82_Overflow instead of the copy overflow routine,
+; so nothing is copied: that routine subtracts $90 from wStringIndex and starts displaying the
+; string (the text printer is armed, wTextFlags = 1) while the destination buffer is left unchanged.
+; Nothing in src/ calls this routine, so the bug may never be reached. (C1, E-0384)
 ; message bank $82: when wStringIndex < $90, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank82; otherwise far-calls the BeginStringDisplay overflow entry
 ; (BeginStringDisplay_Bank82_Overflow), not the copy entry CopyStringToBuffer_Bank82_Overflow, so

@@ -3703,7 +3703,7 @@
         }
       ],
       "record": "eight picks for one wKeyWorldBandAdjust value; a random 0-7 chooses one",
-      "note": "E-0192 (C1: RollKeyWorldMonsterTableKeyWorldBossMonsters reads the byte at $4123 + 8 * wKeyWorldBandAdjust + (random & 7), doubles it and reads the band-list pointer at $6D6D + $90 + that offset; it retries when the list is empty; 34 rows end at FillWCD11LevelsForPartyStrength ($4233); higher rows pick from more bands)."
+      "note": "E-0192 (C1: GenerateKeyWorld_RollMonsters_Boss reads the byte at $4123 + 8 * wKeyWorldBandAdjust + (random & 7), doubles it and reads the band-list pointer at $6D6D + $90 + that offset; it retries when the list is empty; 34 rows end at FillWCD11LevelsForPartyStrength ($4233); higher rows pick from more bands)."
     },
     {
       "bank": "60",
@@ -3810,7 +3810,7 @@
           "reason": "key-world area layout"
         }
       ],
-      "note": "E-0193 (C1: KeyWorldLayout_FillEntrances reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16)."
+      "note": "E-0193 (C1: KeyWorldLayout_FillEntrances reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to KeyWorldLayout_BuildEntrance with DE stepping through wKeyWorldFloorState by 16)."
     },
     {
       "bank": "60",
@@ -6247,7 +6247,7 @@
         }
       ],
       "record": "ten base room records, then six zero bytes; one row per exit of the previous room",
-      "note": "E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_PickOtherExit; 6 rows end at that routine). E-0364: the sum is the next room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered from, so these are room bases, not monster bases."
+      "note": "E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for KeyWorldLayout_BuildEntrance_PickOtherExit; 6 rows end at that routine). E-0364: the sum is the next room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered from, so these are room bases, not monster bases."
     },
     {
       "bank": "84",
@@ -6290,7 +6290,7 @@
         }
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
-      "note": "E-0194 (C1: SetupTownObjectsForMap case 0 (band 0 (Jump_060_63E0), wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens)."
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 0 (band 0 (Jump_060_63E0), wMapObjectCount $0A) passes $6705 to SetupTownObjectsForMap_RollObjects; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens)."
     },
     {
       "bank": "61",
@@ -6306,7 +6306,7 @@
         }
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
-      "note": "E-0194 (C1: SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens)."
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to SetupTownObjectsForMap_RollObjects; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens)."
     },
     {
       "bank": "61",
@@ -6322,7 +6322,7 @@
         }
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
-      "note": "E-0194 (C1: SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens)."
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to SetupTownObjectsForMap_RollObjects; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens)."
     },
     {
       "bank": "61",
@@ -6338,7 +6338,7 @@
         }
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
-      "note": "E-0194 (C1: SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens)."
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to SetupTownObjectsForMap_RollObjects; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens)."
     },
     {
       "bank": "61",
@@ -6354,7 +6354,7 @@
         }
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
-      "note": "E-0194 (C1: SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 36 screens)."
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to SetupTownObjectsForMap_RollObjects; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 36 screens)."
     },
     {
       "bank": "61",
@@ -6370,7 +6370,7 @@
         }
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
-      "note": "E-0194 (C1: SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 6 screens)."
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to SetupTownObjectsForMap_RollObjects; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 6 screens)."
     },
     {
       "bank": "61",
@@ -6386,7 +6386,7 @@
         }
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
-      "note": "E-0194 (C1: SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 25 screens)."
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to SetupTownObjectsForMap_RollObjects; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 25 screens)."
     },
     {
       "bank": "61",
@@ -13431,7 +13431,7 @@
     {
       "bank": "73",
       "addr": "45CA",
-      "label": "AddRewardToCounterCappedAt999_RewardAmounts",
+      "label": "AddMenuStateToPartyStatCapped_StatOffsets",
       "count": 6,
       "id_base": 0,
       "fields": [
@@ -13441,7 +13441,7 @@
           "name": "amount added"
         }
       ],
-      "note": "E-0214 (C1: AddRewardToCounterCappedAt999 adds the byte at $45CA + wScriptParam0; 6 bytes end at the code after them)."
+      "note": "E-0214 (C1: AddMenuStateToPartyStatCapped adds the byte at $45CA + wScriptParam0; 6 bytes end at the code after them)."
     },
     {
       "bank": "73",
@@ -20606,7 +20606,7 @@
           "reason": "band species list"
         }
       ],
-      "note": "E-0256 (C1: PickRandomMonsterFromBandList (with RollKeyWorldMonsterTableKeyWorldMonsters and ...BossMonsters) reads the word at $6D6D + 16 * hTemp1 + 2 * hTemp0 and picks one of the count words that follow the list's count byte; 11 rows (families, StringTable_MonsterFamilies order) of 8 bands)."
+      "note": "E-0256 (C1: PickRandomMonsterFromBandList (with GenerateKeyWorld_RollMonsters_Normal and ...BossMonsters) reads the word at $6D6D + 16 * hTemp1 + 2 * hTemp0 and picks one of the count words that follow the list's count byte; 11 rows (families, StringTable_MonsterFamilies order) of 8 bands)."
     },
     {
       "bank": "60",

@@ -7261,7 +7261,8 @@ ArenaMenu_JudgePartyStrength_Average::
 ; min(99, (MON_MAX_MP + MON_ATK + MON_DEF + (MON_AGL + MON_INT) / 2) / 50) plus min(99, (MON_MAX_MP
 ; + MON_ATK + MON_DEF + MON_AGL + MON_INT - 24 * MON_LEVEL) / 50), where a negative 16-bit
 ; difference wraps and so caps at 99. MON_MAX_HP is loaded in both halves but HL is reset to 0
-; before the next add, so it does not count. It first clears wArenaEntry bytes 0-2. (C1, E-0369)
+; before the next add, so it does not count. It first clears wArenaEntry bytes 0-2. (C2, E-0369;
+; probed E-0384)
 ArenaMenu_JudgePartyStrength_ComputeEach::
     xor a
     ld [wArenaEntry], a
@@ -7495,7 +7496,7 @@ AddTemp0WordToHL::
 ; rRAMG2 and disabled again) and returns HL = a word of PickTableEntryByPartyLevelTotal_Data for
 ; that total: 400 below 49, 600 below 91, 800 below 139, 1200 below 181 and 1400 from 181 on (the
 ; last two entries are both 1400, for 181-219 and for 220 or more). Clobbers A, BC, DE. No caller
-; was found in src/ or the listing. (C1, E-0376)
+; was found in src/ or the listing. (C2, E-0376; probed E-0384)
 ; HL = the word PickTableEntryByPartyLevelTotal_Data[band] for the party's total level (bands at 49,
 ; 91, 139, 181, 220 and 256) (E-0128)
 PickTableEntryByPartyLevelTotal::
@@ -7981,7 +7982,7 @@ ArenaGridBattle_SetUpFromGrid::
 ; (ArenaMenu_JudgePartyStrength_Average), then sets wTwoChoiceCursor = 0 for 80 or more, 1 for
 ; 60-79, 2 for 40-59, 3 for 30-39 and 4 below 30. The last test (cp $00) never sets carry, so the
 ; value 5 after it is never chosen. Called by ArenaMenu_DrawClassPanel (state 16) and
-; ArenaMenu_ClosePanelBox (state 24). (C1, E-0369)
+; ArenaMenu_ClosePanelBox (state 24). (C2, E-0369; probed E-0384)
 ArenaMenu_JudgePartyStrength::
     call ArenaMenu_JudgePartyStrength_ComputeEach
     call ArenaMenu_JudgePartyStrength_Average

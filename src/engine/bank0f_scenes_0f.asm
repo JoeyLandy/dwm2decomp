@@ -690,7 +690,7 @@ SceneHomecoming_ShowWarubouWaheyIWas::
 
 ; Homecoming scene, step 9: runs ScriptStepSetObjectBit2AndWait (bank $73): sets bit 2 of OBJ_FLAGS
 ; of objects 1 and 2, shows the scene object (wObject5 = $80), shifts the objects by
-; ShiftObjectsYByTable each frame and moves on once wScriptParam0 is back to 0. (C2, E-0369; probed
+; ShiftObjectsXByTable each frame and moves on once wScriptParam0 is back to 0. (C2, E-0369; probed
 ; E-0376)
 SceneHomecoming_ShiftObjects::
     farcall ScriptStepSetObjectBit2AndWait

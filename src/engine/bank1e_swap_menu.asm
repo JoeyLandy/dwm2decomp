@@ -182,7 +182,7 @@ SwapMonstersMenu_SetupPartyList_CopyGlyphs::
     ret
 
 ; Swap menu party list, step 2: lists the party records in state 2 into wListEntries and wListCount
-; (ListPartyRecordsWithState2ToListEntries) and goes to step 3. (C1, E-0370)
+; (ListPartyRecordsWithState2ToListEntries) and goes to step 3. (C2, E-0370; probed E-0384)
 SwapMonstersMenu_SetupPartyList_ListParty::
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
@@ -372,7 +372,8 @@ SwapMonstersMenu_OptionCursor_DrawTile::
 SwapMonstersMenu_OptionCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
-; Swap menu, state 3: lists the party (SwapMonstersMenu_ListParty_StartOption). (C1, E-0357)
+; Swap menu, state 3: lists the party (SwapMonstersMenu_ListParty_StartOption). (C2, E-0357; probed
+; E-0384)
 SwapMonstersMenu_ListParty::
     farcall SwapMonstersMenu_ListParty_StartOption
     ret
@@ -1165,7 +1166,7 @@ SwapMonstersMenu_MoveRecords_DropOff::
 
 ; Moving records, step 16: looks for a farm monster (state 1, not an egg) among the records within
 ; the farm level's capacity: with one answers 1 and goes on; without returns to the options with
-; answer 0. (C1, E-0357)
+; answer 0. (C2, E-0357; probed E-0384)
 SwapMonstersMenu_MoveRecords_FindFarmMonster::
     farcall LoadRecordCapacityFromFarmLevelTable
     ld d, c
@@ -1650,7 +1651,7 @@ SwapMonstersMenu_MoveRecords_BackToFarmCursor::
     ret
 
 ; Moving records, step 40: writes '<first party member> with <chosen farm monster>' into wTextBuf0
-; for the swap message. (C1, E-0357)
+; for the swap message. (C2, E-0357; probed E-0384)
 SwapMonstersMenu_MoveRecords_WriteSwapNames::
     ld a, $0a
     ld [rRAMG2], a
@@ -1670,7 +1671,7 @@ SwapMonstersMenu_MoveRecords_WriteSwapNames::
 ; wTextBuf0, C = 0, SRAM enabled): copies up to 10 bytes until $F0, appends ' with ', then the name
 ; of the list entry at GetListEntriesCell5Address (CopyRecordNameToNameGlyphBuf) up to its $F0, ends
 ; wTextBuf0 with $F0, disables SRAM, advances wScreenStep, resets the text window and starts the
-; script. (C1, E-0370)
+; script. (C2, E-0370; probed E-0384)
 SwapMonstersMenu_JoinSwapNames::
     ld a, [hl]
     cp $f0
@@ -2274,7 +2275,7 @@ SwapMonstersMenu_ChooseFromFarm_RedrawAndContinue2::
     ret
 
 ; Choosing from the farm, step 71: writes '<chosen party member> with <farm monster>' into wTextBuf0
-; (the swap message's names). (C1, E-0357)
+; (the swap message's names). (C2, E-0357; probed E-0384)
 SwapMonstersMenu_ChooseFromFarm_WriteSwapNames::
     ld a, $0a
     ld [rRAMG2], a
@@ -3212,7 +3213,7 @@ SwapMonstersMenu_Release_ChoiceCursor::
     ld [wScriptStartRequest], a
     ret
 
-; Releasing, step 23: draws the count box with both counts. (C1, E-0357)
+; Releasing, step 23: draws the count box with both counts. (C2, E-0357; probed E-0384)
 SwapMonstersMenu_Release_DrawCounts::
     ld de, GlyphCopyDestList5 + $282
     ld hl, wWindowTileBuffer + $10b
@@ -3290,7 +3291,8 @@ SwapMonstersMenu_Release_MarkChoice::
     ld [wScriptStartRequest], a
     ret
 
-; Releasing, step 25: copies the chosen monster's name into wTextBuf0 for the script. (C1, E-0357)
+; Releasing, step 25: copies the chosen monster's name into wTextBuf0 for the script. (C2, E-0357;
+; probed E-0384)
 SwapMonstersMenu_Release_CopyName::
     ld a, $0a
     ld [rRAMG2], a
@@ -3439,7 +3441,7 @@ SwapMonstersMenu_Release_EggCursor::
     ld [wScriptStartRequest], a
     ret
 
-; Releasing, step 47: draws the count box with both counts. (C1, E-0357)
+; Releasing, step 47: draws the count box with both counts. (C2, E-0357; probed E-0384)
 SwapMonstersMenu_Release_DrawCountsAgain::
     ld de, GlyphCopyDestList5 + $282
     ld hl, wWindowTileBuffer + $10b
@@ -3551,8 +3553,8 @@ SwapMonstersMenu_Release_ScriptThenDeleteEgg::
     ld [wScriptStartRequest], a
     ret
 
-; Releasing, step 51: deletes the chosen egg's record, relists the party and restores the box. (C1,
-; E-0357)
+; Releasing, step 51: deletes the chosen egg's record, relists the party and restores the box. (C2,
+; E-0357; probed E-0384)
 SwapMonstersMenu_Release_DeleteEgg::
     ld a, $0a
     ld [rRAMG2], a
@@ -3686,7 +3688,7 @@ SwapMonstersMenu_Release_DrawBoxes::
     ret
 
 ; Releasing, step 58: counts the records and returns to the option cursor (state 2) with answer 1.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0384)
 SwapMonstersMenu_Release_BackToOptions::
     farcall CountRecordsInUse
     xor a
@@ -8097,7 +8099,7 @@ LoadFamilyIconTileForRecordB_Bank1E::
 ; wArg1 = record number: far-calls DrawRecordStatsBoxForArg1 (bank $1D), which draws the stats box
 ; of that record (its mark, level and four stat words, per its own comment) into the screen buffer.
 ; The list steps call it after the family icon was loaded by LoadFamilyIconTileForRecordB_Bank1E.
-; (C1, E-0379)
+; (C2, E-0379; probed E-0384)
 ; far-calls DrawRecordStatsBoxForArg1 (E-0122) (E-0344: the address in its name dropped or read as
 ; the label there; was CallDrawRecordStatsBoxForArg1InBank1D)
 CallDrawRecordStatsBoxForArg1InBank1D::

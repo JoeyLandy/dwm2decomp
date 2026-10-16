@@ -4686,7 +4686,7 @@ RecomputeTargetMaxHPAndMP::
     farcall SetSlotAIModeFromINT
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField17OrMonsterCFF5
+    farcall GetSlotLevel
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4695,7 +4695,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2DOrMonsterD002
+    farcall GetSlotPersonalityHi
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4704,7 +4704,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField30OrMonsterD004
+    farcall GetSlotPersonalityMid
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4713,7 +4713,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2EOrMonsterD003
+    farcall GetSlotPersonalityLo
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4722,7 +4722,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2FOrMonsterD005
+    farcall GetSlotTrait
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4757,7 +4757,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], b
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotSpeciesNibblesD00AD00B
+    farcall GetSlotBodyFlags
     ld a, [wBattleTarget]
     ld hl, wSlotBodyFlags
     add_a_to_hl

@@ -773,8 +773,8 @@ ResumeFieldAnimation::
 ; the flip bit $20. With OBJ_SET_MODE 0 the set is OBJ_SPRITE_ID & $7F drawn by
 ; DrawMetaSpriteSet_Bank27 (high byte non-zero), DrawMetaSpriteSet_Bank26 (low bit 7) or
 ; DrawMetaSpriteSet_Bank25; otherwise the set is the OBJ_SPRITE_ID low byte drawn by
-; DrawMetaSprite_2. Called by FieldStateCommonUpdate and four screens in banks $14, $24, $F1 and
-; $F2. (C1, E-0374)
+; DrawMetaSprite_Sets98. Called by FieldStateCommonUpdate and four screens in banks $14, $24, $F1
+; and $F2. (C1, E-0374)
 ; unless bit 7 of wFieldActionRequest is set: updates the sprite slots, then draws each slot's
 ; metasprite at its position relative to the scroll (E-0129)
 UpdateAndDrawSpriteSlots::
@@ -867,7 +867,7 @@ UpdateAndDrawSpriteSlots::
     ld a, [hli]
     inc hl
     ldh [hSpriteSetIndex], a
-    farcall DrawMetaSprite_2
+    farcall DrawMetaSprite_Sets98
 
 .restore:
     pop bc
@@ -2236,7 +2236,7 @@ DrawPlayerOverlaySprite21Or22::
 ; (hPlayerSpriteVariant + 1) & 1, palette 1, tile offset $10, origin follower X + 8 + hScrollX and Y
 ; + 16 + hScrollY; the frame pair is 2 when UseSpecialSpritePoseAtPosition matches its position,
 ; else its direction byte, with direction 3 drawn as pair 1 flipped (attribute $21); the frame is
-; pair * 2 + bit 5 of hPlayerAnimCounter. Drawn with DrawMetaSprite_2. Only
+; pair * 2 + bit 5 of hPlayerAnimCounter. Drawn with DrawMetaSprite_Sets98. Only
 ; DrawPlayerAndFlagFollower calls it. (C1, E-0374)
 ; unless hFieldDrawFlags bit 1 is set, and only when story flag $1B is set: draws the follower
 ; sprite from wFollowerRecords bytes 1-2 (set from hPlayerSpriteVariant, with a different frame when
@@ -2301,7 +2301,7 @@ DrawFollowerSpriteAfterLandHo::
     ldh a, [hScrollYHi]
     adc $00
     ldh [hSpriteOriginYHi], a
-    farcall DrawMetaSprite_2
+    farcall DrawMetaSprite_Sets98
     ret
 
 ; Return if field draw-mask bit 0 hides the player. Set the frame from facing (3 uses side frame 1
@@ -2388,8 +2388,8 @@ DrawPlayerSprite::
     bit 7, a
     jr nz, .skip
 
-.call_draw_meta_sprite_2:
-    farcall DrawMetaSprite_2
+.call_draw_meta_sprite_sets98:
+    farcall DrawMetaSprite_Sets98
     ret
 
 .skip:
@@ -2397,7 +2397,7 @@ DrawPlayerSprite::
     jr z, .check_player_sprite_gfx_id_lo
     ldh a, [hPlayerSpriteGfxIdLo]
     ldh [hSpriteSetIndex], a
-    jr .call_draw_meta_sprite_2
+    jr .call_draw_meta_sprite_sets98
 
 .check_player_sprite_gfx_id_lo:
     ldh a, [hPlayerSpriteGfxIdLo]

@@ -382,7 +382,7 @@ GameMode6_Update_TakePrize::
 
 ; Taking the prize, step 0: except for an egg ($08), first plays the hand-over scene (step $0D, back
 ; with sub-step 1); then with the farm full (CountRecordsInUse against wRecordCapacity) goes to step
-; 3, otherwise step 1. (C1, E-0357)
+; 3, otherwise step 1. (C2, E-0357; probed E-0384)
 GameMode6_Update_TakePrize_Start::
     ld a, [wBattleScene]
     cp $08
@@ -463,7 +463,8 @@ GameMode6_Update_TakePrize_StoreRecord::
     ld [wScreenStep], a
     ret
 
-; Taking the prize, step 2: saves (RunSaveGameSteps), then ends the screen. (C1, E-0357)
+; Taking the prize, step 2: saves (RunSaveGameSteps), then ends the screen. (C2, E-0357; probed
+; E-0384)
 GameMode6_Update_TakePrize_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -806,7 +807,8 @@ GameMode6_Update_GiveUp_StartSave::
     ld [wScreenStep], a
     ret
 
-; Giving up the prize, step 3: saves (RunSaveGameSteps), then ends the screen. (C1, E-0357)
+; Giving up the prize, step 3: saves (RunSaveGameSteps), then ends the screen. (C2, E-0357; probed
+; E-0384)
 GameMode6_Update_GiveUp_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1114,7 +1116,7 @@ GameMode6_Update_ChooseMonster_RedrawChoiceBox::
 
 ; Choosing the monster to switch, step 12: deletes the chosen SRAM record
 ; (DeleteSRAMRecordAndCompact), writes the prize (wRecordBufB) at record wArg5, sets its species
-; flag and resets the save steps. (C1, E-0357)
+; flag and resets the save steps. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseMonster_SwitchForPrize::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1159,7 +1161,7 @@ GameMode6_Update_ChooseMonster_SwitchForPrize::
     ld [wScreenStep], a
     ret
 
-; Choosing the monster to switch, step 13: saves, then ends the screen. (C1, E-0357)
+; Choosing the monster to switch, step 13: saves, then ends the screen. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseMonster_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1456,7 +1458,7 @@ GameMode6_Update_ChooseEgg_RedrawChoiceBox::
 
 ; Choosing the egg to switch, step 10: deletes the chosen egg's SRAM record
 ; (DeleteSRAMRecordAndCompact), writes the prize (wRecordBufB) at record wArg5, sets its species
-; flag and resets the save steps. (C1, E-0357)
+; flag and resets the save steps. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseEgg_SwitchForPrize::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -1502,7 +1504,7 @@ GameMode6_Update_ChooseEgg_SwitchForPrize::
     ld [wScreenStep], a
     ret
 
-; Choosing the egg to switch, step 11: saves, then ends the screen. (C1, E-0357)
+; Choosing the egg to switch, step 11: saves, then ends the screen. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseEgg_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]

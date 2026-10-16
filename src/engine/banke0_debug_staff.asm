@@ -6845,7 +6845,7 @@ DrawSpriteSlots::
     ret
 
 ; Three 3-byte far-call entries, a code address word then a ROM bank: $4001 in bank $25
-; (DrawMetaSpriteSet_Bank25), $4001 in bank $7F (DrawMetaSprite_2) and $700A in bank $7F
+; (DrawMetaSpriteSet_Bank25), $4001 in bank $7F (DrawMetaSprite_Sets98) and $700A in bank $7F
 ; (DrawMetaSprite). DrawSpriteSlots indexes it with byte 0 of each 8-byte slot in wSpriteSlots (0, 1
 ; or 2), loads HL and B from the entry and calls it with rst $10 to draw the slot. (C1, E-0381)
 DrawSpriteSlots_Data::

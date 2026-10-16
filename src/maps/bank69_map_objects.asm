@@ -4,6 +4,23 @@
 SECTION "Bank 69", ROMX[$4000], BANK[$69]
     db $69
 
+; Fills wSpriteSlots with the objects of the current screen. It first sets wSpriteSlotCount to 0. On
+; a key world or other special map (bit 7 of wMapType) it far-calls SetupKeyWorldObjectsForMapType
+; instead. Otherwise hMapId picks a word of MapObjectTable, the address of the screen table of that
+; map (wMapWidthScreens words per row; the word at hMapScreenX, hMapScreenY is 0 for no objects,
+; else the address of a selector). A selector is a list of entries tried in order, each starting
+; with a word: a flag number gives the object list that follows when the story flag is clear
+; (objsel_unless_flag; a set flag goes on to the next entry); $FFFF = no objects; $FFFE = the list
+; that follows; $FFFD = the list after two flag words, taken when neither flag is set; $FFFC and
+; $FFFB = a flag, then two bytes of which the first is a distance to skip forward in the selector
+; when the flag is clear ($FFFC) or set ($FFFB); any other value of $FF00 or more = no objects. The
+; object list is a count byte and then 11 bytes per object (VRAM page, graphics table, graphics
+; number, slot bytes, X, Y, palette slot, facing, talk event group); each is copied into
+; wSpriteSlots (with the number of objects left, & 3, stored in one slot byte), and its graphics are
+; decompressed by DecompressGraphicsTemp0ToTemp4. One exception first: map $2F at screen (0, 1) uses
+; LoadMapObjectsForScreen_MapObjects when EVENT_SCENE_TREASURE_THEFT is set,
+; EVENT_SCENE_MONSTERS_IN_TOW is clear and bit 3 of wStoryFlags + $61 is set. It always ends with
+; RestoreSpriteSnapshot and wOBJPaletteUploadRequest = $7F. (C1, E-0384)
 ; clears the sprite slots; key-world maps set up their objects, other maps load the object list for
 ; hMapId (with a story-flag case on map $2F) (E-0131)
 LoadMapObjectsForScreen::

@@ -310,7 +310,7 @@ InnMenu_PassOneFrame::
 ; MON_STATUS bit 7 is clear, copies MON_MAX_HP (2 bytes) to MON_HP and MON_MAX_MP (2 bytes) to
 ; MON_MP, so a stay refills HP and MP; records with bit 7 set are skipped. SRAM is switched off,
 ; wScreenState += 1 and music $40 is queued (QueueMusic). With an empty party it goes straight to
-; the last two of these. (C1, E-0379)
+; the last two of these. (C2, E-0379; probed E-0384)
 ; for each wPartyList record whose byte $55 bit 7 is clear, copies max HP ($5D) to HP ($5B) and max
 ; MP ($61) to MP ($5F) (E-0276) (C2 from E-0327: a stay turns HP 5/21 and MP 7/35 into 21/21 and
 ; 35/35)

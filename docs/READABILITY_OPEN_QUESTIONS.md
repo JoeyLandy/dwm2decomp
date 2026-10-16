@@ -1695,3 +1695,93 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `TitleKeyAndTarasAdventureTiles` (E1:49DA): whether any other screen uses the TARAS ADVENTURE tiles
 - `Tiles0Gfx_4` (E1:577C): which sprites use tiles 0-15 on the title screen with music
 - `Tiles0Gfx_4` (E1:577C): whether they are a falling-sparkle or glint effect
+
+## E-0384
+
+- `RunRestoreAndUnpackRecordsSteps` (02:76F2): No caller was found in src/: is the routine unused?
+- `PickTableEntryByPartyLevelTotal` (0C:724F): No caller found in src/ or the listing.
+- `MedalPrizeMenu_ChoosePrize_GivePrize` (0D:6AEC): With all 24 inventory slots in use and an item prize, the item byte would be written one byte past wInventory; MedalPrizeMenu_ChoosePrize_CheckRoom is the step that normally stops this.
+- `RefreshRecordResistancesFromSpecies` (0E:5C50): No caller found in src/.
+- `LoadListEntriesCell5RecordAndContinue` (1D:5C94): No call or jump to it is named in src/.
+- `LoadRecordByteForPickedRecords` (33:5F6B): No label or table names it: probably unused.
+- `CopyActorNameToTextBuf0` (3A:78EE): What the glyph $47 after a name in the wSlotNameBytes path draws (it has no charmap entry).
+- `CopyTargetSideNameToTextBuf0` (3A:795D): Why the name is copied just before 'Monsters' overwrites it is not clear from the callers.
+- `CopyActorSideNameToTextBuf0` (3A:798D): Unreferenced twin of CopyTargetSideNameToTextBuf0.
+- `CopySlotNameToHL` (3A:799C): What glyph $47 (written before the letter) draws is not known.
+- `ActionEffect_Ironize_Text` (3A:7B66): E counts the near side, not the side of wBattleTarget; whether that matters for a foe target in link mode 1 is not known.
+- `SetBit0OfLevelUpGainsIndexed_Bank3A` (3A:7CEC): What the three level-up gain bits of a slot mean is not known.
+- `GetSlotPersonalityMid` (3B:420D): The MonsterTable note puts the weight 3 axis in byte 25, while this routine and wSlotPersonalityMid use byte 24; one of the two descriptions is off.
+- `FirstPresentSlotFromC` (3B:4373): wSlotsOccupiedFlag is described in src/ram.asm as the result of this routine, but RunBattleActions_UseItem_MarkUsed sets it to 1 when the item took effect and RunBattleActions_UseItem_ConsumeItem tests it; that RAM description looks out of date.
+- `NextPresentSlotAfterTarget` (3B:4673): wRecordBufferData + $4 is byte 4 of the skill record last loaded; which record the item path leaves there is not known.
+- `GroupTargetsBySpeciesToSpeciesGroups` (3B:4711): The packed-list indexing by slot number looks like a bug for foes that do not start at slot 4; only the routine was run, not the whole item path.
+- `RollTableDamageScaledByResistance` (3B:4990): Which resistance (Vacuum, Bolt, IceBolt, Blaze) each item uses is read from the packed layout in src/ram.asm; the item to element match is not confirmed.
+- `ItemEffect_ReviveFallenTarget` (3B:4C7D): The older comment said the max HP is applied when the slot is present; the branch tests read the other way round (WorldLeaf revives).
+- `ItemEffect_Meat` (3B:4C95): The older comment had the local and non-local branches the other way round; wBattleExtraStat is only named by its users, so what lowering it means is not known.
+- `ItemEffect_BadMeat` (3B:4D1C): The older comment had the local and non-local branches the other way round.
+- `ItemEffect_SealSpells` (3B:4E1B): The old name and comment said status byte 0; the bit is in wBattleStatus1.
+- `ItemEffect_DoubleAtk` (3B:4E46): The old name and comment said status byte 0; the bit is in wBattleStatus1.
+- `ItemEffect_RaiseExtraStatAndRestoreHP` (3B:4E66): What wBattleExtraStat is for is not known.
+- `UnreferencedStoreResolveMessage35_TargetD0` (3B:4EB8): Unused variant of RollTableDamageWithMessage35_StoreMessage; its purpose is not known.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3B` (3B:5059): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3D` (3D:4054): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3E` (3E:4001): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3F` (3F:405B): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `ScriptStepBlinkObjectTemp0` (5F:6BF8): hTemp1 must hold the Y of the object when the scene calls it; the callers were not checked for that.
+- `ScriptStartFadeAndAdvanceStep` (5F:6C5A): Which fade direction and speed state $0F selects is not known.
+- `LoadListedRecordNameTilesForTemp0` (5F:6D3F): what the callers in bank $73 do with the species words $00B9 and $005A beyond removing that monster from the party
+- `MarkKeyEntryKindTemp0Bit6` (5F:6DAC): what bit 6 of a key entry byte 0 means to the readers of wKeyList
+- `RedrawColumnsBesideScreen` (5F:6E09): what tile $C4 looks like and why the scenes blank the columns beside the screen
+- `StartChoiceMessageByTextYesNoResult` (5F:7390): whether this routine is dead code left from an earlier version of the boss-win scene
+- `StartMessage5AndAdvanceScriptSubStep` (5F:73A8): whether this routine is dead code left from an earlier version of the boss-win scene
+- `GenerateKeyWorld_RollMonsters_BossLevelsAlt` (60:4338): whether any code reaches this routine through a computed address; no caller or table entry names it
+- `LoadKeyWorldParamsForCurrentKeyIndex` (60:436B): what bytes 1 and 2 of a key entry stand for in the game (they also pick the two words of the key name)
+- `GenerateKeyWorld_RollEncounterTable` (60:4597): whether the fourth byte of an entry (written as 0 here; the floor battle steps in bank $12 set it to 1 when the battle is done and KeyWorldAreaEncounterIndex reads it) has other uses
+- `GenerateKeyWorld_RollEncounterTableAlt` (60:4607): whether any code reaches this routine through a computed address; no caller or table entry names it
+- `PickRandomNonzeroFromKeyWorldGoalKindRows` (60:4C85): what the goal kinds 0-3 are in the game
+- `CheckKeyWorldCellIsOpen` (60:5075): whether a first byte of $FF really means no screen at that cell
+- `PlaceKeyWorldObjectAtRandomCell` (60:53E5): what the byte stored at DE + 5 means (it comes from one of four bytes after the screen record address)
+- `RollKeyWorldObjectKind` (60:54BB): what kinds 0, 1 and 3 of a map object are in the game; the contents of kind 0 look like item ids
+- `RefreshKeyWorldObjectsOnEntry` (60:62F9): whether the missing mark after a complete placement is intended
+- `SetupTownObjectsForMap` (60:639D): what the town objects are in the game
+- `MarkMapObjectsEntryForKeyWorldGoalCell` (60:64C2): what bit 7 of an object byte 0 means for the object (probably that it holds the goal of the key)
+- `ComputePartyStrengthLevelPartyStrength` (61:4001): what the callers in banks $0A and $85 use the strength for (the name reads it as a level scale)
+- `ComputePartyStrengthForKey` (61:40B4): what the callers in bank $0A use the strength for
+- `DrawKeyWorldExitTile` (61:474C): what the kinds 4 and 5 of a floor entrance are in the game
+- `DrawKeyWorldFloorInfo3ObjectTilesForScreen` (61:562F): what the floor entrance kinds 1-5 are in the game
+- `KeyWorldAreaEncounterIndex` (61:606D): what the done flag in byte 3 of an encounter entry is called by the game; the join question follows a battle of the key world floor
+- `LoadMapObjectsForScreen` (69:4001): the meaning of each of the 11 object bytes beyond the format comment above the lists
+- `LoadMapObjectsForScreen` (69:4001): what the per-object value (objects left & 3) stored in the slot is used for
+- `TravelerEvents_CasinoShip_ShowStopTheReelsWith` (73:4387): Whether the Welcome message ('Welcome aboard the casino ship!') is only answerable with yes when the player has 100G was not checked: no gold test was found in this step.
+- `DrawSymbolTilesForTemp1` (73:44A5): Which direction the reel appears to move on screen was not checked in the emulator (video RAM is outside what a probe sees).
+- `AddMenuStateToPartyStatCapped` (73:4558): No caller was found in src/: where wMenuState is set to the amount and why the routine is unused is not known.
+- `AddMenuStateToPartyStatCapped` (73:4558): The data label AddRewardToCounterCappedAt999_RewardAmounts names a table of stat field offsets, not amounts, and would need a new name with this one.
+- `TravelerEvents_CardGame` (73:4647): Steps 7, 10 and 11 hold $0000, which would jump to address 0; no code was found that sets wScriptStep to them.
+- `TravelerEvents_PriceyMerchant_Sell` (73:4CE5): Whether the game can reach this step with less gold than the Herb price (5 x 10G) was not checked.
+- `ReadBank16TableWord` (73:4FB7): The other 11 bytes of each 13-byte record in bank $16 are not read by this routine; what they hold is not known.
+- `SceneChestBattle_StartSprite` (73:53D8): With 3 party members the loop also reads wFollowerRecords + $3 to + $6 as if they were X/Y pairs; whether a false match can happen in play was not checked.
+- `TakeItem` (73:5919): An item that is not in the bag gives hTemp0 = $FF from FindTemp0InInventoryList and RemoveInventorySlotShiftDown has no range check; whether the script can run with one of the three items missing was not checked.
+- `SceneJustice` (73:5C5F): Which tile positions of the four blocks match the places the player can stand on (the puzzle layout) was not worked out.
+- `AddRecordArg5AsFollower` (73:5F55): no caller or table entry reaches it: unused, or reached by data the disassembler does not follow?
+- `ScriptCommand4C_Run` (73:5FBC): which script uses command type 4C
+- `SceneRealKing` (73:6079): are objects 1 and 2 the two Kings? only the message $0365 suggests it
+- `SceneRealKing_MoveTogether` (73:60A7): whether they end at the same Y depends on the start positions, which are only inferred from SceneRealKing_Restore
+- `UnreferencedScriptStepDispatch_73` (73:6D52): no script command or table reaches this table: leftover or reached only by data
+- `ScriptCommand20_Run` (73:6F7C): which script uses command type $20
+- `SceneWarubouFood2` (73:7024): steps 1-2, 4-5 and 7-8 name the same routine twice: does the second pass hop and start the same message again?
+- `ClearBit1AtHL_Bank73` (73:7A42): no caller found; possibly an unused copy of a shared helper
+- `RotateDirectionAtDEEvery32_Bank73` (73:7A51): which of the values 0-3 is up, right, down or left is not established here
+- `CopyStringToBuffer_Bank7C` (7C:4016): no caller found; the copy twin appears unused (reached only if some table or script pointer targets it)
+- `DrawMetaSpriteAt_Sets98` (7F:40CC): the meaning of the clip limits ($A8, $B8, $34, $71) as screen positions is not tested on the emulator
+- `DrawMetaSpriteAt` (7F:7065): the meaning of the clip limits ($A8, $B8, $34, $71) as screen positions is not tested on the emulator
+- `CopyStringToBuffer_Bank80` (80:4016): no caller found; the copy twin appears unused (reached only if some table or script pointer targets it)
+- `CheckBreedingRecipes_CompareHLToBC` (81:40E2): what the second byte of the $FF rule (0 to 10 in the lists seen) means; the routine ignores it
+- `CopyStringToBuffer_Bank82` (82:4016): no caller found; whether the wrong overflow target is ever reached is unknown
+- `CopyStringToBuffer_Bank83` (83:4016): no caller found; the copy twin appears unused (reached only if some table or script pointer targets it)
+- `ItemUsable_LogTwig_Check` (84:47C2): what the recorded goal is used for by the player-visible effect (a map marker drawn by RunFieldReturnPhase_AfterLogTwig_DrawMarker) is read from that routine only
+- `ItemUsable_LogTwig_KeyWorld` (84:48A9): the 4-byte entries of wKeyWorldObjects are read from three bytes before the tested byte; the exact entry layout is not established
+- `ClearKeyWorldActiveForMatchingKeyEntry` (84:4C84): what byte 3 bit 7 of a key entry means (set for region keys such as the Log Twig spot records?) is not established here
+- `SceneKamehaMissing` (85:46E4): which sprite field command 5 loads into wObject5 is not known
+- `SetFlagRedraw` (85:4858): which chest each of the four X values is and what story flag $01CF to $01D2 means are not known
+- `SceneKamehaKeyBattle2_AfterBattle` (85:48C2): the full-key-list branch (message $0B9E) was not run
+- `SceneKamehaKeyBattle_AfterBattle` (85:496F): the full-key-list branch (message $0B94) was not run
+- `SceneTerry` (85:4A6D): both branches of the hPlayerX = $20 test set the same wWarpDestX; the flag changes nothing there

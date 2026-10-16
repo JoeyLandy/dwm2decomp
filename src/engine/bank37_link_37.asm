@@ -1325,9 +1325,11 @@ LinkBreed_CheckGenders::
     ld [wScreenStep], a
     ret
 
-; Session 5 breeding, step 29: the leader (link role bit 1 clear) works out the child
-; (ComputeBreedingChild); then stores the received record in SRAM (LinkBreed_StoreChildRecord,
-; repeated until it moves the step) and starts the $64-byte exchange. (C1, E-0357)
+; Session 5 breeding, step 29: a side whose wLinkRole bit 1 is clear first works out the child with
+; ComputeBreedingChild (wArg1 = 2); a side with bit 1 set skips that. Both then add 1 to wScreenStep
+; and call LinkBreed_StoreChildRecord again and again until it moves wScreenStep (it waits for the
+; text and takes two calls), and finally jump to LinkBreed_StartWorkBufExchange, which adds 1 more
+; and starts the $64-byte exchange of wWorkBuf. wScreenStep ends 3 higher. (C2, E-0384)
 LinkBreed_MakeChild::
     ld a, [wLinkRole]
     bit 1, a
@@ -1540,14 +1542,14 @@ LinkBreed_ReadAnswer::
     ret
 
 ; Session 5 breeding, step 30 (LinkBreed_MakeChild also calls it in a loop until wScreenStep moves).
-; Does nothing while the text runs. With wScreenSubStep non-zero it clears it and adds 1 to
-; wScreenStep. Otherwise a follower (bit 1 of wLinkRole set) only adds 1 to wScreenSubStep. A leader
-; restores wListCursor and wListPageIndex from wItemGridX and wItemGridY, deletes the SRAM record
-; under the list cell (DeleteSRAMRecordAndCompact with wArg1 = that record, wArg2 = 1), copies the
-; $A5-byte record wChildRecord into the free record slot whose address that routine leaves in wArg6
-; and wArg7, clears wSaveStep and wSaveRecordIndex, sets the child species bit in wMonsterLibraryBuf
-; (SetBitInFieldAtArg3), zeroes the 7 bytes at wPackWork and adds 1 to wScreenSubStep. SRAM is
-; enabled only for the copy. (C1, E-0382)
+; Does nothing while wTextFlags is non-zero. With wScreenSubStep non-zero it clears it and adds 1 to
+; wScreenStep. Otherwise a side whose wLinkRole bit 1 is set only adds 1 to wScreenSubStep. A side
+; with bit 1 clear restores wListCursor and wListPageIndex from wItemGridX and wItemGridY, deletes
+; the SRAM record under the list cell (DeleteSRAMRecordAndCompact with wArg1 = that record, wArg2 =
+; 1), copies the $A5-byte wChildRecord into the free record that routine leaves in wArg6 and wArg7
+; (SRAM is enabled only for the copy), clears wSaveStep and wSaveRecordIndex, sets the child species
+; bit in wMonsterLibraryBuf (SetBitInFieldAtArg3), zeroes the 7 bytes at wPackWork and adds 1 to
+; wScreenSubStep. (C2, E-0384)
 ; when text is idle and not linking: copies the $A5-byte received record at wChildRecord into the
 ; record slot at wListEntries cell 5 and resets the save counters (E-0128)
 LinkBreed_StoreChildRecord::
@@ -3234,8 +3236,8 @@ StoreBAtWordTableEntry_Bank37::
 ; the AGL, INT and WLD words scaled down to about 51, 25 and 25 percent (999 becomes $01FF or
 ; $00FF); plus and egg bytes; the four personality bytes replaced by $28, $E6, the third one and
 ; $E6; 26 of the 27 resistances and a 0; and the two parent names with their plus values. It ends by
-; farcalling LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes, which writes three table bytes over
-; wWorkBuf + $4D to $4F, so the EXP field of the buffer is the table value for the level.
+; farcalling PackRecordBufAToLinkWorkBuf_LoadExp, which writes three table bytes over wWorkBuf + $4D
+; to $4F, so the EXP field of the buffer is the table value for the level.
 ; UnpackLinkRecordToRecordBufB does the reverse for the record received from the partner. (C2,
 ; E-0382)
 ; unpacks the received partner record at wRecordBufA into wWorkBuf: names, species, family, parents,
@@ -3313,7 +3315,7 @@ PackRecordBufAToLinkWorkBuf::
     cp $ff
     jr nz, .call_convert_name_bytes_to_link_format
     call WriteUnknownNameEntry
-    jr .call_load_table_entry_for_work_buf9_to_link
+    jr .call_pack_record_buf_a_to_link_work_buf_load
 
 .call_convert_name_bytes_to_link_format:
     call ConvertNameBytesToLinkFormat
@@ -3324,8 +3326,8 @@ PackRecordBufAToLinkWorkBuf::
     ld a, [de]
     ld [hl], a
 
-.call_load_table_entry_for_work_buf9_to_link:
-    farcall LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes
+.call_pack_record_buf_a_to_link_work_buf_load:
+    farcall PackRecordBufAToLinkWorkBuf_LoadExp
     ret
 
 ; Unpacks the record received from the partner: the $95 bytes at wBattlerRecordSlot1 +

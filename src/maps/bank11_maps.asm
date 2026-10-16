@@ -433,13 +433,14 @@ CheckWarpsAtPlayerPosition::
     ret
 
 ; Far-called by UpdatePlayerMovement (bank $02) when CheckWarpAtPlayer finds nothing after the
-; player steps down to the next screen, and by CallFOnScreenY1 (bank $61); returns C = 1 when it
-; warped, otherwise C = 0. Special maps go to WarpToLinkedMapForCurrentMap_SpecialMap (only map type
-; $87 warps). Otherwise hMapId is looked up in WarpToLinkedMapForCurrentMap_Data1 ($FF ends it; a
-; miss returns C = 0); entry N of the 3-byte WarpToLinkedMapForCurrentMap_Data2 gives the new hMapId
-; and a packed position byte and screen byte, which WarpToLinkedMapForCurrentMap_StartWarp turns
-; into the warp. When a key world is active and wKeyWorldKey - 1 equals N, the position and screen
-; bytes come from wKeyWorldGoal instead; the map id still comes from the table. (C2, E-0376)
+; player steps down to the next screen, and by CheckWarpAtPlayer_LinkedMap_ScreenRow1 (bank $61);
+; returns C = 1 when it warped, otherwise C = 0. Special maps go to
+; WarpToLinkedMapForCurrentMap_SpecialMap (only map type $87 warps). Otherwise hMapId is looked up
+; in WarpToLinkedMapForCurrentMap_Data1 ($FF ends it; a miss returns C = 0); entry N of the 3-byte
+; WarpToLinkedMapForCurrentMap_Data2 gives the new hMapId and a packed position byte and screen
+; byte, which WarpToLinkedMapForCurrentMap_StartWarp turns into the warp. When a key world is active
+; and wKeyWorldKey - 1 equals N, the position and screen bytes come from wKeyWorldGoal instead; the
+; map id still comes from the table. (C2, E-0376)
 ; unless bit 7 of wMapType is set, looks hMapId up in WarpToLinkedMapForCurrentMap_Data1; when
 ; listed, sets the linked map from WarpToLinkedMapForCurrentMap_Data2 and warps (using wKeyWorldGoal
 ; when wKeyWorldKey selects it), C = 1; otherwise C = 0 (E-0125)

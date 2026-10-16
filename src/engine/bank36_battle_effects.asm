@@ -2043,7 +2043,7 @@ ResolveStepBranchOnAction_RemoveEffects_RevertForm::
     farcall SetSlotAIModeFromINT
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField17OrMonsterCFF5
+    farcall GetSlotLevel
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -2052,7 +2052,7 @@ ResolveStepBranchOnAction_RemoveEffects_RevertForm::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2DOrMonsterD002
+    farcall GetSlotPersonalityHi
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -2061,7 +2061,7 @@ ResolveStepBranchOnAction_RemoveEffects_RevertForm::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField30OrMonsterD004
+    farcall GetSlotPersonalityMid
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -2070,7 +2070,7 @@ ResolveStepBranchOnAction_RemoveEffects_RevertForm::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2EOrMonsterD003
+    farcall GetSlotPersonalityLo
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -2079,7 +2079,7 @@ ResolveStepBranchOnAction_RemoveEffects_RevertForm::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2FOrMonsterD005
+    farcall GetSlotTrait
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -5628,12 +5628,10 @@ ActionEffect_Watershot_Damage::
 ; it gets through. HL is the wBattleStatus8 entry of the target. ForceLevel4IfActorConcentrated
 ; raising the level to 4 gets through without a roll (D and E are then left pointing at the
 ; resistance byte); otherwise RollChanceByFlagsAtHLSided rolls and E = 0 on success, 1 on failure.
-; Called by ActionEffect_PoisonGas, InflictStatus0Bit0WithBattleWordArray3FReduction and
-; ResolveStep0EEffect_Start. (C2, E-0382)
+; Called by ActionEffect_PoisonGas, ItemEffect_BadMeat and ResolveStep0EEffect_Start. (C2, E-0382)
 ; rolls whether the action gets through the target's PoisonGas (byte 4, bits 1-0) resistance (a
 ; 2-bit level; certain when ForceLevel4IfActorConcentrated gives 4); used by PoisonGas,
-; InflictStatus0Bit0WithBattleWordArray3FReduction and ResolveStep0EEffect; carry = it gets through
-; (E-0095, E-0338) (sided roll)
+; ItemEffect_BadMeat and ResolveStep0EEffect; carry = it gets through (E-0095, E-0338) (sided roll)
 RollVsPoisonGasResistance::
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte4
@@ -7060,11 +7058,11 @@ ActionEffect_Transform_SkillListAddress::
 .return:
     ret
 
-; C = slot A's body nibbles (SlotSpeciesNibblesD00AD00B), HL kept. (C2, E-0357; probed E-0382)
+; C = slot A's body nibbles (GetSlotBodyFlags), HL kept. (C2, E-0357; probed E-0382)
 ActionEffect_Transform_GetBodyFlags::
     push hl
     ld c, a
-    farcall SlotSpeciesNibblesD00AD00B
+    farcall GetSlotBodyFlags
     pop hl
     ret
 
@@ -8127,7 +8125,7 @@ ActionEffect_Revive::
 ; Sets B = wBattleTarget and DE = the max HP of the target (its wBattleMaxHP entry), then jumps to
 ; ReviveTarget, which stores DE as the HP of the target and brings it back. ActionEffect_Revive
 ; falls into it; ActionEffect_Farewell, ActionEffect_LifeSong_Revive and the item effect
-; ApplyTargetMaxHPIfPresent (bank $3B, far call) call it. (C1, E-0382)
+; ItemEffect_ReviveFallenTarget (bank $3B, far call) call it. (C1, E-0382)
 ; DE = the target's max HP and continues with the shared HP amount path (ReviveTarget) (E-0122)
 ApplyTargetMaxHPAmount::
     ld a, [wBattleTarget]
@@ -11030,9 +11028,9 @@ StoreHitOrUnaffectedMessage::
 ; ActionEffect_Fight, ActionEffect_ActionB9 and ActionEffect_PsycheUp end in a jump to it. (C2,
 ; E-0382)
 ; the resolve message of a hit: actor message $35 'took G damage!', target message $D0 'Miss! ...
-; was unharmed!', flags $A8, argument $88; the same bytes as UnreferencedStoreResolveMessage35D0 in
-; bank $3B, but here the effect routines jump to it (renamed from
-; UnreferencedStoreResolveMessage35D0_Bank36, E-0365)
+; was unharmed!', flags $A8, argument $88; the same bytes as
+; UnreferencedStoreResolveMessage35_TargetD0 in bank $3B, but here the effect routines jump to it
+; (renamed from UnreferencedStoreResolveMessage35D0_Bank36, E-0365)
 StoreHitMessage_Bank36::
     lb hl, $d0, $35
     lb bc, $88, $a8

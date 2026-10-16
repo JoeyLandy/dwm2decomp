@@ -5677,12 +5677,14 @@ DebugBattleSetup_WrapValueAfterBigStep::
     ld [hl], d
     ret
 
-; Makes sure the debug battle has usable party data: when the party has 1-3 members, the farm level
-; is below 3 and each member's record index is below 10, 20 or 30 (by farm level) and its record
-; state is 2 (DebugBattleSetup_Update_EnsureSave_InParty), nothing is done. Otherwise it checks the
-; save (CheckSaveData): a valid save (hTemp0 = 0) gets one call of RunLoadGameSteps, and a missing
-; or damaged one (hTemp0 not 0) is replaced by the default debug game
-; (DebugBattleSetup_CreateDefaultGame). (C1, E-0369)
+; Makes sure the debug battle has usable party data. It returns without changes when wPartyCount is
+; 1-3, wFarmLevel is below 3 and each of the first wPartyCount bytes of wPartyList is below 10, 20
+; or 30 (for wFarmLevel 0, 1 or 2) and, taken as a party slot and mapped through wPartyList a second
+; time by DebugBattleSetup_Update_EnsureSave_InParty, names a record whose MON_STATE is 2. Any other
+; case far-calls CheckSaveData: hTemp0 = 0 (a valid save) gives one call of RunLoadGameSteps, and
+; any other hTemp0 replaces the data with the default debug game
+; (DebugBattleSetup_CreateDefaultGame). Called by DebugBattleSetup_Update_StartBattle when wWorkBuf
+; + 8 is 0. (C2, E-0384)
 DebugBattleSetup_Update_EnsureSave::
     ld a, [wPartyCount]
     or a

@@ -143,6 +143,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 13: data labels described only by their reader (6 slices of 81-82, Sonnet, drafted with batch 12) | E-0381 | 491 | 491 notes (30 names; 35 second names point at their table) | 0 (54 spot checks, all correct) | PASS build/run636 | par636 OK (396, 3 skipped) |
 | 14: unread + probe scope, banks $36-$3A (6 slices of 112-150, Sonnet) | E-0382 | 723 | 723 (675 probed, 2,558 probes; 33 names) | 0 (78 spot checks, all correct) | PASS build/run638 | par638 OK (396, 3 skipped) |
 | 15: opaque INCBIN slices (6 slices of 23-26, Sonnet, drafted with batch 14) | E-0383 | 153 | 140 identified and named, 13 documented as unidentified | 0 (18 entries reviewed, 1 stream claim checked) | PASS build/run_E-0383b | par639 OK (396, 3 skipped) |
+| 16: unread + probe scope, slices 1-6 of 12 (150 each, Sonnet; 4 reruns after a usage stop) | E-0384 | 900 | 900 (783 probed, 2,646 probes; 55 names + 7 children) | 0 (90 spot checks, all correct) | PASS build/run640 | par640 OK (396, 3 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.

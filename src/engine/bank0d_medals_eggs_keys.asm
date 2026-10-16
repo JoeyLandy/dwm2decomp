@@ -432,7 +432,7 @@ EggServiceMenu_ChooseOption::
 
 ; Egg service, state 3: lists the stored eggs (ListRecordsInUseEggs; wSharedMenuWork 0 for
 ; appraisal, 1 for blessing); with none it returns to the menu with a message, otherwise moves on
-; with the sprites hidden. (C1, E-0357)
+; with the sprites hidden. (C2, E-0357; probed E-0384)
 EggServiceMenu_ListEggs::
     ld a, [wGridCursorX]
     and a
@@ -694,9 +694,14 @@ EggServiceMenu_ChooseAndPay_Confirm::
     ld [wScriptStartRequest], a
     ret
 
-; Choosing an egg, step 15: checks the price: 20 gold for an appraisal; for a blessing 20 * (plus
-; value + 1) (EggServiceMenu_BlessingPrice). With enough gold it pays and moves on; otherwise it
-; refuses. (C1, E-0357)
+; Choosing an egg, step 15: checks the gold against the price (IsAmountInArg1AboveGold, 24-bit).
+; Appraisal (wSharedMenuWork 0) costs 20: with enough gold nothing is paid here
+; (EggServiceMenu_Appraise_PayAndMark takes the 20 later), wScreenStep goes up by 3 and
+; wScreenSubStep is cleared. Blessing (wSharedMenuWork not 0) costs EggServiceMenu_BlessingPrice:
+; with enough gold it flips the MON_SEX byte of the egg in the list cell (0 becomes 1, anything else
+; 0), subtracts the price (SubtractArg1AmountFromGold), sets wTwoChoiceCursor 0, adds 1 to
+; wScreenStep and requests the script ($80). Too little gold in either case sets wTwoChoiceCursor 1
+; (the refusal), adds 1 to wScreenStep and requests the script. (C2, E-0384)
 EggServiceMenu_ChooseAndPay_CheckPrice::
     ld a, [wSharedMenuWork]
     and a
@@ -851,8 +856,8 @@ EggServiceMenu_ChooseAndPay_RedrawMarks::
 ; EggServiceMenu_Appraise_RateMaxLevel, 4 EggServiceMenu_Appraise_NameTrait (its strongest
 ; personality byte), 5 EggServiceMenu_Appraise_ShowSex and 6 EggServiceMenu_Appraise_PayAndMark
 ; (pays 20 gold and marks the egg appraised). Each sub-step leaves its result in wTwoChoiceCursor
-; for the message and ends the script command, so the script shows one line per sub-step. (C1,
-; E-0376)
+; for the message and ends the script command, so the script shows one line per sub-step. (C2,
+; E-0376; probed E-0384)
 ; by wScreenSubStep: reads bytes of the chosen record (LoadSRAMRecordByte/Word, MON_SEX), divides,
 ; and subtracts 20 gold (SubtractArg1AmountFromGold) (renamed from
 ; EggServiceMenu_ChooseAndPay_CheckAndPay from its E-0357 note, E-0367)
@@ -875,8 +880,8 @@ EggServiceMenu_Appraise_ClearResult::
     ret
 
 ; Appraisal, sub-step 1: rates the egg's stats: the average of six stat words (fields from
-; EggServiceMenu_ChooseAndPay_CheckAndPay_Data), reduced to a rating 0-3 for the message. (C1,
-; E-0357)
+; EggServiceMenu_ChooseAndPay_CheckAndPay_Data), reduced to a rating 0-3 for the message. (C2,
+; E-0357; probed E-0384)
 EggServiceMenu_Appraise_RateStats::
     call GetListEntriesCell4AddressWithSRAM
     ld c, $00
@@ -944,7 +949,8 @@ EggServiceMenu_Appraise_RateStats::
 ; Shared tail of the appraisal sub-steps (EggServiceMenu_Appraise_RateStats,
 ; EggServiceMenu_Appraise_RateSkills, EggServiceMenu_Appraise_RateMaxLevel and the later ones): A =
 ; the result; stores it in wTwoChoiceCursor (it picks the message), disables SRAM (rRAMG2 = 0) and
-; ends the script command with the next sub-step (EndScriptCommandAndIncScreenSubStep). (C1, E-0369)
+; ends the script command with the next sub-step (EndScriptCommandAndIncScreenSubStep). (C2, E-0369;
+; probed E-0384)
 EggServiceMenu_Appraise_StoreResult::
     ld [wTwoChoiceCursor], a
     xor a
@@ -961,7 +967,7 @@ EggServiceMenu_Appraise_RateStats_Data::
     db $5d, $61, $63, $65, $67, $69
 
 ; Appraisal, sub-step 2: rates the number of skills the egg can learn (entries of MON_SKILL_LIST):
-; below 6 is 0, below 11 is 1, below 16 is 2, otherwise 3. (C1, E-0357)
+; below 6 is 0, below 11 is 1, below 16 is 2, otherwise 3. (C2, E-0357; probed E-0384)
 EggServiceMenu_Appraise_RateSkills::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -1006,7 +1012,7 @@ EggServiceMenu_Appraise_RateSkills::
     jp EggServiceMenu_Appraise_StoreResult
 
 ; Appraisal, sub-step 3: rates the egg's maximum level: below 41 is 0, below 61 is 1, below 81 is 2,
-; otherwise 3. (C1, E-0357)
+; otherwise 3. (C2, E-0357; probed E-0384)
 EggServiceMenu_Appraise_RateMaxLevel::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -1034,8 +1040,12 @@ EggServiceMenu_Appraise_RateMaxLevel::
     ld a, $02
     jp EggServiceMenu_Appraise_StoreResult
 
-; Appraisal, sub-step 4: names the egg's strongest personality trait: the largest of its personality
-; bytes (MON_PERSONALITY onward). (C1, E-0357)
+; Appraisal, sub-step 4: picks one of three personality bytes of the chosen egg and stores its
+; number, not its value, in wTwoChoiceCursor for the message. It starts with MON_PERSONALITY (result
+; 0), takes MON_PERSONALITY + 3 as result 1 only when that byte is larger, then MON_PERSONALITY + 1
+; as result 2 only when it is larger than the best so far, so a tie keeps the earlier one.
+; MON_PERSONALITY + 2 is never read. Ends through EggServiceMenu_Appraise_StoreResult (SRAM off,
+; next sub-step). (C2, E-0384)
 EggServiceMenu_Appraise_NameTrait::
     call GetListEntriesCell4AddressWithSRAM
     ld b, $00
@@ -1105,7 +1115,7 @@ EggServiceMenu_Appraise_NameTrait::
     ld a, b
     jp EggServiceMenu_Appraise_StoreResult
 
-; Appraisal, sub-step 5: the egg's sex (MON_SEX bit 0). (C1, E-0357)
+; Appraisal, sub-step 5: the egg's sex (MON_SEX bit 0). (C2, E-0357; probed E-0384)
 EggServiceMenu_Appraise_ShowSex::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -1116,7 +1126,7 @@ EggServiceMenu_Appraise_ShowSex::
     jp EggServiceMenu_Appraise_StoreResult
 
 ; Appraisal, sub-step 6: pays the 20-gold fee, sets the egg's MON_EGG byte to 2 (appraised, as read
-; here) and moves to the closing step. (C1, E-0357)
+; here) and moves to the closing step. (C2, E-0357; probed E-0384)
 EggServiceMenu_Appraise_PayAndMark::
     ld a, $14
     ld [wArg1], a
@@ -1154,7 +1164,7 @@ EggServiceMenu_Appraise_PayAndMark::
 ; returns HL = wArg5 (high) / wArg6 (low), the address of the chosen list entry (wListEntries + 4 *
 ; wListPageIndex + wListCursor), which holds the record index. The appraisal sub-steps
 ; (EggServiceMenu_Appraise_RateStats and the next four) call it and leave SRAM enabled for the
-; record reads. (C1, E-0376)
+; record reads. (C2, E-0376; probed E-0384)
 ; enables SRAM (bank 0), far-calls SetArg5ToListEntriesCell4 and returns HL = wArg5 (high) / wArg6
 ; (low) (E-0119)
 GetListEntriesCell4AddressWithSRAM::
@@ -1427,7 +1437,7 @@ EggServiceMenu_DrawListAndPrice_RestoreSprites::
 
 ; The blessing price of the egg under the list cursor: HL = 20 * its MON_PLUS + 20 (the record index
 ; read through SetArg5ToListEntriesCell4; SRAM enabled for the read, then disabled). Clobbers A, BC.
-; (C1, E-0369)
+; (C2, E-0369; probed E-0384)
 EggServiceMenu_BlessingPrice::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5696,7 +5706,7 @@ MedalPrizeMenu_RedrawListBox::
 
 ; Choosing a prize, step 12: checks there is room for the prize: an item prize (entry 0) needs a
 ; free inventory slot, a monster prize a free SRAM record slot (MedalPrizeMenu_FindFreeRecord);
-; without room it steps back with the matching refusal (1 or 3). (C1, E-0357)
+; without room it steps back with the matching refusal (1 or 3). (C2, E-0357; probed E-0384)
 MedalPrizeMenu_ChoosePrize_CheckRoom::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5826,9 +5836,13 @@ MedalPrizeMenu_ChoosePrize_PayMedals::
     ld [wScriptStartRequest], a
     ret
 
-; Choosing a prize, step 14: gives the prize: item entry 0 puts item $1E in a free inventory slot; a
-; monster prize creates its record (MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster); then, if no
-; room is left for another, steps back with the refusal. (C1, E-0357)
+; Choosing a prize, step 14: gives the prize of the list entry (SetArg5ToListEntriesCell4). Entry 0
+; puts item $1E in the first free inventory slot (MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot);
+; any other entry creates a monster record in the first free record (MedalPrizeMenu_FindFreeRecord,
+; MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster). It then looks for room again and always steps
+; back three steps (wScreenStep - 3) and requests the script ($80): wTwoChoiceCursor is 0 while
+; there is room for another prize, 1 when no inventory slot is left after an item and 3 when no
+; record is left after a monster. (C2, E-0384)
 MedalPrizeMenu_ChoosePrize_GivePrize::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5906,7 +5920,7 @@ MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom::
 ; record there: from MonsterTable entry $179 + prize (LoadMonsterRecord) and its species
 ; (LoadSpeciesRecord, marked seen with SetSpeciesFlag), builds a new $A5-byte record in wRecordBufA
 ; (state 1, blank name, species, family, sex from RollChildSexFromSpecies, the player's name and the
-; rest) and copies it into the slot with SRAM enabled. (C1, E-0369)
+; rest) and copies it into the slot with SRAM enabled. (C2, E-0369; probed E-0384)
 MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster::
     push hl
     ld hl, wRecordBufA
@@ -6149,7 +6163,8 @@ WriteNameBlanks_Bank0D::
     ret
 
 ; Finds a free SRAM record slot within the farm's capacity (MedalPrizeMenu_FindFreeRecord_Data by
-; wFarmLevel): returns A = 0 with HL at it, or $FF when every slot is in use. (C1, E-0357)
+; wFarmLevel): returns A = 0 with HL at it, or $FF when every slot is in use. (C2, E-0357; probed
+; E-0384)
 MedalPrizeMenu_FindFreeRecord::
     ld a, $0a
     ld [rRAMG2], a
@@ -6797,9 +6812,12 @@ NpcBreedMenu_CopyScreenBlockAndStep::
     ld [wScreenStep], a
     ret
 
-; Choosing a parent, step 17: checks the chosen monster: below level 10 it steps back with refusal
-; 2; the only party member cannot be chosen; otherwise it continues (the following lines check
-; more). (C1, E-0357)
+; Choosing a parent, step 17: checks the monster in list cell 5 (wListEntries + 5 * wListPageIndex +
+; wListCursor). A MON_LEVEL below 10 gives wTwoChoiceCursor 2, and the only party member
+; (wPartyCount below 2 and wPartyList[0] equal to the record) gives wTwoChoiceCursor 1; both take 2
+; off wScreenStep, switch SRAM off and request the script ($80). Otherwise wSelectedRecord = the
+; record, wItemGridX and wItemGridY = wListCursor and wListPageIndex, wTwoChoiceCursor = 0,
+; wScreenStep + 1, wScreenSubStep = 0 and the script is requested. (C2, E-0384)
 NpcBreedMenu_ChooseAndBreed_CheckPick::
     ld a, $0a
     ld [rRAMG2], a
@@ -6907,7 +6925,7 @@ NpcBreedMenu_ChooseAndBreed_StartCountingScript::
 ; Choosing a parent, step 19: reloads the chosen record into wRecordBufA
 ; (NpcBreedMenu_ChooseAndBreed_LoadChosenRecord), copies the townsperson's preset monster ($A5 bytes
 ; from PresetMonsterRecordTable by wScreenTableIndex) into wRecordBufB, gives it the other sex
-; (MON_SEX = 1 - bit 0 of wRecordBufA's MON_SEX) and moves to step 20. (C1, E-0369)
+; (MON_SEX = 1 - bit 0 of wRecordBufA's MON_SEX) and moves to step 20. (C2, E-0369; probed E-0384)
 NpcBreedMenu_ChooseAndBreed_LoadNpcMonster::
     call NpcBreedMenu_ChooseAndBreed_LoadChosenRecord
     ld a, [wScreenTableIndex]
@@ -7594,7 +7612,7 @@ LoadFamilyIconTileForRecordB_Bank0D::
     ld [rRAMG2], a
     ret
 
-; Copies SRAM record wSelectedRecord into wRecordBufA. (C1, E-0357)
+; Copies SRAM record wSelectedRecord into wRecordBufA. (C2, E-0357; probed E-0384)
 NpcBreedMenu_ChooseAndBreed_LoadChosenRecord::
     ld a, $0a
     ld [rRAMG2], a

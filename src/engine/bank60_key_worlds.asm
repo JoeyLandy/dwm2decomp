@@ -8,7 +8,7 @@ SECTION "Bank 60", ROMX[$4000], BANK[$60]
 ; wCurrentKeyIndex) has bit 7 clear: FindSRAMSlotMarkerIndex picks the first SRAM slot whose marker
 ; is not $50 + its index (returns at once when none); the slot goes to wKeyWorldSlot and, with bit 7
 ; set, into that entry byte 0; the key's wKeySeeds word goes to wKeyRandomLo/Hi, and the code falls
-; through into GenerateKeyWorld. (C1, E-0371)
+; through into GenerateKeyWorld. (C2, E-0371; probed E-0384)
 WarpEffect_Warp_StartNewKeyWorld::
     ld a, [wCurrentKeyIndex]
     ld l, a
@@ -43,12 +43,12 @@ WarpEffect_Warp_StartNewKeyWorld::
 ; KeyWorldLayout_NumberCellsAndPlaceEntrances accepts the layout), the rooms, the floor menus, the
 ; objects, the monsters and the goal; then marks the key's list entry generated (bit 7 set, bit 6
 ; clear). WarpEffect_Warp_StartNewKeyWorld falls through into it after loading the seed, and
-; DebugAutomap_Update_EnterKeyWorld (bank $01) far-calls it. (C1, E-0369)
+; DebugAutomap_Update_EnterKeyWorld (bank $01) far-calls it. (C2, E-0369; probed E-0384)
 GenerateKeyWorld::
     call KeyWorldLayout_Start
     call GenerateKeyWorld_FillChunkSlots
     call GenerateKeyWorld_ShuffleAreaNumbers
-    call DebugAutomap_Update_MergeKeyWorldAreas
+    call GenerateKeyWorld_MergeAreaInfo
     call KeyWorldLayout_PlaceAreaExits
     call GenerateKeyWorld_EmptyStep
     call KeyWorldLayout_NumberCellsAndPlaceEntrances
@@ -77,22 +77,31 @@ GenerateKeyWorld::
     ret
 
 ; The key world's monsters: the level base for the party strength, the key's parameters, 32 normal
-; and 8 boss monsters with their levels, the monster ids and the encounter table. (C1, E-0357)
+; and 8 boss monsters with their levels, the monster ids and the encounter table. (C2, E-0357;
+; probed E-0384)
 GenerateKeyWorld_RollMonsters::
     call LoadKeyWorldLevelBaseTripleForPartyStrength
     call LoadKeyWorldParamsForCurrentKeyIndex
-    call RollKeyWorldMonsterTableKeyWorldMonsters
-    call FillKeyWorldMonsters1LevelsForPartyStrength
-    call RollKeyWorldMonsterTableKeyWorldBossMonsters
-    call FillKeyWorldBossMonsters1LevelsSlope
-    call RollKeyWorldMonsterIds
-    call RollKeyWorldEncounterTable
+    call GenerateKeyWorld_RollMonsters_Normal
+    call GenerateKeyWorld_RollMonsters_NormalLevels
+    call GenerateKeyWorld_RollMonsters_Boss
+    call GenerateKeyWorld_RollMonsters_BossLevels
+    call GenerateKeyWorld_RollEncounterFoes
+    call GenerateKeyWorld_RollEncounterTable
     ret
 
+; Fills the 32 two-byte entries of wKeyWorldMonsters with monster ids (the level byte is added
+; later). For each entry it takes the next family from wKeyWorldMonsterBands (the list ends with $FF
+; and then starts again), draws a band from the 16-byte row of KeyWorldBossBandPickRows picked by
+; min(wKeyWorldBandAdjust, 16), finds the list for that family and band in KeyWorldBandSpeciesTable
+; (a count byte, then that many two-byte monster words) and copies one word of it, chosen by drawing
+; wKeyRandomHi & 7 until the draw is below the count. An empty list fills no entry and the next
+; family is tried. Every draw advances wKeyRandomLo/Hi (NextRandomSeed); hTemp0/hTemp1 are used as
+; the write pointer. (C2, E-0384)
 ; fills 32 two-byte entries from wKeyWorldMonsters with random monster ids from the
 ; wKeyWorldMonsterBands band lists (rows from KeyWorldBossBandPickRows by wKeyWorldBandAdjust)
 ; (E-0130)
-RollKeyWorldMonsterTableKeyWorldMonsters::
+GenerateKeyWorld_RollMonsters_Normal::
     ld b, $20
     ld de, wKeyWorldMonsters
     ld a, e
@@ -205,10 +214,10 @@ RollKeyWorldMonsterTableKeyWorldMonsters::
     jp nz, .loop2
     ret
 
-; RollKeyWorldMonsterTableKeyWorldBossMonsters reads the byte at $4123 + 8 * wKeyWorldBandAdjust +
-; (random & 7), doubles it and reads the band-list pointer at $6D6D + $90 + that offset; it retries
-; when the list is empty; 34 rows end at FillKeyWorldMonsters1LevelsForPartyStrength ($4233); higher
-; rows pick from more bands (E-0192, C1)
+; GenerateKeyWorld_RollMonsters_Boss reads the byte at $4123 + 8 * wKeyWorldBandAdjust + (random &
+; 7), doubles it and reads the band-list pointer at $6D6D + $90 + that offset; it retries when the
+; list is empty; 34 rows end at GenerateKeyWorld_RollMonsters_NormalLevels ($4233); higher rows pick
+; from more bands (E-0192, C1)
 ; record: eight picks for one wKeyWorldBandAdjust value; a random 0-7 chooses one
 KeyWorldBossBandPickRows::
     db $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
@@ -246,10 +255,13 @@ KeyWorldBossBandPickRows::
     db $00, $01, $02, $03, $04, $05, $06, $07 ; id 32
     db $07, $06, $05, $04, $03, $02, $01, $00 ; id 33
 
+; Adds a level to the second byte of each of the 32 entries of wKeyWorldMonsters. Entry n (0-31)
+; gets 2 x level ORed in, level = min(wKeyWorldLevelBase + ((wPartyStrength + 10) x n / 150) / 2,
+; 99), so the levels rise along the table. The id byte of each entry is not changed. (C2, E-0384)
 ; for 32 entries from wKeyWorldMonsters + $1 ORs 2 * min(wKeyWorldLevelBase + (32 - n) *
 ; (wPartyStrength + 10) / 150 / 2, 99) into every other byte (E-0125) (E-0340: the address in its
-; name read as its RAM name; was FillKeyWorldMonsters1LevelsForPartyStrength)
-FillKeyWorldMonsters1LevelsForPartyStrength::
+; name read as its RAM name; was GenerateKeyWorld_RollMonsters_NormalLevels)
+GenerateKeyWorld_RollMonsters_NormalLevels::
     ld b, $20
     ld de, wKeyWorldMonsters + $1
     ld a, [wKeyWorldLevelBase]
@@ -296,9 +308,14 @@ FillKeyWorldMonsters1LevelsForPartyStrength::
     jr nz, .loop
     ret
 
+; Fills the 8 two-byte entries at wKeyWorldMonsters + $40 (the boss monsters) with monster ids.
+; Every entry uses family 9 of KeyWorldBandSpeciesTable and a band read from
+; KeyWorldBossBandPickRows[8 x wKeyWorldBandAdjust + (wKeyRandomHi & 7)]; it copies one word of that
+; band list, drawn with wKeyRandomHi & 7 until it is below the count, and an empty list is drawn
+; again. Advances wKeyRandomLo/Hi; hTemp0/hTemp1 are the write pointer. (C2, E-0384)
 ; fills 8 two-byte entries from wKeyWorldBossMonsters with random monster ids from the band lists
 ; (KeyWorldBossBandPickRows row wKeyWorldBandAdjust) (E-0129)
-RollKeyWorldMonsterTableKeyWorldBossMonsters::
+GenerateKeyWorld_RollMonsters_Boss::
     ld b, $08
     ld a, $40
     ld de, wKeyWorldMonsters
@@ -397,10 +414,13 @@ RollKeyWorldMonsterTableKeyWorldBossMonsters::
     jp nz, .loop
     ret
 
+; Adds the same level to the second byte of each of the 8 boss entries at wKeyWorldMonsters + $40: 2
+; x min(wKeyWorldLevelBase + ((wPartyStrength + 10) x 15 / 150) / 2, 99), that is the level the
+; normal table would give entry 15. The id bytes are not changed. (C2, E-0384)
 ; for 8 entries from wKeyWorldBossMonsters + $1 ORs 2 * min(wKeyWorldLevelBase + 15 *
 ; (wPartyStrength + 10) / 150 / 2, 99) into every other byte (E-0127) (E-0340: the address in its
-; name read as its RAM name; was FillKeyWorldBossMonsters1LevelsSlope)
-FillKeyWorldBossMonsters1LevelsSlope::
+; name read as its RAM name; was GenerateKeyWorld_RollMonsters_BossLevels)
+GenerateKeyWorld_RollMonsters_BossLevels::
     ld b, $08
     ld a, $40
     ld de, wKeyWorldMonsters + $1
@@ -452,10 +472,14 @@ FillKeyWorldBossMonsters1LevelsSlope::
     jr nz, .loop
     ret
 
+; Adds a level to the second byte of each of the 8 boss entries at wKeyWorldMonsters + $40: 2 x
+; min(wPartyStrength + 3 x (wPartyStrength / 10), 99), whatever wKeyWorldLevelBase is. Nothing in
+; src/ calls or points to it, so it looks like an unused alternative to
+; GenerateKeyWorld_RollMonsters_BossLevels. (C2, E-0384)
 ; for 8 entries from wKeyWorldBossMonsters + $1 ORs 2 * min(wPartyStrength + 3 * (wPartyStrength /
 ; 10), 99) into every other byte (E-0125) (E-0340: the address in its name read as its RAM name; was
-; FillKeyWorldBossMonsters1LevelsForPartyStrength)
-FillKeyWorldBossMonsters1LevelsForPartyStrength::
+; GenerateKeyWorld_RollMonsters_BossLevelsAlt)
+GenerateKeyWorld_RollMonsters_BossLevelsAlt::
     ld a, [wPartyStrength]
     ld b, a
     ld a, $0a
@@ -495,6 +519,11 @@ FillKeyWorldBossMonsters1LevelsForPartyStrength::
     jr nz, .loop
     ret
 
+; Reads the entry of wCurrentKeyIndex in wKeyList (4 bytes each). Byte 1 picks wKeyWorldBandAdjust =
+; KeyWorldBandAdjustTable[byte 1]; byte 2 picks a row of KeyWorldBandRows (8 bytes): its
+; $FF-terminated list of family numbers is copied to wKeyWorldMonsterBands, and byte 6 of the row is
+; added to wKeyWorldBandAdjust (a negative sum becomes 0). The monster rollers of
+; GenerateKeyWorld_RollMonsters use both results. (C2, E-0384)
 ; from the wKeyList + $1 entry wCurrentKeyIndex: wKeyWorldBandAdjust = KeyWorldBandAdjustTable[byte
 ; 0] plus a row adjustment, and copies the $FF-terminated list of KeyWorldBandRows row byte 1 to
 ; wKeyWorldMonsterBands (E-0127)
@@ -642,9 +671,17 @@ KeyWorldBandRows::
     db $07, $09, $ff, $ff, $ff, $ff, $00, $00 ; id 54
     db $08, $09, $ff, $ff, $ff, $ff, $00, $00 ; id 55
 
+; Builds wKeyWorldEncounterTable (16 bytes, cleared first): one 4-byte entry per entry of the area
+; exit list wKeyWorldAreaExits (it walks the list from wKeyWorldObjects, which is byte 3 of the
+; first exit entry, and stops at the $FF that ends the list). Each table entry is a monster word, a
+; level and a zero byte. The level is wKeyWorldLevelArea + 2 x the area number, taken from the high
+; nibble of wKeyWorldAreaInfo for the area of the first cell of the exit entry (x / 4 + 2 x (y /
+; 4)). The monster is drawn with PickRandomKeyWorldMonsterBandsEntry and
+; PickRandomMonsterFromBandList in band max(BandFromStrength(wPartyStrength) - 2, 0), repeated until
+; a valid one comes. (C2, E-0384)
 ; clears wKeyWorldEncounterTable ($10 bytes) and fills a 4-byte entry per map area (from
 ; wKeyWorldObjects) with a random monster id and level from the band lists (E-0128)
-RollKeyWorldEncounterTable::
+GenerateKeyWorld_RollEncounterTable::
     ld b, $10
     ld hl, wKeyWorldEncounterTable
     xor a
@@ -654,7 +691,7 @@ RollKeyWorldEncounterTable::
     dec b
     jr nz, .loop
     ld a, [wPartyStrength]
-    call BandForA
+    call BandFromStrength
     dec a
     dec a
     bit 7, a
@@ -724,9 +761,12 @@ RollKeyWorldEncounterTable::
     inc hl
     jp .skip
 
-; like RollKeyWorldEncounterTable, with each entry's level from wPartyStrength / 5 * 7 plus the area
-; value, capped at 99 (E-0129)
-RollKeyWorldEncounterTableLevels::
+; The same as GenerateKeyWorld_RollEncounterTable except for the level of an entry:
+; min((wPartyStrength / 5) x 7 + 2 x the area number, 99), not using wKeyWorldLevelArea. Nothing in
+; src/ calls or points to it, so it looks like an unused alternative. (C2, E-0384)
+; like GenerateKeyWorld_RollEncounterTable, with each entry's level from wPartyStrength / 5 * 7 plus
+; the area value, capped at 99 (E-0129)
+GenerateKeyWorld_RollEncounterTableAlt::
     ld b, $10
     ld hl, wKeyWorldEncounterTable
     xor a
@@ -736,7 +776,7 @@ RollKeyWorldEncounterTableLevels::
     dec b
     jr nz, .loop
     ld a, [wPartyStrength]
-    call BandForA
+    call BandFromStrength
     dec a
     dec a
     bit 7, a
@@ -829,13 +869,20 @@ RollKeyWorldEncounterTableLevels::
     inc hl
     jp .skip
 
+; Rolls the three foes of the key world encounter in wKeyWorldEncounter (3 bytes each: monster word,
+; level). Foe 1 is a valid monster of band BandFromStrength(wPartyStrength) and gets level
+; wKeyWorldLevelMonster. Foes 2 and 3 are both empty (words 0) when a draw of wKeyRandomLo & 7 is 0
+; (one time in eight); otherwise they are both the same monster, picked from a band two lower (not
+; below 0). Their level byte is max(wKeyWorldLevelMonster, 5) - 4 in both cases. An invalid pick
+; (empty list or a rejected id) starts the whole roll again, and the band already lowered for foes 2
+; and 3 is not restored, so it can fall further on a restart. (C2, E-0384)
 ; picks random monster ids for the key world from the wKeyWorldMonsterBands lists by band
 ; (PickRandomMonsterFromBandList) into wKeyWorldEncounter-wKeyWorldEncounter + $7, and
 ; wKeyWorldEncounter + $2/wKeyWorldEncounter + $5/wKeyWorldEncounter + $8 from wKeyWorldLevelMonster
 ; (E-0127)
-RollKeyWorldMonsterIds::
+GenerateKeyWorld_RollEncounterFoes::
     ld a, [wPartyStrength]
-    call BandForA
+    call BandFromStrength
     ldh [hTemp0], a
 
 .loop:
@@ -899,6 +946,9 @@ RollKeyWorldMonsterIds::
     ld [wKeyWorldEncounter + $8], a
     ret
 
+; Advances the seed and sets hTemp1 to wKeyWorldMonsterBands[wKeyRandomLo & 1], the family number.
+; If that byte is $FF (the list holds one entry) it steps back to the previous byte. Used before
+; PickRandomMonsterFromBandList. (C2, E-0384)
 ; hTemp1 = wKeyWorldMonsterBands[random & 1], stepping back over $FF entries (E-0124)
 PickRandomKeyWorldMonsterBandsEntry::
     call NextRandomSeed
@@ -921,6 +971,11 @@ PickRandomKeyWorldMonsterBandsEntry::
     ldh [hTemp1], a
     ret
 
+; Input hTemp1 = family, hTemp0 = band. Looks up the list at KeyWorldBandSpeciesTable[16 x family +
+; 2 x band] (a count byte, then two-byte monster words) and returns DE = one word of it, chosen by
+; drawing wKeyRandomHi & 7 until it is below the count (a one-word list uses no draw). Carry set =
+; DE is valid; carry clear = the list is empty or the word is one of the rejected ids $00A4, $00A5
+; and $0174 (DE is then not meaningful). (C2, E-0384)
 ; DE = a random entry of the list KeyWorldBandSpeciesTable[16 * hTemp1 + 2 * hTemp0]; carry when
 ; valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
 PickRandomMonsterFromBandList::
@@ -991,9 +1046,11 @@ PickRandomMonsterFromBandList::
     scf
     ret
 
+; A = a party strength or level value: returns A = 2 below 20 ($14), 3 below 40, 4 below 60, 5 below
+; 80, 6 below 95 and 7 from 95 up. (C2, E-0384)
 ; A = 2-7 by thresholds 20, 40, 60, 70, 80, 90, 95 (E-0125) (E-0344: the address in its name dropped
-; or read as the label there; was BandForA)
-BandForA::
+; or read as the label there; was BandFromStrength)
+BandFromStrength::
     cp $14
     jr nc, .cp_28
     ld a, $02
@@ -1039,6 +1096,9 @@ BandForA::
     ld a, $07
     ret
 
+; Copies the first three bytes of record wPartyStrength (8 bytes each, 100 records) of
+; KeyWorldLevelTable to wKeyWorldLevelBase, wKeyWorldLevelArea and wKeyWorldLevelMonster, the three
+; level values the other key world rollers use. (C2, E-0384)
 ; copies three bytes of entry wPartyStrength of the 8-byte table at $47C5 to
 ; wKeyWorldLevelBase-wKeyWorldLevelMonster (E-0121)
 LoadKeyWorldLevelBaseTripleForPartyStrength::
@@ -1172,7 +1232,7 @@ KeyWorldLevelTable::
 ; Starts the layout: clears the flags and visited screens, picks the goal kind, the size (a random
 ; entry of the table row for the party strength rounded down to 10; a 0 nibble means 10 screens) and
 ; the area count (the row for strength / 10: a base plus a random part), and clears the four chunk
-; slots and areas. (C1, E-0357)
+; slots and areas. (C2, E-0357; probed E-0384)
 KeyWorldLayout_Start::
     xor a
     ld [wKeyWorldFlags], a
@@ -1354,7 +1414,7 @@ KeyWorldLayout_Start_Data::
 
 ; Called by KeyWorldLayout_Start: when wKeyWorldActive is non-zero and wKeyWorldKey has bit 7 set
 ; with its low 7 bits equal to wKeyWorldSlot, clears wKeyWorldActive; otherwise returns with it
-; unchanged. (C1, E-0372)
+; unchanged. (C2, E-0372; probed E-0384)
 ; when wKeyWorldActive is set and wKeyWorldKey has bit 7 with low bits equal to wKeyWorldSlot,
 ; clears wKeyWorldActive (E-0122)
 KeyWorldLayout_ClearActiveIfSameKey::
@@ -1373,6 +1433,10 @@ KeyWorldLayout_ClearActiveIfSameKey::
     ld [wKeyWorldActive], a
     ret
 
+; Sets wKeyWorldGoalKind. It reads byte 2 of the wKeyList entry of wCurrentKeyIndex, which picks a
+; 4-byte row of KeyWorldGoalKindRows, draws one of the four bytes (the low bits of wKeyRandomLo
+; after a seed step) and draws again while that byte is 0; wKeyWorldGoalKind = the byte - 1.
+; KeyWorldLayout_Start calls it. (C2, E-0384)
 ; repeatedly picks entry (wKeyRandomLo & 3) of the 4-byte row of KeyWorldGoalKindRows selected by
 ; the second byte of the wKeyList + $1 entry wCurrentKeyIndex until it is non-zero;
 ; wKeyWorldGoalKind = entry - 1 (E-0121)
@@ -1474,7 +1538,8 @@ KeyWorldGoalKindRows::
     db $03, $03, $03, $03 ; id 55
 
 ; Fills each of the four chunk slots that is still empty with a random chunk pattern
-; (RunRandomPatternCase, retried until one fits), counting the areas in hTemp7. (C1, E-0357)
+; (RunRandomPatternCase, retried until one fits), counting the areas in hTemp7. (C2, E-0357; probed
+; E-0384)
 GenerateKeyWorld_FillChunkSlots::
     ld b, $00
     ld hl, wKeyWorldChunks + $3
@@ -1534,8 +1599,12 @@ GenerateKeyWorld_FillChunkSlots::
     jr nz, .loop
     ret
 
-; ORs the low nibbles of the four wKeyWorldAreas bytes into wKeyWorldAreaInfo (E-0305)
-DebugAutomap_Update_MergeKeyWorldAreas::
+; ORs the low nibble of each of the four wKeyWorldAreas bytes into the matching byte of
+; wKeyWorldAreaInfo, which GenerateKeyWorld_ShuffleAreaNumbers has just filled with the high nibbles
+; (the area numbers). No input; nothing else changes. Only GenerateKeyWorld calls it; the name
+; mentions the debug automap but this routine has no part in it. (C2, E-0384)
+; ORs the low nibbles of the four wKeyWorldAreas bytes into wKeyWorldAreaInfo
+GenerateKeyWorld_MergeAreaInfo::
     ld b, $04
     ld hl, wKeyWorldAreas
     ld de, wKeyWorldAreaInfo
@@ -1555,7 +1624,7 @@ DebugAutomap_Update_MergeKeyWorldAreas::
 ; With more than one area (hTemp7), swaps random pairs of area numbers (the high nibbles of
 ; wKeyWorldAreas, once per area), then walks the areas by number to settle their cells' order
 ; (SwapDEByteWithMatchingKeyWorldAreas); finally copies the four area numbers (high nibbles of
-; wKeyWorldAreas) into wKeyWorldAreaInfo. (C1, E-0369)
+; wKeyWorldAreas) into wKeyWorldAreaInfo. (C2, E-0369; probed E-0384)
 GenerateKeyWorld_ShuffleAreaNumbers::
     ldh a, [hTemp7]
     cp $01
@@ -1796,6 +1865,11 @@ GenerateKeyWorld_ShuffleAreaNumbers::
     jr nz, .loop7
     ret
 
+; DE = address of a byte of wKeyWorldAreas. Sets hTemp1 = [DE] & $F0 and exchanges [DE] with the
+; first of the four wKeyWorldAreas bytes whose whole value equals hTemp1, that is the same area
+; number with a low nibble of 0 (the first cell of that area). Nothing changes when there is none.
+; Called by GenerateKeyWorld_ShuffleAreaNumbers for a neighbour slot that holds the next area
+; number. (C2, E-0384)
 ; swaps [DE] with the first of the four wKeyWorldAreas bytes whose high nibble matches [DE]'s
 ; (E-0124)
 SwapDEByteWithMatchingKeyWorldAreas::
@@ -1829,8 +1903,8 @@ SwapDEByteWithMatchingKeyWorldAreas::
     ret
 
 ; Clears the area exits and, for each area after the first, finds where it meets the next one and
-; places two random open cells between them (PlaceTwoRandomOpenCells); $FF ends the list. (C1,
-; E-0357)
+; places two random open cells between them (PlaceTwoRandomOpenCells); $FF ends the list. (C2,
+; E-0357; probed E-0384)
 KeyWorldLayout_PlaceAreaExits::
     ld hl, wKeyWorldAreaExits + $2
     ld b, $05
@@ -1919,7 +1993,13 @@ KeyWorldLayout_PlaceAreaExits::
     ld [hl], $ff
     ret
 
-; picks two random open cells (ReadKeyWorldCellIsSolid) in the areas named by hTemp1 and hTemp2,
+; Draws two cells for one area exit entry and writes them as (x << 4) | y at HL and HL + 1; HL ends
+; at the old HL + 2. hTemp1 and hTemp2 = the chunk slots (0-3) of the two areas: slot s covers x = 4
+; x (s & 1) + 0..3 and y = 4 x (s >> 1) + 0..3. Each cell is drawn (y first, then x, with
+; wKeyRandomHi & 3) until CheckKeyWorldCellIsOpen gives A = 1; the first cell is also drawn again
+; while it equals the byte three before HL (the second cell of the previous exit entry). Uses hTemp3
+; and hTemp4. (C2, E-0384)
+; picks two random open cells (CheckKeyWorldCellIsOpen) in the areas named by hTemp1 and hTemp2,
 ; avoiding the previous cell, and stores their positions (E-0129)
 PlaceTwoRandomOpenCells::
     ldh a, [hTemp1]
@@ -1945,7 +2025,7 @@ PlaceTwoRandomOpenCells::
     ldh a, [hTemp3]
     or c
     ldh [hTemp3], a
-    call ReadKeyWorldCellIsSolid
+    call CheckKeyWorldCellIsOpen
     or a
     jr z, PlaceTwoRandomOpenCells
     ldh a, [hTemp3]
@@ -1995,7 +2075,7 @@ PlaceTwoRandomOpenCells::
     ldh a, [hTemp3]
     or c
     ldh [hTemp3], a
-    call ReadKeyWorldCellIsSolid
+    call CheckKeyWorldCellIsOpen
     or a
     jr z, .loop
     ldh a, [hTemp3]
@@ -2008,9 +2088,16 @@ PlaceTwoRandomOpenCells::
     ld [hli], a
     ret
 
+; Input hTemp3 = x, hTemp4 = y of a cell of the key world (x and y are 0-15, as in the (x << 4) | y
+; cell bytes). Slot (y / 4) x 2 + x / 4 of wKeyWorldChunks (4 bytes: address low and high, bank,
+; sub-chunk number) names a chunk; the 3-byte record of the cell is at address + $60 x sub-chunk +
+; 12 x (y & 3) + 3 x (x & 3) in that bank, and gives the address and bank of a screen record.
+; Returns A = 1 when the first byte of that screen record is not $FF and A = 0 when it is $FF. HL is
+; kept; B, C, D and E are changed. The callers place exits and objects only on cells that return 1,
+; so the name reads the wrong way round. (C2, E-0384)
 ; reads the cell at (hTemp3, hTemp4) from the area map chunk in wKeyWorldChunks; A = 1 when its byte
 ; is not $FF, else 0 (E-0128)
-ReadKeyWorldCellIsSolid::
+CheckKeyWorldCellIsOpen::
     push hl
     ldh a, [hTemp4]
     and $fc
@@ -2085,13 +2172,13 @@ ReadKeyWorldCellIsSolid::
     ret
 
 ; An empty step of GenerateKeyWorld (called between KeyWorldLayout_PlaceAreaExits and
-; KeyWorldLayout_NumberCellsAndPlaceEntrances): only a ret. (C1, E-0369)
+; KeyWorldLayout_NumberCellsAndPlaceEntrances): only a ret. (C2, E-0369; probed E-0384)
 GenerateKeyWorld_EmptyStep::
     ret
 
 ; Sets the menu flag of each floor entrance of kind 4 or 5 ($FF ends the list): floor state 1 gives
 ; $80, state 2 nothing, otherwise a random 0-99 below 5 gives state 3 and $81, below 30 state 1 and
-; $80, else a flag from a random entry of a 64-byte table. (C1, E-0357)
+; $80, else a flag from a random entry of a 64-byte table. (C2, E-0357; probed E-0384)
 KeyWorldLayout_SetEntranceFlags::
     ld hl, wKeyWorldMenuFlag
     ld a, l
@@ -2205,7 +2292,8 @@ KeyWorldLayout_SetEntranceFlags_Data::
 ; With more than one area, numbers the areas' cells one after another; then places the floor
 ; entrances (their number from the area count's entry in KeyWorldAreaLayoutTable_Bank60, bank $84)
 ; spread evenly over the cells into wKeyWorldFloorInfo (PlaceObjectInAreaC); A = 0 when all fit,
-; otherwise non-zero, which makes GenerateKeyWorld generate the layout again. (C1, E-0357)
+; otherwise non-zero, which makes GenerateKeyWorld generate the layout again. (C2, E-0357; probed
+; E-0384)
 KeyWorldLayout_NumberCellsAndPlaceEntrances::
     ldh a, [hTemp7]
     cp $01
@@ -2361,6 +2449,15 @@ KeyWorldLayout_NumberCellsAndPlaceEntrances::
     pop hl
     ret
 
+; C = a cell number: the number a slot of wKeyWorldAreas got in
+; KeyWorldLayout_NumberCellsAndPlaceEntrances. Finds the slot B whose wKeyWorldAreas byte equals C
+; (none: A = 0 and nothing changes), then draws a cell inside that slot (y, then x, with
+; wKeyRandomHi & 3 on the slot origin) until CheckKeyWorldCellIsOpen gives 1 and the cell is not one
+; of the cells of the area exit list wKeyWorldAreaExits or of an earlier wKeyWorldFloorInfo entry.
+; It appends an entry to wKeyWorldFloorInfo at hTemp8/hTemp9: byte 0 = the cell as (x << 4) | y,
+; byte 1 = the byte at offset 1 + 16 x B of the layout record for wKeyWorldAreaCount in bank $84
+; (KeyWorldAreaLayoutTable_Bank60), byte 3 = 0, then $FF after the entry, and returns A = 0. After
+; 100 refused draws it returns A = 1. (C2, E-0384)
 ; finds area C in wKeyWorldAreas and picks a random free cell inside it for the object (avoiding
 ; wKeyWorldObjects and wKeyWorldFloorInfo + $3 entries) (E-0131)
 PlaceObjectInAreaC::
@@ -2446,7 +2543,7 @@ PlaceObjectInAreaC::
 .skip3:
     ld a, [hl]
     cp $ff
-    jr z, .call_read_key_world_cell_is_solid
+    jr z, .call_check_key_world_cell_is_open
     dec hl
     dec hl
     dec hl
@@ -2457,9 +2554,9 @@ PlaceObjectInAreaC::
     add_a_to_hl
     jr .skip3
 
-.call_read_key_world_cell_is_solid:
+.call_check_key_world_cell_is_open:
     push bc
-    call ReadKeyWorldCellIsSolid
+    call CheckKeyWorldCellIsOpen
     pop bc
     or a
     jr z, .check_temp_a
@@ -2531,7 +2628,8 @@ PlaceObjectInAreaC::
 ; wPartyStrength) picks the object count (wMapObjectCount: 10, 15 or 20 from the 16-byte table after
 ; it); each object in wMapObjects (8 bytes each) gets a kind (RollKeyWorldObjectKind) and a random
 ; free cell (PlaceKeyWorldObjectAtRandomCell). When one cannot be placed the count is cut to those
-; placed; when none were placed it starts again with wKeyWorldBand = 0 (10 objects). (C1, E-0369)
+; placed; when none were placed it starts again with wKeyWorldBand = 0 (10 objects). (C2, E-0369;
+; probed E-0384)
 GenerateKeyWorld_PlaceObjects::
     ld a, [wPartyStrength]
     call SetKeyWorldBandForA
@@ -2583,6 +2681,8 @@ GenerateKeyWorld_PlaceObjects::
 GenerateKeyWorld_PlaceObjects_Data::
     db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0f, $0f, $0f, $0f, $14, $14, $14, $14
 
+; A = a level or strength value. Returns A = the key world band and stores it in wKeyWorldBand: 0
+; for A below $0B, $0F from $50 up, otherwise (A - $0A) / 5 + 1. (C2, E-0384)
 ; wKeyWorldBand = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
 SetKeyWorldBandForA::
     cp $0b
@@ -2610,6 +2710,15 @@ SetKeyWorldBandForA::
     ld [wKeyWorldBand], a
     ret
 
+; Input DE = an entry of wMapObjects (8 bytes), hTemp0 = the number of objects still to place
+; including this one (wMapObjectCount - hTemp0 entries are already placed). Zeroes
+; wKeyWorldPlaceFlag, then draws x below wKeyWorldWidth and y below wKeyWorldHeight (wKeyRandomHi &
+; $0F, redrawn until below), and rejects a cell equal to byte 4 of an earlier entry. It then reads
+; byte 1-4 (random) of the screen record of the cell: when that is not $FF it stores the cell as (x
+; << 4) | y at DE + 4 and that byte at DE + 5 and returns A = 0. Each rejection adds one to
+; wKeyWorldPlaceFlag; after 100 it gives up with A = 1. After a gold roll of RollKeyWorldObjectKind
+; hTemp0 no longer holds the object count, so the number of earlier entries it compares is then
+; wrong. (C2, E-0384)
 ; picks a random open cell within wKeyWorldWidth x wKeyWorldHeight not used by another object and
 ; stores it for object hTemp0 (E-0130)
 PlaceKeyWorldObjectAtRandomCell::
@@ -2747,6 +2856,14 @@ PlaceKeyWorldObjectAtRandomCell::
     ld a, $01
     ret
 
+; DE = a wMapObjects entry. Rolls wKeyRandomHi & $7F until it is below 100 and walks the 64-byte row
+; of RollKeyWorldObjectKind_Data for wKeyWorldBand (row start = label + $10 + 64 x band) to the
+; first non-zero byte that is not below the roll; the position p of that byte decides: p = 0 stores
+; kind 1 at [DE] and an amount at DE + 1 ((a draw below 100 x band + a digit 0-9 x band) / 10, at
+; least 1); p = 1 stores kind 3; p of 2 or more stores kind 0 at [DE] and contents p - 2 at DE + 1
+; (and then makes one more draw that is not used). A gold roll (p = 0) also leaves the 16-bit
+; product of its first draw and the band in hTemp0 (low byte) and hTemp1, overwriting the hTemp0
+; that the callers set for PlaceKeyWorldObjectAtRandomCell. Advances the seed. (C2, E-0384)
 ; picks an object kind for the key level band wKeyWorldBand from the chance rows at $556F and its
 ; contents ([DE + 1]) (E-0130)
 RollKeyWorldObjectKind::
@@ -2942,7 +3059,7 @@ RollKeyWorldObjectKind_Data::
 
 ; Rolls a screen trigger's contents for the band: a random 0-99 against the band's cumulative chance
 ; row (64 bytes per band) picks the kind, then further rolls (scaled by the band) its amount,
-; written at DE. (C1, E-0357)
+; written at DE. (C2, E-0357; probed E-0384)
 FieldState_MapTransition_RollTriggerContents::
     ld a, [wKeyWorldBand]
     and $0f
@@ -3148,7 +3265,7 @@ FieldState_MapTransition_RollTriggerContents_Data::
 
 ; The goal: wKeyWorldGoalScreen = the first floor entrance's screen; reads that screen's chunk and
 ; takes the goal position from the table by its first byte (a byte of $FF hangs in an endless loop).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0384)
 KeyWorldLayout_PlaceGoal::
     ld a, [wKeyWorldFloorInfo]
     ld [wKeyWorldGoalScreen], a
@@ -3243,6 +3360,13 @@ KeyWorldLayout_PlaceGoal::
 KeyWorldLayout_PlaceGoal_Data::
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
+; One step of GenerateKeyWorld_FillChunkSlots for an empty chunk slot: advances the seed and picks
+; an entry of a 16-entry jumptable by wKeyRandomHi & $0F. Entries 0, 6 and 12 run
+; RunRandomPatternCase_SingleChunk, 1, 5, 7, 11 and 13 RunRandomPatternCase_TallBlock, 2, 4, 8, 10
+; and 14 RunRandomPatternCase_WideBlock, and 3, 9 and 15 RunRandomPatternCase_Block2x2. B = the slot
+; number (0-3) and hTemp0/hTemp1 and hTemp5/hTemp6 point into the slot table and wKeyWorldAreas, as
+; the fill loop sets them. Returns the A of the pattern routine: 1 = the chunks were placed, 0 = the
+; pattern did not fit. (C2, E-0384)
 ; runs one of four routines chosen by random & $0F through a 16-entry table (E-0124)
 RunRandomPatternCase::
     call NextRandomSeed
@@ -3268,7 +3392,8 @@ RunRandomPatternCase::
     db $c9, $c9
 
 ; Chunk pattern 3, a 2 x 2 block: only in an even left column with the three other slots free; picks
-; one of 32 patterns, fills the four slots (0-3) and writes the area's cells. (C1, E-0357)
+; one of 32 patterns, fills the four slots (0-3) and writes the area's cells. (C2, E-0357; probed
+; E-0384)
 RunRandomPatternCase_Block2x2::
     ld a, b
     and $01
@@ -3382,7 +3507,7 @@ RunRandomPatternCase_Block2x2::
     ret
 
 ; Chunk pattern 2, a block two wide: only in an even column with the slot to the right free; picks
-; one of 32, fills both slots and the area's cells. (C1, E-0357)
+; one of 32, fills both slots and the area's cells. (C2, E-0357; probed E-0384)
 RunRandomPatternCase_WideBlock::
     ld a, b
     and $01
@@ -3457,7 +3582,7 @@ RunRandomPatternCase_WideBlock::
     ret
 
 ; Chunk pattern 1, a block two tall: only in the top row with the slot below free; picks one of 32,
-; fills both slots and the area's cells. (C1, E-0357)
+; fills both slots and the area's cells. (C2, E-0357; probed E-0384)
 RunRandomPatternCase_TallBlock::
     ld a, b
     cp $02
@@ -3530,7 +3655,7 @@ RunRandomPatternCase_TallBlock::
     ret
 
 ; Chunk pattern 0, a single chunk: one of 32 from KeyWorldChunkLists into the slot, and the area's
-; cell. (C1, E-0357)
+; cell. (C2, E-0357; probed E-0384)
 RunRandomPatternCase_SingleChunk::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -3574,6 +3699,10 @@ RunRandomPatternCase_SingleChunk::
     ld a, $01
     ret
 
+; DE = 3 source bytes. Copies them to the three bytes just before the address in hTemp0/hTemp1 and
+; also into hTemp2, hTemp3 and hTemp4; on return HL = the address in hTemp0/hTemp1 and DE points at
+; the last source byte. The chunk pattern routines use it to store a far pointer (address, bank) in
+; a slot of wKeyWorldChunks. (C2, E-0384)
 ; copies three bytes at DE to the address in hTemp0/hTemp1 minus 3 and to hTemp2-hTemp4 (E-0121)
 StoreThreeBytesBeforeTemp0Pointer::
     ldh a, [hTemp0]
@@ -3596,6 +3725,9 @@ StoreThreeBytesBeforeTemp0Pointer::
     ldh [hTemp4], a
     ret
 
+; HL = HL + the word hTemp0/hTemp1, then stores hTemp2, hTemp3 and hTemp4 at the three bytes before
+; the new HL; HL is left at the sum. The block patterns use it to copy the same far pointer into the
+; other slots (HL = 4, 8 or $0C past the first slot byte). (C2, E-0384)
 ; HL += the word hTemp0/hTemp1, then stores hTemp2, hTemp3, hTemp4 at HL - 3 onward (E-0119)
 StoreTemp2To3BytesBeforeHLPlusTemp0::
     ldh a, [hTemp0]
@@ -3788,6 +3920,17 @@ RunRandomPatternCase_Block2x2_Data::
     dfar KeyWorldChunkGroup56 ; id 162
     dfar KeyWorldChunkGroup57 ; id 163
 
+; Rebuilds the objects of a key world map on entry. It acts only when wMapType is $80 and bit 7 of
+; wKeyWorldRefresh is set (the bit is cleared first). The band is SetKeyWorldBandForA of byte 3 of
+; the wKeyList entry of wCurrentKeyIndex (stored in wKeyWorldBand); wMapObjectCount =
+; RefreshKeyWorldObjectsOnEntry_Data[band] (10, 15 or 20); each 8-byte wMapObjects entry gets
+; RollKeyWorldObjectKind and PlaceKeyWorldObjectAtRandomCell on the layout already in
+; wKeyWorldChunks. When an entry cannot be placed the count is cut to the entries before it. Only in
+; that cut case, with the count still above 0, the routine goes on to set bit 7 of byte 0 of the
+; entry whose byte 4 equals wKeyWorldGoalCell, if wKeyWorldActive is set and wKeyWorldKey has bit 7
+; set with its low 7 bits equal to wKeyWorldSlot. When every object fits it returns without marking,
+; and a count cut to 0 restarts the routine, which then returns at once because the refresh bit is
+; already clear. (C2, E-0384)
 ; on key-world maps with bit 7 of wKeyWorldRefresh set: sets the object count wMapObjectCount from
 ; the band of the key level and drops objects for which PlaceKeyWorldObjectAtRandomCell fails; marks
 ; the wKeyWorldGoalCell object (E-0129)
@@ -3892,6 +4035,14 @@ RefreshKeyWorldObjectsOnEntry::
 RefreshKeyWorldObjectsOnEntry_Data::
     db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0f, $0f, $0f, $0f, $14, $14, $14, $14
 
+; Sets up the random objects of a town (non key world) map. It acts when bit 7 of wMapType is clear
+; and bit 7 of wKeyWorldRefresh is set, by hMapId: map $20 gives wMapObjectCount 10, wKeyWorldBand
+; 0, spot table TownObjectSpotGrid0 and hTemp0 = 1; $30: 10, 3, TownObjectSpotGrid1, 2; $48: 15, 6,
+; TownObjectSpotGrid2, 3; $70: 15, 9, TownObjectSpotGrid3, 4; $A8: 10, $0B, TownObjectSpotGrid4, 5;
+; $B0: 2, $0B, TownObjectSpotGrid5, 6; $B8: 8, $0D, TownObjectSpotGrid6, 7. For these it calls
+; SetupTownObjectsForMap_RollObjects with HL = the spot table and then
+; MarkMapObjectsEntryForKeyWorldGoalCell with that hTemp0. Maps $A0, $C8, $D1 and $DA set
+; wMapObjectCount to 0 and nothing else; other maps change nothing. (C2, E-0384)
 ; on town maps with bit 7 of wKeyWorldRefresh set: sets the object count and band for the map, drops
 ; listed objects and marks the wKeyWorldGoalCell one (E-0130)
 SetupTownObjectsForMap::
@@ -3937,7 +4088,7 @@ SetupTownObjectsForMap::
     ld a, $00
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid0
-    call RemoveMapObjectsEntryMatching
+    call SetupTownObjectsForMap_RollObjects
     ld a, $01
     ldh [hTemp0], a
     call MarkMapObjectsEntryForKeyWorldGoalCell
@@ -3949,7 +4100,7 @@ SetupTownObjectsForMap::
     ld a, $03
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid1
-    call RemoveMapObjectsEntryMatching
+    call SetupTownObjectsForMap_RollObjects
     ld a, $02
     ldh [hTemp0], a
     call MarkMapObjectsEntryForKeyWorldGoalCell
@@ -3961,7 +4112,7 @@ SetupTownObjectsForMap::
     ld a, $06
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid2
-    call RemoveMapObjectsEntryMatching
+    call SetupTownObjectsForMap_RollObjects
     ld a, $03
     ldh [hTemp0], a
     call MarkMapObjectsEntryForKeyWorldGoalCell
@@ -3973,7 +4124,7 @@ SetupTownObjectsForMap::
     ld a, $09
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid3
-    call RemoveMapObjectsEntryMatching
+    call SetupTownObjectsForMap_RollObjects
     ld a, $04
     ldh [hTemp0], a
     call MarkMapObjectsEntryForKeyWorldGoalCell
@@ -3985,7 +4136,7 @@ SetupTownObjectsForMap::
     ld a, $0b
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid4
-    call RemoveMapObjectsEntryMatching
+    call SetupTownObjectsForMap_RollObjects
     ld a, $05
     ldh [hTemp0], a
     call MarkMapObjectsEntryForKeyWorldGoalCell
@@ -3997,7 +4148,7 @@ SetupTownObjectsForMap::
     ld a, $0b
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid5
-    call RemoveMapObjectsEntryMatching
+    call SetupTownObjectsForMap_RollObjects
     ld a, $06
     ldh [hTemp0], a
     call MarkMapObjectsEntryForKeyWorldGoalCell
@@ -4009,16 +4160,22 @@ SetupTownObjectsForMap::
     ld a, $0d
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid6
-    call RemoveMapObjectsEntryMatching
+    call SetupTownObjectsForMap_RollObjects
     ld a, $07
     ldh [hTemp0], a
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
+; HL = a spot table (TownObjectSpotGrid0-6), kept in hTemp6/hTemp7. Clears bit 7 of
+; wKeyWorldRefresh, then for each of the wMapObjectCount entries of wMapObjects (8 bytes) rolls a
+; kind (RollKeyWorldObjectKind for wKeyWorldBand) and a screen with a spot
+; (SetupTownObjectsForMap_RollObjects_PlaceObject). When one cannot be placed it lowers
+; wMapObjectCount by the number of entries from that one on and returns. SetupTownObjectsForMap
+; calls it; despite the name it removes nothing. (C2, E-0384)
 ; clears bit 7 of wKeyWorldRefresh; walks the wMapObjectCount 8-byte entries at wMapObjects and
-; drops the count at the first entry for which RemoveMapObjectsEntryMatching_PlaceObject returns 0
-; (E-0125)
-RemoveMapObjectsEntryMatching::
+; drops the count at the first entry for which SetupTownObjectsForMap_RollObjects_PlaceObject
+; returns 0 (E-0125)
+SetupTownObjectsForMap_RollObjects::
     ld a, l
     ldh [hTemp6], a
     ld a, h
@@ -4036,7 +4193,7 @@ RemoveMapObjectsEntryMatching::
     ld a, b
     ldh [hTemp0], a
     call RollKeyWorldObjectKind
-    call RemoveMapObjectsEntryMatching_PlaceObject
+    call SetupTownObjectsForMap_RollObjects_PlaceObject
     or a
     jr z, .read_map_object_count
     pop bc
@@ -4060,6 +4217,10 @@ RemoveMapObjectsEntryMatching::
     ld [wMapObjectCount], a
     ret
 
+; hTemp0 = a key number. Does something only when wKeyWorldActive is non-zero and wKeyWorldKey has
+; bit 7 clear and equals hTemp0: it then sets bit 7 of byte 0 of the first of the wMapObjectCount
+; wMapObjects entries whose byte 4 equals wKeyWorldGoalCell. Used at the end of each map case of
+; SetupTownObjectsForMap. (C2, E-0384)
 ; when wKeyWorldActive is set and wKeyWorldKey equals hTemp0, sets bit 7 of the entry whose byte 4
 ; equals wKeyWorldGoalCell (E-0125)
 MarkMapObjectsEntryForKeyWorldGoalCell::
@@ -4102,8 +4263,8 @@ MarkMapObjectsEntryForKeyWorldGoalCell::
 ; as X * 16 + Y) that no earlier entry's byte 4 holds, giving up with A = 0 after 100 clashes. It
 ; then reads one of the screen's four 2-byte spots from bank $61 (8 bytes per screen): $FE picks a
 ; new screen, $FF another spot, otherwise entry byte 5 = (first << 4) | second and byte 4 = hTemp5,
-; returning A = 1. (C1, E-0371)
-RemoveMapObjectsEntryMatching_PlaceObject::
+; returning A = 1. (C2, E-0371; probed E-0384)
+SetupTownObjectsForMap_RollObjects_PlaceObject::
     push de
     xor a
     ldh [hTempA], a
@@ -4233,7 +4394,7 @@ RemoveMapObjectsEntryMatching_PlaceObject::
 ; After a warp onto a map listed in FieldState_MapTransition_AfterWarp_Data2 (except map $39 at
 ; screen (1, 1) and map $2B at (1, 2)): sets the band from the map's entry in
 ; FieldState_MapTransition_AfterWarp_Data1 and rolls three screen triggers; otherwise none. In key
-; worlds FieldState_MapTransition_RoomWarp decides. (C1, E-0357)
+; worlds FieldState_MapTransition_RoomWarp decides. (C2, E-0357; probed E-0384)
 FieldState_MapTransition_AfterWarp::
     ld a, [wMapType]
     bit 7, a
@@ -4339,6 +4500,11 @@ FieldState_MapTransition_AfterWarp_Data1::
 FieldState_MapTransition_AfterWarp_Data2::
     db $2b, $38, $39, $3a, $53, $5d, $82, $83, $ad, $ae, $ff
 
+; DE = a 4-byte screen trigger entry. DE moves up by 2 and the two bytes of row hTemp2 of
+; KeyContentsWordRows at position 2 x KeyContentsColumnPicks[hTemp3] (rows are 16 bytes) are written
+; at DE and DE + 1 (bytes 2 and 3 of the entry); DE ends 3 above the start.
+; FieldState_MapTransition_AfterWarp calls it after FieldState_MapTransition_RollTriggerContents
+; with hTemp3 rising by one per trigger. (C2, E-0384)
 ; DE += 2; writes the word at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] at DE
 ; (E-0121)
 WriteKeyContentsWordRowsEntryForTemp2Temp3::
@@ -4416,7 +4582,7 @@ KeyContentsWordRows::
 
 ; In a key world's rooms (map type 5), after a warp into an area other than the floor's two special
 ; ones: the band from the key's level byte, two screen triggers rolled; when both landed in the same
-; place only one is kept. (C1, E-0357)
+; place only one is kept. (C2, E-0357; probed E-0384)
 FieldState_MapTransition_RoomWarp::
     ld a, [wMapType]
     and $07
@@ -4497,6 +4663,10 @@ FieldState_MapTransition_RoomWarp::
     ld [wScreenTriggerCount], a
     ret
 
+; DE = a 4-byte screen trigger entry. DE moves up by 2; after a seed step i = wKeyRandomHi & 7;
+; WriteRandomEntryFromTable_Data[i] is written at DE (byte 2 of the entry) and byte 3 gets the
+; position pair that LookupKeyWorldScreenSpotRecordsNibblePairForTemp0 (bank $61) gives for the same
+; i; DE ends 3 above the start and hTemp0 holds that pair. (C2, E-0384)
 ; DE += 2; advances the random seed; hTemp0 = wKeyRandomHi & 7; writes
 ; WriteRandomEntryFromTable_Data[hTemp0] at DE, calls
 ; LookupKeyWorldScreenSpotRecordsNibblePairForTemp0, then writes hTemp0 at the next byte (E-0121)
@@ -4528,6 +4698,12 @@ WriteRandomEntryFromTable::
 WriteRandomEntryFromTable_Data::
     db $01, $10, $12, $13, $20, $21, $23, $32
 
+; hTemp0 = a level (party strength). Sets hTemp3 = hTemp0, hTemp1 = the position of the first
+; non-zero byte not below a random 0-99 in row level / 10 of KeyContentsKindChanceRows (16 bytes per
+; row), and hTemp2 = the position of the first byte not below a second random 0-99 in row level / 10
+; of KeyContentsChanceRows (60 bytes per row). WriteKeyEntryTemp0 stores hTemp1, hTemp2 and hTemp3
+; as bytes 1-3 of a new key entry in wKeyList (the first two pick the words of the key name). (C2,
+; E-0384)
 ; hTemp3 = hTemp0; picks hTemp1 from the chance row KeyContentsKindChanceRows[level / 10] and hTemp2
 ; from row KeyContentsChanceRows + $3C * (level / 10) (E-0125)
 RollKeyContentsForLevelTemp0::
@@ -4581,6 +4757,8 @@ RollKeyContentsForLevelTemp0::
     ldh [hTemp2], a
     ret
 
+; Steps the seed (NextRandomSeed) until wKeyRandomHi & $7F is below 100 and returns that value in A.
+; (C2, E-0384)
 ; repeats NextRandomSeed until wKeyRandomHi & $7F is below 100; returns A = that value (E-0116)
 RandomBelow100::
     call NextRandomSeed
@@ -4641,6 +4819,10 @@ KeyContentsChanceRows::
     db $00, $00, $43, $00, $46, $47, $00, $00, $48, $4b, $00, $00, $4d, $00, $4e, $4f, $50, $00, $51, $52
     db $53, $00, $54, $00, $55, $57, $58, $5a, $5b, $00, $5e, $60, $62, $00, $00, $64, $00, $00, $00, $00
 
+; Looks at the 20 key world slots in SRAM bank 2 ($195 bytes each, the first byte of a slot is its
+; marker). hTemp0 = the index of the first slot whose marker is not $50 + its index, or $FF when all
+; 20 match. SRAM is enabled for the check and switched off again (rRAMG and rRAMB set to 0). (C2,
+; E-0384)
 ; hTemp0 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50
 ; + index, or $FF when all match (E-0125)
 FindSRAMSlotMarkerIndex::
@@ -4679,6 +4861,9 @@ FindSRAMSlotMarkerIndex::
     ld [rRAMB], a
     ret
 
+; When wKeyWorldSlot is below 20, writes the marker byte wKeyWorldSlot + $50 and then the $194 bytes
+; at wKeyWorldFlags to SRAM bank 2 at $A000 + $195 x wKeyWorldSlot; SRAM is switched off again
+; (rRAMG and rRAMB set to 0). With a slot of 20 or more it returns without writing. (C2, E-0384)
 ; when wKeyWorldSlot < 20, writes wKeyWorldSlot + $50 and the $194 bytes at wKeyWorldFlags to SRAM
 ; bank 2 at $A000 + $195 * wKeyWorldSlot (E-0121)
 SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
@@ -4712,6 +4897,10 @@ SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ld [rRAMB], a
     ret
 
+; The counterpart of SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot: when wKeyWorldSlot is below 20
+; and the first byte of its slot in SRAM bank 2 is wKeyWorldSlot + $50, copies the $194 bytes after
+; the marker to wKeyWorldFlags; otherwise nothing is copied. SRAM is switched off again afterwards.
+; (C2, E-0384)
 ; when wKeyWorldSlot < 20 and SRAM bank 2 slot wKeyWorldSlot is marked wKeyWorldSlot + $50, copies
 ; its $194 bytes to wKeyWorldFlags; counterpart of SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 ; (E-0124)
@@ -4802,7 +4991,7 @@ KeyWorldAreaLayoutTable_Bank60::
     dw KeyWorldAreaLayout46 ; id 46
     dw KeyWorldAreaLayout47 ; id 47
 
-; PickRandomMonsterFromBandList (with RollKeyWorldMonsterTableKeyWorldMonsters and ...BossMonsters)
+; PickRandomMonsterFromBandList (with GenerateKeyWorld_RollMonsters_Normal and ...BossMonsters)
 ; reads the word at $6D6D + 16 * hTemp1 + 2 * hTemp0 and picks one of the count words that follow
 ; the list's count byte; 11 rows (families, StringTable_MonsterFamilies order) of 8 bands (E-0256,
 ; C1)

@@ -2936,7 +2936,7 @@
   },
   "CD60": {
     "name": "wKeyWorldChunks",
-    "note": "area map chunk pointers of the key world (ReadKeyWorldCellIsSolid)",
+    "note": "area map chunk pointers of the key world (CheckKeyWorldCellIsOpen)",
     "evidence": "E-0135",
     "size": "10"
   },
@@ -2990,7 +2990,7 @@
   },
   "CE72": {
     "name": "wKeyWorldEncounter",
-    "note": "monster ids and levels of the key-world encounters ($CE72-$CE7A; RollKeyWorldMonsterIds)",
+    "note": "monster ids and levels of the key-world encounters ($CE72-$CE7A; GenerateKeyWorld_RollEncounterFoes)",
     "evidence": "E-0135",
     "size": "9"
   },
@@ -3547,7 +3547,7 @@
   },
   "D0E8": {
     "name": "wLinkMenuEntry",
-    "note": "entry number for table $555D (LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes)",
+    "note": "entry number for table $555D (PackRecordBufAToLinkWorkBuf_LoadExp)",
     "evidence": "E-0136"
   },
   "D0EA": {
@@ -4226,7 +4226,7 @@
   },
   "D808": {
     "name": "wSlotsOccupiedFlag",
-    "note": "result of AllThreeSlotsFromCOccupied",
+    "note": "result of FirstPresentSlotFromC",
     "evidence": "E-0137"
   },
   "D80A": {

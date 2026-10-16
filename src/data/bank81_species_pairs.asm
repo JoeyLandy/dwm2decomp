@@ -4,9 +4,18 @@
 SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
-; Checks record B's parents against the breeding recipes for its species (the list at $4167 by
-; species id): first in their order, then swapped; when only the swapped order matches, sets record
-; B's family bit 4 (which the parents screen reads to swap their places). (C1, E-0357)
+; Checks the parents of the record in wRecordBufB against the breeding recipes of its species. It
+; copies the species, family and the species of both parents (MON_PARENT1_SPECIES,
+; MON_PARENT2_SPECIES) with the families of both parents (from LoadSpeciesFamily) into wAIWeights +
+; 0 to 8 as scratch, takes the recipe list of the species from the word at $4167 + 2 * species
+; (SpeciesPairCheckTable) and runs CheckBreedingRecipes_CompareHLToBC with the parents in their
+; order, and, if that finds no match, once more with the two parents swapped. Only when the swapped
+; order matches and the given order does not, bit 4 of MON_FAMILY of wRecordBufB is set (the parent
+; screens read it to swap the parents back); when the given order matches, or neither does,
+; MON_FAMILY is left unchanged. On return wSpeciesIdLo/wSpeciesIdHi hold the species of wRecordBufB
+; again; registers are not preserved (CallInBank81KeepRegs saves them). Called through
+; CallInBank81KeepRegs by UnpackLinkRecordToRecordBufB for a record received over the link. (C2,
+; E-0384)
 CheckBreedingRecipes::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
@@ -123,10 +132,20 @@ CheckBreedingRecipes::
     ld [wSpeciesIdHi], a
     ret
 
-; Walks a recipe list (C = 0 on a match, $FF at the end without one): an $FF rule matches when the
-; first parent is the record's own species and the second parent's family is the record's; a kind-0
-; rule names a family, a kind-1 rule a first-parent species, each followed by partners (a species
-; when bit 15 is set, otherwise a family) checked against the second parent. (C1, E-0357)
+; Walks the recipe list HL (one list of SpeciesPairCheckTable, here the list of the record species)
+; and reports in C whether the two parents fit it: C = 0 when a rule matches, C = $FF when the list
+; ends ($FF rule) without a match. Inputs: HL = the list; hTemp0/hTemp1 = species of the first
+; parent; hTemp2/hTemp3 = species of the second parent; hTemp5 = family of the second parent;
+; wAIWeights/wAIWeights + 1 = species of the record and wAIWeights + 6 = its family. A rule is a
+; kind byte and a count byte, then for kind 0 or 1 a key word and that many partner words. Kind 0:
+; applies when the family of the record equals the key (low byte); kind 1: applies when the first
+; parent species equals the key word. Of an applying rule, each partner word with bit 15 set (the
+; bit is dropped) names a species compared with the second parent species, each word without it
+; names a family compared with hTemp5 (the second parent family); any partner that fits gives C = 0.
+; A rule that does not apply, or has no fitting partner, goes on with the next rule. The terminating
+; rule $FF (its second byte is ignored) gives C = 0 when the first parent species is the record
+; species and hTemp5 equals the record family, otherwise C = $FF. A kind byte other than 0, 1 or $FF
+; is skipped with its 2 header bytes. HL, DE, B and A are clobbered. (C2, E-0384)
 CheckBreedingRecipes_CompareHLToBC::
     ld a, [hli]
     ld d, [hl]
@@ -1924,11 +1943,17 @@ SpeciesPairChecks_RayGigas::
 SpeciesPairChecks_Anemon::
     db $ff, $0a ; id 0
 
+; Looks up the experience value for a level in the link version of the EXP table. wWorkBuf + $9 (the
+; species link code of the packed record) selects a row through the byte table ExpCurveIndex81
+; ($5486 + code); wLinkMenuEntry (the level byte of the packed record) selects the 24-bit value
+; inside that $129-byte row of ExpTable81 ($555D + $129 * row + 3 * (wLinkMenuEntry - 1)). The three
+; bytes are copied to wLinkMenuEntryBytes, which in the packed record is its EXP field. A, BC, DE
+; and HL are clobbered. Called at the end of PackRecordBufAToLinkWorkBuf. (C2, E-0384)
 ; copies three bytes of table $555D entry ($5486[wWorkBuf + $9] * $129 + 3 * (wLinkMenuEntry - 1))
 ; to wLinkMenuEntryBytes (E-0121) (E-0340: the address in its name read as its RAM name; was
-; LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes) (E-0344: the address in its name dropped or read as
-; the label there; was LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes)
-LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes::
+; PackRecordBufAToLinkWorkBuf_LoadExp) (E-0344: the address in its name dropped or read as the label
+; there; was PackRecordBufAToLinkWorkBuf_LoadExp)
+PackRecordBufAToLinkWorkBuf_LoadExp::
     ld a, [wWorkBuf + $9]
     ld l, a
     ld h, $00
@@ -1965,8 +1990,8 @@ LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes::
     ld [de], a
     ret
 
-; LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes reads the byte $5486 + wWorkBuf+9 and uses it as the
-; row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31 (E-0151, C1)
+; PackRecordBufAToLinkWorkBuf_LoadExp reads the byte $5486 + wWorkBuf+9 and uses it as the row of
+; the $129-byte table at $555D; 215 bytes up to that table, values 0-31 (E-0151, C1)
 ; record: row of ExpTable81 (0-31)
 ExpCurveIndex81::
     db $0d ; id 0
@@ -2185,9 +2210,9 @@ ExpCurveIndex81::
     db $1f ; id 213
     db $1e ; id 214
 
-; LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes copies the 3 bytes at $555D + $129 * row + 3 *
-; (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different
-; values; 31 of the 32 rows rise from 0 (E-0151, C1)
+; PackRecordBufAToLinkWorkBuf_LoadExp copies the 3 bytes at $555D + $129 * row + 3 * (wLinkMenuEntry
+; - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different values; 31 of the 32
+; rows rise from 0 (E-0151, C1)
 ; record: 24-bit values for levels 1-99
 ExpTable81::
     d24 0, 2, 7, 15, 30, 50, 90, 140, 215, 330, 500 ; id 0

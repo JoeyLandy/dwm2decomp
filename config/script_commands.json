@@ -81,7 +81,7 @@
     },
     "1E": {
       "const": "SCRIPT_CHECK_ITEM",
-      "routine": "CheckItem",
+      "routine": "ReplaceFoodWithWaterCall",
       "note": "looks items up in the inventory (FindTemp0InInventoryList) and, after changing a slot, sets bit 6 of wInventorySortFlags (E-0340)",
       "evidence": "E-0245"
     },

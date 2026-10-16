@@ -2387,15 +2387,15 @@ ScriptCommand1D::
     ret
 
 ; Script command $1E (entry 29 of ScriptCommandHandlers, run once per script frame by
-; ExecuteScriptCommand while wScriptCommandType = $1E): calls CheckItem in bank $73 and returns.
-; CheckItem looks for items $19, $1A, $1B and $1C in that order (FindTemp0InInventoryList); the
-; first one found is replaced by item $30, wInventorySortFlags bit 6 is set and wScriptStartRequest
-; = $80. With none of them it returns without ending, so the command runs again next frame. Scripts
-; start it with SCRIPT_CHECK_ITEM: Script_HeroHandedOverSome (after 'That will help you for...').
-; (C2, E-0376)
+; ExecuteScriptCommand while wScriptCommandType = $1E): calls ReplaceFoodWithWaterCall in bank $73
+; and returns. ReplaceFoodWithWaterCall looks for items $19, $1A, $1B and $1C in that order
+; (FindTemp0InInventoryList); the first one found is replaced by item $30, wInventorySortFlags bit 6
+; is set and wScriptStartRequest = $80. With none of them it returns without ending, so the command
+; runs again next frame. Scripts start it with SCRIPT_CHECK_ITEM: Script_HeroHandedOverSome (after
+; 'That will help you for...'). (C2, E-0376)
 ; runs one frame of script command type 1E (entry 29 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1E::
-    farcall CheckItem
+    farcall ReplaceFoodWithWaterCall
     ret
 
 ; Script command $1F (entry 30 of ScriptCommandHandlers, run once per script frame by

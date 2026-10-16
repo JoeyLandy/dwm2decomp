@@ -222,7 +222,7 @@ HibernateMenu_SetupPartyList_CopyGlyphs::
     ret
 
 ; Hibernation party list, step 2: lists the party's records
-; (ListPartyRecordsWithState2ToListEntries). (C1, E-0357)
+; (ListPartyRecordsWithState2ToListEntries). (C2, E-0357; probed E-0384)
 HibernateMenu_SetupPartyList_ListParty::
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
@@ -417,7 +417,7 @@ HibernateMenu_OptionCursor_DrawTile_Data::
 ; CountFlaggedSRAMRecords) already number the farm level's capacity, answer 0 and step $1E;
 ; otherwise answer 2 and the choice; 1, wake: answer 3 with no sleepers, otherwise checks the farm's
 ; room for the sleeper against the farm level's capacity and the party, choosing the answer and the
-; next screen; 2: lists the sleepers (or none). (C1, E-0357)
+; next screen; 2: lists the sleepers (or none). (C2, E-0357; probed E-0384)
 HibernateMenu_DoOption::
     ld a, [wGridCursorX]
     and a
@@ -581,7 +581,7 @@ HibernateMenu_DoOption::
 ; sets wTwoChoiceCursor = 0 and adds 3 to wScreenState. Both paths clear wScriptCommandType and
 ; request script $80. Nothing in src/ names it or jumps to it; run from HibernateMenu state 3 it
 ; would lead to state 6 (HibernateMenu_ChooseWithStats), the way HibernateMenu_DoOption_ViewSleepers
-; adds 4. (C1, E-0377)
+; adds 4. (C2, E-0377; probed E-0384)
 ; lists the records; with none sets wTwoChoiceCursor = 1 and wScreenState = 2, otherwise
 ; wScreenState += 3; then requests script $80 (the next entry does the same with
 ; CountFlaggedSRAMRecords) (E-0127)
@@ -616,7 +616,7 @@ StartRecordListOrNoneMessage::
     ret
 
 ; Hibernation option 2: with no sleepers (CountFlaggedSRAMRecords) answer 1 and back to the options;
-; otherwise answer 0 and screen state + 4, letting the script speak. (C1, E-0357)
+; otherwise answer 0 and screen state + 4, letting the script speak. (C2, E-0357; probed E-0384)
 HibernateMenu_DoOption_ViewSleepers::
     farcall CountFlaggedSRAMRecords
     ld a, [wArg5]
@@ -734,7 +734,7 @@ HibernateMenu_ChooseRecords::
     dw HibernateMenu_ChooseRecords_BackToOptions
 
 ; Choosing records, step 50: draws the box and menu, notes the chosen farm record and the list
-; position, and copies its name into the name glyph buffer. (C1, E-0357)
+; position, and copies its name into the name glyph buffer. (C2, E-0357; probed E-0384)
 HibernateMenu_ChooseRecords_NoteChosenRecord::
     call DrawBoxAndMenuAndStep
     farcall ListRecordsState1NotEggs
@@ -863,7 +863,7 @@ HibernateMenu_ChooseRecords_ReadSwapAnswer::
 ; Choosing records, step 63: the swap: first packs the chosen farm record into wRecordBufA's compact
 ; form and deletes it from the farm (DeleteSRAMRecordAndCompact); then unpacks the chosen sleeper
 ; (compact slot, or slot $1D in sRecords) into the farm and frees its slot
-; (HibernateMenu_FreeAndCompactSleepers). (C1, E-0357)
+; (HibernateMenu_FreeAndCompactSleepers). (C2, E-0357; probed E-0384)
 HibernateMenu_ChooseRecords_PackForSwap::
     ld a, [wScreenSubStep]
     and a
@@ -953,7 +953,7 @@ HibernateMenu_ChooseRecords_PackForSwap::
 
 ; Choosing records, step 64: stores the packed farm record ($6F bytes from wRecordBufA) in the freed
 ; hibernation slot (sCompactRecords + $6F x slot, or sRecords for slot $1D, in SRAM bank 1), then
-; redraws the box and menu with the party list. (C1, E-0357)
+; redraws the box and menu with the party list. (C2, E-0357; probed E-0384)
 HibernateMenu_ChooseRecords_StorePackedRecord::
     ld a, $0a
     ld [rRAMG2], a
@@ -1830,7 +1830,7 @@ HibernateMenu_ChooseRecords_BackToOptions::
 ; HibernateMenu state 4, reached from option 0 (hibernate) of HibernateMenu_DoOption; dispatches on
 ; wScreenStep (75 steps). Steps 0-8 list the farm monsters that are not eggs with the paged cursor,
 ; 16-18 ask yes/no ('So this one should hibernate?'), and 21-22 put the chosen monster to sleep
-; (HibernateMenu_ChooseToHibernate_CheckRecord finds a slot with FindFreeHibernationSlot,
+; (HibernateMenu_ChooseToHibernate_CheckFreeSlot finds a slot with FindFreeHibernationSlot,
 ; _PackRecord packs it and deletes it from the farm). When the sleepers already fill the capacity
 ; ('Uh-oh, the stable is full!') HibernateMenu_DoOption starts it at step $1E: a yes/no ('Want to
 ; switch with someone?'), the sleeper list (32-40), the farm list (51-59) and the swap (66-67, _Swap
@@ -1862,7 +1862,7 @@ HibernateMenu_ChooseToHibernate::
     dw HibernateMenu_ChooseRecords_YesNoCursor
     dw DrawBoxAndMenuAndStep
     dw HibernateMenu_ChooseToHibernate_RedrawScreen
-    dw HibernateMenu_ChooseToHibernate_CheckRecord
+    dw HibernateMenu_ChooseToHibernate_CheckFreeSlot
     dw HibernateMenu_ChooseToHibernate_PackRecord
     dw HibernateMenu_ChooseRecords_SaveScreenArea
     dw HibernateMenu_ChooseRecords_RedrawScreen
@@ -2185,7 +2185,8 @@ HibernateMenu_RestoreSleeperList::
 
 ; Waking, first part: finds the chosen sleeper's compact record (sCompactRecords + $6F x slot, or
 ; sRecords at slot $1D and above) and the first free farm record (state not 1 or 2) among the 30;
-; with none free skips a step; otherwise keeps both in wListEntries2 and wMenuWordBuf. (C1, E-0357)
+; with none free skips a step; otherwise keeps both in wListEntries2 and wMenuWordBuf. (C2, E-0357;
+; probed E-0384)
 HibernateMenu_ChooseRecords_FindSleeper::
     ld a, $0a
     ld [rRAMG2], a
@@ -2265,7 +2266,7 @@ HibernateMenu_ChooseRecords_FindSleeper::
     ret
 
 ; Waking, second part: unpacks the sleeper into the free farm record; when done clears its $6F-byte
-; compact slot and frees it (HibernateMenu_FreeAndCompactSleepers). (C1, E-0357)
+; compact slot and frees it (HibernateMenu_FreeAndCompactSleepers). (C2, E-0357; probed E-0384)
 HibernateMenu_ChooseRecords_UnpackSleeper::
     ld a, [wListEntries2]
     ld [wArg1], a
@@ -2329,9 +2330,12 @@ HibernateMenu_ChooseToHibernate_RedrawScreen::
     ld [wScriptStartRequest], a
     ret
 
-; Choosing to hibernate: checks the chosen farm record (FindFreeHibernationSlot); when that returns
-; $FF skips a step; then redraws the box and menu with the party list. (C1, E-0357)
-HibernateMenu_ChooseToHibernate_CheckRecord::
+; Choosing to hibernate: looks for a free hibernation slot (FindFreeHibernationSlot, with SRAM bank
+; 0 on and HL at the list cell record). With a free slot it only adds 1 to wScreenStep. When it
+; returns $FF (all 30 slots used) it adds 2 to wScreenStep, relists the party
+; (ListPartyRecordsWithState2ToListEntries), redraws the box and menu (DrawBoxAndMenuAndStep) and
+; clears the list and choice cursors. SRAM is switched off in both cases. (C2, E-0384)
+HibernateMenu_ChooseToHibernate_CheckFreeSlot::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -2372,7 +2376,7 @@ HibernateMenu_ChooseToHibernate_CheckRecord::
 
 ; Choosing to hibernate: packs the chosen record into the hibernation slot
 ; (PackRecordFieldsToBank1Slot); when done deletes it from the farm, relists the party and redraws
-; the box and menu. (C1, E-0357)
+; the box and menu. (C2, E-0357; probed E-0384)
 HibernateMenu_ChooseToHibernate_PackRecord::
     ld a, [wArg5]
     ld [wArg2], a
@@ -2637,8 +2641,8 @@ HibernateMenu_ChooseToHibernate_RedrawAndContinue::
     ret
 
 ; Choosing to hibernate, the swap: first packs the farm record into wRecordBufA's compact form and
-; deletes it from the farm; then unpacks the chosen sleeper into the farm and frees its slot. (C1,
-; E-0357)
+; deletes it from the farm; then unpacks the chosen sleeper into the farm and frees its slot. (C2,
+; E-0357; probed E-0384)
 HibernateMenu_ChooseToHibernate_Swap::
     ld a, [wScreenSubStep]
     and a
@@ -2725,7 +2729,7 @@ HibernateMenu_ChooseToHibernate_Swap::
     ret
 
 ; Choosing to hibernate: stores the packed farm record ($6F bytes from wRecordBufA) in the freed
-; slot, then redraws the box and menu with the party list. (C1, E-0357)
+; slot, then redraws the box and menu with the party list. (C2, E-0357; probed E-0384)
 HibernateMenu_ChooseToHibernate_StorePackedRecord::
     ld a, $0a
     ld [rRAMG2], a
@@ -3027,7 +3031,8 @@ HibernateMenu_ChooseRecords_ReadWakeAnswer::
     ret
 
 ; Freeing a hibernation slot, step 18: clears the chosen compact record ($6F bytes, or slot $1D's in
-; sRecords) and compacts the store (HibernateMenu_FreeAndCompactSleepers). (C1, E-0357)
+; sRecords) and compacts the store (HibernateMenu_FreeAndCompactSleepers). (C2, E-0357; probed
+; E-0384)
 HibernateMenu_IndexListEntry_FreeSlot::
     ld a, $0a
     ld [rRAMG2], a
@@ -3088,7 +3093,7 @@ HibernateMenu_RunSwapScreen::
 ; name of farm record [HL] (CopyRecordNameToNameGlyphBuf, MON_NAME) into wNameGlyphBuf, puts $F0 at
 ; wNameGlyphBuf + $A and disables SRAM, then copies up to 10 glyphs, $F0-terminated, to wTextBuf0 +
 ; C. B is loaded into A and overwritten at once, so the record comes from [HL], not B (the one
-; caller passes the same record in both). (C1, E-0370)
+; caller passes the same record in both). (C2, E-0370; probed E-0384)
 HibernateMenu_CopyFarmRecordNameToTextBuf0::
     push bc
     ld a, $0a
@@ -3133,7 +3138,7 @@ HibernateMenu_CopyFarmRecordNameToTextBuf0::
     ret
 
 ; Copies the chosen sleeper's name from its compact record (LoadRecordNameEntry0) into wTextBuf1; a
-; name starting with glyph $E0 or above becomes empty. (C1, E-0357)
+; name starting with glyph $E0 or above becomes empty. (C2, E-0357; probed E-0384)
 HibernateMenu_CopySleeperNameToTextBuf1::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3191,7 +3196,7 @@ HibernateMenu_CopySleeperNameToTextBuf1::
     ld [wTextBuf1], a
     ret
 
-; Copies the chosen farm record's name into wTextBuf1. (C1, E-0357)
+; Copies the chosen farm record's name into wTextBuf1. (C2, E-0357; probed E-0384)
 HibernateMenu_CopyFarmRecordNameToTextBuf1::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3231,7 +3236,7 @@ HibernateMenu_CopyFarmRecordNameToTextBuf1::
     ret
 
 ; Copies sleeper wSelectedRecord's name from its compact record into wTextBuf0; a name starting with
-; glyph $E0 or above loses its third glyph (an $F0 at wTextBuf0 + 2). (C1, E-0357)
+; glyph $E0 or above loses its third glyph (an $F0 at wTextBuf0 + 2). (C2, E-0357; probed E-0384)
 HibernateMenu_CopySleeperNameToTextBuf0::
     ld a, [wSelectedRecord]
     cp $1d
@@ -5315,7 +5320,7 @@ RunNameEntryStateWhenNotFading_CheckName_Refused::
 ; Name entry checks, step 0: a name on RejectedNameList or refused by
 ; RunNameEntryStateWhenNotFading_ScanNameEntryText goes to step 5; for a monster's name a name
 ; already used by another farm record goes to step 1 (in use); a good name goes to step 3 (monsters)
-; or 2 (the player). (C1, E-0357)
+; or 2 (the player). (C2, E-0357; probed E-0384)
 RunNameEntryStateWhenNotFading_CheckName_Validate::
     ld a, [wArg1]
     and a
@@ -6048,7 +6053,7 @@ RunNameEntryStateWhenNotFading_ClearNameEntryText::
 
 ; Checks for a name already in use: compares the entered name with each farm record's name (30
 ; records of $A5 bytes); returns $FF when one matches, except the party monster being renamed (wArg1
-; 3). (C1, E-0357)
+; 3). (C2, E-0357; probed E-0384)
 RunNameEntryStateWhenNotFading_CheckName_NameInUse::
     ld hl, sRecords
     ld a, $0a
@@ -7892,7 +7897,8 @@ SuggestedName_8B::
 ; 0 of the source; when a compact slot is then free, the bank-1 slot is moved into the first free
 ; one through wRecordBufB and cleared. Finally it finds the first free slot (compact, else the
 ; bank-1 slot), clears its $6F bytes and returns its number in wArg5 and its address in wArg6 (low)
-; and wArg7 (high), or wArg5 = $FF when all 30 are used; SRAM is disabled at the end. (C1, E-0370)
+; and wArg7 (high), or wArg5 = $FF when all 30 are used; SRAM is disabled at the end. (C2, E-0370;
+; probed E-0384)
 HibernateMenu_FreeAndCompactSleepers::
     ld a, [wArg1]
     cp $1e
@@ -8100,7 +8106,7 @@ HibernateMenu_FreeAndCompactSleepers::
 ; sets wArg3 = 1 (else wArg3 = 0); with wArg1 below 30 the party entries above wArg1 are then
 ; lowered by 1. Finally it clears the first free record and returns its number in wArg5 and its
 ; address in wArg6/wArg7, or wArg5 = $FF when all 30 are in use; SRAM is disabled. Callers:
-; breeding, hibernation, the swap menu and link sessions. (C1, E-0377)
+; breeding, hibernation, the swap menu and link sessions. (C2, E-0377; probed E-0384)
 ; clears SRAM record wArg1 (when below 30) and moves the later stored records up to fill the gap,
 ; updating the party list (E-0131)
 DeleteSRAMRecordAndCompact::

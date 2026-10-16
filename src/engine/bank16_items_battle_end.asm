@@ -5770,7 +5770,8 @@ BattleEnd_AskToJoin_ShowGWasSetFree::
 
 ; Asking to join, step 21: once the text has finished deletes the released monster's record
 ; (DeleteSRAMRecordAndCompact), rebuilds the party list ($FF for empty places) and the battle slots
-; (RunForPartyMembers), and moves on two sub-phases to add the new monster. (C1, E-0357)
+; (RunForPartyMembers), and moves on two sub-phases to add the new monster. (C2, E-0357; probed
+; E-0384)
 BattleEnd_AskToJoin_ReleaseMonster::
     ld a, [wTextFlags]
     or a
@@ -6112,7 +6113,7 @@ BattleEnd_AskToJoin_RedrawEggsAfterStats::
     ret
 
 ; Asking to join, step 28: once the text has finished deletes the egg's record and moves on two
-; sub-phases to add the new monster. (C1, E-0357)
+; sub-phases to add the new monster. (C2, E-0357; probed E-0384)
 BattleEnd_AskToJoin_AbandonEgg::
     ld a, [wTextFlags]
     or a

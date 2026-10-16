@@ -7726,7 +7726,7 @@ GameMode5_Update_LinkSession_Breeding::
 ; the $A5-byte wChildRecord to the SRAM address in wArg6/wArg7, marks the child's species in
 ; wMonsterLibraryBuf (SetBitInFieldAtArg3) and clears 7 bytes of wPackWork. Both sides then clear
 ; wLinkBreedResult, run RunSaveGameSteps until wSaveStep bit 7 is set, and clear $6F bytes from
-; wScreenState. (C1, E-0369)
+; wScreenState. (C2, E-0369; probed E-0384)
 GameMode5_Update_LinkSession_Breeding_SaveChild::
     ld a, [wLinkRole]
     bit 1, a
