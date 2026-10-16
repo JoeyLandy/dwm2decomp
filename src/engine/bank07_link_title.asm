@@ -2967,9 +2967,10 @@ GameMode5_Update_LoadScreens_TitlePressStart::
 
 ; On CGB only (wIsCGB non-zero): sets hSpriteSetIndex 0 and hSpriteSubIndex 0 (the code computes $01
 ; XOR $01), clears hSpriteTileOffset, hSpriteOriginXHi, hSpriteOriginYHi and hSpriteAttrXor, sets
-; the origin to ($38, $30) and far-calls RunBankE1Routine. Nothing in src calls or jumps to it (it
-; follows a ret), so whether it runs is unknown. (C1, E-0375)
-; on CGB only: draws sprite set 0, sub-index 1, at ($38, $30) through RunBankE1Routine (E-0124)
+; the origin to ($38, $30) and far-calls DrawMetaSpriteSet_BankE1. Nothing in src calls or jumps to
+; it (it follows a ret), so whether it runs is unknown. (C1, E-0375)
+; on CGB only: draws sprite set 0, sub-index 1, at ($38, $30) through DrawMetaSpriteSet_BankE1
+; (E-0124)
 DrawCGBMetaSpriteAt38_30::
     ld a, [wIsCGB]
     or a
@@ -2988,7 +2989,7 @@ DrawCGBMetaSpriteAt38_30::
     ldh [hSpriteOriginX], a
     ld a, $30
     ldh [hSpriteOriginY], a
-    farcall RunBankE1Routine
+    farcall DrawMetaSpriteSet_BankE1
     ret
 
 ; Sets the DMG palette bytes wDMGPaletteBGP, wDMGPaletteOBP0 and wDMGPaletteOBP1 to $D2, $D2, $E2,

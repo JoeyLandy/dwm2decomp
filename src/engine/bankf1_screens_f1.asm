@@ -4,7 +4,12 @@
 SECTION "Bank F1", ROMX[$4000], BANK[$F1]
     db $f1
 
-; by its step: the 'Gift / Exit' window, a cursor on screen block $32, then a string (E-0293)
+; Runs one step of the gift menu of the pause menu (page 4 of GameMode2_Update, entered by farcall
+; from PauseMenu_State4 in bank $03). The step is wTemp0: 0 PauseMenu_State4_GiftMenu_ShowChoices
+; (item list with the 'Gift / Exit' window), 1 PauseMenu_State4_GiftMenu_ChooseGift (the yes/no
+; block), 2 PauseMenu_State4_GiftMenu_GiveGift. The steps change wTemp0 themselves: A on an item
+; moves to 1, A on yes to 2, no or B back to 0. (C1, E-0385)
+; by its step: the 'Gift / Exit' window, a cursor on screen block $32, then a string
 PauseMenu_State4_GiftMenu::
     ld a, [wTemp0]
     jumptable
@@ -12,7 +17,10 @@ PauseMenu_State4_GiftMenu::
     dw PauseMenu_State4_GiftMenu_ChooseGift
     dw PauseMenu_State4_GiftMenu_GiveGift
 
-; by its step: the 'Gift / Exit' window and its cursor (E-0294)
+; Gift menu step 0, split by wTemp1: 0 PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit draws the
+; item list and the 'Gift / Exit' window, then 1 PauseMenu_State4_GiftMenu_ShowChoices_ItemCursor
+; runs the item cursor every frame. (C1, E-0385)
+; by its step: the 'Gift / Exit' window and its cursor
 PauseMenu_State4_GiftMenu_ShowChoices::
     ld a, [wTemp1]
     jumptable
@@ -135,7 +143,10 @@ PauseMenu_State4_GiftMenu_ShowChoices_ItemCursor::
     call ShowInventoryPageItemNames_BankF1
     ret
 
-; by its step: screen block $32 with a cursor (E-0294)
+; Gift menu step 1, split by wTemp1: 0 PauseMenu_State4_GiftMenu_ChooseGift_DrawYesNo draws the
+; yes/no block, then 1 PauseMenu_State4_GiftMenu_ChooseGift_YesNoCursor runs its cursor. (C1,
+; E-0385)
+; by its step: screen block $32 with a cursor
 PauseMenu_State4_GiftMenu_ChooseGift::
     ld a, [wTemp1]
     jumptable
@@ -189,8 +200,11 @@ PauseMenu_State4_GiftMenu_ChooseGift_YesNoCursor::
     ld [wTemp1], a
     ret
 
+; Gift menu step 2, split by wTemp1: 0 PauseMenu_State4_GiftMenu_GiveGift_Check (gives the item, or
+; refuses it with string $22), then only after a refusal 1
+; PauseMenu_State4_GiftMenu_GiveGift_RedrawYesNo, 2 PauseMenu_State4_GiftMenu_GiveGift_ShowCantGive
+; and 3 PauseMenu_State4_GiftMenu_GiveGift_BackToItems. (C1, E-0385)
 ; by its step: sets the amount and counter pointer, rebuilds block $32 and shows the result string
-; (E-0294)
 PauseMenu_State4_GiftMenu_GiveGift::
     ld a, [wTemp1]
     jumptable
@@ -281,7 +295,7 @@ PauseMenu_State4_GiftMenu_GiveGift_ShowCantGive::
     inc [hl]
     ret
 
-; Giving, step 3: after the text returns to the item list. (C1, E-0357)
+; Giving, step 3: after the text returns to the item list. (C2, E-0357; probed E-0385)
 PauseMenu_State4_GiftMenu_GiveGift_BackToItems::
     ld a, [wTextFlags]
     or a
@@ -292,6 +306,12 @@ PauseMenu_State4_GiftMenu_GiveGift_BackToItems::
     ld [wTemp1], a
     ret
 
+; Starts a pause-menu item screen in wScreenTileBuffer: clears the $240 bytes to $C3
+; (ClearScreenTileBuffer_BankF1), copies screen blocks $0B and $0C, and when the bag is not empty
+; (wInventory first slot not 0) also block $0D. When wMenuItemCount is 2 or more it then writes the
+; page indicator at wScreenTileBuffer + $10E: $C5, tile $E1 + wMenuPage, $BE, tile $E0 +
+; wMenuItemCount, $C6. Called by PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit and
+; BuildScreenBlock32WithCursor_BankF1. (C2, E-0385)
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page
 ; indicator (page wMenuPage of wMenuItemCount) (E-0124)
 BuildInventoryScreenBase_BankF1::
@@ -324,6 +344,11 @@ BuildInventoryScreenBase_BankF1::
 .return:
     ret
 
+; Builds the item list screen with a cursor: BuildInventoryScreenBase_BankF1, then block $32, then
+; tile $BC (the cursor) at the place for wMenuCursor AND 7 of GiftMenu_ItemCursorAddresses (four
+; places; WriteBCTileToScreenBufferAtTableEntry_BankF1 turns the BG map address into a buffer
+; address). Called by PauseMenu_State4_GiftMenu_ChooseGift_DrawYesNo and the other screen builders
+; of this bank. (C2, E-0385)
 ; runs BuildInventoryScreenBase_BankF1, copies block $32 and draws the cursor for wMenuCursor & 7
 ; (E-0122)
 BuildScreenBlock32WithCursor_BankF1::
@@ -336,6 +361,13 @@ BuildScreenBlock32WithCursor_BankF1::
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
+; Builds the screen that shows an item effect: BuildScreenBlock32WithCursor_BankF1, blocks $11 and
+; $1B, then the 12 x 3 rectangle record that BuildItemScreenForWItemId_BankF1_Data2 lists for the
+; item kind BuildItemScreenForWItemId_BankF1_Data1[wItemId] (CopyRecordRectToScreenBuffer_BankF1),
+; then BuildItemScreen_DrawEffect, which writes what the item changes of the chosen record (HP and
+; maximum HP, MP and maximum MP, one stat, the personality, or the equipped item). Only
+; BuildItemScreenWithRecordCursor_BankF1 calls it, and nothing calls that one: this copy of a bank
+; $03 routine is not reached. (C1, E-0385)
 ; builds block $32 with the cursor, blocks $11 and $1B and the rectangle chosen by wItemId, then
 ; runs BuildItemScreen_DrawEffect (E-0122)
 BuildItemScreenForWItemId_BankF1::
@@ -356,6 +388,11 @@ BuildItemScreenForWItemId_BankF1::
     call BuildItemScreen_DrawEffect
     ret
 
+; Calls FillTilesFromRequest and BuildItemScreenForWItemId_BankF1, copies block $10, and puts the
+; cursor tile $BC at the place for wMenuSelectedMember AND 3 of
+; BuildItemScreenWithRecordCursor_BankF1_Data (WriteBCTileToScreenBufferAtTableEntry_BankF1). No
+; caller or table entry for it was found in the ROM; it is the bank $F1 copy of a pause-menu routine
+; of bank $03. (C1, E-0385)
 ; fills tiles, builds the item screen, copies block $10 and draws the cursor for wMenuSelectedMember
 ; & 3 (E-0122)
 BuildItemScreenWithRecordCursor_BankF1::
@@ -369,6 +406,9 @@ BuildItemScreenWithRecordCursor_BankF1::
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
+; Builds the item list screen with its cursor (BuildScreenBlock32WithCursor_BankF1) and then copies
+; block $0F over it. Only BuildScreenBlocks32And0FWithCursor_BankF1 calls it, and nothing calls that
+; one. (C2, E-0385)
 ; builds block $32 with the cursor and copies block $0F (E-0122)
 BuildScreenBlocks32And0F_BankF1::
     call BuildScreenBlock32WithCursor_BankF1
@@ -376,6 +416,10 @@ BuildScreenBlocks32And0F_BankF1::
     farcall CopyBlockToTileBuffer
     ret
 
+; Calls FillTilesFromRequest and BuildScreenBlocks32And0F_BankF1, copies block $10, and puts the
+; cursor tile $BC at the place for wSubMenuCursor AND 3 of GiftMenu_YesNoCursorAddresses
+; (WriteBCTileToScreenBufferAtTableEntry_BankF1). No caller or table entry for it was found in the
+; ROM; it is a bank $F1 copy of a bank $03 routine. (C1, E-0385)
 ; fills tiles, builds blocks $32 and $0F, copies block $10 and draws the cursor for wSubMenuCursor &
 ; 3 (E-0122)
 BuildScreenBlocks32And0FWithCursor_BankF1::
@@ -389,6 +433,11 @@ BuildScreenBlocks32And0FWithCursor_BankF1::
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
+; Blanks the default text window tiles (FillTilesRequest at vTiles1 with size $1202, then
+; FillTilesFromRequest), builds the item list with block $32 (BuildScreenBlock32WithCursor_BankF1),
+; copies block $10 and puts the cursor tile $BC at the place for wSubMenuCursor AND 3 of
+; GiftMenu_YesNoCursorAddresses. PauseMenu_State4_GiftMenu_GiveGift_RedrawYesNo calls it after a
+; refused gift. (C1, E-0385)
 ; clears the default window, fills tiles, builds block $32, copies block $10 and draws the cursor
 ; for wSubMenuCursor & 3 (E-0122)
 ClearWindowAndBuildBlock32WithCursor_BankF1::
@@ -405,6 +454,11 @@ ClearWindowAndBuildBlock32WithCursor_BankF1::
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
+; Shows the description of the item under the cursor: slot (wMenuPage AND $0F) * 4 + (wMenuCursor
+; AND $0F) of wInventory is the item id, which is wStringIndex (item $1F uses $6F instead);
+; wStringCategory = 6 (item descriptions). The string is drawn at vTiles2 + $230 in an 18 x 3 window
+; by ShowStringBank08AtTilesHL_BankF1. Same code as ShowSelectedItemDescription in bank $03. Called
+; by the gift menu when the list is built and when the cursor moves. (C1, E-0385)
 ; the same instruction sequence as ShowSelectedItemDescription (bank $03) apart from label operands,
 ; which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ShowSelectedItemDescription_BankF1::
@@ -434,6 +488,11 @@ ShowSelectedItemDescription_BankF1::
     call ShowStringBank08AtTilesHL_BankF1
     ret
 
+; Draws the item names of the current bag page at vTiles2 + $5C0, one 9 x 1 window per row, $90 tile
+; bytes apart, while keeping the text window (wTextWindowTileLo to wTextWindowWidth are saved and
+; restored). With items it shows the 4 ids from wInventory + 4 * (wMenuPage AND $0F) as category 5
+; strings ($FF counts as 0). With an empty bag (first slot 0) it shows string 0 of category 8 and
+; then 3 more category 5 strings from wInventory + 1. (C1, E-0385)
 ; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wInventory
 ; + $1 entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ShowInventoryPageItemNames_BankF1::
@@ -525,6 +584,8 @@ ShowInventoryPageItemNames_BankF1::
     ld [wTextWindowTileHi], a
     ret
 
+; When wMenuPageCount is not 0, writes tile $E1 + (wMenuPage AND $0F) at vBGMap0 + $10F
+; (WriteVRAMByte): the page number on the item list. (C1, E-0385)
 ; when wMenuPageCount is non-zero, writes tile $E1 + (wMenuPage & $0F) at vBGMap0 + $10F (E-0067)
 ; (the same 20 bytes appear in 2 banks)
 DrawMenuPageNumber_BankF1::
@@ -540,6 +601,10 @@ DrawMenuPageNumber_BankF1::
 .return:
     ret
 
+; Sets the cursor rows of the current bag page. On the last page (wMenuPage AND $0F equals
+; wMenuItemCount - 1) wMenuRowCount = wMenuLastPageRows and a wMenuCursor that is not below it is
+; moved to the last row; on any other page wMenuRowCount = 4. Always clears bit 7 of wMenuPage. Same
+; code as copies in two other banks. (C2, E-0385)
 ; when wMenuPage & $0F = wMenuItemCount - 1 (the last page): wMenuRowCount = wMenuLastPageRows and
 ; the cursor row wMenuCursor is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of
 ; wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
@@ -571,6 +636,11 @@ SetMenuRowsForPage_BankF1::
     res 7, [hl]
     ret
 
+; Counts the items of the 24-slot wInventory up to the first slot that is 0 or $FF; an $FF ends the
+; list and that slot and all later ones are rewritten as 0. Pages hold 4 items: wMenuPageCount =
+; wMenuItemCount = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4 when that is
+; 0; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4.
+; PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit calls it. (C2, E-0385)
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and
 ; the rest are rewritten as $00. Pages of 4: wMenuPageCount = wMenuItemCount = ceil(count / 4), at
 ; least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage
@@ -891,18 +961,28 @@ BuildItemScreen_DrawEffect::
     ld [rRAMG], a
     ret
 
+; Writes tile $C2 at wScreenTileBuffer + $147 (row 16, column 7 of the 20-wide screen) and returns.
+; BuildItemScreen_DrawEffect calls it when bit 7 of MON_STATUS of the chosen party record is set
+; (bit 7 is the dead flag). The same 6 bytes appear in 3 banks. (C2, E-0385)
 ; wScreenTileBuffer + $147 = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col7TileC2_BankF1::
     ld a, $c2
     ld [wScreenTileBuffer + $147], a
     ret
 
+; Writes tile $C1 at wScreenTileBuffer + $147 (row 16, column 7) and returns.
+; BuildItemScreen_DrawEffect calls it when bit 2 of MON_STATUS of the chosen party record is set
+; (bit 2 is read as poison); it runs after the dead check and replaces the tile that one wrote. (C2,
+; E-0385)
 ; wScreenTileBuffer + $147 = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col7TileC1_BankF1::
     ld a, $c1
     ld [wScreenTileBuffer + $147], a
     ret
 
+; Writes tile $C0 at wScreenTileBuffer + $146 (row 16, column 6) and returns.
+; BuildItemScreen_DrawEffect calls it when bit 0 of MON_STATUS of the chosen party record is set;
+; what that bit means is not known. (C2, E-0385)
 ; wScreenTileBuffer + $146 = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col6TileC0_BankF1::
     ld a, $c0
@@ -1029,6 +1109,10 @@ BuildItemScreenForWItemId_BankF1_Data2_Entry08::
     db $38, $04, $2b, $35, $18, $f8, $cd, $07, $43, $af, $ea, $a0, $c0, $ea, $a1, $c0
     db $c9
 
+; Copies the 20 x 18 tiles at the start of wScreenTileBuffer (rows 32 bytes apart) to vBGMap0, one
+; byte at a time with WriteVRAMByte. A column that reaches the end of a BG map row wraps to the
+; start of the same row, and the BG map address wraps back to $9800 after $9BFF. Same code as
+; CopyTileBufferToBGMap in bank $03. (C1, E-0385)
 ; the same 57 bytes as CopyTileBufferToBGMap (CopyTileBufferToBGMap) (E-0353)
 CopyTileBufferToBGMap_BankF1::
     ld hl, vBGMap0
@@ -1077,6 +1161,10 @@ CopyTileBufferToBGMap_BankF1::
     jr nz, .loop
     ret
 
+; B = width, C = rows, DE = source, HL = VRAM destination: copies B bytes per row with
+; WriteVRAMByteInc, VRAM rows 32 bytes apart and source rows B + 14 bytes apart (20 for a 6-wide
+; rectangle). B is kept, C ends 0. Nothing calls it from outside (its loop jumps to its own start);
+; it is a copy of a routine in another bank. (C1, E-0385)
 ; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with
 ; WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle);
 ; B kept, C = 0 (E-0067) (the same 28 bytes appear in 2 banks)
@@ -1104,6 +1192,9 @@ CopyRectToVRAMSourceStrideBPlus14_BankF1::
     jr nz, CopyRectToVRAMSourceStrideBPlus14_BankF1
     ret
 
+; Far-calls RunMoveIncapacitatedPartyMembersBackTwice, then reloads the party name tiles
+; (LoadRecordListNameTiles). PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit calls it when
+; wLevelUpGains is not 0. (C1, E-0385)
 ; far-calls RunMoveIncapacitatedPartyMembersBackTwice and reloads the record list name tiles
 ; (E-0122)
 RefreshRecordListAndNameTiles_BankF1::
@@ -1111,6 +1202,15 @@ RefreshRecordListAndNameTiles_BankF1::
     call LoadRecordListNameTiles
     ret
 
+; HL = cursor byte (low nibble = row, bit 7 = page-changed flag), DE = table of BG map addresses,
+; one per row. Up and Down (bits 6 and 7 of wJoypadPressedRepeat) move the row with wrap over
+; wMenuRowCount: the old cursor is erased ($C3, UpdateMenuCursor_EraseCursor_BankF1) with sound $69
+; when the row changed, the row is stored (clearing bit 7) and the cursor tile $BB is drawn
+; (UpdateMenuCursor_DrawCursor_BankF1); wFrameCounterLo is cleared. When wMenuPageCount is 2 or
+; more, Left and Right (bits 5 and 4) step wMenuPage with wrap, move the row up to wMenuLastPageRows
+; - 1 on the last page, set bit 7 of [HL] and play sound $69. With no input the cursor blinks: drawn
+; when wFrameCounterLo AND $1F is $10, erased when it is 0. Same code as UpdateMenuCursor in bank
+; $03. (C1, E-0385)
 ; the same instruction sequence as UpdateMenuCursor (bank $03) apart from label operands, which
 ; refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 UpdateMenuCursor_BankF1::
@@ -1294,6 +1394,9 @@ UpdateMenuCursor_DrawCursor_BankF1::
     db $fa, $6d, $c4, $e6, $03, $21, $5e, $4a, $87, $85, $6f, $30, $01, $24, $2a, $66
     db $6f, $7d, $c6, $98, $6f, $7c, $ce, $29, $67, $36, $bb, $c9
 
+; HL = table of BG map addresses (words), A = entry number: adds $2998 to the address of that entry,
+; which turns a $98xx BG map address into the same place in wScreenTileBuffer, and writes the cursor
+; tile $BC there. (C2, E-0385)
 ; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG
 ; map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC
 ; there (E-0072) (the same 20 bytes appear in 2 banks)
@@ -1310,6 +1413,8 @@ WriteBCTileToScreenBufferAtTableEntry_BankF1::
     ld [hl], $bc
     ret
 
+; HL = table of VRAM addresses (words), A = entry number: writes the cursor tile $BC at the address
+; of that entry (WriteVRAMByte). No caller was found in the ROM. (C1, E-0385)
 ; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte)
 ; (E-0067) (the same 15 bytes appear in 3 banks)
 WriteBCTileAtWordTableEntry_BankF1::
@@ -1353,7 +1458,8 @@ ShowStringBank08AtTilesHL_BankF1_2::
     ld [wTextWindowTileHi], a
     ret
 
-; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks) (E-0353)
+; Fills the $240 bytes of wScreenTileBuffer with the blank tile $C3. (C2, E-0385)
+; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
 ClearScreenTileBuffer_BankF1::
     ld hl, wScreenTileBuffer
     ld bc, $0240
@@ -1361,6 +1467,9 @@ ClearScreenTileBuffer_BankF1::
     call FillBytes
     ret
 
+; HL = a rectangle record: word offset, width, rows, then width * rows tile bytes. Copies the tiles
+; into wScreenTileBuffer + offset, rows 32 bytes apart. Used by BuildItemScreenForWItemId_BankF1.
+; (C2, E-0385)
 ; HL = header (word offset, width, rows) followed by the tile bytes: copies the rectangle into
 ; wScreenTileBuffer + offset with rows 32 bytes apart (the same steps as ReadScreenBufferRectHeader
 ; then CopyRectToStride32) (E-0065) (the same 32 bytes appear in 2 banks)
@@ -1396,6 +1505,10 @@ CopyRecordRectToScreenBuffer_BankF1::
     jr nz, .loop
     ret
 
+; HL = word table, A = index: HL = the word at HL + 2 * A, then sets wStringCategory = 8,
+; wStringIndex = 5 and DE = $0501 and falls into ShowStringBank08AtTilesHL_BankF1, so string 5 of
+; category 8 is drawn at the tile address taken from the table in a 5 x 1 window. No caller was
+; found in the ROM. (C1, E-0385)
 ; the same 81 bytes as DerefWordTableEntryA_Bank03 (DerefWordTableEntryA_Bank03) (E-0122)
 DerefWordTableEntryA_BankF1::
     add a
@@ -1407,6 +1520,10 @@ DerefWordTableEntryA_BankF1::
     ld [wStringIndex], a
     ld de, $0501
 
+; HL = VRAM tile address, DE = window size (D = width, E = rows): saves the text window
+; (wTextWindowTileLo to wTextWindowWidth), points it at HL and DE, far-calls ShowString_Bank08 to
+; draw string wStringIndex of category wStringCategory, and restores the window. Used for the item
+; descriptions and effect pictures of the bank $F1 menus. (C1, E-0385)
 ; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and
 ; the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different
 ; register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
@@ -1473,6 +1590,11 @@ GiftMenu_YesNoCursorAddresses::
     db $e4, $98, $2f, $99, $6f, $99, $82, $99, $84, $99, $86, $99, $88, $99, $8a, $99
     db $8c, $99, $8e, $99, $90, $99
 
+; Fills the $2D0 bytes from wScreenTileBuffer with the blank tile $C3 (the screen tile buffer and
+; the window tile buffer after it). When wIsCGB is not 0 it then switches rSVBK to WRAM bank 2,
+; clears the $2D0 bytes from wScreenAttrBuffer (the attribute buffers wScreenAttrBuffer and
+; wWindowAttrBuffer) to 0 and switches rSVBK back to 0. Far-called by the link title, link egg, link
+; priest and bank $F2 screens. (C2, E-0385)
 ; fills the $2D0 bytes $C198-$C467 (wScreenTileBuffer, $240 bytes, and the $90 bytes after it) with
 ; $C3; on CGB continues with the attribute buffer (not fully read) (E-0077)
 ClearScreenBufferAndAttributes_BankF1::
@@ -1505,6 +1627,13 @@ ClearScreenBufferAndAttributes_BankF1::
     ldh [rSVBK], a
     ret
 
+; Per-frame runner of the link breeding and record screens (far-called by the link egg code of banks
+; $1B and $33): returns while a palette fade runs (wFadeState not 0), otherwise jumps by
+; wScreenState to one of 18 states listed in the table right after it: 0 swap menu, 2 'Ready to
+; start breeding.', 3 choosing the monster, 4 RunScreenStateWhenNotFading_F1_LinkBreed, 12 the stats
+; screen runner, 13 RunScreenStateWhenNotFading_F1_ShowRecordStats, 14 the breed screen redraw, 17
+; RunScreenStateWhenNotFading_F1_ShowChosenRecord; states 1, 5-11, 15 and 16 all run
+; RunScreenStateWhenNotFading_F1_ExitToLinkMenu. (C1, E-0385)
 ; the link breeding and record screens (link sessions 2 and 6, the egg service menu): while no fade
 ; runs, by wScreenState: the swap menu, 'Ready to start breeding?', choosing the breeding monster,
 ; link breeding, record stats and the chosen record (E-0354; was: unless a fade is running, runs the
@@ -1544,7 +1673,7 @@ RunScreenStateWhenNotFading_F1_SwapMenu::
 
 ; Link breeding screens, states 1, 5-11, 15 and 16: once the text is done (wTextFlags bit 0 clear)
 ; clears the $6F bytes from wScreenState and requests game mode 5, state 1 (wGameMode, wModeState,
-; wModeChangeRequest). (C1, E-0371)
+; wModeChangeRequest). (C2, E-0371; probed E-0385)
 RunScreenStateWhenNotFading_F1_ExitToLinkMenu::
     ld a, [wTextFlags]
     bit 0, a
@@ -1612,7 +1741,8 @@ RunScreenStateWhenNotFading_F1_ChoosePleaseWait::
     ld [wScreenStep], a
     ret
 
-; Choosing the breeding monster, step 1: after the text sends 1. (C1, E-0357)
+; Choosing the breeding monster, step 1: returns while wTextFlags is not 0; after the text sends 1
+; (wLinkSendByte) and adds 1 to wScreenStep. (C2, E-0385)
 RunScreenStateWhenNotFading_F1_ChooseSendSync::
     ld a, [wTextFlags]
     and a
@@ -1639,7 +1769,7 @@ RunScreenStateWhenNotFading_F1_ChoosePrompt::
     ld [wScreenStep], a
     ret
 
-; Choosing the breeding monster, step 3: after the text the next state. (C1, E-0357)
+; Choosing the breeding monster, step 3: after the text the next state. (C2, E-0357; probed E-0385)
 RunScreenStateWhenNotFading_F1_ChooseFinish::
     ld a, [wTextFlags]
     and a
@@ -1651,8 +1781,17 @@ RunScreenStateWhenNotFading_F1_ChooseFinish::
     ld [wScreenState], a
     ret
 
+; Link breeding, screen state 4: jumps by wScreenStep to one of 33 steps listed in the table right
+; after it; each step is documented at its own label. Most of the list steps (0-3, 5-7, 13) run the
+; breeding list menu; steps 19, 27 and 31 share RunScreenStateWhenNotFading_F1_LinkBreed_SendReady;
+; 9, 10 and 11 are the refusal sequence (RunScreenStateWhenNotFading_F1_RefusalHandshake,
+; RunScreenStateWhenNotFading_F1_RefusalClosing); 20 and 21 exchange the records
+; (RunScreenStateWhenNotFading_F1_BreedStartExchange,
+; RunScreenStateWhenNotFading_F1_BreedEndExchange); 29 makes the child and 30 stores it
+; (RunScreenStateWhenNotFading_F1_BreedStoreChild); 32 is
+; RunScreenStateWhenNotFading_F1_LinkBreed_Finish. (C1, E-0385)
 ; by wScreenStep: BreedMenu list steps, link messages, a two-choice confirmation and
-; ComputeBreedingChild (E-0288)
+; ComputeBreedingChild
 RunScreenStateWhenNotFading_F1_LinkBreed::
     ld a, [wScreenStep]
     jumptable
@@ -1789,7 +1928,8 @@ RunScreenStateWhenNotFading_F1_ShowPleaseWait::
     call BeginString_Bank0E_Cat0
     ret
 
-; Re-asking, sub-step 1: after the text sends 1. (C1, E-0357)
+; Re-asking after a cancelled pick, sub-steps 1 and 5 of wScreenSubStep: returns while wTextFlags is
+; not 0; after the text adds 1 to wScreenSubStep and sends 1 (wLinkSendByte). (C2, E-0385)
 RunScreenStateWhenNotFading_F1_ReAskSendSync::
     ld a, [wTextFlags]
     and a
@@ -1889,12 +2029,20 @@ RunScreenStateWhenNotFading_F1_LinkBreed_DrawPanel::
     ld [wScreenStep], a
     ret
 
-; Link breeding, step 15: waits for the text. (C1, E-0357)
+; Link breeding, step 15: returns while wTextFlags is not 0; after the text it falls into
+; CopyScreenBufferRectAt0278AndStep_BankF1, which copies the 5 x 8 tile rectangle from
+; wScreenTileBuffer + $AC to + $278 (also the CGB attributes), adds 1 to wScreenStep and clears
+; wSelectedRecord. (C2, E-0385)
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitText::
     ld a, [wTextFlags]
     and a
     ret nz
 
+; Copies 5 rows of 8 tiles inside the screen buffer from wScreenTileBuffer + $AC to
+; wScreenTileBuffer + $278 (rows 20 bytes apart; CopyScreenBufferRectWithAttrs_F1 with wArg1 = 0,
+; wArg2 = 8, which also copies the attributes on a CGB), then wScreenStep += 1 and wSelectedRecord =
+; 0. Called by RunScreenStateWhenNotFading_F1_BreedLoadPick;
+; RunScreenStateWhenNotFading_F1_LinkBreed_WaitText falls into it. (C2, E-0385)
 ; runs CopyScreenBufferRectWithAttrs_F1 (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), wScreenStep
 ; += 1 and clears wSelectedRecord (E-0122) (E-0344: the address in its name dropped or read as the
 ; label there; was CopyScreenBufferRectAt0278AndStep_BankF1; shortened from
@@ -2033,7 +2181,9 @@ RunScreenStateWhenNotFading_F1_BreedLoadPick::
     call DrawScreenBufferRect_BankF1
     ret
 
-; Link breeding, step 19: after the text sends 1. (C1, E-0357)
+; Link breeding, steps 19, 27 and 31: returns while wTextFlags is not 0; after the text adds 1 to
+; wScreenStep and sends 1 (wLinkSendByte), the ready signal the partner waits for in the next step.
+; (C2, E-0385)
 RunScreenStateWhenNotFading_F1_LinkBreed_SendReady::
     ld a, [wTextFlags]
     and a
@@ -2091,7 +2241,7 @@ RunScreenStateWhenNotFading_F1_BreedStartExchange::
 
 ; Link breeding, step 21: when wLinkMessage is $F0 (the exchange has ended) clears wLinkReady and
 ; goes on (wScreenStep += 1) to the pair check RunScreenStateWhenNotFading_F1_BreedCheckPair;
-; otherwise waits. (C1, E-0373)
+; otherwise waits. (C2, E-0373; probed E-0385)
 RunScreenStateWhenNotFading_F1_BreedEndExchange::
     ld a, [wLinkMessage]
     cp $f0
@@ -2457,7 +2607,7 @@ RunScreenStateWhenNotFading_F1_BreedRecordYesNo::
 ; wSaveRecordIndex, sets the child species bit in wMonsterLibraryBuf (SetBitInFieldAtArg3), clears 7
 ; bytes at wPackWork, adds the vault entries prepared at step 25 (IncrementTwoCountersCappedAt99),
 ; then sets wScreenSubStep = 1 and wMenuCounter = 1. Sub-step 1 waits until wMenuCounter is 0, then
-; clears the sub-step and goes on. (C1, E-0373)
+; clears the sub-step and goes on. (C2, E-0373; probed E-0385)
 RunScreenStateWhenNotFading_F1_BreedStoreChild::
     ld a, [wTextFlags]
     and a
@@ -2566,7 +2716,7 @@ RunScreenStateWhenNotFading_F1_BreedPartnerReady::
 
 ; Link breeding, step 9, which every refusal path of this table selects after sending $FE: waits for
 ; a $FE from the partner, then clears wLinkSendByte and goes on to
-; RunScreenStateWhenNotFading_F1_RefusalPleaseWait. (C1, E-0373)
+; RunScreenStateWhenNotFading_F1_RefusalPleaseWait. (C2, E-0373; probed E-0385)
 RunScreenStateWhenNotFading_F1_RefusalHandshake::
     ld a, [wLinkMessage]
     cp $fe
@@ -2596,7 +2746,8 @@ RunScreenStateWhenNotFading_F1_RefusalPleaseWait::
 
 ; Link breeding, step 11, by wScreenSubStep: sub-step 0 sends 1 after the text
 ; (RunScreenStateWhenNotFading_F1_RefusalClosingSend); sub-step 1 waits for a 1 from the partner and
-; then leaves for wScreenState 1 (RunScreenStateWhenNotFading_F1_RefusalClosingEnd). (C1, E-0373)
+; then leaves for wScreenState 1 (RunScreenStateWhenNotFading_F1_RefusalClosingEnd). (C2, E-0373;
+; probed E-0385)
 ; waits for the text, then for the partner's link message
 RunScreenStateWhenNotFading_F1_RefusalClosing::
     ld a, [wScreenSubStep]
@@ -2604,7 +2755,7 @@ RunScreenStateWhenNotFading_F1_RefusalClosing::
     dw RunScreenStateWhenNotFading_F1_RefusalClosingSend
     dw RunScreenStateWhenNotFading_F1_RefusalClosingEnd
 
-; Waiting, sub-step 0: after the text sends 1. (C1, E-0357)
+; Waiting, sub-step 0: after the text sends 1. (C2, E-0357; probed E-0385)
 RunScreenStateWhenNotFading_F1_RefusalClosingSend::
     ld a, [wTextFlags]
     and a
@@ -2618,7 +2769,7 @@ RunScreenStateWhenNotFading_F1_RefusalClosingSend::
 
 ; Closing exchange, sub-step 1: on a 1 from the partner clears wLinkSendByte and wScreenStep and
 ; sets wScreenState to 1, which RunScreenStateWhenNotFading_F1 runs as
-; RunScreenStateWhenNotFading_F1_ExitToLinkMenu; otherwise waits. (C1, E-0373)
+; RunScreenStateWhenNotFading_F1_ExitToLinkMenu; otherwise waits. (C2, E-0373; probed E-0385)
 RunScreenStateWhenNotFading_F1_RefusalClosingEnd::
     ld a, [wLinkMessage]
     cp $01
@@ -2631,8 +2782,9 @@ RunScreenStateWhenNotFading_F1_RefusalClosingEnd::
     ld [wScreenState], a
     ret
 
-; Link breeding, step 32: after the text, on the partner's 1 clears $6F bytes of screen state and
-; sets wLinkScene 1. (C1, E-0357)
+; Link breeding, step 32: returns while wTextFlags is not 0, and then until wLinkMessage is 1 (the
+; partner is done); then clears wLinkSendByte and the $6F bytes from wScreenState and sets
+; wLinkScene to 1. (C2, E-0385)
 RunScreenStateWhenNotFading_F1_LinkBreed_Finish::
     ld a, [wTextFlags]
     and a
@@ -2671,7 +2823,11 @@ RunScreenStateWhenNotFading_F1_RunStatsScreen::
     ld [wScreenState], a
     ret
 
-; by wScreenStep: a string, BreedMenu list steps and the chosen record's name and species (E-0304)
+; Screen state 17: jumps by wScreenStep to one of 10 steps listed in the table right after it: 0
+; RunScreenStateWhenNotFading_F1_ChosenRecordStart, 1 ShowString0EAndStep_BankF1, steps 2-4, 8 and 9
+; each run one call of the breeding list menu, 5 RunScreenStateWhenNotFading_F1_LinkBreed_DrawPanel,
+; 6 and 7 clear and draw the name tiles of the chosen record. (C1, E-0385)
+; by wScreenStep: a string, BreedMenu list steps and the chosen record's name and species
 RunScreenStateWhenNotFading_F1_ShowChosenRecord::
     ld a, [wScreenStep]
     jumptable
@@ -2692,13 +2848,15 @@ RunScreenStateWhenNotFading_F1_ChosenRecordList::
     farcall BreedMenu
     ret
 
-; The chosen record, step 0: moves on. (C1, E-0357)
+; The chosen record, step 0: moves on. (C2, E-0357; probed E-0385)
 RunScreenStateWhenNotFading_F1_ChosenRecordStart::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
+; Far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1. It is a step of the
+; chosen-record screen and is also used as a step by other screen tables. (C1, E-0385)
 ; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1 (E-0122)
 ShowString0EAndStep_BankF1::
     farcall ShowString0EBank0EAtTiles2700AndLoadTiles
@@ -2749,8 +2907,14 @@ RunScreenStateWhenNotFading_F1_DrawChosenName::
     ld [wScreenStep], a
     ret
 
+; Screen state 13, the stats screens of the record in wRecordBufB: jumps by wScreenStep to one of 33
+; steps listed in the table right after it, each documented at its own label. Steps 0-5 draw the
+; first page (clear, heading, frame, values, picture; step 2 is
+; RunScreenStateWhenNotFading_F1_PartnerStatsNext), 6 reads its keys, 7 leaves, 8-13 are
+; RunScreenStateWhenNotFading_F1_StatsIdle (a bare ret), 14-22 draw and run the second page, 23-29
+; the skills page and 30-32 the pedigree page. (C1, E-0385)
 ; by wScreenStep: the stats screens of record buffer B (picture, name, personality, family icon,
-; level and status, skills, category string) with a paged cursor (E-0288)
+; level and status, skills, category string) with a paged cursor
 RunScreenStateWhenNotFading_F1_ShowRecordStats::
     ld a, [wScreenStep]
     jumptable
@@ -2790,7 +2954,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
 
 ; The record stats screen (wScreenState $0D), steps 8-13: a bare ret. No step of
 ; RunScreenStateWhenNotFading_F1_ShowRecordStats writes 8-13 to wScreenStep (step 7 leaves the
-; state, step 6 jumps to $0E), so what reaches them is not found. (C1, E-0373)
+; state, step 6 jumps to $0E), so what reaches them is not found. (C2, E-0373; probed E-0385)
 RunScreenStateWhenNotFading_F1_StatsIdle::
     ret
 
@@ -2812,13 +2976,17 @@ RunScreenStateWhenNotFading_F1_StatsShowHeading::
     farcall LoadSixteenGlyphTilesFromTable
     call DrawShortStringRecordBufBNameAtTiles1500
 
-; The partner's monster stats, step 2: moves on. (C1, E-0357)
+; The partner's monster stats, step 2: moves on. (C2, E-0357; probed E-0385)
 RunScreenStateWhenNotFading_F1_PartnerStatsNext::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
+; Blanks a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the name at wRecordBufB +
+; MON_NAME as a short string to wNameGlyphBuf (CopyShortStringToNameGlyphBuf_BankF1) and draws its
+; glyphs there (CopyGlyphTilesToVRAM). Called by RunScreenStateWhenNotFading_F1_StatsShowHeading,
+; whose step falls on into RunScreenStateWhenNotFading_F1_PartnerStatsNext. (C1, E-0385)
 ; clears a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the short string at wRecordBufB
 ; + $1 to wNameGlyphBuf (CopyShortStringToNameGlyphBuf_BankF1) and draws its glyphs at vTiles1 +
 ; $500 (E-0116) (E-0340: the address in its name read as its RAM name; was

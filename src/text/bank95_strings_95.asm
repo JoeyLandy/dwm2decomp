@@ -82,7 +82,7 @@ BeginStringDisplay_Bank08_Overflow::
     ret
 
 ; Copies a string of category wStringCategory - 9 from this bank's categories to the buffer
-; (CopyStringToBuffer). (C1, E-0357)
+; (CopyStringToBuffer). (C2, E-0357; probed E-0385)
 CopyStringToBuffer_Bank08_Overflow::
     ld de, StringCategories_Bank95
     ld a, [wStringCategory]

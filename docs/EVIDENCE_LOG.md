@@ -2431,6 +2431,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0385 — Readability batch 17: 900 routines in banks $85-$F1 read or probed (742 probed, 2,281 probes)
+
+- Date: 2026-10-16. Kind: REVIEW and OBSERVATION (static readings C1; probed claims C2 on tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 9a0cd8c (E-0384).
+- **Method.** Slices 7-12 of the twelve drafted with E-0384 (D-014), three of them rerun after the usage stop. Before validation the drafts were moved onto the post-E-0384 names (62 renames). 900 entries: 537 notes, 742 routines probed (2,281 probes, all passing; config/probes/E-0385.json). The integrator read 90 entries (15 per draft) against the code: all correct, 0% rejection. Integrator changes: nine child and data labels took the new prefix of their renamed parents (SetWorldMapPlayerScreenByMapType_PlaceAtExit and the others, DrawMetaSpriteSet_BankE1_BuildOam, FindMinOfSixStatWords_Data); a derived table label of 54 characters was named EffectViewerScreenTileRect.
+- **Names.** 38, among them FindMinOfSixStatWords and FindMaxOfSixStatWords (they compare six record words, not five), SetWorldMapPlayerScreenByMapType (game mode 2 is the pause menu; its only caller is the world map), LoadBattleSlotC_A0 and its party and foe steps, the seven unreferenced AIScoreB_ wrappers (AIScore_<Skill>_UnreferencedVariant: no table entry or pointer reaches them), RaiseLowestResistances (the pick is not random) and the staff-roll hop steps (they add the hop to Y).
+- **Earlier readings corrected** (with passing probes): ComputeBattleResultRank only reads wWildLevel; ApplyBattleResultStatChanges searches six words and caps the gold; SubtractCFromWordMin1's B; RunBattleCommandEntry_BankA1_MarkEnemySlots marks slots 4-6; SaveActionChoicesAndPickFormations stops in link mode 1; AddBCToWordAtHL returns HL + 1; the AI weight routines send negative rows to wAISkillScore2; InitBattleSlotsForFoeCount's slot 6 and 7; the canal gate hop runs twice; FormationCompatibilityRoll uses B mod 3.
+- **Open questions** are in [READABILITY_OPEN_QUESTIONS.md](READABILITY_OPEN_QUESTIONS.md) under E-0385.
+- **Checks.** build/run_E-0385, build/run_E-0385b and build/run641 (after the child renames) PASS (approved size and SHA-256, zero differing bytes); no stale name; parallel suite build/logs/par641.log OK (396 tests, 3 skipped; 16,673 probes). Queue: unread 554 to 71; hand readings 9,751.
+
 ### E-0384 — Readability batch 16: 900 routines in banks $01-$85 read or probed (783 probed, 2,646 probes)
 
 - Date: 2026-10-16. Kind: REVIEW and OBSERVATION (static readings C1; probed claims C2 on tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 3e8d4ae (E-0383).

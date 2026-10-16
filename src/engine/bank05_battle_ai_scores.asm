@@ -4421,8 +4421,8 @@ AIScore_MagicBack_Conditions_NotYetSet::
 ; wLinkRules + $1 has bit 7 (rules on) and bit 6 set. Then C = 0 when wLinkRules + $2 bit 6 is clear
 ; (no use allowed) or bit 6 is set in wLinkRuleFlags + actor / 4, the byte of the actor side
 ; (wLinkRuleState for slots 4-7), the bit CheckLinkRuleViolation sets on the one allowed use;
-; otherwise C = $FF. AIAddScoresForLinkRuleCheckLinkRules1Bit6 and AIScore_Sacrifice_WeighLinkRule
-; add weight row $0E to wAISkillScore2 when it gives 0. (C2, E-0375)
+; otherwise C = $FF. WeighLinkRuleBit6AndTurnLimit and AIScore_Sacrifice_WeighLinkRule add weight
+; row $0E to wAISkillScore2 when it gives 0. (C2, E-0375)
 ; link battles only: C = $00 when rule bits 7 and 6 of wLinkRules + $1 are set and the side's
 ; wLinkRuleFlags flag (or wLinkRules + $2 bit 6) allows it; otherwise $FF (E-0124) (E-0340: the
 ; address in its name read as its RAM name; was LinkRuleCheckLinkRules1Bit6)
@@ -4698,8 +4698,8 @@ AIScore_MegaMagic_LinkRule::
 
 ; C = $FF unless wLinkMode is neither 0 nor 2 and wLinkRuleTurnLimit bit 7 is set (a turn limit is
 ; on). Then, with T = its bits 0-6, C = 0 when wBattleTurn - T (8-bit) is negative ($80-$FF) or
-; below 4, and C = $FF from four turns past the limit on. AIAddScoresForLinkRuleCheckLinkRules1Bit6
-; adds weight row $0F when it gives 0. (C2, E-0375)
+; below 4, and C = $FF from four turns past the limit on. WeighLinkRuleBit6AndTurnLimit adds weight
+; row $0F when it gives 0. (C2, E-0375)
 ; link battles only: C = $00 when the wLinkRuleTurnLimit rule is on and wBattleTurn is less than 4
 ; past its limit; otherwise $FF (E-0124)
 LinkRuleCheckLinkRuleTurnLimitTurnLimit::
@@ -12522,7 +12522,7 @@ AILickSkillUsable::
     call ResetAISkillScore
     ret
 
-; Usability check of AIScore_SickLick and AIScore_Ahhh_2: runs ActorCanPayMPCost_Bank05,
+; Usability check of AIScore_SickLick and AIScore_AhhhStatusLick: runs ActorCanPayMPCost_Bank05,
 ; SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus3And4Bits,
 ; AnyFoeHasClearStatus3 and AnyFoeVulnerableBySlotResistances5Bits23 in turn; the first that gives C
 ; = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C =

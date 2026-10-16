@@ -4,6 +4,10 @@
 SECTION "Bank 89", ROMX[$4000], BANK[$89]
     db $89
 
+; When wStringIndex is below $DE it starts the text printer (BeginStringDisplay) on that string of
+; MessageStrings_Bank89; otherwise it far-calls BeginStringDisplay_Bank89_Overflow, which subtracts
+; $DE from the index and uses the table in bank $98. Callers: StartMessageForGroup_Group0D,
+; ShowMessageHL_ToBeginStringDisplay_Bank89 and DebugMessageTest_Update_ShowBank89. (C1, E-0385)
 ; message bank $89: when wStringIndex < $DE, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank89; otherwise far-calls BeginStringDisplay_Bank89_Overflow (E-0080)
 BeginStringDisplay_Bank89::
@@ -18,6 +22,10 @@ BeginStringDisplay_Bank89::
     call BeginStringDisplay
     ret
 
+; When wStringIndex is below $DE it copies that string of MessageStrings_Bank89 (CopyStringToBuffer:
+; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi); otherwise it far-calls
+; CopyStringToBuffer_Bank89_Overflow, which subtracts $DE and uses the table in bank $98. No routine
+; in src/ calls it by name. (C2, E-0385)
 ; message bank $89: when wStringIndex < $DE, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank89; otherwise far-calls CopyStringToBuffer_Bank89_Overflow (E-0080)
 CopyStringToBuffer_Bank89::

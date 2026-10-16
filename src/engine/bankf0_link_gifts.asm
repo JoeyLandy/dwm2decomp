@@ -4,6 +4,11 @@
 SECTION "Bank F0", ROMX[$4000], BANK[$F0]
     db $f0
 
+; Starts the message wStringIndex of category wStringCategory from this bank first string table
+; (BeginStringDisplay_BankF0_StringCategories: inn, shop and vault messages such as 'Will you stay
+; with us tonight?') by calling BeginStringDisplay with DE = that table; the text printer then draws
+; it. Far-called by DebugMessageTest_Update_ShowBankF0 and listed in StartMessageForGroup_Data for
+; message modes 1 and 2. (C1, E-0385)
 ; ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or
 ; read as the label there; was BeginStringDisplay_BankF0)
 BeginStringDisplay_BankF0::
@@ -385,6 +390,11 @@ Text_ThatWillBeG::
     db "<VOICE1>*: That will be<LINE>"
     db "<BUF0>G. OK?@"
 
+; Starts the message wStringIndex of category wStringCategory from this bank second string table
+; (BeginStringDisplay_BankF0_2_StringCategories: the Dream Egg exchange messages such as 'Obtain a
+; Dream Egg from ...?') by calling BeginStringDisplay with DE = that table. Called by
+; ShowString_BankF0 and BeginString_BankF0_Cat0 and far-called by
+; DebugMessageTest_Update_ShowBankF0Second. (C1, E-0385)
 ; ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or
 ; read as the label there; was BeginStringDisplay_BankF0_2)
 BeginStringDisplay_BankF0_2::
@@ -393,8 +403,11 @@ BeginStringDisplay_BankF0_2::
     ret
     db $11, $b5, $48, $cd, $fe, $25, $c9
 
+; Calls BeginStringDisplay_BankF0_2 and then RunStringDisplayToEnd, so the message chosen by
+; wStringCategory and wStringIndex is drawn whole at once (wTextFlags bit 1 set) instead of one
+; glyph per frame. The Dream Egg screens use it for the small tile texts such as 'Info / OK' and
+; 'Yes / No'. (C1, E-0385)
 ; BeginStringDisplay_BankF0_2 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_BankF0::
     call BeginStringDisplay_BankF0_2
     call RunStringDisplayToEnd
@@ -644,7 +657,7 @@ DreamEggs_State0::
     dw DreamEggs_State0_DrawYesNoBox
     dw RunLinkSession8Exchange_ReadSaveAnswer
 
-; State 0, step 0: sends $BA. (C1, E-0357)
+; State 0, step 0: sends $BA. (C2, E-0357; probed E-0385)
 DreamEggs_State0_SendSync::
     ld a, [wScreenStep]
     inc a
@@ -653,7 +666,7 @@ DreamEggs_State0_SendSync::
     ld [wLinkSendByte], a
     ret
 
-; State 0, step 1: on the partner's $BA goes on. (C1, E-0357)
+; State 0, step 1: on the partner's $BA goes on. (C2, E-0357; probed E-0385)
 DreamEggs_State0_WaitSync::
     ld a, [wLinkMessage]
     cp $ba
@@ -668,7 +681,7 @@ DreamEggs_State0_WaitSync::
 ; State 0, step 2: copies the player's name (up to 10 bytes, then $F0) to wLinkRecvBuffer, stores
 ; wPlayerId in wLinkEggFamilyBit (wLinkRecvBuffer + 12), then starts a 12-byte link exchange: source
 ; wLinkRecvBuffer (kept in wLinkTimeoutLo/Hi), destination wLinkPartnerName (wLinkBufferPtrLo/Hi),
-; count wLinkBufferCountLo/Hi, wLinkSendByte = $FF and wLinkReady = 1. (C1, E-0371)
+; count wLinkBufferCountLo/Hi, wLinkSendByte = $FF and wLinkReady = 1. (C2, E-0371; probed E-0385)
 DreamEggs_State0_StartNameSwap::
     ld a, [wScreenStep]
     inc a
@@ -713,7 +726,7 @@ DreamEggs_State0_StartNameSwap::
     ld [wLinkReady], a
     ret
 
-; State 0, step 3: when the exchange ends ($F0) goes on. (C1, E-0357)
+; State 0, step 3: when the exchange ends ($F0) goes on. (C2, E-0357; probed E-0385)
 DreamEggs_State0_WaitNameSwap::
     ld a, [wLinkMessage]
     cp $f0
@@ -727,7 +740,7 @@ DreamEggs_State0_WaitNameSwap::
     ld [wScreenStep], a
     ret
 
-; State 0, step 4: copies the partner's name into wTextBuf3. (C1, E-0357)
+; State 0, step 4: copies the partner's name into wTextBuf3. (C2, E-0357; probed E-0385)
 DreamEggs_State0_CopyPartnerName::
     ld hl, wLinkPartnerName
     ld de, wTextBuf3
@@ -1080,7 +1093,12 @@ DreamEggs_RecordScreen::
     call LinkRecordScreen
     ret
 
-; shows a category-0 string, then text waits (E-0303)
+; Dream Egg screen state 4, the closing message of an exchange that is cancelled or finished: runs
+; the step for wScreenStep: 0 RunLinkSession8Exchange_ShowMessage_ShowStopReason (the reason message
+; after the partner cancels), 1 RunLinkSession8Exchange_ShowMessage_SendReady, 2
+; RunLinkSession8Exchange_ShowMessage_PartnerReady, 3
+; RunLinkSession8Exchange_ShowMessage_WaitTextFlags (back to the link menu). (C1, E-0385)
+; shows a category-0 string, then text waits
 RunLinkSession8Exchange_ShowMessage::
     ld a, [wScreenStep]
     jumptable
@@ -1089,7 +1107,7 @@ RunLinkSession8Exchange_ShowMessage::
     dw RunLinkSession8Exchange_ShowMessage_PartnerReady
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags
 
-; The message, step 1: after the text sends 1. (C1, E-0357)
+; The message, step 1: after the text sends 1. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_ShowMessage_SendReady::
     ld a, [wTextFlags]
     bit 0, a
@@ -1101,7 +1119,7 @@ RunLinkSession8Exchange_ShowMessage_SendReady::
     ld [wScreenStep], a
     ret
 
-; The message, step 2: after the text, on the partner's 1 goes on. (C1, E-0357)
+; The message, step 2: after the text, on the partner's 1 goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_ShowMessage_PartnerReady::
     ld a, [wTextFlags]
     bit 0, a
@@ -1149,7 +1167,7 @@ RunLinkSession8Exchange_ShowMessage_ShowStopReason::
     ret
 
 ; The message, step 3: after the text clears $6F bytes of screen state, selects WRAM bank 0 and
-; returns to game mode 5, state 1 (the link menu). (C1, E-0357)
+; returns to game mode 5, state 1 (the link menu). (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_ShowMessage_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
@@ -1391,7 +1409,7 @@ RunLinkSession8Exchange_Trade::
     dw RunLinkSession8Exchange_Trade_SendStartSync
     dw RunLinkSession8Exchange_Trade_StartScene
 
-; The exchange: sends $B3. (C1, E-0357)
+; The exchange: sends $B3. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_SendStoredSync::
     ld a, [wScreenStep]
     inc a
@@ -1400,7 +1418,7 @@ RunLinkSession8Exchange_Trade_SendStoredSync::
     ld [wLinkSendByte], a
     ret
 
-; The exchange: when wMenuCounter is 0 sends $A8. (C1, E-0357)
+; The exchange: when wMenuCounter is 0 sends $A8. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_SendSceneReady::
     ld a, [wMenuCounter]
     and a
@@ -1412,7 +1430,7 @@ RunLinkSession8Exchange_Trade_SendSceneReady::
     ld [wLinkSendByte], a
     ret
 
-; The exchange: on the partner's $B3 goes on. (C1, E-0357)
+; The exchange: on the partner's $B3 goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitStoredSync::
     ld a, [wLinkMessage]
     cp $b3
@@ -1424,7 +1442,7 @@ RunLinkSession8Exchange_Trade_WaitStoredSync::
     ld [wScreenStep], a
     ret
 
-; The exchange: on the partner's $A8 goes on. (C1, E-0357)
+; The exchange: on the partner's $A8 goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitSceneReady::
     ld a, [wLinkMessage]
     cp $a8
@@ -1436,7 +1454,7 @@ RunLinkSession8Exchange_Trade_WaitSceneReady::
     ld [wScreenStep], a
     ret
 
-; The exchange: sends $B6. (C1, E-0357)
+; The exchange: sends $B6. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_SendStartSync::
     ld a, [wScreenStep]
     inc a
@@ -1448,8 +1466,8 @@ RunLinkSession8Exchange_Trade_SendStartSync::
 ; The exchange, step 27: on the partner's $B6 clears wLinkSendByte and moves to wScreenState +
 ; wF0ScreenKind + 1 (from state 6: 7 RunLinkSession8Exchange_GivingScene, 8
 ; RunLinkSession8Exchange_ObtainedEgg, 9 RunLinkSession8Exchange_EggsTraded, 10 HatchingScene, 11
-; RunLinkSession8Exchange_EggHatched for kinds 0-4) with wScreenStep and wScreenSubStep 0. (C1,
-; E-0371)
+; RunLinkSession8Exchange_EggHatched for kinds 0-4) with wScreenStep and wScreenSubStep 0. (C2,
+; E-0371; probed E-0385)
 RunLinkSession8Exchange_Trade_StartScene::
     ld a, [wLinkMessage]
     cp $b6
@@ -1469,7 +1487,7 @@ RunLinkSession8Exchange_Trade_StartScene::
 
 ; The exchange, step 9: starts the $A5-byte record exchange: this side's gift record (or, without
 ; one, the empty record RunLinkSession8Exchange_Trade_StartRecordSwap_Data) out, the partner's into
-; wRecordBufA. (C1, E-0357)
+; wRecordBufA. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_StartRecordSwap::
     ld a, [wGiftRecord]
     and a
@@ -1506,7 +1524,7 @@ RunLinkSession8Exchange_Trade_StartRecordSwap::
 
 ; The exchange, step 13: starts a $D8-byte link exchange of the block at wGM2TimerFrames (which
 ; holds wGiftRecord from + $33) into wRecordBufB: source in wLinkTimeoutLo/Hi, destination in
-; wLinkBufferPtrLo/Hi, wLinkSendByte = $FF, wLinkReady = 1. (C1, E-0371)
+; wLinkBufferPtrLo/Hi, wLinkSendByte = $FF, wLinkReady = 1. (C2, E-0371; probed E-0385)
 RunLinkSession8Exchange_Trade_StartBlockSwap::
     ld a, [wScreenStep]
     inc a
@@ -1535,8 +1553,8 @@ RunLinkSession8Exchange_Trade_StartBlockSwap::
 ; The exchange, step 17: sets wLinkEggData (0; 1 behind EVENT_NEVER_SET); with an egg state ranks
 ; the family scores, gives the gift record its top species' growth, sets wFamilyBitCount = count x
 ; (8 - wRankBand) / 5 and raises that many random lowest resistances; then fills the egg data
-; (species, family, the player's name) and starts a 16-byte exchange into wLinkHatchData. (C1,
-; E-0357)
+; (species, family, the player's name) and starts a 16-byte exchange into wLinkHatchData. (C2,
+; E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_RankFamilies::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -1553,7 +1571,7 @@ RunLinkSession8Exchange_Trade_RankFamilies::
     and a
     jp z, .read_gift_record
     call RankFamilyScoresIntoFamilyRanking
-    call LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth
+    call GiftRecord_LoadSkillsResistancesFromSpecies
     ld a, [wFamilyBitCount]
     ld c, a
     ld a, [wRankBand]
@@ -1565,7 +1583,7 @@ RunLinkSession8Exchange_Trade_RankFamilies::
     call DivideHLByA
     ld a, l
     ld [wFamilyBitCount], a
-    call RaiseRandomLowestResistance
+    call RaiseLowestResistances
 
 .read_gift_record:
     ld a, [wGiftRecord + MON_SPECIES]
@@ -1610,7 +1628,7 @@ RunLinkSession8Exchange_Trade_RankFamilies::
     ld [wLinkReady], a
     ret
 
-; The exchange: sends $BA. (C1, E-0357)
+; The exchange: sends $BA. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_SendSync::
     ld a, [wScreenStep]
     inc a
@@ -1619,7 +1637,7 @@ RunLinkSession8Exchange_Trade_SendSync::
     ld [wLinkSendByte], a
     ret
 
-; The exchange: on the partner's $BA goes on. (C1, E-0357)
+; The exchange: on the partner's $BA goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitSync::
     ld a, [wLinkMessage]
     cp $ba
@@ -1633,7 +1651,7 @@ RunLinkSession8Exchange_Trade_WaitSync::
 
 ; The exchange, step 0: packs the screen kind and the gift flag to send, marks the partner's family
 ; bit (MarkBitBInFamilyBitsAndCount) and rolls whether the egg improves (RollMarkChangeCountChance,
-; wLinkEggState). (C1, E-0357)
+; wLinkEggState). (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_Pack::
     ld a, [wF0ScreenKind]
     ld [wLinkRecvBuffer], a
@@ -1652,7 +1670,8 @@ RunLinkSession8Exchange_Trade_Pack::
 ; The exchange, step 3: starts a 3-byte link exchange of the bytes
 ; RunLinkSession8Exchange_Trade_Pack packed at wLinkRecvBuffer (wF0ScreenKind, then the gift flag in
 ; wIntroOrFamilyCount, then wLinkEggState) into wLinkPartnerName, whose bytes 1 and 2 are
-; wLinkPartnerByte1 and wLinkPartnerByte2; wLinkSendByte = $FF, wLinkReady = 1. (C1, E-0371)
+; wLinkPartnerByte1 and wLinkPartnerByte2; wLinkSendByte = $FF, wLinkReady = 1. (C2, E-0371; probed
+; E-0385)
 RunLinkSession8Exchange_Trade_StartFlagSwap::
     ld a, [wScreenStep]
     inc a
@@ -1678,7 +1697,7 @@ RunLinkSession8Exchange_Trade_StartFlagSwap::
     ld [wLinkReady], a
     ret
 
-; The exchange: when the exchange ends ($F0) goes on. (C1, E-0357)
+; The exchange: when the exchange ends ($F0) goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitSwapEnd::
     ld a, [wLinkMessage]
     cp $f0
@@ -1743,7 +1762,8 @@ RunLinkSession8Exchange_Trade_Abort::
     ret
 
 ; The exchange, step 19: picks the closing scene (wF0ScreenKind): 3 when the egg improved, 4 when
-; the partner's byte 2 is set, 0 when this side gave an egg, otherwise 1. (C1, E-0357)
+; the partner's byte 2 is set, 0 when this side gave an egg, otherwise 1. (C2, E-0357; probed
+; E-0385)
 RunLinkSession8Exchange_Trade_PickScene::
     ld a, [wLinkEggState]
     and a
@@ -1776,7 +1796,7 @@ RunLinkSession8Exchange_Trade_PickScene::
 
 ; The exchange, step 20: kind 0 clears the $D8 bytes from wGM2TimerFrames; kinds 1 and 2 store the
 ; received record as the new gift record (first byte 1) and copy $33 bytes of wRecordBufB to
-; wGM2TimerFrames; then goes on. (C1, E-0357)
+; wGM2TimerFrames; then goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_StoreReceived::
     ld a, [wF0ScreenKind]
     and a
@@ -1869,6 +1889,13 @@ RunLinkSession8Exchange_Trade_SetUpScene::
 .return:
     ret
 
+; Dream Egg screen state 7, the closing scene when this side gave an egg (wF0ScreenKind 0): runs the
+; step for wScreenSubStep (13 steps): timed waits (RunLinkSession8Exchange_GivingScene_Wait), the
+; sprite moving right (RunLinkSession8Exchange_GivingScene_MoveSprite), the egg shown and hidden,
+; object 1 walking left and off the screen (RunLinkSession8Exchange_GivingScene_WalkObject1,
+; RunLinkSession8Exchange_GivingScene_WalkObject1Off), then
+; RunLinkSession8Exchange_GivingScene_EggReceived (the message '... received your egg.') and
+; RunLinkSession8Exchange_GivingScene_Save (RunSaveGameSteps, then state $0C). (C1, E-0385)
 ; by wScreenSubStep: timed waits and moves of field objects 1 and 5, then RunSaveGameSteps (renamed
 ; from RunLinkSession8Exchange_ObjectSceneThenSave from its E-0357 note, E-0367)
 RunLinkSession8Exchange_GivingScene::
@@ -1888,8 +1915,8 @@ RunLinkSession8Exchange_GivingScene::
     dw RunLinkSession8Exchange_GivingScene_EggReceived
     dw RunLinkSession8Exchange_GivingScene_Save
 
-; Giving scene, step 12: after the text saves (RunSaveGameSteps), then the waiting state $0C. (C1,
-; E-0357)
+; Giving scene, step 12: after the text saves (RunSaveGameSteps), then the waiting state $0C. (C2,
+; E-0357; probed E-0385)
 RunLinkSession8Exchange_GivingScene_Save::
     ld a, [wTextFlags]
     bit 0, a
@@ -1906,7 +1933,7 @@ RunLinkSession8Exchange_GivingScene_Save::
     ret
 
 ; Giving scene, step 1: moves the sprite at wSpriteSlots + $B right on three counts of four until
-; $38, then sets its flag bit 1. (C1, E-0357)
+; $38, then sets its flag bit 1. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_GivingScene_MoveSprite::
     ld a, [wSpriteSlots + $9]
     and $03
@@ -1926,7 +1953,7 @@ RunLinkSession8Exchange_GivingScene_MoveSprite::
     ret
 
 ; Giving scene, step 4: walks object 1 left on three counts of four until X $58, then sets its flag
-; bit 1. (C1, E-0357)
+; bit 1. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_GivingScene_WalkObject1::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -1947,7 +1974,7 @@ RunLinkSession8Exchange_GivingScene_WalkObject1::
     ld [wScreenSubStep], a
     ret
 
-; Giving scene, step 0: a 16-frame wait. (C1, E-0357)
+; Giving scene, step 0: a 16-frame wait. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_GivingScene_Wait::
     ld a, [wScreenCounter]
     inc a
@@ -1963,7 +1990,7 @@ RunLinkSession8Exchange_GivingScene_Wait::
 
 ; A scene step shared by the giving, obtained, traded, hatching and hatched scenes: sets wObject5
 ; byte 0 to $80 (bit 7 = shown, the script meta-sprite object) and wArg1 to 1, then advances
-; wScreenSubStep. (C1, E-0371)
+; wScreenSubStep. (C2, E-0371; probed E-0385)
 RunLinkSession8Exchange_GivingScene_ShowEgg::
     ld a, $80
     ld [wObject5], a
@@ -1975,7 +2002,7 @@ RunLinkSession8Exchange_GivingScene_ShowEgg::
     ret
 
 ; A scene step shared by the giving, obtained and traded scenes: clears wObject5 byte 0 (hides the
-; script meta-sprite object) and wArg1, then advances wScreenSubStep. (C1, E-0371)
+; script meta-sprite object) and wArg1, then advances wScreenSubStep. (C2, E-0371; probed E-0385)
 RunLinkSession8Exchange_GivingScene_HideEgg::
     ld a, $00
     ld [wObject5], a
@@ -1985,7 +2012,8 @@ RunLinkSession8Exchange_GivingScene_HideEgg::
     ld [wScreenSubStep], a
     ret
 
-; Giving scene, step 10: turns object 1 right and walks it off the screen (X $E0). (C1, E-0357)
+; Giving scene, step 10: turns object 1 right and walks it off the screen (X $E0). (C2, E-0357;
+; probed E-0385)
 RunLinkSession8Exchange_GivingScene_WalkObject1Off::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
@@ -2023,7 +2051,13 @@ RunLinkSession8Exchange_GivingScene_EggReceived::
     ld [wSaveRecordIndex], a
     ret
 
-; by wScreenSubStep: an object animation, then 'Obtained an egg from 0.' (E-0294)
+; Dream Egg screen state 8, the closing scene when this side obtained an egg (wF0ScreenKind 1): runs
+; the step for wScreenSubStep (13 steps): timed waits, object 1 walking in, the egg shown and
+; hidden, the sprite moving in and off the screen (RunLinkSession8Exchange_GivingScene_MoveSprite,
+; RunLinkSession8Exchange_ObtainedEgg_MoveSpriteOff), then
+; RunLinkSession8Exchange_ObtainedEgg_ShowObtained (the message 'Obtained an egg from ...') and
+; RunLinkSession8Exchange_GivingScene_Save. (C1, E-0385)
+; by wScreenSubStep: an object animation, then 'Obtained an egg from 0.'
 RunLinkSession8Exchange_ObtainedEgg::
     ld a, [wScreenSubStep]
     jumptable
@@ -2042,7 +2076,7 @@ RunLinkSession8Exchange_ObtainedEgg::
     dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Obtaining scene, step 10: turns the sprite at wSpriteSlots + $B left and moves it off the screen
-; ($E0). (C1, E-0357)
+; ($E0). (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_ObtainedEgg_MoveSpriteOff::
     ld a, [wSpriteSlots + $d]
     res 1, a
@@ -2080,7 +2114,13 @@ RunLinkSession8Exchange_ObtainedEgg_ShowObtained::
     ld [wSaveRecordIndex], a
     ret
 
-; by wScreenSubStep: an object animation, then 'Eggs were traded with 0.' (E-0294)
+; Dream Egg screen state 9, a closing scene for 'Eggs were traded with ...' (wF0ScreenKind 2): runs
+; the step for wScreenSubStep (17 steps): the egg is shown and hidden twice, object 1 and the sprite
+; leave (RunLinkSession8Exchange_EggsTraded_MoveOff), then
+; RunLinkSession8Exchange_EggsTraded_ShowTraded (the message) and
+; RunLinkSession8Exchange_GivingScene_Save. RunLinkSession8Exchange_Trade_PickScene only picks kinds
+; 0, 1, 3 and 4, so no code read here enters this state. (C1, E-0385)
+; by wScreenSubStep: an object animation, then 'Eggs were traded with 0.'
 RunLinkSession8Exchange_EggsTraded::
     ld a, [wScreenSubStep]
     jumptable
@@ -2102,8 +2142,10 @@ RunLinkSession8Exchange_EggsTraded::
     dw RunLinkSession8Exchange_EggsTraded_ShowTraded
     dw RunLinkSession8Exchange_GivingScene_Save
 
-; Trading scene, step 14: moves object 1 right and the sprite left until both leave the screen. (C1,
-; E-0357)
+; Trading scene, step 14: clears flag bit 1 of the sprite at wSpriteSlots and of wObject1, moves
+; wObject1 right (EggsTraded_MoveOff_StepObject1Right) and the sprite left
+; (EggsTraded_MoveOff_StepSpriteLeft). Only the sprite ends the step: wScreenSubStep += 1 when the
+; sprite X reaches $E0; the X of wObject1 is not tested. (C2, E-0385)
 RunLinkSession8Exchange_EggsTraded_MoveOff::
     ld a, [wSpriteSlots + $d]
     res 1, a
@@ -2111,8 +2153,8 @@ RunLinkSession8Exchange_EggsTraded_MoveOff::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
     ld [wObject1 + OBJ_FLAGS], a
-    call StepObjectCB9AUpToE0
-    call StepObjectCB8ADownToE0
+    call EggsTraded_MoveOff_StepObject1Right
+    call EggsTraded_MoveOff_StepSpriteLeft
     cp $ff
     ret nz
     ld a, [wScreenSubStep]
@@ -2120,9 +2162,12 @@ RunLinkSession8Exchange_EggsTraded_MoveOff::
     ld [wScreenSubStep], a
     ret
 
+; Part of RunLinkSession8Exchange_EggsTraded_MoveOff. Sets the sprite state (wSpriteSlots + $7) to
+; 3; when the counter wSpriteSlots + $9 & 3 is non-zero decrements the sprite X (wSpriteSlots + $B)
+; and returns A = $FF when it reaches $E0; otherwise A = 0. (C2, E-0385)
 ; wSpriteSlots + $7 = 3; while wSpriteSlots + $9 & 3 is set, wSpriteSlots + $B -= 1 and A = $FF once
 ; it reaches $E0; otherwise A = 0 (E-0126)
-StepObjectCB8ADownToE0::
+EggsTraded_MoveOff_StepSpriteLeft::
     ld a, $03
     ld [wSpriteSlots + $7], a
     ld a, [wSpriteSlots + $9]
@@ -2141,8 +2186,12 @@ StepObjectCB8ADownToE0::
     xor a
     ret
 
+; Part of RunLinkSession8Exchange_EggsTraded_MoveOff. Sets wObject1 + OBJ_STATE to 1; when wObject1
+; + OBJ_ANIM_COUNTER & 3 is non-zero increments wObject1 + OBJ_X (nothing stops it at $E0: the
+; compare at the end has no effect). Returns A = the new X, or 0 when the counter is idle. (C2,
+; E-0385)
 ; wObject1 + $7 = 1; while wObject1 + $9 & 3 is set, wObject1 + $B += 1 up to $E0 (E-0126)
-StepObjectCB9AUpToE0::
+EggsTraded_MoveOff_StepObject1Right::
     ld a, $01
     ld [wObject1 + OBJ_STATE], a
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
@@ -2173,6 +2222,13 @@ RunLinkSession8Exchange_EggsTraded_ShowTraded::
     ld [wSaveRecordIndex], a
     ret
 
+; Dream Egg screen state 10, the closing scene when the egg improved (wF0ScreenKind 3): runs the
+; step for wScreenSubStep (35 steps): waits, the sprite and object 1 walking, the egg shown
+; (HatchingScene_ShowEgg) and hatching (HatchingScene_Hatch, HatchingScene_Bob), object 2 turning
+; and walking off, the message '... hatched from the egg that you put up for transfer.' which ends
+; 'Please name your ...' (HatchingScene_ShowGHatchedFromThe), the frame (HatchingScene_DrawFrame),
+; the text window (HatchingScene_RunText), the egg screens (HatchingScene_RunEggScreens, game mode 6
+; update), then RunLinkSession8Exchange_GivingScene_Save. (C1, E-0385)
 ; by wScreenSubStep: the steps of RunLinkSession8Exchange_GivingScene in another order (renamed from
 ; RunLinkSession8Exchange_ObjectScene from its E-0357 note, E-0367)
 HatchingScene::
@@ -2226,7 +2282,7 @@ HatchingScene_RunText::
     ret
 
 ; Hatching scene, step 31: draws the 20 x 13 frame, clears the battle scene, sprite count and name
-; entry state and sets wMenuCounter 1. (C1, E-0357)
+; entry state and sets wMenuCounter 1. (C2, E-0357; probed E-0385)
 HatchingScene_DrawFrame::
     ld de, HatchingScene_DrawFrame_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -2342,7 +2398,7 @@ HatchingScene_ShowEgg::
     ld [wScreenSubStep], a
     ret
 
-; Hatching scene, step 9: turns the sprite right. (C1, E-0357)
+; Hatching scene, step 9: turns the sprite right. (C2, E-0357; probed E-0385)
 HatchingScene_TurnSpriteRight::
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -2352,7 +2408,8 @@ HatchingScene_TurnSpriteRight::
     ret
 
 ; Sets wObject2 + OBJ_STATE to 3 (facing left in these scenes) and advances wScreenSubStep. A step
-; of HatchingScene (three times) and RunLinkSession8Exchange_EggHatched (twice). (C1, E-0371)
+; of HatchingScene (three times) and RunLinkSession8Exchange_EggHatched (twice). (C2, E-0371; probed
+; E-0385)
 HatchingScene_TurnObject2Left::
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
@@ -2362,7 +2419,8 @@ HatchingScene_TurnObject2Left::
     ret
 
 ; Sets wObject2 + OBJ_STATE to 1 (facing right in these scenes) and advances wScreenSubStep. A step
-; of HatchingScene (twice) and RunLinkSession8Exchange_EggHatched (three times). (C1, E-0371)
+; of HatchingScene (twice) and RunLinkSession8Exchange_EggHatched (three times). (C2, E-0371; probed
+; E-0385)
 HatchingScene_TurnObject2Right::
     ld a, $01
     ld [wObject2 + OBJ_STATE], a
@@ -2371,7 +2429,7 @@ HatchingScene_TurnObject2Right::
     ld [wScreenSubStep], a
     ret
 
-; Hatching scene, step 26: walks object 2 left until X $30. (C1, E-0357)
+; Hatching scene, step 26: walks object 2 left until X $30. (C2, E-0357; probed E-0385)
 HatchingScene_WalkObject2Left::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
@@ -2392,9 +2450,13 @@ HatchingScene_WalkObject2Left::
     ld [wScreenSubStep], a
     ret
 
+; No caller was found in src. While wObject1 + OBJ_ANIM_COUNTER & 3 is non-zero: decrements wObject1
+; + OBJ_X; at X $60 runs field command $0E (RunFieldCommandTemp0), sets wObject5 + SCRIPTOBJ_X/Y to
+; $48/$40 and clears wScreenCounter; when X is below $59 sets it to $58, sets flag bit 1 of wObject1
+; and wScreenSubStep += 1. A variant of the egg-showing steps of the closing scenes. (C1, E-0385)
 ; while wObject1 + $9 & 3 is set: wObject1 + $B -= 1; at $60 runs field command $0E and sets
 ; wObject5 + $4/4; at $58 sets bit 1 of wObject1 + $D and wScreenSubStep += 1 (E-0125)
-StepObjectCB9AAndTriggerAt60::
+UnusedStepObject1LeftShowEgg::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
     and a
@@ -2429,7 +2491,7 @@ StepObjectCB9AAndTriggerAt60::
     ret
 
 ; Hatching scene, step 10: counts $D9 frames (sound $74 at frame $BA), then hides the egg, adds a
-; sprite slot and goes on. (C1, E-0357)
+; sprite slot and goes on. (C2, E-0357; probed E-0385)
 HatchingScene_Hatch::
     ld a, [wScreenCounter]
     cp $ba
@@ -2458,7 +2520,7 @@ HatchingScene_Hatch::
     ret
 
 ; Hatching scene, step 11: bobs object 1's Y through the offset table every four frames and turns
-; the sprite right. (C1, E-0357)
+; the sprite right. (C2, E-0357; probed E-0385)
 HatchingScene_Bob::
     ld de, wObject1 + OBJ_Y
     call StepScreenStepOffsetTableEvery4Frames
@@ -2466,7 +2528,8 @@ HatchingScene_Bob::
     ld [wSpriteSlots + $7], a
     ret
 
-; Hatching scene, step 28: walks object 2 and the sprite left off the screen. (C1, E-0357)
+; Hatching scene, step 28: walks object 2 and the sprite left off the screen. (C2, E-0357; probed
+; E-0385)
 HatchingScene_WalkOff::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
@@ -2514,7 +2577,13 @@ HatchingScene_ShowGHatchedFromThe::
     ld [wLinkBreedResult], a
     ret
 
-; by wScreenSubStep: an object animation, then 'G hatched from the egg that ...' (E-0294)
+; Dream Egg screen state 11, the closing scene when the partner byte 2 is set (wF0ScreenKind 4):
+; runs the step for wScreenSubStep (32 steps): waits, object 1 walking, the egg shown
+; (RunLinkSession8Exchange_EggHatched_ShowEgg) and hatching (HatchingScene_Hatch,
+; RunLinkSession8Exchange_EggHatched_BobSprite), object 2 turning and walking off, then
+; RunLinkSession8Exchange_EggHatched_ShowHatched (the message '... hatched from the egg that you
+; were about to receive.') and RunLinkSession8Exchange_GivingScene_Save. (C1, E-0385)
+; by wScreenSubStep: an object animation, then 'G hatched from the egg that ...'
 RunLinkSession8Exchange_EggHatched::
     ld a, [wScreenSubStep]
     jumptable
@@ -2587,7 +2656,7 @@ RunLinkSession8Exchange_EggHatched_ShowEgg::
     ld [wScreenSubStep], a
     ret
 
-; Hatched scene, step 9: turns object 1 left. (C1, E-0357)
+; Hatched scene, step 9: turns object 1 left. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_EggHatched_TurnObject1Left::
     ld a, $03
     ld [wObject1 + OBJ_STATE], a
@@ -2596,7 +2665,7 @@ RunLinkSession8Exchange_EggHatched_TurnObject1Left::
     ld [wScreenSubStep], a
     ret
 
-; Hatched scene, step 26: walks object 2 right until X $60. (C1, E-0357)
+; Hatched scene, step 26: walks object 2 right until X $60. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_EggHatched_WalkObject2::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
@@ -2617,9 +2686,13 @@ RunLinkSession8Exchange_EggHatched_WalkObject2::
     ld [wScreenSubStep], a
     ret
 
+; No caller was found in src. While wSpriteSlots + $9 & 3 is non-zero: increments wSpriteSlots + $B
+; (the sprite X); at X $30 runs field command $0E (RunFieldCommandTemp0), sets wObject5 +
+; SCRIPTOBJ_X/Y to $48/$40 and clears wScreenCounter; at X $38 sets flag bit 1 of the sprite and
+; wScreenSubStep += 1. A variant of the egg-showing steps of the closing scenes. (C1, E-0385)
 ; while wSpriteSlots + $9 & 3 is set: wSpriteSlots + $B += 1; at $30 runs field command $0E and sets
 ; wObject5 + $4/4; at $38 sets bit 1 of wSpriteSlots + $D and wScreenSubStep += 1 (E-0124)
-StepObjectCB8AAndTriggerAt30::
+UnusedStepSpriteRightShowEgg::
     ld a, [wSpriteSlots + $9]
     and $03
     and a
@@ -2654,13 +2727,13 @@ StepObjectCB8AAndTriggerAt30::
 
 ; Hatched scene step: every fourth frame adds the next offset of
 ; StepScreenStepOffsetTableEvery4Frames's table to wSpriteSlots + $C (the sprite's Y), advancing
-; wScreenStep; the table's $80 end mark advances wScreenSubStep. (C1, E-0371)
+; wScreenStep; the table's $80 end mark advances wScreenSubStep. (C2, E-0371; probed E-0385)
 RunLinkSession8Exchange_EggHatched_BobSprite::
     ld de, wSpriteSlots + $c
     call StepScreenStepOffsetTableEvery4Frames
     ret
 
-; Hatched scene, step 28: walks objects 1 and 2 right off the screen. (C1, E-0357)
+; Hatched scene, step 28: walks objects 1 and 2 right off the screen. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_EggHatched_WalkOff::
     ld a, [wSpriteSlots + $d]
     res 1, a
@@ -2707,7 +2780,10 @@ RunLinkSession8Exchange_EggHatched_ShowHatched::
     ld [wSaveRecordIndex], a
     ret
 
-; by wScreenStep: 'Please wait', then a link message wait (E-0294)
+; Dream Egg screen state 12 (the save is done): runs the step for wScreenStep: 0 shows 'Please
+; wait...', 1 sends $BA, 2 waits for the partner $BA, 3 runs
+; RunLinkSession8Exchange_ShowMessage_WaitTextFlags (back to the link menu). (C1, E-0385)
+; by wScreenStep: 'Please wait', then a link message wait
 RunLinkSession8Exchange_WaitForPartner::
     ld a, [wScreenStep]
     jumptable
@@ -2725,7 +2801,7 @@ RunLinkSession8Exchange_WaitForPartner_ShowWait::
     ld [wScreenStep], a
     ret
 
-; Waiting for the partner, step 1: sends $BA. (C1, E-0357)
+; Waiting for the partner, step 1: sends $BA. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_WaitForPartner_SendSync::
     ld a, [wScreenStep]
     inc a
@@ -2734,7 +2810,7 @@ RunLinkSession8Exchange_WaitForPartner_SendSync::
     ld [wLinkSendByte], a
     ret
 
-; Waiting for the partner, step 2: on the partner's $BA goes on. (C1, E-0357)
+; Waiting for the partner, step 2: on the partner's $BA goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_WaitForPartner_WaitSync::
     ld a, [wLinkMessage]
     cp $ba
@@ -2746,6 +2822,11 @@ RunLinkSession8Exchange_WaitForPartner_WaitSync::
     ld [wScreenStep], a
     ret
 
+; DE = address of a byte (here the Y of an object or sprite). Adds 1 to wScreenCounter; every fourth
+; call (counter & 3 = 0) adds the signed entry
+; StepScreenStepOffsetTableEvery4Frames_Data[wScreenStep] ($FD, $FD, $FE, $00, $01, $01, $03, $03)
+; to [DE] and increments wScreenStep; at the end mark $80 it increments wScreenSubStep and clears
+; wScreenStep and wScreenCounter. It makes the hatching sprite bob. (C2, E-0385)
 ; every fourth frame adds StepScreenStepOffsetTableEvery4Frames_Data[wScreenStep] to [DE] and
 ; advances wScreenStep; the $80 end mark advances wScreenSubStep and resets (E-0124)
 StepScreenStepOffsetTableEvery4Frames::
@@ -2785,6 +2866,10 @@ StepScreenStepOffsetTableEvery4Frames::
 StepScreenStepOffsetTableEvery4Frames_Data::
     db $fd, $fd, $fe, $00, $01, $01, $03, $03, $80
 
+; HL = source, DE = destination, B = the most bytes to copy: copies bytes until a $F0 (not copied)
+; or B bytes are copied, then writes $F0 at DE. HL ends one past the last byte read and DE at the
+; written $F0. The closing scenes use it to copy the name in wLinkEggMessageBlock to wTextBuf0. (C2,
+; E-0385)
 ; copies bytes from HL to DE until a $F0 or B bytes, then writes $F0; HL and DE advance (E-0078)
 CopyStringMaxBToDE::
     ld a, [hli]
@@ -2800,6 +2885,12 @@ CopyStringMaxBToDE::
     ld [de], a
     ret
 
+; The egg list of the Dream Egg screen (state 1, DreamEggs_State1 calls it when the partner has not
+; cancelled): runs the step for wScreenStep: LinkEggList_LoadTiles, LinkEggList_ListEggs,
+; LinkEggList_ClearText, LinkEggList_DrawPageFrame, LinkEggList_DrawSpeciesNames,
+; LinkEggList_DrawMarks, LinkEggList_Cursor (a page change goes back four steps, A picks the egg and
+; goes to state 2, B goes on), LinkEggList_Cancel, LinkEggList_RedrawScreen,
+; LinkEggList_ShowChooseTheKindOf. (C1, E-0385)
 ; runs the routine for wScreenStep (jump table of ten) (E-0122) (renamed from
 ; RunLinkSession8Case01Steps from its E-0357 note, E-0367)
 LinkEggList::
@@ -2997,8 +3088,8 @@ LinkEggList_Cursor::
     call SaveAndHideSpriteState_BankF0
     ret
 
-; The egg list, step 7 (B): moves a 13 x 9 area of the screen buffer and draws a 7 x 1 strip. (C1,
-; E-0357)
+; The egg list, step 7 (B): moves a 13 x 9 area of the screen buffer and draws a 7 x 1 strip. (C2,
+; E-0357; probed E-0385)
 LinkEggList_Cancel::
     ld c, $09
     ld hl, $01d3
@@ -3083,7 +3174,10 @@ LinkEggList_ShowChooseTheKindOf::
     ld [wScreenStep], a
     ret
 
-; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_2 (E-0353)
+; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_2 starts
+; that Dream Egg screen message (for example 6 'Is it OK to transfer the egg?', 7 'OK to save the
+; egg trade results?', 8 'Please wait...'). (C1, E-0385)
+; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_2
 BeginString_BankF0_Cat0::
     ld [wStringIndex], a
     xor a
@@ -3091,6 +3185,10 @@ BeginString_BankF0_Cat0::
     call BeginStringDisplay_BankF0_2
     ret
 
+; The record screen of the Dream Egg screen (state 3, DreamEggs_RecordScreen calls it): shows the
+; record of the chosen egg with its parents; runs the step for wScreenStep (17 steps): clear, load
+; glyph tiles, frame, parents, picture, Cursor (move through the records, A or B goes on), then the
+; list box, species names and marks, and Leave (back to state 2, step 3). (C1, E-0385)
 ; the record-list screen of link session 8's receive side: clears the BG map, draws a paged record
 ; list with species names and marks, and moves the list cursor (HandleListCursorInput_1D) (E-0354;
 ; was: runs the routine for wScreenStep (jump table of seventeen) (E-0124)) (renamed from
@@ -3131,6 +3229,10 @@ LinkRecordScreen_Clear::
     call CopyFromBankWaitVRAM
     ret
 
+; Fills the 32 x 32 BG map from the scroll origin (BGMapAddressAtScroll_BankF0) with BGFillTile
+; through FillTileRectWithArg1Tile (wArg1/wArg2 = BGFillTile, wArg3 = wArg4 = $20, wArg5/wArg6 = HL,
+; wArg7 = 0), then hScrollX = hScrollY = 0 and wScreenStep += 1. Called by LinkRecordScreen_Clear
+; and entry 9 of the LinkRecordScreen jump table. (C1, E-0385)
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through
 ; FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wScreenStep += 1
 ; (E-0121; fill, not a tile map: E-0186)
@@ -3328,7 +3430,7 @@ LinkRecordScreen_LoadPicture::
     ld a, [wScreenSubStep]
     and a
     jp nz, .call_get_list_entries_cell4_address_bank_f0
-    call DrawRect6x6FromAtScroll41_BankF0
+    call LinkRecordScreen_DrawBlankPicture
     call GetListEntriesCell4Address_BankF0
     ld a, $0a
     ld [rRAMG2], a
@@ -3407,7 +3509,7 @@ LinkRecordScreen_LoadPicture::
     ret
 
 ; The record screen, step 7: the cursor; a move with two or more flagged records goes on one step; A
-; or B split the cursor back into page and row and go on two steps. (C1, E-0357)
+; or B split the cursor back into page and row and go on two steps. (C2, E-0357; probed E-0385)
 LinkRecordScreen_Cursor::
     farcall HandleListCursorInput_1D
     ld a, [wMenuInputResult]
@@ -3538,6 +3640,10 @@ LinkRecordScreen_DrawListBox::
     farcall ClampRecordListPageCursor4
     jr LinkRecordScreen_DrawListBox_PageStrip
 
+; With wListPages of 2 or more draws the page indicator in the window tile buffer: tiles $C5, $BE,
+; $C6 two apart at wWindowTileBuffer + $112 (StoreC5BEC6AtHLStride2_BankF0) and the current page and
+; the page count as tiles at + $113 and + $115 (DrawPageOfPagesAtArg1_BankF0); then wScreenStep += 1
+; (with fewer than 2 pages only the increment). (C2, E-0385)
 ; with two or more pages draws the bracket and page-of-pages indicator at wWindowTileBuffer + $112;
 ; wScreenStep += 1 (E-0124)
 DrawPageIndicatorWhenTwoPagesAndStep::
@@ -3555,7 +3661,7 @@ DrawPageIndicatorWhenTwoPagesAndStep::
 
 ; Increments wScreenStep. The shared tail of DrawPageIndicatorWhenTwoPagesAndStep (directly when
 ; wListPages is below 2, otherwise after drawing the indicator) and of
-; LinkRecordScreen_DrawListBox_PageStrip. (C1, E-0371)
+; LinkRecordScreen_DrawListBox_PageStrip. (C2, E-0371; probed E-0385)
 DrawPageIndicatorWhenTwoPagesAndStep_NextStep::
     ld a, [wScreenStep]
     inc a
@@ -3564,7 +3670,7 @@ DrawPageIndicatorWhenTwoPagesAndStep_NextStep::
 
 ; Copies the 8 x 1 tile strip after it to wWindowTileBuffer + $110 (CopyRectTo20ByteRows_BankF0),
 ; then increments wScreenStep. Reached only from LinkRecordScreen_DrawListBox, after the list box is
-; drawn and the page cursor clamped. (C1, E-0371)
+; drawn and the page cursor clamped. (C2, E-0371; probed E-0385)
 LinkRecordScreen_DrawListBox_PageStrip::
     ld de, LinkRecordScreen_DrawListBox_PageStrip_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -3642,6 +3748,10 @@ LinkRecordScreen_Leave::
     ld [hl], $12
     ret
 
+; Saves hSpriteWindowClipMode, hFieldDrawFlags and wSpriteSlotCount in wSavedSpriteClipMode,
+; wSavedFieldDrawFlags and wSavedSpriteSlotCount, then sets the clip mode and hSpriteHideTile to 0,
+; hFieldDrawFlags to $FF and wSpriteSlotCount to 0. Called when the egg list hands over to the next
+; state (LinkEggList_Cursor). (C2, E-0385)
 ; wSavedSpriteClipMode = hSpriteWindowClipMode, then hSpriteWindowClipMode = hSpriteHideTile = 0;
 ; wSavedFieldDrawFlags = hFieldDrawFlags, wSavedSpriteSlotCount = wSpriteSlotCount; then
 ; hFieldDrawFlags = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
@@ -3661,6 +3771,9 @@ SaveAndHideSpriteState_BankF0::
     ld [wSpriteSlotCount], a
     ret
 
+; Restores hSpriteWindowClipMode and hFieldDrawFlags from the saved copies, sets hSpriteHideTile to
+; $80 and sets wSpriteSlotCount to 0: the saved count is read but then replaced by 0 (xor a), so it
+; is not restored. Called by LinkRecordScreen_Leave. (C2, E-0385)
 ; hSpriteWindowClipMode = wSavedSpriteClipMode, hSpriteHideTile = $80, hFieldDrawFlags =
 ; wSavedFieldDrawFlags, wSpriteSlotCount = 0 (unlike RestoreSpriteStateFromSavedFieldDrawFlags, the
 ; count is cleared rather than restored) (E-0118)
@@ -3676,6 +3789,13 @@ RestoreSpriteStateClearCount_BankF0::
     ld [wSpriteSlotCount], a
     ret
 
+; Clears the default window (FillTilesRequest on vTiles1, size $1202), sets wTextWindowState = 1,
+; wTextWindowStep = 0 and hSpriteWindowClipMode = 2, then calls StepTextWindowOpenClose until
+; wTextWindowState & 3 is 0. Called by the closing scene steps that show a message
+; (RunLinkSession8Exchange_GivingScene_EggReceived,
+; RunLinkSession8Exchange_ObtainedEgg_ShowObtained, RunLinkSession8Exchange_EggsTraded_ShowTraded,
+; HatchingScene_RunText, HatchingScene_ShowGHatchedFromThe,
+; RunLinkSession8Exchange_EggHatched_ShowHatched). (C1, E-0385)
 ; clears the default window, wTextWindowState = 1, wTextWindowStep = 0, hSpriteWindowClipMode = 2,
 ; then repeatedly far-calls StepTextWindowOpenClose until wTextWindowState & 3 = 0 (E-0122)
 RunTextUntilTextWindowStateDone_BankF0::
@@ -3696,6 +3816,9 @@ RunTextUntilTextWindowStateDone_BankF0::
     jr nz, .loop
     ret
 
+; Turns the plain list index in wListCursor into page and row for a list with four rows per page:
+; wListPageIndex = wListCursor / 4 and wListCursor = wListCursor mod 4 (DivideHLByA). Called by
+; LinkRecordScreen_Cursor on A or B. (C2, E-0385)
 ; wListPageIndex = wListCursor / 4 and wListCursor = wListCursor mod 4 (DivideHLByA) (E-0067) (the
 ; same 19 bytes appear in 2 banks)
 SplitListCursorBy4_BankF0::
@@ -3709,10 +3832,13 @@ SplitListCursorBy4_BankF0::
     ld [wListPageIndex], a
     ret
 
+; HL = BGMapAddressAtScroll_BankF0 + $41; draws the 6 x 6 rectangle BlankPictureTileRect (all tile
+; $C3) there with wArg3 = wArg4 = 6 and wArg7 = 0 (DrawTileRectAtHLFromDE_BankF0): blanks the
+; picture frame of the record screen. Called by LinkRecordScreen_LoadPicture. (C1, E-0385)
 ; draws a 6 x 6 tile rectangle from Data_0F0_651B at BGMapAddressAtScroll_BankF0 + $41
 ; (DrawTileRectAtHLFromDE_BankF0) (E-0118) (E-0344: the address in its name dropped or read as the
-; label there; was DrawRect6x6FromAtScroll41_BankF0)
-DrawRect6x6FromAtScroll41_BankF0::
+; label there; was LinkRecordScreen_DrawBlankPicture)
+LinkRecordScreen_DrawBlankPicture::
     call BGMapAddressAtScroll_BankF0
     ld de, $0041
     add hl, de
@@ -3775,9 +3901,13 @@ SwapMonstersMenu_CopyGlyphTiles_BankF0::
     ld [wGlyphListPos], a
     ret
 
+; DE = source, HL = destination, B = width, C = rows: copies C rows of B bytes from [DE] to [HL],
+; the rows $14 apart in the destination (a window tile buffer row is 20 bytes). On a DMG HL and BC
+; are kept and DE ends past the source. On a CGB (wIsCGB set) it then zero-fills the same-shaped
+; rectangle at HL + $0E68 with rSVBK = 2 and returns with rSVBK = 0, HL and BC changed. (C2, E-0385)
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
 ; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the
-; same 58 bytes appear in 8 banks) (E-0353)
+; same 58 bytes appear in 8 banks)
 CopyRectTo20ByteRows_BankF0::
     push hl
     push bc
@@ -3831,6 +3961,11 @@ CopyRectTo20ByteRows_BankF0::
     ldh [rSVBK], a
     ret
 
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: draws that rectangle
+; of the screen buffer to the BG map (CopyRectToBGMapWrapped) and sets wTextCursorLo/wTextCursorHi =
+; HL + $01C1. On a CGB (wIsCGB set) it then also draws the same rectangle from wScreenAttrBuffer +
+; DE (rSVBK = 2) into VRAM bank 1, the tile attributes. On a DMG BC, DE and HL are kept. (C1,
+; E-0385)
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address:
 ; CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from
 ; wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are
@@ -3876,8 +4011,10 @@ DrawScreenBufferRect_BankF0::
     ldh [rVBK], a
     ret
 
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for the scroll position
+; (hScrollX, hScrollY); clobbers A and DE. (C1, E-0385)
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_BankF0::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3896,6 +4033,10 @@ BGMapAddressAtScroll_BankF0::
     add_a_to_hl
     ret
 
+; DE = offset: draws tiles $C5, $BE and $C6 into the BG map two entries apart starting at
+; BGMapAddressAtScroll_BankF0 + DE (StepBGMapAddressBackOnScrollWrap before the first,
+; WaitForVRAMAccess before each write). Used by LinkEggList_DrawPageFrame for the page brackets.
+; (C1, E-0385)
 ; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll_BankF0 + DE, two entries apart (E-0121)
 DrawC5BEC6AtScrollOffsetDE_BankF0::
     push de
@@ -3924,8 +4065,10 @@ DrawC5BEC6AtScrollOffsetDE_BankF0::
     ei
     ret
 
+; [HL] = $C5, [HL + 2] = $BE, [HL + 4] = $C6 (the page bracket tiles in a tile buffer); HL ends at
+; the original HL + 4; clobbers A. (C2, E-0385)
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
-; banks) (E-0353)
+; banks)
 StoreC5BEC6AtHLStride2_BankF0::
     ld a, $c5
     ld [hl], a
@@ -3939,6 +4082,10 @@ StoreC5BEC6AtHLStride2_BankF0::
     ld [hl], a
     ret
 
+; wArg1:wArg2 = an offset: at BGMapAddressAtScroll_BankF0 + offset writes tile $E0 + wListPageIndex
+; + 1 (the current page, counted from 1) and two entries later tile $E0 + wListPages (the page
+; count) to the BG map (StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess before each write).
+; Called by LinkEggList_DrawPageFrame. (C1, E-0385)
 ; the same instruction sequence as DrawPageOfPagesAtScrollOffset (bank $1E) apart from label
 ; operands, which refer to this bank's own routines and tables; the twin's note describes the shape
 ; (E-0107)
@@ -3978,6 +4125,9 @@ DrawPageOfPagesAtScrollOffset_BankF0::
     ei
     ret
 
+; HL = wArg1:wArg2 (wArg1 is the high byte): writes tile $E0 + wListPageIndex + 1 (the current page,
+; counted from 1) at HL and tile $E0 + wListPages (the page count) at HL + 2. HL ends at the
+; original HL + 2. (C2, E-0385)
 ; HL = the address in wArg1 (high) / wArg2 (low): writes tile $E0 + wListPageIndex + 1 there and
 ; tile $E0 + wListPages two bytes later (current page and page count, 1-based display) (E-0093) (the
 ; same 25 bytes appear in 2 banks)
@@ -3998,6 +4148,8 @@ DrawPageOfPagesAtArg1_BankF0::
     ld [hl], a
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes from [DE] to [HL] (BC = 0 copies
+; 65536). DE and HL end past the copy; BC = 0 and A is clobbered. (C2, E-0385)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 CopyBytesDEToHL_BankF0::
@@ -4010,8 +4162,11 @@ CopyBytesDEToHL_BankF0::
     jr nz, CopyBytesDEToHL_BankF0
     ret
 
+; DE = source, HL = destination, BC = count: sets rSVBK = 2, copies BC bytes from [DE] to [HL] each
+; ANDed with $07 (the CGB tile attribute buffer is copied this way), then sets rSVBK = 0. DE and HL
+; end past the copy and BC = 0. (C2, E-0385)
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 18 bytes appear in 7 banks) (E-0353)
+; 18 bytes appear in 7 banks)
 CopyLow3BitsToWRAMBank2_BankF0::
     ld a, $02
     ldh [rSVBK], a
@@ -4029,6 +4184,11 @@ CopyLow3BitsToWRAMBank2_BankF0::
     ldh [rSVBK], a
     ret
 
+; HL = destination offset, DE = source offset (both into wScreenTileBuffer), C = rows, wArg1:wArg2 =
+; the byte count per row (wArg1 is the high byte): for each row copies that many bytes
+; (CopyBytesDEToHL_BankF0), on a CGB (wIsCGB set) also the same range of wScreenAttrBuffer with each
+; byte ANDed with $07 (CopyLow3BitsToWRAMBank2_BankF0), then moves HL and DE on by $14 and repeats
+; until C rows are done. (C2, E-0385)
 ; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with
 ; CGB attributes (E-0127)
 CopyScreenBufferRectWithAttrs_F0::
@@ -4218,6 +4378,9 @@ RunLinkSession8Exchange_Saving_DrawYesNo_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
+; HL = destination, DE = source tiles: wArg5/wArg6 = HL (high/low), wArg1/wArg2 = DE (high/low),
+; then far-calls DrawTileRectFromArg1Params (the width and rows are already in wArg3/wArg4, wArg7 is
+; the mode). (C1, E-0385)
 ; wArg5/wArg6 = HL (destination), wArg1/wArg2 = DE (source), then far-calls
 ; DrawTileRectFromArg1Params (width and rows already in wArg3/wArg4) (E-0093) (the same 23 bytes
 ; appear in 4 banks)
@@ -4233,6 +4396,8 @@ DrawTileRectAtHLFromDE_BankF0::
     farcall DrawTileRectFromArg1Params
     ret
 
+; HL = wListEntries + 4 * wListPageIndex + wListCursor, the address of the list cell under the
+; cursor, through SetArg5ToListEntriesCell4 (which also stores it in wArg5/wArg6). (C2, E-0385)
 ; the same 15 bytes as GetListEntriesCell4Address (GetListEntriesCell4Address) (E-0075)
 GetListEntriesCell4Address_BankF0::
     farcall SetArg5ToListEntriesCell4
@@ -4242,8 +4407,10 @@ GetListEntriesCell4Address_BankF0::
     ld l, a
     ret
 
+; HL = table of 16-bit addresses, A = index: stores B at the address in entry A. BC is kept; A, DE
+; and HL are clobbered. (C2, E-0385)
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0353)
+; A, DE, HL (the same 14 bytes appear in 8 banks)
 StoreBAtWordTableEntry_BankF0::
     push bc
     add a
@@ -4256,6 +4423,13 @@ StoreBAtWordTableEntry_BankF0::
     ld [de], a
     ret
 
+; wArg2 = which cursor place table to use (0-2, DrawTileBAtArg2Entry_F0_Data). Up or Down (bits 6
+; and 7 of wJoypadPressedRepeat): erases the cursor (tile $C3), toggles wMenuChoice between 0 and 1,
+; draws the cursor tile $BB, queues sound $69 and sets wMenuInputResult = $FD. A (bit 0 of
+; wJoypadPressed): queues sound $69, draws the arrow tile $BC at the choice and sets
+; wMenuInputResult = $FF. B (bit 1): draws the arrow tile $BC and sets wMenuInputResult = $FE
+; without a sound. With no button it blinks the cursor (BlinkCursorBlinkB8_BankF0) and sets
+; wMenuInputResult = 0. (C1, E-0385)
 ; up/down moves wMenuChoice between two entries (sound $69); A selects (wMenuInputResult = $FF), B
 ; cancels ($FE); otherwise blinks the cursor (E-0127)
 HandleTwoChoiceCursorInput_F0::
@@ -4320,6 +4494,10 @@ HandleTwoChoiceCursorInput_F0::
     ld [wMenuInputResult], a
     ret
 
+; While wJoypadRepeatTimer is below $14 draws the cursor tile $BB. From $14 on it increments
+; wListCursorBlink (0-$17, then back to 0) and draws the cursor tile $BB for counts below $10 and
+; the blank tile $C3 for $10-$17, both at the place of wMenuChoice through DrawTileBAtArg2Entry_F0.
+; (C1, E-0385)
 ; once the joypad repeat timer reaches $14, cycles wListCursorBlink through 0-$17 and draws the
 ; cursor tile ($BB) or a blank ($C3) (E-0122)
 BlinkCursorBlinkB8_BankF0::
@@ -4336,16 +4514,22 @@ BlinkCursorBlinkB8_BankF0::
     xor a
     ld [wListCursorBlink], a
 
+; B = $BB (the cursor tile) and jumps to DrawTileBAtArg2Entry_F0, which draws it at the place of
+; wMenuChoice in the table chosen by wArg2. (C1, E-0385)
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
 DrawCursorTileBB_BankF0::
     ld b, $bb
     jr DrawTileBAtArg2Entry_F0
 
+; B = $C3 (the blank tile) and jumps to DrawTileBAtArg2Entry_F0, which draws it at the place of
+; wMenuChoice in the table chosen by wArg2. (C1, E-0385)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_BankF0::
     ld b, $c3
     jr DrawTileBAtArg2Entry_F0
 
+; B = $BC (the arrow tile) and falls into DrawTileBAtArg2Entry_F0, which draws it at the place of
+; wMenuChoice in the table chosen by wArg2. (C1, E-0385)
 ; B = $BC, then writes B at the scroll position + the offset from
 ; DrawTileBAtArg2Entry_F0_Data[wArg2] entry wMenuChoice (E-0125)
 DrawArrowTileBCAtArg2Entry_F0::
@@ -4396,6 +4580,10 @@ DrawTileBAtArg2Entry_F0_Data::
     db $c6, $67, $ca, $67, $ce, $67, $2d, $01, $6d, $01, $2e, $01, $6e, $01, $2f, $01
     db $6f, $01
 
+; Sets wArg1 = 1 when wF0ScreenKind is 3 or 4 and 0 otherwise, then calls
+; RunWithArg1ForF0ScreenKind_SetUpScene, which sets up the objects of the closing scene (a non-zero
+; wArg1 adds object 2, the egg species of kind 3 or the hatched species). Called by
+; RunLinkSession8Exchange_Trade_SetUpScene. (C1, E-0385)
 ; runs RunWithArg1ForF0ScreenKind_SetUpScene with wArg1 = 1 when wF0ScreenKind is 3 or 4, else 0
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; RunWithArg1ForF0ScreenKind)
@@ -4541,6 +4729,8 @@ RunWithArg1ForF0ScreenKind_SetUpScene::
 .return:
     ret
 
+; HL = source, DE = destination, B = count (0 copies 256): copies B bytes from [HL] to [DE]. HL and
+; DE end past the copy, B = 0 and A is clobbered. (C2, E-0385)
 ; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_BankF0::
     ld a, [hli]
@@ -4609,9 +4799,19 @@ Object2Init_2::
 RunLinkSession8Exchange_Trade_StartRecordSwap_Data::
     ds $a6, $ff
 
+; Raises the 27 resistance levels at wGiftRecord + MON_RESISTANCES (levels 0-3) once for each unit
+; of wFamilyBitCount, then returns. Each round returns at once when wFamilyBitCount is 0 or every
+; resistance except index 15 is already 3. Otherwise it subtracts 1 from wFamilyBitCount, finds the
+; lowest level (0, then 1, then 2) that any resistance has (wCounterPtr0Lo), lists the indexes at
+; that level in order (from wCounterPtr0Hi on; wLowestResistCount of them) and adds 1 to one of
+; them: the only one, or with several entry (91 mod count) of the list. The pick is not random: the
+; byte from NextTableByte is thrown away because A is reloaded from L, which is the fixed low byte
+; $5C of the address just past the 27 resistances. A multi-entry pick that lands on index 15 raises
+; nothing and still uses up the count. RunLinkSession8Exchange_Trade_RankFamilies sets
+; wFamilyBitCount and calls it. (C2, E-0385)
 ; while wFamilyBitCount > 0 and some resistance at wGiftRecord + $73 is below 3: picks at random one
 ; of the lowest-level resistances (levels 0, then 1, 2) and raises it (E-0129)
-RaiseRandomLowestResistance::
+RaiseLowestResistances::
     ld a, [wFamilyBitCount]
     and a
     ret z
@@ -4711,7 +4911,7 @@ RaiseRandomLowestResistance::
     add_a_to_hl
     ld a, [hl]
     cp $0f
-    jp z, RaiseRandomLowestResistance
+    jp z, RaiseLowestResistances
     jr .skip5
 
 .read_counter_ptr0_hi:
@@ -4723,12 +4923,18 @@ RaiseRandomLowestResistance::
     ld a, [hl]
     inc a
     ld [hl], a
-    jp RaiseRandomLowestResistance
+    jp RaiseLowestResistances
 
+; Fills the gift Egg record from its species: loads the species record of the id at wGiftRecord +
+; MON_SPECIES (LoadSpeciesRecord), copies its three natural skills (SPECIES_SKILLS) to the first
+; three bytes of MON_SKILL_LIST and its 27 base resistances (SPECIES_RESISTANCES) over
+; MON_RESISTANCES, then copies only the low byte of MON_MAX_HP to MON_HP and of MON_MAX_MP to MON_MP
+; (the high bytes stay as they were). RunLinkSession8Exchange_Trade_RankFamilies calls it right
+; after RankFamilyScoresIntoFamilyRanking has chosen the species. (C2, E-0385)
 ; loads species wGiftRecord + $B and copies its bytes wSpeciesRecord + $8-wSpeciesRecord + $A to
 ; wGiftRecord + $3C and the 27 bytes at wSpeciesRecord + $12 to wGiftRecord + $73; wGiftRecord + $5B
 ; = wGiftRecord + $5D, wGiftRecord + $5F = wGiftRecord + $61 (E-0124)
-LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth::
+GiftRecord_LoadSkillsResistancesFromSpecies::
     ld a, [wGiftRecord + MON_SPECIES]
     ld [wSpeciesIdLo], a
     ld a, [wGiftRecord + MON_SPECIES + 1]
@@ -4756,6 +4962,17 @@ LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth::
     ld [wGiftRecord + MON_MP], a
     ret
 
+; Chooses the family and species of the gift Egg from the 11 family scores at wFamilyScores. It
+; ranks the families from the highest score down into wFamilyRanking: a tie is settled by bit 0 of
+; the next NextTableByte value, a ranked family gets a value with bit 7 set in its wFamilyRankTaken
+; byte (this routine never clears them), and a score of 0 ties with the starting best of 0, so with
+; only zero scores left the pick can be family 0 again. It then sets wRankBand from
+; BandOfFamilyBitCount and tries the 10 best families in turn: it takes that family list from
+; FamilyBandSpeciesTable, the band list of wRankBand from it, and walks its species words, taking
+; one when RandomModulo29_BankF0 returns an odd quotient. A list ends at $FFFF (try the next family)
+; or at $FEFE (take the word before the marker). If no family gives a species it stores family $0A
+; and species $0174. The result goes to MON_FAMILY and MON_SPECIES of wGiftRecord; wRankIndex ends
+; 0. RunLinkSession8Exchange_Trade_RankFamilies calls it when the egg state is set. (C2, E-0385)
 ; ranks the 11 scores at wFamilyScores in descending order (ties at random) into wFamilyRanking,
 ; then wRankBand = BandOfFamilyBitCount (E-0130)
 RankFamilyScoresIntoFamilyRanking::
@@ -5727,6 +5944,11 @@ FamilyBandSpecies_Boss_15::
     dw MONSTER_ORGODEMIR_173 ; id 28
     dw $fefe ; id 29
 
+; B = mask. Steps the table random number (NextTableByte), forms HL = wRandomLo + 256 * ((wRandomLo
+; * 2) AND B) and divides HL by 41 ($29) with DivideHLByA: HL = the quotient, A = the remainder.
+; With B = $0F the quotient is 0-99 and with B = $1F 0-199. Every caller in this bank uses the
+; quotient (L), as a percentage roll or a value to reduce, and ignores the remainder. It is the copy
+; in this bank of RandomModulo29 (bank $0E). (C2, E-0385)
 ; NextTableByte; L = wRandomLo, H = (wRandomLo rotated left through carry) & B; returns A = HL mod
 ; $29 (E-0118)
 RandomModulo29_BankF0::
@@ -5742,6 +5964,10 @@ RandomModulo29_BankF0::
     call DivideHLByA
     ret
 
+; A = 4 when wFamilyBitCount is below 4, 5 when below 6, 6 when below 10, else 7.
+; RankFamilyScoresIntoFamilyRanking stores it in wRankBand to pick one of the 8 band lists of each
+; family (only bands 4-7 are ever chosen), and RunLinkSession8Exchange_Trade_RankFamilies scales the
+; number of resistance raises by 8 minus this band. (C2, E-0385)
 ; A = 4, 5, 6 or 7 for wFamilyBitCount < 4, < 6, < $0A, or more (E-0124)
 BandOfFamilyBitCount::
     ld a, [wFamilyBitCount]
@@ -5796,6 +6022,11 @@ UnreferencedBytesF0_1::
     db $06, $07, $06, $06, $07, $06, $06, $07, $06, $07, $06, $06, $06, $06, $06, $06 ; id 22
     db $07, $07, $07, $07, $06, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 23
 
+; B = a bit number (RunLinkSession8Exchange_Trade_Pack passes wLinkEggFamilyBit, the partner family
+; bit). When B differs from wLastMarkedBit, adds 1 to wMarkChangeCount (it stops at $FF) and B
+; becomes wLastMarkedBit. Then if bit B of the wFamilyBits array (bit 0 is the high bit of its first
+; byte) is clear, sets it, adds 1 to wFamilyBitCount (stops at $FF) and returns C = 0; if it was
+; already set returns C = $FF and leaves the count alone. (C2, E-0385)
 ; wMarkChangeCount counts changes of B (wLastMarkedBit); if bit B of the wFamilyBits array is new,
 ; sets it, wFamilyBitCount += 1 and C = 0; otherwise C = $FF (E-0125)
 MarkBitBInFamilyBitsAndCount::
@@ -5838,6 +6069,12 @@ MarkBitBInFamilyBitsAndCount::
     ld c, $ff
     ret
 
+; Records a gift given to the Egg: adds 1 to wGiftCount (it stops at $0F). When wPendingGiftItem is
+; not 0 (the previous gift), rolls 0-99 with RandomModulo29_BankF0 and runs ApplyGiftEffectByItem
+; when the roll is below 100 - 5 * wGiftCount. Then wArg1, the item being given now, becomes
+; wPendingGiftItem. So each gift takes effect only when the next one is given, with a smaller chance
+; the more gifts have been given. PauseMenu_State4_GiftMenu_GiveGift_Check far-calls it with wArg1
+; set; ClearRollCounterWhenGM2TimerMinutesIs59 resets wGiftCount. (C2, E-0385)
 ; wGiftCount (wGiftCount) += 1 up to $0F; when a gift is pending (wPendingGiftItem,
 ; wPendingGiftItem), applies its effect (ApplyGiftEffectByItem) if a random value is below 100 - 5 *
 ; wGiftCount; then the new gift item (wArg1, from PauseMenu_State4_GiftMenu_GiveGift) becomes
@@ -5872,6 +6109,11 @@ RecordGiftAndMaybeApplyPrevious::
     ld [wPendingGiftItem], a
     ret
 
+; Returns unless wGM2TimerMinutes is $3B and wGM2TimerSeconds and wGM2TimerFrames are 0. In that one
+; frame it sets wGiftCount to 0 and then falls straight into ApplyGiftEffectByItem, so the pending
+; gift (wPendingGiftItem) takes effect at once with no roll (with nothing pending that is
+; GiftEffect_Item00). FarClearRollCounterWhenGM2TimerMinutesIs59 far-calls it, and several field
+; states call that wrapper every frame. (C2, E-0385)
 ; when wGM2TimerMinutes = $3B and wGM2TimerSeconds = wGM2TimerFrames = 0, clears wGiftCount and
 ; falls through (E-0122)
 ClearRollCounterWhenGM2TimerMinutesIs59::
@@ -5887,6 +6129,11 @@ ClearRollCounterWhenGM2TimerMinutesIs59::
     xor a
     ld [wGiftCount], a
 
+; Runs the effect of the gift item in wPendingGiftItem: a jump table of 98 entries indexed by item
+; id ($00-$61); items with no effect share GiftEffect_BookmarkEtc. The index is not range checked.
+; Each effect adds to one stat word of wGiftRecord (at most 999) and to or from entries of
+; wFamilyScores, then clears wPendingGiftItem. Reached from RecordGiftAndMaybeApplyPrevious after a
+; successful roll, and by fall-through from ClearRollCounterWhenGM2TimerMinutesIs59. (C2, E-0385)
 ; jumps by wPendingGiftItem (the item id of the previous gift, stored by
 ; RecordGiftAndMaybeApplyPrevious) to that item's effect; each effect adds to the gift record's
 ; MON_MAX_HP (wGiftRecord, capped at 999) and to or from entries of wFamilyScores, then clears
@@ -5993,7 +6240,10 @@ ApplyGiftEffectByItem::
     dw GiftEffect_Thief
     dw GiftEffect_Cleric
 
-; gift effect for item $00 : case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_00, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
+; wFamilyScores + 7 (family 7, Zombie; at most 254); it does not clear wPendingGiftItem. (C2,
+; E-0385)
+; gift effect for item $00 : case of ApplyGiftEffectByItem
 GiftEffect_Item00::
     ld hl, wFamilyScores + $7
     ld b, $01
@@ -6001,7 +6251,11 @@ GiftEffect_Item00::
     call AddBClampedToC
     ret
 
-; gift effect for item $01 Herb: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_HERB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
+; the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 0 (family 0, Slime; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $01 Herb: case of ApplyGiftEffectByItem
 GiftEffect_Herb::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
@@ -6018,7 +6272,11 @@ GiftEffect_Herb::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $02 LoveWater: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_LOVEWATER, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2
+; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 9 (family 9, Water;
+; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $02 LoveWater: case of ApplyGiftEffectByItem
 GiftEffect_LoveWater::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $02
@@ -6035,7 +6293,11 @@ GiftEffect_LoveWater::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $03 WorldDew: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_WORLDDEW, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1,
+; Dragon; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit
+; 7 set, as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $03 WorldDew: case of ApplyGiftEffectByItem
 GiftEffect_WorldDew::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
@@ -6052,7 +6314,11 @@ GiftEffect_WorldDew::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $04 Potion: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_POTION, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
+; the MON_MAX_MP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 6 (family 6, Demon; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $04 Potion: case of ApplyGiftEffectByItem
 GiftEffect_Potion::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $01
@@ -6069,7 +6335,11 @@ GiftEffect_Potion::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $05 ElfWater: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_ELFWATER, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $05 ElfWater: case of ApplyGiftEffectByItem
 GiftEffect_ElfWater::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
@@ -6086,7 +6356,10 @@ GiftEffect_ElfWater::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $06 Antidote: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_ANTIDOTE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
+; subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as when it would go
+; below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $06 Antidote: case of ApplyGiftEffectByItem
 GiftEffect_Antidote::
     ld hl, wFamilyScores + $7
     ld b, $02
@@ -6095,7 +6368,11 @@ GiftEffect_Antidote::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $07 MoonHerb: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_MOONHERB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_ATK word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 2 (family 2, Beast; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $07 MoonHerb: case of ApplyGiftEffectByItem
 GiftEffect_MoonHerb::
     ld hl, wGiftRecord + MON_ATK
     ld b, $01
@@ -6112,7 +6389,11 @@ GiftEffect_MoonHerb::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $08 Laurel: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_LAUREL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
+; the MON_DEF word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 3 (family 3, Bird; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $08 Laurel: case of ApplyGiftEffectByItem
 GiftEffect_Laurel::
     ld hl, wGiftRecord + MON_DEF
     ld b, $01
@@ -6129,7 +6410,11 @@ GiftEffect_Laurel::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $09 AwakeSand: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_AWAKESAND, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_AGL word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 5 (family 5, Bug; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $09 AwakeSand: case of ApplyGiftEffectByItem
 GiftEffect_AwakeSand::
     ld hl, wGiftRecord + MON_AGL
     ld b, $01
@@ -6146,7 +6431,11 @@ GiftEffect_AwakeSand::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $0A SkyBell: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SKYBELL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_INT word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 8 (family 8, Material;
+; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $0A SkyBell: case of ApplyGiftEffectByItem
 GiftEffect_SkyBell::
     ld hl, wGiftRecord + MON_INT
     ld b, $01
@@ -6163,7 +6452,11 @@ GiftEffect_SkyBell::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $0B SageRock: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SAGEROCK, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8,
+; Material; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with
+; bit 7 set, as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $0B SageRock: case of ApplyGiftEffectByItem
 GiftEffect_SageRock::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
@@ -6180,7 +6473,11 @@ GiftEffect_SageRock::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $0C WorldLeaf: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_WORLDLEAF, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $0C WorldLeaf: case of ApplyGiftEffectByItem
 GiftEffect_WorldLeaf::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
@@ -6197,7 +6494,11 @@ GiftEffect_WorldLeaf::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $0D ATKseed: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_ATKSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_ATK word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
+; 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $0D ATKseed: case of ApplyGiftEffectByItem
 GiftEffect_ATKseed::
     ld hl, wGiftRecord + MON_ATK
     ld b, $03
@@ -6210,7 +6511,11 @@ GiftEffect_ATKseed::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $0E DEFseed: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_DEFSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_DEF word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
+; 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $0E DEFseed: case of ApplyGiftEffectByItem
 GiftEffect_DEFseed::
     ld hl, wGiftRecord + MON_DEF
     ld b, $03
@@ -6223,7 +6528,11 @@ GiftEffect_DEFseed::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $0F AGLseed: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_AGLSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_AGL word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
+; 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $0F AGLseed: case of ApplyGiftEffectByItem
 GiftEffect_AGLseed::
     ld hl, wGiftRecord + MON_AGL
     ld b, $03
@@ -6236,7 +6545,11 @@ GiftEffect_AGLseed::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $10 INTseed: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_INTSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_INT word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
+; 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $10 INTseed: case of ApplyGiftEffectByItem
 GiftEffect_INTseed::
     ld hl, wGiftRecord + MON_INT
     ld b, $03
@@ -6249,7 +6562,11 @@ GiftEffect_INTseed::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $11 LifeAcorn: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_LIFEACORN, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
+; to the MON_MAX_HP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
+; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $11 LifeAcorn: case of ApplyGiftEffectByItem
 GiftEffect_LifeAcorn::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $05
@@ -6262,7 +6579,11 @@ GiftEffect_LifeAcorn::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $12 MysticNut: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_MYSTICNUT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
+; to the MON_MAX_MP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
+; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $12 MysticNut: case of ApplyGiftEffectByItem
 GiftEffect_MysticNut::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $05
@@ -6275,7 +6596,11 @@ GiftEffect_MysticNut::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $13 Quest?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_QUEST, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
+; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1, Dragon; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $13 Quest?: case of ApplyGiftEffectByItem
 GiftEffect_Quest::
     ld hl, wGiftRecord + MON_ATK
     ld b, $05
@@ -6292,7 +6617,11 @@ GiftEffect_Quest::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $14 Horror?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_HORROR, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
+; the MON_DEF word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 2 (family 2, Beast; at
+; most 250), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $14 Horror?: case of ApplyGiftEffectByItem
 GiftEffect_Horror::
     ld hl, wGiftRecord + MON_DEF
     ld b, $05
@@ -6309,7 +6638,11 @@ GiftEffect_Horror::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $15 BeNice?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_BENICE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
+; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 3 (family 3, Bird; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $15 BeNice?: case of ApplyGiftEffectByItem
 GiftEffect_BeNice::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $05
@@ -6326,7 +6659,11 @@ GiftEffect_BeNice::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $16 Cheater?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_CHEATER, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
+; to the MON_AGL word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 6 (family 6, Demon; at
+; most 250), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $16 Cheater?: case of ApplyGiftEffectByItem
 GiftEffect_Cheater::
     ld hl, wGiftRecord + MON_AGL
     ld b, $05
@@ -6343,7 +6680,11 @@ GiftEffect_Cheater::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $17 Smart?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SMART, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
+; the MON_INT word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 4 (family 4, Plant; at
+; most 250), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $17 Smart?: case of ApplyGiftEffectByItem
 GiftEffect_Smart::
     ld hl, wGiftRecord + MON_INT
     ld b, $05
@@ -6360,7 +6701,11 @@ GiftEffect_Smart::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $18 Comedy?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_COMEDY, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
+; the MON_MAX_MP word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 0 (family 0, Slime; at
+; most 250), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $18 Comedy?: case of ApplyGiftEffectByItem
 GiftEffect_Comedy::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $05
@@ -6377,7 +6722,11 @@ GiftEffect_Comedy::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $19 BeefJerky: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_BEEFJERKY, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_MAX_HP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
+; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $19 BeefJerky: case of ApplyGiftEffectByItem
 GiftEffect_BeefJerky::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
@@ -6390,7 +6739,11 @@ GiftEffect_BeefJerky::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $1A PorkChop: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_PORKCHOP, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 8 (family 8,
+; Material; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with
+; bit 7 set, as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $1A PorkChop: case of ApplyGiftEffectByItem
 GiftEffect_PorkChop::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
@@ -6407,7 +6760,11 @@ GiftEffect_PorkChop::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $1B Rib: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_RIB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
+; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $1B Rib: case of ApplyGiftEffectByItem
 GiftEffect_Rib::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $02
@@ -6424,7 +6781,11 @@ GiftEffect_Rib::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $1C Sirloin: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SIRLOIN, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $1C Sirloin: case of ApplyGiftEffectByItem
 GiftEffect_Sirloin::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
@@ -6441,7 +6802,10 @@ GiftEffect_Sirloin::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $1D BadMeat: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_BADMEAT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_MAX_HP word of wGiftRecord (at most 999), and adds 5 to wFamilyScores + 7 (family 7,
+; Zombie; at most 250), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $1D BadMeat: case of ApplyGiftEffectByItem
 GiftEffect_BadMeat::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
@@ -6455,7 +6819,11 @@ GiftEffect_BadMeat::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $1E MeteOrb: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_METEORB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to wFamilyScores + 10 (family 10, Boss; at most 254), and subtracts 2 from wFamilyScores + 7
+; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $1E MeteOrb: case of ApplyGiftEffectByItem
 GiftEffect_MeteOrb::
     ld hl, wFamilyScores + $a
     ld b, $01
@@ -6468,13 +6836,19 @@ GiftEffect_MeteOrb::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $1F BeastTail: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_BEASTTAIL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
+; changes nothing except clearing wPendingGiftItem. (C2, E-0385)
+; gift effect for item $1F BeastTail: case of ApplyGiftEffectByItem
 GiftEffect_BeastTail::
     xor a
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $20 Repellent: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_REPELLENT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_MAX_HP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
+; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
+; wPendingGiftItem. (C2, E-0385)
+; gift effect for item $20 Repellent: case of ApplyGiftEffectByItem
 GiftEffect_Repellent::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
@@ -6487,13 +6861,19 @@ GiftEffect_Repellent::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $21 ShinyHarp: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SHINYHARP, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
+; changes nothing except clearing wPendingGiftItem. (C2, E-0385)
+; gift effect for item $21 ShinyHarp: case of ApplyGiftEffectByItem
 GiftEffect_ShinyHarp::
     xor a
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $22 Mist?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_MIST, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
+; the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 6 (family 6, Demon; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $22 Mist?: case of ApplyGiftEffectByItem
 GiftEffect_Mist::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $01
@@ -6510,7 +6890,11 @@ GiftEffect_Mist::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $23 Friend?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_FRIEND, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
+; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $23 Friend?: case of ApplyGiftEffectByItem
 GiftEffect_Friend::
     ld hl, wGiftRecord + MON_ATK
     ld b, $02
@@ -6527,7 +6911,11 @@ GiftEffect_Friend::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $24 Wind?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_WIND, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
+; the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 0 (family 0, Slime; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $24 Wind?: case of ApplyGiftEffectByItem
 GiftEffect_Wind::
     ld hl, wGiftRecord + MON_DEF
     ld b, $02
@@ -6544,7 +6932,11 @@ GiftEffect_Wind::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $25 Bolt?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_BOLT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
+; the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $25 Bolt?: case of ApplyGiftEffectByItem
 GiftEffect_Bolt::
     ld hl, wGiftRecord + MON_AGL
     ld b, $02
@@ -6561,7 +6953,11 @@ GiftEffect_Bolt::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $26 Snow?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SNOW, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
+; the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug; at most
+; 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as when
+; it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $26 Snow?: case of ApplyGiftEffectByItem
 GiftEffect_Snow::
     ld hl, wGiftRecord + MON_INT
     ld b, $02
@@ -6578,7 +6974,11 @@ GiftEffect_Snow::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $27 Fire?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_FIRE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
+; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1, Dragon; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $27 Fire?: case of ApplyGiftEffectByItem
 GiftEffect_Fire::
     ld hl, wGiftRecord + MON_ATK
     ld b, $02
@@ -6595,7 +6995,11 @@ GiftEffect_Fire::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $28 Warp?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_WARP, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
+; the MON_DEF word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 9 (family 9, Water; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $28 Warp?: case of ApplyGiftEffectByItem
 GiftEffect_Warp::
     ld hl, wGiftRecord + MON_DEF
     ld b, $02
@@ -6612,7 +7016,11 @@ GiftEffect_Warp::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $29 WarpWing: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_WARPWING, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2
+; to the MON_AGL word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 3 (family 3, Bird; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $29 WarpWing: case of ApplyGiftEffectByItem
 GiftEffect_WarpWing::
     ld hl, wGiftRecord + MON_AGL
     ld b, $02
@@ -6629,7 +7037,11 @@ GiftEffect_WarpWing::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $2A ExitBell: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_EXITBELL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2
+; to the MON_INT word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 8 (family 8, Material;
+; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $2A ExitBell: case of ApplyGiftEffectByItem
 GiftEffect_ExitBell::
     ld hl, wGiftRecord + MON_INT
     ld b, $02
@@ -6646,26 +7058,36 @@ GiftEffect_ExitBell::
     ld [wPendingGiftItem], a
     ret
 
+; Gift effect for ITEM_BOOKMARK ($2B), $2F-$3F (ITEM_2F to ITEM_ACCESSORY_3F) and $54-$59 (ITEM_NONE
+; to ITEM_NONE_59), a case of ApplyGiftEffectByItem picked by wPendingGiftItem: changes nothing
+; except clearing wPendingGiftItem. (C2, E-0385)
 ; gift effect for item $2B Bookmark, $2F , $30 WaterCall, $31 MoonRock, $32 Crest, $33 YunaSoul ...:
-; case of ApplyGiftEffectByItem (E-0295)
+; case of ApplyGiftEffectByItem
 GiftEffect_BookmarkEtc::
     xor a
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $2C TinyMedal: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_TINYMEDAL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
+; changes nothing except clearing wPendingGiftItem. (C2, E-0385)
+; gift effect for item $2C TinyMedal: case of ApplyGiftEffectByItem
 GiftEffect_TinyMedal::
     xor a
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $2D GoldPass: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_GOLDPASS, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: changes
+; nothing except clearing wPendingGiftItem. (C2, E-0385)
+; gift effect for item $2D GoldPass: case of ApplyGiftEffectByItem
 GiftEffect_GoldPass::
     xor a
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $2E LogTwig: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_LOGTWIG, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
+; subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as when it would go
+; below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $2E LogTwig: case of ApplyGiftEffectByItem
 GiftEffect_LogTwig::
     ld hl, wFamilyScores + $7
     ld b, $02
@@ -6674,7 +7096,11 @@ GiftEffect_LogTwig::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $40 VITbelt: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_VITBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 5 (family 5, Bug;
+; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $40 VITbelt: case of ApplyGiftEffectByItem
 GiftEffect_VITbelt::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
@@ -6691,7 +7117,11 @@ GiftEffect_VITbelt::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $41 DracoBelt: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_DRACOBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 8
+; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $41 DracoBelt: case of ApplyGiftEffectByItem
 GiftEffect_DracoBelt::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $08
@@ -6708,7 +7138,11 @@ GiftEffect_DracoBelt::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $42 MagicBelt: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_MAGICBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 4 (family 4, Plant;
+; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $42 MagicBelt: case of ApplyGiftEffectByItem
 GiftEffect_MagicBelt::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
@@ -6725,7 +7159,11 @@ GiftEffect_MagicBelt::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $43 OddBelt: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_ODDBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 8
+; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $43 OddBelt: case of ApplyGiftEffectByItem
 GiftEffect_OddBelt::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $08
@@ -6742,7 +7180,11 @@ GiftEffect_OddBelt::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $44 StoneFang: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_STONEFANG, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_ATK word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 2 (family 2, Beast; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $44 StoneFang: case of ApplyGiftEffectByItem
 GiftEffect_StoneFang::
     ld hl, wGiftRecord + MON_ATK
     ld b, $01
@@ -6759,7 +7201,11 @@ GiftEffect_StoneFang::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $45 SteelFang: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_STEELFANG, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
+; to the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $45 SteelFang: case of ApplyGiftEffectByItem
 GiftEffect_SteelFang::
     ld hl, wGiftRecord + MON_ATK
     ld b, $05
@@ -6776,7 +7222,11 @@ GiftEffect_SteelFang::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $46 MermScale: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_MERMSCALE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_DEF word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 9 (family 9, Water; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $46 MermScale: case of ApplyGiftEffectByItem
 GiftEffect_MermScale::
     ld hl, wGiftRecord + MON_DEF
     ld b, $01
@@ -6793,7 +7243,11 @@ GiftEffect_MermScale::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $47 DrakScale: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_DRAKSCALE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
+; to the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $47 DrakScale: case of ApplyGiftEffectByItem
 GiftEffect_DrakScale::
     ld hl, wGiftRecord + MON_DEF
     ld b, $05
@@ -6810,7 +7264,11 @@ GiftEffect_DrakScale::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $48 AGL?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_AGL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
+; the MON_AGL word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 0 (family 0, Slime; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $48 AGL?: case of ApplyGiftEffectByItem
 GiftEffect_AGL::
     ld hl, wGiftRecord + MON_AGL
     ld b, $01
@@ -6827,7 +7285,11 @@ GiftEffect_AGL::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $49 Starry?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_STARRY, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
+; the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 0 (family 0, Slime; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $49 Starry?: case of ApplyGiftEffectByItem
 GiftEffect_Starry::
     ld hl, wGiftRecord + MON_AGL
     ld b, $05
@@ -6844,7 +7306,11 @@ GiftEffect_Starry::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $4A Smart?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SMART_4A, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
+; to the MON_INT word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 6 (family 6, Demon; at
+; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $4A Smart?: case of ApplyGiftEffectByItem
 GiftEffect_Smart_4A::
     ld hl, wGiftRecord + MON_INT
     ld b, $01
@@ -6861,7 +7327,11 @@ GiftEffect_Smart_4A::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $4B Wise?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_WISE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
+; the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 6 (family 6, Demon; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $4B Wise?: case of ApplyGiftEffectByItem
 GiftEffect_Wise::
     ld hl, wGiftRecord + MON_INT
     ld b, $05
@@ -6878,7 +7348,11 @@ GiftEffect_Wise::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $4C MagicCape: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_MAGICCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 8
+; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 3 (family 3, Bird;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $4C MagicCape: case of ApplyGiftEffectByItem
 GiftEffect_MagicCape::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $08
@@ -6895,7 +7369,11 @@ GiftEffect_MagicCape::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $4D DracoCape: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_DRACOCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1, Dragon;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $4D DracoCape: case of ApplyGiftEffectByItem
 GiftEffect_DracoCape::
     ld hl, wGiftRecord + MON_ATK
     ld b, $03
@@ -6912,7 +7390,11 @@ GiftEffect_DracoCape::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $4E SilvrCape: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SILVRCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8, Material;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $4E SilvrCape: case of ApplyGiftEffectByItem
 GiftEffect_SilvrCape::
     ld hl, wGiftRecord + MON_AGL
     ld b, $03
@@ -6929,7 +7411,11 @@ GiftEffect_SilvrCape::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $4F GoldCape: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_GOLDCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8, Material;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $4F GoldCape: case of ApplyGiftEffectByItem
 GiftEffect_GoldCape::
     ld hl, wGiftRecord + MON_INT
     ld b, $03
@@ -6946,7 +7432,11 @@ GiftEffect_GoldCape::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $50 PltnmCape: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_PLTNMCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 10 (family 10, Boss;
+; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $50 PltnmCape: case of ApplyGiftEffectByItem
 GiftEffect_PltnmCape::
     ld hl, wGiftRecord + MON_DEF
     ld b, $03
@@ -6963,7 +7453,11 @@ GiftEffect_PltnmCape::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $51 OrcaCape: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_ORCACAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $51 OrcaCape: case of ApplyGiftEffectByItem
 GiftEffect_OrcaCape::
     ld hl, wGiftRecord + MON_AGL
     ld b, $03
@@ -6980,7 +7474,11 @@ GiftEffect_OrcaCape::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $52 BraveCape: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_BRAVECAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
+; to the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $52 BraveCape: case of ApplyGiftEffectByItem
 GiftEffect_BraveCape::
     ld hl, wGiftRecord + MON_ATK
     ld b, $03
@@ -6997,7 +7495,11 @@ GiftEffect_BraveCape::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $53 D-Scale: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_DSCALE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
+; the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 1 (family 1, Dragon;
+; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
+; as when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $53 D-Scale: case of ApplyGiftEffectByItem
 GiftEffect_DScale::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
@@ -7014,7 +7516,11 @@ GiftEffect_DScale::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $5A Life?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_LIFE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $5A Life?: case of ApplyGiftEffectByItem
 GiftEffect_Life::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
@@ -7031,7 +7537,11 @@ GiftEffect_Life::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $5B Divine?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_DIVINE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $5B Divine?: case of ApplyGiftEffectByItem
 GiftEffect_Divine::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
@@ -7048,7 +7558,11 @@ GiftEffect_Divine::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $5C War?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_WAR, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $5C War?: case of ApplyGiftEffectByItem
 GiftEffect_War::
     ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
@@ -7065,7 +7579,11 @@ GiftEffect_War::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $5D Mage?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_MAGE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 6 (family 6, Demon; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $5D Mage?: case of ApplyGiftEffectByItem
 GiftEffect_Mage::
     ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
@@ -7082,7 +7600,11 @@ GiftEffect_Mage::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $5E Fight?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_FIGHT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $5E Fight?: case of ApplyGiftEffectByItem
 GiftEffect_Fight::
     ld hl, wGiftRecord + MON_ATK
     ld b, $03
@@ -7099,7 +7621,11 @@ GiftEffect_Fight::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $5F Sailor?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_SAILOR, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8, Material; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $5F Sailor?: case of ApplyGiftEffectByItem
 GiftEffect_Sailor::
     ld hl, wGiftRecord + MON_DEF
     ld b, $03
@@ -7116,7 +7642,11 @@ GiftEffect_Sailor::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $60 Thief?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_THIEF, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 3 (family 3, Bird; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $60 Thief?: case of ApplyGiftEffectByItem
 GiftEffect_Thief::
     ld hl, wGiftRecord + MON_AGL
     ld b, $03
@@ -7133,7 +7663,11 @@ GiftEffect_Thief::
     ld [wPendingGiftItem], a
     ret
 
-; gift effect for item $61 Cleric?: case of ApplyGiftEffectByItem (E-0295)
+; Gift effect for ITEM_CLERIC, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
+; the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 0 (family 0, Slime; at
+; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
+; when it would go below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
+; gift effect for item $61 Cleric?: case of ApplyGiftEffectByItem
 GiftEffect_Cleric::
     ld hl, wGiftRecord + MON_INT
     ld b, $03
@@ -7150,7 +7684,10 @@ GiftEffect_Cleric::
     ld [wPendingGiftItem], a
     ret
 
-; [HL] = min([HL] + B, C) (8-bit add, no overflow check); clobbers A, C (E-0353)
+; HL = address of a byte, B = amount, C = cap: [HL] = [HL] + B, but not above C. The 8-bit sum wraps
+; at $100 before it is compared (250 + 10 with C = 250 gives 4). Clobbers A and C (C ends as the old
+; C + 1). Used by the gift effect routines to raise a family score. (C2, E-0385)
+; [HL] = min([HL] + B, C) (8-bit add, no overflow check); clobbers A, C
 AddBClampedToC::
     inc c
     ld a, [hl]
@@ -7164,7 +7701,10 @@ AddBClampedToC::
     ld [hl], a
     ret
 
-; [HL] = [HL] - B, or 0 when the result has bit 7 set; clobbers A (E-0353)
+; HL = address of a byte, B = amount: [HL] = [HL] - B, or 0 when the 8-bit result has bit 7 set
+; (going below 0, or any value of $80 or more). Clobbers A. Used by the gift effect routines to
+; lower a family score. (C2, E-0385)
+; [HL] = [HL] - B, or 0 when the result has bit 7 set; clobbers A
 SubtractBClampedAtZero::
     ld a, [hl]
     sub b
@@ -7176,6 +7716,9 @@ SubtractBClampedAtZero::
     ld [hl], a
     ret
 
+; HL = address of a 16-bit word (low byte first), B = amount, DE = cap: the word becomes word + B,
+; or DE when that sum is above DE, so a word already above DE is lowered to DE. DE is kept; clobbers
+; A, BC and HL. The gift effect routines add to a stat of wGiftRecord with DE = 999. (C2, E-0385)
 ; HL = address of a word: word = min(word + B, DE) (CompareHLWithDE); DE kept; clobbers A, BC, HL
 ; (E-0061)
 AddBToWordAtHLCapped::
@@ -7206,6 +7749,8 @@ AddBToWordAtHLCapped::
     ld [bc], a
     ret
 
+; Unsigned 16-bit compare: C = 0 when HL < DE, 1 when HL = DE, $FF when HL > DE. Clobbers A. Only
+; AddBToWordAtHLCapped calls it. (C2, E-0385)
 ; unsigned 16-bit compare: C = 0 when HL < DE, 1 when equal, $FF when HL > DE; clobbers A (E-0061)
 CompareHLWithDE::
     ld a, h
@@ -7229,6 +7774,11 @@ CompareHLWithDE::
     ld c, $01
     ret
 
+; HL = a species id word (low byte, then high byte), DE = destination: copies the name string of
+; that monster from the string database of bank $08 up to and including its $F0 end mark. A high
+; byte of 0 uses database list 2 (the table at $4036 of bank $08), any other high byte list 3
+; (StringDatabase_MonsterNames2); the low byte indexes the list. Used by the hatching scene steps to
+; put the egg species name into wTextBuf1. (C2, E-0385)
 ; copies the $F0-terminated string [HL] of the category chosen by [HL + 1]
 ; (CopyNameStringFromBank08Database_Data or StringDatabase_MonsterNames2) from bank 8 to HL (E-0125)
 CopyNameStringFromBank08Database::
@@ -7281,6 +7831,9 @@ CopyNameStringFromBank08Database::
     ld [hli], a
     ret
 
+; HL = start of a bit array, DE = bit number: A = $FF when the bit is set, else 0. Bit 0 is the high
+; bit of the first byte. HL ends at the byte (HL + DE / 8), D holds the one-bit mask and E is kept.
+; MarkBitBInFamilyBitsAndCount and OrDIntoTestBitDEOfBitArrayHLByte use it. (C2, E-0385)
 ; A = $FF when bit DE of the bit array at HL is set (mask TestBitDEOfBitArrayHL_Data), else 0; HL is
 ; left at the byte (E-0124)
 TestBitDEOfBitArrayHL::
@@ -7318,6 +7871,8 @@ TestBitDEOfBitArrayHL::
 TestBitDEOfBitArrayHL_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
+; HL = start of a bit array, DE = bit number: sets that bit. It runs TestBitDEOfBitArrayHL, which
+; leaves HL at the byte and D as the one-bit mask, then ORs D into [HL]. (C2, E-0385)
 ; [HL from TestBitDEOfBitArrayHL] |= D (E-0122)
 OrDIntoTestBitDEOfBitArrayHLByte::
     call TestBitDEOfBitArrayHL
@@ -7334,7 +7889,7 @@ OrDIntoTestBitDEOfBitArrayHLByte::
 ; AGL and INT each (random mod 32) + 1 (HP and MP also copied to their maximums), zero MON_WLD,
 ; MON_PLUS and MON_EGG, four MON_PERSONALITY bytes of (random mod 254) + 1, zero resistances, blank
 ; parent names, and zero parent plus values and MON_ITEM. The random bytes come from
-; RandomModulo29_BankF0 and KeyWorldDoorItem_ModuloBPlusOne. (C1, E-0371)
+; RandomModulo29_BankF0 and KeyWorldDoorItem_ModuloBPlusOne. (C2, E-0371; probed E-0385)
 KeyWorldDoorItem_OpenDoor_BuildGiftRecord::
     ld hl, wGM2TimerFrames
     ld bc, $00d8
@@ -7559,7 +8114,10 @@ KeyWorldDoorItem_OpenDoor_BuildGiftRecord::
     ld [hli], a
     ret
 
-; fills C bytes at HL with B (E-0305)
+; Fills C bytes at HL with B (C = 0 fills 256); HL ends just past them and C ends 0.
+; KeyWorldDoorItem_OpenDoor_BuildGiftRecord uses it for the $F0 padding of the parent names. (C2,
+; E-0385)
+; fills C bytes at HL with B
 KeyWorldDoorItem_FillCBytesWithB::
     ld a, b
     ld [hli], a
@@ -7567,7 +8125,10 @@ KeyWorldDoorItem_FillCBytesWithB::
     jr nz, KeyWorldDoorItem_FillCBytesWithB
     ret
 
-; writes three $98 placeholder glyphs and $F0 at HL (E-0305)
+; Writes the placeholder name '???' ($98 is the glyph '?') and the $F0 end mark at HL; HL ends 4
+; bytes on and A = $F0. KeyWorldDoorItem_OpenDoor_BuildGiftRecord uses it for the two parent master
+; names. (C2, E-0385)
+; writes three $98 placeholder glyphs and $F0 at HL
 KeyWorldDoorItem_WriteUnknownName::
     ld a, $98
     ld [hli], a
@@ -7579,7 +8140,11 @@ KeyWorldDoorItem_WriteUnknownName::
     ld [hli], a
     ret
 
-; DE = (L mod B) + 1 (E-0305)
+; DE = (L mod B) + 1, by repeated subtraction (D = 0, E = A = the result). L is the low byte of the
+; quotient RandomModulo29_BankF0 leaves in HL, so this turns a roll into 1..B.
+; KeyWorldDoorItem_OpenDoor_BuildGiftRecord calls it with B = $20 for the stats and $FE for the
+; personality bytes. (C2, E-0385)
+; DE = (L mod B) + 1
 KeyWorldDoorItem_ModuloBPlusOne::
     ld a, l
 
@@ -7595,6 +8160,10 @@ KeyWorldDoorItem_ModuloBPlusOne::
     ld d, $00
     ret
 
+; A = 1 with a chance that grows with wMarkChangeCount, else 0. Below 5 changes the answer is always
+; 0. From 5 to 12 the threshold is 10 * (count - 4), from 13 on 80; the roll is the 0-99 quotient of
+; RandomModulo29_BankF0 with B = $0F, and A = 1 only when the roll is below the threshold.
+; RunLinkSession8Exchange_Trade_Pack stores the answer in wLinkEggState. (C2, E-0385)
 ; A = 1 with a chance growing with wMarkChangeCount (none below 5, 10 per step to 80 from 13), else
 ; 0 (E-0124)
 RollMarkChangeCountChance::

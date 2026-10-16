@@ -527,7 +527,7 @@ SparkleSpriteTiles::
 ; RunFieldCommandTemp0_LoadSceneObject13, which loads it to vTiles0 + $300 with palette 3 (yellow)
 ; at ($50, $3C) or ($48, $40). Callers are the breeding child scene
 ; (BreedChildScene_LoadChildGraphics, BreedChildScene_StartEffect), the hatching scenes
-; (HatchingScene_ShowEgg, RunLinkSession8Exchange_EggHatched_ShowEgg, StepObjectCB9AAndTriggerAt60)
+; (HatchingScene_ShowEgg, RunLinkSession8Exchange_EggHatched_ShowEgg, UnusedStepObject1LeftShowEgg)
 ; and the egg hand-over setups (GameMode6_Update_SetUpPrizeScene, GameMode8_Update_SetUpScene). The
 ; 8 frames of set $1F are an egg, a rocking egg, a cracking egg and then flying shell pieces: a
 ; monster egg hatching. (C1, E-0383)

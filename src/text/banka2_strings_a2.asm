@@ -4,6 +4,10 @@
 SECTION "Bank A2", ROMX[$4000], BANK[$A2]
     db $a2
 
+; wMonsterId (16 bits, $250 or more), C = a byte offset in the 26-byte record, hTemp0 = a count, DE
+; = a destination: copies hTemp0 bytes from MonsterTableA2 at 26 * (wMonsterId - $250 + 1) + C to DE
+; (CopyBytesDEFromHL_BankA2); DE ends past the bytes copied and B is 0. Called by
+; CopyMonsterTableBytesFromMonsterTable for the ids it hands over. (C2, E-0385)
 ; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hTemp0 bytes from HL to DE (E-0121) (E-0344:
 ; the address in its name dropped or read as the label there; was CopyMonsterTableBytes; a trailing
 ; preposition left by the dropped address removed)
@@ -39,8 +43,8 @@ CopyMonsterTableBytes::
     ret
 
 ; Monster ids from $250 on, kept in this bank: copies the 26-byte record at $4056 + 26 x (id - $24F)
-; to DE (CopyBytesDEFromHL_BankA2). (C1, E-0357)
-LoadMonsterRecordTo_Multiply8By16::
+; to DE (CopyBytesDEFromHL_BankA2). (C2, E-0357; probed E-0385)
+LoadMonsterRecordTo_HighIds::
     push de
     ld a, [wMonsterId]
     ld c, a
@@ -64,6 +68,9 @@ LoadMonsterRecordTo_Multiply8By16::
     pop de
     ld b, $1a
 
+; HL = source, DE = destination, B = count (not 0): copies B bytes from HL to DE; HL and DE end past
+; them, B ends 0, A is clobbered. Called by CopyMonsterTableBytes; LoadMonsterRecordTo_HighIds falls
+; into it with B = $1A. (C2, E-0385)
 ; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_BankA2::
     ld a, [hli]
@@ -75,9 +82,9 @@ CopyBytesDEFromHL_BankA2::
     db $00, $00, $ff, $ff, $ff, $ff
     ds $14, $00
 
-; CopyMonsterTableBytes and LoadMonsterRecordTo_Multiply8By16 read the 26-byte record at $4056 + 26
-; * (monster id - $250 + 1) for ids at or above $250 (E-0033), so id $250 starts at $4070; 93
-; records up to the code at $49E2, the same layout as MonsterTable (E-0240, C1)
+; CopyMonsterTableBytes and LoadMonsterRecordTo_HighIds read the 26-byte record at $4056 + 26 *
+; (monster id - $250 + 1) for ids at or above $250 (E-0033), so id $250 starts at $4070; 93 records
+; up to the code at $49E2, the same layout as MonsterTable (E-0240, C1)
 ; record: picture number: index into MonsterPictureTable, MonsterAttributeMapTable and
 ; MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2,
 ; 145); skill id 1 (SkillTable index, $FF = none); skill id 2; skill id 3; skill id 4; EXP, 16 bits

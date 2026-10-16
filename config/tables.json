@@ -18342,7 +18342,7 @@
           "name": "offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding"
         }
       ],
-      "note": "E-0236 (C1: ApplyIncrementOffsetRowsA0ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
+      "note": "E-0236 (C1: ApplyEquippedItemIncrements takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
     },
     {
       "bank": "19",
@@ -19723,7 +19723,7 @@
           "short": "personality axis $72"
         }
       ],
-      "note": "E-0240 (C1: CopyMonsterTableBytesFrom4056 and LoadMonsterRecordTo_Multiply8By16 read the 26-byte record at $4056 + 26 * (monster id - $250 + 1) for ids at or above $250 (E-0033), so id $250 starts at $4070; 93 records up to the code at $49E2, the same layout as MonsterTable).",
+      "note": "E-0240 (C1: CopyMonsterTableBytesFrom4056 and LoadMonsterRecordTo_HighIds read the 26-byte record at $4056 + 26 * (monster id - $250 + 1) for ids at or above $250 (E-0033), so id $250 starts at $4070; 93 records up to the code at $49E2, the same layout as MonsterTable).",
       "id_names": "monster_table",
       "field_comments": true
     },

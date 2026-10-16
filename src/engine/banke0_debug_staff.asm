@@ -4,6 +4,12 @@
 SECTION "Bank E0", ROMX[$4000], BANK[$E0]
     db $e0
 
+; Runs the debug skill editor, state 12 of the debug battle viewer (called by
+; RunDebugState_E0_SkillEditor). Jumps through a table of six by wDebugSubState: 0
+; RunDebugSubState_E0_ShowHeading draws the screen, 1 RunDebugSubState_E0_SideField, 2
+; RunDebugSubState_E0_SkillField, 3 RunDebugSubState_E0_CountField and 4
+; RunDebugSubState_E0_BattleEndField each edit one field, 5 RunDebugSubState_E0_Exit goes back to
+; state 3 of the viewer. (C1, E-0385)
 ; the editing sub-states of the bank-$E0 debug viewer: shows a string, then edits the debug cursor,
 ; two debug values and the battle-end flag (E-0354; was: runs the routine for wDebugSubState (jump
 ; table of six) (E-0122))
@@ -281,7 +287,8 @@ RunDebugSubState_E0_BattleEndField::
     call WriteVRAMByte
     ret
 
-; Debug skill editor, sub-state 5: returns to the debug viewer's state 3. (C1, E-0357)
+; Debug skill editor, sub-state 5: returns to the debug viewer's state 3. (C2, E-0357; probed
+; E-0385)
 RunDebugSubState_E0_Exit::
     xor a
     ld [wDebugSubState], a
@@ -323,6 +330,12 @@ RunDebugSubState_E0_DrawSideMarks::
 RunDebugSubState_E0_DrawSideMarks_Data::
     db $bb, $c3, $bb
 
+; Redraws the skill field of the debug skill editor. Writes the two hex nibbles of wDebugValue0 (the
+; skill number), each plus 1 as a tile number, at vBGMap0 + $CA and the next cell, copies string
+; wDebugValue0 of category 4 (the skill names) into wTextBuf0 with CopyStringHLToDE, and shows
+; string 5 of category 8 (ShowString_Bank08), which is just '<BUF0>', so the name appears. Called by
+; RunDebugSubState_E0_ShowHeading and, after A or Left/Right, by RunDebugSubState_E0_SkillField.
+; (C1, E-0385)
 ; writes the two nibbles of wDebugValue0, each plus 1, as tiles at vBGMap0 + $CA; copies string
 ; wDebugValue0 of category 4 (skill names) to wTextBuf0 (CopyStringHLToDE) and shows string 5 of
 ; category 8 (ShowString_Bank08) (E-0112)
@@ -413,6 +426,11 @@ RunDebugSubState_E0_DrawBattleEndMarks::
     call WriteVRAMByte
     ret
 
+; HL = tile destination, DE = window size (E = rows, D = width): stores them in
+; wTextWindowTileLo/Hi, wTextWindowRows and wTextWindowWidth, far-calls ShowString_Bank08 to show
+; string wStringIndex of category wStringCategory, then puts the window back to vTiles1 with the
+; size word $1202. Called by RunDebugSubState_E0_ShowHeading and
+; RunDebugState_E0_ChooseActionTargets_Start. (C1, E-0385)
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then
 ; sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
 ShowStringBank08AtTilesHLThenDefault_BankE0::
@@ -437,6 +455,9 @@ ShowStringBank08AtTilesHLThenDefault_BankE0::
     ld [wTextWindowWidth], a
     ret
 
+; The same as ShowStringBank08AtTilesHLThenDefault_BankE0 but it far-calls ShowString_Bank09: HL =
+; tile destination, DE = window size (E = rows, D = width), then the window goes back to vTiles1
+; with $1202. Called once, by RunDebugSubState_E0_ShowHeading. (C1, E-0385)
 ; shows the selected string (ShowString_Bank09) in a window at HL with size DE, then restores the
 ; default window (vTiles1, $1202) (E-0121)
 ShowStringBank09AtHLSizeDEThenDefault::
@@ -496,6 +517,15 @@ RunDebugSubState_E0_ShowHeading_Data::
     ds $12, $b4
     db $b5
 
+; The debug battle viewer of bank $E0. Jumps through a table of 14 by wDebugState: 0
+; RunDebugState_E0_ShowHeading, 1 RunDebugState_E0_DrawSlotStats, 2 RunDebugState_E0_Input, 3
+; RunDebugState_E0_MarkGains, 4 RunDebugState_E0_DrawResistanceFrame, 5
+; RunDebugState_E0_DrawResistances, 6 RunDebugState_E0_ReturnOnA, 7 DrawTileMapAndStep, 8
+; RunDebugState_E0_DrawSkillBytes, 9 RunDebugState_E0_ReturnOnB, 10 RunDebugState_E0_EffectViewer,
+; 11 RunDebugState_E0_EditStatusBits, 12 RunDebugState_E0_SkillEditor, 13
+; RunDebugState_E0_ChooseActionTargets. The only routines that far-call it are
+; CallRunDebugStateInBankE0_BankA0 and UnreferencedDebugScreenCaller, and nothing in src/ calls
+; either of them. (C1, E-0385)
 ; the bank-$E0 debug battle viewer: by wDebugState it draws strings, slot HP/MP stats, packed 2-bit
 ; fields and bytes in hex, waits for buttons, and picks action targets (RunDebugSubState_E0 for its
 ; editing sub-states) (E-0354; was: runs the routine for wDebugState (jump table of fourteen)
@@ -702,7 +732,11 @@ DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow::
     ld h, a
     ret
 
-; DE += 2 * C, then falls into the BCD conversion of the word (E-0305)
+; C = battle slot, DE = the start of an array with one word per slot (wBattleHP, wBattleMaxHP,
+; wBattleMP, wBattleMaxMP or wBattleExtraStat), HL = VRAM position: adds 2 * C to DE and falls into
+; DrawSlotHPMPStats_BankE0_DrawWordAtDE, which draws that word as a number. Called five times by
+; DrawSlotHPMPStats_BankE0. (C1, E-0385)
+; DE += 2 * C, then falls into the BCD conversion of the word
 DrawSlotHPMPStats_BankE0_IndexWordC::
     ld a, c
     add a
@@ -790,6 +824,12 @@ DrawSlotHPMPStats_BankE0_DrawThreeDigits::
     call WriteVRAMByte
     ret
 
+; DE = address of a 16-bit word (low byte first): copies it to wDigits and wDigits + 1, clears
+; wDigits + 2 and runs Number24ToPackedBCD, so hTemp0 = tens and ones, hTemp1 = thousands and
+; hundreds, hTemp2 = hundred-thousands and ten-thousands (a word never has a hundred-thousands
+; digit, so it is 0 to 6) and hTemp3 = 0, two decimal digits per byte with the higher digit in the
+; upper nibble. BC and HL are kept; DE is not. Called by DrawSlotHPMPStats_BankE0_DrawWordStat and
+; DrawSlotHPMPStats_BankE0_DrawWordAtDE. (C2, E-0385)
 ; wDigits/wDigits + $1 = the word at DE, wDigits + $2 = 0, then Number24ToPackedBCD; BC, HL kept
 ; (E-0118)
 WordAtDEToPackedBCD::
@@ -807,7 +847,12 @@ WordAtDEToPackedBCD::
     pop hl
     ret
 
-; writes the glyph for the slot's wSlotAIMode at the slot's BG address (E-0305)
+; C = battle slot: writes the glyph tile for the AI mode of that slot,
+; DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data2[wSlotAIMode[C]] ($0B, $0A, $09, $08 or $EF for
+; modes 0-4), at the BG map address of column C AND 3 from
+; DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data1 ($9946, $994C, $9952). Called by
+; DrawSlotHPMPStats_BankE0 just before the suffix mark. (C1, E-0385)
+; writes the glyph for the slot's wSlotAIMode at the slot's BG address
 DrawSlotHPMPStats_BankE0_DrawAIModeGlyph::
     ld a, c
     ld hl, wSlotAIMode
@@ -900,7 +945,7 @@ RunDebugState_E0_Input::
     ld [wBattleFoeCount], a
     ld a, $0a
     ld [wDebugState], a
-    call DrawFullScreenFromBankE0_2
+    call RunDebugState_E0_Input_DrawEffectViewerScreen
     call DrawSkillDebugDigitsAndRecord
     xor a
     ld [wDebugSubState], a
@@ -1094,6 +1139,9 @@ DrawPacked2BitFieldsInRows::
     rlca
     jr DrawLowTwoBitsAsDigit
 
+; DE += 1, then draws bits 7-6 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances
+; HL (through DrawLowTwoBitsAsDigit). Used by DrawPacked2BitFieldsInRows to cross from one
+; resistance byte to the next. (C1, E-0385)
 ; DE += 1, then writes bits 7-6 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc)
 ; (E-0112)
 DrawBits76OfNextDEAsDigit::
@@ -1103,12 +1151,16 @@ DrawBits76OfNextDEAsDigit::
     rlca
     jr DrawLowTwoBitsAsDigit
 
+; Draws bits 5-4 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances HL (swap, then
+; DrawLowTwoBitsAsDigit). DE is not changed. (C1, E-0385)
 ; writes bits 5-4 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 DrawBits54OfDEAsDigit::
     ld a, [de]
     swap a
     jr DrawLowTwoBitsAsDigit
 
+; Draws bits 3-2 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances HL (two right
+; rotations, then DrawLowTwoBitsAsDigit). DE is not changed. (C1, E-0385)
 ; writes bits 3-2 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 DrawBits32OfDEAsDigit::
     ld a, [de]
@@ -1116,6 +1168,8 @@ DrawBits32OfDEAsDigit::
     rrca
     jr DrawLowTwoBitsAsDigit
 
+; Draws bits 1-0 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances HL (falls into
+; DrawLowTwoBitsAsDigit). DE is not changed. (C1, E-0385)
 ; writes bits 1-0 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 DrawBits10OfDEAsDigit::
     ld a, [de]
@@ -1130,7 +1184,7 @@ DrawLowTwoBitsAsDigit::
     call WriteVRAMByteInc
     ret
 
-; Debug battle viewer, state 6: waits for A, then back to state 0. (C1, E-0357)
+; Debug battle viewer, state 6: waits for A, then back to state 0. (C2, E-0357; probed E-0385)
 RunDebugState_E0_ReturnOnA::
     ld a, [wJoypadPressed]
     and $01
@@ -1139,6 +1193,10 @@ RunDebugState_E0_ReturnOnA::
     ld [wDebugState], a
     ret
 
+; Writes the 20 x 16 tile map DrawTileMapAndStep_Data to vBGMap0 + $20 row by row (WriteVRAMByteInc,
+; 32 bytes between rows), then adds 1 to wDebugState. It is state 7 of RunDebugState_E0 (reached
+; from the viewer input with B) and is also called by RunDebugState_E0_DrawResistanceFrame. (C1,
+; E-0385)
 ; writes the 20 x 16 tile map $4946 to vBGMap0 + $20, then wDebugState += 1 (E-0124) (E-0344: the
 ; address in its name dropped or read as the label there; was DrawTileMapAndStep)
 DrawTileMapAndStep::
@@ -1192,6 +1250,10 @@ RunDebugState_E0_DrawSkillBytes::
     inc [hl]
     ret
 
+; DE = bytes, HL = VRAM position: draws four entries with DrawFourBytesAsHexRows, then four more
+; from where DE stopped in a second column 3 cells to the right. Each entry is the low byte of a
+; 16-bit word (DrawFourBytesAsHexRows takes every second byte), so 16 bytes are covered. Called six
+; times by RunDebugState_E0_DrawSkillBytes for wBattleSkills. (C1, E-0385)
 ; DrawFourBytesAsHexRows at HL, then the next four bytes in a second column three entries to the
 ; right (E-0112)
 DrawEightBytesAsHexColumns::
@@ -1205,6 +1267,10 @@ DrawEightBytesAsHexColumns::
     adc $00
     ld h, a
 
+; DE = bytes, HL = VRAM position: for 4 entries draws the byte at DE as two hex digit tiles
+; (WriteHexDigitTile, high nibble first), moves HL to the same column of the next BG map row, and
+; advances DE by 2 (so every second byte is shown). Called by DrawEightBytesAsHexColumns. (C1,
+; E-0385)
 ; writes four bytes from DE as two hex digits each (WriteHexDigitTile), one byte per BG map row (HL
 ; += $1E after each) (E-0112)
 DrawFourBytesAsHexRows::
@@ -1230,6 +1296,8 @@ DrawFourBytesAsHexRows::
     jr nz, .loop
     ret
 
+; A = 0-15, HL = VRAM position: writes the tile $E0 + A for A below 10, or the tile A - 2 ($08-$0D)
+; for 10-15, and advances HL (WriteVRAMByteInc). Called by DrawFourBytesAsHexRows. (C1, E-0385)
 ; A = 0-15: writes tile $E0 + A for 0-9, or A - 2 for 10-15, at HL (WriteVRAMByteInc) (E-0112)
 WriteHexDigitTile::
     cp $0a
@@ -1244,6 +1312,12 @@ WriteHexDigitTile::
     call WriteVRAMByteInc
     ret
 
+; Starts at BATTLER_EXP of record 3 of wBattlerRecords (records are $4E bytes) and calls
+; RunForThreeBattlerRecords_Number24ToPackedBCD for B = 0, 1, 2, moving HL on by $4E each time. Each
+; call converts the 24-bit experience at HL (Number24ToPackedBCD) and draws its last five digits as
+; digit tiles in row 15 of vBGMap0, columns 2, 8 and 14 for B = 0, 1, 2; zero digits are not written
+; until a non-zero digit has been drawn. So it shows the experience of records 3, 4 and 5. Called by
+; RunDebugState_E0_DrawSkillBytes. (C1, E-0385)
 ; runs RunForThreeBattlerRecords_Number24ToPackedBCD for B = 0, 1, 2 on the 78-byte records from
 ; wBattlerRecords + $18 + 3 * $4E (E-0122) (E-0344: the address in its name dropped or read as the
 ; label there; was RunForThreeBattlerRecords)
@@ -1356,7 +1430,7 @@ RunForThreeBattlerRecords_Number24ToPackedBCD::
 RunForThreeBattlerRecords_Number24ToPackedBCD_Data::
     db $e2, $99, $e8, $99, $ee, $99
 
-; Debug battle viewer, state 9: waits for B, then back to state 0. (C1, E-0357)
+; Debug battle viewer, state 9: waits for B, then back to state 0. (C2, E-0357; probed E-0385)
 RunDebugState_E0_ReturnOnB::
     ld a, [wJoypadPressed]
     and $02
@@ -1513,7 +1587,7 @@ RunDebugState_E0_EffectViewer_Buttons::
 ; Returns unless B is pressed; then restores wBattlePartyCount, wBattleFoeCount, wBattleActor,
 ; wBattleTarget and wBattleActionId from the 5 bytes at wWorkBuf, sets wDebugState to 0 and
 ; wEffectId to $FF (no effect playing). Reached from the effect viewer's buttons and from
-; RunDebugState_E0_EditStatusBits. (C1, E-0371)
+; RunDebugState_E0_EditStatusBits. (C2, E-0371; probed E-0385)
 RunDebugState_E0_RestoreBattleOnB::
     ld a, [wJoypadPressed]
     and $02
@@ -1735,6 +1809,9 @@ RunDebugState_E0_EditStatusBits_Data1::
 RunDebugState_E0_EditStatusBits_Data2::
     db $01, $02, $04, $08, $10, $20, $40, $80
 
+; Writes the tile $C3 (blank) when bit 3 of wFrameCounterLo is clear, otherwise the tile saved in
+; wMenuRowCount, at the VRAM address in wTemp0 (low) and wTemp1 (high): the status-bit cursor cell
+; blinks every 8 frames. Called every frame by RunDebugState_E0_EditStatusBits. (C1, E-0385)
 ; writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in
 ; wTemp0/1 (E-0122) (E-0340: the address in its name read as its RAM name; was BlinkTemp0Tile)
 BlinkTemp0Tile::
@@ -1757,8 +1834,13 @@ RunDebugState_E0_SkillEditor::
     call RunDebugSubState_E0
     ret
 
+; State 13 of the debug battle viewer (choosing actions). Jumps through a table of six by
+; wDebugSubState: 0 RunDebugState_E0_ChooseActionTargets_Start, 1
+; RunDebugState_E0_ChooseActionTargets_AIChoice, 2 RunDebugState_E0_ChooseActionTargets_ShowActor, 3
+; RunDebugState_E0_ChooseActionTargets_Input, 4 RunDebugState_E0_ChooseActionTargets_End, 5
+; RunDebugState_E0_ChooseActionTargets_RerunAI. (C1, E-0385)
 ; debug battle state $0D: shows a string, reads the slot's personality and, for an actor without a
-; target, far-calls ChooseActionTarget (E-0293)
+; target, far-calls ChooseActionTarget
 RunDebugState_E0_ChooseActionTargets::
     ld a, [wDebugSubState]
     jumptable
@@ -1832,9 +1914,11 @@ RunDebugState_E0_ChooseActionTargets_ShowActor::
     ld [wDebugSubState], a
     ret
 
-; Choosing actions, sub-state 3: B ends (sub-state 4, clearing the battle phase); A chooses again;
-; Left/Right step to the previous or next occupied slot; Select runs the AI's choice (sub-state 5).
-; (C1, E-0357)
+; Choosing actions, sub-state 3. B (wJoypadPressed bit 1) goes to sub-state 4 and clears the two
+; bytes of wBattleSubPhase. Otherwise on wJoypadPressedRepeat: A (bit 0) goes back to sub-state 1;
+; Left (bit 5) or Right (bit 4) make wBattleActor the previous or next slot, wrapping within 0-7 and
+; skipping slots whose wBattleSlotOut byte is $FF (a slot with 0 or 1 is not skipped), then go to
+; sub-state 1; Select (bit 2) goes to sub-state 5. Any other button does nothing. (C2, E-0385)
 RunDebugState_E0_ChooseActionTargets_Input::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1896,7 +1980,7 @@ RunDebugState_E0_ChooseActionTargets_Input::
     ret
 
 ; Choosing actions, sub-state 4: clears the actor and the 16 action choices ($FF) and returns to the
-; viewer's state 3. (C1, E-0357)
+; viewer's state 3. (C2, E-0357; probed E-0385)
 RunDebugState_E0_ChooseActionTargets_End::
     xor a
     ld [wBattleActor], a
@@ -1947,6 +2031,10 @@ DebugActionTargetsScreenLayout::
     db $b6, $c3, $c3, $c3, $c3, $92, $93, $94, $95, $96, $97, $98, $99, $9a, $c3, $c3, $c3, $c3, $c3, $b7 ; row 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
+; wDebugCounter holds the cursor row (high nibble) and column (low nibble) of the status-bit grid:
+; stores vBGMap0 + $89 + 32 * row + column in wTemp0 (low) and wTemp1 (high), then waits for VRAM
+; access and reads the tile there into wMenuRowCount. Called by
+; RunDebugState_E0_EffectViewer_Buttons and RunDebugState_E0_EditStatusBits. (C1, E-0385)
 ; wDebugCounter = row (high nibble) and column (low nibble): stores vBGMap0 + $89 + 32 * row +
 ; column in wTemp0/1 and reads the tile there into wMenuRowCount (E-0121)
 ReadBGTileAtDebugCounterCell::
@@ -1977,6 +2065,12 @@ ReadBGTileAtDebugCounterCell::
     ld [wMenuRowCount], a
     ret
 
+; Draws the status page of slot wDebugSubState: the four-tile strip for that slot
+; (DrawFourTileStripForA), then its nine status bytes (wBattleStatus + 9 * slot) as nine rows of
+; eight tiles from vBGMap0 + $89, each bit as the tile $E0 + 0 or 1 with bit 0 leftmost. It keeps
+; the running VRAM position in wBattleArg0 and wBattleArg1. Called by
+; RunDebugState_E0_EffectViewer_Buttons (when Select opens the status bits state) and by
+; RunDebugState_E0_EditStatusBits (when Start changes the slot). (C1, E-0385)
 ; debug: draws the four-tile strip for wDebugSubState, then the 9 status bytes of slot
 ; wDebugSubState as rows of 0/1 digit tiles from vBGMap0 + $89 (E-0127)
 DrawSlotStatusBitsDebug::
@@ -2037,6 +2131,9 @@ DrawSlotStatusBitsDebug::
     jr nz, .loop
     ret
 
+; A = 0-7: copies the four tiles at DrawFourTileStripForA_Data[A] (a pointer table of 8, bank $E0)
+; to vBGMap0 + $27 with CopyRectFromBankToVRAM (4 wide, 1 row). Called by DrawSlotStatusBitsDebug
+; with the slot number. (C1, E-0385)
 ; copies a 4 x 1 tile strip from bank $E0 (address from the word table at $4F9E + 2 * A) to vBGMap0
 ; + $27 (CopyRectFromBankToVRAM) (E-0118)
 DrawFourTileStripForA::
@@ -2114,6 +2211,10 @@ DrawFourTileStripForA_Data_Entry06::
 DrawFourTileStripForA_Data_Entry07::
     db $f8, $f9, $e3, $c3
 
+; Draws the skill data of the debug effect viewer for the skill number in wDebugValue0:
+; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_DrawRecordWords, then far-calls
+; DrawSkillDebugPage. Called by RunDebugState_E0_Input (when Select opens the effect viewer) and by
+; DrawHexByteAtBGMap8A. (C1, E-0385)
 ; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_DrawRecordWords, then far-calls
 ; DrawSkillDebugPage (E-0122) (E-0345: draws the skill's debug digits, loads the skill record and
 ; far-calls the battle-argument writer; was DrawSkillDebugDigitsAndRecord)
@@ -2123,6 +2224,9 @@ DrawSkillDebugDigitsAndRecord::
     farcall DrawSkillDebugPage
     ret
 
+; Loads the first byte of the record of skill wDebugValue0 into wRecordBufferData
+; (LoadSkillRecordPart) and draws it as three decimal digit tiles ($E0 + digit, HLToDecimalDigits)
+; at vBGMap0 + $204 to + $206. Called by DrawSkillDebugDigitsAndRecord. (C1, E-0385)
 ; loads skill wDebugValue0's first record byte (LoadSkillRecordPart) and writes it as three digit
 ; tiles at vBGMap0 + $204 (E-0121) (E-0345: was DrawSkillRecordFirstByteDigits)
 DrawSkillRecordFirstByteDigits::
@@ -2242,6 +2346,8 @@ DrawSkillDebugDigitsAndRecord_DrawRecordWords::
     call WriteVRAMByte
     ret
 
+; Copies the 20 x 18 tile map DrawFullScreenFromBankE0_TileRect from bank $E0 to vBGMap0
+; (CopyRectFromBankToVRAM). Called once, by RunDebugState_E0_ShowHeading. (C1, E-0385)
 ; copies a 20 x 18 tile map from E0:$511B to vBGMap0 (CopyRectFromBankToVRAM) (E-0116) (E-0344: the
 ; address in its name dropped or read as the label there; was DrawFullScreenFromBankE0)
 DrawFullScreenFromBankE0::
@@ -2252,11 +2358,14 @@ DrawFullScreenFromBankE0::
     call CopyRectFromBankToVRAM
     ret
 
+; Copies the 20 x 18 tile map EffectViewerScreenTileRect from bank $E0 to vBGMap0. Called once, by
+; RunDebugState_E0_Input right after it sets wDebugState to $0A (the effect viewer), so this is the
+; effect viewer screen. (C1, E-0385)
 ; copies a 20 x 18 tile map from E0:$5283 to vBGMap0 (E-0116) (E-0344: the address in its name
-; dropped or read as the label there; was DrawFullScreenFromBankE0_2)
-DrawFullScreenFromBankE0_2::
+; dropped or read as the label there; was RunDebugState_E0_Input_DrawEffectViewerScreen)
+RunDebugState_E0_Input_DrawEffectViewerScreen::
     ld hl, vBGMap0
-    ld de, DrawFullScreenFromBankE0_2_TileRect
+    ld de, EffectViewerScreenTileRect
     lb bc, $14, $12
     ld a, $e0
     call CopyRectFromBankToVRAM
@@ -2297,7 +2406,9 @@ DrawFullScreenFromBankE0_TileRect::
     db $b6, $c3, $c3, $c3, $c3, $fa, $fb, $fc, $fd, $fe, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-DrawFullScreenFromBankE0_2_TileRect::
+TileRect_E0::
+; another name for the data at TileRect_E0, whose note is above (E-0381)
+EffectViewerScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $0e, $09, $0f, $c3, $0c, $0d, $0d, $0c, $0a, $ff, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -2337,6 +2448,9 @@ RunDebugState_E0_DrawStatusBitsScreen_TileRect::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
+; HL = tile destination, DE = window size: saves the four string window bytes (wTextWindowTileLo to
+; wTextWindowWidth), sets the window to HL and DE, far-calls ShowString_Bank09, then restores the
+; saved window. Called by RunDebugState_E0_ShowHeading. (C1, E-0385)
 ; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and
 ; the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes
 ; appear in 3 banks)
@@ -2372,7 +2486,7 @@ ShowStringBank09AtTilesHL_BankE0::
     ld [wTextWindowWidth], a
     ret
 
-; Plays the sound of effect wDebugSubState (DebugSoundEffectList). (C1, E-0357)
+; Plays the sound of effect wDebugSubState (DebugSoundEffectList). (C2, E-0357; probed E-0385)
 RunDebugState_E0_PlayEffectSound::
     ld a, [wDebugSubState]
     ld hl, DebugSoundEffectList
@@ -2381,6 +2495,11 @@ RunDebugState_E0_PlayEffectSound::
     call QueueSoundEffect
     ret
 
+; A = entry number: loads wBattleActor, wBattleTarget, wBattleActionId and wEffectFlags2 from the
+; four bytes of EffectTestEntries + 4 * A, then far-calls SelectEffectByEffectFlags2Flags, which
+; queues the sound of the action (50 of the 51 entries carry flags $40 and take the sound of
+; ActionSoundTable_Flag6 for the action and the side of the actor; entry 44 carries $04, which makes
+; the target the actor and uses ActionSoundTable_Flag2). Nothing in src/ calls it. (C2, E-0385)
 ; loads wBattleActor, wBattleTarget, wBattleActionId and wEffectFlags2 from the 4-byte entry A of
 ; the table at $55FB, then far-calls SelectEffectByEffectFlags2Flags (a test or debug entry list)
 ; (E-0118)
@@ -2565,6 +2684,9 @@ RunDebugState_E0_RunAIChoice::
     call ChooseTargetIfUnset
     ret
 
+; If the target byte of the actor (wBattleTargetChoice + 2 * wBattleActor) is $FF, meaning no target
+; yet, far-calls ChooseActionTarget; otherwise does nothing. Called twice by
+; RunDebugState_E0_RunAIChoice. (C1, E-0385)
 ; when the actor's wBattleTargetChoice entry is $FF (no target yet), far-calls ChooseActionTarget
 ; (E-0112)
 ChooseTargetIfUnset::
@@ -2964,6 +3086,9 @@ RunDebugState_E0_ChooseActionTargets_DrawDetails::
     jr nz, .loop7
     ret
 
+; A = wBattleActor with bit 2 flipped when wLinkMode is 1 and bit 1 of wLinkRole is set (the two
+; sides swap for that player); HL ends as wLinkRole. Called by
+; RunDebugState_E0_ChooseActionTargets_DrawDetails to pick the label of the actor. (C2, E-0385)
 ; A = wBattleActor, with bit 2 flipped when wLinkMode = 1 and wLinkRole bit 1 is set (the side swap
 ; of the battle panels) (E-0118)
 DisplayedSlotOfActor::
@@ -2977,8 +3102,12 @@ DisplayedSlotOfActor::
     xor $04
     ret
 
+; A = the target choice byte wBattleTargetChoice[2 * wBattleActor], with bit 2 flipped under the
+; same link condition as DisplayedSlotOfActor (wLinkMode 1 and wLinkRole bit 1), even when the byte
+; is $FF; DE = its address, HL = wLinkRole. Called by
+; RunDebugState_E0_ChooseActionTargets_DrawDetails to show the target of the actor. (C2, E-0385)
 ; A = wBattleTargetChoice[wBattleActor * 2]; in link mode 1 with wLinkRole bit 1 set, flips bit 2
-; (the side) so the choice is shown from this player's side (E-0293)
+; (the side) so the choice is shown from this player's side
 DisplayedTargetChoiceOfActor::
     ld a, [wBattleActor]
     add a
@@ -2999,8 +3128,13 @@ DisplayedTargetChoiceOfActor::
     xor $04
     ret
 
+; HL = VRAM position, C = 0: draws the four hex digits of the 16-bit number hTemp1:hTemp0 as tiles
+; (WriteVRAMByteInc), each nibble n as tile n + 1 (the tiles from the string '0123456789ABCDEF'),
+; but a leading zero becomes the blank tile $C3 (C collects the nibbles so far); falls into
+; WriteLowHexDigitTilesOfTemp1Temp0 after the first digit. The last digit is always drawn. Called by
+; RunDebugState_E0_ChooseActionTargets_DrawDetails. (C1, E-0385)
 ; writes hTemp1's high nibble as a tile (nibble + 1, or $C3 while every digit so far is zero; C
-; tracks that), then falls into WriteLowHexDigitTilesOfTemp1Temp0 for the remaining nibbles (E-0293)
+; tracks that), then falls into WriteLowHexDigitTilesOfTemp1Temp0 for the remaining nibbles
 WriteHexDigitTilesOfTemp1Temp0::
     ldh a, [hTemp1]
     and $f0
@@ -3018,8 +3152,12 @@ WriteHexDigitTilesOfTemp1Temp0::
     call WriteVRAMByteInc
     ei
 
+; The rest of WriteHexDigitTilesOfTemp1Temp0: draws the low nibble of hTemp1 and both nibbles of
+; hTemp0 as tiles n + 1, with leading zeros (while C is still 0) as the blank tile $C3 and the last
+; digit always drawn. Also called on its own by RunDebugState_E0_ChooseActionTargets_DrawDetails.
+; (C1, E-0385)
 ; the second half of WriteHexDigitTilesOfTemp1Temp0: hTemp1's low nibble and hTemp0's nibbles as
-; digit tiles (E-0293)
+; digit tiles
 WriteLowHexDigitTilesOfTemp1Temp0::
     ldh a, [hTemp1]
     and $0f
@@ -3159,6 +3297,9 @@ RunDebugState_E0_ChooseActionTargets_RunFullAI::
     farcall ChooseActionTarget
     ret
 
+; A second copy in this bank of ShowStringBank08AtTilesHLThenDefault_BankE0: HL = tile destination,
+; DE = window size, far-calls ShowString_Bank08, then the window goes back to vTiles1 with $1202.
+; Called three times by RunDebugState_E0_ChooseActionTargets_DrawDetails. (C1, E-0385)
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then
 ; sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
 ShowStringBank08AtTilesHLThenDefault_BankE0_2::
@@ -3183,6 +3324,9 @@ ShowStringBank08AtTilesHLThenDefault_BankE0_2::
     ld [wTextWindowWidth], a
     ret
 
+; A second copy in this bank of ShowStringBank09AtHLSizeDEThenDefault: HL = tile destination, DE =
+; window size, far-calls ShowString_Bank09, then the window goes back to vTiles1 with $1202. Nothing
+; in src calls this copy. (C1, E-0385)
 ; the same 45 bytes as ShowStringBank09AtHLSizeDEThenDefault (ShowStringBank09AtHLSizeDEThenDefault)
 ; (E-0121)
 ShowStringBank09AtHLSizeDEThenDefault_BankE0::
@@ -3226,8 +3370,11 @@ DebugStaffRoll_Update_RunScene::
     dw DebugStaffRoll_Scene03
     dw DebugStaffRoll_Scene04
 
+; Staff roll scene 0 on map 0 (entry 0 of the table in DebugStaffRoll_Update_RunScene, picked by
+; wWorkBuf + 2 - 1). Jumps through a table of 16 steps by wWorkBuf + 1, from step 0
+; DebugStaffRoll_Scene00_Load to step 15 DebugStaffRoll_Scene00_WalkOff. The last step fades out and
+; clears wWorkBuf and wWorkBuf + 1, which hands control back to DebugStaffRoll_Credits. (C1, E-0385)
 ; by wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
-; (E-0288)
 DebugStaffRoll_Scene00::
     ld a, [wWorkBuf + $1]
     jumptable
@@ -3392,7 +3539,7 @@ DebugStaffRoll_Scene00_Load::
     ret
 
 ; Staff roll scene 0, step 1: after the fade, sprite 3 walks to ($60, $50) and turns; then a
-; 15-frame wait. (C1, E-0357)
+; 15-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite3::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -3413,8 +3560,8 @@ DebugStaffRoll_Scene00_WalkSprite3::
     inc [hl]
     ret
 
-; Staff roll scene 0, step 2: sprite 3 walks every other frame to ($60, $60), then a wait. (C1,
-; E-0357)
+; Staff roll scene 0, step 2: sprite 3 walks every other frame to ($60, $60), then a wait. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite3Down::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $a]
@@ -3434,7 +3581,8 @@ DebugStaffRoll_Scene00_WalkSprite3Down::
     inc [hl]
     ret
 
-; Staff roll scene 0, step 3: sprite 3 walks two steps a frame to ($60, $50). (C1, E-0357)
+; Staff roll scene 0, step 3: sprite 3 walks two steps a frame to ($60, $50). (C2, E-0357; probed
+; E-0385)
 DebugStaffRoll_Scene00_WalkSprite3Back::
     call DrawSpriteSlots
     ld a, $03
@@ -3447,8 +3595,8 @@ DebugStaffRoll_Scene00_WalkSprite3Back::
     inc [hl]
     ret
 
-; Staff roll scene 0, step 4: sprite 0 walks four steps a frame to ($60, $20), then a wait. (C1,
-; E-0357)
+; Staff roll scene 0, step 4: sprite 0 walks four steps a frame to ($60, $20), then a wait. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite0::
     call DrawSpriteSlots
     ld a, $00
@@ -3467,7 +3615,8 @@ DebugStaffRoll_Scene00_WalkSprite0::
     inc [hl]
     ret
 
-; Staff roll scene 0, step 5: sprite 3 walks to ($60, $40) and turns; then a wait. (C1, E-0357)
+; Staff roll scene 0, step 5: sprite 3 walks to ($60, $40) and turns; then a wait. (C2, E-0357;
+; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite3Left::
     call DrawSpriteSlots
     ld a, $03
@@ -3483,7 +3632,7 @@ DebugStaffRoll_Scene00_WalkSprite3Left::
     inc [hl]
     ret
 
-; Staff roll scene 0, step 6: sprite 2 walks to ($60, $30), then a wait. (C1, E-0357)
+; Staff roll scene 0, step 6: sprite 2 walks to ($60, $30), then a wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite2::
     call DrawSpriteSlots
     ld a, $02
@@ -3499,7 +3648,7 @@ DebugStaffRoll_Scene00_WalkSprite2::
     ret
 
 ; Staff roll scene 0, step 9: sprites 2 and 3 walk two steps a frame to ($50, $30) and ($50, $40),
-; and sprite 1 turns. (C1, E-0357)
+; and sprite 1 turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkPairQuick::
     call DrawSpriteSlots
     ld a, $02
@@ -3521,7 +3670,7 @@ DebugStaffRoll_Scene00_WalkPairQuick::
     ret
 
 ; Staff roll scene 0, step 10: sprite 1 walks four steps a frame to ($10, $40), then a wait and two
-; turns. (C1, E-0357)
+; turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite1::
     call DrawSpriteSlots
     ld a, $01
@@ -3546,7 +3695,8 @@ DebugStaffRoll_Scene00_WalkSprite1::
     inc [hl]
     ret
 
-; Staff roll scene 0, step 11: sprites 2 and 3 walk up to Y 0; then turns and a wait. (C1, E-0357)
+; Staff roll scene 0, step 11: sprites 2 and 3 walk up to Y 0; then turns and a wait. (C2, E-0357;
+; probed E-0385)
 DebugStaffRoll_Scene00_WalkPairUp::
     call DrawSpriteSlots
     ld a, $02
@@ -3575,7 +3725,7 @@ DebugStaffRoll_Scene00_WalkPairUp::
     ret
 
 ; Staff roll scene 0, step 12: sprites 1 and 0 walk to ($40, $40) and ($60, $30); sprite 0 turns.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprites01::
     call DrawSpriteSlots
     ld a, $01
@@ -3593,7 +3743,7 @@ DebugStaffRoll_Scene00_WalkSprites01::
     ret
 
 ; Staff roll scene 0, step 13: sprites 0 and 1 walk to ($40, $30) and ($40, $40); turns and a wait.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprites01Again::
     call DrawSpriteSlots
     ld a, $00
@@ -3615,7 +3765,7 @@ DebugStaffRoll_Scene00_WalkSprites01Again::
     inc [hl]
     ret
 
-; Staff roll scene 0, step 14: a wait, then sprite 0 turns. (C1, E-0357)
+; Staff roll scene 0, step 14: a wait, then sprite 0 turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod15
@@ -3650,8 +3800,8 @@ DebugStaffRoll_Scene00_WalkOff::
     ld [wWorkBuf + $1], a
     ret
 
-; Staff roll scene 0, step 7: sprites 2 and 3 walk to ($50, $30) and ($50, $40), then a wait. (C1,
-; E-0357)
+; Staff roll scene 0, step 7: sprites 2 and 3 walk to ($50, $30) and ($50, $40), then a wait. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkPair::
     call DrawSpriteSlots
     ld a, $02
@@ -3668,7 +3818,7 @@ DebugStaffRoll_Scene00_WalkPair::
     ret
 
 ; Staff roll scene 0, step 8: sprites 2 and 3 walk every other frame to ($60, $30) and ($60, $40),
-; then a wait. (C1, E-0357)
+; then a wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkPairRight::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $a]
@@ -3689,7 +3839,12 @@ DebugStaffRoll_Scene00_WalkPairRight::
     inc [hl]
     ret
 
-; as DebugStaffRoll_Scene00 (E-0288)
+; Staff roll scene 1 on map 2 (entry 1 of the table in DebugStaffRoll_Update_RunScene, picked by
+; wWorkBuf + 2 - 1). Jumps through a table of 26 steps by wWorkBuf + 1, from step 0
+; DebugStaffRoll_Scene01_Load to step 25 DebugStaffRoll_Scene01_PairLeaves. The last step fades out
+; and clears wWorkBuf and wWorkBuf + 1, which hands control back to DebugStaffRoll_Credits. (C1,
+; E-0385)
+; as DebugStaffRoll_Scene00
 DebugStaffRoll_Scene01::
     ld a, [wWorkBuf + $1]
     jumptable
@@ -3839,7 +3994,7 @@ DebugStaffRoll_Scene01_Load::
     ret
 
 ; Staff roll scene 1, step 1: after the fade, sprites 0 and 1 walk to ($50, $30) and ($60, $30),
-; then a wait. (C1, E-0357)
+; then a wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -3859,7 +4014,7 @@ DebugStaffRoll_Scene01_WalkSprites::
     ret
 
 ; Staff roll scene 1, step 2: sprites 0 and 1 turn by two frame tables for $9F frames, then face
-; down. (C1, E-0357)
+; down. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_TurnSprites::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -3911,7 +4066,7 @@ DebugStaffRoll_Scene01_TurnSprites_Data1::
 DebugStaffRoll_Scene01_TurnSprites_Data2::
     db $01, $00, $01, $02, $01
 
-; Staff roll scene 1, step 3: draws three sprite slots and waits. (C1, E-0357)
+; Staff roll scene 1, step 3: draws three sprite slots and waits. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_Wait::
     call DrawSpriteSlots
     ld a, $03
@@ -3923,7 +4078,7 @@ DebugStaffRoll_Scene01_Wait::
     ret
 
 ; Staff roll scene 1, step 4: sprite 2 walks to X $60 with a hop (its Y plus
-; DebugStaffRoll_HopYOffsets), then a wait and a turn. (C1, E-0357)
+; DebugStaffRoll_HopYOffsets), then a wait and a turn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopSprite2::
     call DrawSpriteSlots
     ld d, $60
@@ -3967,7 +4122,8 @@ DebugStaffRoll_Scene01_HopSprite2::
 DebugStaffRoll_HopYOffsets::
     db $fe, $fe, $fe, $ff, $ff, $ff, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02
 
-; Staff roll scene 1, step 5: sprite 2 walks to ($60, $50), then a 30-frame wait. (C1, E-0357)
+; Staff roll scene 1, step 5: sprite 2 walks to ($60, $50), then a 30-frame wait. (C2, E-0357;
+; probed E-0385)
 DebugStaffRoll_Scene01_WalkSprite2::
     call DrawSpriteSlots
     ld a, $02
@@ -3980,7 +4136,8 @@ DebugStaffRoll_Scene01_WalkSprite2::
     inc [hl]
     ret
 
-; Staff roll scene 1, step 22: sprite 2 turns and hops for $20 frames, then a wait. (C1, E-0357)
+; Staff roll scene 1, step 22: sprite 2 turns and hops for $20 frames, then a wait. (C2, E-0357;
+; probed E-0385)
 DebugStaffRoll_Scene01_HopSprite2Turn::
     call DrawSpriteSlots
     ld a, $02
@@ -4011,8 +4168,8 @@ DebugStaffRoll_Scene01_HopSprite2Turn::
     inc [hl]
     ret
 
-; Staff roll scene 1, step 20: sprite 2 turns and walks to ($40, $30); then sprites 0-2 turn. (C1,
-; E-0357)
+; Staff roll scene 1, step 20: sprite 2 turns and walks to ($40, $30); then sprites 0-2 turn. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene01_TurnAndWalk::
     call DrawSpriteSlots
     ld a, $02
@@ -4035,7 +4192,8 @@ DebugStaffRoll_Scene01_TurnAndWalk::
     inc [hl]
     ret
 
-; Staff roll scene 1, step 21: sprite 2 walks one step every four frames to ($30, $30). (C1, E-0357)
+; Staff roll scene 1, step 21: sprite 2 walks one step every four frames to ($30, $30). (C2, E-0357;
+; probed E-0385)
 DebugStaffRoll_Scene01_StepSprite2::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4054,7 +4212,7 @@ DebugStaffRoll_Scene01_StepSprite2::
     ret
 
 ; Staff roll scene 1, step 24: sprite 2 moves left two pixels a frame off the screen (to $F0),
-; animating; then two slots, turns and a wait. (C1, E-0357)
+; animating; then two slots, turns and a wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_Sprite2Leaves::
     call DrawSpriteSlots
     ld a, $02
@@ -4127,7 +4285,7 @@ DebugStaffRoll_Scene01_PairLeaves::
     ld [wSpriteSlots + $f], a
     ret
 
-; Staff roll scene 1, step 6: sprite 2 walks to X $50 with a hop. (C1, E-0357)
+; Staff roll scene 1, step 6: sprite 2 walks to X $50 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopTo50::
     call DrawSpriteSlots
     ld d, $50
@@ -4155,7 +4313,7 @@ DebugStaffRoll_Scene01_HopTo50::
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; Staff roll scene 1, step 9: sprite 2 walks to X $60 with a hop. (C1, E-0357)
+; Staff roll scene 1, step 9: sprite 2 walks to X $60 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopTo60::
     call DrawSpriteSlots
     ld d, $60
@@ -4183,7 +4341,7 @@ DebugStaffRoll_Scene01_HopTo60::
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; Staff roll scene 1, step 7: a sprite walks to X $40 with a hop. (C1, E-0357)
+; Staff roll scene 1, step 7: a sprite walks to X $40 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopTo40::
     call DrawSpriteSlots
     ld d, $40
@@ -4211,7 +4369,7 @@ DebugStaffRoll_Scene01_HopTo40::
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; Staff roll scene 1, step 8: a sprite walks to X $50 with a hop. (C1, E-0357)
+; Staff roll scene 1, step 8: a sprite walks to X $50 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopBackTo50::
     call DrawSpriteSlots
     ld d, $50
@@ -4240,7 +4398,7 @@ DebugStaffRoll_Scene01_HopBackTo50::
     ret
 
 ; Staff roll scene 1, step 23: two sprites hop together for 16 frames
-; (DebugStaffRoll_Scene01_HopTogether_Data), then a wait and a turn. (C1, E-0357)
+; (DebugStaffRoll_Scene01_HopTogether_Data), then a wait and a turn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopTogether::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4280,7 +4438,11 @@ DebugStaffRoll_Scene01_HopTogether::
 DebugStaffRoll_Scene01_HopTogether_Data::
     db $fd, $fe, $ff, $00, $00, $01, $02, $03
 
-; as DebugStaffRoll_Scene00 (E-0288)
+; Staff roll scene 2 on map $18 (entry 2 of the table in DebugStaffRoll_Update_RunScene, picked by
+; wWorkBuf + 2 - 1). Jumps through a table of 27 steps by wWorkBuf + 1, from step 0
+; DebugStaffRoll_Scene02_Load to step 26 DebugStaffRoll_Scene02_Finish. The last step fades out and
+; clears wWorkBuf and wWorkBuf + 1, which hands control back to DebugStaffRoll_Credits. (C1, E-0385)
+; as DebugStaffRoll_Scene00
 DebugStaffRoll_Scene02::
     ld a, [wWorkBuf + $1]
     jumptable
@@ -4302,11 +4464,11 @@ DebugStaffRoll_Scene02::
     dw DebugStaffRoll_Scene02_WalkSpriteFar
     dw DebugStaffRoll_Scene02_WalkSpriteFarUp
     dw DebugStaffRoll_Scene02_HopTogether
-    dw DebugStaffRoll_Scene02_HopSideways
+    dw DebugStaffRoll_Scene02_HopSprite5
     dw DebugStaffRoll_Scene02_WaitAndTurn
     dw DebugStaffRoll_Scene02_Wait
     dw DebugStaffRoll_Scene02_StepPair
-    dw DebugStaffRoll_Scene02_HopMoving
+    dw DebugStaffRoll_Scene02_HopSprites45
     dw DebugStaffRoll_Scene02_WalkPairQuick
     dw DebugStaffRoll_Scene02_WalkSpriteQuick
     dw DebugStaffRoll_Scene02_WalkPairOff
@@ -4505,7 +4667,7 @@ DebugStaffRoll_Scene02_Load::
     ret
 
 ; Staff roll scene 2, step 1: after the fade, two sprites walk to ($40, $70) and ($40, $80), then a
-; wait. (C1, E-0357)
+; wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -4525,7 +4687,7 @@ DebugStaffRoll_Scene02_WalkSprites::
     ret
 
 ; Staff roll scene 2, step 2: two sprites turn by two frame tables for $9F frames, then face set
-; ways and one more slot is drawn. (C1, E-0357)
+; ways and one more slot is drawn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_TurnSprites::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4579,7 +4741,8 @@ DebugStaffRoll_Scene02_TurnSprites_Data1::
 DebugStaffRoll_Scene02_TurnSprites_Data2::
     db $01, $00, $03, $00, $01
 
-; Staff roll scene 2, step 3: a sprite walks to ($40, $20); then one more slot. (C1, E-0357)
+; Staff roll scene 2, step 3: a sprite walks to ($40, $20); then one more slot. (C2, E-0357; probed
+; E-0385)
 DebugStaffRoll_Scene02_WalkSprite::
     call DrawSpriteSlots
     ld a, $02
@@ -4592,8 +4755,8 @@ DebugStaffRoll_Scene02_WalkSprite::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 4: two sprites walk to ($40, $30) and ($40, $20); then three turns. (C1,
-; E-0357)
+; Staff roll scene 2, step 4: two sprites walk to ($40, $30) and ($40, $20); then three turns. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPair::
     call DrawSpriteSlots
     ld a, $02
@@ -4616,7 +4779,8 @@ DebugStaffRoll_Scene02_WalkPair::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 10: a sprite walks to ($50, $20); then one more slot. (C1, E-0357)
+; Staff roll scene 2, step 10: a sprite walks to ($50, $20); then one more slot. (C2, E-0357; probed
+; E-0385)
 DebugStaffRoll_Scene02_WalkSpriteRight::
     call DrawSpriteSlots
     ld a, $04
@@ -4629,8 +4793,8 @@ DebugStaffRoll_Scene02_WalkSpriteRight::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 11: two sprites walk to ($50, $30) and ($50, $20); then a turn. (C1,
-; E-0357)
+; Staff roll scene 2, step 11: two sprites walk to ($50, $30) and ($50, $20); then a turn. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairRight::
     call DrawSpriteSlots
     ld a, $04
@@ -4647,8 +4811,8 @@ DebugStaffRoll_Scene02_WalkPairRight::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 17: two sprites hop together for 16 frames; then a turn and a wait. (C1,
-; E-0357)
+; Staff roll scene 2, step 17: two sprites hop together for 16 frames; then a turn and a wait. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_HopTogether::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4682,9 +4846,11 @@ DebugStaffRoll_Scene02_HopTogether::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 22: a sprite hops while moving for 16 frames; then a 30-frame wait and
-; two turns. (C1, E-0357)
-DebugStaffRoll_Scene02_HopMoving::
+; Staff roll scene 2, step 22: for 16 frames the Y bytes of sprites 4 and 5 both get
+; DebugStaffRoll_HopYOffsets[wWorkBuf + 6] added, so the two hop in place (wObject2 + OBJ_SPRITE_ID
+; + 1 and wObject2 + OBJ_X are byte 3 of slots 4 and 5); then the 30-frame wait runs, sprites 4 and
+; 5 face 2, wWorkBuf + 6 is cleared and the step goes on.  (C2, E-0385)
+DebugStaffRoll_Scene02_HopSprites45::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4721,7 +4887,7 @@ DebugStaffRoll_Scene02_HopMoving::
     ret
 
 ; Staff roll scene 2, step 23: two sprites walk two steps a frame to ($50, $20) and ($50, $10); then
-; fewer slots. (C1, E-0357)
+; fewer slots. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairQuick::
     call DrawSpriteSlots
     ld a, $04
@@ -4742,7 +4908,7 @@ DebugStaffRoll_Scene02_WalkPairQuick::
     ret
 
 ; Staff roll scene 2, step 24: a sprite walks two steps a frame to ($50, $10); then turns, a wait
-; and another turn. (C1, E-0357)
+; and another turn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkSpriteQuick::
     call DrawSpriteSlots
     ld a, $04
@@ -4771,8 +4937,8 @@ DebugStaffRoll_Scene02_WalkSpriteQuick::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 25: two sprites walk to ($A0, $70) and ($40, $70); then three turns. (C1,
-; E-0357)
+; Staff roll scene 2, step 25: two sprites walk to ($A0, $70) and ($40, $70); then three turns. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairOff::
     call DrawSpriteSlots
     ld a, $00
@@ -4795,8 +4961,8 @@ DebugStaffRoll_Scene02_WalkPairOff::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 5: two sprites walk to ($30, $30) and ($40, $30); then two turns. (C1,
-; E-0357)
+; Staff roll scene 2, step 5: two sprites walk to ($30, $30) and ($40, $30); then two turns. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairLeft::
     call DrawSpriteSlots
     ld a, $02
@@ -4816,8 +4982,8 @@ DebugStaffRoll_Scene02_WalkPairLeft::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 6: two sprites walk to ($30, $40) and ($30, $30); then a turn. (C1,
-; E-0357)
+; Staff roll scene 2, step 6: two sprites walk to ($30, $40) and ($30, $30); then a turn. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairDown::
     call DrawSpriteSlots
     ld a, $02
@@ -4834,8 +5000,8 @@ DebugStaffRoll_Scene02_WalkPairDown::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 7: two sprites walk to ($30, $50) and ($30, $40); then a turn. (C1,
-; E-0357)
+; Staff roll scene 2, step 7: two sprites walk to ($30, $50) and ($30, $40); then a turn. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairDownAgain::
     call DrawSpriteSlots
     ld a, $02
@@ -4852,7 +5018,7 @@ DebugStaffRoll_Scene02_WalkPairDownAgain::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 8: a sprite walks to ($20, $50); then a turn. (C1, E-0357)
+; Staff roll scene 2, step 8: a sprite walks to ($20, $50); then a turn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkSpriteDown::
     call DrawSpriteSlots
     ld a, $02
@@ -4867,7 +5033,7 @@ DebugStaffRoll_Scene02_WalkSpriteDown::
     ret
 
 ; Staff roll scene 2, step 9: a sprite walks to ($20, $40); then four turns, a wait and fewer slots.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkSpriteUp::
     call DrawSpriteSlots
     ld a, $02
@@ -4894,8 +5060,8 @@ DebugStaffRoll_Scene02_WalkSpriteUp::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 12: two sprites walk to ($60, $30) and ($50, $30); then two turns. (C1,
-; E-0357)
+; Staff roll scene 2, step 12: two sprites walk to ($60, $30) and ($50, $30); then two turns. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairBack::
     call DrawSpriteSlots
     ld a, $04
@@ -4915,8 +5081,10 @@ DebugStaffRoll_Scene02_WalkPairBack::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 13: two sprites walk (one to the point in DebugStaffRoll_HopYOffsets + 8,
-; one to ($60, $30)); then a turn. (C1, E-0357)
+; Staff roll scene 2, step 13: sprite 4 walks to ($60, $40) and sprite 5 to ($60, $30). The first
+; target is the address DebugStaffRoll_HopYOffsets + 8 ($6040) loaded as an immediate into DE (D =
+; $60, E = $40), not a byte read from the table; when sprite 5 has arrived it faces 0 and the step
+; goes on.  (C2, E-0385)
 DebugStaffRoll_Scene02_WalkPairToPoint::
     call DrawSpriteSlots
     ld a, $04
@@ -4933,8 +5101,10 @@ DebugStaffRoll_Scene02_WalkPairToPoint::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 14: two sprites walk to ($60, $50) and the data point; then a turn. (C1,
-; E-0357)
+; Staff roll scene 2, step 14: sprite 4 walks to ($60, $50) and sprite 5 to ($60, $40), the second
+; target being the address DebugStaffRoll_HopYOffsets + 8 ($6040) loaded as an immediate into DE,
+; not a byte read from the table; when sprite 5 has arrived sprite 4 faces 1 and the step goes on.
+; (C2, E-0385)
 DebugStaffRoll_Scene02_WalkPairToPoint2::
     call DrawSpriteSlots
     ld a, $04
@@ -4951,7 +5121,8 @@ DebugStaffRoll_Scene02_WalkPairToPoint2::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 15: a sprite walks to ($70, $50); then a turn. (C1, E-0357)
+; Staff roll scene 2, step 15: a sprite walks to ($70, $50); then a turn. (C2, E-0357; probed
+; E-0385)
 DebugStaffRoll_Scene02_WalkSpriteFar::
     call DrawSpriteSlots
     ld a, $04
@@ -4965,7 +5136,8 @@ DebugStaffRoll_Scene02_WalkSpriteFar::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 16: a sprite walks to ($70, $40); then two turns and a wait. (C1, E-0357)
+; Staff roll scene 2, step 16: a sprite walks to ($70, $40); then two turns and a wait. (C2, E-0357;
+; probed E-0385)
 DebugStaffRoll_Scene02_WalkSpriteFarUp::
     call DrawSpriteSlots
     ld a, $04
@@ -5011,9 +5183,11 @@ DebugStaffRoll_Scene02_Finish::
     ld [wWorkBuf + $1], a
     ret
 
-; Staff roll scene 2, step 18: a sprite moves sideways with a hop for 16 frames; then a 60-frame
-; wait and a turn. (C1, E-0357)
-DebugStaffRoll_Scene02_HopSideways::
+; Staff roll scene 2, step 18: for 16 frames the Y byte of sprite 5 gets
+; DebugStaffRoll_HopYOffsets[wWorkBuf + 6] added, so it hops in place (wObject2 + OBJ_X is byte 3 of
+; sprite slot 5, its Y); then the 60-frame wait counter runs and at its end sprite 5 faces 1,
+; wWorkBuf + 6 is cleared and the step goes on.  (C2, E-0385)
+DebugStaffRoll_Scene02_HopSprite5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5043,7 +5217,7 @@ DebugStaffRoll_Scene02_HopSideways::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 19: a 60-frame wait, then two turns. (C1, E-0357)
+; Staff roll scene 2, step 19: a 60-frame wait, then two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -5058,7 +5232,7 @@ DebugStaffRoll_Scene02_WaitAndTurn::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 20: a 30-frame wait. (C1, E-0357)
+; Staff roll scene 2, step 20: a 30-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_Wait::
     call DrawSpriteSlots
     call StepWorkBuf5Mod30
@@ -5067,8 +5241,10 @@ DebugStaffRoll_Scene02_Wait::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 21: two sprites step every eight frames toward ($70, $50) and ($60, $50),
-; three times. (C1, E-0357)
+; Staff roll scene 2, step 21: wWorkBuf + 6 counts the frames; on every eighth frame sprite 4 steps
+; a pixel toward ($70, $50) and sprite 5 toward ($60, $50). On a tick where sprite 5 does not move
+; (it has arrived) wWorkBuf + 7 counts up, and at 3 such ticks both counters are cleared and the
+; step goes on.  (C2, E-0385)
 DebugStaffRoll_Scene02_StepPair::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5095,7 +5271,11 @@ DebugStaffRoll_Scene02_StepPair::
     inc [hl]
     ret
 
-; as DebugStaffRoll_Scene00 (E-0288)
+; Staff roll scene 3 on map $19 (entry 3 of the table in DebugStaffRoll_Update_RunScene, picked by
+; wWorkBuf + 2 - 1). Jumps through a table of 11 steps by wWorkBuf + 1, from step 0
+; DebugStaffRoll_Scene03_Load to step 10 DebugStaffRoll_Scene03_Finish. The last step fades out and
+; clears wWorkBuf and wWorkBuf + 1, which hands control back to DebugStaffRoll_Credits. (C1, E-0385)
+; as DebugStaffRoll_Scene00
 DebugStaffRoll_Scene03::
     ld a, [wWorkBuf + $1]
     jumptable
@@ -5104,7 +5284,7 @@ DebugStaffRoll_Scene03::
     dw DebugStaffRoll_Scene03_TurnSprites
     dw DebugStaffRoll_Scene03_WaitAndTurn
     dw DebugStaffRoll_Scene03_WalkSpritesUp
-    dw DebugStaffRoll_Scene03_HopSideways
+    dw DebugStaffRoll_Scene03_HopSprite5
     dw DebugStaffRoll_Scene03_Hop
     dw DebugStaffRoll_Scene03_TurnAndWalk
     dw DebugStaffRoll_Scene03_WalkOff
@@ -5333,7 +5513,7 @@ DebugStaffRoll_Scene03_Load::
     ret
 
 ; Staff roll scene 3, step 1: after the fade, two sprites walk to ($40, $50) and ($40, $60), then a
-; wait. (C1, E-0357)
+; wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -5353,7 +5533,7 @@ DebugStaffRoll_Scene03_WalkSprites::
     ret
 
 ; Staff roll scene 3, step 2: two sprites turn by two frame tables for $9F frames, then face set
-; ways and one more slot is drawn. (C1, E-0357)
+; ways and one more slot is drawn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_TurnSprites::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5393,7 +5573,8 @@ DebugStaffRoll_Scene03_TurnSprites::
     inc [hl]
     ret
 
-; Staff roll scene 3, step 3: a 45-frame wait, then a turn and another slot. (C1, E-0357)
+; Staff roll scene 3, step 3: a 45-frame wait, then a turn and another slot. (C2, E-0357; probed
+; E-0385)
 DebugStaffRoll_Scene03_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod45
@@ -5408,7 +5589,7 @@ DebugStaffRoll_Scene03_WaitAndTurn::
     ret
 
 ; Staff roll scene 3, step 4: two sprites walk to ($40, $40) and ($40, $50), then a 30-frame wait.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_WalkSpritesUp::
     call DrawSpriteSlots
     ld a, $00
@@ -5424,9 +5605,13 @@ DebugStaffRoll_Scene03_WalkSpritesUp::
     inc [hl]
     ret
 
-; Staff roll scene 3, step 5: a sprite moves sideways with a hop for 16 frames, its frame changing
-; every four; then five slots and a second sprite takes its X. (C1, E-0357)
-DebugStaffRoll_Scene03_HopSideways::
+; Staff roll scene 3, step 5: for 16 frames the Y byte of sprite 5 gets
+; DebugStaffRoll_HopYOffsets[wWorkBuf + 6] added (it hops in place) and its facing byte becomes
+; wWorkBuf + 6 / 4. From frame 16 wSpriteSlotCount is set to 5 and the Y of sprite 3 becomes the Y
+; of sprite 5 plus the byte at wSpriteSlots + 8 * (the slot count when the step started), which
+; DrawSpriteSlots leaves in HL (not a byte of its own table); then the 15-frame wait runs, wWorkBuf
+; + 6 is cleared and the step goes on.  (C2, E-0385)
+DebugStaffRoll_Scene03_HopSprite5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5442,7 +5627,7 @@ DebugStaffRoll_Scene03_HopSideways::
     ld a, [wWorkBuf + $6]
     srl a
     srl a
-    ld hl, DebugStaffRoll_Scene03_HopSideways_Data
+    ld hl, DebugStaffRoll_Scene03_HopSprite5_Data
     ld [wObject2 + OBJ_FLAGS], a
     ld a, [wWorkBuf + $6]
     inc a
@@ -5464,15 +5649,15 @@ DebugStaffRoll_Scene03_HopSideways::
     ret
 
 ; Four bytes, $03, $02, $01, $00: a descending facing-code sequence.
-; DebugStaffRoll_Scene03_HopSideways loads the address into HL but no instruction indexes it: during
+; DebugStaffRoll_Scene03_HopSprite5 loads the address into HL but no instruction indexes it: during
 ; the 16 hop frames it stores wWorkBuf + $6 >> 2 (0-3) as byte 5 of a sprite slot, and after the hop
 ; it adds the byte at the HL that DrawSpriteSlots left behind, not a byte of this table. (C1,
 ; E-0381)
-DebugStaffRoll_Scene03_HopSideways_Data::
+DebugStaffRoll_Scene03_HopSprite5_Data::
     db $03, $02, $01, $00
 
 ; Staff roll scene 3, step 6: a sprite hops for 16 frames, its frame changing every four; then four
-; slots, a second sprite takes its Y and a 30-frame wait. (C1, E-0357)
+; slots, a second sprite takes its Y and a 30-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_Hop::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5518,7 +5703,7 @@ DebugStaffRoll_Scene03_Hop_Data::
     db $02, $01, $00, $03
 
 ; Staff roll scene 3, step 7: two sprites turn and walk to ($50, $40) and ($50, $30); then four
-; turns. (C1, E-0357)
+; turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_TurnAndWalk::
     call DrawSpriteSlots
     ld a, $02
@@ -5551,7 +5736,7 @@ DebugStaffRoll_Scene03_TurnAndWalk::
     ret
 
 ; Staff roll scene 3, step 8: two sprites walk down to ($50, $A0), off the screen; then two turns
-; and a 30-frame wait. (C1, E-0357)
+; and a 30-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_WalkOff::
     call DrawSpriteSlots
     ld a, $02
@@ -5573,8 +5758,8 @@ DebugStaffRoll_Scene03_WalkOff::
     inc [hl]
     ret
 
-; Staff roll scene 3, step 9: two sprites walk to ($40, $A0) and ($40, $40); then a turn. (C1,
-; E-0357)
+; Staff roll scene 3, step 9: two sprites walk to ($40, $A0) and ($40, $40); then a turn. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene03_WalkPair::
     call DrawSpriteSlots
     ld a, $00
@@ -5612,7 +5797,11 @@ DebugStaffRoll_Scene03_Finish::
     ld [wWorkBuf + $1], a
     ret
 
-; as DebugStaffRoll_Scene00 (E-0288)
+; Staff roll scene 4 on map $1A (entry 4 of the table in DebugStaffRoll_Update_RunScene, picked by
+; wWorkBuf + 2 - 1). Jumps through a table of 15 steps by wWorkBuf + 1, from step 0
+; DebugStaffRoll_Scene04_Load to step 14 DebugStaffRoll_Scene04_Finish. The last step fades out and
+; clears wWorkBuf and wWorkBuf + 1, which hands control back to DebugStaffRoll_Credits. (C1, E-0385)
+; as DebugStaffRoll_Scene00
 DebugStaffRoll_Scene04::
     ld a, [wWorkBuf + $1]
     jumptable
@@ -5774,7 +5963,7 @@ DebugStaffRoll_Scene04_Load::
     ret
 
 ; Staff roll scene 4, step 1: after the fade, two sprites walk to ($80, $40) and ($90, $40); then a
-; 30-frame wait and two turns. (C1, E-0357)
+; 30-frame wait and two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WalkSprites::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -5799,8 +5988,10 @@ DebugStaffRoll_Scene04_WalkSprites::
     inc [hl]
     ret
 
-; Staff roll scene 4, step 2: two sprites step every four frames toward ($70, $40) and ($80, $40),
-; seven times. (C1, E-0357)
+; Staff roll scene 4, step 2: on every fourth frame (wWorkBuf + 6) sprite 0 steps a pixel toward
+; ($70, $40) and sprite 1 toward ($80, $40). On a tick where sprite 1 does not move (it has arrived)
+; wWorkBuf + 7 counts up, and at 7 such ticks both counters are cleared and the step goes on.  (C2,
+; E-0385)
 DebugStaffRoll_Scene04_StepSpritesLeft::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5827,8 +6018,10 @@ DebugStaffRoll_Scene04_StepSpritesLeft::
     inc [hl]
     ret
 
-; Staff roll scene 4, step 3: two sprites step every four frames toward ($30, $40) and ($40, $40),
-; turning after the seventh, until the fifteenth. (C1, E-0357)
+; Staff roll scene 4, step 3: on every fourth frame sprite 2 steps a pixel toward ($30, $40) and
+; sprite 3 toward ($40, $40). On each tick where sprite 3 does not move (it has arrived) wWorkBuf +
+; 7 counts up: from 7 up to 14 both sprites also get facing 3 on every such tick, and at 15 both
+; counters are cleared and the step goes on.  (C2, E-0385)
 DebugStaffRoll_Scene04_StepSpritesBack::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5867,7 +6060,7 @@ DebugStaffRoll_Scene04_StepSpritesBack::
     ret
 
 ; Staff roll scene 4, step 9: two sprites hop in turn while walking to X $10 (16-frame offsets
-; apart), then run off to ($10, $A0); then a 30-frame wait. (C1, E-0357)
+; apart), then run off to ($10, $A0); then a 30-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_HopInTurn::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5957,7 +6150,7 @@ DebugStaffRoll_Scene04_HopInTurn_Data::
     db $00, $00, $00, $00, $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03, $03
 
 ; Staff roll scene 4, step 10: two sprites hop together for 16 frames, then after 16 more walk to
-; ($30, $40) and ($40, $40). (C1, E-0357)
+; ($30, $40) and ($40, $40). (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_HopTogether::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5999,7 +6192,7 @@ DebugStaffRoll_Scene04_HopTogether::
     inc [hl]
     ret
 
-; Staff roll scene 4, step 11: a 60-frame wait. (C1, E-0357)
+; Staff roll scene 4, step 11: a 60-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_Wait::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -6008,8 +6201,8 @@ DebugStaffRoll_Scene04_Wait::
     inc [hl]
     ret
 
-; Staff roll scene 4, step 13: two sprites walk to ($A0, $40) and ($40, $40); then a turn. (C1,
-; E-0357)
+; Staff roll scene 4, step 13: two sprites walk to ($A0, $40) and ($40, $40); then a turn. (C2,
+; E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WalkApart::
     call DrawSpriteSlots
     ld a, $00
@@ -6047,7 +6240,7 @@ DebugStaffRoll_Scene04_Finish::
     ld [wWorkBuf + $1], a
     ret
 
-; Staff roll scene 4, step 5: a 60-frame wait, then two turns. (C1, E-0357)
+; Staff roll scene 4, step 5: a 60-frame wait, then two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WaitAndTurn::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -6063,7 +6256,7 @@ DebugStaffRoll_Scene04_WaitAndTurn::
     ret
 
 ; Staff roll scene 4, step 12: two sprites step every four frames toward ($40, $40) and ($50, $40);
-; then a wait and a turn. (C1, E-0357)
+; then a wait and a turn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_StepPairRightAgain::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6089,7 +6282,7 @@ DebugStaffRoll_Scene04_StepPairRightAgain::
     inc [hl]
     ret
 
-; Staff roll scene 4, step 4: a 60-frame wait, then two turns. (C1, E-0357)
+; Staff roll scene 4, step 4: a 60-frame wait, then two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WaitAndTurnAgain::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -6104,7 +6297,7 @@ DebugStaffRoll_Scene04_WaitAndTurnAgain::
     inc [hl]
     ret
 
-; Staff roll scene 4, step 6: a 60-frame wait. (C1, E-0357)
+; Staff roll scene 4, step 6: a 60-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WaitAgain::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -6114,7 +6307,7 @@ DebugStaffRoll_Scene04_WaitAgain::
     ret
 
 ; Staff roll scene 4, step 7: two sprites step every four frames toward ($40, $40) and ($50, $40);
-; then a wait. (C1, E-0357)
+; then a wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_StepPairRight::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6137,7 +6330,8 @@ DebugStaffRoll_Scene04_StepPairRight::
     inc [hl]
     ret
 
-; Staff roll scene 4, step 8: two sprites walk to ($30, $40) and ($40, $40). (C1, E-0357)
+; Staff roll scene 4, step 8: two sprites walk to ($30, $40) and ($40, $40). (C2, E-0357; probed
+; E-0385)
 DebugStaffRoll_Scene04_WalkPair::
     call DrawSpriteSlots
     ld a, $02
@@ -6635,7 +6829,7 @@ DebugStaffRoll_Credits_Caption::
 ; Staff roll credits, step 2: returns while wFadeState is non-zero; then decrements the caption
 ; count in wWorkBuf + 4 and, while captions remain, goes back to step 0 (wWorkBuf + 1 = 0) for the
 ; scene's next caption; when none remain it advances the scene number (wWorkBuf + 2) and wWorkBuf
-; and restarts at step 0 for the next scene. (C1, E-0371)
+; and restarts at step 0 for the next scene. (C2, E-0371; probed E-0385)
 DebugStaffRoll_Credits_NextCaption::
     ld a, [wFadeState]
     or a
@@ -6737,7 +6931,7 @@ DebugStaffRoll_Credits_TitleCardFadeOut::
 
 ; The staff roll's title card, step 2 (DebugStaffRoll_Credits with wWorkBuf + 2 = 0): returns while
 ; wFadeState is non-zero; then increments the scene number wWorkBuf + 2 (to scene 1) and wWorkBuf,
-; and clears the step wWorkBuf + 1. (C1, E-0371)
+; and clears the step wWorkBuf + 1. (C2, E-0371; probed E-0385)
 DebugStaffRoll_Credits_StartFirstScene::
     ld a, [wFadeState]
     or a
@@ -6750,6 +6944,10 @@ DebugStaffRoll_Credits_StartFirstScene::
     ld [wWorkBuf + $1], a
     ret
 
+; A = first tile number, B = width, C = rows, HL = VRAM address, DE = row stride: writes consecutive
+; tile numbers (A increases by 1 for every cell, across rows) with WriteVRAMByteInc, interrupts off
+; per byte, and moves to the next row by adding DE to the row start. A ends one past the last tile.
+; Called by DebugStaffRoll_Credits_ShowLines and DebugStaffRoll_Credits_TitleCard. (C1, E-0385)
 ; A = first tile, B = width, C = rows, HL = VRAM address, DE = row stride: writes consecutive tile
 ; numbers with WriteVRAMByteInc (interrupts off per byte), adding DE to the row start after each
 ; row; A ends past the last tile (E-0077)
@@ -6771,10 +6969,19 @@ FillVRAMRectWithTileSequence::
     jr nz, FillVRAMRectWithTileSequence
     ret
 
+; Draws the staff roll sprites. With wSpriteSlotCount 0 it returns at once with A = 0 and Z set.
+; Otherwise for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots it sets hSpriteSetIndex =
+; byte 1, hSpriteOriginX = byte 2 + 8, hSpriteOriginY = byte 3, hSpriteAttrXor = byte 4 and
+; hSpriteTileOffset = byte 6, and hSpriteSubIndex: for a kind 2 slot (byte 0) the facing byte 5 as
+; it is, for other kinds 2 * facing + 1 if bit 5 of the counter (byte 7) is set, else 2 * facing,
+; where facing code 3 counts as 1 and adds $20 to hSpriteAttrXor. It then far-calls the drawing
+; routine for byte 0 from DrawSpriteSlots_Data: DrawMetaSpriteSet_Bank25 for kind 0,
+; DrawMetaSprite_Sets98 for kind 1 and DrawMetaSprite for kind 2. HL ends as wSpriteSlots + 8 *
+; count. Called first by every staff roll scene step after its Load step. (C2, E-0385)
 ; for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots: loads hSpriteSetIndex,
 ; hSpriteOriginX (+8), hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset and hSpriteSubIndex from
 ; the slot, then far-calls the routine chosen by the slot's first byte from the 3-byte entries at
-; $7477 (E-0353)
+; $7477
 DrawSpriteSlots::
     ld a, [wSpriteSlotCount]
     or a
@@ -6851,7 +7058,10 @@ DrawSpriteSlots::
 DrawSpriteSlots_Data::
     db $01, $40, $25, $01, $40, $7f, $0a, $70, $7f
 
-; adds 1 to byte 7 of each of the 8 slots at wSpriteSlots (E-0353)
+; Adds 1 to byte 7, the animation counter, of each of the 8 slots at wSpriteSlots (an $FF wraps to
+; 0); the other bytes are left alone. Called every frame by DebugStaffRoll_Update_RunScene before
+; the scene step. (C2, E-0385)
+; adds 1 to byte 7 of each of the 8 slots at wSpriteSlots
 IncrementSpriteSlotCounters::
     ld b, $08
     ld hl, wSpriteSlots
@@ -6870,8 +7080,13 @@ IncrementSpriteSlotCounters::
     jr nz, .loop
     ret
 
+; A = slot 0-7 (the 8-byte slot at wSpriteSlots + 8 * A), D = target X, E = target Y: moves the slot
+; X (byte 2) and Y (byte 3) one pixel toward D and E (a coordinate that already matches stays) and
+; always adds 1 to the counter in byte 7. Returns A = 1 with Z clear when either coordinate moved, A
+; = 0 with Z set when the slot is at the target. D and E are kept, so a caller can call it again for
+; the same target. Used by the staff roll walking steps. (C2, E-0385)
 ; A = slot number, D = target X, E = target Y: moves the slot's X and Y bytes one step toward the
-; target and adds 1 to its byte 7; returns A = 1 (non-zero) if either moved (E-0353)
+; target and adds 1 to its byte 7; returns A = 1 (non-zero) if either moved
 StepSpriteSlotToward::
     ld c, $00
     swap a
@@ -6920,7 +7135,10 @@ StepSpriteSlotToward::
     or a
     ret
 
-; A = slot number: byte 5 of the slot = C (E-0353)
+; A = slot 0-7, C = value: stores C in byte 5 of that slot (the facing code that DrawSpriteSlots
+; turns into a sub-index). The other bytes and slots are untouched. Used by the staff roll turn
+; steps. (C2, E-0385)
+; A = slot number: byte 5 of the slot = C
 SetSpriteSlotByte5::
     swap a
     srl a
@@ -6934,6 +7152,12 @@ SetSpriteSlotByte5::
     ld [hl], c
     ret
 
+; A = slot, D = target X, E = target Y: when X differs from D it moves by the step Data1[wWorkBuf +
+; $A] (StepSpriteSlotTowardDE_Data1: 1 pixel for 8 entries, then 2) toward D; when Y differs from E
+; it SUBTRACTS Data2[wWorkBuf + $A] (2 pixels for 4 entries, then 1) whatever side of E it is on,
+; and adds 1 to wWorkBuf + $A. Returns A = 1 with Z clear if either was not at its target, A = 0
+; with Z set otherwise. Unlike StepSpriteSlotToward it does not touch byte 7. Its only user is
+; DebugStaffRoll_Scene00_WalkSprite2. (C2, E-0385)
 ; moves sprite slot A's position bytes toward D and E by the steps $7535/$7542 indexed by wWorkBuf +
 ; $A; NZ while still moving (E-0127)
 StepSpriteSlotTowardDE::
@@ -7010,6 +7234,9 @@ StepSpriteSlotTowardDE_Data1::
 StepSpriteSlotTowardDE_Data2::
     db $02, $02, $02, $02, $01, $01, $01, $01, $01, $01, $01, $01, $00
 
+; Adds 1 to the wait counter wWorkBuf + 5; below 15 it returns with carry set and Z clear (the
+; caller keeps waiting, ret nz), and when the value reaches 15 it resets the counter to 0 and
+; returns with Z set. A wait of 15 calls for the staff roll steps. (C2, E-0385)
 ; wWorkBuf + $5 += 1, reset to 0 when it reaches 15 (E-0340: the address in its name read as its RAM
 ; name; was StepWorkBuf5Mod15)
 StepWorkBuf5Mod15::
@@ -7022,6 +7249,9 @@ StepWorkBuf5Mod15::
     ld [wWorkBuf + $5], a
     ret
 
+; Adds 1 to the wait counter wWorkBuf + 5; below 30 it returns with carry set and Z clear (the
+; caller keeps waiting, ret nz), and when the value reaches 30 it resets the counter to 0 and
+; returns with Z set. A wait of 30 calls for the staff roll steps. (C2, E-0385)
 ; wWorkBuf + $5 += 1, reset to 0 when it reaches 30 (E-0340: the address in its name read as its RAM
 ; name; was StepWorkBuf5Mod30)
 StepWorkBuf5Mod30::
@@ -7034,6 +7264,9 @@ StepWorkBuf5Mod30::
     ld [wWorkBuf + $5], a
     ret
 
+; Adds 1 to the wait counter wWorkBuf + 5; below 45 it returns with carry set and Z clear (the
+; caller keeps waiting, ret nz), and when the value reaches 45 it resets the counter to 0 and
+; returns with Z set. A wait of 45 calls for the staff roll steps. (C2, E-0385)
 ; wWorkBuf + $5 += 1, reset to 0 when it reaches 45 (E-0340: the address in its name read as its RAM
 ; name; was StepWorkBuf5Mod45)
 StepWorkBuf5Mod45::
@@ -7046,6 +7279,9 @@ StepWorkBuf5Mod45::
     ld [wWorkBuf + $5], a
     ret
 
+; Adds 1 to the wait counter wWorkBuf + 5; below 60 it returns with carry set and Z clear (the
+; caller keeps waiting, ret nz), and when the value reaches 60 it resets the counter to 0 and
+; returns with Z set. A wait of 60 calls for the staff roll steps. (C2, E-0385)
 ; wWorkBuf + $5 += 1, reset to 0 when it reaches 60 (E-0340: the address in its name read as its RAM
 ; name; was StepWorkBuf5Mod60)
 StepWorkBuf5Mod60::
@@ -7058,6 +7294,10 @@ StepWorkBuf5Mod60::
     ld [wWorkBuf + $5], a
     ret
 
+; A = tile, B = width, C = rows, HL = BG map address: writes A over the B x C rectangle (waiting for
+; VRAM access per cell), wrapping the column within its 32-cell row and the row within the 32 rows
+; of the map. Called by DebugStaffRoll_Credits_ShowLines and DebugStaffRoll_Credits_TitleCard. (C1,
+; E-0385)
 ; writes A over a B x C rectangle of the BG map at HL, wrapping columns and rows (E-0125)
 FillBGMapRectWithAWrapped::
     push bc
@@ -7105,6 +7345,14 @@ FillBGMapRectWithAWrapped::
     jr nz, FillBGMapRectWithAWrapped
     ret
 
+; Sets the DMG palettes wDMGPaletteBGP, wDMGPaletteOBP0 and wDMGPaletteOBP1 to $D2, $D2 and $E2,
+; copies them to wDMGPaletteBytes and resets the fade (ResetFadeFromDMGPaletteBGP). On a Super Game
+; Boy (wSGBActive) it then blanks rBGP, rOBP0 and rOBP1, sets the four SGB palette numbers
+; (wSGBPaletteNum0Lo/Hi to wSGBPaletteNum3Lo/Hi) to wSGBPaletteSet * 4 + 0..3, builds packet $B1
+; with wSGBAttrFile in wSGBPacketBuffer, sends it (SendSGBPacketSet), loads the object palettes
+; (LoadSGBObjectPalettesFromPointers) and copies the 8 bytes of ResetScreenPalettes_E0_Palette to
+; wOBJPaletteBuffer + $20. Called by DebugStaffRoll_Credits_ShowLines and
+; DebugStaffRoll_Credits_TitleCard. (C1, E-0385)
 ; sets the DMG palettes $D2/$D2/$E2 (also in wDMGPaletteBytes) and resets the fade; on the Super
 ; Game Boy blanks rBGP/rOBP, sends PAL_SET for wSGBPaletteSet and copies 8 bytes from $7641 to
 ; wOBJPaletteBuffer + $20 (E-0128)
@@ -7211,8 +7459,11 @@ WorkBufSequence004::
 WorkBufSequence005::
     db $06, $02, $1b, $02, $1b, $01, $1c, $01, $1c, $02, $1d, $02, $1d, $01, $1e, $01, $1e, $00, $1f, $06, $1f, $01, $20, $00, $20 ; id 0
 
+; If wStringCategory is 0 calls BeginStringDisplay with DE =
+; BeginStringDisplay_BankE0_StringCategories (the staff roll strings of this bank); otherwise
+; far-calls BeginStringDisplay_BankE0_FromBankA2Table. Called by ShowString_BankE0. (C1, E-0385)
 ; if wStringCategory < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls
-; BeginStringDisplay_BankE0_FromBankA2Table (E-0353)
+; BeginStringDisplay_BankE0_FromBankA2Table
 BeginStringDisplay_BankE0::
     ld a, [wStringCategory]
     cp $01
@@ -7225,8 +7476,10 @@ BeginStringDisplay_BankE0::
     call BeginStringDisplay
     ret
 
+; Shows the string wStringIndex of category wStringCategory: BeginStringDisplay_BankE0, then
+; RunStringDisplayToEnd. Used for the staff roll credits lines and the title card by
+; DebugStaffRoll_Credits_ShowLines and DebugStaffRoll_Credits_TitleCard. (C1, E-0385)
 ; BeginStringDisplay_BankE0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_BankE0::
     call BeginStringDisplay_BankE0
     call RunStringDisplayToEnd
@@ -7383,34 +7636,36 @@ String_E0_00_1F::
 String_E0_00_20::
     db "    ©2001 ENIX@"
 
+; A = battle slot: HL = the word at wBattleATK + 2 * A (through GetBattleStatWord_BankE0), A = its
+; low byte. Nothing in src calls this bank-$E0 copy. (C2, E-0385)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$E0 copy of
 ; the battle library, after a string; E-0213)
 GetBattleATK_BankE0:: ; configured code entry (E-0213); C0
     ld hl, wBattleATK
     jr GetBattleStatWord_BankE0
 
-; Bank-$E0 copy of GetBattleDEF: HL = battle slot A's DEF word. (C1, E-0357)
+; Bank-$E0 copy of GetBattleDEF: HL = battle slot A's DEF word. (C2, E-0357; probed E-0385)
 GetBattleDEF_BankE0::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankE0
 
-; Bank-$E0 copy of GetBattleMaxHP: HL = battle slot A's max HP word. (C1, E-0357)
+; Bank-$E0 copy of GetBattleMaxHP: HL = battle slot A's max HP word. (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankE0::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankE0
 
-; Bank-$E0 copy of GetBattleMaxMP: HL = battle slot A's max MP word. (C1, E-0357)
+; Bank-$E0 copy of GetBattleMaxMP: HL = battle slot A's max MP word. (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankE0::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankE0
 
-; Bank-$E0 copy of GetBattleHP: HL = battle slot A's HP word. (C1, E-0357)
+; Bank-$E0 copy of GetBattleHP: HL = battle slot A's HP word. (C2, E-0357; probed E-0385)
 GetBattleHP_BankE0::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankE0
 
 ; Bank-$E0 copy of GetBattleMP: HL = battle slot A's MP word; 15 unreached bytes follow the jump
-; (two more getters). (C1, E-0357)
+; (two more getters). (C2, E-0357; probed E-0385)
 GetBattleMP_BankE0::
     ld hl, wBattleMP
     jr GetBattleStatWord_BankE0
@@ -7418,20 +7673,28 @@ GetBattleMP_BankE0::
 
 ; HL = array base, A = battle slot: HL = the 16-bit word at HL + 2 * A (the value, not a pointer); A
 ; = its low byte. The shared tail of GetBattleATK_BankE0 through GetBattleMP_BankE0, the same bytes
-; as ReadBattleWordFromArray in bank $36. (C1, E-0371)
+; as ReadBattleWordFromArray in bank $36. (C2, E-0371; probed E-0385)
 GetBattleStatWord_BankE0::
     add a
     add_a_to_hl
     deref_hl
     ret
 
+; HL = HL + 2 * A. A is doubled in 8 bits first, so an A of $80 or more wraps ($81 adds 2); the
+; carry out of L goes into H. A ends equal to the new L. This bank-$E0 copy of the 7-byte helper has
+; no caller in src. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0353)
+; appear in 12 banks)
 AddDoubleAToHL_BankE0::
     add a
     add_a_to_hl
     ret
 
+; Carry set = the battle actor wBattleActor is in slots 0-3, carry clear = slots 4-7. In a link
+; battle the answer is reversed (carry set for slots 4-7) when wLinkMode is 1 and bit 1 of wLinkRole
+; is set; any other wLinkMode, including 2, leaves it unreversed. A ends holding wBattleActor. This
+; bank-$E0 copy has no caller in src; which side is local is inferred from the reversal and is not
+; checked. (C2, E-0385)
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
@@ -7452,6 +7715,11 @@ ActorOnLocalSide_BankE0::
     cp $04
     ret
 
+; Carry set = the battle target wBattleTarget is in slots 0-3, carry clear = slots 4-7. In a link
+; battle the answer is reversed (carry set for slots 4-7) when wLinkMode is 1 and bit 1 of wLinkRole
+; is set; any other wLinkMode, including 2, leaves it unreversed. A ends holding wBattleTarget. This
+; bank-$E0 copy has no caller in src; which side is local is inferred from the reversal and is not
+; checked. (C2, E-0385)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
@@ -7473,7 +7741,7 @@ TargetOnLocalSide_BankE0::
     ret
 
 ; ANDs status byte 0 of slot E (rows of nine bytes) with entry D of
-; ClearBattleStatusBitsWithMaskD_BankE0_Data. (C1, E-0357)
+; ClearBattleStatusBitsWithMaskD_BankE0_Data. (C2, E-0357; probed E-0385)
 ClearBattleStatusBitsWithMaskD_BankE0::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE0_Data
@@ -7494,8 +7762,11 @@ ClearBattleStatusBitsWithMaskD_BankE0::
 ClearBattleStatusBitsWithMaskD_BankE0_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
+; Sets bit 0 of the byte at wLevelUpGains + A and leaves its other bits, the next byte and HL
+; unchanged; A is clobbered (it ends as the low byte of that address). This bank-$E0 copy has no
+; caller in src. (C2, E-0385)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit0OfLevelUpGainsIndexed_BankE0::
     push hl
     ld hl, wLevelUpGains
@@ -7504,8 +7775,11 @@ SetBit0OfLevelUpGainsIndexed_BankE0::
     pop hl
     ret
 
+; Sets bit 1 of the byte at wLevelUpGains + A and leaves its other bits, the next byte and HL
+; unchanged; A is clobbered (it ends as the low byte of that address). This bank-$E0 copy has no
+; caller in src. (C2, E-0385)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit1OfLevelUpGainsIndexed_BankE0::
     push hl
     ld hl, wLevelUpGains
@@ -7514,8 +7788,11 @@ SetBit1OfLevelUpGainsIndexed_BankE0::
     pop hl
     ret
 
+; Sets bit 2 of the byte at wLevelUpGains + A and leaves its other bits, the next byte and HL
+; unchanged; A is clobbered (it ends as the low byte of that address). This bank-$E0 copy has no
+; caller in src. (C2, E-0385)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit2OfLevelUpGainsIndexed_BankE0::
     push hl
     ld hl, wLevelUpGains
@@ -7524,6 +7801,12 @@ SetBit2OfLevelUpGainsIndexed_BankE0::
     pop hl
     ret
 
+; A = slot 0-7. Returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]), a number 0-26, where g(v) = 0 for v >= $C0, 1 for $40-$BF and 2 for v <
+; $40; HL and BC are kept. Called by RunDebugState_E0_ChooseActionTargets_AIChoice, which stores the
+; result in wPersonalityIndex before running the AI (ReadBank6TableWord reads the weight rows with
+; that index), and by RunDebugState_E0_ChooseActionTargets_DrawDetails, which stores it as
+; wStringIndex with wStringCategory = 7 to draw the personality name. (C2, E-0385)
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
@@ -7583,6 +7866,10 @@ PersonalityIndexOfSlot_BankE0::
     pop hl
     ret
 
+; A = slot. Carry set when CheckSlotStatusBlock sets it (slot absent, or one of its status bits set)
+; or when status byte 3 of the slot has a bit of $C0 set (BSTAT3_AIRBORNE, BSTAT3_AIRBORNE_HI) or
+; status byte 4 has a bit of $0C set (BSTAT4_HIGH_JUMP, BSTAT4_HIGH_JUMP_HI); otherwise carry clear.
+; A, BC and HL are kept. This bank-$E0 copy has no caller in src. (C2, E-0385)
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
@@ -7612,6 +7899,10 @@ CheckSlotStatusBlockWide_BankE0::
     pop hl
     ret
 
+; A = slot. Z clear with A = status byte 3 & $C0 when byte 3 of the slot (wBattleStatus3 + 9 * A)
+; has a bit of $C0 set; otherwise A = status byte 4 & $0C, so Z is clear only when byte 4 has a bit
+; of $0C set. Byte 4 is not read when byte 3 matches. HL is kept. This bank-$E0 copy has no caller
+; in src. (C2, E-0385)
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)

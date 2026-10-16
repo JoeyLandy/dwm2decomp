@@ -1785,3 +1785,119 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `SceneKamehaKeyBattle2_AfterBattle` (85:48C2): the full-key-list branch (message $0B9E) was not run
 - `SceneKamehaKeyBattle_AfterBattle` (85:496F): the full-key-list branch (message $0B94) was not run
 - `SceneTerry` (85:4A6D): both branches of the hPlayerX = $20 test set the same wWarpDestX; the flag changes nothing there
+
+## E-0385
+
+- `SceneCanalGate_RaiseGate` (85:5607): The earlier note said the object stops animating at the end; clearing OBJ_FLAGS bit 1 lets the animation timer run again.
+- `SceneCanalGate_WalkUp` (85:561E): The earlier note said object 1 starts animating here; setting OBJ_FLAGS bit 1 freezes the animation timer (FreezeFieldAnimation sets it, ResumeFieldAnimation clears it).
+- `SceneCanalGate_Hop` (85:566F): The earlier note called this step 0 only; the jumptable of SceneCanalGate lists it for steps 0 and 1.
+- `RotateDirectionAtDEEvery32_Bank85` (85:5774): No caller of this bank-$85 copy was found by name.
+- `PartyHasLivingMonPersonalityAtLeastC0` (85:57FE): No caller was found by name, so the purpose of the test (a first personality byte of $C0 or more in a living party member) is unknown.
+- `FhuntTalkEvents_GiantBird_IsBirdPresent` (85:5882): The earlier note said hTemp0 = 1 for a party match; it is the party position (1 only for the first member). FhuntTalkEvents_GiantBird only tests it for zero.
+- `SetupMap0BMonsterObjects` (85:5B53): What the two possible values of wArenaFlags AND 3 and the wRecordCapacity test mean in arena terms was not read here.
+- `CheckMapInteractionOnA` (87:42A0): The meaning of object type 2 with byte $0A bit 7 set is taken from the wandering-object note in bank $04 (a move is running); the other object types were not compared.
+- `CopyStringToBuffer_Bank89` (89:4016): No caller of CopyStringToBuffer_Bank89 was found by name.
+- `DrawEffectSpriteAtEffectSpriteX_Bank92` (92:4001): The earlier note said wEffectTileOffset sets the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex (the same stale text sits above the copies in banks $3B, $3D and $3E).
+- `CopyStringToBuffer_Bank80_Overflow` (96:4010): The wrapper CopyStringToBuffer_Bank80 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank82_Overflow` (96:4035): No caller; CopyStringToBuffer_Bank82 uses the display overflow, so indexes $90 and up are never copied through this routine.
+- `CopyStringToBuffer_Bank0E_Overflow` (96:7020): The wrapper CopyStringToBuffer_Bank0E that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank28_Overflow` (97:4010): The wrapper CopyStringToBuffer_Bank28 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank29_Overflow` (97:4035): The wrapper CopyStringToBuffer_Bank29 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2A_Overflow` (97:405A): The wrapper CopyStringToBuffer_Bank2A that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank83_Overflow` (97:407F): The wrapper CopyStringToBuffer_Bank83 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2B_Overflow` (98:4010): The wrapper CopyStringToBuffer_Bank2B that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2C_Overflow` (98:4035): The wrapper CopyStringToBuffer_Bank2C that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank89_Overflow` (98:405A): The wrapper CopyStringToBuffer_Bank89 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2D_Overflow` (99:4010): The wrapper CopyStringToBuffer_Bank2D that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2E_Overflow` (99:4035): The wrapper CopyStringToBuffer_Bank2E that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank7C_Overflow` (99:405A): The wrapper CopyStringToBuffer_Bank7C that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `AdjustSkillsForBattleStart_A0` (A0:41F2): What the variant skills SKILL_AHHH_AA, SKILL_PANICALL_AD and SKILL_IRONIZE_AE do differently from the plain skills was not read here.
+- `StoreSkillPanicAllADAtHL_BankA0` (A0:4262): The old name says tile; the byte is stored into a skill list (wBattleSkills), so it is a skill id.
+- `StoreSkillIronizeAEAtHL_BankA0` (A0:4265): The old name says tile; the byte is stored into a skill list (wBattleSkills), so it is a skill id.
+- `GameMode7_Init_Start_PackBattlerRecord` (A0:4301): The earlier note said the item step applies stat increments; the bytes it raises (up to 3) are resistance levels of the packed record.
+- `ApplyEquippedItemIncrements` (A0:434B): What the seven rows mean in game terms (which item raises which resistances) was not read here.
+- `LoadBattleSlotC_A0_Party` (A0:4410): The earlier note said the link side byte (AND 3) is stored in wBattleLoadWork; the byte stored is always 0, and only when wLinkRole bit 1 is clear.
+- `LoadBattleSlotC_A0_Foe` (A0:456F): The hand note above this routine names RunA0OrBySlotC_LoadPartySlot; it follows the rename.
+- `RollRecordField0DState_A0` (A0:4AAA): What the rolled 0 or 1 means (for example which sex) was not read here.
+- `Multiply24By8_BankA0` (A0:4AE4): No caller of this bank-$A0 copy was found by name.
+- `FillScreenTileBufferRow11Col4WithC3_BankA0` (A0:4C1D): No caller of this bank-$A0 copy was found by name.
+- `BuildAndCopySlotPanels0And1_A0` (A0:4C63): No caller found by name.
+- `RunBattlePhaseWhenTextIdle_A0_DrawResults` (A0:5622): The earlier note said three numbers from wKeyNameBuf; WriteThreeTwoDigitRows falls through into a fourth call, so four are written.
+- `CountTableBytesAtOrBelowA_BankA0_2` (A0:5693): No caller of this second copy was found by name.
+- `WriteThreeTwoDigitRows` (A0:569E): The name and the earlier note say three rows; the code writes four because the routine has no return of its own before WriteTwoDigitsFromDEStepRow.
+- `ComputeBattleResultRank` (A0:5A6C): The results screen draws the letters 'GFEDCBAS'; that the rank 0-7 picks one of them is an earlier reading that this reading did not re-check.
+- `ApplyBattleResultStatChanges` (A0:5B47): The HP and MP restore tests compare the wrong bytes (an address high byte, a doubled low byte); whether the original intended a plain restore to maximum is not known.
+- `WriteFiveTileNumbersForCommandMonster` (A0:67B8): What the tiles $D0-$D9 show (they may be the name of the monster) was not checked.
+- `DrawInventoryPageIndicator_BankA0` (A0:694B): Tiles $C5, $BE and $C6 (probably brackets and a separator) were not looked at.
+- `CountPresentFoesOfLinkRoleSide_BankA0` (A0:69F1): No caller of this copy was found; the bank $31 copy of the routine is the one called.
+- `CountPresentSlotsOfLinkRoleSide_BankA0` (A0:6A0D): No caller of this copy was found; the bank $31 copy of the routine is the one called.
+- `CallRunDebugStateInBankE0_BankA0` (A0:6A25): Unreferenced; whether anything reaches it at run time was not checked.
+- `UnreferencedShowFiveGlyphsAtTilesHL_BankA0` (A0:6CF7): Unreferenced; whether anything reaches it at run time was not checked.
+- `ClearBattleStatusBitsWithMaskD_BankA1` (A1:4075): Unreferenced; which status bits the masks are meant to clear was not worked out.
+- `SetWorldMapPlayerScreenByMapType` (A1:4744): The name says game mode 2, but the only caller is the world map close-up (field state 8 of game mode 1).
+- `RunWorldMapState_CenterNameGlyphBuf` (A1:528B): The name says game mode 2, but both callers are world map overview steps.
+- `ClearBattleStatusBitsWithMaskD_BankA3` (A3:4075): Unreferenced; which status bits the masks are meant to clear was not worked out.
+- `SaveActionChoicesAndPickFormations` (A3:4187): wLinkMode is described as 0, 1 or 2; whether a value of 3 or more ever occurs (it would be the only way to reach the second side) was not checked.
+- `CancelTargetActionUnlessSpecial` (A3:4A02): What wSlotMarks value 3 does for a combined action that is kept ($D0 and up) has not been traced.
+- `PickDuckBehindAlly` (A3:4A5F): The name and wDuckBehindSlot call the chosen slot an ally, but the code picks from the side opposite to wBattleTarget; the side numbering (bit 2 of a slot) and what the text <ally> shows are unchecked.
+- `PickDuckBehindAlly` (A3:4A5F): The loop also tests the slot against wBattleTarget and would repeat forever on a match; it cannot match because the sides differ.
+- `RunDebugState_E0` (E0:443B): What starts this viewer in the game: both far-calling wrappers have no caller in src/.
+- `RunDebugState_E0_ChooseActionTargets_Input` (E0:4D17): What a wBattleSlotOut byte of $FF means for a slot (CarryUnlessBattleSlotOutSlotEmpty sets Z only for it); the old comment called the other slots occupied.
+- `DrawSpriteSlots` (E0:7420): The pictures the three drawing routines make (bank $25 and $7F) were not read here, only the values handed to them.
+- `StepSpriteSlotTowardDE` (E0:74D8): The Y step only ever subtracts (a Y below the target would wrap through 0); the only caller moves sprite 2 from Y $40 up to $30, which fits.
+- `SetBit0OfLevelUpGainsIndexed_BankE0` (E0:7A59): What bit 0 of a wLevelUpGains entry stands for is not read here.
+- `SetBit1OfLevelUpGainsIndexed_BankE0` (E0:7A66): What bit 1 of a wLevelUpGains entry stands for is not read here.
+- `SetBit2OfLevelUpGainsIndexed_BankE0` (E0:7A73): What bit 2 of a wLevelUpGains entry stands for is not read here.
+- `DrawMetaSpriteSet_BankE1` (E1:5AB7): Whether DrawCGBMetaSpriteAt38_30 ever runs, and so whether this routine does, is not known.
+- `DrawMetaSpriteSet_BankE1` (E1:5AB7): The cascade of the new name: RunBankE1Routine_BuildOam and RunBankE1Routine_Data derive from this name.
+- `BGTileUnderPointIsSpriteHideTile_BankE1` (E1:5D06): The name says the tile equals hSpriteHideTile, but the callers test carry (tile below hSpriteHideTile), not Z.
+- `AIScore_Beat_UnreferencedVariant` (E2:41C5): Why the ROM keeps this second version of Beat is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_MPass` (E2:43BE): AIScore_MPass_Conditions never gave a non-zero result in 1 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_TwinHits_UnreferencedVariant` (E2:45FE): Why the ROM keeps this second version of TwinHits is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_TwinHits` (E2:4619): FailIfAllyCanUseSkill63Or64 never gave 0 in 8 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Barrier` (E2:48FD): FailIfFoeKnowsSkills42To47 never gave 0 in 6589 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_SquallHit_UnreferencedVariant` (E2:51DB): Why the ROM keeps this second version of SquallHit is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_SquallHit` (E2:51F6): Whether bit 0 of wAIFlag can be set when AIScore_SquallHit_Conditions passes is not known: with wAIFlag non-zero the probe state made the conditions give 0 already.
+- `AIScore_RainSlash` (E2:530E): FewerThanTwoFoesPresent never gave a non-zero result in 25 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Kamikaze` (E2:5856): AIScore_Kamikaze_HealerAllyAndFoeHP never gave 0 in 547 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_OddDance` (E2:591F): ResistanceAverageGateForFoeAIMode3 never gave 0 in 3 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): Why the ROM keeps this second version of LureDance is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): AIAddScoresForTwoLists_SealingFoes never gave 0 in 63 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): AIAddScoresForTwoLists_OtherAllies never gave 0 in 63 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): Why the ROM keeps this second version of LushLicks is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): AIAddScoresForTwoLists_SealingFoes never gave 0 in 20 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): AIAddScoresForTwoLists_OtherAllies never gave 0 in 20 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): Why the ROM keeps this second version of LegSweep is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): AIAddScoresForTwoLists_SealingFoes never gave 0 in 21 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): AIAddScoresForTwoLists_OtherAllies never gave 0 in 21 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): Why the ROM keeps this second version of Ahhh is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): AIAddScoresForTwoLists_SealingFoes never gave 0 in 11 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): AIAddScoresForTwoLists_OtherAllies never gave 0 in 11 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_MouthShut` (E2:60A6): FailIfFoeKnowsSkills42To47 never gave 0 in 7012 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_StormWind` (E2:61C2): FailIfFoeKnowsSkills42To47 never gave 0 in 6047 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_NoWeightA` (E2:64BF): What skills 175-191 are: the skill-name table gives them a placeholder name, and the AI never weighs them.
+- `AIScore_NoWeightB` (E2:64C0): What skills 192-199 are: the skill-name table gives them a placeholder name.
+- `AIScore_Skill200` (E2:64C1): What skill 200 is, and why only the random value decides its score.
+- `MaxNegativeScoreWhenAIFlagBit0` (E2:67A5): What wAIFlag bit 0 means in the game: the code only shows that it blocks every weight row of these scorers.
+- `WeighActorAloneOnSide` (E2:67D5): Why Farewell and Vivify want the actor to be alone: the code only shows the two checks.
+- `AIAddScoresForTwoLists` (E2:67F9): What the two checks stand for in the game (the names SealingFoes and OtherAllies come from the callees).
+- `WeighLinkRules1RuleBit5` (E2:6854): What link rule bit 5 stands for in the game.
+- `WeighLinkRules1RuleBit4` (E2:6865): What link rule bit 4 stands for in the game.
+- `WeighLinkRules1RuleBit3` (E2:6876): What link rule bit 3 stands for in the game.
+- `WeighLinkRules1RuleBit2` (E2:6887): What link rule bit 2 stands for in the game.
+- `WeighLinkRules1RuleBit1` (E2:6898): What link rule bit 1 stands for in the game.
+- `RunLinkSession8Exchange_EggsTraded` (F0:565E): Whether wF0ScreenKind can ever be 2: PickScene never sets it and InfoOrOK only sets 0, so this scene looks unreachable.
+- `UnusedStepObject1LeftShowEgg` (F0:5888): Whether this code is ever run: no label or jump refers to it.
+- `UnusedStepSpriteRightShowEgg` (F0:5A29): Whether this code is ever run: no label or jump refers to it.
+- `DrawPageIndicatorWhenTwoPagesAndStep` (F0:613D): No call, jump or table in src refers to this label, so it may be unused code (LinkRecordScreen_DrawListBox ends in a jump past it).
+- `CopyRectTo20ByteRows_BankF0` (F0:62B8): The CGB zero fill goes to WRAM bank 2, which is not mapped when the routine returns, so it is read from the code, not observed.
+- `CopyScreenBufferRectWithAttrs_F0` (F0:63EE): The CGB attribute copy happens in WRAM bank 2, which is not mapped when the routine returns, so only the DMG copy is observed.
+- `RaiseLowestResistances` (F0:6AFE): The random byte of NextTableByte is discarded (ld a, l after the call): is the fixed pick intended or a leftover? Unknown.
+- `RandomModulo29_BankF0` (F0:7097): The name says modulo but the callers use the quotient; renaming would also touch RandomModulo29 in bank $0E, so the name is kept.
+- `ClearRollCounterWhenGM2TimerMinutesIs59` (F0:72B4): Whether applying the pending gift on this fall-through is intended is not known; the code has no ret before ApplyGiftEffectByItem.
+- `CopyNameStringFromBank08Database` (F0:7C96): CopyNameStringFromBank08Database_Data is a label in this bank but the code uses its address as an entry of bank $08 (StringDatabase list 2); the label is misplaced, not data of this bank.
+- `ClearScreenBufferAndAttributes_BankF1` (F1:4AA8): The probes check the tile fill and the CGB branch, but the runner cannot read WRAM bank 2 after rSVBK is restored, so the attribute clear is C1 (code reading).

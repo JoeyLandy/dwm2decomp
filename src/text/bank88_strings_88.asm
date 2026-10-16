@@ -4,15 +4,21 @@
 SECTION "Bank 88", ROMX[$4000], BANK[$88]
     db $88
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Starts the text printer on string wStringIndex of category wStringCategory from this bank: DE =
+; BeginStringDisplay_Bank88_StringCategories, then BeginStringDisplay (the glyphs are printed later
+; by StepTextPrinter). The caller sets wStringCategory and wStringIndex first. Callers:
+; ShowString_Bank88 and DebugMessageTest_Update_ShowBank88. (C1, E-0385)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank88::
     ld de, BeginStringDisplay_Bank88_StringCategories
     call BeginStringDisplay
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9
 
+; Shows a bank-$88 string in one go: BeginStringDisplay_Bank88 (string wStringIndex of category
+; wStringCategory), then RunStringDisplayToEnd, which steps the text printer until wTextFlags is 0.
+; Callers: DebugShowMonsterRecord and DebugBattleSetupShowFieldString. (C1, E-0385)
 ; BeginStringDisplay_Bank88 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0353)
 ShowString_Bank88::
     call BeginStringDisplay_Bank88
     call RunStringDisplayToEnd

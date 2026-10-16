@@ -4,32 +4,38 @@
 SECTION "Bank A3", ROMX[$4000], BANK[$A3]
     db $a3
 
+; A = a battle slot: HL = wBattleATK, then GetBattleStatWord_BankA3: HL = the word of that slot at
+; wBattleATK + 2 * A (the value, not a pointer) and A = its low byte. GetBattleDEF_BankA3,
+; GetBattleMaxHP_BankA3, GetBattleMaxMP_BankA3, GetBattleHP_BankA3 and GetBattleMP_BankA3 do the
+; same for wBattleDEF, wBattleMaxHP, wBattleMaxMP, wBattleHP and wBattleMP. This bank holds a copy
+; of the shared block of battle helper routines; no call to this copy was found in the source. (C2,
+; E-0385)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 GetBattleATK_BankA3::
     ld hl, wBattleATK
     jr GetBattleStatWord_BankA3
 
-; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
+; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleDEF_BankA3::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankA3
 
-; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
+; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankA3
 
-; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
+; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankA3
 
-; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
+; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleHP_BankA3::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankA3
 
-; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA3). (C1, E-0357)
+; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleMP_BankA3::
     ld hl, wBattleMP
     jr GetBattleStatWord_BankA3
@@ -37,20 +43,27 @@ GetBattleMP_BankA3::
 
 ; HL = array base, A = battle slot: HL = the 16-bit word at HL + 2 * A (the value, not a pointer); A
 ; = its low byte. The shared tail of GetBattleATK_BankA3 through GetBattleMP_BankA3, the same bytes
-; as ReadBattleWordFromArray in bank $36. (C1, E-0371)
+; as ReadBattleWordFromArray in bank $36. (C2, E-0371; probed E-0385)
 GetBattleStatWord_BankA3::
     add a
     add_a_to_hl
     deref_hl
     ret
 
+; HL += 2 * A, with A doubled in 8 bits first (an A of $80 or more wraps); A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0353)
+; appear in 12 banks)
 AddDoubleAToHL_BankA3::
     add a
     add_a_to_hl
     ret
 
+; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise; but when wLinkMode is 1 and
+; wLinkRole bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
@@ -71,6 +84,10 @@ ActorOnLocalSide_BankA3::
     cp $04
     ret
 
+; Carry set when wBattleTarget is below 4, clear otherwise; but when wLinkMode is 1 and wLinkRole
+; bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank holds a
+; copy of the shared block of battle helper routines; no call to this copy was found in the source.
+; (C2, E-0385)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
@@ -91,6 +108,10 @@ TargetOnLocalSide_BankA3::
     cp $04
     ret
 
+; D = an index 0-6, E = a slot: ANDs the byte at wBattleStatus + 9 * E (status byte 0 of the slot)
+; with ClearBitMaskTable_BankA3[D] ($DF, $FE, $00, $FD, $73, $EF, $BF). A, D, HL are clobbered. Not
+; reached from the traced code (a configured code entry); no caller was found in the source. (C2,
+; E-0385)
 ; wBattleStatus + 9 * E &= ClearBitMaskTable_BankA3[D] (AddAx9ToHL); not reached from traced code
 ; (E-0205)
 ClearBattleStatusBitsWithMaskD_BankA3:: ; configured code entry (E-0205); C0
@@ -119,8 +140,11 @@ ClearBitMaskTable_BankA3::
     db $ef ; id 5
     db $bf ; id 6
 
+; A = an index: sets bit 0 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -129,8 +153,11 @@ SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = an index: sets bit 1 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -139,8 +166,11 @@ SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = an index: sets bit 2 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -149,6 +179,10 @@ SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = a slot 0-7: returns A = 9 * g(wSlotPersonalityHi[slot]) + 3 * g(wSlotPersonalityMid[slot]) +
+; g(wSlotPersonalityLo[slot]), where g(v) = 0 for $C0 or more, 1 for $40 to $BF and 2 below $40 (so
+; 0-26). BC and HL are kept. This bank holds a copy of the shared block of battle helper routines;
+; no call to this copy was found in the source. (C2, E-0385)
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
@@ -208,6 +242,10 @@ PersonalityIndexOfSlot_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = a slot: carry set when CheckSlotStatusBlock sets it (the slot is out, or a status bit it tests
+; is set), or when bits 6-7 of status byte 3 or bits 2-3 of status byte 4 (wBattleStatus3 + 9 * A)
+; are set; otherwise carry clear. A, BC, HL are kept. This bank holds a copy of the shared block of
+; battle helper routines; no call to this copy was found in the source. (C2, E-0385)
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
@@ -237,6 +275,9 @@ CheckSlotStatusBlockWide_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = a slot: A = status byte 3 of the slot (wBattleStatus3 + 9 * A) and $C0, or when that is 0
+; status byte 4 and $0C; Z is set when both are clear. HL is kept. This bank holds a copy of the
+; shared block of battle helper routines; no call to this copy was found in the source. (C2, E-0385)
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
@@ -254,6 +295,10 @@ SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; Runs ActorFormationSlotToTemp0 (hTemp0 = the formation partner slot of wBattleActor), then sets
+; the byte of wSlotMarks for that slot to 3. With no formation hTemp0 is $FF and the byte written is
+; wSlotMarks + $FF, outside the 8 marks. Called by ApplyActionResultAndMarkFormation,
+; SetSubPhase2AndRestartResolve and ActionEffect_ActionD0 to ActionEffect_ActionD8. (C2, E-0385)
 ; runs ActorFormationSlotToTemp0, then wSlotMarks[hTemp0] = 3 (E-0122) (E-0340: the address in its
 ; name read as its RAM name; was RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3) (E-0344: the
 ; address in its name dropped or read as the label there; was
@@ -266,6 +311,14 @@ RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3::
     ld [hl], $03
     ret
 
+; hTemp0 = the formation partner slot of the actor wBattleActor. wFormationSlot0 (actors 0-3) or
+; wFormationSlot1 (actors 4-7) holds the formation case 0-2 chosen by
+; SaveActionChoicesAndPickFormations ($FF = none). The case picks the slot pair (0,1), (0,2) or
+; (1,2) from ActorFormationSlotToTemp0_Data: hTemp0 = the second slot of the pair when the actor
+; (wBattleActor and 3) is the first, otherwise the first slot, plus 4 on the second side; $FF when
+; there is no formation. BC is kept. Called by RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3 and,
+; by far call, CheckFormationPartnersCanAct, ApplyActionResultAndMarkFormation, PayActorMPCost_CpD6
+; and others. (C2, E-0385)
 ; hTemp0 = the slot for the actor through its side's wFormationSlot0 formation
 ; (ActorFormationSlotToTemp0_Data), $FF when none (E-0124)
 ActorFormationSlotToTemp0::
@@ -307,6 +360,14 @@ ActorFormationSlotToTemp0::
 ActorFormationSlotToTemp0_Data::
     db $00, $01, $00, $02, $01, $02
 
+; Copies the 16 bytes of wBattleActionChoice to wSavedActionChoices and sets wFormationSlot0 and
+; wFormationSlot1 to $FF. When wLinkMode is 1 (a link battle) it stops there. Otherwise
+; FindFormationForSide is asked about the three action words at wBattleActionChoice; when a
+; formation applies, SaveActionChoicesAndPickFormations_ApplyFormation rewrites two of the three
+; words (the combined action $D0-$E3 and target $FF) and its case 0-2 goes to wFormationSlot0. For
+; wLinkMode 0 and 2 that is all; for any other value the same is done for the three words at
+; wBattleActionChoice + 8 and the case goes to wFormationSlot1. Called by
+; RunBattleCommandEntry_BankA1_TotalHP and RunBattleCommandEntry_TotalHP. (C2, E-0385)
 ; copies 16 bytes of wBattleActionChoice to wSavedActionChoices, clears wFormationSlot0/4, and
 ; outside link battles sets the formation for each side from FindFormationForSide and
 ; SaveActionChoicesAndPickFormations_ApplyFormation (E-0125)
@@ -350,6 +411,17 @@ SaveActionChoicesAndPickFormations::
     ld [wFormationSlot1], a
     ret
 
+; DE = the three action words of one side (wBattleActionChoice or wBattleActionChoice + 8); the side
+; is taken from wBattleActor bit 2 (hTemp0 = the first slot of the side, 0 or 4, is set first).
+; Walks the 5-byte records of FormationTable until one that starts with 0. A record fits when each
+; of its three action bytes that is not $FF equals the action of the matching word and the matching
+; slot (hTemp0 + 0, 1, 2) can act (CheckSlotStatusBlock carry clear and
+; SlotHasStatus3Or4Bits_BankA3_2 zero); a slot whose action byte is $FF is not checked. The first
+; record that fits decides: unless wLinkMode is 2 its flag byte must be 1, else the result is A = 0
+; (flag 0 records are only usable in link mode 2); then FormationCompatibilityRoll must succeed. On
+; success A = 1, hTemp0 = the combined action ($D0-$E3) and B = the number of the record
+; (SaveActionChoicesAndPickFormations_ApplyFormation uses B mod 3); A = 0 otherwise, with hTemp0
+; left as the side base. Called twice by SaveActionChoicesAndPickFormations. (C2, E-0385)
 ; walks FormationTable for the actor's side (wBattleActor & 4): the first record whose three actions
 ; match the side's chosen actions (DE) with every required slot able to act gives A = 1 and hTemp0 =
 ; its combined action, after FormationCompatibilityRoll when its flag is 1 or in link mode 2; A = 0
@@ -477,6 +549,10 @@ FindFormationForSide::
     ld a, $01
     ret
 
+; A = a slot: A = status byte 3 of the slot (wBattleStatus3 + 9 * A) and $C0, or when that is 0
+; status byte 4 and $0C; Z is set when both are clear. HL is kept. The second copy of this helper in
+; the bank (the first is SlotHasStatus3Or4Bits_BankA3); called three times by FindFormationForSide.
+; (C2, E-0385)
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
@@ -617,6 +693,17 @@ FormationTable::
     db $ff, $9f, $8a, $00, $e3 ; id 113
     db $00 ; end
 
+; Decides whether a FormationTable record applies, after its actions matched. B = the index of the
+; record (B mod 3 picks the pair of slots: 0 = slots 0 and 1, 1 = slots 0 and 2, 2 = slots 1 and 2),
+; HL = the address of the combined action byte of the record ($D0-$E3). It reads
+; PersonalityCompatibility[32 * the personality index of the later slot of the pair + the index of
+; the earlier slot] (PersonalityIndexOfSlot_BankA3_2) and adds 1, multiplies it by the sum of the
+; two wSlotTrait bytes and keeps the upper bytes of the product (the product divided by 256),
+; multiplies that by FormationChanceFactors[action - $D0] and divides by 10 (a quotient above 255
+; becomes 255) to get a chance out of 100. It then draws wRandomLo AND $7F (AdvanceRandom) until the
+; draw is below 100 and returns A = 1 when the draw is below the chance, A = 0 otherwise. Called
+; twice by FindFormationForSide: for a record whose flag byte is 1 and, in wLinkMode 2, for every
+; matching record. (C2, E-0385)
 ; picks the slot pair by B / 3, reads PersonalityCompatibility[personality of the
 ; second][personality of the first] + 1, multiplies it by the pair's wSlotTrait sum and by
 ; FormationChanceFactors[action - $D0], divides by 10 (capped at 255) and returns A = 1 when a
@@ -829,7 +916,8 @@ PersonalityCompatibility::
 ; action, DE = the side's three action words in wBattleActionChoice (action byte, target byte): by B
 ; mod 3 writes hTemp0 to the actions of two slots and $FF to their targets - case 0 slots 0 and 1
 ; (bytes 0 and 2), case 1 slots 0 and 2 (bytes 0 and 4), case 2 slots 1 and 2 (bytes 2 and 4).
-; Returns A = the case, which the parent stores in wFormationSlot0 or wFormationSlot1. (C1, E-0371)
+; Returns A = the case, which the parent stores in wFormationSlot0 or wFormationSlot1. (C2, E-0371;
+; probed E-0385)
 SaveActionChoicesAndPickFormations_ApplyFormation::
     push bc
     push de
@@ -896,6 +984,11 @@ SaveActionChoicesAndPickFormations_ApplyFormation::
     ld a, $02
     ret
 
+; hTemp0 = 1 when the action chosen by the actor (the first byte of the word at wBattleActionChoice
+; + 2 * wBattleActor) is $D0-$E3, else 0. $D0-$E3 are the combined actions that FormationTable
+; records give. Far-called by RunBattleActions_StatusChecks_CheckAction_CheckMP, which then goes to
+; RunBattleActions_StatusChecks_CheckAction_Skip when hTemp0 is not 0, so no MP check is made for
+; such an action. (C2, E-0385)
 ; hTemp0 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
 ActorActionIsD0ToE3::
     ld a, [wBattleActor]
@@ -916,6 +1009,11 @@ ActorActionIsD0ToE3::
     ldh [hTemp0], a
     ret
 
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[slot]) + 3 * g(wSlotPersonalityMid[slot]) +
+; g(wSlotPersonalityLo[slot]), with g(v) = 0 for v >= $C0, 1 for v >= $40 and 2 below $40, so A is
+; 0-26. BC and HL are kept. FormationCompatibilityRoll uses it to find the row and the column of
+; PersonalityCompatibility. A second copy of PersonalityIndexOfSlot_BankA3 sitting in this bank; the
+; same code is in 13 banks. (C2, E-0385)
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
@@ -978,7 +1076,7 @@ PersonalityIndexOfSlot_BankA3_2::
 ; hTemp0 = the actor's resolve chance class, indexed by its monster id (the word at wBattleMonsterId
 ; + 2 * wBattleActor): from MonsterResolveChanceTable_Foes when wLinkMode is 0 or 2 and wBattleActor
 ; is 4 or more (a foe), otherwise from MonsterResolveChanceTable. Far-called by
-; RollRandomLoBelowChance. (C1, E-0371)
+; RollRandomLoBelowChance. (C2, E-0371; probed E-0385)
 RollRandomLoBelowChance_LoadActorChance::
     ld a, [wLinkMode]
     or a
@@ -1007,6 +1105,12 @@ RollRandomLoBelowChance_LoadActorChance::
     ldh [hTemp0], a
     ret
 
+; Far-called by ResolveStepBranchOnAction_RemoveEffects_RevertForm right after it shows the text '0
+; turned back to normal!'. Looks at the action chosen by the target (the word at wBattleActionChoice
+; + 2 * wBattleTarget): an action of 0, $AC or $CC-$CF is left alone; any other action below $D0 is
+; replaced by 0 with its target byte set to $FF (the action is cancelled); an action of $D0 or more
+; is left in place and wSlotMarks[target] is set to 3. What the mark 3 does for the combined actions
+; $D0 and up is not known (open question). (C2, E-0385)
 ; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with
 ; target $FF; others set wSlotMarks[target] = 3 (E-0124)
 CancelTargetActionUnlessSpecial::
@@ -1041,6 +1145,11 @@ CancelTargetActionUnlessSpecial::
     ld [hl], $03
     ret
 
+; C = a slot number: removes the first byte equal to C from the queue of 8 slots at wActionQueue and
+; shifts the later bytes down one place; the byte after the queue (wActionQueue + 8) is shifted into
+; the eighth place and then set to $FF. A value that is not in the queue changes nothing. DE is kept
+; (pushed and popped). Nothing in src/ calls this copy; RemoveCFromActionQueue in bank $36 and
+; RemoveCFromActionQueue_3A have the same loop but clobber D. (C2, E-0385)
 ; removes the first byte equal to C from the 8-byte queue at wActionQueue, shifting later bytes down
 ; and filling with $FF (E-0124)
 RemoveCFromActionQueue_A3::
@@ -1077,6 +1186,13 @@ RemoveCFromActionQueue_A3::
     pop de
     ret
 
+; Far-called by ResolveStepBegin to find the slot the target ducks behind (when C is not $FF the
+; caller stores C in wDuckBehindSlot and shows battle text $33). Advances the random state
+; (AdvanceRandom), fills wSlotChoices with $FF, then lists in it the slots that are present
+; (CarryUnlessBattleSlotOutSlotEmpty clear) among the three slots 0-2 or 4-6 on the side OPPOSITE to
+; wBattleTarget (bit 2 of wBattleTarget flipped), and returns C = one of them chosen with
+; RandomInRange, or C = $FF when none is present. RandomInRange advances the random state a second
+; time only when two or more slots are present. (C2, E-0385)
 ; C = an ally the target can duck behind, or $FF (E-0337; was PickDuckBehindAlly)
 PickDuckBehindAlly::
     call AdvanceRandom
@@ -1127,11 +1243,12 @@ PickDuckBehindAlly::
     ld c, a
     ret
 
-; Returns C (and A) = one of the 14 actions $B0-$BD from the table after it, picked by AdvanceRandom
-; then wRandomLo mod 14. When wLinkMode is 0 and wBattleKind is 2, 3 or 5 it rolls again on $B3,
-; $B4, $B6 and $BD; when wLinkMode is 0 in other kinds a player-side actor (wBattleActor bit 2
-; clear) keeps any pick; foe actors, link battles and those three kinds also roll again on $B0 and
-; $B2. Far-called by ActionEffect_Chance, which makes C the actor's action. (C1, E-0371)
+; Far-called by ActionEffect_Chance. Returns C = the action $B0-$BD at
+; ActionEffect_Chance_PickEffect_Data[wRandomLo mod 14], after AdvanceRandom. With wLinkMode 0 and
+; wBattleKind not 2, 3 or 5 a player-side actor (wBattleActor bit 2 clear) keeps the first pick and
+; returns early with A = wBattleActor; every other case draws again while the pick is $B0 or $B2,
+; and in battle kinds 2, 3 and 5 (wLinkMode 0) also while it is $B3, $B4, $B6 or $BD; A = C on those
+; returns. The caller uses only C. (C2, E-0385)
 ActionEffect_Chance_PickEffect::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -1183,6 +1300,12 @@ ActionEffect_Chance_PickEffect::
 ActionEffect_Chance_PickEffect_Data::
     db $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd
 
+; Far-called by BattleEnd_LinkFinish_FadeOutAndStore. Enables SRAM, then for each party member
+; (wPartyCount, record index from wPartyList) copies 5 bytes of wBattleStateBuffer into the SRAM
+; record: the HP word to MON_HP, the MP word to MON_MP and one byte to MON_STATUS. The walk stops
+; early when the second byte of the next 5-byte entry (the high byte of its HP) is $FF.
+; ClampPartyHPAndMPToMax then lowers any HP or MP above its maximum, and SRAM is disabled again.
+; Same code as StoreBattleStateToPartyRecords in bank $A0. (C2, E-0385)
 ; the same 76 bytes as StoreBattleStateToPartyRecords (StoreBattleStateToPartyRecords) (E-0289)
 StoreBattleStateToPartyRecords_BankA3::
     ld a, $0a

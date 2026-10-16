@@ -203,23 +203,28 @@ TitleOpening_LoadNextScreen_BGPaletteBufferData::
 GameMode5_Update_LoadScreens_OBJPaletteBufferData::
     db $20, $7c, $ff, $7f, $a8, $14, $00, $00, $20, $7c, $ff, $7f, $35, $04, $00, $00
 
-; runs RunBankE1Routine_BuildOam with DE = RunBankE1Routine_Data (E-0122) (E-0344: the address in
-; its name dropped or read as the label there; was RunBankE1Routine; a trailing preposition left by
-; the dropped address removed)
-RunBankE1Routine::
-    ld de, RunBankE1Routine_Data
-    call RunBankE1Routine_BuildOam
+; Draws one meta-sprite: loads DE with DrawMetaSpriteSet_BankE1_Data (a table of one pointer, to
+; UnreferencedMetaSpriteSet_E1) and calls DrawMetaSpriteSet_BankE1_BuildOam, which writes the OAM
+; entries for set hSpriteSetIndex, frame hSpriteSubIndex, at the origin hSpriteOriginX /
+; hSpriteOriginY. Its only caller is the far call in DrawCGBMetaSpriteAt38_30 (bank $07), which sets
+; set 0, frame 0 at X $38, Y $30 and which nothing in src reaches. (C1, E-0385)
+; runs DrawMetaSpriteSet_BankE1_BuildOam with DE = DrawMetaSpriteSet_BankE1_Data (E-0122) (E-0344:
+; the address in its name dropped or read as the label there; was DrawMetaSpriteSet_BankE1; a
+; trailing preposition left by the dropped address removed)
+DrawMetaSpriteSet_BankE1::
+    ld de, DrawMetaSpriteSet_BankE1_Data
+    call DrawMetaSpriteSet_BankE1_BuildOam
     ret
 
-; One word, $5D3C: the address in bank $E1 of UnreferencedMetaSpriteSet_E1, which RunBankE1Routine
-; passes in DE to RunBankE1Routine_BuildOam as the table of meta-sprite sets (a table of one set
-; pointer; the set holds two frame pointers). (C1, E-0381)
-RunBankE1Routine_Data::
+; One word, $5D3C: the address in bank $E1 of UnreferencedMetaSpriteSet_E1, which
+; DrawMetaSpriteSet_BankE1 passes in DE to DrawMetaSpriteSet_BankE1_BuildOam as the table of
+; meta-sprite sets (a table of one set pointer; the set holds two frame pointers). (C1, E-0381)
+DrawMetaSpriteSet_BankE1_Data::
     db $3c, $5d
 
 ; Builds the meta-sprite into OAM; the same code as DrawMetaSpriteSet_Bank27_BuildOam with this
 ; bank's frames. (C1, E-0357)
-RunBankE1Routine_BuildOam::
+DrawMetaSpriteSet_BankE1_BuildOam::
     ldh a, [hOamNextEntry]
     cp $27
     ret nc
@@ -682,6 +687,14 @@ RunBankE1Routine_BuildOam::
     jr nz, .loop5
     ret
 
+; DE = address of the X byte of a sprite part in screen coordinates, with its Y byte at DE - 1.
+; Takes the entry of the $9800 BG map under the point (X + hScrollX - 4, Y + hScrollY - 12), rows
+; wrapping inside the 32 x 32 map, waits with interrupts off for rSTAT bit 1 to clear, reads the
+; tile id, executes ei, and returns A = that tile id with the flags of cp A, hSpriteHideTile: carry
+; set when the tile id is below hSpriteHideTile, Z set when equal. BC and HL are kept. Both callers
+; in DrawMetaSpriteSet_BankE1_BuildOam keep the sprite part only when carry is set (they skip it on
+; jr nc), so a tile id at or above hSpriteHideTile hides the part. The interrupt flag is set again
+; whatever it was before. (C1, E-0385)
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the

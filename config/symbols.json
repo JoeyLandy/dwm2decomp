@@ -3123,7 +3123,7 @@
   },
   "CFA7": {
     "name": "wLowestResistCount",
-    "note": "count of lowest-level resistances (RaiseRandomLowestResistance)",
+    "note": "count of lowest-level resistances (RaiseLowestResistances)",
     "evidence": "E-0135"
   },
   "CFA8": {

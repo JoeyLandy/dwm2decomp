@@ -3473,7 +3473,7 @@ SceneTreasureTheft::
 
 ; Treasure theft, step 8: objects 1-3 walk right to X $50 and then down off the screen ($B0); once
 ; object 3 reaches $50, object 4 follows; when it has left, one sprite slot remains and the script
-; resumes. (C1, E-0357)
+; resumes. (C2, E-0357; probed E-0385)
 SceneTreasureTheft_WalkOff::
     ld a, $01
     ld [wStepPtrHi], a
@@ -3547,7 +3547,7 @@ SceneTreasureTheft_WalkOff::
     ret
 
 ; Treasure theft, step 6: objects 1, 3 and 4 walk up to Y $40; then 'King: Good! Your valor be
-; praised!' (message $0186). (C1, E-0357)
+; praised!' (message $0186). (C2, E-0357; probed E-0385)
 SceneTreasureTheft_ShowKingGoodYourValor::
     ld a, $02
     ld [wStepTarget], a
@@ -3571,7 +3571,7 @@ SceneTreasureTheft_ShowKingGoodYourValor::
     inc [hl]
     ret
 
-; Treasure theft, step 5: a 60-frame wait. (C1, E-0357)
+; Treasure theft, step 5: a 60-frame wait. (C2, E-0357; probed E-0385)
 SceneTreasureTheft_Pause::
     ld a, [wScriptParam0]
     inc a
@@ -3584,7 +3584,7 @@ SceneTreasureTheft_Pause::
     inc [hl]
     ret
 
-; Treasure theft, step 4: object 2 walks up to Y $40. (C1, E-0357)
+; Treasure theft, step 4: object 2 walks up to Y $40. (C2, E-0357; probed E-0385)
 SceneTreasureTheft_WalkObject2::
     ld a, $02
     ld [wStepPtrHi], a
@@ -3601,7 +3601,7 @@ SceneTreasureTheft_WalkObject2::
     ret
 
 ; Treasure theft, step 3: every 16 frames turns a random one of objects 1-4 left or right, for $F0
-; frames; then objects 1-3 face up. (C1, E-0357)
+; frames; then objects 1-3 face up. (C2, E-0357; probed E-0385)
 SceneTreasureTheft_TurnRandomly::
     ld a, [wScriptParam0]
     and $0f
@@ -3639,7 +3639,8 @@ SceneTreasureTheft_TurnRandomly::
     ret
 
 ; Treasure theft, step 1: sets hFieldDrawFlags = $0E, so DrawPartyFollowerSprites skips all three
-; followers (bits 1-3) while the player (bit 0 clear) is still drawn; next step. (C1, E-0371)
+; followers (bits 1-3) while the player (bit 0 clear) is still drawn; next step. (C2, E-0371; probed
+; E-0385)
 SceneTreasureTheft_HideFollowers::
     ld a, $0e
     ldh [hFieldDrawFlags], a
@@ -3666,6 +3667,12 @@ SceneTreasureTheft_ShowKingTheHideoutOf::
     call StartMessageHL_B85
     ret
 
+; Runs one frame of the canal gate scene (script command type 22: ScriptCommand22 far-calls it, and
+; Script_WhatOpenTheCanal starts it after 'What? Open the Canal Gate...'). It jumps on wScriptStep:
+; steps 0 and 1 both run SceneCanalGate_Hop, 2 SceneCanalGate_Msg0172_KingArrghIKnow, 3
+; SceneWatchOut_WaitMessage (waits for the message box to go idle, then advances), 4
+; SceneCanalGate_LowerObject0, 5 SceneCanalGate_WalkUp and 6 SceneCanalGate_RaiseGate, which sets
+; wScriptStartRequest to $80 so the script resumes. (C1, E-0385)
 ; implements script command type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene
 ; its only script shows: 'What? Open the Canal Gate more?'; reached through ScriptCommand22 in bank
 ; $10 (E-0038, E-0245)
@@ -3680,8 +3687,9 @@ SceneCanalGate::
     dw SceneCanalGate_WalkUp
     dw SceneCanalGate_RaiseGate
 
-; Canal gate, step 6: object 1 rises two pixels a frame to Y $10, stops animating, and the script
-; resumes. (C1, E-0357)
+; Canal gate, step 6: object 1 moves up two pixels a call. When its Y reaches $10 it clears bit 1 of
+; its OBJ_FLAGS (releasing the animation timer that SceneCanalGate_WalkUp froze) and sets
+; wScriptStartRequest to $80, so the script resumes. Above Y $10 only the Y changes. (C2, E-0385)
 SceneCanalGate_RaiseGate::
     ld a, [wObject1 + OBJ_Y]
     dec a
@@ -3695,8 +3703,10 @@ SceneCanalGate_RaiseGate::
     ld [wScriptStartRequest], a
     ret
 
-; Canal gate, step 5: object 0 walks up two pixels a frame to Y $50; then object 1 animates and
-; sound $63 plays. (C1, E-0357)
+; Canal gate, step 5: object 0 moves up two pixels a call toward Y $50. When it arrives it sets bit
+; 1 of the OBJ_FLAGS of object 1 (the bit that stops an object animation timer, as
+; FreezeFieldAnimation does), queues sound effect $63 and advances wScriptStep. Before that only the
+; position changes. (C2, E-0385)
 SceneCanalGate_WalkUp::
     xor a
     ld [wStepPtrHi], a
@@ -3716,7 +3726,8 @@ SceneCanalGate_WalkUp::
     inc [hl]
     ret
 
-; Canal gate, step 4: object 0 moves down a pixel every other frame to Y $60. (C1, E-0357)
+; Canal gate, step 4: object 0 moves down a pixel every other frame to Y $60. (C2, E-0357; probed
+; E-0385)
 SceneCanalGate_LowerObject0::
     ld a, [wScriptParam0]
     inc a
@@ -3734,7 +3745,7 @@ SceneCanalGate_LowerObject0::
     inc [hl]
     ret
 
-; Canal gate, step 2: 'King: Arrgh! I know that! I ...' (message $0172). (C1, E-0357)
+; Canal gate, step 2: 'King: Arrgh! I know that! I ...' (message $0172). (C2, E-0357; probed E-0385)
 SceneCanalGate_Msg0172_KingArrghIKnow::
     ld hl, $0172 ; 'King: Arrgh! I know that! I'
     call StartMessageHL_B85
@@ -3742,7 +3753,10 @@ SceneCanalGate_Msg0172_KingArrghIKnow::
     inc [hl]
     ret
 
-; Canal gate, step 0: object 0 hops along the hop curve. (C1, E-0357)
+; Canal gate, steps 0 and 1 (both table entries are this routine, so the hop is done twice): moves
+; the Y byte of object 0 (wSpriteSlots + $0C) along the hop curve, one curve entry per call and 16
+; calls for a hop (ScriptApplyStepDeltaAtDE_Bank85). When the 16th call ends the hop, wScriptStep
+; advances. (C2, E-0385)
 SceneCanalGate_Hop::
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE_Bank85
@@ -3751,6 +3765,11 @@ SceneCanalGate_Hop::
     inc [hl]
     ret
 
+; Runs one frame of the GreatLog key scene (script command type 18: ScriptCommand18 far-calls it,
+; and Script_HeroReceivedTheGreatLog starts it before '0 received the GreatLog Key.'). It jumps on
+; wScriptStep: 0 SceneGreatlogKey_ShowWarubouWaheyForgotSomething, 1 and 3 SceneWatchOut_WaitMessage
+; (waits for the message box to go idle, then advances), 2 SceneGreatlogKey_ShowWarubouThisYouUse
+; and 4 SceneGreatlogKey_FlyOff, which sets wScriptStartRequest to $80 at its end. (C1, E-0385)
 ; implements script command type 18 (SCRIPT_SCENE_GREATLOG_KEY): a cutscene step named after the
 ; scene its only script shows: before '0 received the GreatLog Key.'; reached through
 ; ScriptCommand18 in bank $10 (E-0038, E-0245)
@@ -3765,7 +3784,7 @@ SceneGreatlogKey::
 
 ; GreatLog key scene, step 4: the key flies off for 32 frames (sound $65 first): left two pixels a
 ; frame, or along SceneGreatlogKey_FlyOff_Data when thrown the other way, falling along the step
-; curve; then hides it and resumes the script. (C1, E-0357)
+; curve; then hides it and resumes the script. (C2, E-0357; probed E-0385)
 SceneGreatlogKey_FlyOff::
     ld a, [wScriptParam0]
     or a
@@ -3820,7 +3839,7 @@ SceneGreatlogKey_FlyOff_Data::
     db $6a, $6d, $6f, $72, $74, $77, $79, $7c, $7e, $81, $83, $86, $88, $8b, $8d, $90
 
 ; GreatLog key scene, step 2: the key rises along the hop curve; then 'Warubou: This you use to come
-; ...' (message $0084). (C1, E-0357)
+; ...' (message $0084). (C2, E-0357; probed E-0385)
 SceneGreatlogKey_ShowWarubouThisYouUse::
     ld a, $80
     ld [wObject5], a
@@ -3872,20 +3891,31 @@ SceneGreatlogKey_ShowWarubouWaheyForgotSomething::
     ld [wScriptParam1], a
     ret
 
-; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; HL = address of a byte: sets bit 1 of it ([HL] OR $02) and leaves the other bits alone; A ends as
+; the new value. Both callers (SceneCanalGate_WalkUp, SceneGiveBackCyal_TurnAndMove) pass the
+; OBJ_FLAGS byte of an object, where bit 1 stops the object animation timer. One of the same 5-byte
+; copies in several banks. (C2, E-0385)
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
 SetBit1AtHL_Bank85::
     ld a, [hl]
     or $02
     ld [hl], a
     ret
 
-; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; HL = address of a byte: clears bit 1 of it ([HL] AND $FD) and leaves the other bits alone; A ends
+; as the new value. Both callers (SceneCanalGate_RaiseGate, SceneGiveBackCyal_MoveRight) pass the
+; OBJ_FLAGS byte of an object, where clearing bit 1 lets the object animation timer run again. One
+; of the same 5-byte copies in several banks. (C2, E-0385)
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
 ClearBit1AtHL_Bank85::
     ld a, [hl]
     and $fd
     ld [hl], a
     ret
 
+; HL = address of a byte: sets bit 2 of it ([HL] OR $04) and leaves the other bits alone; A ends as
+; the new value. Its only caller, SceneGiveBackCyal_DropObject, passes wObject2 + OBJ_FLAGS. Same 5
+; bytes as the bank-$0F copy SetBit2AtHL_B0F. (C2, E-0385)
 ; the same 5 bytes as SetBit2AtHL_B0F (SetBit2AtHL_B0F) (E-0353)
 SetBit2AtHL_B0F_Bank85::
     ld a, [hl]
@@ -3893,13 +3923,20 @@ SetBit2AtHL_B0F_Bank85::
     ld [hl], a
     ret
 
-; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
+; HL = address of a byte: clears bit 2 of it ([HL] AND $FB) and leaves the other bits alone; A ends
+; as the new value. Its only caller, SceneGiveBackCyal_TurnAndMove, passes wObject2 + OBJ_FLAGS. One
+; of the same 5-byte copies in several banks. (C2, E-0385)
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
 ClearBit2AtHL_Bank85::
     ld a, [hl]
     and $fb
     ld [hl], a
     ret
 
+; DE = address of a direction byte (0-3). When wScriptParam0 AND $1F is 0 it stores ([DE] + 1) AND 3
+; there (the next direction, 3 wraps to 0); otherwise it changes nothing and returns with A =
+; wScriptParam0 AND $1F. No routine in src/ calls this copy by name; the same 12 bytes appear in 3
+; banks. (C2, E-0385)
 ; when wScriptParam0 & $1F = 0: [DE] = ([DE] + 1) & 3, the next of four directions; otherwise
 ; returns with A = wScriptParam0 & $1F (E-0064) (the same 12 bytes appear in 3 banks)
 RotateDirectionAtDEEvery32_Bank85::
@@ -3912,6 +3949,12 @@ RotateDirectionAtDEEvery32_Bank85::
     ld [de], a
     ret
 
+; DE = address of a byte: stores DE in wStepPtrLo/wStepPtrHi and far-calls
+; AddStepDeltaToPointedByte, which adds the hop curve entry wScriptParam0 / 2 to that byte; then
+; wScriptParam0 grows by 2. Returns carry clear and A = 0 while wScriptParam0 is below $20; on the
+; call that makes it $20 (the 16th) wScriptParam0 is cleared and it returns carry set, so the caller
+; knows the hop is done. Callers: DeskKey, SceneCanalGate_Hop,
+; SceneGreatlogKey_ShowWarubouThisYouUse, SceneLimbo_DropItem and SceneLimbo_RaiseItem. (C2, E-0385)
 ; the same 34 bytes as ScriptApplyStepDeltaAtDE (ScriptApplyStepDeltaAtDE) (E-0062)
 ScriptApplyStepDeltaAtDE_Bank85::
     ld a, e
@@ -3934,6 +3977,12 @@ ScriptApplyStepDeltaAtDE_Bank85::
     scf
     ret
 
+; DE = address of a byte, HL = message word: stores DE in wStepPtrLo/wStepPtrHi and far-calls
+; AddStepDeltaToPointedByte, which adds the hop curve entry wScriptParam0 / 2 to that byte, then
+; adds 1 to wScriptParam0. On the 32nd call (wScriptParam0 reaches $20) it starts message HL with
+; StartMessageHL_B85, clears wScriptParam0 and advances wScriptStep; before that nothing else
+; changes. Callers: SceneLimboMonster_HopObject2ThenMessage and
+; SceneLimboMonster2_HopObject2ThenMessage. (C2, E-0385)
 ; stores DE in wStepPtrLo/9 and far-calls AddStepDeltaToPointedByte each frame; after 32 frames
 ; starts message HL, clears wScriptParam0 and advances wScriptStep (E-0121)
 ScriptStepAdjust32TimesThenMessage_Bank85::
@@ -3956,7 +4005,11 @@ ScriptStepAdjust32TimesThenMessage_Bank85::
     inc [hl]
     ret
 
-; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0353)
+; HL = message word: L goes to wMessageIndex and H to wMessageGroup (H bits 0-5 are the group, bits
+; 6-7 the box flags), and wMessageState is set to 0 so the message box starts again; A ends 0. The
+; scene routines of this bank call it 56 times to show a message; RunMessageBoxFar_Bank85 or
+; SceneWatchOut_WaitMessage then waits for it. (C2, E-0385)
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0
 StartMessageHL_B85::
     ld a, l
     ld [wMessageIndex], a
@@ -3966,6 +4019,11 @@ StartMessageHL_B85::
     ld [wMessageState], a
     ret
 
+; A = value for wStepPtrLo (all callers pass 0; RunMessageBox reads it when the window opens and
+; closes, and 0 makes it freeze and resume the field animation). Far-calls RunMessageBox for one
+; frame. Returns carry set when wMessageState is $FF (the message box is idle), otherwise carry
+; clear with A = 0. Callers: SceneWatchOut_WaitMessage, SceneWatchOut_Resume, SceneWatchOut_Finish,
+; SceneWatchOut_BackToStep14 and SceneWaterReward_Finish. (C1, E-0385)
 ; wStepPtrLo = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A =
 ; 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 RunMessageBoxFar_Bank85::
@@ -3999,8 +4057,13 @@ SceneWatchOut_Resume::
     ld [wScriptStartRequest], a
     ret
 
+; Sets hTemp0 to 1 when a party member has a first personality byte (MON_PERSONALITY) of $C0 or more
+; and bit 7 of MON_STATUS clear (not dead); otherwise hTemp0 is 0, also for an empty party. It walks
+; the wPartyCount records of wPartyList through LoadSRAMRecordByte with save RAM enabled (rRAMG $0A,
+; written back to 0 before it returns). No routine in src/ calls it by name; what the test is for is
+; not known. (C2, E-0385)
 ; hTemp0 = 1 when a party record has field $6F >= $C0 and bit 7 of field $55 clear, else 0 (E-0125)
-PartyHasField6FAtLeastC0Without55Bit7::
+PartyHasLivingMonPersonalityAtLeastC0::
     ld a, [wPartyCount]
     or a
     jr nz, .skip
@@ -4050,7 +4113,7 @@ PartyHasField6FAtLeastC0Without55Bit7::
     ret
 
 ; hTemp0 = 1 when every living party member has a wildness (MON_WLD) of 0, otherwise 0; 0 with no
-; party. (C1, E-0357)
+; party. (C2, E-0357; probed E-0385)
 FhuntTalkEvents_PartyIsTame::
     ld a, [wPartyCount]
     or a
@@ -4099,8 +4162,12 @@ FhuntTalkEvents_PartyIsTame::
     ldh [hTemp0], a
     ret
 
-; hTemp0 = 1 when the player is disguised as a monster in TalkEvent29WordList or a living party
-; member's species is in it. (C1, E-0357)
+; Sets hTemp0 to a nonzero value when the giant bird talk should answer: 1 when the player is
+; disguised (hPlayerSpriteOverride bit 7 set, bit 0 clear) with a graphics id
+; (hPlayerSpriteGfxIdLo/Hi) that is in TalkEvent29WordList, otherwise the 1-based position in
+; wPartyList of the first party member without MON_STATUS bit 7 whose MON_SPECIES word is in that
+; list; 0 when nothing matches or the party is empty. Save RAM is enabled around the party scan.
+; (C2, E-0385)
 FhuntTalkEvents_GiantBird_IsBirdPresent::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4234,7 +4301,7 @@ TalkEvent29WordList::
     dw $012a, $012f, $0130, $0135, $0137, $0000
 
 ; hTemp0 = 2 when the player is disguised as a monster in TalkEvent47WordList (also behind
-; EVENT_NEVER_SET), otherwise 0. (C1, E-0357)
+; EVENT_NEVER_SET), otherwise 0. (C2, E-0357; probed E-0385)
 FhuntTalkEvents_IsDisguisedAsListedMonster::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -4315,8 +4382,8 @@ TalkEvent47WordList::
     dw $0144, $0000
 
 ; hTemp1 = 1 when the player's monster disguise is sprite $00F6-$00FF or any $01xx sprite (the
-; second test compares the decremented high byte, always 0, with $11), otherwise hTemp0 = 0. (C1,
-; E-0357)
+; second test compares the decremented high byte, always 0, with $11), otherwise hTemp0 = 0. (C2,
+; E-0357; probed E-0385)
 FhuntTalkEvents_PowerOfJustice_IsDisguised::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4354,7 +4421,7 @@ FhuntTalkEvents_PowerOfJustice_IsDisguised::
 ; (MONSTER_LORDDRACO, MONSTER_GENOSIDOH, MONSTER_ASURAZOMA, MONSTER_PSYCHOPIZ, MONSTER_DARCK; $0000
 ; ends it), otherwise 0; the talk then starts Script_OhGoodnessI for 1. Reads the records with
 ; LoadSRAMRecordByte and LoadSRAMRecordWord with SRAM enabled (rRAMG = $0A, then 0). With an empty
-; party it returns at once and leaves hTemp0 unchanged. (C1, E-0371)
+; party it returns at once and leaves hTemp0 unchanged. (C2, E-0371; probed E-0385)
 Talk04CB_ThatKeyIUsed_CheckPartySpecies::
     ld a, [wPartyCount]
     or a
@@ -4436,6 +4503,12 @@ Talk04CB_ThatKeyIUsed_CheckPartySpecies::
 Talk04CB_ThatKeyIUsed_CheckPartySpecies_Data::
     db $61, $01, $64, $01, $67, $01, $69, $01, $74, $01, $00, $00
 
+; Far-calls CountSpeciesPerFamilyFlaggedOrListed, which counts per family (eleven counters at
+; wWorkBuf) the monster ids 0-372 whose wSpeciesFlags bit is set or that are listed at
+; wMonsterLibraryBuf, and adds the eleven counts into a 16-bit total: hTemp0 = low byte, hTemp1 =
+; high byte. Talk handlers and the library desk (ReadableTalkEvents_LibraryDesk,
+; GreatLogTalkEvents_WarubouInCastle and others) compare this total with limits such as $14, $1E and
+; $28 to pick a message. (C2, E-0385)
 ; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wWorkBuf into
 ; hTemp0/hTemp1 (E-0122)
 TotalSpeciesFlaggedOrListed::
@@ -4456,6 +4529,12 @@ TotalSpeciesFlaggedOrListed::
     ldh [hTemp1], a
     ret
 
+; hTemp0 = key kind to look for. Walks wKeyList (up to 32 entries of 4 bytes): an entry whose first
+; byte is $FF ends the list and sets hTemp0 = 0; an entry whose byte 3 has bit 7 clear is skipped;
+; an entry with bit 7 set and (byte 0 AND $3F) equal to the kind sets hTemp0 = 1 and returns. If all
+; 32 entries pass without a match or an $FF, hTemp0 keeps the kind. Used to see whether a key of a
+; given kind is already held (SceneKamehaKeyBattle_AfterBattle, SceneKamehaKeyBattle2_AfterBattle,
+; TalkMsg0512_KamehaYoHeroThanks and others). (C2, E-0385)
 ; hTemp0 = 1 when a used key entry has kind hTemp0, else 0 (E-0125)
 KeyListHasKindTemp0::
     ldh a, [hTemp0]
@@ -4501,6 +4580,17 @@ KeyListHasKindTemp0::
     ldh [hTemp0], a
     ret
 
+; Does nothing unless hMapId is $0B (the arena map). On that map: when wArenaFlags bit 7 is clear
+; and wRecordCapacity is not 0, or bit 7 is set and wArenaFlags AND 3 is not 0, it resets the arena
+; objects (object 0 and objects 1-3 to X $50, object Y $00, $F0, $E0, $D0, OBJ_STATE 0, the follower
+; X bytes in wFollowerRecords to $30, wSpriteSlotCount to 0). Then it picks the sprite graphics id
+; of object 0: SetupMap0BMonsterObjects_Data1 entry 4 * wArenaRank + wRecordCapacity when
+; wArenaFlags bit 7 is clear, otherwise SetupMap0BMonsterObjects_Data2 entry (wKeyRandomHi AND $1F)
+; after NextRandomSeed. It stores the id in wSpriteSlots + 2 and decompresses its graphics to
+; vTiles0 + $400, then for each of the three words of wEncounterMonsters it reads two bytes of that
+; monster table entry into hTemp0/hTemp1 (CopyMonsterTableBytesFromMonsterTable), stores them in the
+; OBJ_SPRITE_ID of objects 1-3 and decompresses those graphics to vTiles0 + $500, + $600 and + $700.
+; Called by InitFieldScreen and ArenaScene_LoadOpposingSide. (C1, E-0385)
 ; on map $0B places four monster objects and picks the monster for the wArenaRank / wRecordCapacity
 ; entry (table $5C5E) or a random one (E-0130)
 SetupMap0BMonsterObjects::
@@ -4805,8 +4895,8 @@ RandomGoldOrItem_PickFind_RollFind::
     ret
 
 ; Returns A = a random number 0-98 for RandomGoldOrItem_PickFind_RollFind (its only caller, twice):
-; advances NextRandomSeed and takes wKeyRandomLo & $7F, rerolling while it is 99 or more. (C1,
-; E-0370)
+; advances NextRandomSeed and takes wKeyRandomLo & $7F, rerolling while it is 99 or more. (C2,
+; E-0370; probed E-0385)
 RandomGoldOrItem_PickFind_RollFind_RandomUnder99::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -4834,6 +4924,9 @@ RandomGoldOrItem_PickFind_RollFind_Data2::
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
     db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0a, $06, $00, $01
 
+; For each of the wPartyCount records in wPartyList, adds 100 to the INT word (MON_INT) in save RAM
+; and stores the sum, but a sum of 999 or more is stored as 999 ($03E7). Save RAM is enabled around
+; the loop. Its only caller is Talk00FC_YouHaveToEat. (C2, E-0385)
 ; for each party record adds 100 to the INT word (field $69), capped at 999; far-called by
 ; Talk00FC_YouHaveToEat (E-0129)
 AddHundredToPartyINTCapped999::
@@ -4882,6 +4975,9 @@ AddHundredToPartyINTCapped999::
     ld [rRAMG], a
     ret
 
+; C = preset number: copies 48 bytes to wSpeciesFlags from LoadSpeciesFlagsPresetC_Data1 when C is
+; 0, from LoadSpeciesFlagsPresetC_Data2 when C is 1 and from LoadSpeciesFlagsPresetC_Data3 for any
+; other C. Its only caller is GreatLogTalkEvents_SpeciesPreset. (C2, E-0385)
 ; copies the 48-byte preset $5E11, $5E41 or $5E71 (C = 0, 1, other) to wSpeciesFlags (E-0124)
 LoadSpeciesFlagsPresetC::
     ld a, c
