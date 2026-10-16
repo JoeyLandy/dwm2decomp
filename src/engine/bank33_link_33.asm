@@ -2726,7 +2726,7 @@ RunLinkSession6Exchange_BackFromOwnStats_Return::
 ; C = field offset: enables SRAM, selects SRAM bank 0, loads field C of record number
 ; [wPickedRecords] (the first picked record) into hTemp0 with LoadSRAMRecordByte, then disables SRAM
 ; and selects bank 0 again. HL = wPickedRecords and A = 0 on return. No label or table in the source
-; names it, so it appears to be unused. (C1, E-0380)
+; names it, so it appears to be unused. (C2, E-0380; probed E-0384)
 ; with SRAM bank 0 enabled, LoadSRAMRecordByte with A = wPickedRecords (C = field from the caller);
 ; then disables SRAM (E-0119)
 LoadRecordByteForPickedRecords::
@@ -2768,7 +2768,7 @@ DrawBoxAndKeyRows::
 ; record index is appended to wListEntries and wListCount is the length; wRecordsFlagged counts the
 ; records with a fitting state whose MON_EGG byte is not 0. SRAM is switched off at the end and
 ; MovePartyRecordsToFrontOfList puts the party members first. Called by
-; RunLinkSession6Exchange_BackFromOwnStats_ListPage. (C1, E-0380)
+; RunLinkSession6Exchange_BackFromOwnStats_ListPage. (C2, E-0380; probed E-0384)
 ; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is
 ; clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
 ListAvailableRecordsForSelection_Bank33::
@@ -2944,7 +2944,7 @@ StoreListEntriesCell5RecordInPickedRecords::
 ; that DrawPlayerNameAndString0Category1 left there); SRAM is switched off again. Called by
 ; RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe,
 ; RunLinkSession6Exchange_BackFromStats_ShowChoices and
-; RunLinkSession6Exchange_BackFromOwnStats_AskPick. (C1, E-0380)
+; RunLinkSession6Exchange_BackFromOwnStats_AskPick. (C2, E-0380; probed E-0384)
 ; copies the name of the record at wListEntries cell 5 (11 bytes) to wTextBuf0 (E-0124)
 CopyListEntriesCell5NameToTextBuf0_Bank33::
     ld a, $0a

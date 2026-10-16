@@ -1880,10 +1880,10 @@ RejectedNameListCopy_1B::
     db "Suck@" ; word 82
     db "SUCK@" ; word 83
 
-; Zeroes $6F bytes from wScreenState, decompresses Tiles1Gfx from ROM bank $46 to vTiles1, far-calls
-; ClearScreenBufferAndAttributes_BankF1, calls LoadPalette0FromData_3, zeroes hScrollX and hScrollY,
-; starts a palette fade (A = $FC), sets wTextWindowState = 1, wTextWindowStep = 0 and
-; hSpriteWindowClipMode = 2, and runs StepTextWindowOpenClose until the low two bits of
+; Zeroes $6F bytes from wScreenState, decompresses LetterFrameIconDigitTiles from ROM bank $46 to
+; vTiles1, far-calls ClearScreenBufferAndAttributes_BankF1, calls LoadPalette0FromData_3, zeroes
+; hScrollX and hScrollY, starts a palette fade (A = $FC), sets wTextWindowState = 1, wTextWindowStep
+; = 0 and hSpriteWindowClipMode = 2, and runs StepTextWindowOpenClose until the low two bits of
 ; wTextWindowState are clear. It then requests tile fills with FillTilesRequest (HL = vTiles1, DE =
 ; $1202), sets hSpriteWindowClipMode = 2 and wLCDCShadow = 3, and ends by jumping to
 ; ResumeAfterModeChange with A = 1. No call, jump or pointer to it was found in src/. (C1, E-0379)
@@ -1901,7 +1901,7 @@ UnreferencedScreenInitFromBank46:: ; configured code entry (E-0197); C0
     or c
     jr nz, .loop
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -3434,7 +3434,7 @@ LinkKeyTrade_ShowReadyingTrade::
 
 ; Key trade, step 29: when the partner answers 2, copies the chosen key's saved key-world record
 ; ($195 bytes from SRAM bank 2 at $A000 + $195 x its index) into wArenaEntry for a generated key
-; with a record, or clears it, and sends 1. (C1, E-0357)
+; with a record, or clears it, and sends 1. (C2, E-0357; probed E-0384)
 LinkKeyTrade_CopyKeyWorldRecord::
     ld a, [wLinkMessage]
     cp $02
@@ -4857,9 +4857,9 @@ LinkKeyTrade_SwapKeys_Data::
     db $a0, $a1, $a2
 
 ; Link session 4's screen set-up before LinkBattleSetupMenu: clears 256 bytes from wScreenState (B
-; starts at 0, so the $6F loaded into C is unused), decompresses Tiles1Gfx (bank $46) into vTiles1,
-; clears the screen buffer (ClearScreenBufferAndAttributes_BankF1), opens a text window at vTiles1
-; (wTextWindowRows = $02, wTextWindowWidth = $12) and waits until it is open
+; starts at 0, so the $6F loaded into C is unused), decompresses LetterFrameIconDigitTiles (bank
+; $46) into vTiles1, clears the screen buffer (ClearScreenBufferAndAttributes_BankF1), opens a text
+; window at vTiles1 (wTextWindowRows = $02, wTextWindowWidth = $12) and waits until it is open
 ; (StepTextWindowOpenClose). (C1, E-0369)
 RunLinkSession4ScreenState_PrepareSetupMenu_Run::
     ld hl, wScreenState
@@ -4871,7 +4871,7 @@ RunLinkSession4ScreenState_PrepareSetupMenu_Run::
     dec b
     jr nz, .loop
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -5929,7 +5929,7 @@ LinkBattleSetupMenu_DrawPickedMembers::
     ret
 
 ; Starting the battle, step 1: copies the prize monster's record into wRecordBufA, or with no prize
-; an empty record with the player's name as its master. (C1, E-0357)
+; an empty record with the player's name as its master. (C2, E-0357; probed E-0384)
 LinkBattleSetupMenu_CopyPrizeRecord::
     ld a, [wPackWork]
     cp $ff
@@ -6243,9 +6243,11 @@ EggServiceMenu_Bank1B_StartLinkBattle_PalBattleOK::
     ld [wScreenStep], a
     ret
 
-; Starting the battle, step 13: picks the link scene (1 for the leader, 0 otherwise), packs the
-; picked members into this side's battler records (wBattlerRecords or slot 4) and prepares the
-; exchange into the other side's. (C1, E-0357)
+; Starting the battle, step 13: sets wLinkScene to 1 when bit 1 of wLinkRole is set (this side
+; drives the clock), otherwise 0, then packs the picked members into battler records
+; (LinkBattleSetupMenu_PackBattlerRecords) and prepares the exchange. With bit 1 clear the packed
+; records are at wBattlerRecords, wLinkTimeoutLo/Hi point there and wLinkBufferPtrLo/Hi point at
+; wBattlerRecordSlot4; with bit 1 set it is the other way round. Adds 1 to wScreenStep. (C2, E-0384)
 LinkBattleSetupMenu_PackMembers::
     ld a, [wLinkRole]
     bit 1, a
@@ -6583,7 +6585,7 @@ LinkBattleSetupMenu_LeaveList::
 
 ; Packs the picked members for the battle exchange into this side's battler records: per member its
 ; name (14 bytes), skills (8), status and $15 bytes of stats, $1F bytes from the personality, its
-; item, then $FF. (C1, E-0357)
+; item, then $FF. (C2, E-0357; probed E-0384)
 LinkBattleSetupMenu_PackBattlerRecords::
     ld hl, wBattlerRecords
     ld a, [wLinkRole]
@@ -6836,7 +6838,8 @@ PadPickedRecordsWithFFToThree::
     jr nz, .loop
     ret
 
-; Loads byte C of picked record A (wPickedRecords) from SRAM into hTemp0. (C1, E-0357)
+; Loads byte C of picked record A (wPickedRecords) from SRAM into hTemp0. (C2, E-0357; probed
+; E-0384)
 LoadPickedRecordByte::
     ld hl, wPickedRecords
     add_a_to_hl
@@ -6852,7 +6855,7 @@ LoadPickedRecordByte::
     ret
 
 ; Returns $FF when the newest pick's family is already among the earlier picks (the one-per-family
-; rule), otherwise 0. (C1, E-0357)
+; rule), otherwise 0. (C2, E-0357; probed E-0384)
 PickFamilyAlreadyPicked::
     ld a, [wPickCount]
     and a
@@ -6986,7 +6989,7 @@ LinkBattleSetupMenu_EraseInfoOKBox::
 ; record already in wPickedRecords is left out. Each listed record index is appended to wListEntries
 ; and wListCount is the length; wRecordsFlagged counts the records with the right state whose
 ; MON_EGG byte was not 0. SRAM is switched off (rRAMG2 = 0) and MovePartyRecordsToFrontOfList moves
-; the party members to the front. (C1, E-0379)
+; the party members to the front. (C2, E-0379; probed E-0384)
 ; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is
 ; clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
 ListAvailableRecordsForSelection::
@@ -7164,7 +7167,7 @@ LoadFamilyIconTileForRecordB_Bank1B::
 
 ; Draws SRAM record wArg1's level as two digit tiles (a leading zero blanked by
 ; BlankLeadingZeroDigits_F) at HL = wArg3:wArg2, and its sex mark (tile $CC + (MON_SEX & 1)) seven
-; bytes further on. (C1, E-0370)
+; bytes further on. (C2, E-0370; probed E-0384)
 DrawListEntriesCell5RecordPanel_DrawLevelAndSex::
     ld a, [wArg1]
     ld b, a
@@ -7573,8 +7576,8 @@ CheckPickAgainstLinkRules::
 ; (CopyRecordNameToNameGlyphBuf, MON_NAME) and the first 11 bytes of wNameGlyphBuf to wTextBuf0,
 ; then switches SRAM off (rRAMB and rRAMG = 0). Used before the pick questions ('Pick <BUF0> for the
 ; team?') by EggServiceMenu_Bank1B_PickRecords_ListCursor and EggServiceMenu_ShowInfoOKChoice, and
-; far-called by GameMode6_Update_PageList_Cursor and GameMode6_Update_ChooseEgg_ListCursor. (C1,
-; E-0379)
+; far-called by GameMode6_Update_PageList_Cursor and GameMode6_Update_ChooseEgg_ListCursor. (C2,
+; E-0379; probed E-0384)
 ; copies the name of the record at wListEntries cell 5 (11 bytes) to wTextBuf0 (E-0124)
 CopyListEntriesCell5NameToTextBuf0::
     ld a, $0a

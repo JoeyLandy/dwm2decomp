@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LABEL = re.compile(r"^([A-Za-z_]\w*)::")
-BANK_REGS = {"rSVBK", "rRAMG", "rRAMB", "rROMB0", "rROMB1"}
+BANK_REGS = {"rSVBK", "rRAMG", "rRAMG2", "rRAMB", "rROMB0", "rROMB1"}  # rRAMG2 ($1FFF): the RAM enable too (E-0382)
 CALL = re.compile(r"^\s+(?:call|jp|jr|farcall|farcall_b|farjp)(?: (?:n?z|n?c),)? ([A-Za-z_][\w]*)\s*$")
 DW = re.compile(r"^\s+dw ([A-Za-z_]\w*)")
 
@@ -142,7 +142,12 @@ def document(cls: dict[str, str], rs: dict[str, dict], code_order: list[str], pr
            "routine is in scope when it and everything it reaches touch only CPU registers, WRAM, HRAM, SRAM and the "
            "memory-bank registers. The others are listed with the reason: what they do shows on the display, in "
            "sound, on the serial link or the joypad (registers or video RAM), or depends on interrupt timing, or "
-           "jumps through a computed address.", ""]
+           "jumps through a computed address.", "",
+           "Limits (E-0386): a probe reads WRAM bank 1 after the routine returns, so a write a routine makes to WRAM "
+           "bank 2 (the CGB attribute buffers) is not observed; those parts of a probed note stay C1 and its open "
+           "questions say so. The classification goes by the symbols an instruction names, so a video-RAM symbol "
+           "used as a plain number (TalkMsg0A3C_KingIfYouSee loads 40,000 as `vBGMap1 + $40`) puts a routine out of "
+           "scope although it touches no hardware; such routines were probed where a worker noticed it.", ""]
     titles = {"probe": "In scope", "hardware": "Out of scope: display, sound, serial or joypad hardware",
               "interrupts": "Out of scope: interrupt timing", "unresolved": "Out of scope: computed jumps"}
     for c, rs_ in rows.items():

@@ -874,11 +874,11 @@ VaultMenu_SaveListAreaToBGMap1::
 ; Saves the vault quantity box area: copies 3 rows of 7 tiles from the BG map at the scroll origin +
 ; $0140 (row 10, column 0, around the digits at + $0161) to BG map 1 at $9FE0 (vBGMap1 + $3E0) with
 ; attributes (SaveBGMapRectWithAttrs). In state 3 (wScreenState = 3) it then calls
-; ListDistinctInventoryItemsToItemGrid and RunUnlessScreenStateIs3 (which in that state switches the
-; bag order list and rebuilds wItemGrid in that order). Adds 1 to wScreenStep. Step 6 of
-; VaultMenu_Store and VaultMenu_TakeOut (through VaultMenu_Store_SaveArea). (C1, E-0379)
+; ListDistinctInventoryItemsToItemGrid and VaultMenu_ReorderBagOrStorage (which in that state
+; switches the bag order list and rebuilds wItemGrid in that order). Adds 1 to wScreenStep. Step 6
+; of VaultMenu_Store and VaultMenu_TakeOut (through VaultMenu_Store_SaveArea). (C1, E-0379)
 ; draws rect $0140 (3 x 7) at vBGMap1 + $3E0; in state 3 also runs
-; ListDistinctInventoryItemsToItemGrid and RunUnlessScreenStateIs3; wScreenStep += 1 (E-0122)
+; ListDistinctInventoryItemsToItemGrid and VaultMenu_ReorderBagOrStorage; wScreenStep += 1 (E-0122)
 VaultMenu_SaveQuantityAreaToBGMap1::
     ld hl, $0140
     ld de, vBGMap1 + $3e0
@@ -888,7 +888,7 @@ VaultMenu_SaveQuantityAreaToBGMap1::
     cp $03
     jr nz, .check_screen_step
     farcall ListDistinctInventoryItemsToItemGrid
-    farcall RunUnlessScreenStateIs3
+    farcall VaultMenu_ReorderBagOrStorage
 
 .check_screen_step:
     ld a, [wScreenStep]
@@ -1373,12 +1373,13 @@ VaultMenu_Store_DrawCount_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
 
-; Storing, step 11: the item cursor: Select (RunUnlessScreenStateIs3) back four steps; Right/Left
-; turn the page; Up/Down move; A picks; B leaves with answer 2 and resumes the script. (C1, E-0357)
+; Storing, step 11: the item cursor: Select (VaultMenu_ReorderBagOrStorage) back four steps;
+; Right/Left turn the page; Up/Down move; A picks; B leaves with answer 2 and resumes the script.
+; (C1, E-0357)
 VaultMenu_Store_ItemCursor::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
-    jr nz, .call_run_unless_screen_state_is3
+    jr nz, .call_vault_menu_reorder_bag_or_storage
     bit 4, a
     jr nz, .check_saved_sprite_slot_count
     bit 5, a
@@ -1407,8 +1408,8 @@ VaultMenu_Store_ItemCursor::
     ld [wScriptStartRequest], a
     ret
 
-.call_run_unless_screen_state_is3:
-    farcall RunUnlessScreenStateIs3
+.call_vault_menu_reorder_bag_or_storage:
+    farcall VaultMenu_ReorderBagOrStorage
     ld a, [wScreenStep]
     sub $04
     ld [wScreenStep], a
@@ -2321,11 +2322,11 @@ VaultMenu_Store_AfterStoring::
     ld [wTwoChoiceCursor], a
 
 ; Ends the store and take-out steps: clears wTextCounter1 and wTextCounter3, flips wCounterPtr0Lo
-; and runs RunUnlessScreenStateIs3, which flips it back (so it ends as it began) and then rebuilds
-; wItemGrid from the bag in state 3, or sorts wItemStorage in the other states, in the order list of
-; wCounterPtr0Lo (1: ItemOrderListA, 0: ItemOrderListB). Adds 1 to wScreenStep. Jumped to by
-; VaultMenu_Store_AfterStoring and VaultMenu_Store_MoveItems_TakeOut with the answer already in
-; wTwoChoiceCursor. (C2, E-0379)
+; and runs VaultMenu_ReorderBagOrStorage, which flips it back (so it ends as it began) and then
+; rebuilds wItemGrid from the bag in state 3, or sorts wItemStorage in the other states, in the
+; order list of wCounterPtr0Lo (1: ItemOrderListA, 0: ItemOrderListB). Adds 1 to wScreenStep. Jumped
+; to by VaultMenu_Store_AfterStoring and VaultMenu_Store_MoveItems_TakeOut with the answer already
+; in wTwoChoiceCursor. (C2, E-0379)
 VaultMenu_Store_AfterStoring_Finish::
     xor a
     ld [wTextCounter1], a
@@ -2334,7 +2335,7 @@ VaultMenu_Store_AfterStoring_Finish::
     inc a
     and $01
     ld [wCounterPtr0Lo], a
-    farcall RunUnlessScreenStateIs3
+    farcall VaultMenu_ReorderBagOrStorage
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3895,7 +3896,7 @@ VaultMenu_Store_CountListRows::
 ; tiles each at +$D4, +$D8, +$FC and +$100, with leading zeros made blank by
 ; BlankLeadingZeroDigits_F. A word above 999 gives a first digit tile above $E9 because
 ; HLToDecimalDigits keeps hundreds in one byte. Far-called by the hibernate, breed and swap screens.
-; (C1, E-0379)
+; (C2, E-0379; probed E-0384)
 ; record wArg1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields
 ; from DrawRecordStatsBoxForArg1_Data1) into the screen buffer (E-0128)
 DrawRecordStatsBoxForArg1::
@@ -4122,7 +4123,7 @@ DrawListEntriesCell5SpeciesSprite::
 ; Takes the record number in the list cell wListEntries + 5 * wListPageIndex + wListCursor
 ; (SetArg5ToListEntriesCell5), enables SRAM bank 0 and jumps to CopyRecordNameToTextBuf0 with A =
 ; that record number, which copies its name into wTextBuf0 (at most 10 letters, $F0-terminated) and
-; disables SRAM. No call or jump to this label is named in src/. (C1, E-0379)
+; disables SRAM. No call or jump to this label is named in src/. (C2, E-0379; probed E-0384)
 ; with SRAM bank 0 enabled reads the record at wListEntries cell 5 and continues at
 ; CopyRecordNameToTextBuf0 (E-0126) (E-0344: the address in its name dropped or read as the label
 ; there; was LoadListEntriesCell5RecordAndContinue)
@@ -4138,7 +4139,7 @@ LoadListEntriesCell5RecordAndContinue::
 ; Enables SRAM bank 0 (rRAMG2, rRAMB = 0) and copies the name (MON_NAME) of SRAM record
 ; wSelectedRecord into wTextBuf0, at most 10 letters and $F0-terminated, by falling into
 ; CopyRecordNameToTextBuf0. Far-called by HibernateMenu_ChooseRecords_ReadSwapAnswer when the swap
-; is answered yes. (C1, E-0370)
+; is answered yes. (C2, E-0370; probed E-0384)
 CopySelectedRecordNameToTextBuf0::
     ld a, $0a
     ld [rRAMG2], a
@@ -4151,7 +4152,7 @@ CopySelectedRecordNameToTextBuf0::
 ; record whose first name byte is $FF), stores $F0 at wNameGlyphBuf + $A, disables SRAM (rRAMG2 =
 ; 0), then copies bytes from wNameGlyphBuf to wTextBuf0 up to the first $F0 or 10 bytes and ends
 ; wTextBuf0 with $F0. Entered by CopySelectedRecordNameToTextBuf0 falling through and by a jump from
-; LoadListEntriesCell5RecordAndContinue (which has no direct caller). (C1, E-0370)
+; LoadListEntriesCell5RecordAndContinue (which has no direct caller). (C2, E-0370; probed E-0384)
 CopyRecordNameToTextBuf0::
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
@@ -4419,7 +4420,7 @@ ShowCursorRecordFieldAbility::
 ; LoadRecordCapacityFromFarmLevelTable. SRAM bank 0 is enabled before each record is read and SRAM
 ; is disabled at the end. Clobbers A, BC, DE and HL. Called by the option box and count steps of the
 ; hibernate and swap menus (for example SwapMonstersMenu_SetupPartyList_DrawOptions and
-; SwapMonstersMenu_Check_RedrawCounts) and by the prize menu. (C1, E-0379)
+; SwapMonstersMenu_Check_RedrawCounts) and by the prize menu. (C2, E-0379; probed E-0384)
 ; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set
 ; by LoadRecordCapacityFromFarmLevelTable): wRecordsInUse = how many have byte 0 equal to 1 or 2 (in
 ; use) (E-0104)
@@ -4465,7 +4466,7 @@ CountRecordsInUse::
 ; wPartyList in order and appends each whose MON_STATE is 2 to wListEntries, counting them in
 ; wListCount. The loop ends when the number appended equals wPartyCount (it compares wPartyCount
 ; with the count of records listed, not with the number of party slots looked at). SRAM bank 0 is
-; enabled during the scan and disabled at the end. (C1, E-0379)
+; enabled during the scan and disabled at the end. (C2, E-0379; probed E-0384)
 ; clears the wListEntries list, then lists the party records whose SRAM record byte 0 is 2 and
 ; counts them in wListCount (E-0127)
 ListPartyRecordsWithState2ToListEntries::
@@ -4529,7 +4530,7 @@ ListPartyRecordsWithState2ToListEntries::
 ; wRecordCapacity SRAM records in order: a record whose MON_STATE is 1 and whose MON_EGG is 0 has
 ; its number appended to wListEntries (wListCount counts them), and a state-1 record whose MON_EGG
 ; is non-zero only adds 1 to wRecordsFlagged. SRAM bank 0 is enabled during the scan and disabled at
-; the end. (C1, E-0379)
+; the end. (C2, E-0379; probed E-0384)
 ; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set
 ; by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wListEntries, then appends the
 ; number of every record whose byte 0 is 1 and byte $6E is 0; wListCount = the list length,
@@ -4608,7 +4609,7 @@ ListRecordsState1NotEggs::
 ; and whose MON_EGG is 0 has its number appended to wListEntries (wListCount counts them), and one
 ; with MON_EGG non-zero only adds 1 to wRecordsFlagged. It then disables SRAM and falls straight
 ; into the next routine (see MovePartyRecordsToFrontOfList), so the party members end up first in
-; the list and the list is padded with $FF. (C1, E-0379)
+; the list and the list is padded with $FF. (C2, E-0379; probed E-0384)
 ; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set
 ; by LoadRecordCapacityFromFarmLevelTable): clears wListEntries and wListEntries2 (30 bytes each),
 ; then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wListCount = the list length,
@@ -4808,7 +4809,7 @@ MovePartyRecordsToFrontOfList::
 ; wRecordCapacity SRAM records in order and appends the number of each one whose MON_STATE is 1 or 2
 ; and whose MON_EGG is non-zero (appraised or not) to wListEntries. At the end wListCount and
 ; wRecordsFlagged both hold the number of eggs listed. SRAM bank 0 is enabled during the scan and
-; disabled at the end. (C1, E-0379)
+; disabled at the end. (C2, E-0379; probed E-0384)
 ; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set
 ; by LoadRecordCapacityFromFarmLevelTable): clears wListEntries, then appends every record whose
 ; byte 0 is 1 or 2 and byte $6E is non-zero; wListCount = the list length (E-0104) (C2 from E-0325:
@@ -6856,7 +6857,7 @@ MarkPartyMembersInRecordListPage_Data2::
 ; wScreenSubStep 0, otherwise state 5 (SwapMonstersMenu_ChooseFromFarm) at step $1E with
 ; wTwoChoiceCursor 1 when wPartyCount is 3 or more, else step 0 with wTwoChoiceCursor 2; 2 (Check)
 ; goes to state 6 and 3 (Release) to state 7 without listing anything. Every case starts the script
-; (wScriptStartRequest = $80). (C1, E-0370)
+; (wScriptStartRequest = $80). (C2, E-0370; probed E-0384)
 SwapMonstersMenu_ListParty_StartOption::
     ld hl, wTextWindowTileLo
     xor a
@@ -7273,7 +7274,7 @@ LoadPedigreeSpeciesSpriteGraphics_Data3::
 ; set (see PackRecordFieldsToBank1Slot, which sets it) among the 29 slots of $6F bytes from
 ; sCompactRecords in SRAM bank 0 and the slot at sRecords in SRAM bank 1. SRAM is disabled and rRAMB
 ; set back to 0 at the end. Called by PauseMenu_Plan_PlayerRecord_Build and the
-; HibernateMenu_DoOption steps. (C1, E-0379)
+; HibernateMenu_DoOption steps. (C2, E-0379; probed E-0384)
 ; wArg5 = the number of SRAM records (29 in bank 0 from sCompactRecords plus one in bank 1) with bit
 ; 7 of byte 0 set (E-0125)
 CountFlaggedSRAMRecords::
@@ -7324,7 +7325,7 @@ CountFlaggedSRAMRecords::
 ; the slot, switched with rRAMB). It then falls into PackRecordFieldsToBank1Slot_PackName, which
 ; packs the six names and then PackRecordFieldsToBank1Slot_PackOtherFields, which packs the rest;
 ; that last step ends with SRAM disabled, wPackWork = 0 and wArg5 = $FF. Far-called by the hibernate
-; menu and PackNextSavedRecord. (C1, E-0379)
+; menu and PackNextSavedRecord. (C2, E-0379; probed E-0384)
 ; packs SRAM record wArg1's family, state, mark and other fields into the compact form in SRAM bank
 ; wArg2 (wPackWork workspace) (E-0131)
 PackRecordFieldsToBank1Slot::
@@ -7447,7 +7448,7 @@ PackRecordFieldsToBank1Slot::
 ; PackRecordFieldsToBank1Slot_Parent2MasterMarks, PackRecordFieldsToBank1Slot_Parent1NameMarks or
 ; PackRecordFieldsToBank1Slot_Parent2NameMarks for fields 0-5). Entered from
 ; PackRecordFieldsToBank1Slot (whose cleared wPackWork starts it at field 0) and from the mark steps
-; of fields 0-4. (C1, E-0370)
+; of fields 0-4. (C2, E-0370; probed E-0384)
 PackRecordFieldsToBank1Slot_PackName::
     ld hl, wPackFields
     ld c, $00
@@ -7592,7 +7593,7 @@ PackRecordFieldsToBank1Slot_PackName_Data::
 ; Mark step of field 0 (MON_NAME): stores Pack2BitFieldsFromPackFields (the marks of letters 1-4) at
 ; slot offset $21 and the fifth letter's mark (wPackValue & 3) as bits 7-6 of offset $27,
 ; overwriting that byte (fields 1-3 OR theirs in below it); disables SRAM, increments
-; wPackFieldIndex and goes back to PackRecordFieldsToBank1Slot_PackName. (C1, E-0370)
+; wPackFieldIndex and goes back to PackRecordFieldsToBank1Slot_PackName. (C2, E-0370; probed E-0384)
 PackRecordFieldsToBank1Slot_NameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $21
@@ -7627,7 +7628,7 @@ PackRecordFieldsToBank1Slot_NameMarks::
 ; 1-4) at slot offset $22 (slot address wArg3/wArg4, through SRAMRecordAddressOfArg1) and ORs the
 ; fifth letter's mark (wPackValue & 3) into bits 5-4 of offset $27. Then disables SRAM (rRAMG2 = 0,
 ; rRAMB = 0), increments wPackFieldIndex and goes back to PackRecordFieldsToBank1Slot_PackName for
-; field 2. (C1, E-0370)
+; field 2. (C2, E-0370; probed E-0384)
 PackRecordFieldsToBank1Slot_MasterNameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $22
@@ -7658,7 +7659,8 @@ PackRecordFieldsToBank1Slot_MasterNameMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
 
-; Field 2's marks: packs into slot offset $23 and bits 2-3 of offset $27; next field. (C1, E-0357)
+; Field 2's marks: packs into slot offset $23 and bits 2-3 of offset $27; next field. (C2, E-0357;
+; probed E-0384)
 PackRecordFieldsToBank1Slot_Parent1MasterMarks::
     call SRAMRecordAddressOfArg1
     ld a, $23
@@ -7690,7 +7692,8 @@ PackRecordFieldsToBank1Slot_Parent1MasterMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
 
-; Field 3's marks: packs into slot offset $24 and bits 0-1 of offset $27; next field. (C1, E-0357)
+; Field 3's marks: packs into slot offset $24 and bits 0-1 of offset $27; next field. (C2, E-0357;
+; probed E-0384)
 PackRecordFieldsToBank1Slot_Parent2MasterMarks::
     call SRAMRecordAddressOfArg1
     ld a, $24
@@ -7721,8 +7724,8 @@ PackRecordFieldsToBank1Slot_Parent2MasterMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
 
-; Field 4's marks: packs into slot offset $25 and the top two bits of offset $28; next field. (C1,
-; E-0357)
+; Field 4's marks: packs into slot offset $25 and the top two bits of offset $28; next field. (C2,
+; E-0357; probed E-0384)
 PackRecordFieldsToBank1Slot_Parent1NameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $25
@@ -7754,7 +7757,8 @@ PackRecordFieldsToBank1Slot_Parent1NameMarks::
     jp PackRecordFieldsToBank1Slot_PackName
 
 ; Field 5's marks: packs into slot offset $26 and bits 4-5 of offset $28; then clears the field
-; number and packs the two-bit values (PackRecordFieldsToBank1Slot_PackOtherFields). (C1, E-0357)
+; number and packs the two-bit values (PackRecordFieldsToBank1Slot_PackOtherFields). (C2, E-0357;
+; probed E-0384)
 PackRecordFieldsToBank1Slot_Parent2NameMarks::
     call SRAMRecordAddressOfArg1
     ld a, $26
@@ -7823,7 +7827,8 @@ Pack2BitFieldsFromPackFields::
 ; 2-bit high parts after each group of four ($57-$60); MON_WLD's low byte at $61 and its high bits
 ; as bit 7 of $62 and $63, which hold MON_LEVEL and MON_MAX_LEVEL in bits 6-0; MON_EXP at $64-$66;
 ; MON_PERSONALITY at $67-$6A; MON_PLUS, MON_PARENT1_PLUS, MON_PARENT2_PLUS and MON_ITEM at $6B-$6E.
-; Ends with SRAM disabled, wPackFieldIndex and wPackWork 0 and wArg5 = $FF. (C1, E-0370)
+; Ends with SRAM disabled, wPackFieldIndex and wPackWork 0 and wArg5 = $FF. (C2, E-0370; probed
+; E-0384)
 PackRecordFieldsToBank1Slot_PackOtherFields::
     call SRAMRecordAddressOfArg1
     ld a, $28
@@ -8414,7 +8419,7 @@ PackRecordFieldsToBank1Slot_PackOtherFields::
 ; MON_MASTER_NAME, MON_PARENT1_MASTER, MON_PARENT2_MASTER, MON_PARENT1_NAME and MON_PARENT2_NAME,
 ; and jumps to UnpackRecordFromBank1Slot_UnpackOtherFields for the rest, which ends with SRAM
 ; disabled, wPackWork = 0 and wArg5 = $FF. Far-called by the hibernate menu and
-; UnpackNextSavedRecord. (C1, E-0379)
+; UnpackNextSavedRecord. (C2, E-0379; probed E-0384)
 ; unpacks the compact record in SRAM bank wArg2 back into the record fields (family, state, mark
 ; ...) (E-0131)
 UnpackRecordFromBank1Slot::
@@ -8658,7 +8663,7 @@ CopyTenBytesThenSelectSRAMBank0::
 ; MON_MASTER_ID, MON_UNUSED_28 and MON_UNUSED_33; $35-$56 to the 34 bytes from MON_SKILLS; the eight
 ; words MON_HP to MON_INT (UnpackByteAtHLTo2BitFieldsArg5 gives their high bytes); then MON_WLD,
 ; MON_LEVEL, MON_MAX_LEVEL, MON_EXP, MON_PERSONALITY, MON_PLUS, MON_PARENT1_PLUS, MON_PARENT2_PLUS
-; and MON_ITEM. Ends with SRAM disabled, wPackWork 0 and wArg5 = $FF. (C1, E-0370)
+; and MON_ITEM. Ends with SRAM disabled, wPackWork 0 and wArg5 = $FF. (C2, E-0370; probed E-0384)
 UnpackRecordFromBank1Slot_UnpackOtherFields::
     call SRAMRecordAddressOfArg1
     call EnableSRAMBank0
@@ -9258,7 +9263,7 @@ UnpackRecordFromBank1Slot_UnpackOtherFields::
 ; of letter 5 (bits 7-6 of slot byte $27) in wMenuInputResult, and builds the name from the 5
 ; letters at slot offset 3 in wNameGlyphBuf (BuildFiveGlyphNameWithMarksToNameGlyphBuf). Entry 0 is
 ; the MON_NAME of the record. SRAM stays enabled with rRAMB = wArg2. Far-called by the hibernate
-; menu and the save file info window, and by UnpackRecordFromBank1Slot. (C1, E-0379)
+; menu and the save file info window, and by UnpackRecordFromBank1Slot. (C2, E-0379; probed E-0384)
 ; record wArg1 (SRAM bank wArg2): unpacks byte $21 into the four 2-bit fields wArg5-wArg8, sets
 ; wMenuInputResult = bits 7-6 of byte $27, and copies the 5-glyph name entry at offset 3
 ; (BuildFiveGlyphNameWithMarksToNameGlyphBuf); one of six name entries in the record (E-0120)
@@ -9292,7 +9297,7 @@ LoadRecordNameEntry0::
 ; slot byte $22 into wArg5 to wArg8, puts the mark of letter 5 (bits 5-4 of slot byte $27) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset 8 in wNameGlyphBuf. Entry
 ; 1 is the MON_MASTER_NAME of the record. SRAM stays enabled with rRAMB = wArg2. Called by
-; UnpackRecordFromBank1Slot. (C1, E-0379)
+; UnpackRecordFromBank1Slot. (C2, E-0379; probed E-0384)
 ; record wArg1 (SRAM bank wArg2): unpacks byte $22 into the four 2-bit fields wArg5-wArg8, sets
 ; wMenuInputResult = bits 5-4 of byte $27, and copies the 5-glyph name entry at offset 8
 ; (BuildFiveGlyphNameWithMarksToNameGlyphBuf); one of six name entries in the record (E-0120)
@@ -9323,7 +9328,7 @@ LoadRecordNameEntry1::
 ; slot byte $23 into wArg5 to wArg8, puts the mark of letter 5 (bits 3-2 of slot byte $27) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset $0D in wNameGlyphBuf.
 ; Entry 2 is the MON_PARENT1_MASTER of the record. SRAM stays enabled with rRAMB = wArg2. Called by
-; UnpackRecordFromBank1Slot. (C1, E-0379)
+; UnpackRecordFromBank1Slot. (C2, E-0379; probed E-0384)
 ; record wArg1 (SRAM bank wArg2): unpacks byte $23 into the four 2-bit fields wArg5-wArg8, sets
 ; wMenuInputResult = bits 3-2 of byte $27, and copies the 5-glyph name entry at offset $0D
 ; (BuildFiveGlyphNameWithMarksToNameGlyphBuf); one of six name entries in the record (E-0120)
@@ -9355,7 +9360,7 @@ LoadRecordNameEntry2::
 ; slot byte $24 into wArg5 to wArg8, puts the mark of letter 5 (bits 1-0 of slot byte $27) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset $12 in wNameGlyphBuf.
 ; Entry 3 is the MON_PARENT2_MASTER of the record. SRAM stays enabled with rRAMB = wArg2. Called by
-; UnpackRecordFromBank1Slot. (C1, E-0379)
+; UnpackRecordFromBank1Slot. (C2, E-0379; probed E-0384)
 ; record wArg1 (SRAM bank wArg2): unpacks byte $24 into the four 2-bit fields wArg5-wArg8, sets
 ; wMenuInputResult = bits 1-0 of byte $27, and copies the 5-glyph name entry at offset $12
 ; (BuildFiveGlyphNameWithMarksToNameGlyphBuf); one of six name entries in the record (E-0120)
@@ -9385,7 +9390,7 @@ LoadRecordNameEntry3::
 ; slot byte $25 into wArg5 to wArg8, puts the mark of letter 5 (bits 7-6 of slot byte $28) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset $17 in wNameGlyphBuf.
 ; Entry 4 is the MON_PARENT1_NAME of the record. SRAM stays enabled with rRAMB = wArg2. Called by
-; UnpackRecordFromBank1Slot. (C1, E-0379)
+; UnpackRecordFromBank1Slot. (C2, E-0379; probed E-0384)
 ; record wArg1 (SRAM bank wArg2): unpacks byte $25 into the four 2-bit fields wArg5-wArg8, sets
 ; wMenuInputResult = bits 7-6 of byte $28, and copies the 5-glyph name entry at offset $17
 ; (BuildFiveGlyphNameWithMarksToNameGlyphBuf); one of six name entries in the record (E-0120)
@@ -9419,7 +9424,7 @@ LoadRecordNameEntry4::
 ; slot byte $26 into wArg5 to wArg8, puts the mark of letter 5 (bits 5-4 of slot byte $28) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset $1C in wNameGlyphBuf.
 ; Entry 5 is the MON_PARENT2_NAME of the record. SRAM stays enabled with rRAMB = wArg2. Called by
-; UnpackRecordFromBank1Slot. (C1, E-0379)
+; UnpackRecordFromBank1Slot. (C2, E-0379; probed E-0384)
 ; record wArg1 (SRAM bank wArg2): unpacks byte $26 into the four 2-bit fields wArg5-wArg8, sets
 ; wMenuInputResult = bits 5-4 of byte $28, and copies the 5-glyph name entry at offset $1C
 ; (BuildFiveGlyphNameWithMarksToNameGlyphBuf); one of six name entries in the record (E-0120)
@@ -9545,7 +9550,7 @@ UnpackByteAtHLTo2BitFieldsArg5::
 
 ; Writes $0A to rRAMG2 (cartridge RAM on) and selects SRAM bank 0 (rRAMB = 0); A ends 0. Same bytes
 ; as the other EnableSRAMBank0 copies; used by the pack and unpack routines of this bank to switch
-; back to the record bank. (C1, E-0379)
+; back to the record bank. (C2, E-0379; probed E-0384)
 ; writes $0A to the RAM-enable register (rRAMG2 alias) and selects SRAM bank 0 (rRAMB = 0); clobbers
 ; A (E-0066)
 EnableSRAMBank0::

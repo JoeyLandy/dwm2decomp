@@ -35,21 +35,59 @@ KeyWorldRoom03_Y3X2_Tiles::
 KeyWorldRoom04_Y0X2_Tiles::
     INCBIN "maps/key_worlds/room04_y0_x2_tiles.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $02-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_1. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; horizontal passage across the screen with a dark patch under its upper edge. The numbering is
+; shared with the listed key-world screens, so the tile set cannot be fixed from this stream. (C1,
+; E-0383)
 ; LZSS-compressed: 107 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_1::
-    INCBIN "gfx/misc/screen_map6_f_1.lz"
+KeyWorldUnlistedScreen6F_A_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_a_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$53) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_2. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; horizontal passage with a vertical branch and a dark patch in the branch. The numbering is shared
+; with the listed key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_2::
-    INCBIN "gfx/misc/screen_map6_f_2.lz"
+KeyWorldUnlistedScreen6F_B_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_b_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_3. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; horizontal passage with a vertical branch, rubble and several dark patches. The numbering is
+; shared with the listed key-world screens, so the tile set cannot be fixed from this stream. (C1,
+; E-0383)
 ; LZSS-compressed: 236 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_3::
-    INCBIN "gfx/misc/screen_map6_f_3.lz"
+KeyWorldUnlistedScreen6F_C_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_c_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_4. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; horizontal passage with a ring of rubble above a dark patch in the middle. The numbering is shared
+; with the listed key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 200 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_4::
-    INCBIN "gfx/misc/screen_map6_f_4.lz"
+KeyWorldUnlistedScreen6F_D_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_d_tilemap.lz"
 
 ; LZSS-compressed: 100 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom8B_Y3X2_Tiles::
@@ -190,25 +228,71 @@ KeyWorldRoom10_Y2X0_Tiles::
 KeyWorldRoom0A_Y2X0_Tiles::
     INCBIN "maps/key_worlds/room0_a_y2_x0_tiles.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$53) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_5. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a rock
+; mass with a short side corridor, a small dark patch and a passage leaving at the bottom. The
+; numbering is shared with the listed key-world screens, so the tile set cannot be fixed from this
+; stream. (C1, E-0383)
 ; LZSS-compressed: 139 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_5::
-    INCBIN "gfx/misc/screen_map6_f_5.lz"
+KeyWorldUnlistedScreen6F_E_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_e_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_6. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a room
+; with a large dark patch at its left. The numbering is shared with the listed key-world screens, so
+; the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 252 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_6::
-    INCBIN "gfx/misc/screen_map6_f_6.lz"
+KeyWorldUnlistedScreen6F_F_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_f_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_7. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a dark
+; band running diagonally lower-left to upper-right through an open room. The numbering is shared
+; with the listed key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_7::
-    INCBIN "gfx/misc/screen_map6_f_7.lz"
+KeyWorldUnlistedScreen6F_G_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_g_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $02-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_8. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): an open
+; room with a dark patch and rubble at the upper right. The numbering is shared with the listed
+; key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 197 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_8::
-    INCBIN "gfx/misc/screen_map6_f_8.lz"
+KeyWorldUnlistedScreen6F_H_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_h_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_9. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a room
+; with three small boulder-like objects in its upper part. The numbering is shared with the listed
+; key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 147 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_9::
-    INCBIN "gfx/misc/screen_map6_f_9.lz"
+KeyWorldUnlistedScreen6F_I_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_i_tilemap.lz"
 
 ; LZSS-compressed: 199 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom44_Y2X0_Tiles::
@@ -306,9 +390,17 @@ KeyWorldRoom52_Y2X0_Attrs::
 MapType5Tiles7::
     INCBIN "gfx/map_types/5_tiles7.lz"
 
+; Not an independent asset: the last $1DB bytes of the 697-byte compressed stream MapType5Tiles7
+; (entry 7 of MapType5TilesetTable, 2048 bytes = 128 BG tiles for vTiles2 of the key-world floors).
+; Decompressing MapType5Tiles7 from bank $6F address $6397 consumes exactly 697 bytes, ending where
+; MapType5Palettes7 begins, and the stream here starts $DE bytes in (the generator split it at a
+; point where the bytes happen to parse as a header). Decoding from this point gives 1040 bytes of
+; noise that run past the real end: its output contains the 64-byte palette table and the start of
+; the following attribute streams as literals, and the picture is not tiles. Nothing loads it on its
+; own; LoadMapType5TilesetAndHeader decompresses the whole stream from MapType5Tiles7. (C1, E-0383)
 ; LZSS-compressed: 1043 bytes that expand to 1040 (E-0016, E-0017)
-Gfx6F_1::
-    INCBIN "gfx/misc/gfx6_f_1.lz"
+MapType5Tiles7StreamTail::
+    INCBIN "gfx/map_types/5_tiles7_stream_tail.lz"
 
 ; entry 7 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
@@ -353,25 +445,70 @@ KeyWorldRoom03_Y1X2_Tiles::
 KeyWorldRoom12_Y2X3_Tiles::
     INCBIN "maps/key_worlds/room12_y2_x3_tiles.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $02-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_10. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a room
+; with a small dark patch at the right. The numbering is shared with the listed key-world screens,
+; so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 153 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_10::
-    INCBIN "gfx/misc/screen_map6_f_10.lz"
+KeyWorldUnlistedScreen6F_J_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_j_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$53) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_11. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; vertical dark band at the top centre of a room. The numbering is shared with the listed key-world
+; screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 216 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_11::
-    INCBIN "gfx/misc/screen_map6_f_11.lz"
+KeyWorldUnlistedScreen6F_K_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_k_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$53) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_12. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): an open
+; room with dark diagonal patches. The numbering is shared with the listed key-world screens, so the
+; tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 225 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_12::
-    INCBIN "gfx/misc/screen_map6_f_12.lz"
+KeyWorldUnlistedScreen6F_L_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_l_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_13. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a dark
+; patch in the middle with a band of rubble across it. The numbering is shared with the listed
+; key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 214 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_13::
-    INCBIN "gfx/misc/screen_map6_f_13.lz"
+KeyWorldUnlistedScreen6F_M_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_m_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $02-$53) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6F and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6F_14. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a room
+; with three small boulder-like objects at the left. The numbering is shared with the listed
+; key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 136 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6F_14::
-    INCBIN "gfx/misc/screen_map6_f_14.lz"
+KeyWorldUnlistedScreen6F_N_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_f_n_tilemap.lz"
 
 ; LZSS-compressed: 186 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom44_Y0X1_Tiles::

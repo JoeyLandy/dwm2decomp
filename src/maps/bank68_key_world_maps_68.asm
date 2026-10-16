@@ -4144,14 +4144,20 @@ MapX62F0Palettes::
 ; 1 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapX62F0Screens0::
-    dfar MapX62F0Screens0_Y0X0 ; entry 0
+    dfar UnusedStoneHallScreenMap ; entry 0
 
 MapX62F0Attrs0::
     dfar MapX62F0Attrs0_Y0X0 ; entry 0
 
+; Tile map: 360 bytes = one 20 x 18 screen of tile numbers, the only screen (1 x 1) of
+; MapRecordX62F0, a map record that no MapTable entry points to (bank11_maps.asm). Drawn with
+; SandDoorRoomTileset (bank $90) in vTiles2: a hall framed by square stone blocks with a small
+; barred gate or chest at the top middle, a herringbone paved floor in the middle and speckled sand
+; strips on both sides with small tree-like marks. Since the record is not in MapTable and no other
+; load of $7E04 exists, nothing in the game shows it. (C1, E-0383)
 ; LZSS-compressed: 186 bytes that expand to 360 (E-0016, E-0017)
-MapX62F0Screens0_Y0X0::
-    INCBIN "gfx/misc/map_x62_f0_screens0_y0_x0.lz"
+UnusedStoneHallScreenMap::
+    INCBIN "gfx/misc/unused_stone_hall_screen_map.lz"
 
 ; LZSS-compressed: 61 bytes that expand to 360 (E-0016, E-0017)
 MapX62F0Attrs0_Y0X0::

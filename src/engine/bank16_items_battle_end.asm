@@ -5770,7 +5770,8 @@ BattleEnd_AskToJoin_ShowGWasSetFree::
 
 ; Asking to join, step 21: once the text has finished deletes the released monster's record
 ; (DeleteSRAMRecordAndCompact), rebuilds the party list ($FF for empty places) and the battle slots
-; (RunForPartyMembers), and moves on two sub-phases to add the new monster. (C1, E-0357)
+; (RunForPartyMembers), and moves on two sub-phases to add the new monster. (C2, E-0357; probed
+; E-0384)
 BattleEnd_AskToJoin_ReleaseMonster::
     ld a, [wTextFlags]
     or a
@@ -6112,7 +6113,7 @@ BattleEnd_AskToJoin_RedrawEggsAfterStats::
     ret
 
 ; Asking to join, step 28: once the text has finished deletes the egg's record and moves on two
-; sub-phases to add the new monster. (C1, E-0357)
+; sub-phases to add the new monster. (C2, E-0357; probed E-0384)
 BattleEnd_AskToJoin_AbandonEgg::
     ld a, [wTextFlags]
     or a
@@ -7294,11 +7295,11 @@ RunBattleEndStep5SubSteps_EnterName::
     cp $ff
     ret nz
     ld b, $31
-    ld de, Tiles1Plus240Gfx
+    ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Tiles1Plus5F0Gfx
+    ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToVRAM
     ld hl, wBattleScreenFlags
@@ -7910,11 +7911,11 @@ BattleEnd_AddJoinedMonster_RunStatsScreen::
     ld a, [wSavedSpriteSlotCount]
     ld [wSpriteSlotCount], a
     ld b, $31
-    ld de, Tiles1Plus240Gfx
+    ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Tiles1Plus5F0Gfx
+    ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToVRAM
     ld hl, wBattleScreenFlags
@@ -9988,10 +9989,25 @@ FamilyIconTiles::
     db $ff, $10, $ff, $10, $e7, $30, $db, $60, $9b, $e6, $83, $fe, $c7, $7c, $ff, $38 ; id 9
     db $bb, $7c, $7d, $c6, $ff, $ba, $7d, $f6, $bb, $6c, $d7, $38, $ff, $28, $d7, $38 ; id 10
 
+; Tiles: 624 bytes = 39 tiles of 2bpp. DecompressMenuTilesTo16E0 expands it to vTiles1 + $6E0 (tile
+; numbers $EE-$FF, then $00-$14 in the vTiles2 half) and then runs
+; DrawRecordMonsterPictureForMenuSelectedMember. Its only caller is PauseMenu_State4_BuildInfoPage,
+; reached from GameMode2_Update_OpenPage_BuildPage when the pause menu Info page is opened.
+; Rendered: a row of Latin capital and small letters and symbols (D W e x t v and a bar, B a s, then
+; H P M + E x), a row of Japanese kana (hiragana and katakana, among them the katakana for level and
+; master) and a few box and star symbols. These sit in the tile range that
+; CopyBlockToTileBufferBlankingText leaves untouched (tiles below $15 and from $A4 up), so they are
+; fixed screen label tiles and not the text glyphs. (C1, E-0383)
 ; LZSS-compressed: 405 bytes that expand to 624 (E-0016, E-0017)
-Tiles1Plus6E0Gfx::
-    INCBIN "gfx/misc/tiles1_plus6_e0_gfx.lz"
+LatinKanaLabelGlyphTiles::
+    INCBIN "gfx/misc/latin_kana_label_glyph_tiles.lz"
 
+; Tiles, 64 bytes = 4 tiles of 2bpp, stored right after LatinKanaLabelGlyphTiles (the stream ends at
+; $7D55 and the rest of the bank is zero padding). No code, table or far pointer names it: a search
+; of src for the label and its address alias, and of the ROM for ld de, ld hl and ld bc with $7D12,
+; found no load of this stream. Rendered: tiles 0-1 form a 16 x 8 spiky dark and white shape (like a
+; crown or a horned edge), tiles 2-3 a 16 x 8 rounded dark-gray dome with a white highlight. Too
+; abstract to name, and nothing uses it, so what it was meant to show is unknown. (C1, E-0383)
 ; LZSS-compressed: 67 bytes that expand to 64 (E-0016, E-0017)
 Gfx16_1::
     INCBIN "gfx/misc/gfx16_1.lz"

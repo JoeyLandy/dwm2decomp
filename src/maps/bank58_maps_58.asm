@@ -103,13 +103,25 @@ Map40Attrs2::
 Map40Screens0_Y0X0::
     INCBIN "maps/map40/screens0_y0_x0.lz"
 
+; Tile map: 360 bytes = one 20 x 18 screen of tile numbers, drawn with Map40Tileset (vTiles2).
+; SceneKamehaEscape_AnimateScreen shows it as frames 0 and 4 of six
+; (SceneKamehaEscape_AnimateScreen_Data pairs it with Map40AttrsMostRocks as the attributes). It is
+; Map40Screens0_Y0X0 (a stair way up to a throne-like dais, rocks scattered around) with 10 of its
+; 23 rocks (2 x 2 tile blocks of tiles $10-$13 turned into ground tiles $00 and $01) removed, 13
+; rocks left. The frames in order: 13 rocks, 6 rocks (Map40ScreenFewRocks), none
+; (Map40Screens2_Y0X0), 6, 13, all 23 (Map40Screens0_Y0X0), so the rocks vanish in steps and come
+; back. (C1, E-0383)
 ; LZSS-compressed: 245 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap58_1::
-    INCBIN "gfx/misc/screen_map58_1.lz"
+Map40ScreenMostRocks::
+    INCBIN "maps/map40/screen_most_rocks.lz"
 
+; Tile map: 360 bytes = one 20 x 18 screen of tile numbers, drawn with Map40Tileset. Frames 1 and 3
+; of the six in SceneKamehaEscape_AnimateScreen_Data (paired with Map40AttrsFewRocks as the
+; attributes). It is Map40Screens0_Y0X0 with 17 of 23 rocks removed, 6 rocks left; it differs from
+; ScreenMap58_1 in 28 tiles (7 rocks). (C1, E-0383)
 ; LZSS-compressed: 243 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap58_2::
-    INCBIN "gfx/misc/screen_map58_2.lz"
+Map40ScreenFewRocks::
+    INCBIN "maps/map40/screen_few_rocks.lz"
 
 ; LZSS-compressed: 188 bytes that expand to 360 (E-0016, E-0017)
 Map40Screens2_Y0X0::
@@ -127,13 +139,23 @@ Map40Screens2_Y1X0::
 Map40Attrs0_Y0X0::
     INCBIN "maps/map40/attrs0_y0_x0.lz"
 
+; Attribute map: 360 bytes = one 20 x 18 screen of CGB attribute bytes (values 0-3, 5 and 6, palette
+; numbers), the attributes that go with Map40ScreenMostRocks. SceneKamehaEscape_AnimateScreen
+; decompresses it to wScreenAttrBuffer (WRAM bank 2) through SceneKamehaEscape_LoadScreenAttrs when
+; wIsCGB is set. Rendered as tiles it is noise, which is right for attributes; compared with
+; Map40Attrs0_Y0X0 it has 40 of the palette-6 bytes (the rock cells) set to 0 (52 palette-6 cells
+; instead of 92). (C1, E-0383)
 ; LZSS-compressed: 137 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap58_3::
-    INCBIN "gfx/misc/screen_map58_3.lz"
+Map40AttrsMostRocks::
+    INCBIN "maps/map40/attrs_most_rocks.lz"
 
+; Attribute map: 360 bytes of CGB attribute bytes (palette numbers 0-3, 5, 6), the attributes that
+; go with Map40ScreenFewRocks (6 rocks left): 24 palette-6 cells against 92 in Map40Attrs0_Y0X0.
+; Loaded into wScreenAttrBuffer by SceneKamehaEscape_LoadScreenAttrs from
+; SceneKamehaEscape_AnimateScreen when wIsCGB is set. (C1, E-0383)
 ; LZSS-compressed: 113 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap58_4::
-    INCBIN "gfx/misc/screen_map58_4.lz"
+Map40AttrsFewRocks::
+    INCBIN "maps/map40/attrs_few_rocks.lz"
 
 ; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
 Map40Attrs2_Y0X0::

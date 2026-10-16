@@ -4152,7 +4152,7 @@ AIScoreRoutineTableA::
     dfar AIScore_Whistle ; id 167
     dfar AIScore_Whistle ; id 168
     dfar AIScore_Whistle ; id 169
-    dfar AIScore_Ahhh_2 ; id 170
+    dfar AIScore_AhhhStatusLick ; id 170
     dfar AIScore_ZoneOut ; id 171
     dfar AIScore_Guard ; id 172
     dfar AIScore_PanicAll_2 ; id 173
@@ -4168,7 +4168,7 @@ AIScoreRoutineTableA::
     dfar AIScore_Whistle ; id 183
     dfar AIScore_NoWeightA ; id 184
     dfar AIScore_NoWeightA ; id 185
-    dfar AIScore_Ahhh_2 ; id 186
+    dfar AIScore_AhhhStatusLick ; id 186
     dfar AIScore_ZoneOut ; id 187
     dfar AIScore_NoWeightA ; id 188
     dfar AIScore_NoWeightA ; id 189
@@ -4358,7 +4358,7 @@ AIScoreRoutineTableB::
     dfar AIScore_Whistle ; id 167
     dfar AIScore_Whistle ; id 168
     dfar AIScore_Whistle ; id 169
-    dfar AIScore_Ahhh_2 ; id 170
+    dfar AIScore_AhhhStatusLick ; id 170
     dfar AIScore_ZoneOut ; id 171
     dfar AIScore_Guard ; id 172
     dfar AIScore_PanicAll_2 ; id 173
@@ -4374,7 +4374,7 @@ AIScoreRoutineTableB::
     dfar AIScore_Whistle ; id 183
     dfar AIScore_NoWeightA ; id 184
     dfar AIScore_NoWeightA ; id 185
-    dfar AIScore_Ahhh_2 ; id 186
+    dfar AIScore_AhhhStatusLick ; id 186
     dfar AIScore_ZoneOut ; id 187
     dfar AIScore_NoWeightA ; id 188
     dfar AIScore_NoWeightA ; id 189

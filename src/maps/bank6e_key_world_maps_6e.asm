@@ -138,36 +138,108 @@ KeyWorldRoom09_Y2X1_Tiles::
 KeyWorldRoom0A_Y1X2_Tiles::
     INCBIN "maps/key_worlds/room0_a_y1_x2_tiles.lz"
 
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with a dark pit at the centre and blue ice
+; blocks above it. Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3, the ice
+; cave), using the attribute map KeyWorldScreen6E_7 (the entry at the same position in the attribute
+; list of the bank) for palettes and flips; the picture is coherent, which supports that tile set.
+; No loader reaches it: it is one of the screens stored after that tile set, but no room record of
+; KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and bank pattern:
+; no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never decompresses it in the
+; shipped ROM (C1, E-0383)
 ; LZSS-compressed: 133 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_1::
-    INCBIN "gfx/misc/screen_map6_e_1.lz"
+KeyWorldIceCenterPitTilemap::
+    INCBIN "maps/key_worlds/ice_center_pit_tilemap.lz"
 
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with a dark pit stepping down to the lower
+; centre. Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3, the ice cave),
+; using the attribute map KeyWorldScreen6E_8 (the entry at the same position in the attribute list
+; of the bank) for palettes and flips; the picture is coherent, which supports that tile set. No
+; loader reaches it: it is one of the screens stored after that tile set, but no room record of
+; KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and bank pattern:
+; no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never decompresses it in the
+; shipped ROM (C1, E-0383)
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_2::
-    INCBIN "gfx/misc/screen_map6_e_2.lz"
+KeyWorldIceLowerPitTilemap::
+    INCBIN "maps/key_worlds/ice_lower_pit_tilemap.lz"
 
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with a small dark pit under blue ice blocks
+; at the upper right. Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3, the
+; ice cave), using the attribute map KeyWorldScreen6E_9 (the entry at the same position in the
+; attribute list of the bank) for palettes and flips; the picture is coherent, which supports that
+; tile set. No loader reaches it: it is one of the screens stored after that tile set, but no room
+; record of KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and
+; bank pattern: no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never
+; decompresses it in the shipped ROM (C1, E-0383)
 ; LZSS-compressed: 225 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_3::
-    INCBIN "gfx/misc/screen_map6_e_3.lz"
+KeyWorldIceUpperRightPitTilemap::
+    INCBIN "maps/key_worlds/ice_upper_right_pit_tilemap.lz"
 
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with a dark pit as a diagonal band from
+; lower left to upper right. Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3,
+; the ice cave), using the attribute map KeyWorldScreen6E_10 (the entry at the same position in the
+; attribute list of the bank) for palettes and flips; the picture is coherent, which supports that
+; tile set. No loader reaches it: it is one of the screens stored after that tile set, but no room
+; record of KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and
+; bank pattern: no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never
+; decompresses it in the shipped ROM (C1, E-0383)
 ; LZSS-compressed: 245 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_4::
-    INCBIN "gfx/misc/screen_map6_e_4.lz"
+KeyWorldIceDiagonalPitTilemap::
+    INCBIN "maps/key_worlds/ice_diagonal_pit_tilemap.lz"
 
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with about eight blue crystal clusters
+; scattered over the middle. Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3,
+; the ice cave), using the attribute map KeyWorldScreen6E_11 (the entry at the same position in the
+; attribute list of the bank) for palettes and flips; the picture is coherent, which supports that
+; tile set. No loader reaches it: it is one of the screens stored after that tile set, but no room
+; record of KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and
+; bank pattern: no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never
+; decompresses it in the shipped ROM (C1, E-0383)
 ; LZSS-compressed: 230 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_5::
-    INCBIN "gfx/misc/screen_map6_e_5.lz"
+KeyWorldIceScatteredCrystalsTilemap::
+    INCBIN "maps/key_worlds/ice_scattered_crystals_tilemap.lz"
 
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with a column of five blue crystal clusters
+; on the right. Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3, the ice
+; cave), using the attribute map KeyWorldScreen6E_12 (the entry at the same position in the
+; attribute list of the bank) for palettes and flips; the picture is coherent, which supports that
+; tile set. No loader reaches it: it is one of the screens stored after that tile set, but no room
+; record of KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and
+; bank pattern: no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never
+; decompresses it in the shipped ROM (C1, E-0383)
 ; LZSS-compressed: 226 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_6::
-    INCBIN "gfx/misc/screen_map6_e_6.lz"
+KeyWorldIceCrystalColumnTilemap::
+    INCBIN "maps/key_worlds/ice_crystal_column_tilemap.lz"
 
-ScreenMap6E_7::
-    INCBIN "gfx/misc/screen_map6_e_7.lz"
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with about ten blue crystal clusters in
+; groups of two and three. Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3,
+; the ice cave), using the attribute map KeyWorldScreen6E_13 (the entry at the same position in the
+; attribute list of the bank) for palettes and flips; the picture is coherent, which supports that
+; tile set. No loader reaches it: it is one of the screens stored after that tile set, but no room
+; record of KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and
+; bank pattern: no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never
+; decompresses it in the shipped ROM (C1, E-0383)
+KeyWorldIceCrystalClustersTilemap::
+    INCBIN "maps/key_worlds/ice_crystal_clusters_tilemap.lz"
 
+; tile map, 360 bytes after decompression (20 x 18 tile numbers, one screen, highest tile number
+; $55): a key-world cave screen of cyan ice-floor screen with six blue crystal clusters in pairs.
+; Decoded and drawn with tileset 3 (MapType5Tiles3 and MapType5Palettes3, the ice cave), using the
+; attribute map KeyWorldScreen6E_14 (the entry at the same position in the attribute list of the
+; bank) for palettes and flips; the picture is coherent, which supports that tile set. No loader
+; reaches it: it is one of the screens stored after that tile set, but no room record of
+; KeyWorldRooms holds a far pointer to it (searched the ROM for its 3-byte address and bank pattern:
+; no hit, or only a hit in an unrelated table), so LoadMapScreen_Type5 never decompresses it in the
+; shipped ROM (C1, E-0383)
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_8::
-    INCBIN "gfx/misc/screen_map6_e_8.lz"
+KeyWorldIceCrystalPairsTilemap::
+    INCBIN "maps/key_worlds/ice_crystal_pairs_tilemap.lz"
 
 ; LZSS-compressed: 53 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom00_Y2X1_Attrs::
@@ -293,21 +365,61 @@ KeyWorldRoom0A_Y1X3_Tiles::
 KeyWorldRoom0A_Y2X1_Tiles::
     INCBIN "maps/key_worlds/room0_a_y2_x1_tiles.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $02-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6E and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6E_15. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; horizontal passage on the left meeting a vertical passage right of centre, with a dark L-shaped
+; patch between them. The numbering is shared with the listed key-world screens, so the tile set
+; cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 162 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_9::
-    INCBIN "gfx/misc/screen_map6_e_9.lz"
+KeyWorldUnlistedScreen6E_A_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_e_a_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6E and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6E_16. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): an open
+; area at left with a small boulder-like object low in the middle and a dark strip beside it. The
+; numbering is shared with the listed key-world screens, so the tile set cannot be fixed from this
+; stream. (C1, E-0383)
 ; LZSS-compressed: 197 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_10::
-    INCBIN "gfx/misc/screen_map6_e_10.lz"
+KeyWorldUnlistedScreen6E_B_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_e_b_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6E and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6E_17. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; diagonal passage running lower-left to upper-right with a dark patch in the middle. The numbering
+; is shared with the listed key-world screens, so the tile set cannot be fixed from this stream.
+; (C1, E-0383)
 ; LZSS-compressed: 240 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_11::
-    INCBIN "gfx/misc/screen_map6_e_11.lz"
+KeyWorldUnlistedScreen6E_C_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_e_c_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6E and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6E_18. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a rock
+; wall cutting diagonally down the right side and a dark diagonal patch left of centre. The
+; numbering is shared with the listed key-world screens, so the tile set cannot be fixed from this
+; stream. (C1, E-0383)
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_12::
-    INCBIN "gfx/misc/screen_map6_e_12.lz"
+KeyWorldUnlistedScreen6E_D_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_e_d_tilemap.lz"
 
 ; LZSS-compressed: 184 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom22_Y2X1_Tiles::
@@ -317,9 +429,18 @@ KeyWorldRoom22_Y2X1_Tiles::
 KeyWorldRoom4C_Y1X3_Tiles::
     INCBIN "maps/key_worlds/room4_c_y1_x3_tiles.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $6E and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen6E_19. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): an open
+; cave floor with two small boulder-like objects at the upper right. The numbering is shared with
+; the listed key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 236 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap6E_13::
-    INCBIN "gfx/misc/screen_map6_e_13.lz"
+KeyWorldUnlistedScreen6E_E_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen6_e_e_tilemap.lz"
 
 ; LZSS-compressed: 229 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom4B_Y1X2_Tiles::

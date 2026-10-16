@@ -13,7 +13,7 @@ SECTION "Bank E2", ROMX[$4000], BANK[$E2]
 ; wAISkillScore when FoeHPCheckReadsWrongSlot gives 0; weight row $68 to wAISkillScore when
 ; CheckActorSlot0To3OrLinkModeSet gives 0; weight row $05 to wAISkillScore when
 ; ActorStatus4CheckReadsAddress gives 0; weight row $33 to wAISkillScore2 when
-; ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 0 (no name). It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -121,8 +121,8 @@ AIScore_Fight::
 ; FailIfFoeAIDamageEstimatesAtLeastEstimate gives 0; weight row $09 to wAISkillScore when
 ; PassIfFoesAverageResistanceAtLeast2 gives 0; always weight row $0B to wAISkillScore; weight row
 ; $0C to wAISkillScore when PassIfFoeAIDamageEstimatesAtLeastEstimate gives 0;
-; AIAddScoresForLinkRuleCheckLinkRules1Bit6; weight row $10 to wAISkillScore2 when
-; FewerThanTwoFoesPresent gives 0. (C1, E-0357)
+; WeighLinkRuleBit6AndTurnLimit; weight row $10 to wAISkillScore2 when FewerThanTwoFoesPresent gives
+; 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 3 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 1 Blaze, 2 Blazemore, 3 Blazemost. It runs checks
 ; and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -158,12 +158,12 @@ AIScore_Blaze::
     farcall PassIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_ai_add_scores_for_link_rule_check_link
+    jr nz, .call_weigh_link_rule_bit6_and_turn_limit
     ld bc, $000c
     call AddAIWeight
 
-.call_ai_add_scores_for_link_rule_check_link:
-    call AIAddScoresForLinkRuleCheckLinkRules1Bit6
+.call_weigh_link_rule_bit6_and_turn_limit:
+    call WeighLinkRuleBit6AndTurnLimit
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -179,10 +179,11 @@ AIScore_Blaze::
 ; FailIfFoeAIDamageEstimatesAtLeastEstimate gives 0; weight row $09 to wAISkillScore when
 ; PassIfFoesAverageResistanceAtLeast2 gives 0; always weight row $0B to wAISkillScore; weight row
 ; $0D to wAISkillScore when PassIfFoeAIDamageEstimatesAtLeastEstimate gives 0;
-; AIAddScoresForLinkRuleCheckLinkRules1Bit6; weight row $14 to wAISkillScore when
+; WeighLinkRuleBit6AndTurnLimit; weight row $14 to wAISkillScore when
 ; AllySlotsCheckThenFewerThanTwoFoes gives 0; weight row $15 to wAISkillScore when
 ; FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2 when CheckFoeStatus6Bit3 gives
-; 0; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C1, E-0357)
+; 0; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 15 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 4 Firebal, 5 Firebane, 6 Firebolt, 7 Bang, 8 Boom,
 ; 9 Explodet, 10 Infernos, 11 Infermore, 12 Infermost, 13 Bolt .... It runs checks and adds weights
@@ -229,12 +230,12 @@ AIScore_Firebal::
     farcall PassIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_ai_add_scores_for_link_rule_check_link
+    jr nz, .call_weigh_link_rule_bit6_and_turn_limit
     ld bc, $000d
     call AddAIWeight
 
-.call_ai_add_scores_for_link_rule_check_link:
-    call AIAddScoresForLinkRuleCheckLinkRules1Bit6
+.call_weigh_link_rule_bit6_and_turn_limit:
+    call WeighLinkRuleBit6AndTurnLimit
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a
@@ -273,8 +274,13 @@ AIScore_Firebal::
 .return:
     ret
 
+; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
+; none points here, and nothing in src calls it. It calls AIScore_Beat and returns if that gives C =
+; 0 (the conditions of 'Beat' failed). Otherwise it farcalls AIGateFoeSlotResistances2Bits45 and,
+; when that gives 0, adds weight row $B5 to wAISkillScore, the same row AIScore_Beat adds under the
+; same check, so the row would count twice. (C2, E-0385)
 ; table-B AI score: AIScore_Beat, then adds a penalty word when the follow-up check fails (E-0122)
-AIScoreB_Beat::
+AIScore_Beat_UnreferencedVariant::
     call AIScore_Beat
     ld a, c
     and a
@@ -293,12 +299,12 @@ AIScoreB_Beat::
 
 ; Beat's AI score: needs AIScore_Beat_Conditions; then weight row $04 to wAISkillScore2 when
 ; AIGateFoeStatus2Mask22 gives 0; always weight row $CD to wAISkillScore and weight row $CF to
-; wAISkillScore2; AIAddScoresForLinkRuleCheckLinkRules1Bit6; weight row $15 to wAISkillScore when
+; wAISkillScore2; WeighLinkRuleBit6AndTurnLimit; weight row $15 to wAISkillScore when
 ; FewerThanTwoFoesPresent gives 0; weight row $B5 to wAISkillScore when
 ; AIGateFoeSlotResistances2Bits45 gives 0; weight row $12 to wAISkillScore2 when
 ; FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0; returns C = 1. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0; returns C = 1. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 19 Beat, 20 Defeat. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -320,14 +326,14 @@ AIScore_Beat::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_ai_add_scores_for_link_rule_check_link
+    jr nz, .call_weigh_link_rule_bit6_and_turn_limit
     ld bc, $00cd
     call AddAIWeight
     ld bc, $00cf
     call AddAIWeightToScore2
 
-.call_ai_add_scores_for_link_rule_check_link:
-    call AIAddScoresForLinkRuleCheckLinkRules1Bit6
+.call_weigh_link_rule_bit6_and_turn_limit:
+    call WeighLinkRuleBit6AndTurnLimit
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -386,7 +392,7 @@ AIScore_Beat::
 ; $07 to wAISkillScore2 when CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $CD
 ; to wAISkillScore and weight row $CF to wAISkillScore2; AIScore_Sacrifice_WeighLinkRule; weight row
 ; $19 to wAISkillScore when AIScore_Sacrifice_LowHPAndFoesVulnerable gives 0; weight row $12 to
-; wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C1, E-0357)
+; wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 21 Sacrifice. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -467,9 +473,10 @@ AIScore_Sacrifice::
 .return:
     ret
 
-; Heal's AI score: needs AIHealUsable; then weight row $69 to wAISkillScore2 when
-; FailIfTwoAlliesBelowHalfHP gives 0; then goes on as HealUs from
-; AIScore_HealUs_AnyFoeLacksStatus0MaskCC (also when the check passes). (C1, E-0357)
+; AI score of the 'Heal' skills (entries 22-24 of both tables). Returns at once unless AIHealUsable
+; gives non-zero. Adds row $69 to wAISkillScore2 when FailIfTwoAlliesBelowHalfHP gives 0, then in
+; every case goes on at AIScore_HealUs_StatusAndHPWeights (a jump when the check gives non-zero,
+; otherwise a fall-through). (C2, E-0385)
 ; AI scoring routine for 3 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 22 Heal, 23 HealMore, 24 HealAll. It runs checks
 ; and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -487,11 +494,12 @@ AIScore_Heal::
     ld bc, $0069
     call AddAIWeightToScore2
 
-; HealUs scoring, the rest: adds weight $1A to wAISkillScore when every present foe has one of
-; status 0 bits $CC (AnyFoeLacksStatus0MaskCC gives 0), $1A again when every present foe has some
-; status 3 bit, $1B to wAISkillScore2 when no ally is at three quarters of its HP or less; adds by
-; each ally's HP band (AIScore_HealUs_ScoreHPBands); $23 when the actor's HP is 1; always $24 and
-; $C8 (the SetCToZero test cannot pass); then link rule bit 4. (C1, E-0357)
+; Second half of the 'Heal' and 'HealUs' scores (AIScore_Heal continues into it, AIScore_HealUs
+; calls it), ending in ret. Adds row $1A to wAISkillScore when AnyFoeLacksStatus0MaskCC gives 0 and
+; row $1A again when AnyFoeHasClearStatus3 gives 0, row $1B to wAISkillScore2 when
+; AnyAllyHPAtMostThreeQuarters gives 0, runs AIScore_HealUs_ScoreHPBands with A = wBattleActor, adds
+; row $23 when ActorHPIsNotOne gives 0, always adds rows $24 and $C8, and calls
+; WeighLinkRules1RuleBit4. (C2, E-0385)
 AIScore_HealUs_StatusAndHPWeights::
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
@@ -542,7 +550,7 @@ AIScore_HealUs_StatusAndHPWeights::
 
 ; HealUs' AI score: needs AIHealUsable; then AIScore_HealUs_StatusAndHPWeights; weight row $23 to
 ; wAISkillScore when FewerThanTwoAlliesAtHP1 gives 0; weight row $69 to wAISkillScore when
-; FailIfTwoAlliesBelowHalfHP gives 0. (C1, E-0357)
+; FailIfTwoAlliesBelowHalfHP gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 25 HealUs, 26 HealUsAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -572,7 +580,7 @@ AIScore_HealUs::
 .return:
     ret
 
-; MPass' AI score: needs AIScore_MPass_Conditions and adds nothing. (C1, E-0357)
+; MPass' AI score: needs AIScore_MPass_Conditions and adds nothing. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 3 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs
 ; checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -583,9 +591,8 @@ AIScore_MPass::
     ret z
     ret
 
-; Vivify's AI score: needs AIScore_Vivify_Conditions; then
-; AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes; weight row $2E to wAISkillScore2 when
-; AIGateCompareAllyStatAverages gives 0. (C1, E-0357)
+; Vivify's AI score: needs AIScore_Vivify_Conditions; then WeighActorAloneOnSide; weight row $2E to
+; wAISkillScore2 when AIGateCompareAllyStatAverages gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 30 Vivify, 31 Revive. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -594,7 +601,7 @@ AIScore_Vivify::
     ld a, c
     and a
     ret z
-    call AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes
+    call WeighActorAloneOnSide
     farcall AIGateCompareAllyStatAverages
     ld a, c
     cp $01
@@ -607,10 +614,9 @@ AIScore_Vivify::
 .return:
     ret
 
-; Farewell's AI score: needs AIScore_Farewell_Conditions; then
-; AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes; always weight row $BC to wAISkillScore and
-; weight row $C4 to wAISkillScore2; weight row $2E to wAISkillScore2 when
-; AIGateCompareAllyStatAverages gives 0. (C1, E-0357)
+; Farewell's AI score: needs AIScore_Farewell_Conditions; then WeighActorAloneOnSide; always weight
+; row $BC to wAISkillScore and weight row $C4 to wAISkillScore2; weight row $2E to wAISkillScore2
+; when AIGateCompareAllyStatAverages gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 32 Farewell. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -620,7 +626,7 @@ AIScore_Farewell::
     ld a, c
     and a
     ret z
-    call AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes
+    call WeighActorAloneOnSide
     farcall SetCToZero
     ld a, c
     and a
@@ -644,7 +650,7 @@ AIScore_Farewell::
     ret
 
 ; Antidote's AI score: needs AIScore_Antidote_Conditions; then always weight row $2A to
-; wAISkillScore; WeighLinkRules1RuleBit4. (C1, E-0357)
+; wAISkillScore; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 33 Antidote. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -660,7 +666,7 @@ AIScore_Antidote::
     ret
 
 ; DeChaos' AI score: needs AIScore_DeChaos_Conditions; then always weight row $2A to wAISkillScore;
-; WeighLinkRules1RuleBit4. (C1, E-0357)
+; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 34 DeChaos. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -676,7 +682,7 @@ AIScore_DeChaos::
     ret
 
 ; NumbOff's AI score: needs AIScore_NumbOff_Conditions; then always weight row $2A to wAISkillScore;
-; WeighLinkRules1RuleBit4. (C1, E-0357)
+; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 35 NumbOff. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -692,7 +698,7 @@ AIScore_NumbOff::
     ret
 
 ; CurseOff's AI score: needs AIScore_CurseOff_Conditions; then always weight row $2A to
-; wAISkillScore; WeighLinkRules1RuleBit4. (C1, E-0357)
+; wAISkillScore; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 36 CurseOff. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -709,7 +715,8 @@ AIScore_CurseOff::
 
 ; Upper's AI score: needs AIScore_Upper_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; WeighLinkRules1RuleBit5;
-; AIScore_Upper_WeighFoeATKVsAllyDEF; always weight row $C1 to wAISkillScore2. (C1, E-0357)
+; AIScore_Upper_WeighFoeATKVsAllyDEF; always weight row $C1 to wAISkillScore2. (C2, E-0357; probed
+; E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 37 Upper, 38 Increase. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -745,7 +752,7 @@ AIScore_Upper::
 ; $D1 to wAISkillScore2; WeighLinkRules1RuleBit5; weight row $12 to wAISkillScore2 when
 ; FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 39 Sap, 40 Defense. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -828,7 +835,7 @@ AIScore_Sap::
 
 ; Speed's AI score: needs AIScore_Speed_Conditions; then weight row $2D to wAISkillScore2 when
 ; FastestFoeAGLAbove31PercentOfActor gives 0; weight row $2C to wAISkillScore when
-; AllyAverageAGLAtLeastFoes gives 0; WeighLinkRules1RuleBit5. (C1, E-0357)
+; AllyAverageAGLAtLeastFoes gives 0; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 41 Speed, 42 SpeedUp. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -865,7 +872,7 @@ AIScore_Speed::
 ; wAISkillScore2; WeighLinkRules1RuleBit5; weight row $12 to wAISkillScore2 when
 ; FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 43 Slow, 44 SlowAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -945,9 +952,14 @@ AIScore_Slow::
 .return:
     ret
 
+; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
+; none points here, and nothing in src calls it. It calls AIScore_TwinHits and returns if that gives
+; C = 0 (the conditions of 'TwinHits' failed). Otherwise it farcalls FailIfAllyCanUseSkill63Or64
+; and, when that gives 0, adds weight row $B3 to wAISkillScore, the same row AIScore_TwinHits adds
+; under the same check, so the row would count twice. (C2, E-0385)
 ; table-B AI score: AIScore_TwinHits, then adds a penalty word when the follow-up check fails
 ; (E-0122)
-AIScoreB_TwinHits::
+AIScore_TwinHits_UnreferencedVariant::
     call AIScore_TwinHits
     ld a, c
     and a
@@ -964,11 +976,11 @@ AIScoreB_TwinHits::
 .return:
     ret
 
-; TwinHits' AI score: needs AIScore_TwinHits_Conditions; then weight row $2F to wAISkillScore when
-; AIScore_TwinHits_CompareATKWithFoeDEF gives 0; weight row $30 to wAISkillScore when
-; AIScore_TwinHits_CheckAllyATK gives 0; always weight row $BA to wAISkillScore;
-; WeighLinkRules1RuleBit5; weight row $B3 to wAISkillScore when FailIfAllyCanUseSkill63Or64 gives 0.
-; (C1, E-0357)
+; AI score of 'TwinHits' (skill 45, entry of both tables). Returns C = 0 at once unless
+; AIScore_TwinHits_Conditions gives non-zero. Then adds row $2F to wAISkillScore when
+; AIScore_TwinHits_CompareATKWithFoeDEF gives 0 and row $30 when AIScore_TwinHits_CheckAllyATK gives
+; 0, always adds row $BA, calls WeighLinkRules1RuleBit5, and adds row $B3 when
+; FailIfAllyCanUseSkill63Or64 gives 0. Returns C = 1 after a full run. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 45 TwinHits. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1028,7 +1040,7 @@ AIScore_TwinHits::
 ; $32 to wAISkillScore when CompareFoeAverageATKWithAllyDEF gives 0; weight row $12 to
 ; wAISkillScore2 when FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 46 Surround. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1123,7 +1135,7 @@ AIScore_Surround::
 ; AIGateFoeStatus2Mask22 gives 0; weight row $2C to wAISkillScore when AllyAverageAGLAtLeastFoes
 ; gives 0; always weight row $BC to wAISkillScore2; WeighLinkRules1RuleBit5; weight row $09 to
 ; wAISkillScore when ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 47 Sleep, 48 SleepAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -1184,7 +1196,7 @@ AIScore_Sleep::
     ret
 
 ; TakeMagic's AI score: needs AIScore_TakeMagic_Conditions; then weight row $34 to wAISkillScore2
-; when ActorMPBelowThreeQuarters gives 0; WeighLinkRules1RuleBit5. (C1, E-0357)
+; when ActorMPBelowThreeQuarters gives 0; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 49 TakeMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1207,7 +1219,7 @@ AIScore_TakeMagic::
 
 ; RobMagic's AI score: needs AIScore_RobMagic_Conditions; then always weight row $35 to
 ; wAISkillScore; weight row $09 to wAISkillScore when PassIfFoesAverageResistanceAtLeast2 gives 0;
-; WeighLinkRules1RuleBit5. (C1, E-0357)
+; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 50 RobMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1236,7 +1248,7 @@ AIScore_RobMagic::
 ; FailIfFoeKnowsSkillList gives 0; weight row $12 to wAISkillScore2 when
 ; FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 51 StopSpell. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1312,7 +1324,7 @@ AIScore_StopSpell::
 ; PanicAll's AI score: needs AIPanicAllUsable; then always weight row $CA to wAISkillScore;
 ; WeighLinkRules1RuleBit5; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives
 ; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForAISide gives 0; weight row $09 to
-; wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 52 PanicAll. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1364,7 +1376,7 @@ AIScore_PanicAll::
     ret
 
 ; Ironize's AI score: needs AIIronizeUsable and AIScoreGuardSkill; then always weight row $D0 to
-; wAISkillScore; WeighLinkRules1RuleBit5. (C1, E-0357)
+; wAISkillScore; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 53 Ironize. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1388,7 +1400,8 @@ AIScore_Ironize::
     ret
 
 ; MagicBack's AI score: needs AIScore_MagicBack_Conditions; then always weight row $C0 to
-; wAISkillScore2; weight row $36 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C1, E-0357)
+; wAISkillScore2; weight row $36 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 54 MagicBack, 55 Bounce. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -1418,7 +1431,7 @@ AIScore_MagicBack::
     ret
 
 ; Barrier's AI score: needs AIScore_Barrier_Conditions; then weight row $3A to wAISkillScore when
-; FailIfFoeKnowsSkills42To47 gives 0; WeighLinkRules1RuleBit5. (C1, E-0357)
+; FailIfFoeKnowsSkills42To47 gives 0; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 56 Barrier. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1442,7 +1455,7 @@ AIScore_Barrier::
     ret
 
 ; MagicWall's AI score: needs AIScore_MagicWall_Conditions; then WeighLinkRules1RuleBit5; weight row
-; $36 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C1, E-0357)
+; $36 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 57 MagicWall. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1468,7 +1481,7 @@ AIScore_MagicWall::
 ; Transform's AI score: needs AIUsableAndActorLacksStatus4Bits67; then weight row $3B to
 ; wAISkillScore when PassIfTwiceATKAboveHighestFoeDEF gives 0; weight row $3C to wAISkillScore when
 ; AIScore_Transform_NoWeakerFoe gives 0; always weight row $CE to wAISkillScore;
-; WeighLinkRules1RuleBit5. (C1, E-0357)
+; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 58 Transform. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1511,7 +1524,7 @@ AIScore_Transform::
 
 ; BeDragon's AI score: needs AIUsableAndActorLacksStatus4Bits67; then weight row $3A to
 ; wAISkillScore when FailIfFoeKnowsSkills42To47 gives 0; WeighLinkRules1RuleBit5; weight row $3D to
-; wAISkillScore when AIScore_BeDragon_CountHighStats gives 0. (C1, E-0357)
+; wAISkillScore when AIScore_BeDragon_CountHighStats gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 59 BeDragon. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1546,7 +1559,7 @@ AIScore_BeDragon::
 ; wAISkillScore when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $40 to wAISkillScore when
 ; ActorHPIsNotOne gives 0; always weight row $BF to wAISkillScore and weight row $C5 to
 ; wAISkillScore2; WeighLinkRules1RuleBit5; weight row $42 to wAISkillScore when
-; AllySlotsCheckThenFewerThanTwoFoes gives 0. (C1, E-0357)
+; AllySlotsCheckThenFewerThanTwoFoes gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 60 Chance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1602,7 +1615,7 @@ AIScore_Chance::
 ; when LinkRuleCheckLinkRuleTurnLimitTurnLimit gives 0; weight row $47 to wAISkillScore when
 ; AllySlotsCheckThenFewerThanTwoFoes gives 0; weight row $48 to wAISkillScore when
 ; AIScore_MegaMagic_LinkModeAllows gives 0; weight row $3E to wAISkillScore2 when
-; AIScore_MegaMagic_FoeHPPlusDEFHigh gives 0. (C1, E-0357)
+; AIScore_MegaMagic_FoeHPPlusDEFHigh gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 61 MegaMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1705,7 +1718,7 @@ AIScore_MegaMagic::
 ; wAISkillScore when AllySlotsCheckThenFewerThanTwoFoes gives 0; weight row $15 to wAISkillScore
 ; when FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2 when CheckFoeStatus6Bit3
 ; gives 0; weight row $4B to wAISkillScore when CheckBattleKindNot2Or3 gives 0; weight row $12 to
-; wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C1, E-0357)
+; wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 62 BigBang, 63 Hellblast. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -1811,7 +1824,7 @@ AIScore_BigBang::
 ; weight row $15 to wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $4A to
 ; wAISkillScore2 when CheckFoeStatus6Bit3 gives 0; weight row $4E to wAISkillScore2 when
 ; AnyAllyLacksStatus2Bit2_2 gives 0; weight row $12 to wAISkillScore2 when
-; FailIfSkillHasResistanceClass gives 0. (C1, E-0357)
+; FailIfSkillHasResistanceClass gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 8 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 64 FireAir, 65 BlazeAir, 66 Scorching, 67
 ; WhiteFire, 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir. It runs checks and adds weights to
@@ -1918,8 +1931,8 @@ AIScore_FireAir::
     ret
 
 ; WindBeast's AI score: needs AIAttackSkillUsable; then weight row $10 to wAISkillScore2 when
-; FewerThanTwoFoesPresent gives 0; then goes on at AIScore_Vacuum_DamageAndResistWeights. (C1,
-; E-0357)
+; FewerThanTwoFoesPresent gives 0; then goes on at AIScore_Vacuum_DamageAndResistWeights. (C2,
+; E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 72 WindBeast. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -1936,10 +1949,13 @@ AIScore_WindBeast::
     ld bc, $0010
     call AddAIWeightToScore2
 
-; Vacuum scoring, the rest: $07 against when the lone foe's HP is not below the damage estimate, $0A
-; against when a foe's estimate reaches the limit, $09 for when the foes resist on average, $0D for
-; when no estimate reaches the limit; link rule bit 1; $4F for when a foe has 1.5 times the actor's
-; HP or more (AI mode 3 and up). (C1, E-0357)
+; Second half of the 'Vacuum' and 'WindBeast' scores (AIScore_Vacuum calls it, AIScore_WindBeast
+; continues into it), ending in ret. Adds row $07 to wAISkillScore2 when
+; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0, row $0A to wAISkillScore2 when
+; FailIfFoeAIDamageEstimatesAtLeastEstimate gives 0, row $09 when
+; PassIfFoesAverageResistanceAtLeast2 gives 0 and row $0D when
+; PassIfFoeAIDamageEstimatesAtLeastEstimate gives 0, calls WeighLinkRules1RuleBit1, and adds row $4F
+; when FailIfFoeHPAtLeast150PercentOfActor gives 0. (C2, E-0385)
 AIScore_Vacuum_DamageAndResistWeights::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -1989,7 +2005,7 @@ AIScore_Vacuum_DamageAndResistWeights::
 ; Vacuum's AI score: needs AIAttackSkillUsable; then AIScore_Vacuum_DamageAndResistWeights; weight
 ; row $15 to wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2
 ; when CheckFoeStatus6Bit3 gives 0; weight row $12 to wAISkillScore2 when
-; FailIfSkillHasResistanceClass gives 0. (C1, E-0357)
+; FailIfSkillHasResistanceClass gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 73 Vacuum, 74 Lightning. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -2036,7 +2052,8 @@ AIScore_Vacuum::
 ; PassIfFoeAIDamageEstimatesAtLeastEstimate gives 0; WeighLinkRules1RuleBit1; weight row $15 to
 ; wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2 when
 ; CheckFoeStatus6Bit3 gives 0; weight row $6B to wAISkillScore2 when CheckActorSlot0To3OrLinkModeSet
-; gives 0; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C1, E-0357)
+; gives 0; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives 0. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 75 RockThrow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2123,7 +2140,7 @@ AIScore_RockThrow::
 ; PassIfFoesAverageResistanceAtLeast2 gives 0; weight row $0D to wAISkillScore when
 ; PassIfFoeAIDamageEstimatesAtLeastEstimate gives 0; WeighLinkRules1RuleBit1; weight row $10 to
 ; wAISkillScore2 when FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2 when
-; CheckFoeStatus6Bit3 gives 0. (C1, E-0357)
+; CheckFoeStatus6Bit3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 76 Watershot. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2193,7 +2210,7 @@ AIScore_Watershot::
 ; PassIfFoeAIDamageEstimatesAtLeastEstimate gives 0; WeighLinkRules1RuleBit1; weight row $15 to
 ; wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2 when
 ; CheckFoeStatus6Bit3 gives 0; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass
-; gives 0. (C1, E-0357)
+; gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 77 Tidalwave. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2276,7 +2293,7 @@ AIScore_Tidalwave::
 ; wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2 when
 ; CheckFoeStatus6Bit3 gives 0; weight row $4F to wAISkillScore when
 ; FailIfFoeHPAtLeast150PercentOfActor gives 0; weight row $12 to wAISkillScore2 when
-; FailIfSkillHasResistanceClass gives 0. (C1, E-0357)
+; FailIfSkillHasResistanceClass gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 78 CallHelp, 79 YellHelp. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -2386,7 +2403,7 @@ AIScore_CallHelp::
 ; wAISkillScore when CheckBattleKindAtLeast2OrLinkModeSet gives 0; weight row $67 to wAISkillScore
 ; when FoeHPCheckReadsWrongSlot gives 0; weight row $05 to wAISkillScore when
 ; ActorStatus4CheckReadsAddress gives 0; weight row $33 to wAISkillScore2 when
-; ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 4 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 80 FireSlash, 81 VacuSlash, 82 BoltSlash, 83
 ; IceSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70)
@@ -2481,8 +2498,9 @@ AIScore_FireSlash::
 .return:
     ret
 
-; SlimeBlow's AI score: needs AIScore_SlimeBlow_Conditions; then always weight row $52 to
-; wAISkillScore. (C1, E-0357)
+; AI score of 'SlimeBlow' (skill 84, entry of both tables). Returns at once unless
+; AIScore_SlimeBlow_Conditions gives non-zero. Then always adds row $52 to wAISkillScore and falls
+; into AIScore_SlimeBlow_CommonWeights, which adds the rest of the weights. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 84 SlimeBlow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2495,11 +2513,15 @@ AIScore_SlimeBlow::
     ld bc, $0052
     call AddAIWeight
 
-; SlimeBlow scoring, the rest: $07 against for the lone foe, $03 against when a foe has status 7 bit
-; 2 (AI mode 3 and up), $53 for when the actor has status 1 bits 2-3 or status 4 bits 0-1; link rule
-; bit 1; $66 for outside link battles of kind 0-1; $67 for from the foe-HP check that reads the
-; wrong slot, and then $05 for from the status-4 check that reads an address, and $33 against when
-; the actor has status 2 bit 1 or status 4 bits 0-1. (C1, E-0357)
+; Shared second half of the scores of 'SlimeBlow' (which falls into it), 'DrakSlash', 'BeastCut',
+; 'BirdBlow', 'BugBlow', 'Shears', 'DevilCut', 'ZombieCut', 'CleanCut', 'AquaCut' and 'MetalCut'
+; (which jump to it), ending in ret. Adds row $07 to wAISkillScore2 when
+; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0, row $03 to wAISkillScore2 when
+; CheckFoeStatus7Bit2 gives 0, row $53 when ActorLacksStatus1Bits23And4Bits01 gives 0, calls
+; WeighLinkRules1RuleBit1, adds row $66 when CheckBattleKindAtLeast2OrLinkModeSet gives 0 and row
+; $67 when FoeHPCheckReadsWrongSlot gives 0. Only when that last check gives 0 does it go on to add
+; row $05 when ActorStatus4CheckReadsAddress gives 0 and row $33 to wAISkillScore2 when
+; ActorLacksStatus2Bit1And5Bits01 gives 0; a non-zero result returns without those two. (C2, E-0385)
 AIScore_SlimeBlow_CommonWeights::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -2561,7 +2583,7 @@ AIScore_SlimeBlow_CommonWeights::
     ret
 
 ; DrakSlash's AI score: needs AIScore_DrakSlash_Conditions; then always weight row $52 to
-; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 85 DrakSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2576,7 +2598,7 @@ AIScore_DrakSlash::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; BeastCut's AI score: needs AIScore_BeastCut_Conditions; then always weight row $52 to
-; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 86 BeastCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2591,7 +2613,7 @@ AIScore_BeastCut::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; BirdBlow's AI score: needs AIScore_BirdBlow_Conditions; then always weight row $52 to
-; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 87 BirdBlow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2606,7 +2628,7 @@ AIScore_BirdBlow::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; BugBlow's AI score: needs AIScore_BugBlow_Conditions; then always weight row $52 to wAISkillScore;
-; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 88 BugBlow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2621,7 +2643,7 @@ AIScore_BugBlow::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; Shears' AI score: needs AIScore_Shears_Conditions; then always weight row $52 to wAISkillScore;
-; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 89 Shears. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2636,7 +2658,7 @@ AIScore_Shears::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; DevilCut's AI score: needs AIScore_DevilCut_Conditions; then always weight row $52 to
-; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 90 DevilCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2651,7 +2673,7 @@ AIScore_DevilCut::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; ZombieCut's AI score: needs AIScore_ZombieCut_Conditions; then always weight row $52 to
-; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 91 ZombieCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2666,7 +2688,7 @@ AIScore_ZombieCut::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; CleanCut's AI score: needs AIScore_CleanCut_Conditions; then always weight row $52 to
-; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 92 CleanCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2681,7 +2703,7 @@ AIScore_CleanCut::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; AquaCut's AI score: needs AIScore_AquaCut_Conditions; then always weight row $52 to wAISkillScore;
-; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 93 AquaCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2696,7 +2718,7 @@ AIScore_AquaCut::
     jp AIScore_SlimeBlow_CommonWeights
 
 ; MetalCut's AI score: needs AIScore_MetalCut_Conditions; then always weight row $53 to
-; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 94 MetalCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2710,8 +2732,9 @@ AIScore_MetalCut::
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
 
-; PoisonHit's AI score: needs AIScore_PoisonHit_Conditions; then always weight row $54 to
-; wAISkillScore. (C1, E-0357)
+; AI score of 'PoisonHit' (skill 95, entry of both tables). Returns at once unless
+; AIScore_PoisonHit_Conditions gives non-zero. Then always adds row $54 to wAISkillScore and falls
+; into AIScore_PoisonHit_StatusAndResistWeights, which adds the rest of the weights. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 95 PoisonHit. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2724,11 +2747,14 @@ AIScore_PoisonHit::
     ld bc, $0054
     call AddAIWeight
 
-; PoisonHit scoring, the rest: $55 for when the actor has status 1 bits 2-3 or status 4 bits 0-1;
-; link rule bit 1; $66 for outside link battles of kind 0-1; $67 for from the foe-HP check; $39
-; against for a foe-side actor outside link battles; $05 for from the status-4 check; $33 against
-; for status 2 bit 1 or status 4 bits 0-1; $09 for from each of the two resistance gates. (C1,
-; E-0357)
+; Shared second half of the scores of 'PoisonHit' (which falls into it), 'Paralyze' and 'NapAttack'
+; (which jump to it), ending in ret. Adds row $55 when ActorLacksStatus1Bits23And4Bits01 gives 0,
+; calls WeighLinkRules1RuleBit1, adds row $66 when CheckBattleKindAtLeast2OrLinkModeSet gives 0, row
+; $67 when FoeHPCheckReadsWrongSlot gives 0, row $39 to wAISkillScore2 when
+; CheckActorSlot0To3OrLinkModeSet gives 0, row $05 when ActorStatus4CheckReadsAddress gives 0, row
+; $33 to wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0, and row $09 when
+; ResistanceAverageGateForAISide gives 0 and again when ResistanceAverageGateForFoeAIMode3 gives 0.
+; (C2, E-0385)
 AIScore_PoisonHit_StatusAndResistWeights::
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
@@ -2802,7 +2828,8 @@ AIScore_PoisonHit_StatusAndResistWeights::
     ret
 
 ; Paralyze's AI score: needs AIScore_Paralyze_Conditions; then always weight row $54 to
-; wAISkillScore; then goes on at AIScore_PoisonHit_StatusAndResistWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_PoisonHit_StatusAndResistWeights. (C2, E-0357; probed
+; E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 96 Paralyze. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2817,7 +2844,8 @@ AIScore_Paralyze::
     jp AIScore_PoisonHit_StatusAndResistWeights
 
 ; NapAttack's AI score: needs AIScore_NapAttack_Conditions; then always weight row $54 to
-; wAISkillScore; then goes on at AIScore_PoisonHit_StatusAndResistWeights. (C1, E-0357)
+; wAISkillScore; then goes on at AIScore_PoisonHit_StatusAndResistWeights. (C2, E-0357; probed
+; E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 97 NapAttack. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2831,9 +2859,14 @@ AIScore_NapAttack::
     call AddAIWeight
     jp AIScore_PoisonHit_StatusAndResistWeights
 
+; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
+; none points here, and nothing in src calls it. It calls AIScore_SquallHit and returns if that
+; gives C = 0. Otherwise it farcalls FailIfFoeHurtAndHealerCanCast and, when that gives 0, adds
+; weight row $B4 to wAISkillScore, the same row AIScore_SquallHit adds under the same check, so the
+; row would count twice. (C2, E-0385)
 ; table-B AI score: AIScore_SquallHit, then adds a penalty word when the follow-up check fails
 ; (E-0122)
-AIScoreB_SquallHit::
+AIScore_SquallHit_UnreferencedVariant::
     call AIScore_SquallHit
     ld a, c
     and a
@@ -2850,13 +2883,13 @@ AIScoreB_SquallHit::
 .return:
     ret
 
-; SquallHit's AI score: needs AIScore_SquallHit_Conditions and MaxNegativeScoreWhenAIFlagBit0; then
-; weight row $07 to wAISkillScore2 when CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always
-; weight row $C8 to wAISkillScore2; WeighLinkRules1RuleBit1; weight row $56 to wAISkillScore when
-; FailIfFoeHPAtMostFourFifthsAIDamageEstimates gives 0; weight row $B4 to wAISkillScore when
-; FailIfFoeHurtAndHealerCanCast gives 0; weight row $05 to wAISkillScore when
-; ActorStatus4CheckReadsAddress gives 0; weight row $33 to wAISkillScore2 when
-; ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; AI score of 'SquallHit' (skill 98, entry of both tables). Returns C = 0 at once unless
+; AIScore_SquallHit_Conditions gives non-zero, and returns again when MaxNegativeScoreWhenAIFlagBit0
+; returns Z. Then adds row $07 to wAISkillScore2 when CheckLoneFoeHPNotBelowAIDamageEstimates gives
+; 0, always row $C8 to wAISkillScore2, calls WeighLinkRules1RuleBit1, adds row $56 when
+; FailIfFoeHPAtMostFourFifthsAIDamageEstimates gives 0, row $B4 when FailIfFoeHurtAndHealerCanCast
+; gives 0, row $05 when ActorStatus4CheckReadsAddress gives 0 and row $33 to wAISkillScore2 when
+; ActorLacksStatus2Bit1And5Bits01 gives 0. Returns C = 1 after a full run. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 98 SquallHit. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -2930,7 +2963,7 @@ AIScore_SquallHit::
 ; when FailIfFoeHPAtMostFourFifthsAIDamageEstimates gives 0; weight row $56 to wAISkillScore when
 ; AIScore_BiAttack_FoeHPCheck gives 0; weight row $05 to wAISkillScore when
 ; ActorStatus4CheckReadsAddress gives 0; weight row $33 to wAISkillScore2 when
-; ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 99 BiAttack, 100 QuadHits. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -3021,7 +3054,7 @@ AIScore_BiAttack::
 ; row $CB to wAISkillScore2; WeighLinkRules1RuleBit1; weight row $15 to wAISkillScore when
 ; FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2 when CheckFoeStatus6Bit3 gives
 ; 0; weight row $05 to wAISkillScore when ActorStatus4CheckReadsAddress gives 0; weight row $33 to
-; wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 101 RainSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3087,8 +3120,8 @@ AIScore_RainSlash::
     ret
 
 ; MultiCut's AI score: needs AIScore_MultiCut_Conditions; then weight row $12 to wAISkillScore2 when
-; FailIfSkillHasResistanceClass gives 0; then goes on at AIScore_MultiCut_DamageAndFoeWeights. (C1,
-; E-0357)
+; FailIfSkillHasResistanceClass gives 0; then goes on at AIScore_MultiCut_DamageAndFoeWeights. (C2,
+; E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 102 MultiCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3107,9 +3140,14 @@ AIScore_MultiCut::
     ld bc, $0012
     call AddAIWeightToScore2
 
-; MultiCut scoring, the rest: the lone-foe, estimate and resistance weights ($07, $0A against; $09,
-; $0D for); link rule bit 1; $57 for with two or more foes; $4A against when a foe has status 6 bit
-; 3 (AI mode 3 and up). (C1, E-0357)
+; Shared second half of the scores of 'MultiCut' (which falls or jumps into it) and 'GigaSlash'
+; (which jumps to it), ending in ret. Adds row $07 to wAISkillScore2 when
+; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0, row $0A to wAISkillScore2 when
+; FailIfFoeAIDamageEstimatesAtLeastEstimate gives 0, row $09 when
+; PassIfFoesAverageResistanceAtLeast2 gives 0 and row $0D when
+; PassIfFoeAIDamageEstimatesAtLeastEstimate gives 0, calls WeighLinkRules1RuleBit1, adds row $57
+; when FewerThanTwoFoesPresent gives 0 and row $4A to wAISkillScore2 when CheckFoeStatus6Bit3 gives
+; 0. (C2, E-0385)
 AIScore_MultiCut_DamageAndFoeWeights::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3166,7 +3204,7 @@ AIScore_MultiCut_DamageAndFoeWeights::
 
 ; GigaSlash's AI score: needs AIAndFoeLacksStatus3And4; then weight row $33 to wAISkillScore2 when
 ; ActorLacksStatus2Bit1And5Bits01 gives 0; then goes on at AIScore_MultiCut_DamageAndFoeWeights.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 103 GigaSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3188,7 +3226,7 @@ AIScore_GigaSlash::
 
 ; ChargeUp's AI score: needs AIScore_ChargeUp_Conditions; then weight row $58 to wAISkillScore when
 ; PassIfFoeAverageDEFAtMostTwiceAllyATK gives 0; always weight row $BA to wAISkillScore and weight
-; row $BF to wAISkillScore2; WeighLinkRules1RuleBit1. (C1, E-0357)
+; row $BF to wAISkillScore2; WeighLinkRules1RuleBit1. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 104 ChargeUp. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3226,7 +3264,7 @@ AIScore_ChargeUp::
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $2C to wAISkillScore when
 ; AllyAverageAGLAtLeastFoes gives 0; weight row $0A to wAISkillScore2 when
 ; ActorLacksStatus1Bits23And4Bits01 gives 0; always weight row $BA to wAISkillScore and weight row
-; $BF to wAISkillScore2; WeighLinkRules1RuleBit1. (C1, E-0357)
+; $BF to wAISkillScore2; WeighLinkRules1RuleBit1. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 105 PsycheUp. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3288,7 +3326,7 @@ AIScore_PsycheUp::
 ; PassIfFoeAverageDEFAtMostTwiceAllyATK gives 0; weight row $59 to wAISkillScore2 when
 ; PassIfTwiceATKAboveHighestFoeDEF gives 0; weight row $0A to wAISkillScore2 when
 ; ActorLacksStatus1Bits23And4Bits01 gives 0; WeighLinkRules1RuleBit1; weight row $33 to
-; wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 106 HighJump. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3353,7 +3391,8 @@ AIScore_HighJump::
 ; PassIfTwiceATKAboveHighestFoeDEF gives 0; weight row $5C to wAISkillScore2 when
 ; ActorLacksStatus1Bits23And4Bits01 gives 0; always weight row $BD to wAISkillScore;
 ; WeighLinkRules1RuleBit1; weight row $B0 to wAISkillScore when AIScore_EvilSlash_CheckFoes gives 0;
-; weight row $33 to wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; weight row $33 to wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed
+; E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 107 EvilSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3446,7 +3485,7 @@ AIScore_EvilSlash::
 ; wAISkillScore2 when AtLeastTwoFoesPresent gives 0; weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $C4 to wAISkillScore;
 ; WeighLinkRules1RuleBit1; weight row $33 to wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01
-; gives 0. (C1, E-0357)
+; gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 108 Massacre. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3499,7 +3538,7 @@ AIScore_Massacre::
 ; gives 0; weight row $5C to wAISkillScore2 when ActorLacksStatus1Bits23And4Bits01 gives 0; always
 ; weight row $C7 to wAISkillScore and weight row $D0 to wAISkillScore2; WeighLinkRules1RuleBit1;
 ; weight row $62 to wAISkillScore2 when AllyCheckSide0FlagAndOtherSlots gives 0; weight row $33 to
-; wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 109 TwinSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3601,7 +3640,7 @@ AIScore_TwinSlash::
 ; weight row $63 to wAISkillScore2 when AllySlotsCheckThenFewerThanTwoFoes gives 0; weight row $5F
 ; to wAISkillScore2 when AllyCheckSide0FlagAndOtherSlots gives 0; weight row $64 to wAISkillScore
 ; when AIScore_Berserker_SpeedAndHPCheck gives 0; weight row $33 to wAISkillScore2 when
-; ActorLacksStatus2Bit1And5Bits01 gives 0. (C1, E-0357)
+; ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 110 Berserker. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3724,7 +3763,7 @@ AIScore_Berserker::
 ; wAISkillScore2 when AnyFoeLacksStatus0Bit6 gives 0; weight row $17 to wAISkillScore2 when
 ; AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $64 to wAISkillScore when
 ; AIScore_Ramming_LastFoeHPAndResist gives 0; then goes on at AIScore_Ramming_HPAndStatusWeights.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 111 Ramming. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3759,11 +3798,13 @@ AIScore_Ramming::
     ld bc, $0064
     call AddAIWeight
 
-; Ramming scoring, the rest: $07 against for the lone foe, $09 for from the resistance average; by
-; the actor's HP band (AIScore_Ramming_WeighHPBand); $5C against for status 1 bits 2-3 or status 4
-; bits 0-1; always $C7 for and $D0 against (SetCToZero); link rule bit 1; $5F against when the side
-; flag is set or no other ally is present; $33 against for status 2 bit 1 or status 4 bits 0-1. (C1,
-; E-0357)
+; Shared second half of the scores of 'Ramming' and 'Kamikaze' (both continue into it), ending in
+; ret. Adds row $07 to wAISkillScore2 when CheckLoneFoeHPNotBelowAIDamageEstimates gives 0, row $09
+; when PassIfFoesAverageResistanceAtLeast2 gives 0, runs AIScore_Ramming_WeighHPBand with A =
+; wBattleActor, adds row $5C to wAISkillScore2 when ActorLacksStatus1Bits23And4Bits01 gives 0,
+; always adds row $C7 to wAISkillScore and row $D0 to wAISkillScore2, calls WeighLinkRules1RuleBit1,
+; adds row $5F to wAISkillScore2 when AllyCheckSide0FlagAndOtherSlots gives 0 and row $33 to
+; wAISkillScore2 when ActorLacksStatus2Bit1And5Bits01 gives 0. (C2, E-0385)
 AIScore_Ramming_HPAndStatusWeights::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3822,7 +3863,7 @@ AIScore_Ramming_HPAndStatusWeights::
 
 ; Kamikaze's AI score: needs AIScore_Kamikaze_Conditions; then weight row $64 to wAISkillScore when
 ; AIScore_Kamikaze_HealerAllyAndFoeHP gives 0; then goes on at AIScore_Ramming_HPAndStatusWeights.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 112 Kamikaze. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3845,7 +3886,7 @@ AIScore_Kamikaze::
     jp AIScore_Ramming_HPAndStatusWeights
 
 ; SleepAir's AI score: needs AIScore_SleepAir_Conditions; then always weight row $BC to
-; wAISkillScore2; then goes on at AIScore_SleepAir_CommonWeights. (C1, E-0357)
+; wAISkillScore2; then goes on at AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 113 SleepAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3864,12 +3905,16 @@ AIScore_SleepAir::
 
 ; The shared scoring of AIScore_SleepAir, AIScore_PalsyAir, AIScore_PoisonGas and AIScore_PoisonAir
 ; after their conditions: weighs link rule bit 3 (WeighLinkRules1RuleBit3), then falls into
-; AIScore_SleepAir_FoeCountAndResistWeights for the foe-count and resistance weights. (C1, E-0371)
+; AIScore_SleepAir_FoeCountAndResistWeights for the foe-count and resistance weights. (C2, E-0371;
+; probed E-0385)
 AIScore_SleepAir_CommonWeights::
     call WeighLinkRules1RuleBit3
 
-; SleepAir scoring, the rest: $15 for with two or more foes, $12 against when a foe fully resists
-; (AI mode 2 and up), $09 for from each resistance gate. (C1, E-0357)
+; Shared last part of the scores of 'SleepAir', 'PalsyAir', 'PoisonGas' and 'PoisonAir' (through
+; AIScore_SleepAir_CommonWeights) and 'Curse' (which jumps here), ending in ret. Adds row $15 when
+; FewerThanTwoFoesPresent gives 0, row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass
+; gives 0, and row $09 when ResistanceAverageGateForAISide gives 0 and again when
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0385)
 AIScore_SleepAir_FoeCountAndResistWeights::
     farcall FewerThanTwoFoesPresent
     ld a, c
@@ -3912,7 +3957,7 @@ AIScore_SleepAir_FoeCountAndResistWeights::
     ret
 
 ; PalsyAir's AI score: needs AIScore_PalsyAir_Conditions; then goes on at
-; AIScore_SleepAir_CommonWeights. (C1, E-0357)
+; AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 114 PalsyAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3925,7 +3970,7 @@ AIScore_PalsyAir::
     jr AIScore_SleepAir_CommonWeights
 
 ; PoisonGas' AI score: needs AIScore_PoisonGas_Conditions; then goes on at
-; AIScore_SleepAir_CommonWeights. (C1, E-0357)
+; AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 115 PoisonGas. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3938,7 +3983,7 @@ AIScore_PoisonGas::
     jr AIScore_SleepAir_CommonWeights
 
 ; PoisonAir's AI score: needs AIScore_PoisonAir_Conditions; then goes on at
-; AIScore_SleepAir_CommonWeights. (C1, E-0357)
+; AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 116 PoisonAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3951,7 +3996,8 @@ AIScore_PoisonAir::
     jr AIScore_SleepAir_CommonWeights
 
 ; Curse's AI score: needs AIScore_Curse_Conditions; then always weight row $BD to wAISkillScore2;
-; WeighLinkRules1RuleBit5; then goes on at AIScore_SleepAir_FoeCountAndResistWeights. (C1, E-0357)
+; WeighLinkRules1RuleBit5; then goes on at AIScore_SleepAir_FoeCountAndResistWeights. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 117 Curse. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -3975,7 +4021,8 @@ AIScore_Curse::
 ; OddDance's AI score: needs AIScore_OddDance_Conditions; then always weight row $09 to
 ; wAISkillScore; always weight row $C2 to wAISkillScore2 and weight row $D2 to wAISkillScore;
 ; WeighLinkRules1RuleBit2; weight row $09 to wAISkillScore when ResistanceAverageGateForAISide gives
-; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 118 OddDance, 119 RobDance. It runs checks and
 ; adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -4024,7 +4071,7 @@ AIScore_OddDance::
 ; WeighLinkRules1RuleBit2; weight row $15 to wAISkillScore when FewerThanTwoFoesPresent gives 0;
 ; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives 0; weight row $09 to
 ; wAISkillScore when ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 120 PaniDance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4093,7 +4140,7 @@ AIScore_PaniDance::
 ; AIGateFoeSlotResistances2Bits45 gives 0; weight row $12 to wAISkillScore2 when
 ; FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 121 K.O.Dance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4164,8 +4211,14 @@ AIScore_KODance::
 .return:
     ret
 
+; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
+; none points here, and nothing in src calls it. It calls AIScore_LureDance and returns if that
+; gives C = 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which
+; AIScore_LureDance already ends with, so that call, and any row it adds (row $B1 to wAISkillScore
+; when AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies
+; gives 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_LureDance, then AIAddScoresForTwoLists when usable (E-0122)
-AIScoreB_LureDance::
+AIScore_LureDance_UnreferencedVariant::
     call AIScore_LureDance
     ld a, c
     and a
@@ -4173,12 +4226,12 @@ AIScoreB_LureDance::
     call AIAddScoresForTwoLists
     ret
 
-; LureDance's AI score: needs AIScore_LureDance_Conditions; then always weight row $C2 to
-; wAISkillScore2 and weight row $D2 to wAISkillScore; WeighLinkRules1RuleBit2; weight row $15 to
-; wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $12 to wAISkillScore2 when
-; FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0; AIAddScoresForTwoLists. (C1, E-0357)
+; AI score of 'LureDance' (skill 122, entry of both tables). Returns C = 0 at once unless
+; AIScore_LureDance_Conditions gives non-zero. Then always adds row $C2 to wAISkillScore2 and row
+; $D2 to wAISkillScore, calls WeighLinkRules1RuleBit2, adds row $15 when FewerThanTwoFoesPresent
+; gives 0, row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives 0, row $09 when
+; ResistanceAverageGateForAISide gives 0 and row $09 again when ResistanceAverageGateForFoeAIMode3
+; gives 0, and ends with AIAddScoresForTwoLists. Returns C = 1 after a full run. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 122 LureDance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4245,7 +4298,7 @@ AIScore_LureDance::
 ; wAISkillScore and weight row $C4 to wAISkillScore2; WeighLinkRules1RuleBit2; weight row $29 to
 ; wAISkillScore when AllySlotsCheckThenFewerThanTwoFoes gives 0; weight row $29 to wAISkillScore
 ; when PassIfSideFlagOrOtherAllyPresent gives 0; weight row $2E to wAISkillScore2 when
-; AIGateCompareAllyStatAverages gives 0. (C1, E-0357)
+; AIGateCompareAllyStatAverages gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 123 LifeDance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4300,7 +4353,7 @@ AIScore_LifeDance::
 ; gives 0; weight row $23 to wAISkillScore when ActorHPIsNotOne gives 0; weight row $23 to
 ; wAISkillScore when FewerThanTwoAlliesAtHP1 gives 0; always weight row $24 to wAISkillScore;
 ; WeighLinkRules1RuleBit2; weight row $69 to wAISkillScore when FailIfTwoAlliesBelowHalfHP gives 0.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 124 Hustle. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4378,7 +4431,7 @@ AIScore_Hustle::
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $6D to wAISkillScore when
 ; PassIfFoeAverageATKAtMostTwiceAllyDEF gives 0; always weight row $BE to wAISkillScore;
 ; WeighLinkRules1RuleBit2; weight row $32 to wAISkillScore when CompareFoeAverageATKWithAllyDEF
-; gives 0. (C1, E-0357)
+; gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 125 SideStep. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4433,7 +4486,9 @@ AIScore_SideStep::
 .return:
     ret
 
-; SandStorm's AI score: needs AIScore_SandStorm_Conditions. (C1, E-0357)
+; AI score of 'SandStorm' (skill 126, entry of both tables). Returns at once unless
+; AIScore_SandStorm_Conditions gives non-zero, then falls into
+; AIScore_SandStorm_DamageAndATKWeights, which adds all of its weights. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 126 SandStorm. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4444,10 +4499,13 @@ AIScore_SandStorm::
     and a
     ret z
 
-; SandStorm scoring, the rest: $07 against for the lone foe, $6D for when the foes' average ATK is
-; more than twice the allies' DEF (AI mode 2 and up), always $BA against (SetCToZero); link rule bit
-; 5; $15 for with two or more foes, $32 for from the ATK/DEF comparison, $12 against for a fully
-; resistant foe, $09 for from each resistance gate. (C1, E-0357)
+; Shared second half of the scores of 'SandStorm' (which falls into it) and 'Radiant' (which jumps
+; to it), ending in ret. Adds row $07 to wAISkillScore2 when CheckLoneFoeHPNotBelowAIDamageEstimates
+; gives 0, row $6D when PassIfFoeAverageATKAtMostTwiceAllyDEF gives 0, always row $BA to
+; wAISkillScore2, calls WeighLinkRules1RuleBit5, adds row $15 when FewerThanTwoFoesPresent gives 0,
+; row $32 when CompareFoeAverageATKWithAllyDEF gives 0, row $12 to wAISkillScore2 when
+; FailIfSkillHasResistanceClass gives 0, and row $09 when ResistanceAverageGateForAISide gives 0 and
+; again when ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0385)
 AIScore_SandStorm_DamageAndATKWeights::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -4525,7 +4583,7 @@ AIScore_SandStorm_DamageAndATKWeights::
     ret
 
 ; Radiant's AI score: needs AIScore_Radiant_Conditions; then goes on at
-; AIScore_SandStorm_DamageAndATKWeights. (C1, E-0357)
+; AIScore_SandStorm_DamageAndATKWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 127 Radiant. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4542,7 +4600,7 @@ AIScore_Radiant::
 ; wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $12 to wAISkillScore2 when
 ; FailIfSkillHasResistanceClass gives 0; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 128 EerieLite. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4604,7 +4662,7 @@ AIScore_EerieLite::
     ret
 
 ; Surge's AI score: needs AIScore_Surge_Conditions; then always weight row $6F to wAISkillScore;
-; always weight row $CA to wAISkillScore2; WeighLinkRules1RuleBit4. (C1, E-0357)
+; always weight row $CA to wAISkillScore2; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 129 Surge. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4628,7 +4686,8 @@ AIScore_Surge::
     ret
 
 ; UltraDown's AI score: needs AIScore_UltraDown_Conditions; then always weight row $6F to
-; wAISkillScore; always weight row $CC to wAISkillScore; WeighLinkRules1RuleBit5. (C1, E-0357)
+; wAISkillScore; always weight row $CC to wAISkillScore; WeighLinkRules1RuleBit5. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 130 UltraDown. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4653,7 +4712,8 @@ AIScore_UltraDown::
 
 ; DeMagic's AI score: needs AIScore_DeMagic_Conditions; then always weight row $71 to wAISkillScore;
 ; weight row $70 to wAISkillScore when AnyFoeLacksStatus5Bits67 gives 0; always weight row $C9 to
-; wAISkillScore2 and weight row $CB to wAISkillScore; WeighLinkRules1RuleBit5. (C1, E-0357)
+; wAISkillScore2 and weight row $CB to wAISkillScore; WeighLinkRules1RuleBit5. (C2, E-0357; probed
+; E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 131 DeMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4688,7 +4748,7 @@ AIScore_DeMagic::
 
 ; ThickFog's AI score: needs AIScore_ThickFog_Conditions; then always weight row $C9 to
 ; wAISkillScore; WeighLinkRules1RuleBit5; weight row $72 to wAISkillScore when
-; FailIfFoeKnowsSkillList gives 0. (C1, E-0357)
+; FailIfFoeKnowsSkillList gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 132 ThickFog. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4723,7 +4783,7 @@ AIScore_ThickFog::
 ; when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $74 to wAISkillScore and weight
 ; row $BB to wAISkillScore and weight row $C7 to wAISkillScore2; WeighLinkRules1RuleBit5; weight row
-; $75 to wAISkillScore when AllySlotsCheckThenFewerThanTwoFoes gives 0. (C1, E-0357)
+; $75 to wAISkillScore when AllySlotsCheckThenFewerThanTwoFoes gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 4 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136
 ; BazooCall. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70)
@@ -4775,7 +4835,7 @@ AIScore_TatsuCall::
 ; SuckAir's AI score: needs AIScore_SuckAir_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $76 to wAISkillScore;
 ; WeighLinkRules1RuleBit3; weight row $77 to wAISkillScore2 when AnyAllyLacksStatus2Bit2_2 gives 0.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 137 SuckAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4814,7 +4874,7 @@ AIScore_SuckAir::
 
 ; Focus' AI score: needs AIScore_Focus_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $C2 to wAISkillScore and weight
-; row $D2 to wAISkillScore2; WeighLinkRules1RuleBit5. (C1, E-0357)
+; row $D2 to wAISkillScore2; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 138 Focus. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4845,8 +4905,14 @@ AIScore_Focus::
     call WeighLinkRules1RuleBit5
     ret
 
+; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
+; none points here, and nothing in src calls it. It calls AIScore_LushLicks and returns if that
+; gives C = 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which
+; AIScore_LushLicks already ends with, so that call, and any row it adds (row $B1 to wAISkillScore
+; when AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies
+; gives 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_LushLicks, then AIAddScoresForTwoLists when usable (E-0122)
-AIScoreB_LushLicks::
+AIScore_LushLicks_UnreferencedVariant::
     call AIScore_LushLicks
     ld a, c
     and a
@@ -4854,10 +4920,11 @@ AIScoreB_LushLicks::
     call AIAddScoresForTwoLists
     ret
 
-; LushLicks' AI score: needs AILickSkillUsable; then always weight row $78 to wAISkillScore;
-; WeighLinkRules1RuleBit5; weight row $09 to wAISkillScore when ResistanceAverageGateForAISide gives
-; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0;
-; AIAddScoresForTwoLists. (C1, E-0357)
+; AI score of 'LushLicks' (skill 139, entry of both tables). Returns C = 0 at once unless
+; AILickSkillUsable gives non-zero. Then always adds row $78 to wAISkillScore, calls
+; WeighLinkRules1RuleBit5, adds row $09 when ResistanceAverageGateForAISide gives 0 and row $09
+; again when ResistanceAverageGateForFoeAIMode3 gives 0, and ends with AIAddScoresForTwoLists.
+; Returns C = 1 after a full run. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 139 LushLicks. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4906,7 +4973,7 @@ AIScore_LushLicks::
 ; PassIfTwiceATKAboveHighestFoeDEF gives 0; always weight row $78 to wAISkillScore;
 ; WeighLinkRules1RuleBit5; weight row $09 to wAISkillScore when ResistanceAverageGateForAISide gives
 ; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0;
-; AIAddScoresForTwoLists. (C1, E-0357)
+; AIAddScoresForTwoLists. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 140 SickLick. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -4976,8 +5043,14 @@ AIScore_SickLick::
     call AIAddScoresForTwoLists
     ret
 
+; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
+; none points here, and nothing in src calls it. It calls AIScore_LegSweep and returns if that gives
+; C = 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which AIScore_LegSweep
+; already ends with, so that call, and any row it adds (row $B1 to wAISkillScore when
+; AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies gives
+; 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_LegSweep, then AIAddScoresForTwoLists when usable (E-0122)
-AIScoreB_LegSweep::
+AIScore_LegSweep_UnreferencedVariant::
     call AIScore_LegSweep
     ld a, c
     and a
@@ -4988,7 +5061,8 @@ AIScoreB_LegSweep::
 ; LegSweep's AI score: needs AIScore_LegSweep_Conditions; then always weight row $7B to
 ; wAISkillScore; WeighLinkRules1RuleBit5; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0; AIAddScoresForTwoLists; returns C = 1. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0; AIAddScoresForTwoLists; returns C = 1. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 141 LegSweep, 142 BigTrip. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -5030,8 +5104,14 @@ AIScore_LegSweep::
     ld c, $01
     ret
 
+; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
+; none points here, and nothing in src calls it. It calls AIScore_Ahhh and returns if that gives C =
+; 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which AIScore_Ahhh already
+; ends with, so that call, and any row it adds (row $B1 to wAISkillScore when
+; AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies gives
+; 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_Ahhh, then AIAddScoresForTwoLists when usable (E-0122)
-AIScoreB_Ahhh::
+AIScore_Ahhh_UnreferencedVariant::
     call AIScore_Ahhh
     ld a, c
     and a
@@ -5043,7 +5123,8 @@ AIScoreB_Ahhh::
 ; row $C3 to wAISkillScore2 and weight row $CE to wAISkillScore2 and weight row $D3 to
 ; wAISkillScore; WeighLinkRules1RuleBit5; weight row $09 to wAISkillScore when
 ; ResistanceAverageGateForAISide gives 0; weight row $09 to wAISkillScore when
-; ResistanceAverageGateForFoeAIMode3 gives 0; AIAddScoresForTwoLists; returns C = 1. (C1, E-0357)
+; ResistanceAverageGateForFoeAIMode3 gives 0; AIAddScoresForTwoLists; returns C = 1. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 143 Ahhh, 144 WarCry. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -5093,7 +5174,8 @@ AIScore_Ahhh::
 
 ; Geyser's AI score: needs AIScore_Geyser_Conditions; then always weight row $7D to wAISkillScore;
 ; WeighLinkRules1RuleBit5; weight row $09 to wAISkillScore when ResistanceAverageGateForAISide gives
-; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0. (C1, E-0357)
+; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 145 Geyser. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5135,7 +5217,7 @@ AIScore_Geyser::
     ret
 
 ; DanceShut's AI score: needs AIScore_DanceShut_Conditions; then always weight row $7E to
-; wAISkillScore; WeighLinkRules1RuleBit2. (C1, E-0357)
+; wAISkillScore; WeighLinkRules1RuleBit2. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 146 DanceShut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5158,7 +5240,7 @@ AIScore_DanceShut::
 
 ; MouthShut's AI score: needs AIScore_MouthShut_Conditions; then weight row $7F to wAISkillScore
 ; when FailIfFoeKnowsSkills42To47 gives 0; always weight row $80 to wAISkillScore;
-; WeighLinkRules1RuleBit3. (C1, E-0357)
+; WeighLinkRules1RuleBit3. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 147 MouthShut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5191,7 +5273,8 @@ AIScore_MouthShut::
 
 ; StrongD's AI score: needs AIScore_StrongD_Conditions and AIScoreGuardSkill; then
 ; AIScore_StrongD_WeighHPBand; always weight row $C1 to wAISkillScore2; weight row $00 to
-; wAISkillScore when FailIfFoeSkill3DThreatensActorHP gives 0; WeighLinkRules1RuleBit4. (C1, E-0357)
+; wAISkillScore when FailIfFoeSkill3DThreatensActorHP gives 0; WeighLinkRules1RuleBit4. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 148 StrongD. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5227,7 +5310,8 @@ AIScore_StrongD::
     ret
 
 ; Dodge's AI score: needs AIScore_Dodge_Conditions and AIScoreGuardSkill; then always weight row $88
-; to wAISkillScore and weight row $C1 to wAISkillScore2; WeighLinkRules1RuleBit5. (C1, E-0357)
+; to wAISkillScore and weight row $C1 to wAISkillScore2; WeighLinkRules1RuleBit5. (C2, E-0357;
+; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 149 Dodge. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5253,7 +5337,8 @@ AIScore_Dodge::
     ret
 
 ; BladeD's AI score: needs AIGuardSkillUsable and AIScoreGuardSkill; then always weight row $8A to
-; wAISkillScore and weight row $C1 to wAISkillScore2; WeighLinkRules1RuleBit4. (C1, E-0357)
+; wAISkillScore and weight row $C1 to wAISkillScore2; WeighLinkRules1RuleBit4. (C2, E-0357; probed
+; E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 150 BladeD. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5280,7 +5365,7 @@ AIScore_BladeD::
 
 ; Cover's AI score: needs AIScore_Cover_Conditions; then AIScoreGuardSkill (returning when it gives
 ; 0); AIScore_Cover_ScoreHPBands; always weight row $CD to wAISkillScore2 and weight row $D1 to
-; wAISkillScore; WeighLinkRules1RuleBit5. (C1, E-0357)
+; wAISkillScore; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 151 Cover, 152 Guardian. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
@@ -5306,8 +5391,13 @@ AIScore_Cover::
     call WeighLinkRules1RuleBit5
     ret
 
-; TailWind's AI score: needs AIScore_TailWind_Conditions and AIScore_TailWind_WeighFirstTurn. (C1,
-; E-0357)
+; AI score of 'TailWind' (skill 153, entry of both tables). Returns at once unless
+; AIScore_TailWind_Conditions gives non-zero. Then calls AIScore_TailWind_WeighFirstTurn: when
+; wBattleTurn is not 0 it returns with Z clear and the routine falls into
+; AIScore_TailWind_FoeSkillWeights; on turn 0 it adds row $B6 to wAISkillScore2 and the routine
+; returns if Z is then set. The Z flag is the one left by that addition, and it is set for every
+; personality in this ROM (the row $B6 words are $00FF or 0), so on turn 0 only row $B6 is added.
+; (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 153 TailWind. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5320,8 +5410,11 @@ AIScore_TailWind::
     call AIScore_TailWind_WeighFirstTurn
     ret z
 
-; TailWind scoring, the rest: $3A for and then $8C for when a foe knows skills $42-$47 (AI mode 2
-; and up; mode below 2 still adds $8C); link rule bit 5. (C1, E-0357)
+; Shared second half of the scores of 'TailWind' (which falls into it, after turn 0) and 'StormWind'
+; (which jumps to it), ending in ret. FailIfFoeKnowsSkills42To47 decides: a result of 0 adds row $3A
+; and then row $8C (always added after SetCToZero); a result of 1 skips row $3A but still adds row
+; $8C; any other non-zero result skips both. Then it calls WeighLinkRules1RuleBit5. Rows are added
+; with AddAIWeight. (C2, E-0385)
 AIScore_TailWind_FoeSkillWeights::
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
@@ -5345,7 +5438,7 @@ AIScore_TailWind_FoeSkillWeights::
     ret
 
 ; StormWind's AI score: needs AIScore_StormWind_Conditions; then goes on at
-; AIScore_TailWind_FoeSkillWeights. (C1, E-0357)
+; AIScore_TailWind_FoeSkillWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 154 StormWind. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5358,7 +5451,7 @@ AIScore_StormWind::
     jr AIScore_TailWind_FoeSkillWeights
 
 ; AquaWall's AI score: needs AIScore_AquaWall_Conditions; then AIScore_AquaWall_WeighHPBand;
-; WeighLinkRules1RuleBit5. (C1, E-0357)
+; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 155 AquaWall. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5377,7 +5470,7 @@ AIScore_AquaWall::
 ; AIScore_SealPray_QueuedSkillInList gives 0; weight row $8E to wAISkillScore when
 ; FailIfFoeKnowsSkills42To47 gives 0; always weight row $CB to wAISkillScore; weight row $8F to
 ; wAISkillScore when FailIfFoeSkill3DThreatensActorHP gives 0; WeighLinkRules1RuleBit5; weight row
-; $90 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C1, E-0357)
+; $90 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 156 SealPray. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5440,7 +5533,7 @@ AIScore_SealPray::
 ; wAISkillScore when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $92 to wAISkillScore2 when
 ; AnyAllyHPAtMostThreeQuarters gives 0; AIScore_SuckAll_ScoreHPBands; weight row $8E to
 ; wAISkillScore when FailIfFoeKnowsSkills42To47 gives 0; WeighLinkRules1RuleBit3; weight row $97 to
-; wAISkillScore2 when AnyAllyLacksStatus2Bit2 gives 0. (C1, E-0357)
+; wAISkillScore2 when AnyAllyLacksStatus2Bit2 gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 157 SuckAll. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5495,7 +5588,7 @@ AIScore_SuckAll::
 ; wAISkillScore2 when CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $98 to
 ; wAISkillScore when FailIfFoeKnowsSkills42To47 gives 0; always weight row $BB to wAISkillScore2 and
 ; weight row $C6 to wAISkillScore; WeighLinkRules1RuleBit5; weight row $9A to wAISkillScore when
-; FailIfFoeKnowsSkillList gives 0. (C1, E-0357)
+; FailIfFoeKnowsSkillList gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 158 Imitate. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5551,7 +5644,7 @@ AIScore_Imitate::
 ; Meditate's AI score: needs AIScore_Meditate_Conditions; then AIScore_Meditate_WeighHPBand; weight
 ; row $A1 to wAISkillScore when ActorHPIsNotOne gives 0; always weight row $C2 to wAISkillScore and
 ; weight row $D2 to wAISkillScore2; WeighLinkRules1RuleBit4; weight row $69 to wAISkillScore2 when
-; FailIfTwoAlliesBelowHalfHP gives 0. (C1, E-0357)
+; FailIfTwoAlliesBelowHalfHP gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 159 Meditate. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5596,7 +5689,7 @@ AIScore_Meditate::
 
 ; LifeSong's AI score: needs AIScore_LifeSong_Conditions; then always weight row $CC to
 ; wAISkillScore2 and weight row $D3 to wAISkillScore2; WeighLinkRules1RuleBit4; weight row $2E to
-; wAISkillScore2 when AIGateCompareAllyStatAverages gives 0. (C1, E-0357)
+; wAISkillScore2 when AIGateCompareAllyStatAverages gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 160 LifeSong. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5634,7 +5727,7 @@ AIScore_LifeSong::
 ; when ActorHPIsNotOne gives 0; weight row $A4 to wAISkillScore when FewerThanTwoAlliesAtHP1 gives
 ; 0; always weight row $CC to wAISkillScore2 and weight row $CF to wAISkillScore and weight row $D3
 ; to wAISkillScore2; WeighLinkRules1RuleBit4; weight row $69 to wAISkillScore when
-; FailIfTwoAlliesBelowHalfHP gives 0. (C1, E-0357)
+; FailIfTwoAlliesBelowHalfHP gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 161 LoveRain. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5695,7 +5788,12 @@ AIScore_LoveRain::
 .return:
     ret
 
-; Whistle's AI score: never usable (AINeverUsableResetAISkillScore). (C1, E-0357)
+; AI score of the action ids 162-169 ('Whistle', 'Pheromone', 'StepGuard', 'Outside', 'Informer',
+; 'Errand', 'EagleEye', 'MapMagic') and also 178, 179, 182 and 183, which the skill-name table gives
+; a placeholder name; every one is an entry of both tables. It farcalls
+; AINeverUsableResetAISkillScore, which sets C = 0 and resets wAISkillScore to 0 and wAISkillScore2
+; to $FFFF, so ScoreSkillForAI sets the word of the skill to the unusable value $FFFF and the AI
+; never picks these. (C2, E-0385)
 ; AI scoring routine for 8 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 162 Whistle, 163 Pheromone, 164 StepGuard, 165
 ; Outside, 166 Informer, 167 Errand, 168 EagleEye, 169 MapMagic. It runs checks and adds weights to
@@ -5705,13 +5803,15 @@ AIScore_Whistle::
     farcall AINeverUsableResetAISkillScore
     ret
 
-; Ahhh's second AI score: needs AIStatusLickUsable; then always weight row $A5 to wAISkillScore;
-; WeighLinkRules1RuleBit1. (C1, E-0357)
+; AI score of the action ids 170 (SKILL_AHHH_AA) and 186, entries of both tables. Returns at once
+; unless AIStatusLickUsable gives non-zero (when one of its checks fails it resets the score). Then
+; always adds row $A5 to wAISkillScore and calls WeighLinkRules1RuleBit1. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 170 Ahhh. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
-; (E-0083) (E-0344: the address in its name dropped or read as the label there; was AIScore_Ahhh_2)
-AIScore_Ahhh_2::
+; (E-0083) (E-0344: the address in its name dropped or read as the label there; was
+; AIScore_AhhhStatusLick)
+AIScore_AhhhStatusLick::
     farcall AIStatusLickUsable
     ld a, c
     and a
@@ -5727,7 +5827,10 @@ AIScore_Ahhh_2::
     call WeighLinkRules1RuleBit1
     ret
 
-; ZoneOut's AI score: never usable (AINeverUsableResetAISkillScore). (C1, E-0357)
+; AI score of the action ids 171 ('ZoneOut') and 187, entries of both tables. It farcalls
+; AINeverUsableResetAISkillScore, which sets C = 0 and resets wAISkillScore to 0 and wAISkillScore2
+; to $FFFF, so ScoreSkillForAI sets the word of the skill to the unusable value $FFFF and the AI
+; never picks it. (C2, E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 171 ZoneOut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5739,7 +5842,7 @@ AIScore_ZoneOut::
 ; Guard's AI score: needs MaxNegativeScoreWhenAIFlagBit0 and AIScore_Guard_Conditions; then weight
 ; row $A6 to wAISkillScore2 when AnyFoeLacksStatus5Bits01And1Bit1 gives 0; weight row $A7 to
 ; wAISkillScore2 when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $A8 to wAISkillScore2 when
-; ActorHPIsNotOne gives 0; always weight row $A9 to wAISkillScore. (C1, E-0357)
+; ActorHPIsNotOne gives 0; always weight row $A9 to wAISkillScore. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 172 Guard. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5786,7 +5889,7 @@ AIScore_Guard::
     ret
 
 ; PanicAll's second AI score: needs AIPanicAllUsable; then always weight row $37 to wAISkillScore.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 173 PanicAll. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5808,8 +5911,8 @@ AIScore_PanicAll_2::
     ret
 
 ; Ironize's second AI score: needs AIIronizeUsable and AIScoreGuardSkill; then always weight row $38
-; to wAISkillScore; weight row $39 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C1,
-; E-0357)
+; to wAISkillScore; weight row $39 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C2,
+; E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 174 Ironize. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
@@ -5842,18 +5945,29 @@ AIScore_Ironize_2::
 .return:
     ret
 
+; AI scoring routine that does nothing (a lone ret): the registers and both score words are left as
+; they are. AIScoreRoutineTableA and AIScoreRoutineTableB use it for skill numbers 175-177, 180,
+; 181, 184, 185, 188, 189 and 191, so those skills get no weight row. AIScore_NoWeightB is the same
+; code for the numbers 192-199. (C2, E-0385)
 ; AI scoring routine (a lone ret: leaves the score unchanged) for skill numbers 175-191 of the
 ; per-skill far tables (AIScoreRoutineTableA/B, 201 entries); the skill-name table gives these
-; numbers the placeholder name 'HighJump' (E-0316)
+; numbers the placeholder name 'HighJump'
 AIScore_NoWeightA:: ; configured code entry (E-0316); C0
     ret
 
-; AI scoring routine (a lone ret) for skill numbers 192-199 of the per-skill far tables (E-0316)
+; AI scoring routine that does nothing (a lone ret): the registers and both score words are left as
+; they are. AIScoreRoutineTableA and AIScoreRoutineTableB use it for skill numbers 192-199, so those
+; skills get no weight row. AIScore_NoWeightA is the same code for other skill numbers. (C2, E-0385)
+; AI scoring routine (a lone ret) for skill numbers 192-199 of the per-skill far tables
 AIScore_NoWeightB:: ; configured code entry (E-0316); C0
     ret
 
+; AI scoring routine for skill number 200, the last entry of AIScoreRoutineTableA and
+; AIScoreRoutineTableB. It advances the random value (AdvanceRandom) and, when bit 7 of wRandomLo is
+; clear, calls ResetAISkillScoreE2 (wAISkillScore = $0000, wAISkillScore2 = $FFFF); when bit 7 is
+; set the scores stay as they were. It adds no weight row. (C2, E-0385)
 ; AI scoring routine for skill number 200: advances the random value and, when wRandomLo bit 7 is
-; clear, sets wAISkillScore to $0000 and the next word to $FFFF (ResetAISkillScoreE2) (E-0316)
+; clear, sets wAISkillScore to $0000 and the next word to $FFFF (ResetAISkillScoreE2)
 AIScore_Skill200:: ; configured code entry (E-0316); C0
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -5862,6 +5976,11 @@ AIScore_Skill200:: ; configured code entry (E-0316); C0
     ret
     db $c9
 
+; BC = weight row (B is 0 in every caller). Reads the word of that row for the personality in
+; wPersonalityIndex (ReadBank6TableWord) and adds it into the AI score pair: a word whose low byte
+; is $FF counts as 5000 and a word below $8000 is added as it is, both to wAISkillScore; a word of
+; $8000 or more is negated (16 bits) and that magnitude is added to wAISkillScore2. Clobbers A, BC
+; and HL. AddAIWeightToScore2 is the mirror. (C2, E-0385)
 ; BC = weight row: its word for the actor's personality (ReadBank6TableWord); a low byte of $FF
 ; counts as 5000 and is added to wAISkillScore, as is a positive word; a negative word's magnitude
 ; is added to wAISkillScore2 (renamed from AccumulateBank6WordToDA6E, E-0365)
@@ -5895,6 +6014,10 @@ AddAIWeight::
 .return:
     ret
 
+; Mirror of AddAIWeight. BC = weight row (B is 0 in every caller): reads the word of that row for
+; the personality in wPersonalityIndex (ReadBank6TableWord). A word whose low byte is $FF (counted
+; as 5000) or that is below $8000 is added to wAISkillScore2; a word of $8000 or more is negated and
+; that magnitude is added to wAISkillScore. Clobbers A, BC and HL. (C2, E-0385)
 ; the mirror of AddAIWeight: weight row BC's word, $FF (5000) and positive words added to
 ; wAISkillScore2, a negative word's magnitude to wAISkillScore (renamed from
 ; AccumulateBank6WordToDA70, E-0365)
@@ -5928,7 +6051,11 @@ AddAIWeightToScore2::
 .return:
     ret
 
-; the 16-bit word at [HL] += BC; HL is unchanged (E-0353)
+; The 16-bit word at [HL] (low byte first) += BC, wrapping at 16 bits. On return BC = the sum and HL
+; = the address of the high byte of the word (the original HL + 1, not the original HL); A is
+; clobbered. AddAIWeight and AddAIWeightToScore2 use it on wAISkillScore and wAISkillScore2. (C2,
+; E-0385)
+; the 16-bit word at [HL] += BC; HL is unchanged
 AddBCToWordAtHL::
     push hl
     deref_hl
@@ -5943,7 +6070,9 @@ AddBCToWordAtHL::
     db $e5, $2a, $66, $6f, $7d, $91, $6f, $7c, $98, $67, $cb, $7c, $28, $03, $21, $00
     db $00, $44, $4d, $e1, $71, $23, $70, $c9
 
-; wAISkillScore = $0000 and the next word = $FFFF (E-0316)
+; wAISkillScore = $0000 and wAISkillScore2 = $FFFF. Returns A = $FF and HL = wAISkillScore2 + 2 (the
+; address after both words). Called by AIScore_Skill200. (C2, E-0385)
+; wAISkillScore = $0000 and the next word = $FFFF
 ResetAISkillScoreE2::
     xor a
     ld hl, wAISkillScore
@@ -5954,8 +6083,12 @@ ResetAISkillScoreE2::
     ld [hli], a
     ret
 
+; BC = weight row (B is 0 in every caller). Sets wDataBank to 6 and reads the word at ROM bank 6
+; address $4001 + $36 * row + 2 * wPersonalityIndex (each row holds 27 words, one per personality
+; index 0-26). Returns BC = the word (the first ROM byte is the low byte) and A = its low byte.
+; Clobbers HL and E. Called by AddAIWeight and AddAIWeightToScore2. (C2, E-0385)
 ; BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wPersonalityIndex (rows of 27 words); A
-; = its low byte; clobbers HL, E (E-0353)
+; = its low byte; clobbers HL, E
 ReadBank6TableWord::
     ld a, $36
     call Multiply8By16
@@ -5977,7 +6110,7 @@ ReadBank6TableWord::
     ret
 
 ; StrongD scoring by HP band of slot A: bands 0-3 (HP at least a quarter) $83 against; band 4 $84
-; for; lower $85 for. (C1, E-0357)
+; for; lower $85 for. (C2, E-0357; probed E-0385)
 AIScore_StrongD_WeighHPBand::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -6024,7 +6157,7 @@ AIScore_StrongD_WeighHPBand::
     ret
 
 ; AquaWall scoring by HP band of slot A: band 0 $81 for, band 1 $82 for, band 2 $83 against, band 3
-; $84 against, band 4 $85 against, lower $86 against. (C1, E-0357)
+; $84 against, band 4 $85 against, lower $86 against. (C2, E-0357; probed E-0385)
 AIScore_AquaWall_WeighHPBand::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -6071,7 +6204,7 @@ AIScore_AquaWall_WeighHPBand::
     ret
 
 ; For each present slot on side A, scores its HP band for SuckAll
-; (AIScore_SuckAll_ScoreHPBands_WeighSlot). (C1, E-0357)
+; (AIScore_SuckAll_ScoreHPBands_WeighSlot). (C2, E-0357; probed E-0385)
 AIScore_SuckAll_ScoreHPBands::
     and $04
     ld c, a
@@ -6092,7 +6225,8 @@ AIScore_SuckAll_ScoreHPBands::
     jr nz, .loop
     ret
 
-; SuckAll by HP band: at least half HP (bands 0-1) $93 for, lower $94 against. (C1, E-0357)
+; SuckAll by HP band: at least half HP (bands 0-1) $93 for, lower $94 against. (C2, E-0357; probed
+; E-0385)
 AIScore_SuckAll_ScoreHPBands_WeighSlot::
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -6110,7 +6244,7 @@ AIScore_SuckAll_ScoreHPBands_WeighSlot::
     ret
 
 ; Meditate scoring by HP band of slot A: bands 0-2 $9B, $9C, $9D against; band 3 $9E for, band 4 $9F
-; for, lower $A0 for. (C1, E-0357)
+; for, lower $A0 for. (C2, E-0357; probed E-0385)
 AIScore_Meditate_WeighHPBand::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -6157,7 +6291,7 @@ AIScore_Meditate_WeighHPBand::
     ret
 
 ; For each present slot on side A, scores its HP band for HealUs
-; (AIScore_HealUs_ScoreHPBands_WeighSlot). (C1, E-0357)
+; (AIScore_HealUs_ScoreHPBands_WeighSlot). (C2, E-0357; probed E-0385)
 AIScore_HealUs_ScoreHPBands::
     and $04
     ld c, a
@@ -6178,9 +6312,11 @@ AIScore_HealUs_ScoreHPBands::
     jr nz, .loop
     ret
 
-; hTemp0 = C = a present slot (from AIScore_HealUs_ScoreHPBands): adds to wAISkillScore the weight
-; row for the slot's HP band (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($1E-$22, used
-; when C is wBattleActor) or the next one ($AB-$AF, for the other slots). (C1, E-0371)
+; hTemp0 = C = a present slot (from AIScore_HealUs_ScoreHPBands). Takes the weight row for the HP
+; band of the slot (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($1E-$22, used when C is
+; wBattleActor) or from the next one ($AB-$AF, for the other slots) and adds it with AddAIWeight (a
+; positive word to wAISkillScore, a negative word as a magnitude to wAISkillScore2). Clobbers BC.
+; (C2, E-0385)
 AIScore_HealUs_ScoreHPBands_WeighSlot::
     push bc
     farcall HPBandOfSlotTemp0
@@ -6217,6 +6353,10 @@ AIScore_HealUs_ScoreHPBands_WeighSlot_Data1::
 AIScore_HealUs_ScoreHPBands_WeighSlot_Data2::
     db $ab, $ac, $ad, $ae, $af, $af
 
+; A = a side selector (only bit 2 is used: clear = slots 0-2, set = slots 4-6). For each of the
+; three slots of that side that is present (CarryUnlessBattleSlotOutSlotEmpty gives carry clear)
+; sets hTemp0 = the slot and calls ForEachPresentSlotOfSideRun_WeighSlot. Called by AIScore_Hustle
+; and AIScore_LoveRain. Clobbers A, B and C. (C2, E-0385)
 ; for the three slots of the side in A (bit 2), runs ForEachPresentSlotOfSideRun_WeighSlot with
 ; hTemp0 = slot for each occupied one (E-0122) (E-0344: the address in its name dropped or read as
 ; the label there; was ForEachPresentSlotOfSideRun)
@@ -6240,10 +6380,11 @@ ForEachPresentSlotOfSideRun::
     jr nz, .loop
     ret
 
-; hTemp0 = C = a present slot (from ForEachPresentSlotOfSideRun, used by AIScore_Hustle and
-; AIScore_LoveRain): adds to wAISkillScore the weight row for the slot's HP band (HPBandOfSlotTemp0,
-; 0-5) from the 6-byte table after it ($1D-$22, used when C is wBattleActor) or the next one
-; ($AA-$AF, for the other slots). (C1, E-0371)
+; hTemp0 = C = a present slot (from ForEachPresentSlotOfSideRun). Takes the weight row for the HP
+; band of the slot (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($1D-$22, used when C is
+; wBattleActor) or from the next one ($AA-$AF, for the other slots) and adds it with AddAIWeight (a
+; positive word to wAISkillScore, a negative word as a magnitude to wAISkillScore2). Clobbers BC.
+; (C2, E-0385)
 ForEachPresentSlotOfSideRun_WeighSlot::
     push bc
     farcall HPBandOfSlotTemp0
@@ -6279,9 +6420,11 @@ ForEachPresentSlotOfSideRun_WeighSlot_Data1::
 ForEachPresentSlotOfSideRun_WeighSlot_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
-; A = slot (the actor): sets hTemp0 = A and adds to wAISkillScore the weight row for the slot's HP
-; band (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($1D-$22). BC is kept. Called by the
-; Ramming and Kamikaze shared weights. (C1, E-0371)
+; A = slot (the actor): sets hTemp0 = A, then takes the weight row for the HP band of the slot
+; (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($1D-$22) and adds it with AddAIWeight (a
+; positive word to wAISkillScore, a negative word as a magnitude to wAISkillScore2). Clobbers BC.
+; Called by AIScore_Ramming_HPAndStatusWeights, the shared tail of AIScore_Ramming and
+; AIScore_Kamikaze. (C2, E-0385)
 AIScore_Ramming_WeighHPBand::
     ldh [hTemp0], a
     push bc
@@ -6305,7 +6448,7 @@ AIScore_Ramming_WeighHPBand_Data::
     db $1d, $1e, $1f, $20, $21, $22
 
 ; For each present slot on side A, scores its HP band for Cover
-; (AIScore_Cover_ScoreHPBands_WeighSlot). (C1, E-0357)
+; (AIScore_Cover_ScoreHPBands_WeighSlot). (C2, E-0357; probed E-0385)
 AIScore_Cover_ScoreHPBands::
     and $04
     ld c, a
@@ -6326,9 +6469,11 @@ AIScore_Cover_ScoreHPBands::
     jr nz, .loop
     ret
 
-; hTemp0 = C = a present slot (from AIScore_Cover_ScoreHPBands): adds to wAISkillScore the weight
-; row for the slot's HP band (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($21 down to
-; $1D, used when C is wBattleActor) or the next one ($AA-$AE, for the other slots). (C1, E-0371)
+; hTemp0 = C = a present slot (from AIScore_Cover_ScoreHPBands). Takes the weight row for the HP
+; band of the slot (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($21 down to $1D, used
+; when C is wBattleActor) or from the next one ($AA-$AE, for the other slots) and adds it with
+; AddAIWeight (a positive word to wAISkillScore, a negative word as a magnitude to wAISkillScore2).
+; Clobbers BC. (C2, E-0385)
 AIScore_Cover_ScoreHPBands_WeighSlot::
     push bc
     farcall HPBandOfSlotTemp0
@@ -6363,8 +6508,10 @@ AIScore_Cover_ScoreHPBands_WeighSlot_Data1::
 AIScore_Cover_ScoreHPBands_WeighSlot_Data2::
     db $aa, $aa, $ab, $ac, $ad, $ae
 
-; Upper: $2B for when the foes' average ATK is more than twice the allies' DEF (C = 0), otherwise
-; $13 against. (C1, E-0357)
+; Far-calls CompareFoeAverageATKWithAllyDEF, which gives C = 0 when twice the average ATK of the
+; present foes exceeds the average DEF of the present slots on the actor side (the actor included)
+; by more than half their average max HP, and C = $FF otherwise. With C = 0 adds weight row $2B with
+; AddAIWeight (for); otherwise adds weight row $13 with AddAIWeightToScore2 (against). (C2, E-0385)
 AIScore_Upper_WeighFoeATKVsAllyDEF::
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
@@ -6381,7 +6528,10 @@ AIScore_Upper_WeighFoeATKVsAllyDEF::
 .return:
     ret
 
-; Sap: $13 against when the allies' ATK check fails (C = 0), otherwise $2B for. (C1, E-0357)
+; Far-calls AIScore_Sap_CompareATKWithDEF, which gives C = 0 when twice the average ATK of the
+; present slots on the actor side exceeds the average DEF of the present foes by more than half the
+; average current HP of the foes, and C = $FF otherwise. With C = 0 adds weight row $13 with
+; AddAIWeightToScore2 (against); otherwise adds weight row $2B with AddAIWeight (for). (C2, E-0385)
 AIScore_Sap_WeighATKVsDEF::
     farcall AIScore_Sap_CompareATKWithDEF
     ld a, c
@@ -6398,6 +6548,10 @@ AIScore_Sap_WeighATKVsDEF::
 .return:
     ret
 
+; Reads wAIFlag. With bit 0 clear returns C = 1 with Z clear and leaves the scores. With bit 0 set
+; sets wAISkillScore = $0000 and wAISkillScore2 = $FFFF and returns C = 0 with Z set. The skill
+; scorers call it first and return when Z is set (AIScore_Guard, AIScore_SquallHit,
+; AIScore_Berserker and AIScoreGuardSkill). (C2, E-0385)
 ; C = (wAIFlag & 1) ^ 1 and returns when non-zero; when bit 0 is set: wAISkillScore = 0,
 ; wAISkillScore2/wAISkillScore2 + $1 = $FFFF, C = 0 (E-0118)
 MaxNegativeScoreWhenAIFlagBit0::
@@ -6418,7 +6572,7 @@ MaxNegativeScoreWhenAIFlagBit0::
 
 ; On the first turn (wBattleTurn 0) adds weight row $B6 to wAISkillScore2 and returns C = $FF; on
 ; later turns returns at once with C = wBattleTurn (non-zero). Called by AIScore_TailWind and
-; reached from AIScoreGuardSkill. (C1, E-0371)
+; reached from AIScoreGuardSkill. (C2, E-0371; probed E-0385)
 AIScore_TailWind_WeighFirstTurn::
     ld a, [wBattleTurn]
     ld c, a
@@ -6429,6 +6583,13 @@ AIScore_TailWind_WeighFirstTurn::
     ld c, $ff
     ret
 
+; Guard at the start of the buff-skill scorers (AIScore_StrongD, AIScore_Ironize, AIScore_Ironize_2,
+; AIScore_Cover, AIScore_Dodge, AIScore_SuckAll, AIScore_BladeD, AIScore_Imitate), which return when
+; it leaves Z set. Calls MaxNegativeScoreWhenAIFlagBit0 and returns at once with Z set when wAIFlag
+; bit 0 is set (scores already reset). Otherwise jumps to AIScore_TailWind_WeighFirstTurn: on battle
+; turn 0 it adds weight row $B6 to wAISkillScore2 and returns C = $FF with Z set (so these scorers
+; stop there on turn 0); on later turns it returns C = wBattleTurn with Z clear and the scorer goes
+; on. (C2, E-0385)
 ; returns when MaxNegativeScoreWhenAIFlagBit0 applies; otherwise continues with
 ; AIScore_TailWind_Sub02 (E-0122) (E-0344: the address in its name dropped or read as the label
 ; there; was AIScoreGuardSkill)
@@ -6437,11 +6598,16 @@ AIScoreGuardSkill::
     ret z
     jr AIScore_TailWind_WeighFirstTurn
 
+; Calls WeighLinkRules1RuleBit4, then adds weight row $29 to wAISkillScore (AddAIWeight) when
+; AllySlotsCheckThenFewerThanTwoFoes gives C = 0 (the actor is the only present slot of its side and
+; two or more foes are present), and adds it again when PassIfSideFlagOrOtherAllyPresent gives C = 0
+; (wSide0Flag or wSide1Flag of the actor side is not 1 and no other slot of that side is present).
+; Called by AIScore_Farewell and AIScore_Vivify. (C2, E-0385)
 ; WeighLinkRules1RuleBit4, then adds score word $29 to wAISkillScore when
 ; AllySlotsCheckThenFewerThanTwoFoes fails and again when PassIfSideFlagOrOtherAllyPresent fails
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes)
-AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes::
+; WeighActorAloneOnSide)
+WeighActorAloneOnSide::
     call WeighLinkRules1RuleBit4
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
@@ -6461,6 +6627,13 @@ AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes::
 .return:
     ret
 
+; Calls AIAddScoresForTwoLists_SealingFoes and AIAddScoresForTwoLists_OtherAllies; each gives C = 1
+; (AI mode below 4, counts as a pass), $FF (pass) or 0 (fail). A fail adds weight row $B1 (first
+; check) or $B2 (second check) to wAISkillScore with AddAIWeight. The note of the first check says
+; it cannot give 0 (its foe loop never tests a foe), so in practice only row $B2 is added: wAIFlag
+; set, AI mode 4 or more and an ally other than the actor that meets the second check. Called by
+; AIScore_Ahhh, AIScore_LegSweep, AIScore_LureDance, AIScore_LushLicks, AIScore_SickLick and the
+; AIScoreB_ versions of the first four. (C2, E-0385)
 ; adds score word $B1 when AIAddScoresForTwoLists_SealingFoes fails and $B2 when
 ; AIAddScoresForTwoLists_OtherAllies fails (results of 1 count as passing) (E-0124) (E-0344: the
 ; address in its name dropped or read as the label there; was AIAddScoresForTwoLists; a trailing
@@ -6488,10 +6661,15 @@ AIAddScoresForTwoLists::
 .return:
     ret
 
+; Adds weight row $0E (5000) to wAISkillScore2 when LinkRuleCheckLinkRules1Bit6 fails (a link
+; battle, link rule bit 6 on and not met), then adds weight row $0F to wAISkillScore when
+; LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (a link battle with a turn limit on and wBattleTurn
+; less than 4 past it). Outside link battles it changes nothing. Called by AIScore_Beat,
+; AIScore_Blaze and AIScore_Firebal. (C2, E-0385)
 ; adds score word $0E to wAISkillScore2 when LinkRuleCheckLinkRules1Bit6 fails and $0F to
 ; wAISkillScore when LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (E-0122) (E-0344: the address in
-; its name dropped or read as the label there; was AIAddScoresForLinkRuleCheckLinkRules1Bit6)
-AIAddScoresForLinkRuleCheckLinkRules1Bit6::
+; its name dropped or read as the label there; was WeighLinkRuleBit6AndTurnLimit)
+WeighLinkRuleBit6AndTurnLimit::
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
     and a
@@ -6510,7 +6688,7 @@ AIAddScoresForLinkRuleCheckLinkRules1Bit6::
 .return:
     ret
 
-; Sacrifice: $0E against when link rule bit 6 forbids it (C = 0). (C1, E-0357)
+; Sacrifice: $0E against when link rule bit 6 forbids it (C = 0). (C2, E-0357; probed E-0385)
 AIScore_Sacrifice_WeighLinkRule::
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
@@ -6522,6 +6700,10 @@ AIScore_Sacrifice_WeighLinkRule::
 .return:
     ret
 
+; Far-calls CheckLinkRules1RuleBit5; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 5
+; of wLinkRules + 1 set, and bit 5 of wLinkRules + 2 clear or bit 5 of wLinkRuleFlags for the actor
+; side set) adds weight row $0E (a word of $00FF, counted as 5000) to wAISkillScore2 with
+; AddAIWeightToScore2; otherwise changes nothing. Called by many skill scorers. (C2, E-0385)
 ; far-calls CheckLinkRules1RuleBit5; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit5)
@@ -6536,6 +6718,10 @@ WeighLinkRules1RuleBit5::
 .return:
     ret
 
+; Far-calls CheckLinkRules1RuleBit4; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 4
+; of wLinkRules + 1 set, and bit 4 of wLinkRules + 2 clear or bit 4 of wLinkRuleFlags for the actor
+; side set) adds weight row $0E (a word of $00FF, counted as 5000) to wAISkillScore2 with
+; AddAIWeightToScore2; otherwise changes nothing. Called by many skill scorers. (C2, E-0385)
 ; far-calls CheckLinkRules1RuleBit4; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit4)
@@ -6550,6 +6736,10 @@ WeighLinkRules1RuleBit4::
 .return:
     ret
 
+; Far-calls CheckLinkRules1RuleBit3; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 3
+; of wLinkRules + 1 set, and bit 3 of wLinkRules + 2 clear or bit 3 of wLinkRuleFlags for the actor
+; side set) adds weight row $0E (a word of $00FF, counted as 5000) to wAISkillScore2 with
+; AddAIWeightToScore2; otherwise changes nothing. Called by many skill scorers. (C2, E-0385)
 ; far-calls CheckLinkRules1RuleBit3; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit3)
@@ -6564,6 +6754,10 @@ WeighLinkRules1RuleBit3::
 .return:
     ret
 
+; Far-calls CheckLinkRules1RuleBit2; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 2
+; of wLinkRules + 1 set, and bit 2 of wLinkRules + 2 clear or bit 2 of wLinkRuleFlags for the actor
+; side set) adds weight row $0E (a word of $00FF, counted as 5000) to wAISkillScore2 with
+; AddAIWeightToScore2; otherwise changes nothing. Called by many skill scorers. (C2, E-0385)
 ; far-calls CheckLinkRules1RuleBit2; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit2)
@@ -6578,6 +6772,10 @@ WeighLinkRules1RuleBit2::
 .return:
     ret
 
+; Far-calls CheckLinkRules1RuleBit1; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 1
+; of wLinkRules + 1 set, and bit 1 of wLinkRules + 2 clear or bit 1 of wLinkRuleFlags for the actor
+; side set) adds weight row $0E (a word of $00FF, counted as 5000) to wAISkillScore2 with
+; AddAIWeightToScore2; otherwise changes nothing. Called by many skill scorers. (C2, E-0385)
 ; far-calls CheckLinkRules1RuleBit1; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit1)
@@ -6592,32 +6790,34 @@ WeighLinkRules1RuleBit1::
 .return:
     ret
 
+; A = battle slot: HL = the attack word of that slot (wBattleATK + 2 * A), A = its low byte, through
+; GetBattleStatWord_BankE2. (C2, E-0385)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 GetBattleATK_BankE2::
     ld hl, wBattleATK
     jr GetBattleStatWord_BankE2
 
-; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankE2). (C1, E-0357)
+; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleDEF_BankE2::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankE2
 
-; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankE2). (C1, E-0357)
+; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankE2::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankE2
 
-; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankE2). (C1, E-0357)
+; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankE2::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankE2
 
-; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankE2). (C1, E-0357)
+; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleHP_BankE2::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankE2
 
-; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankE2). (C1, E-0357)
+; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleMP_BankE2::
     ld hl, wBattleMP
     jr GetBattleStatWord_BankE2
@@ -6625,20 +6825,24 @@ GetBattleMP_BankE2::
 
 ; HL = array base, A = battle slot: HL = the 16-bit word at HL + 2 * A (the value, not a pointer); A
 ; = its low byte. The shared tail of GetBattleATK_BankE2 through GetBattleMP_BankE2, the same bytes
-; as ReadBattleWordFromArray in bank $36. (C1, E-0371)
+; as ReadBattleWordFromArray in bank $36. (C2, E-0371; probed E-0385)
 GetBattleStatWord_BankE2::
     add a
     add_a_to_hl
     deref_hl
     ret
 
+; HL += 2 * A. A is doubled in 8 bits first, so it wraps above $7F; A is clobbered. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0353)
+; appear in 12 banks)
 AddDoubleAToHL_BankE2::
     add a
     add_a_to_hl
     ret
 
+; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise. In a link battle (wLinkMode
+; 1) with wLinkRole bit 1 set the answer is reversed: carry set for slots 4-7. Which side is local
+; is inferred from that reversal, not checked. (C2, E-0385)
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
@@ -6659,6 +6863,8 @@ ActorOnLocalSide_BankE2::
     cp $04
     ret
 
+; Carry set when wBattleTarget is below 4 (slots 0-3), clear otherwise. In a link battle (wLinkMode
+; 1) with wLinkRole bit 1 set the answer is reversed: carry set for slots 4-7. (C2, E-0385)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
@@ -6680,7 +6886,7 @@ TargetOnLocalSide_BankE2::
     ret
 
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_BankE2_Data); a copy of
-; the bank $05 routine. (C1, E-0357)
+; the bank $05 routine. (C2, E-0357; probed E-0385)
 ClearBattleStatusBitsWithMaskD_BankE2::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE2_Data
@@ -6701,8 +6907,9 @@ ClearBattleStatusBitsWithMaskD_BankE2::
 ClearBattleStatusBitsWithMaskD_BankE2_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
+; Sets bit 0 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit0OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains
@@ -6711,8 +6918,9 @@ SetBit0OfLevelUpGainsIndexed_BankE2::
     pop hl
     ret
 
+; Sets bit 1 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit1OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains
@@ -6721,8 +6929,9 @@ SetBit1OfLevelUpGainsIndexed_BankE2::
     pop hl
     ret
 
+; Sets bit 2 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit2OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains
@@ -6731,6 +6940,11 @@ SetBit2OfLevelUpGainsIndexed_BankE2::
     pop hl
     ret
 
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]), where g(v) = 0 for v >= $C0, 1 for v >= $40 and 2 below $40. The result
+; 0-26 is a personality index (wPersonalityIndex, the column of the bank 6 weight table read by
+; ReadBank6TableWord); PersonalityIndexOfRecord builds the same index from a save record. BC and HL
+; are kept. (C2, E-0385)
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
@@ -6790,6 +7004,9 @@ PersonalityIndexOfSlot_BankE2::
     pop hl
     ret
 
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or status byte
+; 4 & $0C is set (wBattleStatus3 + 9 * slot, then the next byte); otherwise carry clear. A, BC and
+; HL are kept. (C2, E-0385)
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
@@ -6819,6 +7036,9 @@ CheckSlotStatusBlockWide_BankE2::
     pop hl
     ret
 
+; A = slot: HL is kept; with the slot status record at wBattleStatus3 + 9 * A, returns A = status
+; byte 3 & $C0 or, when that is zero, status byte 4 & $0C; Z is set when both are clear. (C2,
+; E-0385)
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)

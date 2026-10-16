@@ -390,6 +390,30 @@ MapStepTriggerTable::
     dw $0000 ; id 254
     dw $0000 ; id 255
 
+; Field routine run when A is pressed (FieldState_WalkATalks and FieldState_WalkAMenu far-call it).
+; It returns at once when (wTextWindowState AND 3) is not 0, wFieldActionRequest bit 7 or
+; hPlayerStateFlags bit 0 is set, or A is not newly pressed (wJoypadPressed bit 0 clear). First,
+; when wSpriteSlotCount is not 0, it moves the player point (hPlayerX, hPlayerY) one step in the
+; direction of hPlayerFacing (down and right by $11, up and left by 1) and asks
+; CheckMapInteractionOnA_SpriteSlots which object stands on that 16-pixel tile. That object is not
+; talked to when its type (byte 0) is 2 and bit 7 of its byte $0A is set (a wandering object in the
+; middle of a move), or when its type is not 0 and its OBJ_X or OBJ_Y has a nonzero low nibble (off
+; the tile grid); the scan of map spots below then runs instead. Otherwise its OBJ_ANIM_COUNTER is
+; cleared, it turns to face the player (OBJ_STATE = (hPlayerFacing + 2) AND 3), and its byte $0F
+; picks the talk event: $FF gives wTalkEventIndex 8 and leaves the group alone; $FE, $FC, $FB and
+; $FA give index 9 with group 0, 2, 3 and 8; any other value is the group, with the index chosen by
+; hMapId (below $20 1, $30 2, $48 3, $70 4, $A0 5, $A8 6, otherwise 7). DispatchTalkEvent runs it.
+; With no object, the routine reads a list of 10-byte map spots: the list from
+; CheckMapInteractionOnA_KeyWorldFloor when wMapType bit 7 is set (no list, no talk, when it returns
+; 0), otherwise the pointer for hMapId in MapInteractionTable ($0000 = none). A spot with kind byte
+; 0 is skipped; kinds 1-4 need hPlayerFacing = kind - 1 and the same screen (hMapScreenX,
+; hMapScreenY, and hMapId when wMapType bit 7 is clear) and player position; kind 5 matches the tile
+; in front of the player whatever the facing; the list ends with $FF. A spot is skipped when its
+; story flag word is not $FFFF and the flag is set; otherwise its group and index go to
+; wTalkEventGroup and wTalkEventIndex and DispatchTalkEvent runs. After a talk, if wModeState is 1
+; the routine clears wJoypadHeld and wJoypadPressed and calls
+; RedrawScreenBufferIfPartyWindowFlagsBit7 when wPartyWindowFlags bit 7 is set; when a map spot
+; leaves wModeState at another value the scan goes on with the next spot. (C1, E-0385)
 ; A in the field when nothing blocks input: walks this map's list in MapInteractionTable and runs
 ; the talk event of the first spot that matches (E-0157, E-0339; was CheckMapInteractionOnA)
 CheckMapInteractionOnA::
@@ -794,6 +818,11 @@ CheckMapInteractionOnA::
     add_a_to_hl
     jp .skip4
 
+; A = wMapType: for $84 returns HL = MapType84Interactions and A = 1; for $83 it reads the kind byte
+; of the current floor (wKeyWorldFloorInfo + 4 * wKeyWorldFloor + 1) and returns HL =
+; KeyWorldFloorKind2Interactions for kind 2 or KeyWorldFloorKind3Interactions for kind 3, with A =
+; 1. For any other wMapType, or another kind byte, it returns A = 0. Its only caller is
+; CheckMapInteractionOnA. (C2, E-0385)
 ; part of CheckMapInteractionOnA that reads the key-world floor (E-0339; was
 ; CheckMapInteractionOnA_KeyWorldFloor)
 CheckMapInteractionOnA_KeyWorldFloor::
@@ -1069,6 +1098,11 @@ MapInteractionTable::
     dw $0000 ; id 230
     dw $0000 ; id 231
 
+; B = X and C = Y in pixels: returns A = 1 + the number of the first of the wSpriteSlotCount slots
+; (16 bytes each from wSpriteSlots, X at +$0B and Y at +$0C) whose X and Y lie in the same 16-pixel
+; tile as the point, or A = 0 when none does. With wSpriteSlotCount 0 it returns A = 0 at once;
+; otherwise hTemp0 = C / 16 and hTemp1 = B / 16 are set. Its only caller is CheckMapInteractionOnA.
+; (C2, E-0385)
 ; part of CheckMapInteractionOnA that reads the sprite slots (E-0339; was
 ; CheckMapInteractionOnA_SpriteSlots)
 CheckMapInteractionOnA_SpriteSlots::

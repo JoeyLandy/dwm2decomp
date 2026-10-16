@@ -4,6 +4,12 @@
 SECTION "Bank 92", ROMX[$4000], BANK[$92]
     db $92
 
+; Draws a battle effect sprite from the meta-sprite table of this bank: hSpriteOriginX =
+; wEffectSpriteX and hSpriteOriginY = $68 (both high bytes 0), hSpriteSetIndex = wEffectTileOffset
+; (the meta-sprite set number), hSpriteSubIndex = wEffectSpriteAttrXor (the frame number),
+; hSpriteTileOffset and hSpriteAttrXor = 0; then BuildOamFromSpriteTable_Bank92 with DE =
+; MetaSprites92Table. Its only caller is DrawEffectSpriteForEffectTileOffsetRange (for
+; wEffectTileOffset $33 and above). (C2, E-0385)
 ; sets the sprite origin X = wEffectSpriteX, Y = $68, tile offset = wEffectTileOffset, attribute XOR
 ; = wEffectSpriteAttrXor, then builds OAM from the local sprite table (E-0121)
 DrawEffectSpriteAtEffectSpriteX_Bank92::
@@ -93,10 +99,18 @@ MetaSprites92Table::
     dw MetaSprites92Set3A ; id 58
     dw MetaSprites92Set3B ; id 59
 
+; DE = table of set pointers: the word at DE + 2 * hSpriteSetIndex is the set, the word at set + 2 *
+; hSpriteSubIndex is the frame, a list of 4-byte entries (Y, X, tile, attribute) ended by a byte
+; $80. Each entry becomes an OAM entry at $C000 + 4 * hOamNextEntry: Y = hSpriteOriginY + Y + $10
+; and X = hSpriteOriginX + X + 8 (8-bit sums), tile = tile + hSpriteTileOffset, attribute =
+; attribute XOR hSpriteAttrXor, and hOamNextEntry grows by one. It stops at the $80 byte or when
+; hOamNextEntry reaches $28 (40 entries), and writes nothing when hOamNextEntry is already $28. Its
+; only caller is DrawEffectSpriteAtEffectSpriteX_Bank92; the same 81 bytes appear in 5 banks. (C2,
+; E-0385)
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
 ; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
 ; tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28
-; (40 entries) (the same 81 bytes appear in 5 banks) (E-0353)
+; (40 entries) (the same 81 bytes appear in 5 banks)
 BuildOamFromSpriteTable_Bank92::
     ldh a, [hOamNextEntry]
     cp $28

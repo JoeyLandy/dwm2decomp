@@ -129,9 +129,17 @@ Map12Attrs0_Y0X0::
 Map2FTileset::
     INCBIN "maps/map2_f/tileset.lz"
 
+; Not a separate asset: the last 109 bytes ($6D) of the compressed tileset stream of map $2F.
+; Decompressing from the label Map2FTileset (Map2FTileset) consumes 1059 bytes ($423) and ends
+; exactly at Map2FPalettes, where Map2FPalettes starts, so the stream covers 533D-575F; the source
+; cuts it at 950 bytes ($3B6) and starts a second guessed stream, Map2FTilesetTail, at 56F3.
+; Decompressing from Map2FTilesetTail reads 359 bytes, well past its own 109-byte slot, through
+; Map2FPalettes and the screen pointer tables, and gives 366 bytes of junk (palette and far-pointer
+; bytes copied through as literals). The 109 bytes themselves look like compressed tile data (rows
+; like 55 55 AA AA). Nothing loads this label. (C1, E-0383)
 ; LZSS-compressed: 359 bytes that expand to 366 (E-0016, E-0017)
-Gfx93_1::
-    INCBIN "gfx/misc/gfx93_1.lz"
+Map2FTilesetTail::
+    INCBIN "maps/map2_f/tileset_tail.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
@@ -258,9 +266,16 @@ Map2FAttrs0_Y1X0::
     db $02, $02, $03, $4c, $06, $03, $52, $0f, $05, $02, $02, $03, $02, $00, $03, $60
     db $06, $03, $7a, $0f, $05, $03, $a5, $0f, $4d, $03, $05, $1f, $4d, $01, $01
 
+; Attribute map, 360 bytes decompressed (20 x 18, palette numbers 0-3 plus a few cells with value
+; $10). It is the attribute half of an entry pair in ScreenAnimationTable: ScenePoorChurch_LoadFrame
+; decompresses it into wScreenAttrBuffer (WRAM bank 2, CGB only) as the frame 1 attributes of
+; animation id 0 and the frame 0 attributes of id 1, always paired with the tile map
+; ScreenMap_ScreenAnimationTable_2. Rendered with that tile map, the Map2F tileset and
+; Map2FPalettes: a sand screen with bones and a skull, three palm trees and a small pool, and a bay
+; of water at the top whose shore is stepped differently from the previous frame. (C1, E-0383)
 ; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
-ScriptScreenAttrMap_ScreenAnimationTable_3::
-    INCBIN "gfx/misc/script_screen_attr_map_screen_animation_table_3.lz"
+SandShoreWaterAttrMap::
+    INCBIN "gfx/misc/sand_shore_water_attr_map.lz"
 
 ; LZSS-compressed: 59 bytes that expand to 360 (E-0016, E-0017)
 ScriptScreenAttrMap_ScreenAnimationTable_7::
@@ -464,10 +479,14 @@ Map94Palettes::
     dw $218c, $4f18, $3a52, $0000 ; entry 6
     dw $218c, $4f18, $3a52, $0000 ; entry 7
 
-; compressed tileset of map $X6248 (the first map record using it)
+; Tiles, 608 bytes decompressed (38 tiles). Tileset of map record MapRecordX6248 (pointed at by no
+; MapTable entry), loaded to vTiles2 by LoadMapHeader. Rendered with StoneDoorRoomTilemap,
+; StoneDoorRoomAttrMap and MapX6248Palettes: a dark stone-brick room, grey-green and purple brick
+; walls, black floor to either side of a grey herringbone path that runs up to a wooden door with
+; gold hinges and a lock at the top. Same layout as the ice and sand door rooms. (C1, E-0383)
 ; LZSS-compressed: 399 bytes that expand to 608 (E-0016, E-0017)
-MapX6248Tileset::
-    INCBIN "gfx/misc/map_x6248_tileset.lz"
+StoneDoorRoomTileset::
+    INCBIN "gfx/misc/stone_door_room_tileset.lz"
 
 MapX6248Palettes::
     dw $7da0, $7fff, $7fe0, $0000 ; entry 0
@@ -482,18 +501,26 @@ MapX6248Palettes::
 ; 1 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapX6248Screens0::
-    dfar MapX6248Screens0_Y0X0 ; entry 0
+    dfar StoneDoorRoomTilemap ; entry 0
 
 MapX6248Attrs0::
-    dfar MapX6248Attrs0_Y0X0 ; entry 0
+    dfar StoneDoorRoomAttrMap ; entry 0
 
+; Tile map, 360 bytes decompressed (20 x 18, tile numbers 0 to 37). Screen (0,0) of the 1 x 1 screen
+; map record MapRecordX6248, decompressed into wScreenTileBuffer by LoadMapScreen, indexing
+; StoneDoorRoomTileset. Rendered: the dark stone-brick room with the herringbone path and the door
+; at the top. (C1, E-0383)
 ; LZSS-compressed: 156 bytes that expand to 360 (E-0016, E-0017)
-MapX6248Screens0_Y0X0::
-    INCBIN "gfx/misc/map_x6248_screens0_y0_x0.lz"
+StoneDoorRoomTilemap::
+    INCBIN "gfx/misc/stone_door_room_tilemap.lz"
 
+; Attribute map, 360 bytes decompressed (20 x 18, palette numbers 0-3, no flips seen). Attribute
+; half of screen (0,0) of MapRecordX6248, decompressed into wScreenAttrBuffer by LoadMapScreen on
+; CGB, one byte per cell of StoneDoorRoomTilemap; the palettes come from MapX6248Palettes (four
+; used, entries 4-7 are all zero). (C1, E-0383)
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
-MapX6248Attrs0_Y0X0::
-    INCBIN "gfx/misc/map_x6248_attrs0_y0_x0.lz"
+StoneDoorRoomAttrMap::
+    INCBIN "gfx/misc/stone_door_room_attr_map.lz"
 
 ; compressed tileset of map $8F (the first map record using it)
 ; LZSS-compressed: 1318 bytes that expand to 1536 (E-0016, E-0017)

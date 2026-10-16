@@ -1397,3 +1397,523 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `DrawTileBAtTwoChoiceEntry_BankF1_Data` (F1:58F4): wTwoChoiceCursor is not bounded by the reader.
 - `BreedRecordPanelTileRect` (F1:5A36): What the glyph tiles of rows 1 and 3 spell is not decided by the reader.
 - `GameMode8_Update_SetUpScene_Data4` (F2:42F2): The second six bytes have no reader found; they may be a record for a monster sprite load that is never issued.
+
+## E-0382
+
+- `RollVsBeatResistance` (36:5B19): Why an ally actor in wBattleKind 2 or 3 can never get Beat, Sacrifice or PalsyAir through is not known; the meaning of those battle kinds is open.
+- `RollVsSleepResistance` (36:5F01): Why the Sleep roll also rolls the skill damage into wBattleDamageLo/wBattleDamageHi is not known; the damage is not used by the rest of the routine.
+- `RollChanceByLevelAndSide` (36:62B1): Why targets in slots 0-3 get the lower chances is not known.
+- `ActionEffect_ActionD0` (36:6906): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD1` (36:6912): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD2` (36:691E): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD3` (36:692A): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD4` (36:6936): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD5` (36:6942): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD6` (36:694E): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD7` (36:6957): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD8` (36:6963): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionD9` (36:696F): E is read as a slot number by ActionEffect_ActionD9_Damage but is not loaded by this routine or by DispatchActionEffectTable: which value reaches it in a real battle is not read.
+- `ActionEffect_ActionD9` (36:696F): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDA` (36:697B): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDB` (36:69ED): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDC` (36:6A69): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDD` (36:6A82): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDE` (36:6ACA): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionDF` (36:6AE7): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE0` (36:6AF0): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE1` (36:6B0F): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE2` (36:6B18): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_ActionE3` (36:6B42): Which code selects action ids $D0-$E3 and how a formation of two monsters is formed (wFormationSlot0, wFormationSlot1) is not read here; the routine only uses the formation partner of the actor.
+- `ActionEffect_Kamikaze` (36:73BD): ActionEffect_Kamikaze_Damage reads a word through the HP value of the actor (a second dereference after GetBattleHP); whether that is intended is not settled here.
+- `ActionEffect_LifeSong` (36:794F): Where BSTAT5_SONG_FORCED is set and how BSTAT5_LIFE_SONG ends the song is done by other code and was not read for this note.
+- `ActionEffect_ActionB9` (36:7AEE): which battle action id $B9 (185) stands for is not known
+- `RemoveCFromActionQueue` (36:7DA6): the ram.asm note for wActionQueue says 8-byte queue; this routine and RunBattleCommandEntry_ListSpeeds treat nine bytes as the queue
+- `RunEffectHandlerForActionId` (36:7DC9): table entry 0 is reached only by action 0, because ComputeDamageEstimateForAction sends id $47 to the skill record path
+- `PersonalityIndexOfSlot_Bank36` (36:7EE5): what the 27 values select (a personality) is documented only through PersonalityIndexOfRecord
+- `BeginStringDisplay_Bank37` (37:4001): whether the 14 unlabelled bytes after the ret are ever jumped to by address
+- `LinkBreed_CopyBlockAndAdvance` (37:4DC7): rename proposed: name has the offset digits $0278 and a callee name; purpose of the block is not known
+- `LinkBreed_StoreChildRecord` (37:5172): a follower never reaches the copy in this routine; where the follower stores its side of the result is not known
+- `LinkBreed_StoreChildRecord` (37:5172): rename proposed: the record it stores is wChildRecord, the child built by ComputeBreedingChild, not a received record
+- `PartnerStats_DrawHeadingName` (37:542C): rename proposed: name has the digit run 1500 (vTiles1 + $500); its only caller is PartnerStats_ShowHeading
+- `DrawRecordBufBSpeciesSpritePart` (37:5870): no caller is named in src; whether it is reached by address is not known
+- `PartnerStats_UploadSummaryTiles` (37:5895): rename proposed: name ends in a _2 numbering; its only caller PartnerStats_SkillsKeys loads it just before DrawSummaryFrames
+- `LinkBreed_ClearChoiceBox` (37:5976): whether offset $0083 holds a saved copy of the area under the box is inferred from the copy direction only
+- `LinkBreed_ClearChoiceBox` (37:5976): rename proposed: name has the offset digits $024F; the target offset is where LinkBreed_DrawChoiceBox draws the 9 x 7 box and both callers are in LinkBreed_ReadChoice
+- `PackRecordBufAToLinkWorkBuf` (37:5BC6): what the EXP replacement by the bank $81 table is for is not known
+- `PackRecordBufAToLinkWorkBuf` (37:5BC6): rename proposed: it converts the own record in wRecordBufA into the exchange buffer, the reverse of the name
+- `UnpackLinkRecordToRecordBufB` (37:5C4E): the cases in which CheckBreedingRecipes sets bit 4 of MON_FAMILY were not exercised by the probes
+- `WriteBlankName10_Bank37` (37:5CF1): The two blanked groups are taken to be the parent names because the byte tested is the first parent code; the record layout of the received data is not documented.
+- `ConvertLinkNameGlyphToGameGlyph` (37:5D0F): Which game or format sits at the other end of the link is not established; only the code mapping is.
+- `ConvertNameBytesToLinkFormat` (37:5D5E): The old name and comment say the conversion goes from the link format to the game; the call path (the record copied from the save into wRecordBufA, then packed into wWorkBuf and sent) shows the opposite direction.
+- `AppendSpeciesToLinkCodeByteForWordAtDE` (37:5DA9): Species ids above 383 read past the table.
+- `FamilyNibbleOrSpeciesFamily` (37:5DBC): Why a nibble of 9 asks the species for its family is not read; the nibble is the family field MON_FAMILY of the record.
+- `MapAndCompactSkillListLinkSkillMapTable_A` (37:5DEB): The 8 + 25 split is by position; which record fields the two lists are is not read.
+- `ScaleStatWordsToLinkFormat` (37:5E3E): Which three record fields these are (they follow the skill bytes) is not read.
+- `Copy26BytesThenLastSpeciesResistance` (37:5FAD): Why the last resistance is not taken from the received data is not read.
+- `ChooseActionTarget` (39:4001): Not probed: probe scope excludes it. Modes above 4 would read past ActionTargetModeTable (no range check).
+- `TargetSavedSlotOrRandomFoe` (39:4055): What action 204 is and why it keeps its earlier target is not read.
+- `TargetFoeWithAGLAboveOne` (39:6BB6): Why action 43 uses this routine in the mode 1 tables while the other mode tables use ChooseTarget_Slow.
+- `TargetAllyConfused` (39:6BBC): Whether any code reaches it (nothing in src/ names it outside its own comment).
+- `TargetAllyParalyzed` (39:6BC9): Whether any code reaches it.
+- `TargetAllyCursed` (39:6BD6): Whether any code reaches it.
+- `EstimateAndPickWeakestTarget` (39:6D74): What wBattleTempBuf + 2 is cleared for (nothing here reads it).
+- `ComputeDamageEstimateForAction` (39:6E27): What each effect handler writes to wBattleDamageLo and wBattleDamageHi when run for an estimate.
+- `BuffCapOfBaseDEF` (39:6F32): Why the scaling depends on the side of the actor (likely a buff of x 4 or x 2).
+- `ChooseTarget_MouthShut_CountMouthSkills` (39:6F9A): Whether these are the skills MouthShut seals (BSTAT1_BREATH_SEALED); an earlier reading says so at C1.
+- `SetActorTargetFromHRAMChoice` (39:6FE2): The meaning of hTemp2 and hTemp3 differs between callers; not recorded here.
+- `ActorOnLocalSide_Bank39` (39:7223): Which side the link role marks as local is inferred from the reversal, not checked.
+- `SetEffectSpriteXForTargets` (3A:4A3A): The one-foe case of mode 2 looks like a game bug (it skips the list and uses the foe count as the table base).
+- `RunBattleEffectAnimation` (3A:4ADB): What writes wEffectFlashState and wEffectCounter during the sequence.
+- `RunEffectRoutineEffectEvery5Frames_InvertPalettes` (3A:4F06): The name Delay does not fit: every step inverts the palettes.
+- `EffectPositionIndexForActor` (3A:5272): Values of wBattleFoeCount other than 1 and 2 (3 in battle) are all treated like three foes.
+- `DrawEffectSpriteForEffectTileOffsetRange` (3A:5383): Offsets $1F and $20 give identical OAM bytes in banks $3F and $3D, so the probes cannot separate that boundary.
+- `UploadBGPalettesWithFade` (3A:5536): Which routines change wDMGPaletteBGP during a battle effect was not followed.
+- `SelectEffectByEffectFlags2Flags_SacrificeSound` (3A:57CA): Why the caller stops on NZ for Farewell and LifeDance (bit 6 of wResolveMsgFlags set) was not followed.
+- `RunBattleActions` (3A:6157): Which routine runs the effect animation in a link battle (this routine only returns there) was not followed.
+- `RunActionSpecificPostStep` (3A:61F8): What resolve step $0E does for Sacrifice and ACTION_D6 was not followed.
+- `CheckBattleDecided` (3A:639A): Why action $BD with hits left counts as not decided was not followed.
+- `SetSlotMarksForPresentSlots` (3A:6650): What the mark values 0, 1, 3 and $FF mean to the consumers of wSlotMarks was not followed.
+- `RunBattleStep4_CountTargets` (3A:6785): ACTION_CE and ACTION_BB are ids whose skill name only repeats 'LoveRain' and 'HighJump'; their own effect was not followed.
+- `RunMultiHitCounter` (3A:6846): Where the extra hits are counted in the damage or the text was not followed.
+- `RunActionResolveStep` (3A:69AA): Where RunBattleSubStep moves wBattleResolveStep on from step 5 was not followed.
+- `RunDefeatStepMinus1Step` (3A:6C93): Which routines set wDefeatStep to each of the values 1-3 and 9 was not followed.
+- `RemoveCFromActionQueue_3A` (3A:6D53): Whether the byte at wActionQueue + 8 is a ninth queue entry (wActionQueuePos can reach 8) was not followed.
+- `ShowActionBattleText` (3A:6E92): Item ids of 64 or more would read past ActionBattleTextTable2; whether they occur was not followed.
+- `BattleText0HookTargetNameAndGroupWord` (3A:7138): Why a recruit message ($2A, $2B) reads wMultiHitCount and wSpeciesGroups was not followed.
+- `BattleTextPrepB8` (3A:73E4): If all three slots of the other side are out the scan ends on slot 3 or 7; that case was not probed.
+- `BattleTextPrep4D` (3A:747B): The text String_2F_01_4D contains no name buffer, so which message this prep serves was not followed.
+- `BattleTextPrep92` (3A:74D6): Whether wSealPrayState holds a skill number in the case that reaches this text was not followed.
+- `ShowActionRefusedMessage` (3A:7508): What reasons 3 to 6 of CheckSkillMPCost each mean in play (which seal) was not followed.
+
+## E-0383
+
+- `LatinKanaLabelGlyphTiles` (16:7B7D): which exact labels (HP, MP, level, experience) each glyph builds on the Info page was not checked tile by tile
+- `Gfx16_1` (16:7D12): is this a leftover picture (two small sprite halves or a top edge) from an earlier build of the Info page?
+- `LetterFrameIconTiles` (31:7C1E): what each icon stands for (skull, circle, Z) was not tied to a status or screen element
+- `DigitLvHpMpTiles` (31:7DFB): the meaning of the small tile after 9 (read as an L and v pair) is by looks only
+- `LetterFrameIconDigitTiles` (46:4001): tiles 71-73 are blank here; the text glyph tiles ($15-$A3) come from elsewhere
+- `Map0DScreenY1X0AltBlock` (47:69D1): why an unreferenced altered copy exists (an unused story variant?)
+- `Map19ScreenY1X0AltBlocks` (48:5F34): whether a script patches those tiles at run time instead of switching screens
+- `MonsterSceneBackdropTiles` (48:7861): what the picture depicts is by looks only; palette and tile bank attributes were ignored in the render
+- `Gfx4C_5` (4C:725A): the generator should fold this label back into the Map48Screens0_Y8X6 bytes
+- `Gfx54_1` (54:4078): the generator should merge the 119-byte and 692-byte INCBIN parts back into one Map81Tileset stream
+- `Map40ScreenMostRocks` (58:4706): the story reason for the rocks vanishing in the Kameha escape scene
+- `WorldMapOverviewLandTiles` (5D:4001): the names of the regions the four silhouettes show were not matched to wWorldMapRegion values
+- `WorldMapCloseUpTerrainTiles` (5D:43AE): what the hex digit row is used for was not traced
+- `Gfx65_1` (65:5F7A): the generator should fold this label back into the KeyWorld01_0_Y1X1_Tiles bytes
+- `Gfx65_3` (65:6644): the generator should fold this label back into the KeyWorld04_0_Y0X2_Tiles bytes
+- `Gfx65_4` (65:6844): the generator should fold this label back into the KeyWorld06_0_Y0X1_Tiles bytes
+- `Gfx66_6` (66:59C0): the generator should fold this label back into the KeyWorld07_0_Y0X0_Tiles bytes
+- `UnusedStoneHallScreenMap` (68:7E04): none of the tile numbers drawn is above $2D, so only the vTiles2 half (MapX62F0Tileset) is shown; the picture needs no vTiles1 tile
+- `ScreenMap6D_1` (6D:4A8F): which MapType5Tiles entry fits (the render used entry 0 only)
+- `ScreenMap6D_1` (6D:4A8F): whether ScreenMap6D_1 to ScreenMap6D_9 are unused key world room screens
+- `KeyWorldGrassCrossSmallPondTilemap` (6D:4B80): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldGrassCrossSmallPondTilemap` (6D:4B80): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandClearingBigPondTilemap` (6D:4C20): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandClearingBigPondTilemap` (6D:4C20): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandGrassPondUpperRightTilemap` (6D:4CF3): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandGrassPondUpperRightTilemap` (6D:4CF3): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldGrassDirtThreeBoulderTilemap` (6D:4DF8): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldGrassDirtThreeBoulderTilemap` (6D:4DF8): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldGrassClearingBoulderTilemap` (6D:4EB6): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldGrassClearingBoulderTilemap` (6D:4EB6): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandCorridorBlockPitTilemap` (6D:6128): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCorridorBlockPitTilemap` (6D:6128): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandZigzagPitTilemap` (6D:61C0): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandZigzagPitTilemap` (6D:61C0): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandRightPitDirtStripTilemap` (6D:629E): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandRightPitDirtStripTilemap` (6D:629E): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandTShapedPitTilemap` (6D:639F): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandTShapedPitTilemap` (6D:639F): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandBoulderGroupDirtTilemap` (6D:6481): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandBoulderGroupDirtTilemap` (6D:6481): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandBoulderGroupLowerTilemap` (6D:6558): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandBoulderGroupLowerTilemap` (6D:6558): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `Gfx6D_1` (6D:6D4C): the generator should not split MapType5Tiles2 at $6D4C; the label and gfx/misc/gfx6_d_1.lz are a split artifact (the INCBIN bytes are identical either way)
+- `KeyWorldSandCrossPitUnderLedgeTilemap` (6D:77CF): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCrossPitUnderLedgeTilemap` (6D:77CF): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandPlusPitRightTilemap` (6D:7881): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandPlusPitRightTilemap` (6D:7881): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandStairPitDirtTilemap` (6D:796D): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandStairPitDirtTilemap` (6D:796D): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandBlobPitTilemap` (6D:7A60): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandBlobPitTilemap` (6D:7A60): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandCrystalsTopDirtTilemap` (6D:7C13): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCrystalsTopDirtTilemap` (6D:7C13): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandCrystalTrailTilemap` (6D:7CE8): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCrystalTrailTilemap` (6D:7CE8): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCenterPitTilemap` (6E:52BA): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCenterPitTilemap` (6E:52BA): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceLowerPitTilemap` (6E:533F): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceLowerPitTilemap` (6E:533F): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceUpperRightPitTilemap` (6E:53FD): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceUpperRightPitTilemap` (6E:53FD): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceDiagonalPitTilemap` (6E:54DE): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceDiagonalPitTilemap` (6E:54DE): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceScatteredCrystalsTilemap` (6E:55D3): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceScatteredCrystalsTilemap` (6E:55D3): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCrystalColumnTilemap` (6E:56B9): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCrystalColumnTilemap` (6E:56B9): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCrystalClustersTilemap` (6E:579B): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCrystalClustersTilemap` (6E:579B): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCrystalPairsTilemap` (6E:5881): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCrystalPairsTilemap` (6E:5881): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldUnlistedScreen6E_A_Tilemap` (6E:6945): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_A_Tilemap` (6E:6945): The attribute map KeyWorldScreen6E_15 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_B_Tilemap` (6E:69E7): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_B_Tilemap` (6E:69E7): The attribute map KeyWorldScreen6E_16 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_C_Tilemap` (6E:6AAC): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_C_Tilemap` (6E:6AAC): The attribute map KeyWorldScreen6E_17 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_D_Tilemap` (6E:6B9C): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_D_Tilemap` (6E:6B9C): The attribute map KeyWorldScreen6E_18 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_E_Tilemap` (6E:6E08): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_E_Tilemap` (6E:6E08): The attribute map KeyWorldScreen6E_19 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_A_Tilemap` (6F:45D5): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_A_Tilemap` (6F:45D5): The attribute map KeyWorldScreen6F_1 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_B_Tilemap` (6F:4640): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_B_Tilemap` (6F:4640): The attribute map KeyWorldScreen6F_2 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_C_Tilemap` (6F:4727): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_C_Tilemap` (6F:4727): The attribute map KeyWorldScreen6F_3 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_D_Tilemap` (6F:4813): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_D_Tilemap` (6F:4813): The attribute map KeyWorldScreen6F_4 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_E_Tilemap` (6F:58E4): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_E_Tilemap` (6F:58E4): The attribute map KeyWorldScreen6F_5 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_F_Tilemap` (6F:596F): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_F_Tilemap` (6F:596F): The attribute map KeyWorldScreen6F_6 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_G_Tilemap` (6F:5A6B): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_G_Tilemap` (6F:5A6B): The attribute map KeyWorldScreen6F_7 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_H_Tilemap` (6F:5B29): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_H_Tilemap` (6F:5B29): The attribute map KeyWorldScreen6F_8 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_I_Tilemap` (6F:5BEE): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_I_Tilemap` (6F:5BEE): The attribute map KeyWorldScreen6F_9 is presumably its partner and is likely to need the matching name.
+- `MapType5Tiles7StreamTail` (6F:6475): The split of one stream into MapType5Tiles7 and Gfx6F_1 comes from the asset generator (assets.txt lists 5_tiles7.lz and the misc file as two ranges); merging them into one asset is a generator change for the integrator, not decided here.
+- `KeyWorldUnlistedScreen6F_J_Tilemap` (6F:6C9B): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_J_Tilemap` (6F:6C9B): The attribute map KeyWorldScreen6F_10 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_K_Tilemap` (6F:6D34): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_K_Tilemap` (6F:6D34): The attribute map KeyWorldScreen6F_11 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_L_Tilemap` (6F:6E0C): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_L_Tilemap` (6F:6E0C): The attribute map KeyWorldScreen6F_12 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_M_Tilemap` (6F:6EED): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_M_Tilemap` (6F:6EED): The attribute map KeyWorldScreen6F_13 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_N_Tilemap` (6F:6FC3): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_N_Tilemap` (6F:6FC3): The attribute map KeyWorldScreen6F_14 is presumably its partner and is likely to need the matching name.
+- `MapType5Tiles8StreamTail` (70:4192): The split of one stream into MapType5Tiles8 and Gfx70_1 comes from the asset generator (assets.txt lists 5_tiles8.lz and the misc file as two ranges); merging them into one asset is a generator change for the integrator, not decided here.
+- `KeyWorldUnlistedScreen70_A_Tilemap` (70:48E1): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_A_Tilemap` (70:48E1): The attribute map KeyWorldScreen70_1 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_B_Tilemap` (70:496B): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_B_Tilemap` (70:496B): The attribute map KeyWorldScreen70_2 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_C_Tilemap` (70:4A37): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_C_Tilemap` (70:4A37): The attribute map KeyWorldScreen70_3 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_D_Tilemap` (70:4B17): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_D_Tilemap` (70:4B17): The attribute map KeyWorldScreen70_4 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_E_Tilemap` (70:4C0C): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_E_Tilemap` (70:4C0C): The attribute map KeyWorldScreen70_5 is presumably its partner and is likely to need the matching name.
+- `KeyWorldFloorScreenFiveScatteredPitsTilemap` (70:5CE4): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenFiveScatteredPitsTilemap` (70:5CE4): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenBigPitBlockAndPoolTilemap` (70:5D86): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenBigPitBlockAndPoolTilemap` (70:5D86): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitClusterStripePatchTilemap` (70:5E4D): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitClusterStripePatchTilemap` (70:5E4D): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenLongLShapedPitLineTilemap` (70:5F2D): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenLongLShapedPitLineTilemap` (70:5F2D): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenSixBouldersDiagonalTilemap` (70:6005): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenSixBouldersDiagonalTilemap` (70:6005): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenSixBouldersTwoRowsTilemap` (70:609A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenSixBouldersTwoRowsTilemap` (70:609A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenTwoBouldersLongStripeTilemap` (70:624A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenTwoBouldersLongStripeTilemap` (70:624A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenWindingCorridorStripesTilemap` (70:7235): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenWindingCorridorStripesTilemap` (70:7235): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenFiveBouldersWindingPathTilemap` (70:74BC): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenFiveBouldersWindingPathTilemap` (70:74BC): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorNarrowCorridorStripesPitsTilemap` (71:45D1): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorNarrowCorridorStripesPitsTilemap` (71:45D1): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenTwoPitColumnsStripeTilemap` (71:463A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenTwoPitColumnsStripeTilemap` (71:463A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenUShapedPitWallTilemap` (71:46F8): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenUShapedPitWallTilemap` (71:46F8): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenFourPitsTwoWallColumnsTilemap` (71:47D2): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenFourPitsTwoWallColumnsTilemap` (71:47D2): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `Gfx71_1` (71:4E34): the generator that finds streams by trial decoding accepted a start that lies inside an already decoded stream; the true run starts at 71:4E22
+- `KeyWorldFloorNarrowCorridorSinglePitBarTilemap` (71:56B3): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorNarrowCorridorSinglePitBarTilemap` (71:56B3): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenTwoLongPitBarsTilemap` (71:56FB): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenTwoLongPitBarsTilemap` (71:56FB): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitsAroundWallBlockTilemap` (71:579C): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitsAroundWallBlockTilemap` (71:579C): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenDiagonalPillarBandTilemap` (71:5868): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenDiagonalPillarBandTilemap` (71:5868): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenSmallLShapedPitTilemap` (71:62DF): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenSmallLShapedPitTilemap` (71:62DF): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenDiagonalPitLineTilemap` (71:6338): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenDiagonalPitLineTilemap` (71:6338): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitsAboveStripeBarTilemap` (71:63ED): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitsAboveStripeBarTilemap` (71:63ED): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenLayeredLanesStripeTilemap` (71:64BE): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenLayeredLanesStripeTilemap` (71:64BE): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenVerticalPitBarRoomTilemap` (71:7293): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenVerticalPitBarRoomTilemap` (71:7293): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitRingTilemap` (71:72E6): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitRingTilemap` (71:72E6): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenStripeLaneAndPitRowTilemap` (71:737A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenStripeLaneAndPitRowTilemap` (71:737A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenStripeBorderPitSlotTilemap` (71:7456): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenStripeBorderPitSlotTilemap` (71:7456): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `UnreferencedKeyWorldRoomTilemap17` (71:76FE): Which key world kind or room would use it, if any, is unknown; the render alone does not show which tileset it was authored for
+- `UnreferencedKeyWorldRoomTilemap18` (71:77EC): Which key world kind or room would use it, if any, is unknown
+- `FoundItemBottleSpriteTiles` (7E:4D8A): Whether kind 5 also marks other things for map object entries (FindTriggerEntryForCurrentScreen_StoreTrigger_Data has the same bytes) is not checked
+- `FoundItemMeatSpriteTiles` (7E:4E37): Whether kind 8 is used for anything but the meat finds
+- `FacetedGrayLumpSpriteTiles` (7E:4F22): What object the scenes mean (a package, a stone, food) is not established
+- `MagicPlugSpriteTiles` (7E:4F63): The prop pairing for command $0F rests on the message set; the picture alone does not show a plug
+- `BandedPotSpriteTiles` (7E:4FA6): Unreferenced; whether it is an earlier version of the MagicPlug prop or an unused prop is not shown
+- `RoundDiscSpriteTiles` (7E:5066): Unreferenced; what it was meant to be (it sits next to the HarMirror and SkyShield props Gfx_FieldCommandSpriteTable_8 and _10) is not shown
+- `HornedFigureSpriteTiles` (7E:50A9): Unreferenced; the figure may be a statue, doll or monster silhouette, which the picture does not decide
+- `ShatteredPiecesSpriteTiles` (7E:5128): Unreferenced; which object it would break (a pot such as Gfx7E_1, a mirror) is not shown
+- `FlameTuftSpriteTiles` (7E:51A8): Which scene, if any, runs field command 6 is not found
+- `FlameTuftSpriteTiles` (7E:51A8): Flame is read from the palette and shape; no scene text confirms it
+- `DarkCrackedBallSpriteTiles` (7E:52F9): What the ball is in the story (a thrown bomb, a stone) is not stated in the code
+- `SwirlSpriteTiles` (7E:541A): What maps $7F and $92 and the map type $82 place (a portal, a whirlpool) is not read here
+- `FlameSpriteTiles` (7E:5513): The scene meaning (a campfire, a spirit flame) is not established
+- `FloatingOrbSpriteTiles` (7E:5595): What the orb is in the story (a soul, a light, food) is not stated
+- `CarvedDiscsSpriteTiles` (7E:5640): Unreferenced; the stippling is too abstract to say what it was meant to be
+- `TidalBellSpriteTiles` (7E:56C3): The pairing of command 3 with the TidalBell is by order in the Limbo scene, not by a direct item id
+- `GiftEggSpriteTiles` (7E:5870): A plain oval rather than the cracked egg of Gfx_FieldCommandSpriteTable_13; both use yellow palettes
+- `ScallopShellSpriteTiles` (7E:58FF): Whether the shell is a boat, a mount or a vehicle in the story is not shown
+- `ScallopShellSpriteTiles` (7E:58FF): Why 256 bytes are loaded when set $21 draws 4 tiles
+- `LumpyBlobSpriteTiles` (7E:594A): What the blob stands for (rock, cloud, island) is not decided by the picture
+- `SpawnScriptSpriteInFrontOfPlayer_Data` (7E:5A15): Which meta-sprite set it was authored for; it is probably an alternate or unused version of the burst sprite Gfx7E_7 and Tiles0Plus700Gfx_4
+- `SparkleAndCurvedStreakTiles` (7E:5A9A): which scene draws these sprites, since the only loader is unreachable
+- `SparkleAndCurvedStreakTiles` (7E:5A9A): whether the streaks are a sword slash, a wind effect or a tail
+- `Tiles0Gfx_3` (7E:5B63): what the two shapes are
+- `Tiles0Gfx_3` (7E:5B63): whether anything ever reaches DrawTitleSaveSummaryScreen (the note on it does not mention that it has no caller)
+- `IceDoorRoomTileset` (90:58E9): whether any code reaches map record X59E4
+- `IceDoorRoomTilemap` (90:5B6E): whether any code reaches map record X59E4
+- `SandDoorRoomTileset` (90:6FB4): why the tileset has 128 tiles when the screen needs 46
+- `Map2FTilesetTail` (93:56F3): the generator should treat 24D33D-24D760 as one 1059-byte stream (merge Gfx93_1 into Map2FTileset) so the slot sizes agree with the decompressor
+- `SandShoreWaterAttrMap` (93:6153): the scene is named ScenePoorChurch but the frames render as a sand shore with water, palms, bones and a skull on the Map2F tileset; that name or reading is worth a second look
+- `StoneDoorRoomTileset` (93:7745): whether any code reaches map record X6248
+- `TitleKeyAndTarasAdventureTiles` (E1:49DA): whether any other screen uses the TARAS ADVENTURE tiles
+- `Tiles0Gfx_4` (E1:577C): which sprites use tiles 0-15 on the title screen with music
+- `Tiles0Gfx_4` (E1:577C): whether they are a falling-sparkle or glint effect
+
+## E-0384
+
+- `RunRestoreAndUnpackRecordsSteps` (02:76F2): No caller was found in src/: is the routine unused?
+- `PickTableEntryByPartyLevelTotal` (0C:724F): No caller found in src/ or the listing.
+- `MedalPrizeMenu_ChoosePrize_GivePrize` (0D:6AEC): With all 24 inventory slots in use and an item prize, the item byte would be written one byte past wInventory; MedalPrizeMenu_ChoosePrize_CheckRoom is the step that normally stops this.
+- `RefreshRecordResistancesFromSpecies` (0E:5C50): No caller found in src/.
+- `LoadListEntriesCell5RecordAndContinue` (1D:5C94): No call or jump to it is named in src/.
+- `LoadRecordByteForPickedRecords` (33:5F6B): No label or table names it: probably unused.
+- `CopyActorNameToTextBuf0` (3A:78EE): What the glyph $47 after a name in the wSlotNameBytes path draws (it has no charmap entry).
+- `CopyTargetSideNameToTextBuf0` (3A:795D): Why the name is copied just before 'Monsters' overwrites it is not clear from the callers.
+- `CopyActorSideNameToTextBuf0` (3A:798D): Unreferenced twin of CopyTargetSideNameToTextBuf0.
+- `CopySlotNameToHL` (3A:799C): What glyph $47 (written before the letter) draws is not known.
+- `ActionEffect_Ironize_Text` (3A:7B66): E counts the near side, not the side of wBattleTarget; whether that matters for a foe target in link mode 1 is not known.
+- `SetBit0OfLevelUpGainsIndexed_Bank3A` (3A:7CEC): What the three level-up gain bits of a slot mean is not known.
+- `GetSlotPersonalityMid` (3B:420D): The MonsterTable note puts the weight 3 axis in byte 25, while this routine and wSlotPersonalityMid use byte 24; one of the two descriptions is off.
+- `FirstPresentSlotFromC` (3B:4373): wSlotsOccupiedFlag is described in src/ram.asm as the result of this routine, but RunBattleActions_UseItem_MarkUsed sets it to 1 when the item took effect and RunBattleActions_UseItem_ConsumeItem tests it; that RAM description looks out of date.
+- `NextPresentSlotAfterTarget` (3B:4673): wRecordBufferData + $4 is byte 4 of the skill record last loaded; which record the item path leaves there is not known.
+- `GroupTargetsBySpeciesToSpeciesGroups` (3B:4711): The packed-list indexing by slot number looks like a bug for foes that do not start at slot 4; only the routine was run, not the whole item path.
+- `RollTableDamageScaledByResistance` (3B:4990): Which resistance (Vacuum, Bolt, IceBolt, Blaze) each item uses is read from the packed layout in src/ram.asm; the item to element match is not confirmed.
+- `ItemEffect_ReviveFallenTarget` (3B:4C7D): The older comment said the max HP is applied when the slot is present; the branch tests read the other way round (WorldLeaf revives).
+- `ItemEffect_Meat` (3B:4C95): The older comment had the local and non-local branches the other way round; wBattleExtraStat is only named by its users, so what lowering it means is not known.
+- `ItemEffect_BadMeat` (3B:4D1C): The older comment had the local and non-local branches the other way round.
+- `ItemEffect_SealSpells` (3B:4E1B): The old name and comment said status byte 0; the bit is in wBattleStatus1.
+- `ItemEffect_DoubleAtk` (3B:4E46): The old name and comment said status byte 0; the bit is in wBattleStatus1.
+- `ItemEffect_RaiseExtraStatAndRestoreHP` (3B:4E66): What wBattleExtraStat is for is not known.
+- `UnreferencedStoreResolveMessage35_TargetD0` (3B:4EB8): Unused variant of RollTableDamageWithMessage35_StoreMessage; its purpose is not known.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3B` (3B:5059): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3D` (3D:4054): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3E` (3E:4001): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `DrawEffectSpriteAtEffectSpriteX_Bank3F` (3F:405B): The older comment called wEffectTileOffset the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex.
+- `ScriptStepBlinkObjectTemp0` (5F:6BF8): hTemp1 must hold the Y of the object when the scene calls it; the callers were not checked for that.
+- `ScriptStartFadeAndAdvanceStep` (5F:6C5A): Which fade direction and speed state $0F selects is not known.
+- `LoadListedRecordNameTilesForTemp0` (5F:6D3F): what the callers in bank $73 do with the species words $00B9 and $005A beyond removing that monster from the party
+- `MarkKeyEntryKindTemp0Bit6` (5F:6DAC): what bit 6 of a key entry byte 0 means to the readers of wKeyList
+- `RedrawColumnsBesideScreen` (5F:6E09): what tile $C4 looks like and why the scenes blank the columns beside the screen
+- `StartChoiceMessageByTextYesNoResult` (5F:7390): whether this routine is dead code left from an earlier version of the boss-win scene
+- `StartMessage5AndAdvanceScriptSubStep` (5F:73A8): whether this routine is dead code left from an earlier version of the boss-win scene
+- `GenerateKeyWorld_RollMonsters_BossLevelsAlt` (60:4338): whether any code reaches this routine through a computed address; no caller or table entry names it
+- `LoadKeyWorldParamsForCurrentKeyIndex` (60:436B): what bytes 1 and 2 of a key entry stand for in the game (they also pick the two words of the key name)
+- `GenerateKeyWorld_RollEncounterTable` (60:4597): whether the fourth byte of an entry (written as 0 here; the floor battle steps in bank $12 set it to 1 when the battle is done and KeyWorldAreaEncounterIndex reads it) has other uses
+- `GenerateKeyWorld_RollEncounterTableAlt` (60:4607): whether any code reaches this routine through a computed address; no caller or table entry names it
+- `PickRandomNonzeroFromKeyWorldGoalKindRows` (60:4C85): what the goal kinds 0-3 are in the game
+- `CheckKeyWorldCellIsOpen` (60:5075): whether a first byte of $FF really means no screen at that cell
+- `PlaceKeyWorldObjectAtRandomCell` (60:53E5): what the byte stored at DE + 5 means (it comes from one of four bytes after the screen record address)
+- `RollKeyWorldObjectKind` (60:54BB): what kinds 0, 1 and 3 of a map object are in the game; the contents of kind 0 look like item ids
+- `RefreshKeyWorldObjectsOnEntry` (60:62F9): whether the missing mark after a complete placement is intended
+- `SetupTownObjectsForMap` (60:639D): what the town objects are in the game
+- `MarkMapObjectsEntryForKeyWorldGoalCell` (60:64C2): what bit 7 of an object byte 0 means for the object (probably that it holds the goal of the key)
+- `ComputePartyStrengthLevelPartyStrength` (61:4001): what the callers in banks $0A and $85 use the strength for (the name reads it as a level scale)
+- `ComputePartyStrengthForKey` (61:40B4): what the callers in bank $0A use the strength for
+- `DrawKeyWorldExitTile` (61:474C): what the kinds 4 and 5 of a floor entrance are in the game
+- `DrawKeyWorldFloorInfo3ObjectTilesForScreen` (61:562F): what the floor entrance kinds 1-5 are in the game
+- `KeyWorldAreaEncounterIndex` (61:606D): what the done flag in byte 3 of an encounter entry is called by the game; the join question follows a battle of the key world floor
+- `LoadMapObjectsForScreen` (69:4001): the meaning of each of the 11 object bytes beyond the format comment above the lists
+- `LoadMapObjectsForScreen` (69:4001): what the per-object value (objects left & 3) stored in the slot is used for
+- `TravelerEvents_CasinoShip_ShowStopTheReelsWith` (73:4387): Whether the Welcome message ('Welcome aboard the casino ship!') is only answerable with yes when the player has 100G was not checked: no gold test was found in this step.
+- `DrawSymbolTilesForTemp1` (73:44A5): Which direction the reel appears to move on screen was not checked in the emulator (video RAM is outside what a probe sees).
+- `AddMenuStateToPartyStatCapped` (73:4558): No caller was found in src/: where wMenuState is set to the amount and why the routine is unused is not known.
+- `AddMenuStateToPartyStatCapped` (73:4558): The data label AddRewardToCounterCappedAt999_RewardAmounts names a table of stat field offsets, not amounts, and would need a new name with this one.
+- `TravelerEvents_CardGame` (73:4647): Steps 7, 10 and 11 hold $0000, which would jump to address 0; no code was found that sets wScriptStep to them.
+- `TravelerEvents_PriceyMerchant_Sell` (73:4CE5): Whether the game can reach this step with less gold than the Herb price (5 x 10G) was not checked.
+- `ReadBank16TableWord` (73:4FB7): The other 11 bytes of each 13-byte record in bank $16 are not read by this routine; what they hold is not known.
+- `SceneChestBattle_StartSprite` (73:53D8): With 3 party members the loop also reads wFollowerRecords + $3 to + $6 as if they were X/Y pairs; whether a false match can happen in play was not checked.
+- `TakeItem` (73:5919): An item that is not in the bag gives hTemp0 = $FF from FindTemp0InInventoryList and RemoveInventorySlotShiftDown has no range check; whether the script can run with one of the three items missing was not checked.
+- `SceneJustice` (73:5C5F): Which tile positions of the four blocks match the places the player can stand on (the puzzle layout) was not worked out.
+- `AddRecordArg5AsFollower` (73:5F55): no caller or table entry reaches it: unused, or reached by data the disassembler does not follow?
+- `ScriptCommand4C_Run` (73:5FBC): which script uses command type 4C
+- `SceneRealKing` (73:6079): are objects 1 and 2 the two Kings? only the message $0365 suggests it
+- `SceneRealKing_MoveTogether` (73:60A7): whether they end at the same Y depends on the start positions, which are only inferred from SceneRealKing_Restore
+- `UnreferencedScriptStepDispatch_73` (73:6D52): no script command or table reaches this table: leftover or reached only by data
+- `ScriptCommand20_Run` (73:6F7C): which script uses command type $20
+- `SceneWarubouFood2` (73:7024): steps 1-2, 4-5 and 7-8 name the same routine twice: does the second pass hop and start the same message again?
+- `ClearBit1AtHL_Bank73` (73:7A42): no caller found; possibly an unused copy of a shared helper
+- `RotateDirectionAtDEEvery32_Bank73` (73:7A51): which of the values 0-3 is up, right, down or left is not established here
+- `CopyStringToBuffer_Bank7C` (7C:4016): no caller found; the copy twin appears unused (reached only if some table or script pointer targets it)
+- `DrawMetaSpriteAt_Sets98` (7F:40CC): the meaning of the clip limits ($A8, $B8, $34, $71) as screen positions is not tested on the emulator
+- `DrawMetaSpriteAt` (7F:7065): the meaning of the clip limits ($A8, $B8, $34, $71) as screen positions is not tested on the emulator
+- `CopyStringToBuffer_Bank80` (80:4016): no caller found; the copy twin appears unused (reached only if some table or script pointer targets it)
+- `CheckBreedingRecipes_CompareHLToBC` (81:40E2): what the second byte of the $FF rule (0 to 10 in the lists seen) means; the routine ignores it
+- `CopyStringToBuffer_Bank82` (82:4016): no caller found; whether the wrong overflow target is ever reached is unknown
+- `CopyStringToBuffer_Bank83` (83:4016): no caller found; the copy twin appears unused (reached only if some table or script pointer targets it)
+- `ItemUsable_LogTwig_Check` (84:47C2): what the recorded goal is used for by the player-visible effect (a map marker drawn by RunFieldReturnPhase_AfterLogTwig_DrawMarker) is read from that routine only
+- `ItemUsable_LogTwig_KeyWorld` (84:48A9): the 4-byte entries of wKeyWorldObjects are read from three bytes before the tested byte; the exact entry layout is not established
+- `ClearKeyWorldActiveForMatchingKeyEntry` (84:4C84): what byte 3 bit 7 of a key entry means (set for region keys such as the Log Twig spot records?) is not established here
+- `SceneKamehaMissing` (85:46E4): which sprite field command 5 loads into wObject5 is not known
+- `SetFlagRedraw` (85:4858): which chest each of the four X values is and what story flag $01CF to $01D2 means are not known
+- `SceneKamehaKeyBattle2_AfterBattle` (85:48C2): the full-key-list branch (message $0B9E) was not run
+- `SceneKamehaKeyBattle_AfterBattle` (85:496F): the full-key-list branch (message $0B94) was not run
+- `SceneTerry` (85:4A6D): both branches of the hPlayerX = $20 test set the same wWarpDestX; the flag changes nothing there
+
+## E-0385
+
+- `SceneCanalGate_RaiseGate` (85:5607): The earlier note said the object stops animating at the end; clearing OBJ_FLAGS bit 1 lets the animation timer run again.
+- `SceneCanalGate_WalkUp` (85:561E): The earlier note said object 1 starts animating here; setting OBJ_FLAGS bit 1 freezes the animation timer (FreezeFieldAnimation sets it, ResumeFieldAnimation clears it).
+- `SceneCanalGate_Hop` (85:566F): The earlier note called this step 0 only; the jumptable of SceneCanalGate lists it for steps 0 and 1.
+- `RotateDirectionAtDEEvery32_Bank85` (85:5774): No caller of this bank-$85 copy was found by name.
+- `PartyHasLivingMonPersonalityAtLeastC0` (85:57FE): No caller was found by name, so the purpose of the test (a first personality byte of $C0 or more in a living party member) is unknown.
+- `FhuntTalkEvents_GiantBird_IsBirdPresent` (85:5882): The earlier note said hTemp0 = 1 for a party match; it is the party position (1 only for the first member). FhuntTalkEvents_GiantBird only tests it for zero.
+- `SetupMap0BMonsterObjects` (85:5B53): What the two possible values of wArenaFlags AND 3 and the wRecordCapacity test mean in arena terms was not read here.
+- `CheckMapInteractionOnA` (87:42A0): The meaning of object type 2 with byte $0A bit 7 set is taken from the wandering-object note in bank $04 (a move is running); the other object types were not compared.
+- `CopyStringToBuffer_Bank89` (89:4016): No caller of CopyStringToBuffer_Bank89 was found by name.
+- `DrawEffectSpriteAtEffectSpriteX_Bank92` (92:4001): The earlier note said wEffectTileOffset sets the tile offset and wEffectSpriteAttrXor the attribute XOR; the code stores them in hSpriteSetIndex and hSpriteSubIndex (the same stale text sits above the copies in banks $3B, $3D and $3E).
+- `CopyStringToBuffer_Bank80_Overflow` (96:4010): The wrapper CopyStringToBuffer_Bank80 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank82_Overflow` (96:4035): No caller; CopyStringToBuffer_Bank82 uses the display overflow, so indexes $90 and up are never copied through this routine.
+- `CopyStringToBuffer_Bank0E_Overflow` (96:7020): The wrapper CopyStringToBuffer_Bank0E that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank28_Overflow` (97:4010): The wrapper CopyStringToBuffer_Bank28 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank29_Overflow` (97:4035): The wrapper CopyStringToBuffer_Bank29 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2A_Overflow` (97:405A): The wrapper CopyStringToBuffer_Bank2A that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank83_Overflow` (97:407F): The wrapper CopyStringToBuffer_Bank83 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2B_Overflow` (98:4010): The wrapper CopyStringToBuffer_Bank2B that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2C_Overflow` (98:4035): The wrapper CopyStringToBuffer_Bank2C that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank89_Overflow` (98:405A): The wrapper CopyStringToBuffer_Bank89 that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2D_Overflow` (99:4010): The wrapper CopyStringToBuffer_Bank2D that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank2E_Overflow` (99:4035): The wrapper CopyStringToBuffer_Bank2E that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `CopyStringToBuffer_Bank7C_Overflow` (99:405A): The wrapper CopyStringToBuffer_Bank7C that far-calls it is not called by name anywhere in src/, so no path to it is known.
+- `AdjustSkillsForBattleStart_A0` (A0:41F2): What the variant skills SKILL_AHHH_AA, SKILL_PANICALL_AD and SKILL_IRONIZE_AE do differently from the plain skills was not read here.
+- `StoreSkillPanicAllADAtHL_BankA0` (A0:4262): The old name says tile; the byte is stored into a skill list (wBattleSkills), so it is a skill id.
+- `StoreSkillIronizeAEAtHL_BankA0` (A0:4265): The old name says tile; the byte is stored into a skill list (wBattleSkills), so it is a skill id.
+- `GameMode7_Init_Start_PackBattlerRecord` (A0:4301): The earlier note said the item step applies stat increments; the bytes it raises (up to 3) are resistance levels of the packed record.
+- `ApplyEquippedItemIncrements` (A0:434B): What the seven rows mean in game terms (which item raises which resistances) was not read here.
+- `LoadBattleSlotC_A0_Party` (A0:4410): The earlier note said the link side byte (AND 3) is stored in wBattleLoadWork; the byte stored is always 0, and only when wLinkRole bit 1 is clear.
+- `LoadBattleSlotC_A0_Foe` (A0:456F): The hand note above this routine names RunA0OrBySlotC_LoadPartySlot; it follows the rename.
+- `RollRecordField0DState_A0` (A0:4AAA): What the rolled 0 or 1 means (for example which sex) was not read here.
+- `Multiply24By8_BankA0` (A0:4AE4): No caller of this bank-$A0 copy was found by name.
+- `FillScreenTileBufferRow11Col4WithC3_BankA0` (A0:4C1D): No caller of this bank-$A0 copy was found by name.
+- `BuildAndCopySlotPanels0And1_A0` (A0:4C63): No caller found by name.
+- `RunBattlePhaseWhenTextIdle_A0_DrawResults` (A0:5622): The earlier note said three numbers from wKeyNameBuf; WriteThreeTwoDigitRows falls through into a fourth call, so four are written.
+- `CountTableBytesAtOrBelowA_BankA0_2` (A0:5693): No caller of this second copy was found by name.
+- `WriteThreeTwoDigitRows` (A0:569E): The name and the earlier note say three rows; the code writes four because the routine has no return of its own before WriteTwoDigitsFromDEStepRow.
+- `ComputeBattleResultRank` (A0:5A6C): The results screen draws the letters 'GFEDCBAS'; that the rank 0-7 picks one of them is an earlier reading that this reading did not re-check.
+- `ApplyBattleResultStatChanges` (A0:5B47): The HP and MP restore tests compare the wrong bytes (an address high byte, a doubled low byte); whether the original intended a plain restore to maximum is not known.
+- `WriteFiveTileNumbersForCommandMonster` (A0:67B8): What the tiles $D0-$D9 show (they may be the name of the monster) was not checked.
+- `DrawInventoryPageIndicator_BankA0` (A0:694B): Tiles $C5, $BE and $C6 (probably brackets and a separator) were not looked at.
+- `CountPresentFoesOfLinkRoleSide_BankA0` (A0:69F1): No caller of this copy was found; the bank $31 copy of the routine is the one called.
+- `CountPresentSlotsOfLinkRoleSide_BankA0` (A0:6A0D): No caller of this copy was found; the bank $31 copy of the routine is the one called.
+- `CallRunDebugStateInBankE0_BankA0` (A0:6A25): Unreferenced; whether anything reaches it at run time was not checked.
+- `UnreferencedShowFiveGlyphsAtTilesHL_BankA0` (A0:6CF7): Unreferenced; whether anything reaches it at run time was not checked.
+- `ClearBattleStatusBitsWithMaskD_BankA1` (A1:4075): Unreferenced; which status bits the masks are meant to clear was not worked out.
+- `SetWorldMapPlayerScreenByMapType` (A1:4744): The name says game mode 2, but the only caller is the world map close-up (field state 8 of game mode 1).
+- `RunWorldMapState_CenterNameGlyphBuf` (A1:528B): The name says game mode 2, but both callers are world map overview steps.
+- `ClearBattleStatusBitsWithMaskD_BankA3` (A3:4075): Unreferenced; which status bits the masks are meant to clear was not worked out.
+- `SaveActionChoicesAndPickFormations` (A3:4187): wLinkMode is described as 0, 1 or 2; whether a value of 3 or more ever occurs (it would be the only way to reach the second side) was not checked.
+- `CancelTargetActionUnlessSpecial` (A3:4A02): What wSlotMarks value 3 does for a combined action that is kept ($D0 and up) has not been traced.
+- `PickDuckBehindAlly` (A3:4A5F): The name and wDuckBehindSlot call the chosen slot an ally, but the code picks from the side opposite to wBattleTarget; the side numbering (bit 2 of a slot) and what the text <ally> shows are unchecked.
+- `PickDuckBehindAlly` (A3:4A5F): The loop also tests the slot against wBattleTarget and would repeat forever on a match; it cannot match because the sides differ.
+- `RunDebugState_E0` (E0:443B): What starts this viewer in the game: both far-calling wrappers have no caller in src/.
+- `RunDebugState_E0_ChooseActionTargets_Input` (E0:4D17): What a wBattleSlotOut byte of $FF means for a slot (CarryUnlessBattleSlotOutSlotEmpty sets Z only for it); the old comment called the other slots occupied.
+- `DrawSpriteSlots` (E0:7420): The pictures the three drawing routines make (bank $25 and $7F) were not read here, only the values handed to them.
+- `StepSpriteSlotTowardDE` (E0:74D8): The Y step only ever subtracts (a Y below the target would wrap through 0); the only caller moves sprite 2 from Y $40 up to $30, which fits.
+- `SetBit0OfLevelUpGainsIndexed_BankE0` (E0:7A59): What bit 0 of a wLevelUpGains entry stands for is not read here.
+- `SetBit1OfLevelUpGainsIndexed_BankE0` (E0:7A66): What bit 1 of a wLevelUpGains entry stands for is not read here.
+- `SetBit2OfLevelUpGainsIndexed_BankE0` (E0:7A73): What bit 2 of a wLevelUpGains entry stands for is not read here.
+- `DrawMetaSpriteSet_BankE1` (E1:5AB7): Whether DrawCGBMetaSpriteAt38_30 ever runs, and so whether this routine does, is not known.
+- `DrawMetaSpriteSet_BankE1` (E1:5AB7): The cascade of the new name: RunBankE1Routine_BuildOam and RunBankE1Routine_Data derive from this name.
+- `BGTileUnderPointIsSpriteHideTile_BankE1` (E1:5D06): The name says the tile equals hSpriteHideTile, but the callers test carry (tile below hSpriteHideTile), not Z.
+- `AIScore_Beat_UnreferencedVariant` (E2:41C5): Why the ROM keeps this second version of Beat is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_MPass` (E2:43BE): AIScore_MPass_Conditions never gave a non-zero result in 1 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_TwinHits_UnreferencedVariant` (E2:45FE): Why the ROM keeps this second version of TwinHits is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_TwinHits` (E2:4619): FailIfAllyCanUseSkill63Or64 never gave 0 in 8 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Barrier` (E2:48FD): FailIfFoeKnowsSkills42To47 never gave 0 in 6589 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_SquallHit_UnreferencedVariant` (E2:51DB): Why the ROM keeps this second version of SquallHit is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_SquallHit` (E2:51F6): Whether bit 0 of wAIFlag can be set when AIScore_SquallHit_Conditions passes is not known: with wAIFlag non-zero the probe state made the conditions give 0 already.
+- `AIScore_RainSlash` (E2:530E): FewerThanTwoFoesPresent never gave a non-zero result in 25 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Kamikaze` (E2:5856): AIScore_Kamikaze_HealerAllyAndFoeHP never gave 0 in 547 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_OddDance` (E2:591F): ResistanceAverageGateForFoeAIMode3 never gave 0 in 3 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): Why the ROM keeps this second version of LureDance is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): AIAddScoresForTwoLists_SealingFoes never gave 0 in 63 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LureDance_UnreferencedVariant` (E2:5A68): AIAddScoresForTwoLists_OtherAllies never gave 0 in 63 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): Why the ROM keeps this second version of LushLicks is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): AIAddScoresForTwoLists_SealingFoes never gave 0 in 20 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LushLicks_UnreferencedVariant` (E2:5EB6): AIAddScoresForTwoLists_OtherAllies never gave 0 in 20 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): Why the ROM keeps this second version of LegSweep is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): AIAddScoresForTwoLists_SealingFoes never gave 0 in 21 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_LegSweep_UnreferencedVariant` (E2:5F8A): AIAddScoresForTwoLists_OtherAllies never gave 0 in 21 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): Why the ROM keeps this second version of Ahhh is not known; the earlier note called it a table-B score, but table B has no entry for it.
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): No probed state made AIAddScoresForTwoLists_SealingFoes or AIAddScoresForTwoLists_OtherAllies give 0, so a repeated row $B1 or $B2 is not shown, only the second call (both checks appear twice in the probe traces).
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): AIAddScoresForTwoLists_SealingFoes never gave 0 in 11 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_Ahhh_UnreferencedVariant` (E2:5FDE): AIAddScoresForTwoLists_OtherAllies never gave 0 in 11 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_MouthShut` (E2:60A6): FailIfFoeKnowsSkills42To47 never gave 0 in 7012 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_StormWind` (E2:61C2): FailIfFoeKnowsSkills42To47 never gave 0 in 6047 distinct fuzzed states (20000 mutations), so that branch of the routine is not probed
+- `AIScore_NoWeightA` (E2:64BF): What skills 175-191 are: the skill-name table gives them a placeholder name, and the AI never weighs them.
+- `AIScore_NoWeightB` (E2:64C0): What skills 192-199 are: the skill-name table gives them a placeholder name.
+- `AIScore_Skill200` (E2:64C1): What skill 200 is, and why only the random value decides its score.
+- `MaxNegativeScoreWhenAIFlagBit0` (E2:67A5): What wAIFlag bit 0 means in the game: the code only shows that it blocks every weight row of these scorers.
+- `WeighActorAloneOnSide` (E2:67D5): Why Farewell and Vivify want the actor to be alone: the code only shows the two checks.
+- `AIAddScoresForTwoLists` (E2:67F9): What the two checks stand for in the game (the names SealingFoes and OtherAllies come from the callees).
+- `WeighLinkRules1RuleBit5` (E2:6854): What link rule bit 5 stands for in the game.
+- `WeighLinkRules1RuleBit4` (E2:6865): What link rule bit 4 stands for in the game.
+- `WeighLinkRules1RuleBit3` (E2:6876): What link rule bit 3 stands for in the game.
+- `WeighLinkRules1RuleBit2` (E2:6887): What link rule bit 2 stands for in the game.
+- `WeighLinkRules1RuleBit1` (E2:6898): What link rule bit 1 stands for in the game.
+- `RunLinkSession8Exchange_EggsTraded` (F0:565E): Whether wF0ScreenKind can ever be 2: PickScene never sets it and InfoOrOK only sets 0, so this scene looks unreachable.
+- `UnusedStepObject1LeftShowEgg` (F0:5888): Whether this code is ever run: no label or jump refers to it.
+- `UnusedStepSpriteRightShowEgg` (F0:5A29): Whether this code is ever run: no label or jump refers to it.
+- `DrawPageIndicatorWhenTwoPagesAndStep` (F0:613D): No call, jump or table in src refers to this label, so it may be unused code (LinkRecordScreen_DrawListBox ends in a jump past it).
+- `CopyRectTo20ByteRows_BankF0` (F0:62B8): The CGB zero fill goes to WRAM bank 2, which is not mapped when the routine returns, so it is read from the code, not observed.
+- `CopyScreenBufferRectWithAttrs_F0` (F0:63EE): The CGB attribute copy happens in WRAM bank 2, which is not mapped when the routine returns, so only the DMG copy is observed.
+- `RaiseLowestResistances` (F0:6AFE): The random byte of NextTableByte is discarded (ld a, l after the call): is the fixed pick intended or a leftover? Unknown.
+- `RandomModulo29_BankF0` (F0:7097): The name says modulo but the callers use the quotient; renaming would also touch RandomModulo29 in bank $0E, so the name is kept.
+- `ClearRollCounterWhenGM2TimerMinutesIs59` (F0:72B4): Whether applying the pending gift on this fall-through is intended is not known; the code has no ret before ApplyGiftEffectByItem.
+- `CopyNameStringFromBank08Database` (F0:7C96): CopyNameStringFromBank08Database_Data is a label in this bank but the code uses its address as an entry of bank $08 (StringDatabase list 2); the label is misplaced, not data of this bank.
+- `ClearScreenBufferAndAttributes_BankF1` (F1:4AA8): The probes check the tile fill and the CGB branch, but the runner cannot read WRAM bank 2 after rSVBK is restored, so the attribute clear is C1 (code reading).
+
+## E-0386
+
+- `CopyScreenBufferRectAt024FAndDrawBox_BankF1` (F1:5812): what the 9 x 7 block at wScreenTileBuffer + $83 holds (the screen as it was before the box was drawn?)
+- `GameMode8_Init` (F2:4001): Why the clear covers 256 bytes while GameMode8_Update_EndMode clears $6F is unknown (the B-only loop looks accidental but is kept by the byte match).
+- `GameMode8_Init` (F2:4001): What the fade value $FC selects is not worked out here.
+- `ShowStatsHeadingTiles` (F2:49CF): The glyph codes of the 30-tile strip are not decoded into the individual stat names here.
+- `ShowInfoOKLabelTiles` (F2:4A0B): Which on-screen buttons the 'InfoOK' tiles label is not confirmed by this reading.
+- `PickNameBufferForFirstByte_BankF2` (F2:4E26): Whether tiles $CC and $CD beside the two parent icons are the male and female marks is not confirmed on screen.
+- `DrawLevelAndStatusRowForRecordBufBLevel` (F2:4F47): The tiles $EA and $ED are probably the 'Lv' label; the tile numbers $C0-$C2 have not been matched with status icons on screen.
+- `DrawRecordBufBFamilyIconAndPlus` (F2:50E2): Whether tile $1E, written before the number, is the plus sign glyph was not checked on screen.
+- `PermuteArg5To7ByMonster` (F2:5181): Why the rows differ per monster (some are 0,1,2, others rotations) is not known; every row is a permutation of 0, 1, 2.
+- `ReturnStub_3` (F2:6333): Whether the 7 unreferenced bytes are a leftover of an earlier version of this stub is not known.
+- `ReorderKeyList` (F2:6355): What byte 3 bit 7 and a value below 7 in byte 0 mean for a key is not read here (another note reads byte 3 bit 7 as a key marked as leaving its key world).
+- `VaultMenu_ReorderBagOrStorage` (F2:6449): The other wScreenState values that reach the storage branch were not enumerated.
+- `GreatLogTalkEvents_ClearArenaData` (F2:6692): What else lives in wArenaEntry through wArenaEntry + $20E besides wScreenState and wScreenStep is not read here.

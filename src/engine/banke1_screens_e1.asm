@@ -4,14 +4,18 @@
 SECTION "Bank E1", ROMX[$4000], BANK[$E1]
     db $e1
 
+; Tiles, 304 bytes decompressed (19 tiles). Decompressed to vTiles2 by
+; GameMode5_Update_LoadScreens_Screen0_Load (intro screen 0), with IntroScreen0TileMap as its
+; screen. Render: the letters of the words LICENSED BY NINTENDO, one letter per tile, in a plain 8x8
+; capital font; the tile map spells the line across the middle of the screen. (C1, E-0383)
 ; LZSS-compressed: 213 bytes that expand to 304 (E-0016, E-0017)
-Tiles2Gfx_4::
-    INCBIN "gfx/misc/tiles2_gfx_4.lz"
+LicensedByNintendoTiles::
+    INCBIN "gfx/misc/licensed_by_nintendo_tiles.lz"
 
 ; LZSS-compressed (37 inline bytes) 20 x 18 tile map that expands to 360 bytes.
 ; GameMode5_Update_LoadScreens_Screen0_Load (intro screen 0, wTitleScreenState = 0) decompresses it
-; to wScreenTileBuffer with DecompressToRAMLocked after Tiles2Gfx_4 goes to vTiles2, and draws it
-; with DrawFullScreenBufferToBGMap. (C1, E-0373)
+; to wScreenTileBuffer with DecompressToRAMLocked after LicensedByNintendoTiles goes to vTiles2, and
+; draws it with DrawFullScreenBufferToBGMap. (C1, E-0373)
 ; LZSS-compressed: 37 bytes that expand to 360 (E-0016, E-0017)
 IntroScreen0TileMap::
     db $68, $01, $13, $13, $a0, $ff, $4d, $13, $41, $0f, $2e, $01, $02, $03, $04, $05
@@ -32,14 +36,19 @@ IntroScreen0AttrMap::
 IntroScreen0Palette::
     db $b5, $56, $ff, $7f, $d7, $56, $00, $00
 
+; Tiles, 1600 bytes decompressed (100 tiles). Decompressed to vTiles2 by
+; GameMode5_Update_LoadScreens_Screen1_Load (intro screen 1), with IntroScreen1TileMap as its
+; screen. Render: a 2001 copyright credit screen in a bold teal outlined font: the copyright sign
+; and 2001 with ARMOR PROJECT, BIRD STUDIO, KOICHI SUGIYAMA, CHUN SOFT and ENIX, one per line, drawn
+; from these tiles. (C1, E-0383)
 ; LZSS-compressed: 1169 bytes that expand to 1600 (E-0016, E-0017)
-Tiles2Gfx_5::
-    INCBIN "gfx/misc/tiles2_gfx_5.lz"
+CopyrightCreditsTiles::
+    INCBIN "gfx/misc/copyright_credits_tiles.lz"
 
 ; LZSS-compressed (85 bytes, an asset file) 20 x 18 tile map that expands to 360 bytes.
 ; GameMode5_Update_LoadScreens_Screen1_Load (intro screen 1, wTitleScreenState = 1) decompresses it
-; to wScreenTileBuffer with DecompressToRAMLocked after Tiles2Gfx_5 goes to vTiles2, and draws it
-; with DrawFullScreenBufferToBGMap. (C1, E-0373)
+; to wScreenTileBuffer with DecompressToRAMLocked after CopyrightCreditsTiles goes to vTiles2, and
+; draws it with DrawFullScreenBufferToBGMap. (C1, E-0373)
 ; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
 IntroScreen1TileMap::
     INCBIN "gfx/misc/intro_screen1_tile_map.lz"
@@ -59,14 +68,19 @@ IntroScreen1AttrMap::
 IntroScreen1Palette::
     db $60, $31, $b5, $56, $e8, $62, $00, $00
 
+; Tiles, 1552 bytes decompressed (97 tiles). Decompressed to vTiles2 by
+; GameMode5_Update_LoadScreens_Screen2_Load (intro screen 2), with IntroScreen2TileMap as its
+; screen. Render: the Enix swoosh logo as large light shapes, the word ENIX with a registered mark
+; under it, and the script text enix presents across the middle, drawn from these tiles. (C1,
+; E-0383)
 ; LZSS-compressed: 815 bytes that expand to 1552 (E-0016, E-0017)
-Tiles2Gfx_6::
-    INCBIN "gfx/misc/tiles2_gfx_6.lz"
+EnixPresentsLogoTiles::
+    INCBIN "gfx/misc/enix_presents_logo_tiles.lz"
 
 ; LZSS-compressed (120 bytes, an asset file) 20 x 18 tile map that expands to 360 bytes.
 ; GameMode5_Update_LoadScreens_Screen2_Load (intro screen 2, wTitleScreenState = 2) decompresses it
-; to wScreenTileBuffer with DecompressToRAMLocked after Tiles2Gfx_6 goes to vTiles2, and draws it
-; with DrawFullScreenBufferToBGMap. (C1, E-0373)
+; to wScreenTileBuffer with DecompressToRAMLocked after EnixPresentsLogoTiles goes to vTiles2, and
+; draws it with DrawFullScreenBufferToBGMap. (C1, E-0373)
 ; LZSS-compressed: 120 bytes that expand to 360 (E-0016, E-0017)
 IntroScreen2TileMap::
     INCBIN "gfx/misc/intro_screen2_tile_map.lz"
@@ -85,45 +99,91 @@ IntroScreen2AttrMap::
 IntroScreen2Palette::
     db $0f, $3e, $bf, $73, $d7, $56, $00, $00
 
+; Tiles, 2048 bytes decompressed (128 tiles). Decompressed to vTiles1 (tile numbers $80-$FF) by
+; TitleOpening_LoadTitle (opening title, with TitleLogoTiles and TitleOpeningKeyBGMap) and by
+; GameMode5_Update_LoadScreens_ScreenWithMusic_Load (title screen with music). Render: the big
+; golden key in pieces (round bow with holes, shaft, teeth) and a banner row of text reading TARAS
+; ADVENTURE. The title maps drawn here use the key pieces; the TARAS ADVENTURE banner row is not
+; placed by them (the US title shows the COBI JOURNEY subtitle from Tiles2Gfx_7), so it looks like a
+; leftover from the sibling release. (C1, E-0383)
 ; LZSS-compressed: 1165 bytes that expand to 2048 (E-0016, E-0017)
-Tiles1Gfx_2::
-    INCBIN "gfx/misc/tiles1_gfx_2.lz"
+TitleKeyAndTarasAdventureTiles::
+    INCBIN "gfx/misc/title_key_and_taras_adventure_tiles.lz"
 
+; Tiles, 2048 bytes decompressed (128 tiles). Decompressed to vTiles2 (tile numbers $00-$7F) by
+; TitleOpening_LoadTitle and by GameMode5_Update_LoadScreens_ScreenWithMusic_Load. Render: the title
+; logo, DRAGON WARRIOR in big brown letters with an orange gradient, the MONSTERS pill banner with a
+; large 2, the COBI JOURNEY subtitle, the registered mark, and the top of the key; drawn with
+; TitleKeyAndTarasAdventureTiles it makes the whole title screen. (C1, E-0383)
 ; LZSS-compressed: 1438 bytes that expand to 2048 (E-0016, E-0017)
-Tiles2Gfx_7::
-    INCBIN "gfx/misc/tiles2_gfx_7.lz"
+TitleLogoTiles::
+    INCBIN "gfx/misc/title_logo_tiles.lz"
 
+; Tiles, 1152 bytes decompressed (72 tiles). Decompressed to vTiles2 by TitleOpening_LoadNextScreen
+; (the screen after the title opening fades), with DragonWarriorLogoTilemap as the screen. Render:
+; the plain DRAGON WARRIOR wordmark, brown letters with a purple outline and a registered mark, on
+; its own, without the MONSTERS banner. (C1, E-0383)
 ; LZSS-compressed: 887 bytes that expand to 1152 (E-0016, E-0017)
-Tiles2Gfx_8::
-    INCBIN "gfx/misc/tiles2_gfx_8.lz"
+DragonWarriorLogoTiles::
+    INCBIN "gfx/misc/dragon_warrior_logo_tiles.lz"
 
+; Tiles, 256 bytes decompressed (16 tiles). Decompressed to vTiles0 (object tile area, tiles 0-15)
+; by GameMode5_Update_LoadScreens_ScreenWithMusic_Load, the title screen with music, which also
+; loads TitleKeyAndTarasAdventureTiles and TitleLogoTiles. Render: scattered thin grey diagonal
+; strokes, short dashes and dots plus one small plus-shaped tile; no letters. Not identified: the
+; shapes read as glint or spark fragments but nothing in the loader says which object draws them
+; (the sparkle meta-sprites of TitleOpening_MoveSparkles use tile offset $10, so tiles 0-15 are not
+; those), and that title state draws no sprite by itself. (C1, E-0383)
 ; LZSS-compressed: 175 bytes that expand to 256 (E-0016, E-0017)
 Tiles0Gfx_4::
     INCBIN "gfx/misc/tiles0_gfx_4.lz"
 
+; Tile map, 360 bytes decompressed (20 x 18). GameMode5_Update_LoadScreens_ScreenWithMusic_Load
+; decompresses it into wScreenTileBuffer (with the attribute map TitleScreenAttrMap into
+; wScreenAttrBuffer on CGB) and draws it to vBGMap0 with DrawFullScreenBufferToBGMap; it indexes
+; TitleLogoTiles (tiles $00-$7F) and TitleKeyAndTarasAdventureTiles (tiles $80-$FF). Rendered: the
+; full title screen, the DRAGON WARRIOR MONSTERS 2 COBI JOURNEY logo with the golden key above it,
+; on white. (C1, E-0383)
 ; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen_tile_buffer_gfx.lz"
+TitleScreenTilemap::
+    INCBIN "gfx/misc/title_screen_tilemap.lz"
 
+; Attribute map, 360 bytes decompressed (20 x 18, one byte per cell of TitleScreenTilemap, palette
+; numbers in the low bits). GameMode5_Update_LoadScreens_ScreenWithMusic_Load decompresses it into
+; wScreenAttrBuffer (WRAM bank 2) on CGB only, then copies the 8 BG palettes of
+; TitleOpening_LoadTitle_BGPaletteBufferData. It colours the title logo: orange, brown and purple
+; letters, gold key. (C1, E-0383)
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_ScreenAttrBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen_attr_buffer_gfx.lz"
+TitleScreenAttrMap::
+    INCBIN "gfx/misc/title_screen_attr_map.lz"
 
+; Tile map, 360 bytes decompressed (20 x 18). TitleOpening_LoadNextScreen decompresses it into
+; wScreenTileBuffer after loading DragonWarriorLogoTiles to vTiles2 (attributes
+; TitleOpening_LoadNextScreen_ScreenAttrBufferGfx, palette
+; TitleOpening_LoadNextScreen_BGPaletteBufferData) and draws it to vBGMap0. Rendered with
+; DragonWarriorLogoTiles: the DRAGON WARRIOR wordmark across the middle of a white screen. (C1,
+; E-0383)
 ; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
-TitleOpening_LoadNextScreen_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/title_opening_load_next_screen_screen_tile_buffer_gfx.lz"
+DragonWarriorLogoTilemap::
+    INCBIN "gfx/misc/dragon_warrior_logo_tilemap.lz"
 
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
 TitleOpening_LoadNextScreen_ScreenAttrBufferGfx::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
     db $1f, $1f, $35
 
+; Tile map, 1024 bytes decompressed (a full 32 x 32 background map). TitleOpening_LoadTitle
+; decompresses it straight to vBGMap0, with BGMap0Gfx (the 1024-byte attribute map) to the same map
+; in VRAM bank 1 on CGB, after TitleKeyAndTarasAdventureTiles goes to vTiles1 and TitleLogoTiles to
+; vTiles2. Rendered with those tiles: the golden key leaning diagonally in the top left of the map,
+; the rest a plain dark brown field; the screen then scrolls (hScrollY) while sparkles fall. (C1,
+; E-0383)
 ; LZSS-compressed: 112 bytes that expand to 1024 (E-0016, E-0017)
-BGMap0Gfx::
-    INCBIN "gfx/misc/bgmap0_gfx.lz"
+TitleOpeningKeyBGMap::
+    INCBIN "gfx/misc/title_opening_key_bgmap.lz"
 
 ; LZSS-compressed: 48 bytes that expand to 1024 (E-0016, E-0017)
-BGMap0Gfx_2::
+BGMap0Gfx::
     db $00, $04, $00, $03, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
     db $00, $20, $1f, $4d, $00, $80, $1f, $4d, $00, $e0, $1f, $4d, $00, $40, $2f, $4d
     db $00, $a0, $2f, $4d, $00, $00, $3f, $4d, $00, $60, $3f, $4d, $00, $a0, $3f, $2c
@@ -143,23 +203,28 @@ TitleOpening_LoadNextScreen_BGPaletteBufferData::
 GameMode5_Update_LoadScreens_OBJPaletteBufferData::
     db $20, $7c, $ff, $7f, $a8, $14, $00, $00, $20, $7c, $ff, $7f, $35, $04, $00, $00
 
-; runs RunBankE1Routine_BuildOam with DE = RunBankE1Routine_Data (E-0122) (E-0344: the address in
-; its name dropped or read as the label there; was RunBankE1Routine; a trailing preposition left by
-; the dropped address removed)
-RunBankE1Routine::
-    ld de, RunBankE1Routine_Data
-    call RunBankE1Routine_BuildOam
+; Draws one meta-sprite: loads DE with DrawMetaSpriteSet_BankE1_Data (a table of one pointer, to
+; UnreferencedMetaSpriteSet_E1) and calls DrawMetaSpriteSet_BankE1_BuildOam, which writes the OAM
+; entries for set hSpriteSetIndex, frame hSpriteSubIndex, at the origin hSpriteOriginX /
+; hSpriteOriginY. Its only caller is the far call in DrawCGBMetaSpriteAt38_30 (bank $07), which sets
+; set 0, frame 0 at X $38, Y $30 and which nothing in src reaches. (C1, E-0385)
+; runs DrawMetaSpriteSet_BankE1_BuildOam with DE = DrawMetaSpriteSet_BankE1_Data (E-0122) (E-0344:
+; the address in its name dropped or read as the label there; was DrawMetaSpriteSet_BankE1; a
+; trailing preposition left by the dropped address removed)
+DrawMetaSpriteSet_BankE1::
+    ld de, DrawMetaSpriteSet_BankE1_Data
+    call DrawMetaSpriteSet_BankE1_BuildOam
     ret
 
-; One word, $5D3C: the address in bank $E1 of UnreferencedMetaSpriteSet_E1, which RunBankE1Routine
-; passes in DE to RunBankE1Routine_BuildOam as the table of meta-sprite sets (a table of one set
-; pointer; the set holds two frame pointers). (C1, E-0381)
-RunBankE1Routine_Data::
+; One word, $5D3C: the address in bank $E1 of UnreferencedMetaSpriteSet_E1, which
+; DrawMetaSpriteSet_BankE1 passes in DE to DrawMetaSpriteSet_BankE1_BuildOam as the table of
+; meta-sprite sets (a table of one set pointer; the set holds two frame pointers). (C1, E-0381)
+DrawMetaSpriteSet_BankE1_Data::
     db $3c, $5d
 
 ; Builds the meta-sprite into OAM; the same code as DrawMetaSpriteSet_Bank27_BuildOam with this
 ; bank's frames. (C1, E-0357)
-RunBankE1Routine_BuildOam::
+DrawMetaSpriteSet_BankE1_BuildOam::
     ldh a, [hOamNextEntry]
     cp $27
     ret nc
@@ -622,6 +687,14 @@ RunBankE1Routine_BuildOam::
     jr nz, .loop5
     ret
 
+; DE = address of the X byte of a sprite part in screen coordinates, with its Y byte at DE - 1.
+; Takes the entry of the $9800 BG map under the point (X + hScrollX - 4, Y + hScrollY - 12), rows
+; wrapping inside the 32 x 32 map, waits with interrupts off for rSTAT bit 1 to clear, reads the
+; tile id, executes ei, and returns A = that tile id with the flags of cp A, hSpriteHideTile: carry
+; set when the tile id is below hSpriteHideTile, Z set when equal. BC and HL are kept. Both callers
+; in DrawMetaSpriteSet_BankE1_BuildOam keep the sprite part only when carry is set (they skip it on
+; jr nc), so a tile id at or above hSpriteHideTile hides the part. The interrupt flag is set again
+; whatever it was before. (C1, E-0385)
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the

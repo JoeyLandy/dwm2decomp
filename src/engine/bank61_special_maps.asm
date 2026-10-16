@@ -4,6 +4,11 @@
 SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
+; Sets wPartyStrength from the party. For each of the wPartyCount monsters (record numbers from
+; wPartyList, read from SRAM bank 0) it takes ((AGL + INT) / 2 + ATK + DEF + MAX HP + MAX MP) / 25
+; (16-bit; the halving keeps the sign bit), adds the results in hTemp4/hTemp5, divides the sum by
+; wPartyCount and caps the result at 99. An empty party gives 0 without reading a record. Called by
+; farcall from bank $0A (encounters) and bank $85. (C2, E-0384)
 ; wPartyStrength = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0
 ; without a party (E-0130)
 ComputePartyStrengthLevelPartyStrength::
@@ -124,6 +129,12 @@ ComputePartyStrengthLevelPartyStrength::
     ld [wPartyStrength], a
     ret
 
+; Sets wPartyStrength for key generation. For each of the wPartyCount monsters it adds to a total in
+; hTemp4/hTemp5 the value ((AGL + INT) / 2 + ATK + DEF + MAX HP + MAX MP) / 50, and to a second
+; total in hTemp6/hTemp7 the value (AGL + INT + ATK + DEF + MAX HP + MAX MP - 24 x MON_LEVEL) / 50
+; (0 when the difference is negative). The two totals are added and divided by wPartyCount, a
+; negative sum gives 0, and the result is capped at 99. An empty party gives 0. WriteKeyEntryTemp0
+; calls it before RollKeyContentsForLevelTemp0; the other caller is in bank $0A. (C2, E-0384)
 ; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hTemp4-hTemp7
 ; and wPartyStrength for key generation (E-0131)
 ComputePartyStrengthForKey::
@@ -360,6 +371,11 @@ ComputePartyStrengthForKey::
     ld [wPartyStrength], a
     ret
 
+; Loads the header of a special map (bit 7 of wMapType set); LoadMapHeader far-calls it. It jumps by
+; wMapType & 7: 0 LoadKeyWorldTilesetAndHeader, 1 LoadMapHeaderByMapType_Type1, 2
+; LoadMapHeaderByMapType_Type2, 3 and 4 LoadMapHeaderByMapType_Type3, 5
+; LoadMapType5TilesetAndHeader, 6 LoadMapHeaderByMapType_Type6, 7 LoadMapHeaderByMapType_Type7. (C1,
+; E-0384)
 ; runs the routine for wMapType & 7 (jump table; 4 reuses 3) (E-0122)
 LoadMapHeaderByMapType::
     ld a, [wMapType]
@@ -412,6 +428,13 @@ LoadMapHeaderByMapType_Type6::
     call LoadSpecialMapHeader
     ret
 
+; Map type 5 of LoadMapHeaderByMapType. Byte 2 of the wKeyWorldFloorState entry of wKeyWorldFloor
+; (16 bytes each) picks a 6-byte record of MapType5TilesetTable: its first far pointer is
+; decompressed to vTiles2 and, on a Game Boy Color (wIsCGB set), the $40 bytes of the second far
+; pointer go to wBGPaletteBuffer and wBGPaletteUploadRequest = $7F. It then sets wMapWidthScreens
+; and wMapHeightScreens to 4, wMaxBlockingTile $3F, wFieldEventKind 0, wMapSpriteKind $10,
+; wMapEventTile $2A, wMapTallTileMin 0 and wEncounterRate $A3, and wMapMoveType to 5 when that byte
+; 2 is 7 or 9, otherwise 0. (C1, E-0384)
 ; map type 5 (wMapType & 7 = 5): takes byte 2 of the floor's wKeyWorldFloorState entry as the index
 ; into MapType5TilesetTable (MapType5TilesetTable, 6 bytes each), decompresses its tiles to vTiles2,
 ; on CGB copies its $40-byte palettes to wBGPaletteBuffer and requests the upload, then sets a 4 x
@@ -619,6 +642,13 @@ LoadMapHeaderByMapType_Type3::
     call LoadSpecialMapHeader
     ret
 
+; Map type 0 (the key world) of LoadMapHeaderByMapType. wKeyWorldGoalKind picks a 6-byte record of
+; KeyWorldTilesetTable: its first far pointer is decompressed to vTiles2 and, on a Game Boy Color,
+; the $40 bytes of the second go to wBGPaletteBuffer with wBGPaletteUploadRequest = $7F. It sets
+; wMaxBlockingTile $3D, wFieldEventKind 2 (0 for goal kind 4), wEncounterRate $A2, wMapMoveType 4
+; for goal kind 1 or 7 (else 0), wMapSpriteKind from LoadKeyWorldTilesetAndHeader_Data[kind],
+; wMapTallTileMin $29 when the low nibble of that byte is non-zero (else 0) and wMapEventTile $2C
+; when its high nibble is non-zero (else 0). (C1, E-0384)
 ; map type 0 (wMapType & 7 = 0): decompresses entry wKeyWorldGoalKind of KeyWorldTilesetTable
 ; (KeyWorldTilesetTable, 6 bytes each) to vTiles2, on CGB copies its $40-byte palette set to
 ; wBGPaletteBuffer and requests the upload, then sets wMaxBlockingTile = $3D, wFieldEventKind,
@@ -794,6 +824,11 @@ LoadMapScreen_Type6::
     call DrawDoorTilesForKeyWorldFloor
     ret
 
+; Writes a 2 x 2 tile block at wScreenTileBuffer + $AC: tiles $1A, $1B over $1E, $1F, or $1C, $1D
+; over $1E, $1F when byte 3 of the wKeyWorldFloorState entry of wKeyWorldFloor (16 bytes each) is
+; $FF. On a Game Boy Color (wIsCGB set) it also sets the matching four attribute bytes in WRAM bank
+; 2 (from wScreenAttrBuffer) to 5 and returns with rSVBK = 0. Called by LoadMapScreen_Type6 and by
+; two farcalls in bank $12. (C2, E-0384)
 ; writes a 2 x 2 tile block ($1A or $1C by the wKeyWorldFloorState + $3 entry, then $1E) at
 ; wScreenTileBuffer + $AC, with CGB attribute 5 (E-0127)
 DrawDoorTilesForKeyWorldFloor::
@@ -972,6 +1007,11 @@ LoadMapScreen_Type5::
     call CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea
     ret
 
+; The floor state of wKeyWorldFloor holds two entries of 4 bytes at bytes 4-7 and 8-11 (byte 0 =
+; area, byte 1 = a stored value, byte 2 = entry number B, byte 3 = a flag). For each entry whose
+; area equals wKeyWorldArea it calls SetKeyWorldEntryTileOnScreen with B = byte 2 and C = $80 when
+; byte 3 is non-zero, otherwise C = byte 1. The second entry is handled by falling into
+; SetKeyWorldEntryTileOnScreen. (C2, E-0384)
 ; for the two wKeyWorldFloorState + $4 entries of wKeyWorldFloor matching wKeyWorldArea runs
 ; SetKeyWorldEntryTileOnScreen with C = $80 or the stored value (E-0127) (E-0340: the address in its
 ; name read as its RAM name; was CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea)
@@ -1034,6 +1074,13 @@ CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea::
     ld a, [hl]
     ld c, a
 
+; B = entry number (0-7), C = flags. When KeyWorldEntryScreenXY[B] equals the current screen
+; (hMapScreenX in the high nibble, hMapScreenY in the low) it writes a 2 x 2 tile block at
+; wScreenTileBuffer + 40 x Y + 2 x X, where (X, Y) is spot B of record n of
+; KeyWorldScreenSpotRecords (n = the wKeyWorldRoomTable byte at 2 x byte 1 of the floor state + 2 x
+; wKeyWorldArea). The tiles are $2C, $2D over $3C, $3D, or $2E, $2F over $3E, $3F when bit 7 of C is
+; set. On a Game Boy Color the four attribute bytes in WRAM bank 2 get their low 3 bits set to 6.
+; (C2, E-0384)
 ; B = entry: when KeyWorldEntryScreenXY[B] is the current map screen (hMapScreenX/Y nibbles), writes
 ; the entry's tile: $2C unless bit 7 of C asks for the stored value, in WRAM bank 2 (E-0340; was
 ; SetKeyWorldEntryTileOnScreen)
@@ -1188,6 +1235,10 @@ SetKeyWorldEntryTileOnScreen::
     ldh [rSVBK], a
     ret
 
+; Replaces hTemp0 (a spot number 0-7) by the packed pair of that spot: record n of
+; KeyWorldScreenSpotRecords (16 bytes, 8 pairs of (X, Y) bytes), n = the wKeyWorldRoomTable byte at
+; 2 x byte 1 of the wKeyWorldFloorState entry of wKeyWorldFloor + 2 x wKeyWorldArea; the result is
+; (X << 4) | Y. HL is kept. WriteRandomEntryFromTable far-calls it. (C2, E-0384)
 ; hTemp0 = the two nibbles at $4818 + 16 * [$CE2C + 2 * wKeyWorldFloorState + $1[16 *
 ; wKeyWorldFloor] + 2 * wKeyWorldArea] + 2 * hTemp0, packed into one byte (E-0121)
 LookupKeyWorldScreenSpotRecordsNibblePairForTemp0::
@@ -1234,6 +1285,14 @@ LookupKeyWorldScreenSpotRecordsNibblePairForTemp0::
     pop hl
     ret
 
+; Draws the exit or stairs block of a room screen. The kind is byte 1 of the wKeyWorldFloorInfo
+; entry of wKeyWorldFloor (kept in hTemp0). The wKeyWorldRoomTable byte at 1 + 2 x byte 1 of the
+; floor state + 2 x wKeyWorldArea holds two screen numbers: the low nibble (unless it is $F) and the
+; high nibble index DrawKeyWorldExitTile_Data (screens as packed X and Y nibbles). On the screen of
+; the low nibble it writes a 2 x 2 tile block at wScreenTileBuffer + $A8 starting with tile $46 + 2
+; x (kind - 4), on the screen of the high nibble one starting with $48 - 2 x (kind - 4); the block
+; is tile, tile + 1 over tile + $10, tile + $11. On a Game Boy Color the four attribute bytes at
+; wWorkBuf + $0B get their low 3 bits set to 4. (C2, E-0384)
 ; draws the exit or stairs tile block for the current screen when it matches the area entry in
 ; wKeyWorldRoomTable + $1 (E-0130)
 DrawKeyWorldExitTile::
@@ -1583,7 +1642,7 @@ KeyWorldScreenSpotRecords::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 190
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 191
 
-; Map type 1's screen: nothing to load. (C1, E-0357)
+; Map type 1's screen: nothing to load. (C2, E-0357; probed E-0384)
 LoadMapScreen_Type1::
     ret
     db $c9
@@ -1688,7 +1747,7 @@ LoadMapScreen_Type0::
     pop hl
     ld a, [wIsCGB]
     or a
-    jr z, .call_draw_key_world_objects_entry_tiles_for
+    jr z, .call_draw_key_world_area_exit_tiles_for
     ld a, l
     add $30
     ld l, a
@@ -1721,12 +1780,19 @@ LoadMapScreen_Type0::
     ld a, $00
     ldh [rSVBK], a
 
-.call_draw_key_world_objects_entry_tiles_for:
-    call DrawKeyWorldObjectsEntryTilesForScreen
+.call_draw_key_world_area_exit_tiles_for:
+    call DrawKeyWorldAreaExitTilesForScreen
     call DrawKeyWorldFloorInfo3ObjectTilesForScreen
     call DrawKeyWorldGoalAtScreen
     ret
 
+; On a key world map (wMapType $80) draws the goal as a 2 x 2 tile block $46, $47 over $56, $57. If
+; wKeyWorldActive is set and wKeyWorldKey has bit 7 set with its low 7 bits equal to wKeyWorldSlot,
+; it draws on the screen wKeyWorldGoalCell at wScreenTileBuffer + 40 x Y + 2 x X, where X is the
+; high and Y the low nibble of wKeyWorldGoal. Otherwise it draws on the screen wKeyWorldGoalScreen
+; at wScreenTileBuffer + 40 x swap(wKeyWorldGoalPos2) + 2 x swap(wKeyWorldGoalPos) (each position
+; byte has a zero low nibble, so this is its high nibble). On a Game Boy Color the attribute bytes
+; in WRAM bank 2 get 5. (C2, E-0384)
 ; on key-world maps draws the goal object for the current screen (from wKeyWorldGoal when the
 ; wKeyWorldKey key matches, else from wKeyWorldGoalPos2) (E-0130)
 DrawKeyWorldGoalAtScreen::
@@ -1855,9 +1921,15 @@ DrawKeyWorldGoalAtScreen::
     ldh [rSVBK], a
     ret
 
+; Walks the area exit list wKeyWorldAreaExits (4-byte entries; it starts at wKeyWorldObjects, byte 3
+; of the first entry, and stops at an $FF in byte 3). For the first entry one of whose two cells
+; (bytes 0 and 1, X in the high nibble) is the current screen it writes a 2 x 2 tile block at
+; wScreenTileBuffer + $A8: $46, $47 over $56, $57 when byte 2 of the entry is 0, else $70, $71 over
+; $72, $73. On a Game Boy Color the attribute bytes at wWorkBuf + $0B get 5 in WRAM bank 2. Despite
+; the name it draws the area exits, not the map objects. (C2, E-0384)
 ; for the wKeyWorldObjects entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73)
 ; at wScreenTileBuffer + $A8 with CGB attribute 5 (E-0129)
-DrawKeyWorldObjectsEntryTilesForScreen::
+DrawKeyWorldAreaExitTilesForScreen::
     ld hl, wKeyWorldObjects
 
 .skip:
@@ -1956,6 +2028,14 @@ DrawKeyWorldObjectsEntryTilesForScreen::
 .return:
     ret
 
+; Walks the wKeyWorldFloorInfo entries (4 bytes each, $FF in byte 3 ends the list). For the first
+; entry whose cell (byte 0, X in the high nibble) is the current screen it draws by kind (byte 1) at
+; wScreenTileBuffer + $A8: kind 0 nothing (and the routine ends), kind 1 and kinds above 5 a 4 x 2
+; block $68-$6B over $6C-$6F, kind 2 two 2 x 2 blocks $4C, $4D over $5C, $5D and $4E, $4F over $5E,
+; $5F side by side, kind 3 a 4 x 2 block $60-$63 over $64-$67, kind 4 a 2 x 2 block $4A, $4B over
+; $5A, $5B and kind 5 a 2 x 2 block $48, $49 over $58, $59. On a Game Boy Color it sets attribute
+; bytes in WRAM bank 2 for the same cells: 6 for the wide kinds (1-3 and above 5, over both blocks
+; of kind 2) and 5 for kinds 4 and 5. (C2, E-0384)
 ; for the wKeyWorldFloorInfo + $3 object on the current screen draws its 4 x 2 or 2 x 2 tile blocks
 ; by kind (E-0130) (E-0340: the address in its name read as its RAM name; was
 ; DrawKeyWorldFloorInfo3ObjectTilesForScreen)
@@ -2086,6 +2166,9 @@ DrawKeyWorldFloorInfo3ObjectTilesForScreen::
 .return:
     ret
 
+; A = first tile, DE = a tile buffer address (rows of 20 tiles). Writes A and A + 1 at DE and DE + 1
+; and A + $10 and A + $11 at DE + 20 and DE + 21. DE ends at DE + 21 and A at the last tile (A +
+; $11). (C2, E-0384)
 ; writes tiles A, A+1 at DE and A+$10, A+$11 one 20-tile row below (E-0121)
 Write2x2TileBlockAtDE::
     ld [de], a
@@ -2107,6 +2190,8 @@ Write2x2TileBlockAtDE::
     ld [de], a
     ret
 
+; A = first tile, DE = a tile buffer address (rows of 20 tiles). Writes A to A + 3 at DE to DE + 3
+; and A + 4 to A + 7 at DE + 20 to DE + 23. DE ends at DE + 23 and A at A + 7. (C2, E-0384)
 ; writes tiles A..A+3 at DE and the next four one 20-tile row below (E-0121)
 Write4x2TileBlockAtDE::
     ld [de], a
@@ -2140,6 +2225,8 @@ Write4x2TileBlockAtDE::
     ld [de], a
     ret
 
+; A = a tile or attribute value, DE = a buffer address (rows of 20). Writes A at DE, DE + 1, DE + 20
+; and DE + 21. DE ends at DE + 21 and A is kept. (C2, E-0384)
 ; writes tile A to two cells at DE and two cells one 20-tile row below (E-0125)
 Write2x2SameTileAtDE::
     ld [de], a
@@ -2201,12 +2288,12 @@ CheckWarpAtPlayer_SpecialMap::
     dw CheckWarpAtPlayer_NoWarp
     dw CheckWarpAtPlayer_LinkedMap
 
-; Map types 0 and 6: no warp here (C = 0). (C1, E-0357)
+; Map types 0 and 6: no warp here (C = 0). (C2, E-0357; probed E-0384)
 CheckWarpAtPlayer_NoWarp::
     ld c, $00
     ret
 
-; Map type 1: no warp here (C = 0). (C1, E-0357)
+; Map type 1: no warp here (C = 0). (C2, E-0357; probed E-0384)
 CheckWarpAtPlayer_Type1::
     ld c, $00
     ret
@@ -2233,14 +2320,18 @@ CheckWarpAtPlayer_FloorInfoExit::
     call WarpByKeyWorldFloorInfo1EntryAtScreen14
     ret
 
-; Map type 7: on screen row 1 warps to the linked map (CallFOnScreenY1). (C1, E-0357)
+; Map type 7: on screen row 1 warps to the linked map (CheckWarpAtPlayer_LinkedMap_ScreenRow1). (C1,
+; E-0357)
 CheckWarpAtPlayer_LinkedMap::
-    call CallFOnScreenY1
+    call CheckWarpAtPlayer_LinkedMap_ScreenRow1
     ret
 
+; Map type 7 of CheckWarpAtPlayer_SpecialMap. C = 0 (no warp) unless hMapScreenY is 1, in which case
+; it far-calls WarpToLinkedMapForCurrentMap and returns with the C of that routine. (C1, E-0384)
 ; C = 0 unless hMapScreenY = 1, in which case far-calls WarpToLinkedMapForCurrentMap (E-0122)
-; (E-0344: the address in its name dropped or read as the label there; was CallFOnScreenY1)
-CallFOnScreenY1::
+; (E-0344: the address in its name dropped or read as the label there; was
+; CheckWarpAtPlayer_LinkedMap_ScreenRow1)
+CheckWarpAtPlayer_LinkedMap_ScreenRow1::
     ldh a, [hMapScreenY]
     cp $01
     jr z, .call_warp_to_linked_map_for_current_map
@@ -2251,6 +2342,12 @@ CallFOnScreenY1::
     farcall WarpToLinkedMapForCurrentMap
     ret
 
+; Map type 5 of CheckWarpAtPlayer_SpecialMap. Only when wKeyWorldArea is 0, byte 1 of the
+; wKeyWorldFloorInfo entry of wKeyWorldFloor is 5 and the player is on screen (1, 4) does it warp:
+; hMapScreenX and hMapScreenY = the nibbles of byte 0 of that entry, wWarpDestX and wWarpDestY =
+; $40, wWarpDestFacing = $F0, sound $60, StartPaletteFade 4, wModeState = 4, wFieldTransitionStep =
+; 0, bit 7 of hPlayerStateFlags set, wFieldTransitionKind = 1 and C = 1. Otherwise C = 0. (C1,
+; E-0384)
 ; when wKeyWorldArea is 0, the wKeyWorldFloorInfo + $1 entry is 5 and the player is at screen (1,
 ; 4): warps to the stored screen and starts the transition; C = 1 (E-0127) (E-0340: the address in
 ; its name read as its RAM name; was WarpByKeyWorldFloorInfo1EntryAtScreen14)
@@ -2307,6 +2404,11 @@ WarpByKeyWorldFloorInfo1EntryAtScreen14::
     ld c, $01
     ret
 
+; Map type 4 of CheckWarpAtPlayer_SpecialMap. On screen row 1 (hMapScreenY = 1) it warps to screen
+; (0, 1): hMapScreenX = 0, wWarpDestX $40, wWarpDestY $38, wWarpDestFacing $FF, byte 1 of the floor
+; state entry of wKeyWorldFloor is copied to its byte 0, sound $60, wMapType = $83, StartPaletteFade
+; 4, wModeState = 4, wFieldTransitionStep = 0, bit 6 of hPlayerStateFlags set, wFieldTransitionKind
+; = 1 and C = 1. On any other row C = 0. (C1, E-0384)
 ; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wKeyWorldFloorState + $1
 ; entry, plays sound $60, wMapType = $83 and starts the transition; C = 1 (E-0125)
 WarpToScreen01Event83::
@@ -2351,6 +2453,12 @@ WarpToScreen01Event83::
     ld c, $01
     ret
 
+; Map type 2 of CheckWarpAtPlayer_SpecialMap. On screen row 1 (hMapScreenY = 1) it warps to the
+; screen named by the area exit list: byte 0 (or byte 1 when bit 7 of wKeyWorldFloor is set) of
+; entry (wKeyWorldFloor & $7F) of wKeyWorldAreaExits gives hMapScreenX (high nibble) and hMapScreenY
+; (low nibble). wWarpDestX and wWarpDestY = $40, wWarpDestFacing = $F0, sound $60, StartPaletteFade
+; 4, wModeState = 4, wFieldTransitionStep = 0, bit 7 of hPlayerStateFlags set and bit 0 cleared,
+; wFieldTransitionKind = 1 and C = 1. On any other row C = 0. (C1, E-0384)
 ; on screen row 1: warps to the screen in the wKeyWorldAreaExits entry of wKeyWorldFloor and starts
 ; the transition; C = 1 (E-0127)
 WarpByKeyWorldAreaExitsEntryAtScreenRow1::
@@ -2404,6 +2512,15 @@ WarpByKeyWorldAreaExitsEntryAtScreenRow1::
     ld c, $01
     ret
 
+; Map type 3 of CheckWarpAtPlayer_SpecialMap. The warp list is the word of KeyWorldWarpListTable at
+; index (byte 0 of the floor state entry of wKeyWorldFloor) & $7F; its entries are 9 bytes and a
+; first byte of $80 ends the list (C = 0). An entry of kind $FD is skipped. For kind $FE or $FF the
+; kind goes to wWarpDestFacing and bytes 2 and 3 are compared with hMapScreenX and hMapScreenY; on a
+; match a byte 4 that is not $FF gives C = 0 (no warp, the scan stops), and a byte 4 of $FF warps:
+; wWarpDestX and wWarpDestY = bytes 7 and 8, hMapScreenX/Y = the nibbles of byte 0 of the
+; wKeyWorldFloorInfo entry of the floor, wWarpDestFacing = $F0, StartPaletteFade 4, wModeState = 4,
+; wFieldTransitionStep = 0, bit 7 of hPlayerStateFlags set, wFieldTransitionKind = 1, sound $60 and
+; C = 1. (C1, E-0384)
 ; checks the warp list KeyWorldWarpListTable[wKeyWorldFloorState entry] against the current screen
 ; and warps when one matches; C = 0 when none (E-0130)
 CheckKeyWorldWarpTable::
@@ -2522,6 +2639,11 @@ CheckKeyWorldWarpTable::
     ld c, $01
     ret
 
+; Per-step warp check for special maps (bit 7 of wMapType set), called through
+; CheckWarpsAtPlayerPosition. It jumps by wMapType & 7: 0 CheckWarpsByMapType_RunThreeWarpChecks, 1
+; CheckWarpsByMapType_Type1, 2 CheckWarpsByMapType_Type2, 3 CheckWarpsByMapType_Type3, 5
+; CheckWarpsByMapType_Type5, 6 CheckWarpsByMapType_Type6; types 4 and 7 use
+; CheckWarpsByMapType_NoWarps. The caller treats C = 1 as a warp started. (C1, E-0384)
 ; checks the player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map
 ; toggles and key-world floors (2), warp destinations (3), player-state warps (5) and key-world
 ; areas (6); map types 1, 4 and 7 have none (E-0354; was: runs the routine for wMapType & 7 (jump
@@ -2539,10 +2661,13 @@ CheckWarpsByMapType::
     dw CheckWarpsByMapType_Type6
     dw CheckWarpsByMapType_NoWarps
 
-; Map types 4 and 7 of CheckWarpsByMapType: nothing (a bare ret). (C1, E-0371)
+; Map types 4 and 7 of CheckWarpsByMapType: nothing (a bare ret). (C2, E-0371; probed E-0384)
 CheckWarpsByMapType_NoWarps::
     ret
 
+; Map type 0 (the key world) of CheckWarpsByMapType. Calls CheckWarpsByMapType_KeyWorldGoalWarp,
+; then CheckWarpsByMapType_KeyWorldObjects, then CheckWarpsByMapType_FloorEntrances, and returns at
+; the first one that returns A non-zero (A = 0 after all three). (C1, E-0384)
 ; entry 0 of the rst $00 table in CheckWarpsByMapType: calls CheckWarpsByMapType_KeyWorldGoalWarp
 ; and two further warp checks in turn and returns at the first that returns A nonzero (E-0344
 ; reading; was CheckWarpsByMapType_RunThreeWarpChecks)
@@ -2558,12 +2683,13 @@ CheckWarpsByMapType_RunThreeWarpChecks::
     ret nz
     ret
 
-; Key-world warps, map type 1: nothing (ReturnStub_2). (C1, E-0357)
+; Key-world warps, map type 1: nothing (CheckWarpsByMapType_Type1_Stub). (C2, E-0357; probed E-0384)
 CheckWarpsByMapType_Type1::
-    call ReturnStub_2
+    call CheckWarpsByMapType_Type1_Stub
     ret
 
-; Key-world warps, map type 2: the floor toggle (CheckWarpsByMapType_FloorToggle). (C1, E-0357)
+; Key-world warps, map type 2: the floor toggle (CheckWarpsByMapType_FloorToggle). (C2, E-0357;
+; probed E-0384)
 CheckWarpsByMapType_Type2::
     call CheckWarpsByMapType_FloorToggle
     ret
@@ -2895,7 +3021,7 @@ CheckWarpsByMapType_RoomExits_Data::
 
 ; Standing at ($40, $30) with a floor toggle requested (wMapToggleRequest): switches to the floor's
 ; other half (wKeyWorldFloor + $80) at ($40, $30), keeping the facing, and starts the field
-; transition (mode state 6). (C1, E-0357)
+; transition (mode state 6). (C2, E-0357; probed E-0384)
 CheckWarpsByMapType_FloorToggle::
     ldh a, [hPlayerX]
     cp $40
@@ -3072,9 +3198,10 @@ CheckWarpsByMapType_FloorWarpList::
     ld c, $00
     ret
 
+; A bare ret. CheckWarpsByMapType_Type1 calls it, so map type 1 has no warp check. (C2, E-0384)
 ; a bare ret (E-0116) (E-0344: the address in its name dropped or read as the label there; was
-; ReturnStub_2)
-ReturnStub_2::
+; CheckWarpsByMapType_Type1_Stub)
+CheckWarpsByMapType_Type1_Stub::
     ret
 
 ; The floor entrances in wKeyWorldFloorInfo ($FF ends): when the player stands on an entrance's
@@ -3332,6 +3459,16 @@ CheckWarpsByMapType_FloorEntrances::
 CheckWarpsByMapType_FloorEntrances_Data::
     db $00, $30, $11, $22, $03, $33
 
+; The first of the three checks of CheckWarpsByMapType_RunThreeWarpChecks. It detects the player on
+; the key world goal: when wKeyWorldActive is set and wKeyWorldKey has bit 7 set with its low 7 bits
+; equal to wKeyWorldSlot, the screen must equal wKeyWorldGoalCell and the player cell (high nibbles
+; of hPlayerX and hPlayerY, X first) must equal wKeyWorldGoal; otherwise the screen must equal
+; wKeyWorldGoalScreen, hPlayerX wKeyWorldGoalPos and hPlayerY wKeyWorldGoalPos2. On a miss it clears
+; bit 5 of hPlayerStateFlags and returns A = 0. On a hit with bit 5 already set it returns A = 0;
+; otherwise it plays sound $60, sets wFieldReturnPhase = 0, StartPaletteFade 4, wFieldTransitionStep
+; = 0, wModeState = 4, sets bit 5 of hPlayerStateFlags, wMapType = $87, hMapScreenX and hMapScreenY
+; = 0, wWarpDestX $40, wWarpDestY $80, wWarpDestFacing 0, wFieldTransitionKind = 3, far-calls
+; ClearPendingFieldEventIfBit7AndNot6 and returns A = 1. (C1, E-0384)
 ; when a key world is active (wKeyWorldActive) and the key in wKeyWorldKey bit 7 is for
 ; wKeyWorldSlot, compares the map screen with wKeyWorldGoalCell and the player cell with
 ; wKeyWorldGoal before writing the field return and transition state (E-0344 reading; was
@@ -3623,6 +3760,15 @@ CheckWarpsByMapType_KeyWorldObjects::
     inc hl
     jp .skip
 
+; hTemp0 = 1 when bit 7 of wKeyWorldFlags is set. Otherwise, on map type $80 the area slot is
+; hMapScreenX / 4 + 2 x (hMapScreenY / 4), and on map type $85 it is the same from the cell in byte
+; 0 of the wKeyWorldFloorInfo entry of wKeyWorldFloor (X in the high nibble); hTemp0 = byte 3 of the
+; 4-byte entry of wKeyWorldEncounterTable numbered by the high nibble of wKeyWorldAreaInfo[slot]
+; (that byte is 1 once the battle of the entry is done). DE and HL are kept. For any other map type
+; with bit 7 of wKeyWorldFlags clear the early return comes after two pushes, so it would return to
+; the wrong address. The only caller is BattleEnd_AskToJoin_Start, which uses a non-zero result to
+; go on to the farm check and shows the 'got up, looking hopeful. But' text when the result is 0.
+; (C2, E-0384)
 ; hTemp0 = 1 when bit 7 of wKeyWorldFlags is set; otherwise on map types $80/$85 the
 ; wKeyWorldEncounterTable + $3 entry of the current area (wKeyWorldAreaInfo), else 0 (E-0129)
 KeyWorldAreaEncounterIndex::
@@ -4265,8 +4411,8 @@ KeyWorldWarps63::
     db $80 ; end
 
 ; SetupTownObjectsForMap case 0 (band 0 (SetupTownObjectsForMap.set_map_object_count_to_0A),
-; wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching;
-; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen inside wMapWidthScreens x
+; wMapObjectCount $0A) passes $6705 to SetupTownObjectsForMap_RollObjects;
+; SetupTownObjectsForMap_RollObjects_PlaceObject picks a random screen inside wMapWidthScreens x
 ; wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width +
 ; screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot,
 ; otherwise its nibbles place the object; 64 screens (E-0194, C1)
@@ -4339,10 +4485,10 @@ TownObjectSpotGrid0::
     db $03, $04, $05, $01, $05, $05, $08, $03 ; id 63
 
 ; SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
-; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
-; $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
-; screen, $FF a new spot, otherwise its nibbles place the object; 64 screens (E-0194, C1)
+; SetupTownObjectsForMap_RollObjects; SetupTownObjectsForMap_RollObjects_PlaceObject picks a random
+; screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the
+; pair at $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a
+; new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens (E-0194, C1)
 TownObjectSpotGrid1::
     db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 0
     db $01, $03, $04, $05, $05, $01, $07, $07 ; id 1
@@ -4410,10 +4556,10 @@ TownObjectSpotGrid1::
     db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 63
 
 ; SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
-; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
-; $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
-; screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
+; SetupTownObjectsForMap_RollObjects; SetupTownObjectsForMap_RollObjects_PlaceObject picks a random
+; screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the
+; pair at $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a
+; new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
 TownObjectSpotGrid2::
     db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 0
     db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 1
@@ -4561,10 +4707,10 @@ TownObjectSpotGrid2::
     db $02, $02, $03, $04, $05, $05, $07, $03 ; id 143
 
 ; SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
-; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
-; $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
-; screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
+; SetupTownObjectsForMap_RollObjects; SetupTownObjectsForMap_RollObjects_PlaceObject picks a random
+; screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the
+; pair at $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a
+; new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
 TownObjectSpotGrid3::
     db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 0
     db $02, $06, $05, $04, $06, $07, $ff, $ff ; id 1
@@ -4712,10 +4858,10 @@ TownObjectSpotGrid3::
     db $02, $04, $03, $02, $04, $05, $06, $03 ; id 143
 
 ; SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
-; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
-; $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
-; screen, $FF a new spot, otherwise its nibbles place the object; 36 screens (E-0194, C1)
+; SetupTownObjectsForMap_RollObjects; SetupTownObjectsForMap_RollObjects_PlaceObject picks a random
+; screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the
+; pair at $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a
+; new screen, $FF a new spot, otherwise its nibbles place the object; 36 screens (E-0194, C1)
 ; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen,
 ; $FF = draw again
 TownObjectSpotGrid4::
@@ -4757,10 +4903,10 @@ TownObjectSpotGrid4::
     db $03, $06, $06, $02, $03, $06, $06, $02 ; id 35
 
 ; SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
-; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
-; $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
-; screen, $FF a new spot, otherwise its nibbles place the object; 6 screens (E-0194, C1)
+; SetupTownObjectsForMap_RollObjects; SetupTownObjectsForMap_RollObjects_PlaceObject picks a random
+; screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the
+; pair at $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a
+; new screen, $FF a new spot, otherwise its nibbles place the object; 6 screens (E-0194, C1)
 TownObjectSpotGrid5::
     db $02, $03, $04, $06, $06, $02, $07, $07 ; id 0
     db $03, $01, $06, $06, $03, $01, $06, $06 ; id 1
@@ -4770,10 +4916,10 @@ TownObjectSpotGrid5::
     db $02, $01, $03, $04, $07, $02, $ff, $ff ; id 5
 
 ; SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to
-; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_PlaceObject picks a random screen
-; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
-; $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
-; screen, $FF a new spot, otherwise its nibbles place the object; 25 screens (E-0194, C1)
+; SetupTownObjectsForMap_RollObjects; SetupTownObjectsForMap_RollObjects_PlaceObject picks a random
+; screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the
+; pair at $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a
+; new screen, $FF a new spot, otherwise its nibbles place the object; 25 screens (E-0194, C1)
 TownObjectSpotGrid6::
     db $03, $05, $05, $03, $07, $06, $ff, $ff ; id 0
     db $03, $02, $04, $06, $07, $03, $ff, $ff ; id 1

@@ -2474,12 +2474,12 @@ RunBattleActions_StatusChecks_CheckAction_Skip::
 ; reached by falling through from RunBattleActions_StatusChecks_CheckAction_Skip. The dw lines of
 ; that label are really code: call CheckFormationPartnersCanAct, jr c, ld a, d, cp 7 and jp z, which
 ; add 1 to wBattleSubStep and skip this routine when the pair can act or the reason is 7. Reasons
-; 1-6 call BuildActionMessageNames and CheckActionD0ToE3OrSpecial pays the MP unless the reason is
+; 1-6 call ShowActionRefusedMessage and CheckActionD0ToE3OrSpecial pays the MP unless the reason is
 ; 1; reason 0 (a monster of the pair is blocked by a status, or the partner has acted) shows
 ; ShowSpecialActionMessage. Then SetSubPhase7AndResetSteps ends the action and the formation partner
 ; of the actor (ActorFormationSlotToTemp0) gets wSlotMarks 3 unless it has status byte 3 bits 6-7 or
 ; byte 4 bits 2-3 (SlotHasStatus3Or4Bits_Bank32). (C1, E-0380)
-; for C & 7 non-zero runs BuildActionMessageNames (and CheckActionD0ToE3OrSpecial unless the result
+; for C & 7 non-zero runs ShowActionRefusedMessage (and CheckActionD0ToE3OrSpecial unless the result
 ; is 1), else shows the special action message; then sets sub-phase 7 and marks the formation slot
 ; unless it has status 3/4 bits (E-0126)
 ApplyActionResultAndMarkFormation::
@@ -2487,7 +2487,7 @@ ApplyActionResultAndMarkFormation::
     and $07
     jr z, .call_show_special_action_message
     push de
-    farcall BuildActionMessageNames
+    farcall ShowActionRefusedMessage
     pop af
     cp $01
     call nz, CheckActionD0ToE3OrSpecial
@@ -2539,7 +2539,7 @@ RunBattleActions_StatusChecks_CheckAction_CheckMP::
     cp $07
     jp z, .done
     push de
-    farcall BuildActionMessageNames
+    farcall ShowActionRefusedMessage
     pop af
     cp $01
     call nz, CheckActionD0ToE3OrSpecial
@@ -2736,7 +2736,7 @@ RunBattleActions_StatusChecks_CheckAction_Target::
 ; Checking the action, step 3: first moves on (wBattleResolveStep += 1, wBattleSubStep = 0). When
 ; wBattleActionId matches wQueuedActionId or its pair (QueuedActionMatches), the action that
 ; RunBattleActions_StatusChecks_ShatterChecks_Detect stores when it breaks a BSTAT8_SEAL_PRAY,
-; builds action message 2 (BuildActionMessageNames), runs CheckActionD0ToE3OrSpecial when
+; builds action message 2 (ShowActionRefusedMessage), runs CheckActionD0ToE3OrSpecial when
 ; wRecordBufferData is non-zero and ends the action (SetSubPhase7AndResetSteps). (C1, E-0372)
 RunBattleActions_StatusChecks_CheckAction_SealPray::
     ld hl, wBattleResolveStep
@@ -2747,7 +2747,7 @@ RunBattleActions_StatusChecks_CheckAction_SealPray::
     call QueuedActionMatches
     ret nz
     ld d, $02
-    farcall BuildActionMessageNames
+    farcall ShowActionRefusedMessage
     ld a, [wRecordBufferData]
     or a
     call nz, CheckActionD0ToE3OrSpecial
@@ -3956,7 +3956,7 @@ RunBattleStep4_ResolveSkill_CheckMP::
     cp $07
     jr z, .return
     push de
-    farcall BuildActionMessageNames
+    farcall ShowActionRefusedMessage
     pop af
     cp $01
     jr z, .set_battle_resolve_step_to_05
@@ -4686,7 +4686,7 @@ RecomputeTargetMaxHPAndMP::
     farcall SetSlotAIModeFromINT
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField17OrMonsterCFF5
+    farcall GetSlotLevel
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4695,7 +4695,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2DOrMonsterD002
+    farcall GetSlotPersonalityHi
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4704,7 +4704,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField30OrMonsterD004
+    farcall GetSlotPersonalityMid
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4713,7 +4713,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2EOrMonsterD003
+    farcall GetSlotPersonalityLo
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4722,7 +4722,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], c
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotField2FOrMonsterD005
+    farcall GetSlotTrait
     ld a, [wBattleStatResultLo]
     ld c, a
     ld a, [wBattleTarget]
@@ -4757,7 +4757,7 @@ RecomputeTargetMaxHPAndMP::
     ld [hl], b
     ld a, [wBattleTarget]
     ld c, a
-    farcall SlotSpeciesNibblesD00AD00B
+    farcall GetSlotBodyFlags
     ld a, [wBattleTarget]
     ld hl, wSlotBodyFlags
     add_a_to_hl

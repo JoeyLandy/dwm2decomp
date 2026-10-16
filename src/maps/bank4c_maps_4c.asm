@@ -809,6 +809,12 @@ Map48Screens2_Y8X5::
 Map48Screens0_Y8X6::
     db $68, $01, $02, $00, $01, $02, $00, $0e
 
+; Not an asset. The bytes at $725A lie 8 bytes inside the stream Map48Screens0_Y8X6 (bank $4C,
+; $7252-$72A8, 86 bytes that expand to 360), so a decompression from here only reads the middle of
+; that screen stream as if it were a header. It yields 258 bytes (not a whole number of tiles) and
+; its read runs on to $733B, past the end of that stream into Map48Screens2_Y8X6. Rendered as tiles:
+; noise. Map48Screens0_Y8X6 is a normal map screen with a table pointer, so the label Gfx4C_5 is a
+; false stream start of the scan. No loader exists to read. (C1, E-0383)
 ; LZSS-compressed: 225 bytes that expand to 258 (E-0016, E-0017)
 Gfx4C_5::
     INCBIN "gfx/misc/gfx4_c_5.lz"

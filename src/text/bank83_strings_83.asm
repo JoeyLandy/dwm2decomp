@@ -4,6 +4,11 @@
 SECTION "Bank 83", ROMX[$4000], BANK[$83]
     db $83
 
+; Starts displaying string wStringIndex of category wStringCategory from message bank $83: below $C7
+; it calls BeginStringDisplay with the table MessageStrings_Bank83; from $C7 up it far-calls
+; BeginStringDisplay_Bank83_Overflow in bank $97, which subtracts $C7 from wStringIndex and uses its
+; own overflow table. Reached by farcall from StartMessageForGroup_KeyWorld (index $20 and up of
+; group 0 while in the key world) and the debug message test. (C1, E-0384)
 ; message bank $83: when wStringIndex < $C7, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank83; otherwise far-calls BeginStringDisplay_Bank83_Overflow (E-0080)
 BeginStringDisplay_Bank83::
@@ -18,6 +23,12 @@ BeginStringDisplay_Bank83::
     call BeginStringDisplay
     ret
 
+; Copies one string of message bank $83 to a buffer: when wStringIndex is below $C7 it calls
+; CopyStringToBuffer with the table MessageStrings_Bank83 (string wStringIndex of category
+; wStringCategory; copied with its $F0 terminator to the address in wStringDestLo/wStringDestHi);
+; from $C7 up it far-calls CopyStringToBuffer_Bank83_Overflow in bank $97, which subtracts $C7 from
+; wStringIndex and uses the overflow table. Nothing in src/ calls this copy: the BeginStringDisplay
+; twin of this bank is the one the message code reaches. (C2, E-0384)
 ; message bank $83: when wStringIndex < $C7, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank83; otherwise far-calls CopyStringToBuffer_Bank83_Overflow (E-0080)
 CopyStringToBuffer_Bank83::

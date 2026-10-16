@@ -8401,7 +8401,7 @@ GreatLogTalkEvents_EditionChoice::
 
 ; Great Log talk, a gift monster: 'The farm is full.' ($0D62) when no SRAM slot is free; otherwise
 ; message $0D63 + (wTalkEventGroup - $33) and a new monster of kind wTalkEventGroup - $33 + 6 in the
-; free slot (CreateMonsterRecordOfKindTemp1). (C1, E-0357)
+; free slot (CreateMonsterRecordOfKindTemp1). (C2, E-0357; probed E-0384)
 GreatLogTalkEvents_ShowTheFarmIsFull::
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -8625,8 +8625,8 @@ TalkMsg02B0_HeroPeeredIntoTheBarrelIt::
 
 ; Great Log talk: 'Did you know that there's ...', 'Everyone's saying GreatLog'll sink!' ($0525)
 ; after the three items; at the end a gift monster of kind 2 ('The way you saved GreatLog ...',
-; $0B43, or $0B44 when the farm is full) once, then 'Our monsters left on a ...' ($0B45). (C1,
-; E-0357)
+; $0B43, or $0B44 when the farm is full) once, then 'Our monsters left on a ...' ($0B45). (C2,
+; E-0357; probed E-0384)
 GreatLogTalkEvents_DidYouKnow::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -11394,7 +11394,7 @@ Talk_DoYouWantToKnowHow::
 ; Talk (the farm helper): 'The Evaluator said I had...' ($08D1) until EVENT_THANKS_FOR_COMING_BY_025
 ; and once EVENT_GIVE_MONSTER is set; in between the 'Hello, hero! Let me help' script, the second
 ; version when the farm is not at its limit (wArg5 not $FF after
-; ClearArg5IfAtOrAboveLimitForFarmLevel). (C1, E-0357)
+; ClearArg5IfAtOrAboveLimitForFarmLevel). (C2, E-0357; probed E-0384)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $08D1, whose
 ; string begins 'The Evaluator said I had an' (E-0097)

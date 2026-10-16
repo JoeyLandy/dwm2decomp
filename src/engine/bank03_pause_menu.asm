@@ -1110,8 +1110,8 @@ PauseMenu_Plan_MessageSpeed_CursorAddress_Data::
 ; Runs one screen of the pause menu save, chosen by wPauseMenuScreen: 0
 ; RunPauseMenuScreen_PrepareSave, 1 RunPauseMenuScreen_BeforeSave, 2 RunPauseMenuScreen_Save (one
 ; RunSaveGameSteps_2 stage per frame until wSaveStep bit 7), 3 RunPauseMenuScreen_AfterSave; each
-; moves wPauseMenuScreen on, and its callers (the item use and record steps) wait for 4. (C1,
-; E-0374)
+; moves wPauseMenuScreen on, and its callers (the item use and record steps) wait for 4. (C2,
+; E-0374; probed E-0384)
 ; runs the routine for wPauseMenuScreen (jump table of four screens) (E-0122)
 RunPauseMenuSave::
     ld a, [wPauseMenuScreen]
@@ -1140,7 +1140,7 @@ RunPauseMenuScreen_BeforeSave::
     ret
 
 ; Saving, screen 2: runs one stage of the save (RunSaveGameSteps_2) per frame until it is done
-; (wSaveStep bit 7). (C1, E-0357)
+; (wSaveStep bit 7). (C2, E-0357; probed E-0384)
 RunPauseMenuScreen_Save::
     farcall RunSaveGameSteps_2
     ld a, [wSaveStep]
@@ -1723,14 +1723,14 @@ LoadBlankedBlocks00_09_0AWithCursor::
     call DrawMenuCursorTileInBuffer
     ret
 
-; Expands Tiles1Plus6E0Gfx (bank $16) into vTiles1 + $6E0 with DecompressToVRAM, then loads the
-; picture of the selected member (DrawRecordMonsterPictureForMenuSelectedMember). Only
+; Expands LatinKanaLabelGlyphTiles (bank $16) into vTiles1 + $6E0 with DecompressToVRAM, then loads
+; the picture of the selected member (DrawRecordMonsterPictureForMenuSelectedMember). Only
 ; PauseMenu_State4_BuildInfoPage calls it, when the Info page is opened. (C1, E-0374)
-; decompresses Tiles1Plus6E0Gfx (bank $16) to vTiles1 + $6E0, then runs
+; decompresses LatinKanaLabelGlyphTiles (bank $16) to vTiles1 + $6E0, then runs
 ; DrawRecordMonsterPictureForMenuSelectedMember (E-0122)
 DecompressMenuTilesTo16E0::
     ld b, $16
-    ld de, Tiles1Plus6E0Gfx
+    ld de, LatinKanaLabelGlyphTiles
     ld hl, vTiles1 + $6e0
     call DecompressToVRAM
     call DrawRecordMonsterPictureForMenuSelectedMember
@@ -3810,7 +3810,7 @@ PauseMenu_Items_UseItem_BackToList::
     ret
 
 ; Using an item, step 30: runs the save screens (RunPauseMenuSave) until all four are done, then
-; skips a step. (C1, E-0357)
+; skips a step. (C2, E-0357; probed E-0384)
 PauseMenu_Items_UseItem_RunSaveScreens::
     call RunPauseMenuSave
     ld a, [wPauseMenuScreen]

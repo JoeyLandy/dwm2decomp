@@ -4,16 +4,22 @@
 SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7f
 
-; DrawMetaSpriteAt_2 with DE = MetaSprites7FTable (E-0116) (E-0344: the address in its name dropped
-; or read as the label there; was DrawMetaSprite_2)
-DrawMetaSprite_2::
+; Draws one meta-sprite from the 98 sets of MetaSprites7FTable: loads DE = MetaSprites7FTable and
+; calls DrawMetaSpriteAt_Sets98 with the HRAM inputs the caller has set up (hSpriteSetIndex,
+; hSpriteSubIndex, hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor). Callers:
+; UpdateAndDrawSpriteSlots (the field object slots), DrawPlayerSprite and
+; DrawFollowerSpriteAfterLandHo. DrawMetaSprite in this bank is the same with the table
+; MetaSprites7FTable_2 (42 sets). (C1, E-0384)
+; DrawMetaSpriteAt_Sets98 with DE = MetaSprites7FTable (E-0116) (E-0344: the address in its name
+; dropped or read as the label there; was DrawMetaSprite_Sets98)
+DrawMetaSprite_Sets98::
     ld de, MetaSprites7FTable
-    call DrawMetaSpriteAt_2
+    call DrawMetaSpriteAt_Sets98
     ret
 
-; the caller of DrawMetaSprite_2 passes DE = $MetaSprites7FTable; the builder takes the word at DE +
-; 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98 words,
-; up to the next code or data (E-0147, C1)
+; the caller of DrawMetaSprite_Sets98 passes DE = $MetaSprites7FTable; the builder takes the word at
+; DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98
+; words, up to the next code or data (E-0147, C1)
 ; record: meta-sprite set
 MetaSprites7FTable::
     dw MetaSprites7FSet00 ; id 0
@@ -115,10 +121,30 @@ MetaSprites7FTable::
     dw MetaSprites7FSet46 ; id 96
     dw MetaSprites7FSet61 ; id 97
 
+; Builds OAM entries in the shadow OAM at $C000 for one meta-sprite frame. Input DE = table of set
+; pointers; the other inputs are HRAM bytes: hSpriteSetIndex picks the set (word at DE + 2 * set),
+; hSpriteSubIndex the frame (word at set + 2 * frame), hSpriteOriginX/Hi and hSpriteOriginY/Hi the
+; position (16-bit), hSpriteTileOffset (added to each tile), hSpriteAttrXor (XORed into each
+; attribute), hSpriteWindowClipMode. Returns at once when hOamNextEntry is $27 or more. It adds the
+; scroll words hSpriteScrollXLo/Hi and hSpriteScrollYLo/Hi to the position (the results are
+; hMetaSpriteXLo/Hi and hMetaSpriteYLo/Hi; hMetaSpriteXFlipLo/Hi = X - 8) and then reads the frame:
+; entries of 4 bytes (signed Y offset, signed X offset, tile, attribute) up to a first byte of $80.
+; Each entry that lands on the screen is written at $C000 + 4 * hOamNextEntry and hOamNextEntry is
+; incremented; an entry that is off-screen is skipped (its Y byte is cleared to 0 when only the X
+; test fails); it stops when hOamNextEntry reaches $28. Four loops: with hSpriteWindowClipMode = 0
+; an entry stays when its Y total is under $A8 and X total under $B8; with attribute bit 5
+; (horizontal flip) set in hSpriteAttrXor the X is mirrored, origin X - 8 minus the offset (for a
+; non-negative offset only the high byte of the sum is tested, so the $B8 limit is not applied).
+; With a non-zero hSpriteWindowClipMode the Y total must be under $B8, mode 1 (message window at the
+; top) also drops Y under $34, mode 2 (window at the bottom) drops Y of $71 and more, and each part
+; is also dropped when the BG tile under it is not below hSpriteHideTile
+; (BGTileUnderPointIsSpriteHideTile_Bank7F_2). Byte for byte the same as DrawMetaSpriteAt except for
+; its own table pointers and its own BG-tile helper. Called only by DrawMetaSprite_Sets98. (C1,
+; E-0384)
 ; the same instruction sequence as DrawMetaSpriteAt (bank $7F) apart from label operands, which
 ; refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; (E-0344: the address in its name dropped or read as the label there; was DrawMetaSpriteAt_2)
-DrawMetaSpriteAt_2::
+; (E-0344: the address in its name dropped or read as the label there; was DrawMetaSpriteAt_Sets98)
+DrawMetaSpriteAt_Sets98::
     ldh a, [hOamNextEntry]
     cp $27
     ret nc
@@ -581,6 +607,13 @@ DrawMetaSpriteAt_2::
     jr nz, .loop5
     ret
 
+; Looks at the background tile under one sprite part. Input DE = address of the X byte of an OAM
+; entry (its Y byte is at DE - 1). Finds the $9800 BG map entry for (X + hScrollX - 4, Y + hScrollY
+; - 12), 8 pixels per tile with both sums wrapping at 256, waits until rSTAT bit 1 is clear with
+; interrupts off, reads the tile and re-enables interrupts (ei). Returns A = the tile and the flags
+; of a compare with hSpriteHideTile: carry set when the tile is below it, zero set when equal; BC
+; and HL are kept. DrawMetaSpriteAt_Sets98 drops the part when carry is clear, so parts over BG
+; tiles of hSpriteHideTile or more are hidden. The same 54 bytes exist in six banks. (C1, E-0384)
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the
@@ -6468,7 +6501,14 @@ MetaSprites7FSet61Frame5::
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; DE = MetaSprites7FTable_2 (the table of meta-sprite sets), then DrawMetaSpriteAt (E-0030)
+; Draws one meta-sprite from the 42 sets of MetaSprites7FTable_2: loads DE = MetaSprites7FTable_2
+; and calls DrawMetaSpriteAt with the HRAM inputs the caller has set up (hSpriteSetIndex,
+; hSpriteSubIndex, hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor). About 25 call
+; sites in 20 routines, for example DrawSaveCompletionMark, DrawPlayerOverlaySprite21Or22,
+; DrawPartyFollowerSprites, TitleOpening_MoveSparkles_DrawSparkle, DrawFieldSprites_DrawEntry and
+; the world map marker routines RunWorldMapState_DrawObjectMarkers,
+; RunWorldMapState_DrawRegionMarkers and RunWorldMapState_DrawOverviewMarkers. (C1, E-0384)
+; DE = MetaSprites7FTable_2 (the table of meta-sprite sets), then DrawMetaSpriteAt
 DrawMetaSprite::
     ld de, MetaSprites7FTable_2
     call DrawMetaSpriteAt
@@ -6522,11 +6562,31 @@ MetaSprites7FTable_2::
     dw MetaSprites7FTable_2Set28 ; id 40
     dw MetaSprites7FTable_2Set29 ; id 41
 
+; Builds OAM entries in the shadow OAM at $C000 for one meta-sprite frame. Input DE = table of set
+; pointers; the other inputs are HRAM bytes: hSpriteSetIndex picks the set (word at DE + 2 * set),
+; hSpriteSubIndex the frame (word at set + 2 * frame), hSpriteOriginX/Hi and hSpriteOriginY/Hi the
+; position (16-bit), hSpriteTileOffset (added to each tile), hSpriteAttrXor (XORed into each
+; attribute), hSpriteWindowClipMode. Returns at once when hOamNextEntry is $27 or more. It adds the
+; scroll words hSpriteScrollXLo/Hi and hSpriteScrollYLo/Hi to the position (the results are
+; hMetaSpriteXLo/Hi and hMetaSpriteYLo/Hi; hMetaSpriteXFlipLo/Hi = X - 8) and then reads the frame:
+; entries of 4 bytes (signed Y offset, signed X offset, tile, attribute) up to a first byte of $80.
+; Each entry that lands on the screen is written at $C000 + 4 * hOamNextEntry and hOamNextEntry is
+; incremented; an entry that is off-screen is skipped (its Y byte is cleared to 0 when only the X
+; test fails); it stops when hOamNextEntry reaches $28. Four loops: with hSpriteWindowClipMode = 0
+; an entry stays when its Y total is under $A8 and X total under $B8; with attribute bit 5
+; (horizontal flip) set in hSpriteAttrXor the X is mirrored, origin X - 8 minus the offset (for a
+; non-negative offset only the high byte of the sum is tested, so the $B8 limit is not applied).
+; With a non-zero hSpriteWindowClipMode the Y total must be under $B8, mode 1 (message window at the
+; top) also drops Y under $34, mode 2 (window at the bottom) drops Y of $71 and more, and each part
+; is also dropped when the BG tile under it is not below hSpriteHideTile
+; (BGTileUnderPointIsSpriteHideTile_Bank7F_2). Byte for byte the same as DrawMetaSpriteAt_Sets98
+; except for its own table pointers and its own BG-tile helper
+; (BGTileUnderPointIsSpriteHideTile_Bank7F). Called only by DrawMetaSprite. (C1, E-0384)
 ; DE = table of set pointers: returns at once when hOamNextEntry is $27 or more; otherwise converts
 ; the 16-bit position (hSpriteOriginX with hSpriteOriginXHi, hSpriteOriginY with hSpriteOriginYHi)
 ; to screen coordinates by adding the scroll-offset words hSpriteScrollXLo/Hi and
 ; hSpriteScrollYLo/Hi, and writes OAM entries for the sprite chosen by hSpriteSetIndex and
-; hSpriteSubIndex (tile += hSpriteTileOffset, attribute ^= hSpriteAttrXor) (E-0030)
+; hSpriteSubIndex (tile += hSpriteTileOffset, attribute ^= hSpriteAttrXor)
 DrawMetaSpriteAt::
     ldh a, [hOamNextEntry]
     cp $27
@@ -6990,6 +7050,13 @@ DrawMetaSpriteAt::
     jr nz, .loop5
     ret
 
+; Looks at the background tile under one sprite part. Input DE = address of the X byte of an OAM
+; entry (its Y byte is at DE - 1). Finds the $9800 BG map entry for (X + hScrollX - 4, Y + hScrollY
+; - 12), 8 pixels per tile with both sums wrapping at 256, waits until rSTAT bit 1 is clear with
+; interrupts off, reads the tile and re-enables interrupts (ei). Returns A = the tile and the flags
+; of a compare with hSpriteHideTile: carry set when the tile is below it, zero set when equal; BC
+; and HL are kept. DrawMetaSpriteAt drops the part when carry is clear, so parts over BG tiles of
+; hSpriteHideTile or more are hidden. The same 54 bytes exist in six banks. (C1, E-0384)
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the

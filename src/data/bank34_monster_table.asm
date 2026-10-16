@@ -9,7 +9,7 @@ SECTION "Bank 34", ROMX[$4000], BANK[$34]
 ; this bank (record at $4075 + 26 * id), ids from $250 on from bank $A2. Far-called by the battle
 ; code and the debug menu among others. (C2, E-0380)
 ; wMonsterId/wMonsterId + $1 = monster id: copies its 26-byte MonsterTable record to wRecordBuffer
-; (ids at or above $250 come from bank $A2 through LoadMonsterRecordTo_Multiply8By16)
+; (ids at or above $250 come from bank $A2 through LoadMonsterRecordTo_HighIds)
 LoadMonsterRecord::
     ld de, wRecordBuffer
     call LoadMonsterRecordTo
@@ -59,8 +59,8 @@ CopyMonsterTableBytesFromMonsterTable::
 
 ; DE = destination: copies the 26-byte record of monster id wMonsterId (16 bit) from MonsterTable
 ; (record at $4075 + 26 * id, Multiply8By16 with A = $1A) to [DE], then falls into CopyBytesDEFromHL
-; with B = $1A. Ids from $250 on are handed to LoadMonsterRecordTo_Multiply8By16 in bank $A2 (record
-; at $4056 + 26 * (id - $24F)). Called by LoadMonsterRecord. (C2, E-0380)
+; with B = $1A. Ids from $250 on are handed to LoadMonsterRecordTo_HighIds in bank $A2 (record at
+; $4056 + 26 * (id - $24F)). Called by LoadMonsterRecord. (C2, E-0380)
 ; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE]
 LoadMonsterRecordTo::
     ld a, [wMonsterId + $1]
@@ -69,7 +69,7 @@ LoadMonsterRecordTo::
     ld a, [wMonsterId]
     cp $50
     jr c, .read_monster_id
-    farcall LoadMonsterRecordTo_Multiply8By16
+    farcall LoadMonsterRecordTo_HighIds
     ret
 
 .read_monster_id:

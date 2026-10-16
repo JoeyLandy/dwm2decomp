@@ -139,10 +139,15 @@ Map4BScreens0_Y0X0::
 Map4BAttrs0_Y0X0::
     INCBIN "maps/map4_b/attrs0_y0_x0.lz"
 
-; compressed tileset of map $X59E4 (the first map record using it)
+; Tiles, 736 bytes decompressed (46 tiles). The tileset of map record MapRecordX59E4 (a map record
+; no MapTable entry points to), which LoadMapHeader decompresses to vTiles2 with a 20 x 18 tile
+; screen indexing it from tile 0. Rendered together with IceDoorRoomTilemap, its attribute stream
+; (at MapX59E4Attrs0_Y0X0, raw in the source) and MapX59E4Palettes: an ice room, blue striped
+; ice-block walls and a white snow floor with a grey herringbone stone path running up the middle to
+; a wooden door with gold hinges and a lock at the top. (C1, E-0383)
 ; LZSS-compressed: 575 bytes that expand to 736 (E-0016, E-0017)
-MapX59E4Tileset::
-    INCBIN "gfx/misc/map_x59_e4_tileset.lz"
+IceDoorRoomTileset::
+    INCBIN "gfx/misc/ice_door_room_tileset.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
@@ -159,14 +164,18 @@ MapX59E4Palettes::
 ; 1 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapX59E4Screens0::
-    dfar MapX59E4Screens0_Y0X0 ; entry 0
+    dfar IceDoorRoomTilemap ; entry 0
 
 MapX59E4Attrs0::
     dfar MapX59E4Attrs0_Y0X0 ; entry 0
 
+; Tile map, 360 bytes decompressed (20 x 18 screen, one tile number per cell, 0 to 45). Screen (0,0)
+; of the 1 x 1 screen map record MapRecordX59E4, decompressed into wScreenTileBuffer by
+; LoadMapScreen and indexing IceDoorRoomTileset; its attribute map is MapX59E4Attrs0_Y0X0. Rendered:
+; the ice room (ice walls, snow, stone path, door at the top). (C1, E-0383)
 ; LZSS-compressed: 164 bytes that expand to 360 (E-0016, E-0017)
-MapX59E4Screens0_Y0X0::
-    INCBIN "gfx/misc/map_x59_e4_screens0_y0_x0.lz"
+IceDoorRoomTilemap::
+    INCBIN "gfx/misc/ice_door_room_tilemap.lz"
 
 ; LZSS-compressed: 61 bytes that expand to 360 (E-0016, E-0017)
 MapX59E4Attrs0_Y0X0::
@@ -330,10 +339,16 @@ Map9BAttrs0_Y2X0::
     db $48, $0f, $15, $01, $32, $02, $01, $76, $0f, $2f, $01, $04, $02, $01, $34, $02
     db $01, $c4, $0f, $0b, $01, $f2, $08, $01, $ee, $0f, $2d, $01, $3e, $1f, $13
 
-; compressed tileset of map $X62F0 (the first map record using it)
+; Tiles, 2048 bytes decompressed (128 tiles). Tileset of map record MapRecordX62F0 (a map record no
+; MapTable entry points to), loaded to vTiles2 by LoadMapHeader. Its screen
+; (UnusedStoneHallScreenMap) and palettes (MapX62F0Palettes) sit in bank $68, not beside it.
+; Rendered with them: the same room layout and the same attribute bytes as the ice room, in a sand
+; version: grey-green stone-block walls, sand floor with sand-pile or pyramid shapes at the sides,
+; orange herringbone path to a wooden door at the top. The screen uses only tiles 0-45; the other 82
+; tiles are not used by that one screen. (C1, E-0383)
 ; LZSS-compressed: 639 bytes that expand to 2048 (E-0016, E-0017)
-MapX62F0Tileset::
-    INCBIN "gfx/misc/map_x62_f0_tileset.lz"
+SandDoorRoomTileset::
+    INCBIN "gfx/misc/sand_door_room_tileset.lz"
 
 ; compressed tileset of map $1D (the first map record using it)
 ; LZSS-compressed: 875 bytes that expand to 1024 (E-0016, E-0017)

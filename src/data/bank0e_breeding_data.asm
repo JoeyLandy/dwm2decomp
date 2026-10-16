@@ -1887,7 +1887,7 @@ LoadSpeciesBytes8To10ToArg5::
 ; With SRAM enabled (bank 0), for each of the 30 records from sRecords whose MON_STATE is not 0:
 ; loads its species record (wSpeciesIdLo/Hi and wArg2/wArg3 = its MON_SPECIES) and writes the 27
 ; base resistance levels of the species (LoadSpeciesResistanceArg4, low two bits) to its
-; MON_RESISTANCES. Ends with rRAMG = 0. No caller was found in src/. (C1, E-0376)
+; MON_RESISTANCES. Ends with rRAMG = 0. No caller was found in src/. (C2, E-0376; probed E-0384)
 ; for each of the 30 SRAM records stores the 27 two-bit resistance levels of its species at record +
 ; $73 (E-0127)
 RefreshRecordResistancesFromSpecies::

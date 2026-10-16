@@ -141,6 +141,11 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 11: unread + probe scope, banks $19-$31 (6 slices of 75-80, Sonnet) | E-0379 | 459 | 459 (233 probed, 823 probes; 49 names + 4 derived) | 0 (48 spot checks, all correct) | PASS build/run631 | par631 OK (395, 3 skipped) |
 | 12: unread + probe scope, banks $31-$36 (6 slices of 75-80, Sonnet) | E-0380 | 457 | 457 (352 probed, 1,519 probes; 46 names + 14 child steps) | 0 (48 spot checks, all correct) | PASS build/run633 | par633 OK (396, 3 skipped) |
 | 13: data labels described only by their reader (6 slices of 81-82, Sonnet, drafted with batch 12) | E-0381 | 491 | 491 notes (30 names; 35 second names point at their table) | 0 (54 spot checks, all correct) | PASS build/run636 | par636 OK (396, 3 skipped) |
+| 14: unread + probe scope, banks $36-$3A (6 slices of 112-150, Sonnet) | E-0382 | 723 | 723 (675 probed, 2,558 probes; 33 names) | 0 (78 spot checks, all correct) | PASS build/run638 | par638 OK (396, 3 skipped) |
+| 15: opaque INCBIN slices (6 slices of 23-26, Sonnet, drafted with batch 14) | E-0383 | 153 | 140 identified and named, 13 documented as unidentified | 0 (18 entries reviewed, 1 stream claim checked) | PASS build/run_E-0383b | par639 OK (396, 3 skipped) |
+| 16: unread + probe scope, slices 1-6 of 12 (150 each, Sonnet; 4 reruns after a usage stop) | E-0384 | 900 | 900 (783 probed, 2,646 probes; 55 names + 7 children) | 0 (90 spot checks, all correct) | PASS build/run640 | par640 OK (396, 3 skipped) |
+| 17: unread + probe scope, slices 7-12 of 12 (150 each, Sonnet; 3 reruns) | E-0385 | 900 | 900 (742 probed, 2,281 probes; 38 names + 10 children) | 0 (90 spot checks, all correct) | PASS build/run641 | par641 OK (396, 3 skipped) |
+| 18: the last 89 routines, banks $F1-$F2 (4 slices of 20-23, Sonnet) | E-0386 | 89 | 89 (40 probed, 109 probes; 16 names + 9 children; GiftEffect_None) | 0 (20 spot checks, all correct) | PASS build/run643 | serial suite643 OK (397, 3 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
@@ -154,7 +159,20 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-15, E-0381)
+## Current handoff (2026-10-16, E-0386): readability goal complete
+
+The goal.md completion criteria hold on build/run643 (approved size and SHA-256, zero differing bytes) and the
+serial full suite build/logs/suite643.log (397 tests OK, 3 skipped, 28m38s): every code label (9,822) has a
+hand-written reading note and none is named after its instructions; no label is over 60 characters (two of 56-57,
+documented in docs/ROADMAP.md); every data label (23,561) has a note on its content; the 153 opaque INCBIN slices
+are identified (140) or listed with what was tried in docs/UNIDENTIFIED_ASSETS.md (13); every routine a probe can
+check (5,874) has a passing probe and the 3,948 others are listed with the reason in docs/PROBE_SCOPE.md;
+docs/ROADMAP.md marks the goal complete with these measures and the open questions. Batches E-0368 to E-0386,
+drafted by read-only workers (Sonnet from E-0378, D-013) and integrated one at a time. Open questions:
+docs/READABILITY_OPEN_QUESTIONS.md (1,852 entries). Follow-ups outside readability: merge the 11 split asset
+streams (config/stream_chains.json), mark bank $32 $4F00 as code, fold the second-name table labels.
+
+## Prior handoff (2026-10-15, E-0381)
 
 Batches 12 (E-0380, code: 457 entries, 352 probed, 1,519 probes) and 13 (E-0381, all 491 reader-only data labels)
 were drafted together (D-014, 12 Sonnet workers) and integrated one after the other, both at 0% rejection. Phases:

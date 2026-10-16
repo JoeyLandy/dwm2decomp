@@ -4,9 +4,15 @@
 SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
     db $5d
 
+; Tiles: 1024 bytes = 64 tiles of 2bpp for vTiles2 (tile numbers $00-$3F).
+; RunWorldMapState_DrawOverview expands it, then draws one of the WorldMapViewTable rectangles (bank
+; $5D, 8 x 8 to 12 x 12 tiles) in the middle of the overview frame. Rendered: coarse blocky pieces
+; in dark gray and light gray; assembled by the WorldMapView0-WorldMapView3 rectangles they give the
+; silhouettes of islands and continents, light gray land on dark gray sea. The world map overview,
+; step 1 of the world map state machine. (C1, E-0383)
 ; LZSS-compressed: 312 bytes that expand to 1024 (E-0016, E-0017)
-Tiles2Gfx_2::
-    INCBIN "gfx/misc/tiles2_gfx_2.lz"
+WorldMapOverviewLandTiles::
+    INCBIN "gfx/misc/world_map_overview_land_tiles.lz"
 
 ; RunWorldMapState_DrawOverview copies only palette 0 (8 bytes) to wBGPaletteBuffer with
 ; CopyFromBank; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and
@@ -134,9 +140,16 @@ WorldMapView9::
 WorldMapView10::
     db $38, $39 ; id 0
 
+; Tiles: 2048 bytes = 128 tiles of 2bpp filling vTiles2. RunWorldMapState_DrawCloseUp expands it
+; (after Tiles0Gfx_2, Tiles0Plus100Gfx_2 and Tiles0Plus200Gfx into vTiles0), fills the BG map with
+; tile $57 and draws the visited screens with RunWorldMapState_DrawCloseUpCell. Rendered: tiles
+; $00-$6F are blocky terrain pieces in white, light gray and dark gray (coast and land edge shapes:
+; slopes, notches and blobs; the AutomapBlocks 5 x 5 blocks drawn with them show coastline-like
+; pictures), tiles $70-$7F the sixteen hex digits 0-9 and A-F in a thin outline font. The world map
+; close-up, step 4 of the world map state machine. (C1, E-0383)
 ; LZSS-compressed: 439 bytes that expand to 2048 (E-0016, E-0017)
-Tiles2Gfx_3::
-    INCBIN "gfx/misc/tiles2_gfx_3.lz"
+WorldMapCloseUpTerrainTiles::
+    INCBIN "gfx/misc/world_map_close_up_terrain_tiles.lz"
 
 ; 64 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)

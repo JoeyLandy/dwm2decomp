@@ -2693,7 +2693,7 @@ GameMode4_Init_SetSlotMarks::
 
 ; LoadTableEntryForRecordBufASpeciesToRecordBufAExp copies the 3 bytes at $4E60 + $129 * (species
 ; record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and
-; DrawRecordBufBExpExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row
+; DrawRecordBufBExpAndExpToNextLevel read the same rows; 32 rows of 99 rising values, each row
 ; starting at 0 (E-0148, C1)
 ; record: EXP needed for levels 1-99 (24-bit)
 ExpTable::
@@ -2992,7 +2992,7 @@ ExpTable::
 ; level of a monster the entry is the experience needed for the next level; the pause-menu status
 ; page does that with MON_LEVEL. A, BC, E and HL are changed. Callers:
 ; PauseMenu_Info_Page2_DrawDetails, DrawRecordExperience, RecordReachedNextLevelExp and
-; DrawRecordBufBExpExpAndToNextLevel. (C2, E-0379)
+; DrawRecordBufBExpAndExpToNextLevel. (C2, E-0379)
 ; copies the 3 bytes at $4E60 + $129 * hTemp0 + 3 * hTemp1 into hTemp2-hTemp4 (E-0120)
 LoadExpTableEntryToTemp2::
     ld bc, $0129

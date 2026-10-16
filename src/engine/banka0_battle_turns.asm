@@ -36,8 +36,15 @@ GameMode7_Init_Start::
     call GameMode7_Init_MarkSlots
     ret
 
+; Prepares the foe half of the slot tables before the foes are loaded; wScreenCountPlusOne is the
+; input (2 means two foes). It clears wBattleSlotOut for slots 4 and 5, sets slot 6 to $FF with two
+; foes (otherwise 0) and slot 7 to $FF. Then it writes the eight wSlotMarks: 3 for slots 0 and 1
+; when their wBattleSlotOut byte is not 0 (out or absent), otherwise 0; $FF for slot 2; $FF for slot
+; 3 when its byte is not 0, otherwise 0; 1 for slots 4 and 5; 1 for slot 6 ($FF with two foes); $FF
+; for slot 7. Last it clears wBattleTurn and the ten bytes from wBattleArg0. Its only caller is
+; RunBattlePhaseWhenTextIdle_A0_IntroSetUpFoes. (C2, E-0385)
 ; clears the slot-out bytes of slots 4-7, marking the last one absent ($FF) unless
-; wScreenCountPlusOne is 2, then checks the slots (CarryUnlessBattleSlotOutSlotEmpty) (E-0289)
+; wScreenCountPlusOne is 2, then checks the slots (CarryUnlessBattleSlotOutSlotEmpty)
 InitBattleSlotsForFoeCount::
     xor a
     ld hl, wBattleSlotOut + $4
@@ -120,7 +127,7 @@ InitBattleSlotsForFoeCount::
 ; Resets the battle variables: no effect, queued action, SealPray or item target ($FF); slot marks
 ; 0, 0, $FF, $FF, 0, 0, 0, $FF; side control $80; every slot out and no species ($FF); skill and
 ; name tables $FF; meter 10; an empty action queue; turn 0; two party slots and three foes; text
-; speed 3. (C1, E-0357)
+; speed 3. (C2, E-0357; probed E-0385)
 GameMode7_Init_Start_ResetBattleVars::
     ld a, $ff
     ld [wEffectId], a
@@ -214,36 +221,44 @@ GameMode7_Init_DrawScreen::
     ld [wBGPaletteUploadRequest], a
     ret
 
-; Sets up battle slots 0 and 1 (RunA0OrBySlotC). (C1, E-0357)
+; Sets up battle slots 0 and 1 (LoadBattleSlotC_A0). (C2, E-0357; probed E-0385)
 GameMode7_Init_Start_SetUpSlots::
     ld bc, $0200
 
 .loop:
     push bc
-    call RunA0OrBySlotC
+    call LoadBattleSlotC_A0
     pop bc
     inc c
     dec b
     jr nz, .loop
     ret
 
-; runs the slot setup (RunA0OrBySlotC) for slots 4-5, then falls into the shared loop's tail:
-; AdjustSkillsForBattleStart_A0 and the slot damage flags (E-0289)
+; Loads the two foe slots 4 and 5 (BC = $0204: B = 2 slots, C = first slot), then continues in
+; PrepareFoeSlots, which loads each slot with LoadBattleSlotC_A0, runs AdjustSkillsForBattleStart_A0
+; and stores the wSlotBodyFlags. Its only caller is RunBattlePhaseWhenTextIdle_A0_IntroSetUpFoes
+; (the two-foe case). (C2, E-0385)
+; runs the slot setup (LoadBattleSlotC_A0) for slots 4-5, then falls into the shared loop's tail:
+; AdjustSkillsForBattleStart_A0 and the slot damage flags
 PrepareTwoFoeSlots::
     ld bc, $0204
     jr PrepareFoeSlots
 
-; runs the slot setup (RunA0OrBySlotC) for slots 4-6, then AdjustSkillsForBattleStart_A0 and the
-; slot damage flags (E-0289)
+; Loads the three foe slots 4, 5 and 6 (BC = $0304: B = 3 slots, C = first slot) by falling into
+; PrepareFoeSlots, which loads each slot with LoadBattleSlotC_A0, runs AdjustSkillsForBattleStart_A0
+; and stores the wSlotBodyFlags. Its only caller is RunBattlePhaseWhenTextIdle_A0_IntroSetUpFoes
+; (the three wild monsters case). (C2, E-0385)
+; runs the slot setup (LoadBattleSlotC_A0) for slots 4-6, then AdjustSkillsForBattleStart_A0 and the
+; slot damage flags
 PrepareThreeFoeSlots::
     ld bc, $0304
 
 ; Sets up the foe slots from C on, adjusts the skills for the battle start and stores each present
 ; slot's body flags (SPECIES_METAL with SPECIES_UNTRIPPABLE in the high nibble) in wSlotBodyFlags.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 PrepareFoeSlots::
     push bc
-    call RunA0OrBySlotC
+    call LoadBattleSlotC_A0
     pop bc
     inc c
     dec b
@@ -286,6 +301,9 @@ PrepareFoeSlots::
     jr nz, .loop
     ret
 
+; Zero-fills the 47 bytes of wSpeciesRecord (the buffer LoadSpeciesRecord fills); BC and HL are
+; saved and restored. Called by LoadBattleSlotC_A0 after each battle slot has been loaded. One of 2
+; identical copies in different banks. (C2, E-0385)
 ; zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067)
 ; (the same 15 bytes appear in 2 banks)
 ClearSpeciesRecordBuffer_BankA0::
@@ -299,6 +317,12 @@ ClearSpeciesRecordBuffer_BankA0::
     pop bc
     ret
 
+; Adjusts the skill lists once all slots are loaded (called by PrepareFoeSlots). Only slots whose
+; wBattleSlotOut byte is 0 are looked at. First, for each of the 8 slots whose wSlotNameSuffix is 0,
+; ReplaceSkill8FWithAAInSlotC_A0 changes the first SKILL_AHHH ($8F) into SKILL_AHHH_AA. Then, for
+; the foe slots 4-6, each of the first four skills (the first byte of each 2-byte entry of
+; wBattleSkills, up to a $FF entry) that is SKILL_PANICALL ($34) becomes SKILL_PANICALL_AD and
+; SKILL_IRONIZE ($35) becomes SKILL_IRONIZE_AE. (C2, E-0385)
 ; replaces skill $8F by $AA for slots without wSlotNameSuffix set and marks skills $34 and $35 of
 ; the foe slots with tiles $AD and $AE (E-0127)
 AdjustSkillsForBattleStart_A0::
@@ -333,13 +357,13 @@ AdjustSkillsForBattleStart_A0::
     jr z, .next3
     cp $34
     jr nz, .cp_35
-    call StoreTileADAtHL_BankA0
+    call StoreSkillPanicAllADAtHL_BankA0
     jr .next2
 
 .cp_35:
     cp $35
     jr nz, .next2
-    call StoreTileAEAtHL_BankA0
+    call StoreSkillIronizeAEAtHL_BankA0
 
 .next2:
     inc hl
@@ -357,6 +381,10 @@ AdjustSkillsForBattleStart_A0::
     jr nz, .loop2
     ret
 
+; C = battle slot: scans the 8 skill entries of that slot in wBattleSkills (2 bytes each, $10 bytes
+; a slot) and changes the first entry that is SKILL_AHHH ($8F) into SKILL_AHHH_AA ($AA); the scan
+; stops at an entry of $FF (empty), and only the first $8F is changed. HL is kept. Its only caller
+; is AdjustSkillsForBattleStart_A0. (C2, E-0385)
 ; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
 ReplaceSkill8FWithAAInSlotC_A0::
     push hl
@@ -386,20 +414,32 @@ ReplaceSkill8FWithAAInSlotC_A0::
     pop hl
     ret
 
+; HL = address of a skill entry: stores $AD (SKILL_PANICALL_AD) there; A and HL are unchanged. Its
+; only caller is AdjustSkillsForBattleStart_A0, which uses it to replace SKILL_PANICALL in a foe
+; skill list. (C2, E-0385)
 ; [HL] = $AD (E-0116)
-StoreTileADAtHL_BankA0::
+StoreSkillPanicAllADAtHL_BankA0::
     ld [hl], $ad
     ret
 
+; HL = address of a skill entry: stores $AE (SKILL_IRONIZE_AE) there; A and HL are unchanged. Its
+; only caller is AdjustSkillsForBattleStart_A0, which uses it to replace SKILL_IRONIZE in a foe
+; skill list. (C2, E-0385)
 ; [HL] = $AE (E-0116)
-StoreTileAEAtHL_BankA0::
+StoreSkillIronizeAEAtHL_BankA0::
     ld [hl], $ae
     ret
 
+; C = battle slot, HL = the flag byte of its battler record (record byte $16): bit 7 set stores 1 in
+; wBattleSlotOut[C] and leaves the status alone. Bit 7 clear stores 0 there and sets the first
+; status byte of the slot (wBattleStatus + 9 * C): bit 0 of the flag byte stores $20 (BSTAT0_CURSED)
+; and then bit 2 ORs in $01 (BSTAT0_POISONED); with neither bit set the status byte is left as it
+; was. HL is kept. Callers: LoadBattleSlotC_A0_Party and LoadBattleSlotC_A0_Foe, when wLoadSlot is
+; 0. (C2, E-0385)
 ; sets wBattleSlotOut for slot C from bit 7 of the record byte and the slot's wBattleStatus bits
 ; from its other flags (E-0344: the address in its name dropped or read as the label there; was
-; RunA0OrBySlotC_SetSlotOutAndStatus)
-RunA0OrBySlotC_SetSlotOutAndStatus::
+; LoadBattleSlotC_A0_SetSlotOutAndStatus)
+LoadBattleSlotC_A0_SetSlotOutAndStatus::
     push hl
     ld a, c
     ld de, wBattleSlotOut
@@ -446,7 +486,10 @@ RunA0OrBySlotC_SetSlotOutAndStatus::
     pop hl
     ret
 
-; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks) (E-0353)
+; DE = base of a per-slot table, C = slot, HL = source: DE becomes DE + C, the byte at HL is copied
+; to [DE] and HL advances by 1; A ends as the byte. Used by the two slot loaders for the level and
+; the personality bytes. Same 9 bytes in 2 banks. (C2, E-0385)
+; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
 StoreByteAtDEPlusC_BankA0::
     ld a, c
     add e
@@ -459,8 +502,12 @@ StoreByteAtDEPlusC_BankA0::
     ld [de], a
     ret
 
+; DE = base of a per-slot word table, C = slot, HL = source: DE becomes DE + 2 * C (worked out in 8
+; bits), the word at HL is copied to [DE] and [DE + 1], low byte first; HL advances by 2 and DE ends
+; on the second byte written. Used by the two slot loaders for HP, MP and the stats. Same 13 bytes
+; in 2 banks. (C2, E-0385)
 ; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same
-; 13 bytes appear in 2 banks) (E-0353)
+; 13 bytes appear in 2 banks)
 StoreWordAtDEPlus2C_BankA0::
     ld a, c
     add a
@@ -477,6 +524,11 @@ StoreWordAtDEPlus2C_BankA0::
     ld [de], a
     ret
 
+; HL = BG map address: copies 18 rows of 20 tiles from wScreenTileBuffer (rows 32 bytes apart in the
+; buffer) to the BG map starting at HL (rows 32 bytes apart too), each byte written with
+; WriteVRAMByteInc. Callers: GameMode7_Init_DrawScreen,
+; RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Blank and
+; RunBattlePhaseWhenTextIdle_A0_ShowResultsScreen. (C1, E-0385)
 ; copies the 20 x 18 screen tile buffer to the BG map at HL (32-byte rows) (E-0124)
 CopyScreenTileBufferToVRAM_A0::
     ld de, wScreenTileBuffer
@@ -507,7 +559,7 @@ CopyScreenTileBufferToVRAM_A0::
     jr nz, .loop
     ret
 
-; Starts the battle music: $0F for wBattleKind 0, otherwise $13. (C1, E-0357)
+; Starts the battle music: $0F for wBattleKind 0, otherwise $13. (C2, E-0357; probed E-0385)
 GameMode7_Init_Start_PlayMusic::
     ld a, [wBattleKind]
     or a
@@ -523,7 +575,7 @@ GameMode7_Init_Start_PlayMusic::
     ret
 
 ; Copies the two linked records into battler records 0 and 1: wRecordBufA first and wRecordBufB
-; second, the other way round for link role bit 1. (C1, E-0357)
+; second, the other way round for link role bit 1. (C2, E-0357; probed E-0385)
 GameMode7_Init_Start_CopyLinkedRecords::
     ld de, wBattlerRecords
     ld a, [wLinkRole]
@@ -539,9 +591,13 @@ GameMode7_Init_Start_CopyLinkedRecords::
     call GameMode7_Init_Start_PackBattlerRecord
     ld hl, wRecordBufA
 
-; Packs record HL into the battler record at DE: its name (14 bytes), skills (8) and a zero, one
-; byte, $15 bytes of stats, $1F bytes from the personality and the item byte, applies the stat
-; increments (ApplyIncrementOffsetRowsA0ForA0DTo13) and ends with $FF. (C1, E-0357)
+; HL = a linked monster record, DE = the battler record to fill; both advance. The record byte 0 is
+; skipped, then it copies 14 bytes from MON_NAME (the name, the species word and two more bytes),
+; the 8 skills (MON_SKILLS), writes a zero byte, copies MON_LEVEL, 21 bytes from MON_EXP to MON_WLD,
+; and 31 bytes from MON_PERSONALITY (the personality bytes and the resistances) followed by the
+; MON_ITEM byte. ApplyEquippedItemIncrements then raises the resistance bytes that the item names,
+; and the last byte written is $FF. Caller: GameMode7_Init_Start_CopyLinkedRecords (twice). (C2,
+; E-0385)
 GameMode7_Init_Start_PackBattlerRecord::
     inc hl
     ld b, $0e
@@ -581,12 +637,15 @@ GameMode7_Init_Start_PackBattlerRecord::
     ld a, [hl]
     ld [de], a
     inc de
-    call ApplyIncrementOffsetRowsA0ForA0DTo13
+    call ApplyEquippedItemIncrements
     ld a, $ff
     ld [de], a
     inc de
     ret
 
+; B = count, HL = source, DE = destination: copies B bytes from [HL] to [DE]; HL and DE end past the
+; copy and B ends 0 (a count of 0 copies 256). Used by GameMode7_Init_Start_PackBattlerRecord. Same
+; 7 bytes as CopyBytesDEFromHL. (C2, E-0385)
 ; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_BankA0::
     ld a, [hli]
@@ -596,9 +655,16 @@ CopyBytesDEFromHL_BankA0::
     jr nz, CopyBytesDEFromHL_BankA0
     ret
 
+; A = the equipped item byte just packed (MON_ITEM), DE = the address after it: for A in $0D-$13 it
+; reads row A - $0D of IncrementOffsetRows_A0 (16 bytes a row) and for each offset byte before the
+; $80 end it raises the byte at DE - 256 + offset by one unless that byte is already 3 or more
+; (IncrementTableByteCappedAt3_BankA0). Other values of A (0, below $0D, $14 and above) return at
+; once. DE is kept. In the packed battler record the addressed bytes are the resistance levels,
+; except that the one entry of the row for $12 ($FF) names the byte just before DE. Its only caller
+; is GameMode7_Init_Start_PackBattlerRecord. (C2, E-0385)
 ; for A in $0D-$13 increments (capped at 3) each byte listed in IncrementOffsetRows_A0 row A - $0D,
 ; relative to DE (E-0125)
-ApplyIncrementOffsetRowsA0ForA0DTo13::
+ApplyEquippedItemIncrements::
     or a
     ret z
     cp $0d
@@ -634,6 +700,9 @@ ApplyIncrementOffsetRowsA0ForA0DTo13::
     inc de
     jr .skip
 
+; HL = offset (the callers pass $FF00 + a table byte), hTemp0/hTemp1 = base: adds the base word to
+; HL and raises the byte at that address by one unless it is already 3 or more. Its only caller is
+; ApplyEquippedItemIncrements. The bank-$A0 copy of IncrementTableByteCappedAt3. (C2, E-0385)
 ; increments the byte at HL + the word hTemp0/hTemp1 unless it is already 3 or more (the bank-$A0
 ; copy of IncrementTableByteCappedAt3) (E-0118)
 IncrementTableByteCappedAt3_BankA0::
@@ -650,9 +719,9 @@ IncrementTableByteCappedAt3_BankA0::
     ld [hl], a
     ret
 
-; ApplyIncrementOffsetRowsA0ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each
-; byte before $80 increments the byte at DE + $FF00 + byte, capped at 3
-; (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical (E-0236, C1)
+; ApplyEquippedItemIncrements takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before
+; $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows;
+; the bank $19 and $A0 copies are identical (E-0236, C1)
 ; record: offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then
 ; zero padding
 IncrementOffsetRows_A0::
@@ -664,20 +733,24 @@ IncrementOffsetRows_A0::
     db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-; runs RunA0OrBySlotC_LoadPartySlot for slots 0-3 or RunA0OrBySlotC_LoadFoeSlot for slots 4-7,
-; clears the species record buffer and restores wBattleArg0 (E-0122) (E-0344: the address in its
-; name dropped or read as the label there; was RunA0OrBySlotC)
-RunA0OrBySlotC::
+; C = battle slot: loads that slot from its battler record, with LoadBattleSlotC_A0_Party for slots
+; 0-3 or LoadBattleSlotC_A0_Foe for slots 4-7, then clears the species record buffer
+; (ClearSpeciesRecordBuffer_BankA0); wBattleArg0 is saved on entry and put back at the end. Callers:
+; GameMode7_Init_Start_SetUpSlots (slots 0 and 1) and PrepareFoeSlots (foe slots). (C2, E-0385)
+; runs LoadBattleSlotC_A0_Party for slots 0-3 or LoadBattleSlotC_A0_Foe for slots 4-7, clears the
+; species record buffer and restores wBattleArg0 (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was LoadBattleSlotC_A0)
+LoadBattleSlotC_A0::
     ld a, [wBattleArg0]
     push af
     ld a, c
     cp $04
-    jr nc, .call_run_a0_or_by_slot_c_load_foe_slot
-    call RunA0OrBySlotC_LoadPartySlot
+    jr nc, .call_load_battle_slot_c_a0_foe
+    call LoadBattleSlotC_A0_Party
     jr .call_clear_species_record_buffer_bank_a0
 
-.call_run_a0_or_by_slot_c_load_foe_slot:
-    call RunA0OrBySlotC_LoadFoeSlot
+.call_load_battle_slot_c_a0_foe:
+    call LoadBattleSlotC_A0_Foe
 
 .call_clear_species_record_buffer_bank_a0:
     call ClearSpeciesRecordBuffer_BankA0
@@ -685,12 +758,20 @@ RunA0OrBySlotC::
     ld [wBattleArg0], a
     ret
 
-; Loads battle slot C (0-3) from its battler record: species id, name suffix (low nibble), tactic
-; and last tactic cleared, the link side byte (& 3, for this side's slots), skills, the out flag and
-; status (not when reloading, wLoadSlot), level, HP and MP (only the maximums when reloading), ATK,
-; DEF, AGL, INT, the extra stat, the personality bytes and trait (kept when reloading unless status
-; 1 bits 4-5 are set), then the resistances. (C1, E-0357)
-RunA0OrBySlotC_LoadPartySlot::
+; C = slot 0-3: loads the battle slot from its battler record (BattlerRecordAddress_BankA0). The
+; species word goes to wBattleMonsterId, the low nibble of record byte $0D to wSlotNameSuffix, and 0
+; to wSlotTactic and wSlotLastTactic; wBattleLoadWork[C] is cleared too, unless bit 1 of wLinkRole
+; is set (then it is left alone). The skills come from LoadSlotSkillsFromBattlerRecord, or from
+; LoadSlotSkillsForBattleArg0 when wBattleArg0 is not 0. When wLoadSlot is 0 (a first load, not a
+; reload) wBattleSlotOut and the first status byte are set from record byte $16
+; (LoadBattleSlotC_A0_SetSlotOutAndStatus). Then come the level, HP, maximum HP, MP, maximum MP
+; (only the two maximums on a reload), ATK, DEF, AGL, INT and the extra stat; the four personality
+; bytes go to wSlotPersonalityHi, wSlotPersonalityLo, wSlotTrait and wSlotPersonalityMid (on a
+; reload they are kept unless bit 4 or 5 of the status 1 byte of slot wBattleArg0 is set); the 27
+; resistances are packed into wSlotResistances (PackResistancesFromBattleArgs); last,
+; SetSlotAIModeFromINT sets the AI mode from INT (below 30, 100, 550, 900: 0, 1, 2, 3; more: 4).
+; (C2, E-0385)
+LoadBattleSlotC_A0_Party::
     ld a, c
     push bc
     call BattlerRecordAddress_BankA0
@@ -812,7 +893,7 @@ RunA0OrBySlotC_LoadPartySlot::
     ld h, a
     ld a, [wLoadSlot]
     or a
-    call z, RunA0OrBySlotC_SetSlotOutAndStatus
+    call z, LoadBattleSlotC_A0_SetSlotOutAndStatus
     inc hl
     ld de, wBattleLevel
     call StoreByteAtDEPlusC_BankA0
@@ -913,15 +994,15 @@ RunA0OrBySlotC_LoadPartySlot::
     ret
 
 ; Loads foe slot C (4-7) from its battler record (BattlerRecordAddress_BankA0) as
-; RunA0OrBySlotC_LoadPartySlot does for slots 0-3: species id, the whole name suffix byte (not
-; masked), tactic cleared, skills (LoadSlotSkillsFromBattlerRecord, or LoadSlotSkillsForBattleArg0
-; when wBattleArg0 is non-zero), the out flag and status unless reloading (wLoadSlot), the level and
-; then zeroes the three record bytes after it, HP and MP (only the maximums when reloading), ATK,
-; DEF, AGL, INT and the extra stat, the personality bytes and trait (kept when reloading unless
-; status 1 bits 4-5 are set), the resistances (PackResistancesFromBattleArgs) and the AI mode
+; LoadBattleSlotC_A0_Party does for slots 0-3: species id, the whole name suffix byte (not masked),
+; tactic cleared, skills (LoadSlotSkillsFromBattlerRecord, or LoadSlotSkillsForBattleArg0 when
+; wBattleArg0 is non-zero), the out flag and status unless reloading (wLoadSlot), the level and then
+; zeroes the three record bytes after it, HP and MP (only the maximums when reloading), ATK, DEF,
+; AGL, INT and the extra stat, the personality bytes and trait (kept when reloading unless status 1
+; bits 4-5 are set), the resistances (PackResistancesFromBattleArgs) and the AI mode
 ; (SetSlotAIModeFromINT). Unlike the party version it stores no last tactic and no link side byte.
-; (C1, E-0371)
-RunA0OrBySlotC_LoadFoeSlot::
+; (C2, E-0371; probed E-0385)
+LoadBattleSlotC_A0_Foe::
     push bc
     call BattlerRecordAddress_BankA0
     pop bc
@@ -988,7 +1069,7 @@ RunA0OrBySlotC_LoadFoeSlot::
     ld h, a
     ld a, [wLoadSlot]
     or a
-    call z, RunA0OrBySlotC_SetSlotOutAndStatus
+    call z, LoadBattleSlotC_A0_SetSlotOutAndStatus
     inc hl
     ld de, wBattleLevel
     call StoreByteAtDEPlusC_BankA0
@@ -1089,6 +1170,10 @@ RunA0OrBySlotC_LoadFoeSlot::
     farcall SetSlotAIModeFromINT
     ret
 
+; A = battle slot: slots 3 and 7 return at once with Z set and HL unchanged; otherwise HL =
+; wBattlerRecords + $4E * n, with n = A for slots 0-2 and A - 1 for slots 4-6 (slot 4 is
+; wBattlerRecordSlot4). Callers: LoadBattleSlotC_A0_Party and LoadBattleSlotC_A0_Foe. Same 23 bytes
+; in 2 banks. (C2, E-0385)
 ; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL =
 ; wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the
 ; field offset) (E-0067) (the same 23 bytes appear in 2 banks)
@@ -1112,7 +1197,7 @@ BattlerRecordAddress_BankA0::
     ret
 
 ; Marks slots 0 and 1: $FF when absent, 1 when it cannot act (CheckSlotStatusBlock), otherwise 0.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 GameMode7_Init_MarkSlots::
     ld bc, $0200
     ld hl, wSlotMarks
@@ -1141,7 +1226,11 @@ GameMode7_Init_MarkSlots::
     jr nz, .loop
     ret
 
-; ComputeWildEncounterLevel, then ApplyLevelScaledStatsToSlots (E-0289)
+; BC = (number of foe slots, first slot): ComputeWildEncounterLevel works out wWildLevel and
+; wWildBand and picks the monsters for those slots, then ApplyLevelScaledStatsToSlots builds their
+; wild battler records at that level. Its only caller is
+; RunBattlePhaseWhenTextIdle_A0_IntroSetUpFoes (BC = $0300). (C2, E-0385)
+; ComputeWildEncounterLevel, then ApplyLevelScaledStatsToSlots
 ComputeWildLevelAndScaleStats::
     push bc
     call ComputeWildEncounterLevel
@@ -1149,6 +1238,14 @@ ComputeWildLevelAndScaleStats::
     call ApplyLevelScaledStatsToSlots
     ret
 
+; B = number of slots, C = first slot. Works out a wild level from battler records 0 and 1 (the two
+; party monsters): for each record, (AGL + INT) / 2 + max HP + max MP + ATK + DEF, divided by 50,
+; plus (max HP + max MP + ATK + DEF + AGL + INT - 24 * level) / 50 (a negative second term is
+; divided as its absolute value, then negated), a negative result becoming 0 and one above 99
+; becoming 99. wWildLevel is 1 when both values are 0, otherwise the larger of the two (a zero value
+; is ignored). wWildBand is 0 below level 20, then 1 to 7 at 20, 40, 50, 60, 70, 80 and 90 (levels
+; $14, $28, $32, $3C, $46, $50, $5A). Finally PickEncounterMonsterForSlotC is run for each of the B
+; slots from C. Its only caller is ComputeWildLevelAndScaleStats. (C2, E-0385)
 ; computes the wild monster level wWildLevel and band wWildBand from the party's stat totals
 ; (wBattlerRecords + $1D-wBattlerRecords + $29) and size (E-0131)
 ComputeWildEncounterLevel::
@@ -1413,7 +1510,10 @@ ComputeWildEncounterLevel::
     jr nz, .loop
     ret
 
-; DE += the word at [HL]; HL += 1 (ends on the high byte); clobbers A (E-0353)
+; HL = address of a word: DE = DE + that word (16-bit sum); HL ends on the high byte; A is
+; clobbered. Used by ComputeWildEncounterLevel to add up the stat words of a battler record. Same
+; code in several banks. (C2, E-0385)
+; DE += the word at [HL]; HL += 1 (ends on the high byte); clobbers A
 AddWordAtHLToDE::
     ld a, [hli]
     add e
@@ -1423,6 +1523,13 @@ AddWordAtHLToDE::
     ld d, a
     ret
 
+; C = slot: stores a species word in wEncounterMonsters[C]. It takes the row from
+; PickRandomBand0To10 (the row index is the family number; each row of EncounterBandSpeciesTable has
+; 8 words, one list for each wWildBand 0-7), reads the list for wWildBand (a count byte, then that
+; many species words), and draws a second random value (AdvanceRandom): the entry k is chosen when
+; wRandomLo is not above (k + 1) * (255 / count); a count of 0, or a value above the last step,
+; throws the draw away and starts again from a new row. Callers: ComputeWildEncounterLevel (and
+; itself on a redraw). (C2, E-0385)
 ; picks a monster for slot C from the band row EncounterBandSpeciesTable (PickRandomBand0To10,
 ; wWildBand) by a weighted roll and stores its id in wEncounterMonsters[C] (E-0127)
 PickEncounterMonsterForSlotC::
@@ -1490,6 +1597,10 @@ PickEncounterMonsterForSlotC::
     pop bc
     jr PickEncounterMonsterForSlotC
 
+; Advances the random value (AdvanceRandom) and returns in A the number of thresholds of
+; PickRandomBand0To10_Data that wRandomLo has reached: 0-9 for the steps of 25, 10 for $FA and
+; above. A result of 10 is thrown away and drawn again while wWildBand is below 6. Its caller is
+; PickEncounterMonsterForSlotC. (C2, E-0385)
 ; draws a random value and returns its band in the 11-entry threshold table
 ; PickRandomBand0To10_Data; band 10 is redrawn while wWildBand < 6 (E-0124)
 PickRandomBand0To10::
@@ -1528,6 +1639,10 @@ PickRandomBand0To10::
 PickRandomBand0To10_Data::
     db $19, $32, $4b, $64, $7d, $96, $af, $c8, $e1, $fa, $ff
 
+; Copies the $4E-byte battler records 0 and 1 (wBattlerRecords and wBattlerRecordSlot1) to
+; wBattlerRecordSlot4 and wBattlerRecordSlot5, so that the two foes of a two-foe battle start as
+; copies of the two party monsters. Its only caller is RunBattlePhaseWhenTextIdle_A0_IntroSetUpFoes.
+; (C2, E-0385)
 ; copies battler records 0 and 1 ($4E bytes each, wBattlerRecords and wBattlerRecordSlot1) to
 ; wBattlerRecordSlot4 and wBattlerRecordSlot5 (E-0118)
 BackupBattlerRecords0And1::
@@ -1541,6 +1656,11 @@ BackupBattlerRecords0And1::
     call CopyBytes
     ret
 
+; B = number of slots, C = first slot: sets hTemp1 = min(4 * wWildLevel / 5 + 5, 99) (the level of
+; the wild monsters), then for each slot runs ApplyLevelScaledStatsToSlots_BuildWildRecord with
+; wBattleArg2/wBattleArg3 = the record address from ApplyLevelScaledStatsToSlots_Data entry C (the
+; records of battle slots 4, 5 and 6). Its only caller is ComputeWildLevelAndScaleStats; DE is
+; returned as the last record address. (C2, E-0385)
 ; hTemp1 = min(4 * wWildLevel / 5 + 5, 99); runs ApplyLevelScaledStatsToSlots_BuildWildRecord for B
 ; slots from C with wBattleArg2 = ApplyLevelScaledStatsToSlots_Data[slot] (E-0125)
 ApplyLevelScaledStatsToSlots::
@@ -1581,7 +1701,7 @@ ApplyLevelScaledStatsToSlots::
 
 ; Builds wild monster C's battler record from its species (wEncounterMonsters): id, family, sex
 ; ratio, its three skills, the level (hTemp1) and each stat from its growth rows scaled by the wild
-; level (at most 999). (C1, E-0357)
+; level (at most 999). (C2, E-0357; probed E-0385)
 ApplyLevelScaledStatsToSlots_BuildWildRecord::
     push bc
     ld a, c
@@ -1693,6 +1813,10 @@ ApplyLevelScaledStatsToSlots_BuildWildRecord::
     pop bc
     ret
 
+; HL = destination: advances the random table (NextTableByte: wRandomHi + 1 modulo $80, wRandomLo =
+; the next RandomByteTable byte) and stores wRandomLo at [HL]; HL advances by 1 and A ends as the
+; byte. BC and DE are kept. Used by ApplyLevelScaledStatsToSlots_BuildWildRecord for four
+; personality bytes. Same 16 bytes in 2 banks. (C2, E-0385)
 ; advances the random table (NextTableByte) and stores the new wRandomLo at HL; HL += 1; AF, BC, DE
 ; kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
 StoreRandomByteAtHL_BankA0::
@@ -1709,6 +1833,10 @@ StoreRandomByteAtHL_BankA0::
     ld [hli], a
     ret
 
+; hTemp3:hTemp2 = a stat word, HL = destination: multiplies the stat by (wWildLevel / 4 + 100) / 100
+; (integer division), keeps at most 999 ($03E7), stores the result back in hTemp2/hTemp3 and writes
+; it at [HL]; HL advances by 2. BC and DE are kept; A ends as the high byte of the result. Called
+; for each growth-row stat by ApplyLevelScaledStatsToSlots_BuildWildRecord. (C2, E-0385)
 ; the word hTemp2 = hTemp2 * (wWildLevel / 4 + 100) / 100, capped at 999, stored at [HL+] (E-0125)
 ScaleStatByWildLevelCapped999::
     push af
@@ -1759,6 +1887,9 @@ ScaleStatByWildLevelCapped999::
     ld [hli], a
     ret
 
+; HL = destination: stores hTemp2 then hTemp3 there; HL advances by 2 and A is clobbered. Used by
+; ApplyLevelScaledStatsToSlots_BuildWildRecord to write the first two scaled stats (the maximum HP
+; and MP). Same 7 bytes in 2 banks. (C2, E-0385)
 ; stores hTemp2 then hTemp3 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 StoreTemp2WordAtHL_BankA0::
     ldh a, [hTemp2]
@@ -1767,6 +1898,10 @@ StoreTemp2WordAtHL_BankA0::
     ld [hli], a
     ret
 
+; HL = destination: copies the 27 bytes of wSpeciesRecord from SPECIES_RESISTANCES on (the species
+; resistance levels) to HL; HL ends past the copy and A, B and DE are clobbered. Used by
+; ApplyLevelScaledStatsToSlots_BuildWildRecord for the resistances of a wild monster record. (C2,
+; E-0385)
 ; copies the 27 ($1B) bytes at wSpeciesRecord + $12 to HL; HL ends past the copy; clobbers A, B, DE
 ; (E-0065) (the same 12 bytes appear in 2 banks)
 CopySpeciesExpCurveBRecordToHL_BankA0::
@@ -1781,6 +1916,12 @@ CopySpeciesExpCurveBRecordToHL_BankA0::
     jr nz, .loop
     ret
 
+; wBattleArg2/wBattleArg3 = address of a battler record: byte $0D of the record (the sex ratio class
+; that ApplyLevelScaledStatsToSlots_BuildWildRecord stored from SPECIES_SEX_RATIO) is rolled to 1 or
+; 0. A value of 0 stays 0 and the random table is not stepped; otherwise NextTableByte runs and the
+; byte becomes 1 when wRandomLo is below 2 (value 1), below $80 (value 2) or below $E6 (any other
+; nonzero value), else 0. Its only caller is ApplyLevelScaledStatsToSlots_BuildWildRecord. (C2,
+; E-0385)
 ; field $0D of record wBattleArg2: values 1, 2 and others roll with thresholds 2, $80 and $E6 and
 ; become 1 or 0 (E-0125)
 RollRecordField0DState_A0::
@@ -1830,6 +1971,9 @@ RollRecordField0DState_A0::
     ld [hl], a
     ret
 
+; A = factor, E:H:L = a 24-bit number (E high, L low): the 32-bit product A * E:H:L is returned in
+; D:E:H:L (D the top byte). No routine in src/ calls this copy by name. Same 38 bytes as
+; Multiply24By8. (C2, E-0385)
 ; the same 38 bytes as Multiply24By8 (Multiply24By8) (E-0121)
 Multiply24By8_BankA0::
     push af
@@ -2015,8 +2159,11 @@ GameMode7_Init_DrawScreen_LoadNameTiles::
     call CopyGlyphTilesToVRAM
     ret
 
+; Fills the $160 bytes from wScreenTileBuffer + $E0 with tile $C3 (the blank tile); the bytes around
+; them are not changed. A, BC and HL are clobbered. No routine in src/ calls this copy by name. Same
+; 15 bytes in 2 banks. (C2, E-0385)
 ; Fills the $160 bytes at wScreenTileBuffer + $E0 with $C3; clobbers A, BC, HL (the same 15 bytes
-; appear in 2 banks) (E-0353)
+; appear in 2 banks)
 FillScreenTileBufferRow11Col4WithC3_BankA0::
     ld hl, wScreenTileBuffer + $e0
     ld bc, $0160
@@ -2030,13 +2177,17 @@ FillScreenTileBufferRow11Col4WithC3_BankA0::
     jr nz, .loop
     ret
 
-; Copies game mode 7's frame rectangle into the screen buffer. (C1, E-0357)
+; Copies game mode 7's frame rectangle into the screen buffer. (C2, E-0357; probed E-0385)
 GameMode7_Init_DrawScreen_DrawFrame::
     ld hl, GameMode7_Init_DrawScreen_DrawFrame_TileRect
     call ReadScreenBufferRectHeader_BankA0
     call CopyRectToStride32_BankA0
     ret
 
+; Copies the 20 x 13 tile rectangle DrawRectAndWriteDATiles_TileRect into wScreenTileBuffer
+; (ReadScreenBufferRectHeader_BankA0, CopyRectToStride32_BankA0); unless bit 1 of wLinkRole is set
+; it then writes the tiles $DA to $DE at wScreenTileBuffer + $2B. Its only caller is
+; RunBattlePhaseWhenTextIdle_A0_DrawResults, which draws the results frame with it. (C2, E-0385)
 ; copies rectangle DrawRectAndWriteDATiles_TileRect to the screen buffer; unless bit 1 of wLinkRole
 ; is set, writes tiles $DA-$DE at wScreenTileBuffer + $2B (E-0122) (E-0344: the address in its name
 ; dropped or read as the label there; was DrawRectAndWriteDATiles)
@@ -2058,12 +2209,16 @@ DrawRectAndWriteDATiles::
     jr nz, .loop
     ret
 
-; Draws slots 0 and 1's HP, MP and status marks. (C1, E-0357)
+; Draws slots 0 and 1's HP, MP and status marks. (C2, E-0357; probed E-0385)
 GameMode7_Init_DrawScreen_DrawSlotPanels::
     ld c, $00
     call DrawSlotPanelValues_BankA0
     ld c, $01
 
+; C = slot: runs DrawSlotHPDigits_BankA0, DrawSlotMPDigits_BankA0 and DrawSlotStatusMarks_BankA0 for
+; that slot, which write the HP and MP as three digit tiles and the level and status marks into
+; wScreenTileBuffer. GameMode7_Init_DrawScreen_DrawSlotPanels calls it for slot 0 and falls into it
+; for slot 1. (C2, E-0385)
 ; DrawSlotHPDigits_BankA0, DrawSlotMPDigits_BankA0 and DrawSlotStatusMarks_BankA0 for slot C
 ; (E-0116)
 DrawSlotPanelValues_BankA0::
@@ -2072,12 +2227,18 @@ DrawSlotPanelValues_BankA0::
     call DrawSlotStatusMarks_BankA0
     ret
 
+; Runs BuildAndCopySlotPanel_A0 for slot 0 and falls into it for slot 1. No routine in src/ calls it
+; by name. (C1, E-0385)
 ; runs BuildAndCopySlotPanel_A0 for slot 0 and falls into it for slot 1 (E-0126)
 BuildAndCopySlotPanels0And1_A0::
     ld c, $00
     call BuildAndCopySlotPanel_A0
     ld c, $01
 
+; C = slot: copies the drawn panel of that slot from wScreenTileBuffer to the BG map: its HP digits
+; (CopySlotHPDigitsPanelToVRAM_BankA0), its MP digits (CopySlotMPDigitsPanelToVRAM_BankA0) and its
+; panel row (CopySlotPanelRowToVRAM_BankA0). Its only caller is BuildAndCopySlotPanels0And1_A0. (C1,
+; E-0385)
 ; runs CopySlotHPDigitsPanelToVRAM_BankA0 and 6C22 for slot C and copies its panel row to VRAM
 ; (E-0122)
 BuildAndCopySlotPanel_A0::
@@ -2212,6 +2373,14 @@ DrawRect13x7AtRow11ToBGMap_BankA0::
     call CopyRect32StrideToVRAM_BankA0
     ret
 
+; DE = source tiles, HL = BG map address, B = width, C = rows: copies C rows of B tiles with
+; WriteVRAMByteInc; after each row HL moves $20 on and DE moves to $20 past the start of that source
+; row, so source and destination rows are both 32 bytes apart. B is kept. Callers:
+; DrawRows13To17ToBGMap_BankA0, DrawRows9To17ToBGMap_BankA0, DrawRows7To17ToBGMap_BankA0,
+; DrawRow8AndRows9To17ToBGMap_BankA0, DrawRect11x9AtRow9ToBGMap_BankA0,
+; DrawRect13x7AtRow11ToBGMap_BankA0, DrawRect7x7AtRow11ToBGMap_BankA0,
+; DrawRect8x9AtRow9ToBGMap_BankA0 and RunBattleSetup_BankA0_EntrySelect_DrawWindow. Same 28 bytes as
+; CopyRect32StrideToVRAM. (C1, E-0385)
 ; the same 28 bytes as CopyRect32StrideToVRAM (CopyRect32StrideToVRAM) (E-0060)
 CopyRect32StrideToVRAM_BankA0::
     push bc
@@ -2239,6 +2408,10 @@ CopyRect32StrideToVRAM_BankA0::
     jr nz, CopyRect32StrideToVRAM_BankA0
     ret
 
+; HL = a 4-byte header (word offset, width, rows): returns HL = wScreenTileBuffer + offset, B =
+; width, C = rows and DE = the address just after the header. Callers:
+; GameMode7_Init_DrawScreen_DrawFrame and DrawRectAndWriteDATiles. Same 15 bytes in 2 banks. (C2,
+; E-0385)
 ; reads a 4-byte header at HL (word offset, width, rows): returns HL = wScreenTileBuffer + offset, B
 ; = width, C = rows, DE = the byte after the header (E-0065) (the same 15 bytes appear in 2 banks)
 ReadScreenBufferRectHeader_BankA0::
@@ -2256,6 +2429,10 @@ ReadScreenBufferRectHeader_BankA0::
     pop de
     ret
 
+; DE = source (rows packed), HL = destination, B = width, C = rows: copies a B x C rectangle with
+; the destination rows 32 bytes apart; DE ends past the source, HL at the start of the row below the
+; last one, B is kept and C ends 0. Callers: GameMode7_Init_DrawScreen_DrawFrame and
+; DrawRectAndWriteDATiles. Same 18 bytes in 2 banks. (C2, E-0385)
 ; DE = source (rows packed), HL = destination with rows 32 bytes apart, B = width, C = rows: copies
 ; a B x C rectangle; DE ends past the source, HL at the start of the row below; B kept, C = 0
 ; (E-0065) (the same 18 bytes appear in 2 banks)
@@ -2308,6 +2485,16 @@ DrawRectAndWriteDATiles_TileRect::
     db $b6, $0a, $0b, $0c, $0d, $c3, $af, $c3, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 11
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 12
 
+; Start-up of game mode 7, the link battle (RunGameModeInit_LinkBattle far-calls it). It clears the
+; STAT interrupt sources and queues music 2; when wSGBActive is set it clears wSGBPaletteSet and
+; wSGBAttrFile and sends the SGB palette set packet. It zeroes the scroll (hScrollX, hScrollY and
+; their high bytes), fills vBGMap0 with tile $C3 and, when wIsCGB is set, fills the attribute map in
+; VRAM bank 1 with 0. The text cursor is set to vBGMap0 + $1C1, LetterFrameIconTiles is decompressed
+; to vTiles1 + $240 and DigitLvHpMpTiles to vTiles1 + $5F0 (bank $31), and GameMode7_Init_Start sets
+; up the battle (state, linked records, slots, screen, music, marks). Last it requests a tile fill
+; at vTiles1 (FillTilesRequest, size $1202), resets the text cursor, starts a palette fade
+; (StartPaletteFade with A = $FC), sets hWindowX = 7, hWindowY = $FF, the scroll to 0 and
+; wLCDCShadow = 3, and jumps to ResumeAfterModeChange with A = $0B. (C1, E-0385)
 ; start-up for wGameMode = 7; forcing this mode on the emulator shows: two monster panels when
 ; forced (E-0029)
 GameMode7_Init::
@@ -2353,11 +2540,11 @@ GameMode7_Init::
     ld a, h
     ld [wTextCursorHi], a
     ld b, $31
-    ld de, Tiles1Plus240Gfx
+    ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Tiles1Plus5F0Gfx
+    ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
     call GameMode7_Init_Start
@@ -2384,7 +2571,11 @@ GameMode7_Init::
     ld a, $0b
     jp ResumeAfterModeChange
 
-; per-frame routine for wGameMode = 7 (E-0029)
+; Per-frame routine of game mode 7 (RunGameModeUpdate_LinkBattle far-calls it). It runs
+; LinkExchangeJoypadPerFrame, then returns when wEffectId is $FF (no effect playing). Otherwise it
+; runs RunBattleEffectAnimation, and when wEffectAnimState is 2 it runs TickSequencePtrLoSequence
+; with interrupts disabled. (C1, E-0385)
+; per-frame routine for wGameMode = 7
 GameMode7_Update::
     call LinkExchangeJoypadPerFrame
     ld a, [wEffectId]
@@ -2399,6 +2590,11 @@ GameMode7_Update::
     ei
     ret
 
+; Runs the current phase of the game mode 7 battle, but only while wTextFlags is 0 (no text being
+; printed); otherwise it returns at once. wBattlePhase picks the phase: 0
+; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters, 1 RunBattlePhaseWhenTextIdle_A0_RunTurn, 2
+; RunBattlePhaseWhenTextIdle_A0_SyncLink and 3 RunBattlePhaseWhenTextIdle_A0_ResultsScreen. Its
+; caller is RunLinkSession7Exchange_Receive. (C1, E-0385)
 ; unless wTextFlags is set (text busy), runs the routine for wBattlePhase (jump table of four)
 ; (E-0122)
 RunBattlePhaseWhenTextIdle_A0::
@@ -2412,8 +2608,18 @@ RunBattlePhaseWhenTextIdle_A0::
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 
+; Phase 0 of the game mode 7 battle. It jumps on wBattleStep (19 steps): 0-5 are the link handshake
+; and the shared random seed (RunBattlePhaseWhenTextIdle_A0_IntroAfterFade,
+; RunBattlePhaseWhenTextIdle_A0_IntroPartnerReady, RunBattlePhaseWhenTextIdle_A0_IntroSendSeed,
+; RunBattlePhaseWhenTextIdle_A0_IntroSeedReceived, RunBattlePhaseWhenTextIdle_A0_IntroAckSeed,
+; RunBattlePhaseWhenTextIdle_A0_IntroShareSeed), 6 sets up the foes
+; (RunBattlePhaseWhenTextIdle_A0_IntroSetUpFoes), 7 shows the Team Mode battle text
+; (RunBattlePhaseWhenTextIdle_A0_IntroShowText), 8-16 name, load and draw the picture of each of the
+; three foes ('The first monster is 0!' and so on), 17 shows 'Please wait'
+; (RunBattlePhaseWhenTextIdle_A0_ShowPleaseWait) and 18 (RunBattlePhaseWhenTextIdle_A0_IntroFinish)
+; moves to the next phase when the partner answers 1. (C1, E-0385)
 ; by wBattleStep: waits for the link, computes the wild level and shows each opposing monster's
-; picture ('The first/second/third monster is 0!', 'Please wait') (E-0288)
+; picture ('The first/second/third monster is 0!', 'Please wait')
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
     ld a, [wBattleStep]
     jumptable
@@ -2437,7 +2643,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
     dw RunBattlePhaseWhenTextIdle_A0_ShowPleaseWait
     dw RunBattlePhaseWhenTextIdle_A0_IntroFinish
 
-; Game mode 7's introduction, step 0: after the fade sends $0C. (C1, E-0357)
+; Game mode 7's introduction, step 0: after the fade sends $0C. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroAfterFade::
     ld a, [wFadeState]
     and a
@@ -2448,7 +2654,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroAfterFade::
     ld [wLinkSendByte], a
     ret
 
-; Introduction, step 1: when the partner answers $0C goes on. (C1, E-0357)
+; Introduction, step 1: when the partner answers $0C goes on. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroPartnerReady::
     ld a, [wLinkMessage]
     cp $0c
@@ -2460,7 +2666,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroPartnerReady::
     ret
 
 ; Introduction, step 2: starts a 2-byte exchange of the random seed (wRandomLo/Hi out, into
-; wLinkPartnerName). (C1, E-0357)
+; wLinkPartnerName). (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroSendSeed::
     ld hl, wBattleStep
     inc [hl]
@@ -2486,7 +2692,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroSendSeed::
     ld [wLinkReady], a
     ret
 
-; Introduction, step 3: when the exchange ends ($F0) goes on. (C1, E-0357)
+; Introduction, step 3: when the exchange ends ($F0) goes on. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroSeedReceived::
     ld a, [wLinkMessage]
     cp $f0
@@ -2499,7 +2705,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroSeedReceived::
     inc [hl]
     ret
 
-; Introduction, step 4: sends 3. (C1, E-0357)
+; Introduction, step 4: sends 3. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroAckSeed::
     ld hl, wBattleStep
     inc [hl]
@@ -2508,7 +2714,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroAckSeed::
     ret
 
 ; Introduction, step 5: on the partner's 3 both sides take one seed (its own, or the partner's for
-; link role bit 1) as wRandomLo/Hi and the second seed. (C1, E-0357)
+; link role bit 1) as wRandomLo/Hi and the second seed. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroShareSeed::
     ld a, [wLinkMessage]
     cp $03
@@ -2545,7 +2751,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroShareSeed::
 
 ; Introduction, step 6: sets up the foes: with wScreenCountPlusOne 2 two foes (encounter kind 1)
 ; from backed-up battler records; otherwise three wild monsters (encounter kind 2) at the computed
-; wild level. (C1, E-0357)
+; wild level. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroSetUpFoes::
     call InitBattleSlotsForFoeCount
     ld a, [wScreenCountPlusOne]
@@ -2819,7 +3025,8 @@ RunBattlePhaseWhenTextIdle_A0_ShowPleaseWait::
     inc [hl]
     ret
 
-; Introduction, step 18: on the partner's 1 goes to the next battle phase. (C1, E-0357)
+; Introduction, step 18: on the partner's 1 goes to the next battle phase. (C2, E-0357; probed
+; E-0385)
 RunBattlePhaseWhenTextIdle_A0_IntroFinish::
     ld a, [wLinkMessage]
     cp $01
@@ -2853,8 +3060,14 @@ RunBattlePhaseWhenTextIdle_A0_DrawPictureTiles::
     jr nz, .loop
     ret
 
+; Phase 1 of the game mode 7 battle. It jumps on wBattleStep: 0
+; RunBattlePhaseWhenTextIdle_A0_RunTurn_Begin (resets the turn), 1
+; RunBattlePhaseWhenTextIdle_A0_RunTurn_Setup (RunBattleSetup_BankA0), 2
+; RunBattlePhaseWhenTextIdle_A0_RunTurn_Commands (the command entry in bank $A1), 3
+; RunBattlePhaseWhenTextIdle_A0_RunTurn_Actions (RunBattleActions) and 4
+; RunBattlePhaseWhenTextIdle_A0_RunTurn_FightStep (RunBattleStep4). (C1, E-0385)
 ; by wBattleStep: clears a buffer, then RunBattleSetup_BankA0, the command entry (bank $A1),
-; RunBattleActions and RunBattleStep4 (E-0294)
+; RunBattleActions and RunBattleStep4
 RunBattlePhaseWhenTextIdle_A0_RunTurn::
     ld a, [wBattleStep]
     jumptable
@@ -2867,7 +3080,7 @@ RunBattlePhaseWhenTextIdle_A0_RunTurn::
 ; Game mode 7's turn, step 0: resets the turn (RunBattlePhaseWhenTextIdle_A0_RunTurn_Reset) and
 ; advances wBattleStep. When the reset found neither slot 0 nor 1 with mark 0 it has already
 ; advanced the step once, so step 1 (RunBattleSetup_BankA0) is skipped and the turn goes straight to
-; the command entry (step 2). (C1, E-0371)
+; the command entry (step 2). (C2, E-0371; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_RunTurn_Begin::
     call RunBattlePhaseWhenTextIdle_A0_RunTurn_Reset
     ld hl, wBattleStep
@@ -2894,7 +3107,18 @@ RunBattlePhaseWhenTextIdle_A0_RunTurn_FightStep::
     farcall RunBattleStep4
     ret
 
-; by wBattleStep: exchanges bytes and messages over the link ('Please wait.') (E-0288)
+; Phase 2 of the game mode 7 battle (the end of a round, with the partner over the link). It jumps
+; on wBattleStep: 0 RunBattlePhaseWhenTextIdle_A0_SyncLink_Start (sends 1), 1
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_SendSlots (sends wBattleSlotOut), 2
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_TakeOutFlag (takes the partner out flag), 3
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_CountTurns, 4
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_CountRound (shows 'Please wait.'), 5
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_BlankPics, 6
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_ClearAttrs, 7
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_SendReady (sends 1) and 8
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_NextRound, which returns to phase 0 when the partner
+; answers 1. (C1, E-0385)
+; by wBattleStep: exchanges bytes and messages over the link ('Please wait.')
 RunBattlePhaseWhenTextIdle_A0_SyncLink::
     ld a, [wBattleStep]
     jumptable
@@ -2908,7 +3132,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink::
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_SendReady
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_NextRound
 
-; Game mode 7's round end, step 0: sends 1. (C1, E-0357)
+; Game mode 7's round end, step 0: sends 1. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_Start::
     ld a, $01
     ld [wLinkSendByte], a
@@ -2917,7 +3141,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_Start::
     ret
 
 ; Round end, step 1: on the partner's 1 starts an 8-byte exchange of wBattleSlotOut into
-; wLinkPartnerName. (C1, E-0357)
+; wLinkPartnerName. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_SendSlots::
     ld a, [wLinkMessage]
     cp $01
@@ -2941,7 +3165,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_SendSlots::
     ret
 
 ; Round end, step 2: when the exchange ends takes the partner's out flag for its slot (slot 1 from
-; the partner's byte 1, or slot 0 for link role bit 1). (C1, E-0357)
+; the partner's byte 1, or slot 0 for link role bit 1). (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_TakeOutFlag::
     ld a, [wLinkMessage]
     cp $f0
@@ -3133,7 +3357,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_ClearAttrs::
     inc [hl]
     ret
 
-; Round end, step 7: sends 1. (C1, E-0357)
+; Round end, step 7: sends 1. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_SendReady::
     ld hl, wBattleStep
     inc [hl]
@@ -3142,7 +3366,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_SendReady::
     ret
 
 ; Round end, step 8: on the partner's 1 returns to battle phase 0 (the next round's introduction).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_NextRound::
     ld a, [wLinkMessage]
     cp $01
@@ -3155,8 +3379,13 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_NextRound::
     ld [wBattleStep], a
     ret
 
+; For each of the wPartyCount party members that has an entry in wBattleStateBuffer (5 bytes: HP
+; word, MP word, status byte; an entry whose second byte is $FF ends the list), writes the HP word
+; to MON_HP, the MP word to MON_MP and the status byte to MON_STATUS of the save RAM record named in
+; wPartyList, then far-calls ClampPartyHPAndMPToMax. Save RAM is enabled for the work (rRAMG $0A,
+; written back to 0). Its only caller is RunBattlePhaseWhenTextIdle_A0_DecideResult. (C2, E-0385)
 ; for each party member with a battle entry in wBattleStateBuffer, writes two words to SRAM record
-; offsets $5B and $5F and one byte to $55, then ClampPartyHPAndMPToMax (E-0289)
+; offsets $5B and $5F and one byte to $55, then ClampPartyHPAndMPToMax
 StoreBattleStateToPartyRecords::
     ld a, $0a
     ld [rRAMG], a
@@ -3211,8 +3440,16 @@ StoreBattleStateToPartyRecords::
     ld [rRAMG], a
     ret
 
+; Phase 3 of the game mode 7 battle (the results). It jumps on wBattleStep: 0
+; RunBattlePhaseWhenTextIdle_A0_DecideResult, 1 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Save, 2
+; RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Blank, 3
+; RunBattlePhaseWhenTextIdle_A0_DrawResultLabels, 4 RunBattlePhaseWhenTextIdle_A0_DrawResults, 5
+; RunBattlePhaseWhenTextIdle_A0_ShowResultsScreen, 6 RunBattlePhaseWhenTextIdle_A0_ShowStatChange, 7
+; RunBattlePhaseWhenTextIdle_A0_ShowStatFalls, 8 RunBattlePhaseWhenTextIdle_A0_ShowGoldReceived, 9
+; RunBattlePhaseWhenTextIdle_A0_MakeEgg and 10 RunBattlePhaseWhenTextIdle_A0_EndResults. (C1,
+; E-0385)
 ; by wBattleStep: the results screen ('RESULTS ... Level Turns Win Rank', the rank letters
-; 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0288)
+; 'GFEDCBAS', "0's G fell by W.", 'received WG.')
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
     ld a, [wBattleStep]
     jumptable
@@ -3230,8 +3467,8 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
 
 ; The results, step 0: text speed 1; works out the result (0 both stand, 1 the partner fell, 2 both
 ; fell (out or paralyzed), 3 this side's monster fell) into wBattleResultStep, computes the rank and
-; the stat changes, resets the save steps and stores the battle state in the party records. (C1,
-; E-0357)
+; the stat changes, resets the save steps and stores the battle state in the party records. (C2,
+; E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_DecideResult::
     ld a, $01
     ld [wTextSpeed], a
@@ -3392,12 +3629,13 @@ RunBattlePhaseWhenTextIdle_A0_DrawResultLabels::
     inc [hl]
     ret
 
-; The results, step 4: draws the frame (DrawRectAndWriteDATiles), then this result's label
-; (ResultLabelTiles entry wBattleResultStep: four tiles from its first tile, with one blank column
-; before the last) at wScreenTileBuffer + $61, two-digit numbers of wWildLevel, wLinkRuleTurnLimit
-; and wWildBand down column 7 (+$A7, +$E7, +$127; WriteTwoDigitsBlankLeading_A0), the rank letter
-; tile wEncounterClass + $20 at wWindowTileBuffer, and three two-digit numbers from wKeyNameBuf two
-; rows apart from +$71 (WriteThreeTwoDigitRows); next step. (C1, E-0372)
+; The results, step 4: draws the frame with DrawRectAndWriteDATiles, then four label tiles from the
+; ResultLabelTiles entry for wBattleResultStep at wScreenTileBuffer + $61 (one column skipped before
+; the last tile). The values of wWildLevel, wLinkRuleTurnLimit and wWildBand are written as
+; two-digit numbers down column 7 (+ $A7, + $E7, + $127; WriteTwoDigitsBlankLeading_A0), the tile
+; wEncounterClass + $20 goes to wWindowTileBuffer, and four two-digit numbers from wKeyNameBuf are
+; written every $40 bytes from + $71 (WriteThreeTwoDigitRows). Then wBattleStep advances. (C2,
+; E-0385)
 RunBattlePhaseWhenTextIdle_A0_DrawResults::
     call DrawRectAndWriteDATiles
     ld a, [wBattleResultStep]
@@ -3442,6 +3680,10 @@ RunBattlePhaseWhenTextIdle_A0_DrawResults::
     inc [hl]
     ret
 
+; A = number (0-255), HL = destination: writes the tens digit as tile $E0 + digit at [HL] (a blank
+; tile $C3 when the tens digit is 0) and the ones digit as $E0 + digit at [HL + 1]; the hundreds
+; digit is dropped (100 gives a blank tile and 0). HL ends on the second tile. Caller:
+; RunBattlePhaseWhenTextIdle_A0_DrawResults. (C2, E-0385)
 ; writes A as two digit tiles at HL, with a blank ($C3) for a leading zero (E-0122)
 WriteTwoDigitsBlankLeading_A0::
     push hl
@@ -3462,6 +3704,10 @@ WriteTwoDigitsBlankLeading_A0::
     ld [hl], a
     ret
 
+; A = value, HL = table of ascending bytes: counts the leading table bytes that are not above A; C
+; and A end as that count and HL on the first byte above A. The table must hold a byte above A or
+; the scan runs on. No routine in src/ calls this copy by name (the other copy in the bank is
+; CountTableBytesAtOrBelowA_BankA0). Same 11 bytes in 2 banks. (C2, E-0385)
 ; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index
 ; of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065)
 ; (the same 11 bytes appear in 2 banks)
@@ -3479,12 +3725,20 @@ CountTableBytesAtOrBelowA_BankA0_2::
     ld a, c
     ret
 
-; three WriteTwoDigitsFromDEStepRow calls: three numbers from DE, one per row (E-0289)
+; DE = list of numbers, HL = destination: calls WriteTwoDigitsFromDEStepRow three times and then
+; falls into it for a fourth, so four numbers are written, one every $40 bytes from HL; DE ends 4
+; bytes on and HL $100 on. Its only caller is RunBattlePhaseWhenTextIdle_A0_DrawResults. (C2,
+; E-0385)
+; three WriteTwoDigitsFromDEStepRow calls: three numbers from DE, one per row
 WriteThreeTwoDigitRows::
     call WriteTwoDigitsFromDEStepRow
     call WriteTwoDigitsFromDEStepRow
     call WriteTwoDigitsFromDEStepRow
 
+; DE = address of a number, HL = destination: reads the byte at [DE] (DE advances by 1) and writes
+; its tens digit as tile $E0 + digit at [HL] only when the tens digit is not 0 (otherwise [HL] is
+; left alone), and its ones digit at [HL + 1]; the hundreds digit is dropped. HL ends at the start
+; position + $40 (two rows of the 32-tile buffer on). Caller: WriteThreeTwoDigitRows. (C2, E-0385)
 ; writes [DE] (DE += 1) as two digit tiles at HL (no leading zero digit), then HL moves to the next
 ; row ($40 on) (E-0124)
 WriteTwoDigitsFromDEStepRow::
@@ -3654,7 +3908,7 @@ RunBattlePhaseWhenTextIdle_A0_MakeEgg::
     dw RunBattlePhaseWhenTextIdle_A0_EggSendReady
     dw RunBattlePhaseWhenTextIdle_A0_MakeEggRecord
 
-; The partner's egg, sub-step 0: after the text sends 1. (C1, E-0357)
+; The partner's egg, sub-step 0: after the text sends 1. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_EggSendReady::
     ld a, [wTextFlags]
     or a
@@ -3818,6 +4072,9 @@ RunBattlePhaseWhenTextIdle_A0_MakeEggRecord::
     ld [wLinkScreenStep], a
     ret
 
+; HL = HL / 4 with the sign kept (two arithmetic shifts right, so $FFFC gives $FFFF), then 1 when
+; that leaves 0. A is clobbered. Called six times by RunBattlePhaseWhenTextIdle_A0_MakeEggRecord to
+; quarter the HP, MP and the four stats of an egg copy. (C2, E-0385)
 ; HL >>= 2 (arithmetic), and 1 when that leaves 0 (E-0118)
 QuarterHLAtLeast1::
     sra h
@@ -3830,6 +4087,10 @@ QuarterHLAtLeast1::
     ld hl, $0001
     ret
 
+; HL = a 10-byte name field: writes the glyph $98 ('?') three times and then seven $F0 bytes, so the
+; field reads '???'; HL ends on the last byte written (HL + 9). Called four times by
+; RunBattlePhaseWhenTextIdle_A0_MakeEggRecord for the parent names and the parent master names of
+; the egg copy. (C2, E-0385)
 ; writes '???' ($98 three times, the charmap '?') followed by seven $F0 bytes at HL: a 10-byte name
 ; field holding a placeholder (E-0111)
 WriteUnknownNamePlaceholder::
@@ -3855,6 +4116,12 @@ WriteUnknownNamePlaceholder::
     ld [hl], a
     ret
 
+; Moves the eight skill bytes at wRecordBufB + MON_SKILLS into the skill list at wRecordBufB +
+; MON_SKILL_LIST. The list is searched for its first $FF within 25 bytes (none: it returns and
+; changes nothing). Each skill byte up to the first $FF is replaced by the second byte of the first
+; pair of SkillReplacementPairs whose first byte matches (a byte with no pair is copied as it is)
+; and stored in the list from that $FF on; then all eight skill bytes are set to $FF. Called once,
+; by RunBattlePhaseWhenTextIdle_A0_MakeEggRecord. (C2, E-0385)
 ; appends the eight skills at wRecordBufB + $34 (mapped through the pair list SkillReplacementPairs)
 ; to the first free slot of wRecordBufB + $3C, then clears wRecordBufB + $34 (E-0127) (E-0340: the
 ; address in its name read as its RAM name; was AppendMappedSkillsToRecordBufBSkillList)
@@ -3981,7 +4248,7 @@ RunBattlePhaseWhenTextIdle_A0_EndResults::
     dw RunBattlePhaseWhenTextIdle_A0_FadeOutSendReady
     dw RunBattlePhaseWhenTextIdle_A0_ReturnToTitleMenu
 
-; The results' end, sub-step 0: after the text sends 1. (C1, E-0357)
+; The results' end, sub-step 0: after the text sends 1. (C2, E-0357; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_FadeOutSendReady::
     ld a, [wTextFlags]
     or a
@@ -4027,6 +4294,11 @@ RunBattlePhaseWhenTextIdle_A0_ReturnToTitleMenu::
     ret
     db $0a, $14, $1e
 
+; A = stat number 0-5 (HP, MP, ATK, DEF, AGL, INT): copies the name of that stat, glyphs up to and
+; including the $F0 end byte, from the strings after the pointer table
+; CopyF0StringFromTableToTextBuf1_Data to wTextBuf1. A, HL, DE are clobbered. Called by
+; RunBattlePhaseWhenTextIdle_A0_ShowStatChange and RunBattlePhaseWhenTextIdle_A0_ShowNextStatFall,
+; which print a message that a stat rose or fell by an amount. (C2, E-0385)
 ; copies the $F0-terminated string at CopyF0StringFromTableToTextBuf1_Data[A] to wTextBuf1,
 ; including the terminator (E-0122) (E-0344: the address in its name dropped or read as the label
 ; there; was CopyF0StringFromTableToTextBuf1)
@@ -4059,12 +4331,22 @@ CopyF0StringFromTableToTextBuf1_Data::
     db $19, $f0, $0a, $1d, $14, $f0, $0d, $0e, $0f, $f0, $0a, $10, $15, $f0, $12, $17
     db $1d, $f0
 
+; Works out the rank 0-7 of a link battle result; called by
+; RunBattlePhaseWhenTextIdle_A0_DecideResult. Adds 1 (stopping at 99) to counter number
+; wBattleResultStep of the four counters wKeyNameBuf, wKeyNameBuf + 1, wBattleResultCount2 and
+; wBattleResultCount3. The band = 10 * (counter 0 + counter 1) / (sum of the four), 0-10, goes to
+; wWorkBuf and wWildBand. Then wWildLevel (read only, it is not changed) plus two signed adjustments
+; is clamped to 0-99: BattleResultBandAdjust for the bracket of the band in
+; BattleResultBandThresholds (-20 to +10) and BattleResultTurnLimitAdjust for the bracket of
+; wLinkRuleTurnLimit in BattleResultTurnLimitThresholds (+20 to -20). The rank is how many of the
+; BattleResultRankThresholds (20 40 50 60 70 80 90) are at or below that level; it goes to wWorkBuf
+; + 1 and wEncounterClass. (C2, E-0385)
 ; adds 1 (up to 99) to battle result counter wBattleResultStep of the four at $C895-$C898
 ; (wKeyNameBuf, wKeyNameBuf+1, wBattleResultCount2, wBattleResultCount3); band = (counter 0 +
 ; counter 1) * 10 / (sum of all four) to wWorkBuf and wWildBand; adds BattleResultBandAdjust[band
 ; bracket] and BattleResultTurnLimitAdjust[wLinkRuleTurnLimit bracket] to wWildLevel, clamped to
 ; 0-99; the rank 0-7 (count of BattleResultRankThresholds at or below it) goes to wWorkBuf+1 and
-; wEncounterClass and is shown as one of 'GFEDCBAS' (E-0289, E-0314)
+; wEncounterClass and is shown as one of 'GFEDCBAS'
 ComputeBattleResultRank::
     ld a, [wBattleResultStep]
     ld hl, wKeyNameBuf
@@ -4170,6 +4452,9 @@ ComputeBattleResultRank::
     ld [wEncounterClass], a
     ret
 
+; HL = a table of ascending thresholds, A = a value: C = A = how many leading table bytes are at or
+; below A; HL ends on the first byte above A. The table must contain a byte above A (the tables used
+; here end in $FF) or the walk runs on. Called three times by ComputeBattleResultRank. (C2, E-0385)
 ; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index
 ; of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065)
 ; (the same 11 bytes appear in 2 banks)
@@ -4208,10 +4493,27 @@ BattleResultBandAdjust::
 BattleResultRankThresholds::
     db $14, $28, $32, $3c, $46, $50, $5a, $ff
 
+; Applies a link battle result to the saved monster record number wLinkReceivedByte (SRAM bank 0,
+; $A5 bytes per record) and to the gold; called by RunBattlePhaseWhenTextIdle_A0_DecideResult.
+; Inputs: wBattleResultStep (the result) and the rank in wWorkBuf + 1. It first sets wWorkBuf + 9 to
+; wWorkBuf + $11 to $FF, then works on the six words MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF,
+; MON_AGL and MON_INT. Results 0 and 1: the smallest word (FindMinOfSixStatWords) gets
+; BattleResultStatBonusByRank[rank] added, up to 999; its number is left in wWorkBuf + 9 and the
+; amount that fitted in wWorkBuf + $A. Result 2: the largest word (FindMaxOfSixStatWords, its number
+; in wWorkBuf + 9) is lowered by BattleResultStatPenaltyByRank[rank] (1), never below 1, amount in
+; wWorkBuf + $A. Any other result lowers all six words that way, amounts in wWorkBuf + $A to + $F,
+; and wWorkBuf + 9 stays $FF. The gold amount is BattleResultGoldByRank[rank] (1000 for every rank)
+; after result 0 or 1 and 1000 after the others; it goes to wWorkBuf + $10 and + $11 and is added to
+; the 24-bit gold at wGoldLo, which stops at 99999; when the sum is over that, wWorkBuf + $10 and +
+; $11 are replaced by the 16-bit negative of the excess (not the amount that fitted). Last, MON_HP
+; is set to MON_MAX_HP (the test compares the SRAM address high byte, so it always passes), and
+; MON_MP is set to MON_MAX_MP only when the low byte of MON_MP, taken as both bytes of a word, is
+; not below MON_MAX_MP (the test reads the wrong bytes); SRAM is closed again (rRAMG = 0). (C2,
+; E-0385)
 ; by wBattleResultStep: results 0 and 1 raise the lowest of five record words by
 ; BattleResultStatBonusByRank[rank] (capped at 999) and take a word from BattleResultGoldByRank;
 ; result 2 lowers the highest by BattleResultStatPenaltyByRank[rank]; others lower all five; the
-; word (or 1000) goes to wWorkBuf+$10 (E-0289)
+; word (or 1000) goes to wWorkBuf+$10
 ApplyBattleResultStatChanges::
     ld a, $ff
     ld [wWorkBuf + $9], a
@@ -4232,15 +4534,15 @@ ApplyBattleResultStatChanges::
     call SRAMRecordAddress
     ld a, [wBattleResultStep]
     or a
-    jr z, .call_offset_by_index_of_min_of_five_words
+    jr z, .call_find_min_of_six_stat_words
     cp $01
-    jr z, .call_offset_by_index_of_min_of_five_words
+    jr z, .call_find_min_of_six_stat_words
     cp $02
-    jr z, .call_offset_by_index_of_max_of_five_words
+    jr z, .call_find_max_of_six_stat_words
     jr .read_work_buf
 
-.call_offset_by_index_of_min_of_five_words:
-    call OffsetByIndexOfMinOfFiveWords
+.call_find_min_of_six_stat_words:
+    call FindMinOfSixStatWords
     push hl
     ld a, [wWorkBuf + $1]
     ld hl, BattleResultStatBonusByRank
@@ -4259,8 +4561,8 @@ ApplyBattleResultStatChanges::
     ld e, a
     jr .set_work_buf
 
-.call_offset_by_index_of_max_of_five_words:
-    call OffsetByIndexOfMaxOfFiveWords
+.call_find_max_of_six_stat_words:
+    call FindMaxOfSixStatWords
     push hl
     ld a, [wWorkBuf + $1]
     ld hl, BattleResultStatPenaltyByRank
@@ -4399,6 +4701,9 @@ ApplyBattleResultStatChanges::
     ld [rRAMG], a
     ret
 
+; HL = a word, C = an amount: adds C to the word and stops it at 999; C becomes the amount that was
+; really added; HL ends on the low byte of the word, A, DE are clobbered. Called by
+; ApplyBattleResultStatChanges. (C2, E-0385)
 ; the word at HL += C, capped at 999; C becomes the amount actually added (E-0124)
 AddCToWordCappedAt999::
     ld a, [hli]
@@ -4433,6 +4738,12 @@ AddCToWordCappedAt999::
     ld [hl], e
     ret
 
+; HL = a word, C = an amount: subtracts C from the word; a result of 0 or less is stored as 1. HL
+; ends 2 bytes on (after the word); A, DE are clobbered. B = C, except when C is more than the word:
+; then B = C minus the low byte of the word, which is not the amount taken (a result of exactly 0
+; also gives B = C although only C - 1 was taken). Called seven times by
+; ApplyBattleResultStatChanges, which stores B as the amount shown in the stat fall messages. (C2,
+; E-0385)
 ; the word at HL -= C; results at or below 0 become 1 (B = the amount actually taken) (E-0124)
 SubtractCFromWordMin1::
     ld b, c
@@ -4463,9 +4774,15 @@ SubtractCFromWordMin1::
     ld [hli], a
     ret
 
+; HL = the first word of a stat block (MON_MAX_HP in its one caller, ApplyBattleResultStatChanges):
+; compares the six words at HL + 0, + 4, + 6, + 8, + $A and + $C (the word at + 2 is skipped) with
+; KeepMinWordEntry and returns HL = the smallest one, HL + FindMinOfSixStatWords_Data[number]; the
+; number 0-5 of the winner goes to wWorkBuf + 9. On equal words RollTieBreakCarry decides (carry
+; takes the later word). A, BC, DE are clobbered; the name says five because five words are compared
+; with the first. (C2, E-0385)
 ; finds the entry with the smallest of five words after HL (ties broken randomly), stores its index
-; in wWorkBuf + $9 and returns HL + OffsetByIndexOfMinOfFiveWords_Data[index] (E-0122)
-OffsetByIndexOfMinOfFiveWords::
+; in wWorkBuf + $9 and returns HL + FindMinOfSixStatWords_Data[index] (E-0122)
+FindMinOfSixStatWords::
     push hl
     ld de, $0000
     ld a, [hli]
@@ -4480,14 +4797,17 @@ OffsetByIndexOfMinOfFiveWords::
     call KeepMinWordEntry
     ld a, e
     ld [wWorkBuf + $9], a
-    ld hl, OffsetByIndexOfMinOfFiveWords_Data
+    ld hl, FindMinOfSixStatWords_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
     add_a_to_hl
     ret
 
-; next table entry: D += 1; if its word is below BC (or equal and RollChance80Of256 succeeds), BC =
+; One step of the search in FindMinOfSixStatWords: D += 1; reads the word at HL + 1 (HL ends 2 bytes
+; on, on its high byte); when it is below BC, or equal to BC and RollTieBreakCarry sets carry, BC =
+; that word and E = D. A is clobbered. (C2, E-0385)
+; next table entry: D += 1; if its word is below BC (or equal and RollTieBreakCarry succeeds), BC =
 ; word and E = D (E-0122)
 KeepMinWordEntry::
     inc hl
@@ -4497,7 +4817,7 @@ KeepMinWordEntry::
     ld h, [hl]
     ld l, a
     call CompareHLToBC
-    call z, RollChance80Of256
+    call z, RollTieBreakCarry
     jr nc, .done
     ld b, h
     ld c, l
@@ -4507,9 +4827,13 @@ KeepMinWordEntry::
     pop hl
     ret
 
+; Like FindMinOfSixStatWords but finds the largest of the six words at HL + 0, + 4, + 6, + 8, + $A
+; and + $C (KeepMaxWordEntry): returns HL = the winner, the number 0-5 in wWorkBuf + 9. On equal
+; words RollTieBreakCarry decides (carry keeps the earlier word). Called by
+; ApplyBattleResultStatChanges for result 2. (C2, E-0385)
 ; finds the entry with the largest of five words after HL (ties broken randomly), stores its index
-; in wWorkBuf + $9 and returns HL + OffsetByIndexOfMinOfFiveWords_Data[index] (E-0122)
-OffsetByIndexOfMaxOfFiveWords::
+; in wWorkBuf + $9 and returns HL + FindMinOfSixStatWords_Data[index] (E-0122)
+FindMaxOfSixStatWords::
     push hl
     ld de, $0000
     ld a, [hli]
@@ -4524,14 +4848,17 @@ OffsetByIndexOfMaxOfFiveWords::
     call KeepMaxWordEntry
     ld a, e
     ld [wWorkBuf + $9], a
-    ld hl, OffsetByIndexOfMinOfFiveWords_Data
+    ld hl, FindMinOfSixStatWords_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
     add_a_to_hl
     ret
 
-; next table entry: D += 1; if its word is not below BC (equal only when RollChance80Of256 fails),
+; One step of the search in FindMaxOfSixStatWords: D += 1; reads the word at HL + 1 (HL ends 2 bytes
+; on); when it is not below BC (equal only when RollTieBreakCarry does not set carry), BC = that
+; word and E = D. A is clobbered. (C2, E-0385)
+; next table entry: D += 1; if its word is not below BC (equal only when RollTieBreakCarry fails),
 ; BC = word and E = D (E-0122)
 KeepMaxWordEntry::
     inc hl
@@ -4541,7 +4868,7 @@ KeepMaxWordEntry::
     ld h, [hl]
     ld l, a
     call CompareHLToBC
-    call z, RollChance80Of256
+    call z, RollTieBreakCarry
     jr c, .done
     ld b, h
     ld c, l
@@ -4551,8 +4878,11 @@ KeepMaxWordEntry::
     pop hl
     ret
 
+; Calls AdvanceRandom and compares the new wRandomLo with $80: carry set (and A below $80) about
+; half of the time, carry clear otherwise. A = wRandomLo. Its two callers, KeepMinWordEntry and
+; KeepMaxWordEntry, use it as the tie-break between equal words. (C2, E-0385)
 ; AdvanceRandom, then compares wRandomLo with $80: carry (success) half the time (E-0116)
-RollChance80Of256::
+RollTieBreakCarry::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $80
@@ -4561,10 +4891,10 @@ RollChance80Of256::
 ; Six bytes, one per candidate word: $00, $04, $06, $08, $0A, $0C. They are the byte offsets from
 ; the start of a record stat block (HL, which ApplyBattleResultStatChanges points at MON_MAX_HP) to
 ; the six words the search compares: MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL and MON_INT
-; (the word at +2, MON_MP, is skipped). Both OffsetByIndexOfMinOfFiveWords and
-; OffsetByIndexOfMaxOfFiveWords index it with the winning word number 0-5 (also stored in wWorkBuf +
-; $9) and return HL plus the byte. (C1, E-0381)
-OffsetByIndexOfMinOfFiveWords_Data::
+; (the word at +2, MON_MP, is skipped). Both FindMinOfSixStatWords and FindMaxOfSixStatWords index
+; it with the winning word number 0-5 (also stored in wWorkBuf + $9) and return HL plus the byte.
+; (C1, E-0381)
+FindMinOfSixStatWords_Data::
     db $00, $04, $06, $08, $0a, $0c
 
 ; one byte per rank 0-7: the amount added to the lowest record word (E-0289)
@@ -4586,7 +4916,7 @@ BattleResultGoldByRank::
 ; it advances wBattleStep once, so the caller's own advance skips step 1 (RunBattleSetup_BankA0).
 ; Then marks slots 0 and 1 in wSlotMarks: 3 when absent (CarryUnlessBattleSlotOutSlotEmpty), 1 when
 ; it cannot act (CheckSlotStatusBlock) or has status 3 bits 6-7, status 4 bits 2-3, status 5 bits
-; 4-5 or status 8 bits 0-1 (from wBattleStatus3), otherwise 0. (C1, E-0371)
+; 4-5 or status 8 bits 0-1 (from wBattleStatus3), otherwise 0. (C2, E-0371; probed E-0385)
 RunBattlePhaseWhenTextIdle_A0_RunTurn_Reset::
     ld hl, wSideControl
     ld b, $08
@@ -4673,6 +5003,18 @@ RunBattlePhaseWhenTextIdle_A0_RunTurn_Reset::
     jr nz, .loop3
     ret
 
+; The turn set-up of game mode 7 (battle step 1; RunBattlePhaseWhenTextIdle_A0_RunTurn_Setup calls
+; it every frame). Jumps by wBattleSubPhase to 13 sub-phases: 0 RunBattleSetup_BankA0_EntrySelect
+; (choosing what to do), 1 RunBattleSetup_BankA0_CommandMenu (the commands of the monster), 2
+; RunBattleSetup_BankA0_DoNothing, 3 RunBattleSetup_BankA0_MarkSlotsToAct, 4
+; RunBattleSetup_BankA0_ShowSelectingHeroSMove, 5 RunBattleSetup_BankA0_PackChoice, 6
+; RunBattleSetup_BankA0_PrepareExchange, 7 RunBattleSetup_BankA0_StartExchange, 8
+; RunBattleSetup_BankA0_TakePartnerChoice, 9 RunBattleSetup_BankA0_CompareSeeds, 10
+; RunBattleSetup_BankA0_WaitPartnerSeed, 11 RunBattleSetup_BankA0_ConfirmSeeds (back to 5 unless
+; both sides agree on the seed) and 12 RunBattleSetup_BankA0_ClearWindow, which adds 1 to
+; wBattleStep. Sub-phases 0 and 1 are the menus; 3 marks the slots, 4 shows the message that the
+; partner is selecting a move, 5 to 11 trade the choices and the random seed with the partner over
+; the link, and 12 waits for the partner and goes on. (C1, E-0385)
 ; a 13-step dispatcher on wBattleSubPhase laid out like RunBattleSetup (bank $31), but only the
 ; dispatch matches: the steps are this bank's own (E-0363; narrows E-0107)
 RunBattleSetup_BankA0::
@@ -4692,9 +5034,16 @@ RunBattleSetup_BankA0::
     dw RunBattleSetup_BankA0_ConfirmSeeds
     dw RunBattleSetup_BankA0_ClearWindow
 
+; Sub-phase 0 of RunBattleSetup_BankA0, choosing what to do: jumps by wBattleResolveStep to 8 steps:
+; 0 RunBattleSetup_BankA0_EntrySelect_ShowChoices, 1 RunBattleSetup_BankA0_EntrySelect_ShowCursor, 2
+; RunBattleSetup_BankA0_EntrySelect_Cursor, 3 RunBattleSetup_BankA0_EntrySelect_RedrawWindow, 4
+; RunBattleSetup_BankA0_EntrySelect_Choose, 5 RunBattleSetup_BankA0_EntrySelect_DrawRecordFrame, 6
+; RunBattleSetup_BankA0_EntrySelect_ShowString, 7 RunBattleSetup_BankA0_EntrySelect_Redraw. Step 4
+; either leaves the menu (wBattleSubPhase 3 or 1) or goes on through steps 5-7 to show a message and
+; returns to step 1. (C1, E-0385)
 ; by wBattleResolveStep: lays out the tile blocks for the foe count and moves a selection over
 ; entries, setting or clearing bit 6 and the entry tile (SetBit6AndBlankEntryTile_BankA0,
-; ClearBit6AndCursorEntryTile_BankA0) (E-0304)
+; ClearBit6AndCursorEntryTile_BankA0)
 RunBattleSetup_BankA0_EntrySelect::
     ld a, [wBattleResolveStep]
     jumptable
@@ -4783,7 +5132,7 @@ RunBattleSetup_BankA0_EntrySelect_RedrawWindow::
 
 ; Choosing what to do, step 4: by the choice (wBattleSetupDB): 0 clears this side's action and
 ; fights (sub-phase 3); 1 commands this side's monster (wCommandMonster, sub-phase 1) when it can
-; act, otherwise string $2D; 2 string $1D; 3 string $20. (C1, E-0357)
+; act, otherwise string $2D; 2 string $1D; 3 string $20. (C2, E-0357; probed E-0385)
 RunBattleSetup_BankA0_EntrySelect_Choose::
     ld a, [wMenuState]
     and $03
@@ -4848,7 +5197,7 @@ RunBattleSetup_BankA0_EntrySelect_Choose::
 .return:
     ret
 
-; Clears this side's action choice (slot 0, or 1 for link role bit 1). (C1, E-0357)
+; Clears this side's action choice (slot 0, or 1 for link role bit 1). (C2, E-0357; probed E-0385)
 RunBattleSetup_BankA0_EntrySelect_ClearOwnAction::
     ld a, [wLinkRole]
     and $02
@@ -4887,8 +5236,28 @@ RunBattleSetup_BankA0_EntrySelect_Redraw::
     ld [wBattleResolveStep], a
     ret
 
+; Sub-phase 1 of RunBattleSetup_BankA0, the command menu of the monster wCommandMonster: jumps by
+; wBattleResolveStep to 25 steps. Tactic list: 0 RunBattleSetup_BankA0_CommandMenu_DrawLists, 1
+; RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor, 2 RunBattleSetup_BankA0_CommandMenu_SetTactic,
+; 3 RunBattleSetup_BankA0_CommandMenu_BackToChoosing. Command list: 4
+; RunBattleSetup_BankA0_CommandMenu_ShowCommands, 5
+; RunBattleSetup_BankA0_CommandMenu_CursorOnCommand, 6
+; RunBattleSetup_BankA0_CommandMenu_StoreCommand, 7 RunBattleSetup_BankA0_CommandMenu_AfterCommand.
+; Messages: 8 and 21 RunBattleSetup_BankA0_CommandMenu_PrepareMessage, 9
+; RunBattleSetup_BankA0_CommandMenu_NoUsableSkills, 22
+; RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo, then 10 and 23
+; RunBattleSetup_BankA0_CommandMenu_LayOut and 11 and 24
+; RunBattleSetup_BankA0_CommandMenu_BackToList. Skill list: 12
+; RunBattleSetup_BankA0_CommandMenu_ShowSkills, 13
+; RunBattleSetup_BankA0_CommandMenu_ShowSkillCursor, 14
+; RunBattleSetup_BankA0_CommandMenu_SkillCursor, 15 RunBattleSetup_BankA0_CommandMenu_ReturnToStep,
+; 16 RunBattleSetup_BankA0_CommandMenu_DrawRecordFrame, 17
+; RunBattleSetup_BankA0_CommandMenu_ShowSkillError, 18
+; RunBattleSetup_BankA0_CommandMenu_LayOutAfterText, 19
+; RunBattleSetup_BankA0_CommandMenu_BackToSkills. 20 RunBattleSetup_BankA0_CommandMenu_Finish ends
+; the menu with wBattleSubPhase 3. (C1, E-0385)
 ; by wBattleResolveStep: the bank-$A0 copy of RunBattleSetup_PlanMenu (command windows, 'It has no
-; usable ...') (E-0288)
+; usable ...')
 RunBattleSetup_BankA0_CommandMenu::
     ld a, [wBattleResolveStep]
     jumptable
@@ -4941,7 +5310,7 @@ RunBattleSetup_BankA0_CommandMenu_DrawLists::
     ld [wCommandCursor], a
     farcall CopyRectRecordToScreenBuffer_4
     ld hl, wScreenTileBuffer + $103
-    call WriteFiveTilesFromTable_2
+    call WriteFiveTileNumbersForCommandMonster
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5064,7 +5433,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowCommands::
     ld a, [wCommandMonster]
     and $03
     ld hl, wScreenTileBuffer + $142
-    call WriteFiveTilesFromTable_2
+    call WriteFiveTileNumbersForCommandMonster
     ld a, [wCommandMonster]
     ld hl, wSideControl
     add_a_to_hl
@@ -5241,7 +5610,8 @@ RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo::
     inc [hl]
     ret
 
-; The command menu, step 10: after the text lays out the screen and goes on. (C1, E-0357)
+; The command menu, step 10: after the text lays out the screen and goes on. (C2, E-0357; probed
+; E-0385)
 RunBattleSetup_BankA0_CommandMenu_LayOut::
     ld a, [wTextFlags]
     or a
@@ -5466,7 +5836,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowSkillError::
     inc [hl]
     ret
 
-; The command menu, step 18: after the text lays out the screen. (C1, E-0357)
+; The command menu, step 18: after the text lays out the screen. (C2, E-0357; probed E-0385)
 RunBattleSetup_BankA0_CommandMenu_LayOutAfterText::
     ld a, [wTextFlags]
     or a
@@ -5484,7 +5854,7 @@ RunBattleSetup_BankA0_CommandMenu_BackToSkills::
     ld [wBattleResolveStep], a
     ret
 
-; The command menu, step 20: the choice is made: fights (sub-phase 3). (C1, E-0357)
+; The command menu, step 20: the choice is made: fights (sub-phase 3). (C2, E-0357; probed E-0385)
 RunBattleSetup_BankA0_CommandMenu_Finish::
     xor a
     ld [wBattleResolveStep], a
@@ -5492,7 +5862,7 @@ RunBattleSetup_BankA0_CommandMenu_Finish::
     ld [wBattleSubPhase], a
     ret
 
-; Turn setup, sub-phase 2: nothing (a bare ret). (C1, E-0357)
+; Turn setup, sub-phase 2: nothing (a bare ret). (C2, E-0357; probed E-0385)
 RunBattleSetup_BankA0_DoNothing::
     ret
 
@@ -5539,9 +5909,13 @@ RunBattleSetup_BankA0_ShowSelectingHeroSMove::
     inc [hl]
     ret
 
-; Turn setup, sub-phase 5: rolls the random bytes until neither is $F3, packs this side's choice
-; (menu bytes, its tactic, the two random bytes, side controls and action choices; 11 bytes) into
-; wLinkRecvBuffer and sends 1. (C1, E-0357)
+; Turn set-up, sub-phase 5: advances the random number once (AdvanceRandom) and returns to try again
+; on the next frame if wRandomLo or wRandomHi is $F3 (wRandomHi never gets that high and the random
+; table holds no $F3, so it does not happen). Otherwise packs 11 bytes into wLinkRecvBuffer:
+; wMenuState, wMenuSubState, the wSlotTactic byte of the own slot (wLinkRole bit 1), wRandomLo,
+; wRandomHi, wSideControl and the byte after it, wBattleActionChoice, wBattleTargetChoice and
+; wBattleActionChoice + 2 and + 3; sets wLinkSendByte to 1 and adds 1 to wBattleSubPhase. (C2,
+; E-0385)
 RunBattleSetup_BankA0_PackChoice::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -5586,7 +5960,7 @@ RunBattleSetup_BankA0_PackChoice::
     ret
 
 ; Turn setup, sub-phase 6: on the partner's 1 prepares an 11-byte exchange into wLinkPartnerName.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 RunBattleSetup_BankA0_PrepareExchange::
     ld a, [wLinkMessage]
     cp $01
@@ -5609,7 +5983,8 @@ RunBattleSetup_BankA0_PrepareExchange::
     ld [wLinkBufferPtrHi], a
     ret
 
-; Turn setup, sub-phase 7: starts the exchange (send byte $FF, wLinkReady). (C1, E-0357)
+; Turn setup, sub-phase 7: starts the exchange (send byte $FF, wLinkReady). (C2, E-0357; probed
+; E-0385)
 RunBattleSetup_BankA0_StartExchange::
     ld hl, wBattleSubPhase
     inc [hl]
@@ -5619,10 +5994,16 @@ RunBattleSetup_BankA0_StartExchange::
     ld [wLinkReady], a
     ret
 
-; Turn setup, sub-phase 8: when the exchange ends takes the partner's choice for its slot (the
-; leader takes slot 1's commands, tactic, side control and action; the follower slot 0's together
-; with the leader's menu bytes and random seed), and copies the tactic into the last tactic unless
-; it is 3. (C1, E-0357)
+; Turn set-up, sub-phase 8: waits for wLinkMessage $F0, then clears wLinkSendByte and wLinkReady and
+; takes the 11 bytes received in wLinkPartnerName. With wLinkRole bit 1 clear (this side owns slot
+; 0): they become wSlotCommands and wPartnerCommand (bytes 0 and 1), the tactic of slot 1 (byte 2),
+; the side control of slot 1 (byte 6) and the choice bytes of slot 1 (wBattleActionChoice + 2 and +
+; 3, from bytes 9 and 10); bytes 3 and 4 (wRandomSeed2Lo and wRandomSeed2Hi) are overwritten with
+; the own wBattleSetupFlagsLo and wBattleSetupFlagsHi. With bit 1 set (this side owns slot 1): the
+; own wMenuState and wMenuSubState move to wSlotCommands and wPartnerCommand, then the partner bytes
+; replace wMenuState, wMenuSubState, the tactic of slot 0, wRandomLo, wRandomHi, the side control of
+; slot 0 (byte 5) and the choice and target bytes of slot 0 (bytes 7 and 8). The tactic taken is
+; also copied to the last tactic unless it is 3. Then adds 1 to wBattleSubPhase. (C2, E-0385)
 RunBattleSetup_BankA0_TakePartnerChoice::
     ld a, [wLinkMessage]
     cp $f0
@@ -5697,8 +6078,8 @@ RunBattleSetup_BankA0_TakePartnerChoice::
     ret
 
 ; Turn setup, sub-phase 9: compares the second random seed with the exchanged one
-; (wBattleSetupFlags) and sends $22 when they match, $33 when not (kept in wCounterPtr0Lo). (C1,
-; E-0357)
+; (wBattleSetupFlags) and sends $22 when they match, $33 when not (kept in wCounterPtr0Lo). (C2,
+; E-0357; probed E-0385)
 RunBattleSetup_BankA0_CompareSeeds::
     ld hl, wBattleSetupFlagsLo
     ld a, [hli]
@@ -5730,8 +6111,8 @@ RunBattleSetup_BankA0_CompareSeeds::
     inc [hl]
     ret
 
-; Turn setup, sub-phase 10: waits for the partner's $22 or $33 (kept in wCounterPtr0Hi). (C1,
-; E-0357)
+; Turn setup, sub-phase 10: waits for the partner's $22 or $33 (kept in wCounterPtr0Hi). (C2,
+; E-0357; probed E-0385)
 RunBattleSetup_BankA0_WaitPartnerSeed::
     ld a, [wLinkMessage]
     cp $22
@@ -5749,7 +6130,7 @@ RunBattleSetup_BankA0_WaitPartnerSeed::
     ret
 
 ; Turn setup, sub-phase 11: when both sides sent $22 sends 2 and goes on; otherwise exchanges again
-; from sub-phase 5. (C1, E-0357)
+; from sub-phase 5. (C2, E-0357; probed E-0385)
 RunBattleSetup_BankA0_ConfirmSeeds::
     ld a, [wCounterPtr0Lo]
     cp $22
@@ -6065,6 +6446,10 @@ SkillListCursor_BankA0::
 .return:
     ret
 
+; HL = a cursor entry byte, DE = a table of words (BG map offsets): sets bit 6 of [HL] and writes
+; the blank tile $C3 at $9800 plus the word at DE + 2 * ([HL] and $3F) with WriteVRAMByte, which
+; hides that cursor; HL and DE are kept. Used by TwoByTwoCursor, ThreeEntryCursor_BankA0 and
+; SkillListCursor_BankA0 before they move or blink the cursor. (C1, E-0385)
 ; HL = entry byte, DE = table of BG map offsets: sets bit 6 of [HL] and writes tile $C3 at $9800 +
 ; table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
 SetBit6AndBlankEntryTile_BankA0::
@@ -6090,6 +6475,10 @@ SetBit6AndBlankEntryTile_BankA0::
     pop hl
     ret
 
+; HL = a cursor entry byte, DE = a table of words (BG map offsets): clears bit 6 of [HL] and writes
+; the cursor tile $BB at $9800 plus the word at DE + 2 * ([HL] and $3F) with WriteVRAMByte; HL and
+; DE are kept. The partner of SetBit6AndBlankEntryTile_BankA0 in the cursor routines TwoByTwoCursor,
+; ThreeEntryCursor_BankA0 and SkillListCursor_BankA0. (C1, E-0385)
 ; HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 +
 ; table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
 ClearBit6AndCursorEntryTile_BankA0::
@@ -6115,13 +6504,19 @@ ClearBit6AndCursorEntryTile_BankA0::
     pop hl
     ret
 
+; HL = a destination in a tile buffer: clears wMenuSubState and writes five consecutive tile
+; numbers, starting at $D0 when wCommandMonster is 0 and at $D5 when it is 1
+; (WriteFiveTileNumbersForCommandMonster_Data); HL ends 5 bytes on. Called by
+; RunBattleSetup_BankA0_CommandMenu_DrawLists (at wScreenTileBuffer + $103) and
+; RunBattleSetup_BankA0_CommandMenu_ShowCommands (at wScreenTileBuffer + $142, wCommandMonster
+; masked with 3). (C2, E-0385)
 ; clears wMenuSubState and writes five consecutive tile numbers starting at
-; WriteFiveTilesFromTable_2_Data[wCommandMonster] to HL (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was WriteFiveTilesFromTable_2)
-WriteFiveTilesFromTable_2::
+; WriteFiveTileNumbersForCommandMonster_Data[wCommandMonster] to HL (E-0122) (E-0344: the address in
+; its name dropped or read as the label there; was WriteFiveTileNumbersForCommandMonster)
+WriteFiveTileNumbersForCommandMonster::
     push hl
     ld a, [wCommandMonster]
-    ld hl, WriteFiveTilesFromTable_2_Data
+    ld hl, WriteFiveTileNumbersForCommandMonster_Data
     add_a_to_hl
     xor a
     ld [wMenuSubState], a
@@ -6137,14 +6532,15 @@ WriteFiveTilesFromTable_2::
     ret
 
 ; Two bytes, $D0 and $D5: the first of five consecutive tile numbers for a command monster.
-; WriteFiveTilesFromTable_2 indexes it with wCommandMonster (its second caller masks it with $03)
-; and writes the five tiles starting at that value ($D0-$D4 for monster 0, $D5-$D9 for monster 1) to
-; the buffer at HL. (C1, E-0381)
-WriteFiveTilesFromTable_2_Data::
+; WriteFiveTileNumbersForCommandMonster indexes it with wCommandMonster (its second caller masks it
+; with $03) and writes the five tiles starting at that value ($D0-$D4 for monster 0, $D5-$D9 for
+; monster 1) to the buffer at HL. (C1, E-0381)
+WriteFiveTileNumbersForCommandMonster_Data::
     db $d0, $d5
 
 ; Counts the command monster's skills (up to eight, stopping at $FF or 0) for the skill list: two
-; pages from five on, the last page's size, and returns D = the skills outside $A2-$A9. (C1, E-0357)
+; pages from five on, the last page's size, and returns D = the skills outside $A2-$A9. (C2, E-0357;
+; probed E-0385)
 CountSkillsForList_BankA0::
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
@@ -6200,6 +6596,14 @@ CountSkillsForList_BankA0::
     ld [wCommandCursor], a
     ret
 
+; Shows the names of the four skills on page wCommandCursor of the monster wCommandMonster, in the
+; four 9 x 1 tile rows ShowStringAAtTiles16D0_BankA0, ShowStringAAtTiles1760_BankA0,
+; ShowStringAAtTiles17F0_BankA0 and ShowStringAAtTiles2080_BankA0, with wStringCategory 4 and the
+; skill number as the string index; a skill byte of $FF is shown as string 0
+; (ShowSkillPageNames_EmptySlotToString0). The skills are the even bytes of wBattleSkills + 16 *
+; wCommandMonster + 8 * the page; the start of that monster block is left in wBattleArg2 and
+; wBattleArg3 for RedrawSkillList_BankA0. Called by RunBattleSetup_BankA0_CommandMenu_ShowSkills and
+; RedrawSkillList_BankA0. (C1, E-0385)
 ; shows the four skill names (category 4) of page wCommandCursor of monster wCommandMonster's skills
 ; (wBattleSkills + 16 * wCommandMonster) in the four tile rows; $FF shows string 0 (E-0121)
 ShowSkillPageNames_BankA0::
@@ -6222,27 +6626,30 @@ ShowSkillPageNames_BankA0::
     ld a, [hli]
     inc hl
     cp $ff
-    call z, ReturnZero_3
+    call z, ShowSkillPageNames_EmptySlotToString0
     call ShowStringAAtTiles16D0_BankA0
     ld a, [hli]
     inc hl
     cp $ff
-    call z, ReturnZero_3
+    call z, ShowSkillPageNames_EmptySlotToString0
     call ShowStringAAtTiles1760_BankA0
     ld a, [hli]
     inc hl
     cp $ff
-    call z, ReturnZero_3
+    call z, ShowSkillPageNames_EmptySlotToString0
     call ShowStringAAtTiles17F0_BankA0
     ld a, [hl]
     cp $ff
-    call z, ReturnZero_3
+    call z, ShowSkillPageNames_EmptySlotToString0
     call ShowStringAAtTiles2080_BankA0
     ret
 
+; A = 0 and return. Its only calls are the conditional calls (call z) in ShowSkillPageNames_BankA0
+; after a skill byte is compared with $FF, so an empty skill slot is shown with string index 0. (C2,
+; E-0385)
 ; A = 0 (xor a); a two-byte handler stub (E-0111) (E-0344: the address in its name dropped or read
-; as the label there; was ReturnZero_3)
-ReturnZero_3::
+; as the label there; was ShowSkillPageNames_EmptySlotToString0)
+ShowSkillPageNames_EmptySlotToString0::
     xor a
     ret
 
@@ -6296,6 +6703,9 @@ RedrawSkillList_BankA0::
     call WriteVRAMByte
     ret
 
+; A = a string index: stores it in wStringIndex and shows that string (the category is in
+; wStringCategory) with ShowStringBank08AtTilesHL_BankA0 in a 9 x 1 tile block at vTiles1 + $6D0; HL
+; is kept. Called by ShowSkillPageNames_BankA0 for one of the four skill names. (C1, E-0385)
 ; wStringIndex = A, then ShowStringBank08AtTilesHL_BankA0 at vTiles1 + $6D0 with size $0901; HL kept
 ; (E-0116)
 ShowStringAAtTiles16D0_BankA0::
@@ -6307,6 +6717,9 @@ ShowStringAAtTiles16D0_BankA0::
     pop hl
     ret
 
+; A = a string index: stores it in wStringIndex and shows that string (the category is in
+; wStringCategory) with ShowStringBank08AtTilesHL_BankA0 in a 9 x 1 tile block at vTiles1 + $760; HL
+; is kept. Called by ShowSkillPageNames_BankA0 for one of the four skill names. (C1, E-0385)
 ; wStringIndex = A, then the string at vTiles1 + $760 with size $0901; HL kept (E-0116)
 ShowStringAAtTiles1760_BankA0::
     ld [wStringIndex], a
@@ -6317,6 +6730,9 @@ ShowStringAAtTiles1760_BankA0::
     pop hl
     ret
 
+; A = a string index: stores it in wStringIndex and shows that string (the category is in
+; wStringCategory) with ShowStringBank08AtTilesHL_BankA0 in a 9 x 1 tile block at vTiles1 + $7F0; HL
+; is kept. Called by ShowSkillPageNames_BankA0 for one of the four skill names. (C1, E-0385)
 ; wStringIndex = A, then the string at vTiles1 + $7F0 with size $0901; HL kept (E-0116)
 ShowStringAAtTiles17F0_BankA0::
     ld [wStringIndex], a
@@ -6327,6 +6743,9 @@ ShowStringAAtTiles17F0_BankA0::
     pop hl
     ret
 
+; A = a string index: stores it in wStringIndex and shows that string (the category is in
+; wStringCategory) with ShowStringBank08AtTilesHL_BankA0 in a 9 x 1 tile block at vTiles2 + $80; HL
+; is not kept. Called by ShowSkillPageNames_BankA0 for the fourth skill name. (C1, E-0385)
 ; wStringIndex = A, then the string at vTiles2 + $80 with size $0901 (E-0116)
 ShowStringAAtTiles2080_BankA0::
     ld [wStringIndex], a
@@ -6369,6 +6788,11 @@ ShowSkillNameAndCost::
     call WriteDecimalDigitTiles
     ret
 
+; Draws the page indicator of the battle skill list: returns at once when wCommandPageCount is 0;
+; otherwise writes at vBGMap0 + $226 the tile $C5, the digit tile $E0 + (wCommandCursor and 7) + 1,
+; the tile $BE, the digit tile $E0 + wCommandPageCount + 1 and the tile $C6 (WriteVRAMByteInc,
+; WriteVRAMByte). Called by RunBattleSetup_BankA0_CommandMenu_ShowSkillCursor and
+; RunBattleSetup_BankA0_CommandMenu_SkillCursor. (C1, E-0385)
 ; when wCommandPageCount is non-zero writes tiles $C5, $E0 + (wCommandCursor & 7) + 1, $BE, $E0 +
 ; wCommandPageCount + 1, $C6 at vBGMap0 + $226 (page X of Y) (E-0121)
 DrawInventoryPageIndicator_BankA0::
@@ -6428,7 +6852,7 @@ RunBattleSetup_BankA0_CommandCursorOffsets::
 ; A = tactic: stores A in the wSlotTactic byte of wCommandMonster and, unless A is 3 (manual
 ; command), also in its wSlotLastTactic byte; returns with A unchanged (Z set when it was 3). Called
 ; by RunBattleSetup_BankA0_CommandMenu_SetTactic; the same instructions as
-; SetSlotTacticAndSlotLastTacticForCommandMonster in bank $31. (C1, E-0373)
+; SetSlotTacticAndSlotLastTacticForCommandMonster in bank $31. (C2, E-0373; probed E-0385)
 ; A = value: stores A in wSlotTactic[wCommandMonster], and also in wSlotLastTactic[wCommandMonster]
 ; unless A is 3 (E-0118)
 SetCommandMonsterTactic_BankA0::
@@ -6448,6 +6872,10 @@ SetCommandMonsterTactic_BankA0::
     ld [hl], a
     ret
 
+; Takes the skill number at wBattleSkills + 16 * wCommandMonster + 2 * (4 * (wCommandCursor and 1) +
+; (wMenuCursor and 3)) into wRecordBuffer, clears wRecordBuffer + 1 and far-calls LoadSkillRecord,
+; which copies the 17-byte record of that skill to wRecordBufferData. Called by
+; RunBattleSetup_BankA0_CommandMenu_SkillCursor when A is pressed on a skill. (C2, E-0385)
 ; wRecordBuffer = the skill at wBattleSkills + 16 * wCommandMonster + 2 * (4 * (wCommandCursor & 1)
 ; + (wMenuCursor & 3)), wRecordBuffer + $1 = 0, then far-calls LoadSkillRecord (E-0120) (the same 48
 ; bytes appear in 2 banks)
@@ -6473,6 +6901,10 @@ LoadSelectedSkillRecord_BankA0::
     farcall LoadSkillRecord
     ret
 
+; Counts the present slots (CarryUnlessBattleSlotOutSlotEmpty carry clear) among the three slots
+; starting at ((wLinkRole << 1) and 4) xor 4, that is 0 when wLinkRole bit 1 is set and 4 otherwise:
+; D = how many, E = the number of the last present one (0 when none). A, BC are clobbered. No call
+; to this bank copy was found in the source. (C2, E-0385)
 ; side base = ((wLinkRole << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfLinkRoleSide_BankA0;
 ; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A,
 ; BC (E-0067) (the same 28 bytes appear in 2 banks)
@@ -6498,6 +6930,9 @@ CountPresentFoesOfLinkRoleSide_BankA0::
     jr nz, .loop
     ret
 
+; D = how many of the three slots starting at (wLinkRole << 1) and 4 (4 when wLinkRole bit 1 is set,
+; otherwise 0) are present (CarryUnlessBattleSlotOutSlotEmpty carry clear). A, BC are clobbered. No
+; call to this bank copy was found in the source. (C2, E-0385)
 ; side base = (wLinkRole << 1) & 4: D = how many of its three slots are present; clobbers A, BC
 ; (E-0067) (the same 24 bytes appear in 2 banks)
 CountPresentSlotsOfLinkRoleSide_BankA0::
@@ -6520,6 +6955,8 @@ CountPresentSlotsOfLinkRoleSide_BankA0::
     jr nz, .loop
     ret
 
+; Far-calls RunDebugState_E0 (the debug screens of bank $E0) and returns. No call to it was found in
+; the source. (C1, E-0385)
 ; far-calls RunDebugState_E0 (E-0122) (E-0344: the address in its name dropped or read as the label
 ; there; was CallRunDebugStateInBankE0_BankA0; shortened from CallRunDebugState_E0InBankE0_BankA0)
 CallRunDebugStateInBankE0_BankA0::
@@ -6551,8 +6988,8 @@ RunBattleSetup_BankA0_ClearTextTiles::
 
 ; Draws the status mark of slot C (0-2) on the battle screen: tile $C2 with the level for an absent
 ; slot, $C3 with the level when status 0 is clear; otherwise the marker for each set status:
-; poisoned, badly poisoned, confused, cursed, paralyzed, asleep (bits 0, 1, 4, 5, 6, 7). (C1,
-; E-0357)
+; poisoned, badly poisoned, confused, cursed, paralyzed, asleep (bits 0, 1, 4, 5, 6, 7). (C2,
+; E-0357; probed E-0385)
 DrawSlotStatusMarks_BankA0::
     push bc
     ld a, c
@@ -6607,7 +7044,7 @@ DrawSlotStatusMarks_BankA0::
     pop bc
     ret
 
-; Blanks slot C's five status mark places (tile $C3). (C1, E-0357)
+; Blanks slot C's five status mark places (tile $C3). (C2, E-0357; probed E-0385)
 DrawSlotStatusMarks_BankA0_BlankMarks::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_BlankMarks_Data
@@ -6621,7 +7058,7 @@ DrawSlotStatusMarks_BankA0_BlankMarks::
     pop hl
     ret
 
-; Draws the curse mark ($C0, status bit 5) for slot C. (C1, E-0357)
+; Draws the curse mark ($C0, status bit 5) for slot C. (C2, E-0357; probed E-0385)
 DrawSlotStatusMarks_BankA0_CurseMark::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_BlankMarks_Data
@@ -6630,7 +7067,7 @@ DrawSlotStatusMarks_BankA0_CurseMark::
     pop hl
     ret
 
-; Draws the poison mark ($C1, status bit 0) for slot C. (C1, E-0357)
+; Draws the poison mark ($C1, status bit 0) for slot C. (C2, E-0357; probed E-0385)
 DrawSlotStatusMarks_BankA0_PoisonMark::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_PoisonMark_Data
@@ -6639,7 +7076,8 @@ DrawSlotStatusMarks_BankA0_PoisonMark::
     pop hl
     ret
 
-; Draws the bad poison mark ($C7, status bit 1) for slot C at the poison place. (C1, E-0357)
+; Draws the bad poison mark ($C7, status bit 1) for slot C at the poison place. (C2, E-0357; probed
+; E-0385)
 DrawSlotStatusMarks_BankA0_BadPoisonMark::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_PoisonMark_Data
@@ -6648,7 +7086,7 @@ DrawSlotStatusMarks_BankA0_BadPoisonMark::
     pop hl
     ret
 
-; Draws the sleep mark ($C8, status bit 7) for slot C. (C1, E-0357)
+; Draws the sleep mark ($C8, status bit 7) for slot C. (C2, E-0357; probed E-0385)
 DrawSlotStatusMarks_BankA0_SleepMark::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_SleepMark_Data
@@ -6657,7 +7095,7 @@ DrawSlotStatusMarks_BankA0_SleepMark::
     pop hl
     ret
 
-; Draws the confusion mark ($C9, status bit 4) for slot C. (C1, E-0357)
+; Draws the confusion mark ($C9, status bit 4) for slot C. (C2, E-0357; probed E-0385)
 DrawSlotStatusMarks_BankA0_ConfusionMark::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_ConfusionMark_Data
@@ -6666,7 +7104,7 @@ DrawSlotStatusMarks_BankA0_ConfusionMark::
     pop hl
     ret
 
-; Draws the paralysis mark ($CA, status bit 6) for slot C. (C1, E-0357)
+; Draws the paralysis mark ($CA, status bit 6) for slot C. (C2, E-0357; probed E-0385)
 DrawSlotStatusMarks_BankA0_ParalysisMark::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_Data
@@ -6675,6 +7113,10 @@ DrawSlotStatusMarks_BankA0_ParalysisMark::
     pop hl
     ret
 
+; HL = a table of words, C = a slot: HL = the word at HL + 2 * (C and 3) (the carry out of the low
+; byte goes into H), by falling into DerefHL_BankA0. A is clobbered. Called by the
+; DrawSlotStatusMarks_BankA0 mark routines to find the screen buffer place of a status mark for slot
+; C. (C2, E-0385)
 ; the same 13 bytes as ReadWordTableEntryForSlotC (ReadWordTableEntryForSlotC) (E-0110)
 ReadWordTableEntryForSlotC_BankA0::
     ld a, c
@@ -6685,6 +7127,8 @@ ReadWordTableEntryForSlotC_BankA0::
     jr nc, DerefHL_BankA0
     inc h
 
+; HL = the word HL points to (low byte first). A is clobbered. Used by DrawSlotStatusMarks_BankA0
+; and by ReadWordTableEntryForSlotC_BankA0, which falls into it. (C2, E-0385)
 ; the same 4 bytes as DerefHL_Bank31 (DerefHL_Bank31) (E-0110)
 DerefHL_BankA0::
     deref_hl
@@ -6729,6 +7173,10 @@ DrawSlotStatusMarks_BankA0_SleepMark_Data::
 DrawSlotStatusMarks_BankA0_Data::
     db $3d, $c2, $4a, $c2
 
+; C = slot: returns at once when C is 3 or more; otherwise copies the five tiles at
+; wScreenTileBuffer + CopySlotPanelRowToVRAM_BankA0_Data[C] (the row with the level and the status
+; marks of the slot) to vBGMap0 plus the same offset with WriteVRAMByteInc. Called by
+; BuildAndCopySlotPanel_A0 and, from bank $31, by CopySlotPanelRowToVRAM. (C1, E-0385)
 ; C = slot 0-2: copies the 5-tile panel row at CopySlotPanelRowToVRAM_BankA0_Data's offset from
 ; wScreenTileBuffer to vBGMap0 (the wLinkMode = 2 form of CopySlotPanelRowToVRAM) (E-0111)
 CopySlotPanelRowToVRAM_BankA0::
@@ -6759,6 +7207,10 @@ CopySlotPanelRowToVRAM_BankA0::
 .return:
     ret
 
+; C = slot: for slots 0-2 turns wBattleHP[C] into three decimal digits (HLToDecimalDigits) and
+; writes them as tiles ($E0 + digit, leading zeros the blank tile $C3) at wScreenTileBuffer +
+; DrawSlotHPDigits_BankA0_Data[C] (WriteDecimalDigitTiles); does nothing for C of 3 or more; BC is
+; kept. Called by DrawSlotPanelValues_BankA0 and, from bank $31, by DrawSlotHPDigits. (C2, E-0385)
 ; C = slot 0-2: writes the slot's HP as decimal digit tiles into wScreenTileBuffer at the position
 ; from DrawSlotHPDigits_BankA0_Data (the wLinkMode = 2 form of DrawSlotHPDigits) (E-0111)
 DrawSlotHPDigits_BankA0::
@@ -6791,6 +7243,10 @@ DrawSlotHPDigits_BankA0::
     pop bc
     ret
 
+; C = slot: for slots 0-2 turns wBattleMP[C] into three decimal digits and writes them as tiles ($E0
+; + digit, leading zeros the blank tile $C3) at wScreenTileBuffer + DrawSlotMPDigits_BankA0_Data[C];
+; does nothing for C of 3 or more; BC is kept. Called by DrawSlotPanelValues_BankA0 and, from bank
+; $31, by DrawSlotMPDigits. (C2, E-0385)
 ; C = slot 0-2: writes the slot's MP as decimal digit tiles into wScreenTileBuffer at the position
 ; from DrawSlotMPDigits_BankA0_Data (the wLinkMode = 2 form of DrawSlotMPDigits) (E-0111)
 DrawSlotMPDigits_BankA0::
@@ -6828,7 +7284,7 @@ DrawSlotMPDigits_BankA0::
     ret
 
 ; Draws 'Lv' (tiles $EA, $AF) and the two-digit level of slot C (0-2) into wScreenTileBuffer at the
-; slot's place (DrawSlotLevel_BankA0_Data). (C1, E-0357)
+; slot's place (DrawSlotLevel_BankA0_Data). (C2, E-0357; probed E-0385)
 DrawSlotLevel_BankA0::
     push bc
     ld a, c
@@ -6865,6 +7321,10 @@ DrawSlotLevel_BankA0::
     pop bc
     ret
 
+; C = slot: for slots 0-2 (nothing for 3 or more) copies the three tiles at wScreenTileBuffer +
+; DrawSlotHPDigits_BankA0_Data[C] (the HP digits) to vBGMap0 plus the same offset with
+; WriteVRAMByteInc. Called by BuildAndCopySlotPanel_A0 and, from bank $31, by
+; CopySlotHPDigitsPanelToVRAM. (C1, E-0385)
 ; for slots 0-2: copies three tiles at offset DrawSlotHPDigits_BankA0_Data[slot] from the screen
 ; buffer to vBGMap0 (E-0124) (E-0344: the address in its name dropped or read as the label there;
 ; was CopySlotHPDigitsPanelToVRAM_BankA0; shortened from
@@ -6900,6 +7360,9 @@ CopySlotHPDigitsPanelToVRAM_BankA0::
 .return:
     ret
 
+; C = slot: for slots 0-2 (nothing for 3 or more) copies the three tiles at wScreenTileBuffer +
+; DrawSlotMPDigits_BankA0_Data[C] (the MP digits) to vBGMap0 plus the same offset. Called by
+; BuildAndCopySlotPanel_A0 and, from bank $31, by CopySlotMPDigitsPanelToVRAM. (C1, E-0385)
 ; for slots 0-2: copies three tiles at offset DrawSlotMPDigits_BankA0_Data[slot] from the screen
 ; buffer to vBGMap0 (E-0124) (E-0344: the address in its name dropped or read as the label there;
 ; was CopySlotMPDigitsPanelToVRAM_BankA0; shortened from
@@ -6935,6 +7398,10 @@ CopySlotMPDigitsPanelToVRAM_BankA0::
 .return:
     ret
 
+; C = slot: for slots 0-2 (nothing for 3 or more) copies the two tiles at wScreenTileBuffer +
+; DrawSlotLevel_BankA0_Data[C] (the first two tiles of the level display, 'Lv' as drawn by
+; DrawSlotLevel_BankA0) to vBGMap0 plus the same offset. Called only from bank $31, by
+; CopySlotLevelPanelToVRAM. (C1, E-0385)
 ; for slots 0-2: copies two tiles at offset DrawSlotLevel_BankA0_Data[slot] from the screen buffer
 ; to vBGMap0 (E-0124) (E-0344: the address in its name dropped or read as the label there; was
 ; CopySlotLevelPanelToVRAM_BankA0; shortened from CopySlotPanelPartDrawSlotLevel_BankA0_DataToVRAM)
@@ -6966,6 +7433,11 @@ CopySlotLevelPanelToVRAM_BankA0::
 .return:
     ret
 
+; HL = the tile address, DE = the size (D width, E rows): saves the text window fields
+; wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows and wTextWindowWidth, sets them from HL and
+; DE, far-calls ShowString_Bank09 (the string is chosen by wStringCategory and wStringIndex, set by
+; the caller) and restores the window fields. Called by the battle menu steps of
+; RunBattleSetup_BankA0_EntrySelect and RunBattleSetup_BankA0_CommandMenu. (C1, E-0385)
 ; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and
 ; the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes
 ; appear in 3 banks)
@@ -7001,6 +7473,9 @@ ShowStringBank09AtTilesHL_BankA0::
     ld [wTextWindowWidth], a
     ret
 
+; The same as ShowStringBank09AtTilesHL_BankA0 but far-calls ShowString_Bank08: HL = the tile
+; address, DE = the size; the window fields are saved and restored. Called by
+; ShowStringAAtTiles16D0_BankA0 and its three siblings and by ShowSkillNameAndCost. (C1, E-0385)
 ; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and
 ; the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes
 ; appear in 2 banks)
@@ -7036,6 +7511,10 @@ ShowStringBank08AtTilesHL_BankA0::
     ld [wTextWindowWidth], a
     ret
 
+; HL = a tile address, DE = the source of five glyphs: copies them to wTextBuf0
+; (CopyFiveGlyphsPlusMarks), then shows string 0 of category 2 in a 5 x 1 window at HL with
+; ShowString_Bank08, saving and restoring the text window fields. No call to it was found in the
+; source. (C1, E-0385)
 ; copies five glyphs plus marks to wTextBuf0 (CopyFiveGlyphsPlusMarks), then shows string category
 ; 2, index 0 in a 5 x 1 window at tile HL with ShowString_Bank08, saving and restoring the text
 ; window fields; no caller found (E-0238)

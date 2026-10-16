@@ -482,7 +482,7 @@ GameMode5_Init_Boot::
 
 .skip:
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
     xor a
@@ -619,7 +619,7 @@ GameMode5_Init_TitleMenu::
     ld a, $01
     ld [wTextSpeed], a
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
     ld hl, vTiles2
@@ -864,7 +864,7 @@ GameMode5_Init_ReturnToTitle::
     ld a, $fc
     call StartPaletteFade
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -967,7 +967,7 @@ GameMode5_Init_ReloadTitle::
     ld a, $fc
     call StartPaletteFade
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -1060,11 +1060,11 @@ GameMode5_Init_LinkBattleSetup::
     ld a, $fc
     call StartPaletteFade
     ld b, $31
-    ld de, Tiles1Plus240Gfx
+    ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Tiles1Plus5F0Gfx
+    ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
     ld hl, vTiles2 + $400
@@ -1265,7 +1265,7 @@ GameMode5_Init_AfterLinkBattle::
     ld a, $fc
     call StartPaletteFade
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -1910,7 +1910,7 @@ GameMode5_Update_LoadScreens_Screen0_Load::
     or a
     jr z, .skip
     ld b, $e1
-    ld de, Tiles2Gfx_4
+    ld de, LicensedByNintendoTiles
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
@@ -2017,7 +2017,7 @@ GameMode5_Update_LoadScreens_Screen1_Load::
     or a
     jr z, .skip
     ld b, $e1
-    ld de, Tiles2Gfx_5
+    ld de, CopyrightCreditsTiles
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
@@ -2123,7 +2123,7 @@ GameMode5_Update_LoadScreens_Screen2_Load::
     or a
     jr z, .skip
     ld b, $e1
-    ld de, Tiles2Gfx_6
+    ld de, EnixPresentsLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
@@ -2245,7 +2245,7 @@ TitleOpening_Load::
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7e
-    ld de, Tiles0Plus100Gfx
+    ld de, SparkleSpriteTiles
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $10
@@ -2410,11 +2410,11 @@ TitleOpening_LoadNextScreen::
     or a
     jp nz, TitleOpening_MoveSparkles
     ld b, $e1
-    ld de, Tiles2Gfx_8
+    ld de, DragonWarriorLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
-    ld de, TitleOpening_LoadNextScreen_ScreenTileBufferGfx
+    ld de, DragonWarriorLogoTilemap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2468,15 +2468,15 @@ TitleOpening_LoadTitle::
     or a
     ret nz
     ld b, $e1
-    ld de, Tiles1Gfx_2
+    ld de, TitleKeyAndTarasAdventureTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld b, $e1
-    ld de, Tiles2Gfx_7
+    ld de, TitleLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
-    ld de, BGMap0Gfx
+    ld de, TitleOpeningKeyBGMap
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -2485,7 +2485,7 @@ TitleOpening_LoadTitle::
     ld a, $01
     ldh [rVBK], a
     ld b, $e1
-    ld de, BGMap0Gfx_2
+    ld de, BGMap0Gfx
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, $00
@@ -2857,15 +2857,15 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_Load::
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $e1
-    ld de, Tiles1Gfx_2
+    ld de, TitleKeyAndTarasAdventureTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld b, $e1
-    ld de, Tiles2Gfx_7
+    ld de, TitleLogoTiles
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_ScreenTileBufferGfx
+    ld de, TitleScreenTilemap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2874,7 +2874,7 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_Load::
     ld a, $02
     ldh [rSVBK], a
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_ScreenAttrBufferGfx
+    ld de, TitleScreenAttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
@@ -2967,9 +2967,10 @@ GameMode5_Update_LoadScreens_TitlePressStart::
 
 ; On CGB only (wIsCGB non-zero): sets hSpriteSetIndex 0 and hSpriteSubIndex 0 (the code computes $01
 ; XOR $01), clears hSpriteTileOffset, hSpriteOriginXHi, hSpriteOriginYHi and hSpriteAttrXor, sets
-; the origin to ($38, $30) and far-calls RunBankE1Routine. Nothing in src calls or jumps to it (it
-; follows a ret), so whether it runs is unknown. (C1, E-0375)
-; on CGB only: draws sprite set 0, sub-index 1, at ($38, $30) through RunBankE1Routine (E-0124)
+; the origin to ($38, $30) and far-calls DrawMetaSpriteSet_BankE1. Nothing in src calls or jumps to
+; it (it follows a ret), so whether it runs is unknown. (C1, E-0375)
+; on CGB only: draws sprite set 0, sub-index 1, at ($38, $30) through DrawMetaSpriteSet_BankE1
+; (E-0124)
 DrawCGBMetaSpriteAt38_30::
     ld a, [wIsCGB]
     or a
@@ -2988,7 +2989,7 @@ DrawCGBMetaSpriteAt38_30::
     ldh [hSpriteOriginX], a
     ld a, $30
     ldh [hSpriteOriginY], a
-    farcall RunBankE1Routine
+    farcall DrawMetaSpriteSet_BankE1
     ret
 
 ; Sets the DMG palette bytes wDMGPaletteBGP, wDMGPaletteOBP0 and wDMGPaletteOBP1 to $D2, $D2, $E2,
@@ -7148,8 +7149,8 @@ RunLinkSession4ScreenState_State5::
     ret
 
 ; Link set-up, state 6: far-calls RunLinkSession4ScreenState_PrepareSetupMenu_Run (clears 256 bytes
-; from wScreenState, decompresses Tiles1Gfx to vTiles1, clears the screen buffer and opens the text
-; window) and moves to state 7 (LinkBattleSetupMenu). (C1, E-0369)
+; from wScreenState, decompresses LetterFrameIconDigitTiles to vTiles1, clears the screen buffer and
+; opens the text window) and moves to state 7 (LinkBattleSetupMenu). (C1, E-0369)
 RunLinkSession4ScreenState_PrepareSetupMenu::
     farcall RunLinkSession4ScreenState_PrepareSetupMenu_Run
     ld hl, wTitleScreenState
@@ -7726,7 +7727,7 @@ GameMode5_Update_LinkSession_Breeding::
 ; the $A5-byte wChildRecord to the SRAM address in wArg6/wArg7, marks the child's species in
 ; wMonsterLibraryBuf (SetBitInFieldAtArg3) and clears 7 bytes of wPackWork. Both sides then clear
 ; wLinkBreedResult, run RunSaveGameSteps until wSaveStep bit 7 is set, and clear $6F bytes from
-; wScreenState. (C1, E-0369)
+; wScreenState. (C2, E-0369; probed E-0384)
 GameMode5_Update_LinkSession_Breeding_SaveChild::
     ld a, [wLinkRole]
     bit 1, a

@@ -14,6 +14,13 @@ BeginStringDisplay_Bank28_Overflow::
     call BeginStringDisplay
     ret
 
+; Overflow half of the string copy of message bank $28: lowers wStringIndex by $DA (the first index
+; the bank-$28 table does not hold), then CopyStringToBuffer with DE =
+; MessageStrings_Bank28_Overflow, which copies string (index - $DA) of category wStringCategory,
+; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi (LookupString also stores
+; this bank number in wStringBank). Far-called by CopyStringToBuffer_Bank28 when wStringIndex is $DA
+; or more. The wrapper CopyStringToBuffer_Bank28 that far-calls it is not called by name anywhere in
+; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $28: wStringIndex -= $DA, then CopyStringToBuffer with the table
 ; MessageStrings_Bank28_Overflow in this bank (E-0080)
 CopyStringToBuffer_Bank28_Overflow::
@@ -25,6 +32,11 @@ CopyStringToBuffer_Bank28_Overflow::
     ret
     db $cd, $01, $40, $cd, $11, $26, $c9
 
+; Overflow half of the string lookup of message bank $29: lowers wStringIndex by $8E (the first
+; index the bank-$29 table does not hold), then BeginStringDisplay with DE =
+; MessageStrings_Bank29_Overflow, so the text printer starts on string (index - $8E) of category
+; wStringCategory in this bank. Far-called by BeginStringDisplay_Bank29 when wStringIndex is $8E or
+; more. (C1, E-0385)
 ; overflow for message bank $29: wStringIndex -= $8E, then BeginStringDisplay with the table
 ; MessageStrings_Bank29_Overflow in this bank (E-0080)
 BeginStringDisplay_Bank29_Overflow::
@@ -35,6 +47,13 @@ BeginStringDisplay_Bank29_Overflow::
     call BeginStringDisplay
     ret
 
+; Overflow half of the string copy of message bank $29: lowers wStringIndex by $8E (the first index
+; the bank-$29 table does not hold), then CopyStringToBuffer with DE =
+; MessageStrings_Bank29_Overflow, which copies string (index - $8E) of category wStringCategory,
+; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi (LookupString also stores
+; this bank number in wStringBank). Far-called by CopyStringToBuffer_Bank29 when wStringIndex is $8E
+; or more. The wrapper CopyStringToBuffer_Bank29 that far-calls it is not called by name anywhere in
+; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $29: wStringIndex -= $8E, then CopyStringToBuffer with the table
 ; MessageStrings_Bank29_Overflow in this bank (E-0080)
 CopyStringToBuffer_Bank29_Overflow::
@@ -46,6 +65,11 @@ CopyStringToBuffer_Bank29_Overflow::
     ret
     db $cd, $26, $40, $cd, $11, $26, $c9
 
+; Overflow half of the string lookup of message bank $2A: lowers wStringIndex by $95 (the first
+; index the bank-$2A table does not hold), then BeginStringDisplay with DE =
+; MessageStrings_Bank2A_Overflow, so the text printer starts on string (index - $95) of category
+; wStringCategory in this bank. Far-called by BeginStringDisplay_Bank2A when wStringIndex is $95 or
+; more. (C1, E-0385)
 ; overflow for message bank $2A: wStringIndex -= $95, then BeginStringDisplay with the table
 ; MessageStrings_Bank2A_Overflow in this bank (E-0080)
 BeginStringDisplay_Bank2A_Overflow::
@@ -56,6 +80,13 @@ BeginStringDisplay_Bank2A_Overflow::
     call BeginStringDisplay
     ret
 
+; Overflow half of the string copy of message bank $2A: lowers wStringIndex by $95 (the first index
+; the bank-$2A table does not hold), then CopyStringToBuffer with DE =
+; MessageStrings_Bank2A_Overflow, which copies string (index - $95) of category wStringCategory,
+; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi (LookupString also stores
+; this bank number in wStringBank). Far-called by CopyStringToBuffer_Bank2A when wStringIndex is $95
+; or more. The wrapper CopyStringToBuffer_Bank2A that far-calls it is not called by name anywhere in
+; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $2A: wStringIndex -= $95, then CopyStringToBuffer with the table
 ; MessageStrings_Bank2A_Overflow in this bank (E-0080)
 CopyStringToBuffer_Bank2A_Overflow::
@@ -67,6 +98,11 @@ CopyStringToBuffer_Bank2A_Overflow::
     ret
     db $cd, $4b, $40, $cd, $11, $26, $c9
 
+; Overflow half of the string lookup of message bank $83: lowers wStringIndex by $C7 (the first
+; index the bank-$83 table does not hold), then BeginStringDisplay with DE =
+; MessageStrings_Bank83_Overflow, so the text printer starts on string (index - $C7) of category
+; wStringCategory in this bank. Far-called by BeginStringDisplay_Bank83 when wStringIndex is $C7 or
+; more. (C1, E-0385)
 ; overflow for message bank $83: wStringIndex -= $C7, then BeginStringDisplay with the table
 ; MessageStrings_Bank83_Overflow in this bank (E-0080)
 BeginStringDisplay_Bank83_Overflow::
@@ -77,6 +113,13 @@ BeginStringDisplay_Bank83_Overflow::
     call BeginStringDisplay
     ret
 
+; Overflow half of the string copy of message bank $83: lowers wStringIndex by $C7 (the first index
+; the bank-$83 table does not hold), then CopyStringToBuffer with DE =
+; MessageStrings_Bank83_Overflow, which copies string (index - $C7) of category wStringCategory,
+; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi (LookupString also stores
+; this bank number in wStringBank). Far-called by CopyStringToBuffer_Bank83 when wStringIndex is $C7
+; or more. The wrapper CopyStringToBuffer_Bank83 that far-calls it is not called by name anywhere in
+; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $83: wStringIndex -= $C7, then CopyStringToBuffer with the table
 ; MessageStrings_Bank83_Overflow in this bank (E-0080)
 CopyStringToBuffer_Bank83_Overflow::

@@ -344,9 +344,16 @@ Map0DScreens0_Y0X0::
 Map0DScreens0_Y1X0::
     INCBIN "maps/map0_d/screens0_y1_x0.lz"
 
+; Tile map: 360 bytes = one 20 x 18 screen of tile numbers, stored in the Map0D screen run of bank
+; $47 between Map0DScreens0_Y1X0 and Map0DScreens0_Y1X1. It differs from Map0DScreens0_Y1X0 in four
+; bytes only: the 2 x 2 block at columns 10-11, rows 16-17 holds tiles $42 $43 $42 $43 instead of
+; $30 $31 $32 $33. No pointer to it exists: the Map0DScreens0, Map0DScreens4 and Map0DScreens7
+; tables never list it and no ld de load of $69D1 was found. Rendered with Map0DTileset (vTiles2):
+; rocky cave floor on black, only the lower right part of a room, the same picture as
+; Map0DScreens0_Y1X0 apart from the small block. (C1, E-0383)
 ; LZSS-compressed: 107 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap47_1::
-    INCBIN "gfx/misc/screen_map47_1.lz"
+Map0DScreenY1X0AltBlock::
+    INCBIN "maps/map0_d/screen_y1_x0_alt_block.lz"
 
 ; LZSS-compressed: 206 bytes that expand to 360 (E-0016, E-0017)
 Map0DScreens0_Y1X1::

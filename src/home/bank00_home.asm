@@ -5192,13 +5192,14 @@ LoadSpecialMapHeader::
 
 ; Loads the header of map hMapId; special maps (wMapType bit 7) go to LoadMapHeaderByMapType.
 ; Otherwise, with bank $11 mapped, it reads the record (MapRecordPointer): the tileset far pointer
-; is expanded into vTiles2 (map $14 expands it into vTiles1, then Tiles2Gfx into vTiles2, and clears
-; wMenuState and wMenuSubState); the palette far pointer goes to LoadBGPaletteBufferFromBank; then
-; wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
-; wEncounterRate (with bit 7 set), wMapMoveType and wMapSpriteKind. When wMapSpriteKind is non-zero
-; the next byte goes to wMapTallTileMin (low nibble non-zero) or wMapEventTile (low nibble 0). It
-; ends with the map-specific fix-ups SetMapSpriteKindAndEventTileForSpecialMaps, PatchTilesOnMap1Or2
-; and SetFieldEventKindOnMap19IfFlagD1, and maps the calling bank back. (C1, E-0373)
+; is expanded into vTiles2 (map $14 expands it into vTiles1, then MonsterSceneBackdropTiles into
+; vTiles2, and clears wMenuState and wMenuSubState); the palette far pointer goes to
+; LoadBGPaletteBufferFromBank; then wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile,
+; wMapHeaderByte7, wFieldEventKind, wEncounterRate (with bit 7 set), wMapMoveType and
+; wMapSpriteKind. When wMapSpriteKind is non-zero the next byte goes to wMapTallTileMin (low nibble
+; non-zero) or wMapEventTile (low nibble 0). It ends with the map-specific fix-ups
+; SetMapSpriteKindAndEventTileForSpecialMaps, PatchTilesOnMap1Or2 and
+; SetFieldEventKindOnMap19IfFlagD1, and maps the calling bank back. (C1, E-0373)
 ; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile
 ; and other header bytes from the bank-$11 map record (special maps use LoadMapHeaderByMapType)
 ; (E-0128)
@@ -5228,7 +5229,7 @@ LoadMapHeader::
     jr nz, .call_decompress_to_vram
     ld hl, vTiles1
     call DecompressToVRAM
-    ld de, Tiles2Gfx
+    ld de, MonsterSceneBackdropTiles
     ld b, $48
     ld hl, vTiles2
     call DecompressToVRAM
@@ -6557,7 +6558,7 @@ LoadPlayerAndFollowerSpriteGraphics_Followers::
     ld [bc], a
     inc bc
     ld [bc], a
-    ld de, LoadPlayerAndFollowerSpriteGraphics_Followers_Data
+    ld de, FallenFollowerCoffinTiles
     ld b, $7e
     ldh a, [hTemp2]
     ld l, a

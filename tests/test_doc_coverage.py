@@ -76,7 +76,7 @@ class Coverage(unittest.TestCase):
         RESTATED_AT_MOST = 0
         hand, restated = doc_coverage.note_counts(FILES)
         self.assertLessEqual(restated, RESTATED_AT_MOST, f"{restated} restated routines (was at most {RESTATED_AT_MOST})")
-        self.assertGreaterEqual(hand, 8573)  # E-0380: raised as the readability batches add readings
+        self.assertGreaterEqual(hand, 9822)  # E-0386: raised as the readability batches add readings
         import json
         ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]
@@ -110,10 +110,12 @@ class Coverage(unittest.TestCase):
         """E-0368 (D-011): the labels the generator named after their instructions or a callee, and the labels over
         60 characters, never grow; lower the bounds as the readability batches name them from their readings."""
         import readability_queue
-        INSTRUCTION_AT_MOST, LONG60_AT_MOST, ETC_AT_MOST, DATA_AT_MOST = 0, 0, 1, 0  # data: E-0381
+        INSTRUCTION_AT_MOST, LONG60_AT_MOST, ETC_AT_MOST, DATA_AT_MOST, ASSET_AT_MOST = 0, 0, 0, 0, 0  # E-0381, E-0383, E-0386
         q = readability_queue.queues(FILES)
         self.assertLessEqual(len(q["instruction"]), INSTRUCTION_AT_MOST, q["instruction"][:10])
         self.assertLessEqual(len(q["data"]), DATA_AT_MOST, q["data"][:10])
+        self.assertLessEqual(len(q["asset"]), ASSET_AT_MOST, q["asset"][:10])
+        self.assertEqual(q["unread"][:10], [], "E-0386: every code label carries a hand-written reading note")
         names = [name for f in FILES for name, *_ in doc_coverage.scan(f)]
         self.assertLessEqual(sum(len(n) > 60 for n in names), LONG60_AT_MOST)
         import re

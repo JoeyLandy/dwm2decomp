@@ -310,9 +310,11 @@ BreedMenu_OptionCursor::
     call HandleThreeOptionMenuInput_15
     ret
 
-; Breeding menu, state 3: acts on the option: lists the eggs (ListRecordsInUseEggs); with
-; wRecordsFlagged 0 gives the script answer 1 and returns to the options; otherwise answer 0 and
-; moves on two states (three for option 0). (C1, E-0357)
+; Breeding menu, state 3: acts on the option in wGridCursorX. Option 0 only adds 1 to wScreenState
+; (no egg list, no script). Any other option lists the eggs (ListRecordsInUseEggs): with
+; wRecordsFlagged 0 it sets wTwoChoiceCursor 1 and wScreenState 2 (back to the options); otherwise
+; wTwoChoiceCursor 0 and wScreenState + 2. Both of those cases clear wScriptCommandType and set
+; wScriptStartRequest to $80. (C2, E-0384)
 BreedMenu_DoOption::
     ld a, [wGridCursorX]
     and a
@@ -814,9 +816,14 @@ BreedMenu_ChooseParents_BlankCursors::
     ld [wScriptStartRequest], a
     ret
 
-; Choosing parents, step 17: checks the chosen base: answer 3 (back two steps) when every listed
-; monster has its sex (no possible mate), answer 2 when it is below level 10, answer 1 when it is
-; the only party member; otherwise it is kept and the mate list follows. (C1, E-0357)
+; Choosing parents, step 17: checks the base chosen in list cell 5 (wListEntries + 5 *
+; wListPageIndex + wListCursor). If every one of the wListCount listed records has the same bit 0 of
+; MON_SEX as the base, no mate is possible: wTwoChoiceCursor 3. Otherwise a base with MON_LEVEL
+; below 10 gives wTwoChoiceCursor 2, and the only party member (wPartyCount below 2 and
+; wPartyList[0] equal to the record) gives wTwoChoiceCursor 1. Each of these three refusals takes 2
+; off wScreenStep and requests the script ($80). A good base is kept in wSelectedRecord, wItemGridX
+; and wItemGridY get wListCursor and wListPageIndex, both cursors and wTwoChoiceCursor are cleared
+; and wScreenStep goes up by 1. (C2, E-0384)
 BreedMenu_ChooseParents_CheckBase::
     ld a, $0a
     ld [rRAMG2], a
@@ -1086,7 +1093,8 @@ DrawListEntriesCell5RecordNamesAndStep::
     ld [wScreenStep], a
     ret
 
-; Choosing parents, step 27: keeps the chosen mate and resets the name entry's state. (C1, E-0357)
+; Choosing parents, step 27: keeps the chosen mate and resets the name entry's state. (C2, E-0357;
+; probed E-0384)
 BreedMenu_ChooseParents_KeepMate::
     call BreedMenu_CopyParentRecords
     xor a
@@ -1403,7 +1411,8 @@ BreedMenu_ChooseParents_BlankCursorsAgain::
     ret
 
 ; Choosing parents, step 38: checks the chosen mate: below level 10 answer 3 (step $24); a choice
-; that would take every party monster answer 2 (step $24); otherwise answer 0 and on. (C1, E-0357)
+; that would take every party monster answer 2 (step $24); otherwise answer 0 and on. (C2, E-0357;
+; probed E-0384)
 BreedMenu_ChooseParents_CheckMate::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2277,7 +2286,7 @@ BreedMenu_ChooseParents_FeeRefused::
     ret
 
 ; Choosing parents, step 65: pays the fee, lists the eggs, finds the child in the list (page and
-; cursor of four) and clears its MON_EGG byte, then screen state 8. (C1, E-0357)
+; cursor of four) and clears its MON_EGG byte, then screen state 8. (C2, E-0357; probed E-0384)
 BreedMenu_ChooseParents_PayAndMakeEgg::
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -2955,7 +2964,7 @@ BreedMenu_ChooseEgg_RedrawMarks::
     ret
 
 ; Choosing an egg, step 15: checks the gold for the egg's fee (TenTimesTemp0PlusTen of its plus
-; value): too little answers 1 (step 7), otherwise answer 0 and on. (C1, E-0357)
+; value): too little answers 1 (step 7), otherwise answer 0 and on. (C2, E-0357; probed E-0384)
 BreedMenu_ChooseEgg_CheckFee::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -3005,7 +3014,7 @@ BreedMenu_ChooseEgg_CheckFee::
     ret
 
 ; Choosing an egg, step 16: hatches the egg (clears record byte $6E, MON_EGG), pays the fee, clears
-; wListEntries2 and goes to screen state 9. (C1, E-0357)
+; wListEntries2 and goes to screen state 9. (C2, E-0357; probed E-0384)
 BreedMenu_ChooseEgg_Hatch::
     ld a, $0a
     ld [rRAMG2], a
@@ -3231,11 +3240,11 @@ BreedMenu_ReturnToMap::
     dw BreedMenu_ReturnToMap_MarkOption
     dw BreedMenu_ChooseParents_BackToOptions
 
-; Returning to the map, step 0: decompresses Tiles1Gfx (bank $46) into VRAM $8800 and restores the
-; player's position. (C1, E-0357)
+; Returning to the map, step 0: decompresses LetterFrameIconDigitTiles (bank $46) into VRAM $8800
+; and restores the player's position. (C1, E-0357)
 BreedMenu_ReturnToMap_LoadTiles::
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld a, [wScreenStep]
@@ -4021,8 +4030,8 @@ BreedMenu_ReturnToMap_BackToList::
     ld [wScriptStartRequest], a
     ret
 
-; Choosing who leaves, step 27: copies the chosen entry's name into wTextBuf0 for the script. (C1,
-; E-0357)
+; Choosing who leaves, step 27: copies the chosen entry's name into wTextBuf0 for the script. (C2,
+; E-0357; probed E-0384)
 BreedMenu_ReturnToMap_CopyLeaverName::
     ld a, $0a
     ld [rRAMG2], a
@@ -4064,7 +4073,7 @@ BreedMenu_ReturnToMap_CopyLeaverName::
 
 ; Choosing who leaves, step 28: sends the chosen monster to the farm (MON_STATE 1); unless it was
 ; the child (entry 3), rebuilds the party from the other three and marks them in the party (state
-; 2). (C1, E-0357)
+; 2). (C2, E-0357; probed E-0384)
 BreedMenu_ReturnToMap_SendToFarm::
     ld a, $0a
     ld [rRAMG2], a
@@ -5972,8 +5981,8 @@ LoadFamilyIconTileForRecordB_Bank15::
 ; Record wArg1, with SRAM bank 0 enabled (left enabled): writes the sex mark $CC + (MON_SEX & 1) at
 ; the address in wArg2/wArg3 and, three bytes on, MON_LEVEL as two digit tiles ($E0 + digit,
 ; HLToDecimalDigits and BlankLeadingZeroDigits_F_Bank15, so a leading 0 becomes the blank $C3);
-; returns with B = wArg1 and C kept. Used by the breeding lists and the link breeding panel. (C1,
-; E-0377)
+; returns with B = wArg1 and C kept. Used by the breeding lists and the link breeding panel. (C2,
+; E-0377; probed E-0384)
 ; record wArg1 (bank 0): writes tile $CC + (field $0E & 1) at the address in wArg2/3 and, three
 ; tiles on, field $56 as two digits with leading blanks (E-0121)
 DrawRecordField0EMarkAndField56Digits::
@@ -6110,7 +6119,7 @@ TestBitInFieldAtArg3_Data::
 
 ; Lists the possible mates: clears both lists, then lists every farm or party record that is not an
 ; egg and whose sex differs from wArg1 (counting the eggs in wRecordsFlagged), and moves the party
-; members to the front. (C1, E-0357)
+; members to the front. (C2, E-0357; probed E-0384)
 BreedMenu_ListMates::
     ld hl, wListEntries
     ld b, $1e
@@ -6214,7 +6223,7 @@ BreedMenu_ListMates::
 
 ; With SRAM bank 0 enabled reads MON_SEX of record wSelectedRecord (LoadSRAMRecordByte), sets wArg1
 ; = its bit 0 (the sex) and disables SRAM. Used by BreedMenu_ChooseParents_ListPartners and
-; BreedMenu_ShowSelectedRecord_ListMates to list mates of the other sex. (C1, E-0377)
+; BreedMenu_ShowSelectedRecord_ListMates to list mates of the other sex. (C2, E-0377; probed E-0384)
 ; with SRAM bank 0 enabled: wArg1 = bit 0 of byte $0E of record wSelectedRecord (LoadSRAMRecordByte)
 ; (E-0119) (E-0345: record byte $0E bit 0 is the sex (MON_SEX); was LoadSelectedRecordSex)
 LoadSelectedRecordSex::
@@ -6330,7 +6339,7 @@ DrawRecordNameAndSpeciesName::
     ret
 
 ; Copies the chosen base (wSelectedRecord) into wRecordBufA and the mate under the cursor into
-; wRecordBufB ($A5 bytes each) for ComputeBreedingChild. (C1, E-0357)
+; wRecordBufB ($A5 bytes each) for ComputeBreedingChild. (C2, E-0357; probed E-0384)
 BreedMenu_CopyParentRecords::
     ld a, $0a
     ld [rRAMG2], a
@@ -6833,7 +6842,8 @@ WriteDigitTilesFromDEToVRAM::
 
 ; With SRAM bank 1 enabled reads the record number at HL + C and returns HL = sBank1Records + $6F x
 ; that number (a compact record of the saved party); then selects SRAM bank 0 and disables SRAM.
-; Clobbers A, B, C and DE. Used by ShowSaveFileInfoWindow for the saved party list. (C1, E-0377)
+; Clobbers A, B, C and DE. Used by ShowSaveFileInfoWindow for the saved party list. (C2, E-0377;
+; probed E-0384)
 ; with SRAM bank 1 selected, HL = sBank1Records + $6F * [HL + C] (a $6F-byte record in bank 1); then
 ; selects bank 0 and disables SRAM (E-0117)
 SRAMBank1RecordAddress::
@@ -7600,7 +7610,7 @@ Script_HeroIsGoingTo::
     script_jump Script_Breed_2
 
 ; Counts the sleepers: the compact records with byte 0 bit 7 set (29 in bank 0, one in bank 1) into
-; wListCount, after clearing wListEntries. (C1, E-0357)
+; wListCount, after clearing wListEntries. (C2, E-0357; probed E-0384)
 HibernateMenu_CountSleepers::
     ld hl, wListEntries
     ld b, $1e
@@ -7904,7 +7914,7 @@ LoadFamilyIconTileForArg1Record::
     ret
 
 ; Draws a sleeper's stats box from its compact record (RecordAddressWithBank1Slot1D): the sex mark,
-; the level and the packed stat fields as digits. (C1, E-0357)
+; the level and the packed stat fields as digits. (C2, E-0357; probed E-0384)
 HibernateMenu_DrawSleeperStatsBox::
     ld a, [wArg1]
     ld b, a

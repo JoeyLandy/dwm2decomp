@@ -68,7 +68,7 @@ GameMode6_Init::
 
 .skip:
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -105,7 +105,7 @@ GameMode6_Init::
     ld a, [wBattleScene]
     cp $80
     jr nz, .skip2
-    ld de, GameMode6_Init_Data2
+    ld de, LinkResultDrawTiles
     ld b, $24
     jr .call_decompress_to_ram_locked
 
@@ -113,12 +113,12 @@ GameMode6_Init::
     and $01
     and a
     jr nz, .skip3
-    ld de, GameMode6_Init_Data1
+    ld de, LinkResultYouWinTiles
     ld b, $24
     jr .call_decompress_to_ram_locked
 
 .skip3:
-    ld de, Tiles1Plus600Gfx
+    ld de, LinkResultYouLoseTiles
     ld b, $24
 
 .call_decompress_to_ram_locked:
@@ -382,7 +382,7 @@ GameMode6_Update_TakePrize::
 
 ; Taking the prize, step 0: except for an egg ($08), first plays the hand-over scene (step $0D, back
 ; with sub-step 1); then with the farm full (CountRecordsInUse against wRecordCapacity) goes to step
-; 3, otherwise step 1. (C1, E-0357)
+; 3, otherwise step 1. (C2, E-0357; probed E-0384)
 GameMode6_Update_TakePrize_Start::
     ld a, [wBattleScene]
     cp $08
@@ -463,7 +463,8 @@ GameMode6_Update_TakePrize_StoreRecord::
     ld [wScreenStep], a
     ret
 
-; Taking the prize, step 2: saves (RunSaveGameSteps), then ends the screen. (C1, E-0357)
+; Taking the prize, step 2: saves (RunSaveGameSteps), then ends the screen. (C2, E-0357; probed
+; E-0384)
 GameMode6_Update_TakePrize_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -696,7 +697,7 @@ GameMode6_Update_TakePrize_RedrawBoxes::
 ; (the egg list). (C1, E-0357)
 GameMode6_Update_TakePrize_AskSwitchWhich::
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld de, vTiles1
@@ -806,7 +807,8 @@ GameMode6_Update_GiveUp_StartSave::
     ld [wScreenStep], a
     ret
 
-; Giving up the prize, step 3: saves (RunSaveGameSteps), then ends the screen. (C1, E-0357)
+; Giving up the prize, step 3: saves (RunSaveGameSteps), then ends the screen. (C2, E-0357; probed
+; E-0384)
 GameMode6_Update_GiveUp_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1114,7 +1116,7 @@ GameMode6_Update_ChooseMonster_RedrawChoiceBox::
 
 ; Choosing the monster to switch, step 12: deletes the chosen SRAM record
 ; (DeleteSRAMRecordAndCompact), writes the prize (wRecordBufB) at record wArg5, sets its species
-; flag and resets the save steps. (C1, E-0357)
+; flag and resets the save steps. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseMonster_SwitchForPrize::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1159,7 +1161,7 @@ GameMode6_Update_ChooseMonster_SwitchForPrize::
     ld [wScreenStep], a
     ret
 
-; Choosing the monster to switch, step 13: saves, then ends the screen. (C1, E-0357)
+; Choosing the monster to switch, step 13: saves, then ends the screen. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseMonster_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1456,7 +1458,7 @@ GameMode6_Update_ChooseEgg_RedrawChoiceBox::
 
 ; Choosing the egg to switch, step 10: deletes the chosen egg's SRAM record
 ; (DeleteSRAMRecordAndCompact), writes the prize (wRecordBufB) at record wArg5, sets its species
-; flag and resets the save steps. (C1, E-0357)
+; flag and resets the save steps. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseEgg_SwitchForPrize::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -1502,7 +1504,7 @@ GameMode6_Update_ChooseEgg_SwitchForPrize::
     ld [wScreenStep], a
     ret
 
-; Choosing the egg to switch, step 11: saves, then ends the screen. (C1, E-0357)
+; Choosing the egg to switch, step 11: saves, then ends the screen. (C2, E-0357; probed E-0384)
 GameMode6_Update_ChooseEgg_Save::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1567,7 +1569,7 @@ GameMode6_Update_SwitchEgg::
 ; the tile areas, redraws the boxes and marks the entry. (C1, E-0357)
 GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -1760,7 +1762,7 @@ GameMode6_Update_SwitchMonster::
 ; marks the entry. (C1, E-0357)
 GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -1881,7 +1883,7 @@ GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
     farcall LinkBattleSetupMenu
     ret
 
-; Unless wLinkBreedResult is set: decompresses GameMode6_Init_Data1 into vTiles2
+; Unless wLinkBreedResult is set: decompresses LinkResultYouWinTiles into vTiles2
 ; (GameMode6_Update_LoadBannerTiles, entered with A = 0) and copies the 17 x 2 rectangle
 ; GameMode6_Update_PageList_Cancel_TileRect (tiles $00-$1F) to wWindowTileBuffer + $7A, where
 ; GameMode6_Update_ShowResult draws the result banner. Used by
@@ -2467,19 +2469,19 @@ GameMode6_Update_SwitchMonster_ClearTiles::
     call FillTilesFromRequest
     ret
 
-; Decompresses into vTiles2 ($9000) by A bit 0: clear GameMode6_Init_Data1, set Tiles1Plus600Gfx
-; (both in bank $24). Its only caller, GameMode6_Update_DrawResultBanner, enters with A = 0. (C1,
-; E-0370)
+; Decompresses into vTiles2 ($9000) by A bit 0: clear LinkResultYouWinTiles, set
+; LinkResultYouLoseTiles (both in bank $24). Its only caller, GameMode6_Update_DrawResultBanner,
+; enters with A = 0. (C1, E-0370)
 GameMode6_Update_LoadBannerTiles::
     and $01
     and a
     jr nz, .skip
-    ld de, GameMode6_Init_Data1
+    ld de, LinkResultYouWinTiles
     ld b, $24
     jr .call_decompress_to_vram
 
 .skip:
-    ld de, Tiles1Plus600Gfx
+    ld de, LinkResultYouLoseTiles
     ld b, $24
 
 .call_decompress_to_vram:
@@ -5873,17 +5875,31 @@ GameMode6_ResultBannerPalette::
     ds $38, $00
     db $1f, $00, $ff, $7f, $00, $7e, $00, $00
 
+; Tiles: 512 bytes = 32 tiles of 2bpp, big outlined lettering that reads YOU WIN! (banner tiles
+; $00-$1F). GameMode6_Init picks it when bit 0 of wBattleScene is clear (the winning side) and
+; expands it into vTiles1 + $600 with DecompressToRAMLocked; GameMode6_Update_LoadBannerTiles
+; (called by GameMode6_Update_DrawResultBanner with A = 0) expands the same stream into vTiles2. It
+; belongs to game mode 6, the screen after a link battle or link breeding.
+; GameMode6_Update_ShowResult documents that scene bit 0 clear is the won message. (C1, E-0383)
 ; LZSS-compressed: 303 bytes that expand to 512 (E-0016, E-0017)
-GameMode6_Init_Data1::
-    INCBIN "gfx/misc/game_mode6_init_data1.lz"
+LinkResultYouWinTiles::
+    INCBIN "gfx/misc/link_result_you_win_tiles.lz"
 
+; Tiles: 512 bytes = 32 tiles of 2bpp, big dark lettering that reads YOU LOSE! (the same banner
+; layout as the YOU WIN set). GameMode6_Init expands it into vTiles1 + $600 when bit 0 of
+; wBattleScene is set (the loss side), and GameMode6_Update_LoadBannerTiles (A bit 0 set) into
+; vTiles2. Game mode 6, the screen shown after a link battle. (C1, E-0383)
 ; LZSS-compressed: 315 bytes that expand to 512 (E-0016, E-0017)
-Tiles1Plus600Gfx::
-    INCBIN "gfx/misc/tiles1_plus600_gfx.lz"
+LinkResultYouLoseTiles::
+    INCBIN "gfx/misc/link_result_you_lose_tiles.lz"
 
+; Tiles: 512 bytes = 32 tiles of 2bpp, the lettering DRAW in a boxed gray style. GameMode6_Init
+; expands it into vTiles1 + $600 with DecompressToRAMLocked when wBattleScene is $80 (a draw);
+; GameMode6_Update_ShowResult draws the draw banner tile rectangle for the same scene value. Game
+; mode 6, link battle result screen. (C1, E-0383)
 ; LZSS-compressed: 247 bytes that expand to 512 (E-0016, E-0017)
-GameMode6_Init_Data2::
-    INCBIN "gfx/misc/game_mode6_init_data2.lz"
+LinkResultDrawTiles::
+    INCBIN "gfx/misc/link_result_draw_tiles.lz"
 
 ; Draws the whole description of one item into the text tiles at vTiles1. The item is the byte at
 ; wItemGrid[4 * wItemGridY + wItemGridX] when wScreenState is 4, otherwise the value

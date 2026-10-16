@@ -1117,7 +1117,7 @@
   "C150": {
     "name": "wTextBuf2",
     "size": "10",
-    "note": "16-byte text slot: the target or item name of a message (CopyActionItemNameToTextBuf2, BuildActionMessageNames)",
+    "note": "16-byte text slot: the target or item name of a message (CopyActionItemNameToTextBuf2, ShowActionRefusedMessage)",
     "evidence": "E-0132"
   },
   "C160": {
@@ -2791,7 +2791,7 @@
   "CAD0": {
     "name": "wChildRecord",
     "size": "A5",
-    "note": "the $A5-byte record built by ComputeBreedingChild; stored into SRAM by StoreReceivedRecordIntoSRAM",
+    "note": "the $A5-byte record built by ComputeBreedingChild; stored into SRAM by LinkBreed_StoreChildRecord",
     "evidence": "E-0134"
   },
   "CBD7": {
@@ -2936,7 +2936,7 @@
   },
   "CD60": {
     "name": "wKeyWorldChunks",
-    "note": "area map chunk pointers of the key world (ReadKeyWorldCellIsSolid)",
+    "note": "area map chunk pointers of the key world (CheckKeyWorldCellIsOpen)",
     "evidence": "E-0135",
     "size": "10"
   },
@@ -2990,7 +2990,7 @@
   },
   "CE72": {
     "name": "wKeyWorldEncounter",
-    "note": "monster ids and levels of the key-world encounters ($CE72-$CE7A; RollKeyWorldMonsterIds)",
+    "note": "monster ids and levels of the key-world encounters ($CE72-$CE7A; GenerateKeyWorld_RollEncounterFoes)",
     "evidence": "E-0135",
     "size": "9"
   },
@@ -3123,7 +3123,7 @@
   },
   "CFA7": {
     "name": "wLowestResistCount",
-    "note": "count of lowest-level resistances (RaiseRandomLowestResistance)",
+    "note": "count of lowest-level resistances (RaiseLowestResistances)",
     "evidence": "E-0135"
   },
   "CFA8": {
@@ -3362,7 +3362,7 @@
   },
   "D043": {
     "name": "wLinkRules",
-    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckLinkRules1Bit6, UnpackLinkRecordToWorkBuf)",
+    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckLinkRules1Bit6, PackRecordBufAToLinkWorkBuf)",
     "evidence": "E-0136",
     "size": "A"
   },
@@ -3547,7 +3547,7 @@
   },
   "D0E8": {
     "name": "wLinkMenuEntry",
-    "note": "entry number for table $555D (LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes)",
+    "note": "entry number for table $555D (PackRecordBufAToLinkWorkBuf_LoadExp)",
     "evidence": "E-0136"
   },
   "D0EA": {
@@ -4226,7 +4226,7 @@
   },
   "D808": {
     "name": "wSlotsOccupiedFlag",
-    "note": "result of AllThreeSlotsFromCOccupied",
+    "note": "result of FirstPresentSlotFromC",
     "evidence": "E-0137"
   },
   "D80A": {

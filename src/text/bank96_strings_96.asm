@@ -4,6 +4,11 @@
 SECTION "Bank 96", ROMX[$4000], BANK[$96]
     db $96
 
+; Overflow half of the string lookup of message bank $80: lowers wStringIndex by $C8 (the first
+; index the bank-$80 table does not hold), then BeginStringDisplay with DE =
+; MessageStrings_Bank80_Overflow, so the text printer starts on string (index - $C8) of category
+; wStringCategory in this bank. Far-called by BeginStringDisplay_Bank80 when wStringIndex is $C8 or
+; more. (C1, E-0385)
 ; overflow for message bank $80: wStringIndex -= $C8, then BeginStringDisplay with the table
 ; MessageStrings_Bank80_Overflow in this bank (E-0080)
 BeginStringDisplay_Bank80_Overflow::
@@ -14,6 +19,13 @@ BeginStringDisplay_Bank80_Overflow::
     call BeginStringDisplay
     ret
 
+; Overflow half of the string copy of message bank $80: lowers wStringIndex by $C8 (the first index
+; the bank-$80 table does not hold), then CopyStringToBuffer with DE =
+; MessageStrings_Bank80_Overflow, which copies string (index - $C8) of category wStringCategory,
+; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi (LookupString also stores
+; this bank number in wStringBank). Far-called by CopyStringToBuffer_Bank80 when wStringIndex is $C8
+; or more. The wrapper CopyStringToBuffer_Bank80 that far-calls it is not called by name anywhere in
+; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $80: wStringIndex -= $C8, then CopyStringToBuffer with the table
 ; MessageStrings_Bank80_Overflow in this bank (E-0080)
 CopyStringToBuffer_Bank80_Overflow::
@@ -25,6 +37,12 @@ CopyStringToBuffer_Bank80_Overflow::
     ret
     db $cd, $01, $40, $cd, $11, $26, $c9
 
+; Overflow half of the string lookup of message bank $82: lowers wStringIndex by $90 (the first
+; index the bank-$82 table does not hold), then BeginStringDisplay with DE =
+; MessageStrings_Bank82_Overflow, so the text printer starts on string (index - $90) of category
+; wStringCategory in this bank. Far-called by BeginStringDisplay_Bank82 when wStringIndex is $90 or
+; more. CopyStringToBuffer_Bank82 also far-calls this routine for those indexes instead of its own
+; copy overflow, so such strings are displayed rather than copied. (C1, E-0385)
 ; overflow for message bank $82: wStringIndex -= $90, then BeginStringDisplay with the table
 ; MessageStrings_Bank82_Overflow in this bank (E-0080)
 BeginStringDisplay_Bank82_Overflow::
@@ -35,6 +53,12 @@ BeginStringDisplay_Bank82_Overflow::
     call BeginStringDisplay
     ret
 
+; Overflow half of the string copy of message bank $82: lowers wStringIndex by $90, then
+; CopyStringToBuffer with DE = MessageStrings_Bank82_Overflow, which copies string (index - $90) of
+; category wStringCategory, with its $F0 end byte, to the address in wStringDestLo/wStringDestHi
+; (LookupString also stores this bank number in wStringBank). Nothing calls it:
+; CopyStringToBuffer_Bank82 far-calls BeginStringDisplay_Bank82_Overflow instead, and that wrapper
+; is itself not called by name. (C2, E-0385)
 ; overflow for message bank $82: wStringIndex -= $90, then CopyStringToBuffer with the table
 ; MessageStrings_Bank82_Overflow in this bank (E-0080)
 CopyStringToBuffer_Bank82_Overflow::
@@ -1410,6 +1434,13 @@ BeginMessageDisplay_Bank0E_Overflow::
     call BeginStringDisplay
     ret
 
+; Overflow half of the string copy of message bank $0E: lowers wStringIndex by $88 (the first index
+; the bank-$0E table does not hold), then CopyStringToBuffer with DE =
+; MessageStrings_Bank0E_Overflow, which copies string (index - $88) of category wStringCategory,
+; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi (LookupString also stores
+; this bank number in wStringBank). Far-called by CopyStringToBuffer_Bank0E when wStringIndex is $88
+; or more. The wrapper CopyStringToBuffer_Bank0E that far-calls it is not called by name anywhere in
+; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $0E: wStringIndex -= $88, then CopyStringToBuffer with the table
 ; MessageStrings_Bank0E_Overflow in this bank (E-0080)
 CopyStringToBuffer_Bank0E_Overflow::

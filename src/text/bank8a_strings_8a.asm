@@ -4,7 +4,12 @@
 SECTION "Bank 8A", ROMX[$4000], BANK[$8A]
     db $8a
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Starts the text printer on string wStringIndex of category wStringCategory from this bank: DE =
+; BeginStringDisplay_Bank8A_StringCategories, then BeginStringDisplay (the glyphs are printed later
+; by StepTextPrinter). The caller sets wStringCategory and wStringIndex first. Callers:
+; StartMessageForGroup_KeyWorld, KeyWorldBossBattle_StartMessageText and
+; DebugMessageTest_Update_ShowBank8A. (C1, E-0385)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank8A::
     ld de, BeginStringDisplay_Bank8A_StringCategories
     call BeginStringDisplay

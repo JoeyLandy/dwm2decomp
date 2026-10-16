@@ -4,51 +4,64 @@
 SECTION "Bank A1", ROMX[$4000], BANK[$A1]
     db $a1
 
+; A = a battle slot: HL = wBattleATK, then GetBattleStatWord_BankA1: HL = the word of that slot at
+; wBattleATK + 2 * A (the value, not a pointer) and A = its low byte. GetBattleDEF_BankA1,
+; GetBattleMaxHP_BankA1, GetBattleMaxMP_BankA1, GetBattleHP_BankA1 and GetBattleMP_BankA1 do the
+; same for wBattleDEF, wBattleMaxHP, wBattleMaxMP, wBattleHP and wBattleMP. This bank holds a copy
+; of the shared block of battle helper routines; no call to this copy was found in the source. (C2,
+; E-0385)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
 GetBattleATK_BankA1::
     ld hl, wBattleATK
     jr GetBattleStatWord_BankA1
 
-; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
+; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleDEF_BankA1::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankA1
 
-; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
+; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankA1::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankA1
 
-; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
+; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankA1::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankA1
 
-; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
+; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleHP_BankA1::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankA1
 
-; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA1). (C1, E-0357)
+; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleMP_BankA1::
     ld hl, wBattleMP
     jr GetBattleStatWord_BankA1
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; HL = the word at HL + 2 x slot A (the value, not a pointer). (C1, E-0357)
+; HL = the word at HL + 2 x slot A (the value, not a pointer). (C2, E-0357; probed E-0385)
 GetBattleStatWord_BankA1::
     add a
     add_a_to_hl
     deref_hl
     ret
 
+; HL += 2 * A, with A doubled in 8 bits first (an A of $80 or more wraps); A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0353)
+; appear in 12 banks)
 AddDoubleAToHL_BankA1::
     add a
     add_a_to_hl
     ret
 
+; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise; but when wLinkMode is 1 and
+; wLinkRole bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
@@ -69,6 +82,10 @@ ActorOnLocalSide_BankA1::
     cp $04
     ret
 
+; Carry set when wBattleTarget is below 4, clear otherwise; but when wLinkMode is 1 and wLinkRole
+; bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank holds a
+; copy of the shared block of battle helper routines; no call to this copy was found in the source.
+; (C2, E-0385)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
@@ -89,6 +106,10 @@ TargetOnLocalSide_BankA1::
     cp $04
     ret
 
+; D = an index 0-6, E = a slot: ANDs the byte at wBattleStatus + 9 * E (status byte 0 of the slot)
+; with ClearBitMaskTable_BankA1[D] ($DF, $FE, $00, $FD, $73, $EF, $BF). A, D, HL are clobbered. Not
+; reached from the traced code (a configured code entry); no caller was found in the source. (C2,
+; E-0385)
 ; wBattleStatus + 9 * E &= ClearBitMaskTable_BankA1[D] (AddAx9ToHL); not reached from traced code
 ; (E-0205)
 ClearBattleStatusBitsWithMaskD_BankA1:: ; configured code entry (E-0205); C0
@@ -117,8 +138,11 @@ ClearBitMaskTable_BankA1::
     db $ef ; id 5
     db $bf ; id 6
 
+; A = an index: sets bit 0 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -127,8 +151,11 @@ SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = an index: sets bit 1 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -137,8 +164,11 @@ SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = an index: sets bit 2 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
+; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
+; source. (C2, E-0385)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0353)
+; banks)
 SetBit2OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -147,6 +177,10 @@ SetBit2OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = a slot 0-7: returns A = 9 * g(wSlotPersonalityHi[slot]) + 3 * g(wSlotPersonalityMid[slot]) +
+; g(wSlotPersonalityLo[slot]), where g(v) = 0 for $C0 or more, 1 for $40 to $BF and 2 below $40 (so
+; 0-26). BC and HL are kept. This bank holds a copy of the shared block of battle helper routines;
+; no call to this copy was found in the source. (C2, E-0385)
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
@@ -206,6 +240,10 @@ PersonalityIndexOfSlot_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = a slot: carry set when CheckSlotStatusBlock sets it (the slot is out, or a status bit it tests
+; is set), or when bits 6-7 of status byte 3 or bits 2-3 of status byte 4 (wBattleStatus3 + 9 * A)
+; are set; otherwise carry clear. A, BC, HL are kept. This bank holds a copy of the shared block of
+; battle helper routines; no call to this copy was found in the source. (C2, E-0385)
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
@@ -235,6 +273,9 @@ CheckSlotStatusBlockWide_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; A = a slot: A = status byte 3 of the slot (wBattleStatus3 + 9 * A) and $C0, or when that is 0
+; status byte 4 and $0C; Z is set when both are clear. HL is kept. This bank holds a copy of the
+; shared block of battle helper routines; no call to this copy was found in the source. (C2, E-0385)
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
@@ -252,6 +293,14 @@ SlotHasStatus3Or4Bits_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+; The command entry of the turn of game mode 7 (battle step 2;
+; RunBattlePhaseWhenTextIdle_A0_RunTurn_Commands far-calls it every frame), a variant of
+; RunBattleCommandEntry (bank $30) whose step 0 marks the enemy slots. Returns while text is shown
+; (wTextFlags not 0); otherwise jumps by wBattleSubPhase to 0
+; RunBattleCommandEntry_BankA1_MarkEnemySlots, 1 RunBattleCommandEntry_BankA1_NextActor, 2
+; RunBattleCommandEntry_BankA1_ChooseAIAction, 3 RunBattleCommandEntry_BankA1_ChooseTarget, 4
+; RunBattleCommandEntry_BankA1_ListSpeeds, 5 RunBattleCommandEntry_BankA1_SortBySpeed and 6
+; RunBattleCommandEntry_BankA1_TotalHP. (C1, E-0385)
 ; a variant of RunBattleCommandEntry (bank $30) with the same seven steps, but step 0 marks the
 ; enemy slots 4-7 instead of choosing the command-entry monster, the second random stream always
 ; advances, step 3 uses ChooseActionTarget, step 4 lists no item entry, and a skill's speed bonus is
@@ -271,9 +320,10 @@ RunBattleCommandEntry_BankA1::
     dw RunBattleCommandEntry_BankA1_SortBySpeed
     dw RunBattleCommandEntry_BankA1_TotalHP
 
-; Turn order, step 0: clears the link byte and the actor, and marks the enemy slots 4-7 in
-; wSlotMarks: $FF stays empty, $FE and $FD become 3, a present slot 1, one that is out 3; next step.
-; (C1, E-0357)
+; Turn order, step 0: clears wLinkSendByte and wBattleActor, then marks the three slots 4, 5 and 6
+; (not 7) in wSlotMarks: $FF stays $FF, $FE and $FD become 3, any other mark becomes 3 for an absent
+; slot and 1 for a present one (CarryUnlessBattleSlotOutSlotEmpty); adds 1 to wBattleSubPhase. (C2,
+; E-0385)
 RunBattleCommandEntry_BankA1_MarkEnemySlots::
     xor a
     ld [wLinkSendByte], a
@@ -308,9 +358,12 @@ RunBattleCommandEntry_BankA1_MarkEnemySlots::
     inc [hl]
     ret
 
-; Turn order, step 1: advances the second random stream; walks wBattleActor through the slots to the
-; next one marked 1 that is present and goes on to its command entry (step 2); after slot 7 skips to
-; step 4. (C1, E-0357)
+; Turn order, step 1, run every frame: advances the second random stream
+; (NextTableByteSecondStream). With wBattleActor = 8 (past the last slot) adds 3 to wBattleSubPhase
+; (on to step 4). Otherwise looks at the mark of wBattleActor in wSlotMarks: when it is 1 and the
+; slot is present, wBattleActor stays, wBattleResolveStep is cleared and wBattleSubPhase moves on
+; one step (the command entry of the computer, step 2); for any other slot only wBattleActor is
+; increased by 1, so one slot is passed per call. (C2, E-0385)
 RunBattleCommandEntry_BankA1_NextActor::
     call NextTableByteSecondStream
     ld a, [wBattleActor]
@@ -376,7 +429,8 @@ RunBattleCommandEntry_BankA1_ChooseTarget::
 
 ; Turn order, step 4: clears the action queue and the speed list, then for each present slot marked
 ; 2 works out a speed (RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed plus the action's bonus,
-; AddActionSpeedBonus_BankA1) and lists it with the slot number; next step. (C1, E-0357)
+; AddActionSpeedBonus_BankA1) and lists it with the slot number; next step. (C2, E-0357; probed
+; E-0385)
 RunBattleCommandEntry_BankA1_ListSpeeds::
     ld hl, wActionQueue
     ld bc, $0009
@@ -438,7 +492,7 @@ RunBattleCommandEntry_BankA1_ListSpeeds::
     ret
 
 ; Turn order, step 5: sorts the listed slots by speed, fastest first (swapping neighbours, eight
-; passes), and copies the order into wActionQueue; next step. (C1, E-0357)
+; passes), and copies the order into wActionQueue; next step. (C2, E-0357; probed E-0385)
 RunBattleCommandEntry_BankA1_SortBySpeed::
     ld d, $08
 
@@ -536,7 +590,7 @@ RunBattleCommandEntry_BankA1_SortBySpeed::
 
 ; Turn order, step 6: totals the HP and the max HP of slots 0-2 into wBattleCommandArgs, clears the
 ; resolve counters, saves the action choices (SaveActionChoicesAndPickFormations) and marks berserk
-; actors (SetBerserkForAction6E_BankA1); next battle step. (C1, E-0357)
+; actors (SetBerserkForAction6E_BankA1); next battle step. (C2, E-0357; probed E-0385)
 RunBattleCommandEntry_BankA1_TotalHP::
     ld hl, wBattleHP
     ld bc, $0000
@@ -568,7 +622,9 @@ RunBattleCommandEntry_BankA1_TotalHP::
     call SetBerserkForAction6E_BankA1
     ret
 
-; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks) (E-0353)
+; BC += the word at HL (low byte first, 16-bit wrap); HL moves on 2 bytes; A is clobbered. Called
+; six times by RunBattleCommandEntry_BankA1_TotalHP. (C2, E-0385)
+; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
 AddWordAtHLToBC_BankA1::
     ld a, [hli]
     add c
@@ -578,7 +634,7 @@ AddWordAtHLToBC_BankA1::
     ld b, a
     ret
 
-; Sets BSTAT6_BERSERK for every present slot whose chosen action is $6E. (C1, E-0357)
+; Sets BSTAT6_BERSERK for every present slot whose chosen action is $6E. (C2, E-0357; probed E-0385)
 SetBerserkForAction6E_BankA1::
     ld c, $00
     ld b, $08
@@ -606,7 +662,7 @@ SetBerserkForAction6E_BankA1::
     ret
 
 ; BC = a random speed for slot E between 3/10 of its agility and its agility (second random stream).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed::
     push de
     call NextTableByteSecondStream
@@ -631,7 +687,7 @@ RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed::
 
 ; Adds the action's speed bonus to BC: actions $62 and $D8 add 3,000 (they go first); a skill whose
 ; record byte 5 has bit 2 set adds 2,000, others 10; action $69 instead gives a random speed of 1 to
-; 9 (random mod 9 + 1). (C1, E-0357)
+; 9 (random mod 9 + 1). (C2, E-0357; probed E-0385)
 AddActionSpeedBonus_BankA1::
     push de
     ld a, e
@@ -720,6 +776,11 @@ AddActionSpeedBonus_BankA1::
     pop de
     ret
 
+; Does nothing unless wMapType is exactly $80 (a key world). Sets the bit of the screen
+; (hMapScreenX, hMapScreenY) in the 8-byte map wVisitedScreens: byte 4 * (Y / 4) + 2 * (X / 4) + ((Y
+; / 2) and 1), bit (X and 3) + 4 * (Y and 1). A, B, C, HL are clobbered. Called by
+; RunFieldActionRequestActionIfBit7_ScrollScreen, WarpEffect_Warp and
+; MarkVisitedScreens5x5AroundPlayer. (C2, E-0385)
 ; on map type $80 sets the bit for the current map screen in the visited-screen bitmap
 ; wVisitedScreens (E-0125)
 MarkVisitedMapScreenInVisitedScreens::
@@ -765,7 +826,7 @@ MarkVisitedMapScreenInVisitedScreens::
     ret
 
 ; Marks the current floor's exit screen (wKeyWorldAreaExits, second byte when wKeyWorldFloor bit 7)
-; as visited: sets its bit in wVisitedScreens. (C1, E-0357)
+; as visited: sets its bit in wVisitedScreens. (C2, E-0357; probed E-0385)
 WarpEffect_Warp_MarkExitVisited::
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
@@ -823,6 +884,10 @@ WarpEffect_Warp_MarkExitVisited::
     ld [hl], a
     ret
 
+; Marks the screens within 2 of (hMapScreenX, hMapScreenY) that lie inside wKeyWorldWidth x
+; wKeyWorldHeight as visited (MarkVisitedMapScreenInVisitedScreens for each, so only in a key world
+; of wMapType $80). hMapScreenX and hMapScreenY are restored; hTemp0 and hTemp1 are left holding the
+; original X and Y. Called by FieldSkillEffect_MapAroundPlayer. (C2, E-0385)
 ; marks the 5 x 5 map screens around the current one (within wKeyWorldWidth x wKeyWorldHeight) as
 ; visited (E-0127)
 MarkVisitedScreens5x5AroundPlayer::
@@ -880,6 +945,11 @@ MarkVisitedScreens5x5AroundPlayer::
     ldh [hMapScreenY], a
     ret
 
+; Field state 8, the world map: FieldState_WorldMap far-calls it every frame. Jumps by
+; wWorldMapState and 7 to RunWorldMapState_BlankPalettes (0 and 3), RunWorldMapState_DrawOverview
+; (1), RunWorldMapState_OverviewInput (2), RunWorldMapState_DrawCloseUp (4),
+; RunWorldMapState_CloseUpInput (5) and RunWorldMapState_ReturnToField (6); state 7 has no entry.
+; TryOpenWorldMap starts it at state 0 (the overview) or 3 (the close-up). (C1, E-0385)
 ; the world map screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map
 ; graphics and tiles, shows the region, and returns to the field (EnterGameMode1WithDefaultPalettes)
 ; (E-0354; was: runs the routine for wWorldMapState & 7 (field mode state 8; jump table, 3 reuses 0)
@@ -908,7 +978,7 @@ RunWorldMapState_DrawCloseUp::
     ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Tiles0Plus100Gfx_3
+    ld de, Tiles0Plus100Gfx_2
     ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
@@ -916,7 +986,7 @@ RunWorldMapState_DrawCloseUp::
     ld b, $7e
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld de, Tiles2Gfx_3
+    ld de, WorldMapCloseUpTerrainTiles
     ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
@@ -1161,8 +1231,9 @@ RunWorldMapState_DrawCloseUpCell::
     ret
 
 ; Finds where the player is for the close-up: runs the map-type position routine
-; (RunGameMode2MapTypeState), then sets the first screen and the cell within it (hTemp5-hTemp8) so
-; the player's screen is in the middle; the player's position is restored. (C1, E-0357)
+; (SetWorldMapPlayerScreenByMapType), then sets the first screen and the cell within it
+; (hTemp5-hTemp8) so the player's screen is in the middle; the player's position is restored. (C2,
+; E-0357; probed E-0385)
 RunWorldMapState_DrawCloseUp_CenterKeyWorld::
     ldh a, [hPlayerX]
     ld l, a
@@ -1174,7 +1245,7 @@ RunWorldMapState_DrawCloseUp_CenterKeyWorld::
     ldh a, [hMapScreenY]
     ld h, a
     push hl
-    call RunGameMode2MapTypeState
+    call SetWorldMapPlayerScreenByMapType
     ld a, [wKeyWorldWidth]
     ldh [hTemp3], a
     ld a, [wKeyWorldHeight]
@@ -1230,27 +1301,33 @@ RunWorldMapState_DrawCloseUp_CenterKeyWorld::
     ldh [hMapScreenX], a
     ret
 
+; Chooses where the player is placed for the world map by wMapType and 7: 0
+; SetWorldMapPlayerScreenByMapType_KeepPlace, 1 and 2 SetWorldMapPlayerScreenByMapType_PlaceAtExit,
+; 3 to 6 SetWorldMapPlayerScreenByMapType_PlaceAtFloor, 7
+; SetWorldMapPlayerScreenByMapType_PlaceAtGoal. Called by
+; RunWorldMapState_DrawCloseUp_CenterKeyWorld. It has nothing to do with game mode 2 (the pause
+; menu). (C2, E-0385)
 ; runs the routine for wMapType & 7 (jump table) (E-0122)
-RunGameMode2MapTypeState::
+SetWorldMapPlayerScreenByMapType::
     ld a, [wMapType]
     and $07
     jumptable
-    dw RunGameMode2MapTypeState_KeepPlace
-    dw RunGameMode2MapTypeState_PlaceAtExit
-    dw RunGameMode2MapTypeState_PlaceAtExit
-    dw RunGameMode2MapTypeState_PlaceAtFloor
-    dw RunGameMode2MapTypeState_PlaceAtFloor
-    dw RunGameMode2MapTypeState_PlaceAtFloor
-    dw RunGameMode2MapTypeState_PlaceAtFloor
-    dw RunGameMode2MapTypeState_PlaceAtGoal
+    dw SetWorldMapPlayerScreenByMapType_KeepPlace
+    dw SetWorldMapPlayerScreenByMapType_PlaceAtExit
+    dw SetWorldMapPlayerScreenByMapType_PlaceAtExit
+    dw SetWorldMapPlayerScreenByMapType_PlaceAtFloor
+    dw SetWorldMapPlayerScreenByMapType_PlaceAtFloor
+    dw SetWorldMapPlayerScreenByMapType_PlaceAtFloor
+    dw SetWorldMapPlayerScreenByMapType_PlaceAtFloor
+    dw SetWorldMapPlayerScreenByMapType_PlaceAtGoal
 
-; Map type 0: nothing to do. (C1, E-0357)
-RunGameMode2MapTypeState_KeepPlace::
+; Map type 0: nothing to do. (C2, E-0357; probed E-0385)
+SetWorldMapPlayerScreenByMapType_KeepPlace::
     ret
 
-; Map type 1: places the player at the current floor's exit screen (wKeyWorldAreaExits). (C1,
-; E-0357)
-RunGameMode2MapTypeState_PlaceAtExit::
+; Map type 1: places the player at the current floor's exit screen (wKeyWorldAreaExits). (C2,
+; E-0357; probed E-0385)
+SetWorldMapPlayerScreenByMapType_PlaceAtExit::
     ld a, [wKeyWorldFloor]
     and $07
     add a
@@ -1266,8 +1343,9 @@ RunGameMode2MapTypeState_PlaceAtExit::
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; Map type 3: places the player at the current floor's screen from wKeyWorldFloorInfo. (C1, E-0357)
-RunGameMode2MapTypeState_PlaceAtFloor::
+; Map type 3: places the player at the current floor's screen from wKeyWorldFloorInfo. (C2, E-0357;
+; probed E-0385)
+SetWorldMapPlayerScreenByMapType_PlaceAtFloor::
     ld a, [wKeyWorldFloor]
     and $07
     add a
@@ -1278,8 +1356,9 @@ RunGameMode2MapTypeState_PlaceAtFloor::
     jr SetMapScreenFromAAndCenterPlayer
 
 ; Map type 7: places the player at the key world's goal (wKeyWorldGoalCell and wKeyWorldGoal) when
-; the active key's slot matches, otherwise at wKeyWorldGoalScreen / wKeyWorldGoalPos. (C1, E-0357)
-RunGameMode2MapTypeState_PlaceAtGoal::
+; the active key's slot matches, otherwise at wKeyWorldGoalScreen / wKeyWorldGoalPos. (C2, E-0357;
+; probed E-0385)
+SetWorldMapPlayerScreenByMapType_PlaceAtGoal::
     ld a, [wKeyWorldActive]
     or a
     jr z, .read_key_world_goal_screen
@@ -1311,6 +1390,10 @@ RunGameMode2MapTypeState_PlaceAtGoal::
     ldh [hPlayerY], a
     ret
 
+; A = a screen (high nibble X, low nibble Y): hMapScreenX = X, hMapScreenY = Y, hPlayerX = hPlayerY
+; = $40. A is clobbered. Used by the placements SetWorldMapPlayerScreenByMapType_PlaceAtExit and
+; SetWorldMapPlayerScreenByMapType_PlaceAtFloor (which jump to it) and
+; SetWorldMapPlayerScreenByMapType_PlaceAtGoal (which calls it). (C2, E-0385)
 ; hMapScreenX = A >> 4, hMapScreenY = A & $0F, hPlayerX = hPlayerY = $40 (E-0118)
 SetMapScreenFromAAndCenterPlayer::
     push af
@@ -1439,7 +1522,7 @@ RunWorldMapState_DrawCloseUp_Region::
     ret
 
 ; Sets up a region's close-up: the region's size and screen-tile table from WorldMapScreenCellTable,
-; and the first screen and cell so the player's screen is in the middle. (C1, E-0357)
+; and the first screen and cell so the player's screen is in the middle. (C2, E-0357; probed E-0385)
 RunWorldMapState_SetUpCloseUp::
     ldh a, [hPlayerX]
     ld l, a
@@ -1643,7 +1726,7 @@ WorldMapScreenCellTable::
 ; $B2, $C5, $D0, $D9, $E2) the start position, or the key world's goal when that region's key is
 ; active; on maps $20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA nothing changes; other maps
 ; look themselves up in WorldMapScreenPositionTable (the second position when the last warp was 2).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0385)
 RunWorldMapState_FindPlayerScreen::
     ldh a, [hMapId]
     ld c, $01
@@ -1766,6 +1849,10 @@ RunWorldMapState_FindPlayerScreen::
     call LoadMapPositionFromHL
     ret
 
+; HL = a position record of two bytes: hMapScreenX and hMapScreenY = the high and low nibble of the
+; first byte; hPlayerX = the second byte and $F0, hPlayerY = its low nibble shifted up by 4. HL ends
+; on the second byte; A is clobbered. Called twice by RunWorldMapState_FindPlayerScreen. (C2,
+; E-0385)
 ; hMapScreenX/Y = the nibbles of [HL]; hPlayerX = [HL + 1] & $F0, hPlayerY = ([HL + 1] & $0F) << 4
 ; (E-0118)
 LoadMapPositionFromHL::
@@ -1786,6 +1873,9 @@ LoadMapPositionFromHL::
     ldh [hPlayerY], a
     ret
 
+; wCursorCellX = hTemp5, wCursorCellY = hTemp7, wCursorCellW = hTemp6, wCursorCellH = hTemp8 (the
+; first screen block and cell the close-up starts from). A is clobbered. Called by
+; RunWorldMapState_DrawCloseUp_KeyWorld and RunWorldMapState_DrawCloseUp_Region. (C2, E-0385)
 ; wCursorCellX = hTemp5, wCursorCellY = hTemp7, wCursorCellW = hTemp6, wCursorCellH = hTemp8
 ; (E-0118)
 StoreTemp5ValuesToCursorCellX::
@@ -2600,6 +2690,10 @@ RunWorldMapState_DrawKeyWorldMarkers_Screen::
     pop de
     ret
 
+; While bit 5 of wFrameCounterLo is set, draws metasprite set 8 (DrawMetaSprite, sub-index 0, no
+; tile offset or attribute change) with its origin at X $4E, Y $46 (near the middle of the screen);
+; returns at once when the bit is clear, so it blinks. Called by RunWorldMapState_DrawCloseUpMarkers
+; as the marker of the player. (C1, E-0385)
 ; while bit 5 of wFrameCounterLo is set, draws metasprite set 8 at ($4E, $46) (E-0121)
 DrawBlinkingMetaSprite8::
     ld a, [wFrameCounterLo]
@@ -2664,15 +2758,15 @@ RunWorldMapState_DrawOverview::
     ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Tiles0Plus100Gfx_2
+    ld de, Tiles0Plus100Gfx
     ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, Tiles2Gfx_2
+    ld de, WorldMapOverviewLandTiles
     ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
-    ld de, Tiles2Plus500Gfx
+    ld de, WorldMapOverviewFrameTiles
     ld b, $5e
     ld hl, vTiles2 + $500
     call DecompressToVRAM
@@ -3008,7 +3102,7 @@ RunWorldMapState_DrawOverview_KeyWorld::
     ld de, wNameGlyphBuf
     ld a, [wCurrentKeyIndex]
     call WriteKeyNameToDE
-    call RunGameMode2State_CenterName
+    call RunWorldMapState_CenterNameGlyphBuf
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80
@@ -3074,9 +3168,14 @@ RunWorldMapState_DrawOverview_KeyWorldCell::
     pop af
     ret
 
+; Centers a name in wNameGlyphBuf: counts the glyphs up to the $F0 end byte (the $F0 is counted, the
+; dakuten marks $8D and $8E are not), then moves the string right by (13 - that count) / 2 places
+; and fills the places before it with the blank glyph $90; nothing moves when that number is 0. HL
+; and DE are kept. Called by RunWorldMapState_DrawOverview_Region and
+; RunWorldMapState_DrawOverview_KeyWorld. (C2, E-0385)
 ; counts the characters of wNameGlyphBuf (not the dakuten marks) and shifts it to center it in 13
-; tiles (E-0305)
-RunGameMode2State_CenterName::
+; tiles
+RunWorldMapState_CenterNameGlyphBuf::
     push hl
     push de
     ld hl, wNameGlyphBuf
@@ -3181,7 +3280,7 @@ RunWorldMapState_DrawOverview_Region::
     ld a, d
     ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank08
-    call RunGameMode2State_CenterName
+    call RunWorldMapState_CenterNameGlyphBuf
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80
@@ -3323,6 +3422,10 @@ RunWorldMapState_DrawOverviewGoalMarker::
     call DrawCursorSpriteAtTemp1Cell
     ret
 
+; hTemp1 = a screen (high nibble X, low nibble Y): draws metasprite set $26 (tile offset $10,
+; attribute XOR 1, sub-index 0) with DrawMetaSprite at hSpriteOriginX = 8 * wCursorCellX + 8 * X and
+; hSpriteOriginY = 8 * wCursorCellY + 8 * Y (origin high bytes 0). Called four times by
+; RunWorldMapState_DrawOverviewGoalMarker. (C1, E-0385)
 ; draws metasprite set $26 at X = 8 * (wCursorCellX + 8 * high nibble of hTemp1), Y = 8 *
 ; (wCursorCellY + 8 * low nibble) (E-0121)
 DrawCursorSpriteAtTemp1Cell::
@@ -3522,6 +3625,9 @@ RunWorldMapState_WaitFrameCounterLo_GoalMarker::
     call DrawMetaSpriteSet08
     ret
 
+; A = an X offset in pixels: hSpriteOriginX = 8 * wCursorCellX + A + 6 (8 bits). A and C are
+; clobbered. Used by the overview and close-up marker routines such as
+; RunWorldMapState_DrawOverviewPlayerMarker. (C2, E-0385)
 ; hSpriteOriginX = 8 * wCursorCellX + A + 6 (E-0122)
 SetSpriteXFromCursorCellX::
     ld c, a
@@ -3534,6 +3640,9 @@ SetSpriteXFromCursorCellX::
     ldh [hSpriteOriginX], a
     ret
 
+; A = a Y offset in pixels: hSpriteOriginY = 8 * wCursorCellY + A + 6 (8 bits). A and C are
+; clobbered. Used by the overview and close-up marker routines such as
+; RunWorldMapState_DrawOverviewPlayerMarker. (C2, E-0385)
 ; hSpriteOriginY = 8 * wCursorCellY + A + 6; the next entry dispatches on wMapType & 7 (E-0124)
 SetSpriteYFromCursorCellY::
     ld c, a
@@ -3613,6 +3722,10 @@ SetSpriteYFromCursorCellY_GoalMarker::
     call SetSpriteXYFromCellA
     ret
 
+; A = a screen (high nibble X, low nibble Y): hSpriteOriginX = 8 * wCursorCellX + 8 * X + 6 and
+; hSpriteOriginY = 8 * wCursorCellY + 8 * Y + 6; it has no return of its own and falls into
+; DrawMetaSpriteSet08, so it also draws metasprite set 8 there. Called by the key-world marker
+; routines such as SetSpriteYFromCursorCellY_ExitMarker. (C1, E-0385)
 ; hSpriteOriginX = 8 * wCursorCellX + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wCursorCellY + (A &
 ; $0F) * 8 + 6 (E-0124)
 SetSpriteXYFromCellA::
@@ -3641,6 +3754,10 @@ SetSpriteXYFromCellA::
     add $06
     ldh [hSpriteOriginY], a
 
+; Calls DrawMetaSprite (far) for metasprite set $08, sub-index 0, no tile offset, no attribute
+; change and origin high bytes 0, at the position left in hSpriteOriginX and hSpriteOriginY by the
+; caller. Called by RunWorldMapState_DrawOverviewPlayerMarker and other marker routines, and entered
+; by falling through from SetSpriteXYFromCellA. (C1, E-0385)
 ; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0)
 ; (E-0118)
 DrawMetaSpriteSet08::
@@ -3767,6 +3884,9 @@ RunWorldMapState_DrawOverviewMarkers::
 .skip4:
     jr .skip2
 
+; Calls DrawMetaSprite (far) for metasprite set $26, sub-index 0, tile offset $10, attribute XOR 1
+; and origin high bytes 0, at the position left in hSpriteOriginX and hSpriteOriginY by the caller.
+; Called twice by RunWorldMapState_DrawOverviewMarkers. (C1, E-0385)
 ; DrawMetaSprite with set $26, sub-index 0, tile offset $10, attribute XOR $01 (origin high bytes 0)
 ; (E-0118)
 DrawMetaSpriteSet26::
@@ -3872,6 +3992,10 @@ RunWorldMapState_DrawVisitedScreenMarker::
     pop de
     ret
 
+; B = width, C = rows of a block of tiles: wCursorCellY = 9 - C / 2, wCursorCellX = 10 - B / 2 and
+; HL = vBGMap0 + 32 * row + column, the address of the top-left tile of the block when it is
+; centered on the 20 x 18 tile screen. A and E are clobbered. Called by
+; RunWorldMapState_DrawOverview_Region and RunWorldMapState_DrawOverview_KeyWorld. (C2, E-0385)
 ; row = 9 - C/2 (wCursorCellY), column = 10 - B/2 (wCursorCellX); HL = vBGMap0 + 32 * row + column
 ; (E-0121)
 CenteredBGMapOriginForSizeBC::
@@ -3903,6 +4027,8 @@ CenteredBGMapOriginForSizeBC::
     add_a_to_hl
     ret
 
+; Fills the $400 bytes of vBGMap0 (the whole 32 x 32 map) with tile $57 using WriteVRAMByteInc. A,
+; BC, HL are clobbered. Called by RunWorldMapState_DrawCloseUp before the map is drawn. (C1, E-0385)
 ; fills the $400 bytes of vBGMap0 with tile $57 (E-0122)
 FillBGMap0With57::
     ld hl, vBGMap0
@@ -3982,6 +4108,9 @@ RunWorldMapState_DrawOverview_SetAttributes::
     ldh [c], a
     ret
 
+; Copies the 12 x 12 tile block DrawRect12x12FromBankA1_TileRect (all 144 tiles are $34) from bank
+; $A1 to vBGMap0 + $64 (row 3, column 4) with CopyRectFromBankToVRAM (B = 12 wide, C = 12 rows, A =
+; the bank $A1). Called by RunWorldMapState_DrawOverview after it copies the frame. (C1, E-0385)
 ; copies a 12 x 12 tile rectangle from A1:$5808 to vBGMap0 + $64 (CopyRectFromBankToVRAM) (E-0116)
 DrawRect12x12FromBankA1::
     ld de, DrawRect12x12FromBankA1_TileRect
@@ -4008,6 +4137,9 @@ DrawRect12x12FromBankA1_TileRect::
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 10
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 11
 
+; Sets wFieldInitStage to 3 and wDataBankSave to $40, far-calls InitFieldScreen, sets the three DMG
+; palette bytes from wDMGPaletteBGP to $D2, $D2, $E2 and wGameMode to 1. Called by
+; RunWorldMapState_ReturnToField when the world map closes. (C1, E-0385)
 ; wFieldInitStage = 3, wDataBankSave = $40, far-calls InitFieldScreen, sets the default DMG palette
 ; bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
 EnterGameMode1WithDefaultPalettes::
@@ -4027,6 +4159,11 @@ EnterGameMode1WithDefaultPalettes::
     ld [wGameMode], a
     ret
 
+; A = a screen (high nibble X, low nibble Y): A = 1 when its bit is set in the 8-byte map
+; wVisitedScreens (byte 4 * (Y / 4) + 2 * (X / 4) + ((Y / 2) and 1), bit (X and 3) + 4 * (Y and 1)),
+; else 0. BC and HL are kept; hTemp0 is clobbered. Called by the world map marker and close-up
+; routines such as RunWorldMapState_DrawRegionMarkers and RunWorldMapState_DrawVisitedScreenMarker.
+; (C2, E-0385)
 ; A = 1 when the bit for screen A (high nibble x, low nibble y) is set in wVisitedScreens, else 0
 ; (E-0125)
 IsMapScreenAVisited::
@@ -4081,6 +4218,16 @@ IsMapScreenAVisited::
     pop bc
     ret
 
+; Called by FieldState_WalkATalks and FieldState_WalkAMenu when Select is newly pressed. Sets hTemp0
+; to 0 and returns without opening the map unless no fade runs (wFadeState 0), the text window is
+; closed (wTextWindowState bits 0-1 clear), wFieldActionRequest bit 7 is clear and hPlayerStateFlags
+; bit 0 is clear. In a key world (wMapType bit 7) it goes on at once; on other maps below $20 it
+; returns; from map $20 up it sets wWorldMapRegion to 0-10 by the hMapId bands $20-$2F, $30-$47,
+; $48-$6F, $70-$9F, $A0-$A7, $A8-$AF, $B0-$B7, $B8-$C7, $C8-$D0, $D1-$D9 and $DA up. Opening the map
+; sets hTemp0 to 1, wFieldReturnPhase to 1, saves the screen buffer (SaveScreenBufferToBGMap1), sets
+; wModeState to 8 (field state 8) and wWorldMapState to 0 (open at the overview) for a $80 key world
+; or for the first map of a band ($20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA), otherwise
+; to 3 (open at the close-up). (C1, E-0385)
 ; Select in field states 0 and 5: unless a fade, the text window, a field action or the player state
 ; blocks it, sets hTemp0 = 1 in a key world (bit 7 of wMapType); on maps $20 and up stores the map's
 ; region in wWorldMapRegion and opens the world map (C2 from E-0339: on map $30 it shows the Water

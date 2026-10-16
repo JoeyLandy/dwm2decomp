@@ -61,7 +61,7 @@ DEF BATTLER_JOIN_CLASS EQU $4D ; MonsterTable byte 8 for a wild monster; copied 
 DEF SPECIES_FAMILY EQU $00 ; family (StringTable_MonsterFamilies index) (E-0069)
 DEF SPECIES_SEX_RATIO EQU $01 ; sex-ratio class: 0 = always male, otherwise (byte & 3) indexes SexChanceByClass (10, 50, 90: the chance of female) in RollChildSexFromSpecies (E-0307, E-0311)
 DEF SPECIES_UNTRIPPABLE EQU $02 ; bit 0 becomes bit 4 of the slot's wSlotBodyFlags at battle start (GameMode4_Init_LoadBattleSlots); LegSweep and BigTrip skip or fail on such a target (ChooseTarget_LegSweep, ActionEffect_LegSweep) (E-0310)
-DEF SPECIES_METAL EQU $03 ; bit 0 becomes bit 0 of the slot's wSlotBodyFlags: MetalCut multiplies damage by 50 against it (MultiplyDamageBy50IfSlotDamageFlagsBit0, ChooseTarget_MetalCut); a non-zero byte also raises a stat cap from 700 to 999 in battle kind 3 (E-0310)
+DEF SPECIES_METAL EQU $03 ; bit 0 becomes bit 0 of the slot's wSlotBodyFlags: MetalCut multiplies damage by 50 against it (MultiplyDamageBy50IfSlotBodyFlagsBit0, ChooseTarget_MetalCut); a non-zero byte also raises a stat cap from 700 to 999 in battle kind 3 (E-0310)
 DEF SPECIES_JOIN_CLASS EQU $04 ; join-chance class 0-7: after a battle BattleEnd_OfferJoin_DecideJoinOffer compares (random mod 200) with the chance table entry for it; 7 = never joins (E-0306)
 DEF SPECIES_UNUSED_05 EQU $05 ; values 0-3 in the 324 records but never read: every species read goes through wSpeciesRecord, and no code reads its byte 5 (the two whole-buffer users only clear it) (E-0311)
 DEF SPECIES_MAX_LEVEL EQU $06 ; base level cap: copied to a new record's $57 (MON_MAX_LEVEL); BattleEnd_Records compares the level with it; ComputeBreedingChild starts the child's cap from it (E-0299)

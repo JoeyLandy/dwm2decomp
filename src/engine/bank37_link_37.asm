@@ -4,7 +4,17 @@
 SECTION "Bank 37", ROMX[$4000], BANK[$37]
     db $37
 
-; ld de, this bank's string table / BeginStringDisplay (E-0353)
+; Starts showing a string from the table of this bank: loads DE =
+; BeginStringDisplay_Bank37_StringCategories and calls BeginStringDisplay, which clears the text
+; window, looks up string wStringIndex of category wStringCategory and sets wTextFlags to 1 so the
+; text printer draws it. Category 0 holds the item-use messages (for example 'But nothing
+; happened!'), category 1 the skill-use messages (for example 'cast'). The caller sets
+; wStringCategory, wStringIndex and the text window first; the pause menu
+; (PauseMenu_Items_UseItem_ShowMessage and others) and DebugMessageTest_Update_ShowBank37 farcall
+; it. The 14 bytes after its ret are not referenced by name: a second copy of the same three
+; instructions followed by a call to BeginStringDisplay_Bank37 and RunStringDisplayToEnd. (C1,
+; E-0382)
+; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank37::
     ld de, BeginStringDisplay_Bank37_StringCategories
     call BeginStringDisplay
@@ -599,7 +609,7 @@ RunLinkSession5Exchange_SwapMenu::
 
 ; Session 5, states 1, 7-11, 15 and 16: once wTextFlags bit 0 is clear, zero-fills the $6F bytes
 ; from wScreenState and requests game mode 5, state 1 (wGameMode, wModeState, wModeChangeRequest).
-; (C1, E-0371)
+; (C2, E-0371; probed E-0382)
 RunLinkSession5Exchange_ExitAfterText::
     ld a, [wTextFlags]
     bit 0, a
@@ -622,7 +632,7 @@ RunLinkSession5Exchange_ExitAfterText::
     ld [wModeChangeRequest], a
     ret
 
-; Session 5, state 5: after the text sends 3. (C1, E-0357)
+; Session 5, state 5: after the text sends 3. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_SendLeave::
     ld a, [wTextFlags]
     or a
@@ -633,7 +643,7 @@ RunLinkSession5Exchange_SendLeave::
     inc [hl]
     ret
 
-; Session 5, state 6: on the partner's 3 goes to leaving (state 1). (C1, E-0357)
+; Session 5, state 6: on the partner's 3 goes to leaving (state 1). (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_WaitPartnerLeave::
     ld a, [wLinkMessage]
     cp $03
@@ -645,7 +655,7 @@ RunLinkSession5Exchange_WaitPartnerLeave::
     ret
 
 ; Session 5, state 2: moves to state 3, queues link byte 2 (wLinkSendByte) and increments
-; wTitleScreenState. (C1, E-0371)
+; wTitleScreenState. (C2, E-0371; probed E-0382)
 RunLinkSession5Exchange_SignalPartner::
     ld a, [wScreenState]
     inc a
@@ -656,7 +666,14 @@ RunLinkSession5Exchange_SignalPartner::
     inc [hl]
     ret
 
-; text waits around two strings (ShowStringIndexA_Bank37) (E-0303)
+; Session 5, state 3: runs one of four steps by wScreenStep: 0
+; RunLinkSession5Exchange_ShowMessages_WaitTextFlags (wait for the text), 1
+; RunLinkSession5Exchange_ShowMessages_TerryMessage (a received byte 2 shows the 'For breeding with'
+; text and jumps to state 5, a received 0 goes on, any other byte waits), 2
+; RunLinkSession5Exchange_ShowMessages_AskChoose ('Choose the monster for breeding.'), 3
+; RunLinkSession5Exchange_ShowMessages_SetScreenStep (after the text moves on to state 4,
+; LinkBreed). (C1, E-0382)
+; text waits around two strings (ShowStringIndexA_Bank37)
 RunLinkSession5Exchange_ShowMessages::
     ld a, [wScreenStep]
     jumptable
@@ -665,7 +682,7 @@ RunLinkSession5Exchange_ShowMessages::
     dw RunLinkSession5Exchange_ShowMessages_AskChoose
     dw RunLinkSession5Exchange_ShowMessages_SetScreenStep
 
-; The messages, step 0: after the text goes on. (C1, E-0357)
+; The messages, step 0: after the text goes on. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -711,7 +728,7 @@ RunLinkSession5Exchange_ShowMessages_AskChoose::
     ld [wScreenStep], a
     ret
 
-; The messages, step 3: after the text the next state. (C1, E-0357)
+; The messages, step 3: after the text the next state. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_ShowMessages_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -723,8 +740,21 @@ RunLinkSession5Exchange_ShowMessages_SetScreenStep::
     ld [wScreenState], a
     ret
 
+; Session 5, state 4 (the breeding itself): runs one of 34 steps by wScreenStep. Steps 0-3, 5-7 and
+; 13 run the choice list (LinkBreed_RunList, which calls BreedMenu once the text is done); 4 draws
+; the chosen record panel (LinkBreed_DrawPanel); 8 LinkBreed_ChooseOrRefuse; 9
+; LinkBreed_WaitPartnerCancel; 10 LinkBreed_WaitText; 11 LinkBreed_ClosingExchange; 12
+; LinkBreed_AskIsThisOK; 14 LinkBreed_PartnerCancel; 15 LinkBreed_WaitTextAgain; 16
+; LinkBreed_AskChoose; 17 LinkBreed_CheckPick; 18 LinkBreed_SendRecord; 19 and 27
+; LinkBreed_SendReady; 20 LinkBreed_ExchangeRecords; 21 LinkBreed_ReceiveRecord; 22
+; LinkBreed_CheckGenders; 23 LinkBreed_DrawChoiceBox; 24 LinkBreed_ReadChoice; 25
+; LinkBreed_DrawYesNo; 26 LinkBreed_ReadAnswer; 28 LinkBreed_WaitPartnerForChild; 29
+; LinkBreed_MakeChild; 30 LinkBreed_StoreChildRecord; 31 LinkBreed_StartWorkBufExchange; 32
+; LinkBreed_FinishExchange; 33 LinkBreed_WaitPartnerRefusal. The steps trade a record with the
+; partner over the link and end in the egg screens (wLinkScene, wLinkBreedResult) or back at the
+; title menu (game mode 5). (C1, E-0382)
 ; by wScreenStep: BreedMenu list steps, unpacks the partner's record from the link
-; (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and StoreReceivedRecordIntoSRAM (renamed from
+; (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and LinkBreed_StoreChildRecord (renamed from
 ; RunLinkSession5Exchange_LinkBreed from its E-0357 note, E-0367)
 LinkBreed::
     ld a, [wScreenStep]
@@ -759,7 +789,7 @@ LinkBreed::
     dw LinkBreed_SendReady
     dw LinkBreed_WaitPartnerForChild
     dw LinkBreed_MakeChild
-    dw StoreReceivedRecordIntoSRAM
+    dw LinkBreed_StoreChildRecord
     dw LinkBreed_StartWorkBufExchange
     dw LinkBreed_FinishExchange
     dw LinkBreed_WaitPartnerRefusal
@@ -873,7 +903,8 @@ LinkBreed_AskChoose_PleaseWait::
     ret
 
 ; Re-asking, sub-steps 1 and 5: after the text queues link byte 1 (wLinkSendByte) and moves to the
-; next sub-step, where LinkBreed_AskChoose_AskAgain waits for the partner's 1. (C1, E-0371)
+; next sub-step, where LinkBreed_AskChoose_AskAgain waits for the partner's 1. (C2, E-0371; probed
+; E-0382)
 LinkBreed_AskChoose_SendReady::
     ld a, [wTextFlags]
     and a
@@ -987,16 +1018,23 @@ LinkBreed_DrawPanel::
     ld [wScreenStep], a
     ret
 
-; Session 5 breeding, step 15: waits for the text. (C1, E-0357)
+; Session 5 breeding, step 15: returns while the text is still running. Once it is done it falls
+; into LinkBreed_CopyBlockAndAdvance, which copies the 8 x 5 block of the screen buffer from offset
+; $00AC to offset $0278, adds 1 to wScreenStep and sets wSelectedRecord to 0, all in the same call.
+; (C2, E-0382)
 LinkBreed_WaitTextAgain::
     ld a, [wTextFlags]
     and a
     ret nz
 
+; Copies a block of the screen buffer from offset $00AC to offset $0278, 8 bytes wide and 5 rows
+; high (CopyScreenBufferRectWithAttrs_37 with wArg1 = 0, wArg2 = 8, B = 0, C = 5), adds 1 to
+; wScreenStep and sets wSelectedRecord to 0. Step 15 (LinkBreed_WaitTextAgain) falls into it, and
+; LinkBreed_SendRecord calls it. (C2, E-0382)
 ; runs CopyScreenBufferRectWithAttrs_37 (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), wScreenStep
 ; += 1 and clears wSelectedRecord (E-0122) (E-0344: the address in its name dropped or read as the
-; label there; was RunCopyScreenBufferRectWithAttrs_37At0278AndStep)
-RunCopyScreenBufferRectWithAttrs_37At0278AndStep::
+; label there; was LinkBreed_CopyBlockAndAdvance)
+LinkBreed_CopyBlockAndAdvance::
     ld b, $00
     ld c, $05
     ld hl, $0278
@@ -1095,7 +1133,7 @@ LinkBreed_CheckPick::
     ret
 
 ; Session 5 breeding, step 18: copies the chosen SRAM record into wRecordBufA, converts it into
-; wWorkBuf for the exchange (UnpackLinkRecordToWorkBuf; here wRecordBufA holds this side's own
+; wWorkBuf for the exchange (PackRecordBufAToLinkWorkBuf; here wRecordBufA holds this side's own
 ; record), shows 'Please wait.' and redraws. (C1, E-0357)
 LinkBreed_SendRecord::
     ld a, [wTextFlags]
@@ -1121,17 +1159,19 @@ LinkBreed_SendRecord::
     jr nz, .loop
     xor a
     ld [rRAMG2], a
-    call UnpackLinkRecordToWorkBuf
+    call PackRecordBufAToLinkWorkBuf
     ld a, $07
     call ShowStringIndexA_Bank37
-    call RunCopyScreenBufferRectWithAttrs_37At0278AndStep
+    call LinkBreed_CopyBlockAndAdvance
     call BGMapAddressAtScroll_Bank37
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_37
     ret
 
-; Session 5 breeding, step 19: after the text sends 1. (C1, E-0357)
+; Session 5 breeding, steps 19 and 27: returns while the text is running; then wScreenStep + 1 and
+; wLinkSendByte = 1, the byte that the partner side waits for in step 20 (LinkBreed_ExchangeRecords)
+; and step 28 (LinkBreed_WaitPartnerForChild). (C2, E-0382)
 LinkBreed_SendReady::
     ld a, [wTextFlags]
     and a
@@ -1143,7 +1183,7 @@ LinkBreed_SendReady::
     ld [wLinkSendByte], a
     ret
 
-; Session 5 breeding, step 31: starts a $64-byte exchange of wWorkBuf. (C1, E-0357)
+; Session 5 breeding, step 31: starts a $64-byte exchange of wWorkBuf. (C2, E-0357; probed E-0382)
 LinkBreed_StartWorkBufExchange::
     ld a, $64
     ld [wLinkBufferCountLo], a
@@ -1212,7 +1252,7 @@ LinkBreed_ExchangeRecords::
     ret
 
 ; Session 5 breeding, step 21: when the exchange ends unpacks the partner's record into wRecordBufB
-; (UnpackLinkRecordToRecordBufB). (C1, E-0357)
+; (UnpackLinkRecordToRecordBufB). (C2, E-0357; probed E-0382)
 LinkBreed_ReceiveRecord::
     ld a, [wLinkMessage]
     cp $f0
@@ -1285,9 +1325,11 @@ LinkBreed_CheckGenders::
     ld [wScreenStep], a
     ret
 
-; Session 5 breeding, step 29: the leader (link role bit 1 clear) works out the child
-; (ComputeBreedingChild); then stores the received record in SRAM (StoreReceivedRecordIntoSRAM,
-; repeated until it moves the step) and starts the $64-byte exchange. (C1, E-0357)
+; Session 5 breeding, step 29: a side whose wLinkRole bit 1 is clear first works out the child with
+; ComputeBreedingChild (wArg1 = 2); a side with bit 1 set skips that. Both then add 1 to wScreenStep
+; and call LinkBreed_StoreChildRecord again and again until it moves wScreenStep (it waits for the
+; text and takes two calls), and finally jump to LinkBreed_StartWorkBufExchange, which adds 1 more
+; and starts the $64-byte exchange of wWorkBuf. wScreenStep ends 3 higher. (C2, E-0384)
 LinkBreed_MakeChild::
     ld a, [wLinkRole]
     bit 1, a
@@ -1304,7 +1346,7 @@ LinkBreed_MakeChild::
 
 .loop:
     push bc
-    call StoreReceivedRecordIntoSRAM
+    call LinkBreed_StoreChildRecord
     pop bc
     ld a, [wScreenStep]
     cp b
@@ -1355,7 +1397,7 @@ LinkBreed_ReadChoice::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_handle_three_choice_cursor_input_37
-    call CopyScreenBufferRectAt024FAndDrawBox_37
+    call LinkBreed_ClearChoiceBox
     ld a, $21
     ld [wScreenStep], a
     ld a, $14
@@ -1377,7 +1419,7 @@ LinkBreed_ReadChoice::
     ret
 
 .loop:
-    call CopyScreenBufferRectAt024FAndDrawBox_37
+    call LinkBreed_ClearChoiceBox
     ld a, $21
     ld [wScreenStep], a
     ld a, $13
@@ -1499,9 +1541,18 @@ LinkBreed_ReadAnswer::
     call ShowStringIndexA_Bank37
     ret
 
+; Session 5 breeding, step 30 (LinkBreed_MakeChild also calls it in a loop until wScreenStep moves).
+; Does nothing while wTextFlags is non-zero. With wScreenSubStep non-zero it clears it and adds 1 to
+; wScreenStep. Otherwise a side whose wLinkRole bit 1 is set only adds 1 to wScreenSubStep. A side
+; with bit 1 clear restores wListCursor and wListPageIndex from wItemGridX and wItemGridY, deletes
+; the SRAM record under the list cell (DeleteSRAMRecordAndCompact with wArg1 = that record, wArg2 =
+; 1), copies the $A5-byte wChildRecord into the free record that routine leaves in wArg6 and wArg7
+; (SRAM is enabled only for the copy), clears wSaveStep and wSaveRecordIndex, sets the child species
+; bit in wMonsterLibraryBuf (SetBitInFieldAtArg3), zeroes the 7 bytes at wPackWork and adds 1 to
+; wScreenSubStep. (C2, E-0384)
 ; when text is idle and not linking: copies the $A5-byte received record at wChildRecord into the
 ; record slot at wListEntries cell 5 and resets the save counters (E-0128)
-StoreReceivedRecordIntoSRAM::
+LinkBreed_StoreChildRecord::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1609,7 +1660,10 @@ LinkBreed_WaitPartnerForChild::
     ld [wScreenStep], a
     jp LinkBreed_MakeChild
 
-; Session 5 breeding, step 9: on the partner's $FD goes on. (C1, E-0357)
+; Session 5 breeding, step 9: waits for the received byte $FD (the other side has refused or
+; cancelled). Then wScreenStep + 1 and a jr into LinkBreed_WaitText, so with the text idle the same
+; call goes on through step 10 to step $0B and starts the closing exchange
+; (LinkBreed_StartClosingExchange); with the text still running it stays at step 10. (C2, E-0382)
 LinkBreed_WaitPartnerCancel::
     ld a, [wLinkMessage]
     cp $fd
@@ -1619,7 +1673,11 @@ LinkBreed_WaitPartnerCancel::
     ld [wScreenStep], a
     jr LinkBreed_WaitText
 
-; Session 5 breeding, step 33: on the partner's $FE goes to step $0A. (C1, E-0357)
+; Session 5 breeding, step 33: on the received byte $FE (the other side refused) sets wLinkSendByte
+; to 0 and wScreenStep to $0A, then jumps into LinkBreed_WaitText. With the text still running it
+; returns at step $0A; with the text idle the same call moves to step $0B and starts the closing
+; exchange (LinkBreed_StartClosingExchange), so wScreenStep ends at $0B, not $0A. Any other byte
+; changes nothing. (C2, E-0382)
 LinkBreed_WaitPartnerRefusal::
     ld a, [wLinkMessage]
     cp $fe
@@ -1630,7 +1688,9 @@ LinkBreed_WaitPartnerRefusal::
     ld [wScreenStep], a
     jr LinkBreed_WaitText
 
-; Session 5 breeding, step 10: after the text goes on. (C1, E-0357)
+; Session 5 breeding, step 10: once the text is done, wScreenStep + 1 and wScreenSubStep = 0, then
+; it falls into LinkBreed_ClosingExchange, whose sub-step 0 (LinkBreed_StartClosingExchange) starts
+; the exchange in the same call. While the text runs nothing changes. (C2, E-0382)
 LinkBreed_WaitText::
     ld a, [wTextFlags]
     and a
@@ -1645,7 +1705,7 @@ LinkBreed_WaitText::
 ; LinkBreed_WaitText (which clears wScreenSubStep): by wScreenSubStep runs
 ; LinkBreed_StartClosingExchange (after the text starts an exchange of wWorkBuf with the partner)
 ; and then LinkBreed_EndClosingExchange (when the exchange ends clears $6F bytes from wScreenState
-; and switches to wGameMode 5, wModeState 1, GameMode5_Init_TitleMenu). (C1, E-0372)
+; and switches to wGameMode 5, wModeState 1, GameMode5_Init_TitleMenu). (C2, E-0372; probed E-0382)
 ; waits for the text, then for the partner's link message
 LinkBreed_ClosingExchange::
     ld a, [wScreenSubStep]
@@ -1654,7 +1714,7 @@ LinkBreed_ClosingExchange::
     dw LinkBreed_EndClosingExchange
 
 ; The closing exchange, sub-step 0: after the text starts an exchange of wWorkBuf: $64 bytes for the
-; leader, $48 for the follower ($45 after the partner cancelled). (C1, E-0357)
+; leader, $48 for the follower ($45 after the partner cancelled). (C2, E-0357; probed E-0382)
 LinkBreed_StartClosingExchange::
     ld a, [wTextFlags]
     and a
@@ -1694,7 +1754,7 @@ LinkBreed_StartClosingExchange::
     ret
 
 ; The closing exchange, sub-step 1: when it ends clears $6F bytes of screen state and returns to
-; game mode 5, state 1. (C1, E-0357)
+; game mode 5, state 1. (C2, E-0357; probed E-0382)
 LinkBreed_EndClosingExchange::
     ld a, [wLinkMessage]
     cp $f0
@@ -1722,7 +1782,7 @@ LinkBreed_EndClosingExchange::
     ret
 
 ; Session 5 breeding, step 32: when the exchange ends sets wLinkScene and wLinkBreedResult 1 (the
-; egg screens). (C1, E-0357)
+; egg screens). (C2, E-0357; probed E-0382)
 LinkBreed_FinishExchange::
     ld a, [wLinkMessage]
     cp $f0
@@ -1752,7 +1812,13 @@ RunLinkSession5Exchange_RunStatsScreen::
     ld [wScreenState], a
     ret
 
-; as RunScreenStateWhenNotFading_F1_ShowChosenRecord (E-0304)
+; Session 5, state 17: runs one of ten steps by wScreenStep to redraw the breeding list with the
+; chosen record: 0 RunLinkSession5Exchange_ChosenRecordStart, 1 ShowString0EAndStep_Bank37, 2-4, 8
+; and 9 RunLinkSession5Exchange_ChosenRecordList (the steps of BreedMenu), 5 LinkBreed_DrawPanel, 6
+; RunLinkSession5Exchange_ClearNameTiles, 7 RunLinkSession5Exchange_ShowChosenRecord_DrawName. The
+; state follows state 12 (RunLinkSession5Exchange_RunStatsScreen), which moves wScreenState to 17.
+; (C1, E-0382)
+; as RunScreenStateWhenNotFading_F1_ShowChosenRecord
 RunLinkSession5Exchange_ShowChosenRecord::
     ld a, [wScreenStep]
     jumptable
@@ -1772,16 +1838,21 @@ RunLinkSession5Exchange_ChosenRecordList::
     farcall BreedMenu
     ret
 
-; The chosen record, step 0: moves on. (C1, E-0357)
+; The chosen record, step 0: moves on. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_ChosenRecordStart::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1 (E-0122)
+; Farcalls ShowInfoOKLabelTiles (it shows string $0E of the bank $0E table at vTiles2 + $700, puts
+; the default text window back and copies two tiles into vTiles1), then adds 1 to wScreenStep. Used
+; as a step by RunLinkSession5Exchange_ShowChosenRecord and
+; RunLinkSession5Exchange_ResetListAndShowString, and called by PartnerStats_DrawSummaryFrames. (C1,
+; E-0382)
+; far-calls ShowInfoOKLabelTiles, then wScreenStep += 1 (E-0122)
 ShowString0EAndStep_Bank37::
-    farcall ShowString0EBank0EAtTiles2700AndLoadTiles
+    farcall ShowInfoOKLabelTiles
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1845,6 +1916,12 @@ RunLinkSession5Exchange_ShowChosenRecord_DrawName::
     ld [wScreenStep], a
     ret
 
+; Session 5, state 13: the stats screens of the monster of the partner (record buffer B), 33 steps
+; by wScreenStep. 0 clears the screen, 1 shows the heading and the name, 2 moves on, 3-5 draw the
+; frame, the stats and the picture, 6 reads the keys (PartnerStats_Cursor), 7 leaves
+; (PartnerStats_Leave), 8-13 do nothing (PartnerStats_Idle), 14-22 build and draw the second page,
+; 23-27 the skills page, 28 and 29 the summary page, 30-32 the pedigree page with the parents. The
+; keys move between the pages by setting wScreenStep. (C1, E-0382)
 ; by wScreenStep: the stats screens of record buffer B, as
 ; RunScreenStateWhenNotFading_F1_ShowRecordStats (renamed from
 ; RunLinkSession5Exchange_ShowRecordStats from its E-0357 note, E-0367)
@@ -1885,7 +1962,7 @@ PartnerStats::
     dw PartnerStats_DrawParents
     dw PartnerStats_PedigreeKeys
 
-; The partner's monster stats, steps 8-13: nothing (a bare ret). (C1, E-0371)
+; The partner's monster stats, steps 8-13: nothing (a bare ret). (C2, E-0371; probed E-0382)
 PartnerStats_Idle::
     ret
 
@@ -1900,21 +1977,26 @@ PartnerStats_ClearScreen::
 ; The partner's monster stats, step 1: shows the heading (bank-$0E string $10), loads sixteen glyph
 ; tiles and draws the monster's name. (C1, E-0357)
 PartnerStats_ShowHeading::
-    farcall ShowString10Bank0EAtTiles2020ThenDefault
+    farcall ShowStatsHeadingTiles
     farcall LoadSixteenGlyphTilesFromTable
-    call DrawRecordBufBNameNameAtTiles1500
+    call PartnerStats_DrawHeadingName
 
 ; The partner's monster stats, step 2 and the end of step 1 (PartnerStats_ShowHeading falls in):
-; moves to the next step. (C1, E-0371)
+; moves to the next step. (C2, E-0371; probed E-0382)
 PartnerStats_HeadingDone::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
+; Draws the name of record buffer B as tiles at vTiles1 + $500: clears a window of 5 x 1 tiles there
+; (FillTilesFromRequest), copies the name at wRecordBufB + MON_NAME into wNameGlyphBuf
+; (CopyF0NameToNameGlyphBuf) and writes its glyph tiles to vTiles1 + $500 (CopyGlyphTilesToVRAM). It
+; leaves wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows and wTextWindowWidth set to that 5 x
+; 1 window. PartnerStats_ShowHeading calls it. (C1, E-0382)
 ; clears 5 tiles at vTiles1 + $500 and draws the name at wRecordBufB + $1 there (E-0122) (E-0340:
-; the address in its name read as its RAM name; was DrawRecordBufBNameNameAtTiles1500)
-DrawRecordBufBNameNameAtTiles1500::
+; the address in its name read as its RAM name; was PartnerStats_DrawHeadingName)
+PartnerStats_DrawHeadingName::
     ld hl, vTiles1 + $500
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2105,7 +2187,7 @@ PartnerStats_DrawPage2Frame::
 
 ; The second page, step 18: shows its personality name and master's name. (C1, E-0357)
 PartnerStats_ShowPersonality::
-    farcall ShowPersonalityNameAndRecordBufBMasterNameName
+    farcall ShowRecordBufBPersonalityAndMasterName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2121,8 +2203,8 @@ PartnerStats_DrawFamilyIcon::
     ld [wArg3], a
     ld a, $c7
     ld [wArg4], a
-    farcall DrawFamilyIconAndCountForRecordBufBFamily
-    farcall DrawRecordBufBExpExpAndToNextLevel
+    farcall DrawRecordBufBFamilyIconAndPlus
+    farcall DrawRecordBufBExpAndExpToNextLevel
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2142,7 +2224,7 @@ PartnerStats_LoadSprite::
     farcall DecompressGraphicsArg1ToArg4
     ld a, $f0
     ldh [hSpriteHideTile], a
-    farcall ShowRecordBufBItemCategory11StringAtTiles2320
+    farcall ShowRecordBufBEquippedItemName
     call BGMapAddressAtScroll_Bank37
     ld de, $0160
     add hl, de
@@ -2227,7 +2309,7 @@ PartnerStats_ShowSkillNames::
 
 ; The skills page, step 26: shows the species' description. (C1, E-0357)
 PartnerStats_ShowDescription::
-    farcall ShowSpeciesCategory13StringAtTiles2680
+    farcall ShowSpeciesFieldAbilityName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2275,7 +2357,7 @@ PartnerStats_SkillsKeys::
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    call UploadTilesFromData_2
+    call PartnerStats_UploadSummaryTiles
     farcall DrawSummaryFrames
     ld a, [wScreenStep]
     add $03
@@ -2286,15 +2368,15 @@ PartnerStats_SkillsKeys::
 PartnerStats_DrawSummaryFrames::
     ld a, [wScreenSubStep]
     and a
-    jr nz, .call_show_string10_bank0_e_at_tiles2020_then
+    jr nz, .call_show_stats_heading_tiles
     farcall MonsterDetails_DrawSummaryPanelFrames
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-.call_show_string10_bank0_e_at_tiles2020_then:
-    farcall ShowString10Bank0EAtTiles2020ThenDefault
+.call_show_stats_heading_tiles:
+    farcall ShowStatsHeadingTiles
     call ShowString0EAndStep_Bank37
     xor a
     ld [wScreenSubStep], a
@@ -2357,7 +2439,7 @@ PartnerStats_DrawPedigreeFrame::
 
 ; The pedigree page, step 31: draws the parents and hides sprite tile $F0. (C1, E-0357)
 PartnerStats_DrawParents::
-    farcall RunF2
+    farcall DrawRecordBufBParents
     ld a, $f0
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -2400,7 +2482,13 @@ PartnerStats_PedigreeKeys::
     ld [wScreenStep], a
     ret
 
-; as RunScreenStateWhenNotFading_F1_RedrawBreedScreen (E-0304)
+; Session 5, state 14: runs one of ten steps by wScreenStep to go back to the breeding list: 0
+; RunLinkSession5Exchange_RestoreListCursor, 1 ShowString0EAndStep_Bank37, 2-4
+; RunLinkSession5Exchange_RunBreedList, 5 LinkBreed_DrawPanel, 6
+; RunLinkSession5Exchange_ClearNameTiles, 7 RunLinkSession5Exchange_ShowChosenRecord_DrawName, 8
+; RunLinkSession5Exchange_ShowPartnerMonster, 9 RunLinkSession5Exchange_RunBreedListFinal. (C1,
+; E-0382)
+; as RunScreenStateWhenNotFading_F1_RedrawBreedScreen
 RunLinkSession5Exchange_ResetListAndShowString::
     ld a, [wScreenStep]
     jumptable
@@ -2415,7 +2503,7 @@ RunLinkSession5Exchange_ResetListAndShowString::
     dw RunLinkSession5Exchange_ShowPartnerMonster
     dw RunLinkSession5Exchange_RunBreedListFinal
 
-; Back to the list, step 0: restores the list cursor and page. (C1, E-0357)
+; Back to the list, step 0: restores the list cursor and page. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_RestoreListCursor::
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -2489,6 +2577,10 @@ RunLinkSession5Exchange_ShowPartnerMonster::
     ld [wScreenStep], a
     ret
 
+; Draws the picture of the species of record buffer B: wArg1 and wArg2 = the species word at
+; wRecordBufB + MON_SPECIES, wArg3 = 0 (tile offset), wArg4 = $90 and wArg5 = $40 (screen position
+; added to the scroll), wArg6 = 0, then farcalls DrawMetaSpritePartC0. Nothing in src names this
+; routine as a caller target. (C1, E-0382)
 ; wArg1/2 = the species wRecordBufB + $B/7, wArg3-6 = $00, $90, $40, $00, then far-calls
 ; DrawMetaSpritePartC0 (E-0122) (E-0340: the address in its name read as its RAM name; was
 ; DrawRecordBufBSpeciesSpritePart)
@@ -2508,11 +2600,14 @@ DrawRecordBufBSpeciesSpritePart::
     farcall DrawMetaSpritePartC0
     ret
 
-; copies tiles from UploadTilesFromData_2_Tiles: two to vTiles2 + $6E0 and three to vTiles2 + $7C0
-; (CopyTileBytesToVRAM_Bank37) (E-0118) (E-0344: the address in its name dropped or read as the
-; label there; was UploadTilesFromData_2)
-UploadTilesFromData_2::
-    ld hl, UploadTilesFromData_2_Tiles
+; Copies the five 16-byte tiles of PartnerStats_UploadSummaryTiles_Tiles into VRAM with
+; CopyTileBytesToVRAM_Bank37: the first two to vTiles2 + $6E0 and vTiles2 + $6F0, the next three to
+; vTiles2 + $7C0, + $7D0 and + $7E0. PartnerStats_SkillsKeys calls it. (C1, E-0382)
+; copies tiles from PartnerStats_UploadSummaryTiles_Tiles: two to vTiles2 + $6E0 and three to
+; vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank37) (E-0118) (E-0344: the address in its name dropped or
+; read as the label there; was PartnerStats_UploadSummaryTiles)
+PartnerStats_UploadSummaryTiles::
+    ld hl, PartnerStats_UploadSummaryTiles_Tiles
     ld de, vTiles2 + $6e0
     call CopyTileBytesToVRAM_Bank37
     call CopyTileBytesToVRAM_Bank37
@@ -2524,13 +2619,17 @@ UploadTilesFromData_2::
 
 ; HL = $58AE and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-UploadTilesFromData_2_Tiles::
+PartnerStats_UploadSummaryTiles_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $ff ; entry 0
     db $ff, $ff, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 1
     db $ff, $ff, $ff, $ff, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0 ; entry 2
     db $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $ff, $ff, $ff ; entry 3
     db $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0 ; entry 4
 
+; Copies 16 bytes from [HL] to [DE], one at a time: each byte is written with interrupts off (di)
+; after waiting until bit 1 of rSTAT is clear, then interrupts are turned on again (ei) before the
+; next byte, so they are left enabled. HL and DE move on by 16, A is clobbered; C and the other
+; registers are untouched. The same 20 bytes are in 3 banks. (C1, E-0382)
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (E-0353: corrected; was: Copies 16 bytes
 ; from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to
@@ -2556,6 +2655,11 @@ CopyTileBytesToVRAM_Bank37::
     jr c, .loop
     ret
 
+; HL = a name: copies its characters to wNameGlyphBuf, at most 10 of them and stopping at a $F0, and
+; then writes a $F0 terminator after them. Returns with A = $F0, C = the number of characters
+; copied, DE = the address of the terminator written and HL = the source byte where it stopped (the
+; source $F0, or the byte after the tenth). PartnerStats_DrawNameAndSpecies and
+; PartnerStats_DrawHeadingName use it before CopyGlyphTilesToVRAM. (C2, E-0382)
 ; copies up to 10 bytes from HL to wNameGlyphBuf, stopping at $F0, and appends $F0 (E-0124)
 CopyF0NameToNameGlyphBuf::
     ld de, wNameGlyphBuf
@@ -2609,6 +2713,10 @@ PartnerStats_DrawNameAndSpecies::
     farcall ShowString_Bank08
     ret
 
+; HL = BG map destination, DE = source: stores them in wArg5, wArg6 (H, L) and wArg1, wArg2 (D, E),
+; then farcalls DrawTileRectFromArg1Params, which draws the tile rectangle whose width and rows the
+; caller has already put in wArg3 and wArg4 (wArg7 = 0 also clears the attributes on CGB). The same
+; 23 bytes are in 4 banks. (C1, E-0382)
 ; wArg5/wArg6 = HL (destination), wArg1/wArg2 = DE (source), then far-calls
 ; DrawTileRectFromArg1Params (width and rows already in wArg3/wArg4) (E-0093) (the same 23 bytes
 ; appear in 4 banks)
@@ -2624,11 +2732,17 @@ DrawTileRectAtHLFromDE_Bank37::
     farcall DrawTileRectFromArg1Params
     ret
 
+; Copies a block of 9 bytes wide and 7 rows from screen buffer offset $0083 to offset $024F
+; (CopyScreenBufferRectWithAttrs_37 with wArg1 = 0, wArg2 = 9, B = 0, C = 7), then redraws the 20 x
+; 13 screen buffer area at offset $01CC onto the BG map at the scroll position
+; (BGMapAddressAtScroll_Bank37, DrawScreenBufferRectToBGMap_37). Offset $024F is where
+; LinkBreed_DrawChoiceBox put the 9 x 7 choice box, so LinkBreed_ReadChoice calls this to draw that
+; area from the saved copy again when the choice ends. (C1, E-0382)
 ; runs CopyScreenBufferRectWithAttrs_37 (C = 7, HL = $024F, DE = $0083, wArg1/2 = 0/9), then draws
 ; the box at scroll + $1CC (E-0122) (E-0344: the address in its name dropped or read as the label
-; there; was CopyScreenBufferRectAt024FAndDrawBox_37; shortened from
+; there; was LinkBreed_ClearChoiceBox; shortened from
 ; RunCopyScreenBufferRectWithAttrs_37At024FAndDrawBox)
-CopyScreenBufferRectAt024FAndDrawBox_37::
+LinkBreed_ClearChoiceBox::
     ld b, $00
     ld c, $07
     ld hl, $024f
@@ -2644,12 +2758,23 @@ CopyScreenBufferRectAt024FAndDrawBox_37::
     call DrawScreenBufferRectToBGMap_37
     ret
 
+; A = string number: stores it in wStringIndex (wStringCategory is not touched) and farcalls
+; BeginStringDisplay_Bank0E, which starts showing that string of the bank $0E breeding text table
+; and sets wTextFlags to 1. Session 5 uses it for the texts such as 'Please wait.' (7) and 'Choose
+; the monster for breeding.' (9). (C1, E-0382)
 ; wStringIndex = A (wStringCategory unchanged), then far-calls BeginStringDisplay_Bank0E (E-0066)
 ShowStringIndexA_Bank37::
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank0E
     ret
 
+; Moves a cursor over three entries and reports the key in wMenuInputResult and A. Up (bit 6 of
+; wJoypadPressedRepeat) and Down (bit 7) change wTwoChoiceCursor by one and wrap between 0 and 2:
+; the old cursor tile is blanked ($C3), wScreenCounter restarts, the cursor tile $BB is drawn at the
+; new entry, sound $69 is queued and the result is $FD. Otherwise A (bit 0 of wJoypadPressed) draws
+; the arrow tile $BC at the entry, queues sound $69 and gives $FF; B (bit 1) gives $FE; with no key
+; the cursor blinks (BlinkCursorScreenCounter_Bank37) and the result is 0. LinkBreed_ReadChoice
+; reads the result. (C1, E-0382)
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or
 ; cancel; otherwise blinks the cursor (E-0127)
 HandleThreeChoiceCursorInput_37::
@@ -2718,6 +2843,11 @@ HandleThreeChoiceCursorInput_37::
     ld [wMenuInputResult], a
     ret
 
+; Blinks the cursor of the three-entry choice. While wJoypadRepeatTimer is below $14 it just draws
+; the cursor tile $BB (DrawCursorTileBB_Bank37). From $14 on it adds 1 to wScreenCounter each call:
+; below $10 it draws the cursor tile, from $10 to $17 a blank tile $C3 (DrawBlankTileC3_Bank37), and
+; at $18 it resets the counter to 0 and draws the cursor tile, so the cursor is shown 16 calls and
+; hidden 8. (C1, E-0382)
 ; once the joypad repeat timer reaches $14, cycles wScreenCounter through 0-$17 and draws the cursor
 ; tile ($BB) or a blank ($C3) (E-0122)
 BlinkCursorScreenCounter_Bank37::
@@ -2734,16 +2864,22 @@ BlinkCursorScreenCounter_Bank37::
     xor a
     ld [wScreenCounter], a
 
+; B = $BB (the cursor tile) and jumps to DrawTileBAtTwoChoiceEntry_Bank37, which writes it at the
+; entry chosen by wTwoChoiceCursor. (C1, E-0382)
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
 DrawCursorTileBB_Bank37::
     ld b, $bb
     jr DrawTileBAtTwoChoiceEntry_Bank37
 
+; B = $C3 (the blank tile) and jumps to DrawTileBAtTwoChoiceEntry_Bank37, which writes it at the
+; entry chosen by wTwoChoiceCursor. (C1, E-0382)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_Bank37::
     ld b, $c3
     jr DrawTileBAtTwoChoiceEntry_Bank37
 
+; B = $BC (the arrow tile) and falls into DrawTileBAtTwoChoiceEntry_Bank37, which writes it at the
+; entry chosen by wTwoChoiceCursor in the BG map. (C1, E-0382)
 ; B = $BC, then writes B at the scroll position +
 ; DrawTileBAtTwoChoiceEntry_Bank37_Data[wTwoChoiceCursor] (E-0124)
 DrawArrowTileBCAtTwoChoiceEntry_Bank37::
@@ -2777,6 +2913,12 @@ DrawTileBAtTwoChoiceEntry_Bank37::
 DrawTileBAtTwoChoiceEntry_Bank37_Data::
     db $ec, $00, $2c, $01, $6c, $01
 
+; Copies a block inside the screen buffer: HL = destination offset and DE = source offset into
+; wScreenTileBuffer, wArg1:wArg2 (high, low) = bytes per row, rows B to C - 1 (B is the first row
+; number, C the end), the offsets moving on by 20 (one buffer row) each row. When wIsCGB is non-zero
+; the same block of the attribute buffer wScreenAttrBuffer is copied at the same offsets with
+; CopyLow3BitsToWRAMBank2_Bank37 (each byte ANDed with 7). On return B = C and HL and DE have moved
+; on by 20 per row. (C2, E-0382)
 ; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL for rows B to C,
 ; with CGB attributes (E-0128)
 CopyScreenBufferRectWithAttrs_37::
@@ -2844,6 +2986,9 @@ CopyScreenBufferRectWithAttrs_37::
     jr c, CopyScreenBufferRectWithAttrs_37
     ret
 
+; DE = source, HL = destination, BC = number of bytes: copies the bytes one by one, DE and HL end
+; just past the copy, BC = 0 and A = 0. The count is tested after the first byte, so BC = 0 would
+; count down from 65536 and copy that many. The same 9 bytes are in 13 banks. (C2, E-0382)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 CopyBytesDEToHL_Bank37::
@@ -2856,8 +3001,11 @@ CopyBytesDEToHL_Bank37::
     jr nz, CopyBytesDEToHL_Bank37
     ret
 
+; DE = source, HL = destination, BC = number of bytes: sets rSVBK to 2, copies the bytes with each
+; ANDed with $07 (only the low three bits of a CGB attribute are kept), then sets rSVBK to 0. DE and
+; HL end past the copy, BC = 0. The same 19 bytes are in 5 banks. (C2, E-0382)
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 19 bytes appear in 5 banks) (E-0353)
+; 19 bytes appear in 5 banks)
 CopyLow3BitsToWRAMBank2_Bank37::
     ld a, $02
     ldh [rSVBK], a
@@ -2875,6 +3023,10 @@ CopyLow3BitsToWRAMBank2_Bank37::
     ldh [rSVBK], a
     ret
 
+; B = record number, wArg1 = VRAM tile number: enables SRAM bank 0, reads the family byte of that
+; SRAM record (MON_FAMILY, LoadSRAMRecordByte), stores its low nibble in wWorkBuf and wArg1 in
+; wWorkBuf + 1, farcalls LoadFamilyIconTileForWorkBuf (which writes the family icon tile to that
+; tile number) and disables SRAM again. LinkBreed_DrawPanel calls it with tile $C7. (C1, E-0382)
 ; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = wArg1, then
 ; LoadFamilyIconTileForWorkBuf (E-0122)
 LoadFamilyIconTileForRecordB_Bank37::
@@ -2895,6 +3047,12 @@ LoadFamilyIconTileForRecordB_Bank37::
     ld [rRAMG2], a
     ret
 
+; B = width, C = rows, DE = source, HL = destination in the screen buffer: copies C rows of B bytes,
+; the destination moving on by 20 bytes (one buffer row) per row. When wIsCGB is non-zero it then
+; clears the same rectangle of the attribute buffer, which lies $0E68 bytes above the tile buffer
+; (HL + $0E68, wScreenAttrBuffer minus wScreenTileBuffer), with rSVBK set to 2, and puts rSVBK back
+; to 0. DE ends just past the source rectangle; without CGB BC and HL come back as they were on
+; entry. (C2, E-0382)
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows
 ; in WRAM bank 2 (E-0127)
 CopyRectToScreenBufferAndClearAttributes_37::
@@ -2958,6 +3116,11 @@ CopyRectToScreenBufferAndClearAttributes_37::
     ldh [rSVBK], a
     ret
 
+; B = width, C = rows, HL = BG map address, DE = offset into wScreenTileBuffer: copies that
+; rectangle of the screen buffer to the BG map (CopyRectFromBankToBGMapWrapped), sets wTextCursorLo
+; and wTextCursorHi to HL + $01C1 and, when wIsCGB is non-zero, copies the matching rectangle of
+; wScreenAttrBuffer (WRAM bank 2) to VRAM bank 1 the same way; the VRAM bank and WRAM bank are put
+; back to 0 at the end. (C1, E-0382)
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL +
 ; $1C1, and on CGB copies its attributes (E-0127)
 DrawScreenBufferRectToBGMap_37::
@@ -3020,8 +3183,11 @@ DrawScreenBufferRectToBGMap_37::
     ldh [c], a
     ret
 
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8: the BG map entry for the pixel at the scroll
+; position (32 entries per map row, 8 pixels per entry). A and DE are clobbered. The same 33 bytes
+; are in 18 banks. (C1, E-0382)
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_Bank37::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3040,8 +3206,11 @@ BGMapAddressAtScroll_Bank37::
     add_a_to_hl
     ret
 
+; HL = a table of 16-bit addresses, A = index, B = value: stores B at the address held in entry A of
+; the table. BC is kept; A, DE and HL are clobbered. LinkBreed_ReadChoice uses it with
+; LinkBreed_ReadChoice_Data to write the tile $BC. The same 16 bytes are in 4 banks. (C2, E-0382)
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0353)
+; A, DE, HL (the same 16 bytes appear in 4 banks)
 StoreBAtWordTableEntry_Bank37::
     push bc
     sla a
@@ -3055,22 +3224,38 @@ StoreBAtWordTableEntry_Bank37::
     ld [de], a
     ret
 
+; Packs the own record of this side into the exchange buffer: wRecordBufA (the $A5-byte record
+; LinkBreed_SendRecord copied from SRAM) becomes the $95 bytes at wWorkBuf that the link sends.
+; State byte; name and master name cut to 4 glyphs plus 4 $F0 with the glyph codes of this game
+; changed ($95, $AB, $B5, $94, $93 to $5C, $5E, $5F, $60, $61 and $0A-$3D up by $1A); the species as
+; a one-byte code (SpeciesToLinkCodeTable); the family nibble (9 is looked up from the species, 10
+; becomes 9); the sex bit; the master id; the two parent species as codes with their master names
+; and the bytes after them (two '???' names behind $FF $FF when both parent species bytes are $FF);
+; the 33 skill bytes mapped through LinkSkillMapTable_A and packed to the front of each list
+; (MapAndCompactSkillListLinkSkillMapTable_A); status, level, cap, EXP and HP to DEF as they are;
+; the AGL, INT and WLD words scaled down to about 51, 25 and 25 percent (999 becomes $01FF or
+; $00FF); plus and egg bytes; the four personality bytes replaced by $28, $E6, the third one and
+; $E6; 26 of the 27 resistances and a 0; and the two parent names with their plus values. It ends by
+; farcalling PackRecordBufAToLinkWorkBuf_LoadExp, which writes three table bytes over wWorkBuf + $4D
+; to $4F, so the EXP field of the buffer is the table value for the level.
+; UnpackLinkRecordToRecordBufB does the reverse for the record received from the partner. (C2,
+; E-0382)
 ; unpacks the received partner record at wRecordBufA into wWorkBuf: names, species, family, parents,
 ; skills and scaled stats (E-0129)
-UnpackLinkRecordToWorkBuf::
+PackRecordBufAToLinkWorkBuf::
     ld hl, wWorkBuf
     ld de, wRecordBufA
     ld a, [de]
     ld [hli], a
     inc de
-    call ConvertNameBytesFromLinkFormat
+    call ConvertNameBytesToLinkFormat
     call AppendSpeciesToLinkCodeByteForWordAtDE
     call FamilyNibbleOrSpeciesFamily
     ld a, [de]
     and $01
     ld [hli], a
     inc de
-    call ConvertNameBytesFromLinkFormat
+    call ConvertNameBytesToLinkFormat
     ld a, [de]
     ld [hli], a
     inc de
@@ -3089,11 +3274,11 @@ UnpackLinkRecordToWorkBuf::
 .call_append_species_to_link_code_byte_for:
     call AppendSpeciesToLinkCodeByteForWordAtDE
     call AppendSpeciesToLinkCodeByteForWordAtDE
-    call ConvertNameBytesFromLinkFormat
+    call ConvertNameBytesToLinkFormat
     ld a, [de]
     ld [hli], a
     inc de
-    call ConvertNameBytesFromLinkFormat
+    call ConvertNameBytesToLinkFormat
     ld a, [de]
     ld [hli], a
     inc de
@@ -3101,7 +3286,7 @@ UnpackLinkRecordToWorkBuf::
 .call_map_and_compact_skill_list_link_skill:
     call MapAndCompactSkillListLinkSkillMapTable_A
     ld b, $12
-    call CopyBBytesHLToDE_Bank37
+    call CopyBBytesDEToHL_Bank37
     call ScaleStatWordsToLinkFormat
     ld a, [de]
     ld [hli], a
@@ -3122,29 +3307,43 @@ UnpackLinkRecordToWorkBuf::
     ld [hli], a
     inc de
     ld b, $1a
-    call CopyBBytesHLToDE_Bank37
+    call CopyBBytesDEToHL_Bank37
     ld a, $00
     ld [hli], a
     inc de
     ld a, [wLinkRules]
     cp $ff
-    jr nz, .call_convert_name_bytes_from_link_format
+    jr nz, .call_convert_name_bytes_to_link_format
     call WriteUnknownNameEntry
-    jr .call_load_table_entry_for_work_buf9_to_link
+    jr .call_pack_record_buf_a_to_link_work_buf_load
 
-.call_convert_name_bytes_from_link_format:
-    call ConvertNameBytesFromLinkFormat
+.call_convert_name_bytes_to_link_format:
+    call ConvertNameBytesToLinkFormat
     ld a, [de]
     ld [hli], a
     inc de
-    call ConvertNameBytesFromLinkFormat
+    call ConvertNameBytesToLinkFormat
     ld a, [de]
     ld [hl], a
 
-.call_load_table_entry_for_work_buf9_to_link:
-    farcall LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes
+.call_pack_record_buf_a_to_link_work_buf_load:
+    farcall PackRecordBufAToLinkWorkBuf_LoadExp
     ret
 
+; Unpacks the record received from the partner: the $95 bytes at wBattlerRecordSlot1 +
+; BATTLER_SKILLS + 1 become a full record in wRecordBufB. State byte; name and master name changed
+; to the glyphs of this game ($5C, $5E, $5F, $60, $61, $63, $64 to $95, $AB, $B5, $94, $93, $99,
+; $98; $0A-$0D to 0-3; $24-$57 down by $1A) and padded to 10 bytes with two $F0; the species word
+; from the one-byte code (LinkCodeToSpeciesTable) and its family from the species record
+; (LoadSpeciesRecord); the sex bit; the master id; the two parent species words from their codes and
+; then CheckBreedingRecipes, which can set bit 4 of MON_FAMILY; the parent master names and the
+; bytes after them (four $FF and two blank names when the first parent code is $FF); the skills
+; mapped through LinkSkillMapTable_B and packed to the front of each list; status to DEF, plus, egg
+; and personality bytes copied; the AGL, INT and WLD words scaled up (999 for $01FF or $00FF, about
+; 1.95 and 3.91 times otherwise); the resistances, the last one from the species record; the parent
+; names with their plus values; and a 0 at MON_ITEM. It ends by farcalling
+; LoadTableEntryForRecordBufBSpeciesToRecordBufBExp, which sets MON_EXP from the experience table
+; for the level. (C2, E-0382)
 ; unpacks the received record at wBattlerRecordSlot1 + $F into wRecordBufB: names, species ids from
 ; LinkCodeToSpeciesTable, family, parents, skills and scaled stats (E-0127)
 UnpackLinkRecordToRecordBufB::
@@ -3153,7 +3352,7 @@ UnpackLinkRecordToRecordBufB::
     ld a, [de]
     ld [hli], a
     inc de
-    call ConvertEightBytesAndPadF0
+    call ConvertLinkNameBytesToGameGlyphs
     call AppendLinkCodeToSpeciesWordForByteAtDE
     ld a, c
     ld [wSpeciesIdLo], a
@@ -3164,7 +3363,7 @@ UnpackLinkRecordToRecordBufB::
     and $01
     ld [hli], a
     inc de
-    call ConvertEightBytesAndPadF0
+    call ConvertLinkNameBytesToGameGlyphs
     ld a, [de]
     ld [hli], a
     inc de
@@ -3179,11 +3378,11 @@ UnpackLinkRecordToRecordBufB::
     call AppendLinkCodeToSpeciesWordForByteAtDE
     call AppendLinkCodeToSpeciesWordForByteAtDE
     call CallInBank81KeepRegs
-    call ConvertEightBytesAndPadF0
+    call ConvertLinkNameBytesToGameGlyphs
     ld a, [de]
     ld [hli], a
     inc de
-    call ConvertEightBytesAndPadF0
+    call ConvertLinkNameBytesToGameGlyphs
     ld a, [de]
     ld [hli], a
     inc de
@@ -3191,22 +3390,26 @@ UnpackLinkRecordToRecordBufB::
 .call_map_and_compact_skill_list_link_skill:
     call MapAndCompactSkillListLinkSkillMapTable_B
     ld b, $12
-    call CopyBBytesHLToDE_Bank37
-    call ScaleStatWordsForDisplay
+    call CopyBBytesDEToHL_Bank37
+    call ScaleStatWordsFromLinkFormat
     ld b, $06
-    call CopyBBytesHLToDE_Bank37
+    call CopyBBytesDEToHL_Bank37
     call Copy26BytesThenLastSpeciesResistance
-    call ConvertEightBytesAndPadF0
+    call ConvertLinkNameBytesToGameGlyphs
     ld a, [de]
     ld [hli], a
     inc de
-    call ConvertEightBytesAndPadF0
+    call ConvertLinkNameBytesToGameGlyphs
     ld a, [de]
     ld [hli], a
     ld [hl], $00
     farcall LoadTableEntryForRecordBufBSpeciesToRecordBufBExp
     ret
 
+; DE += 4, then writes the two bytes $FF $FF at HL and falls into WriteUnknownNameEntry, which
+; writes two placeholder names. In all 20 bytes go to HL and DE moves on by $1A.
+; PackRecordBufAToLinkWorkBuf calls it when both parent species bytes are $FF (the parents are
+; unknown). (C2, E-0382)
 ; DE += 4, writes two $FF bytes and falls into the '???' name entry (E-0126)
 WriteFFPairAndUnknownName::
     ld a, e
@@ -3219,11 +3422,18 @@ WriteFFPairAndUnknownName::
     ld [hli], a
     ld [hli], a
 
+; Calls WriteUnknownNamePlaceholder_Bank37 and falls into it again, so it writes two placeholder
+; names ('???' as three $98, five $F0 and a 0, each 9 bytes): 18 bytes at HL and DE moves on by $16.
+; This is the unknown-parents case of PackRecordBufAToLinkWorkBuf: one name for each parent master.
+; (C2, E-0382)
 ; calls WriteUnknownNamePlaceholder_Bank37 and falls into it again (E-0126) (E-0344: the address in
 ; its name dropped or read as the label there; was WriteUnknownNameEntry)
 WriteUnknownNameEntry::
     call WriteUnknownNamePlaceholder_Bank37
 
+; Writes the placeholder name '???' at HL: the glyph $98 three times, five $F0 bytes and a 0 (9
+; bytes); HL moves on 9 and DE moves on by $0B (it skips the name field of the record being read), A
+; = 0. PackRecordBufAToLinkWorkBuf uses it for a parent name that is unknown. (C2, E-0382)
 ; DE += $0B; writes '???' ($98 x 3), five $F0 bytes and a 0 at HL (E-0120)
 WriteUnknownNamePlaceholder_Bank37::
     ld a, e
@@ -3248,6 +3458,10 @@ WriteUnknownNamePlaceholder_Bank37::
     ld [hli], a
     ret
 
+; DE += 2, writes four $FF bytes at HL and falls into WriteBlankName10_Bank37 twice (once by call,
+; once by falling in): each writes ten $F0 and a 0 (11 bytes) and moves DE on by 9. In all 26 bytes
+; go to HL and DE moves on by 20. UnpackLinkRecordToRecordBufB calls it when the first received
+; parent code is $FF. (C2, E-0382)
 ; DE += 2, writes four $FF bytes, then WriteBlankName10_Bank37 (and falls into it) (E-0126)
 WriteFFQuadAndBlankName::
     inc de
@@ -3259,6 +3473,11 @@ WriteFFQuadAndBlankName::
     ld [hli], a
     call WriteBlankName10_Bank37
 
+; Blanks one name-and-byte group of the link record being built: DE += 9 (nine source bytes skipped,
+; not read), then ten $F0 bytes and a 0 are written at HL, which ends 11 bytes on; A = 0.
+; WriteFFQuadAndBlankName calls it and then falls into it again, so two groups are blanked;
+; UnpackLinkRecordToRecordBufB does that for the parent fields when the first parent code byte it
+; reads is $FF. (C2, E-0382)
 ; DE += 9; writes ten $F0 (blank) bytes and a terminating 0 at HL (E-0121)
 WriteBlankName10_Bank37::
     ld a, e
@@ -3282,19 +3501,27 @@ WriteBlankName10_Bank37::
     ld [hli], a
     ret
 
+; DE = source, HL = destination, B = count: copies B bytes from [DE] to [HL] and advances both (B =
+; 0 copies 256 bytes); B ends 0 and A is the last byte copied. It moves the unconverted runs of a
+; link record: the $12-byte and $1A-byte runs in PackRecordBufAToLinkWorkBuf, the $12-byte and
+; 6-byte runs in UnpackLinkRecordToRecordBufB, and the 26 bytes of
+; Copy26BytesThenLastSpeciesResistance. (C2, E-0382)
 ; copies B bytes from HL to DE; HL and DE advance, B = 0 (E-0115)
-CopyBBytesHLToDE_Bank37::
+CopyBBytesDEToHL_Bank37::
     ld a, [de]
     ld [hli], a
     inc de
     dec b
-    jr nz, CopyBBytesHLToDE_Bank37
+    jr nz, CopyBBytesDEToHL_Bank37
     ret
 
-; Converts one name glyph for the link with the other game: $5C, $5E, $5F, $60, $61, $63, $64 to
-; $95, $AB, $B5, $94, $93, $99, $98; $0A-$0D to 0-3; $24-$57 down by $1A; other codes unchanged.
-; (C1, E-0357)
-ConvertEightBytesAndPadF0_Cp5C::
+; Converts one name glyph code of a received link record into the code the game itself uses. A =
+; code in, A = code out: $5C, $5E, $5F, $60, $61, $63, $64 become $95, $AB, $B5, $94, $93, $99, $98;
+; $0A-$0D become 0-3; $24-$57 go down by $1A; every other code is unchanged. It is called for each
+; of the eight name bytes by the name converter that UnpackLinkRecordToRecordBufB uses;
+; PackRecordBufAToLinkWorkBuf applies the opposite mapping when it packs a record for sending. (C2,
+; E-0382)
+ConvertLinkNameGlyphToGameGlyph::
     cp $5c
     jr z, .skip
     cp $5e
@@ -3354,9 +3581,15 @@ ConvertEightBytesAndPadF0_Cp5C::
 .return:
     ret
 
+; Packs one name for sending: DE = the name in the game glyph codes (8 bytes are read, then DE skips
+; 2 more), HL = destination. Only the first four glyphs are kept: $0A-$3D go up by $1A, $95 $AB $B5
+; $94 $93 become $5C $5E $5F $60 $61, other codes are unchanged, and four $F0 bytes follow, so a
+; name is cut to four characters. DE ends 10 bytes on, HL 8 bytes on, B = 0, C = 4.
+; PackRecordBufAToLinkWorkBuf uses it for each name of the record it builds in wWorkBuf. (C2,
+; E-0382)
 ; converts 8 name bytes at DE to the game's glyphs ($0A-$3D + $1A, special marks $93-$95, $AB, $B5),
 ; padding after the fourth with $F0 (E-0127)
-ConvertNameBytesFromLinkFormat::
+ConvertNameBytesToLinkFormat::
     ld c, $00
     ld b, $08
 
@@ -3416,6 +3649,10 @@ ConvertNameBytesFromLinkFormat::
     inc de
     ret
 
+; DE = a species number (a word, low byte first), HL = destination: DE += 2; the byte at
+; SpeciesToLinkCodeTable + species (this bank, read without a range check) is stored at [HL] and HL
+; += 1; A = that byte, the link code of the species. PackRecordBufAToLinkWorkBuf uses it for the
+; species of the record and for its two parents. (C2, E-0382)
 ; reads a word index at DE (DE += 2) and appends the byte at $6175 + index to [HL+] (E-0121)
 AppendSpeciesToLinkCodeByteForWordAtDE::
     push hl
@@ -3436,6 +3673,11 @@ AppendSpeciesToLinkCodeByteForWordAtDE::
     ld [hli], a
     ret
 
+; DE = source, HL = destination, where the byte before HL is the link code just written: A = [DE] &
+; $0F, DE += 1. A nibble of 9 is replaced by the family of the species of that link code
+; (LinkCodeToSpeciesTable gives the species, LoadSpeciesFamily the family); a value of 10 (the Boss
+; family) becomes 9. The result is stored at [HL] and HL += 1. PackRecordBufAToLinkWorkBuf calls it
+; right after the species code is written. (C2, E-0382)
 ; A = [DE] & $0F (DE += 1); for 9 looks up the species at LinkCodeToSpeciesTable[[HL - 1]] and uses
 ; its family; 10 becomes 9; stores it at [HL+] (E-0124)
 FamilyNibbleOrSpeciesFamily::
@@ -3471,6 +3713,14 @@ FamilyNibbleOrSpeciesFamily::
     ld [hli], a
     ret
 
+; DE = source, HL = destination of $21 (33) skill bytes: each byte except $FF is replaced by
+; LinkSkillMapTable_A[byte] (the index is not range checked). The first 8 mapped bytes and the next
+; 25 are then each packed to the front of their own list, dropping every $FE and $FF, padded with
+; $FF and written to HL; HL and DE end 33 bytes on. The packing is done in the 33 bytes at
+; wBattlerRecordSlot5 + BATTLER_SKILLS + 2 (the first list there, the second from
+; wBattlerRecordSlot5 + BATTLER_EXP), which are left holding the packed result.
+; PackRecordBufAToLinkWorkBuf calls it once for the skill lists of the record being sent. (C2,
+; E-0382)
 ; maps $21 bytes through LinkSkillMapTable_A and compacts the 8- and $19-entry lists, dropping
 ; $FE/$FF entries (E-0127)
 MapAndCompactSkillListLinkSkillMapTable_A::
@@ -3543,6 +3793,10 @@ MapAndCompactSkillListLinkSkillMapTable_A::
     pop de
     ret
 
+; DE = three 16-bit words (low byte first), HL = destination: writes three words scaled down for the
+; link record. Word 1 is $01FF when it is 999, otherwise word x $33 / 100 rounded up; words 2 and 3
+; are $00FF when 999, otherwise word x $19 / 100 rounded up. DE and HL end 6 bytes on.
+; PackRecordBufAToLinkWorkBuf calls it once; the receiving side scales back up. (C2, E-0382)
 ; converts three stat words at DE: 999 becomes $01FF/$00FF, otherwise word * $33 or $19 / 100
 ; rounded up; stores them at HL (E-0129)
 ScaleStatWordsToLinkFormat::
@@ -3650,14 +3904,19 @@ ScaleStatWordsToLinkFormat::
     inc hl
     ret
 
-; converts 8 bytes from DE through ConvertEightBytesAndPadF0_Cp5C into HL, then appends two $F0
+; DE = a name of 8 bytes in the link format, HL = destination: each byte is converted to the game
+; glyph code by the glyph converter (the table of $5C to $95 and so on) and two $F0 bytes are
+; appended, giving the 10-byte name of a game record. DE ends 8 bytes on, HL 10 bytes on, B = 0.
+; UnpackLinkRecordToRecordBufB calls it for every name field of the partner record it receives. (C2,
+; E-0382)
+; converts 8 bytes from DE through ConvertLinkNameGlyphToGameGlyph into HL, then appends two $F0
 ; bytes (E-0122)
-ConvertEightBytesAndPadF0::
+ConvertLinkNameBytesToGameGlyphs::
     ld b, $08
 
 .loop:
     ld a, [de]
-    call ConvertEightBytesAndPadF0_Cp5C
+    call ConvertLinkNameGlyphToGameGlyph
     ld [hli], a
     inc de
     dec b
@@ -3667,6 +3926,10 @@ ConvertEightBytesAndPadF0::
     ld [hli], a
     ret
 
+; DE = a link code byte (0-214), HL = destination: DE += 1; the word at LinkCodeToSpeciesTable + 2 x
+; code, a species number, is stored at [HL] low byte first and HL += 2; A = C = the low byte, B =
+; the high byte. UnpackLinkRecordToRecordBufB uses it for the species of the received record and for
+; its two parents. (C2, E-0382)
 ; reads a byte index at DE (DE += 1) and appends the word at $5FC7 + 2 * index to [HL]; HL ends
 ; after the word, C = low byte (E-0121)
 AppendLinkCodeToSpeciesWordForByteAtDE::
@@ -3691,6 +3954,11 @@ AppendLinkCodeToSpeciesWordForByteAtDE::
     inc hl
     ret
 
+; wSpeciesIdLo/Hi = a species: LoadSpeciesRecord (a far call) fills wSpeciesRecord, whose first byte
+; is the family, and that byte is stored at [HL]; HL += 1 and DE += 1 (the source byte at DE is
+; skipped, not read), other registers kept. UnpackLinkRecordToRecordBufB calls it right after the
+; species of the received record is converted, which also leaves the whole species record in
+; wSpeciesRecord for Copy26BytesThenLastSpeciesResistance. (C2, E-0382)
 ; LoadSpeciesRecord (id already in wSpeciesIdLo/Hi), then stores its family at HL; HL += 1, DE += 1
 ; (E-0118)
 StoreSpeciesFamilyAtHL::
@@ -3704,6 +3972,12 @@ StoreSpeciesFamilyAtHL::
     inc de
     ret
 
+; As MapAndCompactSkillListLinkSkillMapTable_A but through LinkSkillMapTable_B and dropping only
+; $FF: each source byte except $FF is replaced by LinkSkillMapTable_B[byte], the first 8 and the
+; next 25 results are packed to the front of their own lists and padded with $FF, and HL and DE end
+; 33 bytes on. A mapped $FE is kept; the table has 222 entries, so a source byte of $DE or more
+; reads the bytes after it (249 gives $FE). UnpackLinkRecordToRecordBufB calls it once for the
+; skills of the received record. (C2, E-0382)
 ; maps $21 bytes through LinkSkillMapTable_B and compacts the 8- and $19-entry lists, dropping $FF
 ; entries (E-0127)
 MapAndCompactSkillListLinkSkillMapTable_B::
@@ -3776,10 +4050,15 @@ MapAndCompactSkillListLinkSkillMapTable_B::
     pop de
     ret
 
+; DE = three 16-bit words of a received link record (low byte first), HL = destination: word 1 is
+; 999 when it is $01FF, otherwise word x $C3 / 100 rounded up. The routine that follows is then
+; called for word 2 and entered again by falling into it for word 3. DE and HL end 6 bytes on. It
+; undoes the scaling that ScaleStatWordsToLinkFormat applied when the record was sent, and
+; UnpackLinkRecordToRecordBufB calls it once. (C2, E-0382)
 ; reads a word at DE: $01FF becomes 999, otherwise word * $C3 / 100 rounded up; stores it at HL and
-; continues with the next word (ScaleStatWordsForDisplay_2) (E-0125) (E-0344: the address in its
-; name dropped or read as the label there; was ScaleStatWordsForDisplay)
-ScaleStatWordsForDisplay::
+; continues with the next word (ScaleStatWordsFromLinkFormat_NextWord) (E-0125) (E-0344: the address
+; in its name dropped or read as the label there; was ScaleStatWordsFromLinkFormat)
+ScaleStatWordsFromLinkFormat::
     push hl
     ld a, [de]
     ld c, a
@@ -3814,12 +4093,16 @@ ScaleStatWordsForDisplay::
     inc hl
     ld [hl], b
     inc hl
-    call ScaleStatWordsForDisplay_2
+    call ScaleStatWordsFromLinkFormat_NextWord
 
+; DE = a 16-bit word (low byte first), HL = destination: stores 999 when the word is $00FF,
+; otherwise word x $5B / 100 rounded up plus 3 x word (about 3.9 x word), as a 16-bit sum; DE and HL
+; advance 2. ScaleStatWordsFromLinkFormat calls it for its second word and then falls into it for
+; the third. (C2, E-0382)
 ; reads a word at DE: $00FF becomes 999, otherwise word * $5B / 100 rounded up plus 3 * word; stores
 ; it at HL (E-0125) (E-0344: the address in its name dropped or read as the label there; was
-; ScaleStatWordsForDisplay_2)
-ScaleStatWordsForDisplay_2::
+; ScaleStatWordsFromLinkFormat_NextWord)
+ScaleStatWordsFromLinkFormat_NextWord::
     push hl
     ld a, [de]
     ld c, a
@@ -3865,18 +4148,29 @@ ScaleStatWordsForDisplay_2::
     inc hl
     ret
 
-; copies $1A bytes (CopyBBytesHLToDE_Bank37), then appends wSpeciesRecord + $2C as the 27th byte
+; DE = source, HL = destination: copies 26 ($1A) bytes from [DE] to [HL], then appends the last base
+; resistance of the species record loaded earlier (wSpeciesRecord + SPECIES_RESISTANCES + 26) as the
+; 27th byte. DE ends 27 bytes on (the 27th source byte is skipped), HL 27 on.
+; UnpackLinkRecordToRecordBufB uses it to build the 27 resistance bytes of the received record. (C2,
+; E-0382)
+; copies $1A bytes (CopyBBytesDEToHL_Bank37), then appends wSpeciesRecord + $2C as the 27th byte
 ; (E-0115) (E-0340: the address in its name read as its RAM name; was
 ; Copy26BytesThenLastSpeciesResistance) (E-0345: the byte after the 26 is wSpeciesRecord + $2C, the
 ; last resistance; was Copy26BytesThenLastSpeciesResistance)
 Copy26BytesThenLastSpeciesResistance::
     ld b, $1a
-    call CopyBBytesHLToDE_Bank37
+    call CopyBBytesDEToHL_Bank37
     ld a, [wSpeciesRecord + SPECIES_RESISTANCES + 26]
     ld [hli], a
     inc de
     ret
 
+; Far-calls CheckBreedingRecipes in bank $81 with AF, BC, DE and HL pushed and restored, so the
+; caller loses nothing. CheckBreedingRecipes works on wRecordBufB: it tests the two parents against
+; the recipes of the record species and sets bit 4 of MON_FAMILY when only the swapped parent order
+; matches; it leaves wSpeciesIdLo/Hi equal to the species of wRecordBufB.
+; UnpackLinkRecordToRecordBufB calls it once the species and parents of the received record are in
+; wRecordBufB. (C2, E-0382)
 ; far-calls CheckBreedingRecipes, preserving all registers (E-0122) (E-0344: the address in its name
 ; dropped or read as the label there; was CallInBank81KeepRegs)
 CallInBank81KeepRegs::
@@ -3892,7 +4186,7 @@ CallInBank81KeepRegs::
     ret
 
 ; FamilyNibbleOrSpeciesFamily reads the word at $5FC7 + 2 * code to look up a species' family while
-; UnpackLinkRecordToWorkBuf unpacks a record; for all 215 codes, SpeciesToLinkCodeTable[species]
+; PackRecordBufAToLinkWorkBuf unpacks a record; for all 215 codes, SpeciesToLinkCodeTable[species]
 ; gives the code back (C2 for the pairing) (E-0217, C1)
 ; record: species for this link code
 LinkCodeToSpeciesTable::

@@ -4,9 +4,14 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
-; Fills each floor entrance's 16-byte wKeyWorldFloorState entry ($FF ends the entrance list) by the
-; entrance's kind (RunDebugAutomapCaseTemp0), reading 16 bytes per entrance from the area count's
-; KeyWorldAreaLayoutTable entry; the room counter starts at 0. (C1, E-0357)
+; Builds the floor state of every floor entrance of a freshly generated key world. Sets
+; wKeyWorldGenRoom to 0, takes the area layout for wKeyWorldAreaCount from KeyWorldAreaLayoutTable
+; (skipping its first byte, the block count) and walks wKeyWorldFloorInfo (4 bytes per entrance;
+; byte 1 = the entrance kind; the list ends at the first entry whose byte 3 is $FF). For each
+; entrance it calls KeyWorldLayout_BuildEntrance with hTemp0 = the kind, DE = the next 16-byte entry
+; of wKeyWorldFloorState and [hTemp8/hTemp9] = the next 16-byte block of the layout, so entrance k
+; uses block k. Called through farcall by GenerateKeyWorld after
+; KeyWorldLayout_NumberCellsAndPlaceEntrances accepted the layout. (C2, E-0384)
 KeyWorldLayout_FillEntrances::
     xor a
     ld [wKeyWorldGenRoom], a
@@ -37,7 +42,7 @@ KeyWorldLayout_FillEntrances::
     dec hl
     ld a, [hl]
     ldh [hTemp0], a
-    call RunDebugAutomapCaseTemp0
+    call KeyWorldLayout_BuildEntrance
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -61,32 +66,42 @@ KeyWorldLayout_FillEntrances::
 .skip2:
     jr .skip
 
+; Builds one floor state entry by the entrance kind in hTemp0 (jump table of seven: 0
+; KeyWorldLayout_BuildEntrance_Blank, 1 to 5 KeyWorldLayout_BuildEntrance_Kind1 to
+; KeyWorldLayout_BuildEntrance_Kind5, 6 KeyWorldLayout_BuildEntrance_FixedState). DE = the 16-byte
+; entry in wKeyWorldFloorState, [hTemp8/hTemp9] = the 16-byte block of the area layout for this
+; entrance. Called only by KeyWorldLayout_FillEntrances, which is called by GenerateKeyWorld while a
+; key world is generated; the name speaks of the debug automap, but nothing in this chain is
+; debug-only. (C2, E-0384)
 ; debug automap: runs the routine for hTemp0 (jump table of seven) (E-0122)
-RunDebugAutomapCaseTemp0::
+KeyWorldLayout_BuildEntrance::
     ldh a, [hTemp0]
     jumptable
-    dw RunDebugAutomapCaseTemp0_LeaveEntranceBlank
-    dw RunDebugAutomapCaseTemp0_Entrance1
-    dw RunDebugAutomapCaseTemp0_Entrance2
-    dw RunDebugAutomapCaseTemp0_Entrance3
-    dw RunDebugAutomapCaseTemp0_Entrance4
-    dw RunDebugAutomapCaseTemp0_Entrance5
-    dw RunDebugAutomapCaseTemp0_FixedStateEntrance
+    dw KeyWorldLayout_BuildEntrance_Blank
+    dw KeyWorldLayout_BuildEntrance_Kind1
+    dw KeyWorldLayout_BuildEntrance_Kind2
+    dw KeyWorldLayout_BuildEntrance_Kind3
+    dw KeyWorldLayout_BuildEntrance_Kind4
+    dw KeyWorldLayout_BuildEntrance_Kind5
+    dw KeyWorldLayout_BuildEntrance_FixedState
 
-; Entrance kind 0: nothing. (C1, E-0357)
-RunDebugAutomapCaseTemp0_LeaveEntranceBlank::
+; Entrance kind 0: returns at once and leaves the floor state entry at DE as it was. (C2, E-0384)
+KeyWorldLayout_BuildEntrance_Blank::
     ret
 
-; Entrance kind 6: floor state byte 0 = $54. (C1, E-0357)
-RunDebugAutomapCaseTemp0_FixedStateEntrance::
+; Entrance kind 6: sets byte 0 of the floor state entry at DE to $54 and leaves the other 15 bytes
+; alone. (C2, E-0384)
+KeyWorldLayout_BuildEntrance_FixedState::
     ld a, $54
     ld [de], a
     ret
 
-; Entrance kind 1: byte 0 from the goal kind's entry of the table; bytes 2-15 from the layout data.
-; (C1, E-0357)
-RunDebugAutomapCaseTemp0_Entrance1::
-    ld hl, RunDebugAutomapCaseTemp0_Entrance1_Data
+; Entrance kind 1: DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the 16-byte block of the
+; area layout for this entrance (KeyWorldAreaLayoutTable). Byte 0 of the entry = the byte of
+; KeyWorldLayout_BuildEntrance_Kind1_Data picked by wKeyWorldGoalKind, byte 1 is left alone, bytes
+; 2-15 are copied from bytes 1-14 of the layout block. No random numbers are used. (C2, E-0384)
+KeyWorldLayout_BuildEntrance_Kind1::
+    ld hl, KeyWorldLayout_BuildEntrance_Kind1_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -108,10 +123,13 @@ RunDebugAutomapCaseTemp0_Entrance1::
     jr nz, .loop
     ret
 
-; Entrance kind 2: byte 0 = the goal kind's entry + $20, with bit 7 set at random half the time;
-; bytes 2-15 from the layout data. (C1, E-0357)
-RunDebugAutomapCaseTemp0_Entrance2::
-    ld hl, RunDebugAutomapCaseTemp0_Entrance2_Data
+; Entrance kind 2: DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of the
+; entrance. Byte 0 of the entry = the byte of KeyWorldLayout_BuildEntrance_Kind2_Data picked by
+; wKeyWorldGoalKind plus $20, with bit 7 set when bit 1 of the new wKeyRandomHi (one NextRandomSeed
+; step) is set; byte 1 is left alone; bytes 2-15 are copied from bytes 1-14 of the layout block.
+; (C2, E-0384)
+KeyWorldLayout_BuildEntrance_Kind2::
+    ld hl, KeyWorldLayout_BuildEntrance_Kind2_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -144,10 +162,13 @@ RunDebugAutomapCaseTemp0_Entrance2::
     jr nz, .loop
     ret
 
-; Entrance kind 3: byte 0 = the goal kind's entry + $40, with bit 7 set half the time; bytes 2-15
-; from the layout data. (C1, E-0357)
-RunDebugAutomapCaseTemp0_Entrance3::
-    ld hl, RunDebugAutomapCaseTemp0_Entrance2_Data
+; Entrance kind 3: DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of the
+; entrance. Byte 0 of the entry = the byte of KeyWorldLayout_BuildEntrance_Kind2_Data picked by
+; wKeyWorldGoalKind plus $40, with bit 7 set when bit 1 of the new wKeyRandomHi (one NextRandomSeed
+; step) is set; byte 1 is left alone; bytes 2-15 are copied from bytes 1-14 of the layout block.
+; (C2, E-0384)
+KeyWorldLayout_BuildEntrance_Kind3::
+    ld hl, KeyWorldLayout_BuildEntrance_Kind2_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -180,11 +201,15 @@ RunDebugAutomapCaseTemp0_Entrance3::
     jr nz, .loop
     ret
 
-; Entrance kind 4 (rooms): byte 0 = the room count from the layout, byte 1 = the first room's
-; number, byte 2 = one of four from the goal kind's row, bytes 3-15 from the layout with a random
-; 0-7 in bytes 5 and 7 when they are used; then the rooms (RunDebugAutomapCaseTemp0_GenerateRooms,
-; kind 4). (C1, E-0357)
-RunDebugAutomapCaseTemp0_Entrance4::
+; Entrance kind 4 (rooms): DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of
+; the entrance. Byte 0 of the entry = block byte 1 (the room count, also left in hTemp0), byte 1 =
+; wKeyWorldGenRoom (the number of the first room), byte 2 = one of the four bytes of the row of the
+; goal kind in KeyWorldLayout_BuildEntrance_Kind4_Data, picked by the low 2 bits of the new
+; wKeyRandomHi, bytes 3-15 = block bytes 2-14. When byte 4 of the entry is not $FF a random 0-7
+; replaces byte 6, and then, when byte 8 is not $FF, a random 0-7 replaces byte 10. Finally it
+; generates the rooms with KeyWorldLayout_BuildEntrance_GenerateRooms (A = 1), which advances
+; wKeyWorldGenRoom. (C2, E-0384)
+KeyWorldLayout_BuildEntrance_Kind4::
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -201,7 +226,7 @@ RunDebugAutomapCaseTemp0_Entrance4::
     ld a, [wKeyWorldGoalKind]
     add a
     add a
-    ld hl, RunDebugAutomapCaseTemp0_Entrance4_Data
+    ld hl, KeyWorldLayout_BuildEntrance_Kind4_Data
     add_a_to_hl
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -224,7 +249,7 @@ RunDebugAutomapCaseTemp0_Entrance4::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_generate
+    jr z, .call_key_world_layout_build_entrance_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -235,7 +260,7 @@ RunDebugAutomapCaseTemp0_Entrance4::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_generate
+    jr z, .call_key_world_layout_build_entrance_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -243,14 +268,19 @@ RunDebugAutomapCaseTemp0_Entrance4::
     inc de
     ld [de], a
 
-.call_run_debug_automap_case_temp0_generate:
+.call_key_world_layout_build_entrance_generate:
     ld a, $01
-    call RunDebugAutomapCaseTemp0_GenerateRooms
+    call KeyWorldLayout_BuildEntrance_GenerateRooms
     ret
 
-; Entrance kind 5 (rooms): as kind 4, but byte 2 is one of eight from its own table; then the rooms
-; (RunDebugAutomapCaseTemp0_GenerateRooms, kind 5). (C1, E-0357)
-RunDebugAutomapCaseTemp0_Entrance5::
+; Entrance kind 5 (rooms): DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of
+; the entrance. Byte 0 of the entry = block byte 1 (the room count, also left in hTemp0), byte 1 =
+; wKeyWorldGenRoom (the number of the first room), byte 2 = a byte of
+; KeyWorldLayout_BuildEntrance_Kind5_Data picked by the low 3 bits of the new wKeyRandomHi, bytes
+; 3-15 = block bytes 2-14. When byte 4 of the entry is not $FF a random 0-7 replaces byte 6, and
+; then, when byte 8 is not $FF, a random 0-7 replaces byte 10. Finally it generates the rooms with
+; KeyWorldLayout_BuildEntrance_GenerateRooms (A = 0), which advances wKeyWorldGenRoom. (C2, E-0384)
+KeyWorldLayout_BuildEntrance_Kind5::
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -267,7 +297,7 @@ RunDebugAutomapCaseTemp0_Entrance5::
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
-    ld hl, RunDebugAutomapCaseTemp0_Entrance5_Data
+    ld hl, KeyWorldLayout_BuildEntrance_Kind5_Data
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -286,7 +316,7 @@ RunDebugAutomapCaseTemp0_Entrance5::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_generate
+    jr z, .call_key_world_layout_build_entrance_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -297,7 +327,7 @@ RunDebugAutomapCaseTemp0_Entrance5::
     inc de
     ld a, [de]
     cp $ff
-    jr z, .call_run_debug_automap_case_temp0_generate
+    jr z, .call_key_world_layout_build_entrance_generate
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
@@ -305,54 +335,55 @@ RunDebugAutomapCaseTemp0_Entrance5::
     inc de
     ld [de], a
 
-.call_run_debug_automap_case_temp0_generate:
+.call_key_world_layout_build_entrance_generate:
     xor a
-    call RunDebugAutomapCaseTemp0_GenerateRooms
+    call KeyWorldLayout_BuildEntrance_GenerateRooms
     ret
 
 ; Ten bytes indexed by wKeyWorldGoalKind (0-9): $00, $00, $03, $01, $00, $00, $04, $05, $02, $00.
-; RunDebugAutomapCaseTemp0_Entrance1 (entrance kind 1) stores the byte as byte 0 of the 16-byte
+; KeyWorldLayout_BuildEntrance_Kind1 (entrance kind 1) stores the byte as byte 0 of the 16-byte
 ; wKeyWorldFloorState entry for the floor; CheckWarpsByMapType_FloorEntrances later masks that byte
 ; with $7F and uses it to index a table of 2-byte pointers in bank $61. (C1, E-0381)
-RunDebugAutomapCaseTemp0_Entrance1_Data::
+KeyWorldLayout_BuildEntrance_Kind1_Data::
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
 ; Ten bytes indexed by wKeyWorldGoalKind (0-9): $00, $06, $03, $01, $07, $08, $04, $05, $02, $09.
-; RunDebugAutomapCaseTemp0_Entrance2 adds $20 and RunDebugAutomapCaseTemp0_Entrance3 adds $40, sets
+; KeyWorldLayout_BuildEntrance_Kind2 adds $20 and KeyWorldLayout_BuildEntrance_Kind3 adds $40, sets
 ; bit 7 half the time at random, and stores the result as byte 0 of the 16-byte wKeyWorldFloorState
 ; entry; the low seven bits later index a 2-byte pointer table in bank $61 in
 ; CheckWarpsByMapType_FloorEntrances. (C1, E-0381)
-RunDebugAutomapCaseTemp0_Entrance2_Data::
+KeyWorldLayout_BuildEntrance_Kind2_Data::
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
 ; Eight bytes indexed by wKeyRandomHi AND 7: $05, $06, $07, $08, $09, $05, $07, $09.
-; RunDebugAutomapCaseTemp0_Entrance5 (entrance kind 5, rooms) stores the picked byte as byte 2 of
+; KeyWorldLayout_BuildEntrance_Kind5 (entrance kind 5, rooms) stores the picked byte as byte 2 of
 ; the 16-byte wKeyWorldFloorState entry, which LoadMapType5TilesetAndHeader uses as the index into
 ; MapType5TilesetTable. (C1, E-0381)
-RunDebugAutomapCaseTemp0_Entrance5_Data::
+KeyWorldLayout_BuildEntrance_Kind5_Data::
     db $05, $06, $07, $08, $09, $05, $07, $09
 
 ; Ten rows of four bytes (40 bytes), one row per wKeyWorldGoalKind (0-9), each pick made with
 ; wKeyRandomHi AND 3: (0,$0B,0,$0B), (0,2,0,2), (2,3,$0B,2), (2,4,2,4), (1,1,1,1), (1,3,1,3),
-; (0,4,0,4), (1,4,1,4), (1,3,$0B,1) and (0,$0B,0,$0B). RunDebugAutomapCaseTemp0_Entrance4 (entrance
+; (0,4,0,4), (1,4,1,4), (1,3,$0B,1) and (0,$0B,0,$0B). KeyWorldLayout_BuildEntrance_Kind4 (entrance
 ; kind 4, rooms) stores the picked byte as byte 2 of the 16-byte wKeyWorldFloorState entry, which
 ; LoadMapType5TilesetAndHeader uses as the index into MapType5TilesetTable. (C1, E-0381)
-RunDebugAutomapCaseTemp0_Entrance4_Data::
+KeyWorldLayout_BuildEntrance_Kind4_Data::
     db $00, $0b, $00, $0b, $00, $02, $00, $02, $02, $03, $0b, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0b, $01, $00, $0b, $00, $0b
 
-; Fills wKeyWorldRoomTable for an entrance's rooms from entry wKeyWorldGenRoom on, two bytes each:
-; the room record, then the exits in the nibbles (high = the exit it is left by, low = the one it is
-; entered by). A picks the first room: non-zero (entrance kind 4,
-; RunDebugAutomapCaseTemp0_Entrance4) gives $A0 + 8 x 0-3 + 0-4 with one random exit and $F in the
-; low nibble; zero (kind 5, RunDebugAutomapCaseTemp0_Entrance5) gives 8 x 0-8 + 0-7 ($00-$47) with
-; two different random exits (RunDebugAutomapCaseTemp0_PickTwoExits). Each further room (hTemp0 - 2
-; of them, hTemp0 being the room count, so a count of 2 would run 256 times) is a byte from the
-; 16-byte row of KeyWorldNextRoomRows for the previous room's leaving exit (one of the row's first
-; ten) plus 0-7, entered by that exit and left by another (RunDebugAutomapCaseTemp0_PickOtherExit);
-; wKeyWorldGenRoom counts every room written. (C1, E-0371)
-RunDebugAutomapCaseTemp0_GenerateRooms::
+; Generates the rooms of one rooms-type entrance (kind 4 or 5) into wKeyWorldRoomTable, two bytes
+; per room starting at entry wKeyWorldGenRoom (which is incremented for every room). Input A and
+; hTemp0 = the room count. The first room: A = 0 gives the record $A0 + 8 * (0-3) + (0-4) and its
+; second byte has the exit it is left by in the high nibble and $F in the low nibble; A non-zero
+; gives the record 8 * (0-8) + (0-7) with the two exits from RunDebugAutomapCaseTemp0_PickTwoExits
+; (high nibble = the second exit, low nibble = the first). Each of the hTemp0 - 2 further rooms is
+; the byte at KeyWorldNextRoomRows + 16 * (the previous leaving exit) + (0-9) plus (0-7), entered by
+; the previous leaving exit and left by another one (KeyWorldLayout_BuildEntrance_PickOtherExit). A
+; count of 2 would run 256 more rooms (the counter underflows). Random numbers come from
+; RandomBelowC and NextRandomSeed. Kind 4 (KeyWorldLayout_BuildEntrance_Kind4) passes A = 1, kind 5
+; passes A = 0. (C2, E-0384)
+KeyWorldLayout_BuildEntrance_GenerateRooms::
     push af
     ld a, [wKeyWorldGenRoom]
     add a
@@ -384,7 +415,7 @@ RunDebugAutomapCaseTemp0_GenerateRooms::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_PickTwoExits
+    call KeyWorldLayout_BuildEntrance_PickTwoExits
     ldh a, [hTemp4]
     swap a
     or $0f
@@ -420,7 +451,7 @@ RunDebugAutomapCaseTemp0_GenerateRooms::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_PickTwoExits
+    call KeyWorldLayout_BuildEntrance_PickTwoExits
     ldh a, [hTemp4]
     swap a
     ld c, a
@@ -469,7 +500,7 @@ RunDebugAutomapCaseTemp0_GenerateRooms::
     rl d
     ldh a, [hTemp4]
     ldh [hTemp3], a
-    call RunDebugAutomapCaseTemp0_PickOtherExit
+    call KeyWorldLayout_BuildEntrance_PickOtherExit
     ldh a, [hTemp3]
     ld c, a
     ldh a, [hTemp4]
@@ -484,10 +515,10 @@ RunDebugAutomapCaseTemp0_GenerateRooms::
     jr nz, .loop
     ret
 
-; E-0193 (C1: RunDebugAutomapCaseTemp0_GenerateRooms.loop reads the byte at $42C7 + 16 * (hTemp4 &
-; $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for
-; RunDebugAutomapCaseTemp0_PickOtherExit; 6 rows end at that routine). E-0364: the sum is the next
-; room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered
+; E-0193 (C1: KeyWorldLayout_BuildEntrance_GenerateRooms.loop reads the byte at $42C7 + 16 * (hTemp4
+; & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for
+; KeyWorldLayout_BuildEntrance_PickOtherExit; 6 rows end at that routine). E-0364: the sum is the
+; next room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered
 ; from, so these are room bases, not monster bases.
 ; record: ten base room records, then six zero bytes; one row per exit of the previous room
 KeyWorldNextRoomRows::
@@ -498,9 +529,12 @@ KeyWorldNextRoomRows::
     db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
-; hTemp4 = a random one of the three exits of room record DE (bank $72, the table at $4001) other
-; than hTemp3. (C1, E-0357)
-RunDebugAutomapCaseTemp0_PickOtherExit::
+; Picks the exit by which a room is left. Input DE = 2 * the room record number, hTemp3 = the exit
+; the room was entered by. The three exit values of the record are the 3 bytes behind the word at
+; $4001 + DE in bank $72. Random draws (NextRandomSeed, low 2 bits, repeated when 0) choose one of
+; the three until its value differs from hTemp3, and hTemp4 = that exit. hTemp3 and HL are
+; preserved; A, BC and DE are not. (C2, E-0384)
+KeyWorldLayout_BuildEntrance_PickOtherExit::
     push hl
     ld a, e
     add $01
@@ -537,9 +571,13 @@ RunDebugAutomapCaseTemp0_PickOtherExit::
     pop hl
     ret
 
-; hTemp3 = a random one of the three exits of room record DE (bank $72), and hTemp4 another one
-; different from it. (C1, E-0357)
-RunDebugAutomapCaseTemp0_PickTwoExits::
+; Picks two different exits for a room. Input DE = 2 * the room record number ($A0-$B4 range or
+; $00-$47 in practice). The three exit values of the record are the 3 bytes behind the word at $4001
+; + DE in bank $72. A random draw (NextRandomSeed, low 2 bits of the result, repeated when 0)
+; chooses one of the three into hTemp3; then draws are repeated until another exit with a different
+; value is chosen into hTemp4. HL is preserved; A, BC and DE are not. (It would never end if all
+; three exits of a record had the same value.) (C2, E-0384)
+KeyWorldLayout_BuildEntrance_PickTwoExits::
     push hl
     ld a, e
     add $01
@@ -594,6 +632,11 @@ RunDebugAutomapCaseTemp0_PickTwoExits::
     pop hl
     ret
 
+; Draws a random number below C: calls NextRandomSeed (wKeyRandomLo/Hi = 5 * seed + 11) until the
+; low 4 bits of the new wKeyRandomHi are less than C, and returns A = that value (0 to C - 1). C
+; must be 1 to 16; with C = 0 it would never finish. Because it draws repeatedly the number of seed
+; steps used varies. Used by KeyWorldLayout_BuildEntrance_GenerateRooms for room numbers (0-4, 0-7,
+; 0-8, 0-9). (C2, E-0384)
 ; repeats NextRandomSeed until wKeyRandomHi & $0F is below C (C must be 1-16); returns A = that
 ; value (E-0077)
 RandomBelowC::
@@ -604,6 +647,12 @@ RandomBelowC::
     jr nc, RandomBelowC
     ret
 
+; Redraws the flag-dependent tiles of the current map screen. It walks the 8-byte entries of
+; MapScreenFlagTiles (map id, screen X, screen Y, tile, story flag word, offset word; the list ends
+; at $FF) and, for every entry whose map id equals hMapId, whose screen equals hMapScreenX /
+; hMapScreenY and whose story flag is set (TestFlagBit), runs ApplyMapScreenFlagEvents_DrawTiles
+; with hTemp0 = the entry tile. Called by LoadMapScreen after the screen is built, and by
+; RunOneTimeTreasure_RedrawChest and SetFlagRedraw after a flag changes. (C2, E-0384)
 ; for each 8-byte entry of MapScreenFlagTiles matching hMapId and the screen position, with its
 ; story flag set, runs ApplyMapScreenFlagEvents_DrawTiles (hTemp0 = its value) (E-0125)
 ApplyMapScreenFlagEvents::
@@ -650,8 +699,11 @@ ApplyMapScreenFlagEvents::
     add_a_to_hl
     jr .skip
 
-; Writes a map flag event's tiles into wScreenTileBuffer at the entry's offset: tiles hTemp0 and
-; hTemp0 + 1, or for $FF the 2 x 2 block $40/$41 over $50/$51 with CGB palette 5. (C1, E-0357)
+; Draws one flag-dependent map tile. HL = the 8-byte MapScreenFlagTiles entry, hTemp0 = its tile;
+; the entry offset word (entry + 6) is added to wScreenTileBuffer. A normal tile writes hTemp0 and
+; hTemp0 + 1 side by side. Tile $FF draws the 2 x 2 block $40, $41 over $50, $51 (the second row 20
+; tiles on) and, on a CGB, writes palette 5 into the four attribute bytes in WRAM bank 2 and selects
+; bank 0 again. The palette bytes are not checked by a probe. (C2, E-0384)
 ApplyMapScreenFlagEvents_DrawTiles::
     ldh a, [hTemp0]
     cp $ff
@@ -1069,11 +1121,22 @@ MapScreenFlagTiles::
     dw $00ae
     db $ff ; end
 
-; Whether the LogTwig can be used: not while hPlayerStateFlags bit 3 is set, not on maps below $20,
-; not on a trigger cell, not on a spot listed in LogTwigSpotList (map, screen, two positions); key
-; worlds are checked by ItemUsable_LogTwig_KeyWorld. Otherwise it records the active key world's
-; goal (wLogTwigKeyWorldGoal, wLogTwigKeyWorldGoalCell, wLogTwigKeyWorldKey) for the map's region.
-; (C1, E-0357)
+; Decides whether the Log Twig has an effect here and records the spot. Result in hTempA: 1 = a new
+; goal was recorded, 0 = nothing changed (ItemUsable_LogTwig then refuses the item). Steps: returns
+; with 0 while hPlayerStateFlags bit 3 is set; in a key world (wMapType bit 7) it continues in
+; ItemUsable_LogTwig_KeyWorld; on maps below $20, on the trigger cell (IsPlayerOnTriggerCell_Bank84)
+; and on a spot of LogTwigSpotList (map, screen, and one or two player positions) it returns with 0.
+; Otherwise it looks the map up in ItemUsable_LogTwig_Check_Data (record number E). When
+; wKeyWorldActive is set it first saves wKeyWorldGoal, wKeyWorldGoalCell and wKeyWorldKey in
+; wLogTwigKeyWorldGoal, wLogTwigKeyWorldGoalCell and wLogTwigKeyWorldKey, and it keeps
+; wKeyWorldActive in wSpriteSnapshot (for RunFieldReturnPhase_AfterLogTwig); it returns with 0 when
+; the old goal is the same spot under the key E, or when the player position is $44 on screen $44.
+; In every other case it sets wKeyWorldActive = 1, wKeyWorldGoal = player position (x tile high
+; nibble, y tile low), wKeyWorldGoalCell = the screen (hMapScreenX high nibble, hMapScreenY low),
+; wKeyWorldKey = E + 1 (12 for a map missing from the data) and hTempA = 1. Quirks: the old key is
+; compared with E, not E + 1, so a goal this routine stored never counts as the same spot; and at
+; the end the screen byte of the record is not compared (the position byte $44 is compared with the
+; screen instead). (C2, E-0384)
 ItemUsable_LogTwig_Check::
     xor a
     ldh [hTempA], a
@@ -1222,9 +1285,19 @@ ItemUsable_LogTwig_Check_Data::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
-; The LogTwig in a key world (map type $80): not on a trigger cell, nor at ($40, $40) on a key-world
-; object's screen, nor on a floor entrance ($40 across, or $50 except kinds 4 and 5); otherwise
-; records the goal as ItemUsable_LogTwig_Check. (C1, E-0357)
+; The Log Twig in a key world; A = wMapType on entry. Returns at once unless A is $80, on the
+; trigger cell (IsPlayerOnTriggerCell_Bank84), when hPlayerX and hPlayerY are both $40 on the screen
+; of an entry of the wKeyWorldObjects list (the screen bytes sit 3 and 2 bytes before the tested
+; byte), and when hPlayerY is $40 on the screen of a wKeyWorldFloorInfo entry with hPlayerX = $40,
+; or hPlayerX = $50 unless that floor is kind 4 or 5. Otherwise it keeps wKeyWorldActive in
+; wSpriteSnapshot; when wKeyWorldActive is set it saves the old goal (wLogTwigKeyWorldGoal,
+; wLogTwigKeyWorldGoalCell, wLogTwigKeyWorldKey) and, when wKeyWorldKey has bit 7 set for this slot
+; (wKeyWorldSlot) and the goal is the current position and screen, returns with nothing new; when no
+; goal is active it also returns with nothing new if the current spot is the one in
+; wKeyWorldGoalScreen, wKeyWorldGoalPos and wKeyWorldGoalPos2. In every other case it records
+; wKeyWorldActive = 1, wKeyWorldGoal = position (x tile high nibble, y tile low nibble),
+; wKeyWorldGoalCell = the screen, wKeyWorldKey = wKeyWorldSlot | $80 and hTempA = 1. hTempA is not
+; cleared here: ItemUsable_LogTwig_Check clears it before the jump. (C2, E-0384)
 ItemUsable_LogTwig_KeyWorld::
     cp $80
     ret nz
@@ -1445,8 +1518,10 @@ LogTwigSpotList::
     db $da, $10, $44, $ff ; id 49
     db $ff ; end
 
-; A = 1 when the player stands on the trigger cell (wTriggerCell, with wTriggerKind not $FF),
-; otherwise 0. (C1, E-0357)
+; A = 1 when the player stands on the trigger cell, else A = 0. There is no trigger when
+; wTriggerKind is $FF. The player cell is the high nibble of hPlayerX as the high nibble and the
+; high nibble of hPlayerY as the low nibble; it is compared with wTriggerCell. C is clobbered. The
+; bank-$84 copy of the helper used by the Log Twig checks. (C2, E-0384)
 IsPlayerOnTriggerCell_Bank84::
     ld a, [wTriggerKind]
     cp $ff
@@ -1700,8 +1775,14 @@ RunFieldReturnPhase_AfterLogTwig_DrawGoal::
     call DrawFullScreenBufferToBGMap
     ret
 
-; Draws the 2 x 2 marker ($40/$41 over $50/$51) at position C (x high nibble, y low) in
-; wScreenTileBuffer, with the region's CGB palette from the table (1 in key worlds). (C1, E-0357)
+; Draws a 2 x 2 tile marker for a screen cell. Input C = the cell (x in the high nibble, y in the
+; low nibble; the tile column is 2 * x, the tile row 2 * y; wScreenTileBuffer is 20 tiles wide):
+; tiles $40, $41 on the top row and $50, $51 on the row below. On a CGB (wIsCGB non-zero) it also
+; writes the palette number into the matching attribute bytes in WRAM bank 2 ($D000 + the same
+; offset), then selects bank 0 again: palette 1 in a key world (wMapType bit 7), otherwise the byte
+; of RunFieldReturnPhase_AfterLogTwig_DrawMarker_Data picked by B (the region record number). B and
+; C are inputs; A, DE and HL are clobbered. The palette bytes in bank 2 are not checked by a probe.
+; (C2, E-0384)
 RunFieldReturnPhase_AfterLogTwig_DrawMarker::
     ld a, c
     and $0f
@@ -1788,6 +1869,13 @@ RunFieldReturnPhase_AfterLogTwig_DrawMarker::
 RunFieldReturnPhase_AfterLogTwig_DrawMarker_Data::
     db $01, $01, $03, $02, $02
 
+; Called when key entry hTemp0 is deleted (DeleteKeyEntryTemp0): clears wKeyWorldActive if the
+; recorded Log Twig goal belongs to that entry. Does nothing when wKeyWorldActive is 0. The entry is
+; the 4-byte record at wKeyList + 4 * hTemp0. If bit 7 of its byte 3 is set, the goal belongs to it
+; when wKeyWorldKey has bit 7 clear and wKeyWorldKey - 1 equals entry byte 0. Otherwise (byte 3 bit
+; 7 clear) the entry must not be $FF in byte 0 and must have bit 7 of byte 0 set, and the goal
+; belongs to it when wKeyWorldKey has bit 7 set and wKeyWorldKey & $7F equals byte 0 & $3F. A, C, HL
+; are clobbered. (C2, E-0384)
 ; when wKeyWorldActive is set and key entry hTemp0 matches wKeyWorldKey, clears wKeyWorldActive
 ; (E-0127)
 ClearKeyWorldActiveForMatchingKeyEntry::
@@ -1843,7 +1931,7 @@ ClearKeyWorldActiveForMatchingKeyEntry::
 
 ; KeyWorldLayout_FillEntrances reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's
 ; first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to
-; RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16 (E-0193, C1)
+; KeyWorldLayout_BuildEntrance with DE stepping through wKeyWorldFloorState by 16 (E-0193, C1)
 ; record: area layout
 KeyWorldAreaLayoutTable::
     dw KeyWorldAreaLayout00 ; id 0

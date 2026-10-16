@@ -5,7 +5,7 @@ SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
     db $3d
 
 ; Effect tile $2C draws the effect sprite over each present slot of the target's side, as many as
-; wBattleFoeCount; other effects draw once at wEffectSpriteX. (C1, E-0357)
+; wBattleFoeCount; other effects draw once at wEffectSpriteX. (C2, E-0357; probed E-0384)
 DrawEffectSpriteOverTargets::
     ld a, [wEffectTileOffset]
     cp $2c
@@ -47,6 +47,12 @@ DrawEffectSpriteOverTargets::
     ret c
     farcall SetEffectSpriteXForTargets
 
+; Draws the effect sprite from the meta-sprite sets of bank $3D: hSpriteOriginX = wEffectSpriteX
+; (hSpriteOriginXHi 0), hSpriteOriginY = $68 (hSpriteOriginYHi 0), hSpriteSetIndex =
+; wEffectTileOffset, hSpriteSubIndex = wEffectSpriteAttrXor, hSpriteTileOffset = 0 and
+; hSpriteAttrXor = 0, then BuildOamFromSpriteTable_Bank3D with DE = MetaSprites3DTable.
+; DrawEffectSpriteOverTargets calls it once per drawn target, or once when the effect is not $2C.
+; (C2, E-0384)
 ; sets the sprite origin X = wEffectSpriteX, Y = $68, tile offset = wEffectTileOffset, attribute XOR
 ; = wEffectSpriteAttrXor, then builds OAM from the local sprite table (E-0121)
 DrawEffectSpriteAtEffectSpriteX_Bank3D::
@@ -121,10 +127,17 @@ MetaSprites3DTable::
     dw MetaSprites3DSet2B ; id 43
     dw MetaSprites3DSet2C ; id 44
 
+; DE = MetaSprites3DTable: the word at DE + 2 * hSpriteSetIndex is a meta-sprite set and the word at
+; set + 2 * hSpriteSubIndex a frame of 4-byte entries (Y offset, X offset, tile, attribute) ending
+; in a $80 byte. Writes one OAM entry per frame entry at $C000 + 4 * hOamNextEntry (Y =
+; hSpriteOriginY + offset + $10, X = hSpriteOriginX + offset + 8, tile + hSpriteTileOffset,
+; attribute XOR hSpriteAttrXor, all in 8 bits) and counts hOamNextEntry up; it stops at the $80 byte
+; or when hOamNextEntry reaches $28, and does nothing when it is already $28 or more. The same 81
+; bytes appear in 5 banks. (C2, E-0384)
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
 ; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
 ; tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28
-; (40 entries) (the same 81 bytes appear in 5 banks) (E-0353)
+; (40 entries) (the same 81 bytes appear in 5 banks)
 BuildOamFromSpriteTable_Bank3D::
     ldh a, [hOamNextEntry]
     cp $28
