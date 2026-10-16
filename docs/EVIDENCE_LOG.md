@@ -2431,6 +2431,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0388 — Shiftability audit (M1): what breaks when code and data move
+
+- Date: 2026-10-16. Kind: OBSERVATION (project emulator tools/sm83.py, not hardware; C2 for the routines named below, C1 for the static counts). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit d4f8d17 (source as eb9066a). Details and the M2 plan: [shiftability](SHIFTABILITY.md).
+- **Method.** tools/shift_test.py assembles a copy of src/ unchanged and with `ds N, $00` inserted before the first label of each bank past its fixed start, shrinking the bank's last `ds` by N. The unchanged copy must equal the reference. It then compares the video state of both ROMs (VRAM, OAM, palette RAM, LCD registers) frame by frame under the same scripted buttons. A crash counts as a difference. `--bisect` isolates banks; `--locate` reports the first instruction whose PC or ROM reads do not follow the padding. tools/hardcoded_refs.py counts numbers that stand for labels, by kind and bank.
+- **Dynamic results.** Pad 1 and pad 16 (152 banks padded, 31,982 labels moved): the screens differ from frame 818, caused by banks $00, $1F, $69 and $87. Pad $100 (107 banks; 50 lack the room): banks $1F and $87. Without those four, 148 banks padded by 16 run 10,000 frames with --explore (30,255 labels moved) with no difference. Located causes:
+  - FillTilesFromRequest reads `ld de, $2940`, unlabelled bytes after its `ret`.
+  - DrawTextGlyph steps 2-byte glyph rows with `inc e`, so GlyphFont rows must not cross a page (pad 1 breaks it, pad 16 does not).
+  - CopyFromBankWaitVRAM copies from 1F:$40B0 = GlyphFont + $A0, an address from a glyph source list written as `dw $40b0, ...`.
+  - LoadMapObjectsForScreen builds MapObjectTable's address as `add $74` / `adc $41`.
+  - FieldState_WalkATalks_RunStepTriggers builds MapStepTriggerTable's as `add $a0` / `adc $40`.
+- **Static counts** (src/ at eb9066a, build/run651/dwm2.sym):
+  - code_split 124 in 39 banks; data_tiles 592 addresses in 9 banks; code_bank 468 in 38 banks.
+  - code_address 86, mostly message ids: `ld de, $1d07` for Tiles_00_1D07 is real.
+  - code_number 0; data_word 149 (many palette colours); data_bank 8 (all coincidences); data_pair 5,107 (mostly coincidences).
+  - incbin_raw 0: all 3,546 asset slices are LZSS streams.
+- **Limits.** The scripted runs reach 404 (3,000 frames) and 461 (10,000 frames with --explore) labelled routines, under 5% of 9,820 code labels. Other code is covered only by the static counts, which are candidates, not proofs. Banks are one fixed section each, so nothing can yet move between banks. RAM layout is not tested.
+- **Tests.** tests/test_shift_test.py (10): padding placement and `ds` shrinking; refusal with no room or no label; bank $00 below $0150 untouched; first-difference and crash handling; bad arguments; each inventory kind with negatives.
+- Binary verification of the matching target: build/run652 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite652.log OK (408 tests, 3 skipped). The padded builds are not identity checks.
+
 ### E-0387 — Generator follow-ups: whole compressed streams, code at bank $32 $4F00, one name per table
 
 - Date: 2026-10-16. Kind: OBSERVATION and DECISION (generator changes; byte layout unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 947c078.

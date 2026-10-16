@@ -159,7 +159,21 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16): next goal, a moddable decomp
+## Current handoff (2026-10-16, E-0388): M1 shiftability audit done
+
+tools/shift_test.py pads a copy of src/ and compares the padded ROM's video state with the original's, frame by
+frame, in tools/sm83.py; tools/hardcoded_refs.py counts numbers that stand for labels. Padding banks $00, $1F, $69
+or $87 breaks the game. The causes, located to the instruction:
+- a raw `ld de, $2940`;
+- a font that must not cross a page (`inc e`);
+- glyph source lists of numbers;
+- two table addresses split into `add`/`adc` immediates.
+
+The other 148 banks padded by 16 run 10,000 frames identical. The scripted runs reach under 5% of the routines,
+so the static counts carry the rest: 124 split addresses, 592 tile addresses as numbers, 468 literal banks. The M2
+plan is in docs/SHIFTABILITY.md. Branch claude/m1-shiftability, not merged.
+
+## Prior handoff (2026-10-16): next goal, a moddable decomp
 
 The source matches and is fully annotated (E-0386, E-0387; master eb9066a), but it is not yet a pokered-level
 decomp: it is unknown whether code and data can move, the assets come out of the reference ROM, some unreached

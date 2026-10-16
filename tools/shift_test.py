@@ -1,0 +1,320 @@
+#!/usr/bin/env python3
+"""M1 shift test (E-0388): does the source survive moving code and data?
+
+A scratch copy of src/ is assembled twice under the output directory (default build/shift/): once unchanged
+("base") and once with N bytes of `ds N, $00` (N `nop`s) inserted before the first label of each chosen bank past
+its fixed start ($0150 in bank $00, after the bank-number byte at $4000 in the others), with the bank's last `ds`
+fill shortened by N so the bank keeps its size. Labels after the insertion point move by N; a value written as a
+number instead of a label expression does not follow them. Neither output is the matching target, and neither is
+verified against the reference: the matching build stays tools/build.py.
+
+Both ROMs then run in tools/sm83.py from power-on with the same scripted buttons, and at the end of every frame
+the video state (both VRAM banks, OAM, CGB palette RAM and LCDC/scroll/window registers) is compared. Moving code
+does not change instruction timing on this CPU, so a ROM that still works shows the same screen frame for frame;
+the first differing frame is where a hard-coded reference took effect. An observation of the project's own
+emulator, not hardware (C2 at best).
+
+Usage: shift_test.py [--pad 1] [--banks all | 00,02,...] [--frames 3000] [--out build/shift]
+Exit 0 when the padded build assembles and its frames match the base build; 1 otherwise.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+RGBDS = ROOT / "tools/rgbds"
+LABEL = re.compile(r"^([A-Za-z_]\w*)::")
+DS = re.compile(r"^(\s*)(ds|DS) (\$[0-9A-Fa-f]+|\d+)(\s*,\s*[^;]*)?(\s*;.*)?$")
+SECTION = re.compile(r'^SECTION "Bank ([0-9A-F]{2})"')
+MARK = "; shift_test padding"
+
+
+def bank_files(src: Path) -> dict[int, Path]:
+    """Bank number -> its file, from the SECTION line."""
+    out = {}
+    for p in sorted(src.glob("*/bank*.asm")):
+        for ln in p.read_text(encoding="utf-8").split("\n"):
+            m = SECTION.match(ln)
+            if m:
+                out[int(m.group(1), 16)] = p
+                break
+    return out
+
+
+def read_sym(path: Path) -> dict[str, tuple[int, int]]:
+    """Global label -> (bank, address) from an rgblink .sym file."""
+    out = {}
+    for ln in path.read_text(encoding="utf-8").split("\n"):
+        m = re.match(r"([0-9a-fA-F]{2,3}):([0-9a-fA-F]{4}) (\S+)$", ln)
+        if m and "." not in m.group(3):
+            out[m.group(3)] = (int(m.group(1), 16), int(m.group(2), 16))
+    return out
+
+
+def pad_bank(text: str, bank: int, sym: dict[str, tuple[int, int]], pad: int) -> tuple[str, str]:
+    """Insert `ds pad, $00` before the first label past the bank's fixed start and shorten the last `ds` after it.
+    Returns (new text, the label padded before); raises ValueError when the bank has no room."""
+    lines = text.split("\n")
+    first = 0x0150 if bank == 0 else 0x4001
+    cands = [(sym[m.group(1)][1], i, m.group(1)) for i, ln in enumerate(lines)
+             for m in [LABEL.match(ln)] if m and sym.get(m.group(1), (None,))[0] == bank
+             and sym[m.group(1)][1] >= first]
+    if not cands:
+        raise ValueError("no label past the bank's fixed start")
+    _addr, at, label = min(cands)
+    for j in range(len(lines) - 1, at, -1):
+        m = DS.match(lines[j])
+        if not m:
+            continue
+        size = int(m.group(3)[1:], 16) if m.group(3).startswith("$") else int(m.group(3))
+        if size < pad:
+            continue
+        rest = size - pad
+        lines[j] = (f"{m.group(1)}{m.group(2)} ${rest:X}{m.group(4) or ''}{m.group(5) or ''}" if rest else
+                    f"{m.group(1)}; ds removed by shift_test")
+        break
+    else:
+        raise ValueError(f"no `ds` of at least {pad} bytes after {label}")
+    lines.insert(at, f"    ds {pad}, $00 {MARK}")
+    return "\n".join(lines), label
+
+
+def assemble(src: Path, out: Path) -> tuple[bytes | None, str]:
+    """rgbasm + rgblink of src/main.asm into out/ (no rgbfix, no identity gate). Returns (ROM or None, log)."""
+    out.mkdir(parents=True, exist_ok=True)
+    import build
+    build.extract_assets(out / "assets")
+    obj, rom = out / "main.o", out / "dwm2.gbc"
+    log = []
+    for cmd in ([RGBDS / "rgbasm.exe", "-I", src, "-I", out / "assets", "-I", ROOT / "local/roms", "-o", obj,
+                 src / "main.asm"],
+                [RGBDS / "rgblink.exe", "-n", out / "dwm2.sym", "-o", rom, obj]):
+        p = subprocess.run([str(c) for c in cmd], cwd=out, capture_output=True, text=True)
+        log.append(p.stdout + p.stderr)
+        if p.returncode:
+            return None, "\n".join(log)
+    return rom.read_bytes(), "\n".join(log)
+
+
+EXPLORE = False  # --explore: from frame 4000 walk, talk and open menus (tools/boot_trace.py --explore)
+
+
+def buttons(frame: int) -> int:
+    """The scripted joypad of tools/boot_trace.py: A for 4 frames every 120, Start 60 frames later; with EXPLORE,
+    from frame 4000 a walk in a square with A, B and Start presses."""
+    if EXPLORE and frame >= 4000:
+        f = frame - 4000
+        direction = (0x01, 0x08, 0x02, 0x04)[(f // 120) % 4]
+        return 0xFF & ~(direction | (0x10 if f % 30 < 2 else 0) | (0x20 if f % 97 < 2 else 0)
+                        | (0x80 if f % 997 < 3 else 0))
+    return 0xFF & ~(0x10 if frame % 120 < 4 else 0) & ~(0x80 if 60 <= frame % 120 < 64 else 0)
+
+
+def video_state(gb) -> str:
+    h = hashlib.sha1()
+    for part in (gb.vram[0], gb.vram[1], gb.oam, gb.bgpal, gb.objpal, bytes(gb.io[0x40:0x4C])):
+        h.update(bytes(part))
+    return h.hexdigest()
+
+
+def frame_hashes(rom: bytes, frames: int) -> list[str]:
+    """Run from power-on for `frames` frames; the video-state hash at the end of each. A run that stops on an
+    invalid opcode (a jump into data) ends early, so it differs from a complete run at the frame it stopped in."""
+    from sm83 import GameBoy
+    gb = GameBoy(rom)
+    out = []
+    while len(out) < frames:
+        frame = gb.cycles // 70224
+        gb.joy = buttons(frame)
+        try:
+            gb.run(1)
+        except RuntimeError:
+            break
+        if gb.cycles // 70224 > frame:
+            out.append(video_state(gb))
+    return out
+
+
+def locate(base: bytes, rom: bytes, bank: int, start: int, pad: int, frames: int) -> dict | None:
+    """Run both ROMs in lockstep, one instruction at a time, and return the first instruction whose PC or ROM reads
+    in the padded ROM are not those of the base ROM moved by the padding (bank `bank` from address `start` on, by
+    `pad`). The reads of an instruction are compared in order; a padded ROM that still works maps one to one."""
+    from sm83 import GameBoy
+
+    def moved(rb: int, a: int) -> int:
+        b = 0 if a < 0x4000 else rb
+        return a + pad if b == bank and a >= start and a < 0x8000 else a
+
+    def traced(gb) -> list:
+        reads = []
+        orig = gb.rb
+
+        def rb(a: int) -> int:
+            if a < 0x8000:
+                reads.append((0 if a < 0x4000 else gb.rombank, a))
+            return orig(a)
+        gb.rb = rb
+        return reads
+
+    ga, gb_ = GameBoy(base), GameBoy(rom)
+    ra, rb_ = traced(ga), traced(gb_)
+    n = 0
+    while ga.cycles // 70224 < frames:
+        frame = ga.cycles // 70224
+        n += 1
+        ga.joy = gb_.joy = buttons(frame)
+        pa, pb = (ga.rombank if 0x4000 <= ga.pc < 0x8000 else 0, ga.pc), gb_.pc
+        ra.clear()
+        rb_.clear()
+        ga.run(1)
+        gb_.run(1)
+        if moved(*pa) != pb or [moved(*r) for r in ra] != [r[1] for r in rb_]:
+            return {"instruction": n, "frame": frame, "base_pc": f"{pa[0]:02X}:{pa[1]:04X}",
+                    "padded_pc": f"{pa[0]:02X}:{pb:04X}", "base_reads": [f"{b:02X}:{a:04X}" for b, a in ra],
+                    "padded_reads": [f"{b:02X}:{a:04X}" for b, a in rb_]}
+    return None
+
+
+def label_of(sym: dict[str, tuple[int, int]], bank: int, addr: int) -> str:
+    """The nearest label at or below (bank, addr), as Label+offset."""
+    best = max(((a, n) for n, (b, a) in sym.items() if b == (0 if addr < 0x4000 else bank) and a <= addr),
+               default=None)
+    return f"{best[1]}+${addr - best[0]:X}" if best else f"{bank:02X}:{addr:04X}"
+
+
+def first_difference(a: list[str], b: list[str]) -> int | None:
+    for i, (x, y) in enumerate(zip(a, b)):
+        if x != y:
+            return i
+    return None if len(a) == len(b) else min(len(a), len(b))
+
+
+def padded_rom(out: Path, pristine: Path, files: dict[int, Path], sym: dict, banks: list[int], pad: int, tag: str
+               ) -> tuple[bytes | None, dict, dict, str]:
+    """Copy the pristine src/ to out/<tag>/src, pad `banks`, assemble. Returns (ROM, padded, skipped, log)."""
+    src = out / tag / "src"
+    shutil.rmtree(out / tag, ignore_errors=True)
+    shutil.copytree(pristine, src)
+    padded, skipped = {}, {}
+    for b in banks:
+        f = src / files[b].relative_to(pristine)
+        try:
+            text, label = pad_bank(f.read_text(encoding="utf-8"), b, sym, pad)
+        except ValueError as e:
+            skipped[f"{b:02X}"] = str(e)
+            continue
+        f.write_text(text, encoding="utf-8", newline="\n")
+        padded[f"{b:02X}"] = label
+    rom, log = assemble(src, out / tag)
+    return rom, padded, skipped, log
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--pad", type=int, default=1)
+    ap.add_argument("--banks", default="all", help="all, or hex bank numbers separated by commas")
+    ap.add_argument("--frames", type=int, default=3000)
+    ap.add_argument("--bisect", type=int, default=0, metavar="K",
+                    help="when the frames differ, find up to K banks whose padding alone makes them differ")
+    ap.add_argument("--locate", metavar="BB", help="pad only bank BB and report the first instruction that "
+                    "reads or jumps to an address the padding did not move with it")
+    ap.add_argument("--explore", action="store_true", help="from frame 4000 walk, talk and open menus")
+    ap.add_argument("--out", default="build/shift")
+    args = ap.parse_args(argv)
+    global EXPLORE
+    EXPLORE = args.explore
+    out = (ROOT / args.out).resolve()
+    if (ROOT / "build").resolve() not in out.parents:
+        sys.exit("output dir must be beneath build/")
+    if args.pad < 1:
+        sys.exit("--pad must be at least 1")
+    shutil.rmtree(out, ignore_errors=True)
+    pristine = out / "base/src"
+    shutil.copytree(ROOT / "src", pristine)
+    base, log = assemble(pristine, out / "base")
+    if base is None:
+        print(log)
+        sys.exit("FAIL: the unpadded copy of src/ does not assemble")
+    if base != (ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes():  # the copy itself must still match
+        sys.exit("FAIL: the unpadded copy of src/ does not rebuild the reference; fix the matching build first")
+    sym = read_sym(out / "base/dwm2.sym")
+    files = bank_files(pristine)
+    chosen = sorted(files) if args.banks == "all" else [int(b, 16) for b in args.banks.split(",")]
+    if args.locate:
+        chosen = [int(args.locate, 16)]
+    for b in chosen:
+        if b not in files:
+            sys.exit(f"no bank file for bank ${b:02X}")
+    rom, padded, skipped, log = padded_rom(out, pristine, files, sym, chosen, args.pad, "padded")
+    report = {"pad": args.pad, "banks_padded": padded, "banks_skipped": skipped, "assembled": rom is not None}
+    if rom is None:
+        report["assembler_log"] = log[-4000:]
+    else:
+        moved = read_sym(out / "padded/dwm2.sym")
+        report["labels_moved"] = sum(1 for k, v in sym.items() if moved.get(k) != v)
+        report["frames"] = args.frames
+        ha = frame_hashes(base, args.frames)
+        report["first_differing_frame"] = first_difference(ha, frame_hashes(rom, args.frames))
+        if args.locate and padded:
+            b = chosen[0]
+            start = sym[padded[f"{b:02X}"]][1]
+            hit = locate(base, rom, b, start, args.pad, args.frames)
+            if hit:
+                pb, pa = int(hit["base_pc"][:2], 16), int(hit["base_pc"][3:], 16)
+                hit["base_routine"] = label_of(sym, pb, pa)
+                hit["base_reads_named"] = [label_of(sym, int(r[:2], 16), int(r[3:], 16)) for r in hit["base_reads"]]
+            report["located"] = hit
+        if args.bisect and report["first_differing_frame"] is not None:
+            report["culprits"] = bisect(out, pristine, files, sym, [int(b, 16) for b in padded], args, ha)
+    (out / "report.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
+    ok = rom is not None and report.get("first_differing_frame") is None
+    print(json.dumps({k: v for k, v in report.items() if k not in ("banks_padded", "banks_skipped", "assembler_log")},
+                     indent=1))
+    print(f"{'PASS' if ok else 'FAIL'}: {len(padded)} banks padded by {args.pad} ({len(skipped)} could not be); "
+          f"report {out / 'report.json'}")
+    return 0 if ok else 1
+
+
+def bisect(out: Path, pristine: Path, files: dict, sym: dict, banks: list[int], args, ha: list[str]) -> list[dict]:
+    """Up to args.bisect banks whose padding alone changes the frames, each with its first differing frame; after
+    each one is found it is left unpadded and the rest are tried again. A failure that needs two banks together
+    is reported as the set that still fails."""
+    def fails(bs: list[int]) -> int | None:
+        rom, _p, _s, _log = padded_rom(out, pristine, files, sym, bs, args.pad, "trial")
+        if rom is None:
+            return -1  # does not assemble
+        return first_difference(ha, frame_hashes(rom, args.frames))
+
+    found, rest = [], list(banks)
+    while rest and len(found) < args.bisect:
+        f = fails(rest)
+        if f is None:
+            break
+        cur = rest
+        while len(cur) > 1:
+            half = cur[:len(cur) // 2]
+            fh = fails(half)
+            if fh is not None:
+                cur, f = half, fh
+                continue
+            other = cur[len(cur) // 2:]
+            fo = fails(other)
+            if fo is None:
+                break  # only the two halves together fail
+            cur, f = other, fo
+        found.append({"banks": [f"{b:02X}" for b in cur], "first_differing_frame": f})
+        print(f"culprit: banks {', '.join(f'{b:02X}' for b in cur)}, first differing frame {f}", flush=True)
+        rest = [b for b in rest if b not in cur]
+    return found
+
+
+if __name__ == "__main__":
+    sys.exit(main())
