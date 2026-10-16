@@ -159,7 +159,17 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0387): the three generator follow-ups
+## Current handoff (2026-10-16): next goal, a moddable decomp
+
+The source matches and is fully annotated (E-0386, E-0387; master eb9066a), but it is not yet a pokered-level
+decomp: it is unknown whether code and data can move, the assets come out of the reference ROM, some unreached
+code is still `db` bytes, and most readings are C1. docs/ROADMAP.md now sets the next goal in five stages: M1
+shiftability audit, M2 labels for hard-coded references, M3 editable assets with a byte-identical LZSS encoder, M4
+leftover code bytes, M5 mechanics. M1 started 2026-10-16 in its own session and worktree (tools/shift_test.py,
+docs/SHIFTABILITY.md, evidence E-0388); its result is not yet integrated. Build status for this documentation-only
+change: not run (the last identity gate is build/run651 on eb9066a).
+
+## Prior handoff (2026-10-16, E-0387): the three generator follow-ups
 
 E-0387 does the three follow-ups the readability goal left (all generator changes; no ROM byte moves):
 - **Split streams.** A stream found only by config/stream_chains.json is dropped when it starts inside another
