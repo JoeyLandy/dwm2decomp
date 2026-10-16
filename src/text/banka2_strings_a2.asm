@@ -28,10 +28,10 @@ CopyMonsterTableBytes::
     ld a, $1a
     call Multiply8By16
     ld a, l
-    add $56
+    add LOW(MonsterTableA2 - $1a)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(MonsterTableA2 - $1a)
     ld h, a
     pop bc
     ld b, $00
@@ -60,10 +60,10 @@ LoadMonsterRecordTo_HighIds::
     ld a, $1a
     call Multiply8By16
     ld a, l
-    add $56
+    add LOW(MonsterTableA2 - $1a)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(MonsterTableA2 - $1a)
     ld h, a
     pop de
     ld b, $1a

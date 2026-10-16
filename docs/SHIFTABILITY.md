@@ -134,7 +134,8 @@ BANK(...)` setups and 14 `ld a, BANK(...)` switches; the `farcall` fold also acc
 
 ## Next (M2)
 
-1. The nine unresolved split sums of E-0390 (a label or a reading each).
+1. Done for six of the nine (E-0392). Left: 60:$4BF4 (index range not read) and 0F:$4000 x2 (a window base chosen
+   by wMessageGroup, which no label names).
 2. Per-bank sections in place of one fixed section per bank, now that code bank numbers are BANK(label) (E-0391);
    data far pointers already use `dfar`.
 3. Widen what runs: the scripted runs reach under 5% of the routines. Longer --explore scripts, or save states at

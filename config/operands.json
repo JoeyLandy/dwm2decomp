@@ -89,6 +89,7 @@
   },
   "splits": {
     "03:6851": {"make_label": true, "why": "E-0390: one byte per skill, read as $6851 + the skill number (add/adc) and used as the index into SkillTargetBoxRects right after it: 1 for the MPass skills, 0 for the others (SkillTargetBoxRects' note, E-0381)"},
+    "A2:4056": {"expr": "MonsterTableA2 - $1A", "why": "E-0392: CopyMonsterTableBytes and LoadMonsterRecordTo_HighIds compute (monster id - $250) + 1, a 1-based index, times $1A (one record) and add $4056: one record before MonsterTableA2 ($4070)"},
     "17:446C": {"expr": "SGBPaletteSets + $200", "why": "E-0390: LoadSGBObjectPalettesFromPointers_CopyPaletteEntry copies 8 bytes from $446C + 8 * index: the 8-byte entries after the 64 system-palette sets of SGBPaletteSets"}
   },
   "values": {

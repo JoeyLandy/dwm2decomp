@@ -159,7 +159,15 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0391): M2 batch 3
+## Current handoff (2026-10-16, E-0392): M2 batch 4
+
+Six of the nine unresolved split sums now resolve: the bank hint looks further ahead and back to a preceding
+rROMB0 switch, and A2:$4056 is MonsterTableA2 - $1A. 65 split pairs are label expressions; 3 address-like sums
+remain, explained in E-0392. build/run667 PASS; parallel suite OK (411 tests, 3 skipped); the read gate passes.
+Left in M2: those 3, and one fixed section per bank, which still stops code moving between banks. Then M3,
+editable assets.
+
+## Prior handoff (2026-10-16, E-0391): M2 batch 3
 
 Bank numbers beside pointers are BANK(label) (382 `ld b` setups, 14 `ld a` bank switches; farcall folding
 unchanged at 3,842). Literal-bank candidates fall from 468 to 96, none of them real. build/run665 PASS; parallel suite

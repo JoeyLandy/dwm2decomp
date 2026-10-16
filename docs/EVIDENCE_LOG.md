@@ -2431,6 +2431,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0392 — M2 batch 4: six of the nine unresolved split sums
+
+- Date: 2026-10-16. Kind: OBSERVATION and DECISION (generator and config; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 9b6451f (E-0391).
+- **Bank hints.** `name_split_addresses` looks twelve instructions ahead for the far-read bank, not eight, and also back up to twelve for an `ld a, $NN` / `ld [rROMB0], a` switch made just before the sum. New resolutions:
+  - ReadBank6TableWord (bank $E2): `ld a, $06` / `ld [wDataBank], a` nine instructions later gives AIPersonalityWeightTable (06:$4001).
+  - LoadSpecialMapScreen and a second bank-$00 routine (rROMB0 = $61 before the sum): SpecialMapTable.
+  - DebugMapEditor_CheckPosition (rROMB0 = $11): MapTable.
+- **By hand.** A2:$4056 is MonsterTableA2 - $1A. CopyMonsterTableBytes and LoadMonsterRecordTo_HighIds compute (monster id - $250) + 1, a 1-based index, times one $1A-byte record (config/operands.json `splits`, C1).
+- **Left** (3 address-like sums):
+  - 60:$4BF4 is $64 bytes below KeyWorldLayout_Start_Data; KeyWorldLayout_Start adds wPartyStrength - C plus a roll of 0-9 and reads a nibble. Its index range is not read, so the expression is not certain.
+  - 0F:$4000 x2 is the start of the switchable window plus 256 x wMessageGroup, a base in whichever bank is mapped; no single label names it.
+- **Counts.** 65 split pairs are label expressions; code_split 59 = 56 constants + the 3 above.
+- **Checks.** build/run667 PASS (approved size and SHA-256, zero differing bytes); parallel full suite build/logs/par667.log OK (411 tests, 3 skipped); the read gate passes with all 152 paddable banks padded by 16 over 10,000 explore frames.
+
 ### E-0391 — M2 batch 3: literal bank numbers written BANK(label)
 
 - Date: 2026-10-16. Kind: DECISION (generator change; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit df12480 (E-0390).

@@ -2630,7 +2630,8 @@ class Rom:
         """E-0389, E-0390 (M2): `add a, $LO` followed, before any control transfer and within four instructions, by
         `adc a, $HI` is a table address split into two immediates (LoadMapObjectsForScreen: hMapId * 2 +
         MapObjectTable) when $HI$LO is in the ROM window and lands on a data label or inside a table. Its bank is
-        the one a `ld b, $NN` (or `ld a, $NN` / `ld b, a`) within the next six instructions names for a far read
+        the one a `ld b, $NN` (or `ld a, $NN` / `ld b, a`) within the next twelve instructions names for a far read
+        (or an `ld a, $NN` / `ld [rROMB0], a` within the twelve before it)
         (CopyFromBankWaitVRAM, ReadByteInBank: 7E:$4BBD is SharedOBJPalettes), else the instruction's own. The two
         operands are written LOW(expr) and HIGH(expr) with expr = Label or Table + $offset, so they follow the table
         if it moves; the bytes are the same. Other sums (screen-buffer offsets, checksum seeds, steps) stay numbers."""
@@ -2658,7 +2659,13 @@ class Rom:
                     if not 0x4000 <= v < 0x8000:
                         break
                     hint, held = None, None  # a bank named for a far read after the sum
-                    for y in order[kx + 1:kx + 9]:
+                    for z in range(k - 1, max(-1, k - 13), -1):  # or switched in just before it (rROMB0)
+                        if ins[order[z]][2] in SETUP_BARRIER and ins[order[z]][2] != "jr":
+                            break
+                        if ins[order[z]][1] == "ld [$2100], a" and z > 0 and (ma := lda.match(ins[order[z - 1]][1])):
+                            hint = int(ma.group(1), 16)
+                            break
+                    for y in order[kx + 1:kx + 13] if hint is None else ():
                         if ins[y][2] in SETUP_BARRIER and ins[y][2] != "jr":
                             break
                         t_ = ins[y][1]

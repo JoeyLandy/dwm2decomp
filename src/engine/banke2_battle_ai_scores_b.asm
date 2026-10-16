@@ -6093,10 +6093,10 @@ ReadBank6TableWord::
     ld a, $36
     call Multiply8By16
     ld a, l
-    add $01
+    add LOW(AIPersonalityWeightTable)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(AIPersonalityWeightTable)
     ld h, a
     ld a, [wPersonalityIndex]
     add a

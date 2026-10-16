@@ -4670,10 +4670,10 @@ LoadSpecialMapScreen::
     ld h, $00
     add hl, hl
     ld a, l
-    add $d8
+    add LOW(SpecialMapTable)
     ld l, a
     ld a, h
-    adc $60
+    adc HIGH(SpecialMapTable)
     ld h, a
     ld a, $14
     push af
@@ -5149,10 +5149,10 @@ LoadSpecialMapHeader::
     sla l
     rl h
     ld a, l
-    add $d8
+    add LOW(SpecialMapTable)
     ld l, a
     ld a, h
-    adc $60
+    adc HIGH(SpecialMapTable)
     ld h, a
     ld a, [hli]
     ld e, a
@@ -5463,10 +5463,10 @@ DebugMapEditor_CheckPosition::
     ld h, $00
     add hl, hl
     ld a, l
-    add $b8
+    add LOW(MapTable)
     ld l, a
     ld a, h
-    adc $44
+    adc HIGH(MapTable)
     ld h, a
     ld a, [hli]
     ld e, a
