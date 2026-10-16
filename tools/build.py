@@ -58,7 +58,8 @@ def main() -> int:
     obj, rom = out / "main.o", out / "dwm2.gbc"
     assets = extract_assets(out / "assets")
     run([RGBDS / "rgbasm.exe", "-I", "src", "-I", out / "assets", "-I", "local/roms", "-o", obj, "src/main.asm"], log)
-    run([RGBDS / "rgblink.exe", "-m", out / "dwm2.map", "-n", out / "dwm2.sym", "-o", rom, obj], log)
+    layout = ["-l", ROOT / "src/layout.link"] if (ROOT / "src/layout.link").exists() else []  # E-0393
+    run([RGBDS / "rgblink.exe", *layout, "-m", out / "dwm2.map", "-n", out / "dwm2.sym", "-o", rom, obj], log)
     tools = {n: subprocess.run([str(RGBDS / f"{n}.exe"), "--version"], capture_output=True, text=True).stdout.strip()
              for n in ("rgbasm", "rgblink")}
     v = subprocess.run([sys.executable, "-I", ROOT / "tools/verify_rom.py", "--manifest", MANIFEST,
@@ -68,7 +69,7 @@ def main() -> int:
     rep.update(toolchain=tools, commands=log,
                rgbds_zip_sha256=hashlib.sha256((RGBDS / "rgbds-win64.zip").read_bytes()).hexdigest(),
                source_tree_sha256=hashlib.sha256(b"".join(
-                   p.read_bytes() for p in sorted((ROOT / "src").rglob("*.asm")) + [ROOT / "src/assets.txt"]
+                   p.read_bytes() for p in sorted((ROOT / "src").rglob("*.asm")) + [ROOT / "src/assets.txt", ROOT / "src/layout.link"]
                    if p.exists())).hexdigest(),
                assets_extracted=assets)
     (out / "report.json").write_text(json.dumps(rep, indent=2))

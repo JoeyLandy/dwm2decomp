@@ -1,7 +1,7 @@
 ; ROM bank $75: compressed monster pictures
 ; The annotated listing of this bank is build/listing/bank75.asm.
 
-SECTION "Bank 75", ROMX[$4000], BANK[$75]
+SECTION "Bank 75", ROMX
     db $75
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $03E (SkyDragon) (MonsterPictureTable /

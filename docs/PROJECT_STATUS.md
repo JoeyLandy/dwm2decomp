@@ -159,7 +159,15 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0392): M2 batch 4
+## Current handoff (2026-10-16, E-0393): M2 done, code can move between banks
+
+src/ is 9,071 floating sections placed by src/layout.link (rgblink -l). tools/bank_check.py finds jumps and
+pointers that would break when a section changes bank. tools/move_section.py lists 255 sections free to move, and
+moves one in a scratch copy: ScriptWaitFrames and ScriptStepObject run identically from other banks. A routine
+reached by plain calls is caught. build/run670 PASS; parallel suite OK (418 tests, 3 skipped); the read gate passes. Next: M3,
+editable assets with a byte-identical LZSS encoder.
+
+## Prior handoff (2026-10-16, E-0392): M2 batch 4
 
 Six of the nine unresolved split sums now resolve: the bank hint looks further ahead and back to a preceding
 rROMB0 switch, and A2:$4056 is MonsterTableA2 - $1A. 65 split pairs are label expressions; 3 address-like sums

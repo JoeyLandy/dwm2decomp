@@ -1,7 +1,7 @@
 ; ROM bank $A1: the world map and game-mode helpers
 ; The annotated listing of this bank is build/listing/banka1.asm.
 
-SECTION "Bank A1", ROMX[$4000], BANK[$A1]
+SECTION "Bank A1", ROMX
     db $a1
 
 ; A = a battle slot: HL = wBattleATK, then GetBattleStatWord_BankA1: HL = the word of that slot at
@@ -15,25 +15,35 @@ GetBattleATK_BankA1::
     ld hl, wBattleATK
     jr GetBattleStatWord_BankA1
 
+SECTION "Bank A1 GetBattleDEF_BankA1", ROMX
+
 ; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleDEF_BankA1::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankA1
+
+SECTION "Bank A1 GetBattleMaxHP_BankA1", ROMX
 
 ; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankA1::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankA1
 
+SECTION "Bank A1 GetBattleMaxMP_BankA1", ROMX
+
 ; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankA1::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankA1
 
+SECTION "Bank A1 GetBattleHP_BankA1", ROMX
+
 ; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleHP_BankA1::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankA1
+
+SECTION "Bank A1 GetBattleMP_BankA1", ROMX
 
 ; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
 GetBattleMP_BankA1::
@@ -48,6 +58,8 @@ GetBattleStatWord_BankA1::
     deref_hl
     ret
 
+SECTION "Bank A1 AddDoubleAToHL_BankA1", ROMX
+
 ; HL += 2 * A, with A doubled in 8 bits first (an A of $80 or more wraps); A is clobbered. This bank
 ; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
 ; source. (C2, E-0385)
@@ -57,6 +69,8 @@ AddDoubleAToHL_BankA1::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank A1 ActorOnLocalSide_BankA1", ROMX
 
 ; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise; but when wLinkMode is 1 and
 ; wLinkRole bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank
@@ -82,6 +96,8 @@ ActorOnLocalSide_BankA1::
     cp $04
     ret
 
+SECTION "Bank A1 TargetOnLocalSide_BankA1", ROMX
+
 ; Carry set when wBattleTarget is below 4, clear otherwise; but when wLinkMode is 1 and wLinkRole
 ; bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank holds a
 ; copy of the shared block of battle helper routines; no call to this copy was found in the source.
@@ -106,6 +122,8 @@ TargetOnLocalSide_BankA1::
     cp $04
     ret
 
+SECTION "Bank A1 ClearBattleStatusBitsWithMaskD_BankA1", ROMX
+
 ; D = an index 0-6, E = a slot: ANDs the byte at wBattleStatus + 9 * E (status byte 0 of the slot)
 ; with ClearBitMaskTable_BankA1[D] ($DF, $FE, $00, $FD, $73, $EF, $BF). A, D, HL are clobbered. Not
 ; reached from the traced code (a configured code entry); no caller was found in the source. (C2,
@@ -124,6 +142,8 @@ ClearBattleStatusBitsWithMaskD_BankA1:: ; configured code entry (E-0205); C0
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank A1 ClearBitMaskTable_BankA1", ROMX
 
 ; the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 *
 ; E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks
@@ -151,6 +171,8 @@ SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A1 SetBit1OfLevelUpGainsIndexed_BankA1", ROMX
+
 ; A = an index: sets bit 1 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
 ; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
 ; source. (C2, E-0385)
@@ -164,6 +186,8 @@ SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A1 SetBit2OfLevelUpGainsIndexed_BankA1", ROMX
+
 ; A = an index: sets bit 2 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
 ; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
 ; source. (C2, E-0385)
@@ -176,6 +200,8 @@ SetBit2OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank A1 PersonalityIndexOfSlot_BankA1", ROMX
 
 ; A = a slot 0-7: returns A = 9 * g(wSlotPersonalityHi[slot]) + 3 * g(wSlotPersonalityMid[slot]) +
 ; g(wSlotPersonalityLo[slot]), where g(v) = 0 for $C0 or more, 1 for $40 to $BF and 2 below $40 (so
@@ -240,6 +266,8 @@ PersonalityIndexOfSlot_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A1 CheckSlotStatusBlockWide_BankA1", ROMX
+
 ; A = a slot: carry set when CheckSlotStatusBlock sets it (the slot is out, or a status bit it tests
 ; is set), or when bits 6-7 of status byte 3 or bits 2-3 of status byte 4 (wBattleStatus3 + 9 * A)
 ; are set; otherwise carry clear. A, BC, HL are kept. This bank holds a copy of the shared block of
@@ -273,6 +301,8 @@ CheckSlotStatusBlockWide_BankA1:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A1 SlotHasStatus3Or4Bits_BankA1", ROMX
+
 ; A = a slot: A = status byte 3 of the slot (wBattleStatus3 + 9 * A) and $C0, or when that is 0
 ; status byte 4 and $0C; Z is set when both are clear. HL is kept. This bank holds a copy of the
 ; shared block of battle helper routines; no call to this copy was found in the source. (C2, E-0385)
@@ -292,6 +322,8 @@ SlotHasStatus3Or4Bits_BankA1:: ; configured code entry (E-0205); C0
 .done:
     pop hl
     ret
+
+SECTION "Bank A1 RunBattleCommandEntry_BankA1", ROMX
 
 ; The command entry of the turn of game mode 7 (battle step 2;
 ; RunBattlePhaseWhenTextIdle_A0_RunTurn_Commands far-calls it every frame), a variant of
@@ -358,6 +390,8 @@ RunBattleCommandEntry_BankA1_MarkEnemySlots::
     inc [hl]
     ret
 
+SECTION "Bank A1 RunBattleCommandEntry_BankA1_NextActor", ROMX
+
 ; Turn order, step 1, run every frame: advances the second random stream
 ; (NextTableByteSecondStream). With wBattleActor = 8 (past the last slot) adds 3 to wBattleSubPhase
 ; (on to step 4). Otherwise looks at the mark of wBattleActor in wSlotMarks: when it is 1 and the
@@ -402,11 +436,15 @@ RunBattleCommandEntry_BankA1_NextActor::
 .return:
     ret
 
+SECTION "Bank A1 RunBattleCommandEntry_BankA1_ChooseAIAction", ROMX
+
 ; Turn order, step 2: the computer's command entry for the slot (RunCommandEntryResolveStep). (C1,
 ; E-0357)
 RunBattleCommandEntry_BankA1_ChooseAIAction::
     farcall RunCommandEntryResolveStep
     ret
+
+SECTION "Bank A1 RunBattleCommandEntry_BankA1_ChooseTarget", ROMX
 
 ; Turn order, step 3: chooses the action's target, marks the slot done (2) and returns to step 1
 ; with the next actor. (C1, E-0357)
@@ -426,6 +464,8 @@ RunBattleCommandEntry_BankA1_ChooseTarget::
     ld hl, wBattleActor
     inc [hl]
     ret
+
+SECTION "Bank A1 RunBattleCommandEntry_BankA1_ListSpeeds", ROMX
 
 ; Turn order, step 4: clears the action queue and the speed list, then for each present slot marked
 ; 2 works out a speed (RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed plus the action's bonus,
@@ -490,6 +530,8 @@ RunBattleCommandEntry_BankA1_ListSpeeds::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank A1 RunBattleCommandEntry_BankA1_SortBySpeed", ROMX
 
 ; Turn order, step 5: sorts the listed slots by speed, fastest first (swapping neighbours, eight
 ; passes), and copies the order into wActionQueue; next step. (C2, E-0357; probed E-0385)
@@ -588,6 +630,8 @@ RunBattleCommandEntry_BankA1_SortBySpeed::
     inc [hl]
     ret
 
+SECTION "Bank A1 RunBattleCommandEntry_BankA1_TotalHP", ROMX
+
 ; Turn order, step 6: totals the HP and the max HP of slots 0-2 into wBattleCommandArgs, clears the
 ; resolve counters, saves the action choices (SaveActionChoicesAndPickFormations) and marks berserk
 ; actors (SetBerserkForAction6E_BankA1); next battle step. (C2, E-0357; probed E-0385)
@@ -622,6 +666,8 @@ RunBattleCommandEntry_BankA1_TotalHP::
     call SetBerserkForAction6E_BankA1
     ret
 
+SECTION "Bank A1 AddWordAtHLToBC_BankA1", ROMX
+
 ; BC += the word at HL (low byte first, 16-bit wrap); HL moves on 2 bytes; A is clobbered. Called
 ; six times by RunBattleCommandEntry_BankA1_TotalHP. (C2, E-0385)
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
@@ -633,6 +679,8 @@ AddWordAtHLToBC_BankA1::
     adc b
     ld b, a
     ret
+
+SECTION "Bank A1 SetBerserkForAction6E_BankA1", ROMX
 
 ; Sets BSTAT6_BERSERK for every present slot whose chosen action is $6E. (C2, E-0357; probed E-0385)
 SetBerserkForAction6E_BankA1::
@@ -661,6 +709,8 @@ SetBerserkForAction6E_BankA1::
     jr nz, .loop
     ret
 
+SECTION "Bank A1 RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed", ROMX
+
 ; BC = a random speed for slot E between 3/10 of its agility and its agility (second random stream).
 ; (C2, E-0357; probed E-0385)
 RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed::
@@ -684,6 +734,8 @@ RunBattleCommandEntry_BankA1_ListSpeeds_RollSpeed::
     ld b, d
     pop de
     ret
+
+SECTION "Bank A1 AddActionSpeedBonus_BankA1", ROMX
 
 ; Adds the action's speed bonus to BC: actions $62 and $D8 add 3,000 (they go first); a skill whose
 ; record byte 5 has bit 2 set adds 2,000, others 10; action $69 instead gives a random speed of 1 to
@@ -776,6 +828,8 @@ AddActionSpeedBonus_BankA1::
     pop de
     ret
 
+SECTION "Bank A1 MarkVisitedMapScreenInVisitedScreens", ROMX
+
 ; Does nothing unless wMapType is exactly $80 (a key world). Sets the bit of the screen
 ; (hMapScreenX, hMapScreenY) in the 8-byte map wVisitedScreens: byte 4 * (Y / 4) + 2 * (X / 4) + ((Y
 ; / 2) and 1), bit (X and 3) + 4 * (Y and 1). A, B, C, HL are clobbered. Called by
@@ -824,6 +878,8 @@ MarkVisitedMapScreenInVisitedScreens::
     or c
     ld [hl], a
     ret
+
+SECTION "Bank A1 WarpEffect_Warp_MarkExitVisited", ROMX
 
 ; Marks the current floor's exit screen (wKeyWorldAreaExits, second byte when wKeyWorldFloor bit 7)
 ; as visited: sets its bit in wVisitedScreens. (C2, E-0357; probed E-0385)
@@ -883,6 +939,8 @@ WarpEffect_Warp_MarkExitVisited::
     or c
     ld [hl], a
     ret
+
+SECTION "Bank A1 MarkVisitedScreens5x5AroundPlayer", ROMX
 
 ; Marks the screens within 2 of (hMapScreenX, hMapScreenY) that lie inside wKeyWorldWidth x
 ; wKeyWorldHeight as visited (MarkVisitedMapScreenInVisitedScreens for each, so only in a key world
@@ -944,6 +1002,8 @@ MarkVisitedScreens5x5AroundPlayer::
     ldh a, [hTemp1]
     ldh [hMapScreenY], a
     ret
+
+SECTION "Bank A1 RunWorldMapState", ROMX
 
 ; Field state 8, the world map: FieldState_WorldMap far-calls it every frame. Jumps by
 ; wWorldMapState and 7 to RunWorldMapState_BlankPalettes (0 and 3), RunWorldMapState_DrawOverview
@@ -1044,6 +1104,8 @@ RunWorldMapState_DrawCloseUp::
     inc [hl]
     ret
 
+SECTION "Bank A1 RunWorldMapState_DrawCloseUp_KeyWorld", ROMX
+
 ; Draws the key world's close-up: each map screen is a 5 x 5 tile block, centred on the player's
 ; screen; only screens inside the world and visited are drawn (RunWorldMapState_DrawCloseUpCell).
 ; (C1, E-0357)
@@ -1130,6 +1192,8 @@ RunWorldMapState_DrawCloseUp_KeyWorld::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawCloseUpCell", ROMX
 
 ; Draws the tile for close-up cell (hTemp9, hTemp6) of key-world screen (hTempA, hTemp8), read
 ; through the world's chunk list (wKeyWorldChunks) from the chunk's ROM data. (C1, E-0357)
@@ -1230,6 +1294,8 @@ RunWorldMapState_DrawCloseUpCell::
     call WriteVRAMByte
     ret
 
+SECTION "Bank A1 RunWorldMapState_DrawCloseUp_CenterKeyWorld", ROMX
+
 ; Finds where the player is for the close-up: runs the map-type position routine
 ; (SetWorldMapPlayerScreenByMapType), then sets the first screen and the cell within it
 ; (hTemp5-hTemp8) so the player's screen is in the middle; the player's position is restored. (C2,
@@ -1301,6 +1367,8 @@ RunWorldMapState_DrawCloseUp_CenterKeyWorld::
     ldh [hMapScreenX], a
     ret
 
+SECTION "Bank A1 SetWorldMapPlayerScreenByMapType", ROMX
+
 ; Chooses where the player is placed for the world map by wMapType and 7: 0
 ; SetWorldMapPlayerScreenByMapType_KeepPlace, 1 and 2 SetWorldMapPlayerScreenByMapType_PlaceAtExit,
 ; 3 to 6 SetWorldMapPlayerScreenByMapType_PlaceAtFloor, 7
@@ -1325,6 +1393,8 @@ SetWorldMapPlayerScreenByMapType::
 SetWorldMapPlayerScreenByMapType_KeepPlace::
     ret
 
+SECTION "Bank A1 SetWorldMapPlayerScreenByMapType_PlaceAtExit", ROMX
+
 ; Map type 1: places the player at the current floor's exit screen (wKeyWorldAreaExits). (C2,
 ; E-0357; probed E-0385)
 SetWorldMapPlayerScreenByMapType_PlaceAtExit::
@@ -1343,6 +1413,8 @@ SetWorldMapPlayerScreenByMapType_PlaceAtExit::
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
+SECTION "Bank A1 SetWorldMapPlayerScreenByMapType_PlaceAtFloor", ROMX
+
 ; Map type 3: places the player at the current floor's screen from wKeyWorldFloorInfo. (C2, E-0357;
 ; probed E-0385)
 SetWorldMapPlayerScreenByMapType_PlaceAtFloor::
@@ -1354,6 +1426,8 @@ SetWorldMapPlayerScreenByMapType_PlaceAtFloor::
     add_a_to_hl
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
+
+SECTION "Bank A1 SetWorldMapPlayerScreenByMapType_PlaceAtGoal", ROMX
 
 ; Map type 7: places the player at the key world's goal (wKeyWorldGoalCell and wKeyWorldGoal) when
 ; the active key's slot matches, otherwise at wKeyWorldGoalScreen / wKeyWorldGoalPos. (C2, E-0357;
@@ -1390,6 +1464,8 @@ SetWorldMapPlayerScreenByMapType_PlaceAtGoal::
     ldh [hPlayerY], a
     ret
 
+SECTION "Bank A1 SetMapScreenFromAAndCenterPlayer", ROMX
+
 ; A = a screen (high nibble X, low nibble Y): hMapScreenX = X, hMapScreenY = Y, hPlayerX = hPlayerY
 ; = $40. A is clobbered. Used by the placements SetWorldMapPlayerScreenByMapType_PlaceAtExit and
 ; SetWorldMapPlayerScreenByMapType_PlaceAtFloor (which jump to it) and
@@ -1407,6 +1483,8 @@ SetMapScreenFromAAndCenterPlayer::
     ldh [hPlayerX], a
     ldh [hPlayerY], a
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawCloseUp_Region", ROMX
 
 ; Draws a region's close-up: copies the 5 x 5 tile block of each screen in view from the region's
 ; screen tiles (WorldMapScreenCellTable) in ROM. (C1, E-0357)
@@ -1520,6 +1598,8 @@ RunWorldMapState_DrawCloseUp_Region::
     dec c
     jp nz, .loop
     ret
+
+SECTION "Bank A1 RunWorldMapState_SetUpCloseUp", ROMX
 
 ; Sets up a region's close-up: the region's size and screen-tile table from WorldMapScreenCellTable,
 ; and the first screen and cell so the player's screen is in the middle. (C2, E-0357; probed E-0385)
@@ -1692,6 +1772,8 @@ RunWorldMapState_SetUpCloseUp::
     ldh [hMapScreenX], a
     ret
 
+SECTION "Bank A1 WorldMapScreenCellTable", ROMX
+
 ; RunWorldMapState_SetUpCloseUp reads the record at $497C + 4 * wGameMode2Byte44: width and height
 ; from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY
 ; - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and
@@ -1849,6 +1931,8 @@ RunWorldMapState_FindPlayerScreen::
     call LoadMapPositionFromHL
     ret
 
+SECTION "Bank A1 LoadMapPositionFromHL", ROMX
+
 ; HL = a position record of two bytes: hMapScreenX and hMapScreenY = the high and low nibble of the
 ; first byte; hPlayerX = the second byte and $F0, hPlayerY = its low nibble shifted up by 4. HL ends
 ; on the second byte; A is clobbered. Called twice by RunWorldMapState_FindPlayerScreen. (C2,
@@ -1873,6 +1957,8 @@ LoadMapPositionFromHL::
     ldh [hPlayerY], a
     ret
 
+SECTION "Bank A1 StoreTemp5ValuesToCursorCellX", ROMX
+
 ; wCursorCellX = hTemp5, wCursorCellY = hTemp7, wCursorCellW = hTemp6, wCursorCellH = hTemp8 (the
 ; first screen block and cell the close-up starts from). A is clobbered. Called by
 ; RunWorldMapState_DrawCloseUp_KeyWorld and RunWorldMapState_DrawCloseUp_Region. (C2, E-0385)
@@ -1888,6 +1974,8 @@ StoreTemp5ValuesToCursorCellX::
     ldh a, [hTemp8]
     ld [wCursorCellH], a
     ret
+
+SECTION "Bank A1 RunWorldMapState_CloseUpInput", ROMX
 
 ; World map, step 5 (the close-up): B or Select closes the map (RunWorldMapState_WhiteOutScreen);
 ; otherwise draws the blinking player marker and the other markers. (C1, E-0357)
@@ -1927,6 +2015,8 @@ RunWorldMapState_WhiteOutScreen::
     inc [hl]
     ret
 
+SECTION "Bank A1 RunWorldMapState_DrawCloseUpMarkers", ROMX
+
 ; Close-up markers: the blinking player marker, the region's markers, the key-world objects, those
 ; shown by the field skill, and the goal marker. (C1, E-0357)
 RunWorldMapState_DrawCloseUpMarkers::
@@ -1936,6 +2026,8 @@ RunWorldMapState_DrawCloseUpMarkers::
     call RunWorldMapState_DrawObjectMarkers
     call RunWorldMapState_GoalMarker
     ret
+
+SECTION "Bank A1 RunWorldMapState_GoalMarker", ROMX
 
 ; Close-up goal marker: in a region, the key world's goal when its key is active (region by hMapId:
 ; below $30 is 1, below $48 2, ... $DA and over 11), otherwise the region's start position
@@ -2039,6 +2131,8 @@ RunWorldMapState_GoalMarker::
     call RunWorldMapState_GoalMarker_Draw
     ret
 
+SECTION "Bank A1 RunWorldMapState_GoalMarker_Draw", ROMX
+
 ; Draws marker set $28 at screen hTemp1 (x high nibble, y low nibble), position hTemp2, when the
 ; screen is within the 5 x 5 screens in view: 40 pixels a screen plus 8 per half-tile step. (C1,
 ; E-0357)
@@ -2118,6 +2212,8 @@ RunWorldMapState_GoalMarker_Draw::
 
 .return:
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawObjectMarkers", ROMX
 
 ; Close-up markers of the map objects, only when the map was opened by the field skill
 ; (wWorldMapByFieldSkill): for each of the wMapObjectCount 8-byte entries of wMapObjects without bit
@@ -2348,6 +2444,8 @@ RunWorldMapState_DrawObjectMarkers::
     dec b
     jp nz, .loop2
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawObjectMarkers_Data", ROMX
 
 ; Sixteen bytes, each a packed position inside a map screen: the high nibble feeds the marker X and
 ; the low nibble the marker Y, each as (nibble >> 1) * 8 pixels before the cursor-cell offset is
@@ -2690,6 +2788,8 @@ RunWorldMapState_DrawKeyWorldMarkers_Screen::
     pop de
     ret
 
+SECTION "Bank A1 DrawBlinkingMetaSprite8", ROMX
+
 ; While bit 5 of wFrameCounterLo is set, draws metasprite set 8 (DrawMetaSprite, sub-index 0, no
 ; tile offset or attribute change) with its origin at X $4E, Y $46 (near the middle of the screen);
 ; returns at once when the bit is clear, so it blinks. Called by RunWorldMapState_DrawCloseUpMarkers
@@ -2721,6 +2821,8 @@ DrawBlinkingMetaSprite8::
     farcall DrawMetaSprite
     ret
 
+SECTION "Bank A1 RunWorldMapState_BlankPalettes", ROMX
+
 ; World map, step 0: hides the sprites and blanks the palettes (white on CGB); next step. (C1,
 ; E-0357)
 RunWorldMapState_BlankPalettes::
@@ -2746,6 +2848,8 @@ RunWorldMapState_BlankPalettes::
     ld hl, wWorldMapState
     inc [hl]
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawOverview", ROMX
 
 ; World map, step 1 (the overview): loads the tiles, draws the frame and the 12 x 12 map, sets the
 ; attributes, draws the region or key-world overview, and sets the palettes; next step. (C1, E-0357)
@@ -2834,6 +2938,8 @@ RunWorldMapState_DrawOverview::
     inc [hl]
     ret
 
+SECTION "Bank A1 RunWorldMapState_OverviewInput", ROMX
+
 ; World map, step 2 (the overview): B whites out the screen (RunWorldMapState_WhiteOutScreen) and
 ; sets step 6 (back to the field); Select goes on to step 3 (the close-up's set-up); otherwise draws
 ; the blinking player marker (RunWorldMapState_DrawOverviewPlayerMarker), the other markers
@@ -2862,10 +2968,14 @@ RunWorldMapState_OverviewInput::
     call RunWorldMapState_DrawOverviewGoalMarker
     ret
 
+SECTION "Bank A1 RunWorldMapState_ReturnToField", ROMX
+
 ; World map, step 6: returns to the field (EnterGameMode1WithDefaultPalettes). (C1, E-0357)
 RunWorldMapState_ReturnToField::
     call EnterGameMode1WithDefaultPalettes
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawOverview_KeyWorld", ROMX
 
 ; Draws the key world's overview centred on the screen: two tiles per screen, only for visited
 ; screens, read through the chunk list (wKeyWorldChunks). (C1, E-0357)
@@ -3117,6 +3227,8 @@ RunWorldMapState_DrawOverview_KeyWorld::
     jr nz, .loop4
     ret
 
+SECTION "Bank A1 RunWorldMapState_DrawOverview_KeyWorldCell", ROMX
+
 ; Shifts the next visited bit out of A; when set, draws the chunk's overview tile (its byte 5) at
 ; hTemp0; steps hTemp0 and the chunk pointer. (C1, E-0357)
 RunWorldMapState_DrawOverview_KeyWorldCell::
@@ -3167,6 +3279,8 @@ RunWorldMapState_DrawOverview_KeyWorldCell::
     pop bc
     pop af
     ret
+
+SECTION "Bank A1 RunWorldMapState_CenterNameGlyphBuf", ROMX
 
 ; Centers a name in wNameGlyphBuf: counts the glyphs up to the $F0 end byte (the $F0 is counted, the
 ; dakuten marks $8D and $8E are not), then moves the string right by (13 - that count) / 2 places
@@ -3234,6 +3348,8 @@ RunWorldMapState_CenterNameGlyphBuf::
     pop hl
     ret
 
+SECTION "Bank A1 RunWorldMapState_DrawOverview_Region", ROMX
+
 ; Draws the region's overview (WorldMapViewTable for wWorldMapRegion: picture and size) centred,
 ; then clears the name tiles and writes string hMapId + $0A of bank $08 (read as the place name)
 ; centred under it. (C1, E-0357)
@@ -3294,6 +3410,8 @@ RunWorldMapState_DrawOverview_Region::
     dec b
     jr nz, .loop2
     ret
+
+SECTION "Bank A1 WorldMapViewTable", ROMX
 
 ; RunWorldMapState_DrawOverview_Region takes entry 8 * wGameMode2Byte44, centres a rectangle of
 ; these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with
@@ -3422,6 +3540,8 @@ RunWorldMapState_DrawOverviewGoalMarker::
     call DrawCursorSpriteAtTemp1Cell
     ret
 
+SECTION "Bank A1 DrawCursorSpriteAtTemp1Cell", ROMX
+
 ; hTemp1 = a screen (high nibble X, low nibble Y): draws metasprite set $26 (tile offset $10,
 ; attribute XOR 1, sub-index 0) with DrawMetaSprite at hSpriteOriginX = 8 * wCursorCellX + 8 * X and
 ; hSpriteOriginY = 8 * wCursorCellY + 8 * Y (origin high bytes 0). Called four times by
@@ -3467,6 +3587,8 @@ DrawCursorSpriteAtTemp1Cell::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawOverviewPlayerMarker", ROMX
 
 ; The blinking player marker on the overview (shown while frame counter bit 5 is set): on an
 ; entrance map at the region start or the active key's goal; on maps $20, $30, ... $DA at the
@@ -3566,6 +3688,8 @@ RunWorldMapState_DrawOverviewPlayerMarker::
     call DrawMetaSpriteSet08
     ret
 
+SECTION "Bank A1 SetSpriteYFromCursorCellY_PlayerMarker", ROMX
+
 ; Draws the overview player marker at the player's screen (hMapScreenX, hMapScreenY). (C1, E-0357)
 SetSpriteYFromCursorCellY_PlayerMarker::
     ldh a, [hMapScreenX]
@@ -3580,6 +3704,8 @@ SetSpriteYFromCursorCellY_PlayerMarker::
     call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
+
+SECTION "Bank A1 RunWorldMapState_WaitFrameCounterLo_GoalMarker", ROMX
 
 ; C = 1-11, the entrance map number the parent picked from hMapId: when wKeyWorldActive is non-zero
 ; and wKeyWorldKey equals C, draws the blinking overview marker (DrawMetaSpriteSet08) at the cell in
@@ -3625,6 +3751,8 @@ RunWorldMapState_WaitFrameCounterLo_GoalMarker::
     call DrawMetaSpriteSet08
     ret
 
+SECTION "Bank A1 SetSpriteXFromCursorCellX", ROMX
+
 ; A = an X offset in pixels: hSpriteOriginX = 8 * wCursorCellX + A + 6 (8 bits). A and C are
 ; clobbered. Used by the overview and close-up marker routines such as
 ; RunWorldMapState_DrawOverviewPlayerMarker. (C2, E-0385)
@@ -3640,6 +3768,8 @@ SetSpriteXFromCursorCellX::
     ldh [hSpriteOriginX], a
     ret
 
+SECTION "Bank A1 SetSpriteYFromCursorCellY", ROMX
+
 ; A = a Y offset in pixels: hSpriteOriginY = 8 * wCursorCellY + A + 6 (8 bits). A and C are
 ; clobbered. Used by the overview and close-up marker routines such as
 ; RunWorldMapState_DrawOverviewPlayerMarker. (C2, E-0385)
@@ -3654,6 +3784,8 @@ SetSpriteYFromCursorCellY::
     add $06
     ldh [hSpriteOriginY], a
     ret
+
+SECTION "Bank A1 RunWorldMapState_WaitFrameCounterLo_KeyWorldMarker", ROMX
 
 ; In a key world, places the player marker by map type (wMapType & 7). (C1, E-0357)
 RunWorldMapState_WaitFrameCounterLo_KeyWorldMarker::
@@ -3687,6 +3819,8 @@ SetSpriteYFromCursorCellY_ExitMarker::
     call SetSpriteXYFromCellA
     ret
 
+SECTION "Bank A1 SetSpriteYFromCursorCellY_FloorMarker", ROMX
+
 ; Map types 3 to 6: the marker at the current floor's screen from wKeyWorldFloorInfo. (C1, E-0357)
 SetSpriteYFromCursorCellY_FloorMarker::
     ld a, [wKeyWorldFloor]
@@ -3698,6 +3832,8 @@ SetSpriteYFromCursorCellY_FloorMarker::
     ld a, [hl]
     call SetSpriteXYFromCellA
     ret
+
+SECTION "Bank A1 SetSpriteYFromCursorCellY_GoalMarker", ROMX
 
 ; Map type 7: the marker at the goal cell when the active key's slot matches, otherwise at the goal
 ; screen. (C1, E-0357)
@@ -3721,6 +3857,8 @@ SetSpriteYFromCursorCellY_GoalMarker::
     ld a, [wKeyWorldGoalScreen]
     call SetSpriteXYFromCellA
     ret
+
+SECTION "Bank A1 SetSpriteXYFromCellA", ROMX
 
 ; A = a screen (high nibble X, low nibble Y): hSpriteOriginX = 8 * wCursorCellX + 8 * X + 6 and
 ; hSpriteOriginY = 8 * wCursorCellY + 8 * Y + 6; it has no return of its own and falls into
@@ -3774,6 +3912,8 @@ DrawMetaSpriteSet08::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawOverviewMarkers", ROMX
 
 ; Overview markers: the region's list (WorldMapCursorSpriteLists: a count, then x and y) with set
 ; $26; in a key world the floor list, only for visited screens unless the field skill shows
@@ -3884,6 +4024,8 @@ RunWorldMapState_DrawOverviewMarkers::
 .skip4:
     jr .skip2
 
+SECTION "Bank A1 DrawMetaSpriteSet26", ROMX
+
 ; Calls DrawMetaSprite (far) for metasprite set $26, sub-index 0, tile offset $10, attribute XOR 1
 ; and origin high bytes 0, at the position left in hSpriteOriginX and hSpriteOriginY by the caller.
 ; Called twice by RunWorldMapState_DrawOverviewMarkers. (C1, E-0385)
@@ -3903,6 +4045,8 @@ DrawMetaSpriteSet26::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawKeyWorldObjectMarkers", ROMX
 
 ; Returns at once unless wMapType bit 7 is set (a key world). Otherwise walks the 4-byte key-world
 ; object entries: DE starts at wKeyWorldObjects and the walk ends when [DE] is $FF; for each entry
@@ -3935,6 +4079,8 @@ RunWorldMapState_DrawKeyWorldObjectMarkers::
 
 .skip2:
     jr .skip
+
+SECTION "Bank A1 RunWorldMapState_DrawVisitedScreenMarker", ROMX
 
 ; DE = address of a key-world screen byte (high nibble = column, low nibble = row): unless
 ; wWorldMapByFieldSkill is set, returns when IsMapScreenAVisited says the screen was not visited;
@@ -3992,6 +4138,8 @@ RunWorldMapState_DrawVisitedScreenMarker::
     pop de
     ret
 
+SECTION "Bank A1 CenteredBGMapOriginForSizeBC", ROMX
+
 ; B = width, C = rows of a block of tiles: wCursorCellY = 9 - C / 2, wCursorCellX = 10 - B / 2 and
 ; HL = vBGMap0 + 32 * row + column, the address of the top-left tile of the block when it is
 ; centered on the 20 x 18 tile screen. A and E are clobbered. Called by
@@ -4027,6 +4175,8 @@ CenteredBGMapOriginForSizeBC::
     add_a_to_hl
     ret
 
+SECTION "Bank A1 FillBGMap0With57", ROMX
+
 ; Fills the $400 bytes of vBGMap0 (the whole 32 x 32 map) with tile $57 using WriteVRAMByteInc. A,
 ; BC, HL are clobbered. Called by RunWorldMapState_DrawCloseUp before the map is drawn. (C1, E-0385)
 ; fills the $400 bytes of vBGMap0 with tile $57 (E-0122)
@@ -4042,6 +4192,8 @@ FillBGMap0With57::
     or c
     jr nz, .loop
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawCloseUp_ClearAttributes", ROMX
 
 ; On CGB, clears all BG map attributes (VRAM bank 1) to 0. (C1, E-0357)
 RunWorldMapState_DrawCloseUp_ClearAttributes::
@@ -4065,6 +4217,8 @@ RunWorldMapState_DrawCloseUp_ClearAttributes::
     ld a, $00
     ldh [c], a
     ret
+
+SECTION "Bank A1 RunWorldMapState_DrawOverview_SetAttributes", ROMX
 
 ; On CGB, sets all BG map attributes to palette 1, then the 12 x 12 map area (from row 3, column 4)
 ; to palette 0. (C1, E-0357)
@@ -4108,6 +4262,8 @@ RunWorldMapState_DrawOverview_SetAttributes::
     ldh [c], a
     ret
 
+SECTION "Bank A1 DrawRect12x12FromBankA1", ROMX
+
 ; Copies the 12 x 12 tile block DrawRect12x12FromBankA1_TileRect (all 144 tiles are $34) from bank
 ; $A1 to vBGMap0 + $64 (row 3, column 4) with CopyRectFromBankToVRAM (B = 12 wide, C = 12 rows, A =
 ; the bank $A1). Called by RunWorldMapState_DrawOverview after it copies the frame. (C1, E-0385)
@@ -4119,6 +4275,8 @@ DrawRect12x12FromBankA1::
     ld a, $a1
     call CopyRectFromBankToVRAM
     ret
+
+SECTION "Bank A1 DrawRect12x12FromBankA1_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -4158,6 +4316,8 @@ EnterGameMode1WithDefaultPalettes::
     ld a, $01
     ld [wGameMode], a
     ret
+
+SECTION "Bank A1 IsMapScreenAVisited", ROMX
 
 ; A = a screen (high nibble X, low nibble Y): A = 1 when its bit is set in the 8-byte map
 ; wVisitedScreens (byte 4 * (Y / 4) + 2 * (X / 4) + ((Y / 2) and 1), bit (X and 3) + 4 * (Y and 1)),
@@ -4217,6 +4377,8 @@ IsMapScreenAVisited::
     pop hl
     pop bc
     ret
+
+SECTION "Bank A1 TryOpenWorldMap", ROMX
 
 ; Called by FieldState_WalkATalks and FieldState_WalkAMenu when Select is newly pressed. Sets hTemp0
 ; to 0 and returns without opening the map unless no fade runs (wFadeState 0), the text window is

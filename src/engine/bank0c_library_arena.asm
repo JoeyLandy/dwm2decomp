@@ -1,7 +1,7 @@
 ; ROM bank $0C: the monster library and the arena; script helpers
 ; The annotated listing of this bank is build/listing/bank0c.asm.
 
-SECTION "Bank 0C", ROMX[$4000], BANK[$0C]
+SECTION "Bank 0C", ROMX
     db $0c
 
 ; The monster library, script command SCRIPT_LIBRARY ($F6; ScriptCommandF6 in bank $10 far-calls it
@@ -60,6 +60,8 @@ LibraryMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_SetUpScreen", ROMX
+
 ; Library, state 1: clears the screen area, resets the scroll, saves the sprite clipping and hide
 ; tile (in wLibraryScrollY/X) and hides the field sprites, clears vTiles0 and blanks the window
 ; buffer. (C1, E-0357)
@@ -100,6 +102,8 @@ LibraryMenu_SetUpScreen::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ClearFamilyTextTiles", ROMX
+
 ; Library, state 2: clears the string window tiles at vTiles2 + $20. (C1, E-0357)
 LibraryMenu_ClearFamilyTextTiles::
     call ClearStringWindowAt2020
@@ -107,6 +111,8 @@ LibraryMenu_ClearFamilyTextTiles::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C LibraryMenu_DrawFamilyChooser", ROMX
 
 ; Library, state 3: draws the family chooser: the family panel (two rows of family icons, the second
 ; row with one fewer), the cursor on the current family, and the message window. (C1, E-0357)
@@ -145,6 +151,8 @@ LibraryMenu_DrawFamilyChooser::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C LibraryMenu_CountSeenMonsters", ROMX
 
 ; Library, state 4: writes the page number (wGridCursorY) and, for each family on the shown row,
 ; counts how many of its monsters have been seen, for the counts shown beside the icons. (C1,
@@ -300,6 +308,8 @@ LibraryMenu_CountSeenMonsters::
     ld a, h
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank 0C LibraryMenu_FamilyCursor", ROMX
 
 ; Library, state 5: the family cursor. Right/Left switch between the two rows, Up/Down move along
 ; the row; A opens the family; B leaves the library. The cursor blinks while waiting. (C1, E-0357)
@@ -472,6 +482,8 @@ LibraryMenu_FamilyCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_FamilyCursor_Blink", ROMX
+
 ; Blinks the library cursor: after the repeat timer, a 24-frame cycle shows the cursor for 16 frames
 ; and hides it for 8. (C1, E-0357)
 LibraryMenu_FamilyCursor_Blink::
@@ -493,10 +505,14 @@ LibraryMenu_FamilyCursor_Show::
     ld b, $bb
     jr LibraryMenu_FamilyCursor_DrawTile
 
+SECTION "Bank 0C LibraryMenu_FamilyCursor_Hide", ROMX
+
 ; Hides the family cursor (tile $C3). (C1, E-0357)
 LibraryMenu_FamilyCursor_Hide::
     ld b, $c3
     jr LibraryMenu_FamilyCursor_DrawTile
+
+SECTION "Bank 0C LibraryMenu_FamilyCursor_MarkChosen", ROMX
 
 ; Marks the chosen family (tile $BC). (C1, E-0357)
 LibraryMenu_FamilyCursor_MarkChosen::
@@ -525,6 +541,8 @@ LibraryMenu_FamilyCursor_DrawTile::
     ei
     ret
 
+SECTION "Bank 0C LibraryMenu_FamilyCursor_DrawTile_Data", ROMX
+
 ; Six little-endian offsets, $0021, $0061, $00A1, $00E1, $0121, $0161 (BG map row 1, 3, 5, 7, 9, 11
 ; at column 1), indexed by wGridCursorX (0-5). LibraryMenu_FamilyCursor_DrawTile adds the entry to
 ; the BG map 0 address of the scroll position (BGMapAddressAtScroll_Bank0C) and writes the tile in B
@@ -547,6 +565,8 @@ LibraryMenu_LeaveReloadMap::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C LibraryMenu_LeaveRestoreScreen", ROMX
 
 ; Library, state 7 (leaving): restores the screen buffer and attributes to the BG map, the sprite
 ; clipping and hide tile, and the text window. (C1, E-0357)
@@ -599,6 +619,8 @@ LibraryMenu_LeaveRestoreScreen::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_LeaveReloadNames", ROMX
+
 ; Library, state 8 (leaving): reloads the name and party tiles, clears the library's state and puts
 ; the player's name in the text buffer for the closing message. (C1, E-0357)
 LibraryMenu_LeaveReloadNames::
@@ -641,6 +663,8 @@ LibraryMenu_LeaveReloadNames::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_LeaveReloadNames_BlankFourTiles", ROMX
+
 ; Clears four tiles of the name area (the blank pattern at SolidColor1Tile). (C1, E-0357)
 LibraryMenu_LeaveReloadNames_BlankFourTiles::
     ld hl, SolidColor1Tile
@@ -653,6 +677,8 @@ LibraryMenu_LeaveReloadNames_BlankFourTiles::
     call CopyTileBytesToVRAM_Bank0C
     ret
 
+SECTION "Bank 0C LibraryMenu_ClearListTextTiles", ROMX
+
 ; Library, state 9: clears the string window tiles at vTiles2 + $200. (C1, E-0357)
 LibraryMenu_ClearListTextTiles::
     call ClearStringWindowAt2200
@@ -660,6 +686,8 @@ LibraryMenu_ClearListTextTiles::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C LibraryMenu_DrawMonsterList", ROMX
 
 ; Library, state 10: draws the monster list of the chosen family: its panel, the page count and the
 ; cursor, and the names of the monsters seen (LibraryMenu_DrawSeenNames). (C1, E-0357)
@@ -697,6 +725,8 @@ LibraryMenu_DrawMonsterList::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowPageNumbers", ROMX
+
 ; Library, state 11: draws the list's page number and page count. (C1, E-0357)
 LibraryMenu_ShowPageNumbers::
     call LibraryMenu_DrawPageNumbers
@@ -704,6 +734,8 @@ LibraryMenu_ShowPageNumbers::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C LibraryMenu_MonsterCursor", ROMX
 
 ; Library, state 12: the monster cursor. Right/Left change page within the family, Up/Down move in
 ; the list; A opens the monster's entry; B returns to the family chooser. (C1, E-0357)
@@ -889,6 +921,8 @@ LibraryMenu_MonsterCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_MonsterCursor_Blink", ROMX
+
 ; Blinks the monster cursor: 16 frames shown, 8 hidden. (C1, E-0357)
 LibraryMenu_MonsterCursor_Blink::
     ld a, [wJoypadRepeatTimer]
@@ -908,6 +942,8 @@ LibraryMenu_MonsterCursor_Blink::
 LibraryMenu_MonsterCursor_Show::
     ld b, $bb
     jr LibraryMenu_MonsterCursor_DrawTile
+
+SECTION "Bank 0C LibraryMenu_MonsterCursor_Hide", ROMX
 
 ; Hides the monster cursor (tile $C3). (C1, E-0357)
 LibraryMenu_MonsterCursor_Hide::
@@ -937,6 +973,8 @@ LibraryMenu_MonsterCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 0C LibraryMenu_MonsterCursor_DrawTile_Data", ROMX
 
 ; Six little-endian offsets, $0029, $0069, $00A9, $00E9, $0129, $0169 (BG map row 1, 3, 5, 7, 9, 11
 ; at column 9), indexed by wGrid2CursorX (0-5). LibraryMenu_MonsterCursor_DrawTile adds the entry to
@@ -978,6 +1016,8 @@ LibraryMenu_BackToFamilies::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_EraseFamilyMark", ROMX
+
 ; Library, state 14: erases the chosen-family mark and returns to the family cursor (state 5). (C1,
 ; E-0357)
 LibraryMenu_EraseFamilyMark::
@@ -997,6 +1037,8 @@ LibraryMenu_EraseFamilyMark::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ClearForEntry", ROMX
+
 ; Library, state 15: clears the screen area and the window buffer before showing an entry. (C1,
 ; E-0357)
 LibraryMenu_ClearForEntry::
@@ -1006,6 +1048,8 @@ LibraryMenu_ClearForEntry::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry", ROMX
 
 ; Library state 16, one monster entry, by wScreenStep: 0-3 load the frame tiles, the entry screen
 ; with the icon and class blocks, the picture (LoadMonsterPicture) and the sprite graphics; 4 draws
@@ -1084,6 +1128,8 @@ LibraryMenu_ShowMonsterEntry_LoadTiles::
     xor a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 0C LibraryEntryLineTiles", ROMX
 
 ; Six 2bpp tiles (16 bytes each, every first byte of a pair $FF, the second the pattern): line
 ; pieces made of 2-pixel vertical strokes ($03 at the right edge, $60 inside) and full rows ($FF).
@@ -1227,6 +1273,8 @@ LibraryMenu_ShowMonsterEntry_LoadScreen::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_LoadScreen_TileRect", ROMX
+
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 10 x 1 tiles, one row per line
@@ -1341,6 +1389,8 @@ LibraryMenu_ShowMonsterEntry_DrawPicture::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_LoadSprite", ROMX
+
 ; Library entry, step 3: decompresses the monster's sprite graphics (DecompressGraphicsArg1ToArg4).
 ; (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_LoadSprite::
@@ -1359,6 +1409,8 @@ LibraryMenu_ShowMonsterEntry_LoadSprite::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_DrawEntry", ROMX
 
 ; Library entry, step 4: draws the monster's sprite and shows its name, its family's icon and name,
 ; and its description strings. (C1, E-0357)
@@ -1455,6 +1507,8 @@ LibraryMenu_ShowMonsterEntry_DrawEntry::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_DrawEntry_Data", ROMX
+
 ; Three VRAM glyph-tile addresses, vTiles2 + $440, + $4D0 and + $560 ($9440, $94D0, $9560), indexed
 ; by the skill row c (0-2). LibraryMenu_ShowMonsterEntry_DrawEntry uses each as the 9 by 1 text
 ; window where ShowString_Bank08 draws the skill name (category 4) of the skill number at wArg5 + c
@@ -1512,6 +1566,8 @@ LibraryMenu_ShowMonsterEntry_DrawParents::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_ShowPedigree", ROMX
+
 ; Library entry, step 6: shows the monster's pedigree: the two parents from MonsterPedigreeTableA
 ; and MonsterPedigreeTableB, each a species (name and family icon) or a family. (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_ShowPedigree::
@@ -1552,6 +1608,8 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_ShowDescription2", ROMX
+
 ; Library entry, step 7: shows the monster's second description (string $10 entries on, bank $0B) in
 ; the text window. (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_ShowDescription2::
@@ -1578,6 +1636,8 @@ LibraryMenu_ShowMonsterEntry_ShowDescription2::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_BrowseFamily", ROMX
 
 ; Library entry, step 8: Right/Left show the next or previous monster of the family (when the family
 ; has more than one page), A and B close the entry. (C1, E-0357)
@@ -1777,6 +1837,8 @@ LibraryMenu_ShowMonsterEntry_BrowseFamily::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_Close", ROMX
+
 ; Library entry, step 9 (closing): clears the screen area, restores the font tiles and blanks the
 ; window buffer. (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_Close::
@@ -1790,6 +1852,8 @@ LibraryMenu_ShowMonsterEntry_Close::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_RedrawLists", ROMX
 
 ; Library entry, step 10: redraws the family panel and the monster list with their marks, and clears
 ; the string tiles. (C1, E-0357)
@@ -1841,6 +1905,8 @@ LibraryMenu_ShowMonsterEntry_RedrawLists::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_RestorePalette", ROMX
+
 ; Library entry, step 11: restores BG palette 0 and the family icons and list names. (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_RestorePalette::
     call WriteBGPalette0FromData
@@ -1850,6 +1916,8 @@ LibraryMenu_ShowMonsterEntry_RestorePalette::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_RedrawCounts", ROMX
 
 ; Library entry, step 12: redraws the family counts and the message window, and lets the script
 ; continue. (C1, E-0357)
@@ -1891,6 +1959,8 @@ LibraryMenu_ShowMonsterEntry_RedrawCounts::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_EraseListMark", ROMX
+
 ; Library entry, step 13: erases the list mark and returns to the monster cursor (library state
 ; $0C). (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_EraseListMark::
@@ -1921,6 +1991,8 @@ LibraryMenu_ShowMonsterEntry_EraseListMark::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_ShowPedigree_Name", ROMX
 
 ; HL = a pedigree word (MonsterPedigreeTableA or MonsterPedigreeTableB), DE = tile address: shows
 ; one parent's name in a 9 x 1 window at DE. A species id shows its name (category = high byte + 2,
@@ -1979,6 +2051,8 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree_Name::
     farcall ShowString_Bank0B
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_ShowPedigree_Icon", ROMX
+
 ; A = tile number, HL = a pedigree word: loads one parent's family icon into that tile. A species id
 ; gets its family from FamilyForSpeciesIdArg6 (wArg6/wArg7 in, wArg5 out); a $FExx word uses family
 ; xx & $0F; either way wWorkBuf = family, wWorkBuf + 1 = tile and LoadFamilyIconTileForWorkBuf draws
@@ -2029,6 +2103,8 @@ LibraryMenu_ShowMonsterEntry_ShowPedigree_Icon::
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
+
+SECTION "Bank 0C LibraryMenu_DrawSeenNames", ROMX
 
 ; Draws the monster names on the current page of the family list (page wGrid2CursorY, six per page,
 ; as many as ReadGridCellByteForGridCursorXGridCursorY + 1): a seen monster
@@ -2145,6 +2221,8 @@ LibraryMenu_DrawSeenNames::
     jp c, .loop
     ret
 
+SECTION "Bank 0C LibraryMenu_DrawSeenNames_Data", ROMX
+
 ; Six VRAM glyph-tile addresses, vTiles2 + $200, + $290, + $320, + $3B0, + $440 and + $4D0 (steps of
 ; $90 = 9 tiles), indexed by the row c (0-5) of the page of the monster list.
 ; LibraryMenu_DrawSeenNames uses each as the 9 by 1 text window where it draws the name of a seen
@@ -2195,6 +2273,8 @@ LibraryMenu_LoadFamilyIcons::
     cp $06
     jr c, .loop
     ret
+
+SECTION "Bank 0C LibraryMenu_LoadFamilyIcons_Data", ROMX
 
 ; The first 12 bytes are two rows of six family numbers for the family grid, indexed by 6 *
 ; wGridCursorY + c: row 0 holds families $00-$05 and row 1 holds $06-$0A and $FF (no family).
@@ -2256,6 +2336,8 @@ DrawThreeMetaSpritePartsAtGridCursor::
     farcall DrawThreeMetaSpritePartsAtGridCursor_SetAttrs
     ret
 
+SECTION "Bank 0C LibraryMenu_DrawPageNumbers", ROMX
+
 ; Draws the list page indicator: the current page and the family's page count as digit tiles. (C1,
 ; E-0357)
 LibraryMenu_DrawPageNumbers::
@@ -2294,6 +2376,8 @@ LibraryMenu_DrawPageNumbers::
     ei
     ret
 
+SECTION "Bank 0C LibraryMenu_GetCursorMonsterId", ROMX
+
 ; HL = the monster id under the library monster cursor: the first id of the family
 ; GridIndexFromGridCursorXGridCursorY (6 * wGridCursorY + wGridCursorX), a word of
 ; LibraryMenu_CountSeenMonsters_Data1 (Slime $0001, Dragon $0024, ..., the eleventh family $015F),
@@ -2323,6 +2407,8 @@ LibraryMenu_GetCursorMonsterId::
     add_a_to_hl
     ret
 
+SECTION "Bank 0C ReadGridCellByteForGridCursorXGridCursorY", ROMX
+
 ; A = the last valid column (wGrid2CursorX) on row wGrid2CursorY of the monster grid of family
 ; GridIndexFromGridCursorXGridCursorY: the byte at
 ; ReadGridCellByteForGridCursorXGridCursorY_Data[family] (LibraryRowLastColumns_Slime, ..._Dragon,
@@ -2348,6 +2434,8 @@ ReadGridCellByteForGridCursorXGridCursorY::
 .done:
     ld a, [de]
     ret
+
+SECTION "Bank 0C LibraryMenu_DrawSeenCounts", ROMX
 
 ; Draws the seen counts of the families on the current row (wGridCursorY: six on row 0, five on row
 ; 1) from wScreenCountPlusOne + 6 * row, as two digit tiles each with a blank instead of a leading
@@ -2441,6 +2529,8 @@ LibraryMenu_DrawSeenCounts::
     jr c, .loop
     ret
 
+SECTION "Bank 0C LibraryMenu_DrawSeenCounts_Data1", ROMX
+
 ; Six little-endian offsets, $0026, $0066, $00A6, $00E6, $0126, $0166 (BG map row 1, 3, 5, 7, 9, 11
 ; at column 6), indexed by the row c of the family row. LibraryMenu_DrawSeenCounts adds the entry to
 ; the BG map 0 address of the scroll position to place the two digit tiles of the seen count when
@@ -2488,6 +2578,8 @@ LibraryMenu_BlankWindowBuffer::
 .return:
     ret
 
+SECTION "Bank 0C CopyTileBytesToVRAM_Bank0C", ROMX
+
 ; Copies one 16-byte tile from [HL] to [DE] (VRAM): each byte is written with interrupts off after
 ; rSTAT bit 1 clears; HL and DE end past the tile, C = 0, A clobbered. LibraryMenu_ClearBGMap uses
 ; it for the fill tile LibraryMenu_ClearBGMap_Tiles (one of the per-bank copies of this helper).
@@ -2512,6 +2604,8 @@ CopyTileBytesToVRAM_Bank0C::
     jr nz, .loop
     ret
 
+SECTION "Bank 0C BGMapAddressAtScroll_Bank0C", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry at the top-left of the screen
 ; (pixel hScrollX, hScrollY); DE = the row offset, A clobbered. The library and arena screens add a
 ; tile offset to it before drawing (DrawScreenBufferRect_Bank0C). One of the per-bank copies of this
@@ -2535,6 +2629,8 @@ BGMapAddressAtScroll_Bank0C::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank 0C LibraryMenu_ClearBGMap", ROMX
 
 ; Copies the solid fill tile LibraryMenu_ClearBGMap_Tiles to vTiles1 + $430, then far-calls
 ; FillTileRectWithArg1Tile to cover the 32 x 32 BG map from the scroll position
@@ -2561,6 +2657,8 @@ LibraryMenu_ClearBGMap::
     ld [wArg7], a
     farcall FillTileRectWithArg1Tile
     ret
+
+SECTION "Bank 0C LibraryMenu_ClearBGMap_Tiles", ROMX
 
 ; HL = $51AB and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
@@ -2629,6 +2727,8 @@ CopyRectTo20ByteRows_Bank0C::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 0C DrawScreenBufferRect_Bank0C", ROMX
+
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: copies that
 ; rectangle of wScreenTileBuffer + DE to the BG map (CopyRectToBGMapWrapped) and, on CGB, the same
 ; rectangle of wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, then rSVBK = rVBK = 0. It also
@@ -2692,6 +2792,8 @@ DrawScreenBufferRect_Bank0C::
     ldh [rVBK], a
     ret
 
+SECTION "Bank 0C ArenaMenu_CancelClass_BlankMarks", ROMX
+
 ; Arena: writes the blank tile $C3 at the first C entries of the address table at HL. (C2, E-0357;
 ; probed E-0376)
 ArenaMenu_CancelClass_BlankMarks::
@@ -2713,6 +2815,8 @@ ArenaMenu_CancelClass_BlankMarks::
     jr c, .loop
     ret
 
+SECTION "Bank 0C StoreBAtWordTableEntry_Bank0C", ROMX
+
 ; HL = a table of 16-bit addresses, A = index: stores B at the address in entry A (DE = that address
 ; on return, HL = the entry high byte); BC kept, A = B. The library and arena use it to draw or
 ; erase a mark tile at one of a list of screen-buffer positions. One of the per-bank copies of this
@@ -2730,6 +2834,8 @@ StoreBAtWordTableEntry_Bank0C::
     ld a, b
     ld [de], a
     ret
+
+SECTION "Bank 0C ClearStringWindowAt2020", ROMX
 
 ; Sets the text window to tiles vTiles2 + $20 (wTextWindowTileLo/Hi) with wTextWindowRows = 2 and
 ; wTextWindowWidth = $17, then clears those tiles with FillTilesFromRequest (23 passes of 2 tiles).
@@ -2751,6 +2857,8 @@ ClearStringWindowAt2020::
     call FillTilesFromRequest
     ret
 
+SECTION "Bank 0C ClearStringWindowAt2200", ROMX
+
 ; Sets the text window to tiles vTiles2 + $200 with wTextWindowRows = 1 and wTextWindowWidth = $53,
 ; then clears those tiles with FillTilesFromRequest ($53 passes of one tile). Library state 9
 ; (LibraryMenu_ClearListTextTiles) and LibraryMenu_ShowMonsterEntry_RedrawLists call it before the
@@ -2770,6 +2878,8 @@ ClearStringWindowAt2200::
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ret
+
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_FillTilesFromRequest", ROMX
 
 ; Clears the string tiles of the entry screen (vTiles2 and vTiles2 + $670). (C1, E-0357)
 LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
@@ -2797,6 +2907,8 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
     call FillTilesFromRequest
     ret
 
+SECTION "Bank 0C CopyBytesDEToHL_Bank0C", ROMX
+
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy, BC = 0 and A = 0. One of the per-bank copies of this helper. (C2, E-0376)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
@@ -2810,6 +2922,8 @@ CopyBytesDEToHL_Bank0C::
     or c
     jr nz, CopyBytesDEToHL_Bank0C
     ret
+
+SECTION "Bank 0C CopyLow3BitsToWRAMBank2_Bank0C", ROMX
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07 (a CGB attribute keeps only
 ; its palette number), then sets rSVBK = 0. DE and HL end past the copy, BC = 0. The arena and
@@ -2834,6 +2948,8 @@ CopyLow3BitsToWRAMBank2_Bank0C::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 0C GridIndexFromGridCursorXGridCursorY", ROMX
+
 ; A = 6 * wGridCursorY + wGridCursorX, the row-major index in a 6-column grid (in the library the
 ; family index, in the arena the class); BC kept. Used by the library and arena cursors and tables.
 ; (C2, E-0376)
@@ -2852,6 +2968,8 @@ GridIndexFromGridCursorXGridCursorY::
     pop bc
     ret
 
+SECTION "Bank 0C GridIndexFromGrid2CursorXGrid2CursorY", ROMX
+
 ; A = 6 * wGrid2CursorY + wGrid2CursorX, the row-major index in the second 6-column grid (the
 ; library monster list: the position of the monster within its family); BC kept. (C2, E-0376)
 ; A = 6 * wGrid2CursorY + wGrid2CursorX (row-major index in a 6-column grid); BC kept (E-0117)
@@ -2867,6 +2985,8 @@ GridIndexFromGrid2CursorXGrid2CursorY::
     add b
     pop bc
     ret
+
+SECTION "Bank 0C LibraryMenu_ClassifyMonster", ROMX
 
 ; HL = monster id: A = $FF when the id's bit is set in the bit field at wMonsterLibraryBuf
 ; (TestBitInFieldAtArg3 returns wArg5 = $FF for a set bit); otherwise A = $FE when its species flag
@@ -2911,6 +3031,8 @@ LibraryMenu_ClassifyMonster::
     ld a, $fe
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_LoadIconBlock", ROMX
+
 ; Copies the two tile bytes of the shown monster's icon block to wLibraryEntryBlock: the monster
 ; number from GridCellAddressFromGridCursorXAndGrid2CursorX indexes MonsterIconKindTable, whose
 ; value picks an entry of MonsterIconBlockPointers. LibraryMenu_ShowMonsterEntry_LoadScreen then
@@ -2936,6 +3058,8 @@ LibraryMenu_ShowMonsterEntry_LoadIconBlock::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 0C MonsterIconKindTable", ROMX
 
 ; LibraryMenu_ShowMonsterEntry_LoadIconBlock reads the byte at $536A + the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that
@@ -3370,6 +3494,8 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock::
     jr nz, .loop
     ret
 
+SECTION "Bank 0C LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data", ROMX
+
 ; Eight pointers, one per class 0-7, to the eight 4-byte tile rows LibraryClassBlock_Class0 to
 ; LibraryClassBlock_Class7. LibraryMenu_ShowMonsterEntry_LoadClassBlock takes the class byte of the
 ; shown monster from LibraryMonsterClasses, doubles it to pick the word, and copies the 4 tiles it
@@ -3454,6 +3580,8 @@ WriteBGPalette0FromData::
     dec d
     jr nz, .loop
     ret
+
+SECTION "Bank 0C WriteBGPalette0FromData_Data", ROMX
 
 ; Three CGB colours as little-endian BGR555 words: $7D86, $7FFF (white) and $7FE1.
 ; WriteBGPalette0FromData writes the six bytes in order through rBGPD starting at palette index 0,
@@ -5711,6 +5839,8 @@ ArenaMenu_PickPrize::
     ld [wAreaGraphicsIndex], a
     ret
 
+SECTION "Bank 0C ArenaMenu_ReadQuestion", ROMX
+
 ; Arena, state 38: a yes/no question; yes moves on, no redraws the screen and steps back. (C1,
 ; E-0357)
 ArenaMenu_ReadQuestion::
@@ -5761,6 +5891,8 @@ ArenaMenu_ReadQuestion::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0C ArenaMenu_Init", ROMX
 
 ; Arena, state 0: clears the arena state, copies the screen to the window buffer, sets message mode
 ; $0A and picks the starting state by the arena rank (wArenaRank): the first visit, a class choice,
@@ -5898,6 +6030,8 @@ ArenaMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_DrawClassChooser", ROMX
+
 ; Arena, state 1: draws the class chooser with the current rank and the prize money. (C1, E-0357)
 ArenaMenu_DrawClassChooser::
     ld de, ArenaMenu_DrawClassChooser_TileRect
@@ -5914,6 +6048,8 @@ ArenaMenu_DrawClassChooser::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C ArenaMenu_ClassCursor", ROMX
 
 ; Arena, state 2: the class cursor: Up/Down move over the four classes (wrapping), A chooses one, B
 ; cancels (wTwoChoiceCursor = 3). (C1, E-0357)
@@ -6025,6 +6161,8 @@ ArenaMenu_ClassCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_ClassCursor_Data1", ROMX
+
 ; Four text characters, "C", "B", "A" and "S" in the charmap ($0C, $0B, $0A, $1C): the arena class
 ; letters. ArenaMenu_ClassCursor indexes it with wGridCursorX (0-3, the class under the cursor) and
 ; stores the letter in wTextBuf0, followed by the $F0 terminator, so the next message can show it
@@ -6054,6 +6192,8 @@ ArenaMenu_ClassCursor_Show::
     ld b, $bb
     jr ArenaMenu_ClassCursor_DrawTile
 
+SECTION "Bank 0C ArenaMenu_ClassCursor_Hide", ROMX
+
 ; Hides the arena class cursor (tile $C3). The two bytes after its jump ($06 $BC, an ld b, $BC) are
 ; not reached by any code read. (C1, E-0369)
 ArenaMenu_ClassCursor_Hide::
@@ -6082,6 +6222,8 @@ ArenaMenu_ClassCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 0C ArenaMenu_ClassCursor_DrawTile_Data", ROMX
 
 ; Four little-endian word offsets into the BG map, counted from the BG map address of the screen
 ; scroll position (BGMapAddressAtScroll_Bank0C): $00A2, $00E2, $0122 and $0162, which are rows 5, 7,
@@ -6115,6 +6257,8 @@ ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     xor a
     ld [wTwoChoiceCursor], a
     ret
+
+SECTION "Bank 0C ArenaMenu_AskEnterClass", ROMX
 
 ; Arena, state 4: the yes/no question on entering the chosen class; yes checks the class's entry fee
 ; (ArenaMenu_AskEnterClass_Data), no closes the question and moves on. (C1, E-0357)
@@ -6194,6 +6338,8 @@ ArenaMenu_AskEnterClass::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_CloseYesNoBox", ROMX
+
 ; Closes the arena's yes/no box: restores the screen behind it and redraws the box frame. (C1,
 ; E-0357)
 ArenaMenu_CloseYesNoBox::
@@ -6216,6 +6362,8 @@ ArenaMenu_CloseYesNoBox::
     call DrawScreenBufferRect_Bank0C
     ret
 
+SECTION "Bank 0C ArenaMenu_CancelClass", ROMX
+
 ; Arena, state 5: closes the box, blanks the four class marks and returns to the class cursor (state
 ; 2). (C1, E-0357)
 ArenaMenu_CancelClass::
@@ -6231,6 +6379,8 @@ ArenaMenu_CancelClass::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0C ArenaMenu_NextState", ROMX
+
 ; Arena, states 6, 9, 29 and 32: wScreenState += 1 without ending the script command, so the next
 ; state runs on the next frame. Each follows a state that ended the command for the script: 6 after
 ; the fee check of ArenaMenu_AskEnterClass, 9 and 32 after ArenaMenu_AfterRound, 29 from
@@ -6240,6 +6390,8 @@ ArenaMenu_NextState::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C ArenaMenu_PayEntryFee", ROMX
 
 ; Arena, state 7: pays the class's entry fee (SubtractArg1AmountFromGold), records the class
 ; (wAreaGraphicsIndex) and the round count, starts the arena talk event and redraws the screen. (C1,
@@ -6277,6 +6429,8 @@ ArenaMenu_PayEntryFee::
     ld [wAreaGraphicsIndex], a
     call RedrawFullScreenBoxes_0C
     ret
+
+SECTION "Bank 0C ArenaMenu_AfterRound", ROMX
 
 ; Arena, state 8, after a round: when the battle was lost (wBattleScene set) the run ends; before
 ; the third round it prepares the next one; after the third the arena rank goes up and the run ends.
@@ -6330,6 +6484,8 @@ ArenaMenu_AfterRound::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0C ArenaMenu_StartNextClassBattle", ROMX
+
 ; Arena, state 10, after ArenaMenu_AfterRound has advanced the battle index: starts the next class
 ; battle (ArenaMenu_StartClassBattle: talk event group $18 and the three foes from
 ; GridEncounterTable). It does not change wScreenState. (C1, E-0369)
@@ -6337,11 +6493,15 @@ ArenaMenu_StartNextClassBattle::
     call ArenaMenu_StartClassBattle
     ret
 
+SECTION "Bank 0C ArenaMenu_ShowGoldAndYesNo", ROMX
+
 ; Arena, state 11: shows the gold and the yes/no box. (C1, E-0357)
 ArenaMenu_ShowGoldAndYesNo::
     call ArenaMenu_Number24ToPackedBCD
     call ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     ret
+
+SECTION "Bank 0C ArenaMenu_ReadAnswer", ROMX
 
 ; Arena, state 12: the yes/no answer: yes closes the box and moves on, no leaves the question for
 ; the script. (C1, E-0357)
@@ -6381,6 +6541,8 @@ ArenaMenu_ReadAnswer::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_NextStateAfterYes", ROMX
+
 ; Arena, state 13, after a yes in state 12 (ArenaMenu_ReadAnswer): wScreenState += 1 without ending
 ; the script command, so state 14 (ArenaMenu_SkipToClassPanel) runs on the next frame. (C2, E-0369;
 ; probed E-0376)
@@ -6389,6 +6551,8 @@ ArenaMenu_NextStateAfterYes::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C ArenaMenu_SkipToClassPanel", ROMX
 
 ; Arena, state 14: wScreenState += 2 (to state 16, ArenaMenu_DrawClassPanel, passing over
 ; ArenaMenu_RestoreClassPanels), wTwoChoiceCursor = 0, and ends the script command
@@ -6405,6 +6569,8 @@ ArenaMenu_SkipToClassPanel::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0C ArenaMenu_RestoreClassPanels", ROMX
 
 ; Arena, state 15: restores the screen areas behind the class panels and steps back four states.
 ; (C1, E-0357)
@@ -6440,6 +6606,8 @@ ArenaMenu_RestoreClassPanels::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_DrawClassPanel", ROMX
+
 ; Arena, state 16: draws the class panel with the gold, judges the party's strength
 ; (ArenaMenu_JudgePartyStrength) and skips a state. (C1, E-0357)
 ArenaMenu_DrawClassPanel::
@@ -6467,6 +6635,8 @@ ArenaMenu_DrawClassPanel::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_DrawClassPanelGold", ROMX
+
 ; Arena, state 17: draws the class panel with the gold. (C1, E-0357)
 ArenaMenu_DrawClassPanelGold::
     ld de, ArenaMenu_DrawClassPanel_TileRect
@@ -6486,6 +6656,8 @@ ArenaMenu_DrawClassPanelGold::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C ArenaMenu_ClassCursor2", ROMX
 
 ; Arena, state 18: the class cursor of the second panel: Up/Down move over the four classes, A
 ; chooses, B cancels. (C1, E-0357)
@@ -6573,6 +6745,8 @@ ArenaMenu_ClassCursor2::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_ClassCursor2_Data1", ROMX
+
 ; Four text characters, "C", "B", "A" and "S" ($0C, $0B, $0A, $1C): the arena class letters for the
 ; second class panel, the same bytes as ArenaMenu_ClassCursor_Data1. ArenaMenu_ClassCursor2 indexes
 ; it with wGridCursorX (0-3) and stores the letter in wTextBuf0 with the $F0 terminator, for <BUF0>
@@ -6599,6 +6773,8 @@ ArenaMenu_ClassCursor2_Blink::
 ArenaMenu_ClassCursor2_Show::
     ld b, $bb
     jr ArenaMenu_ClassCursor2_DrawTile
+
+SECTION "Bank 0C ArenaMenu_ClassCursor2_Hide", ROMX
 
 ; Hides the second panel's cursor (tile $C3). The two bytes after its jump ($06 $BC, an ld b, $BC)
 ; are not reached by any code read. (C1, E-0369)
@@ -6628,6 +6804,8 @@ ArenaMenu_ClassCursor2_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 0C ArenaMenu_ClassCursor2_DrawTile_Data", ROMX
 
 ; Four little-endian word offsets into the BG map from the scroll position
 ; (BGMapAddressAtScroll_Bank0C): $00A1, $00E1, $0121 and $0161, which are rows 5, 7, 9 and 11 at
@@ -6662,6 +6840,8 @@ ArenaMenu_RestorePanel::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_NextStateAfterClassChoice", ROMX
+
 ; Arena, state 20, after A on the second panel's cursor (ArenaMenu_ClassCursor2 moves from state 18
 ; to 20): wScreenState += 1 without ending the script command, so state 21 (ArenaMenu_SetClassFee)
 ; runs on the next frame. (C2, E-0369; probed E-0376)
@@ -6670,6 +6850,8 @@ ArenaMenu_NextStateAfterClassChoice::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0C ArenaMenu_SetClassFee", ROMX
 
 ; Arena, state 21: sets the chosen class's area (wScreenArea = class + 2) and its entry fee from
 ; ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data. (C2, E-0357; probed E-0376)
@@ -6699,6 +6881,8 @@ ArenaMenu_SetClassFee::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0C ArenaMenu_SetClassFee_Data", ROMX
 
 ; Four little-endian 16-bit amounts: 1000, 2000, 3000 and 5000 ($03E8, $07D0, $0BB8, $1388).
 ; ArenaMenu_SetClassFee indexes it with wGridCursorX (the class chosen, 0-3) times 2 and stores the
@@ -6769,6 +6953,8 @@ ArenaMenu_ReadFeeAnswer::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_ClosePanelBox", ROMX
+
 ; Arena, state 24: closes the box, redraws the panel, judges the party and returns to state $11.
 ; (C1, E-0357)
 ArenaMenu_ClosePanelBox::
@@ -6801,6 +6987,8 @@ ArenaMenu_ClosePanelBox::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_PayEntryFeeAgain", ROMX
+
 ; Arena, state 25: pays the entry fee and redraws the gold. (C1, E-0357)
 ArenaMenu_PayEntryFeeAgain::
     xor a
@@ -6824,6 +7012,8 @@ ArenaMenu_PayEntryFeeAgain::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_StartArenaTalk", ROMX
+
 ; Arena, state 26: records the area, starts talk event group $1F and redraws the screen. (C1,
 ; E-0357)
 ArenaMenu_StartArenaTalk::
@@ -6836,6 +7026,8 @@ ArenaMenu_StartArenaTalk::
     ld [wScreenTableIndex], a
     call RedrawFullScreenBoxes_0C
     ret
+
+SECTION "Bank 0C ArenaMenu_AfterRoundAgain", ROMX
 
 ; Arena, state 27, after a round: a lost battle clears the prize; before the third round the round
 ; count goes up for the next battle; after it the run ends (state $23). (C2, E-0357; probed E-0376)
@@ -6885,12 +7077,16 @@ ArenaMenu_AfterRoundAgain::
     ld a, $02
     jr .set_two_choice_cursor
 
+SECTION "Bank 0C ArenaMenu_LoadNextRound", ROMX
+
 ; Arena, state 28: copies the three foes of round wArenaRound into wEncounterMonsters
 ; (ArenaRounds_LoadRoundFoes); state 27 (ArenaMenu_AfterRoundAgain) has just advanced wArenaRound.
 ; It does not change wScreenState or end the script command. (C2, E-0369; probed E-0376)
 ArenaMenu_LoadNextRound::
     call ArenaRounds_LoadRoundFoes
     ret
+
+SECTION "Bank 0C ArenaMenu_StartTalkAndClearRun", ROMX
 
 ; Arena, state 30: starts the arena talk event, clears the run's record and redraws the screen. (C1,
 ; E-0357)
@@ -6909,6 +7105,8 @@ ArenaMenu_StartTalkAndClearRun::
     call RedrawFullScreenBoxes_0C
     ret
 
+SECTION "Bank 0C ArenaMenu_StartNextFixedListBattle", ROMX
+
 ; Arena, state 33, after ArenaMenu_AfterRound (state 31) has advanced the battle index: starts the
 ; next battle (ArenaMenu_StartFixedListBattle: talk event group $18 and three foes from
 ; ArenaGridBattle_SetUp_Data entry wScreenCountPlusOne). It does not change wScreenState. (C1,
@@ -6916,6 +7114,8 @@ ArenaMenu_StartTalkAndClearRun::
 ArenaMenu_StartNextFixedListBattle::
     call ArenaMenu_StartFixedListBattle
     ret
+
+SECTION "Bank 0C ArenaMenu_ResultMessage", ROMX
 
 ; Arena, state 34, the result message: after a lost battle picks the message by rank (below 3 or
 ; not); otherwise the message index is the rank - 2, and for ranks 1-4 two states are skipped. (C2,
@@ -6966,6 +7166,8 @@ ArenaMenu_ResultMessage::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C ArenaMenu_PrepareResultName", ROMX
+
 ; Arena, state 35: puts the player's name (and, after a win, the class letter) in the text buffer
 ; for the message. (C2, E-0357; probed E-0376)
 ArenaMenu_PrepareResultName::
@@ -7000,6 +7202,8 @@ ArenaMenu_PrepareResultName::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0C ArenaMenu_GiveRankReward", ROMX
 
 ; Arena, state 36, the reward: at rank 1 gives the first key (EVENT_ARENA_RANK1_KEY_GIVEN, a key of
 ; kind 3, and sets EVENT_WARUBOU_WA_HEY_THIS_TIME); otherwise generates a new key
@@ -7063,6 +7267,8 @@ ArenaMenu_GiveRankReward::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0C RedrawFullScreenBoxes_0C", ROMX
+
 ; Restores the arena screen after a talk or battle: copies the 13 rows of wScreenTileBuffer from
 ; offset 0 to offset $1CC (CopyScreenBufferRectWithAttrs_0C, 20 bytes a row), copies $64 bytes of
 ; wScreenTileBuffer + $104 to wWindowTileBuffer (and, on CGB, the attributes from wScreenAttrBuffer
@@ -7107,6 +7313,8 @@ RedrawFullScreenBoxes_0C::
     call DrawScreenBufferRect_Bank0C
     ret
 
+SECTION "Bank 0C ArenaMenu_PrepareResultName_ClassLetter", ROMX
+
 ; Runs WritePlayerNameWithFlag0SuffixToTextBuf0, then overwrites the first two bytes of wTextBuf0
 ; with the class letter for wAreaGraphicsIndex (ArenaMenu_PrepareResultName_ClassLetter_Data: 'C',
 ; 'C', 'C', 'B', 'A', 'S' for 0-5) and the $F0 end, so the text buffer reads as just the letter; the
@@ -7121,6 +7329,8 @@ ArenaMenu_PrepareResultName_ClassLetter::
     ld a, $f0
     ld [wTextBuf0 + $1], a
     ret
+
+SECTION "Bank 0C ArenaMenu_PrepareResultName_ClassLetter_Data", ROMX
 
 ; Six text characters, "C", "C", "C", "B", "A", "S" ($0C, $0C, $0C, $0B, $0A, $1C), one per
 ; wAreaGraphicsIndex 0-5. ArenaMenu_PrepareResultName_ClassLetter stores the letter in wTextBuf0
@@ -7140,6 +7350,8 @@ IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld [wScreenArea], a
     ret
 
+SECTION "Bank 0C SetupScreenCountPlusOneFromRecordCapacity", ROMX
+
 ; Refresh the grid-arena selection: increment the reused arena counter modulo 256, store the result
 ; in both wScreenCountPlusOne and wRecordCapacity, copy wAreaGraphicsIndex to wGridCursorX and set
 ; wTwoChoiceCursor = 1. The caller uses the refreshed index for the next three-foe encounter. (C2,
@@ -7155,6 +7367,8 @@ SetupScreenCountPlusOneFromRecordCapacity::
     ld a, [wScreenCountPlusOne]
     ld [wRecordCapacity], a
     ret
+
+SECTION "Bank 0C ArenaMenu_DrawClassChooser_MarkCleared", ROMX
 
 ; Marks the cleared classes on the class panel: tile $AD beside each class below the arena rank.
 ; (C2, E-0357; probed E-0376)
@@ -7191,6 +7405,8 @@ ArenaMenu_DrawClassChooser_MarkCleared::
     ld [hl], a
     ret
 
+SECTION "Bank 0C ArenaMenu_Number24ToPackedBCD", ROMX
+
 ; Draws the gold on the arena panel: the frame and the five digits of wGold. (C2, E-0357; probed
 ; E-0376)
 ArenaMenu_Number24ToPackedBCD::
@@ -7220,6 +7436,8 @@ ArenaMenu_Number24ToPackedBCD::
     cp $05
     jr c, .loop
     ret
+
+SECTION "Bank 0C ArenaMenu_JudgePartyStrength_Average", ROMX
 
 ; The party's average arena strength: HL = the sum of the wPartyCount bytes at wArenaEntry divided
 ; by wPartyCount (DivideHLByA); a quotient above 255 becomes HL = $00FF (each byte is at most 198,
@@ -7255,6 +7473,8 @@ ArenaMenu_JudgePartyStrength_Average::
     ld h, $00
     ld l, $ff
     ret
+
+SECTION "Bank 0C ArenaMenu_JudgePartyStrength_ComputeEach", ROMX
 
 ; For each party member (wPartyList, wPartyCount entries) computes an arena strength byte at
 ; wArenaEntry + its position from its SRAM record (SRAM enabled at bank 0, disabled at the end):
@@ -7480,6 +7700,8 @@ ArenaMenu_JudgePartyStrength_ComputeEach::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 0C AddTemp0WordToHL", ROMX
+
 ; HL += the word in hTemp0 (low) and hTemp1 (high), the record word LoadSRAMRecordWord has just
 ; loaded; a carry out of bit 15 is lost. Clobbers A. (C2, E-0369; probed E-0376)
 ; HL += the word in hTemp0/hTemp1; clobbers A (E-0073)
@@ -7491,6 +7713,8 @@ AddTemp0WordToHL::
     adc h
     ld h, a
     ret
+
+SECTION "Bank 0C PickTableEntryByPartyLevelTotal", ROMX
 
 ; Adds MON_LEVEL of every party member (wPartyList, wPartyCount records, SRAM bank 0 enabled with
 ; rRAMG2 and disabled again) and returns HL = a word of PickTableEntryByPartyLevelTotal_Data for
@@ -7585,6 +7809,8 @@ PickTableEntryByPartyLevelTotal::
     ld h, a
     ret
 
+SECTION "Bank 0C PickTableEntryByPartyLevelTotal_Data", ROMX
+
 ; Six little-endian words: 400, 600, 800, 1200, 1400 and 1400 ($0190, $0258, $0320, $04B0, $0578,
 ; $0578). PickTableEntryByPartyLevelTotal adds the MON_LEVEL of every party member and picks the
 ; word by the total: entry 0 below 49, 1 below 91, 2 below 139, 3 below 181, 4 below 220 and 5 from
@@ -7665,6 +7891,8 @@ CopyScreenBufferRectWithAttrs_0C::
     cp c
     jr c, CopyScreenBufferRectWithAttrs_0C
     ret
+
+SECTION "Bank 0C ArenaRounds_RandomModulo52", ROMX
 
 ; Build individual foe words for rounds wArenaRound through 2, three words per round in wArenaList2.
 ; Clear all forty wArenaList usage bytes, draw through RandomModulo52 using its L quotient, fold the
@@ -7775,6 +8003,8 @@ ArenaRounds_RandomModulo52::
     jp c, .loop2
     ret
 
+SECTION "Bank 0C RandomModulo52", ROMX
+
 ; Steps the table random number (NextTableByte), then forms HL = ((wRandomLo << 1) & B) * 256 +
 ; wRandomLo (the carry shifted in is always clear) and divides it by 82 ($52) with DivideHLByA: A =
 ; the remainder, HL = the quotient, D = 0, E = $52; BC kept. Its three callers (ArenaMenu_PickPrize,
@@ -7795,10 +8025,14 @@ RandomModulo52::
     call DivideHLByA
     ret
 
+SECTION "Bank 0C ArenaMenu_AfterRoundAgain_NoOp", ROMX
+
 ; A lone ret: ArenaMenu_AfterRoundAgain calls it after the third round (wArenaRound >= 2) and it
 ; does nothing. (C2, E-0369; probed E-0376)
 ArenaMenu_AfterRoundAgain_NoOp::
     ret
+
+SECTION "Bank 0C ArenaMenu_StartArenaTalk_StartRoundsBattle", ROMX
 
 ; Saves the script position (wScriptStartRequest, wScriptPointerLo/Hi into wScriptReturnBank/Lo/Hi)
 ; and starts talk event group $1F (Talk_ArenaRounds, through DispatchTalkEvent); then clears
@@ -7855,6 +8089,8 @@ ArenaRounds_LoadRoundFoes::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 0C ArenaMenu_StartFixedListBattle", ROMX
 
 ; Saves the script position (into wScriptReturnBank/Lo/Hi) and starts talk event group $18
 ; (Talk_ArenaGridBattle, through DispatchTalkEvent); then clears wScriptInDataBank and
@@ -7914,6 +8150,8 @@ ArenaGridBattle_SetUp::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 0C ArenaMenu_StartClassBattle", ROMX
 
 ; Saves the script position (into wScriptReturnBank/Lo/Hi) and starts talk event group $18
 ; (Talk_ArenaGridBattle, through DispatchTalkEvent); then clears wScriptInDataBank and
@@ -7977,6 +8215,8 @@ ArenaGridBattle_SetUpFromGrid::
     jr nz, .loop
     ret
 
+SECTION "Bank 0C ArenaMenu_JudgePartyStrength", ROMX
+
 ; Judges the party for the arena: computes each member's strength
 ; (ArenaMenu_JudgePartyStrength_ComputeEach) and the average L
 ; (ArenaMenu_JudgePartyStrength_Average), then sets wTwoChoiceCursor = 0 for 80 or more, 1 for
@@ -8023,6 +8263,8 @@ ArenaMenu_JudgePartyStrength::
     ld [wTwoChoiceCursor], a
     ret
 
+SECTION "Bank 0C ArenaMenu_PickPrize_RandomItem", ROMX
+
 ; Picks a random item prize: one of seven entries of the list chosen by the random value's low two
 ; bits (ArenaMenu_PickPrize_RandomItem_Data), into wArg1. (C2, E-0357; probed E-0376)
 ArenaMenu_PickPrize_RandomItem::
@@ -8055,6 +8297,8 @@ ArenaMenu_PickPrize_RandomItem::
     ld a, [de]
     ld [wArg1], a
     ret
+
+SECTION "Bank 0C ArenaMenu_PickPrize_RandomItem_Data", ROMX
 
 ; Four word pointers (8 bytes) followed by four lists of 7 item ids each: $40-$46, $47-$4D, $4E-$53
 ; with $5A, and $5B-$61. ArenaMenu_PickPrize_RandomItem takes the roll from RandomModulo52, uses its
@@ -8097,6 +8341,8 @@ ArenaMenu_PickPrize_GiveItem::
     xor a
     ret
 
+SECTION "Bank 0C ArenaMenu_PickPrize_GiveItem_CopyName", ROMX
+
 ; Copies the name of item wArg1 (through the far pointer table in bank $08) to wTextBuf1. (C2,
 ; E-0357; probed E-0376)
 ArenaMenu_PickPrize_GiveItem_CopyName::
@@ -8136,6 +8382,8 @@ ArenaMenu_PickPrize_GiveItem_CopyName::
     ld [hli], a
     ret
 
+SECTION "Bank 0C ArenaMenu_PickPrize_GiveGold", ROMX
+
 ; Adds 6,000 ($1770) gold, capped at 99,999. (C2, E-0357; probed E-0376)
 ArenaMenu_PickPrize_GiveGold::
     ld hl, $1770
@@ -8147,6 +8395,8 @@ ArenaMenu_PickPrize_GiveGold::
     ld [wArg3], a
     farcall AddArg1ToGoldCapped99999
     ret
+
+SECTION "Bank 0C ArenaMenu_PickPrize_Data1", ROMX
 
 ; Six word pointers (areas 0-2 share the first list, wAreaGraphicsIndex selects the word) followed
 ; by four lists of 9 bytes: eight ascending thresholds ending in $64, then an $FF end mark; the

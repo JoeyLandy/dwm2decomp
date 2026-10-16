@@ -1,7 +1,7 @@
 ; ROM bank $3E: meta-sprite frames
 ; The annotated listing of this bank is build/listing/bank3e.asm.
 
-SECTION "Bank 3E", ROMX[$4000], BANK[$3E]
+SECTION "Bank 3E", ROMX
     db $3e
 
 ; Draws the effect sprite from the meta-sprite sets of bank $3E: hSpriteOriginX = wEffectSpriteX
@@ -32,6 +32,8 @@ DrawEffectSpriteAtEffectSpriteX_Bank3E::
     ld de, MetaSprites3ETable
     call BuildOamFromSpriteTable_Bank3E
     ret
+
+SECTION "Bank 3E MetaSprites3ETable", ROMX
 
 ; the caller of BuildOamFromSpriteTable_Bank3E passes DE = $MetaSprites3ETable; the builder takes
 ; the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the
@@ -127,6 +129,8 @@ BuildOamFromSpriteTable_Bank3E::
 
 .return:
     ret
+
+SECTION "Bank 3E MetaSprites3ESet00", ROMX
 
 ; meta-sprite set 0 of MetaSprites3ETable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame

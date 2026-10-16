@@ -1,7 +1,7 @@
 ; ROM bank $35: species records
 ; The annotated listing of this bank is build/listing/bank35.asm.
 
-SECTION "Bank 35", ROMX[$4000], BANK[$35]
+SECTION "Bank 35", ROMX
     db $35
 
 ; wSpeciesIdLo/wSpeciesIdHi = monster id: copies the whole 47-byte species record
@@ -15,6 +15,8 @@ LoadSpeciesRecord::
     call CopySpeciesRecordPrefix
     ret
 
+SECTION "Bank 35 LoadSpeciesFamily", ROMX
+
 ; wSpeciesIdLo/wSpeciesIdHi = monster id: copies byte 0 of its species record, the family, to
 ; wSpeciesRecord (CopySpeciesRecordPrefix with B = 1); the rest of wSpeciesRecord is left alone.
 ; (C2, E-0380)
@@ -26,6 +28,8 @@ LoadSpeciesFamily::
     call CopySpeciesRecordPrefix
     ret
 
+SECTION "Bank 35 LoadSpeciesRecordWord0", ROMX
+
 ; wSpeciesIdLo/wSpeciesIdHi = monster id: copies bytes 0-1 of its species record (the family and the
 ; byte after it) to wSpeciesRecord (CopySpeciesRecordPrefix with B = 2). (C2, E-0380)
 ; copies bytes 0-1 of the species record of monster id wSpeciesIdLo/Hi (the family and byte 1) to
@@ -35,6 +39,8 @@ LoadSpeciesRecordWord0::
     ld b, $02
     call CopySpeciesRecordPrefix
     ret
+
+SECTION "Bank 35 CopySpeciesRecordPrefix", ROMX
 
 ; B = byte count (0 means 256), DE = destination: reads the word at SpeciesRecordPointers + 2 *
 ; (wSpeciesIdLo/wSpeciesIdHi) and copies the first B bytes of the 47-byte species record it points
@@ -68,6 +74,8 @@ CopySpeciesRecordPrefix::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 35 SpeciesRecordPointers", ROMX
 
 ; 384 pointers indexed by monster id (the numbering of StringTable_MonsterNames and
 ; StringTable_MonsterNames2) to 47-byte species records; byte 0 is the family index of

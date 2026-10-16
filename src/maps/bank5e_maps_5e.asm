@@ -1,7 +1,7 @@
 ; ROM bank $5E: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank5e.asm.
 
-SECTION "Bank 5E", ROMX[$4000], BANK[$5E]
+SECTION "Bank 5E", ROMX
     db $5e
 
 ; Tiles: 768 bytes = 48 tiles of 2bpp for vTiles2 + $500 (tile numbers $50-$7F).

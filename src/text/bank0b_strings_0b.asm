@@ -1,7 +1,7 @@
 ; ROM bank $0B: string tables
 ; The annotated listing of this bank is build/listing/bank0b.asm.
 
-SECTION "Bank 0B", ROMX[$4000], BANK[$0B]
+SECTION "Bank 0B", ROMX
     db $0b
 
 ; Loads DE = BeginStringDisplay_Bank0B_StringCategories (this bank string table: category 0 the
@@ -27,6 +27,8 @@ ShowString_Bank0B::
     call BeginStringDisplay_Bank0B
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 0B BeginStringDisplay_Bank0B_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

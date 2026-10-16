@@ -1,7 +1,7 @@
 ; ROM bank $06: battle AI: personality table
 ; The annotated listing of this bank is build/listing/bank06.asm.
 
-SECTION "Bank 06", ROMX[$4000], BANK[$06]
+SECTION "Bank 06", ROMX
     db $06
 
 ; ReadBank6TableWord reads the word at 06:$4001 + $36 * BC + 2 * wPersonalityIndex; AddAIWeight /

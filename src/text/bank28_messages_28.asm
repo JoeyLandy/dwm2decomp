@@ -1,7 +1,7 @@
 ; ROM bank $28: messages
 ; The annotated listing of this bank is build/listing/bank28.asm.
 
-SECTION "Bank 28", ROMX[$4000], BANK[$28]
+SECTION "Bank 28", ROMX
     db $28
 
 ; Starts a message of message group 0 (strings of category 0 of bank $28, picked by wStringIndex).
@@ -25,6 +25,8 @@ BeginStringDisplay_Bank28::
     call BeginStringDisplay
     ret
 
+SECTION "Bank 28 CopyStringToBuffer_Bank28", ROMX
+
 ; Copies a message of message group 0 to a buffer instead of printing it: string wStringIndex of
 ; category wStringCategory is copied, with its $F0 terminator, to the address in
 ; wStringDestLo/wStringDestHi. When wStringIndex is below $DA it uses MessageStrings_Bank28 through
@@ -45,6 +47,8 @@ CopyStringToBuffer_Bank28::
     call CopyStringToBuffer
     ret
 
+SECTION "Bank 28 ShowString_Bank28", ROMX
+
 ; Shows a bank $28 message to its end: calls BeginStringDisplay_Bank28, then RunStringDisplayToEnd,
 ; which sets bit 1 of wTextFlags and runs StepTextPrinter until wTextFlags is 0, so the whole string
 ; is printed at once. Farcalled from a bank $0F routine. (C1, E-0378)
@@ -53,6 +57,8 @@ ShowString_Bank28::
     call BeginStringDisplay_Bank28
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 28 MessageStrings_Bank28", ROMX
 
 ; One little-endian word, a pointer to StringList_Bank28_0, the list of 218 message pointers
 ; Message_00_00 to Message_00_D9 (message group 0, bank $28). LookupString reads word

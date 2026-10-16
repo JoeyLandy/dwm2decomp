@@ -1,7 +1,7 @@
 ; ROM bank $51: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank51.asm.
 
-SECTION "Bank 51", ROMX[$4000], BANK[$51]
+SECTION "Bank 51", ROMX
     db $51
 
 ; LZSS-compressed: 137 bytes that expand to 360 (E-0016, E-0017)

@@ -1,7 +1,7 @@
 ; ROM bank $0A: random encounters: encounter groups and grids, battle intro
 ; The annotated listing of this bank is build/listing/bank0a.asm.
 
-SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
+SECTION "Bank 0A", ROMX
     db $0a
 
 ; Field state 7, a harmful floor: flashes the screen for five frames
@@ -57,6 +57,8 @@ FieldState_StepChecks_HarmfulFloor::
     ld [wModeState], a
     ret
 
+SECTION "Bank 0A FieldState_StepChecks_HarmfulFloor_DrainMP", ROMX
+
 ; The MP loss of a harmful floor (when wStatusStepFlags bit 0 is set): each standing party member
 ; with status bit 0 set and MP left loses 1 MP. (C2, E-0357; probed E-0375)
 FieldState_StepChecks_HarmfulFloor_DrainMP::
@@ -109,6 +111,8 @@ FieldState_StepChecks_HarmfulFloor_DrainMP::
     jr nz, .loop
     ret
 
+SECTION "Bank 0A SetFieldStepFlagsBit7", ROMX
+
 ; Sets bit 7 of wFieldStepFlags (A = the new value). FieldState_StepChecks_HarmfulFloor_PoisonDamage
 ; and FieldState_StepChecks_HarmfulFloor_FloorDamage call it when a party member falls. (C2, E-0375)
 ; sets bit 7 of wFieldStepFlags (E-0114)
@@ -117,6 +121,8 @@ SetFieldStepFlagsBit7::
     set 7, a
     ld [wFieldStepFlags], a
     ret
+
+SECTION "Bank 0A FieldState_StepChecks_HarmfulFloor_PoisonDamage", ROMX
 
 ; The poison damage of a step: each standing party member (MON_STATUS bit 7 clear) with status bit 2
 ; loses 1 HP; one that reaches 0 or below falls: SetFieldStepFlagsBit7, its bit (party position) set
@@ -199,6 +205,8 @@ FieldState_StepChecks_HarmfulFloor_PoisonDamage::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 0A FieldState_StepChecks_HarmfulFloor_FloorDamage", ROMX
 
 ; The damage of a harmful floor: each standing party member loses 10 HP (also setting
 ; wFieldStepFlags to $40) unless wStatusFieldStep bit 7 is set, in which case it loses 2 HP, or 5 on
@@ -298,6 +306,8 @@ FieldState_StepChecks_HarmfulFloor_FloorDamage::
     jr nz, .loop
     ret
 
+SECTION "Bank 0A FieldState_StepChecks_HarmfulFloor_Flash", ROMX
+
 ; The flash of a harmful floor or status step, by wMenuState (which
 ; FieldState_StepChecks_HarmfulFloor counts 0-4): at 0 plays sound $66, sets the DMG palettes
 ; $D2/$D2/$E2 and on CGB saves wBGPaletteBuffer to wBGPaletteCopy; at 1-3 (bit 2 clear) shows the
@@ -378,6 +388,8 @@ FieldState_StepChecks_HarmfulFloor_Flash::
 .return:
     ret
 
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType", ROMX
+
 ; Field step check, far-called from the field step code of bank $02 after
 ; CheckWarpsAtPlayerPosition: jumps by wMapMoveType (a map header byte) to
 ; RunPlayerMoveTypeMapMoveType_None (0) or a harmful floor check:
@@ -406,6 +418,8 @@ RunPlayerMoveTypeMapMoveType::
 RunPlayerMoveTypeMapMoveType_None::
     ret
 
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_LightHurtFloor", ROMX
+
 ; Map movement type 6: floor tile $50 hurts, the lighter kind: hTemp1 = $50, wStatusFieldStep = $80
 ; (so FieldState_StepChecks_HarmfulFloor_FloorDamage takes 2 HP, or 5 on map $3A outside key worlds,
 ; instead of 10) and wFieldStepFlags = $40; continues in RunPlayerMoveTypeMapMoveType_CheckHurtTile.
@@ -419,6 +433,8 @@ RunPlayerMoveTypeMapMoveType_LightHurtFloor::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_HurtFloor7", ROMX
+
 ; Map movement type 7: floor tile $52 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor7::
     ld a, $52
@@ -426,6 +442,8 @@ RunPlayerMoveTypeMapMoveType_HurtFloor7::
     xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
+
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_HurtFloor1", ROMX
 
 ; Map movement type 1: floor tile $44 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor1::
@@ -435,6 +453,8 @@ RunPlayerMoveTypeMapMoveType_HurtFloor1::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_HurtFloor2", ROMX
+
 ; Map movement type 2: floor tile $56 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor2::
     ld a, $56
@@ -443,6 +463,8 @@ RunPlayerMoveTypeMapMoveType_HurtFloor2::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_HurtFloor3", ROMX
+
 ; Map movement type 3: floor tile $44 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor3::
     ld a, $44
@@ -450,6 +472,8 @@ RunPlayerMoveTypeMapMoveType_HurtFloor3::
     xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
+
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_LightHurtFloor4", ROMX
 
 ; Map movement type 4: floor tile $44 hurts, the lighter kind (wStatusFieldStep $80, wFieldStepFlags
 ; $40). (C2, E-0357; probed E-0375)
@@ -462,6 +486,8 @@ RunPlayerMoveTypeMapMoveType_LightHurtFloor4::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
 
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_HurtFloor", ROMX
+
 ; Map movement type 5: floor tile $44 hurts. (C2, E-0357; probed E-0375)
 RunPlayerMoveTypeMapMoveType_HurtFloor::
     ld a, $44
@@ -469,6 +495,8 @@ RunPlayerMoveTypeMapMoveType_HurtFloor::
     xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_CheckHurtTile
+
+SECTION "Bank 0A RunPlayerMoveTypeMapMoveType_CheckHurtTile", ROMX
 
 ; When no fade, script or talk countdown is running and one of the four tiles under the player is
 ; the harmful tile in hTemp1, switches to field state 7 (the floor damage). (C2, E-0357; probed
@@ -511,6 +539,8 @@ RunPlayerMoveTypeMapMoveType_CheckHurtTile::
     ld [wMenuState], a
     ld [wMenuSubState], a
     ret
+
+SECTION "Bank 0A EnterStatusEffectFieldState", ROMX
 
 ; Field step check for the poison and MP-drain statuses, far-called after
 ; RunPlayerMoveTypeMapMoveType. It does nothing when hPlayerStateFlags bit 7 or 5 is set,
@@ -633,6 +663,8 @@ EnterStatusEffectFieldState::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 0A ToggleStatusStepFlagsLowBitOnce", ROMX
+
 ; When wStatusStepFlags bit 7 is clear: wStatusStepFlags = ((wStatusStepFlags + 1) & 1) | $80,
 ; flipping bit 0 and setting bit 7 so that later calls in the same scan change nothing. Returns A =
 ; wStatusStepFlags either way. EnterStatusEffectFieldState clears bit 7 again when it finishes. (C2,
@@ -649,6 +681,8 @@ ToggleStatusStepFlagsLowBitOnce::
     or $80
     ld [wStatusStepFlags], a
     ret
+
+SECTION "Bank 0A EnterStatusEffectFieldState_Data", ROMX
 
 ; A list of 64 map ids in ascending order apart from $B2, $B1, then an $FF end marker: $21-$26,
 ; $29-$2B, $2D, $2E, $31-$34, $3C, $3D, $41, $45, $49-$4D, $4F-$52, $58-$61, $68, $71, $72, $78,
@@ -712,6 +746,8 @@ CountDownTalkCountdownThenDispatchTalkEvent::
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
+
+SECTION "Bank 0A TickRandomEncounterCounter", ROMX
 
 ; Field step check for random encounters, far-called from the field step code of bank $02. Returns
 ; while a fade or script runs, with hPlayerStateFlags bit 7 or 5 set, or in field state 1 or 4. If
@@ -891,6 +927,8 @@ TickRandomEncounterCounter::
     call PickRandomEncounterCountdownFromTable
     ret
 
+SECTION "Bank 0A EncounterRateTable", ROMX
+
 ; TickRandomEncounterCounter.restore reads the record at $44FE + 8 * wEncounterRate; with byte 0 = 0
 ; it compares bytes 1-7 (until $FF) with the four tiles of wTilesUnderPoint and subtracts (2 + slot)
 ; / 2 from wEncounterCountdown, else 1; with a non-zero byte 0 it subtracts byte 1; when bit 3 of
@@ -978,6 +1016,8 @@ ReadTileBuffer2x2AtPixel_Bank0A::
     ld a, [hl]
     ld [wTilesUnderPoint + $3], a
     ret
+
+SECTION "Bank 0A RunBattleIntroKindCase", ROMX
 
 ; Decides the foes and the battle kind as a battle starts (RunBattleTransitionStep_StartBattle):
 ; clears wBattleIntroFlag and jumps by wBattleIntroKind & 7 to 0
@@ -1097,6 +1137,8 @@ RunBattleIntroKindCase_KeyWorldStrength::
     jr nz, .loop2
     jr .set_encounter_kind_to_02
 
+SECTION "Bank 0A RunBattleIntroKindCase_KeyWorldStrength_Data1", ROMX
+
 ; Twenty little-endian words, indexed by party strength / 5 (wPartyStrength, quotient from
 ; DivideBByA): base monster numbers $00AC, $00BC, $00CC, $00DC, $00EC, $00FC, $010C, $011C, $012C,
 ; $013C, then $021E, $0223, $0228, $022D, $0232, $0237, $023C, $0241, $0246, $0248.
@@ -1154,6 +1196,8 @@ RunBattleIntroKindCase_StrengthSingleFoe::
     ld [wBattleKind], a
     ret
 
+SECTION "Bank 0A PickRandomEncounterCountdownFromTable", ROMX
+
 ; Sets wEncounterCountdown = 2 * PickRandomEncounterCountdownFromTable_Data[v / 5], with v =
 ; wKeyRandomHi & $3F after NextRandomSeed. Its loop redraws when v is 100 or more, which never
 ; happens (v is at most 63), so only the first 13 of the 21 table bytes are used (counts 20 to 104).
@@ -1178,6 +1222,8 @@ PickRandomEncounterCountdownFromTable::
     add a
     ld [wEncounterCountdown], a
     ret
+
+SECTION "Bank 0A PickRandomEncounterCountdownFromTable_Data", ROMX
 
 ; Twenty-one counts in ascending order: $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32,
 ; $34, $36, $38, $3A, $3C, $41, $46, $50, $50. PickRandomEncounterCountdownFromTable indexes it by
@@ -1260,6 +1306,8 @@ StartScriptedEncounterTemp0::
     farcall PickRandomEncounterCountdownFromTable
     pop hl
     ret
+
+SECTION "Bank 0A ScriptedEncounterTable", ROMX
 
 ; StartScriptedEncounterTemp0 (14 callers, script commands among them) reads the record at $481C + 8
 ; * hTemp0: byte 0 to wEncounterKind, bytes 2-7 to wEncounterMonsters; records $14, $15 and $2F-$31
@@ -1916,6 +1964,8 @@ RunBattleIntroKindCase_RandomEncounter::
     call ReadMapCellWordForScreenXY
     ret
 
+SECTION "Bank 0A ReadMapCellWordForScreenXY", ROMX
+
 ; A = cells per row, DE = encounter grid: DE = the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)), the encounter entry of the current map screen, then falls into
 ; FillEncounterFromEntry. RunBattleIntroKindCase_RandomEncounter uses it for the maps that have a
@@ -2045,6 +2095,8 @@ FillEncounterFromEntry::
     ld a, [hl]
     ld [wEncounterKind], a
     ret
+
+SECTION "Bank 0A CollectUniqueEncounterIdsToWorkBuf2_FindTable", ROMX
 
 ; The map dispatch of CollectUniqueEncounterIdsToWorkBuf2 for maps outside key worlds: by hMapId
 ; (and on some maps the screen position or hPlayerStateFlags bit 3) it picks the same encounter
@@ -2486,6 +2538,8 @@ CollectUniqueEncounterIdsToWorkBuf2_FindTable::
     call LoadEncounterIdsForScreenCell
     ret
 
+SECTION "Bank 0A LoadEncounterIdsForScreenCell", ROMX
+
 ; The grid look-up of ReadMapCellWordForScreenXY (A = cells per row, DE = grid: DE = the entry word
 ; for hMapScreenY & $0F and hMapScreenX & $0F), falling into LoadEncounterMonsterIdsToWorkBuf
 ; instead of FillEncounterFromEntry. CollectUniqueEncounterIdsToWorkBuf2_FindTable uses it for the
@@ -2583,11 +2637,15 @@ LoadEncounterMonsterIdsToWorkBuf::
     jr nz, .loop2
     ret
 
+SECTION "Bank 0A RunBattleIntroKindCase_SetBattleKindTo02", ROMX
+
 ; Battle intro kind 2: battle kind 2. (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_SetBattleKindTo02::
     ld a, $02
     ld [wBattleKind], a
     ret
+
+SECTION "Bank 0A RunBattleIntroKindCase_KeyWorldEncounter", ROMX
 
 ; Battle intro kind 1, a key-world encounter: picks a random encounter kind (one of four) and the
 ; area's monster group from wKeyWorldAreas (or the floor's entry in wKeyWorldFloorInfo), draws the
@@ -2659,6 +2717,8 @@ RunBattleIntroKindCase_KeyWorldEncounter::
     ld a, $01
     ld [wBattleKind], a
     ret
+
+SECTION "Bank 0A FillEncounterFromEntry_Data1", ROMX
 
 ; Four encounter kind values, 0, 2, 1, 2, indexed by wRandomLo & 3 after NextTableByte.
 ; FillEncounterFromEntry replaces an encounter kind of 2 or more with the entry, and
@@ -2775,6 +2835,8 @@ RunBattleIntroKindCase_KeyWorldEncounter_RollFoes::
     jr nz, .loop2
     ret
 
+SECTION "Bank 0A RunBattleIntroKindCase_Kind3", ROMX
+
 ; Battle intro kind 3: battle kind 3, with the intro flag set on map type $82. (C2, E-0357; probed
 ; E-0375)
 RunBattleIntroKindCase_Kind3::
@@ -2789,17 +2851,23 @@ RunBattleIntroKindCase_Kind3::
     ld [wBattleKind], a
     ret
 
+SECTION "Bank 0A RunBattleIntroKindCase_SetBattleKindTo04", ROMX
+
 ; Battle intro kind 4: battle kind 4. (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_SetBattleKindTo04::
     ld a, $04
     ld [wBattleKind], a
     ret
 
+SECTION "Bank 0A RunBattleIntroKindCase_SetBattleKindTo05", ROMX
+
 ; Battle intro kind 7: battle kind 5. (C2, E-0357; probed E-0375)
 RunBattleIntroKindCase_SetBattleKindTo05::
     ld a, $05
     ld [wBattleKind], a
     ret
+
+SECTION "Bank 0A RunBattleTransitionStep", ROMX
 
 ; Field state 3 (FieldState_BattleTransition) step: jumps by wBattleTransitionStep to 0
 ; RunBattleTransitionStep_PlayBattleMusic (battle music and the start position of the effect), 1
@@ -2865,6 +2933,8 @@ RunBattleTransitionStep_PlayBattleMusic::
     inc [hl]
     ret
 
+SECTION "Bank 0A RunBattleTransitionStep_StartBattle", ROMX
+
 ; Battle transition, step 2: when the music has stopped on every channel, decides the battle
 ; (RunBattleIntroKindCase), fades out and switches to game mode 4 (the battle). (C1, E-0357)
 RunBattleTransitionStep_StartBattle::
@@ -2907,6 +2977,8 @@ RunBattleTransitionStep_StartBattle::
     ld hl, wBGFillFlag
     inc [hl]
     ret
+
+SECTION "Bank 0A RunBattleTransitionStep_StagedSteps", ROMX
 
 ; Battle transition step 1, the screen effect, by wBattleTransitionSubStep (set as the battle
 ; starts: 0 or 2 at random by TickRandomEncounterCounter, 1 by StartScriptedEncounterTemp0): 0
@@ -2992,11 +3064,15 @@ RunBattleTransitionStep_CheckStage_CloseColumns::
     inc [hl]
     ret
 
+SECTION "Bank 0A RunBattleTransitionStep_CheckStage_End", ROMX
+
 ; Ends the closing transition: next transition step. (C2, E-0357; probed E-0375)
 RunBattleTransitionStep_CheckStage_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
+
+SECTION "Bank 0A WriteTileC4AtTransitionBGPtrLoAndClearAttr", ROMX
 
 ; Blanks one tile of a battle transition. HL = the offset from the transition origin (row in the
 ; high bits, column in L & $1F); WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate turns it into the
@@ -3019,6 +3095,8 @@ WriteTileC4AtTransitionBGPtrLoAndClearAttr::
     ld a, $00
     ldh [rVBK], a
     ret
+
+SECTION "Bank 0A WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate", ROMX
 
 ; Moves HL to the BG map position of offset L from the transition origin: row by the high bits, then
 ; L & $1F columns to the right with wrapping. (C2, E-0357; probed E-0376)
@@ -3043,6 +3121,8 @@ WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate::
     pop bc
     ret
 
+SECTION "Bank 0A NextBGMapColumn_Bank0A", ROMX
+
 ; HL = the next BG map entry to the right inside the same 32-entry row: L = (L & $E0) | ((L + 1) &
 ; $1F), so the last column wraps to column 0 of that row; H is unchanged and AF is kept.
 ; WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate calls it once per column. (C2, E-0376)
@@ -3063,6 +3143,8 @@ NextBGMapColumn_Bank0A::
     pop af
     ret
 
+SECTION "Bank 0A AddHLToTransitionBGPtrLoInBGMap", ROMX
+
 ; HL = wTransitionBGPtrLo/wTransitionBGPtrHi + HL, with the sum high byte cut to its low 2 bits and
 ; the upper 6 bits taken from wTransitionBGPtrHi, so the result wraps inside the 1 KB BG map the
 ; pointer is in. Used by WriteTileC4AtTransitionBGPtrLoAndClearAttr_Locate for the row part of a
@@ -3082,6 +3164,8 @@ AddHLToTransitionBGPtrLoInBGMap::
     or h
     ld h, a
     ret
+
+SECTION "Bank 0A RunBattleTransitionStep_StagedSteps_Spiral", ROMX
 
 ; The spiral transition: six tiles per frame. (C1, E-0357)
 RunBattleTransitionStep_StagedSteps_Spiral::
@@ -3137,6 +3221,8 @@ SpiralTransition_Pass0::
     jr c, SpiralTransition_BlankMoveUp
     jr SpiralTransition_BlankMoveLeft
 
+SECTION "Bank 0A SpiralTransition_Pass1", ROMX
+
 ; Spiral pass 1: the reverse spiral, the direction from the stage by a second table of ring
 ; boundaries. (C1, E-0357)
 SpiralTransition_Pass1::
@@ -3178,6 +3264,8 @@ SpiralTransition_Pass1::
     jr c, SpiralTransition_BlankMoveLeft
     jr SpiralTransition_BlankMoveUp
 
+SECTION "Bank 0A SpiralTransition_BlankMoveUp", ROMX
+
 ; Blanks the tile at the spiral position and moves up a row (starting at offset $233 on the first
 ; stage). (C1, E-0357)
 SpiralTransition_BlankMoveUp::
@@ -3204,6 +3292,8 @@ SpiralTransition_BlankMoveUp::
     sbc $00
     ld h, a
     jr SpiralTransition_NextStage
+
+SECTION "Bank 0A SpiralTransition_BlankMoveLeft", ROMX
 
 ; Blanks the tile at the spiral position and moves left a column (starting at offset $12A on the
 ; first stage). (C1, E-0357)
@@ -3232,6 +3322,8 @@ SpiralTransition_BlankMoveLeft::
     ld h, a
     jr SpiralTransition_NextStage
 
+SECTION "Bank 0A SpiralTransition_BlankMoveDown", ROMX
+
 ; Blanks the tile at the spiral position and moves down a row. (C1, E-0357)
 SpiralTransition_BlankMoveDown::
     ld a, [wTransitionCountA]
@@ -3248,6 +3340,8 @@ SpiralTransition_BlankMoveDown::
     adc $00
     ld h, a
     jr SpiralTransition_NextStage
+
+SECTION "Bank 0A SpiralTransition_BlankMoveRight", ROMX
 
 ; Blanks the tile at the spiral position and moves right a column. (C1, E-0357)
 SpiralTransition_BlankMoveRight::
@@ -3288,11 +3382,15 @@ SpiralTransition_NextStage::
     jp nz, RunBattleTransitionStep_StagedSteps_SpiralPass
     ret
 
+SECTION "Bank 0A SpiralTransition_End", ROMX
+
 ; Ends the spiral transition: next transition step. (C2, E-0357; probed E-0376)
 SpiralTransition_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
+
+SECTION "Bank 0A RunBattleTransitionStep_StagedSteps_Stripes", ROMX
 
 ; The stripe transition (sub-step 2 of RunBattleTransitionStep_StagedSteps), by wTransitionCounter:
 ; 0 StripeTransition_BlankStripes (blanks one rectangular ring of tiles per stage, outermost first,
@@ -3433,17 +3531,23 @@ StripeTransition_BlankStripes::
     inc [hl]
     ret
 
+SECTION "Bank 0A StripeTransition_IdleFrame", ROMX
+
 ; The stripe transition's wait step: goes back one pass. (C2, E-0357; probed E-0376)
 StripeTransition_IdleFrame::
     ld hl, wTransitionCounter
     dec [hl]
     ret
 
+SECTION "Bank 0A StripeTransition_End", ROMX
+
 ; Ends the stripe transition: next transition step. (C2, E-0357; probed E-0376)
 StripeTransition_End::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
+
+SECTION "Bank 0A JumpToWordAtHL_Bank0A", ROMX
 
 ; Jumps to the address stored at HL (HL = the word at HL, then jp hl); the target returns to the
 ; caller of this routine. StripeTransition_BlankStripes calls it with HL at the stage entry of
@@ -3452,6 +3556,8 @@ StripeTransition_End::
 JumpToWordAtHL_Bank0A::
     deref_hl
     jp hl
+
+SECTION "Bank 0A TransitionRowStep00", ROMX
 
 ; Entry 0 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 0: DE += $0220
 ; (17 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
@@ -3468,6 +3574,8 @@ TransitionRowStep00::
     ld h, d
     ret
 
+SECTION "Bank 0A TransitionRowStep01", ROMX
+
 ; Entry 1 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 1: DE += $01E0
 ; (15 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
 ; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
@@ -3482,6 +3590,8 @@ TransitionRowStep01::
     ld l, e
     ld h, d
     ret
+
+SECTION "Bank 0A TransitionRowStep02", ROMX
 
 ; Entry 2 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 2: DE += $01A0
 ; (13 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
@@ -3498,6 +3608,8 @@ TransitionRowStep02::
     ld h, d
     ret
 
+SECTION "Bank 0A TransitionRowStep03", ROMX
+
 ; Entry 3 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 3: DE += $0160
 ; (11 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
 ; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
@@ -3512,6 +3624,8 @@ TransitionRowStep03::
     ld l, e
     ld h, d
     ret
+
+SECTION "Bank 0A TransitionRowStep04", ROMX
 
 ; Entry 4 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 4: DE += $0120
 ; (9 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
@@ -3528,6 +3642,8 @@ TransitionRowStep04::
     ld h, d
     ret
 
+SECTION "Bank 0A TransitionRowStep05", ROMX
+
 ; Entry 5 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 5: DE += $00E0
 ; (7 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
 ; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
@@ -3542,6 +3658,8 @@ TransitionRowStep05::
     ld l, e
     ld h, d
     ret
+
+SECTION "Bank 0A TransitionRowStep06", ROMX
 
 ; Entry 6 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 6: DE += $00A0
 ; (5 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
@@ -3558,6 +3676,8 @@ TransitionRowStep06::
     ld h, d
     ret
 
+SECTION "Bank 0A TransitionRowStep07", ROMX
+
 ; Entry 7 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 7: DE += $0060
 ; (3 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
 ; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
@@ -3573,6 +3693,8 @@ TransitionRowStep07::
     ld h, d
     ret
 
+SECTION "Bank 0A TransitionRowStep08", ROMX
+
 ; Entry 8 of TransitionRowStepTable, run by StripeTransition_BlankStripes for stage 8: DE += $0020
 ; (1 BG map rows) and HL = the new DE, the offset of the bottom row of that stage ring (DE = the
 ; ring top-left offset, wTransitionCountA/B); A = the new D. (C2, E-0376)
@@ -3587,6 +3709,8 @@ TransitionRowStep08::
     ld l, e
     ld h, d
     ret
+
+SECTION "Bank 0A StripeTransition_BlankStripes_Data1", ROMX
 
 ; Nine widths in tiles, 20, 18, 16, 14, 12, 10, 8, 6, 4, indexed by the stage wTransitionStage
 ; (0-8). StripeTransition_BlankStripes blanks one rectangular ring of tiles per stage, outermost
@@ -3758,6 +3882,8 @@ AdvanceStepCounterAndUpdateStoredRecords::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 0A UpdatePlayerMovement_HeldItemRegen", ROMX
+
 ; Each step after the long-faces scene (EVENT_SCENE_LONG_FACES_002), outside scripts and with
 ; encounters on: a standing party member holding item $1B regains 1 HP, one holding item $1C regains
 ; 1 MP, up to the maximum. (C2, E-0357; probed E-0376)
@@ -3845,6 +3971,8 @@ UpdatePlayerMovement_HeldItemRegen::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 0A UpdatePlayerMovement_WaitPlayerSpriteOverride", ROMX
+
 ; Return unless override bit 7 is set and wScriptRunning is zero. Otherwise decrement the
 ; little-endian timer modulo 65536 and test updated high-byte bit 7. If clear, return; if set,
 ; select talk group $0A index 0 and far-call DispatchTalkEvent. From timer 100, dispatch occurs on
@@ -3875,6 +4003,8 @@ UpdatePlayerMovement_WaitPlayerSpriteOverride::
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
+
+SECTION "Bank 0A EncounterGrid_1", ROMX
 
 ; RunBattleIntroKindCase_RandomEncounter and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it
 ; in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY

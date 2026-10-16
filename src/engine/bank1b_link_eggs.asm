@@ -1,7 +1,7 @@
 ; ROM bank $1B: link key exchange, egg service, link screens
 ; The annotated listing of this bank is build/listing/bank1b.asm.
 
-SECTION "Bank 1B", ROMX[$4000], BANK[$1B]
+SECTION "Bank 1B", ROMX
     db $1b
 
 ; Runs one step of the link, called from SerialInterruptHandler (the serial interrupt) with every
@@ -453,6 +453,8 @@ RunLinkSession_FindPartner::
     call SerialSendByte
     ret
 
+SECTION "Bank 1B ClearSoundChannelSlots", ROMX
+
 ; Zeroes the first two bytes of each of the six sound channel slots (wSoundChannelSlots,
 ; wSoundChannel1 to wSoundChannel5, $20 bytes apart) and leaves the other bytes alone. Called only
 ; by RunLinkSession_FindPartner, right after it requests the game mode change into the link session.
@@ -475,6 +477,8 @@ ClearSoundChannelSlots::
     ld [wSoundChannel5 + $1], a
     ret
 
+SECTION "Bank 1B ShortDelayLoop", ROMX
+
 ; Busy-waits $80 passes of a loop that takes BC down by 2 each pass (BC starts at $0100), then
 ; returns with BC as it was, A = 0 and Z set. Called by RunLinkSession_FindPartner after it accepts
 ; a follower code and before it stores the code in wScreenState. (C2, E-0379)
@@ -491,6 +495,8 @@ ShortDelayLoop::
     jr nz, .loop
     pop bc
     ret
+
+SECTION "Bank 1B LinkCheckScreenCounterState", ROMX
 
 ; A = the byte received from the partner (a leader code in the callers); it is stored in
 ; wScreenCounter and kept in C. Returns A = 0 only when wGameMode is 5, wModeState is 1,
@@ -537,6 +543,8 @@ LinkCheckScreenCounterState::
     ld a, $ff
     ret
 
+SECTION "Bank 1B SendLinkByteForMenuOption_Bank1B", ROMX
+
 ; Sends the byte at SendLinkByteForMenuOption_Bank1B_Data + (wMenuOption AND $0F) with
 ; SerialSendByte (external clock). The table holds $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3 for
 ; options 0-7; options 2-7 give exactly the follower codes that RunLinkSession_FindPartner matches
@@ -558,6 +566,8 @@ SendLinkByteForMenuOption_Bank1B::
     call SerialSendByte
     ret
 
+SECTION "Bank 1B SendLinkByteForMenuOption_Bank1B_Data", ROMX
+
 ; Eight bytes $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3: the link byte sent for menu option 0 to 7.
 ; SendLinkByteForMenuOption_Bank1B sends the entry numbered wMenuOption AND $0F with SerialSendByte;
 ; the mask also allows indexes 8 to 15, which fall past the table. The bytes equal
@@ -578,6 +588,8 @@ RunLinkSession_Battle::
 .return:
     ret
 
+SECTION "Bank 1B RunLinkSession1Exchange", ROMX
+
 ; Jumptable on wLinkExchangeState: 0 RunLinkSession1Exchange_Send (the send half), 1
 ; RunLinkSession1Exchange_Receive (the receive half). The send half sets the state to 1 once it has
 ; started a transfer and the receive half sets it back to 0, so successive serial interrupts
@@ -595,6 +607,8 @@ RunLinkSession1Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession1Exchange_Receive", ROMX
+
 ; Link session 1, exchange state 1: receives one byte; then, unless the resync flag (wVBlankFlags
 ; bit 7) was set, runs a frame and the battle phase (RunBattlePhase). (C1, E-0357)
 RunLinkSession1Exchange_Receive::
@@ -609,6 +623,8 @@ RunLinkSession1Exchange_Receive::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B RunLinkSession_Breeding", ROMX
+
 ; Link session 2: while linked as the active role runs its exchange. (C1, E-0357)
 RunLinkSession_Breeding::
     ld a, [wLinkMode]
@@ -621,6 +637,8 @@ RunLinkSession_Breeding::
 
 .return:
     ret
+
+SECTION "Bank 1B RunLinkSession2Exchange", ROMX
 
 ; Jumptable on wLinkExchangeState: 0 RunLinkSession2Exchange_Send, 1
 ; RunLinkSession2Exchange_Receive; the two halves alternate, the send half leaving the state at 1
@@ -638,6 +656,8 @@ RunLinkSession2Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession2Exchange_Receive", ROMX
+
 ; Link session 2, exchange state 1: receives one byte, then runs a frame and the session's screen
 ; (RunScreenStateWhenNotFading_F1). (C1, E-0357)
 RunLinkSession2Exchange_Receive::
@@ -652,6 +672,8 @@ RunLinkSession2Exchange_Receive::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B RunLinkSession_KeyTrade", ROMX
+
 ; Link session 3 (the key trade): while linked as the active role runs its exchange. (C1, E-0357)
 RunLinkSession_KeyTrade::
     ld a, [wLinkMode]
@@ -664,6 +686,8 @@ RunLinkSession_KeyTrade::
 
 .return:
     ret
+
+SECTION "Bank 1B RunLinkSession3Exchange", ROMX
 
 ; Jumptable on wLinkExchangeState: 0 RunLinkSession3Exchange_Send, 1
 ; RunLinkSession3Exchange_Receive; the two halves alternate, the send half leaving the state at 1
@@ -681,6 +705,8 @@ RunLinkSession3Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession3Exchange_Receive", ROMX
+
 ; Link session 3, exchange state 1: receives one byte, then runs a frame and the session's screen
 ; (RunScreenStateWhenNotFading_1B). (C1, E-0357)
 RunLinkSession3Exchange_Receive::
@@ -695,6 +721,8 @@ RunLinkSession3Exchange_Receive::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B RunLinkSession_BattleSetup", ROMX
+
 ; Link session 4: while linked as the active role runs its exchange. (C1, E-0357)
 RunLinkSession_BattleSetup::
     ld a, [wLinkMode]
@@ -707,6 +735,8 @@ RunLinkSession_BattleSetup::
 
 .return:
     ret
+
+SECTION "Bank 1B RunLinkSession4Exchange", ROMX
 
 ; Jumptable on wLinkExchangeState: 0 RunLinkSession4Exchange_Send, 1
 ; RunLinkSession4Exchange_Receive; the two halves alternate, the send half leaving the state at 1
@@ -724,6 +754,8 @@ RunLinkSession4Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession4Exchange_Receive", ROMX
+
 ; Link session 4, exchange state 1: receives one byte, then runs a frame and the session's screen
 ; (RunLinkSession4ScreenState). (C1, E-0357)
 RunLinkSession4Exchange_Receive::
@@ -738,6 +770,8 @@ RunLinkSession4Exchange_Receive::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B RunLinkSession_WonderlandBreeding", ROMX
+
 ; Link session 5: while linked as the active role runs its exchange. (C1, E-0357)
 RunLinkSession_WonderlandBreeding::
     ld a, [wLinkMode]
@@ -750,6 +784,8 @@ RunLinkSession_WonderlandBreeding::
 
 .return:
     ret
+
+SECTION "Bank 1B RunLinkSession5Exchange", ROMX
 
 ; Jumptable on wLinkExchangeState with two entries: 0 RunLinkSession5Exchange_Send, 1
 ; RunLinkSession5Exchange_Receive; the two halves alternate, the send half leaving the state at 1
@@ -771,6 +807,8 @@ RunLinkSession5Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession5Exchange_Receive", ROMX
+
 ; Link session 5, exchange state 1: receives one byte, then runs a frame and the session's screen.
 ; (C1, E-0357)
 RunLinkSession5Exchange_Receive::
@@ -785,6 +823,8 @@ RunLinkSession5Exchange_Receive::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B RunLinkSession_TeamMode", ROMX
+
 ; Link session 6: while linked as the active role runs its exchange. (C1, E-0357)
 RunLinkSession_TeamMode::
     ld a, [wLinkMode]
@@ -797,6 +837,8 @@ RunLinkSession_TeamMode::
 
 .return:
     ret
+
+SECTION "Bank 1B RunLinkSession6Exchange", ROMX
 
 ; Jumptable on wLinkExchangeState: 0 RunLinkSession6Exchange_Send, 1
 ; RunLinkSession6Exchange_Receive; the two halves alternate, the send half leaving the state at 1
@@ -814,6 +856,8 @@ RunLinkSession6Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession6Exchange_Receive", ROMX
+
 ; Link session 6, exchange state 1: receives one byte, then runs a frame and the session's screen.
 ; (C1, E-0357)
 RunLinkSession6Exchange_Receive::
@@ -828,6 +872,8 @@ RunLinkSession6Exchange_Receive::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B RunLinkSession_BattleWhenTextIdle", ROMX
+
 ; Link session 7 (battle): while linked as the active role runs its exchange. (C1, E-0357)
 RunLinkSession_BattleWhenTextIdle::
     ld a, [wLinkMode]
@@ -840,6 +886,8 @@ RunLinkSession_BattleWhenTextIdle::
 
 .return:
     ret
+
+SECTION "Bank 1B RunLinkSession7Exchange", ROMX
 
 ; Jumptable on wLinkExchangeState: 0 RunLinkSession7Exchange_Send, 1
 ; RunLinkSession7Exchange_Receive; the two halves alternate, the send half leaving the state at 1
@@ -857,6 +905,8 @@ RunLinkSession7Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession7Exchange_Receive", ROMX
+
 ; Link session 7, exchange state 1: receives one byte, then runs a frame and the battle phase while
 ; text is idle (RunBattlePhaseWhenTextIdle_A0). (C1, E-0357)
 RunLinkSession7Exchange_Receive::
@@ -871,6 +921,8 @@ RunLinkSession7Exchange_Receive::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B RunLinkSession_EggExchange", ROMX
+
 ; Link session 8: while linked as the active role runs its exchange. (C1, E-0357)
 RunLinkSession_EggExchange::
     ld a, [wLinkMode]
@@ -883,6 +935,8 @@ RunLinkSession_EggExchange::
 
 .return:
     ret
+
+SECTION "Bank 1B RunLinkSession8Exchange", ROMX
 
 ; Jumptable on wLinkExchangeState: 0 RunLinkSession8Exchange_Send, 1
 ; RunLinkSession8Exchange_Receive; the two halves alternate, the send half leaving the state at 1
@@ -904,6 +958,8 @@ RunLinkSession8Exchange_Send::
     call LinkSendStepWithBuffer
     ret
 
+SECTION "Bank 1B RunLinkSession8Exchange_Receive", ROMX
+
 ; Link session 8, exchange state 1: receives one byte, then runs a frame and the session's screen.
 ; (C1, E-0357)
 RunLinkSession8Exchange_Receive::
@@ -917,6 +973,8 @@ RunLinkSession8Exchange_Receive::
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
+
+SECTION "Bank 1B LinkExchangeJoypadByte", ROMX
 
 ; Joypad exchange, send half (the same shape as LinkSendStepWithBuffer without the buffer). If bit 1
 ; of wLinkRole is clear it sets wLinkExchangeState = 1 and arms $F9 with SerialSendByte. Otherwise,
@@ -953,6 +1011,8 @@ LinkExchangeJoypadByte::
     ld a, [wJoypadHeld]
     jp StartSerialTransferInternalClock
 
+SECTION "Bank 1B LinkExchangeJoypadByte_SendResync", ROMX
+
 ; Joypad exchange, after a short wait: sets wVBlankFlags bit 2, exchange state 1 and sends $F3 (the
 ; resync byte). (C1, E-0357)
 LinkExchangeJoypadByte_SendResync::
@@ -967,6 +1027,8 @@ LinkExchangeJoypadByte_SendResync::
     ld [wLinkExchangeState], a
     ld a, $f3
     jp StartSerialTransferInternalClock
+
+SECTION "Bank 1B LinkReceiveJoypadByte", ROMX
 
 ; Joypad exchange, receive half. If bit 1 of wLinkRole is set it continues at
 ; LinkHandshakeSendFAOrFB. Otherwise it reads the received byte from rSB into wSerialReceived; when
@@ -1008,6 +1070,8 @@ LinkReceiveJoypadByte::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B LinkReceiveJoypadByte_Resync", ROMX
+
 ; Joypad exchange, the $F3 resync: restores the saved joypad state; when no byte was queued ($FF)
 ; counts down the link timeout; back to exchange state 0 with the resync flag (bit 7). (C2, E-0357;
 ; probed E-0379)
@@ -1033,6 +1097,8 @@ LinkReceiveJoypadByte_Resync::
     set 7, [hl]
     ret
 
+SECTION "Bank 1B LinkHandshakeSendFAOrFB", ROMX
+
 ; Receive-side handshake used when bit 1 of wLinkRole is set. If bit 2 of wVBlankFlags is clear it
 ; sets bit 1 of wVBlankFlags, wLinkExchangeState = 0, arms $FA with SerialSendByte, runs
 ; RunFrameTickFadeAndCounter_Bank1B and clears bit 1 again; if bit 2 is set it continues at
@@ -1054,6 +1120,8 @@ LinkHandshakeSendFAOrFB::
     res 1, [hl]
     ret
 
+SECTION "Bank 1B LinkHandshakeSendFAOrFB_SendFB", ROMX
+
 ; Handshake, the second half: clears wVBlankFlags bit 2, sends $FB and sets the resync flag. (C1,
 ; E-0357)
 LinkHandshakeSendFAOrFB_SendFB::
@@ -1066,6 +1134,8 @@ LinkHandshakeSendFAOrFB_SendFB::
     ld hl, wVBlankFlags
     set 7, [hl]
     ret
+
+SECTION "Bank 1B LinkSendStepWithBuffer", ROMX
 
 ; Send half of the link exchange, shared by the send halves of the eight session exchanges
 ; (RunLinkSession1Exchange_Send to RunLinkSession8Exchange_Send). If bit 1 of wLinkRole is clear it
@@ -1158,6 +1228,8 @@ LinkSendStepWithBuffer::
     ld a, $f0
     jp StartSerialTransferInternalClock
 
+SECTION "Bank 1B LinkReceiveStepWithBuffer", ROMX
+
 ; Receive half of the link exchange, shared by the receive halves of the eight session exchanges
 ; (RunLinkSession1Exchange_Receive to RunLinkSession8Exchange_Receive). If bit 1 of wLinkRole is set
 ; it continues at LinkHandshakeSendFAOrFB_SendFB when bit 2 of wVBlankFlags is set, else sets bit 1
@@ -1246,6 +1318,8 @@ LinkReceiveStepWithBuffer::
     call SerialSendByte
     ret
 
+SECTION "Bank 1B RunFrameTickFadeAndCounter_Bank1B", ROMX
+
 ; Runs one frame of the screen work for the link: calls StepTextPrinter when wTextFlags is non-zero,
 ; then StepFade; adds 1 to the 16-bit wFrameCounterLo/Hi and zeroes wLinkFrameCounterLo/Hi. Called
 ; by the receive half of every link session and by LinkReceiveJoypadByte and
@@ -1271,6 +1345,8 @@ RunFrameTickFadeAndCounter_Bank1B::
     ld [wLinkFrameCounterHi], a
     ret
 
+SECTION "Bank 1B WaitSerialTransferWithTimeout", ROMX
+
 ; While bit 7 of rSC (a transfer in progress) is set, adds 1 to the 16-bit counter
 ; wScreenCounter/wGlyphListPos and tests it; if the high byte reaches 4 it returns A = $FE,
 ; otherwise it returns when the transfer ends. No call, jump or pointer to it was found in src/
@@ -1295,6 +1371,8 @@ WaitSerialTransferWithTimeout::
     ld a, $fe
     ret
 
+SECTION "Bank 1B BeginStringDisplay_Bank1B", ROMX
+
 ; DE = BeginStringDisplay_Bank1B_StringCategories (the first string table of this bank: texts of the
 ; key trade, team battle and battle prize screens), then BeginStringDisplay starts the string chosen
 ; by wStringCategory and wStringIndex. Far-called by BeginString_Bank1B_Cat0, ShowStringA10_Bank1B
@@ -1318,6 +1396,8 @@ ShowString_Bank1B::
     call BeginStringDisplay_Bank1B
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 1B BeginStringDisplay_Bank1B_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -1548,6 +1628,8 @@ ShowBreedingString::
     call BeginBreedingStringDisplay
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 1B BeginBreedingStringDisplay_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -1929,6 +2011,8 @@ UnreferencedScreenInitFromBank46:: ; configured code entry (E-0197); C0
     ld a, $01
     jp ResumeAfterModeChange
 
+SECTION "Bank 1B LoadPalette0FromData_3", ROMX
+
 ; Does nothing when wIsCGB is zero. On CGB it copies the 8 bytes of LoadPalette0FromData_3_Data ($4D
 ; $5E $FF $7F $F2 $66 $00 $00) to wBGPaletteBuffer and sets wBGPaletteUploadRequest = $7F so the
 ; palette is uploaded later. Far-called by GameMode6_Init and GameMode8_Init, and called by
@@ -1947,6 +2031,8 @@ LoadPalette0FromData_3::
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ret
+
+SECTION "Bank 1B LoadPalette0FromData_3_Data", ROMX
 
 ; Four CGB colours as RGB555 words, low byte first: $5E4D, $7FFF, $66F2, $0000 (a blue, white, a
 ; paler blue, black). LoadPalette0FromData_3 copies the 8 bytes to the start of wBGPaletteBuffer,
@@ -2014,6 +2100,8 @@ LinkKeyTrade_Start_SaveScreen::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_Start_ShowStartingKeyTrade", ROMX
+
 ; Key trade start, step 1: 'Starting key trade...' (string 1); clears the send byte and advances the
 ; title state. (C1, E-0357)
 LinkKeyTrade_Start_ShowStartingKeyTrade::
@@ -2028,6 +2116,8 @@ LinkKeyTrade_Start_ShowStartingKeyTrade::
     inc [hl]
     ret
 
+SECTION "Bank 1B LinkKeyTrade_Start_ShowPleaseWait", ROMX
+
 ; Key trade start, step 2: 'Please wait.' (string 7). (C1, E-0357)
 LinkKeyTrade_Start_ShowPleaseWait::
     ld a, [wTextFlags]
@@ -2040,6 +2130,8 @@ LinkKeyTrade_Start_ShowPleaseWait::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_Start_SignalReady", ROMX
+
 ; Key trade start, step 3: once the text has finished sends 1 (ready). (C2, E-0357; probed E-0379)
 LinkKeyTrade_Start_SignalReady::
     ld a, [wTextFlags]
@@ -2051,6 +2143,8 @@ LinkKeyTrade_Start_SignalReady::
     ld a, $01
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_Start_ShowPleaseChooseTheKey", ROMX
 
 ; Key trade start, step 4: when the partner answers 1, 'Please choose the key to trade.' (string 6)
 ; and on to the key list. (C1, E-0357)
@@ -2068,6 +2162,8 @@ LinkKeyTrade_Start_ShowPleaseChooseTheKey::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade", ROMX
 
 ; Key trade screens (state 1 of RunScreenStateWhenNotFading_1B), jumptable on wScreenStep with 37
 ; entries: 0-5 build and draw the key list and run the cursor, 6 LinkKeyTrade_WaitForPartner (the
@@ -2167,6 +2263,8 @@ LinkKeyTrade_BuildKeyList::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_ClearNameTiles", ROMX
+
 ; Key trade, step 1: clears the name tile areas. (C1, E-0357)
 LinkKeyTrade_ClearNameTiles::
     ld hl, vTiles2 + $100
@@ -2205,6 +2303,8 @@ LinkKeyTrade_ClearNameTiles::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_DrawListBox", ROMX
 
 ; Key trade, step 2: draws the list box, clamps the page cursor, the page arrows and numbers, and
 ; shows the cursor. (C1, E-0357)
@@ -2250,6 +2350,8 @@ LinkKeyTrade_DrawListBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_DrawKeyNames", ROMX
+
 ; Key trade, step 3: draws the page's key names and marks. (C1, E-0357)
 LinkKeyTrade_DrawKeyNames::
     ld a, $02
@@ -2262,6 +2364,8 @@ LinkKeyTrade_DrawKeyNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_RedrawScreen", ROMX
 
 ; Key trade, step 4: redraws and clears the cursor mark. (C1, E-0357)
 LinkKeyTrade_RedrawScreen::
@@ -2277,6 +2381,8 @@ LinkKeyTrade_RedrawScreen::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_KeyCursor", ROMX
 
 ; Key trade, step 5: the key cursor: when the partner sends $FE (cancelled) answers $FD and goes on;
 ; Select shows the key's details (ReturnStub_3); a page change or move redraws; B sends $FE; A marks
@@ -2352,6 +2458,8 @@ LinkKeyTrade_KeyCursor::
     call BeginString_Bank1B_Cat0
     ret
 
+SECTION "Bank 1B LinkKeyTrade_WaitForPartner", ROMX
+
 ; Key trade step 6, jumptable on wScreenSubStep: 0 LinkKeyTrade_WaitForPartner_ShowStopReason, 1
 ; LinkKeyTrade_WaitForPartner_ShowPleaseWait, 2 LinkKeyTrade_WaitForPartner_SignalReady, 3
 ; LinkKeyTrade_WaitForPartner_PartnerReady, 4 LinkKeyTrade_WaitForPartner_ExitToTitleMenu. It is
@@ -2400,6 +2508,8 @@ LinkKeyTrade_WaitForPartner_ShowStopReason::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_WaitForPartner_ShowPleaseWait", ROMX
+
 ; Waiting for the partner, sub-step 1: 'Please wait.' (string 7). (C1, E-0357)
 LinkKeyTrade_WaitForPartner_ShowPleaseWait::
     ld a, [wTextFlags]
@@ -2411,6 +2521,8 @@ LinkKeyTrade_WaitForPartner_ShowPleaseWait::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_WaitForPartner_SignalReady", ROMX
 
 ; Waiting for the partner, sub-step 2: once the text has finished sends 1. (C2, E-0357; probed
 ; E-0379)
@@ -2425,6 +2537,8 @@ LinkKeyTrade_WaitForPartner_SignalReady::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_WaitForPartner_PartnerReady", ROMX
+
 ; Waiting for the partner, sub-step 3: when the partner answers 1, goes on. (C2, E-0357; probed
 ; E-0379)
 LinkKeyTrade_WaitForPartner_PartnerReady::
@@ -2437,6 +2551,8 @@ LinkKeyTrade_WaitForPartner_PartnerReady::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_WaitForPartner_ExitToTitleMenu", ROMX
 
 ; Waiting for the partner, sub-step 4: once bit 0 of wTextFlags is clear, zeroes $6F bytes from
 ; wScreenState and requests a change to game mode 5 with wModeState 1 (wModeChangeRequest = 1), the
@@ -2463,6 +2579,8 @@ LinkKeyTrade_WaitForPartner_ExitToTitleMenu::
     ld [wModeChangeRequest], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_DrawYesNo", ROMX
+
 ; Key trade, step 7: plays sound $6C and draws the yes/no box. (C1, E-0357)
 LinkKeyTrade_DrawYesNo::
     ld a, [wTextFlags]
@@ -2484,6 +2602,8 @@ LinkKeyTrade_DrawYesNo::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_ReadAnswer", ROMX
 
 ; Key trade, step 8: the yes/no answer; a partner's cancel ($FE) goes to step 6 sending $FD; no goes
 ; on one step, yes three. (C1, E-0357)
@@ -2543,6 +2663,8 @@ LinkKeyTrade_ReadAnswer::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_ShowPleaseChooseTheKey", ROMX
+
 ; Key trade, step 9: redraws and 'Please choose the key to trade.' (string 6). (C1, E-0357)
 LinkKeyTrade_ShowPleaseChooseTheKey::
     call LinkKeyTrade_RestoreYesNoArea
@@ -2552,6 +2674,8 @@ LinkKeyTrade_ShowPleaseChooseTheKey::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_EraseMarks", ROMX
 
 ; Key trade, step 10: once the text has finished erases the four marks and returns to the cursor
 ; (step 5). (C2, E-0357; probed E-0379)
@@ -2565,6 +2689,8 @@ LinkKeyTrade_EraseMarks::
     ld a, $05
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_KeyCannotBeTraded", ROMX
 
 ; Key trade step 11, jumptable on wScreenSubStep: 0 LinkKeyTrade_KeyCannotBeTraded_Check (shows
 ; 'That key cannot be traded.' or 'Please wait.'), 1 LinkKeyTrade_KeyCannotBeTraded_AskAgain (goes
@@ -2588,6 +2714,8 @@ LinkKeyTrade_KeyCannotBeTraded_AskAgain::
     sub $02
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_KeyCannotBeTraded_Check", ROMX
 
 ; Key trade refusal, sub-step 0: 'That key cannot be traded.' (string 5) for a story key below kind
 ; 7, a story key whose world is the one the player is in (maps $A8-$E2 by kind 7-12), or the
@@ -2751,6 +2879,8 @@ LinkKeyTrade_SignalReady::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_SendReady", ROMX
+
 ; Key trade, step 28: draws three tiles at the top, sends 2 and goes on. (C1, E-0357)
 LinkKeyTrade_SendReady::
     ld a, [wTextFlags]
@@ -2764,6 +2894,8 @@ LinkKeyTrade_SendReady::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_WaitPartnerAnswer", ROMX
 
 ; Key trade, step 13: when the partner answers 1 goes on; on $FE returns to step 6 sending $FD. (C2,
 ; E-0357; probed E-0379)
@@ -2786,6 +2918,8 @@ LinkKeyTrade_WaitPartnerAnswer::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_ExchangeKeys", ROMX
 
 ; Key trade step 14: adds 1 to wScreenStep, then copies the four bytes of the chosen key entry
 ; (KeyEntryAddressForListEntriesCell4) and the two bytes of its wKeySeeds word
@@ -2842,6 +2976,8 @@ LinkKeyTrade_ExchangeKeys::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_SignalSaveDone", ROMX
+
 ; Key trade, step 35: once the text has finished sends 5. (C2, E-0357; probed E-0379)
 LinkKeyTrade_SignalSaveDone::
     ld a, [wTextFlags]
@@ -2853,6 +2989,8 @@ LinkKeyTrade_SignalSaveDone::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_EndKeyExchange", ROMX
 
 ; Key trade, step 15: when the exchange ends ($F0) goes on. (C2, E-0357; probed E-0379)
 LinkKeyTrade_EndKeyExchange::
@@ -2867,6 +3005,8 @@ LinkKeyTrade_EndKeyExchange::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_CheckPartnerKey", ROMX
 
 ; Key trade step 16: adds 1 to wScreenStep, then sets wSelectedRecord. $FF (and wScreenSubStep = 0)
 ; when LinkKeyTrade_HasLikeKey finds a story key of the same kind as the partner story key; $FE (and
@@ -2908,6 +3048,8 @@ LinkKeyTrade_CheckPartnerKey::
     ld a, $ff
     ld [wSelectedRecord], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_HasLikeKey", ROMX
 
 ; Scans the 32 entries of wKeyList and returns A = $FF if one is a story key (byte 3 bit 7 set)
 ; whose byte 0 low nibble equals the low nibble of the partner key in wLinkPartnerName, and the
@@ -2982,6 +3124,8 @@ LinkKeyTrade_HasLikeKey::
     ld a, $ff
     ret
 
+SECTION "Bank 1B LinkKeyTrade_CheckPartnerKey_CountGeneratedKeys", ROMX
+
 ; Counts the generated keys (kind $FE or byte 3 bit 7 clear) into C; at 20 or more C drops by one
 ; when the chosen key is generated or the partner's is a story key (a place frees up). (C2, E-0357;
 ; probed E-0379)
@@ -3039,6 +3183,8 @@ LinkKeyTrade_CheckPartnerKey_CountGeneratedKeys::
     jr nz, .loop2
     ret
 
+SECTION "Bank 1B LinkKeyTrade_KeysSameName", ROMX
+
 ; Key trade step 17, jumptable on wScreenSubStep: 0 LinkKeyTrade_KeysSameName_SendResult, 1
 ; LinkKeyTrade_KeysSameName_WaitResult, 2 LinkKeyTrade_KeysSameName_Decide, 3
 ; LinkKeyTrade_KeysSameName_EndRefusalText, 4 LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey. The
@@ -3080,6 +3226,8 @@ LinkKeyTrade_KeysSameName_SendResult::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_KeysSameName_WaitResult", ROMX
+
 ; Same-name check, sub-step 1: waits for the partner's result (2-4). (C2, E-0357; probed E-0379)
 LinkKeyTrade_KeysSameName_WaitResult::
     ld a, [wLinkMessage]
@@ -3099,6 +3247,8 @@ LinkKeyTrade_KeysSameName_WaitResult::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_KeysSameName_Decide", ROMX
 
 ; Same-name check, sub-step 2: with both fine goes on; otherwise shows the matching refusal ('Keys
 ; can't have the same name.' string 8, or strings $0D, $0F or $26). (C1, E-0357)
@@ -3156,6 +3306,8 @@ LinkKeyTrade_KeysSameName_Decide::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_KeysSameName_EndRefusalText", ROMX
+
 ; Same-name check, sub-step 3: waits for the text. (C2, E-0357; probed E-0379)
 LinkKeyTrade_KeysSameName_EndRefusalText::
     ld a, [wTextFlags]
@@ -3165,6 +3317,8 @@ LinkKeyTrade_KeysSameName_EndRefusalText::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey", ROMX
 
 ; Same-name check, sub-step 4: redraws and 'Please choose the key to trade.' and returns to step
 ; $0A. (C1, E-0357)
@@ -3177,6 +3331,8 @@ LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey::
     ld a, $0a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_ShowIsItOKTo", ROMX
 
 ; Key trade, step 18: draws the partner's key name (LinkKeyTrade_WritePartnerKeyName) in the box and
 ; asks 'Is it OK to trade keys?' (string 9). (C1, E-0357)
@@ -3205,6 +3361,8 @@ LinkKeyTrade_ShowIsItOKTo::
     call BeginString_Bank1B_Cat0
     ret
 
+SECTION "Bank 1B LinkKeyTrade_DrawYesNoAgain", ROMX
+
 ; Key trade, step 19: plays sound $6C and draws the yes/no box. (C1, E-0357)
 LinkKeyTrade_DrawYesNoAgain::
     ld a, [wTextFlags]
@@ -3226,6 +3384,8 @@ LinkKeyTrade_DrawYesNoAgain::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_ReadAnswer2", ROMX
 
 ; Key trade, step 20: the answer; a partner's cancel goes to step 6 sending $FD; no sends $FE and
 ; goes to step 6; yes marks it and asks 'Is it OK to record the ...' (string $0A). (C1, E-0357)
@@ -3302,6 +3462,8 @@ LinkKeyTrade_ReadAnswer2::
     call BeginString_Bank1B_Cat0
     ret
 
+SECTION "Bank 1B ShowTwoChoiceBoxWhenTextIdle", ROMX
+
 ; Does nothing while wTextFlags is non-zero. Otherwise draws the 6 x 5 yes/no box
 ; LinkKeyTrade_DrawYesNo_TileRect at wWindowTileBuffer + $112 (CopyRectTo20ByteRows), copies 20 x 13
 ; tiles of the screen buffer from offset $01CC to the BG map at the current scroll position
@@ -3329,6 +3491,8 @@ ShowTwoChoiceBoxWhenTextIdle::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_ReadAnswer3", ROMX
 
 ; Key trade, step 22: the answer; a partner's cancel goes to step 6; no asks 'Is it OK to trade
 ; keys?' again; yes goes on two steps. (C1, E-0357)
@@ -3390,6 +3554,8 @@ LinkKeyTrade_ReadAnswer3::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_DrawYesNoAndBack", ROMX
+
 ; Key trade, step 23: plays sound $6C, draws the yes/no box and goes back three steps. (C1, E-0357)
 LinkKeyTrade_DrawYesNoAndBack::
     ld a, [wTextFlags]
@@ -3410,6 +3576,8 @@ LinkKeyTrade_DrawYesNoAndBack::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_ConfirmPleaseWait", ROMX
+
 ; Key trade, step 24: 'Please wait.' (string 7). (C1, E-0357)
 LinkKeyTrade_ConfirmPleaseWait::
     ld a, $07 ; 'Please wait.'
@@ -3419,6 +3587,8 @@ LinkKeyTrade_ConfirmPleaseWait::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_ShowReadyingTrade", ROMX
+
 ; Key trade, step 27: 'Readying trade... Please wait.' (string $0B). (C1, E-0357)
 LinkKeyTrade_ShowReadyingTrade::
     ld a, $0b ; 'Readying trade… Please wait.'
@@ -3427,6 +3597,8 @@ LinkKeyTrade_ShowReadyingTrade::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_CopyKeyWorldRecord", ROMX
 
 ; Key trade, step 29: when the partner answers 2, copies the chosen key's saved key-world record
 ; ($195 bytes from SRAM bank 2 at $A000 + $195 x its index) into wArenaEntry for a generated key
@@ -3494,6 +3666,8 @@ LinkKeyTrade_CopyKeyWorldRecord::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_SendRecord", ROMX
+
 ; Key trade, step 30: when the partner answers 1 starts sending the record in 30-byte parts (13
 ; parts and the rest). (C1, E-0357)
 LinkKeyTrade_SendRecord::
@@ -3528,6 +3702,8 @@ LinkKeyTrade_SendRecord::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_EndRecordPart", ROMX
+
 ; Key trade, step 31: when a part's exchange ends ($F0) sends 1. (C2, E-0357; probed E-0379)
 LinkKeyTrade_EndRecordPart::
     ld a, [wLinkMessage]
@@ -3541,6 +3717,8 @@ LinkKeyTrade_EndRecordPart::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_SendNextRecordPart", ROMX
 
 ; Key trade, step 32: when the partner answers 1 sends the next part (back one step) until the
 ; record is sent. (C1, E-0357)
@@ -3596,6 +3774,8 @@ LinkKeyTrade_SendNextRecordPart::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkKeyTrade_SwapKeys", ROMX
 
 ; Key trade, step 33: draws three tiles, removes the traded key (a story key's four bytes $FF, a
 ; generated one through DeleteKeyEntryTemp0) and stores the partner's key in a free slot of the 32
@@ -3798,6 +3978,8 @@ LinkKeyTrade_SwapKeys::
     ld [wInventorySortFlags], a
     ret
 
+SECTION "Bank 1B LinkKeyTrade_ShowPleaseWait", ROMX
+
 ; Key trade, step 34: saves (RunSaveGameSteps) and shows 'Please wait.'. (C1, E-0357)
 LinkKeyTrade_ShowPleaseWait::
     ld a, [wTextFlags]
@@ -3815,6 +3997,8 @@ LinkKeyTrade_ShowPleaseWait::
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank1B_Cat0
     ret
+
+SECTION "Bank 1B LinkKeyTrade_ExitToTitleMenu", ROMX
 
 ; Key trade, step 36: when the partner answers 5, clears wLinkSendByte, zeroes $6F bytes from
 ; wScreenState, clears hDecompressLock and requests a change to game mode 5 with wModeState 1
@@ -3846,6 +4030,8 @@ LinkKeyTrade_ExitToTitleMenu::
     ld [wModeChangeRequest], a
     ret
 
+SECTION "Bank 1B ClearLinkExchangeBuffer1Bit7AndFourSlots", ROMX
+
 ; Clears bit 7 of wLinkExchangeBuffer + $1 and zeroes the four bytes at wLinkExchangeBuffer + $178,
 ; + $17C, + $180 and + $184 (4 apart), leaving the bytes between them alone. Called only by
 ; LinkKeyTrade_SwapKeys. (C2, E-0379)
@@ -3869,6 +4055,8 @@ ClearLinkExchangeBuffer1Bit7AndFourSlots::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 1B LinkKeyTrade_WritePartnerKeyName", ROMX
 
 ; Writes the partner's key name into wNameGlyphBuf: a fixed name for $FE, a story key's name, or a
 ; generated key's two name parts from the bank-$09 strings (wLinkPartnerByte1 + 1 and
@@ -3943,6 +4131,8 @@ LinkKeyTrade_WritePartnerKeyName::
     inc de
     jr .skip2
 
+SECTION "Bank 1B LinkKeyTrade_EndKeyName", ROMX
+
 ; Ends the key name with mark $5B and $F0. (C1, E-0357)
 LinkKeyTrade_EndKeyName::
     ld a, $5b
@@ -3995,6 +4185,8 @@ LinkKeyTrade_ShowKeyName::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 1B CopyDataBankStringToTextBuf0", ROMX
+
 ; A = string number. Reads word A of the pointer list CopyKeyNameWordToDE_StringList from the ROM
 ; bank in wDataBank (ReadWordFromDataBank), then copies the 16 bytes it points to from ROM bank $09
 ; into wTextBuf0 (CopyFromBankWaitVRAM with B = 9, C = $10). Called twice by
@@ -4015,6 +4207,8 @@ CopyDataBankStringToTextBuf0::
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
+
+SECTION "Bank 1B LinkKeyTrade_WriteStoryKeyName", ROMX
 
 ; Reached by a jump from LinkKeyTrade_WritePartnerKeyName for a story key (bit 7 of wRandomSeed2Lo,
 ; the partner key's fourth byte): copies string wLinkPartnerName & $3F of category $0C in bank $09
@@ -4098,6 +4292,8 @@ KeyEntryAddressForListEntriesCell4::
     ld h, a
     ret
 
+SECTION "Bank 1B KeySeedAddressForListEntriesCell4", ROMX
+
 ; Far-calls SetArg5ToListEntriesCell4, reads the key slot number at wListEntries + 4 *
 ; wListPageIndex + wListCursor and returns HL = wKeySeeds + 2 * slot, the 2-byte seed word of that
 ; key. A and DE are clobbered. Called only by LinkKeyTrade_ExchangeKeys. The label says item, but
@@ -4121,6 +4317,8 @@ KeySeedAddressForListEntriesCell4::
     adc $c7
     ld h, a
     ret
+
+SECTION "Bank 1B DrawThreeTilesAtBGMap20FFromDE", ROMX
 
 ; Writes the three bytes at DE to vBGMap0 + $20F, + $210 and + $211 (each write waits for VRAM
 ; access with interrupts off). DE ends 2 past its start, HL = vBGMap0 + $211. Called by
@@ -4148,6 +4346,8 @@ DrawThreeTilesAtBGMap20FFromDE::
     ei
     ret
 
+SECTION "Bank 1B RunScreenCounterStep", ROMX
+
 ; Jumptable on wScreenCounter with six entries, the waiting animation of the key trade record
 ; transfer: 0, 2 and 4 RunScreenCounterStep_DrawBlankDot; 1 and 3 RunScreenCounterStep_DrawDot; 5
 ; RunScreenCounterStep_AnimateDots. Each step ends by adding 1 to wScreenCounter, except the last,
@@ -4172,6 +4372,8 @@ RunScreenCounterStep::
 RunScreenCounterStep_DrawBlankDot::
     ld b, $c3
     jr WriteTileBAtBGMap20FPlusGlyphListStart
+
+SECTION "Bank 1B RunScreenCounterStep_DrawDot", ROMX
 
 ; The waiting animation, counters 1 and 3 (two entries of the RunScreenCounterStep jumptable on
 ; wScreenCounter): draws tile $BC at the current dot (vBGMap0 + $20F + wGlyphListStart) by falling
@@ -4200,6 +4402,8 @@ WriteTileBAtBGMap20FPlusGlyphListStart::
     ld [wScreenCounter], a
     ret
 
+SECTION "Bank 1B RunScreenCounterStep_AnimateDots", ROMX
+
 ; The waiting animation, counter 5: draws the cursor tile ($BB) at the dot, moves to the next of
 ; three dots and redraws the three after the last. (C1, E-0357)
 RunScreenCounterStep_AnimateDots::
@@ -4218,6 +4422,8 @@ RunScreenCounterStep_AnimateDots::
     call DrawThreeTilesAtBGMap20FFromDE
     ret
 
+SECTION "Bank 1B BeginString_Bank1B_Cat0", ROMX
+
 ; A = string index: stores it in wStringIndex, sets wStringCategory = 0 and far-calls
 ; BeginStringDisplay_Bank1B, so the string starts printing in the text window set up by the caller.
 ; Called by the key trade steps for their messages (for example 'Please wait.' as index 7 and
@@ -4229,6 +4435,8 @@ BeginString_Bank1B_Cat0::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank1B
     ret
+
+SECTION "Bank 1B LinkKeyTrade_RestoreYesNoArea", ROMX
 
 ; Restores the area under the yes/no box from the saved screen: copies five rows of six bytes from
 ; wScreenTileBuffer + $AE to wScreenTileBuffer + $27A (the same place as wWindowTileBuffer + $112,
@@ -4254,6 +4462,8 @@ LinkKeyTrade_RestoreYesNoArea::
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ret
+
+SECTION "Bank 1B CopyRectTo20ByteRows", ROMX
 
 ; DE = source, HL = destination, B = width, C = rows: copies the rectangle with destination rows 20
 ; bytes apart; the source rows are packed. DE ends past the source. On DMG (wIsCGB zero) that is
@@ -4324,6 +4534,8 @@ CopyRectTo20ByteRows::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 1B DrawScreenBufferRectToBGMap_1B", ROMX
+
 ; HL = BG map address, DE = offset into wScreenTileBuffer, B = width, C = rows: copies the rectangle
 ; from wScreenTileBuffer + DE to the BG map with CopyRectToBGMapWrapped, and sets wTextCursorLo/Hi
 ; to HL + $1C1. On CGB it then selects VRAM bank 1 and work RAM bank 2 and copies the same rectangle
@@ -4391,6 +4603,8 @@ DrawScreenBufferRectToBGMap_1B::
     ldh [c], a
     ret
 
+SECTION "Bank 1B BGMapAddressAtScroll_Bank1B", ROMX
+
 ; Returns HL = vBGMap0 + (hScrollY AND $F8) * 4 + hScrollX / 8, the BG map entry at the top left of
 ; the scrolled screen. A and DE are clobbered. Called by the key trade and link menu routines that
 ; draw boxes or marks. (C1, E-0379)
@@ -4414,6 +4628,8 @@ BGMapAddressAtScroll_Bank1B::
     add_a_to_hl
     ret
 
+SECTION "Bank 1B CopyBytesDEToHL_Bank1B", ROMX
+
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy, BC = 0 and A = 0. Called by LinkKeyTrade_Start_SaveScreen and
 ; LinkKeyTrade_RestoreYesNoArea_CopyRows. (C2, E-0379)
@@ -4428,6 +4644,8 @@ CopyBytesDEToHL_Bank1B::
     or c
     jr nz, CopyBytesDEToHL_Bank1B
     ret
+
+SECTION "Bank 1B CopyLow3BitsToWRAMBank2_Bank1B", ROMX
 
 ; DE = source, HL = destination, BC = count: sets rSVBK = 2, copies BC bytes with each ANDed with
 ; $07 (the palette number bits of a CGB attribute byte), then sets rSVBK = 0; DE and HL end past the
@@ -4452,6 +4670,8 @@ CopyLow3BitsToWRAMBank2_Bank1B::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 1B StoreBAtWordTableEntry_Bank1B", ROMX
+
 ; HL = table of 16-bit addresses, A = index, B = value: stores B at the address held in entry A; BC
 ; is kept; A ends as B; DE and HL are clobbered. Called by the key trade, link battle setup and egg
 ; service menus to draw or erase marks in the tile buffers. (C2, E-0379)
@@ -4469,6 +4689,8 @@ StoreBAtWordTableEntry_Bank1B::
     ld a, b
     ld [de], a
     ret
+
+SECTION "Bank 1B EraseCEntriesOfWordTable_Bank1B", ROMX
 
 ; HL = table of 16-bit addresses, C = count: stores tile $C3 at the addresses of entries 0 to C - 1
 ; (through StoreBAtWordTableEntry_Bank1B). Entry 0 is always erased, so C = 0 erases one entry like
@@ -4493,6 +4715,8 @@ EraseCEntriesOfWordTable_Bank1B::
     cp b
     jr c, .loop
     ret
+
+SECTION "Bank 1B DrawC5BEC6AtScrollOffsetDE_Bank1B", ROMX
 
 ; DE = offset: writes tiles $C5, $BE, $C6 at BGMapAddressAtScroll_Bank1B + DE, + DE + 2 and + DE + 4
 ; (each write waits for VRAM access with interrupts off). Called by LinkKeyTrade_DrawListBox (DE =
@@ -4525,6 +4749,8 @@ DrawC5BEC6AtScrollOffsetDE_Bank1B::
     ei
     ret
 
+SECTION "Bank 1B StoreC5BEC6AtHLStride2_Bank1B", ROMX
+
 ; Stores $C5 at [HL], $BE at [HL + 2] and $C6 at [HL + 4], leaving the bytes between them alone; HL
 ; ends as HL + 4 and A = $C6. Called by LinkKeyTrade_DrawListBox, DrawRecordListPageIndicators_1B
 ; and LinkBattleSetupMenu_ListMembers. (C2, E-0379)
@@ -4542,6 +4768,8 @@ StoreC5BEC6AtHLStride2_Bank1B::
     ld a, $c6
     ld [hl], a
     ret
+
+SECTION "Bank 1B CopyTileBytesToVRAM_Bank1B", ROMX
 
 ; Copies 16 bytes (one tile) from [HL] to [DE], one byte at a time: it disables interrupts, waits
 ; until bit 1 of rSTAT is clear (VRAM can be written), stores the byte and enables interrupts again.
@@ -4571,6 +4799,8 @@ CopyTileBytesToVRAM_Bank1B::
     cp $10
     jr c, .loop
     ret
+
+SECTION "Bank 1B LinkKeyTrade_RestoreYesNoArea_CopyRows", ROMX
 
 ; Copies rows B up to C - 1 (its one caller passes B = 0, C = 5) of wArg1:wArg2 bytes each (a 16-bit
 ; count) from offset DE to offset HL, both inside wScreenTileBuffer, rows 20 bytes apart; on the GBC
@@ -4640,6 +4870,8 @@ LinkKeyTrade_RestoreYesNoArea_CopyRows::
     cp c
     jr c, LinkKeyTrade_RestoreYesNoArea_CopyRows
     ret
+
+SECTION "Bank 1B UpdateTwoChoiceCursor_Bank1B", ROMX
 
 ; Yes/no cursor update for the link key trade, called by LinkKeyTrade_ReadAnswer2; the cursor is
 ; wTwoChoiceCursor (0 or 1). Up (bit 6 of wJoypadPressedRepeat) or Down (bit 7) toggles it, hides
@@ -4721,6 +4953,8 @@ UpdateTwoChoiceCursor_Bank1B::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank 1B UpdateTwoChoiceCursor_Bank1B_Blink", ROMX
+
 ; Blinks the yes/no cursor: after $14 frames of the repeat timer, shown for 16 counts and hidden for
 ; 8. (C1, E-0357)
 UpdateTwoChoiceCursor_Bank1B_Blink::
@@ -4742,10 +4976,14 @@ UpdateTwoChoiceCursor_Bank1B_Show::
     ld b, $bb
     jr UpdateTwoChoiceCursor_Bank1B_DrawTile
 
+SECTION "Bank 1B UpdateTwoChoiceCursor_Bank1B_Hide", ROMX
+
 ; Draws the blank tile ($C3) at the yes/no cursor. (C1, E-0357)
 UpdateTwoChoiceCursor_Bank1B_Hide::
     ld b, $c3
     jr UpdateTwoChoiceCursor_Bank1B_DrawTile
+
+SECTION "Bank 1B UpdateTwoChoiceCursor_Bank1B_MarkChosen", ROMX
 
 ; Draws the chosen tile ($BC) at the yes/no cursor. (C1, E-0357)
 UpdateTwoChoiceCursor_Bank1B_MarkChosen::
@@ -4773,6 +5011,8 @@ UpdateTwoChoiceCursor_Bank1B_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1B UpdateTwoChoiceCursor_Bank1B_DrawTile_Data", ROMX
 
 ; Two words that are offsets from the BG map entry at the top left of the visible screen
 ; (BGMapAddressAtScroll_Bank1B): $012D and $016D, which are rows 9 and 11 of column 13.
@@ -4896,6 +5136,8 @@ RunLinkSession4ScreenState_PrepareSetupMenu_Run::
     jr nz, .loop2
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu", ROMX
+
 ; Runs the VS battle set-up, one frame at a time, by a jump table on wScreenState (16 states): 0
 ; LinkBattleSetupMenu_Init, 1 LinkBattleSetupMenu_EndIntroText, 2
 ; LinkBattleSetupMenu_WaitForPartner, 3 LinkBattleSetupMenu_EnterPickRecords, 4
@@ -4946,6 +5188,8 @@ LinkBattleSetupMenu_Init::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_EndIntroText", ROMX
+
 ; Link battle setup, state 1: once the text has finished goes on two states. (C2, E-0357; probed
 ; E-0379)
 LinkBattleSetupMenu_EndIntroText::
@@ -4957,6 +5201,8 @@ LinkBattleSetupMenu_EndIntroText::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_WaitForPartner", ROMX
 
 ; State 2 of LinkBattleSetupMenu, by wScreenStep (5 steps), the aftermath of a refusal: 0
 ; EggServiceMenu_Bank1B_WaitForPartner_PalRefused waits for a $FE from the partner, 1
@@ -4988,6 +5234,8 @@ EggServiceMenu_Bank1B_WaitForPartner_PalRefused::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_WaitForPartner_ShowWait", ROMX
+
 ; Waiting for the partner, step 1: 'Please wait.' (string $0C). (C1, E-0357)
 EggServiceMenu_Bank1B_WaitForPartner_ShowWait::
     ld a, [wTextFlags]
@@ -4999,6 +5247,8 @@ EggServiceMenu_Bank1B_WaitForPartner_ShowWait::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_WaitForPartner_SignalReady", ROMX
 
 ; Waiting for the partner, step 2: once the text has finished sends 1. (C2, E-0357; probed E-0379)
 EggServiceMenu_Bank1B_WaitForPartner_SignalReady::
@@ -5012,6 +5262,8 @@ EggServiceMenu_Bank1B_WaitForPartner_SignalReady::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_WaitForPartner_PartnerReady", ROMX
+
 ; Waiting for the partner, step 3: when the partner answers 1, goes on. (C2, E-0357; probed E-0379)
 EggServiceMenu_Bank1B_WaitForPartner_PartnerReady::
     ld a, [wLinkMessage]
@@ -5023,6 +5275,8 @@ EggServiceMenu_Bank1B_WaitForPartner_PartnerReady::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_WaitForPartner_ExitToTitle", ROMX
 
 ; Waiting for the partner, step 4: once bit 0 of wTextFlags is clear, zeroes $6F bytes from
 ; wScreenState and requests a change to game mode 5 with wModeState 1 (wModeChangeRequest = 1), the
@@ -5049,12 +5303,16 @@ EggServiceMenu_Bank1B_WaitForPartner_ExitToTitle::
     ld [wModeChangeRequest], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_EnterPickRecords", ROMX
+
 ; Link battle setup, state 3: moves on. (C2, E-0357; probed E-0379)
 LinkBattleSetupMenu_EnterPickRecords::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_PickRecords", ROMX
 
 ; State 4 of LinkBattleSetupMenu: picking the three team members (and the prize question) from the
 ; stored monsters, by wScreenStep (14 steps): 0, 1 and 3 run BreedMenu once the text is done
@@ -5095,6 +5353,8 @@ LinkBattleSetupMenu_RunRecordListAgain::
     farcall BreedMenu
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_RunRecordList", ROMX
+
 ; Picking members, step 0: once the text has finished runs the record list's steps (BreedMenu). (C1,
 ; E-0357)
 LinkBattleSetupMenu_RunRecordList::
@@ -5103,6 +5363,8 @@ LinkBattleSetupMenu_RunRecordList::
     ret nz
     farcall BreedMenu
     ret
+
+SECTION "Bank 1B DrawRecordListPageIndicators_1B", ROMX
 
 ; Step 2 of LinkBattleSetupMenu_PickRecords (also far-called by
 ; RunLinkSession6Exchange_Pick_ListMonsters): rebuilds the pick list with
@@ -5142,6 +5404,8 @@ DrawRecordListPageIndicators_1B::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B DrawListEntriesCell5RecordPanel", ROMX
 
 ; Draws the info panel of the monster under the list cursor: the record index comes from
 ; SetArg5ToListEntriesCell5 (wListEntries + 5 * wListPageIndex + wListCursor); its family icon is
@@ -5189,6 +5453,8 @@ DrawListEntriesCell5RecordPanel::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B ClearAndDrawListEntriesCell5NameAtTiles1780", ROMX
+
 ; Blanks 5 tiles at vTiles1 + $780 (FillTilesFromRequest with the request wTextWindowRows = 1,
 ; wTextWindowWidth = 5) and draws the name of the record at list cell 5 there
 ; (DrawListEntriesCell5RecordNameAtTiles1780); wScreenStep += 1. Step 5 of
@@ -5214,6 +5480,8 @@ ClearAndDrawListEntriesCell5NameAtTiles1780::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B DrawRuleBoxByLinkRuleTurnLimit1Bit7", ROMX
 
 ; Copies the picks box to wWindowTileBuffer + $6E (CopyRectTo20ByteRows, rows 20 bytes apart): the
 ; 10 x 7 rectangle DrawRuleBoxByLinkRuleTurnLimit1Bit7_TileRect (three rows marked with the digit
@@ -5249,6 +5517,8 @@ DrawRuleBoxByLinkRuleTurnLimit1Bit7::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_ShowCursorMark", ROMX
+
 ; Picking members, step 7: shows and clears the cursor mark, redraws and resets the string window.
 ; (C1, E-0357)
 LinkBattleSetupMenu_ShowCursorMark::
@@ -5272,6 +5542,8 @@ LinkBattleSetupMenu_ShowCursorMark::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_ListCursor", ROMX
 
 ; Picking members, step 8: the list cursor. When wLinkMessage is $FE (the partner refused) it shows
 ; 'Your pal refused to battle.' (string $0B), goes to screen state 2 and sends $FE. Otherwise
@@ -5398,6 +5670,8 @@ EggServiceMenu_Bank1B_PickRecords_ListCursor::
     call ShowStringA10_Bank1B
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_PickRecords_ShowInfoOKYesN", ROMX
+
 ; Picking members, step 9: shows the 'Info / OK' choice (string $1E), plays sound $6C and draws its
 ; box. (C1, E-0357)
 LinkBattleSetupMenu_PickRecords_ShowInfoOKYesN::
@@ -5445,6 +5719,8 @@ LinkBattleSetupMenu_PickRecords_ShowInfoOKYesN::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_InfoOrOK", ROMX
 
 ; Picking members, step 10: the Info / OK choice (the partner's refusal stops as before): Info opens
 ; the stats screen (state $0C); OK adds the pick, and with three picks (and the prize not a party
@@ -5536,6 +5812,8 @@ EggServiceMenu_Bank1B_PickRecords_InfoOrOK::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_EraseMarks", ROMX
+
 ; Picking members, step 11: once the text has finished erases the five marks, redraws and goes back
 ; three steps. (C1, E-0357)
 LinkBattleSetupMenu_EraseMarks::
@@ -5546,6 +5824,8 @@ LinkBattleSetupMenu_EraseMarks::
     ld hl, LinkBattleSetupMenu_ShowCursorMark_Data
     call EraseCEntriesOfWordTable_Bank1B
     jr LinkBattleSetupMenu_RedrawBoxAndStepBack
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_MarkPrize", ROMX
 
 ; Erases the five marks (EraseCEntriesOfWordTable_Bank1B), marks the cursor entry with the chosen
 ; tile ($BC) and falls into LinkBattleSetupMenu_RedrawBoxAndStepBack. Its one caller, picking step
@@ -5571,6 +5851,8 @@ LinkBattleSetupMenu_RedrawBoxAndStepBack::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_CountPick", ROMX
+
 ; Picking members, step 12: when the pick is allowed, redraws, counts it and draws the picked
 ; members' names and icons. (C1, E-0357)
 LinkBattleSetupMenu_CountPick::
@@ -5591,6 +5873,8 @@ LinkBattleSetupMenu_CountPick::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_AskMoreOrPrize", ROMX
 
 ; Picking members, step 13: the partner's refusal stops as before; otherwise runs its sub-steps
 ; (another member, the prize question, waiting). (C1, E-0357)
@@ -5644,6 +5928,8 @@ EggServiceMenu_Bank1B_PickRecords_AskOneMore::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_DrawYesNo", ROMX
+
 ; Draws the yes/no box (sound $6C), with the answer set to no at three picks. (C1, E-0357)
 LinkBattleSetupMenu_DrawYesNo::
     ld a, [wTextFlags]
@@ -5677,6 +5963,8 @@ LinkBattleSetupMenu_DrawYesNo::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_AnswerOneMore", ROMX
 
 ; The answer to another member: yes clears the box and returns to picking (string 0); no goes on two
 ; sub-steps. (C1, E-0357)
@@ -5725,6 +6013,8 @@ EggServiceMenu_Bank1B_PickRecords_AnswerOneMore::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_BackToPicking", ROMX
+
 ; Once the text has finished returns to picking (step 0). (C2, E-0357; probed E-0379)
 EggServiceMenu_Bank1B_PickRecords_BackToPicking::
     ld a, [wTextFlags]
@@ -5734,6 +6024,8 @@ EggServiceMenu_Bank1B_PickRecords_BackToPicking::
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_AskPrize", ROMX
 
 ; Sub-step 4 of the picking step 13 (the prize): without the prize rule (wLinkRules + 9 bit 7 clear)
 ; shows 'Please wait.' (string $0C) and finishes the picks (FinishPickedRecordsEntryAndAdvance).
@@ -5778,6 +6070,8 @@ EggServiceMenu_Bank1B_PickRecords_AskPrize::
     ld [wTwoChoiceCursor], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_FinishPicks", ROMX
+
 ; Once the text has finished finishes the picks and shows 'Please wait.'. (C1, E-0357)
 EggServiceMenu_Bank1B_PickRecords_FinishPicks::
     ld a, [wTextFlags]
@@ -5787,6 +6081,8 @@ EggServiceMenu_Bank1B_PickRecords_FinishPicks::
     ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_AnswerPrize", ROMX
 
 ; The prize answer: no clears the prize ($FF) and goes back two sub-steps; yes asks 'Select a
 ; monster as the prize.' (string 6). (C1, E-0357)
@@ -5837,6 +6133,8 @@ EggServiceMenu_Bank1B_PickRecords_AnswerPrize::
     ld a, $03
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_ConfirmAndStart", ROMX
 
 ; State 5 of LinkBattleSetupMenu, after the picks: the exchange over the link and the start of the
 ; battle, by wScreenStep (22 steps): 0 LinkBattleSetupMenu_DrawPickedMembers, 1
@@ -5891,6 +6189,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_Announce::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_PleaseWait", ROMX
+
 ; Starting the battle, step 9: 'Please wait.'. (C1, E-0357)
 EggServiceMenu_Bank1B_StartLinkBattle_PleaseWait::
     ld a, $0c ; 'Please wait.'
@@ -5899,6 +6199,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_PleaseWait::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_TextDone", ROMX
 
 ; Starting the battle, steps 10 and 18 (the jump table of LinkBattleSetupMenu_ConfirmAndStart lists
 ; it twice): once wTextFlags is zero, wScreenStep += 1; while text is still running it returns. (C2,
@@ -5912,6 +6214,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_TextDone::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_DrawPickedMembers", ROMX
+
 ; Starting the battle, step 0: once the text has finished draws the picked members' names and icons.
 ; (C1, E-0357)
 LinkBattleSetupMenu_DrawPickedMembers::
@@ -5923,6 +6227,8 @@ LinkBattleSetupMenu_DrawPickedMembers::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_CopyPrizeRecord", ROMX
 
 ; Starting the battle, step 1: copies the prize monster's record into wRecordBufA, or with no prize
 ; an empty record with the player's name as its master. (C2, E-0357; probed E-0384)
@@ -5966,6 +6272,8 @@ LinkBattleSetupMenu_CopyPrizeRecord::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_SignalReady", ROMX
+
 ; Starting the battle, steps 2, 11, 14 and 19 (the jump table of LinkBattleSetupMenu_ConfirmAndStart
 ; lists it four times): wScreenStep += 1 and wLinkSendByte = 1, with no waiting. The step after it
 ; waits for the answer of the partner: EggServiceMenu_Bank1B_StartLinkBattle_PalReady after steps 2
@@ -5978,6 +6286,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_SignalReady::
     ld a, $01
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_PalReady", ROMX
 
 ; Starting the battle, steps 3 and 20 (each after
 ; EggServiceMenu_Bank1B_StartLinkBattle_SignalReady): when wLinkMessage is 1 clears wLinkSendByte
@@ -6009,6 +6319,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_PalReady::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_ExchangePrizes", ROMX
+
 ; Starting the battle, step 4: exchanges the prize records ($A5 bytes, wRecordBufA out, wRecordBufB
 ; in). (C2, E-0357; probed E-0379)
 LinkBattleSetupMenu_ExchangePrizes::
@@ -6036,6 +6348,8 @@ LinkBattleSetupMenu_ExchangePrizes::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_EndExchange", ROMX
+
 ; Starting the battle, step 16: when the exchange ends ($F0), goes on. (C2, E-0357; probed E-0379)
 EggServiceMenu_Bank1B_StartLinkBattle_EndExchange::
     ld a, [wLinkMessage]
@@ -6049,6 +6363,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_EndExchange::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_AskBegin", ROMX
 
 ; Starting the battle, step 5: when the exchange ends asks 'Begin battle?' (string 8). (C1, E-0357)
 EggServiceMenu_Bank1B_StartLinkBattle_AskBegin::
@@ -6065,6 +6381,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_AskBegin::
     ld a, $08 ; 'Begin battle?'
     call ShowStringA10_Bank1B
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox", ROMX
 
 ; Starting the battle, step 6: shows the 'Battle / Prize / Exit' choice (string $1F), plays sound
 ; $6C and draws its box. (C1, E-0357)
@@ -6104,6 +6422,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_ReadChoice", ROMX
 
 ; Starting the battle, step 7: the choice (the partner's refusal stops as before): Battle goes on
 ; two steps; Prize shows the partner's prize ('There is no prize for this ...' string $14 without
@@ -6201,6 +6521,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_ReadChoice::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_RetryChoice", ROMX
+
 ; Starting the battle, step 8: once the text has finished goes back to the choice. (C2, E-0357;
 ; probed E-0379)
 EggServiceMenu_Bank1B_StartLinkBattle_RetryChoice::
@@ -6211,6 +6533,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_RetryChoice::
     dec a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_PalBattleOK", ROMX
 
 ; Starting the battle, step 12: on the partner's 1 goes on; on $FE 'Your pal refused to battle.'.
 ; (C1, E-0357)
@@ -6238,6 +6562,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_PalBattleOK::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_PackMembers", ROMX
 
 ; Starting the battle, step 13: sets wLinkScene to 1 when bit 1 of wLinkRole is set (this side
 ; drives the clock), otherwise 0, then packs the picked members into battler records
@@ -6285,6 +6611,8 @@ LinkBattleSetupMenu_PackMembers::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_StartLinkBattle_SendMembers", ROMX
+
 ; Starting the battle, step 15: on the partner's 1 starts the $EA-byte exchange of the battler
 ; records. (C2, E-0357; probed E-0379)
 EggServiceMenu_Bank1B_StartLinkBattle_SendMembers::
@@ -6304,6 +6632,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_SendMembers::
     ld a, $01
     ld [wLinkReady], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_StartBattle", ROMX
 
 ; Starting the battle, step 21: switches to game mode 4 (the battle), link session 1, and clears the
 ; link bytes. (C2, E-0357; probed E-0379)
@@ -6326,6 +6656,8 @@ LinkBattleSetupMenu_StartBattle::
     ld [wLinkMessage], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_RunStatsScreen", ROMX
+
 ; Link battle setup, state 6: runs the stats screen (SwapMonstersMenu) until its step $0A, then goes
 ; on three states. (C1, E-0357)
 LinkBattleSetupMenu_RunStatsScreen::
@@ -6341,6 +6673,8 @@ LinkBattleSetupMenu_RunStatsScreen::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_RunScreen", ROMX
+
 ; Link battle setup, state 13: runs the screen (RunScreenStateWhenNotFading_F1); back in state $0E
 ; restores the list position. (C1, E-0357)
 LinkBattleSetupMenu_RunScreen::
@@ -6353,6 +6687,8 @@ LinkBattleSetupMenu_RunScreen::
     ld a, [wItemGridY]
     ld [wListPageIndex], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_ListAfterPrizeScreen", ROMX
 
 ; State 14 of LinkBattleSetupMenu, by wScreenStep (8 steps): redraws the pick list after the screen
 ; of the prize of the partner (state 13 ends by moving on to state 14): 0
@@ -6407,6 +6743,8 @@ LinkBattleSetupMenu_ShowBattlePrizeExit::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_ListAfterInfoScreen", ROMX
+
 ; State 15 of LinkBattleSetupMenu, by wScreenStep (8 steps): the same steps as
 ; LinkBattleSetupMenu_ListAfterPrizeScreen except that step 6 is EggServiceMenu_ShowInfoOKChoice
 ; (the 'Info / OK' window with the pick question). It follows the stats screen of state 12, which
@@ -6443,6 +6781,8 @@ LinkBattleSetupMenu_DrawListBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_ListMembers", ROMX
+
 ; Listing members, step 1: lists the monsters that may be picked (ListAvailableRecordsForSelection),
 ; clamps the page cursor and draws the page numbers. (C1, E-0357)
 LinkBattleSetupMenu_ListMembers::
@@ -6466,6 +6806,8 @@ LinkBattleSetupMenu_ListMembers::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_DrawPageNames", ROMX
+
 ; Listing members, step 2: draws the page's names and marks the party members. (C1, E-0357)
 LinkBattleSetupMenu_DrawPageNames::
     farcall DrawRecordListPageNames
@@ -6474,15 +6816,21 @@ LinkBattleSetupMenu_DrawPageNames::
     farcall MarkPartyMembersInRecordListPage
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_DrawCursorPanel", ROMX
+
 ; Listing members, step 3: draws the panel of the monster under the cursor. (C1, E-0357)
 LinkBattleSetupMenu_DrawCursorPanel::
     call DrawListEntriesCell5RecordPanel
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_DrawCursorName", ROMX
+
 ; Listing members, step 4: draws the name of the monster under the cursor. (C1, E-0357)
 LinkBattleSetupMenu_DrawCursorName::
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_DrawPicksBox", ROMX
 
 ; Listing members, step 5: draws the picks box (DrawRuleBoxByLinkRuleTurnLimit1Bit7, which advances
 ; wScreenStep): three numbered rows, and a fourth row when bit 7 of wLinkRules + $9 is set, the same
@@ -6491,6 +6839,8 @@ LinkBattleSetupMenu_DrawCursorName::
 LinkBattleSetupMenu_DrawPicksBox::
     call DrawRuleBoxByLinkRuleTurnLimit1Bit7
     ret
+
+SECTION "Bank 1B EggServiceMenu_ShowInfoOKChoice", ROMX
 
 ; Listing members, step 6 (second list): shows 'Info / OK' and the pick question (string $12, or $17
 ; for the prize at three picks) and draws its box. (C1, E-0357)
@@ -6546,6 +6896,8 @@ EggServiceMenu_ShowInfoOKChoice::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_LeaveList", ROMX
+
 ; Listing members, step 7 (leaving): redraws the screen and the bottom rows, restores hide tile $70
 ; and returns to the saved screen state and step. (C1, E-0357)
 LinkBattleSetupMenu_LeaveList::
@@ -6578,6 +6930,8 @@ LinkBattleSetupMenu_LeaveList::
     ld a, h
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank 1B LinkBattleSetupMenu_PackBattlerRecords", ROMX
 
 ; Packs the picked members for the battle exchange into this side's battler records: per member its
 ; name (14 bytes), skills (8), status and $15 bytes of stats, $1F bytes from the personality, its
@@ -6701,6 +7055,8 @@ LinkBattleSetupMenu_PackBattlerRecords::
     ld [rRAMB], a
     ret
 
+SECTION "Bank 1B CopyEBytesBCToHL", ROMX
+
 ; Copies E bytes from [BC] to [HL]; BC and HL end E bytes on and E = 0. E = 0 copies 256 bytes,
 ; because E is decremented before it is tested. Used by LinkBattleSetupMenu_PackBattlerRecords for
 ; the 14-byte name, the 8 skills, $15 stat bytes and $1F personality bytes of each picked member.
@@ -6713,6 +7069,8 @@ CopyEBytesBCToHL::
     dec e
     jr nz, CopyEBytesBCToHL
     ret
+
+SECTION "Bank 1B ClearRecordPanelTiles", ROMX
 
 ; Blanks the tiles of the record panel and redraws the picked names: FillTilesFromRequest clears 15
 ; tiles at vTiles1 + $500, 5 at vTiles1 + $700, 5 at vTiles1 + $780, 3 at vTiles1 + $240 and 2 at
@@ -6784,6 +7142,8 @@ ClearRecordPanelTiles::
     call DrawPickedRecordsRecordNamesAndIcons
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_CursorInParty", ROMX
+
 ; Returns $FF when the monster under the cursor is in the party. (C2, E-0357; probed E-0379)
 EggServiceMenu_Bank1B_PickRecords_CursorInParty::
     farcall SetArg5ToListEntriesCell5
@@ -6810,6 +7170,8 @@ EggServiceMenu_Bank1B_PickRecords_CursorInParty::
     ld a, $ff
     ret
 
+SECTION "Bank 1B PadPickedRecordsWithFFToThree", ROMX
+
 ; Fills wPickedRecords[wPickCount] up to wPickedRecords[2] with $FF (3 - wPickCount entries), so
 ; unused pick slots read $FF; returns at once, changing nothing, when wPickCount = 3. Used by
 ; EggServiceMenu_Bank1B_PickRecords_AskPrize and FinishPickedRecordsEntryAndAdvance. (C2, E-0379)
@@ -6834,6 +7196,8 @@ PadPickedRecordsWithFFToThree::
     jr nz, .loop
     ret
 
+SECTION "Bank 1B LoadPickedRecordByte", ROMX
+
 ; Loads byte C of picked record A (wPickedRecords) from SRAM into hTemp0. (C2, E-0357; probed
 ; E-0384)
 LoadPickedRecordByte::
@@ -6849,6 +7213,8 @@ LoadPickedRecordByte::
     ld [rRAMG2], a
     ld [rRAMB], a
     ret
+
+SECTION "Bank 1B PickFamilyAlreadyPicked", ROMX
 
 ; Returns $FF when the newest pick's family is already among the earlier picks (the one-per-family
 ; rule), otherwise 0. (C2, E-0357; probed E-0384)
@@ -6918,6 +7284,8 @@ PickFamilyAlreadyPicked::
     ld a, $ff
     ret
 
+SECTION "Bank 1B DrawChoiceBoxByLinkRuleTurnLimit1Bit7", ROMX
+
 ; Erases the 6 x 5 yes/no choice box at wWindowTileBuffer + $112: copies
 ; DrawChoiceBoxByLinkRuleTurnLimit1Bit7_TileRect (blank tiles $C3) or, when bit 7 of wLinkRules + $9
 ; is set, DrawChoiceBoxByLinkRuleTurnLimit1Bit7_TileRect_2 (the same with the first row $B4 ... $B5,
@@ -6953,6 +7321,8 @@ DrawChoiceBoxByLinkRuleTurnLimit1Bit7::
     call DrawScreenBufferRectToBGMap_1B
     ret
 
+SECTION "Bank 1B LinkBattleSetupMenu_EraseInfoOKBox", ROMX
+
 ; Redraws the 8 x 5 block at wWindowTileBuffer + $110, the place of the 'Info / OK' box
 ; (EggServiceMenu_InfoOKBoxTileRect), with mostly blank tiles (the left column keeps the border
 ; tiles $B2, $B7, $B5): LinkBattleSetupMenu_EraseInfoOKBox_TileRect when bit 7 of wLinkRules + $9 is
@@ -6978,6 +7348,8 @@ LinkBattleSetupMenu_EraseInfoOKBox::
 
 .return:
     ret
+
+SECTION "Bank 1B ListAvailableRecordsForSelection", ROMX
 
 ; Builds the pick list wListEntries from the first $1E stored records (sRecords, SRAM bank 0): the
 ; 30 bytes of wListEntries and wListEntries2 are zeroed first; a record is listed when its MON_STATE
@@ -7105,6 +7477,8 @@ ListAvailableRecordsForSelection::
     farcall MovePartyRecordsToFrontOfList
     ret
 
+SECTION "Bank 1B ShowStringA10_Bank1B", ROMX
+
 ; A = string number: sets wStringIndex = A + $10 and wStringCategory = 0, then far-calls
 ; BeginStringDisplay_Bank1B to start that string. Every state of the VS set-up uses it for its
 ; messages, for example A = $0B for 'Your pal refused to battle.' and A = $0C for 'Please wait.'.
@@ -7117,6 +7491,8 @@ ShowStringA10_Bank1B::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank1B
     ret
+
+SECTION "Bank 1B SetDefaultStringWindow_Bank1B", ROMX
 
 ; Sets the text window request to the default message area: wTextWindowTileLo/Hi = vTiles1 ($8800),
 ; wTextWindowRows = 2 and wTextWindowWidth = $12. Changes only those four bytes (and A, HL). (C1,
@@ -7135,6 +7511,8 @@ SetDefaultStringWindow_Bank1B::
     ld a, h
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank 1B LoadFamilyIconTileForRecordB_Bank1B", ROMX
 
 ; B = SRAM record index, wArg1 = VRAM tile number: with SRAM bank 0 on, takes the low nibble of
 ; MON_FAMILY of the record into wWorkBuf, puts wArg1 in wWorkBuf + 1, and far-calls
@@ -7160,6 +7538,8 @@ LoadFamilyIconTileForRecordB_Bank1B::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 1B DrawListEntriesCell5RecordPanel_DrawLevelAndSex", ROMX
 
 ; Draws SRAM record wArg1's level as two digit tiles (a leading zero blanked by
 ; BlankLeadingZeroDigits_F) at HL = wArg3:wArg2, and its sex mark (tile $CC + (MON_SEX & 1)) seven
@@ -7212,6 +7592,8 @@ DrawListEntriesCell5RecordPanel_DrawLevelAndSex::
     pop hl
     ld [hl], a
     ret
+
+SECTION "Bank 1B ClearTileRowsFromPickCount", ROMX
 
 ; Clears the not yet used name rows of the picked-members list: with the request 6 tiles x 1
 ; (wTextWindowRows = 1, wTextWindowWidth = 6) FillTilesFromRequest blanks the rows at vTiles2 +
@@ -7272,6 +7654,8 @@ ClearTileRowsFromPickCount::
 .call_set_default_string_window_bank1_b:
     call SetDefaultStringWindow_Bank1B
     ret
+
+SECTION "Bank 1B DrawPickedRecordsRecordNamesAndIcons", ROMX
 
 ; Draws the picked monsters: for the first n entries of wPickedRecords (n = wPickCount, but 4 when
 ; wPickCount is 4 or more; nothing when it is 0), skipping entries that are $FF, it copies the name
@@ -7361,6 +7745,8 @@ DrawPickedRecordsRecordNamesAndIcons::
 .return:
     ret
 
+SECTION "Bank 1B DrawPickedRecordsRecordNamesAndIcons_Data1", ROMX
+
 ; Four words, VRAM addresses $9110, $9170, $91D0, $9230 (vTiles2 + $110, + $170, + $1D0, + $230, six
 ; tiles apart). DrawPickedRecordsRecordNamesAndIcons draws the name of picked record c (c = 0 to 3,
 ; up to wPickCount) with CopyGlyphTilesToVRAM at word c; the family icon goes to the tile before it
@@ -7403,6 +7789,8 @@ DrawListEntriesCell5RecordNameAtTiles1780::
     ld [rRAMB], a
     ret
 
+SECTION "Bank 1B EggServiceMenu_Bank1B_PickRecords_RecordPick", ROMX
+
 ; Records the monster under the cursor as the next pick (wPickedRecords + wPickCount). (C2, E-0357;
 ; probed E-0379)
 EggServiceMenu_Bank1B_PickRecords_RecordPick::
@@ -7422,6 +7810,8 @@ EggServiceMenu_Bank1B_PickRecords_RecordPick::
     ld a, [hl]
     ld [de], a
     ret
+
+SECTION "Bank 1B CheckPickAgainstLinkRules", ROMX
 
 ; Checks a pick against the link rules: with the total-level rule the picks' levels summed must not
 ; exceed the limit, with the level rule its level must not exceed wLinkRules + 3 ('Monster level
@@ -7567,6 +7957,8 @@ CheckPickAgainstLinkRules::
     ld a, $ff
     ret
 
+SECTION "Bank 1B CopyListEntriesCell5NameToTextBuf0", ROMX
+
 ; Copies the name of the record at list cell 5 into wTextBuf0 for the next message: with SRAM bank 0
 ; on it gets the record index from SetArg5ToListEntriesCell5, copies the name to wNameGlyphBuf
 ; (CopyRecordNameToNameGlyphBuf, MON_NAME) and the first 11 bytes of wNameGlyphBuf to wTextBuf0,
@@ -7603,6 +7995,8 @@ CopyListEntriesCell5NameToTextBuf0::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 1B FinishPickedRecordsEntryAndAdvance", ROMX
+
 ; Ends the picking: PadPickedRecordsWithFFToThree fills the unused pick slots with $FF,
 ; wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4, wScreenStep and wScreenSubStep = 0
 ; and wScreenState += 1 (to state 5, LinkBattleSetupMenu_ConfirmAndStart). Called by
@@ -7625,6 +8019,8 @@ FinishPickedRecordsEntryAndAdvance::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 1B DrawListEntriesCell5RecordPanel_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)

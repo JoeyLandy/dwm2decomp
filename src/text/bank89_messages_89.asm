@@ -1,7 +1,7 @@
 ; ROM bank $89: messages
 ; The annotated listing of this bank is build/listing/bank89.asm.
 
-SECTION "Bank 89", ROMX[$4000], BANK[$89]
+SECTION "Bank 89", ROMX
     db $89
 
 ; When wStringIndex is below $DE it starts the text printer (BeginStringDisplay) on that string of
@@ -21,6 +21,8 @@ BeginStringDisplay_Bank89::
     ld de, MessageStrings_Bank89
     call BeginStringDisplay
     ret
+
+SECTION "Bank 89 CopyStringToBuffer_Bank89", ROMX
 
 ; When wStringIndex is below $DE it copies that string of MessageStrings_Bank89 (CopyStringToBuffer:
 ; with its $F0 end byte, to the address in wStringDestLo/wStringDestHi); otherwise it far-calls

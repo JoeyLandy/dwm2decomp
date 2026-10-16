@@ -1,7 +1,7 @@
 ; ROM bank $90: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank90.asm.
 
-SECTION "Bank 90", ROMX[$4000], BANK[$90]
+SECTION "Bank 90", ROMX
     db $90
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 0: entry 0 of KeyWorldTilesetTable,

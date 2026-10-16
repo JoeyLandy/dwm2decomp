@@ -1,7 +1,7 @@
 ; ROM bank $17: Super Game Boy packets and border
 ; The annotated listing of this bank is build/listing/bank17.asm.
 
-SECTION "Bank 17", ROMX[$4000], BANK[$17]
+SECTION "Bank 17", ROMX
     db $17
 
 ; When wSGBActive is set, sends a packet set through rP1 (ldh [c] with C = 0): wSGBPacketBuffer when
@@ -76,6 +76,8 @@ SendSGBPaletteSetPacket_SendPacketSet::
     ret z
     call SpinDelay
     jr .skip3
+
+SECTION "Bank 17 SGBPacketSetTable_Bank17", ROMX
 
 ; A table of 21 words (the first two written as the bytes $FF $40 $0F $41, that is $40FF and $410F),
 ; indexed by wSGBPacketIndex: each word points to a Super Game Boy packet set whose first byte is
@@ -313,6 +315,8 @@ SendSGBPaletteSetPacket::
     call SpinDelay
     ret
 
+SECTION "Bank 17 LoadSGBObjectPalettesFromPointers", ROMX
+
 ; Does nothing unless wSGBActive is non-zero. Otherwise copies the four 8-byte palettes numbered by
 ; the words wSGBPaletteNum0Lo/Hi to wSGBPaletteNum3Lo/Hi
 ; (LoadSGBObjectPalettesFromPointers_CopyPaletteEntry, data at $446C + 8 x number in bank $17) to
@@ -351,6 +355,8 @@ LoadSGBObjectPalettesFromPointers::
     call LoadSGBObjectPalettesFromPointers_CopyPaletteEntry
     ret
 
+SECTION "Bank 17 LoadSGBObjectPalettesFromPointers_CopyPaletteEntry", ROMX
+
 ; HL = palette number, DE = destination: copies the 8 bytes at $446C + 8 x HL (bank $17) to DE; DE
 ; ends past them. (C2, E-0378)
 ; copies the 8 bytes at $446C + 8 * HL to DE
@@ -373,6 +379,8 @@ LoadSGBObjectPalettesFromPointers_CopyPaletteEntry::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 17 SGBPaletteSets", ROMX
 
 ; SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51)
 ; packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file

@@ -1,7 +1,7 @@
 ; ROM bank $6B: special map screens
 ; The annotated listing of this bank is build/listing/bank6b.asm.
 
-SECTION "Bank 6B", ROMX[$4000], BANK[$6B]
+SECTION "Bank 6B", ROMX
     db $6b
 
 ; compressed tileset of special map record 6 (SpecialMapRecords)

@@ -1,7 +1,7 @@
 ; ROM bank $E2: battle AI: the second set of scoring routines
 ; The annotated listing of this bank is build/listing/banke2.asm.
 
-SECTION "Bank E2", ROMX[$4000], BANK[$E2]
+SECTION "Bank E2", ROMX
     db $e2
 
 ; Fight's AI score: needs AIScore_Fight_Conditions; then weight row $00 to wAISkillScore when
@@ -117,6 +117,8 @@ AIScore_Fight::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Blaze", ROMX
+
 ; Blaze's AI score: needs AIFireSkillUsable; then weight row $08 to wAISkillScore2 when
 ; FailIfFoeAIDamageEstimatesAtLeastEstimate gives 0; weight row $09 to wAISkillScore when
 ; PassIfFoesAverageResistanceAtLeast2 gives 0; always weight row $0B to wAISkillScore; weight row
@@ -173,6 +175,8 @@ AIScore_Blaze::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Firebal", ROMX
 
 ; Firebal's AI score: needs AIFireSkillUsable; then weight row $04 to wAISkillScore2 when
 ; AIGateFoeStatus2Mask22 gives 0; weight row $0A to wAISkillScore2 when
@@ -274,6 +278,8 @@ AIScore_Firebal::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Beat_UnreferencedVariant", ROMX
+
 ; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
 ; none points here, and nothing in src calls it. It calls AIScore_Beat and returns if that gives C =
 ; 0 (the conditions of 'Beat' failed). Otherwise it farcalls AIGateFoeSlotResistances2Bits45 and,
@@ -296,6 +302,8 @@ AIScore_Beat_UnreferencedVariant::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Beat", ROMX
 
 ; Beat's AI score: needs AIScore_Beat_Conditions; then weight row $04 to wAISkillScore2 when
 ; AIGateFoeStatus2Mask22 gives 0; always weight row $CD to wAISkillScore and weight row $CF to
@@ -385,6 +393,8 @@ AIScore_Beat::
     ld c, $01
     ret
 
+SECTION "Bank E2 AIScore_Sacrifice", ROMX
+
 ; Sacrifice's AI score: needs AIScore_Sacrifice_Conditions; then weight row $17 to wAISkillScore2
 ; when ActorLacksStatus4Bits67 gives 0; weight row $17 to wAISkillScore2 when
 ; AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $11 to wAISkillScore2 when AtLeastTwoFoesPresent
@@ -473,6 +483,8 @@ AIScore_Sacrifice::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Heal", ROMX
+
 ; AI score of the 'Heal' skills (entries 22-24 of both tables). Returns at once unless AIHealUsable
 ; gives non-zero. Adds row $69 to wAISkillScore2 when FailIfTwoAlliesBelowHalfHP gives 0, then in
 ; every case goes on at AIScore_HealUs_StatusAndHPWeights (a jump when the check gives non-zero,
@@ -548,6 +560,8 @@ AIScore_HealUs_StatusAndHPWeights::
     call WeighLinkRules1RuleBit4
     ret
 
+SECTION "Bank E2 AIScore_HealUs", ROMX
+
 ; HealUs' AI score: needs AIHealUsable; then AIScore_HealUs_StatusAndHPWeights; weight row $23 to
 ; wAISkillScore when FewerThanTwoAlliesAtHP1 gives 0; weight row $69 to wAISkillScore when
 ; FailIfTwoAlliesBelowHalfHP gives 0. (C2, E-0357; probed E-0385)
@@ -580,6 +594,8 @@ AIScore_HealUs::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_MPass", ROMX
+
 ; MPass' AI score: needs AIScore_MPass_Conditions and adds nothing. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 3 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs
@@ -590,6 +606,8 @@ AIScore_MPass::
     and a
     ret z
     ret
+
+SECTION "Bank E2 AIScore_Vivify", ROMX
 
 ; Vivify's AI score: needs AIScore_Vivify_Conditions; then WeighActorAloneOnSide; weight row $2E to
 ; wAISkillScore2 when AIGateCompareAllyStatAverages gives 0. (C2, E-0357; probed E-0385)
@@ -613,6 +631,8 @@ AIScore_Vivify::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Farewell", ROMX
 
 ; Farewell's AI score: needs AIScore_Farewell_Conditions; then WeighActorAloneOnSide; always weight
 ; row $BC to wAISkillScore and weight row $C4 to wAISkillScore2; weight row $2E to wAISkillScore2
@@ -649,6 +669,8 @@ AIScore_Farewell::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Antidote", ROMX
+
 ; Antidote's AI score: needs AIScore_Antidote_Conditions; then always weight row $2A to
 ; wAISkillScore; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -664,6 +686,8 @@ AIScore_Antidote::
     call AddAIWeight
     call WeighLinkRules1RuleBit4
     ret
+
+SECTION "Bank E2 AIScore_DeChaos", ROMX
 
 ; DeChaos' AI score: needs AIScore_DeChaos_Conditions; then always weight row $2A to wAISkillScore;
 ; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
@@ -681,6 +705,8 @@ AIScore_DeChaos::
     call WeighLinkRules1RuleBit4
     ret
 
+SECTION "Bank E2 AIScore_NumbOff", ROMX
+
 ; NumbOff's AI score: needs AIScore_NumbOff_Conditions; then always weight row $2A to wAISkillScore;
 ; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -697,6 +723,8 @@ AIScore_NumbOff::
     call WeighLinkRules1RuleBit4
     ret
 
+SECTION "Bank E2 AIScore_CurseOff", ROMX
+
 ; CurseOff's AI score: needs AIScore_CurseOff_Conditions; then always weight row $2A to
 ; wAISkillScore; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -712,6 +740,8 @@ AIScore_CurseOff::
     call AddAIWeight
     call WeighLinkRules1RuleBit4
     ret
+
+SECTION "Bank E2 AIScore_Upper", ROMX
 
 ; Upper's AI score: needs AIScore_Upper_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; WeighLinkRules1RuleBit5;
@@ -744,6 +774,8 @@ AIScore_Upper::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Sap", ROMX
 
 ; Sap's AI score: needs AIScore_Sap_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $2C to wAISkillScore when
@@ -833,6 +865,8 @@ AIScore_Sap::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Speed", ROMX
+
 ; Speed's AI score: needs AIScore_Speed_Conditions; then weight row $2D to wAISkillScore2 when
 ; FastestFoeAGLAbove31PercentOfActor gives 0; weight row $2C to wAISkillScore when
 ; AllyAverageAGLAtLeastFoes gives 0; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
@@ -864,6 +898,8 @@ AIScore_Speed::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_Slow", ROMX
 
 ; Slow's AI score: needs AIScore_Slow_Conditions; then weight row $04 to wAISkillScore2 when
 ; AIGateFoeStatus2Mask22 gives 0; weight row $2D to wAISkillScore2 when
@@ -952,6 +988,8 @@ AIScore_Slow::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_TwinHits_UnreferencedVariant", ROMX
+
 ; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
 ; none points here, and nothing in src calls it. It calls AIScore_TwinHits and returns if that gives
 ; C = 0 (the conditions of 'TwinHits' failed). Otherwise it farcalls FailIfAllyCanUseSkill63Or64
@@ -975,6 +1013,8 @@ AIScore_TwinHits_UnreferencedVariant::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_TwinHits", ROMX
 
 ; AI score of 'TwinHits' (skill 45, entry of both tables). Returns C = 0 at once unless
 ; AIScore_TwinHits_Conditions gives non-zero. Then adds row $2F to wAISkillScore when
@@ -1031,6 +1071,8 @@ AIScore_TwinHits::
 .done:
     ld c, $01
     ret
+
+SECTION "Bank E2 AIScore_Surround", ROMX
 
 ; Surround's AI score: needs AIScore_Surround_Conditions; then weight row $04 to wAISkillScore2 when
 ; AIGateFoeStatus2Mask22 gives 0; weight row $07 to wAISkillScore2 when
@@ -1131,6 +1173,8 @@ AIScore_Surround::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Sleep", ROMX
+
 ; Sleep's AI score: needs AIScore_Sleep_Conditions; then weight row $04 to wAISkillScore2 when
 ; AIGateFoeStatus2Mask22 gives 0; weight row $2C to wAISkillScore when AllyAverageAGLAtLeastFoes
 ; gives 0; always weight row $BC to wAISkillScore2; WeighLinkRules1RuleBit5; weight row $09 to
@@ -1195,6 +1239,8 @@ AIScore_Sleep::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_TakeMagic", ROMX
+
 ; TakeMagic's AI score: needs AIScore_TakeMagic_Conditions; then weight row $34 to wAISkillScore2
 ; when ActorMPBelowThreeQuarters gives 0; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1216,6 +1262,8 @@ AIScore_TakeMagic::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_RobMagic", ROMX
 
 ; RobMagic's AI score: needs AIScore_RobMagic_Conditions; then always weight row $35 to
 ; wAISkillScore; weight row $09 to wAISkillScore when PassIfFoesAverageResistanceAtLeast2 gives 0;
@@ -1241,6 +1289,8 @@ AIScore_RobMagic::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_StopSpell", ROMX
 
 ; StopSpell's AI score: needs AIScore_StopSpell_Conditions; then weight row $04 to wAISkillScore2
 ; when AIGateFoeStatus2Mask22 gives 0; WeighLinkRules1RuleBit5; always weight row $CC to
@@ -1321,6 +1371,8 @@ AIScore_StopSpell::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_PanicAll", ROMX
+
 ; PanicAll's AI score: needs AIPanicAllUsable; then always weight row $CA to wAISkillScore;
 ; WeighLinkRules1RuleBit5; weight row $12 to wAISkillScore2 when FailIfSkillHasResistanceClass gives
 ; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForAISide gives 0; weight row $09 to
@@ -1375,6 +1427,8 @@ AIScore_PanicAll::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Ironize", ROMX
+
 ; Ironize's AI score: needs AIIronizeUsable and AIScoreGuardSkill; then always weight row $D0 to
 ; wAISkillScore; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1398,6 +1452,8 @@ AIScore_Ironize::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_MagicBack", ROMX
 
 ; MagicBack's AI score: needs AIScore_MagicBack_Conditions; then always weight row $C0 to
 ; wAISkillScore2; weight row $36 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C2, E-0357;
@@ -1430,6 +1486,8 @@ AIScore_MagicBack::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Barrier", ROMX
+
 ; Barrier's AI score: needs AIScore_Barrier_Conditions; then weight row $3A to wAISkillScore when
 ; FailIfFoeKnowsSkills42To47 gives 0; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1454,6 +1512,8 @@ AIScore_Barrier::
     call WeighLinkRules1RuleBit5
     ret
 
+SECTION "Bank E2 AIScore_MagicWall", ROMX
+
 ; MagicWall's AI score: needs AIScore_MagicWall_Conditions; then WeighLinkRules1RuleBit5; weight row
 ; $36 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1477,6 +1537,8 @@ AIScore_MagicWall::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Transform", ROMX
 
 ; Transform's AI score: needs AIUsableAndActorLacksStatus4Bits67; then weight row $3B to
 ; wAISkillScore when PassIfTwiceATKAboveHighestFoeDEF gives 0; weight row $3C to wAISkillScore when
@@ -1522,6 +1584,8 @@ AIScore_Transform::
     call WeighLinkRules1RuleBit5
     ret
 
+SECTION "Bank E2 AIScore_BeDragon", ROMX
+
 ; BeDragon's AI score: needs AIUsableAndActorLacksStatus4Bits67; then weight row $3A to
 ; wAISkillScore when FailIfFoeKnowsSkills42To47 gives 0; WeighLinkRules1RuleBit5; weight row $3D to
 ; wAISkillScore when AIScore_BeDragon_CountHighStats gives 0. (C2, E-0357; probed E-0385)
@@ -1554,6 +1618,8 @@ AIScore_BeDragon::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Chance", ROMX
 
 ; Chance's AI score: needs CheckSkillUsableStatusElseResetAISkillScore; then weight row $3F to
 ; wAISkillScore when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $40 to wAISkillScore when
@@ -1605,6 +1671,8 @@ AIScore_Chance::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_MegaMagic", ROMX
 
 ; MegaMagic's AI score: needs AIScore_MegaMagic_Conditions; then weight row $43 to wAISkillScore
 ; when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $07 to wAISkillScore2 when
@@ -1708,6 +1776,8 @@ AIScore_MegaMagic::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_BigBang", ROMX
 
 ; BigBang's AI score: needs AIAttackSkillUsable; then weight row $49 to wAISkillScore when
 ; ActorLacksStatus4Bits67 gives 0; weight row $0A to wAISkillScore2 when
@@ -1813,6 +1883,8 @@ AIScore_BigBang::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_FireAir", ROMX
 
 ; FireAir's AI score: needs AIScore_FireAir_Conditions; then weight row $4C to wAISkillScore2 when
 ; AIScore_FireAir_WindGuardCheck gives 0; weight row $11 to wAISkillScore2 when
@@ -1930,6 +2002,8 @@ AIScore_FireAir::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_WindBeast", ROMX
+
 ; WindBeast's AI score: needs AIAttackSkillUsable; then weight row $10 to wAISkillScore2 when
 ; FewerThanTwoFoesPresent gives 0; then goes on at AIScore_Vacuum_DamageAndResistWeights. (C2,
 ; E-0357; probed E-0385)
@@ -2002,6 +2076,8 @@ AIScore_Vacuum_DamageAndResistWeights::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Vacuum", ROMX
+
 ; Vacuum's AI score: needs AIAttackSkillUsable; then AIScore_Vacuum_DamageAndResistWeights; weight
 ; row $15 to wAISkillScore when FewerThanTwoFoesPresent gives 0; weight row $4A to wAISkillScore2
 ; when CheckFoeStatus6Bit3 gives 0; weight row $12 to wAISkillScore2 when
@@ -2044,6 +2120,8 @@ AIScore_Vacuum::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_RockThrow", ROMX
 
 ; RockThrow's AI score: needs AIAndFoeLacksStatus3And4; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $0A to wAISkillScore2 when
@@ -2134,6 +2212,8 @@ AIScore_RockThrow::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Watershot", ROMX
+
 ; Watershot's AI score: needs AIAndFoeLacksStatus3And4; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $0D to wAISkillScore2 when
 ; FailIfFoeAIDamageEstimatesAtLeastEstimate gives 0; weight row $09 to wAISkillScore when
@@ -2202,6 +2282,8 @@ AIScore_Watershot::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Tidalwave", ROMX
 
 ; Tidalwave's AI score: needs AIAndFoeLacksStatus3And4; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $0A to wAISkillScore2 when
@@ -2282,6 +2364,8 @@ AIScore_Tidalwave::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_CallHelp", ROMX
 
 ; CallHelp's AI score: needs AIAndFoeLacksStatus3And4; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $08 to wAISkillScore2 when
@@ -2393,6 +2477,8 @@ AIScore_CallHelp::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_FireSlash", ROMX
+
 ; FireSlash's AI score: needs AIAndFoeLacksStatus3And4; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $03 to wAISkillScore2 when
 ; CheckFoeStatus7Bit2 gives 0; weight row $08 to wAISkillScore2 when
@@ -2498,6 +2584,8 @@ AIScore_FireSlash::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_SlimeBlow", ROMX
+
 ; AI score of 'SlimeBlow' (skill 84, entry of both tables). Returns at once unless
 ; AIScore_SlimeBlow_Conditions gives non-zero. Then always adds row $52 to wAISkillScore and falls
 ; into AIScore_SlimeBlow_CommonWeights, which adds the rest of the weights. (C2, E-0385)
@@ -2582,6 +2670,8 @@ AIScore_SlimeBlow_CommonWeights::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_DrakSlash", ROMX
+
 ; DrakSlash's AI score: needs AIScore_DrakSlash_Conditions; then always weight row $52 to
 ; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -2596,6 +2686,8 @@ AIScore_DrakSlash::
     ld bc, $0052
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
+
+SECTION "Bank E2 AIScore_BeastCut", ROMX
 
 ; BeastCut's AI score: needs AIScore_BeastCut_Conditions; then always weight row $52 to
 ; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
@@ -2612,6 +2704,8 @@ AIScore_BeastCut::
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
 
+SECTION "Bank E2 AIScore_BirdBlow", ROMX
+
 ; BirdBlow's AI score: needs AIScore_BirdBlow_Conditions; then always weight row $52 to
 ; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -2626,6 +2720,8 @@ AIScore_BirdBlow::
     ld bc, $0052
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
+
+SECTION "Bank E2 AIScore_BugBlow", ROMX
 
 ; BugBlow's AI score: needs AIScore_BugBlow_Conditions; then always weight row $52 to wAISkillScore;
 ; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
@@ -2642,6 +2738,8 @@ AIScore_BugBlow::
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
 
+SECTION "Bank E2 AIScore_Shears", ROMX
+
 ; Shears' AI score: needs AIScore_Shears_Conditions; then always weight row $52 to wAISkillScore;
 ; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -2656,6 +2754,8 @@ AIScore_Shears::
     ld bc, $0052
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
+
+SECTION "Bank E2 AIScore_DevilCut", ROMX
 
 ; DevilCut's AI score: needs AIScore_DevilCut_Conditions; then always weight row $52 to
 ; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
@@ -2672,6 +2772,8 @@ AIScore_DevilCut::
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
 
+SECTION "Bank E2 AIScore_ZombieCut", ROMX
+
 ; ZombieCut's AI score: needs AIScore_ZombieCut_Conditions; then always weight row $52 to
 ; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -2686,6 +2788,8 @@ AIScore_ZombieCut::
     ld bc, $0052
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
+
+SECTION "Bank E2 AIScore_CleanCut", ROMX
 
 ; CleanCut's AI score: needs AIScore_CleanCut_Conditions; then always weight row $52 to
 ; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
@@ -2702,6 +2806,8 @@ AIScore_CleanCut::
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
 
+SECTION "Bank E2 AIScore_AquaCut", ROMX
+
 ; AquaCut's AI score: needs AIScore_AquaCut_Conditions; then always weight row $52 to wAISkillScore;
 ; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -2717,6 +2823,8 @@ AIScore_AquaCut::
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
 
+SECTION "Bank E2 AIScore_MetalCut", ROMX
+
 ; MetalCut's AI score: needs AIScore_MetalCut_Conditions; then always weight row $53 to
 ; wAISkillScore; then goes on at AIScore_SlimeBlow_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -2731,6 +2839,8 @@ AIScore_MetalCut::
     ld bc, $0053
     call AddAIWeight
     jp AIScore_SlimeBlow_CommonWeights
+
+SECTION "Bank E2 AIScore_PoisonHit", ROMX
 
 ; AI score of 'PoisonHit' (skill 95, entry of both tables). Returns at once unless
 ; AIScore_PoisonHit_Conditions gives non-zero. Then always adds row $54 to wAISkillScore and falls
@@ -2827,6 +2937,8 @@ AIScore_PoisonHit_StatusAndResistWeights::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Paralyze", ROMX
+
 ; Paralyze's AI score: needs AIScore_Paralyze_Conditions; then always weight row $54 to
 ; wAISkillScore; then goes on at AIScore_PoisonHit_StatusAndResistWeights. (C2, E-0357; probed
 ; E-0385)
@@ -2843,6 +2955,8 @@ AIScore_Paralyze::
     call AddAIWeight
     jp AIScore_PoisonHit_StatusAndResistWeights
 
+SECTION "Bank E2 AIScore_NapAttack", ROMX
+
 ; NapAttack's AI score: needs AIScore_NapAttack_Conditions; then always weight row $54 to
 ; wAISkillScore; then goes on at AIScore_PoisonHit_StatusAndResistWeights. (C2, E-0357; probed
 ; E-0385)
@@ -2858,6 +2972,8 @@ AIScore_NapAttack::
     ld bc, $0054
     call AddAIWeight
     jp AIScore_PoisonHit_StatusAndResistWeights
+
+SECTION "Bank E2 AIScore_SquallHit_UnreferencedVariant", ROMX
 
 ; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
 ; none points here, and nothing in src calls it. It calls AIScore_SquallHit and returns if that
@@ -2882,6 +2998,8 @@ AIScore_SquallHit_UnreferencedVariant::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_SquallHit", ROMX
 
 ; AI score of 'SquallHit' (skill 98, entry of both tables). Returns C = 0 at once unless
 ; AIScore_SquallHit_Conditions gives non-zero, and returns again when MaxNegativeScoreWhenAIFlagBit0
@@ -2954,6 +3072,8 @@ AIScore_SquallHit::
 .done:
     ld c, $01
     ret
+
+SECTION "Bank E2 AIScore_BiAttack", ROMX
 
 ; BiAttack's AI score: needs AIScore_BiAttack_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $05 to wAISkillScore when
@@ -3049,6 +3169,8 @@ AIScore_BiAttack::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_RainSlash", ROMX
+
 ; RainSlash's AI score: needs AIScore_RainSlash_Conditions; then weight row $05 to wAISkillScore
 ; when ActorLacksStatus1Bits23And4Bits01 gives 0; always weight row $C3 to wAISkillScore and weight
 ; row $CB to wAISkillScore2; WeighLinkRules1RuleBit1; weight row $15 to wAISkillScore when
@@ -3118,6 +3240,8 @@ AIScore_RainSlash::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_MultiCut", ROMX
 
 ; MultiCut's AI score: needs AIScore_MultiCut_Conditions; then weight row $12 to wAISkillScore2 when
 ; FailIfSkillHasResistanceClass gives 0; then goes on at AIScore_MultiCut_DamageAndFoeWeights. (C2,
@@ -3202,6 +3326,8 @@ AIScore_MultiCut_DamageAndFoeWeights::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_GigaSlash", ROMX
+
 ; GigaSlash's AI score: needs AIAndFoeLacksStatus3And4; then weight row $33 to wAISkillScore2 when
 ; ActorLacksStatus2Bit1And5Bits01 gives 0; then goes on at AIScore_MultiCut_DamageAndFoeWeights.
 ; (C2, E-0357; probed E-0385)
@@ -3223,6 +3349,8 @@ AIScore_GigaSlash::
 
 .to_ai_score_multi_cut_damage_and_foe:
     jp AIScore_MultiCut_DamageAndFoeWeights
+
+SECTION "Bank E2 AIScore_ChargeUp", ROMX
 
 ; ChargeUp's AI score: needs AIScore_ChargeUp_Conditions; then weight row $58 to wAISkillScore when
 ; PassIfFoeAverageDEFAtMostTwiceAllyATK gives 0; always weight row $BA to wAISkillScore and weight
@@ -3258,6 +3386,8 @@ AIScore_ChargeUp::
 .call_weigh_link_rules1_rule_bit1:
     call WeighLinkRules1RuleBit1
     ret
+
+SECTION "Bank E2 AIScore_PsycheUp", ROMX
 
 ; PsycheUp's AI score: needs AIScore_PsycheUp_Conditions; then weight row $2D to wAISkillScore2 when
 ; FastestFoeAGLAbove31PercentOfActor gives 0; weight row $07 to wAISkillScore2 when
@@ -3321,6 +3451,8 @@ AIScore_PsycheUp::
     call WeighLinkRules1RuleBit1
     ret
 
+SECTION "Bank E2 AIScore_HighJump", ROMX
+
 ; HighJump's AI score: needs AIScore_HighJump_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $58 to wAISkillScore2 when
 ; PassIfFoeAverageDEFAtMostTwiceAllyATK gives 0; weight row $59 to wAISkillScore2 when
@@ -3382,6 +3514,8 @@ AIScore_HighJump::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_EvilSlash", ROMX
 
 ; EvilSlash's AI score: needs CheckSkillUsableElseResetAISkillScore; then weight row $5A to
 ; wAISkillScore when AnyFoeNotBlocked gives 0; weight row $5B to wAISkillScore when
@@ -3481,6 +3615,8 @@ AIScore_EvilSlash::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Massacre", ROMX
+
 ; Massacre's AI score: needs CheckSkillUsableElseResetAISkillScore; then weight row $11 to
 ; wAISkillScore2 when AtLeastTwoFoesPresent gives 0; weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $C4 to wAISkillScore;
@@ -3529,6 +3665,8 @@ AIScore_Massacre::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_TwinSlash", ROMX
 
 ; TwinSlash's AI score: needs AIScore_TwinSlash_Conditions; then weight row $5E to wAISkillScore2
 ; when AnyFoeLacksStatus0Bit6 gives 0; weight row $07 to wAISkillScore2 when
@@ -3628,6 +3766,8 @@ AIScore_TwinSlash::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Berserker", ROMX
 
 ; Berserker's AI score: needs AIAttackSkillUsable_3 and MaxNegativeScoreWhenAIFlagBit0; then weight
 ; row $5A to wAISkillScore when AnyFoeNotBlocked gives 0; weight row $17 to wAISkillScore2 when
@@ -3759,6 +3899,8 @@ AIScore_Berserker::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Ramming", ROMX
+
 ; Ramming's AI score: needs AIAndAnyFoeNotFullyResistantAndActorHPNotOne; then weight row $5E to
 ; wAISkillScore2 when AnyFoeLacksStatus0Bit6 gives 0; weight row $17 to wAISkillScore2 when
 ; AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $64 to wAISkillScore when
@@ -3861,6 +4003,8 @@ AIScore_Ramming_HPAndStatusWeights::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Kamikaze", ROMX
+
 ; Kamikaze's AI score: needs AIScore_Kamikaze_Conditions; then weight row $64 to wAISkillScore when
 ; AIScore_Kamikaze_HealerAllyAndFoeHP gives 0; then goes on at AIScore_Ramming_HPAndStatusWeights.
 ; (C2, E-0357; probed E-0385)
@@ -3884,6 +4028,8 @@ AIScore_Kamikaze::
 
 .to_ai_score_ramming_hp_and_status_weights:
     jp AIScore_Ramming_HPAndStatusWeights
+
+SECTION "Bank E2 AIScore_SleepAir", ROMX
 
 ; SleepAir's AI score: needs AIScore_SleepAir_Conditions; then always weight row $BC to
 ; wAISkillScore2; then goes on at AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
@@ -3956,6 +4102,8 @@ AIScore_SleepAir_FoeCountAndResistWeights::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_PalsyAir", ROMX
+
 ; PalsyAir's AI score: needs AIScore_PalsyAir_Conditions; then goes on at
 ; AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -3968,6 +4116,8 @@ AIScore_PalsyAir::
     and a
     ret z
     jr AIScore_SleepAir_CommonWeights
+
+SECTION "Bank E2 AIScore_PoisonGas", ROMX
 
 ; PoisonGas' AI score: needs AIScore_PoisonGas_Conditions; then goes on at
 ; AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
@@ -3982,6 +4132,8 @@ AIScore_PoisonGas::
     ret z
     jr AIScore_SleepAir_CommonWeights
 
+SECTION "Bank E2 AIScore_PoisonAir", ROMX
+
 ; PoisonAir's AI score: needs AIScore_PoisonAir_Conditions; then goes on at
 ; AIScore_SleepAir_CommonWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -3994,6 +4146,8 @@ AIScore_PoisonAir::
     and a
     ret z
     jr AIScore_SleepAir_CommonWeights
+
+SECTION "Bank E2 AIScore_Curse", ROMX
 
 ; Curse's AI score: needs AIScore_Curse_Conditions; then always weight row $BD to wAISkillScore2;
 ; WeighLinkRules1RuleBit5; then goes on at AIScore_SleepAir_FoeCountAndResistWeights. (C2, E-0357;
@@ -4017,6 +4171,8 @@ AIScore_Curse::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     jp AIScore_SleepAir_FoeCountAndResistWeights
+
+SECTION "Bank E2 AIScore_OddDance", ROMX
 
 ; OddDance's AI score: needs AIScore_OddDance_Conditions; then always weight row $09 to
 ; wAISkillScore; always weight row $C2 to wAISkillScore2 and weight row $D2 to wAISkillScore;
@@ -4065,6 +4221,8 @@ AIScore_OddDance::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_PaniDance", ROMX
 
 ; PaniDance's AI score: needs AIScore_PaniDance_Conditions; then always weight row $C2 to
 ; wAISkillScore2 and weight row $CA to wAISkillScore and weight row $D2 to wAISkillScore;
@@ -4133,6 +4291,8 @@ AIScore_PaniDance::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_KODance", ROMX
 
 ; KODance's AI score: needs AIScore_KODance_Conditions; then always weight row $CD to wAISkillScore
 ; and weight row $CF to wAISkillScore2; WeighLinkRules1RuleBit2; weight row $15 to wAISkillScore
@@ -4211,6 +4371,8 @@ AIScore_KODance::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_LureDance_UnreferencedVariant", ROMX
+
 ; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
 ; none points here, and nothing in src calls it. It calls AIScore_LureDance and returns if that
 ; gives C = 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which
@@ -4225,6 +4387,8 @@ AIScore_LureDance_UnreferencedVariant::
     ret z
     call AIAddScoresForTwoLists
     ret
+
+SECTION "Bank E2 AIScore_LureDance", ROMX
 
 ; AI score of 'LureDance' (skill 122, entry of both tables). Returns C = 0 at once unless
 ; AIScore_LureDance_Conditions gives non-zero. Then always adds row $C2 to wAISkillScore2 and row
@@ -4294,6 +4458,8 @@ AIScore_LureDance::
     ld c, $01
     ret
 
+SECTION "Bank E2 AIScore_LifeDance", ROMX
+
 ; LifeDance's AI score: needs AIScore_LifeDance_Conditions; then always weight row $BC to
 ; wAISkillScore and weight row $C4 to wAISkillScore2; WeighLinkRules1RuleBit2; weight row $29 to
 ; wAISkillScore when AllySlotsCheckThenFewerThanTwoFoes gives 0; weight row $29 to wAISkillScore
@@ -4346,6 +4512,8 @@ AIScore_LifeDance::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Hustle", ROMX
 
 ; Hustle's AI score: needs AIScore_Hustle_Conditions; then ForEachPresentSlotOfSideRun; weight row
 ; $1A to wAISkillScore when AnyFoeLacksStatus0MaskCC gives 0; weight row $1A to wAISkillScore when
@@ -4426,6 +4594,8 @@ AIScore_Hustle::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_SideStep", ROMX
+
 ; SideStep's AI score: needs AIScore_SideStep_Conditions; then weight row $6C to wAISkillScore2 when
 ; AnyFoeLacksStatus5Bits01And1Bit1 gives 0; weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $6D to wAISkillScore when
@@ -4485,6 +4655,8 @@ AIScore_SideStep::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_SandStorm", ROMX
 
 ; AI score of 'SandStorm' (skill 126, entry of both tables). Returns at once unless
 ; AIScore_SandStorm_Conditions gives non-zero, then falls into
@@ -4582,6 +4754,8 @@ AIScore_SandStorm_DamageAndATKWeights::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Radiant", ROMX
+
 ; Radiant's AI score: needs AIScore_Radiant_Conditions; then goes on at
 ; AIScore_SandStorm_DamageAndATKWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4594,6 +4768,8 @@ AIScore_Radiant::
     and a
     ret z
     jp AIScore_SandStorm_DamageAndATKWeights
+
+SECTION "Bank E2 AIScore_EerieLite", ROMX
 
 ; EerieLite's AI score: needs AIScore_EerieLite_Conditions; then always weight row $CC to
 ; wAISkillScore and weight row $D1 to wAISkillScore2; WeighLinkRules1RuleBit5; weight row $15 to
@@ -4661,6 +4837,8 @@ AIScore_EerieLite::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Surge", ROMX
+
 ; Surge's AI score: needs AIScore_Surge_Conditions; then always weight row $6F to wAISkillScore;
 ; always weight row $CA to wAISkillScore2; WeighLinkRules1RuleBit4. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4684,6 +4862,8 @@ AIScore_Surge::
 .call_weigh_link_rules1_rule_bit4:
     call WeighLinkRules1RuleBit4
     ret
+
+SECTION "Bank E2 AIScore_UltraDown", ROMX
 
 ; UltraDown's AI score: needs AIScore_UltraDown_Conditions; then always weight row $6F to
 ; wAISkillScore; always weight row $CC to wAISkillScore; WeighLinkRules1RuleBit5. (C2, E-0357;
@@ -4709,6 +4889,8 @@ AIScore_UltraDown::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_DeMagic", ROMX
 
 ; DeMagic's AI score: needs AIScore_DeMagic_Conditions; then always weight row $71 to wAISkillScore;
 ; weight row $70 to wAISkillScore when AnyFoeLacksStatus5Bits67 gives 0; always weight row $C9 to
@@ -4746,6 +4928,8 @@ AIScore_DeMagic::
     call WeighLinkRules1RuleBit5
     ret
 
+SECTION "Bank E2 AIScore_ThickFog", ROMX
+
 ; ThickFog's AI score: needs AIScore_ThickFog_Conditions; then always weight row $C9 to
 ; wAISkillScore; WeighLinkRules1RuleBit5; weight row $72 to wAISkillScore when
 ; FailIfFoeKnowsSkillList gives 0. (C2, E-0357; probed E-0385)
@@ -4778,6 +4962,8 @@ AIScore_ThickFog::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_TatsuCall", ROMX
 
 ; TatsuCall's AI score: needs AIScore_TatsuCall_Conditions; then weight row $73 to wAISkillScore
 ; when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $07 to wAISkillScore2 when
@@ -4832,6 +5018,8 @@ AIScore_TatsuCall::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_SuckAir", ROMX
+
 ; SuckAir's AI score: needs AIScore_SuckAir_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $76 to wAISkillScore;
 ; WeighLinkRules1RuleBit3; weight row $77 to wAISkillScore2 when AnyAllyLacksStatus2Bit2_2 gives 0.
@@ -4872,6 +5060,8 @@ AIScore_SuckAir::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Focus", ROMX
+
 ; Focus' AI score: needs AIScore_Focus_Conditions; then weight row $07 to wAISkillScore2 when
 ; CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; always weight row $C2 to wAISkillScore and weight
 ; row $D2 to wAISkillScore2; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
@@ -4905,6 +5095,8 @@ AIScore_Focus::
     call WeighLinkRules1RuleBit5
     ret
 
+SECTION "Bank E2 AIScore_LushLicks_UnreferencedVariant", ROMX
+
 ; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
 ; none points here, and nothing in src calls it. It calls AIScore_LushLicks and returns if that
 ; gives C = 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which
@@ -4919,6 +5111,8 @@ AIScore_LushLicks_UnreferencedVariant::
     ret z
     call AIAddScoresForTwoLists
     ret
+
+SECTION "Bank E2 AIScore_LushLicks", ROMX
 
 ; AI score of 'LushLicks' (skill 139, entry of both tables). Returns C = 0 at once unless
 ; AILickSkillUsable gives non-zero. Then always adds row $78 to wAISkillScore, calls
@@ -4966,6 +5160,8 @@ AIScore_LushLicks::
     call AIAddScoresForTwoLists
     ld c, $01
     ret
+
+SECTION "Bank E2 AIScore_SickLick", ROMX
 
 ; SickLick's AI score: needs AIStatusLickUsable; then weight row $79 to wAISkillScore2 when
 ; AnyFoeHasDEFAtLeast2 gives 0; weight row $2C to wAISkillScore when
@@ -5043,6 +5239,8 @@ AIScore_SickLick::
     call AIAddScoresForTwoLists
     ret
 
+SECTION "Bank E2 AIScore_LegSweep_UnreferencedVariant", ROMX
+
 ; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
 ; none points here, and nothing in src calls it. It calls AIScore_LegSweep and returns if that gives
 ; C = 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which AIScore_LegSweep
@@ -5057,6 +5255,8 @@ AIScore_LegSweep_UnreferencedVariant::
     ret z
     call AIAddScoresForTwoLists
     ret
+
+SECTION "Bank E2 AIScore_LegSweep", ROMX
 
 ; LegSweep's AI score: needs AIScore_LegSweep_Conditions; then always weight row $7B to
 ; wAISkillScore; WeighLinkRules1RuleBit5; weight row $09 to wAISkillScore when
@@ -5104,6 +5304,8 @@ AIScore_LegSweep::
     ld c, $01
     ret
 
+SECTION "Bank E2 AIScore_Ahhh_UnreferencedVariant", ROMX
+
 ; Not used by the game: AIScoreRoutineTableA and AIScoreRoutineTableB hold the same 201 entries,
 ; none points here, and nothing in src calls it. It calls AIScore_Ahhh and returns if that gives C =
 ; 0 (its conditions failed). Otherwise it calls AIAddScoresForTwoLists, which AIScore_Ahhh already
@@ -5118,6 +5320,8 @@ AIScore_Ahhh_UnreferencedVariant::
     ret z
     call AIAddScoresForTwoLists
     ret
+
+SECTION "Bank E2 AIScore_Ahhh", ROMX
 
 ; Ahhh's AI score: needs AILickSkillUsable; then always weight row $C0 to wAISkillScore and weight
 ; row $C3 to wAISkillScore2 and weight row $CE to wAISkillScore2 and weight row $D3 to
@@ -5172,6 +5376,8 @@ AIScore_Ahhh::
     ld c, $01
     ret
 
+SECTION "Bank E2 AIScore_Geyser", ROMX
+
 ; Geyser's AI score: needs AIScore_Geyser_Conditions; then always weight row $7D to wAISkillScore;
 ; WeighLinkRules1RuleBit5; weight row $09 to wAISkillScore when ResistanceAverageGateForAISide gives
 ; 0; weight row $09 to wAISkillScore when ResistanceAverageGateForFoeAIMode3 gives 0. (C2, E-0357;
@@ -5216,6 +5422,8 @@ AIScore_Geyser::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_DanceShut", ROMX
+
 ; DanceShut's AI score: needs AIScore_DanceShut_Conditions; then always weight row $7E to
 ; wAISkillScore; WeighLinkRules1RuleBit2. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -5237,6 +5445,8 @@ AIScore_DanceShut::
 .call_weigh_link_rules1_rule_bit2:
     call WeighLinkRules1RuleBit2
     ret
+
+SECTION "Bank E2 AIScore_MouthShut", ROMX
 
 ; MouthShut's AI score: needs AIScore_MouthShut_Conditions; then weight row $7F to wAISkillScore
 ; when FailIfFoeKnowsSkills42To47 gives 0; always weight row $80 to wAISkillScore;
@@ -5270,6 +5480,8 @@ AIScore_MouthShut::
 .call_weigh_link_rules1_rule_bit3:
     call WeighLinkRules1RuleBit3
     ret
+
+SECTION "Bank E2 AIScore_StrongD", ROMX
 
 ; StrongD's AI score: needs AIScore_StrongD_Conditions and AIScoreGuardSkill; then
 ; AIScore_StrongD_WeighHPBand; always weight row $C1 to wAISkillScore2; weight row $00 to
@@ -5309,6 +5521,8 @@ AIScore_StrongD::
     call WeighLinkRules1RuleBit4
     ret
 
+SECTION "Bank E2 AIScore_Dodge", ROMX
+
 ; Dodge's AI score: needs AIScore_Dodge_Conditions and AIScoreGuardSkill; then always weight row $88
 ; to wAISkillScore and weight row $C1 to wAISkillScore2; WeighLinkRules1RuleBit5. (C2, E-0357;
 ; probed E-0385)
@@ -5335,6 +5549,8 @@ AIScore_Dodge::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_BladeD", ROMX
 
 ; BladeD's AI score: needs AIGuardSkillUsable and AIScoreGuardSkill; then always weight row $8A to
 ; wAISkillScore and weight row $C1 to wAISkillScore2; WeighLinkRules1RuleBit4. (C2, E-0357; probed
@@ -5363,6 +5579,8 @@ AIScore_BladeD::
     call WeighLinkRules1RuleBit4
     ret
 
+SECTION "Bank E2 AIScore_Cover", ROMX
+
 ; Cover's AI score: needs AIScore_Cover_Conditions; then AIScoreGuardSkill (returning when it gives
 ; 0); AIScore_Cover_ScoreHPBands; always weight row $CD to wAISkillScore2 and weight row $D1 to
 ; wAISkillScore; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
@@ -5390,6 +5608,8 @@ AIScore_Cover::
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_TailWind", ROMX
 
 ; AI score of 'TailWind' (skill 153, entry of both tables). Returns at once unless
 ; AIScore_TailWind_Conditions gives non-zero. Then calls AIScore_TailWind_WeighFirstTurn: when
@@ -5437,6 +5657,8 @@ AIScore_TailWind_FoeSkillWeights::
     call WeighLinkRules1RuleBit5
     ret
 
+SECTION "Bank E2 AIScore_StormWind", ROMX
+
 ; StormWind's AI score: needs AIScore_StormWind_Conditions; then goes on at
 ; AIScore_TailWind_FoeSkillWeights. (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -5449,6 +5671,8 @@ AIScore_StormWind::
     and a
     ret z
     jr AIScore_TailWind_FoeSkillWeights
+
+SECTION "Bank E2 AIScore_AquaWall", ROMX
 
 ; AquaWall's AI score: needs AIScore_AquaWall_Conditions; then AIScore_AquaWall_WeighHPBand;
 ; WeighLinkRules1RuleBit5. (C2, E-0357; probed E-0385)
@@ -5465,6 +5689,8 @@ AIScore_AquaWall::
     call AIScore_AquaWall_WeighHPBand
     call WeighLinkRules1RuleBit5
     ret
+
+SECTION "Bank E2 AIScore_SealPray", ROMX
 
 ; SealPray's AI score: needs AIScore_SealPray_Conditions; then weight row $8D to wAISkillScore2 when
 ; AIScore_SealPray_QueuedSkillInList gives 0; weight row $8E to wAISkillScore when
@@ -5529,6 +5755,8 @@ AIScore_SealPray::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_SuckAll", ROMX
+
 ; SuckAll's AI score: needs AIScore_SuckAll_Conditions and AIScoreGuardSkill; then weight row $91 to
 ; wAISkillScore when AllOtherAlliesHaveStatus0Bit6 gives 0; weight row $92 to wAISkillScore2 when
 ; AnyAllyHPAtMostThreeQuarters gives 0; AIScore_SuckAll_ScoreHPBands; weight row $8E to
@@ -5583,6 +5811,8 @@ AIScore_SuckAll::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Imitate", ROMX
 
 ; Imitate's AI score: needs AIScore_Imitate_Conditions and AIScoreGuardSkill; then weight row $07 to
 ; wAISkillScore2 when CheckLoneFoeHPNotBelowAIDamageEstimates gives 0; weight row $98 to
@@ -5641,6 +5871,8 @@ AIScore_Imitate::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Meditate", ROMX
+
 ; Meditate's AI score: needs AIScore_Meditate_Conditions; then AIScore_Meditate_WeighHPBand; weight
 ; row $A1 to wAISkillScore when ActorHPIsNotOne gives 0; always weight row $C2 to wAISkillScore and
 ; weight row $D2 to wAISkillScore2; WeighLinkRules1RuleBit4; weight row $69 to wAISkillScore2 when
@@ -5687,6 +5919,8 @@ AIScore_Meditate::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_LifeSong", ROMX
+
 ; LifeSong's AI score: needs AIScore_LifeSong_Conditions; then always weight row $CC to
 ; wAISkillScore2 and weight row $D3 to wAISkillScore2; WeighLinkRules1RuleBit4; weight row $2E to
 ; wAISkillScore2 when AIGateCompareAllyStatAverages gives 0. (C2, E-0357; probed E-0385)
@@ -5721,6 +5955,8 @@ AIScore_LifeSong::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_LoveRain", ROMX
 
 ; LoveRain's AI score: needs AIScore_LoveRain_Conditions; then weight row $1B to wAISkillScore2 when
 ; AnyAllyHPAtMostThreeQuarters gives 0; ForEachPresentSlotOfSideRun; weight row $A3 to wAISkillScore
@@ -5788,6 +6024,8 @@ AIScore_LoveRain::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Whistle", ROMX
+
 ; AI score of the action ids 162-169 ('Whistle', 'Pheromone', 'StepGuard', 'Outside', 'Informer',
 ; 'Errand', 'EagleEye', 'MapMagic') and also 178, 179, 182 and 183, which the skill-name table gives
 ; a placeholder name; every one is an entry of both tables. It farcalls
@@ -5802,6 +6040,8 @@ AIScore_LoveRain::
 AIScore_Whistle::
     farcall AINeverUsableResetAISkillScore
     ret
+
+SECTION "Bank E2 AIScore_AhhhStatusLick", ROMX
 
 ; AI score of the action ids 170 (SKILL_AHHH_AA) and 186, entries of both tables. Returns at once
 ; unless AIStatusLickUsable gives non-zero (when one of its checks fails it resets the score). Then
@@ -5827,6 +6067,8 @@ AIScore_AhhhStatusLick::
     call WeighLinkRules1RuleBit1
     ret
 
+SECTION "Bank E2 AIScore_ZoneOut", ROMX
+
 ; AI score of the action ids 171 ('ZoneOut') and 187, entries of both tables. It farcalls
 ; AINeverUsableResetAISkillScore, which sets C = 0 and resets wAISkillScore to 0 and wAISkillScore2
 ; to $FFFF, so ScoreSkillForAI sets the word of the skill to the unusable value $FFFF and the AI
@@ -5838,6 +6080,8 @@ AIScore_AhhhStatusLick::
 AIScore_ZoneOut::
     farcall AINeverUsableResetAISkillScore
     ret
+
+SECTION "Bank E2 AIScore_Guard", ROMX
 
 ; Guard's AI score: needs MaxNegativeScoreWhenAIFlagBit0 and AIScore_Guard_Conditions; then weight
 ; row $A6 to wAISkillScore2 when AnyFoeLacksStatus5Bits01And1Bit1 gives 0; weight row $A7 to
@@ -5888,6 +6132,8 @@ AIScore_Guard::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_PanicAll_2", ROMX
+
 ; PanicAll's second AI score: needs AIPanicAllUsable; then always weight row $37 to wAISkillScore.
 ; (C2, E-0357; probed E-0385)
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -5909,6 +6155,8 @@ AIScore_PanicAll_2::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Ironize_2", ROMX
 
 ; Ironize's second AI score: needs AIIronizeUsable and AIScoreGuardSkill; then always weight row $38
 ; to wAISkillScore; weight row $39 to wAISkillScore when FailIfFoeKnowsSkillList gives 0. (C2,
@@ -5945,6 +6193,8 @@ AIScore_Ironize_2::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_NoWeightA", ROMX
+
 ; AI scoring routine that does nothing (a lone ret): the registers and both score words are left as
 ; they are. AIScoreRoutineTableA and AIScoreRoutineTableB use it for skill numbers 175-177, 180,
 ; 181, 184, 185, 188, 189 and 191, so those skills get no weight row. AIScore_NoWeightB is the same
@@ -5955,12 +6205,16 @@ AIScore_Ironize_2::
 AIScore_NoWeightA:: ; configured code entry (E-0316); C0
     ret
 
+SECTION "Bank E2 AIScore_NoWeightB", ROMX
+
 ; AI scoring routine that does nothing (a lone ret): the registers and both score words are left as
 ; they are. AIScoreRoutineTableA and AIScoreRoutineTableB use it for skill numbers 192-199, so those
 ; skills get no weight row. AIScore_NoWeightA is the same code for other skill numbers. (C2, E-0385)
 ; AI scoring routine (a lone ret) for skill numbers 192-199 of the per-skill far tables
 AIScore_NoWeightB:: ; configured code entry (E-0316); C0
     ret
+
+SECTION "Bank E2 AIScore_Skill200", ROMX
 
 ; AI scoring routine for skill number 200, the last entry of AIScoreRoutineTableA and
 ; AIScoreRoutineTableB. It advances the random value (AdvanceRandom) and, when bit 7 of wRandomLo is
@@ -6014,6 +6268,8 @@ AddAIWeight::
 .return:
     ret
 
+SECTION "Bank E2 AddAIWeightToScore2", ROMX
+
 ; Mirror of AddAIWeight. BC = weight row (B is 0 in every caller): reads the word of that row for
 ; the personality in wPersonalityIndex (ReadBank6TableWord). A word whose low byte is $FF (counted
 ; as 5000) or that is below $8000 is added to wAISkillScore2; a word of $8000 or more is negated and
@@ -6051,6 +6307,8 @@ AddAIWeightToScore2::
 .return:
     ret
 
+SECTION "Bank E2 AddBCToWordAtHL", ROMX
+
 ; The 16-bit word at [HL] (low byte first) += BC, wrapping at 16 bits. On return BC = the sum and HL
 ; = the address of the high byte of the word (the original HL + 1, not the original HL); A is
 ; clobbered. AddAIWeight and AddAIWeightToScore2 use it on wAISkillScore and wAISkillScore2. (C2,
@@ -6083,6 +6341,8 @@ ResetAISkillScoreE2::
     ld [hli], a
     ret
 
+SECTION "Bank E2 ReadBank6TableWord", ROMX
+
 ; BC = weight row (B is 0 in every caller). Sets wDataBank to 6 and reads the word at ROM bank 6
 ; address $4001 + $36 * row + 2 * wPersonalityIndex (each row holds 27 words, one per personality
 ; index 0-26). Returns BC = the word (the first ROM byte is the low byte) and A = its low byte.
@@ -6108,6 +6368,8 @@ ReadBank6TableWord::
     ld b, c
     ld c, a
     ret
+
+SECTION "Bank E2 AIScore_StrongD_WeighHPBand", ROMX
 
 ; StrongD scoring by HP band of slot A: bands 0-3 (HP at least a quarter) $83 against; band 4 $84
 ; for; lower $85 for. (C2, E-0357; probed E-0385)
@@ -6156,6 +6418,8 @@ AIScore_StrongD_WeighHPBand::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_AquaWall_WeighHPBand", ROMX
+
 ; AquaWall scoring by HP band of slot A: band 0 $81 for, band 1 $82 for, band 2 $83 against, band 3
 ; $84 against, band 4 $85 against, lower $86 against. (C2, E-0357; probed E-0385)
 AIScore_AquaWall_WeighHPBand::
@@ -6203,6 +6467,8 @@ AIScore_AquaWall_WeighHPBand::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_SuckAll_ScoreHPBands", ROMX
+
 ; For each present slot on side A, scores its HP band for SuckAll
 ; (AIScore_SuckAll_ScoreHPBands_WeighSlot). (C2, E-0357; probed E-0385)
 AIScore_SuckAll_ScoreHPBands::
@@ -6225,6 +6491,8 @@ AIScore_SuckAll_ScoreHPBands::
     jr nz, .loop
     ret
 
+SECTION "Bank E2 AIScore_SuckAll_ScoreHPBands_WeighSlot", ROMX
+
 ; SuckAll by HP band: at least half HP (bands 0-1) $93 for, lower $94 against. (C2, E-0357; probed
 ; E-0385)
 AIScore_SuckAll_ScoreHPBands_WeighSlot::
@@ -6242,6 +6510,8 @@ AIScore_SuckAll_ScoreHPBands_WeighSlot::
 
 .return:
     ret
+
+SECTION "Bank E2 AIScore_Meditate_WeighHPBand", ROMX
 
 ; Meditate scoring by HP band of slot A: bands 0-2 $9B, $9C, $9D against; band 3 $9E for, band 4 $9F
 ; for, lower $A0 for. (C2, E-0357; probed E-0385)
@@ -6290,6 +6560,8 @@ AIScore_Meditate_WeighHPBand::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_HealUs_ScoreHPBands", ROMX
+
 ; For each present slot on side A, scores its HP band for HealUs
 ; (AIScore_HealUs_ScoreHPBands_WeighSlot). (C2, E-0357; probed E-0385)
 AIScore_HealUs_ScoreHPBands::
@@ -6311,6 +6583,8 @@ AIScore_HealUs_ScoreHPBands::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank E2 AIScore_HealUs_ScoreHPBands_WeighSlot", ROMX
 
 ; hTemp0 = C = a present slot (from AIScore_HealUs_ScoreHPBands). Takes the weight row for the HP
 ; band of the slot (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($1E-$22, used when C is
@@ -6336,6 +6610,8 @@ AIScore_HealUs_ScoreHPBands_WeighSlot::
     ld b, $00
     call AddAIWeight
     ret
+
+SECTION "Bank E2 AIScore_HealUs_ScoreHPBands_WeighSlot_Data1", ROMX
 
 ; Six weight row ids, $1E, $1F, $20, $21, $22, $22, indexed by the HP band 0-5 of the slot
 ; (HPBandOfSlotTemp0). AIScore_HealUs_ScoreHPBands_WeighSlot uses this row set when the slot being
@@ -6380,6 +6656,8 @@ ForEachPresentSlotOfSideRun::
     jr nz, .loop
     ret
 
+SECTION "Bank E2 ForEachPresentSlotOfSideRun_WeighSlot", ROMX
+
 ; hTemp0 = C = a present slot (from ForEachPresentSlotOfSideRun). Takes the weight row for the HP
 ; band of the slot (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($1D-$22, used when C is
 ; wBattleActor) or from the next one ($AA-$AF, for the other slots) and adds it with AddAIWeight (a
@@ -6404,6 +6682,8 @@ ForEachPresentSlotOfSideRun_WeighSlot::
     ld b, $00
     call AddAIWeight
     ret
+
+SECTION "Bank E2 ForEachPresentSlotOfSideRun_WeighSlot_Data1", ROMX
 
 ; Six weight row ids, $1D to $22 in order, indexed by the HP band 0-5 of the slot
 ; (HPBandOfSlotTemp0). ForEachPresentSlotOfSideRun_WeighSlot, called for each present slot of a side
@@ -6440,6 +6720,8 @@ AIScore_Ramming_WeighHPBand::
     call AddAIWeight
     ret
 
+SECTION "Bank E2 AIScore_Ramming_WeighHPBand_Data", ROMX
+
 ; Six weight row ids, $1D to $22 in order, indexed by the HP band 0-5 (HPBandOfSlotTemp0) of the
 ; slot passed in A. AIScore_Ramming_WeighHPBand adds that row with AddAIWeight with no own-slot or
 ; other-slot split. The entry is the weight row id given to AddAIWeight in C (B = 0), which reads
@@ -6469,6 +6751,8 @@ AIScore_Cover_ScoreHPBands::
     jr nz, .loop
     ret
 
+SECTION "Bank E2 AIScore_Cover_ScoreHPBands_WeighSlot", ROMX
+
 ; hTemp0 = C = a present slot (from AIScore_Cover_ScoreHPBands). Takes the weight row for the HP
 ; band of the slot (HPBandOfSlotTemp0, 0-5) from the 6-byte table after it ($21 down to $1D, used
 ; when C is wBattleActor) or from the next one ($AA-$AE, for the other slots) and adds it with
@@ -6493,6 +6777,8 @@ AIScore_Cover_ScoreHPBands_WeighSlot::
     ld b, $00
     call AddAIWeight
     ret
+
+SECTION "Bank E2 AIScore_Cover_ScoreHPBands_WeighSlot_Data1", ROMX
 
 ; Six weight row ids, $21, $20, $1F, $1E, $1D, $1D (descending), indexed by the HP band 0-5 of the
 ; slot (HPBandOfSlotTemp0). AIScore_Cover_ScoreHPBands_WeighSlot uses this row set when the slot is
@@ -6528,6 +6814,8 @@ AIScore_Upper_WeighFoeATKVsAllyDEF::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Sap_WeighATKVsDEF", ROMX
+
 ; Far-calls AIScore_Sap_CompareATKWithDEF, which gives C = 0 when twice the average ATK of the
 ; present slots on the actor side exceeds the average DEF of the present foes by more than half the
 ; average current HP of the foes, and C = $FF otherwise. With C = 0 adds weight row $13 with
@@ -6547,6 +6835,8 @@ AIScore_Sap_WeighATKVsDEF::
 
 .return:
     ret
+
+SECTION "Bank E2 MaxNegativeScoreWhenAIFlagBit0", ROMX
 
 ; Reads wAIFlag. With bit 0 clear returns C = 1 with Z clear and leaves the scores. With bit 0 set
 ; sets wAISkillScore = $0000 and wAISkillScore2 = $FFFF and returns C = 0 with Z set. The skill
@@ -6570,6 +6860,8 @@ MaxNegativeScoreWhenAIFlagBit0::
     ld c, a
     ret
 
+SECTION "Bank E2 AIScore_TailWind_WeighFirstTurn", ROMX
+
 ; On the first turn (wBattleTurn 0) adds weight row $B6 to wAISkillScore2 and returns C = $FF; on
 ; later turns returns at once with C = wBattleTurn (non-zero). Called by AIScore_TailWind and
 ; reached from AIScoreGuardSkill. (C2, E-0371; probed E-0385)
@@ -6582,6 +6874,8 @@ AIScore_TailWind_WeighFirstTurn::
     call AddAIWeightToScore2
     ld c, $ff
     ret
+
+SECTION "Bank E2 AIScoreGuardSkill", ROMX
 
 ; Guard at the start of the buff-skill scorers (AIScore_StrongD, AIScore_Ironize, AIScore_Ironize_2,
 ; AIScore_Cover, AIScore_Dodge, AIScore_SuckAll, AIScore_BladeD, AIScore_Imitate), which return when
@@ -6597,6 +6891,8 @@ AIScoreGuardSkill::
     call MaxNegativeScoreWhenAIFlagBit0
     ret z
     jr AIScore_TailWind_WeighFirstTurn
+
+SECTION "Bank E2 WeighActorAloneOnSide", ROMX
 
 ; Calls WeighLinkRules1RuleBit4, then adds weight row $29 to wAISkillScore (AddAIWeight) when
 ; AllySlotsCheckThenFewerThanTwoFoes gives C = 0 (the actor is the only present slot of its side and
@@ -6626,6 +6922,8 @@ WeighActorAloneOnSide::
 
 .return:
     ret
+
+SECTION "Bank E2 AIAddScoresForTwoLists", ROMX
 
 ; Calls AIAddScoresForTwoLists_SealingFoes and AIAddScoresForTwoLists_OtherAllies; each gives C = 1
 ; (AI mode below 4, counts as a pass), $FF (pass) or 0 (fail). A fail adds weight row $B1 (first
@@ -6661,6 +6959,8 @@ AIAddScoresForTwoLists::
 .return:
     ret
 
+SECTION "Bank E2 WeighLinkRuleBit6AndTurnLimit", ROMX
+
 ; Adds weight row $0E (5000) to wAISkillScore2 when LinkRuleCheckLinkRules1Bit6 fails (a link
 ; battle, link rule bit 6 on and not met), then adds weight row $0F to wAISkillScore when
 ; LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (a link battle with a turn limit on and wBattleTurn
@@ -6688,6 +6988,8 @@ WeighLinkRuleBit6AndTurnLimit::
 .return:
     ret
 
+SECTION "Bank E2 AIScore_Sacrifice_WeighLinkRule", ROMX
+
 ; Sacrifice: $0E against when link rule bit 6 forbids it (C = 0). (C2, E-0357; probed E-0385)
 AIScore_Sacrifice_WeighLinkRule::
     farcall LinkRuleCheckLinkRules1Bit6
@@ -6699,6 +7001,8 @@ AIScore_Sacrifice_WeighLinkRule::
 
 .return:
     ret
+
+SECTION "Bank E2 WeighLinkRules1RuleBit5", ROMX
 
 ; Far-calls CheckLinkRules1RuleBit5; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 5
 ; of wLinkRules + 1 set, and bit 5 of wLinkRules + 2 clear or bit 5 of wLinkRuleFlags for the actor
@@ -6718,6 +7022,8 @@ WeighLinkRules1RuleBit5::
 .return:
     ret
 
+SECTION "Bank E2 WeighLinkRules1RuleBit4", ROMX
+
 ; Far-calls CheckLinkRules1RuleBit4; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 4
 ; of wLinkRules + 1 set, and bit 4 of wLinkRules + 2 clear or bit 4 of wLinkRuleFlags for the actor
 ; side set) adds weight row $0E (a word of $00FF, counted as 5000) to wAISkillScore2 with
@@ -6735,6 +7041,8 @@ WeighLinkRules1RuleBit4::
 
 .return:
     ret
+
+SECTION "Bank E2 WeighLinkRules1RuleBit3", ROMX
 
 ; Far-calls CheckLinkRules1RuleBit3; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 3
 ; of wLinkRules + 1 set, and bit 3 of wLinkRules + 2 clear or bit 3 of wLinkRuleFlags for the actor
@@ -6754,6 +7062,8 @@ WeighLinkRules1RuleBit3::
 .return:
     ret
 
+SECTION "Bank E2 WeighLinkRules1RuleBit2", ROMX
+
 ; Far-calls CheckLinkRules1RuleBit2; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 2
 ; of wLinkRules + 1 set, and bit 2 of wLinkRules + 2 clear or bit 2 of wLinkRuleFlags for the actor
 ; side set) adds weight row $0E (a word of $00FF, counted as 5000) to wAISkillScore2 with
@@ -6771,6 +7081,8 @@ WeighLinkRules1RuleBit2::
 
 .return:
     ret
+
+SECTION "Bank E2 WeighLinkRules1RuleBit1", ROMX
 
 ; Far-calls CheckLinkRules1RuleBit1; when it fails (C = 0: wLinkMode neither 0 nor 2, bits 7 and 1
 ; of wLinkRules + 1 set, and bit 1 of wLinkRules + 2 clear or bit 1 of wLinkRuleFlags for the actor
@@ -6790,6 +7102,8 @@ WeighLinkRules1RuleBit1::
 .return:
     ret
 
+SECTION "Bank E2 GetBattleATK_BankE2", ROMX
+
 ; A = battle slot: HL = the attack word of that slot (wBattleATK + 2 * A), A = its low byte, through
 ; GetBattleStatWord_BankE2. (C2, E-0385)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
@@ -6797,25 +7111,35 @@ GetBattleATK_BankE2::
     ld hl, wBattleATK
     jr GetBattleStatWord_BankE2
 
+SECTION "Bank E2 GetBattleDEF_BankE2", ROMX
+
 ; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleDEF_BankE2::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankE2
+
+SECTION "Bank E2 GetBattleMaxHP_BankE2", ROMX
 
 ; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankE2::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankE2
 
+SECTION "Bank E2 GetBattleMaxMP_BankE2", ROMX
+
 ; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankE2::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankE2
 
+SECTION "Bank E2 GetBattleHP_BankE2", ROMX
+
 ; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleHP_BankE2::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankE2
+
+SECTION "Bank E2 GetBattleMP_BankE2", ROMX
 
 ; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
 GetBattleMP_BankE2::
@@ -6832,6 +7156,8 @@ GetBattleStatWord_BankE2::
     deref_hl
     ret
 
+SECTION "Bank E2 AddDoubleAToHL_BankE2", ROMX
+
 ; HL += 2 * A. A is doubled in 8 bits first, so it wraps above $7F; A is clobbered. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
 ; appear in 12 banks)
@@ -6839,6 +7165,8 @@ AddDoubleAToHL_BankE2::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank E2 ActorOnLocalSide_BankE2", ROMX
 
 ; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise. In a link battle (wLinkMode
 ; 1) with wLinkRole bit 1 set the answer is reversed: carry set for slots 4-7. Which side is local
@@ -6863,6 +7191,8 @@ ActorOnLocalSide_BankE2::
     cp $04
     ret
 
+SECTION "Bank E2 TargetOnLocalSide_BankE2", ROMX
+
 ; Carry set when wBattleTarget is below 4 (slots 0-3), clear otherwise. In a link battle (wLinkMode
 ; 1) with wLinkRole bit 1 set the answer is reversed: carry set for slots 4-7. (C2, E-0385)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
@@ -6885,6 +7215,8 @@ TargetOnLocalSide_BankE2::
     cp $04
     ret
 
+SECTION "Bank E2 ClearBattleStatusBitsWithMaskD_BankE2", ROMX
+
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_BankE2_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0385)
 ClearBattleStatusBitsWithMaskD_BankE2::
@@ -6899,6 +7231,8 @@ ClearBattleStatusBitsWithMaskD_BankE2::
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank E2 ClearBattleStatusBitsWithMaskD_BankE2_Data", ROMX
 
 ; Seven AND masks indexed by D: $DF (clears bit 5), $FE (bit 0), $00 (all bits), $FD (bit 1), $73
 ; (bits 7, 3 and 2), $EF (bit 4) and $BF (bit 6). ClearBattleStatusBitsWithMaskD_BankE2 ANDs the
@@ -6918,6 +7252,8 @@ SetBit0OfLevelUpGainsIndexed_BankE2::
     pop hl
     ret
 
+SECTION "Bank E2 SetBit1OfLevelUpGainsIndexed_BankE2", ROMX
+
 ; Sets bit 1 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
@@ -6929,6 +7265,8 @@ SetBit1OfLevelUpGainsIndexed_BankE2::
     pop hl
     ret
 
+SECTION "Bank E2 SetBit2OfLevelUpGainsIndexed_BankE2", ROMX
+
 ; Sets bit 2 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
@@ -6939,6 +7277,8 @@ SetBit2OfLevelUpGainsIndexed_BankE2::
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank E2 PersonalityIndexOfSlot_BankE2", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]), where g(v) = 0 for v >= $C0, 1 for v >= $40 and 2 below $40. The result
@@ -7004,6 +7344,8 @@ PersonalityIndexOfSlot_BankE2::
     pop hl
     ret
 
+SECTION "Bank E2 CheckSlotStatusBlockWide_BankE2", ROMX
+
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or status byte
 ; 4 & $0C is set (wBattleStatus3 + 9 * slot, then the next byte); otherwise carry clear. A, BC and
 ; HL are kept. (C2, E-0385)
@@ -7035,6 +7377,8 @@ CheckSlotStatusBlockWide_BankE2::
     pop bc
     pop hl
     ret
+
+SECTION "Bank E2 SlotHasStatus3Or4Bits_BankE2", ROMX
 
 ; A = slot: HL is kept; with the slot status record at wBattleStatus3 + 9 * A, returns A = status
 ; byte 3 & $C0 or, when that is zero, status byte 4 & $0C; Z is set when both are clear. (C2,

@@ -80,7 +80,8 @@ class PresentedTreeTest(unittest.TestCase):
         names = present.Names(texts, LISTING)
         titles = present.bank_titles()
         stale = [n for n, t in texts.items() if (SRC / present.src_name(n, titles)).read_text(encoding="utf-8")
-                 != present.header(n, titles) + present.present(t, names, int(n[4:6], 16))]
+                 != present.header(n, titles) + present.split_sections(present.present(t, names, int(n[4:6], 16)),
+                                                                       int(n[4:6], 16))[0]]  # E-0393: sections
         self.assertEqual(stale, [], "src/ is not tools/present.py's output for build/listing")
 
     def test_no_code_or_data_line_is_lost(self):
@@ -93,7 +94,18 @@ class PresentedTreeTest(unittest.TestCase):
                    for ln in (SRC / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
                    if ln.strip() and not ln.lstrip().startswith(";")]
             got = ["    INCBIN" if g.lstrip().startswith("INCBIN") else g for g in got]
-            self.assertEqual(got, want, p.name)
+            # E-0393: src splits each bank into sections (checked against src/layout.link below)
+            self.assertEqual([g for g in got if not g.startswith("SECTION")],
+                             [w for w in want if not w.startswith("SECTION")], p.name)
+
+    def test_every_section_is_placed_once_by_the_layout(self):
+        import re
+        layout = (SRC / "layout.link").read_text(encoding="utf-8")
+        placed = re.findall(r'^\t"([^"]+)"$', layout, re.M)
+        defined = [m for f in sorted(SRC.glob("*/bank*.asm"))
+                   for m in re.findall(r'^SECTION "([^"]+)"', f.read_text(encoding="utf-8"), re.M)]
+        self.assertEqual(len(placed), len(set(placed)))
+        self.assertEqual(sorted(placed), sorted(defined))
 
     def test_every_bank_file_is_named_and_included_once(self):
         titles = present.bank_titles()

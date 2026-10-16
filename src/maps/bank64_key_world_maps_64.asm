@@ -1,7 +1,7 @@
 ; ROM bank $64: key-world map screens
 ; The annotated listing of this bank is build/listing/bank64.asm.
 
-SECTION "Bank 64", ROMX[$4000], BANK[$64]
+SECTION "Bank 64", ROMX
     db $64
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 2: entry 2 of KeyWorldTilesetTable,

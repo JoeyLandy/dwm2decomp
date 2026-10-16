@@ -1,7 +1,7 @@
 ; ROM bank $19: battle loading (game mode 4 set-up)
 ; The annotated listing of this bank is build/listing/bank19.asm.
 
-SECTION "Bank 19", ROMX[$4000], BANK[$19]
+SECTION "Bank 19", ROMX
     db $19
 
 ; Battle start (GameMode4_Init far-calls it): keeps wBattleKind while clearing $303 bytes from
@@ -62,6 +62,8 @@ GameMode4_Init_SetUpBattle::
     call GameMode4_Init_PlayBattleMusic
     call GameMode4_Init_SetSlotMarks
     ret
+
+SECTION "Bank 19 GameMode4_Init_ResetBattleArrays", ROMX
 
 ; Resets the battle arrays: command menu state 1 for battle kinds 4, 5 and 9 (else 0); no effect,
 ; queued action, Seal/Pray state or item target; slot marks, monster ids, skills, slot out and name
@@ -187,6 +189,8 @@ GameMode4_Init_ResetBattleArrays::
     ld [wLinkRuleState], a
     ret
 
+SECTION "Bank 19 GameMode4_Init_CountBattlerRecords", ROMX
+
 ; HL = the BATTLER_LEVEL field of the first of up to three $4E-byte battler records: returns A = C =
 ; 1, plus 1 for the second record when its byte is non-zero, plus 1 more for the third when that one
 ; is non-zero as well. The first record byte is not tested. (C2, E-0378)
@@ -209,6 +213,8 @@ GameMode4_Init_CountBattlerRecords::
     ld a, c
     ret
 
+SECTION "Bank 19 GameMode4_Init_BuildBattleScreen", ROMX
+
 ; Builds the battle screen: the glyph tiles, cleared attributes, the party's layout, the foes'
 ; picture blocks, the status panels and the picture attributes, copied to the BG map with a palette
 ; upload. (C1, E-0357)
@@ -224,6 +230,8 @@ GameMode4_Init_BuildBattleScreen::
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ret
+
+SECTION "Bank 19 GameMode4_Init_LoadFoePictures", ROMX
 
 ; Loads the foes' pictures (the link follower's foes are slots 0-2, otherwise 4-6) into vTiles2 +
 ; $140, $380 and $5C0 with palettes 1, 3 and 5, as many as there are foes. (C1, E-0357)
@@ -268,6 +276,8 @@ GameMode4_Init_LoadFoePictures::
 .return:
     ret
 
+SECTION "Bank 19 GameMode4_Init_LoadFoePictures_LoadOne", ROMX
+
 ; DE = address of a BATTLER_SPECIES word, HL = VRAM destination, C = palette slot: loads that
 ; monster's picture (LoadMonsterPicture with DE = the id). (C1, E-0370)
 GameMode4_Init_LoadFoePictures_LoadOne::
@@ -280,6 +290,8 @@ GameMode4_Init_LoadFoePictures_LoadOne::
     ld e, a
     call LoadMonsterPicture
     ret
+
+SECTION "Bank 19 GameMode4_Init_LoadBattleSlots", ROMX
 
 ; Loads the battle slots from the battler records (the player's side from slot 0 and the other from
 ; slot 4, the counts swapped for the link follower), adjusts the skills, and sets each present
@@ -352,6 +364,8 @@ GameMode4_Init_LoadBattleSlots::
     jr nz, .loop3
     ret
 
+SECTION "Bank 19 SetSlotAIModeFromINT", ROMX
+
 ; C = battle slot: wSlotAIMode[C] = 0, 1, 2, 3 or 4 by the INT word of the slot in wBattleINT, below
 ; 30, 100, 550, 900, or more. BC is kept. (C2, E-0378)
 ; wSlotAIMode[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
@@ -418,6 +432,8 @@ SetSlotAIModeFromINT::
     pop bc
     ret
 
+SECTION "Bank 19 ClearSpeciesRecordBuffer_Bank19", ROMX
+
 ; Zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes. BC and HL are kept.
 ; (C2, E-0378)
 ; zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067)
@@ -432,6 +448,8 @@ ClearSpeciesRecordBuffer_Bank19::
     pop hl
     pop bc
     ret
+
+SECTION "Bank 19 RandomizeWordBetween80And100Percent", ROMX
 
 ; HL = pointer to a word. Unless wBattleKind is 2, 3 or 5 or wLinkMode is non-zero, the word is
 ; replaced in place by 80 to 100 percent of itself: 80 percent (ScaleHLToEightTenths_Bank19) plus a
@@ -501,6 +519,8 @@ RandomizeWordBetween80And100Percent::
     ld [bc], a
     pop bc
     ret
+
+SECTION "Bank 19 LoadSlotSkillsForBattleArg0", ROMX
 
 ; Entry for far callers: C = wBattleArg0 (the battle slot), then falls into
 ; LoadSlotSkillsFromBattlerRecord, which refills that slot's 8 entries of wBattleSkills from its
@@ -631,6 +651,8 @@ LoadSlotSkillsFromBattlerRecord::
     call nz, AdjustSkillsForBattleStart
     ret
 
+SECTION "Bank 19 AdjustSkillsForBattleStart", ROMX
+
 ; For each of the 8 slots whose wBattleSlotOut is 0 and whose wSlotNameSuffix is 0, the first skill
 ; $8F in its list becomes $AA (ReplaceSkill8FWithAAInSlotC). Outside link battles, in the foe slots
 ; 4-6 that are present, the first four skills $34 and $35 are replaced by the tiles $AD and $AE (a
@@ -696,6 +718,8 @@ AdjustSkillsForBattleStart::
     jr nz, .loop2
     ret
 
+SECTION "Bank 19 ReplaceSkill8FWithAAInSlotC", ROMX
+
 ; C = battle slot: in its skill list (8 entries, 2 bytes apart in wBattleSkills) the first skill $8F
 ; becomes $AA; the scan stops at the first $FF. HL is kept. (C2, E-0378)
 ; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
@@ -727,17 +751,23 @@ ReplaceSkill8FWithAAInSlotC::
     pop hl
     ret
 
+SECTION "Bank 19 StoreTileADAtHL", ROMX
+
 ; Stores the byte $AD at [HL] (a tile id); HL and every register are kept. (C2, E-0378)
 ; [HL] = $AD (E-0114)
 StoreTileADAtHL::
     ld [hl], $ad
     ret
 
+SECTION "Bank 19 StoreTileAEAtHL", ROMX
+
 ; Stores the byte $AE at [HL] (a tile id); HL and every register are kept. (C2, E-0378)
 ; [HL] = $AE (E-0114)
 StoreTileAEAtHL::
     ld [hl], $ae
     ret
+
+SECTION "Bank 19 InitSlotOutAndStatusFromRecordFlags", ROMX
 
 ; C = battle slot, HL = a record status byte: with bit 7 set, wBattleSlotOut[C] = 1 and nothing
 ; more. Otherwise wBattleSlotOut[C] = 0 and, unless wBattleKind is 4, bit 0 of the flags stores $20
@@ -795,6 +825,8 @@ InitSlotOutAndStatusFromRecordFlags::
     pop hl
     ret
 
+SECTION "Bank 19 StoreByteAtDEPlusC_Bank19", ROMX
+
 ; DE += C, then copies the byte at HL to [DE] and HL += 1. (C2, E-0378)
 ; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
 StoreByteAtDEPlusC_Bank19::
@@ -808,6 +840,8 @@ StoreByteAtDEPlusC_Bank19::
     ld a, [hli]
     ld [de], a
     ret
+
+SECTION "Bank 19 StoreWordAtDEPlus2C_Bank19", ROMX
 
 ; DE += 2 x C, then copies the word at HL to [DE] and [DE + 1] and HL += 2; DE ends on the second
 ; byte written. (C2, E-0378)
@@ -828,6 +862,8 @@ StoreWordAtDEPlus2C_Bank19::
     ld a, [hli]
     ld [de], a
     ret
+
+SECTION "Bank 19 PackResistancesFromBattleArgs", ROMX
 
 ; Entry for far callers: HL = the word wBattleArg0/wBattleArg1 (source fields), DE = the word
 ; wBattleArg2/wBattleArg3 (destination), then falls into PackResistanceFieldsToDE, which packs the
@@ -905,6 +941,8 @@ PackResistanceFieldsToDE::
     ld [de], a
     ret
 
+SECTION "Bank 19 CopyScreenTileBufferToVRAM_A0_Bank19", ROMX
+
 ; HL = VRAM address: copies the 20 x 18 tiles of wScreenTileBuffer (rows 32 bytes apart in the
 ; buffer) to the VRAM rectangle at HL with rows 32 bytes apart, using WriteVRAMByteInc. (C1, E-0378)
 ; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (CopyScreenTileBufferToVRAM_A0) (E-0124)
@@ -937,6 +975,8 @@ CopyScreenTileBufferToVRAM_A0_Bank19::
     jr nz, .loop
     ret
 
+SECTION "Bank 19 ScaleHLToEightTenths_Bank19", ROMX
+
 ; HL = HL x 8 / 10, the multiply done in 16 bits so it wraps above 8191 (8192 gives 0). BC and DE
 ; are kept. (C2, E-0378)
 ; HL = (HL * 8) / 10 with 16-bit arithmetic (the multiply can overflow above 8191); BC and DE kept
@@ -952,6 +992,8 @@ ScaleHLToEightTenths_Bank19::
     pop de
     pop bc
     ret
+
+SECTION "Bank 19 GameMode4_Init_PlayBattleMusic", ROMX
 
 ; Battle music: $0F for battle kinds 0 and 1, otherwise $13. (C2, E-0357; probed E-0378)
 GameMode4_Init_PlayBattleMusic::
@@ -972,6 +1014,8 @@ GameMode4_Init_PlayBattleMusic::
     call QueueMusic
     ret
 
+SECTION "Bank 19 GameMode4_Init_CopyPartyToBattlers", ROMX
+
 ; With SRAM enabled by the caller, copies each of the wBattlePartyCount party members' SRAM records
 ; into consecutive $4E-byte battler records from wBattlerRecords
 ; (GameMode4_Init_CopyPartyToBattlers_Member). (C2, E-0370; probed E-0378)
@@ -989,6 +1033,8 @@ GameMode4_Init_CopyPartyToBattlers::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 19 GameMode4_Init_CopyPartyToBattlers_Member", ROMX
 
 ; Copies party member C's SRAM record (SRAMRecordAddressMapped) into the battler record at DE in
 ; battler order: MON_NAME, MON_SPECIES, MON_FAMILY, MON_SEX, MON_SKILLS, MON_STATUS, MON_LEVEL,
@@ -1127,6 +1173,8 @@ GameMode4_Init_CopyPartyToBattlers_Member::
     inc de
     ret
 
+SECTION "Bank 19 ApplyIncrementOffsetRows19ForA0DTo13", ROMX
+
 ; A = a MON_ITEM value copied into a battler record, DE = the address of that item byte (the byte
 ; just after the 27 BATTLER_RESISTANCES bytes). Returns at once, changing nothing, when A is 0 or
 ; outside $0D-$13. Otherwise it reads row A - $0D of IncrementOffsetRows_19, a list of offsets ended
@@ -1171,6 +1219,8 @@ ApplyIncrementOffsetRows19ForA0DTo13::
     inc de
     jr .skip
 
+SECTION "Bank 19 IncrementTableByteCappedAt3", ROMX
+
 ; HL = a 16-bit offset, hTemp0/hTemp1 = a base address (low, high). Adds the two to make the
 ; address, leaves it in HL, and adds one to the byte there unless it is already 3 or more. Carry is
 ; clear when the byte was 3 or more and left alone. Only ApplyIncrementOffsetRows19ForA0DTo13 calls
@@ -1189,6 +1239,8 @@ IncrementTableByteCappedAt3::
     inc a
     ld [hl], a
     ret
+
+SECTION "Bank 19 IncrementOffsetRows_19", ROMX
 
 ; ApplyIncrementOffsetRows19ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each
 ; byte before $80 increments the byte at DE + $FF00 + byte, capped at 3
@@ -1242,6 +1294,8 @@ BattleEnd_Records_ReloadFoeBattler::
     ld [de], a
     ret
 
+SECTION "Bank 19 GameMode4_Init_LoadFoes", ROMX
+
 ; Loads the foes: in battle kind 5 or an even kind from their monster records
 ; (LoadMonsterAndSpeciesForListEntryC); in odd kinds other than 5 builds each from its species
 ; (GameMode4_Init_BuildFoeRecord), $4E bytes apart. (C2, E-0357; probed E-0379)
@@ -1280,6 +1334,8 @@ GameMode4_Init_LoadFoes::
     dec b
     jr nz, .loop2
     ret
+
+SECTION "Bank 19 LoadMonsterAndSpeciesForListEntryC", ROMX
 
 ; C = index 0-2 into wEncounterMonsters (monster ids, words), DE = the battler record to fill. Reads
 ; the 26-byte monster record of that id (LoadMonsterRecord), writes it into the battler record with
@@ -1325,6 +1381,8 @@ LoadMonsterAndSpeciesForListEntryC::
     call SetBattlerFamilyAndSex
     pop bc
     ret
+
+SECTION "Bank 19 GameMode4_Init_BuildFoeRecord", ROMX
 
 ; Builds foe C's battler record from its species (wEncounterMonsters): species, family, sex ratio
 ; and three skills, level wWildLevel[C] (at least 1), experience, and the stats from the species'
@@ -1476,6 +1534,8 @@ GameMode4_Init_BuildFoeRecord::
     pop bc
     ret
 
+SECTION "Bank 19 StoreRandomByteAtHL_Bank19", ROMX
+
 ; HL = where to store. Steps the table random number once (NextTableByte, so wRandomHi goes up by
 ; one and wRandomLo changes), stores wRandomLo at [HL] and adds 1 to HL. A = the byte stored; BC and
 ; DE are kept. GameMode4_Init_BuildFoeRecord calls it three times to fill three personality bytes of
@@ -1495,6 +1555,8 @@ StoreRandomByteAtHL_Bank19::
     ld a, [wRandomLo]
     ld [hli], a
     ret
+
+SECTION "Bank 19 StoreRandom80ToFFAtHL", ROMX
 
 ; HL = where to store. Steps the table random number once (NextTableByte), stores (wRandomLo AND
 ; $7F) + $80 at [HL], so the byte is always $80-$FF, and adds 1 to HL. A = the byte stored; BC and
@@ -1517,6 +1579,8 @@ StoreRandom80ToFFAtHL::
     add $80
     ld [hli], a
     ret
+
+SECTION "Bank 19 ScaleStatAndCapByBattleKind", ROMX
 
 ; Scales one stat of a new foe record and stores it. hTemp2/hTemp3 = the stat (a word), HL = where
 ; to store it, wBattleArg0 = which stat it is, wBattleKind = the kind of battle. The value is first
@@ -1608,6 +1672,8 @@ ScaleStatAndCapByBattleKind::
     pop bc
     jr ScaleStatAndCapByBattleKind_Store
 
+SECTION "Bank 19 ScaleWordBy6Or12_OverflowToTenThousand", ROMX
+
 ; No caller was found. It sets A to 6, or to 12 when wBattleArg1 is 1, and falls into
 ; ScaleStatAndCapByBattleKind_ApplyMultiplier, so it expects the state of that branch: E:H:L = a
 ; 24-bit value and the caller AF, BC, DE and HL pushed on the stack. The product A * E:H:L is a word
@@ -1636,6 +1702,8 @@ ScaleStatAndCapByBattleKind_ApplyMultiplier::
     ld hl, $2710
     jr ScaleStatAndCapByBattleKind_Store
 
+SECTION "Bank 19 ScaleStatAndCapByBattleKind_UseCap", ROMX
+
 ; Pops BC into HL: from the cap test of ScaleStatAndCapByBattleKind this is the cap it pushed (the
 ; 101% value was above it), so the stat becomes the cap; then stores it
 ; (ScaleStatAndCapByBattleKind_Store). The other jump here, taken when the 101% value does not fit
@@ -1663,6 +1731,8 @@ ScaleStatAndCapByBattleKind_Store::
     ld [hli], a
     ret
 
+SECTION "Bank 19 StoreTemp2WordAtHL_Bank19", ROMX
+
 ; HL = destination. Stores hTemp2 then hTemp3 (a word, low byte first) at [HL], adds 2 to HL; A ends
 ; as hTemp3. GameMode4_Init_BuildFoeRecord uses it right after ScaleStatAndCapByBattleKind to store
 ; the same scaled value a second time, as the maximum HP and maximum MP next to the current ones.
@@ -1674,6 +1744,8 @@ StoreTemp2WordAtHL_Bank19::
     ldh a, [hTemp3]
     ld [hli], a
     ret
+
+SECTION "Bank 19 CopySpeciesExpCurveBRecordToHL_Bank19", ROMX
 
 ; HL = destination. Copies the 27 bytes of wSpeciesRecord + SPECIES_RESISTANCES (the species
 ; resistance levels) to [HL]; HL ends 27 bytes on, DE ends just past the source, B = 0 and A = the
@@ -1693,6 +1765,8 @@ CopySpeciesExpCurveBRecordToHL_Bank19::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 19 RollRecordField0DState", ROMX
 
 ; wBattleArg2/wBattleArg3 = the address of a battler record whose byte $0D holds a sex-ratio class
 ; from the species. 0 stays 0 without using the random number. For 1, 2 and any other value it steps
@@ -1753,6 +1827,8 @@ RollRecordField0DState::
     res 4, a
     ld [hl], a
     ret
+
+SECTION "Bank 19 AccumulateGrowthForLevelsTemp1", ROMX
 
 ; Sets the experience of a new foe record. wBattleArg2/wBattleArg3 = the record, hTemp1 = its level,
 ; and the word at BATTLER_EXP of the record = the species base experience
@@ -1895,6 +1971,8 @@ AccumulateGrowthForLevelsTemp1::
     pop de
     ret
 
+SECTION "Bank 19 Multiply24By8", ROMX
+
 ; A = the multiplier, E:H:L = a 24-bit number (E the high byte). Returns the 32-bit product D:E:H:L
 ; = A * E:H:L, from three 8-bit multiplies (Multiply8) added with carries. A, B and C are changed.
 ; ScaleStatAndCapByBattleKind_ApplyMultiplier and AccumulateGrowthForLevelsTemp1 are the callers.
@@ -1931,6 +2009,8 @@ Multiply24By8::
     adc $00
     ld d, a
     ret
+
+SECTION "Bank 19 FillBattlerRecordFromMonster", ROMX
 
 ; Fills a battler record at DE from the loaded monster record: $FF for the name, the monster id, and
 ; the record's fields in battler order. (C2, E-0357; probed E-0379)
@@ -2063,6 +2143,8 @@ FillBattlerRecordFromMonster::
     pop bc
     ret
 
+SECTION "Bank 19 SetBattlerFamilyAndSex", ROMX
+
 ; DE = the start of a battler record, wSpeciesRecord = the species record of its monster. Writes the
 ; family (species byte 0) at BATTLER_FAMILY and the sex byte at the next byte, then the 27
 ; resistance bytes of wSpeciesRecord + SPECIES_RESISTANCES at BATTLER_RESISTANCES. The sex byte is 0
@@ -2149,6 +2231,8 @@ SetBattlerFamilyAndSex::
     pop bc
     ret
 
+SECTION "Bank 19 GameMode4_Init_LoadBattleSlots_LoadSlot", ROMX
+
 ; Loads battle slot C from its battler record: in link battles it goes straight to
 ; LoadBattleSlotFromBattlerRecord; otherwise slots below 4 use LoadBattleSlotFromBattlerRecord and
 ; foe slots LoadBattleSlotFromBattlerRecord_UnlinkedFoe, and then the species record buffer is
@@ -2169,6 +2253,8 @@ GameMode4_Init_LoadBattleSlots_LoadSlot::
 .call_clear_species_record_buffer_bank19:
     call ClearSpeciesRecordBuffer_Bank19
     ret
+
+SECTION "Bank 19 LoadBattleSlotFromBattlerRecord", ROMX
 
 ; C = battle slot (0-2 or 4-6). Copies that slot battler record (BattlerRecordAddress_Bank19) into
 ; the per-slot battle arrays: the species word to wBattleMonsterId; the low nibble of record byte
@@ -2421,6 +2507,8 @@ LoadBattleSlotFromBattlerRecord::
     call SetSlotAIModeFromINT
     ret
 
+SECTION "Bank 19 LoadBattleSlotFromBattlerRecord_UnlinkedFoe", ROMX
+
 ; A = C = battle slot (4-6): the routine passes A to BattlerRecordAddress_Bank19 without loading it,
 ; so the caller must have A = C. It is the foe variant of LoadBattleSlotFromBattlerRecord used
 ; outside link battles. Differences: wSlotNameSuffix gets the whole of record byte $0D, wSlotTactic
@@ -2604,6 +2692,8 @@ LoadBattleSlotFromBattlerRecord_UnlinkedFoe::
     call SetSlotAIModeFromINT
     ret
 
+SECTION "Bank 19 BattlerRecordAddress_Bank19", ROMX
+
 ; A = battle slot. For slots 3 and 7 it returns at once with Z set and HL unchanged (they have no
 ; battler record). Otherwise HL = wBattlerRecords + $4E * n, where n = A for slots 0-2 and A - 1 for
 ; slots 4-6, the address of the battler record of that slot (so the records of slots 4-6 are the
@@ -2630,6 +2720,8 @@ BattlerRecordAddress_Bank19::
     adc $d0
     ld h, a
     ret
+
+SECTION "Bank 19 GameMode4_Init_SetSlotMarks", ROMX
 
 ; Sets wSlotMarks from wBattleSlotOut. Outside link battles the foe slots 4-7 are done first: $FF
 ; for a slot whose wBattleSlotOut is $FF (no monster), $01 for any other. Then slots 0-3 (all eight
@@ -2690,6 +2782,8 @@ GameMode4_Init_SetSlotMarks::
     dec b
     jr nz, .loop2
     ret
+
+SECTION "Bank 19 ExpTable", ROMX
 
 ; LoadTableEntryForRecordBufASpeciesToRecordBufAExp copies the 3 bytes at $4E60 + $129 * (species
 ; record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and
@@ -3018,6 +3112,8 @@ LoadExpTableEntryToTemp2::
     ldh [hTemp4], a
     ret
 
+SECTION "Bank 19 LoadTableEntryForRecordBufASpeciesToRecordBufAExp", ROMX
+
 ; Sets the experience of the monster record in wRecordBufA to the least experience of its level. It
 ; loads the species record of the species word at MON_SPECIES of wRecordBufA (LoadSpeciesRecord,
 ; which also leaves wSpeciesIdLo/Hi and wSpeciesRecord set), then copies the 3-byte entry number
@@ -3066,6 +3162,8 @@ LoadTableEntryForRecordBufASpeciesToRecordBufAExp::
     ld [de], a
     ret
 
+SECTION "Bank 19 LoadTableEntryForRecordBufBSpeciesToRecordBufBExp", ROMX
+
 ; The same as LoadTableEntryForRecordBufASpeciesToRecordBufAExp for the record in wRecordBufB: loads
 ; the species record of its MON_SPECIES word and copies the 3-byte entry number MON_LEVEL - 1 of
 ; ExpTable row wSpeciesExpCurve to MON_EXP of wRecordBufB. Its only caller is
@@ -3111,6 +3209,8 @@ LoadTableEntryForRecordBufBSpeciesToRecordBufBExp::
     ld a, [hl]
     ld [de], a
     ret
+
+SECTION "Bank 19 SpeciesNewRecordByteTable", ROMX
 
 ; while GameMode4_Init_BuildFoeRecord builds a new monster record, the code reads the byte at $741C
 ; + wSpeciesId and stores it at the next record byte, right after the zero that follows the copied

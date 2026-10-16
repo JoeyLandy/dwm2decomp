@@ -1,7 +1,7 @@
 ; ROM bank $29: messages
 ; The annotated listing of this bank is build/listing/bank29.asm.
 
-SECTION "Bank 29", ROMX[$4000], BANK[$29]
+SECTION "Bank 29", ROMX
     db $29
 
 ; Starts a message of message group 1 (strings of category 0 of bank $29, picked by wStringIndex).
@@ -24,6 +24,8 @@ BeginStringDisplay_Bank29::
     ld de, MessageStrings_Bank29
     call BeginStringDisplay
     ret
+
+SECTION "Bank 29 CopyStringToBuffer_Bank29", ROMX
 
 ; Copies a message of message group 1 to a buffer instead of printing it: string wStringIndex of
 ; category wStringCategory is copied, with its $F0 terminator, to the address in

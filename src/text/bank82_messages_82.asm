@@ -1,7 +1,7 @@
 ; ROM bank $82: messages
 ; The annotated listing of this bank is build/listing/bank82.asm.
 
-SECTION "Bank 82", ROMX[$4000], BANK[$82]
+SECTION "Bank 82", ROMX
     db $82
 
 ; Starts displaying string wStringIndex of category wStringCategory from message bank $82: below $90
@@ -22,6 +22,8 @@ BeginStringDisplay_Bank82::
     ld de, MessageStrings_Bank82
     call BeginStringDisplay
     ret
+
+SECTION "Bank 82 CopyStringToBuffer_Bank82", ROMX
 
 ; Meant to copy one string of message bank $82 to a buffer: when wStringIndex is below $90 it calls
 ; CopyStringToBuffer with the table MessageStrings_Bank82 (string wStringIndex of category

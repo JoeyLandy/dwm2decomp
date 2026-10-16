@@ -2431,6 +2431,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0393 — M2 batch 5: floating sections placed by src/layout.link; code moved between banks
+
+- Date: 2026-10-16. Kind: DECISION and OBSERVATION (layout change; bytes unchanged; moves observed on tools/sm83.py, not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 22111cb (E-0392).
+- **Layout.** tools/present.py now writes each bank file as floating sections (`SECTION "Bank NN Label", ROMX`, `ROM0` for bank $00).
+  - A section starts at a top-level label whose code above ends in an unconditional ret, reti, jp or jr, so no code falls from one section into the next. Comments stay with their label; data after a routine stays in that routine's section. 9,071 sections in all.
+  - src/layout.link lists every bank and its sections in ROM order, and tools/build.py links with `rgblink -l src/layout.link`. Sections follow one another with no gaps, and the trailing `ds` fills pad each bank.
+  - The cartridge header section is pinned with `ORG $0104`, after the entry point at $0100, so anything growing into it fails the link. build/listing and the tests that read it keep one section per bank.
+- **Bank check.** tools/bank_check.py reads a build's .sym and src/.
+  - An error is a call, jp or jr from a switchable bank to a label in a different switchable bank.
+  - A warning is an `ld hl/de/bc` of a label in another switchable bank with no BANK(), farcall or literal `ld b` within three lines.
+  - On the matching layout: 0 errors, 511 warnings. These are pointers whose bank is fixed elsewhere, e.g. scripts in bank $10, which the script engine reads from bank $10. They are the dependencies to read before moving that data.
+- **Moves.** tools/move_section.py `--list` finds sections with no unbanked reference to or from the rest of their bank or bank $00: 255 of 9,071 (a call, jp or jr is never banked). `--move NAME --to BB` moves one in a scratch copy (its layout line, plus BB's last `ds` shortened by its size), links, runs the bank check, and compares 3,000 frames with the unmoved copy (persist 8).
+  - ScriptWaitFrames (32 bytes, bank $5F to $F4): bank check clean, all frames identical; it runs 240 times in those frames.
+  - ScriptStepObject (132 bytes, $5F to $F5): clean, identical; it runs 176 times.
+  - Negative case: FarClearRollCounterWhenGM2TimerMinutesIs59 ($02 to $F3), which five bank-$02 routines reach with a plain `call`. The bank check reports the five calls, and the frames differ from 803. Before the jump rule, `--list` had offered it because an unrelated `ld b` was within three lines.
+- **Tests.** tests/test_sections.py (6):
+  - split points: after unconditional ends only; comments stay with their label;
+  - the header pin;
+  - layout moves, with unknown names and banks refused;
+  - the bank check's errors and warnings, and bank $00 skipped.
+- **Checks.** build/run670 PASS from a full regeneration (approved size and SHA-256, zero differing bytes); parallel full suite build/logs/par670.log OK (418 tests, 3 skipped; the serial run build/logs/suite670.log had 2 failures in tests/test_present.py, which now applies split_sections and checks that src/layout.link places every section once); the read gate passes with all 152 paddable banks padded by 16 (sections in place).
+
 ### E-0392 — M2 batch 4: six of the nine unresolved split sums
 
 - Date: 2026-10-16. Kind: OBSERVATION and DECISION (generator and config; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 9b6451f (E-0391).

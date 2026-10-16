@@ -1,7 +1,7 @@
 ; ROM bank $50: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank50.asm.
 
-SECTION "Bank 50", ROMX[$4000], BANK[$50]
+SECTION "Bank 50", ROMX
     db $50
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)

@@ -1,7 +1,7 @@
 ; ROM bank $53: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank53.asm.
 
-SECTION "Bank 53", ROMX[$4000], BANK[$53]
+SECTION "Bank 53", ROMX
     db $53
 
 ; compressed tileset of map $7B (the first map record using it)

@@ -1,7 +1,7 @@
 ; ROM bank $43: sound tracks
 ; The annotated listing of this bank is build/listing/bank43.asm.
 
-SECTION "Bank 43", ROMX[$4000], BANK[$43]
+SECTION "Bank 43", ROMX
     db $43
 
 ; E-0018. Sound ids 168-222: the array ends at $40DD and track streams follow; the bank table

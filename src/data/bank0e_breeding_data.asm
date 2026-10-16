@@ -1,7 +1,7 @@
 ; ROM bank $0E: breeding tables: species pair rules and family results; message bank $0E
 ; The annotated listing of this bank is build/listing/bank0e.asm.
 
-SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
+SECTION "Bank 0E", ROMX
     db $0e
 
 ; Starts message wStringIndex of message bank $0E: below $88 from this bank's table
@@ -20,6 +20,8 @@ BeginMessageDisplay_Bank0E::
     ld de, MessageStrings_Bank0E
     call BeginStringDisplay
     ret
+
+SECTION "Bank 0E CopyStringToBuffer_Bank0E", ROMX
 
 ; Copies message wStringIndex of message bank $0E to the address in wStringDestLo/wStringDestHi, its
 ; $F0 terminator included: below $88 through CopyStringToBuffer with the table MessageStrings_Bank0E
@@ -706,6 +708,8 @@ ShowString_Bank0E::
     call BeginStringDisplay_Bank0E
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 0E BeginStringDisplay_Bank0E_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -1448,6 +1452,8 @@ ComputeBreedingChild::
     ld [wArg5], a
     ret
 
+SECTION "Bank 0E AdjustStatForRecordBufAAndBItems", ROMX
+
 ; C = stat index 0-7 (in the order of ComputeBreedingChild_Data), DE = parent A stat word, HL =
 ; parent B stat word: when the MON_ITEM of wRecordBufA is in the list
 ; AdjustStatForRecordBufAAndBItems_Data1[C] (items 1-2 for stats 0-1, 3-4 for 2-3, 5-6 for 4, 7, 8
@@ -1581,6 +1587,8 @@ AdjustStatForRecordBufAAndBItems::
     pop de
     ret
 
+SECTION "Bank 0E AdjustStatForRecordBufAAndBItems_Data1", ROMX
+
 ; Eight word pointers, one per stat index c = 0-7 in the order of the child record stat words from
 ; MON_HP: HP, max HP, MP, max MP, ATK, DEF, AGL and INT. Each points at a list of MON_ITEM values
 ; ending in $FF (the _Entry00 to _Entry07 labels below; stats 0-1 share one list and stats 2-3 share
@@ -1685,6 +1693,8 @@ BuildChildRecordSkillListCandidateList::
     call ClearDuplicateChildSkills
     ret
 
+SECTION "Bank 0E MapChildRecordSkillListEntriesThroughTable", ROMX
+
 ; Replaces each of the 25 ($19) bytes of the MON_SKILL_LIST of wChildRecord other than $FF by
 ; SkillLineBaseTable[byte], the first skill of its line (1-3 become 1, 4-6 become 4). The table has
 ; 176 entries (skills 0-$AF); a larger byte would read past it. (C2, E-0376)
@@ -1715,6 +1725,8 @@ MapChildRecordSkillListEntriesThroughTable::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 0E SkillLineBaseTable", ROMX
 
 ; MapChildRecordSkillListEntriesThroughTable replaces each of the $19 skill bytes at wChildRecord +
 ; $3C (other than $FF) by the byte at $5B03 + skill; the values never exceed the index and repeat
@@ -1761,6 +1773,8 @@ CompactChildRecordSkillListRemovingFF::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 0E ClearDuplicateChildSkills", ROMX
 
 ; Walks the 25 ($19) bytes of the child's skill list at wChildRecord + MON_SKILL_LIST: a byte of 0
 ; or $FF becomes $FF, and for every other byte each later byte equal to it is set to $FF, so each
@@ -1821,6 +1835,8 @@ ClearDuplicateChildSkills::
     jr c, .loop
     ret
 
+SECTION "Bank 0E CopyEightBytesDEToHL", ROMX
+
 ; Copies 8 bytes from DE to HL; DE and HL end past them, C = 0, A = the last byte.
 ; BuildChildRecordSkillListCandidateList uses it to append the MON_SKILLS of both parents to the
 ; skill list of the child. (C2, E-0376)
@@ -1836,6 +1852,8 @@ CopyEightBytesDEToHL::
     jr nz, .loop
     ret
 
+SECTION "Bank 0E StoreBCAAtHL", ROMX
+
 ; Stores B, C and A at HL, HL + 1 and HL + 2 and leaves HL past them; A and the flags are kept.
 ; BuildChildRecordSkillListCandidateList stores three natural skills with it. (C2, E-0376)
 ; stores B, C and A at HL onward; HL += 3; AF kept (E-0114)
@@ -1848,6 +1866,8 @@ StoreBCAAtHL::
     pop af
     ld [hli], a
     ret
+
+SECTION "Bank 0E LoadSpeciesBytes8To10FromHL", ROMX
 
 ; HL = address of a monster id word: sets wSpeciesIdLo/Hi from it, far-calls LoadSpeciesRecord and
 ; returns B, C and A = SPECIES_SKILLS bytes 0, 1 and 2 of wSpeciesRecord (the three natural skills).
@@ -1867,6 +1887,8 @@ LoadSpeciesBytes8To10FromHL::
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ret
 
+SECTION "Bank 0E LoadSpeciesBytes8To10ToArg5", ROMX
+
 ; Monster id = wArg1 (low) / wArg2 (high): far-calls LoadSpeciesRecord and copies its three natural
 ; skills (SPECIES_SKILLS) to wArg5, wArg6 and wArg7. Called from the library code in bank $0C. (C2,
 ; E-0376)
@@ -1885,6 +1907,8 @@ LoadSpeciesBytes8To10ToArg5::
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [wArg7], a
     ret
+
+SECTION "Bank 0E RefreshRecordResistancesFromSpecies", ROMX
 
 ; With SRAM enabled (bank 0), for each of the 30 records from sRecords whose MON_STATE is not 0:
 ; loads its species record (wSpeciesIdLo/Hi and wArg2/wArg3 = its MON_SPECIES) and writes the 27
@@ -1947,6 +1971,8 @@ RefreshRecordResistancesFromSpecies::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 0E RollChildResistancesToChildRecordResistances", ROMX
 
 ; Loads the species record of the child (MON_SPECIES of wChildRecord) and, for each of the 27
 ; resistances, takes its base level (LoadSpeciesResistanceArg4 into wArg5). A level of 3 is kept. A
@@ -2017,6 +2043,8 @@ RollChildResistancesToChildRecordResistances::
     jr nz, .loop
     ret
 
+SECTION "Bank 0E RollResistanceGainForLowLevel", ROMX
+
 ; B = sum of the two parent levels (3 or more), wArg5 = the base level 0 or 1 of a child resistance:
 ; nothing when the MON_PLUS of wChildRecord is 0. Otherwise it rolls
 ; RollChildRecordPlusChanceOrIncArg5 with factor 1 for B = 3 and 3 for B = 4; for B = 5 factor 10
@@ -2070,6 +2098,8 @@ RollResistanceGainForLowLevel::
     jr z, .loop
     jr .skip3
 
+SECTION "Bank 0E RollChildRecordPlusChanceOrIncArg5", ROMX
+
 ; A = factor: chance = factor * the MON_PLUS of wChildRecord. When the chance is 100 or more, or a
 ; random value 0-99 (the quotient of RandomModulo29 with B = $0F) is not above it, it adds 1 to
 ; wArg5 and returns A = 0; when the random value is above the chance it returns A = $FF and leaves
@@ -2105,6 +2135,8 @@ RollChildRecordPlusChanceOrIncArg5::
     ld [wArg5], a
     xor a
     ret
+
+SECTION "Bank 0E RollResistanceGainForLevel2", ROMX
 
 ; B = sum of the two parent levels (5 or more), wArg5 = the base level 2 of a child resistance:
 ; nothing when the MON_PLUS of wChildRecord is 0. For B = 5 it draws a random value 0-199
@@ -2160,6 +2192,8 @@ RollResistanceGainForLevel2::
     pop bc
     ret
 
+SECTION "Bank 0E SumRecordBufAAndBResistanceTests", ROMX
+
 ; C = resistance index, B = least sum: TestResistanceEntry for the MON_RESISTANCES of wRecordBufA
 ; and of wRecordBufB; when neither returns $FF and their sum is at least B, returns B = A = the sum,
 ; otherwise B = $FF. (C2, E-0376)
@@ -2186,6 +2220,8 @@ SumRecordBufAAndBResistanceTests::
 .done:
     ld b, $ff
     ret
+
+SECTION "Bank 0E TestResistanceEntry", ROMX
 
 ; HL = the MON_RESISTANCES of a parent record, C = resistance index: returns A = the level at HL +
 ; C, except that a level of 2 returns $FF when the record MON_ITEM (HL + $31) is 1-$1B and
@@ -2231,6 +2267,8 @@ TestResistanceEntry::
     pop af
     jr .done
 
+SECTION "Bank 0E TestResistanceEntry_Data", ROMX
+
 ; 27 bytes indexed by MON_ITEM - 1 (items 1 to $1B): each is a resistance index 0-$1A, and together
 ; they use every index once (the order starts 0-6, then $0E, $0F, 7, $10-$14, 8-$B and so on).
 ; TestResistanceEntry returns $FF instead of level 2 for resistance C when the record MON_ITEM is
@@ -2252,6 +2290,8 @@ LoadSpeciesResistanceArg4::
     ld a, [hl]
     ld [wArg5], a
     ret
+
+SECTION "Bank 0E CopySixBytesByChildRecordFamilyBit4Table", ROMX
 
 ; Copies the species words and pluses of the parents into wChildRecord: with bit 4 of its MON_FAMILY
 ; clear, the MON_SPECIES and MON_PLUS of wRecordBufA go to MON_PARENT1_SPECIES and MON_PARENT1_PLUS
@@ -2304,6 +2344,8 @@ CopySixBytesByChildRecordFamilyBit4Table::
     jr nz, .loop
     ret
 
+SECTION "Bank 0E CopySixBytesByChildRecordFamilyBit4Table_Data1", ROMX
+
 ; Six little-endian addresses in the breeding record buffers, the sources used when bit 4 of the
 ; child MON_FAMILY is clear: wRecordBufA + MON_SPECIES (two bytes, $C991 and $C992), wRecordBufB +
 ; MON_SPECIES ($CA36, $CA37), then the MON_PLUS bytes of wRecordBufA ($C9F3) and of wRecordBufB
@@ -2342,6 +2384,8 @@ CopyPlayerNameToChildRecordMasterName::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 0E CopyFourNamesByChildRecordFamilyBit4Table", ROMX
 
 ; Copies four 10-byte names into wChildRecord: with bit 4 of its MON_FAMILY clear, the MON_NAME and
 ; MON_MASTER_NAME of wRecordBufA go to MON_PARENT1_NAME and MON_PARENT1_MASTER and those of
@@ -2400,6 +2444,8 @@ CopyFourNamesByChildRecordFamilyBit4Table::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 0E CopyFourNamesByChildRecordFamilyBit4Table_Data1", ROMX
 
 ; Four little-endian source addresses used when bit 4 of the child MON_FAMILY is clear: wRecordBufA
 ; + MON_NAME ($C987), wRecordBufB + MON_NAME ($CA2C), wRecordBufA + MON_MASTER_NAME ($C995) and
@@ -2557,6 +2603,8 @@ ApplyBreedingBonusToChildStats::
     jr nz, .loop
     ret
 
+SECTION "Bank 0E ApplyBreedingBonusToChildStats_Data", ROMX
+
 ; Eight MON record offsets, each a stat word of wChildRecord: $5B MON_HP, $5D MON_MAX_HP, $5F
 ; MON_MP, $61 MON_MAX_MP, $63 MON_ATK, $65 MON_DEF, $67 MON_AGL and $69 MON_INT.
 ; ApplyBreedingBonusToChildStats walks the list and adds word * bonus / 100 (rounded up, capped at
@@ -2644,6 +2692,8 @@ PersonalityPairValueToArg5::
     pop af
     ret
 
+SECTION "Bank 0E CombinedPersonalityLevelIndexOfRecord", ROMX
+
 ; HL = a monster record: returns A = 9 * grade(byte $6F) + 3 * grade(byte $72) + grade(byte $70),
 ; each grade from GradeTemp0_Bank0E (0 for $C0 or more, 1 for $40-$BF, 2 below $40), so 0-26. Byte
 ; $71 is not used. Compare CombinedPersonalityLevelIndex. (C2, E-0376)
@@ -2681,6 +2731,8 @@ CombinedPersonalityLevelIndexOfRecord::
     add b
     ret
 
+SECTION "Bank 0E GradeTemp0_Bank0E", ROMX
+
 ; Grades the byte in hTemp0: returns C = 0 when it is $C0 or more, 1 when it is $40-$BF and 2 below
 ; $40; A = the byte. A bank-$0E copy of GradeTemp0; CombinedPersonalityLevelIndexOfRecord grades
 ; three personality bytes with it. (C2, E-0376)
@@ -2695,6 +2747,8 @@ GradeTemp0_Bank0E::
     ret nc
     inc c
     ret
+
+SECTION "Bank 0E PersonalityPairMatrix", ROMX
 
 ; PersonalityPairValueToArg5 takes CombinedPersonalityLevelIndexOfRecord of both parents (A, B),
 ; reads the byte at $603F + 8 * A + B / 4 and masks it with PersonalityPairValueToArg5_Data[B & 3];
@@ -2753,6 +2807,8 @@ RandomModulo29::
     call DivideHLByA
     ret
 
+SECTION "Bank 0E LoadRecordWordFieldArg5AndShowIcon", ROMX
+
 ; C = SRAM record index, wArg5 = field offset: loads that word of the record (LoadSRAMRecordWord
 ; into hTemp0/hTemp1; the caller enables SRAM) and falls into DrawSpeciesAndFamilyIconForTemp0,
 ; which takes it as a species id and loads its family icon tile into tile wArg4.
@@ -2787,6 +2843,8 @@ DrawSpeciesAndFamilyIconForTemp0::
     ld [wWorkBuf + $1], a
     farcall LoadFamilyIconTileForWorkBuf
     ret
+
+SECTION "Bank 0E FamilyForSpeciesIdArg6", ROMX
 
 ; wArg6/wArg7 = monster id (low, high): sets wArg5 = its family from the id ranges: below $1B 0,
 ; $1B-$42 1, $43-$66 2, $67-$84 3, $85-$A7 4, $A8-$C9 5, $CA-$F0 6, $F1-$110 7, $111-$138 8,
@@ -2875,6 +2933,8 @@ FamilyForSpeciesIdArg6::
     ld [wArg5], a
     ret
 
+SECTION "Bank 0E RollChildSexFromSpecies", ROMX
+
 ; Loads the species record of MON_SPECIES of wChildRecord (LoadSpeciesRecordWord0). When its
 ; SPECIES_SEX_RATIO byte is 0 the child is male (MON_SEX = 0); otherwise it draws a random value
 ; 0-99 (RandomModulo29 with B = $0F, the quotient) and sets MON_SEX = 1 (female) when it is not
@@ -2915,6 +2975,8 @@ RollChildSexFromSpecies::
     ld hl, wChildRecord + MON_SEX
     ld [hl], a
     ret
+
+SECTION "Bank 0E SexChanceByClass", ROMX
 
 ; chance (of about 100) of a female child (RollChildSexFromSpecies sets MON_SEX to 1), per sex-ratio
 ; class 0-3: 0, 10, 50, 90 (E-0311)

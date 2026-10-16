@@ -1,7 +1,7 @@
 ; ROM bank $7E: field graphics, sprites and palettes
 ; The annotated listing of this bank is build/listing/bank7e.asm.
 
-SECTION "Bank 7E", ROMX[$4000], BANK[$7E]
+SECTION "Bank 7E", ROMX
     db $7e
 
 ; compressed sprite graphics number $50 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4

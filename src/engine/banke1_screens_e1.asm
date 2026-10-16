@@ -1,7 +1,7 @@
 ; ROM bank $E1: screen graphics, tiles and palettes
 ; The annotated listing of this bank is build/listing/banke1.asm.
 
-SECTION "Bank E1", ROMX[$4000], BANK[$E1]
+SECTION "Bank E1", ROMX
     db $e1
 
 ; Tiles, 304 bytes decompressed (19 tiles). Decompressed to vTiles2 by
@@ -215,6 +215,8 @@ DrawMetaSpriteSet_BankE1::
     ld de, DrawMetaSpriteSet_BankE1_Data
     call DrawMetaSpriteSet_BankE1_BuildOam
     ret
+
+SECTION "Bank E1 DrawMetaSpriteSet_BankE1_Data", ROMX
 
 ; One word, $5D3C: the address in bank $E1 of UnreferencedMetaSpriteSet_E1, which
 ; DrawMetaSpriteSet_BankE1 passes in DE to DrawMetaSpriteSet_BankE1_BuildOam as the table of
@@ -687,6 +689,8 @@ DrawMetaSpriteSet_BankE1_BuildOam::
     jr nz, .loop5
     ret
 
+SECTION "Bank E1 BGTileUnderPointIsSpriteHideTile_BankE1", ROMX
+
 ; DE = address of the X byte of a sprite part in screen coordinates, with its Y byte at DE - 1.
 ; Takes the entry of the $9800 BG map under the point (X + hScrollX - 4, Y + hScrollY - 12), rows
 ; wrapping inside the 32 x 32 map, waits with interrupts off for rSTAT bit 1 to clear, reads the
@@ -743,6 +747,8 @@ BGTileUnderPointIsSpriteHideTile_BankE1::
     pop bc
     pop hl
     ret
+
+SECTION "Bank E1 UnreferencedMetaSpriteSet_E1", ROMX
 
 ; shape only; no reference found and the bytes occur nowhere else in the ROM; two words point at the
 ; two frames that follow, each laid out as the E-0147 meta-sprite frames: 4-byte sprites (Y offset,

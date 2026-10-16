@@ -1,7 +1,7 @@
 ; ROM bank $7F: meta-sprite frames
 ; The annotated listing of this bank is build/listing/bank7f.asm.
 
-SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
+SECTION "Bank 7F", ROMX
     db $7f
 
 ; Draws one meta-sprite from the 98 sets of MetaSprites7FTable: loads DE = MetaSprites7FTable and
@@ -16,6 +16,8 @@ DrawMetaSprite_Sets98::
     ld de, MetaSprites7FTable
     call DrawMetaSpriteAt_Sets98
     ret
+
+SECTION "Bank 7F MetaSprites7FTable", ROMX
 
 ; the caller of DrawMetaSprite_Sets98 passes DE = $MetaSprites7FTable; the builder takes the word at
 ; DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98
@@ -607,6 +609,8 @@ DrawMetaSpriteAt_Sets98::
     jr nz, .loop5
     ret
 
+SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F_2", ROMX
+
 ; Looks at the background tile under one sprite part. Input DE = address of the X byte of an OAM
 ; entry (its Y byte is at DE - 1). Finds the $9800 BG map entry for (X + hScrollX - 4, Y + hScrollY
 ; - 12), 8 pixels per tile with both sums wrapping at 256, waits until rSTAT bit 1 is clear with
@@ -662,6 +666,8 @@ BGTileUnderPointIsSpriteHideTile_Bank7F_2::
     pop bc
     pop hl
     ret
+
+SECTION "Bank 7F MetaSprites7FSet00", ROMX
 
 ; meta-sprite set 0 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
@@ -6514,6 +6520,8 @@ DrawMetaSprite::
     call DrawMetaSpriteAt
     ret
 
+SECTION "Bank 7F MetaSprites7FTable_2", ROMX
+
 ; the caller of DrawMetaSprite passes DE = $MetaSprites7FTable_2; the builder takes the word at DE +
 ; 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 42 words,
 ; up to the next code or data (E-0147, C1)
@@ -7050,6 +7058,8 @@ DrawMetaSpriteAt::
     jr nz, .loop5
     ret
 
+SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F", ROMX
+
 ; Looks at the background tile under one sprite part. Input DE = address of the X byte of an OAM
 ; entry (its Y byte is at DE - 1). Finds the $9800 BG map entry for (X + hScrollX - 4, Y + hScrollY
 ; - 12), 8 pixels per tile with both sums wrapping at 256, waits until rSTAT bit 1 is clear with
@@ -7105,6 +7115,8 @@ BGTileUnderPointIsSpriteHideTile_Bank7F::
     pop bc
     pop hl
     ret
+
+SECTION "Bank 7F MetaSprites7FTable_2Set00", ROMX
 
 ; meta-sprite set 0 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame

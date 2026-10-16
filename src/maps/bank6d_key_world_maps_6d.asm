@@ -1,7 +1,7 @@
 ; ROM bank $6D: key-world map screens
 ; The annotated listing of this bank is build/listing/bank6d.asm.
 
-SECTION "Bank 6D", ROMX[$4000], BANK[$6D]
+SECTION "Bank 6D", ROMX
     db $6d
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 0 of MapType5TilesetTable, decompressed to

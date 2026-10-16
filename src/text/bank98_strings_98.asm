@@ -1,7 +1,7 @@
 ; ROM bank $98: string tables
 ; The annotated listing of this bank is build/listing/bank98.asm.
 
-SECTION "Bank 98", ROMX[$4000], BANK[$98]
+SECTION "Bank 98", ROMX
     db $98
 
 ; Overflow half of the string lookup of message bank $2B: lowers wStringIndex by $8A (the first
@@ -18,6 +18,8 @@ BeginStringDisplay_Bank2B_Overflow::
     ld [wStringIndex], a
     call BeginStringDisplay
     ret
+
+SECTION "Bank 98 CopyStringToBuffer_Bank2B_Overflow", ROMX
 
 ; Overflow half of the string copy of message bank $2B: lowers wStringIndex by $8A (the first index
 ; the bank-$2B table does not hold), then CopyStringToBuffer with DE =
@@ -52,6 +54,8 @@ BeginStringDisplay_Bank2C_Overflow::
     call BeginStringDisplay
     ret
 
+SECTION "Bank 98 CopyStringToBuffer_Bank2C_Overflow", ROMX
+
 ; Overflow half of the string copy of message bank $2C: lowers wStringIndex by $91 (the first index
 ; the bank-$2C table does not hold), then CopyStringToBuffer with DE =
 ; MessageStrings_Bank2C_Overflow, which copies string (index - $91) of category wStringCategory,
@@ -84,6 +88,8 @@ BeginStringDisplay_Bank89_Overflow::
     ld [wStringIndex], a
     call BeginStringDisplay
     ret
+
+SECTION "Bank 98 CopyStringToBuffer_Bank89_Overflow", ROMX
 
 ; Overflow half of the string copy of message bank $89: lowers wStringIndex by $DE (the first index
 ; the bank-$89 table does not hold), then CopyStringToBuffer with DE =

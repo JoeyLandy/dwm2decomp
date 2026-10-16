@@ -1,7 +1,7 @@
 ; ROM bank $F0: link sessions, family bands, gift effects
 ; The annotated listing of this bank is build/listing/bankf0.asm.
 
-SECTION "Bank F0", ROMX[$4000], BANK[$F0]
+SECTION "Bank F0", ROMX
     db $f0
 
 ; Starts the message wStringIndex of category wStringCategory from this bank first string table
@@ -413,6 +413,8 @@ ShowString_BankF0::
     call RunStringDisplayToEnd
     ret
 
+SECTION "Bank F0 BeginStringDisplay_BankF0_2_StringCategories", ROMX
+
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
@@ -666,6 +668,8 @@ DreamEggs_State0_SendSync::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank F0 DreamEggs_State0_WaitSync", ROMX
+
 ; State 0, step 1: on the partner's $BA goes on. (C2, E-0357; probed E-0385)
 DreamEggs_State0_WaitSync::
     ld a, [wLinkMessage]
@@ -677,6 +681,8 @@ DreamEggs_State0_WaitSync::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 DreamEggs_State0_StartNameSwap", ROMX
 
 ; State 0, step 2: copies the player's name (up to 10 bytes, then $F0) to wLinkRecvBuffer, stores
 ; wPlayerId in wLinkEggFamilyBit (wLinkRecvBuffer + 12), then starts a 12-byte link exchange: source
@@ -726,6 +732,8 @@ DreamEggs_State0_StartNameSwap::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank F0 DreamEggs_State0_WaitNameSwap", ROMX
+
 ; State 0, step 3: when the exchange ends ($F0) goes on. (C2, E-0357; probed E-0385)
 DreamEggs_State0_WaitNameSwap::
     ld a, [wLinkMessage]
@@ -739,6 +747,8 @@ DreamEggs_State0_WaitNameSwap::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 DreamEggs_State0_CopyPartnerName", ROMX
 
 ; State 0, step 4: copies the partner's name into wTextBuf3. (C2, E-0357; probed E-0385)
 DreamEggs_State0_CopyPartnerName::
@@ -763,6 +773,8 @@ DreamEggs_State0_CopyPartnerName::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 DreamEggs_State0_AskGiveOrObtain", ROMX
 
 ; State 0, step 5: clears $35 bytes from wFamilyRankTaken, shows 'Yes / No' (string $1F) at VRAM
 ; $9700 and asks 'Give a dream egg?' (string 1) when a gift record is set, otherwise 'Obtain a dream
@@ -814,6 +826,8 @@ DreamEggs_State0_AskGiveOrObtain::
     inc [hl]
     ret
 
+SECTION "Bank F0 DreamEggs_State0_DrawYesNoBox", ROMX
+
 ; State 0, step 6: draws the yes/no box with the cursor on yes. (C1, E-0357)
 DreamEggs_State0_DrawYesNoBox::
     ld de, DreamEggs_State0_DrawYesNoBox_TileRect
@@ -829,6 +843,8 @@ DreamEggs_State0_DrawYesNoBox::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_ReadSaveAnswer", ROMX
 
 ; State 0, step 7: yes goes to saving (state 5, 'OK to save the egg trade ...', string 7); no or B
 ; shows 'Please wait...' (string 8), goes to state 4 and sends $BD. (C1, E-0357)
@@ -868,6 +884,8 @@ RunLinkSession8Exchange_ReadSaveAnswer::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank F0 DreamEggs_State1", ROMX
+
 ; Dream eggs, state 1: the partner's cancel as in state 0; otherwise the egg list's steps
 ; (LinkEggList). (C1, E-0357)
 DreamEggs_State1::
@@ -886,6 +904,8 @@ DreamEggs_State1::
 .call_link_egg_list:
     call LinkEggList
     ret
+
+SECTION "Bank F0 DreamEggs_State2", ROMX
 
 ; Dream eggs, state 2 (the chosen egg): the partner's cancel as in state 0; otherwise its six steps.
 ; (C1, E-0357)
@@ -919,6 +939,8 @@ DreamEggs_State2_AskTransfer::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank F0 DreamEggs_State2_ShowInfoOK", ROMX
 
 ; State 2, step 1: draws the box, marks the list entry and shows 'Info / OK' (string $1E, 9 x 1 at
 ; VRAM $9700). (C1, E-0357)
@@ -963,6 +985,8 @@ DreamEggs_State2_ShowInfoOK::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 DreamEggs_State2_DrawInfoOKBox", ROMX
+
 ; State 2, step 2: draws the box with the cursor on the first choice. (C1, E-0357)
 DreamEggs_State2_DrawInfoOKBox::
     ld de, DreamEggs_State2_DrawInfoOKBox_TileRect
@@ -979,6 +1003,8 @@ DreamEggs_State2_DrawInfoOKBox::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_InfoOrOK", ROMX
 
 ; State 2, step 3: A on Info goes to the records (state 3); A on OK goes to saving ('OK to save the
 ; egg trade ...', state 5, screen kind 0); B shows 'Choose the egg to be transferred.' (string 5)
@@ -1023,6 +1049,8 @@ RunLinkSession8Exchange_InfoOrOK::
     inc [hl]
     ret
 
+SECTION "Bank F0 DreamEggs_State2_ShowAllyStore", ROMX
+
 ; State 2, step 4 (back): redraws, clears the entry mark and shows 'Ally / Store' (string $1D, 7 x
 ; 1). (C1, E-0357)
 DreamEggs_State2_ShowAllyStore::
@@ -1065,6 +1093,8 @@ DreamEggs_State2_ShowAllyStore::
     inc [hl]
     ret
 
+SECTION "Bank F0 DreamEggs_State2_BackToList", ROMX
+
 ; State 2, step 5: draws the Ally / Store box with the choice marked and returns to the list (state
 ; 1, step 6). (C1, E-0357)
 DreamEggs_State2_BackToList::
@@ -1088,10 +1118,14 @@ DreamEggs_State2_BackToList::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 DreamEggs_RecordScreen", ROMX
+
 ; Dream eggs, state 3: the record screen (LinkRecordScreen). (C1, E-0357)
 DreamEggs_RecordScreen::
     call LinkRecordScreen
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_ShowMessage", ROMX
 
 ; Dream Egg screen state 4, the closing message of an exchange that is cancelled or finished: runs
 ; the step for wScreenStep: 0 RunLinkSession8Exchange_ShowMessage_ShowStopReason (the reason message
@@ -1119,6 +1153,8 @@ RunLinkSession8Exchange_ShowMessage_SendReady::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_ShowMessage_PartnerReady", ROMX
+
 ; The message, step 2: after the text, on the partner's 1 goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_ShowMessage_PartnerReady::
     ld a, [wTextFlags]
@@ -1133,6 +1169,8 @@ RunLinkSession8Exchange_ShowMessage_PartnerReady::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_ShowMessage_ShowStopReason", ROMX
 
 ; The message, step 0: on the partner's $BB or $BD shows why the exchange stopped (string 2, or 3
 ; when this side cancelled first or has link role bit 1) and goes on. (C1, E-0357)
@@ -1166,6 +1204,8 @@ RunLinkSession8Exchange_ShowMessage_ShowStopReason::
     inc [hl]
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_ShowMessage_WaitTextFlags", ROMX
+
 ; The message, step 3: after the text clears $6F bytes of screen state, selects WRAM bank 0 and
 ; returns to game mode 5, state 1 (the link menu). (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_ShowMessage_WaitTextFlags::
@@ -1191,6 +1231,8 @@ RunLinkSession8Exchange_ShowMessage_WaitTextFlags::
     ld a, $01
     ld [wModeChangeRequest], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Saving", ROMX
 
 ; Dream eggs, state 5 (saving): the partner's cancel as in state 0; otherwise its six steps. (C1,
 ; E-0357)
@@ -1225,6 +1267,8 @@ RunLinkSession8Exchange_Saving_DrawWindow::
     inc [hl]
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Saving_ShowSaveInfo", ROMX
+
 ; Saving, step 2: shows the save file's details (ShowSaveFileInfoWindow) and sets wPickCount 1. (C1,
 ; E-0357)
 RunLinkSession8Exchange_Saving_ShowSaveInfo::
@@ -1234,6 +1278,8 @@ RunLinkSession8Exchange_Saving_ShowSaveInfo::
     ld a, $01
     ld [wPickCount], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Saving_DrawBottomBox", ROMX
 
 ; Saving, step 3: draws the link bottom box and resets the text window. (C1, E-0357)
 RunLinkSession8Exchange_Saving_DrawBottomBox::
@@ -1249,6 +1295,8 @@ RunLinkSession8Exchange_Saving_DrawBottomBox::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Saving_DrawYesNo", ROMX
 
 ; Saving, step 0: moves a 13 x 9 area of the screen buffer, loads two tiles, draws the yes/no box
 ; and shows 'Yes / No' (string $1F), cursor on yes. (C1, E-0357)
@@ -1308,6 +1356,8 @@ RunLinkSession8Exchange_Saving_DrawYesNo::
     inc [hl]
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Saving_RedrawYesNo", ROMX
+
 ; Saving, step 4: draws the yes/no box with the cursor on yes. (C1, E-0357)
 RunLinkSession8Exchange_Saving_RedrawYesNo::
     ld de, DreamEggs_State0_DrawYesNoBox_TileRect
@@ -1323,6 +1373,8 @@ RunLinkSession8Exchange_Saving_RedrawYesNo::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Saving_ReadAnswer", ROMX
 
 ; Saving, step 5: yes shows 'Please wait...' and goes on to the exchange (state 6); no or B shows
 ; 'Please wait...', goes to state 4 and sends $BD. (C1, E-0357)
@@ -1361,6 +1413,8 @@ RunLinkSession8Exchange_Saving_ReadAnswer::
     ld a, $bd
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade", ROMX
 
 ; Dream eggs, state 6 (the exchange): the partner's cancel as in state 0; otherwise its 28 steps of
 ; handshakes and record exchanges. (C1, E-0357)
@@ -1418,6 +1472,8 @@ RunLinkSession8Exchange_Trade_SendStoredSync::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_SendSceneReady", ROMX
+
 ; The exchange: when wMenuCounter is 0 sends $A8. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_SendSceneReady::
     ld a, [wMenuCounter]
@@ -1429,6 +1485,8 @@ RunLinkSession8Exchange_Trade_SendSceneReady::
     ld a, $a8
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_WaitStoredSync", ROMX
 
 ; The exchange: on the partner's $B3 goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitStoredSync::
@@ -1442,6 +1500,8 @@ RunLinkSession8Exchange_Trade_WaitStoredSync::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_WaitSceneReady", ROMX
+
 ; The exchange: on the partner's $A8 goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitSceneReady::
     ld a, [wLinkMessage]
@@ -1454,6 +1514,8 @@ RunLinkSession8Exchange_Trade_WaitSceneReady::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_SendStartSync", ROMX
+
 ; The exchange: sends $B6. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_SendStartSync::
     ld a, [wScreenStep]
@@ -1462,6 +1524,8 @@ RunLinkSession8Exchange_Trade_SendStartSync::
     ld a, $b6
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_StartScene", ROMX
 
 ; The exchange, step 27: on the partner's $B6 clears wLinkSendByte and moves to wScreenState +
 ; wF0ScreenKind + 1 (from state 6: 7 RunLinkSession8Exchange_GivingScene, 8
@@ -1484,6 +1548,8 @@ RunLinkSession8Exchange_Trade_StartScene::
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_StartRecordSwap", ROMX
 
 ; The exchange, step 9: starts the $A5-byte record exchange: this side's gift record (or, without
 ; one, the empty record RunLinkSession8Exchange_Trade_StartRecordSwap_Data) out, the partner's into
@@ -1522,6 +1588,8 @@ RunLinkSession8Exchange_Trade_StartRecordSwap::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_StartBlockSwap", ROMX
+
 ; The exchange, step 13: starts a $D8-byte link exchange of the block at wGM2TimerFrames (which
 ; holds wGiftRecord from + $33) into wRecordBufB: source in wLinkTimeoutLo/Hi, destination in
 ; wLinkBufferPtrLo/Hi, wLinkSendByte = $FF, wLinkReady = 1. (C2, E-0371; probed E-0385)
@@ -1549,6 +1617,8 @@ RunLinkSession8Exchange_Trade_StartBlockSwap::
     ld a, $01
     ld [wLinkReady], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_RankFamilies", ROMX
 
 ; The exchange, step 17: sets wLinkEggData (0; 1 behind EVENT_NEVER_SET); with an egg state ranks
 ; the family scores, gives the gift record its top species' growth, sets wFamilyBitCount = count x
@@ -1628,6 +1698,8 @@ RunLinkSession8Exchange_Trade_RankFamilies::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_SendSync", ROMX
+
 ; The exchange: sends $BA. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_SendSync::
     ld a, [wScreenStep]
@@ -1636,6 +1708,8 @@ RunLinkSession8Exchange_Trade_SendSync::
     ld a, $ba
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_WaitSync", ROMX
 
 ; The exchange: on the partner's $BA goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitSync::
@@ -1648,6 +1722,8 @@ RunLinkSession8Exchange_Trade_WaitSync::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_Pack", ROMX
 
 ; The exchange, step 0: packs the screen kind and the gift flag to send, marks the partner's family
 ; bit (MarkBitBInFamilyBitsAndCount) and rolls whether the egg improves (RollMarkChangeCountChance,
@@ -1666,6 +1742,8 @@ RunLinkSession8Exchange_Trade_Pack::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_StartFlagSwap", ROMX
 
 ; The exchange, step 3: starts a 3-byte link exchange of the bytes
 ; RunLinkSession8Exchange_Trade_Pack packed at wLinkRecvBuffer (wF0ScreenKind, then the gift flag in
@@ -1697,6 +1775,8 @@ RunLinkSession8Exchange_Trade_StartFlagSwap::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_WaitSwapEnd", ROMX
+
 ; The exchange: when the exchange ends ($F0) goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_Trade_WaitSwapEnd::
     ld a, [wLinkMessage]
@@ -1710,6 +1790,8 @@ RunLinkSession8Exchange_Trade_WaitSwapEnd::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_CheckPartnerEgg", ROMX
 
 ; The exchange, step 5: when this side gives and the partner already has a dream egg shows '...
 ; already has a Dream Egg.' (string $16); when this side obtains and the partner has none, '... has
@@ -1748,6 +1830,8 @@ RunLinkSession8Exchange_Trade_CheckPartnerEgg::
     inc [hl]
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_Abort", ROMX
+
 ; The exchange, step 6: 'Please wait...' (string $12) and on to the message state 4 (step 1). (C1,
 ; E-0357)
 RunLinkSession8Exchange_Trade_Abort::
@@ -1760,6 +1844,8 @@ RunLinkSession8Exchange_Trade_Abort::
     ld a, $04
     ld [wScreenState], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_PickScene", ROMX
 
 ; The exchange, step 19: picks the closing scene (wF0ScreenKind): 3 when the egg improved, 4 when
 ; the partner's byte 2 is set, 0 when this side gave an egg, otherwise 1. (C2, E-0357; probed
@@ -1793,6 +1879,8 @@ RunLinkSession8Exchange_Trade_PickScene::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_StoreReceived", ROMX
 
 ; The exchange, step 20: kind 0 clears the $D8 bytes from wGM2TimerFrames; kinds 1 and 2 store the
 ; received record as the new gift record (first byte 1) and copy $33 bytes of wRecordBufB to
@@ -1852,6 +1940,8 @@ RunLinkSession8Exchange_Trade_StoreReceived::
     ld [wPickCount], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_Trade_SetUpScene", ROMX
+
 ; The exchange, step 23: fills the 32 x 32 BG map from BGMapAddressAtScroll_BankF0 with BGFillTile
 ; (FillTileRectWithArg1Tile through wArg1-wArg7), sets up the closing scene's objects
 ; (RunWithArg1ForF0ScreenKind), clears hSpriteWindowClipMode and goes on to the next step; returns A
@@ -1888,6 +1978,8 @@ RunLinkSession8Exchange_Trade_SetUpScene::
 
 .return:
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene", ROMX
 
 ; Dream Egg screen state 7, the closing scene when this side gave an egg (wF0ScreenKind 0): runs the
 ; step for wScreenSubStep (13 steps): timed waits (RunLinkSession8Exchange_GivingScene_Wait), the
@@ -1932,6 +2024,8 @@ RunLinkSession8Exchange_GivingScene_Save::
     ld [wScreenState], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene_MoveSprite", ROMX
+
 ; Giving scene, step 1: moves the sprite at wSpriteSlots + $B right on three counts of four until
 ; $38, then sets its flag bit 1. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_GivingScene_MoveSprite::
@@ -1951,6 +2045,8 @@ RunLinkSession8Exchange_GivingScene_MoveSprite::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene_WalkObject1", ROMX
 
 ; Giving scene, step 4: walks object 1 left on three counts of four until X $58, then sets its flag
 ; bit 1. (C2, E-0357; probed E-0385)
@@ -1974,6 +2070,8 @@ RunLinkSession8Exchange_GivingScene_WalkObject1::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene_Wait", ROMX
+
 ; Giving scene, step 0: a 16-frame wait. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_GivingScene_Wait::
     ld a, [wScreenCounter]
@@ -1988,6 +2086,8 @@ RunLinkSession8Exchange_GivingScene_Wait::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene_ShowEgg", ROMX
+
 ; A scene step shared by the giving, obtained, traded, hatching and hatched scenes: sets wObject5
 ; byte 0 to $80 (bit 7 = shown, the script meta-sprite object) and wArg1 to 1, then advances
 ; wScreenSubStep. (C2, E-0371; probed E-0385)
@@ -2001,6 +2101,8 @@ RunLinkSession8Exchange_GivingScene_ShowEgg::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene_HideEgg", ROMX
+
 ; A scene step shared by the giving, obtained and traded scenes: clears wObject5 byte 0 (hides the
 ; script meta-sprite object) and wArg1, then advances wScreenSubStep. (C2, E-0371; probed E-0385)
 RunLinkSession8Exchange_GivingScene_HideEgg::
@@ -2011,6 +2113,8 @@ RunLinkSession8Exchange_GivingScene_HideEgg::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene_WalkObject1Off", ROMX
 
 ; Giving scene, step 10: turns object 1 right and walks it off the screen (X $E0). (C2, E-0357;
 ; probed E-0385)
@@ -2034,6 +2138,8 @@ RunLinkSession8Exchange_GivingScene_WalkObject1Off::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_GivingScene_EggReceived", ROMX
+
 ; Giving scene, step 11: '<name> received your egg.' (string 9) and resets the save steps. (C1,
 ; E-0357)
 RunLinkSession8Exchange_GivingScene_EggReceived::
@@ -2050,6 +2156,8 @@ RunLinkSession8Exchange_GivingScene_EggReceived::
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_ObtainedEgg", ROMX
 
 ; Dream Egg screen state 8, the closing scene when this side obtained an egg (wF0ScreenKind 1): runs
 ; the step for wScreenSubStep (13 steps): timed waits, object 1 walking in, the egg shown and
@@ -2097,6 +2205,8 @@ RunLinkSession8Exchange_ObtainedEgg_MoveSpriteOff::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_ObtainedEgg_ShowObtained", ROMX
+
 ; Obtaining scene, step 11: 'Obtained an egg from <name>.' (string $0A) and resets the save steps.
 ; (C1, E-0357)
 RunLinkSession8Exchange_ObtainedEgg_ShowObtained::
@@ -2113,6 +2223,8 @@ RunLinkSession8Exchange_ObtainedEgg_ShowObtained::
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_EggsTraded", ROMX
 
 ; Dream Egg screen state 9, a closing scene for 'Eggs were traded with ...' (wF0ScreenKind 2): runs
 ; the step for wScreenSubStep (17 steps): the egg is shown and hidden twice, object 1 and the sprite
@@ -2162,6 +2274,8 @@ RunLinkSession8Exchange_EggsTraded_MoveOff::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 EggsTraded_MoveOff_StepSpriteLeft", ROMX
+
 ; Part of RunLinkSession8Exchange_EggsTraded_MoveOff. Sets the sprite state (wSpriteSlots + $7) to
 ; 3; when the counter wSpriteSlots + $9 & 3 is non-zero decrements the sprite X (wSpriteSlots + $B)
 ; and returns A = $FF when it reaches $E0; otherwise A = 0. (C2, E-0385)
@@ -2186,6 +2300,8 @@ EggsTraded_MoveOff_StepSpriteLeft::
     xor a
     ret
 
+SECTION "Bank F0 EggsTraded_MoveOff_StepObject1Right", ROMX
+
 ; Part of RunLinkSession8Exchange_EggsTraded_MoveOff. Sets wObject1 + OBJ_STATE to 1; when wObject1
 ; + OBJ_ANIM_COUNTER & 3 is non-zero increments wObject1 + OBJ_X (nothing stops it at $E0: the
 ; compare at the end has no effect). Returns A = the new X, or 0 when the counter is idle. (C2,
@@ -2205,6 +2321,8 @@ EggsTraded_MoveOff_StepObject1Right::
     ret nz
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_EggsTraded_ShowTraded", ROMX
+
 ; Trading scene, step 15: 'Eggs were traded with <name>.' (string $0B) and resets the save steps.
 ; (C1, E-0357)
 RunLinkSession8Exchange_EggsTraded_ShowTraded::
@@ -2221,6 +2339,8 @@ RunLinkSession8Exchange_EggsTraded_ShowTraded::
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ret
+
+SECTION "Bank F0 HatchingScene", ROMX
 
 ; Dream Egg screen state 10, the closing scene when the egg improved (wF0ScreenKind 3): runs the
 ; step for wScreenSubStep (35 steps): waits, the sprite and object 1 walking, the egg shown
@@ -2281,6 +2401,8 @@ HatchingScene_RunText::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 HatchingScene_DrawFrame", ROMX
+
 ; Hatching scene, step 31: draws the 20 x 13 frame, clears the battle scene, sprite count and name
 ; entry state and sets wMenuCounter 1. (C2, E-0357; probed E-0385)
 HatchingScene_DrawFrame::
@@ -2300,6 +2422,8 @@ HatchingScene_DrawFrame::
     ld a, $01
     ld [wMenuCounter], a
     ret
+
+SECTION "Bank F0 HatchingScene_RunEggScreens", ROMX
 
 ; Hatching scene, step 33: runs game mode 6's update with the hatch state swapped into the screen
 ; state (the egg screens); when it asks for a mode change switches to game mode 7, state $0A,
@@ -2362,6 +2486,8 @@ HatchingScene_RunEggScreens::
     ld [wSaveRecordIndex], a
     ret
 
+SECTION "Bank F0 HatchingScene_ShowEgg", ROMX
+
 ; Hatching scene, step 8: turns the sprite left and moves it to $20, then starts field command $0E
 ; (the egg at ($48, $40)) and stops the sprite. (C1, E-0357)
 HatchingScene_ShowEgg::
@@ -2398,6 +2524,8 @@ HatchingScene_ShowEgg::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 HatchingScene_TurnSpriteRight", ROMX
+
 ; Hatching scene, step 9: turns the sprite right. (C2, E-0357; probed E-0385)
 HatchingScene_TurnSpriteRight::
     ld a, $01
@@ -2406,6 +2534,8 @@ HatchingScene_TurnSpriteRight::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 HatchingScene_TurnObject2Left", ROMX
 
 ; Sets wObject2 + OBJ_STATE to 3 (facing left in these scenes) and advances wScreenSubStep. A step
 ; of HatchingScene (three times) and RunLinkSession8Exchange_EggHatched (twice). (C2, E-0371; probed
@@ -2418,6 +2548,8 @@ HatchingScene_TurnObject2Left::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 HatchingScene_TurnObject2Right", ROMX
+
 ; Sets wObject2 + OBJ_STATE to 1 (facing right in these scenes) and advances wScreenSubStep. A step
 ; of HatchingScene (twice) and RunLinkSession8Exchange_EggHatched (three times). (C2, E-0371; probed
 ; E-0385)
@@ -2428,6 +2560,8 @@ HatchingScene_TurnObject2Right::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 HatchingScene_WalkObject2Left", ROMX
 
 ; Hatching scene, step 26: walks object 2 left until X $30. (C2, E-0357; probed E-0385)
 HatchingScene_WalkObject2Left::
@@ -2449,6 +2583,8 @@ HatchingScene_WalkObject2Left::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 UnusedStepObject1LeftShowEgg", ROMX
 
 ; No caller was found in src. While wObject1 + OBJ_ANIM_COUNTER & 3 is non-zero: decrements wObject1
 ; + OBJ_X; at X $60 runs field command $0E (RunFieldCommandTemp0), sets wObject5 + SCRIPTOBJ_X/Y to
@@ -2490,6 +2626,8 @@ UnusedStepObject1LeftShowEgg::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 HatchingScene_Hatch", ROMX
+
 ; Hatching scene, step 10: counts $D9 frames (sound $74 at frame $BA), then hides the egg, adds a
 ; sprite slot and goes on. (C2, E-0357; probed E-0385)
 HatchingScene_Hatch::
@@ -2519,6 +2657,8 @@ HatchingScene_Hatch::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 HatchingScene_Bob", ROMX
+
 ; Hatching scene, step 11: bobs object 1's Y through the offset table every four frames and turns
 ; the sprite right. (C2, E-0357; probed E-0385)
 HatchingScene_Bob::
@@ -2527,6 +2667,8 @@ HatchingScene_Bob::
     ld a, $01
     ld [wSpriteSlots + $7], a
     ret
+
+SECTION "Bank F0 HatchingScene_WalkOff", ROMX
 
 ; Hatching scene, step 28: walks object 2 and the sprite left off the screen. (C2, E-0357; probed
 ; E-0385)
@@ -2554,6 +2696,8 @@ HatchingScene_WalkOff::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 HatchingScene_ShowGHatchedFromThe", ROMX
+
 ; Hatching scene, step 30: '<species> hatched from the egg that ...' (string $0C, the egg's species)
 ; and prepares the egg screen (hatch state 2, link breed result 1). (C1, E-0357)
 HatchingScene_ShowGHatchedFromThe::
@@ -2576,6 +2720,8 @@ HatchingScene_ShowGHatchedFromThe::
     ld a, $01
     ld [wLinkBreedResult], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_EggHatched", ROMX
 
 ; Dream Egg screen state 11, the closing scene when the partner byte 2 is set (wF0ScreenKind 4):
 ; runs the step for wScreenSubStep (32 steps): waits, object 1 walking, the egg shown
@@ -2656,6 +2802,8 @@ RunLinkSession8Exchange_EggHatched_ShowEgg::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_EggHatched_TurnObject1Left", ROMX
+
 ; Hatched scene, step 9: turns object 1 left. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_EggHatched_TurnObject1Left::
     ld a, $03
@@ -2664,6 +2812,8 @@ RunLinkSession8Exchange_EggHatched_TurnObject1Left::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_EggHatched_WalkObject2", ROMX
 
 ; Hatched scene, step 26: walks object 2 right until X $60. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_EggHatched_WalkObject2::
@@ -2685,6 +2835,8 @@ RunLinkSession8Exchange_EggHatched_WalkObject2::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F0 UnusedStepSpriteRightShowEgg", ROMX
 
 ; No caller was found in src. While wSpriteSlots + $9 & 3 is non-zero: increments wSpriteSlots + $B
 ; (the sprite X); at X $30 runs field command $0E (RunFieldCommandTemp0), sets wObject5 +
@@ -2725,6 +2877,8 @@ UnusedStepSpriteRightShowEgg::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_EggHatched_BobSprite", ROMX
+
 ; Hatched scene step: every fourth frame adds the next offset of
 ; StepScreenStepOffsetTableEvery4Frames's table to wSpriteSlots + $C (the sprite's Y), advancing
 ; wScreenStep; the table's $80 end mark advances wScreenSubStep. (C2, E-0371; probed E-0385)
@@ -2732,6 +2886,8 @@ RunLinkSession8Exchange_EggHatched_BobSprite::
     ld de, wSpriteSlots + $c
     call StepScreenStepOffsetTableEvery4Frames
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_EggHatched_WalkOff", ROMX
 
 ; Hatched scene, step 28: walks objects 1 and 2 right off the screen. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_EggHatched_WalkOff::
@@ -2758,6 +2914,8 @@ RunLinkSession8Exchange_EggHatched_WalkOff::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_EggHatched_ShowHatched", ROMX
+
 ; Hatched scene, step 30: '<species> hatched from the egg that <name> ...' (string $0D, the hatched
 ; species) and resets the save steps. (C1, E-0357)
 RunLinkSession8Exchange_EggHatched_ShowHatched::
@@ -2780,6 +2938,8 @@ RunLinkSession8Exchange_EggHatched_ShowHatched::
     ld [wSaveRecordIndex], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_WaitForPartner", ROMX
+
 ; Dream Egg screen state 12 (the save is done): runs the step for wScreenStep: 0 shows 'Please
 ; wait...', 1 sends $BA, 2 waits for the partner $BA, 3 runs
 ; RunLinkSession8Exchange_ShowMessage_WaitTextFlags (back to the link menu). (C1, E-0385)
@@ -2801,6 +2961,8 @@ RunLinkSession8Exchange_WaitForPartner_ShowWait::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 RunLinkSession8Exchange_WaitForPartner_SendSync", ROMX
+
 ; Waiting for the partner, step 1: sends $BA. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_WaitForPartner_SendSync::
     ld a, [wScreenStep]
@@ -2809,6 +2971,8 @@ RunLinkSession8Exchange_WaitForPartner_SendSync::
     ld a, $ba
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank F0 RunLinkSession8Exchange_WaitForPartner_WaitSync", ROMX
 
 ; Waiting for the partner, step 2: on the partner's $BA goes on. (C2, E-0357; probed E-0385)
 RunLinkSession8Exchange_WaitForPartner_WaitSync::
@@ -2821,6 +2985,8 @@ RunLinkSession8Exchange_WaitForPartner_WaitSync::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 StepScreenStepOffsetTableEvery4Frames", ROMX
 
 ; DE = address of a byte (here the Y of an object or sprite). Adds 1 to wScreenCounter; every fourth
 ; call (counter & 3 = 0) adds the signed entry
@@ -2859,6 +3025,8 @@ StepScreenStepOffsetTableEvery4Frames::
     ld [wScreenCounter], a
     ret
 
+SECTION "Bank F0 StepScreenStepOffsetTableEvery4Frames_Data", ROMX
+
 ; Nine bytes: signed steps $FD, $FD, $FE, $00, $01, $01, $03, $03 (net zero), then the end mark $80.
 ; Every fourth call StepScreenStepOffsetTableEvery4Frames adds entry [wScreenStep] to the byte at DE
 ; and increments wScreenStep; at the $80 it increments wScreenSubStep and clears wScreenStep and
@@ -2884,6 +3052,8 @@ CopyStringMaxBToDE::
     ld a, $f0
     ld [de], a
     ret
+
+SECTION "Bank F0 LinkEggList", ROMX
 
 ; The egg list of the Dream Egg screen (state 1, DreamEggs_State1 calls it when the partner has not
 ; cancelled): runs the step for wScreenStep: LinkEggList_LoadTiles, LinkEggList_ListEggs,
@@ -2913,6 +3083,8 @@ LinkEggList_LoadTiles::
     farcall SaveTilesToBGMap1BottomHalf
     ret
 
+SECTION "Bank F0 LinkEggList_ListEggs", ROMX
+
 ; The egg list, step 1: draws the 13 x 9 list box with the Ally / Store choice marked and lists the
 ; eggs (ListRecordsInUseEggs). (C1, E-0357)
 LinkEggList_ListEggs::
@@ -2933,6 +3105,8 @@ LinkEggList_ListEggs::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkEggList_ListEggs_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -2978,6 +3152,8 @@ LinkEggList_ClearText::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkEggList_DrawPageFrame", ROMX
+
 ; The egg list, step 3: redraws the box, clamps the page cursor of four and, with two or more pages,
 ; draws the page brackets and page-of-pages numbers. (C1, E-0357)
 LinkEggList_DrawPageFrame::
@@ -3016,6 +3192,8 @@ LinkEggList_DrawPageFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkEggList_DrawSpeciesNames", ROMX
+
 ; The egg list, step 4: draws the page's species names. (C1, E-0357)
 LinkEggList_DrawSpeciesNames::
     xor a
@@ -3025,6 +3203,8 @@ LinkEggList_DrawSpeciesNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkEggList_DrawMarks", ROMX
 
 ; The egg list, step 5: loads the mark tiles and draws the page's marks. (C1, E-0357)
 LinkEggList_DrawMarks::
@@ -3041,6 +3221,8 @@ LinkEggList_DrawMarks::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkEggList_Cursor", ROMX
 
 ; The egg list, step 6: the list cursor: a page change goes back four steps; B goes on; A picks the
 ; egg, goes to state 2 and hides the sprites. (C1, E-0357)
@@ -3088,6 +3270,8 @@ LinkEggList_Cursor::
     call SaveAndHideSpriteState_BankF0
     ret
 
+SECTION "Bank F0 LinkEggList_Cancel", ROMX
+
 ; The egg list, step 7 (B): moves a 13 x 9 area of the screen buffer and draws a 7 x 1 strip. (C2,
 ; E-0357; probed E-0385)
 LinkEggList_Cancel::
@@ -3107,6 +3291,8 @@ LinkEggList_Cancel::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkEggList_Cancel_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -3145,6 +3331,8 @@ LinkEggList_RedrawScreen::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkEggList_ShowChooseTheKindOf", ROMX
+
 ; The egg list, step 9: reloads the list tiles six per call; when done clears the choice mark and
 ; returns to state 0, step 7 with 'Choose the kind of egg to ...' (string 4). (C1, E-0357)
 LinkEggList_ShowChooseTheKindOf::
@@ -3174,6 +3362,8 @@ LinkEggList_ShowChooseTheKindOf::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 BeginString_BankF0_Cat0", ROMX
+
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_2 starts
 ; that Dream Egg screen message (for example 6 'Is it OK to transfer the egg?', 7 'OK to save the
 ; egg trade results?', 8 'Please wait...'). (C1, E-0385)
@@ -3184,6 +3374,8 @@ BeginString_BankF0_Cat0::
     ld [wStringCategory], a
     call BeginStringDisplay_BankF0_2
     ret
+
+SECTION "Bank F0 LinkRecordScreen", ROMX
 
 ; The record screen of the Dream Egg screen (state 3, DreamEggs_RecordScreen calls it): shows the
 ; record of the chosen egg with its parents; runs the step for wScreenStep (17 steps): clear, load
@@ -3229,6 +3421,8 @@ LinkRecordScreen_Clear::
     call CopyFromBankWaitVRAM
     ret
 
+SECTION "Bank F0 ClearBGMapAtScrollAndResetScroll_BankF0", ROMX
+
 ; Fills the 32 x 32 BG map from the scroll origin (BGMapAddressAtScroll_BankF0) with BGFillTile
 ; through FillTileRectWithArg1Tile (wArg1/wArg2 = BGFillTile, wArg3 = wArg4 = $20, wArg5/wArg6 = HL,
 ; wArg7 = 0), then hScrollX = hScrollY = 0 and wScreenStep += 1. Called by LinkRecordScreen_Clear
@@ -3262,6 +3456,8 @@ ClearBGMapAtScrollAndResetScroll_BankF0::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_CopyGlyphTiles", ROMX
+
 ; The record screen (LinkRecordScreen, entry 1 of its jumptable on wScreenStep): copies 31 glyph
 ; tiles from bank $1F (sources in LinkRecordScreen_CopyGlyphTiles_TileCopySrcList) to vTiles2 + $20
 ; through + $1F0 and to vTiles2 + $6F0 (LinkRecordScreen_CopyGlyphTiles_TileCopyDestList, ended by
@@ -3275,6 +3471,8 @@ LinkRecordScreen_CopyGlyphTiles::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkRecordScreen_OrGlyphs", ROMX
 
 ; The record screen, step 2: ORs six glyph tiles into VRAM $9020 onward (OrFromBankWaitVRAM). (C1,
 ; E-0357)
@@ -3314,6 +3512,8 @@ LinkRecordScreen_OrGlyphs::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_ClearText", ROMX
+
 ; The record screen, step 3: clears the text tiles, loads a frame tile and turns the paged cursor
 ; into a plain index (page x 4 + row). (C1, E-0357)
 LinkRecordScreen_ClearText::
@@ -3339,6 +3539,8 @@ LinkRecordScreen_ClearText::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_DrawPedigreeFrame", ROMX
+
 ; The record screen, step 4: loads the arrow tiles, draws the 20 x 18 pedigree frame and loads the
 ; party's species sprites. (C1, E-0357)
 LinkRecordScreen_DrawPedigreeFrame::
@@ -3362,6 +3564,8 @@ LinkRecordScreen_DrawPedigreeFrame::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkRecordScreen_DrawParents", ROMX
 
 ; The record screen, step 5: draws the record's parents' names and family entries, the arrow tiles
 ; $6C/$6D, and with two or more entries the scroll arrows. (C1, E-0357)
@@ -3423,6 +3627,8 @@ LinkRecordScreen_DrawParents::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkRecordScreen_LoadPicture", ROMX
 
 ; The record screen, step 6: in two sub-steps loads the monster's picture into VRAM $9480 and, on
 ; the GBC, its palette and attributes, then draws its 6 x 6 frame. (C1, E-0357)
@@ -3508,6 +3714,8 @@ LinkRecordScreen_LoadPicture::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_Cursor", ROMX
+
 ; The record screen, step 7: the cursor; a move with two or more flagged records goes on one step; A
 ; or B split the cursor back into page and row and go on two steps. (C2, E-0357; probed E-0385)
 LinkRecordScreen_Cursor::
@@ -3545,6 +3753,8 @@ LinkRecordScreen_Cursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_ClearTiles", ROMX
+
 ; The record screen, step 8: clears the text and picture tiles and goes back four steps. (C1,
 ; E-0357)
 LinkRecordScreen_ClearTiles::
@@ -3559,6 +3769,8 @@ LinkRecordScreen_ClearTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_CopyGlyphs", ROMX
+
 ; The record screen, step 10: copies the list glyph tiles. (C1, E-0357)
 LinkRecordScreen_CopyGlyphs::
     ld hl, LinkRecordScreen_CopyGlyphs_TileCopyDestList
@@ -3568,6 +3780,8 @@ LinkRecordScreen_CopyGlyphs::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkRecordScreen_ShowInfoOK", ROMX
 
 ; The record screen, step 11: copies more glyph tiles, shows 'Info / OK' (string $1E, 9 x 1) and ORs
 ; a glyph tile in. (C1, E-0357)
@@ -3600,6 +3814,8 @@ LinkRecordScreen_ShowInfoOK::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_ClearTextAgain", ROMX
+
 ; The record screen, step 12: clears five tile areas of the text and resets the text window. (C1,
 ; E-0357)
 LinkRecordScreen_ClearTextAgain::
@@ -3631,6 +3847,8 @@ LinkRecordScreen_ClearTextAgain::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_DrawListBox", ROMX
+
 ; The record screen, step 13: draws the list box and clamps the page cursor of four. (C1, E-0357)
 LinkRecordScreen_DrawListBox::
     ld de, LinkEggList_DrawPageFrame_TileRect
@@ -3639,6 +3857,8 @@ LinkRecordScreen_DrawListBox::
     call CopyRectTo20ByteRows_BankF0
     farcall ClampRecordListPageCursor4
     jr LinkRecordScreen_DrawListBox_PageStrip
+
+SECTION "Bank F0 DrawPageIndicatorWhenTwoPagesAndStep", ROMX
 
 ; With wListPages of 2 or more draws the page indicator in the window tile buffer: tiles $C5, $BE,
 ; $C6 two apart at wWindowTileBuffer + $112 (StoreC5BEC6AtHLStride2_BankF0) and the current page and
@@ -3668,6 +3888,8 @@ DrawPageIndicatorWhenTwoPagesAndStep_NextStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F0 LinkRecordScreen_DrawListBox_PageStrip", ROMX
+
 ; Copies the 8 x 1 tile strip after it to wWindowTileBuffer + $110 (CopyRectTo20ByteRows_BankF0),
 ; then increments wScreenStep. Reached only from LinkRecordScreen_DrawListBox, after the list box is
 ; drawn and the page cursor clamped. (C2, E-0371; probed E-0385)
@@ -3677,6 +3899,8 @@ LinkRecordScreen_DrawListBox_PageStrip::
     lb bc, $08, $01
     call CopyRectTo20ByteRows_BankF0
     jr DrawPageIndicatorWhenTwoPagesAndStep_NextStep
+
+SECTION "Bank F0 LinkRecordScreen_DrawListBox_PageStrip_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -3693,6 +3917,8 @@ LinkRecordScreen_DrawSpeciesNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkRecordScreen_DrawMarks", ROMX
 
 ; The record screen, step 15: loads the mark tiles, draws the page's marks and marks the cursor
 ; entry. (C1, E-0357)
@@ -3715,6 +3941,8 @@ LinkRecordScreen_DrawMarks::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank F0 LinkRecordScreen_Leave", ROMX
 
 ; The record screen, step 16 (leaving): redraws the screen and the bottom rows, restores the sprite
 ; state and hide tile $70 and returns to the chosen egg (state 2, step 3). (C1, E-0357)
@@ -3748,6 +3976,8 @@ LinkRecordScreen_Leave::
     ld [hl], $12
     ret
 
+SECTION "Bank F0 SaveAndHideSpriteState_BankF0", ROMX
+
 ; Saves hSpriteWindowClipMode, hFieldDrawFlags and wSpriteSlotCount in wSavedSpriteClipMode,
 ; wSavedFieldDrawFlags and wSavedSpriteSlotCount, then sets the clip mode and hSpriteHideTile to 0,
 ; hFieldDrawFlags to $FF and wSpriteSlotCount to 0. Called when the egg list hands over to the next
@@ -3771,6 +4001,8 @@ SaveAndHideSpriteState_BankF0::
     ld [wSpriteSlotCount], a
     ret
 
+SECTION "Bank F0 RestoreSpriteStateClearCount_BankF0", ROMX
+
 ; Restores hSpriteWindowClipMode and hFieldDrawFlags from the saved copies, sets hSpriteHideTile to
 ; $80 and sets wSpriteSlotCount to 0: the saved count is read but then replaced by 0 (xor a), so it
 ; is not restored. Called by LinkRecordScreen_Leave. (C2, E-0385)
@@ -3788,6 +4020,8 @@ RestoreSpriteStateClearCount_BankF0::
     xor a
     ld [wSpriteSlotCount], a
     ret
+
+SECTION "Bank F0 RunTextUntilTextWindowStateDone_BankF0", ROMX
 
 ; Clears the default window (FillTilesRequest on vTiles1, size $1202), sets wTextWindowState = 1,
 ; wTextWindowStep = 0 and hSpriteWindowClipMode = 2, then calls StepTextWindowOpenClose until
@@ -3816,6 +4050,8 @@ RunTextUntilTextWindowStateDone_BankF0::
     jr nz, .loop
     ret
 
+SECTION "Bank F0 SplitListCursorBy4_BankF0", ROMX
+
 ; Turns the plain list index in wListCursor into page and row for a list with four rows per page:
 ; wListPageIndex = wListCursor / 4 and wListCursor = wListCursor mod 4 (DivideHLByA). Called by
 ; LinkRecordScreen_Cursor on A or B. (C2, E-0385)
@@ -3831,6 +4067,8 @@ SplitListCursorBy4_BankF0::
     ld a, l
     ld [wListPageIndex], a
     ret
+
+SECTION "Bank F0 LinkRecordScreen_DrawBlankPicture", ROMX
 
 ; HL = BGMapAddressAtScroll_BankF0 + $41; draws the 6 x 6 rectangle BlankPictureTileRect (all tile
 ; $C3) there with wArg3 = wArg4 = 6 and wArg7 = 0 (DrawTileRectAtHLFromDE_BankF0): blanks the
@@ -3851,6 +4089,8 @@ LinkRecordScreen_DrawBlankPicture::
     ld [wArg7], a
     call DrawTileRectAtHLFromDE_BankF0
     ret
+
+SECTION "Bank F0 SwapMonstersMenu_CopyGlyphTiles_BankF0", ROMX
 
 ; Copies glyph tiles from a pair of tile lists (destinations at HL, sources at DE, bank $1F) to VRAM
 ; until the list ends ($FF), then clears wGlyphListPos. (C1, E-0357)
@@ -3900,6 +4140,8 @@ SwapMonstersMenu_CopyGlyphTiles_BankF0::
     xor a
     ld [wGlyphListPos], a
     ret
+
+SECTION "Bank F0 CopyRectTo20ByteRows_BankF0", ROMX
 
 ; DE = source, HL = destination, B = width, C = rows: copies C rows of B bytes from [DE] to [HL],
 ; the rows $14 apart in the destination (a window tile buffer row is 20 bytes). On a DMG HL and BC
@@ -3961,6 +4203,8 @@ CopyRectTo20ByteRows_BankF0::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank F0 DrawScreenBufferRect_BankF0", ROMX
+
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: draws that rectangle
 ; of the screen buffer to the BG map (CopyRectToBGMapWrapped) and sets wTextCursorLo/wTextCursorHi =
 ; HL + $01C1. On a CGB (wIsCGB set) it then also draws the same rectangle from wScreenAttrBuffer +
@@ -4011,6 +4255,8 @@ DrawScreenBufferRect_BankF0::
     ldh [rVBK], a
     ret
 
+SECTION "Bank F0 BGMapAddressAtScroll_BankF0", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for the scroll position
 ; (hScrollX, hScrollY); clobbers A and DE. (C1, E-0385)
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
@@ -4032,6 +4278,8 @@ BGMapAddressAtScroll_BankF0::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank F0 DrawC5BEC6AtScrollOffsetDE_BankF0", ROMX
 
 ; DE = offset: draws tiles $C5, $BE and $C6 into the BG map two entries apart starting at
 ; BGMapAddressAtScroll_BankF0 + DE (StepBGMapAddressBackOnScrollWrap before the first,
@@ -4065,6 +4313,8 @@ DrawC5BEC6AtScrollOffsetDE_BankF0::
     ei
     ret
 
+SECTION "Bank F0 StoreC5BEC6AtHLStride2_BankF0", ROMX
+
 ; [HL] = $C5, [HL + 2] = $BE, [HL + 4] = $C6 (the page bracket tiles in a tile buffer); HL ends at
 ; the original HL + 4; clobbers A. (C2, E-0385)
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
@@ -4081,6 +4331,8 @@ StoreC5BEC6AtHLStride2_BankF0::
     ld a, $c6
     ld [hl], a
     ret
+
+SECTION "Bank F0 DrawPageOfPagesAtScrollOffset_BankF0", ROMX
 
 ; wArg1:wArg2 = an offset: at BGMapAddressAtScroll_BankF0 + offset writes tile $E0 + wListPageIndex
 ; + 1 (the current page, counted from 1) and two entries later tile $E0 + wListPages (the page
@@ -4125,6 +4377,8 @@ DrawPageOfPagesAtScrollOffset_BankF0::
     ei
     ret
 
+SECTION "Bank F0 DrawPageOfPagesAtArg1_BankF0", ROMX
+
 ; HL = wArg1:wArg2 (wArg1 is the high byte): writes tile $E0 + wListPageIndex + 1 (the current page,
 ; counted from 1) at HL and tile $E0 + wListPages (the page count) at HL + 2. HL ends at the
 ; original HL + 2. (C2, E-0385)
@@ -4148,6 +4402,8 @@ DrawPageOfPagesAtArg1_BankF0::
     ld [hl], a
     ret
 
+SECTION "Bank F0 CopyBytesDEToHL_BankF0", ROMX
+
 ; DE = source, HL = destination, BC = count: copies BC bytes from [DE] to [HL] (BC = 0 copies
 ; 65536). DE and HL end past the copy; BC = 0 and A is clobbered. (C2, E-0385)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
@@ -4161,6 +4417,8 @@ CopyBytesDEToHL_BankF0::
     or c
     jr nz, CopyBytesDEToHL_BankF0
     ret
+
+SECTION "Bank F0 CopyLow3BitsToWRAMBank2_BankF0", ROMX
 
 ; DE = source, HL = destination, BC = count: sets rSVBK = 2, copies BC bytes from [DE] to [HL] each
 ; ANDed with $07 (the CGB tile attribute buffer is copied this way), then sets rSVBK = 0. DE and HL
@@ -4183,6 +4441,8 @@ CopyLow3BitsToWRAMBank2_BankF0::
     xor a
     ldh [rSVBK], a
     ret
+
+SECTION "Bank F0 CopyScreenBufferRectWithAttrs_F0", ROMX
 
 ; HL = destination offset, DE = source offset (both into wScreenTileBuffer), C = rows, wArg1:wArg2 =
 ; the byte count per row (wArg1 is the high byte): for each row copies that many bytes
@@ -4249,6 +4509,8 @@ CopyScreenBufferRectWithAttrs_F0::
     dec c
     jr nz, CopyScreenBufferRectWithAttrs_F0
     ret
+
+SECTION "Bank F0 LinkRecordScreen_CopyGlyphTiles_TileCopyDestList", ROMX
 
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
@@ -4396,6 +4658,8 @@ DrawTileRectAtHLFromDE_BankF0::
     farcall DrawTileRectFromArg1Params
     ret
 
+SECTION "Bank F0 GetListEntriesCell4Address_BankF0", ROMX
+
 ; HL = wListEntries + 4 * wListPageIndex + wListCursor, the address of the list cell under the
 ; cursor, through SetArg5ToListEntriesCell4 (which also stores it in wArg5/wArg6). (C2, E-0385)
 ; the same 15 bytes as GetListEntriesCell4Address (GetListEntriesCell4Address) (E-0075)
@@ -4406,6 +4670,8 @@ GetListEntriesCell4Address_BankF0::
     ld a, [wArg6]
     ld l, a
     ret
+
+SECTION "Bank F0 StoreBAtWordTableEntry_BankF0", ROMX
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A. BC is kept; A, DE
 ; and HL are clobbered. (C2, E-0385)
@@ -4422,6 +4688,8 @@ StoreBAtWordTableEntry_BankF0::
     ld a, b
     ld [de], a
     ret
+
+SECTION "Bank F0 HandleTwoChoiceCursorInput_F0", ROMX
 
 ; wArg2 = which cursor place table to use (0-2, DrawTileBAtArg2Entry_F0_Data). Up or Down (bits 6
 ; and 7 of wJoypadPressedRepeat): erases the cursor (tile $C3), toggles wMenuChoice between 0 and 1,
@@ -4494,6 +4762,8 @@ HandleTwoChoiceCursorInput_F0::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank F0 BlinkCursorBlinkB8_BankF0", ROMX
+
 ; While wJoypadRepeatTimer is below $14 draws the cursor tile $BB. From $14 on it increments
 ; wListCursorBlink (0-$17, then back to 0) and draws the cursor tile $BB for counts below $10 and
 ; the blank tile $C3 for $10-$17, both at the place of wMenuChoice through DrawTileBAtArg2Entry_F0.
@@ -4521,12 +4791,16 @@ DrawCursorTileBB_BankF0::
     ld b, $bb
     jr DrawTileBAtArg2Entry_F0
 
+SECTION "Bank F0 DrawBlankTileC3_BankF0", ROMX
+
 ; B = $C3 (the blank tile) and jumps to DrawTileBAtArg2Entry_F0, which draws it at the place of
 ; wMenuChoice in the table chosen by wArg2. (C1, E-0385)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_BankF0::
     ld b, $c3
     jr DrawTileBAtArg2Entry_F0
+
+SECTION "Bank F0 DrawArrowTileBCAtArg2Entry_F0", ROMX
 
 ; B = $BC (the arrow tile) and falls into DrawTileBAtArg2Entry_F0, which draws it at the place of
 ; wMenuChoice in the table chosen by wArg2. (C1, E-0385)
@@ -4571,6 +4845,8 @@ DrawTileBAtArg2Entry_F0::
     ei
     ret
 
+SECTION "Bank F0 DrawTileBAtArg2Entry_F0_Data", ROMX
+
 ; Nine words in two layers: three pointers ($67C6, $67CA, $67CE, into this block) followed by three
 ; pairs of offsets ($012D and $016D, $012E and $016E, $012F and $016F). DrawTileBAtArg2Entry_F0
 ; picks a pair with wArg2 (0-2) and an offset in it with wMenuChoice; the offset (row 9 or row 11,
@@ -4603,6 +4879,8 @@ RunWithArg1ForF0ScreenKind::
     ld [wArg1], a
     call RunWithArg1ForF0ScreenKind_SetUpScene
     ret
+
+SECTION "Bank F0 RunWithArg1ForF0ScreenKind_SetUpScene", ROMX
 
 ; Sets up a closing scene: the sprite slots and object 1 (with or without the hatch data; the
 ; alternatives behind EVENT_NEVER_SET are never chosen), decompresses their graphics, starts field
@@ -4729,6 +5007,8 @@ RunWithArg1ForF0ScreenKind_SetUpScene::
 .return:
     ret
 
+SECTION "Bank F0 CopyBytesDEFromHL_BankF0", ROMX
+
 ; HL = source, DE = destination, B = count (0 copies 256): copies B bytes from [HL] to [DE]. HL and
 ; DE end past the copy, B = 0 and A is clobbered. (C2, E-0385)
 ; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
@@ -4739,6 +5019,8 @@ CopyBytesDEFromHL_BankF0::
     dec b
     jr nz, CopyBytesDEFromHL_BankF0
     ret
+
+SECTION "Bank F0 HatchingScene_DrawFrame_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -4928,6 +5210,8 @@ RaiseLowestResistances::
     ld [hl], a
     jp RaiseLowestResistances
 
+SECTION "Bank F0 GiftRecord_LoadSkillsResistancesFromSpecies", ROMX
+
 ; Fills the gift Egg record from its species: loads the species record of the id at wGiftRecord +
 ; MON_SPECIES (LoadSpeciesRecord), copies its three natural skills (SPECIES_SKILLS) to the first
 ; three bytes of MON_SKILL_LIST and its 27 base resistances (SPECIES_RESISTANCES) over
@@ -4964,6 +5248,8 @@ GiftRecord_LoadSkillsResistancesFromSpecies::
     ld a, [wGiftRecord + MON_MAX_MP]
     ld [wGiftRecord + MON_MP], a
     ret
+
+SECTION "Bank F0 RankFamilyScoresIntoFamilyRanking", ROMX
 
 ; Chooses the family and species of the gift Egg from the 11 family scores at wFamilyScores. It
 ; ranks the families from the highest score down into wFamilyRanking: a tie is settled by bit 0 of
@@ -5125,6 +5411,8 @@ RankFamilyScoresIntoFamilyRanking::
     ld a, [hl]
     ld [wGiftRecord + MON_FAMILY], a
     ret
+
+SECTION "Bank F0 FamilyBandSpeciesTable", ROMX
 
 ; RankFamilyScoresIntoFamilyRanking walks wFamilyRanking (10 families), reads the word at $6CB5 + 2
 ; * family, then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that list, and walks the
@@ -5967,6 +6255,8 @@ RandomModulo29_BankF0::
     call DivideHLByA
     ret
 
+SECTION "Bank F0 BandOfFamilyBitCount", ROMX
+
 ; A = 4 when wFamilyBitCount is below 4, 5 when below 6, 6 when below 10, else 7.
 ; RankFamilyScoresIntoFamilyRanking stores it in wRankBand to pick one of the 8 band lists of each
 ; family (only bands 4-7 are ever chosen), and RunLinkSession8Exchange_Trade_RankFamilies scales the
@@ -5994,6 +6284,8 @@ BandOfFamilyBitCount::
 .return_06:
     ld a, $06
     ret
+
+SECTION "Bank F0 UnreferencedBytesF0_1", ROMX
 
 ; no reference found in any bank (no address load, word or split high/low load of $70C5-$7244); 384
 ; bytes after BandOfFamilyBitCount's last ret, all values 0-7, in runs that climb to 6 or 7
@@ -6072,6 +6364,8 @@ MarkBitBInFamilyBitsAndCount::
     ld c, $ff
     ret
 
+SECTION "Bank F0 RecordGiftAndMaybeApplyPrevious", ROMX
+
 ; Records a gift given to the Egg: adds 1 to wGiftCount (it stops at $0F). When wPendingGiftItem is
 ; not 0 (the previous gift), rolls 0-99 with RandomModulo29_BankF0 and runs ApplyGiftEffectByItem
 ; when the roll is below 100 - 5 * wGiftCount. Then wArg1, the item being given now, becomes
@@ -6111,6 +6405,8 @@ RecordGiftAndMaybeApplyPrevious::
     ld a, [wArg1]
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 ClearRollCounterWhenGM2TimerMinutesIs59", ROMX
 
 ; Returns unless wGM2TimerMinutes is $3B and wGM2TimerSeconds and wGM2TimerFrames are 0. In that one
 ; frame it sets wGiftCount to 0 and then falls straight into ApplyGiftEffectByItem, so the pending
@@ -6254,6 +6550,8 @@ GiftEffect_Item00::
     call AddBClampedToC
     ret
 
+SECTION "Bank F0 GiftEffect_Herb", ROMX
+
 ; Gift effect for ITEM_HERB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
 ; the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 0 (family 0, Slime; at
 ; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6274,6 +6572,8 @@ GiftEffect_Herb::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_LoveWater", ROMX
 
 ; Gift effect for ITEM_LOVEWATER, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 9 (family 9, Water;
@@ -6296,6 +6596,8 @@ GiftEffect_LoveWater::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_WorldDew", ROMX
+
 ; Gift effect for ITEM_WORLDDEW, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1,
 ; Dragon; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit
@@ -6316,6 +6618,8 @@ GiftEffect_WorldDew::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Potion", ROMX
 
 ; Gift effect for ITEM_POTION, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
 ; the MON_MAX_MP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 6 (family 6, Demon; at
@@ -6338,6 +6642,8 @@ GiftEffect_Potion::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_ElfWater", ROMX
+
 ; Gift effect for ITEM_ELFWATER, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant;
 ; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -6359,6 +6665,8 @@ GiftEffect_ElfWater::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Antidote", ROMX
+
 ; Gift effect for ITEM_ANTIDOTE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
 ; subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as when it would go
 ; below 0, becomes 0), then clears wPendingGiftItem. (C2, E-0385)
@@ -6370,6 +6678,8 @@ GiftEffect_Antidote::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_MoonHerb", ROMX
 
 ; Gift effect for ITEM_MOONHERB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_ATK word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 2 (family 2, Beast; at
@@ -6392,6 +6702,8 @@ GiftEffect_MoonHerb::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Laurel", ROMX
+
 ; Gift effect for ITEM_LAUREL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
 ; the MON_DEF word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 3 (family 3, Bird; at
 ; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6412,6 +6724,8 @@ GiftEffect_Laurel::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_AwakeSand", ROMX
 
 ; Gift effect for ITEM_AWAKESAND, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_AGL word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 5 (family 5, Bug; at
@@ -6434,6 +6748,8 @@ GiftEffect_AwakeSand::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_SkyBell", ROMX
+
 ; Gift effect for ITEM_SKYBELL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_INT word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 8 (family 8, Material;
 ; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -6454,6 +6770,8 @@ GiftEffect_SkyBell::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_SageRock", ROMX
 
 ; Gift effect for ITEM_SAGEROCK, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8,
@@ -6476,6 +6794,8 @@ GiftEffect_SageRock::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_WorldLeaf", ROMX
+
 ; Gift effect for ITEM_WORLDLEAF, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant;
 ; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -6497,6 +6817,8 @@ GiftEffect_WorldLeaf::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_ATKseed", ROMX
+
 ; Gift effect for ITEM_ATKSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_ATK word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
 ; 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
@@ -6513,6 +6835,8 @@ GiftEffect_ATKseed::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_DEFseed", ROMX
 
 ; Gift effect for ITEM_DEFSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_DEF word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
@@ -6531,6 +6855,8 @@ GiftEffect_DEFseed::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_AGLseed", ROMX
+
 ; Gift effect for ITEM_AGLSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_AGL word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
 ; 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
@@ -6547,6 +6873,8 @@ GiftEffect_AGLseed::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_INTseed", ROMX
 
 ; Gift effect for ITEM_INTSEED, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_INT word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7 (family
@@ -6565,6 +6893,8 @@ GiftEffect_INTseed::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_LifeAcorn", ROMX
+
 ; Gift effect for ITEM_LIFEACORN, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
 ; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
@@ -6582,6 +6912,8 @@ GiftEffect_LifeAcorn::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_MysticNut", ROMX
+
 ; Gift effect for ITEM_MYSTICNUT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
 ; to the MON_MAX_MP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
 ; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
@@ -6598,6 +6930,8 @@ GiftEffect_MysticNut::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Quest", ROMX
 
 ; Gift effect for ITEM_QUEST, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
 ; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1, Dragon; at
@@ -6620,6 +6954,8 @@ GiftEffect_Quest::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Horror", ROMX
+
 ; Gift effect for ITEM_HORROR, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
 ; the MON_DEF word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 2 (family 2, Beast; at
 ; most 250), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6640,6 +6976,8 @@ GiftEffect_Horror::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_BeNice", ROMX
 
 ; Gift effect for ITEM_BENICE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
 ; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 3 (family 3, Bird; at
@@ -6662,6 +7000,8 @@ GiftEffect_BeNice::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Cheater", ROMX
+
 ; Gift effect for ITEM_CHEATER, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
 ; to the MON_AGL word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 6 (family 6, Demon; at
 ; most 250), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6682,6 +7022,8 @@ GiftEffect_Cheater::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Smart", ROMX
 
 ; Gift effect for ITEM_SMART, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
 ; the MON_INT word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 4 (family 4, Plant; at
@@ -6704,6 +7046,8 @@ GiftEffect_Smart::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Comedy", ROMX
+
 ; Gift effect for ITEM_COMEDY, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
 ; the MON_MAX_MP word of wGiftRecord (at most 999), adds 5 to wFamilyScores + 0 (family 0, Slime; at
 ; most 250), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6725,6 +7069,8 @@ GiftEffect_Comedy::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_BeefJerky", ROMX
+
 ; Gift effect for ITEM_BEEFJERKY, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
 ; (family 7, Zombie; a result with bit 7 set, as when it would go below 0, becomes 0), then clears
@@ -6741,6 +7087,8 @@ GiftEffect_BeefJerky::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_PorkChop", ROMX
 
 ; Gift effect for ITEM_PORKCHOP, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 8 (family 8,
@@ -6763,6 +7111,8 @@ GiftEffect_PorkChop::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Rib", ROMX
+
 ; Gift effect for ITEM_RIB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
 ; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6783,6 +7133,8 @@ GiftEffect_Rib::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Sirloin", ROMX
 
 ; Gift effect for ITEM_SIRLOIN, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water;
@@ -6805,6 +7157,8 @@ GiftEffect_Sirloin::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_BadMeat", ROMX
+
 ; Gift effect for ITEM_BADMEAT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), and adds 5 to wFamilyScores + 7 (family 7,
 ; Zombie; at most 250), then clears wPendingGiftItem. (C2, E-0385)
@@ -6821,6 +7175,8 @@ GiftEffect_BadMeat::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_MeteOrb", ROMX
 
 ; Gift effect for ITEM_METEORB, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to wFamilyScores + 10 (family 10, Boss; at most 254), and subtracts 2 from wFamilyScores + 7
@@ -6839,6 +7195,8 @@ GiftEffect_MeteOrb::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_BeastTail", ROMX
+
 ; Gift effect for ITEM_BEASTTAIL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
 ; changes nothing except clearing wPendingGiftItem. (C2, E-0385)
 ; gift effect for item $1F BeastTail: case of ApplyGiftEffectByItem
@@ -6846,6 +7204,8 @@ GiftEffect_BeastTail::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Repellent", ROMX
 
 ; Gift effect for ITEM_REPELLENT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), and subtracts 2 from wFamilyScores + 7
@@ -6864,6 +7224,8 @@ GiftEffect_Repellent::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_ShinyHarp", ROMX
+
 ; Gift effect for ITEM_SHINYHARP, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
 ; changes nothing except clearing wPendingGiftItem. (C2, E-0385)
 ; gift effect for item $21 ShinyHarp: case of ApplyGiftEffectByItem
@@ -6871,6 +7233,8 @@ GiftEffect_ShinyHarp::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Mist", ROMX
 
 ; Gift effect for ITEM_MIST, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
 ; the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 6 (family 6, Demon; at
@@ -6893,6 +7257,8 @@ GiftEffect_Mist::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Friend", ROMX
+
 ; Gift effect for ITEM_FRIEND, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
 ; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6913,6 +7279,8 @@ GiftEffect_Friend::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Wind", ROMX
 
 ; Gift effect for ITEM_WIND, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
 ; the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 0 (family 0, Slime; at
@@ -6935,6 +7303,8 @@ GiftEffect_Wind::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Bolt", ROMX
+
 ; Gift effect for ITEM_BOLT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
 ; the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6955,6 +7325,8 @@ GiftEffect_Bolt::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Snow", ROMX
 
 ; Gift effect for ITEM_SNOW, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
 ; the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug; at most
@@ -6977,6 +7349,8 @@ GiftEffect_Snow::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Fire", ROMX
+
 ; Gift effect for ITEM_FIRE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
 ; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1, Dragon; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -6997,6 +7371,8 @@ GiftEffect_Fire::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Warp", ROMX
 
 ; Gift effect for ITEM_WARP, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2 to
 ; the MON_DEF word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 9 (family 9, Water; at
@@ -7019,6 +7395,8 @@ GiftEffect_Warp::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_WarpWing", ROMX
+
 ; Gift effect for ITEM_WARPWING, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2
 ; to the MON_AGL word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 3 (family 3, Bird; at
 ; most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7039,6 +7417,8 @@ GiftEffect_WarpWing::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_ExitBell", ROMX
 
 ; Gift effect for ITEM_EXITBELL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 2
 ; to the MON_INT word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 8 (family 8, Material;
@@ -7061,6 +7441,8 @@ GiftEffect_ExitBell::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_None", ROMX
+
 ; Gift effect for ITEM_BOOKMARK ($2B), $2F-$3F (ITEM_2F to ITEM_ACCESSORY_3F) and $54-$59 (ITEM_NONE
 ; to ITEM_NONE_59), a case of ApplyGiftEffectByItem picked by wPendingGiftItem: changes nothing
 ; except clearing wPendingGiftItem. (C2, E-0385)
@@ -7071,6 +7453,8 @@ GiftEffect_None::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_TinyMedal", ROMX
+
 ; Gift effect for ITEM_TINYMEDAL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
 ; changes nothing except clearing wPendingGiftItem. (C2, E-0385)
 ; gift effect for item $2C TinyMedal: case of ApplyGiftEffectByItem
@@ -7079,6 +7463,8 @@ GiftEffect_TinyMedal::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_GoldPass", ROMX
+
 ; Gift effect for ITEM_GOLDPASS, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: changes
 ; nothing except clearing wPendingGiftItem. (C2, E-0385)
 ; gift effect for item $2D GoldPass: case of ApplyGiftEffectByItem
@@ -7086,6 +7472,8 @@ GiftEffect_GoldPass::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_LogTwig", ROMX
 
 ; Gift effect for ITEM_LOGTWIG, a case of ApplyGiftEffectByItem picked by wPendingGiftItem:
 ; subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as when it would go
@@ -7098,6 +7486,8 @@ GiftEffect_LogTwig::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_VITbelt", ROMX
 
 ; Gift effect for ITEM_VITBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 5 (family 5, Bug;
@@ -7120,6 +7510,8 @@ GiftEffect_VITbelt::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_DracoBelt", ROMX
+
 ; Gift effect for ITEM_DRACOBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 8
 ; to the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug;
 ; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -7140,6 +7532,8 @@ GiftEffect_DracoBelt::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_MagicBelt", ROMX
 
 ; Gift effect for ITEM_MAGICBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 4 (family 4, Plant;
@@ -7162,6 +7556,8 @@ GiftEffect_MagicBelt::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_OddBelt", ROMX
+
 ; Gift effect for ITEM_ODDBELT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 8
 ; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant;
 ; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -7182,6 +7578,8 @@ GiftEffect_OddBelt::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_StoneFang", ROMX
 
 ; Gift effect for ITEM_STONEFANG, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_ATK word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 2 (family 2, Beast; at
@@ -7204,6 +7602,8 @@ GiftEffect_StoneFang::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_SteelFang", ROMX
+
 ; Gift effect for ITEM_STEELFANG, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
 ; to the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7224,6 +7624,8 @@ GiftEffect_SteelFang::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_MermScale", ROMX
 
 ; Gift effect for ITEM_MERMSCALE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_DEF word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 9 (family 9, Water; at
@@ -7246,6 +7648,8 @@ GiftEffect_MermScale::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_DrakScale", ROMX
+
 ; Gift effect for ITEM_DRAKSCALE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5
 ; to the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7266,6 +7670,8 @@ GiftEffect_DrakScale::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_AGL", ROMX
 
 ; Gift effect for ITEM_AGL, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
 ; the MON_AGL word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 0 (family 0, Slime; at
@@ -7288,6 +7694,8 @@ GiftEffect_AGL::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Starry", ROMX
+
 ; Gift effect for ITEM_STARRY, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
 ; the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 0 (family 0, Slime; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7308,6 +7716,8 @@ GiftEffect_Starry::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Smart_4A", ROMX
 
 ; Gift effect for ITEM_SMART_4A, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1
 ; to the MON_INT word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 6 (family 6, Demon; at
@@ -7330,6 +7740,8 @@ GiftEffect_Smart_4A::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Wise", ROMX
+
 ; Gift effect for ITEM_WISE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 5 to
 ; the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 6 (family 6, Demon; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7350,6 +7762,8 @@ GiftEffect_Wise::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_MagicCape", ROMX
 
 ; Gift effect for ITEM_MAGICCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 8
 ; to the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 3 (family 3, Bird;
@@ -7372,6 +7786,8 @@ GiftEffect_MagicCape::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_DracoCape", ROMX
+
 ; Gift effect for ITEM_DRACOCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 1 (family 1, Dragon;
 ; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -7392,6 +7808,8 @@ GiftEffect_DracoCape::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_SilvrCape", ROMX
 
 ; Gift effect for ITEM_SILVRCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8, Material;
@@ -7414,6 +7832,8 @@ GiftEffect_SilvrCape::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_GoldCape", ROMX
+
 ; Gift effect for ITEM_GOLDCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8, Material;
 ; at most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -7434,6 +7854,8 @@ GiftEffect_GoldCape::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_PltnmCape", ROMX
 
 ; Gift effect for ITEM_PLTNMCAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 10 (family 10, Boss;
@@ -7456,6 +7878,8 @@ GiftEffect_PltnmCape::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_OrcaCape", ROMX
+
 ; Gift effect for ITEM_ORCACAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7476,6 +7900,8 @@ GiftEffect_OrcaCape::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_BraveCape", ROMX
 
 ; Gift effect for ITEM_BRAVECAPE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3
 ; to the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
@@ -7498,6 +7924,8 @@ GiftEffect_BraveCape::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_DScale", ROMX
+
 ; Gift effect for ITEM_DSCALE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 1 to
 ; the MON_MAX_HP word of wGiftRecord (at most 999), adds 1 to wFamilyScores + 1 (family 1, Dragon;
 ; at most 254), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set,
@@ -7518,6 +7946,8 @@ GiftEffect_DScale::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Life", ROMX
 
 ; Gift effect for ITEM_LIFE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 5 (family 5, Bug; at
@@ -7540,6 +7970,8 @@ GiftEffect_Life::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Divine", ROMX
+
 ; Gift effect for ITEM_DIVINE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 4 (family 4, Plant; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7560,6 +7992,8 @@ GiftEffect_Divine::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_War", ROMX
 
 ; Gift effect for ITEM_WAR, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_MAX_HP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 9 (family 9, Water; at
@@ -7582,6 +8016,8 @@ GiftEffect_War::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Mage", ROMX
+
 ; Gift effect for ITEM_MAGE, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_MAX_MP word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 6 (family 6, Demon; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7602,6 +8038,8 @@ GiftEffect_Mage::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Fight", ROMX
 
 ; Gift effect for ITEM_FIGHT, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_ATK word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 2 (family 2, Beast; at
@@ -7624,6 +8062,8 @@ GiftEffect_Fight::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Sailor", ROMX
+
 ; Gift effect for ITEM_SAILOR, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_DEF word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 8 (family 8, Material; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7644,6 +8084,8 @@ GiftEffect_Sailor::
     xor a
     ld [wPendingGiftItem], a
     ret
+
+SECTION "Bank F0 GiftEffect_Thief", ROMX
 
 ; Gift effect for ITEM_THIEF, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_AGL word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 3 (family 3, Bird; at
@@ -7666,6 +8108,8 @@ GiftEffect_Thief::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 GiftEffect_Cleric", ROMX
+
 ; Gift effect for ITEM_CLERIC, a case of ApplyGiftEffectByItem picked by wPendingGiftItem: adds 3 to
 ; the MON_INT word of wGiftRecord (at most 999), adds 2 to wFamilyScores + 0 (family 0, Slime; at
 ; most 253), and subtracts 2 from wFamilyScores + 7 (family 7, Zombie; a result with bit 7 set, as
@@ -7687,6 +8131,8 @@ GiftEffect_Cleric::
     ld [wPendingGiftItem], a
     ret
 
+SECTION "Bank F0 AddBClampedToC", ROMX
+
 ; HL = address of a byte, B = amount, C = cap: [HL] = [HL] + B, but not above C. The 8-bit sum wraps
 ; at $100 before it is compared (250 + 10 with C = 250 gives 4). Clobbers A and C (C ends as the old
 ; C + 1). Used by the gift effect routines to raise a family score. (C2, E-0385)
@@ -7704,6 +8150,8 @@ AddBClampedToC::
     ld [hl], a
     ret
 
+SECTION "Bank F0 SubtractBClampedAtZero", ROMX
+
 ; HL = address of a byte, B = amount: [HL] = [HL] - B, or 0 when the 8-bit result has bit 7 set
 ; (going below 0, or any value of $80 or more). Clobbers A. Used by the gift effect routines to
 ; lower a family score. (C2, E-0385)
@@ -7718,6 +8166,8 @@ SubtractBClampedAtZero::
 .done:
     ld [hl], a
     ret
+
+SECTION "Bank F0 AddBToWordAtHLCapped", ROMX
 
 ; HL = address of a 16-bit word (low byte first), B = amount, DE = cap: the word becomes word + B,
 ; or DE when that sum is above DE, so a word already above DE is lowered to DE. DE is kept; clobbers
@@ -7752,6 +8202,8 @@ AddBToWordAtHLCapped::
     ld [bc], a
     ret
 
+SECTION "Bank F0 CompareHLWithDE", ROMX
+
 ; Unsigned 16-bit compare: C = 0 when HL < DE, 1 when HL = DE, $FF when HL > DE. Clobbers A. Only
 ; AddBToWordAtHLCapped calls it. (C2, E-0385)
 ; unsigned 16-bit compare: C = 0 when HL < DE, 1 when equal, $FF when HL > DE; clobbers A (E-0061)
@@ -7776,6 +8228,8 @@ CompareHLWithDE::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank F0 CopyNameStringFromBank08Database", ROMX
 
 ; HL = a species id word (low byte, then high byte), DE = destination: copies the name string of
 ; that monster from the string database of bank $08 up to and including its $F0 end mark. A high
@@ -7834,6 +8288,8 @@ CopyNameStringFromBank08Database::
     ld [hli], a
     ret
 
+SECTION "Bank F0 TestBitDEOfBitArrayHL", ROMX
+
 ; HL = start of a bit array, DE = bit number: A = $FF when the bit is set, else 0. Bit 0 is the high
 ; bit of the first byte. HL ends at the byte (HL + DE / 8), D holds the one-bit mask and E is kept.
 ; MarkBitBInFamilyBitsAndCount and OrDIntoTestBitDEOfBitArrayHLByte use it. (C2, E-0385)
@@ -7867,6 +8323,8 @@ TestBitDEOfBitArrayHL::
     ld a, $ff
     ret
 
+SECTION "Bank F0 TestBitDEOfBitArrayHL_Data", ROMX
+
 ; Eight single-bit masks, $80, $40, $20, $10, $08, $04, $02, $01. TestBitDEOfBitArrayHL adds DE / 8
 ; to HL, indexes the table with DE & 7 and ANDs the mask with that byte, returning $FF in A when the
 ; bit is set and 0 when it is clear, so bit 0 of the array is the high bit of its first byte. (C1,
@@ -7883,6 +8341,8 @@ OrDIntoTestBitDEOfBitArrayHLByte::
     or d
     ld [hl], a
     ret
+
+SECTION "Bank F0 KeyWorldDoorItem_OpenDoor_BuildGiftRecord", ROMX
 
 ; Far-called by KeyWorldDoorItem_OpenDoor: clears the $D8 bytes from wGM2TimerFrames, then builds
 ; the record at wGiftRecord: MON_STATE 1, a blank MON_NAME ($F0 x 10), MON_SPECIES $001A, MON_FAMILY
@@ -8117,6 +8577,8 @@ KeyWorldDoorItem_OpenDoor_BuildGiftRecord::
     ld [hli], a
     ret
 
+SECTION "Bank F0 KeyWorldDoorItem_FillCBytesWithB", ROMX
+
 ; Fills C bytes at HL with B (C = 0 fills 256); HL ends just past them and C ends 0.
 ; KeyWorldDoorItem_OpenDoor_BuildGiftRecord uses it for the $F0 padding of the parent names. (C2,
 ; E-0385)
@@ -8127,6 +8589,8 @@ KeyWorldDoorItem_FillCBytesWithB::
     dec c
     jr nz, KeyWorldDoorItem_FillCBytesWithB
     ret
+
+SECTION "Bank F0 KeyWorldDoorItem_WriteUnknownName", ROMX
 
 ; Writes the placeholder name '???' ($98 is the glyph '?') and the $F0 end mark at HL; HL ends 4
 ; bytes on and A = $F0. KeyWorldDoorItem_OpenDoor_BuildGiftRecord uses it for the two parent master
@@ -8142,6 +8606,8 @@ KeyWorldDoorItem_WriteUnknownName::
     ld a, $f0
     ld [hli], a
     ret
+
+SECTION "Bank F0 KeyWorldDoorItem_ModuloBPlusOne", ROMX
 
 ; DE = (L mod B) + 1, by repeated subtraction (D = 0, E = A = the result). L is the low byte of the
 ; quotient RandomModulo29_BankF0 leaves in HL, so this turns a roll into 1..B.
@@ -8162,6 +8628,8 @@ KeyWorldDoorItem_ModuloBPlusOne::
     ld e, a
     ld d, $00
     ret
+
+SECTION "Bank F0 RollMarkChangeCountChance", ROMX
 
 ; A = 1 with a chance that grows with wMarkChangeCount, else 0. Below 5 changes the answer is always
 ; 0. From 5 to 12 the threshold is 10 * (count - 4), from 13 on 80; the roll is the 0-99 quotient of

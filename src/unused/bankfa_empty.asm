@@ -1,6 +1,6 @@
 ; ROM bank $FA: empty (all bytes $00 or $FF)
 ; The annotated listing of this bank is build/listing/bankfa.asm.
 
-SECTION "Bank FA", ROMX[$4000], BANK[$FA]
+SECTION "Bank FA", ROMX
 ; bank $FA: all $00 in the reference
 DS $4000, $00

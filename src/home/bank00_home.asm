@@ -1,7 +1,7 @@
 ; ROM bank $00: home bank: boot, main loop, interrupts, bank switching, text printer, sound driver
 ; The annotated listing of this bank is build/listing/bank00.asm.
 
-SECTION "Bank 00", ROM0[$0000]
+SECTION "Bank 00", ROM0
 
 ; The rst $00 dispatcher behind the jumptable macro (507 uses in src/): pops the return address as
 ; the base of the dw list that follows the rst, adds 2 * A as a 16-bit offset (so all 256 values of
@@ -111,6 +111,8 @@ InstallOamDmaRoutine::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 OamDmaRoutineTemplate", ROM0
+
 ; The OAM DMA routine kept as bytes: ld a, $C0 / ldh [rDMA], a starts a DMA of $C000 (wShadowOAM) to
 ; OAM, a $28-pass dec a loop waits for it, then ret. It never runs here: InstallOamDmaRoutine copies
 ; it to hOAMDMARoutine, which VBlankHandler calls each frame. $68 zero bytes pad to the entry point
@@ -134,6 +136,8 @@ OamDmaRoutineTemplate::
 ROMEntryPoint::
     nop
     jp BootAndMainLoop
+
+SECTION "Bank 00 CartridgeHeader", ROM0
 
 ; E-0239 (HARDWARE: the standard Game Boy cartridge header layout; the byte values are those of the
 ; reference ROM and are kept exactly, checksums included; ASCII fields are written as numbers
@@ -423,11 +427,15 @@ RunGameModeInit_DebugMenu::
     farcall GameMode0_Init
     ret
 
+SECTION "Bank 00 RunGameModeInit_Field", ROM0
+
 ; Game mode 1's start-up (the field: a map with the player): far-calls GameMode1_Init in bank $02.
 ; (C1, E-0357)
 RunGameModeInit_Field::
     farcall GameMode1_Init
     ret
+
+SECTION "Bank 00 RunGameModeInit_PauseMenu", ROM0
 
 ; Game mode 2's start-up (the pause menu's monster pages): far-calls GameMode2_Init in bank $03.
 ; (C1, E-0357)
@@ -435,25 +443,35 @@ RunGameModeInit_PauseMenu::
     farcall GameMode2_Init
     ret
 
+SECTION "Bank 00 RunGameModeInit_None", ROM0
+
 ; Game mode 3 has no start-up routine: returns at once. (C2, E-0357; probed E-0374)
 RunGameModeInit_None::
     ret
+
+SECTION "Bank 00 RunGameModeInit_Battle", ROM0
 
 ; Game mode 4's start-up (the battle): far-calls GameMode4_Init in bank $31. (C1, E-0357)
 RunGameModeInit_Battle::
     farcall GameMode4_Init
     ret
 
+SECTION "Bank 00 RunGameModeInit_Title", ROM0
+
 ; Game mode 5's start-up (the title screen): far-calls GameMode5_Init in bank $07. (C1, E-0357)
 RunGameModeInit_Title::
     farcall GameMode5_Init
     ret
+
+SECTION "Bank 00 RunGameModeInit_EggAndSaveScreens", ROM0
 
 ; Game mode 6's start-up (the egg and save screens after a link or the priest): far-calls
 ; GameMode6_Init in bank $24. (C1, E-0357)
 RunGameModeInit_EggAndSaveScreens::
     farcall GameMode6_Init
     ret
+
+SECTION "Bank 00 RunGameModeInit_LinkBattle", ROM0
 
 ; Game mode 7's start-up (the linked battle: RunLinkSession6Exchange_FightInfo_StartLinkBattle and
 ; HatchingScene_RunEggScreens switch to this mode, and GameMode7_Update runs
@@ -463,11 +481,15 @@ RunGameModeInit_LinkBattle::
     farcall GameMode7_Init
     ret
 
+SECTION "Bank 00 RunGameModeInit_EggHandOver", ROM0
+
 ; Game mode 8's start-up (the egg hand-over scene): far-calls GameMode8_Init in bank $F2. (C1,
 ; E-0357)
 RunGameModeInit_EggHandOver::
     farcall GameMode8_Init
     ret
+
+SECTION "Bank 00 VBlankHandler", ROM0
 
 ; The VBlank interrupt handler (entered from VBlankVector with interrupts off). Saves AF, BC, DE,
 ; HL, rSVBK and rVBK and writes 0 to rSVBK (WRAM bank 1). If bit 0 of wVBlankFlags is already set (a
@@ -605,6 +627,8 @@ VBlankHandler::
     ei
     jr .restore
 
+SECTION "Bank 00 GameFrameUpdate", ROM0
+
 ; The game work of one frame, called by VBlankHandler (in its linked and unlinked paths):
 ; hOamNextEntry = 0, ComputeSpriteScrollOffsets, RunGameModeUpdate, then ClearUnusedOAMEntries,
 ; except when wFadeState is non-zero with bit 7 clear (a fade in progress), when it returns without
@@ -625,6 +649,8 @@ GameFrameUpdate::
 .call_clear_unused_oam_entries:
     call ClearUnusedOAMEntries
     ret
+
+SECTION "Bank 00 RunGameModeUpdate", ROM0
 
 ; Called by GameFrameUpdate each frame. Returns at once when wModeChangeRequest is non-zero; not
 ; linked (wLinkMode 0) it also returns while wFadeState is non-zero with bit 7 clear, but when
@@ -669,34 +695,48 @@ RunGameModeUpdate_DebugMenu::
     farcall GameMode0_Update
     ret
 
+SECTION "Bank 00 RunGameModeUpdate_Field", ROM0
+
 ; Game mode 1's frame (the field): far-calls GameMode1_Update. (C1, E-0357)
 RunGameModeUpdate_Field::
     farcall GameMode1_Update
     ret
+
+SECTION "Bank 00 RunGameModeUpdate_PauseMenu", ROM0
 
 ; Game mode 2's frame (the pause menu): far-calls GameMode2_Update. (C1, E-0357)
 RunGameModeUpdate_PauseMenu::
     farcall GameMode2_Update
     ret
 
+SECTION "Bank 00 RunGameModeUpdate_None", ROM0
+
 ; Game mode 3 has no per-frame routine: returns at once. (C2, E-0357; probed E-0374)
 RunGameModeUpdate_None::
     ret
+
+SECTION "Bank 00 RunGameModeUpdate_Battle", ROM0
 
 ; Game mode 4's frame (the battle): far-calls GameMode4_Update. (C1, E-0357)
 RunGameModeUpdate_Battle::
     farcall GameMode4_Update
     ret
 
+SECTION "Bank 00 RunGameModeUpdate_Title", ROM0
+
 ; Game mode 5's frame (the title screen and link set-up): far-calls GameMode5_Update. (C1, E-0357)
 RunGameModeUpdate_Title::
     farcall GameMode5_Update
     ret
 
+SECTION "Bank 00 RunGameModeUpdate_EggAndSaveScreens", ROM0
+
 ; Game mode 6's frame (the egg and save screens): far-calls GameMode6_Update. (C1, E-0357)
 RunGameModeUpdate_EggAndSaveScreens::
     farcall GameMode6_Update
     ret
+
+SECTION "Bank 00 RunGameModeUpdate_LinkBattle", ROM0
 
 ; Game mode 7's frame (the linked battle; see RunGameModeInit_LinkBattle): far-calls
 ; GameMode7_Update. (C1, E-0369)
@@ -704,10 +744,14 @@ RunGameModeUpdate_LinkBattle::
     farcall GameMode7_Update
     ret
 
+SECTION "Bank 00 RunGameModeUpdate_EggHandOver", ROM0
+
 ; Game mode 8's frame (the egg hand-over scene): far-calls GameMode8_Update. (C1, E-0357)
 RunGameModeUpdate_EggHandOver::
     farcall GameMode8_Update
     ret
+
+SECTION "Bank 00 ApplyScreenShake", ROM0
 
 ; Shakes the screen; called by VBlankHandler right after CopyScrollToHardware. Its early exit ORs
 ; wScreenShakeOffset with A as it arrives (hWindowY, left by CopyScrollToHardware), not with
@@ -866,6 +910,8 @@ LinkExchangeJoypadPerFrame::
     ld a, $f0
     jp StartSerialTransferInternalClock
 
+SECTION "Bank 00 SpinDelay", ROM0
+
 ; A fixed busy wait used after Super Game Boy packets (44 call sites: after each SendSGBPacketSet in
 ; BootAndMainLoop_StartUp, DetectSGB, ResumeAfterModeChange_TurnOnLCD, StepFade_SGB and others).
 ; Returns at once when wSGBActive is 0 (A = 0, DE untouched); otherwise counts DE down from $1B58 to
@@ -887,6 +933,8 @@ SpinDelay::
     or e
     jr nz, .loop
     ret
+
+SECTION "Bank 00 DetectSGB", ROM0
 
 ; Called once by BootAndMainLoop_StartUp on a unit that is not a CGB, with wSGBActive still 1: sends
 ; SGB packet set $0B (SendSGBPacketSet, then SpinDelay), then reads the joypad lines of rP1 (bits
@@ -943,6 +991,8 @@ DetectSGB::
     call SpinDelay
     scf
     ret
+
+SECTION "Bank 00 PollJoypad_ReadSGBPlayers", ROM0
 
 ; Reads the joypad of each Super Game Boy player, up to four (B = 4). Each pass reads the player
 ; number from rP1, selects the button lines ($20) and the direction lines ($10) and combines them
@@ -1003,6 +1053,8 @@ PollJoypad_ReadSGBPlayers::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 DelayBCWhenSGB", ROM0
+
 ; A longer busy wait for Super Game Boy transfers, BC = number of passes. Returns at once when
 ; wSGBActive is 0 (BC and DE untouched); otherwise runs BC passes of a count of DE from $06D6 down
 ; to 0 (three nops a step) and returns BC = 0, DE = 0, A = 0 (BC = 0 would run 65536 passes).
@@ -1030,6 +1082,8 @@ DelayBCWhenSGB::
     or c
     jr nz, .loop
     ret
+
+SECTION "Bank 00 SGBTransferCompressed", ROM0
 
 ; Sends a Super Game Boy VRAM transfer built from compressed data. A = packet set (stored in
 ; wSGBPacketIndex even when nothing follows), B = ROM bank, DE = compressed stream. Returns at once
@@ -1093,6 +1147,8 @@ SGBTransferCompressed::
     call DelayBCWhenSGB
     call TurnOffLCD
     ret
+
+SECTION "Bank 00 SGBTransferRaw", ROM0
 
 ; The uncompressed form of SGBTransferCompressed, used once by BootAndMainLoop_StartUp (A = $0C, H =
 ; $17, DE = $446C, BC = $0800). A = packet set (stored in wSGBPacketIndex), H = ROM bank, DE =
@@ -1164,6 +1220,8 @@ SGBTransferRaw::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 ClearSGBPacketBuffer", ROM0
+
 ; Zero-fills the 16 bytes of wSGBPacketBuffer, the packet SendSGBPacketSet sends when
 ; wSGBPacketIndex is $FF; keeps BC and HL and returns A = 0. Callers: StepFade_SGB, StartPaletteFade
 ; and SendSGBPaletteSetPacket (5 call sites). (C2, E-0373)
@@ -1182,6 +1240,8 @@ ClearSGBPacketBuffer::
     pop bc
     pop hl
     ret
+
+SECTION "Bank 00 ResumeAfterModeChange", ROM0
 
 ; Turns the screen back on after a mode change and re-enables interrupts with the mask in A; the
 ; game modes' start-up routines (GameMode0_Init, GameMode4_Init, GameMode7_Init and others) end by
@@ -1202,6 +1262,8 @@ ResumeAfterModeChange::
     call SetInterruptEnable
     ei
     ret
+
+SECTION "Bank 00 DisableVBlankTimerSerialJoypadInterrupts", ROM0
 
 ; Clears pending interrupts (rIF = 0) and masks rIE with $E2, which clears the VBlank, timer, serial
 ; and joypad enables (bits 0, 2, 3, 4) and keeps the LCD STAT enable (bit 1) and bits 5-7; then
@@ -1235,6 +1297,8 @@ TurnOffLCD::
     res 7, [hl]
     ret
 
+SECTION "Bank 00 ResumeAfterModeChange_TurnOnLCD", ROM0
+
 ; Switches the LCD on (sets bit 7 of wLCDCShadow and copies it to rLCDC); on a Super Game Boy it
 ; also sends packet set 1 and waits. The 11 bytes after its ret are never reached; as code they
 ; would be ret / xor a / ldh [rIF], a / ldh a, [rIE] / and $F7 / ldh [rIE], a / ret (clear the
@@ -1263,6 +1327,8 @@ WaitSerialTransferDone::
     jr nz, WaitSerialTransferDone
     ret
 
+SECTION "Bank 00 SetInterruptEnable", ROM0
+
 ; Clears pending interrupts (rIF = 0) and enables those in A (rIE = A). (C1, E-0357)
 SetInterruptEnable::
     ld b, a
@@ -1271,6 +1337,8 @@ SetInterruptEnable::
     ld a, b
     ldh [rIE], a
     ret
+
+SECTION "Bank 00 CopyScrollToHardware", ROM0
 
 ; rSCX = hScrollX, rSCY = hScrollY, rWX = hWindowX, rWY = hWindowY; returns A = hWindowY, which
 ; ApplyScreenShake (run next by VBlankHandler) tests. Callers: VBlankHandler each frame,
@@ -1288,6 +1356,8 @@ CopyScrollToHardware::
     ldh [rWY], a
     ret
 
+SECTION "Bank 00 WriteLCDCShadow", ROM0
+
 ; Waits until the rSTAT mode bits read 0 (HBlank, or the LCD off), then writes wLCDCShadow to rLCDC.
 ; Mode 1 (VBlank) does not end the wait. VBlankHandler calls it each frame, also on its re-entered
 ; path. (C1, E-0373)
@@ -1299,6 +1369,8 @@ WriteLCDCShadow::
     ld a, [wLCDCShadow]
     ldh [rLCDC], a
     ret
+
+SECTION "Bank 00 CopyDMGPalettesToHardware", ROM0
 
 ; rBGP, rOBP0, rOBP1 = wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1; called by VBlankHandler
 ; each frame. (C1, E-0373)
@@ -1312,6 +1384,8 @@ CopyDMGPalettesToHardware::
     ld a, [hl]
     ldh [rOBP1], a
     ret
+
+SECTION "Bank 00 CopyCGB40BytesFromBankAndMark7F", ROM0
 
 ; No caller in src/ (no call, jump or pointer found). On CGB (wIsCGB non-zero) it maps ROM bank B,
 ; copies $40 bytes from DE to HL, writes $7F at the address it reached plus C (B, reused as the
@@ -1340,6 +1414,8 @@ CopyCGB40BytesFromBankAndMark7F::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 UploadBGPalettes", ROM0
 
 ; Writes CGB background palettes from wBGPaletteBuffer to rBGPD. When bit 7 of
 ; wBGPaletteUploadRequest is set it uploads one palette: the request goes to rBGPI as it is (start
@@ -1390,6 +1466,8 @@ UploadBGPalettes::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 VBlankHandler_UploadOBJPalettes", ROM0
+
 ; VBlank step that uploads sprite palettes on CGB. If bit 7 of wOBJPaletteUploadRequest is set, it
 ; uploads one palette (8 bytes; bits 3-5 of the request choose it, and the request also goes to
 ; rOBPI) from wOBJPaletteBuffer; otherwise all eight (64 bytes) from wOBJPaletteBuffer. Each byte
@@ -1439,6 +1517,8 @@ VBlankHandler_UploadOBJPalettes::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 HLFromABits3To5", ROM0
+
 ; HL = A & $38 (bits 3-5 of A, a palette number times 8), H = 0; A is left as A & $38.
 ; UploadBGPalettes and VBlankHandler_UploadOBJPalettes use it to find one palette in
 ; wBGPaletteBuffer or wOBJPaletteBuffer from an upload request. The res 7, a before the and changes
@@ -1451,6 +1531,8 @@ HLFromABits3To5::
     ld h, $00
     ret
 
+SECTION "Bank 00 EnableLYCInterruptSource", ROM0
+
 ; rSTAT |= $40: enables the LY = LYC coincidence as an LCD STAT interrupt source. No caller in src/
 ; (no call, jump or pointer found). (C1, E-0373)
 ; rSTAT |= $40: selects the LY = LYC coincidence as an LCD STAT interrupt source (E-0114)
@@ -1459,6 +1541,8 @@ EnableLYCInterruptSource::
     or $40
     ldh [rSTAT], a
     ret
+
+SECTION "Bank 00 ClearSTATInterruptSources", ROM0
 
 ; rSTAT &= $07: clears the LCD STAT interrupt source bits 3-6 and keeps the mode and coincidence
 ; bits. Called by GameMode1_Init, GameMode4_Init, GameMode5_Init and GameMode7_Init. (C1, E-0373)
@@ -1469,6 +1553,8 @@ ClearSTATInterruptSources::
     and $07
     ldh [rSTAT], a
     ret
+
+SECTION "Bank 00 StartSerialTransferInternalClock", ROM0
 
 ; A = byte to send: with interrupts off, LoadSerialByte (rSC = 0, rSB = A), then sets rSC bit 0
 ; (internal clock) and bit 7 (start), so this Game Boy clocks the transfer; then ei. Returns B = the
@@ -1486,6 +1572,8 @@ StartSerialTransferInternalClock::
     ei
     ret
 
+SECTION "Bank 00 SerialSendByte", ROM0
+
 ; A = byte to send: with interrupts off, LoadSerialByte (rSC = 0, rSB = A), then clears rSC bit 0
 ; and sets bit 7, so rSC = $80 and the byte waits for the partner to clock the transfer (external
 ; clock); then ei. Returns B = the byte, HL = rSC. 32 call sites in the link code
@@ -1501,6 +1589,8 @@ SerialSendByte::
     ei
     ret
 
+SECTION "Bank 00 LoadSerialByte", ROM0
+
 ; rSC = 0 (stops any transfer), then rSB = A; B = A. Shared by StartSerialTransferInternalClock and
 ; SerialSendByte, which then start the transfer. (C1, E-0373)
 ; rSC = 0, rSB = A
@@ -1511,6 +1601,8 @@ LoadSerialByte::
     ld a, b
     ldh [rSB], a
     ret
+
+SECTION "Bank 00 ClearWRAMHRAMAndSRAMBanks0And2", ROM0
 
 ; The memory clear of BootAndMainLoop_StartUp, so it runs at power-on and at every reset that jumps
 ; there. On CGB it first zeroes rVBK, rSVBK, rHDMA1-rHDMA5, rBGPI and rOBPI. It zeroes $1E00 bytes
@@ -1567,6 +1659,8 @@ ClearWRAMHRAMAndSRAMBanks0And2::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 00 ClearBGMapOrFillWithC3", ROM0
+
 ; Called by BootAndMainLoop_StartUp at the start of every mode: zeroes the $800 bytes from vBGMap0
 ; (both BG maps, $9800-$9FFF); but when wBGFillFlag is non-zero it clears the flag and fills only
 ; the $400 bytes of vBGMap0 with tile $C3. (C1, E-0373)
@@ -1587,6 +1681,8 @@ ClearBGMapOrFillWithC3::
     call FillBytes
     ret
 
+SECTION "Bank 00 FillBytes", ROM0
+
 ; Stores A in BC bytes from HL (memset); returns HL just past them, BC = 0, D = the value, A = 0. BC
 ; is a full 16-bit count, and BC = 0 fills 65536 bytes. 155 call sites. (C2, E-0373)
 ; A = value, HL = destination, BC = count; HL ends past the last byte (memset)
@@ -1602,6 +1698,8 @@ FillBytes::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 CopyBytes", ROM0
+
 ; Copies BC bytes from HL to DE (memcpy, upward); returns HL and DE just past them, BC = 0, A = 0.
 ; BC = 0 copies 65536 bytes. 47 call sites. (C2, E-0373)
 ; HL = source, DE = destination, BC = count (memcpy)
@@ -1614,6 +1712,8 @@ CopyBytes::
     or c
     jr nz, CopyBytes
     ret
+
+SECTION "Bank 00 NextTableByte", ROM0
 
 ; Steps the table random number: wRandomHi = (wRandomHi + 1) & $7F, then wRandomLo = A =
 ; RandomByteTable[wRandomHi]; HL is kept. The main loop in BootAndMainLoop_StartUp calls it on every
@@ -1633,6 +1733,8 @@ NextTableByte::
     ld [wRandomLo], a
     pop hl
     ret
+
+SECTION "Bank 00 RandomByteTable", ROM0
 
 ; NextTableByte steps wRandomHi through 0-$7F and loads wRandomLo from $0973 + wRandomHi; 128 bytes
 ; end at NextRandomSeed ($09F3) (E-0220, C1)
@@ -1676,6 +1778,8 @@ NextRandomSeed::
     pop hl
     ret
 
+SECTION "Bank 00 PollJoypad", ROM0
+
 ; Reads the joypad. With wSGBActive set it runs PollJoypad_ReadSGBPlayers, then wJoypadHeldPrev =
 ; the old wJoypadHeld, wJoypadHeld = wSGBJoypad1, wLinkJoypadHeldPrev = the old wLinkJoypadHeld and
 ; wLinkJoypadHeld = wSGBJoypad2 (the second SGB pad). Otherwise it clears wJoypadReadFlag, reads the
@@ -1712,6 +1816,8 @@ PollJoypad::
     ldh [rP1], a
     ret
 
+SECTION "Bank 00 ReadJoypadIntoLinkJoypadHeld", ROM0
+
 ; No caller in src/ (no call, jump or pointer found). Reads this pad with ReadJoypadDirect into the
 ; other-player bytes: wLinkJoypadHeldPrev = the old wLinkJoypadHeld, wLinkJoypadHeld = the reading
 ; (B); then rP1 = $30 (both key groups deselected). (C1, E-0373)
@@ -1726,6 +1832,8 @@ ReadJoypadIntoLinkJoypadHeld::
     ld a, $30
     ldh [rP1], a
     ret
+
+SECTION "Bank 00 ReadJoypadDirect", ROM0
 
 ; Reads this pad from rP1: selects the direction lines ($20) and reads twice, then the button lines
 ; ($10) and reads 10 times, and returns B = A = the pressed buttons, 1 = pressed: bits 4-7 Right,
@@ -1759,6 +1867,8 @@ ReadJoypadDirect::
     or b
     ld b, a
     ret
+
+SECTION "Bank 00 UpdateJoypadPresses", ROM0
 
 ; Turns held buttons into presses, for this pad and for the other player. When not linked (wLinkMode
 ; 0) and wJoypadReadFlag is 0 it first clears wLinkJoypadHeld and wLinkJoypadHeldPrev.
@@ -1858,6 +1968,8 @@ UpdateJoypadPresses::
 .return:
     ret
 
+SECTION "Bank 00 ReadWordTableEntry_Bank00", ROM0
+
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so an index
 ; above $7F wraps; the add carries into H); A = the low byte of the word. The bank $00 copy of a
 ; per-bank helper; callers: TitleOpening_ScrollWithSparkles, TitleOpening_StartSparkles,
@@ -1874,6 +1986,8 @@ ReadWordTableEntry_Bank00::
     ld h, a
     deref_hl
     ret
+
+SECTION "Bank 00 CopyFromBank", ROM0
 
 ; B = ROM bank, DE = source, HL = destination, C = count (0 means 256): maps bank B, copies C bytes
 ; from DE to HL, then maps the calling bank back (saved from BANK_NUMBER_BYTE). Returns DE and HL
@@ -1894,6 +2008,8 @@ CopyFromBank::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 CopyFromBankWaitVRAM", ROM0
 
 ; The interface of CopyFromBank (B = ROM bank, DE = source, HL = destination, C = count, 0 means
 ; 256) with a wait for VRAM: before each byte it disables interrupts and waits until rSTAT bit 1 is
@@ -1922,6 +2038,8 @@ CopyFromBankWaitVRAM::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 OrFromBankWaitVRAM", ROM0
 
 ; B = ROM bank, DE = source, HL = destination, C = count (0 means 256): maps bank B; for each byte
 ; it waits for rSTAT bit 1 clear with interrupts off and reads [DE], then waits again and ORs the
@@ -1961,6 +2079,8 @@ OrFromBankWaitVRAM::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 ReadWordFromDataBank", ROM0
+
 ; HL = address in the ROM bank held in wDataBank: maps that bank, reads B = [HL] and C = [HL + 1]
 ; (the first byte goes to B), leaves HL unchanged and maps the calling bank back; A = the calling
 ; bank number. 31 call sites (CopyMonsterNameToBuffer_B01, DrawKeyListPageNames,
@@ -1977,6 +2097,8 @@ ReadWordFromDataBank::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 SetDefaultDMGPaletteBytes", ROM0
 
 ; Sets wDMGPaletteBGP, wDMGPaletteOBP0 and wDMGPaletteOBP1 to $D2, $D2, $E2 and copies the three to
 ; wDMGPaletteBytes. Called by BootAndMainLoop_StartUp at the start of every mode, before
@@ -2000,6 +2122,8 @@ SetDefaultDMGPaletteBytes::
     ld [hl], a
     ret
 
+SECTION "Bank 00 ClearScrollPositions", ROM0
+
 ; Zeroes the 8 bytes $FFA1-$FFA8 (hScrollX, hScrollXHi, $FFA3, $FFA4, hScrollY, hScrollYHi, $FFA7,
 ; $FFA8): it calls StoreAFourTimesAtHL and then falls into it for 4 more. Returns HL = $FFA9, A = 0.
 ; Callers: BootAndMainLoop_StartUp at the start of every mode, SGBTransferCompressed and
@@ -2020,6 +2144,8 @@ StoreAFourTimesAtHL::
     ld [hli], a
     ret
 
+SECTION "Bank 00 ClearShadowOAM", ROM0
+
 ; hOamNextEntry = 0 and zeroes the $A0 bytes of wShadowOAM (all 40 sprite entries); HL ends at
 ; $C0A0. Called by BootAndMainLoop_StartUp at the start of every mode. (C2, E-0373)
 ; hOamNextEntry = 0 and clears the $A0 bytes of shadow OAM at wShadowOAM (E-0122)
@@ -2034,6 +2160,8 @@ ClearShadowOAM::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 00 ClearUnusedOAMEntries", ROM0
 
 ; Called by GameFrameUpdate after the frame routine of the mode: zeroes the first byte (Y) of each
 ; wShadowOAM entry from index hOamNextEntry to 39, leaving the other bytes and the earlier entries;
@@ -2060,6 +2188,8 @@ ClearUnusedOAMEntries::
     inc b
     jr nz, .loop
     ret
+
+SECTION "Bank 00 FlushQueuedBGMapWrite", ROM0
 
 ; Called by VBlankHandler each frame. When wBGWriteDestLo/Hi (a BG map address) is non-zero it
 ; copies wBGWriteCount bytes from wBGWriteData there: along the row when wBGWriteVertical is 0 (the
@@ -2180,6 +2310,8 @@ FlushQueuedBGMapWrite::
     ld [wAttrWriteDestHi], a
     ret
 
+SECTION "Bank 00 DecompressToRAMLocked", ROM0
+
 ; B = ROM bank, DE = compressed stream, HL = destination: waits while hDecompressLock is non-zero
 ; (with no time limit), sets it to 1, runs DecompressToRAM (which maps bank B and maps the calling
 ; bank back), then clears it. 34 call sites (SGBTransferCompressed, GameMode5_Init_AfterLinkBattle
@@ -2194,6 +2326,8 @@ DecompressToRAMLocked::
     xor a
     ldh [hDecompressLock], a
     ret
+
+SECTION "Bank 00 DecompressToRAM", ROM0
 
 ; Expands the compressed stream at DE in ROM bank B into memory at HL with plain stores (a RAM
 ; destination), then maps the calling bank back. After the header (DecompressReadHeader: size,
@@ -2322,6 +2456,8 @@ DecompressToRAM::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 DecompressToVRAM", ROM0
 
 ; The same expansion as DecompressToRAM (format there) for destinations that may be VRAM: it spins
 ; while hDecompressLock is non-zero and then takes it, waits for rSTAT bit 1 to clear with
@@ -2475,6 +2611,8 @@ DecompressToVRAM::
     ldh [hDecompressLock], a
     ret
 
+SECTION "Bank 00 DecompressReadHeader", ROM0
+
 ; Maps ROM bank B and reads the 3-byte header of the compressed stream at DE: BC = the output size
 ; (low byte first) and hDecompressMarker = the marker byte, leaving DE past the header. Stores the
 ; destination start HL in hDecompressDestLo/Hi and in hDecompressHeader3/4, and the destination end
@@ -2506,6 +2644,8 @@ DecompressReadHeader::
     ldh [hDecompressHeader2], a
     pop hl
     ret
+
+SECTION "Bank 00 ResetFadeFromDMGPaletteBGP", ROM0
 
 ; Resets the palette fade: copies wDMGPaletteBGP, wDMGPaletteOBP0 and wDMGPaletteOBP1 to the three
 ; wFadeDMGPalettes bytes, clears wFadeLevel and the four bytes after it (wFadeDelay,
@@ -2539,6 +2679,8 @@ ResetFadeFromDMGPaletteBGP::
     ld a, $1f
     ld [wFadeMask], a
     ret
+
+SECTION "Bank 00 StartPaletteFade", ROM0
 
 ; A = fade state, stored in wFadeState; on the SGB and DMG paths bit 7 clear fades from the current
 ; colours toward white (black when wFadeMode bit 7 is set) and bit 7 set starts at white or black
@@ -2735,6 +2877,8 @@ StartPaletteFade::
 .return:
     ret
 
+SECTION "Bank 00 CopyEightBytesFromTiles1Entry", ROM0
+
 ; Copies the 8 bytes at vTiles1 + 8 * HL to DE, without waiting for VRAM access; DE and HL end past
 ; the copy, B = HIGH(vTiles1) and C = 0. No caller was found in src/ or the listing. (C1, E-0373)
 ; copies the 8 bytes at vTiles1 + 8 * HL to DE (E-0122)
@@ -2753,6 +2897,8 @@ CopyEightBytesFromTiles1Entry::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 00 StepFade", ROM0
 
 ; One frame of the palette fade, run from VBlankHandler and RunFrameTickFadeAndCounter_Bank1B:
 ; returns at once when wFadeState is 0; when wFadeState bit 7 is clear it first runs
@@ -2826,6 +2972,8 @@ StepFade::
     or a
     jp z, StepFade_End
     ret
+
+SECTION "Bank 00 StepFade_SGB", ROM0
 
 ; Super Game Boy step of the palette fade: fades the colour groups chosen by bits 0-3 of wFadeMask
 ; (8 bytes each, StepFade_SGBColorGroup; groups 2 and 3 only when bit 4 is set), then sends the
@@ -2907,6 +3055,8 @@ CopySGBPacketFieldsAndSend::
     farcall_b SendSGBPacketSet
     ret
 
+SECTION "Bank 00 StepFade_SGBColorGroup", ROM0
+
 ; Fades one SGB palette group of four colours: StepFade_SGBColor for the colour at the current
 ; offset (wFadeStepSize), then StepFade_NextSGBColor three times (twice by call, once by falling
 ; through), each moving the offset on by 2 bytes and fading that colour. (C2, E-0369; probed E-0374)
@@ -2978,6 +3128,8 @@ StepFade_SGBColor::
     ld [hl], d
     ret
 
+SECTION "Bank 00 AdjustColorChannelForFade", ROM0
+
 ; A = a colour channel (the low 5 bits are used), B = wFadeLevel: when wFadeMode bit 7 is clear
 ; returns A = (A & $1F) + B capped at $1F (toward white), when it is set A = (A & $1F) - B, at least
 ; 0 (toward black). C = wFadeMode. Used three times per colour by StepFade_SGBColor. (C2, E-0373)
@@ -3006,11 +3158,15 @@ AdjustColorChannelForFade::
 .return:
     ret
 
+SECTION "Bank 00 StepFade_CGB", ROM0
+
 ; CGB path of the fade: far-calls StepCGBFade, which moves every palette one level toward the fade
 ; target. (C1, E-0357)
 StepFade_CGB::
     farcall StepCGBFade
     ret
+
+SECTION "Bank 00 StepFade_DMG", ROM0
 
 ; DMG fade step toward white (wFadeMode bit 7 clear; set means toward black, StepFade_DMGToBlack).
 ; Waits wFadeDelay frames per step; each step redraws the chosen DMG palettes
@@ -3061,6 +3217,8 @@ StepFade_DMG::
     jp z, StepFade_End
     ret
 
+SECTION "Bank 00 LightenSelectedDMGPalettes", ROM0
+
 ; For each of bits 0, 1 and 2 of wFadeMode that is set, lightens the saved palette wFadeDMGPalettes,
 ; + 1 or + 2 by wFadeLevel (LightenDMGPaletteByFadeLevel) into wDMGPaletteBGP, wDMGPaletteOBP0 or
 ; wDMGPaletteOBP1; an unselected palette byte is left alone. HL ends at wDMGPaletteOBP1. Called by
@@ -3086,6 +3244,8 @@ LightenSelectedDMGPalettes::
     jr nz, LightenDMGPaletteByFadeLevel
     ret
 
+SECTION "Bank 00 LightenDMGPaletteByFadeLevel", ROM0
+
 ; A = a DMG palette byte (four 2-bit shades): each shade minus wFadeLevel, at least 0 (white), is
 ; packed back in the same place and the result is stored at [HL] and left in C; B = wFadeLevel, HL
 ; kept. Built from LightenDMGShade and three LightenDMGShadeNext calls. (C2, E-0373)
@@ -3103,6 +3263,8 @@ LightenDMGPaletteByFadeLevel::
     call LightenDMGShadeNext
     ld [hl], c
     ret
+
+SECTION "Bank 00 LightenDMGShadeNext", ROM0
 
 ; Rotates D right by 2 to bring the next shade into bits 0-1, then falls into LightenDMGShade with A
 ; = D. (C2, E-0373)
@@ -3128,6 +3290,8 @@ LightenDMGShade::
     rrc c
     rrc c
     ret
+
+SECTION "Bank 00 StepFade_DMGToBlack", ROM0
 
 ; DMG fade step toward black (wFadeMode bit 7 set): the same timing as the fade toward white, but
 ; each step redraws the palettes with DarkenDMGPaletteByFadeLevel; the fade ends at level 4 or below
@@ -3173,6 +3337,8 @@ StepFade_DMGToBlack::
     jr z, StepFade_End
     ret
 
+SECTION "Bank 00 DarkenSelectedDMGPalettes", ROM0
+
 ; Redraws the DMG palettes the fade affects: for each of bits 0-2 of wFadeMode it darkens the
 ; matching saved palette in wFadeDMGPalettes (BGP, OBP0, OBP1) by wFadeLevel into wDMGPaletteBGP and
 ; the bytes after it. (C2, E-0357; probed E-0374)
@@ -3194,6 +3360,8 @@ DarkenSelectedDMGPalettes::
     jr nz, DarkenDMGPaletteByFadeLevel
     ret
 
+SECTION "Bank 00 DarkenDMGPaletteByFadeLevel", ROM0
+
 ; A = a DMG palette byte (four 2-bit shades): each shade plus wFadeLevel, capped at 3 (black), is
 ; packed back in the same place and the result is stored at [HL] and left in C; B = wFadeLevel, HL
 ; kept. Built from DarkenDMGShade and three DarkenDMGShadeNext calls; DarkenSelectedDMGPalettes uses
@@ -3212,6 +3380,8 @@ DarkenDMGPaletteByFadeLevel::
     call DarkenDMGShadeNext
     ld [hl], c
     ret
+
+SECTION "Bank 00 DarkenDMGShadeNext", ROM0
 
 ; Rotates D right by 2 to bring the next shade into bits 0-1, then falls into DarkenDMGShade with A
 ; = D. (C2, E-0373)
@@ -3239,11 +3409,15 @@ DarkenDMGShade::
     rrc c
     ret
 
+SECTION "Bank 00 StepFade_End", ROM0
+
 ; Ends a fade: wFadeState = 0. (C2, E-0357; probed E-0374)
 StepFade_End::
     xor a
     ld [wFadeState], a
     ret
+
+SECTION "Bank 00 WaitForVRAMAccess", ROM0
 
 ; Loops until rSTAT bit 1 is clear (LCD modes 0 and 1, when VRAM can be accessed) and returns with Z
 ; set and A = rSTAT. Callers usually disable interrupts first so the window does not pass before
@@ -3254,6 +3428,8 @@ WaitForVRAMAccess::
     bit 1, a
     ret z
     jr WaitForVRAMAccess
+
+SECTION "Bank 00 WriteVRAMByte", ROM0
 
 ; A = value, HL = VRAM address: saves A in hVRAMWriteByte, disables interrupts, waits until rSTAT
 ; bit 1 is clear, stores the byte at [HL] and enables interrupts again; HL is not changed. (C1,
@@ -3273,6 +3449,8 @@ WriteVRAMByte::
     ei
     ret
 
+SECTION "Bank 00 WriteVRAMByteInc", ROM0
+
 ; The same as WriteVRAMByte but stores with [HL+], so HL ends one past the byte. (C1, E-0373)
 ; like WriteVRAMByte but stores at [HL] and increments HL
 WriteVRAMByteInc::
@@ -3288,12 +3466,16 @@ WriteVRAMByteInc::
     ei
     ret
 
+SECTION "Bank 00 QueueMusic", ROM0
+
 ; wMusicRequest = A: ProcessSoundQueue starts that music (StartMusic) in the next VBlank and sets
 ; the request back to $FF. (C2, E-0373)
 ; wMusicRequest = A
 QueueMusic::
     ld [wMusicRequest], a
     ret
+
+SECTION "Bank 00 StartMusic", ROM0
 
 ; A = music id, stored in wCurrentMusic. With interrupts disabled it resets the sound hardware and
 ; every channel (InitSoundHardware); id 0 stops there. Otherwise it stores the id in wSoundId and
@@ -3348,12 +3530,16 @@ StartMusic::
     ei
     ret
 
+SECTION "Bank 00 QueueSoundEffect", ROM0
+
 ; wSoundEffectRequest = A: ProcessSoundQueue starts that sound effect (StartSoundEffect) in the next
 ; VBlank and sets the request back to $FF. (C2, E-0373)
 ; wSoundEffectRequest = A; ProcessSoundQueue starts it on the next frame
 QueueSoundEffect::
     ld [wSoundEffectRequest], a
     ret
+
+SECTION "Bank 00 StartSoundEffect", ROM0
 
 ; A = sound effect id, stored in wSoundId; every register is kept. With interrupts disabled it
 ; starts one track (StartSound) for most ids, two (A and A + 1, StartTwoSoundTracks) for $63, $67,
@@ -3457,6 +3643,8 @@ StartSoundEffect::
     pop af
     ret
 
+SECTION "Bank 00 ProcessSoundQueue", ROM0
+
 ; Called from both branches of VBlankHandler: when wMusicRequest is not $FF it starts that music
 ; (StartMusic) and sets the request to $FF, then when wSoundEffectRequest is not $FF it starts that
 ; effect (StartSoundEffect) and sets it to $FF. QueueMusic and QueueSoundEffect fill the requests.
@@ -3482,11 +3670,15 @@ ProcessSoundQueue::
 .return:
     ret
 
+SECTION "Bank 00 UnreferencedReturn_00_1339", ROM0
+
 ; A lone ret after the end of ProcessSoundQueue; it returns with every register unchanged. Nothing
 ; calls or jumps to it. (C2, E-0373)
 ; a lone ret after the sound-effect request step's ret; nothing reaches it (E-0239)
 UnreferencedReturn_00_1339:: ; configured code entry (E-0239); C0
     ret
+
+SECTION "Bank 00 UnreferencedStartSoundFadeA", ROM0
 
 ; A = fade level: clears wSoundFadeLevel and returns when wFieldInitStage is non-zero or A is 0 or
 ; has bit 7 set. Otherwise wSoundFadeLevel = A (halved with sra when wSGBActive is 0); then, unless
@@ -3535,6 +3727,8 @@ UnreferencedStartSoundFadeA:: ; configured code entry (E-0239); C0
     xor a
     ld [wSoundFadeLevel], a
     ret
+
+SECTION "Bank 00 StepMusicVolumeFade", ROM0
 
 ; Music volume fade, run once per frame from StepFade. When wSoundFadeLevel is set (and not bit 7,
 ; and no field set-up is in progress) it waits wSoundFadeTarget frames per step, then lowers each
@@ -3612,6 +3806,8 @@ StepMusicVolumeFade::
     xor a
     ld [wSoundFadeLevel], a
     ret
+
+SECTION "Bank 00 LoadSGBBorderForSetA", ROM0
 
 ; A = Super Game Boy border set: returns when A equals wSGBBorderSet; otherwise stores it there and,
 ; for sets 0-4, sends the border with three SGBTransferCompressed transfers, packet sets $10, $11
@@ -3849,6 +4045,8 @@ ResumeAfterModeChange_ResyncLink::
     jr nz, .loop2
     ret
 
+SECTION "Bank 00 ResumeAfterModeChange_ResyncLink_SendGreeting", ROM0
+
 ; Link greeting exchange: sends $70 | wIsCGB (driving the clock when wLinkRole bit 1 is clear,
 ; otherwise waiting for the partner's clock) and counts in wLinkTimer until the transfer completes
 ; (wLinkStatus bit 6). If the 16-bit count reaches $FF00 it gives up and sets wLinkFrameCounterHi to
@@ -3888,6 +4086,8 @@ ResumeAfterModeChange_ResyncLink_SendGreeting::
     ld [wLinkFrameCounterHi], a
     ret
 
+SECTION "Bank 00 ResumeAfterModeChange_ResyncLink_SendAck", ROM0
+
 ; Sends the link acknowledgement byte $F5 (as clock receiver or driver, by wLinkRole bit 1) and
 ; waits until the transfer completes (wLinkStatus bit 6). (C1, E-0357)
 ResumeAfterModeChange_ResyncLink_SendAck::
@@ -3905,6 +4105,8 @@ ResumeAfterModeChange_ResyncLink_SendAck::
     bit 6, a
     jr z, .loop
     ret
+
+SECTION "Bank 00 CopyRectFromBankToVRAM", ROM0
 
 ; A = ROM bank, DE = source in that bank (rows packed, B bytes each), B = width, C = rows, HL = VRAM
 ; destination with rows 32 bytes apart (no wrap): maps the bank and copies the rectangle a byte at a
@@ -3952,6 +4154,8 @@ CopyRectFromBankToVRAM::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 CopyRectFromBankToBGMapWrapped", ROM0
 
 ; A = ROM bank, DE = source in that bank (rows packed), B = width, C = rows, HL = BG map address:
 ; maps the bank and copies the rectangle with WriteVRAMByteInc, wrapping each row back to its own
@@ -4014,6 +4218,8 @@ CopyRectFromBankToBGMapWrapped::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 CopyScreenTileBufferToBGMapWrapped", ROM0
+
 ; Copies $400 bytes, 32 rows of 32, from wScreenTileBuffer to vBGMap0 with WriteVRAMByte, wrapping
 ; the column inside each row and the rows inside $9800-$9BFF. Reads past the $240-byte buffer
 ; described in src/ram.asm. No caller was found. (C1, E-0373)
@@ -4056,6 +4262,8 @@ CopyScreenTileBufferToBGMapWrapped::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 CopyBytesDEToHL_Bank00", ROM0
+
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy, BC = 0 and A = 0. The same 9 bytes appear in 13 banks. (C2, E-0373)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
@@ -4069,6 +4277,8 @@ CopyBytesDEToHL_Bank00::
     or c
     jr nz, CopyBytesDEToHL_Bank00
     ret
+
+SECTION "Bank 00 Multiply8", ROM0
 
 ; HL = A * C (8 x 8 bits), by two passes of Multiply8_AddFourBits (the second by falling through). A
 ; ends unchanged (rotated 8 times), B = the old C and C = 0. (C2, E-0373)
@@ -4114,6 +4324,8 @@ Multiply8_AddFourBits::
     rl b
     ret
 
+SECTION "Bank 00 Multiply8By16", ROM0
+
 ; E:H:L = A * BC (a 24-bit product, E the high byte), from two Multiply8 calls (A * B and A * C); BC
 ; ends as A * the old B, and A = E. D is kept. (C2, E-0373)
 ; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
@@ -4134,6 +4346,8 @@ Multiply8By16::
     adc $00
     ld e, a
     ret
+
+SECTION "Bank 00 DivideBByA", ROM0
 
 ; B = B / A (the quotient), A = the remainder, by 8 shift-and-subtract steps that also handle a
 ; divisor above $80; D = 0 and E = the divisor on return. (C2, E-0373)
@@ -4159,6 +4373,8 @@ DivideBByA::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 DivideHLByA", ROM0
+
 ; HL = HL / A (the quotient), A = the remainder, by 16 shift-and-subtract steps; D = 0 and E = the
 ; divisor on return. (C2, E-0373)
 ; HL = HL / A (quotient in HL), A = remainder; clobbers D, E
@@ -4182,6 +4398,8 @@ DivideHLByA::
     dec d
     jr nz, .loop
     ret
+
+SECTION "Bank 00 Divide24ByA", ROM0
 
 ; E:H:L = E:H:L / A (a 24-bit quotient, E the high byte), A = the remainder, by 24
 ; shift-and-subtract steps; B = the divisor and D = 0 on return. (C2, E-0373)
@@ -4207,6 +4425,8 @@ Divide24ByA::
     dec d
     jr nz, .loop
     ret
+
+SECTION "Bank 00 HLToDecimalDigits", ROM0
 
 ; Splits HL into decimal digits: wDigits = hundreds, wDigits + 1 = tens, wDigits + 2 = ones (for HL
 ; above 999 the first byte is HL / 100). HL ends as the ones value. (C2, E-0373)
@@ -4249,6 +4469,8 @@ HLToDecimalDigits::
     ld a, l
     ld [wDigits + $2], a
     ret
+
+SECTION "Bank 00 Number24ToPackedBCD", ROM0
 
 ; Converts the 24-bit value at wDigits (low byte first) by repeated subtraction: hTemp3 = the count
 ; of millions (a binary number, up to 16), hTemp2 = hundred-thousands and ten-thousands, hTemp1 =
@@ -4436,6 +4658,8 @@ Number24ToPackedBCD::
     ldh [hTemp0], a
     ret
 
+SECTION "Bank 00 TestFlagBit", ROM0
+
 ; DE = flag number: tests bit DE & 7 of the byte wStoryFlags + DE / 8 (DE shifted right
 ; arithmetically, no range check). Returns carry set and A = the masked bit when the flag is set, A
 ; = 0 with carry clear and Z set otherwise; B and C are clobbered. (C2, E-0373)
@@ -4476,6 +4700,8 @@ TestFlagBit::
 .return_carry:
     scf
     ret
+
+SECTION "Bank 00 SetFlagBit", ROM0
 
 ; DE = flag number: sets bit DE & 7 of the byte wStoryFlags + DE / 8. When DE is $0300 or more (D >=
 ; 3) it never returns: the branch it takes is a jr to itself. (C2, E-0373)
@@ -4519,6 +4745,8 @@ SetFlagBit::
 .skip2:
     jr .skip2
 
+SECTION "Bank 00 ReadByteInBank", ROM0
+
 ; B = ROM bank, DE = address: C = the byte at [DE] with that bank mapped; the calling bank is mapped
 ; back (A ends as its number). (C2, E-0373)
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
@@ -4532,6 +4760,8 @@ ReadByteInBank::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 FillTilesBxC", ROM0
 
 ; HL = VRAM destination, B = width, C = height in tiles: writes B * C copies of the 16-byte tile
 ; pattern at SolidColor1Tile ($FF, $00 repeated: every pixel colour 1, the bytes after
@@ -4570,6 +4800,8 @@ FillTilesBxC::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 00 CopyRectToBGMapWrapped", ROM0
 
 ; B = width, C = rows, DE = source (rows packed), HL = BG map address: copies the B x C rectangle in
 ; the current bank, wrapping each row back to its own 32-entry line when it crosses column 31 and
@@ -4625,6 +4857,8 @@ CopyRectToBGMapWrapped::
 
 .return:
     ret
+
+SECTION "Bank 00 ReadFarPointerAtDEInBankB", ROM0
 
 ; With ROM bank B mapped, reads a far pointer at DE: HL = the word, B = the byte after it (its
 ; bank). DE ends at that third byte (DE + 2, not past it); the calling bank is mapped back (A = its
@@ -4771,6 +5005,8 @@ LoadSpecialMapScreen::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 LoadMapScreen", ROM0
 
 ; Loads the screen (hMapScreenX, hMapScreenY) of map hMapId into wScreenTileBuffer (and
 ; wScreenAttrBuffer on CGB). Special maps (wMapType bit 7) go to LoadMapScreen_SpecialMap.
@@ -4921,6 +5157,8 @@ LoadMapScreen::
     call LoadMapScreen_DrawMarker
     ret
 
+SECTION "Bank 00 LoadMapScreen_DrawMarker", ROM0
+
 ; Draws a map's special 2x2 marker, unless wMapType bit 7 is set. The table after the routine (code
 ; at MapMarkerRecords) holds 3-byte entries (map id, position, screen) for 11 maps ending with $FF;
 ; for the entry matching hMapId it draws the marker with LoadMapScreen_DrawMarker_IfOnScreen,
@@ -4976,6 +5214,8 @@ LoadMapScreen_DrawMarker::
 
 .return:
     ret
+
+SECTION "Bank 00 MapMarkerRecords", ROM0
 
 ; Map marker records of 3 bytes up to $FF: the map id, the marker position (column in the high
 ; nibble, metatile row in the low) and its screen (screen X in the high nibble, Y in the low).
@@ -5088,6 +5328,8 @@ LoadMapScreen_DrawMarker_IfOnScreen::
     pop hl
     ret
 
+SECTION "Bank 00 LoadMapScreen_PatchStrongestMasterTiles", ROM0
+
 ; After the story flag EVENT_SCENE_STRONGEST_MASTER is set, patches two map screens at screen X 0:
 ; map $0D gets tiles $44 $45 over $46 $47 at wScreenTileBuffer + $14A, and map $05 gets $78 $79 over
 ; $7A $7B at wScreenTileBuffer + $32. What the changed tiles show is not yet confirmed. (C2, E-0357;
@@ -5126,6 +5368,8 @@ LoadMapScreen_PatchStrongestMasterTiles::
     inc hl
     ld [hl], $7b
     ret
+
+SECTION "Bank 00 LoadSpecialMapHeader", ROM0
 
 ; hTemp0 = special map number: with bank $61 mapped it follows SpecialMapTable entry hTemp0 to the
 ; record, expands its first far-pointer stream (the tileset) into vTiles2 with DecompressToVRAM,
@@ -5197,6 +5441,8 @@ LoadSpecialMapHeader::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 LoadMapHeader", ROM0
 
 ; Loads the header of map hMapId; special maps (wMapType bit 7) go to LoadMapHeaderByMapType.
 ; Otherwise, with bank $11 mapped, it reads the record (MapRecordPointer): the tileset far pointer
@@ -5298,6 +5544,8 @@ LoadMapHeader::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 SetFieldEventKindOnMap19IfFlagD1", ROM0
+
 ; On map $19 (hMapId), when EVENT_SCENE_DARCK_DEFEATED is set, sets wFieldEventKind = $0B. Its ld a,
 ; [wStoryFlags + $60] / ret nz tests the Z flag left by the map compare, so that byte never stops
 ; it. Run at the end of LoadMapHeader. (C2, E-0373)
@@ -5316,6 +5564,8 @@ SetFieldEventKindOnMap19IfFlagD1::
     ld a, $0b
     ld [wFieldEventKind], a
     ret
+
+SECTION "Bank 00 PatchTilesOnMap1Or2", ROM0
 
 ; Run at the end of LoadMapHeader. When bit 1 of wStoryFlags + $60 is set
 ; (SceneRivalDefeated_GiveKey sets it) and bit 5 is clear (SceneDarckDefeated_WarpToKing sets it):
@@ -5359,6 +5609,8 @@ PatchTilesOnMap1Or2::
     call CopyBBytesToVRAMFromDE
     ret
 
+SECTION "Bank 00 CopyBBytesToVRAMFromDE", ROM0
+
 ; Copies B bytes from DE to HL (both may be VRAM): each byte is read with interrupts disabled after
 ; WaitForVRAMAccess and written with WriteVRAMByteInc. DE and HL end past the copy, B = 0. (C1,
 ; E-0373)
@@ -5374,6 +5626,8 @@ CopyBBytesToVRAMFromDE::
     dec b
     jr nz, CopyBBytesToVRAMFromDE
     ret
+
+SECTION "Bank 00 Tiles_00_1D07", ROM0
 
 ; 64 bytes copied into vTiles uncompressed (E-0168)
 ; record: one 16-byte tile (2bpp) per line
@@ -5426,6 +5680,8 @@ SetMapSpriteKindAndEventTileForSpecialMaps::
 .return:
     ret
 
+SECTION "Bank 00 MapRecordPointer", ROM0
+
 ; HL = DE = the word at MapTable + 2 * hMapId: the map record of the current map. The caller maps
 ; bank $11 (MapTable) first, as LoadMapScreen and LoadMapHeader do. (C2, E-0373)
 ; HL = the word at MapTable + 2 * hMapId (bank $11)
@@ -5443,6 +5699,8 @@ MapRecordPointer::
     ld l, e
     ld h, d
     ret
+
+SECTION "Bank 00 DebugMapEditor_CheckPosition", ROM0
 
 ; Debug map editor check of the edit position. With bank $11 mapped it follows entry hTemp0 of the
 ; pointer table at $44B8 to a map record and returns A = 1 when the position is outside it:
@@ -5560,6 +5818,8 @@ DebugMapEditor_CheckPosition::
     xor a
     ret
 
+SECTION "Bank 00 DrawFullScreenBufferToBGMap", ROM0
+
 ; HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer (rows of 20) with
 ; WriteVRAMByteInc, wrapping each row back to its own 32-entry line and the rows inside $9800-$9BFF.
 ; On CGB it then draws the same cells of wScreenAttrBuffer (rSVBK = 2), masked to the palette bits
@@ -5661,6 +5921,8 @@ DrawFullScreenBufferToBGMap::
     ld a, $00
     ldh [rVBK], a
     ret
+
+SECTION "Bank 00 DrawScreenBufferToBGMapWithAttrs", ROM0
 
 ; HL = BG map address: draws 20 x 13 entries of wScreenTileBuffer (rows of 20) to the BG map with
 ; the same wrapping as DrawFullScreenBufferToBGMap, each byte written with interrupts disabled after
@@ -5798,6 +6060,8 @@ DrawScreenBufferToBGMapWithAttrs::
     ldh [rVBK], a
     ret
 
+SECTION "Bank 00 SRAMRecordAddressMapped", ROM0
+
 ; A = party slot, C = field offset: maps A through MapIndexViaPartyList (the record number
 ; wPartyList + (A & $7F), or A itself when wLinkMode is non-zero and wGameMode is 4) and returns HL
 ; = sRecords + record * $A5 + C. BC is kept; it maps no SRAM bank (the caller does). (C2, E-0373)
@@ -5814,6 +6078,8 @@ SRAMRecordAddressMapped::
     ld a, c
     add_a_to_hl
     ret
+
+SECTION "Bank 00 StoreTemp0ToSRAMRecordBytes", ROM0
 
 ; Copies B bytes from hTemp0 on to field C of the record for party slot A (SRAMRecordAddressMapped),
 ; in the SRAM bank already mapped; HL and DE are kept. No caller was found. (C2, E-0373)
@@ -5835,6 +6101,8 @@ StoreTemp0ToSRAMRecordBytes::
     pop hl
     ret
 
+SECTION "Bank 00 LoadSRAMRecordBytesToTemp0", ROM0
+
 ; Copies B bytes of field C of the record for party slot A (SRAMRecordAddressMapped), in the SRAM
 ; bank already mapped, to hTemp0 on; HL and DE are kept. No caller was found. (C2, E-0373)
 ; copies B bytes of field C of SRAM record A to hTemp0; HL and DE preserved (E-0122)
@@ -5854,6 +6122,8 @@ LoadSRAMRecordBytesToTemp0::
     pop hl
     ret
 
+SECTION "Bank 00 LoadSRAMRecordByte", ROM0
+
 ; A = record number (used directly, not mapped through wPartyList), C = field offset: hTemp0 = A =
 ; the byte at sRecords + A * $A5 + C (SRAMRecordAddress) in the SRAM bank already mapped; HL is
 ; kept. (C2, E-0373)
@@ -5865,6 +6135,8 @@ LoadSRAMRecordByte::
     ldh [hTemp0], a
     pop hl
     ret
+
+SECTION "Bank 00 LoadSRAMRecordWord", ROM0
 
 ; A = record number, C = field offset: loads the word at sRecords + A * $A5 + C (SRAMRecordAddress,
 ; no party mapping) into hTemp0 (low byte) and hTemp1 (high byte) and returns A = the high byte; HL
@@ -5880,6 +6152,8 @@ LoadSRAMRecordWord::
     ldh [hTemp1], a
     pop hl
     ret
+
+SECTION "Bank 00 LoadRecordThreeBytesToTemp0", ROM0
 
 ; A = record number, C = field offset: copies the three bytes at sRecords + A * $A5 + C
 ; (SRAMRecordAddress) to hTemp0-hTemp2, low byte first; HL kept. All three callers pass C = MON_EXP,
@@ -5898,6 +6172,8 @@ LoadRecordThreeBytesToTemp0::
     ldh [hTemp2], a
     pop hl
     ret
+
+SECTION "Bank 00 CopyRecordNameToNameGlyphBuf", ROM0
 
 ; A = record number, C = field offset (callers pass MON_NAME, once MON_MASTER_NAME): copies the 10
 ; bytes at sRecords + A * $A5 + C to wNameGlyphBuf and returns A = 0 with carry clear (Z set). When
@@ -5945,6 +6221,8 @@ CopyRecordNameToNameGlyphBuf::
     scf
     ret
 
+SECTION "Bank 00 SRAMRecordAddress", ROM0
+
 ; A = record number, C = field offset: returns HL = sRecords + A * $A5 + C (records are $A5 bytes;
 ; Multiply8) with no party mapping (SRAMRecordAddressMapped maps A through wPartyList first). BC
 ; kept; A is clobbered. It does not enable SRAM or pick its bank. (C2, E-0373)
@@ -5959,6 +6237,8 @@ SRAMRecordAddress::
     ld a, c
     add_a_to_hl
     ret
+
+SECTION "Bank 00 LoadMonsterPicture", ROM0
 
 ; DE = monster id, HL = VRAM destination, C = palette number: reads the 3-byte far pointer at
 ; MonsterPictureTable + 3 * DE (bank $38) and decompresses that picture stream to HL
@@ -6019,6 +6299,8 @@ LoadMonsterPicture::
     ld c, $10
     call CopyFromBank
     ret
+
+SECTION "Bank 00 LoadMonsterPictureAttributeBlock", ROM0
 
 ; DE = monster id, HL = destination in WRAM bank 2 (callers pass wScreenAttrBuffer), hTemp0 =
 ; palette number: reads the far pointer at MonsterAttributeMapTable + 3 * DE (bank $38; $447E), maps
@@ -6097,6 +6379,8 @@ LoadMonsterPictureAttributeBlock::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 LoadMonsterPictureAttributes", ROM0
 
 ; DE = monster id, HL = BG map address, hTemp0 = palette number: reads the far pointer at
 ; MonsterAttributeMapTable + 3 * DE (bank $38), maps the bank it names, and writes its 6 x 6
@@ -6207,6 +6491,8 @@ WriteTwoDigitTilesFromDigits1::
     pop hl
     ret
 
+SECTION "Bank 00 WriteDecimalDigitTiles", ROM0
+
 ; DE = destination: writes the three digits wDigits, wDigits + $1 and wDigits + $2 (from
 ; HLToDecimalDigits) as tiles $E0 + digit, with leading zeros as the blank tile $C3; the ones digit
 ; is always drawn. DE ends at the third tile (not past it); HL kept; C = 1 when a hundreds or tens
@@ -6252,6 +6538,8 @@ WriteDecimalDigitTiles::
     ld [de], a
     pop hl
     ret
+
+SECTION "Bank 00 WritePackedBCDAsSevenDigitTiles", ROM0
 
 ; DE = destination: writes seven digit tiles ($E0 + digit) for the packed BCD number from
 ; Number24ToPackedBCD: the low nibble of hTemp3, then the high and low nibbles of hTemp2, hTemp1 and
@@ -6330,6 +6618,8 @@ WritePackedBCDAsSevenDigitTiles::
     jr nz, .loop
     pop hl
     ret
+
+SECTION "Bank 00 CopyGlyphTilesToVRAM", ROM0
 
 ; DE = VRAM destination: with ROM bank $1F mapped, takes the characters of wNameGlyphBuf until $F0
 ; or 11 characters and copies each one 16-byte font tile (GlyphFont + 16 * character) to DE, waiting
@@ -6455,6 +6745,8 @@ CopyGlyphTilesToVRAM::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 LoadRecordListNameTiles", ROM0
+
 ; Fills wNameGlyphBuf with five spaces ($90) and an $F0 and draws it (CopyGlyphTilesToVRAM) at
 ; vTiles1 + $500, $550 and $5A0, three blank 5-tile slots; enables SRAM (rRAMG = $0A); then for each
 ; of the wPartyCount record numbers at wPartyList copies the MON_NAME of that record
@@ -6518,6 +6810,8 @@ LoadRecordListNameTiles::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 00 LoadPlayerAndFollowerSpriteGraphics_Followers", ROM0
 
 ; Loads the sprite tiles and palettes of the party members who follow the player in the field. For
 ; each member of wPartyList it writes the species word to a list from wPartyList + 3 and
@@ -6696,6 +6990,8 @@ LoadPlayerAndFollowerSpriteGraphics_Followers::
     jp nz, .loop
     ret
 
+SECTION "Bank 00 PersonalityIndexOfRecord", ROM0
+
 ; A = SRAM record number (no party mapping; two callers first map a party slot with
 ; MapIndexViaPartyList, two pass a record number from a list): grades the record bytes
 ; MON_PERSONALITY ($6F), MON_PERSONALITY + 3 ($72) and MON_PERSONALITY + 1 ($70) with GradeTemp0
@@ -6732,6 +7028,8 @@ PersonalityIndexOfRecord::
     add b
     ret
 
+SECTION "Bank 00 GradeTemp0", ROM0
+
 ; Grades hTemp0 into C: C = 0 when hTemp0 >= $C0, 1 when $40 <= hTemp0 < $C0, otherwise 2 (carry set
 ; then, clear in the other cases). A = hTemp0. PersonalityIndexOfRecord grades three personality
 ; bytes with it. (C2, E-0373)
@@ -6746,6 +7044,8 @@ GradeTemp0::
     ret nc
     inc c
     ret
+
+SECTION "Bank 00 WritePackedBCDNoLeadingZeros", ROM0
 
 ; DE = destination: writes the number from Number24ToPackedBCD in hTemp0-hTemp3 as digit characters
 ; 0-9 (not tiles) without leading zeros, then $F0: hTemp3 (the millions, written as a whole byte)
@@ -6820,6 +7120,8 @@ WritePackedBCDNoLeadingZeros::
     ld [de], a
     ret
 
+SECTION "Bank 00 CopySkillNameToDE", ROM0
+
 ; A = skill number, DE = destination: with ROM bank $08 mapped, copies string A of
 ; StringTable_SkillNames (the word at $4558 + 2 * A, a 16-bit index) including its $F0 to DE,
 ; through the shared tail CopyItemNameToDE_CopyString; DE ends past the $F0 and the caller ROM bank
@@ -6843,6 +7145,8 @@ CopySkillNameToDE::
     ld a, $08
     ld [rROMB0], a
     jr CopyItemNameToDE_CopyString
+
+SECTION "Bank 00 CopyItemNameToDE", ROM0
 
 ; A = item number, DE = destination: with ROM bank $08 mapped, copies string A of
 ; StringTable_ItemNames ($4716 + 2 * A) including its $F0 to DE and restores the caller bank (falls
@@ -6885,6 +7189,8 @@ CopyItemNameToDE_CopyString::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 WriteKeyNameToDE", ROM0
 
 ; A = key slot, or $FE: for $FE writes 'Magic Key' to DE; otherwise writes the name of entry A of
 ; wKeyList (4-byte entries; it reads bytes 1 and 2 from $C708 + 4 * A): word (byte 1) + 1, then word
@@ -6952,6 +7258,8 @@ WriteKeyNameToDE::
     ld [de], a
     ret
 
+SECTION "Bank 00 CopyKeyNameWordToDE", ROM0
+
 ; A = word number (below $80; it is doubled in 8 bits), DE = destination: with ROM bank $09 mapped,
 ; copies that string of CopyKeyNameWordToDE_StringList (category 3 of the bank-$09 strings: Ylw,
 ; Plain, Green, ... then Slime, Draco, Beast, ... Cave, Isle) with its $F0 to DE and restores the
@@ -6983,6 +7291,8 @@ CopyKeyNameWordToDE::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 MapIndexViaPartyList", ROM0
+
 ; A = party slot (bit 7 ignored): returns A = the byte at wPartyList + (A & $7F), the record number
 ; of that member, with HL pointing there. In a link battle (wLinkMode non-zero and wGameMode 4) it
 ; returns A unchanged and HL kept. BC kept. (C2, E-0373)
@@ -7010,6 +7320,8 @@ MapIndexViaPartyList::
     ld a, [hl]
     ret
 
+SECTION "Bank 00 LoadBGPaletteBufferFromBank", ROM0
+
 ; B = ROM bank, DE = source: on CGB copies $40 bytes (eight palettes) from DE in bank B into
 ; wBGPaletteBuffer (CopyFromBank, caller bank restored) and sets wBGPaletteUploadRequest = $7F;
 ; returns at once when wIsCGB is 0. Two screen loaders in bank 0 call it with the palette pointer
@@ -7026,6 +7338,8 @@ LoadBGPaletteBufferFromBank::
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ret
+
+SECTION "Bank 00 StepBGMapAddressBackOnScrollWrap", ROM0
 
 ; HL = BG map address built by adding an offset to the scroll origin: with col = (hScrollX / 8) &
 ; $1F, when col >= 12 and (L & $1F) < col - 12 the entry ran past column 31 into the next row, so HL
@@ -7077,6 +7391,8 @@ StepBGMapAddressBackOnScrollWrap::
     xor a
     ret
 
+SECTION "Bank 00 ComputeSpriteScrollOffsets", ROM0
+
 ; Sets hSpriteScrollXLo/Hi = 8 - the 16-bit scroll hScrollX/hScrollXHi and hSpriteScrollYLo/Hi = $10
 ; - hScrollY/hScrollYHi (computed as -(scroll - 9) - 1 and -(scroll - $11) - 1). In game mode 1 with
 ; wModeState & $0F = 6 (FieldState_FieldMenu) it returns early and leaves them. GameFrameUpdate
@@ -7113,6 +7429,8 @@ ComputeSpriteScrollOffsets::
     ldh [hSpriteScrollYHi], a
     ret
 
+SECTION "Bank 00 SerialInterruptHandler", ROM0
+
 ; The serial interrupt (vector $0058): saves AF, BC, DE and HL, far-calls RunLinkSession (a step of
 ; the link session) and returns with reti. (C1, E-0373)
 ; the serial interrupt (vector $0058): saves AF, BC, DE and HL, runs a step of the link session
@@ -7128,6 +7446,8 @@ SerialInterruptHandler::
     pop bc
     pop af
     reti
+
+SECTION "Bank 00 StatInterruptHandler", ROM0
 
 ; The LCD STAT interrupt (vector $0048): saves AF, HL and DE and the WRAM bank (rSVBK, then sets it
 ; to 0), and runs entry wSTATSplitEnable & 3 of its table: 0 StatInterruptHandler_Exit and 1
@@ -7165,9 +7485,13 @@ StatInterruptHandler_Exit::
     pop af
     reti
 
+SECTION "Bank 00 StatInterruptHandler_NoSplit", ROM0
+
 ; STAT split 1: does nothing (jumps to the common exit). (C1, E-0357)
 StatInterruptHandler_NoSplit::
     jr StatInterruptHandler_Exit
+
+SECTION "Bank 00 StatInterruptHandler_HorizontalWave", ROM0
 
 ; STAT split 2, a horizontal wave: on each interrupt sets rSCX to the byte at wBGPaletteCopy + rLY
 ; (the buffer here holds per-line scroll values) and moves the LYC line on by 2; after line $8F it
@@ -7190,6 +7514,8 @@ StatInterruptHandler_HorizontalWave::
     ldh [rLYC], a
     jr StatInterruptHandler_Exit
 
+SECTION "Bank 00 StatInterruptHandler_VerticalWave", ROM0
+
 ; STAT split 3, a vertical wave: on each interrupt sets rSCY to the byte at wBGPaletteCopy + rLY and
 ; moves the LYC line on by 2; after line $80 it restores rSCY from hScrollY and restarts at line 0.
 ; (C1, E-0357)
@@ -7210,6 +7536,8 @@ StatInterruptHandler_VerticalWave::
 .skip:
     ldh [rLYC], a
     jr StatInterruptHandler_Exit
+
+SECTION "Bank 00 BeginStringDisplay", ROM0
 
 ; DE = string table (see LookupString): clears the text window tiles (FillTilesFromRequest), copies
 ; wTextWindowTileLo/Hi to wTextGlyphDestLo/Hi and wTextLineStartLo/Hi, looks up string wStringIndex
@@ -7246,6 +7574,8 @@ BeginStringDisplay::
     ld [wTextGlyphTimer], a
     ret
 
+SECTION "Bank 00 CopyStringToBuffer", ROM0
+
 ; DE = string table: looks up string wStringIndex of category wStringCategory (LookupString, which
 ; stores the current ROM bank in wStringBank) and copies it, including its $F0 terminator, to the
 ; address in wStringDestLo/wStringDestHi. Called by the string-bank wrappers such as
@@ -7267,6 +7597,8 @@ CopyStringToBuffer::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 RunStringDisplayToEnd", ROM0
+
 ; Sets wTextFlags bit 1 (<FAST>), then calls StepTextPrinter in a loop until wTextFlags is 0,
 ; printing the whole string begun by BeginStringDisplay at once instead of one glyph per frame. (C1,
 ; E-0373)
@@ -7281,6 +7613,8 @@ RunStringDisplayToEnd::
     or a
     jr nz, .loop
     ret
+
+SECTION "Bank 00 StepTextPrinter", ROM0
 
 ; One step of the text printer: when wTextControl bit 7 (<INSTANT>) is clear it runs PrintTextStep
 ; once; otherwise it runs PrintTextStep repeatedly, setting wTextFlags bit 1 before each, until bit
@@ -7301,6 +7635,8 @@ StepTextPrinter::
     bit 7, a
     jr nz, .loop
     ret
+
+SECTION "Bank 00 PrintTextStep", ROM0
 
 ; One frame of the text printer, with ROM bank wStringBank mapped (the caller bank is restored and
 ; wTextGlyphTimer += 1 on every exit). In order: while wTextControl bit 2 is set (<SFX_WAIT>,
@@ -7635,6 +7971,8 @@ PrintTextStep::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 DrawTextGlyph", ROM0
+
 ; A = glyph: with ROM bank $1F mapped, copies the 16-byte font tile of the glyph
 ; (GlyphTileSourceForL: GlyphFont + 16 * A) to the address in wTextGlyphDestLo/Hi, waiting for VRAM
 ; access before each pair of bytes, stores the address after it back in wTextGlyphDestLo/Hi and
@@ -7674,6 +8012,8 @@ DrawTextGlyph::
     ld [rROMB0], a
     ret
 
+SECTION "Bank 00 DrawTextMarkGlyph", ROM0
+
 ; A = mark glyph ($8D or $8E): with ROM bank $1F mapped, runs CallFunc28BDInBank1F_OverlayGlyph,
 ; which ORs the 16-byte font tile of the mark into the tile just drawn (wTextGlyphDestLo/Hi - $10),
 ; clearing bit 1 of its fourth byte, and leaves wTextGlyphDestLo/Hi where it was; restores the
@@ -7691,6 +8031,8 @@ DrawTextMarkGlyph::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 CallFunc28BDInBank1F_OverlayGlyph", ROM0
 
 ; Draws one glyph of text over the tile being built: finds glyph L's 16-byte font tile
 ; (GlyphTileSourceForL), backs the destination up one tile and ORs the 16 bytes into VRAM, waiting
@@ -7741,6 +8083,8 @@ CallFunc28BDInBank1F_OverlayGlyph::
     ld [wTextGlyphDestHi], a
     ret
 
+SECTION "Bank 00 GlyphTileSourceForL", ROM0
+
 ; L = glyph: returns DE = GlyphFont + 16 * L ($4010 + 16 * L, the 16-byte font tile in bank $1F) and
 ; HL = the word at wTextGlyphDestLo/wTextGlyphDestHi (A = its high byte). BC kept. The caller maps
 ; bank $1F. (C2, E-0373)
@@ -7764,6 +8108,8 @@ GlyphTileSourceForL::
     ld a, [wTextGlyphDestHi]
     ld h, a
     ret
+
+SECTION "Bank 00 FillTilesFromRequest", ROM0
 
 ; Fills the text window tiles at wTextWindowTileLo/Hi with the 16-byte pattern at SolidColor1Tile
 ; (eight $FF, $00 pairs, right after this routine): wTextWindowWidth passes of wTextWindowRows
@@ -7813,6 +8159,8 @@ FillTilesFromRequest::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 00 SolidColor1Tile", ROM0
 
 ; One 2bpp tile, 16 bytes $FF, $00: eight rows of colour 1. FillTilesBxC and FillTilesFromRequest
 ; copy it into each tile they fill, and LibraryMenu_LeaveReloadNames copies it with
@@ -7882,6 +8230,8 @@ TextCmd_SfxWait::
     set 2, [hl]
     ret
 
+SECTION "Bank 00 TextCmd_MusicWait", ROM0
+
 ; <MUSIC_WAIT> ($E5): clears wTextControl bit 7, queues the next string byte as music (QueueMusic,
 ; wMusicRequest), moves wTextPosLo/Hi past it and sets wTextControl bit 2, which holds the text
 ; until every sound channel is idle. (C2, E-0373)
@@ -7897,11 +8247,15 @@ TextCmd_MusicWait::
     set 2, [hl]
     ret
 
+SECTION "Bank 00 TextCmd_ChoiceE6", ROM0
+
 ; <CHOICE_E6> ($E6): opens the yes/no choice (jumps to OpenTextChoice). wTextLastChar stays $E6, so
 ; PrintTextStep plays no sound when yes is confirmed. (C1, E-0373)
 ; <CHOICE_E6> ($E6): the yes/no choice (OpenTextChoice) (E-0336)
 TextCmd_ChoiceE6::
     jp OpenTextChoice
+
+SECTION "Bank 00 TextCmd_ChoiceNo", ROM0
 
 ; <CHOICE_NO> ($E7): opens the yes/no choice (OpenTextChoice), then puts the cursor on no
 ; (wTextYesNoResult = 1) and sets wTextLastChar = $FF, so PrintTextStep handles it like <CHOICE>.
@@ -7914,6 +8268,8 @@ TextCmd_ChoiceNo::
     ld a, $ff
     ld [wTextLastChar], a
     ret
+
+SECTION "Bank 00 TextCmd_Cursor", ROM0
 
 ; <CURSOR> ($E8): reads the column (next byte) and row (the byte after), moving wTextPosLo/Hi past
 ; both, and sets wTextGlyphDestLo/Hi and wTextLineStartLo/Hi = wTextWindowTileLo/Hi + 16 * (row *
@@ -7947,6 +8303,8 @@ TextCmd_Cursor::
     ld a, h
     ld [wTextLineStartHi], a
     ret
+
+SECTION "Bank 00 TextCmd_Sound", ROM0
 
 ; <SOUND> ($E9): plays the id in the next byte without waiting (wTextPosLo/Hi moves past it): $FF
 ; far-calls RestartMapMusic (<MAP_MUSIC>); ids below $60 and $CC, $CF, $D6 go to QueueMusic; every
@@ -7989,6 +8347,8 @@ TextCmd_Voice1::
     ld [wTextBeepSound], a
     ret
 
+SECTION "Bank 00 TextCmd_Voice2", ROM0
+
 ; <VOICE2> ($EB): turns the speech beep on (wTextControl bit 0) with sound $6A (wTextBeepSound).
 ; (C2, E-0373)
 ; <VOICE2> ($EB): speech beep on with sound $6A (E-0336)
@@ -7998,6 +8358,8 @@ TextCmd_Voice2::
     ld a, $6a
     ld [wTextBeepSound], a
     ret
+
+SECTION "Bank 00 TextCmd_Pause", ROM0
 
 ; <PAUSE> ($EC): clears wTextControl bit 7; below text speed 7 it sets wTextDelayCounter from the
 ; 7-byte table after it at $2A66, indexed by wTextSpeed (6, 12, 20, 26, 32, 40, 48 frames), and sets
@@ -8036,6 +8398,8 @@ TextCmd_Instant::
     ld hl, wTextControl
     set 7, [hl]
     ret
+
+SECTION "Bank 00 TextCmd_ClearLine", ROM0
 
 ; <CLEAR_LINE> ($EE), the second half of <NEXT>: writes the first line tile numbers
 ; (wTextWindowTileLo/Hi / 16 onward, wTextWindowWidth of them) to the BG map row at
@@ -8133,6 +8497,8 @@ TextCmd_ClearLine::
     ld hl, wTextFlags
     res 1, [hl]
     ret
+
+SECTION "Bank 00 TextCmd_NextLine", ROM0
 
 ; <NEXT_LINE> ($EF), the first half of <NEXT>: when wTextLineStartLo/Hi is not yet the second line
 ; (wTextWindowTileLo/Hi + 16 * wTextWindowWidth), it moves wTextGlyphDestLo/Hi and
@@ -8261,6 +8627,8 @@ TextCmd_NextLine::
     ld [wTextDelayCounter], a
     ret
 
+SECTION "Bank 00 TextCmd_End", ROM0
+
 ; @ ($F0): at the end of an inserted text (<BUF0>-<BUF3>, <PLAYER>; wTextFlags bit 4) it clears bit
 ; 4, hides the arrow (HideTextArrow) and returns wTextPosLo/Hi to the position saved in
 ; wTextStartPosLo/Hi; otherwise it clears wTextFlags and wTextControl, which ends the text. C2 from
@@ -8292,6 +8660,8 @@ TextCmd_End::
     ld [wTextControl], a
     ret
 
+SECTION "Bank 00 HideTextArrow", ROM0
+
 ; When the arrow is shown (wTextFlags bit 5): clears that bit, writes tile $B4 where the blinking
 ; arrow is drawn (three rows below wTextCursorLo/Hi, 9 columns in) and plays sound $69 unless
 ; wGameMode is 4 (battle). Otherwise it does nothing. (C1, E-0373)
@@ -8315,6 +8685,8 @@ HideTextArrow::
     ld a, $69
     call QueueSoundEffect
     ret
+
+SECTION "Bank 00 TextCmd_Line", ROM0
 
 ; <LINE> ($F1): moves the glyph cursor to the start of the next line without scrolling:
 ; wTextGlyphDestLo/Hi and wTextLineStartLo/Hi = wTextLineStartLo/Hi + 16 * wTextWindowWidth. C2 from
@@ -8345,6 +8717,8 @@ TextCmd_Line::
     ld [wTextLineStartHi], a
     ret
 
+SECTION "Bank 00 TextCmd_Clear", ROM0
+
 ; <CLEAR> ($F2): hides the arrow (HideTextArrow), ends <INSTANT> and <FAST>
 ; (ClearStringDisplayFlags), fills the window tiles with the blank pattern (FillTilesFromRequest)
 ; and falls into TextCmd_Home, which puts the glyph cursor on the first line. (C1, E-0373)
@@ -8373,6 +8747,8 @@ TextCmd_Home::
     ld [wTextLineStartHi], a
     ret
 
+SECTION "Bank 00 ClearStringDisplayFlags", ROM0
+
 ; <NORMAL> ($F4) and a helper: clears wTextControl bit 7 (<INSTANT>) and wTextFlags bit 1 (<FAST>),
 ; nothing else. (C2, E-0373)
 ; <NORMAL> ($F4) and a helper: clears bit 7 of wTextControl (<INSTANT>) and bit 1 of wTextFlags
@@ -8384,6 +8760,8 @@ ClearStringDisplayFlags::
     res 1, [hl]
     ret
 
+SECTION "Bank 00 TextCmd_Fast", ROM0
+
 ; <FAST> ($F5): sets wTextFlags bit 1, so glyphs are drawn without waiting for the text speed. (C2,
 ; E-0373)
 ; <FAST> ($F5): sets wTextFlags bit 1, so glyphs are drawn without waiting for the text speed
@@ -8392,6 +8770,8 @@ TextCmd_Fast::
     ld hl, wTextFlags
     set 1, [hl]
     ret
+
+SECTION "Bank 00 TextCmd_Player", ROM0
 
 ; <PLAYER> ($F6): copies the 10 bytes of wPlayerName to wPlayerNameText with a $F0 after them, sets
 ; wTextFlags bit 4, saves wTextPosLo/Hi in wTextStartPosLo/Hi and points wTextPosLo/Hi at
@@ -8428,6 +8808,8 @@ TextCmd_Player::
     ld [wTextPosHi], a
     ret
 
+SECTION "Bank 00 TextCmd_Wait", ROM0
+
 ; <WAIT> ($F7): sets wTextFlags bit 2 and clears wTextControl bit 7: the text waits for a button. C2
 ; from E-0336: it holds until A is pressed. (C2, E-0373)
 ; <WAIT> ($F7): sets wTextFlags bit 2: the text waits for a button (C2 from E-0336: it holds until A
@@ -8438,6 +8820,8 @@ TextCmd_Wait::
     ld hl, wTextControl
     res 7, [hl]
     ret
+
+SECTION "Bank 00 TextCmd_Speed", ROM0
 
 ; <SPEED> ($F8): sets wTextFlags bit 3 and stores the next byte in wTextControlArg (wTextPosLo/Hi
 ; moves past it); from here on glyphs wait that many frames instead of wTextSpeed. (C2, E-0373)
@@ -8450,6 +8834,8 @@ TextCmd_Speed::
     ld a, [hl]
     ld [wTextControlArg], a
     ret
+
+SECTION "Bank 00 TextCmd_Buf", ROM0
 
 ; <BUF> ($F9): sets wTextFlags bit 4, saves wTextPosLo/Hi + 1 (past the argument byte) in
 ; wTextStartPosLo/Hi and points wTextPosLo/Hi at wTextBuf0 + the argument byte, so that
@@ -8488,6 +8874,8 @@ TextCmd_Buf::
     ld [wTextPosHi], a
     ret
 
+SECTION "Bank 00 TextCmd_Arrow", ROM0
+
 ; <ARROW> ($FA): sets wTextFlags bit 5: PrintTextStep blinks the arrow (tiles $BD and $B4) while the
 ; text waits. (C2, E-0373)
 ; <ARROW> ($FA): sets wTextFlags bit 5: PrintTextStep blinks the arrow (tiles $BD and $B4) while the
@@ -8496,6 +8884,8 @@ TextCmd_Arrow::
     ld hl, wTextFlags
     set 5, [hl]
     ret
+
+SECTION "Bank 00 TextCmd_WaitOrButton", ROM0
 
 ; <WAIT_OR_BUTTON> ($FB): sets wTextFlags bit 6, stores the next byte in wTextRepeatCount
 ; (wTextPosLo/Hi moves past it) and clears wTextControl bit 7: the text waits that many frames or
@@ -8512,6 +8902,8 @@ TextCmd_WaitOrButton::
     res 7, [hl]
     ret
 
+SECTION "Bank 00 TextCmd_Delay", ROM0
+
 ; <DELAY> ($FC): sets wTextFlags bit 7, stores the next byte in wTextDelayCounter (wTextPosLo/Hi
 ; moves past it) and clears wTextControl bit 7: the text waits that many frames. (C2, E-0373)
 ; <DELAY> ($FC): waits the frames in the next byte (wTextDelayCounter) (E-0336)
@@ -8525,6 +8917,8 @@ TextCmd_Delay::
     res 7, [hl]
     ret
 
+SECTION "Bank 00 TextCmd_BeepOn", ROM0
+
 ; <BEEP_ON> ($FD): turns the speech beep on (wTextControl bit 0) with the current wTextBeepSound.
 ; (C2, E-0373)
 ; <BEEP_ON> ($FD): speech beep on with the current sound (E-0336)
@@ -8533,12 +8927,16 @@ TextCmd_BeepOn::
     set 0, [hl]
     ret
 
+SECTION "Bank 00 TextCmd_BeepOff", ROM0
+
 ; <BEEP_OFF> ($FE): turns the speech beep off (clears wTextControl bit 0). (C2, E-0373)
 ; <BEEP_OFF> ($FE): speech beep off (E-0336)
 TextCmd_BeepOff::
     ld hl, wTextControl
     res 0, [hl]
     ret
+
+SECTION "Bank 00 OpenTextChoice", ROM0
 
 ; The yes/no choice of the text printer: entry $FF (<CHOICE>) of the RunTextCommand table, also run
 ; by TextCmd_ChoiceE6 and TextCmd_ChoiceNo (which then sets wTextYesNoResult = 1). It clears
@@ -8561,6 +8959,8 @@ OpenTextChoice::
     xor a
     ld [wTextYesNoResult], a
     ret
+
+SECTION "Bank 00 OpenTextChoice_DrawWindow", ROM0
 
 ; Draws the yes/no choice window: uploads the two choice tiles from wScriptTileBuf0/1 and two more
 ; from bank $1F, then writes the window from TextPromptWindowTiles to the BG map 14 columns right of
@@ -8661,6 +9061,8 @@ OpenTextChoice_DrawWindow::
     pop hl
     ret
 
+SECTION "Bank 00 SaveTwoTilesToScriptTileBuf", ROM0
+
 ; Saves the two tiles at vTiles1 + $6E0 and + $6F0 into wScriptTileBuf0 and wScriptTileBuf1 (16
 ; bytes each, CopyCBytesToVRAMWaitSTAT copies from HL = VRAM to DE = the buffer). Only caller:
 ; OpenTextChoice_DrawWindow, which then loads the choice tiles from bank $1F over those two tiles;
@@ -8679,6 +9081,8 @@ SaveTwoTilesToScriptTileBuf::
     call CopyCBytesToVRAMWaitSTAT
     ret
 
+SECTION "Bank 00 CopyCBytesToVRAMWaitSTAT", ROM0
+
 ; Copies C bytes from HL to DE, waiting before each byte until rSTAT bit 1 is clear (hardware: LCD
 ; mode 0 or 1, when VRAM can be accessed); interrupts are left as they are. HL and DE end past the
 ; copied bytes, C = 0. Its only user, SaveTwoTilesToScriptTileBuf, copies from VRAM into WRAM with
@@ -8695,6 +9099,8 @@ CopyCBytesToVRAMWaitSTAT::
     dec c
     jr nz, CopyCBytesToVRAMWaitSTAT
     ret
+
+SECTION "Bank 00 TextPromptWindowTiles", ROM0
 
 ; OpenTextChoice writes these bytes to the BG map (WriteVRAMByte) from 14 columns right of scroll +
 ; $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6 (E-0239, C1)
@@ -8743,6 +9149,8 @@ LookupString::
     ld d, [hl]
     ret
 
+SECTION "Bank 00 IncrementTextPosLoWord", ROM0
+
 ; Returns HL = the text pointer wTextPosLo/wTextPosHi and then increments that stored word (with
 ; carry), so [HL] is the current string byte and the next call reads the one after; A ends as the
 ; new high byte. The text commands use it to fetch their argument bytes (TextCmd_SfxWait,
@@ -8761,6 +9169,8 @@ IncrementTextPosLoWord::
     ld [wTextPosHi], a
     ret
 
+SECTION "Bank 00 ShowStringHL_Bank08", ROM0
+
 ; H = string category, L = string index: stores them in wStringCategory and wStringIndex and
 ; far-calls BeginStringDisplay_Bank08, which starts the text printer on that string of
 ; StringDatabase (categories 9 and above go to BeginStringDisplay_Bank08_Overflow). Unlike
@@ -8774,6 +9184,8 @@ ShowStringHL_Bank08::
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank08
     ret
+
+SECTION "Bank 00 CopyStringHLToDE", ROM0
 
 ; H = string category, L = string index, DE = destination: stores them in wStringCategory,
 ; wStringIndex and wStringDestLo/Hi and far-calls CopyStringToBuffer_Bank08, which copies the string
@@ -8796,6 +9208,8 @@ CopyStringHLToDE::
     farcall CopyStringToBuffer_Bank08
     ret
 
+SECTION "Bank 00 FillTilesRequest", ROM0
+
 ; HL = first tile address, D = width, E = rows: stores HL in wTextWindowTileLo/Hi, E in
 ; wTextWindowRows and D in wTextWindowWidth (the text window layout the printer also uses), then
 ; FillTilesFromRequest fills D * E consecutive tiles from HL with the 16-byte pattern at
@@ -8817,6 +9231,8 @@ FillTilesRequest::
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ret
+
+SECTION "Bank 00 WriteDecimalByteString", ROM0
 
 ; HL = destination, A = value (0-255): writes the decimal digits of A as bytes 0-9 (the font codes
 ; of '0'-'9') without leading zeros, then $F0; HL ends on the terminator. The hundreds and tens come
@@ -8845,6 +9261,8 @@ WriteDecimalByteString::
     ld [hl], a
     ret
 
+SECTION "Bank 00 WriteDecimalDigitForE", ROM0
+
 ; Digit step of WriteDecimalByteString: D = A / E by repeated subtraction (counted in 8 bits),
 ; stored at HL, HL += 1, and A = A mod E (A is kept when it is below E, with digit 0). (C2, E-0373)
 ; D = A / E by repeated subtraction, stored at HL; HL += 1; A = the remainder (E-0074)
@@ -8859,6 +9277,8 @@ WriteDecimalDigitForE::
     ld [hl], d
     inc hl
     ret
+
+SECTION "Bank 00 WriteNumber24AsDecimalString", ROM0
 
 ; HL = destination, hTemp0-hTemp2 = a 24-bit number (low byte first): writes its decimal digits as
 ; bytes without leading zeros, then $F0, HL on the terminator. It tests the places 1,000,000,
@@ -8927,6 +9347,8 @@ WriteNumber24AsDecimalString::
     ld b, a
     jp WriteBCAsDecimalString_CallDivideBCByDE
 
+SECTION "Bank 00 Quotient24ByTemp6DE", ROM0
+
 ; Divide24ByTemp6DE without consuming the dividend: A = hTemp2:hTemp1:hTemp0 / hTemp6:D:E, then
 ; hTemp0-hTemp2 are restored from the copies it kept in wTemp0, wTemp1 and wMenuRowCount (which keep
 ; them, so wMenuRowCount is overwritten). WriteNumber24AsDecimalString uses it to find the first
@@ -8950,6 +9372,8 @@ Quotient24ByTemp6DE::
     ldh [hTemp2], a
     pop af
     ret
+
+SECTION "Bank 00 Divide24ByTemp6DE", ROM0
 
 ; A = the 24-bit hTemp2:hTemp1:hTemp0 divided by the 24-bit hTemp6:D:E by repeated subtraction; the
 ; remainder is left in hTemp0-hTemp2. The quotient is counted in 8 bits and wraps (a quotient of 256
@@ -8987,6 +9411,8 @@ Divide24ByTemp6DE::
     pop hl
     ret
 
+SECTION "Bank 00 WriteBCAsDecimalString", ROM0
+
 ; HL = destination, BC = number: writes its decimal digits as bytes without leading zeros, each
 ; followed by a $F0 that the next digit overwrites, so HL ends on the final terminator. It finds the
 ; first non-zero place among 1000, 100 and 10 (DivideBCByDE on a copy of BC) and enters the matching
@@ -9018,6 +9444,8 @@ WriteBCAsDecimalString::
     jr nz, WriteBCAsDecimalString_CallDivideBCByDE3
     jr WriteBCAsDecimalString_Ones
 
+SECTION "Bank 00 WriteBCAsDecimalString_CallDivideBCByDE", ROM0
+
 ; The thousands digit of WriteBCAsDecimalString: BC / 1000 is stored as a digit and BC keeps the
 ; remainder. (C2, E-0357; probed E-0374)
 WriteBCAsDecimalString_CallDivideBCByDE::
@@ -9042,6 +9470,8 @@ WriteBCAsDecimalString_Ones::
     ld a, c
     call StoreAThenTerminator
     ret
+
+SECTION "Bank 00 DivideBCByDE", ROM0
 
 ; A = BC / DE by repeated subtraction (the quotient counted in 8 bits), BC = the remainder; HL is
 ; kept and DE is not changed. BC below DE gives A = 0 with BC unchanged. (C2, E-0373)
@@ -9070,6 +9500,8 @@ DivideBCByDE::
     pop hl
     ret
 
+SECTION "Bank 00 StoreAThenTerminator", ROM0
+
 ; [HL] = A, HL += 1, [HL] = $F0 (the string terminator); A ends as $F0. The digit writers call it
 ; once per digit, so each digit overwrites the terminator before it. (C2, E-0373)
 ; [HL] = A, HL += 1, [HL] = $F0 (string terminator) (E-0077)
@@ -9078,6 +9510,8 @@ StoreAThenTerminator::
     ld a, $f0
     ld [hl], a
     ret
+
+SECTION "Bank 00 CopyFiveGlyphsPlusMarks", ROM0
 
 ; Copies from DE to HL until 5 bytes other than $8D and $8E have been copied; the $8D/$8E marks
 ; (which PrintTextStep hands to DrawTextMarkGlyph rather than drawing) are copied without counting,
@@ -9111,6 +9545,8 @@ CopyFiveGlyphsPlusMarks::
     ld [hli], a
     ld [hl], $f0
     ret
+
+SECTION "Bank 00 WriteWindowTileNumbersAtHL", ROM0
 
 ; HL = BG map address: stores it in wTextCursorLo/Hi and writes consecutive tile numbers, starting
 ; at the low byte of (wTextWindowTileLo/Hi) / 16, as rows of wTextWindowWidth entries
@@ -9163,6 +9599,8 @@ WriteWindowTileNumbersAtHL::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 AdvanceBGMapColumnsByB", ROM0
+
 ; Moves HL B entries to the right inside its 32-entry BG map row, wrapping at the row end
 ; (NextBGMapColumn_Bank00 B times); B ends 0, and B = 0 on entry means 256 moves, which leave HL
 ; where it was. The text printer and OpenTextChoice_DrawWindow use it to reach a column of the text
@@ -9174,6 +9612,8 @@ AdvanceBGMapColumnsByB::
     dec b
     jr nz, AdvanceBGMapColumnsByB
     ret
+
+SECTION "Bank 00 NextBGMapColumn_Bank00", ROM0
 
 ; Moves HL one BG map entry to the right inside its 32-entry row: L = (L & $E0) | ((L + 1) & $1F),
 ; so the last entry of a row wraps to its first; H, AF and the other registers are kept (the same 15
@@ -9195,6 +9635,8 @@ NextBGMapColumn_Bank00::
     pop af
     ret
 
+SECTION "Bank 00 AddTextCursorToHL", ROM0
+
 ; Returns HL = wTextCursorLo/Hi + HL, wrapping inside the 1 KB BG map the cursor is in: the high
 ; byte keeps the upper 6 bits of wTextCursorHi and takes only the low 2 bits of the sum ($9BE0 + $40
 ; gives $9820). wTextCursorLo/Hi are not changed. The text printer uses it to address rows below the
@@ -9214,6 +9656,8 @@ AddTextCursorToHL::
     or h
     ld h, a
     ret
+
+SECTION "Bank 00 BGMapAddressAtScrollPlusHL", ROM0
 
 ; HL = offset in a 32 x 32 BG map: returns HL = $9800 + ((HL + (hScrollY & $F8) * 4 + hScrollX / 8)
 ; & $3FF), the entry that offset points at counted from the tile at the scroll origin, wrapping
@@ -9250,6 +9694,8 @@ BGMapAddressAtScrollPlusHL::
     ld h, a
     ret
 
+SECTION "Bank 00 BlankBGMapEntriesRight", ROM0
+
 ; Writes tile $C3, the blank interior tile of the text windows (TextPromptWindowTiles), to B BG map
 ; entries from HL rightward (WriteVRAMByte), wrapping inside the 32-entry row
 ; (NextBGMapColumn_Bank00); B ends 0. TextCmd_ClearLine and TextCmd_NextLine use it to clear a row
@@ -9263,6 +9709,8 @@ BlankBGMapEntriesRight::
     dec b
     jr nz, BlankBGMapEntriesRight
     ret
+
+SECTION "Bank 00 CopyGlyphTileToHL", ROM0
 
 ; A = glyph (character code), HL = destination: copies the 16 bytes of that glyph from GlyphFont
 ; (bank $1F, $4010 + 16 * A) to HL unchanged, mapping bank $1F through rROMB0 and mapping the
@@ -9303,6 +9751,8 @@ CopyGlyphTileToHL::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 SoundWaveSetTable", ROM0
 
 ; StartChannelFromTrackHeader.set_sound_event_arg indexes it by (hSndA8Param >> 4) * 2; only entry 0
 ; exists, and the wave set follows it directly (E-0189, C1)
@@ -9405,6 +9855,8 @@ InitSoundHardware::
     ld [wSoundWaveReload], a
     ret
 
+SECTION "Bank 00 SoundRunAllSlotsRestoreMode", ROM0
+
 ; Sets wSoundEngineState = 0, the channel slot SoundTick starts its pass at, so all six slots of
 ; wSoundChannelSlots are processed again, and copies wSoundSavedMode back into wSoundEngineMode, the
 ; stereo mask SoundTick_NextChannel writes to rNR51; clobbers A. Its neighbour
@@ -9417,6 +9869,8 @@ SoundRunAllSlotsRestoreMode::
     ld a, [wSoundSavedMode]
     ld [wSoundEngineMode], a
     ret
+
+SECTION "Bank 00 SetSoundEngineStateTo4AndClearSoundEngineMode", ROM0
 
 ; Sets wSoundEngineState = 4 and wSoundEngineMode = 0. SoundTick copies wSoundEngineState into
 ; wSoundChannelIndex and stops at index 6, so it then makes only two passes, numbered 4 and 5, over
@@ -9431,6 +9885,8 @@ SetSoundEngineStateTo4AndClearSoundEngineMode::
     ld [wSoundEngineMode], a
     ret
 
+SECTION "Bank 00 SetSoundChannelsToWaitFor", ROM0
+
 ; Sets which sound channels to wait for (wSoundChannelMask = B, and C into wSoundChannelMaskCount)
 ; and clears the set of channels that have finished. InitSoundHardware calls it with BC = 0. (C2,
 ; E-0357; probed E-0374)
@@ -9442,6 +9898,8 @@ SetSoundChannelsToWaitFor::
     xor a
     ld [wSoundChannelsDone], a
     ret
+
+SECTION "Bank 00 SoundTick_MarkChannelDone", ROM0
 
 ; Marks the current sound channel (wSoundChannelIndex) as finished: ORs bit (index) into
 ; wSoundChannelsDone. (C2, E-0357; probed E-0374)
@@ -9463,6 +9921,8 @@ SoundTick_MarkChannelDone::
     or b
     ld [wSoundChannelsDone], a
     ret
+
+SECTION "Bank 00 SoundTick_CheckChannelsDone", ROM0
 
 ; When every channel in wSoundChannelMask has finished, writes the low nibble of
 ; wSoundChannelMaskCount into the low nibble of byte 6 of each of those channels' 32-byte slots in
@@ -9507,6 +9967,8 @@ SoundTick_CheckChannelsDone::
     ld [wSoundChannelsDone], a
     ret
 
+SECTION "Bank 00 StartFourSoundsAfterBankTable", ROM0
+
 ; Runs StartSoundAfterBankTable for A, A + 1 and A + 2 and falls into it for A + 3, returning A + 4
 ; with wSoundId = A + 3. Every id lands in slot 0 of wSoundChannelSlots (see
 ; StartSoundAfterBankTable). No call or jump to it was found. (C2, E-0373)
@@ -9531,6 +9993,8 @@ StartSoundAfterBankTable::
     ld [wSoundId], a
     ld hl, $3e24
     jr StartSound_FromTable
+
+SECTION "Bank 00 StartFourSoundTracks", ROM0
 
 ; Calls StartSound and falls into StartThreeSoundTracks, so four sound ids start together: A, A + 1,
 ; A + 2 and A + 3. StartMusic uses it for music ids $02, $0F and $58. (C2, E-0369; probed E-0374)
@@ -9685,6 +10149,8 @@ StartSound_FromTable::
     pop bc
     ret
 
+SECTION "Bank 00 SoundTick", ROM0
+
 ; The sound engine's frame step (from VBlankHandler; E-0018 identified it from its sound register
 ; writes): saves the ROM bank, starts at channel wSoundEngineState, clears wSoundSkipMaskA, counts
 ; the frame in wSoundTickBuf and goes on with the per-slot pass from wSoundChannelSlots. (C1,
@@ -9836,6 +10302,8 @@ SoundTick_NextNote::
     call SoundNextEvent
     jr SoundTick_EndChannelPass
 
+SECTION "Bank 00 SoundTick_EnvelopeCountdown", ROM0
+
 ; Envelope step: when the envelope counter reaches the value in the low nibble of hSndEnvFlags - 1,
 ; it recomputes the envelope (SoundTick_StepEnvelope) and writes it to the channel if it changed.
 ; (C1, E-0357)
@@ -9850,6 +10318,8 @@ SoundTick_EnvelopeCountdown::
     call WriteChannelEnvelopeIfChanged
     jr SoundTick_EndChannelPass
 
+SECTION "Bank 00 SoundTick_WaitCountdown", ROM0
+
 ; Counts down hSndWaitTicks; when it reaches 0 and the channel has no envelope steps (hSndEnvFlags
 ; high nibble 0) the channel is marked finished. (C1, E-0357)
 SoundTick_WaitCountdown::
@@ -9860,6 +10330,8 @@ SoundTick_WaitCountdown::
     and $f0
     jr nz, SoundTick_EndChannelPass
     jr SoundTick_EndNote
+
+SECTION "Bank 00 SoundTick_EndChannelPass", ROM0
 
 ; End of a channel's pass. For the wave channel (hardware channel 2, slot 2 or later, not muted)
 ; whose wave set changed (wSoundWaveReload and hSndSweepOrWave different from the last one), it
@@ -9960,6 +10432,8 @@ SoundTick_NextChannel::
     call SoundTick_CheckChannelsDone
     ret
 
+SECTION "Bank 00 StartChannelFromTrackHeader", ROM0
+
 ; Starts a channel whose track position is 0 (jumped to from SoundTick_ChannelPass): reads the
 ; 4-byte track header at hTrackBaseLo/Hi. Byte 0 low nibble goes to hSndTickAccum and the tempo
 ; nibble of hSndDutyAndTempo; byte 1 gives the duty bits (bits 0-1 to 6-7), or hSndVibratoDelay on
@@ -10056,6 +10530,8 @@ StartChannelFromTrackHeader::
     dec b
     jr nz, .loop
     jr .clear_snd_chan_unused
+
+SECTION "Bank 00 SoundNextEvent", ROM0
 
 ; Fetches the next 2-byte event of the current channel: the address is hTrackBaseLo/Hi + 2 *
 ; hTrackPosLo/Hi, and the position is incremented before the event runs. Bytes $00-$9F are notes:
@@ -10750,6 +11226,8 @@ ComputeNotePitch_ApplyPanning::
     ld [wSoundEngineMode], a
     ret
 
+SECTION "Bank 00 ComputeNotePitch_WaveChannel", ROM0
+
 ; Restarts the wave channel's note: clears rNR31 (the sound length); if the wave channel is not
 ; running (rNR52 bit 2 clear) it writes the high frequency byte with the restart bit, otherwise
 ; without it. (C1, E-0357)
@@ -10762,6 +11240,8 @@ ComputeNotePitch_WaveChannel::
     ld a, h
     and $07
     jr ComputeNotePitch_UpdateFrequency
+
+SECTION "Bank 00 SoundTick_VolumeSlide", ROM0
 
 ; The volume slide of a note (not on the wave channel, wSoundHwChannel = 2, and not while
 ; hSndPitchSlide is 0). Each call counts hSndPitchSlideCounter down; when it reaches 0 and the low
@@ -10812,6 +11292,8 @@ SoundTick_VolumeSlide::
     ldh [hSndEnvelope], a
     jr WriteChannelEnvelopeIfChanged
 
+SECTION "Bank 00 SoundTick_PitchOffset", ROM0
+
 ; The pitch offset of a note in progress (not on the noise channel), applied when the note timer has
 ; run out and the channel flags' high nibble is not 0: adds the entry of SoundPitchOffsetRows chosen
 ; by that nibble and the low nibble of wSoundTickBuf to the frequency low byte and writes it
@@ -10840,6 +11322,8 @@ SoundTick_PitchOffset::
     add [hl]
     ld c, $13
     jr WriteChannelRegisterC
+
+SECTION "Bank 00 ComputeNotePitch_WriteNR32", ROM0
 
 ; After a note's pitch is set: the wave channel goes to its volume write
 ; (ComputeNotePitch_WaveLevel); a channel with vibrato depth goes to SoundTick_VolumeModulation;
@@ -10884,6 +11368,8 @@ WriteChannelEnvelopeIfChanged::
     call ClearChannelLengthBits
     ret
 
+SECTION "Bank 00 WriteChannelRegisterC", ROM0
+
 ; A = value, C = register offset: writes A to $FF00 + wSoundRegBase + C, the register of the channel
 ; being processed (wSoundRegBase is 0 for the first channel, so offset $12 is rNR12); B = A and C
 ; ends as the register address low byte. (C2, E-0373)
@@ -10898,12 +11384,16 @@ WriteChannelRegisterC::
     ldh [c], a
     ret
 
+SECTION "Bank 00 ComputeNotePitch_WaveLevel", ROM0
+
 ; Writes hSndEnvelope to the channel's envelope register (offset 2, $12); for the wave channel this
 ; is its output level. (C2, E-0357; probed E-0374)
 ComputeNotePitch_WaveLevel::
     ldh a, [hSndEnvelope]
     ld c, $12
     jr WriteChannelRegisterC
+
+SECTION "Bank 00 ClearChannelLengthBits", ROM0
 
 ; [$FF00 + wSoundRegBase + $11] &= $C0: keeps the duty bits of the current channel length/duty
 ; register and clears its length bits; A ends as the new value and C as the register address low
@@ -10921,6 +11411,8 @@ ClearChannelLengthBits::
     ldh [c], a
     ret
 
+SECTION "Bank 00 SoundTick_VolumeModulation_Wave", ROM0
+
 ; Wave-channel volume from the modulation step E: the level (E / 2 + 2) in the high nibble is
 ; written only when it is at least hSndEnvelope; its level bits ($60) go to rNR32. (C1, E-0357)
 SoundTick_VolumeModulation_Wave::
@@ -10934,6 +11426,8 @@ SoundTick_VolumeModulation_Wave::
     and $60
     ldh [rNR32], a
     ret
+
+SECTION "Bank 00 SoundTick_PlayingNote", ROM0
 
 ; Per-tick checks of a playing note: skipped when the channel is muted this frame; a note with
 ; frequency 0 (a rest) silences the channel's envelope (SoundNextEvent_SilenceNote); the wave
@@ -11083,12 +11577,16 @@ SoundTick_VolumeModulation::
     or b
     jp WriteChannelEnvelopeIfChanged
 
+SECTION "Bank 00 SoundNextEvent_SilenceNote", ROM0
+
 ; A rest: unless the channel is muted this frame, writes envelope 0 (silence) to the channel. (C2,
 ; E-0357; probed E-0374)
 SoundNextEvent_SilenceNote::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, $00
     jp WriteChannelEnvelopeIfChanged
+
+SECTION "Bank 00 SoundNextEvent_MuteChannel", ROM0
 
 ; Unless the channel is muted this frame, clears the channel's stereo bits (wSoundSkipMaskB) in
 ; wSoundEngineMode, silencing it on both sides. (C2, E-0357; probed E-0374)
@@ -11101,6 +11599,8 @@ SoundNextEvent_MuteChannel::
     and b
     ld [wSoundEngineMode], a
     ret
+
+SECTION "Bank 00 ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB", ROM0
 
 ; When wSoundSkipMaskA & wSoundSkipMaskB is non-zero it pops its return address (into AF), so its
 ; ret goes back to the caller of its caller and the rest of the caller is skipped; otherwise it
@@ -11117,6 +11617,8 @@ ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
     ret z
     pop af
     ret
+
+SECTION "Bank 00 SoundNotePeriodTable", ROM0
 
 ; E-0209 (C2 for the use, from E-0019's matched formula: the note routine indexes $3B5C by the
 ; semitone, or $3B74 when $FFDE bit 4 is set; row 1 is the alternative tuning).
@@ -11213,6 +11715,8 @@ LoadWavePattern::
     jr nz, .loop
     ret
 
+SECTION "Bank 00 SoundLabelSlot", ROM0
+
 ; B = label number: returns HL = wSoundLabelSlots + wSoundChannelIndex * 12 + (B & $0F) * 3, the
 ; 3-byte label slot (a repeat counter and a saved track position) used by the track events $FD (save
 ; the position), $B0 (jump to it) and $B1-$BF (repeat). B ends as B & $0F and C as the channel * 12.
@@ -11239,6 +11743,8 @@ SoundLabelSlot::
     adc h
     ld h, a
     ret
+
+SECTION "Bank 00 SoundTick_StepEnvelope", ROM0
 
 ; Recomputes the envelope for an envelope step: (reload nibble + 1) * (start volume + 1) / 16, at
 ; least 1, becomes the new start volume (high nibble of hSndEnvelope, low nibble kept);
@@ -11298,6 +11804,8 @@ SoundTick_StepEnvelope::
     pop bc
     pop de
     ret
+
+SECTION "Bank 00 SoundBankTable", ROM0
 
 ; E-0018 (C2: static reading of StartSound, and 495 emulated sound starts read exactly the banks
 ; this table names). StartSound takes the first entry whose first byte is greater than the sound id;
@@ -11361,6 +11869,8 @@ CheckSlotStatusBlock::
     pop hl
     ret
 
+SECTION "Bank 00 CarryUnlessBattleSlotOutSlotEmpty", ROM0
+
 ; A = battle slot: carry clear only when A < 8 and wBattleSlotOut[A] is 0; carry set for A >= 8 and
 ; for any non-zero byte ($FF included). A, BC and HL are kept. By the wBattleSlotOut note (1 for a
 ; defeated or absent battler), carry means the slot has no battler in play. (C2, E-0373)
@@ -11397,6 +11907,8 @@ CarryUnlessBattleSlotOutSlotEmpty::
     pop hl
     ret
 
+SECTION "Bank 00 CompareHLToBC", ROM0
+
 ; Compares HL with BC as unsigned 16-bit numbers: Z set when they are equal, carry set when HL < BC
 ; (decided by the high bytes, or by the low bytes when the high bytes match). A is clobbered. (C2,
 ; E-0373)
@@ -11408,6 +11920,8 @@ CompareHLToBC::
     ld a, l
     cp c
     ret
+
+SECTION "Bank 00 CompareHLToBCFastZero", ROM0
 
 ; Like CompareHLToBC (Z = equal, carry = HL < BC), with a separate path when BC or HL is 0: BC = HL
 ; = 0 gives A = 0, Z and no carry; BC = 0 with HL non-zero gives NZ and no carry; HL = 0 with BC
@@ -11439,6 +11953,8 @@ CompareHLToBCFastZero::
     or a
     scf
     ret
+
+SECTION "Bank 00 RandomInRange", ROM0
 
 ; HL = minimum, BC = maximum: returns DE = minimum + (R mod (maximum - minimum + 1)), where R is the
 ; word wRandomHi:wRandomLo after AdvanceRandom (DivideHLByBC); when the two are equal it returns DE
@@ -11498,6 +12014,8 @@ RandomInRange::
 .return:
     ret
 
+SECTION "Bank 00 AdvanceRandom", ROM0
+
 ; Advances the random state: outside link play (wLinkMode = 0) NextTableByte steps wRandomHi through
 ; 0-$7F and loads wRandomLo from RandomByteTable; in link play NextTableByteSecondStream runs the
 ; same step on the copy in wRandomSeed2Lo/Hi (shared in link battles), leaving the result in both
@@ -11510,6 +12028,8 @@ AdvanceRandom::
     jr nz, NextTableByteSecondStream
     call NextTableByte
     ret
+
+SECTION "Bank 00 NextTableByteSecondStream", ROM0
 
 ; Loads the second random state wRandomSeed2Lo/Hi into wRandomLo/Hi, runs NextTableByte (wRandomHi =
 ; (wRandomHi + 1) & $7F, wRandomLo = RandomByteTable[wRandomHi]) and stores the result back in
@@ -11539,6 +12059,8 @@ NextTableByteSecondStream::
     ld [wRandomSeed2Hi], a
     pop hl
     ret
+
+SECTION "Bank 00 DivideHLByBC", ROM0
 
 ; HL = HL / BC (quotient), BC = HL mod BC. When B = 0 it uses DivideHLByA with A = C (D ends 0 and E
 ; = C); otherwise it counts repeated subtractions in DE, so DE also ends as the quotient. A is
@@ -11578,6 +12100,8 @@ DivideHLByBC::
 .return:
     ret
 
+SECTION "Bank 00 AddAx9ToHL", ROM0
+
 ; HL += (A * 9) & $FF: the product is computed in 8 bits and wraps, and the addition to HL carries
 ; into H. A is clobbered; BC and DE are kept. Used to index 9-byte records such as wBattleStatus
 ; (CheckSlotStatusBlock). (C2, E-0373)
@@ -11593,6 +12117,8 @@ AddAx9ToHL::
     pop de
     add_a_to_hl
     ret
+
+SECTION "Bank 00 BattlerRecordFieldAddress", ROM0
 
 ; A = battle slot, E = field offset: returns HL = wBattlerRecords + $4E * A' + E, where A' = A - 1
 ; for A >= 3, so slots 0-2 and 4-6 map to records 0-5 (slot 3 gives record 2 again and slot 7 record
@@ -11614,6 +12140,8 @@ BattlerRecordFieldAddress::
     ld a, e
     add_a_to_hl
     ret
+
+SECTION "Bank 00 QueuedActionMatches", ROM0
 
 ; A = action id: Z set when A equals wQueuedActionId, or when A is one id of a pair that names the
 ; same skill and the queued id is the other: SKILL_PANICALL / SKILL_PANICALL_AD, SKILL_IRONIZE /

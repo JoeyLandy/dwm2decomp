@@ -1,7 +1,7 @@
 ; ROM bank $2F: battle text
 ; The annotated listing of this bank is build/listing/bank2f.asm.
 
-SECTION "Bank 2F", ROMX[$4000], BANK[$2F]
+SECTION "Bank 2F", ROMX
     db $2f
 
 ; Starts a battle text message of bank $2F: loads DE with BeginStringDisplay_Bank2F_StringCategories
@@ -25,6 +25,8 @@ ShowString_Bank2F::
     call BeginStringDisplay_Bank2F
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 2F BeginStringDisplay_Bank2F_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

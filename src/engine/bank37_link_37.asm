@@ -1,7 +1,7 @@
 ; ROM bank $37: link sessions; strings
 ; The annotated listing of this bank is build/listing/bank37.asm.
 
-SECTION "Bank 37", ROMX[$4000], BANK[$37]
+SECTION "Bank 37", ROMX
     db $37
 
 ; Starts showing a string from the table of this bank: loads DE =
@@ -607,6 +607,8 @@ RunLinkSession5Exchange_SwapMenu::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_ExitAfterText", ROMX
+
 ; Session 5, states 1, 7-11, 15 and 16: once wTextFlags bit 0 is clear, zero-fills the $6F bytes
 ; from wScreenState and requests game mode 5, state 1 (wGameMode, wModeState, wModeChangeRequest).
 ; (C2, E-0371; probed E-0382)
@@ -632,6 +634,8 @@ RunLinkSession5Exchange_ExitAfterText::
     ld [wModeChangeRequest], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_SendLeave", ROMX
+
 ; Session 5, state 5: after the text sends 3. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_SendLeave::
     ld a, [wTextFlags]
@@ -642,6 +646,8 @@ RunLinkSession5Exchange_SendLeave::
     ld hl, wScreenState
     inc [hl]
     ret
+
+SECTION "Bank 37 RunLinkSession5Exchange_WaitPartnerLeave", ROMX
 
 ; Session 5, state 6: on the partner's 3 goes to leaving (state 1). (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_WaitPartnerLeave::
@@ -654,6 +660,8 @@ RunLinkSession5Exchange_WaitPartnerLeave::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_SignalPartner", ROMX
+
 ; Session 5, state 2: moves to state 3, queues link byte 2 (wLinkSendByte) and increments
 ; wTitleScreenState. (C2, E-0371; probed E-0382)
 RunLinkSession5Exchange_SignalPartner::
@@ -665,6 +673,8 @@ RunLinkSession5Exchange_SignalPartner::
     ld hl, wTitleScreenState
     inc [hl]
     ret
+
+SECTION "Bank 37 RunLinkSession5Exchange_ShowMessages", ROMX
 
 ; Session 5, state 3: runs one of four steps by wScreenStep: 0
 ; RunLinkSession5Exchange_ShowMessages_WaitTextFlags (wait for the text), 1
@@ -692,6 +702,8 @@ RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_ShowMessages_TerryMessage", ROMX
+
 ; The messages, step 1: after the text, a partner's 2 shows "For breeding with Terry's ..."
 ; (bank-$0E string $15) and goes to state 5; with no byte goes on. (C1, E-0357)
 RunLinkSession5Exchange_ShowMessages_TerryMessage::
@@ -717,6 +729,8 @@ RunLinkSession5Exchange_ShowMessages_TerryMessage::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_ShowMessages_AskChoose", ROMX
+
 ; The messages, step 2: 'Choose the monster for breeding.' (string 9). (C1, E-0357)
 RunLinkSession5Exchange_ShowMessages_AskChoose::
     xor a
@@ -727,6 +741,8 @@ RunLinkSession5Exchange_ShowMessages_AskChoose::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 RunLinkSession5Exchange_ShowMessages_SetScreenStep", ROMX
 
 ; The messages, step 3: after the text the next state. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_ShowMessages_SetScreenStep::
@@ -739,6 +755,8 @@ RunLinkSession5Exchange_ShowMessages_SetScreenStep::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 37 LinkBreed", ROMX
 
 ; Session 5, state 4 (the breeding itself): runs one of 34 steps by wScreenStep. Steps 0-3, 5-7 and
 ; 13 run the choice list (LinkBreed_RunList, which calls BreedMenu once the text is done); 4 draws
@@ -817,6 +835,8 @@ LinkBreed_PartnerCancel::
     farcall BreedMenu
     ret
 
+SECTION "Bank 37 LinkBreed_ChooseOrRefuse", ROMX
+
 ; Session 5 breeding, step 8: the partner's cancel as above; otherwise the list, where B shows 'You
 ; refused breeding.' (string $13), step 9, sending $FD (wAIFlag 0). (C1, E-0357)
 LinkBreed_ChooseOrRefuse::
@@ -851,6 +871,8 @@ LinkBreed_ChooseOrRefuse::
     ld [wAIFlag], a
     ret
 
+SECTION "Bank 37 LinkBreed_RunList", ROMX
+
 ; Session 5 breeding, step 0: after the text the list's steps (BreedMenu). (C1, E-0357)
 LinkBreed_RunList::
     ld a, [wTextFlags]
@@ -858,6 +880,8 @@ LinkBreed_RunList::
     ret nz
     farcall BreedMenu
     ret
+
+SECTION "Bank 37 LinkBreed_AskChoose", ROMX
 
 ; Session 5 breeding, step 16: with a pick runs the list and asks 'Choose the monster for
 ; breeding.'; after a cancel ($FF) runs the re-asking sub-steps. (C1, E-0357)
@@ -902,6 +926,8 @@ LinkBreed_AskChoose_PleaseWait::
     call ShowStringIndexA_Bank37
     ret
 
+SECTION "Bank 37 LinkBreed_AskChoose_SendReady", ROMX
+
 ; Re-asking, sub-steps 1 and 5: after the text queues link byte 1 (wLinkSendByte) and moves to the
 ; next sub-step, where LinkBreed_AskChoose_AskAgain waits for the partner's 1. (C2, E-0371; probed
 ; E-0382)
@@ -915,6 +941,8 @@ LinkBreed_AskChoose_SendReady::
     ld a, $01
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 37 LinkBreed_AskChoose_AskAgain", ROMX
 
 ; Re-asking, sub-step 2: on the partner's 1 'Choose the monster for breeding.'. (C1, E-0357)
 LinkBreed_AskChoose_AskAgain::
@@ -930,6 +958,8 @@ LinkBreed_AskChoose_AskAgain::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 37 LinkBreed_AskChoose_RunList", ROMX
+
 ; Re-asking, sub-step 3: after the text runs the list and clears the pick. (C1, E-0357)
 LinkBreed_AskChoose_RunList::
     ld a, [wTextFlags]
@@ -940,6 +970,8 @@ LinkBreed_AskChoose_RunList::
     ld [wSelectedRecord], a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 37 LinkBreed_AskChoose_AskAgain2", ROMX
 
 ; Re-asking, sub-step 9: after the text 'Choose the monster for breeding.'. (C1, E-0357)
 LinkBreed_AskChoose_AskAgain2::
@@ -954,6 +986,8 @@ LinkBreed_AskChoose_AskAgain2::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 37 LinkBreed_AskIsThisOK", ROMX
 
 ; Session 5 breeding, step 12: 'Is this one OK for breeding?' (string 4), then the list's next step
 ; with two cursor tiles reloaded. (C1, E-0357)
@@ -987,6 +1021,8 @@ LinkBreed_AskIsThisOK::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 37 LinkBreed_DrawPanel", ROMX
+
 ; Session 5 breeding, step 4: loads the chosen record's family icon and draws its 12 x 5 panel with
 ; its sex mark and level. (C1, E-0357)
 LinkBreed_DrawPanel::
@@ -1017,6 +1053,8 @@ LinkBreed_DrawPanel::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 LinkBreed_WaitTextAgain", ROMX
 
 ; Session 5 breeding, step 15: returns while the text is still running. Once it is done it falls
 ; into LinkBreed_CopyBlockAndAdvance, which copies the 8 x 5 block of the screen buffer from offset
@@ -1050,6 +1088,8 @@ LinkBreed_CopyBlockAndAdvance::
     xor a
     ld [wSelectedRecord], a
     ret
+
+SECTION "Bank 37 LinkBreed_CheckPick", ROMX
 
 ; Session 5 breeding, step 17: a pick below level 10 gives 'This one is too young to ...' (string 5)
 ; and a party member 'Choose from the farm's roster.' (string 6), both two steps back; otherwise
@@ -1132,6 +1172,8 @@ LinkBreed_CheckPick::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 LinkBreed_SendRecord", ROMX
+
 ; Session 5 breeding, step 18: copies the chosen SRAM record into wRecordBufA, converts it into
 ; wWorkBuf for the exchange (PackRecordBufAToLinkWorkBuf; here wRecordBufA holds this side's own
 ; record), shows 'Please wait.' and redraws. (C1, E-0357)
@@ -1169,6 +1211,8 @@ LinkBreed_SendRecord::
     call DrawScreenBufferRectToBGMap_37
     ret
 
+SECTION "Bank 37 LinkBreed_SendReady", ROMX
+
 ; Session 5 breeding, steps 19 and 27: returns while the text is running; then wScreenStep + 1 and
 ; wLinkSendByte = 1, the byte that the partner side waits for in step 20 (LinkBreed_ExchangeRecords)
 ; and step 28 (LinkBreed_WaitPartnerForChild). (C2, E-0382)
@@ -1182,6 +1226,8 @@ LinkBreed_SendReady::
     ld a, $01
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 37 LinkBreed_StartWorkBufExchange", ROMX
 
 ; Session 5 breeding, step 31: starts a $64-byte exchange of wWorkBuf. (C2, E-0357; probed E-0382)
 LinkBreed_StartWorkBufExchange::
@@ -1207,6 +1253,8 @@ LinkBreed_StartWorkBufExchange::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 LinkBreed_ExchangeRecords", ROMX
 
 ; Session 5 breeding, step 20: on the partner's 1 starts a $95-byte exchange (wWorkBuf out, the
 ; partner's record into the battler record area); on $FD 'Your pal refused breeding.' (step 9). (C1,
@@ -1251,6 +1299,8 @@ LinkBreed_ExchangeRecords::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank 37 LinkBreed_ReceiveRecord", ROMX
+
 ; Session 5 breeding, step 21: when the exchange ends unpacks the partner's record into wRecordBufB
 ; (UnpackLinkRecordToRecordBufB). (C2, E-0357; probed E-0382)
 LinkBreed_ReceiveRecord::
@@ -1264,6 +1314,8 @@ LinkBreed_ReceiveRecord::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 LinkBreed_CheckGenders", ROMX
 
 ; Session 5 breeding, step 22: the same sex gives 'Identical genders can't breed.' and back to
 ; choosing (step $10, sub-step 8); otherwise shows the partner's monster (string $0F, 13 x 1 at VRAM
@@ -1325,6 +1377,8 @@ LinkBreed_CheckGenders::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 LinkBreed_MakeChild", ROMX
+
 ; Session 5 breeding, step 29: a side whose wLinkRole bit 1 is clear first works out the child with
 ; ComputeBreedingChild (wArg1 = 2); a side with bit 1 set skips that. Both then add 1 to wScreenStep
 ; and call LinkBreed_StoreChildRecord again and again until it moves wScreenStep (it waits for the
@@ -1352,6 +1406,8 @@ LinkBreed_MakeChild::
     cp b
     jr z, .loop
     jp LinkBreed_StartWorkBufExchange
+
+SECTION "Bank 37 LinkBreed_DrawChoiceBox", ROMX
 
 ; Session 5 breeding, step 23: plays sound $6C and draws the 9 x 7 three-way choice box. (C1,
 ; E-0357)
@@ -1385,6 +1441,8 @@ LinkBreed_DrawChoiceBox::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 LinkBreed_ReadChoice", ROMX
 
 ; Session 5 breeding, step 24: the partner's refusal ($FE) restores the area and gives 'Your pal
 ; refused breeding.' (step $21); the choice: B or the third entry 'You refused breeding.' (step $21,
@@ -1465,6 +1523,8 @@ LinkBreed_ReadChoice::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 37 LinkBreed_DrawYesNo", ROMX
+
 ; Session 5 breeding, step 25: loads the yes/no tiles and draws its box. (C1, E-0357)
 LinkBreed_DrawYesNo::
     ld a, [wTextFlags]
@@ -1505,6 +1565,8 @@ LinkBreed_DrawYesNo::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 LinkBreed_ReadAnswer", ROMX
+
 ; Session 5 breeding, step 26: no or B asks 'Proceed with breeding?' again (step $17); yes shows
 ; 'Please wait.' and goes on. (C1, E-0357)
 LinkBreed_ReadAnswer::
@@ -1540,6 +1602,8 @@ LinkBreed_ReadAnswer::
     ld a, $07
     call ShowStringIndexA_Bank37
     ret
+
+SECTION "Bank 37 LinkBreed_StoreChildRecord", ROMX
 
 ; Session 5 breeding, step 30 (LinkBreed_MakeChild also calls it in a loop until wScreenStep moves).
 ; Does nothing while wTextFlags is non-zero. With wScreenSubStep non-zero it clears it and adds 1 to
@@ -1636,6 +1700,8 @@ LinkBreed_StoreChildRecord::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 37 LinkBreed_WaitPartnerForChild", ROMX
+
 ; Session 5 breeding, step 28: on the partner's 1 goes on to the child; on $FE 'Your pal refused
 ; breeding.' (step $21). (C1, E-0357)
 LinkBreed_WaitPartnerForChild::
@@ -1660,6 +1726,8 @@ LinkBreed_WaitPartnerForChild::
     ld [wScreenStep], a
     jp LinkBreed_MakeChild
 
+SECTION "Bank 37 LinkBreed_WaitPartnerCancel", ROMX
+
 ; Session 5 breeding, step 9: waits for the received byte $FD (the other side has refused or
 ; cancelled). Then wScreenStep + 1 and a jr into LinkBreed_WaitText, so with the text idle the same
 ; call goes on through step 10 to step $0B and starts the closing exchange
@@ -1672,6 +1740,8 @@ LinkBreed_WaitPartnerCancel::
     inc a
     ld [wScreenStep], a
     jr LinkBreed_WaitText
+
+SECTION "Bank 37 LinkBreed_WaitPartnerRefusal", ROMX
 
 ; Session 5 breeding, step 33: on the received byte $FE (the other side refused) sets wLinkSendByte
 ; to 0 and wScreenStep to $0A, then jumps into LinkBreed_WaitText. With the text still running it
@@ -1687,6 +1757,8 @@ LinkBreed_WaitPartnerRefusal::
     ld a, $0a
     ld [wScreenStep], a
     jr LinkBreed_WaitText
+
+SECTION "Bank 37 LinkBreed_WaitText", ROMX
 
 ; Session 5 breeding, step 10: once the text is done, wScreenStep + 1 and wScreenSubStep = 0, then
 ; it falls into LinkBreed_ClosingExchange, whose sub-step 0 (LinkBreed_StartClosingExchange) starts
@@ -1753,6 +1825,8 @@ LinkBreed_StartClosingExchange::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank 37 LinkBreed_EndClosingExchange", ROMX
+
 ; The closing exchange, sub-step 1: when it ends clears $6F bytes of screen state and returns to
 ; game mode 5, state 1. (C2, E-0357; probed E-0382)
 LinkBreed_EndClosingExchange::
@@ -1781,6 +1855,8 @@ LinkBreed_EndClosingExchange::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 37 LinkBreed_FinishExchange", ROMX
+
 ; Session 5 breeding, step 32: when the exchange ends sets wLinkScene and wLinkBreedResult 1 (the
 ; egg screens). (C2, E-0357; probed E-0382)
 LinkBreed_FinishExchange::
@@ -1798,6 +1874,8 @@ LinkBreed_FinishExchange::
     ld [wLinkBreedResult], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_RunStatsScreen", ROMX
+
 ; Session 5, state 12: runs the stats screen until its step $0A, then state 17. (C1, E-0357)
 RunLinkSession5Exchange_RunStatsScreen::
     farcall SwapMonstersMenu
@@ -1811,6 +1889,8 @@ RunLinkSession5Exchange_RunStatsScreen::
     add $05
     ld [wScreenState], a
     ret
+
+SECTION "Bank 37 RunLinkSession5Exchange_ShowChosenRecord", ROMX
 
 ; Session 5, state 17: runs one of ten steps by wScreenStep to redraw the breeding list with the
 ; chosen record: 0 RunLinkSession5Exchange_ChosenRecordStart, 1 ShowString0EAndStep_Bank37, 2-4, 8
@@ -1838,12 +1918,16 @@ RunLinkSession5Exchange_ChosenRecordList::
     farcall BreedMenu
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_ChosenRecordStart", ROMX
+
 ; The chosen record, step 0: moves on. (C2, E-0357; probed E-0382)
 RunLinkSession5Exchange_ChosenRecordStart::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 ShowString0EAndStep_Bank37", ROMX
 
 ; Farcalls ShowInfoOKLabelTiles (it shows string $0E of the bank $0E table at vTiles2 + $700, puts
 ; the default text window back and copies two tiles into vTiles1), then adds 1 to wScreenStep. Used
@@ -1857,6 +1941,8 @@ ShowString0EAndStep_Bank37::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 RunLinkSession5Exchange_ClearNameTiles", ROMX
 
 ; Step 6 of RunLinkSession5Exchange_ShowChosenRecord and of
 ; RunLinkSession5Exchange_ResetListAndShowString: clears the 9 x 1 species-name tiles at vTiles1 +
@@ -1900,6 +1986,8 @@ RunLinkSession5Exchange_ClearNameTiles::
     inc [hl]
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_ShowChosenRecord_DrawName", ROMX
+
 ; The chosen record, step 7: draws the chosen record's name and species name. (C1, E-0357)
 RunLinkSession5Exchange_ShowChosenRecord_DrawName::
     farcall SetArg5ToListEntriesCell5
@@ -1915,6 +2003,8 @@ RunLinkSession5Exchange_ShowChosenRecord_DrawName::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats", ROMX
 
 ; Session 5, state 13: the stats screens of the monster of the partner (record buffer B), 33 steps
 ; by wScreenStep. 0 clears the screen, 1 shows the heading and the name, 2 moves on, 3-5 draw the
@@ -1966,6 +2056,8 @@ PartnerStats::
 PartnerStats_Idle::
     ret
 
+SECTION "Bank 37 PartnerStats_ClearScreen", ROMX
+
 ; The partner's monster stats, step 0: clears the BG map and loads the frame tiles. (C1, E-0357)
 PartnerStats_ClearScreen::
     farcall ClearBGMapAndLoadFrameTiles
@@ -1973,6 +2065,8 @@ PartnerStats_ClearScreen::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_ShowHeading", ROMX
 
 ; The partner's monster stats, step 1: shows the heading (bank-$0E string $10), loads sixteen glyph
 ; tiles and draws the monster's name. (C1, E-0357)
@@ -1988,6 +2082,8 @@ PartnerStats_HeadingDone::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_DrawHeadingName", ROMX
 
 ; Draws the name of record buffer B as tiles at vTiles1 + $500: clears a window of 5 x 1 tiles there
 ; (FillTilesFromRequest), copies the name at wRecordBufB + MON_NAME into wNameGlyphBuf
@@ -2014,6 +2110,8 @@ PartnerStats_DrawHeadingName::
     call CopyGlyphTilesToVRAM
     ret
 
+SECTION "Bank 37 PartnerStats_DrawFrame", ROMX
+
 ; The partner's monster stats, step 3: draws the 20 x 18 stats frame. (C1, E-0357)
 PartnerStats_DrawFrame::
     call BGMapAddressAtScroll_Bank37
@@ -2030,6 +2128,8 @@ PartnerStats_DrawFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_DrawStats", ROMX
+
 ; The partner's monster stats, step 4: draws its level, status and stats. (C1, E-0357)
 PartnerStats_DrawStats::
     farcall DrawRecordBufBStatsScreen
@@ -2038,10 +2138,14 @@ PartnerStats_DrawStats::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_DrawPicture", ROMX
+
 ; The partner's monster stats, step 5: draws its picture in two calls. (C1, E-0357)
 PartnerStats_DrawPicture::
     farcall DrawRecordBufBSpeciesMonsterPictureInTwoSteps
     ret
+
+SECTION "Bank 37 PartnerStats_Cursor", ROMX
 
 ; The partner's monster stats, step 6: B leaves; A redraws the picture frame and turns to the second
 ; page (step $0E). (C1, E-0357)
@@ -2084,6 +2188,8 @@ PartnerStats_Cursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_Leave", ROMX
+
 ; The partner's monster stats, step 7 (leaving): fills the BG map with the fill tile and goes to the
 ; next state. (C1, E-0357)
 PartnerStats_Leave::
@@ -2112,6 +2218,8 @@ PartnerStats_Leave::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 37 PartnerStats_ClearPage2", ROMX
+
 ; The second page, step 14: clears $0F x 2 tiles at VRAM $9200. (C1, E-0357)
 PartnerStats_ClearPage2::
     ld hl, vTiles2 + $200
@@ -2129,6 +2237,8 @@ PartnerStats_ClearPage2::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_ClearPage2Names", ROMX
 
 ; The second page, step 15: clears the species and name tile areas. (C1, E-0357)
 PartnerStats_ClearPage2Names::
@@ -2159,6 +2269,8 @@ PartnerStats_ClearPage2Names::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_DrawNames", ROMX
+
 ; The second page, step 16: draws the name and species name. (C1, E-0357)
 PartnerStats_DrawNames::
     call PartnerStats_DrawNameAndSpecies
@@ -2166,6 +2278,8 @@ PartnerStats_DrawNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_DrawPage2Frame", ROMX
 
 ; The second page, step 17: draws the 12 x 15 page frame. (C1, E-0357)
 PartnerStats_DrawPage2Frame::
@@ -2184,6 +2298,8 @@ PartnerStats_DrawPage2Frame::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_ShowPersonality", ROMX
 
 ; The second page, step 18: shows its personality name and master's name. (C1, E-0357)
 PartnerStats_ShowPersonality::
@@ -2241,6 +2357,8 @@ PartnerStats_LoadSprite::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_Page2Keys", ROMX
+
 ; The second page, step 21: B redraws and goes back to the first page (step 4); A goes on to the
 ; skills. (C1, E-0357)
 PartnerStats_Page2Keys::
@@ -2277,12 +2395,16 @@ PartnerStats_Page2Keys::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_DrawLevelRow", ROMX
+
 ; The second page, step 22: draws the level and status row, then step $0F. (C1, E-0357)
 PartnerStats_DrawLevelRow::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld a, $0f
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_DrawSkillsFrames", ROMX
 
 ; The skills page, step 23: draws its frames. (C1, E-0357)
 PartnerStats_DrawSkillsFrames::
@@ -2292,6 +2414,8 @@ PartnerStats_DrawSkillsFrames::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_ClearSkillsText", ROMX
+
 ; The skills page, step 24: clears the text tiles and draws the frames. (C1, E-0357)
 PartnerStats_ClearSkillsText::
     farcall MonsterDetails_DrawSkillsPageFrames
@@ -2299,6 +2423,8 @@ PartnerStats_ClearSkillsText::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_ShowSkillNames", ROMX
 
 ; The skills page, step 25: shows the eight skill names, or none. (C1, E-0357)
 PartnerStats_ShowSkillNames::
@@ -2314,6 +2440,8 @@ PartnerStats_ShowDescription::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_SkillsKeys", ROMX
 
 ; The skills page, step 27: B clears the text and goes on; A loads the summary tiles and frames and
 ; goes on three steps. (C1, E-0357)
@@ -2364,6 +2492,8 @@ PartnerStats_SkillsKeys::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_DrawSummaryFrames", ROMX
+
 ; The summary page, step 28: draws its frames, then shows the headings and goes on. (C1, E-0357)
 PartnerStats_DrawSummaryFrames::
     ld a, [wScreenSubStep]
@@ -2381,6 +2511,8 @@ PartnerStats_DrawSummaryFrames::
     xor a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_DrawSummaryLevelRow", ROMX
 
 ; The summary page, step 29: draws the level row, the name and species and a tile, then step $11.
 ; (C1, E-0357)
@@ -2417,6 +2549,8 @@ PartnerStats_DrawSummaryLevelRow::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_DrawPedigreeFrame", ROMX
+
 ; The pedigree page, step 30: draws the 12 x 18 frame and decompresses the parents' species
 ; graphics. (C1, E-0357)
 PartnerStats_DrawPedigreeFrame::
@@ -2437,6 +2571,8 @@ PartnerStats_DrawPedigreeFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 PartnerStats_DrawParents", ROMX
+
 ; The pedigree page, step 31: draws the parents and hides sprite tile $F0. (C1, E-0357)
 PartnerStats_DrawParents::
     farcall DrawRecordBufBParents
@@ -2446,6 +2582,8 @@ PartnerStats_DrawParents::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 37 PartnerStats_PedigreeKeys", ROMX
 
 ; The pedigree page, step 32: B goes back to the skills page (step $17); A to leaving (step 7). (C1,
 ; E-0357)
@@ -2482,6 +2620,8 @@ PartnerStats_PedigreeKeys::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_ResetListAndShowString", ROMX
+
 ; Session 5, state 14: runs one of ten steps by wScreenStep to go back to the breeding list: 0
 ; RunLinkSession5Exchange_RestoreListCursor, 1 ShowString0EAndStep_Bank37, 2-4
 ; RunLinkSession5Exchange_RunBreedList, 5 LinkBreed_DrawPanel, 6
@@ -2514,6 +2654,8 @@ RunLinkSession5Exchange_RestoreListCursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_RunBreedListFinal", ROMX
+
 ; Step 9 (the last) of RunLinkSession5Exchange_ResetListAndShowString: sets wScreenState to $11 and
 ; runs BreedMenu's list steps like RunLinkSession5Exchange_RunBreedList, but the saved wScreenState
 ; is popped into A and never stored back, so wScreenState keeps whatever BreedMenu left there. (C1,
@@ -2527,6 +2669,8 @@ RunLinkSession5Exchange_RunBreedListFinal::
     pop af
     ret
 
+SECTION "Bank 37 RunLinkSession5Exchange_RunBreedList", ROMX
+
 ; Back to the list, step 2: runs the list's steps as state $11. (C1, E-0357)
 RunLinkSession5Exchange_RunBreedList::
     ld a, [wScreenState]
@@ -2537,6 +2681,8 @@ RunLinkSession5Exchange_RunBreedList::
     pop af
     ld [wScreenState], a
     ret
+
+SECTION "Bank 37 RunLinkSession5Exchange_ShowPartnerMonster", ROMX
 
 ; Back to the list, step 8: copies the 9 x 7 choice box (LinkBreed_DrawChoiceBox_TileRect) into
 ; wWindowTileBuffer + $E7 (CopyRectToScreenBufferAndClearAttributes_37), shows string $0F of
@@ -2577,6 +2723,8 @@ RunLinkSession5Exchange_ShowPartnerMonster::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 37 DrawRecordBufBSpeciesSpritePart", ROMX
+
 ; Draws the picture of the species of record buffer B: wArg1 and wArg2 = the species word at
 ; wRecordBufB + MON_SPECIES, wArg3 = 0 (tile offset), wArg4 = $90 and wArg5 = $40 (screen position
 ; added to the scroll), wArg6 = 0, then farcalls DrawMetaSpritePartC0. Nothing in src names this
@@ -2600,6 +2748,8 @@ DrawRecordBufBSpeciesSpritePart::
     farcall DrawMetaSpritePartC0
     ret
 
+SECTION "Bank 37 PartnerStats_UploadSummaryTiles", ROMX
+
 ; Copies the five 16-byte tiles of PartnerStats_UploadSummaryTiles_Tiles into VRAM with
 ; CopyTileBytesToVRAM_Bank37: the first two to vTiles2 + $6E0 and vTiles2 + $6F0, the next three to
 ; vTiles2 + $7C0, + $7D0 and + $7E0. PartnerStats_SkillsKeys calls it. (C1, E-0382)
@@ -2616,6 +2766,8 @@ PartnerStats_UploadSummaryTiles::
     call CopyTileBytesToVRAM_Bank37
     call CopyTileBytesToVRAM_Bank37
     ret
+
+SECTION "Bank 37 PartnerStats_UploadSummaryTiles_Tiles", ROMX
 
 ; HL = $58AE and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
@@ -2655,6 +2807,8 @@ CopyTileBytesToVRAM_Bank37::
     jr c, .loop
     ret
 
+SECTION "Bank 37 CopyF0NameToNameGlyphBuf", ROMX
+
 ; HL = a name: copies its characters to wNameGlyphBuf, at most 10 of them and stopping at a $F0, and
 ; then writes a $F0 terminator after them. Returns with A = $F0, C = the number of characters
 ; copied, DE = the address of the terminator written and HL = the source byte where it stopped (the
@@ -2681,6 +2835,8 @@ CopyF0NameToNameGlyphBuf::
     ld a, $f0
     ld [de], a
     ret
+
+SECTION "Bank 37 PartnerStats_DrawNameAndSpecies", ROMX
 
 ; Draws record B's name (wRecordBufB + MON_NAME, CopyF0NameToNameGlyphBuf) as glyph tiles at vTiles1
 ; + $780 and its species name, string [wRecordBufB + MON_SPECIES] of category [wRecordBufB +
@@ -2713,6 +2869,8 @@ PartnerStats_DrawNameAndSpecies::
     farcall ShowString_Bank08
     ret
 
+SECTION "Bank 37 DrawTileRectAtHLFromDE_Bank37", ROMX
+
 ; HL = BG map destination, DE = source: stores them in wArg5, wArg6 (H, L) and wArg1, wArg2 (D, E),
 ; then farcalls DrawTileRectFromArg1Params, which draws the tile rectangle whose width and rows the
 ; caller has already put in wArg3 and wArg4 (wArg7 = 0 also clears the attributes on CGB). The same
@@ -2731,6 +2889,8 @@ DrawTileRectAtHLFromDE_Bank37::
     ld [wArg2], a
     farcall DrawTileRectFromArg1Params
     ret
+
+SECTION "Bank 37 LinkBreed_ClearChoiceBox", ROMX
 
 ; Copies a block of 9 bytes wide and 7 rows from screen buffer offset $0083 to offset $024F
 ; (CopyScreenBufferRectWithAttrs_37 with wArg1 = 0, wArg2 = 9, B = 0, C = 7), then redraws the 20 x
@@ -2758,6 +2918,8 @@ LinkBreed_ClearChoiceBox::
     call DrawScreenBufferRectToBGMap_37
     ret
 
+SECTION "Bank 37 ShowStringIndexA_Bank37", ROMX
+
 ; A = string number: stores it in wStringIndex (wStringCategory is not touched) and farcalls
 ; BeginStringDisplay_Bank0E, which starts showing that string of the bank $0E breeding text table
 ; and sets wTextFlags to 1. Session 5 uses it for the texts such as 'Please wait.' (7) and 'Choose
@@ -2767,6 +2929,8 @@ ShowStringIndexA_Bank37::
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank0E
     ret
+
+SECTION "Bank 37 HandleThreeChoiceCursorInput_37", ROMX
 
 ; Moves a cursor over three entries and reports the key in wMenuInputResult and A. Up (bit 6 of
 ; wJoypadPressedRepeat) and Down (bit 7) change wTwoChoiceCursor by one and wrap between 0 and 2:
@@ -2843,6 +3007,8 @@ HandleThreeChoiceCursorInput_37::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank 37 BlinkCursorScreenCounter_Bank37", ROMX
+
 ; Blinks the cursor of the three-entry choice. While wJoypadRepeatTimer is below $14 it just draws
 ; the cursor tile $BB (DrawCursorTileBB_Bank37). From $14 on it adds 1 to wScreenCounter each call:
 ; below $10 it draws the cursor tile, from $10 to $17 a blank tile $C3 (DrawBlankTileC3_Bank37), and
@@ -2871,12 +3037,16 @@ DrawCursorTileBB_Bank37::
     ld b, $bb
     jr DrawTileBAtTwoChoiceEntry_Bank37
 
+SECTION "Bank 37 DrawBlankTileC3_Bank37", ROMX
+
 ; B = $C3 (the blank tile) and jumps to DrawTileBAtTwoChoiceEntry_Bank37, which writes it at the
 ; entry chosen by wTwoChoiceCursor. (C1, E-0382)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_Bank37::
     ld b, $c3
     jr DrawTileBAtTwoChoiceEntry_Bank37
+
+SECTION "Bank 37 DrawArrowTileBCAtTwoChoiceEntry_Bank37", ROMX
 
 ; B = $BC (the arrow tile) and falls into DrawTileBAtTwoChoiceEntry_Bank37, which writes it at the
 ; entry chosen by wTwoChoiceCursor in the BG map. (C1, E-0382)
@@ -2906,6 +3076,8 @@ DrawTileBAtTwoChoiceEntry_Bank37::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 37 DrawTileBAtTwoChoiceEntry_Bank37_Data", ROMX
 
 ; Three little-endian BG map offsets from the top-left screen tile, $00EC, $012C and $016C: column
 ; 12 of rows 7, 9 and 11 (32 tiles per BG row). DrawTileBAtTwoChoiceEntry_Bank37 indexes it by
@@ -2986,6 +3158,8 @@ CopyScreenBufferRectWithAttrs_37::
     jr c, CopyScreenBufferRectWithAttrs_37
     ret
 
+SECTION "Bank 37 CopyBytesDEToHL_Bank37", ROMX
+
 ; DE = source, HL = destination, BC = number of bytes: copies the bytes one by one, DE and HL end
 ; just past the copy, BC = 0 and A = 0. The count is tested after the first byte, so BC = 0 would
 ; count down from 65536 and copy that many. The same 9 bytes are in 13 banks. (C2, E-0382)
@@ -3000,6 +3174,8 @@ CopyBytesDEToHL_Bank37::
     or c
     jr nz, CopyBytesDEToHL_Bank37
     ret
+
+SECTION "Bank 37 CopyLow3BitsToWRAMBank2_Bank37", ROMX
 
 ; DE = source, HL = destination, BC = number of bytes: sets rSVBK to 2, copies the bytes with each
 ; ANDed with $07 (only the low three bits of a CGB attribute are kept), then sets rSVBK to 0. DE and
@@ -3022,6 +3198,8 @@ CopyLow3BitsToWRAMBank2_Bank37::
     ld a, $00
     ldh [rSVBK], a
     ret
+
+SECTION "Bank 37 LoadFamilyIconTileForRecordB_Bank37", ROMX
 
 ; B = record number, wArg1 = VRAM tile number: enables SRAM bank 0, reads the family byte of that
 ; SRAM record (MON_FAMILY, LoadSRAMRecordByte), stores its low nibble in wWorkBuf and wArg1 in
@@ -3046,6 +3224,8 @@ LoadFamilyIconTileForRecordB_Bank37::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 37 CopyRectToScreenBufferAndClearAttributes_37", ROMX
 
 ; B = width, C = rows, DE = source, HL = destination in the screen buffer: copies C rows of B bytes,
 ; the destination moving on by 20 bytes (one buffer row) per row. When wIsCGB is non-zero it then
@@ -3116,6 +3296,8 @@ CopyRectToScreenBufferAndClearAttributes_37::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 37 DrawScreenBufferRectToBGMap_37", ROMX
+
 ; B = width, C = rows, HL = BG map address, DE = offset into wScreenTileBuffer: copies that
 ; rectangle of the screen buffer to the BG map (CopyRectFromBankToBGMapWrapped), sets wTextCursorLo
 ; and wTextCursorHi to HL + $01C1 and, when wIsCGB is non-zero, copies the matching rectangle of
@@ -3183,6 +3365,8 @@ DrawScreenBufferRectToBGMap_37::
     ldh [c], a
     ret
 
+SECTION "Bank 37 BGMapAddressAtScroll_Bank37", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8: the BG map entry for the pixel at the scroll
 ; position (32 entries per map row, 8 pixels per entry). A and DE are clobbered. The same 33 bytes
 ; are in 18 banks. (C1, E-0382)
@@ -3206,6 +3390,8 @@ BGMapAddressAtScroll_Bank37::
     add_a_to_hl
     ret
 
+SECTION "Bank 37 StoreBAtWordTableEntry_Bank37", ROMX
+
 ; HL = a table of 16-bit addresses, A = index, B = value: stores B at the address held in entry A of
 ; the table. BC is kept; A, DE and HL are clobbered. LinkBreed_ReadChoice uses it with
 ; LinkBreed_ReadChoice_Data to write the tile $BC. The same 16 bytes are in 4 banks. (C2, E-0382)
@@ -3223,6 +3409,8 @@ StoreBAtWordTableEntry_Bank37::
     ld a, b
     ld [de], a
     ret
+
+SECTION "Bank 37 PackRecordBufAToLinkWorkBuf", ROMX
 
 ; Packs the own record of this side into the exchange buffer: wRecordBufA (the $A5-byte record
 ; LinkBreed_SendRecord copied from SRAM) becomes the $95 bytes at wWorkBuf that the link sends.
@@ -3330,6 +3518,8 @@ PackRecordBufAToLinkWorkBuf::
     farcall PackRecordBufAToLinkWorkBuf_LoadExp
     ret
 
+SECTION "Bank 37 UnpackLinkRecordToRecordBufB", ROMX
+
 ; Unpacks the record received from the partner: the $95 bytes at wBattlerRecordSlot1 +
 ; BATTLER_SKILLS + 1 become a full record in wRecordBufB. State byte; name and master name changed
 ; to the glyphs of this game ($5C, $5E, $5F, $60, $61, $63, $64 to $95, $AB, $B5, $94, $93, $99,
@@ -3406,6 +3596,8 @@ UnpackLinkRecordToRecordBufB::
     farcall LoadTableEntryForRecordBufBSpeciesToRecordBufBExp
     ret
 
+SECTION "Bank 37 WriteFFPairAndUnknownName", ROMX
+
 ; DE += 4, then writes the two bytes $FF $FF at HL and falls into WriteUnknownNameEntry, which
 ; writes two placeholder names. In all 20 bytes go to HL and DE moves on by $1A.
 ; PackRecordBufAToLinkWorkBuf calls it when both parent species bytes are $FF (the parents are
@@ -3458,6 +3650,8 @@ WriteUnknownNamePlaceholder_Bank37::
     ld [hli], a
     ret
 
+SECTION "Bank 37 WriteFFQuadAndBlankName", ROMX
+
 ; DE += 2, writes four $FF bytes at HL and falls into WriteBlankName10_Bank37 twice (once by call,
 ; once by falling in): each writes ten $F0 and a 0 (11 bytes) and moves DE on by 9. In all 26 bytes
 ; go to HL and DE moves on by 20. UnpackLinkRecordToRecordBufB calls it when the first received
@@ -3501,6 +3695,8 @@ WriteBlankName10_Bank37::
     ld [hli], a
     ret
 
+SECTION "Bank 37 CopyBBytesDEToHL_Bank37", ROMX
+
 ; DE = source, HL = destination, B = count: copies B bytes from [DE] to [HL] and advances both (B =
 ; 0 copies 256 bytes); B ends 0 and A is the last byte copied. It moves the unconverted runs of a
 ; link record: the $12-byte and $1A-byte runs in PackRecordBufAToLinkWorkBuf, the $12-byte and
@@ -3514,6 +3710,8 @@ CopyBBytesDEToHL_Bank37::
     dec b
     jr nz, CopyBBytesDEToHL_Bank37
     ret
+
+SECTION "Bank 37 ConvertLinkNameGlyphToGameGlyph", ROMX
 
 ; Converts one name glyph code of a received link record into the code the game itself uses. A =
 ; code in, A = code out: $5C, $5E, $5F, $60, $61, $63, $64 become $95, $AB, $B5, $94, $93, $99, $98;
@@ -3580,6 +3778,8 @@ ConvertLinkNameGlyphToGameGlyph::
 
 .return:
     ret
+
+SECTION "Bank 37 ConvertNameBytesToLinkFormat", ROMX
 
 ; Packs one name for sending: DE = the name in the game glyph codes (8 bytes are read, then DE skips
 ; 2 more), HL = destination. Only the first four glyphs are kept: $0A-$3D go up by $1A, $95 $AB $B5
@@ -3649,6 +3849,8 @@ ConvertNameBytesToLinkFormat::
     inc de
     ret
 
+SECTION "Bank 37 AppendSpeciesToLinkCodeByteForWordAtDE", ROMX
+
 ; DE = a species number (a word, low byte first), HL = destination: DE += 2; the byte at
 ; SpeciesToLinkCodeTable + species (this bank, read without a range check) is stored at [HL] and HL
 ; += 1; A = that byte, the link code of the species. PackRecordBufAToLinkWorkBuf uses it for the
@@ -3672,6 +3874,8 @@ AppendSpeciesToLinkCodeByteForWordAtDE::
     pop hl
     ld [hli], a
     ret
+
+SECTION "Bank 37 FamilyNibbleOrSpeciesFamily", ROMX
 
 ; DE = source, HL = destination, where the byte before HL is the link code just written: A = [DE] &
 ; $0F, DE += 1. A nibble of 9 is replaced by the family of the species of that link code
@@ -3712,6 +3916,8 @@ FamilyNibbleOrSpeciesFamily::
 .done:
     ld [hli], a
     ret
+
+SECTION "Bank 37 MapAndCompactSkillListLinkSkillMapTable_A", ROMX
 
 ; DE = source, HL = destination of $21 (33) skill bytes: each byte except $FF is replaced by
 ; LinkSkillMapTable_A[byte] (the index is not range checked). The first 8 mapped bytes and the next
@@ -3792,6 +3998,8 @@ MapAndCompactSkillListLinkSkillMapTable_A::
     jr nz, .loop5
     pop de
     ret
+
+SECTION "Bank 37 ScaleStatWordsToLinkFormat", ROMX
 
 ; DE = three 16-bit words (low byte first), HL = destination: writes three words scaled down for the
 ; link record. Word 1 is $01FF when it is 999, otherwise word x $33 / 100 rounded up; words 2 and 3
@@ -3904,6 +4112,8 @@ ScaleStatWordsToLinkFormat::
     inc hl
     ret
 
+SECTION "Bank 37 ConvertLinkNameBytesToGameGlyphs", ROMX
+
 ; DE = a name of 8 bytes in the link format, HL = destination: each byte is converted to the game
 ; glyph code by the glyph converter (the table of $5C to $95 and so on) and two $F0 bytes are
 ; appended, giving the 10-byte name of a game record. DE ends 8 bytes on, HL 10 bytes on, B = 0.
@@ -3925,6 +4135,8 @@ ConvertLinkNameBytesToGameGlyphs::
     ld [hli], a
     ld [hli], a
     ret
+
+SECTION "Bank 37 AppendLinkCodeToSpeciesWordForByteAtDE", ROMX
 
 ; DE = a link code byte (0-214), HL = destination: DE += 1; the word at LinkCodeToSpeciesTable + 2 x
 ; code, a species number, is stored at [HL] low byte first and HL += 2; A = C = the low byte, B =
@@ -3954,6 +4166,8 @@ AppendLinkCodeToSpeciesWordForByteAtDE::
     inc hl
     ret
 
+SECTION "Bank 37 StoreSpeciesFamilyAtHL", ROMX
+
 ; wSpeciesIdLo/Hi = a species: LoadSpeciesRecord (a far call) fills wSpeciesRecord, whose first byte
 ; is the family, and that byte is stored at [HL]; HL += 1 and DE += 1 (the source byte at DE is
 ; skipped, not read), other registers kept. UnpackLinkRecordToRecordBufB calls it right after the
@@ -3971,6 +4185,8 @@ StoreSpeciesFamilyAtHL::
     ld [hli], a
     inc de
     ret
+
+SECTION "Bank 37 MapAndCompactSkillListLinkSkillMapTable_B", ROMX
 
 ; As MapAndCompactSkillListLinkSkillMapTable_A but through LinkSkillMapTable_B and dropping only
 ; $FF: each source byte except $FF is replaced by LinkSkillMapTable_B[byte], the first 8 and the
@@ -4049,6 +4265,8 @@ MapAndCompactSkillListLinkSkillMapTable_B::
     jr nz, .loop5
     pop de
     ret
+
+SECTION "Bank 37 ScaleStatWordsFromLinkFormat", ROMX
 
 ; DE = three 16-bit words of a received link record (low byte first), HL = destination: word 1 is
 ; 999 when it is $01FF, otherwise word x $C3 / 100 rounded up. The routine that follows is then
@@ -4148,6 +4366,8 @@ ScaleStatWordsFromLinkFormat_NextWord::
     inc hl
     ret
 
+SECTION "Bank 37 Copy26BytesThenLastSpeciesResistance", ROMX
+
 ; DE = source, HL = destination: copies 26 ($1A) bytes from [DE] to [HL], then appends the last base
 ; resistance of the species record loaded earlier (wSpeciesRecord + SPECIES_RESISTANCES + 26) as the
 ; 27th byte. DE ends 27 bytes on (the 27th source byte is skipped), HL 27 on.
@@ -4164,6 +4384,8 @@ Copy26BytesThenLastSpeciesResistance::
     ld [hli], a
     inc de
     ret
+
+SECTION "Bank 37 CallInBank81KeepRegs", ROMX
 
 ; Far-calls CheckBreedingRecipes in bank $81 with AF, BC, DE and HL pushed and restored, so the
 ; caller loses nothing. CheckBreedingRecipes works on wRecordBufB: it tests the two parents against
@@ -4184,6 +4406,8 @@ CallInBank81KeepRegs::
     pop bc
     pop af
     ret
+
+SECTION "Bank 37 LinkCodeToSpeciesTable", ROMX
 
 ; FamilyNibbleOrSpeciesFamily reads the word at $5FC7 + 2 * code to look up a species' family while
 ; PackRecordBufAToLinkWorkBuf unpacks a record; for all 215 codes, SpeciesToLinkCodeTable[species]

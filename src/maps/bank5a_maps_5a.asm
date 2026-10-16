@@ -1,7 +1,7 @@
 ; ROM bank $5A: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank5a.asm.
 
-SECTION "Bank 5A", ROMX[$4000], BANK[$5A]
+SECTION "Bank 5A", ROMX
     db $5a
 
 ; 12 screen far pointers, row by row (E-0142)

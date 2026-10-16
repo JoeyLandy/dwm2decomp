@@ -1,7 +1,7 @@
 ; ROM bank $65: key-world map screens
 ; The annotated listing of this bank is build/listing/bank65.asm.
 
-SECTION "Bank 65", ROMX[$4000], BANK[$65]
+SECTION "Bank 65", ROMX
     db $65
 
 ; entry 3 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to

@@ -1,7 +1,7 @@
 ; ROM bank $68: key-world map screens
 ; The annotated listing of this bank is build/listing/bank68.asm.
 
-SECTION "Bank 68", ROMX[$4000], BANK[$68]
+SECTION "Bank 68", ROMX
     db $68
 
 ; 6 sub-chunk(s) of a 4 x 4 grid of screens; LoadMapScreen_Type0 skips the 8-byte header before each

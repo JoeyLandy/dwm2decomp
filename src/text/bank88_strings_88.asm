@@ -1,7 +1,7 @@
 ; ROM bank $88: string tables
 ; The annotated listing of this bank is build/listing/bank88.asm.
 
-SECTION "Bank 88", ROMX[$4000], BANK[$88]
+SECTION "Bank 88", ROMX
     db $88
 
 ; Starts the text printer on string wStringIndex of category wStringCategory from this bank: DE =
@@ -23,6 +23,8 @@ ShowString_Bank88::
     call BeginStringDisplay_Bank88
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 88 BeginStringDisplay_Bank88_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

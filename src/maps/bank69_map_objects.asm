@@ -1,7 +1,7 @@
 ; ROM bank $69: map object lists and selectors
 ; The annotated listing of this bank is build/listing/bank69.asm.
 
-SECTION "Bank 69", ROMX[$4000], BANK[$69]
+SECTION "Bank 69", ROMX
     db $69
 
 ; Fills wSpriteSlots with the objects of the current screen. It first sets wSpriteSlotCount to 0. On
@@ -293,6 +293,8 @@ LoadMapObjectsForScreen::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
+
+SECTION "Bank 69 MapObjectTable", ROMX
 
 ; LoadMapObjectsForScreen reads the word $4174 + 2 * hMapId (`add $74` / `adc $41`); 228 words up to
 ; the first array at $433C (E-0163, C1)

@@ -1,7 +1,7 @@
 ; ROM bank $3A: battle effect steps and battle text hooks
 ; The annotated listing of this bank is build/listing/bank3a.asm.
 
-SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
+SECTION "Bank 3A", ROMX
     db $3a
 
 ; Starts the battle effect of an action from wEffectFlags. A target in a fourth slot (wBattleTarget
@@ -141,6 +141,8 @@ SelectEffectByEffectFlags::
     xor a
     ld [wEffectFrameCounter], a
     ret
+
+SECTION "Bank 3A ActionEffectTable_Flag7", ROMX
 
 ; SelectEffectByEffectFlags uses this table for wEffectFlags bit 7, indexed by wBattleActionId: byte
 ; 1 when ActorOnLocalSide_Bank3A (or, for action $6C and some flags, TargetOnLocalSide_Bank3A) says
@@ -1338,6 +1340,8 @@ SelectEffectByEffectFlags_StartAnimation::
     call LoadEffectOBJPaletteC
     ret
 
+SECTION "Bank 3A SelectEffectByEffectFlags_StartAnimation_Data", ROMX
+
 ; Sixty bytes, one per battle effect number $00 to $3B, each a target mode for wEffectTargetMode: 0
 ; for $00-$02, $12-$19, $1D-$26, $2C-$2D, $2F-$31 and $34-$37 (one target slot, wBattleArg0); 1 for
 ; $03-$05, $08, $0A-$0C, $0E, $11, $1A, $1C, $27, $29-$2B, $2E, $32-$33 and $38-$3B (the effect
@@ -1369,6 +1373,8 @@ IsEffectSlotNearSide::
     cp $04
     ret
 
+SECTION "Bank 3A SelectEffectByEffectFlags_RainSlashMode", ROMX
+
 ; Returns Z with A = 2 for effect $1D of RainSlash when wEffectFlags bit 3 is clear; otherwise NZ.
 ; (C2, E-0357; probed E-0382)
 SelectEffectByEffectFlags_RainSlashMode::
@@ -1383,6 +1389,8 @@ SelectEffectByEffectFlags_RainSlashMode::
     ret nz
     ld a, $02
     ret
+
+SECTION "Bank 3A SelectEffectByEffectFlags_SetEffectSlot", ROMX
 
 ; The effect's slot (wBattleArg0): the target, or the actor for Transform unless wEffectFlags bit 3
 ; is set. (C2, E-0357; probed E-0382)
@@ -1407,6 +1415,8 @@ SelectEffectByEffectFlags_SetEffectSlot::
     ld a, [wBattleTarget]
     ld [wBattleArg0], a
     ret
+
+SECTION "Bank 3A SetEffectSpriteXForTargets", ROMX
 
 ; Sets wEffectSpriteX, the screen X of the effect sprite, from wEffectTargetMode. Mode 0 reads
 ; SetEffectSpriteXForTargets_Data at (wBattleArg0 & 3) plus a base picked by wBattleFoeCount (0 for
@@ -1516,6 +1526,8 @@ SetEffectSpriteXForTargets::
     ld a, [wEffectStep]
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A SetEffectSpriteXForTargets_Data", ROMX
 
 ; Six screen X coordinates, $20, $50, $80, $38, $68 and $50: the effect sprite X for a target by foe
 ; count. Entries 0 to 2 are used with three foes (slot 0, 1, 2), entries 3 and 4 with two foes, and
@@ -1686,6 +1698,8 @@ RunBattleEffectAnimation::
     call LoadEffectOBJPaletteC
     ret
 
+SECTION "Bank 3A RunBattleEffectAnimation_Data", ROMX
+
 ; One entry of two bytes: $22 (the effect number, stored in wEffectTileOffset and wEffectAnimArg)
 ; and $00 (the target mode, stored in wEffectTargetMode). RunBattleEffectAnimation indexes it by 2 *
 ; (wBattleActionId - $D7) when an effect ends while wEffectAnimFlags is set, which
@@ -1705,6 +1719,8 @@ RunBattleEffectAnimation_RunRoutine::
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames", ROMX
 
 ; Called on every frame by RunBattleEffectAnimation_RunRoutine while wEffectId is 0. It adds 1 to
 ; wEffectFrameCounter and returns until the count reaches 5, then clears it and runs the effect
@@ -1753,6 +1769,8 @@ RunEffectRoutineEffectEvery5Frames_EndAtOnce::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_BlinkTarget", ROMX
 
 ; Effect routine 2: ends unless the target is one present slot on the far side (4 and up, or below 4
 ; for the link follower); then blinks its picture through four steps. (C1, E-0357)
@@ -1810,6 +1828,8 @@ RunEffectRoutineEffectEvery5Frames_CoverTarget::
     inc [hl]
     ret
 
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_RestoreTarget", ROMX
+
 ; Effect routine 2, steps 1 and 3: restores the target's picture place from its own tile block (slot
 ; & 3). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_RestoreTarget::
@@ -1832,6 +1852,8 @@ RunEffectRoutineEffectEvery5Frames_RestoreTarget::
     inc [hl]
     ret
 
+SECTION "Bank 3A BlinkTarget_End", ROMX
+
 ; Effect routine 2's end (step 4, or a target that cannot blink): wEffectId $FF, wEffectSpriteX and
 ; wEffectStep 0. (C2, E-0371; probed E-0382)
 BlinkTarget_End::
@@ -1842,6 +1864,8 @@ BlinkTarget_End::
     xor a
     ld [wEffectStep], a
     ret
+
+SECTION "Bank 3A EffectPositionIndexForTarget", ROMX
 
 ; A = the 0-4 position index of the picture place of the target (see EffectPictureBGMapOffsets,
 ; which the callers index with it), from wBattleFoeCount and wBattleTarget & 3. One foe: 0. Two
@@ -1885,6 +1909,8 @@ EffectPositionIndexForTarget::
 .return:
     ret
 
+SECTION "Bank 3A CopyVRAMRectToBuffer", ROMX
+
 ; Copies a rectangle from VRAM at HL to DE: C rows of wEffectStep bytes, each byte read with
 ; interrupts off after WaitForVRAMAccess, the destination rows 32 bytes apart. (C1, E-0357)
 CopyVRAMRectToBuffer::
@@ -1913,6 +1939,8 @@ CopyVRAMRectToBuffer::
 .skip:
     jr CopyVRAMRectToBuffer
 
+SECTION "Bank 3A ReadWordTableEntry_Bank3A", ROMX
+
 ; HL = table of words, A = index: HL = the word at HL + 2 * A, low byte first, and A = its low byte.
 ; A is doubled in 8 bits, so an index of $80 or more wraps. Called by the Cover and Restore steps of
 ; the blink effects (RunEffectRoutineEffectEvery5Frames_CoverTarget,
@@ -1930,6 +1958,8 @@ ReadWordTableEntry_Bank3A::
     ld h, a
     deref_hl
     ret
+
+SECTION "Bank 3A EffectPictureBGMapOffsets", ROMX
 
 ; Five words, offsets added to vBGMap0: $00E7, $00E4, $00EA, $00E1 and $00ED (BG map row 7, columns
 ; 7, 4, 10, 1 and 13), indexed by the 0-4 position from EffectPositionIndexForTarget or
@@ -2010,6 +2040,8 @@ ScrollShake_Start::
     inc [hl]
     ret
 
+SECTION "Bank 3A SetScroll0_1AndIncEffectSpriteX", ROMX
+
 ; Sets hScrollY = 0 and hScrollX = 1 and adds 1 to wEffectSpriteX. Nothing in src/ calls it or lists
 ; it in a table. (C2, E-0382)
 ; hScrollY = 0, hScrollX = 1, then wEffectSpriteX += 1 (E-0116)
@@ -2022,6 +2054,8 @@ SetScroll0_1AndIncEffectSpriteX::
     inc [hl]
     ret
 
+SECTION "Bank 3A ScrollShake_Back", ROMX
+
 ; The scroll shake, step 1: back to 0. (C2, E-0357; probed E-0382)
 ScrollShake_Back::
     xor a
@@ -2031,6 +2065,8 @@ ScrollShake_Back::
     ld hl, wEffectSpriteX
     inc [hl]
     ret
+
+SECTION "Bank 3A ScrollShake_End", ROMX
 
 ; The scroll shake, step 3: resets the scroll and ends the effect. (C2, E-0357; probed E-0382)
 ScrollShake_End::
@@ -2043,6 +2079,8 @@ ScrollShake_End::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_FlashWhite", ROMX
 
 ; Effect routine 4 (wEffectRoutine), stepped by wEffectSpriteX, which here only counts the steps:
 ; three times sets the three DMG palette bytes (wDMGPaletteBGP and the two after it) to $00, every
@@ -2075,6 +2113,8 @@ FlashAndMoveSprite_White::
     inc [hl]
     ret
 
+SECTION "Bank 3A SetDMGPaletteBGPPatternAndIncEffectSpriteX", ROMX
+
 ; Sets the three DMG palette bytes (wDMGPaletteBGP and the two after it) to $D2, $D2, $E2, the
 ; values the other effect steps restore, and adds 1 to wEffectSpriteX. It is the odd step of
 ; RunEffectRoutineEffectEvery5Frames_FlashWhite and
@@ -2092,6 +2132,8 @@ SetDMGPaletteBGPPatternAndIncEffectSpriteX::
     inc [hl]
     ret
 
+SECTION "Bank 3A FlashAndMoveSprite_End", ROMX
+
 ; Flash and move, last step (6, or 16 in RunEffectRoutineEffectEvery5Frames_FlashWhiteLong):
 ; restores the palettes ($D2, $D2, $E2; SetDMGPaletteBGPPatternAndIncEffectSpriteX) and ends the
 ; effect. (C2, E-0371; probed E-0382)
@@ -2102,6 +2144,8 @@ FlashAndMoveSprite_End::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_FlashOnce", ROMX
 
 ; Effect routine 5, stepped by wEffectSpriteX: 0 FlashOnce_Darken (four darkening calls), 1
 ; FlashOnce_Hold (ten calls), 2 FlashOnce_Restore (palettes back to $D2, $D2, $E2), 3 FlashOnce_End
@@ -2130,6 +2174,8 @@ FlashOnce_Darken::
     inc [hl]
     ret
 
+SECTION "Bank 3A FlashOnce_Hold", ROMX
+
 ; Flash once, step 1: waits ten calls. (C2, E-0357; probed E-0382)
 FlashOnce_Hold::
     ld hl, wEffectStep
@@ -2143,6 +2189,8 @@ FlashOnce_Hold::
     ld [wEffectStep], a
     ret
 
+SECTION "Bank 3A FlashOnce_Restore", ROMX
+
 ; Flash once, step 2: restores the palettes ($D2, $D2, $E2). (C2, E-0357; probed E-0382)
 FlashOnce_Restore::
     ld hl, wDMGPaletteBGP
@@ -2155,6 +2203,8 @@ FlashOnce_Restore::
     inc [hl]
     ret
 
+SECTION "Bank 3A FlashOnce_End", ROMX
+
 ; Flash once, step 3: ends the effect. (C2, E-0357; probed E-0382)
 FlashOnce_End::
     ld a, $ff
@@ -2162,6 +2212,8 @@ FlashOnce_End::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A DarkenDMGPaletteOneStep", ROMX
 
 ; Adds 1 to wEffectCounter and darkens the three DMG palette bytes (wDMGPaletteBGP and the two after
 ; it) by one shade each: every 2-bit shade goes up by 1 and stops at 3, except the top shade, where
@@ -2225,6 +2277,8 @@ DarkenDMGPaletteOneStep::
     jr nz, .loop
     ret
 
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_InvertPalettes", ROMX
+
 ; Effect routine 6, stepped by wEffectSpriteX: steps 0-11 are InvertPalettes_Flip and step 12 is
 ; InvertPalettes_End. The twelve steps (five frames each) invert the three DMG palette bytes every
 ; time, so the palette flips twelve times and ends as it started. (C2, E-0382)
@@ -2266,6 +2320,8 @@ InvertPalettes_Flip::
     inc [hl]
     ret
 
+SECTION "Bank 3A InvertPalettes_End", ROMX
+
 ; The delay, step 12: ends the effect. (C2, E-0357; probed E-0382)
 InvertPalettes_End::
     ld a, $ff
@@ -2273,6 +2329,8 @@ InvertPalettes_End::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_FlashTwice", ROMX
 
 ; Effect routine 7, stepped by wEffectSpriteX: 0 and 3 FlashTwice_Darken, 1 and 4 FlashTwice_Hold
 ; (five calls), 2 and 5 FlashTwice_Restore, 6 FlashTwice_End. The flash of effect routine 5 twice,
@@ -2304,6 +2362,8 @@ FlashTwice_Darken::
     inc [hl]
     ret
 
+SECTION "Bank 3A FlashTwice_Hold", ROMX
+
 ; Flash twice, steps 1 and 4: waits five calls (wEffectStep), then moves on. (C2, E-0371; probed
 ; E-0382)
 FlashTwice_Hold::
@@ -2318,6 +2378,8 @@ FlashTwice_Hold::
     ld [wEffectStep], a
     ret
 
+SECTION "Bank 3A FlashTwice_Restore", ROMX
+
 ; Flash twice, steps 2 and 5: restores the palettes ($D2, $D2, $E2) and moves on. (C2, E-0371;
 ; probed E-0382)
 FlashTwice_Restore::
@@ -2331,6 +2393,8 @@ FlashTwice_Restore::
     inc [hl]
     ret
 
+SECTION "Bank 3A FlashTwice_End", ROMX
+
 ; Flash twice, step 6: ends the effect. (C2, E-0357; probed E-0382)
 FlashTwice_End::
     ld a, $ff
@@ -2338,6 +2402,8 @@ FlashTwice_End::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_ShakeAndFlash", ROMX
 
 ; Effect routine 8: runs the 27-step shake and the palette flash (RunEffectStep) together; when the
 ; shake has ended, ends the effect. (C2, E-0357; probed E-0382)
@@ -2356,6 +2422,8 @@ RunEffectRoutineEffectEvery5Frames_ShakeAndFlash::
     xor a
     ld [wEffectStep], a
     ret
+
+SECTION "Bank 3A ShakeAndFlash_RunShake", ROMX
 
 ; Effect routine 8's shake, while wEffectSpriteX is 0: one step of a 27-entry table by wEffectStep,
 ; mostly ShakeAndFlash_Down, ShakeAndFlash_Reset, ShakeAndFlash_Right, ShakeAndFlash_Reset in turn
@@ -2405,6 +2473,8 @@ ShakeAndFlash_Down::
     inc [hl]
     ret
 
+SECTION "Bank 3A ShakeAndFlash_Right", ROMX
+
 ; Routine 8's shake: hScrollY 0, hScrollX 3. (C2, E-0357; probed E-0382)
 ShakeAndFlash_Right::
     ld a, $00
@@ -2415,6 +2485,8 @@ ShakeAndFlash_Right::
     inc [hl]
     ret
 
+SECTION "Bank 3A ShakeAndFlash_Reset", ROMX
+
 ; Routine 8's shake: hScrollY and hScrollX 0. (C2, E-0357; probed E-0382)
 ShakeAndFlash_Reset::
     xor a
@@ -2424,6 +2496,8 @@ ShakeAndFlash_Reset::
     ld hl, wEffectStep
     inc [hl]
     ret
+
+SECTION "Bank 3A ShakeAndFlash_EndShake", ROMX
 
 ; Routine 8's shake, step 26: resets the scroll and marks the shake done (wEffectSpriteX 1). (C2,
 ; E-0357; probed E-0382)
@@ -2437,6 +2511,8 @@ ShakeAndFlash_EndShake::
     xor a
     ld [wEffectStep], a
     ret
+
+SECTION "Bank 3A RunEffectStep", ROMX
 
 ; Sets the three DMG palette bytes for the step wEffectStep (0-26): white
 ; (RunEffectStep_WhitePalettes) for 9 and the odd steps up to 25, otherwise the normal $D2, $D2, $E2
@@ -2487,6 +2563,8 @@ RunEffectStep_WhitePalettes::
     ld [hl], $00
     ret
 
+SECTION "Bank 3A RunEffectStep_NormalPalettes", ROMX
+
 ; The palette flash, steps 0-8 and the even steps 10-26: the normal DMG palettes ($D2, $D2, $E2).
 ; (C2, E-0371; probed E-0382)
 RunEffectStep_NormalPalettes::
@@ -2497,6 +2575,8 @@ RunEffectStep_NormalPalettes::
     inc hl
     ld [hl], $e2
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_CountUp", ROMX
 
 ; Effect routine 9: increments wEffectCounter (both branches do the same); it never writes
 ; wEffectId, so it does not end the effect itself. (C2, E-0371; probed E-0382)
@@ -2512,6 +2592,8 @@ RunEffectRoutineEffectEvery5Frames_CountUp::
     ld hl, wEffectCounter
     inc [hl]
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_FlashPalette", ROMX
 
 ; Effect routine 10, stepped by wEffectSpriteX: 0 FlashPalette_Lighten (four calls of
 ; LightenDMGPaletteOneStep), 1 FlashPalette_Hold (ten calls), 2 FlashPalette_Restore (palettes back
@@ -2540,6 +2622,8 @@ FlashPalette_Lighten::
     inc [hl]
     ret
 
+SECTION "Bank 3A FlashPalette_Hold", ROMX
+
 ; Flash light, step 1: waits ten calls. (C2, E-0357; probed E-0382)
 FlashPalette_Hold::
     ld hl, wEffectStep
@@ -2553,6 +2637,8 @@ FlashPalette_Hold::
     ld [wEffectStep], a
     ret
 
+SECTION "Bank 3A FlashPalette_Restore", ROMX
+
 ; Flash light, step 2: restores the palettes ($D2, $D2, $E2). (C2, E-0357; probed E-0382)
 FlashPalette_Restore::
     ld hl, wDMGPaletteBGP
@@ -2565,6 +2651,8 @@ FlashPalette_Restore::
     inc [hl]
     ret
 
+SECTION "Bank 3A FlashPalette_End", ROMX
+
 ; Flash light, step 3: ends the effect. (C2, E-0357; probed E-0382)
 FlashPalette_End::
     ld a, $ff
@@ -2572,6 +2660,8 @@ FlashPalette_End::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A LightenDMGPaletteOneStep", ROMX
 
 ; Adds 1 to wEffectCounter and lightens the three DMG palette bytes (wDMGPaletteBGP and the two
 ; after it) by one shade each: every 2-bit shade goes down by 1 and stops at 0. Register C is never
@@ -2628,6 +2718,8 @@ LightenDMGPaletteOneStep::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_FlashWhiteLong", ROMX
 
 ; Effect routine 11: as RunEffectRoutineEffectEvery5Frames_FlashWhite but eight times: steps 0-15
 ; (by wEffectSpriteX) alternate FlashAndMoveSprite_White (DMG palettes $00) and
@@ -2701,6 +2793,8 @@ ScreenShake_Reset::
     inc [hl]
     ret
 
+SECTION "Bank 3A ScreenShake_Left2", ROMX
+
 ; The screen shake, step 0: hScrollX -2. (C2, E-0357; probed E-0382)
 ScreenShake_Left2::
     ld a, $fe
@@ -2708,6 +2802,8 @@ ScreenShake_Left2::
     ld hl, wEffectSpriteX
     inc [hl]
     ret
+
+SECTION "Bank 3A ScreenShake_Right2", ROMX
 
 ; The screen shake, step 2: hScrollX +2. (C2, E-0357; probed E-0382)
 ScreenShake_Right2::
@@ -2717,6 +2813,8 @@ ScreenShake_Right2::
     inc [hl]
     ret
 
+SECTION "Bank 3A ScreenShake_Left4", ROMX
+
 ; The screen shake, step 4: hScrollX -4. (C2, E-0357; probed E-0382)
 ScreenShake_Left4::
     ld a, $fc
@@ -2724,6 +2822,8 @@ ScreenShake_Left4::
     ld hl, wEffectSpriteX
     inc [hl]
     ret
+
+SECTION "Bank 3A ScreenShake_Right4", ROMX
 
 ; The screen shake, step 6: hScrollX +4. (C2, E-0357; probed E-0382)
 ScreenShake_Right4::
@@ -2733,6 +2833,8 @@ ScreenShake_Right4::
     inc [hl]
     ret
 
+SECTION "Bank 3A ScreenShake_Left8", ROMX
+
 ; The screen shake, step 8: hScrollX -8. (C2, E-0357; probed E-0382)
 ScreenShake_Left8::
     ld a, $f8
@@ -2741,6 +2843,8 @@ ScreenShake_Left8::
     inc [hl]
     ret
 
+SECTION "Bank 3A ScreenShake_Right8", ROMX
+
 ; The screen shake, step 10: hScrollX +8. (C2, E-0357; probed E-0382)
 ScreenShake_Right8::
     ld a, $08
@@ -2748,6 +2852,8 @@ ScreenShake_Right8::
     ld hl, wEffectSpriteX
     inc [hl]
     ret
+
+SECTION "Bank 3A ScreenShake_LeftDown", ROMX
 
 ; The screen shake, step 12: hScrollX -8 and hScrollY 2. (C2, E-0357; probed E-0382)
 ScreenShake_LeftDown::
@@ -2759,6 +2865,8 @@ ScreenShake_LeftDown::
     inc [hl]
     ret
 
+SECTION "Bank 3A ScreenShake_RightDown", ROMX
+
 ; The screen shake, step 14: hScrollX +8 and hScrollY 2. (C2, E-0357; probed E-0382)
 ScreenShake_RightDown::
     ld a, $08
@@ -2768,6 +2876,8 @@ ScreenShake_RightDown::
     ld hl, wEffectSpriteX
     inc [hl]
     ret
+
+SECTION "Bank 3A ScreenShake_End", ROMX
 
 ; The screen shake, step 27: resets the scroll and ends the effect. (C2, E-0357; probed E-0382)
 ScreenShake_End::
@@ -2779,6 +2889,8 @@ ScreenShake_End::
     xor a
     ld [wEffectSpriteX], a
     ret
+
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_BlinkActor", ROMX
 
 ; Effect routine 13: ends unless the actor is a present slot 4-6 (0-2 in link mode 1, whatever the
 ; role; never slot 3 or 7 up); then blinks its picture through four steps. (C1, E-0357)
@@ -2835,6 +2947,8 @@ RunEffectRoutineEffectEvery5Frames_CoverActor::
     inc [hl]
     ret
 
+SECTION "Bank 3A RunEffectRoutineEffectEvery5Frames_RestoreActor", ROMX
+
 ; Effect routine 13, steps 1 and 3: restores the actor's picture place from its own tile block (slot
 ; & 3). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_RestoreActor::
@@ -2857,6 +2971,8 @@ RunEffectRoutineEffectEvery5Frames_RestoreActor::
     inc [hl]
     ret
 
+SECTION "Bank 3A BlinkActor_End", ROMX
+
 ; Effect routine 13's end (step 4, or an actor that cannot blink): wEffectId $FF, wEffectSpriteX and
 ; wEffectStep 0. (C2, E-0371; probed E-0382)
 BlinkActor_End::
@@ -2867,6 +2983,8 @@ BlinkActor_End::
     xor a
     ld [wEffectStep], a
     ret
+
+SECTION "Bank 3A EffectPositionIndexForActor", ROMX
 
 ; A = a place index 0-4 for the picture of the actor, from the foe count wBattleFoeCount and the
 ; actor slot wBattleActor AND 3. One foe gives 0. Two foes give 2 for slot 1 and 1 for any other
@@ -2910,6 +3028,8 @@ EffectPositionIndexForActor::
 .return:
     ret
 
+SECTION "Bank 3A DecompressGraphicsAToTiles0", ROMX
+
 ; A = effect graphics number (0-59). Reads the 3-byte far pointer (address low, address high, ROM
 ; bank) at BattleEffectGraphicsTable + 3 * A and decompresses that stream into video RAM at vTiles0
 ; with DecompressToVRAM. RunBattleEffectAnimation and RunDebugState_E0_EffectViewer_PlayEffect call
@@ -2932,6 +3052,8 @@ DecompressGraphicsAToTiles0::
     ld hl, vTiles0
     call DecompressToVRAM
     ret
+
+SECTION "Bank 3A BattleEffectGraphicsTable", ROMX
 
 ; DecompressGraphicsAToTiles0 decompresses the far pointer at $52B9 + 3 * A to vTiles0;
 ; RunBattleEffectAnimation and the debug effect viewer call it; all 60 entries decode (E-0145, C1)
@@ -3017,6 +3139,8 @@ AdvanceEffectSpriteXBy4InMode3::
     ld [wEffectActive], a
     ret
 
+SECTION "Bank 3A DrawEffectSpriteForEffectTileOffsetRange", ROMX
+
 ; Draws the effect sprite with the routine of one of five banks, picked by wEffectTileOffset: below
 ; $0E DrawEffectSpriteAtEffectSpriteX_Bank3E, $0E-$1F DrawEffectSpriteOverTargets_Bank3F, $20-$2C
 ; DrawEffectSpriteOverTargets (bank $3D), $2D-$32 DrawEffectSpriteAtEffectSpriteX_Bank3B and $33 or
@@ -3054,6 +3178,8 @@ DrawEffectSpriteForEffectTileOffsetRange::
 .call_draw_effect_sprite_at_effect_sprite_x2:
     farcall DrawEffectSpriteAtEffectSpriteX_Bank3B
     ret
+
+SECTION "Bank 3A DrawSkillDebugPage", ROMX
 
 ; The debug skill page: draws the entries of the skill wDebugValue0 in ActionEffectTable_Flag7,
 ; Flag6, Flag5 and the rest as hex digits, each at two BG map places a row apart. (C1, E-0357)
@@ -3194,6 +3320,8 @@ DrawSkillDebugPage_DrawEntry::
 .return:
     ret
 
+SECTION "Bank 3A RunDebugState_E0_EffectViewer_StartEffect", ROMX
+
 ; Starts the debug effect wDebugSubState (target mode 1): resets its steps, starts its sequence,
 ; sets its X and loads its object palette. (C2, E-0357; probed E-0382)
 RunDebugState_E0_EffectViewer_StartEffect::
@@ -3228,6 +3356,8 @@ RunDebugState_E0_EffectViewer_StartEffect::
     call LoadEffectOBJPaletteC
     ret
 
+SECTION "Bank 3A RunDebugState_E0_EffectViewer_PlayEffect", ROMX
+
 ; Runs the debug effect: first decompresses its graphics; then ticks its sequence, moves it in mode
 ; 3 and draws it until it ends ($FF). (C1, E-0357)
 RunDebugState_E0_EffectViewer_PlayEffect::
@@ -3261,6 +3391,8 @@ RunDebugState_E0_EffectViewer_PlayEffect::
     ld [wEffectId], a
     ret
 
+SECTION "Bank 3A LoadEffectOBJPaletteC", ROMX
+
 ; C = effect palette number. On a Game Boy Color (wIsCGB non-zero) copies the 8 bytes (4 colours) at
 ; EffectOBJPalettes + 8 * C to the start of wOBJPaletteBuffer and sets wOBJPaletteUploadRequest to
 ; $80 so the VBlank handler uploads it; on other consoles it returns at once.
@@ -3291,6 +3423,8 @@ LoadEffectOBJPaletteC::
     ld a, $80
     ld [wOBJPaletteUploadRequest], a
     ret
+
+SECTION "Bank 3A UploadBGPalettesWithFade", ROMX
 
 ; On a Game Boy Color only: when wDMGPaletteBGP differs from the saved byte wDMGPaletteBytes, writes
 ; the eight palettes of wBGPaletteBuffer to the background palette port (rBGPI starting $80, data
@@ -3380,6 +3514,8 @@ UploadBGPalettesWithFade::
     ld a, [wDMGPaletteBGP]
     ld [wDMGPaletteBytes], a
     jp UploadBGPalettesWithFade_OBJPalettes
+
+SECTION "Bank 3A UploadBGPaletteByDMGShades", ROMX
 
 ; Writes one background palette to port C with its four colours picked by the DMG BGP shades
 ; (UploadBGPaletteByDMGShades_Data), waiting for VRAM access before each colour. (C1, E-0357)
@@ -3498,6 +3634,8 @@ UploadBGPaletteByDMGShades::
     ld h, a
     ret
 
+SECTION "Bank 3A UploadBGPalettesWithFade_OBJPalettes", ROMX
+
 ; When wDMGPaletteOBP0 has changed, writes the eight object palettes the same way by its shades and
 ; remembers it. (C1, E-0357)
 UploadBGPalettesWithFade_OBJPalettes::
@@ -3574,6 +3712,8 @@ UploadBGPalettesWithFade_OBJPalettes::
     ld a, [wDMGPaletteOBP0]
     ld [wDMGPaletteBytes + $1], a
     jp UploadPalettes_Return
+
+SECTION "Bank 3A UploadOBJPaletteByDMGShades", ROMX
 
 ; Writes one object palette to port C with its four colours picked by the OBP0 shades. (C1, E-0357)
 UploadOBJPaletteByDMGShades::
@@ -3691,9 +3831,13 @@ UploadOBJPaletteByDMGShades::
     ld h, a
     ret
 
+SECTION "Bank 3A UploadPalettes_Return", ROMX
+
 ; A bare ret, the shared exit. (C2, E-0357; probed E-0382)
 UploadPalettes_Return::
     ret
+
+SECTION "Bank 3A UploadBGPaletteByDMGShades_Data", ROMX
 
 ; Four byte offsets, $02, $04, $00 and $06: for a DMG shade 0 to 3 the offset of the matching colour
 ; (2 bytes each) inside a 4-colour CGB palette. UploadBGPaletteByDMGShades and
@@ -3776,6 +3920,8 @@ SelectEffectByEffectFlags2Flags::
     call QueueSoundEffect
     ret
 
+SECTION "Bank 3A SelectEffectByEffectFlags2Flags_SacrificeSound", ROMX
+
 ; A = wEffectFlags2. Without bit 4 returns at once with Z set. With bit 4 it is the Sacrifice check
 ; of SelectEffectByEffectFlags2Flags: for SKILL_SACRIFICE or ACTION_D6 it queues sound $81 and
 ; returns the flags of the last subtraction of 1000 from the damage word (wBattleDamageLo,
@@ -3813,6 +3959,8 @@ SelectEffectByEffectFlags2Flags_SacrificeSound::
     ld a, [wResolveMsgFlags]
     bit 6, a
     ret
+
+SECTION "Bank 3A ActionSoundTable_Flag7", ROMX
 
 ; SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 7, indexed by
 ; wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide_Bank3A), else byte 0; a value
@@ -5100,10 +5248,14 @@ RunBattleActions_StatusCheckStep::
     farcall RunBattleActions_StatusChecks
     ret
 
+SECTION "Bank 3A RunBattleActions_ResolveStep", ROMX
+
 ; Battle fight step 3, sub-phase 1: one resolve step (RunBattleResolveStep). (C1, E-0357)
 RunBattleActions_ResolveStep::
     farcall RunBattleResolveStep
     ret
+
+SECTION "Bank 3A RunBattleActions_ResolveAction", ROMX
 
 ; Battle fight step 3, sub-phase 2: loads the action's skill record and resolves the action
 ; (RunActionResolveStep). (C1, E-0357)
@@ -5115,6 +5267,8 @@ RunBattleActions_ResolveAction::
     farcall LoadSkillRecord
     call RunActionResolveStep
     ret
+
+SECTION "Bank 3A RunBattleActions_AfterAction", ROMX
 
 ; Battle fight step 3, sub-phase 3: after the action, by its record's byte 4: for a group action
 ; ($80 or kind 2) moves to the next target unless an attack was inhaled; kind 4 runs QuadHits' hits
@@ -5164,6 +5318,8 @@ RunBattleActions_AfterAction::
 .call_run_multi_hit_counter:
     call RunMultiHitCounter
     ret
+
+SECTION "Bank 3A RunActionSpecificPostStep", ROMX
 
 ; Sub-phase 4 of RunBattleActions and RunBattleStep4: the after-step that depends on
 ; wBattleActionId. SKILL_CALLHELP and SKILL_YELLHELP, when wMultiHitCount is non-zero and the actor
@@ -5234,6 +5390,8 @@ RunActionSpecificPostStep::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 3A RunBattleActions_ShowHeroBlewBackG", ROMX
 
 ; Battle fight step 3, sub-phase 5: after an inhaled attack clears it and sets the repeat flag; when
 ; the target can act and has SuckAll, shows battle text $7E and goes to the next battle step;
@@ -5401,6 +5559,8 @@ RunBattleActions_MarkActorDone::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3A CheckBattleDecided", ROMX
+
 ; Carry set = one side has no battler left that can fight, which the callers treat as the battle
 ; being decided; carry clear otherwise. For ACTION_BD while wMultiHitCount bits 0-6 are non-zero it
 ; returns A = 0 with carry clear at once. Otherwise carry is set when
@@ -5427,6 +5587,8 @@ CheckBattleDecided::
     ret c
     call CheckOtherSideOut
     ret
+
+SECTION "Bank 3A CheckActionBDOrRun_LocalSideOutOrParalyzed", ROMX
 
 ; Carry only when slots 0-2 (4-6 for the link follower: link mode 1, wLinkRole bit 1) are each out,
 ; empty or paralyzed (AllThreeSlotsOutOrParalyzed with C = the first slot). (C2, E-0371; probed
@@ -5456,6 +5618,8 @@ AllThreeSlotsOutOrParalyzed::
     call SlotOutOrParalyzed
     ret
 
+SECTION "Bank 3A CheckOtherSideOut", ROMX
+
 ; The other side's check: outside a link carry only when slots 4-6 are all out or empty; in a link
 ; the status test on slots 4-6 (0-2 for the follower). (C2, E-0357; probed E-0382)
 CheckOtherSideOut::
@@ -5482,6 +5646,8 @@ CheckOtherSideOut::
     call CarryUnlessBattleSlotOutSlotEmpty
     ret
 
+SECTION "Bank 3A SlotOutOrParalyzed", ROMX
+
 ; C = battle slot. Carry set when the slot is out or empty (CarryUnlessBattleSlotOutSlotEmpty gives
 ; carry; slot numbers of 8 or more count as out) or, for a present slot, when its status byte 0 has
 ; bit 6 set (BSTAT0_PARALYZED); carry clear for a present slot that is not paralyzed. A and HL are
@@ -5500,10 +5666,14 @@ SlotOutOrParalyzed::
     scf
     ret
 
+SECTION "Bank 3A RunBattleActions_ItemStep", ROMX
+
 ; Battle fight step 3, sub-phase 8: an item action (RunBattleActions_UseItem). (C1, E-0357)
 RunBattleActions_ItemStep::
     farcall RunBattleActions_UseItem
     ret
+
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat", ROMX
 
 ; Sub-phase 9 of RunBattleActions, the end of the turn, run on wBattleResolveStep (0-6):
 ; RunBattleActions_EndOfTurn, RunBattleActions_WearOffAndDefeat_Ironize (countdown with the text
@@ -5600,6 +5770,8 @@ RunBattleActions_EndOfTurn::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat_Ironize", ROMX
+
 ; End of turn, step 1: counts down the slot's Ironize ($40 a turn), showing "<name>'s Ironize wore
 ; off!" (text $84) at zero; an Ironized slot skips the poison step. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_Ironize::
@@ -5632,6 +5804,8 @@ RunBattleActions_WearOffAndDefeat_Ironize::
 
 .return:
     ret
+
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat_Poison", ROMX
 
 ; End of turn, step 2: poison: BSTAT0_POISONED takes max HP / 16 (at least 1, at most 50) with text
 ; $88, BSTAT0_BADLY_POISONED max HP / 6 (at most 150) with text $89; when that defeats the slot goes
@@ -5673,6 +5847,8 @@ RunBattleActions_WearOffAndDefeat_Poison::
     ld hl, wBattleResolveStep
     dec [hl]
     ret
+
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat_Poison_Damage", ROMX
 
 ; The poison damage: wBattleDamage = max HP / B (B = 16 or 6), at least 1, at most 50 (B = 16) or
 ; 150 (B = 6). (C2, E-0357; probed E-0382)
@@ -5720,6 +5896,8 @@ RunBattleActions_WearOffAndDefeat_Poison_Damage::
     ld a, h
     ld [wBattleDamageHi], a
     ret
+
+SECTION "Bank 3A ApplyPoisonDamage", ROMX
 
 ; Takes the poison damage from the slot's HP; at zero clears it, marks the slot's level-up gains
 ; (bit 2) and defeats it (DefeatTarget, wLoadSlot 1); marks bit 0 either way. (C2, E-0357; probed
@@ -5775,6 +5953,8 @@ ApplyPoisonDamage::
     call SetBit0OfLevelUpGainsIndexed_Bank3A
     ret
 
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat_DroppedDead", ROMX
+
 ; End of turn, step 3: blanks the slot's picture and shows '<name> dropped dead!' (text $90); when
 ; the battle is decided goes to sub-phase $0A. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_DroppedDead::
@@ -5790,6 +5970,8 @@ RunBattleActions_WearOffAndDefeat_DroppedDead::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat_NextSlot", ROMX
 
 ; End of turn, step 4: moves to the next present slot (back to step 1); after slot 7 resets the slot
 ; marks, counts the turn (up to $FF) and, in a link battle with a turn limit (wLinkRuleTurnLimit bit
@@ -5892,6 +6074,8 @@ RunBattleActions_WearOffAndDefeat_NextSlot::
     inc [hl]
     ret
 
+SECTION "Bank 3A SetSlotMarksForPresentSlots", ROMX
+
 ; C = first slot, B = number of slots, D = mark: sets wSlotMarks[slot] = D for each slot in the
 ; range that is present (not out or empty); a slot that is out keeps its mark. It ends with C = C +
 ; B and B = 0. RunBattleActions_WearOffAndDefeat_NextSlot calls it four times at the end of a turn
@@ -5914,6 +6098,8 @@ SetSlotMarksForPresentSlots::
     jr nz, SetSlotMarksForPresentSlots
     ret
 
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat_NextTurn", ROMX
+
 ; End of turn, step 5: after the text starts the next turn. (C2, E-0357; probed E-0382)
 RunBattleActions_WearOffAndDefeat_NextTurn::
     ld a, [wTextFlags]
@@ -5926,6 +6112,8 @@ RunBattleActions_WearOffAndDefeat_NextTurn::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 3A RunBattleActions_WearOffAndDefeat_TurnLimitDraw", ROMX
 
 ; End of turn, step 6 (the turn limit): after the text ends the battle as a draw: phase 2, step 8,
 ; wBattleScene $80, music $42. (C2, E-0357; probed E-0382)
@@ -5946,6 +6134,8 @@ RunBattleActions_WearOffAndDefeat_TurnLimitDraw::
     call QueueMusic
     ret
 
+SECTION "Bank 3A RunBattleActions_NextPhase", ROMX
+
 ; Battle fight step 3, sub-phase 10: the next battle phase. (C2, E-0357; probed E-0382)
 RunBattleActions_NextPhase::
     ld hl, wBattlePhase
@@ -5957,6 +6147,8 @@ RunBattleActions_NextPhase::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 3A RedrawChangedSlotPanels", ROMX
 
 ; Redraws the parts of the slot panels that were flagged. For each of wBattlePartyCount slots,
 ; starting at slot 0 (at slot 4 in a link battle, wLinkMode 1, when wLinkRole bit 1 is set), it
@@ -6025,6 +6217,8 @@ RedrawChangedSlotPanels::
     jr nz, .loop
     ret
 
+SECTION "Bank 3A RunBattleStep4_NextTarget", ROMX
+
 ; When the group action has another target, makes it the target (and the actor's target choice) and
 ; resolves again (sub-phase 1). (C2, E-0357; probed E-0382)
 RunBattleStep4_NextTarget::
@@ -6042,6 +6236,8 @@ RunBattleStep4_NextTarget::
     ld a, $00
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 3A RunBattleStep4_NextGroupTarget", ROMX
 
 ; A group action's next target: counts the targets on the first call (wMultiHitCount bit 7 marks
 ; it), then steps on; with none left, Sacrifice, Farewell and LifeDance (and ACTION_D6, saving the
@@ -6093,6 +6289,8 @@ RunBattleStep4_NextGroupTarget::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 3A RunBattleStep4_CountTargets", ROMX
 
 ; Adds the number of targets of a group action to wMultiHitCount (it is not cleared first): the
 ; target slot itself, always, plus every present slot of the target side (slots 0-3 or 4-7), or of
@@ -6155,6 +6353,8 @@ RunBattleStep4_CountTargets::
     jr nz, .loop
     ret
 
+SECTION "Bank 3A NextGroupTarget", ROMX
+
 ; Moves C to the group action's next target after the current one (present, or fallen for those four
 ; skills), crossing to the other side for record byte 4 $80; counts one down. (C2, E-0357; probed
 ; E-0382)
@@ -6200,6 +6400,8 @@ NextGroupTarget::
     inc c
     jr .check_record_buffer_data
 
+SECTION "Bank 3A RollRepeatCountForAction", ROMX
+
 ; Used for a skill with record kind 4 when the actor has BSTAT6_CALLED_HELP
 ; (RunBattleActions_AfterAction and RunBattleStep4_AfterAction). When bit 7 of wMultiHitCount is
 ; already set it goes on to RunMultiHitCounter_NextHit. Otherwise it rolls a number from 1 up to a
@@ -6234,6 +6436,8 @@ RollRepeatCountForAction::
     or $80
     ld [wMultiHitCount], a
     jr RunMultiHitCounter_NewTarget
+
+SECTION "Bank 3A RunMultiHitCounter", ROMX
 
 ; Multi-hit bookkeeping for SKILL_BIATTACK and SKILL_QUADHITS (called from
 ; RunBattleActions_AfterAction and RunBattleStep4_AfterAction after each hit). If the actor is out
@@ -6272,6 +6476,8 @@ RunMultiHitCounter::
     jr nc, RunMultiHitCounter_NewTarget_ResolveAgain
     jr RunMultiHitCounter_HitsDone
 
+SECTION "Bank 3A RunMultiHitCounter_NextHit", ROMX
+
 ; The next hit of a multi-hit action: when hits remain, BiAttack keeps a present target or picks
 ; another; other actions pick a new target. (C1, E-0357)
 RunMultiHitCounter_NextHit::
@@ -6301,11 +6507,15 @@ RunMultiHitCounter_NewTarget_ResolveAgain::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3A RunMultiHitCounter_HitsDone", ROMX
+
 ; The hits are done: the next sub-phase. (C2, E-0357; probed E-0382)
 RunMultiHitCounter_HitsDone::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 3A RunMultiHitCounter_AutoTarget", ROMX
 
 ; Picks a new target with the actor's side control bit 7 set for the choice (the automatic choice),
 ; then resolves again. (C1, E-0357)
@@ -6325,6 +6535,8 @@ RunMultiHitCounter_AutoTarget::
     pop hl
     ld [hl], a
     jr RunMultiHitCounter_NewTarget_ResolveAgain
+
+SECTION "Bank 3A RunBattleStep4", ROMX
 
 ; Fight step 4, run every frame by BattleFight_Step4 and
 ; RunBattlePhaseWhenTextIdle_A0_RunTurn_FightStep: a follow-up round in which the target of the
@@ -6366,15 +6578,21 @@ RunBattleStep4_SkillChecks::
     farcall RunBattleStep4_ResolveSkill
     ret
 
+SECTION "Bank 3A RunBattleStep4_ResolveStep", ROMX
+
 ; Battle fight step 4, sub-phase 1: one resolve step. (C1, E-0357)
 RunBattleStep4_ResolveStep::
     farcall RunBattleResolveStep
     ret
 
+SECTION "Bank 3A RunBattleStep4_ResolveAction", ROMX
+
 ; Battle fight step 4, sub-phase 2: resolves the action. (C1, E-0357)
 RunBattleStep4_ResolveAction::
     call RunActionResolveStep
     ret
+
+SECTION "Bank 3A RunBattleStep4_AfterAction", ROMX
 
 ; Battle fight step 4, sub-phase 3: after the action, by record byte 4: kind 2 moves to the next
 ; target; kind 4 runs QuadHits' hits or rolls the called-help repeats; BiAttack runs its hits;
@@ -6418,11 +6636,15 @@ RunBattleStep4_AfterAction::
     call RunMultiHitCounter
     ret
 
+SECTION "Bank 3A RunBattleStep4_ActionPostStep", ROMX
+
 ; Battle fight step 4, sub-phase 4: the action's own after-step (RunActionSpecificPostStep). (C1,
 ; E-0357)
 RunBattleStep4_ActionPostStep::
     call RunActionSpecificPostStep
     ret
+
+SECTION "Bank 3A RunBattleStep4_RestoreSaved", ROMX
 
 ; Battle fight step 4, sub-phase 5: restores the saved actor, target, hit count, both action choices
 ; and the target's slot mark, steps the battle back one step and resumes at sub-phase 3 (6 when the
@@ -6491,6 +6713,8 @@ RunBattleStep4_RestoreSaved::
     ld a, $06
     ld [wBattleSubPhase], a
     ret
+
+SECTION "Bank 3A RunActionResolveStep", ROMX
 
 ; Sub-phase 2 of RunBattleActions and of RunBattleStep4: one step of resolving the action, run on
 ; wBattleResolveStep (0-9): RunActionResolveStep_TakeMagic, RunActionResolveStep_WakeOrSnapOut,
@@ -6607,6 +6831,8 @@ RunActionResolveStep_TakeMagic::
     ld [wBattleDamageHi], a
     ret
 
+SECTION "Bank 3A RunActionResolveStep_WakeOrSnapOut", ROMX
+
 ; Resolve step 1: when the present target is asleep or confused (status bits 7 or 4), the skill's
 ; record byte 7 bit 3 and message flag bit 4, a roll below $40 (a foe outside a link) or $80 wakes a
 ; sleeper (clearing bits 7, 3 and 2, mark 3, text $82 '<name> woke up!'); a confused target goes to
@@ -6654,6 +6880,8 @@ RunActionResolveStep_WakeOrSnapOut::
     inc [hl]
     jr RunActionResolveStep_CheckDecided
 
+SECTION "Bank 3A RunActionResolveStep_SnapOutOfConfusion", ROMX
+
 ; Resolve step 2: a confused target that passed step 1's roll snaps out of it (clears
 ; BSTAT0_CONFUSED, mark 3, text $83). (C1, E-0357)
 RunActionResolveStep_SnapOutOfConfusion::
@@ -6676,6 +6904,8 @@ RunActionResolveStep_SnapOutOfConfusion::
     farcall ShowBattleText
     ret
 
+SECTION "Bank 3A RunActionResolveStep_CheckDecided", ROMX
+
 ; Resolve step 3: when the battle is decided skips to step 6; otherwise step 4. (C1, E-0357)
 RunActionResolveStep_CheckDecided::
     ld hl, wBattleResolveStep
@@ -6687,6 +6917,8 @@ RunActionResolveStep_CheckDecided::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 3A RunActionResolveStep_Counter", ROMX
 
 ; Resolve step 4 (Counter): when there is no follow-up and the target has BSTAT7_COUNTER, the
 ; skill's record byte 5 bit 7, the actor is present, the target can act and message flag bit 4 is
@@ -6825,10 +7057,14 @@ RunActionResolveStep_Counter::
     inc [hl]
     ret
 
+SECTION "Bank 3A RunActionResolveStep_EffectSubSteps", ROMX
+
 ; Resolve step 5: the effect's sub-steps (RunBattleSubStep). (C1, E-0357)
 RunActionResolveStep_EffectSubSteps::
     farcall RunBattleSubStep
     ret
+
+SECTION "Bank 3A RunActionResolveStep_RestoreTarget", ROMX
 
 ; Resolve step 6: puts back a redirected target (wOriginalTarget) as the target and choice;
 ; otherwise outside fight step 4 after a follow-up restores the saved actor, target, hits and
@@ -6892,6 +7128,8 @@ RunActionResolveStep_StoreWordAtIndex::
     ld [de], a
     ret
 
+SECTION "Bank 3A RunActionResolveStep_RunDefeat", ROMX
+
 ; Resolve step 7: runs the pending defeat step (RunDefeatStepMinus1Step). (C1, E-0357)
 RunActionResolveStep_RunDefeat::
     ld a, [wDefeatStep]
@@ -6900,6 +7138,8 @@ RunActionResolveStep_RunDefeat::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 3A RunActionResolveStep_CheckDecidedAfterDefeat", ROMX
 
 ; Resolve step 8: when the battle is decided clears the hits and goes to sub-phase 4; otherwise step
 ; 9. (C2, E-0357; probed E-0382)
@@ -6919,10 +7159,14 @@ RunActionResolveStep_CheckDecidedAfterDefeat::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3A RunActionResolveStep_Imitate", ROMX
+
 ; Resolve step 9: the Imitate check. (C1, E-0357)
 RunActionResolveStep_Imitate::
     call RunActionResolveStep_Imitate_TryStrikeBack
     ret
+
+SECTION "Bank 3A RollRandomBelowTargetThreshold", ROMX
 
 ; Carry set when wRandomLo is below a limit, which is $80 in link mode 1 and for a target in slot
 ; 0-3, and $40 for a target in slot 4-7 outside a link battle (link mode 2 counts as no link). B
@@ -6947,6 +7191,8 @@ RollRandomBelowTargetThreshold::
     ld a, [wRandomLo]
     cp b
     ret
+
+SECTION "Bank 3A RunDefeatStepMinus1Step", ROMX
 
 ; Runs the pending defeat message of an action: RunActionResolveStep_RunDefeat calls it when
 ; wDefeatStep is non-zero, and it jumps on wDefeatStep - 1 (0-9). Entry 0
@@ -6981,6 +7227,8 @@ RunDefeatStepMinus1Step_ShowText::
     ld d, $e8
     jr RunDefeatStepMinus1Step_ShowTextAndEnd
 
+SECTION "Bank 3A RunDefeatStepMinus1Step_ShowText2", ROMX
+
 ; Defeat step 1: battle text $80 for a target on the near side, $E7 otherwise. (C1, E-0357)
 RunDefeatStepMinus1Step_ShowText2::
     call TargetOnLocalSide_Bank3A
@@ -6989,16 +7237,22 @@ RunDefeatStepMinus1Step_ShowText2::
     ld d, $e7
     jr RunDefeatStepMinus1Step_ShowTextAndEnd
 
+SECTION "Bank 3A RunDefeatStepMinus1Step_ShowBarrierPopped", ROMX
+
 ; Defeat step 2 (wDefeatStep = 3): D = battle text $AC 'The barrier popped and disappeared!', shown
 ; by RunDefeatStepMinus1Step_ShowTextAndEnd, which also clears wDefeatStep. (C1, E-0371)
 RunDefeatStepMinus1Step_ShowBarrierPopped::
     ld d, $ac
     jr RunDefeatStepMinus1Step_ShowTextAndEnd
 
+SECTION "Bank 3A RunDefeatStepMinus1Step_DoNothing", ROMX
+
 ; Entries 3-7 and 9 of RunDefeatStepMinus1Step (wDefeatStep = 4-8 and 10): a bare ret; unlike the
 ; other entries it leaves wDefeatStep unchanged. (C2, E-0371; probed E-0382)
 RunDefeatStepMinus1Step_DoNothing::
     ret
+
+SECTION "Bank 3A RunDefeatStepMinus1Step_ShowHeroWentAway", ROMX
 
 ; Defeat step 8: battle text $7F ('<name> went away'). (C1, E-0357)
 RunDefeatStepMinus1Step_ShowHeroWentAway::
@@ -7010,6 +7264,8 @@ RunDefeatStepMinus1Step_ShowTextAndEnd::
     xor a
     ld [wDefeatStep], a
     ret
+
+SECTION "Bank 3A RunActionResolveStep_Imitate_TryStrikeBack", ROMX
 
 ; The Imitate check (outside fight step 4): after a follow-up shows text $7B; when the target can
 ; act and has BSTAT6_IMITATE, a skill without record byte 7 bit 2 shows text $7B, otherwise
@@ -7082,6 +7338,8 @@ RunActionResolveStep_Imitate_TryStrikeBack::
     scf
     ret
 
+SECTION "Bank 3A RemoveCFromActionQueue_3A", ROMX
+
 ; C = slot number: removes the first of the 8 bytes of wActionQueue that equals C by shifting the
 ; later bytes down one place; the byte after the queue (wActionQueue + 8) is shifted into the eighth
 ; place and set to $FF. A value that is not in the queue changes nothing. No call to this copy was
@@ -7119,6 +7377,8 @@ RemoveCFromActionQueue_3A::
     jr nz, .loop
     ret
 
+SECTION "Bank 3A ShowActionBattleTextFromActionBattleTextTable", ROMX
+
 ; Shows the battle text of the action wBattleActionId: D = the byte at ActionBattleTextTable +
 ; wBattleActionId (232 entries); $FF shows nothing. For ACTION_CF it first runs RollLoveRainOutcome,
 ; which replaces D by $D6 or $91. Then it jumps to ShowBattleText (category 1 of bank $2F, with the
@@ -7140,6 +7400,8 @@ ShowActionBattleTextFromActionBattleTextTable::
     call z, RollLoveRainOutcome
     jp ShowBattleText
 
+SECTION "Bank 3A RollLoveRainOutcome", ROMX
+
 ; For action ACTION_CF only (called by ShowActionBattleTextFromActionBattleTextTable): rolls
 ; AdvanceRandom; when wRandomLo is below $80 sets wLoveRainFlag to 1 and returns D = battle text $D6
 ; ('A gentle rain fell!'), otherwise clears wLoveRainFlag and returns D = $91 ('... prayer went
@@ -7160,6 +7422,8 @@ RollLoveRainOutcome::
     ld [wLoveRainFlag], a
     ld d, $d6
     ret
+
+SECTION "Bank 3A ActionBattleTextTable", ROMX
 
 ; ShowActionBattleTextFromActionBattleTextTable reads the byte at $6DAA + wBattleActionId and,
 ; unless it is $FF, passes it in D to ShowBattleText (action $CF first runs RollLoveRainOutcome);
@@ -7415,6 +7679,8 @@ ShowActionBattleText::
     ld d, a
     jp ShowBattleText
 
+SECTION "Bank 3A ActionBattleTextTable2", ROMX
+
 ; ShowActionBattleText (from RunBattleActions_UseItem) reads the byte at $6EA5 + wBattleActionId
 ; and, unless it is $FF, passes it to ShowBattleText; 64 bytes end at ShowBattleTextCategory0
 ; ($6EE5) (E-0210, C1)
@@ -7514,6 +7780,8 @@ ShowBattleTextCategory0::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
     ret
+
+SECTION "Bank 3A BattleTextCategory0HookTable", ROMX
 
 ; ShowBattleTextCategory0 calls the word at $6F06 + 2 * D through JumpToWordAtHL when it is
 ; non-zero, then shows string D of category 0 with BeginStringDisplay_Bank2F; 256 words end exactly
@@ -7786,12 +8054,16 @@ BattleTextCategory0HookTable::
 BattleText0HookRet::
     ret
 
+SECTION "Bank 3A BattleText0Hook02", ROMX
+
 ; A bare ret: the hook of battle text $02 (category 0, entry of BattleTextCategory0HookTable), so
 ; ShowBattleTextCategory0 prepares nothing for it and the text uses whatever the caller left in the
 ; name buffers wTextBuf0 to wTextBuf2. (C2, E-0382)
 ; handler 02 (entry 2 of BattleTextCategory0HookTable) (E-0210)
 BattleText0Hook02::
     ret
+
+SECTION "Bank 3A BattleText0HookNoneForTexts3To4", ROMX
 
 ; A bare ret: the hook of battle texts $03-$04 (category 0, entry of BattleTextCategory0HookTable),
 ; so ShowBattleTextCategory0 prepares nothing for it and the text uses whatever the caller left in
@@ -7801,12 +8073,16 @@ BattleText0Hook02::
 BattleText0HookNoneForTexts3To4::
     ret
 
+SECTION "Bank 3A BattleText0Hook05", ROMX
+
 ; A bare ret: the hook of battle text $05 (category 0, entry of BattleTextCategory0HookTable), so
 ; ShowBattleTextCategory0 prepares nothing for it and the text uses whatever the caller left in the
 ; name buffers wTextBuf0 to wTextBuf2. (C2, E-0382)
 ; handler 05 (entry 5 of BattleTextCategory0HookTable) (E-0210)
 BattleText0Hook05::
     ret
+
+SECTION "Bank 3A BattleText0Hook06", ROMX
 
 ; A bare ret: the hook of battle text $06 (category 0, entry of BattleTextCategory0HookTable), so
 ; ShowBattleTextCategory0 prepares nothing for it and the text uses whatever the caller left in the
@@ -7815,12 +8091,16 @@ BattleText0Hook05::
 BattleText0Hook06::
     ret
 
+SECTION "Bank 3A BattleText0Hook07", ROMX
+
 ; A bare ret: the hook of battle text $07 (category 0, entry of BattleTextCategory0HookTable), so
 ; ShowBattleTextCategory0 prepares nothing for it and the text uses whatever the caller left in the
 ; name buffers wTextBuf0 to wTextBuf2. (C2, E-0382)
 ; handler 07 (entry 7 of BattleTextCategory0HookTable) (E-0210)
 BattleText0Hook07::
     ret
+
+SECTION "Bank 3A BattleText0HookNoneForTexts8To9", ROMX
 
 ; A bare ret: the hook of battle texts $08-$09 (category 0, entry of BattleTextCategory0HookTable),
 ; so ShowBattleTextCategory0 prepares nothing for it and the text uses whatever the caller left in
@@ -7829,6 +8109,8 @@ BattleText0Hook07::
 ; BattleText0HookNoneForTexts8To9)
 BattleText0HookNoneForTexts8To9::
     ret
+
+SECTION "Bank 3A BattleText0HookListSidesTwice", ROMX
 
 ; Hook of battle texts $0B-$0C (category 0): calls ListSideMonsterIdsToTemp0 and falls into
 ; BattleText0Hook0D, which lists the sides again (the second result is the same) and ends with
@@ -7852,6 +8134,8 @@ BattleText0Hook0D::
     call ListSideMonsterIdsToTemp0
     jp WriteTargetNameOrTheMonsters_CountInB
 
+SECTION "Bank 3A BattleText0Hook0E", ROMX
+
 ; Hook of battle text $0E (category 0): ListSideMonsterIdsToTemp0 lists the monster ids of the near
 ; side at wTemp0 and of the far side at wPauseMenuStep and leaves B = the number of present far
 ; monsters, then jumps to CheckAllTargetsSame_CountInB. With B = 1 wTextBuf0 gets the name of the
@@ -7861,12 +8145,16 @@ BattleText0Hook0E::
     call ListSideMonsterIdsToTemp0
     jp CheckAllTargetsSame_CountInB
 
+SECTION "Bank 3A BattleText0HookActorName", ROMX
+
 ; Hook of 44 battle texts (from $0F) (category 0): copies the name of the actor slot (wBattleActor)
 ; to wTextBuf0 (CopyActorNameToTextBuf0). (C2, E-0382)
 ; CopyActorNameToTextBuf0 (44 messages) (E-0210)
 BattleText0HookActorName::
     call CopyActorNameToTextBuf0
     ret
+
+SECTION "Bank 3A BattleText0HookActorNameAndDamage", ROMX
 
 ; Hook of battle texts $10-$11 (category 0): the name of the actor slot goes to wTextBuf0 and the
 ; damage word (wBattleDamageLo, wBattleDamageHi) to wTextBuf1 as a decimal number without leading
@@ -7877,12 +8165,16 @@ BattleText0HookActorNameAndDamage::
     call WriteBattleDamageToTextBuf1
     ret
 
+SECTION "Bank 3A BattleText0Hook22", ROMX
+
 ; A bare ret: the hook of battle text $22 (category 0, entry of BattleTextCategory0HookTable), so
 ; ShowBattleTextCategory0 prepares nothing for it and the text uses whatever the caller left in the
 ; name buffers wTextBuf0 to wTextBuf2. (C2, E-0382)
 ; handler 22 (entry 34 of BattleTextCategory0HookTable) (E-0210)
 BattleText0Hook22::
     ret
+
+SECTION "Bank 3A BattleText0Hook33", ROMX
 
 ; Hook of battle text $33 (category 0): the name of the target slot goes to wTextBuf0 and the name
 ; of the slot wDuckBehindSlot to wTextBuf1 (the text says 'ducked behind'; wDuckBehindSlot is the
@@ -7895,6 +8187,8 @@ BattleText0Hook33::
     ld [wNameSlot], a
     call CopySlotNameToHL
     ret
+
+SECTION "Bank 3A BattleText0HookTargetNameAndGroupWord", ROMX
 
 ; Hook of battle texts $2A-$2B (category 0): the name of the target slot goes to wTextBuf0; then,
 ; when entry (wMultiHitCount AND $7F) - 1 of wSpeciesGroups is not $FF and has bit 7 set (a group of
@@ -7916,6 +8210,8 @@ BattleText0HookTargetNameAndGroupWord::
     call WriteMonstersWordToTextBuf0
     ret
 
+SECTION "Bank 3A BattleText0HookActorAndSkill", ROMX
+
 ; Hook of battle texts $36-$38 (category 0): the name of the actor slot goes to wTextBuf0 and the
 ; name of skill wBattleActionId (string category 4 of bank $08) to wTextBuf1. The texts say 'cast'
 ; and a skill name, followed by a failure line. (C2, E-0382)
@@ -7926,6 +8222,8 @@ BattleText0HookActorAndSkill::
     call CopyActionSkillNameToTextBuf1
     ret
 
+SECTION "Bank 3A BattleText0Hook3F", ROMX
+
 ; Hook of battle text $3F (category 0): the name of the actor slot goes to wTextBuf0 and the name of
 ; the target slot to wTextBuf2. (C2, E-0382)
 ; handler 3F (entry 63 of BattleTextCategory0HookTable) (E-0210)
@@ -7933,6 +8231,8 @@ BattleText0Hook3F::
     call CopyActorNameToTextBuf0
     call CopyTargetNameToTextBuf2
     ret
+
+SECTION "Bank 3A BattleText0HookActorAndSkillForLaterTexts", ROMX
 
 ; Hook of 14 battle texts (from $45) (category 0): the same two calls as
 ; BattleText0HookActorAndSkill (actor name to wTextBuf0, name of skill wBattleActionId to
@@ -7945,6 +8245,8 @@ BattleText0HookActorAndSkillForLaterTexts::
     call CopyActionSkillNameToTextBuf1
     ret
 
+SECTION "Bank 3A BattleText0HookActorAndMappedSlot", ROMX
+
 ; Hook of battle texts $66-$7A (category 0): the name of the actor slot goes to wTextBuf0 and the
 ; name of the slot ActorFormationSlotToTemp0 maps the actor to (its formation partner) to wTextBuf1.
 ; The texts name two monsters and say that they tried something. (C2, E-0382)
@@ -7953,6 +8255,8 @@ BattleText0HookActorAndMappedSlot::
     call CopyActorNameToTextBuf0
     call CopyMappedSlotNameToTextBuf1
     ret
+
+SECTION "Bank 3A BattleText0Hook7E", ROMX
 
 ; Hook of battle text $7E (category 0): when the target slot is 3 or more and exactly one monster is
 ; present on the far side (ListSideMonsterIdsToTemp0 gives B = 1), the name of the target slot goes
@@ -7972,6 +8276,8 @@ BattleText0Hook7E::
 .return:
     ret
 
+SECTION "Bank 3A BattleText0HookTargetAndDefeatSlot", ROMX
+
 ; Hook of battle texts $80-$81 (category 0): the name of the target slot goes to wTextBuf0 and the
 ; name of the slot wOriginalTarget (the slot first targeted before the attack was moved) to
 ; wTextBuf1. (C2, E-0382)
@@ -7983,6 +8289,8 @@ BattleText0HookTargetAndDefeatSlot::
     ld [wNameSlot], a
     call CopySlotNameToHL
     ret
+
+SECTION "Bank 3A ShowBattleText", ROMX
 
 ; D = battle text index: calls the text's prep routine from BattleTextPrepTable when its entry is
 ; not zero, then shows string D of category 1 (bank $2F, BeginStringDisplay_Bank2F). (C1, E-0357)
@@ -8006,6 +8314,8 @@ ShowBattleText::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
     ret
+
+SECTION "Bank 3A BattleTextPrepTable", ROMX
 
 ; ShowBattleText reads the word $71B4 + 2 * D and, when it is non-zero, calls it (JumpToWordAtHL)
 ; before showing string D of category 1 from bank $2F; 256 words up to the first routine at $73B4;
@@ -8276,6 +8586,8 @@ BattleTextPrep00::
     call CopyActorNameToTextBuf0
     ret
 
+SECTION "Bank 3A BattleTextPrepE6", ROMX
+
 ; Prep of battle text $E6 (category 1): when the target slot is 3 or more and exactly one monster is
 ; present on the far side (ListSideMonsterIdsToTemp0 gives B = 1), the name of the target slot goes
 ; to wTextBuf0; otherwise nothing changes (the item code has already named the targets with
@@ -8294,6 +8606,8 @@ BattleTextPrepE6::
 .return:
     ret
 
+SECTION "Bank 3A BattleTextPrep01", ROMX
+
 ; Prep of battle texts $01-$05, $24, $E3-$E5 (category 1): the name of the actor slot goes to
 ; wTextBuf0 and the name of skill wBattleActionId to wTextBuf1 (text $01 says 'cast' after the actor
 ; name). (C2, E-0382)
@@ -8303,6 +8617,8 @@ BattleTextPrep01::
     call CopyActionSkillNameToTextBuf1
     ret
 
+SECTION "Bank 3A BattleTextPrep06", ROMX
+
 ; Prep of 14 battle texts (from $06) (category 1): the name of the actor slot goes to wTextBuf0 and
 ; the name of the target slot to wTextBuf1 (text $06 says 'closed in on'). (C2, E-0382)
 ; prepares the arguments of battle text 06 (entry 6 of BattleTextPrepTable) (E-0180)
@@ -8310,6 +8626,8 @@ BattleTextPrep06::
     call CopyActorNameToTextBuf0
     call CopyTargetNameToTextBuf1
     ret
+
+SECTION "Bank 3A BattleTextPrep35", ROMX
 
 ; Prep of 17 battle texts (from $35) (category 1): the name of the target slot goes to wTextBuf0 and
 ; the damage word (wBattleDamageLo, wBattleDamageHi) to wTextBuf1 as a decimal number (text $35 says
@@ -8320,12 +8638,16 @@ BattleTextPrep35::
     call WriteBattleDamageToTextBuf1
     ret
 
+SECTION "Bank 3A BattleTextPrep37", ROMX
+
 ; Prep of 88 battle texts (from $37) (category 1): copies the name of the target slot to wTextBuf0
 ; (CopyTargetNameToTextBuf0). (C2, E-0382)
 ; prepares the arguments of battle text 37 (entry 55 of BattleTextPrepTable) (E-0180)
 BattleTextPrep37::
     call CopyTargetNameToTextBuf0
     ret
+
+SECTION "Bank 3A BattleTextPrepB8", ROMX
 
 ; Prep of battle text $B8 (category 1): the name of the actor slot goes to wTextBuf0. Then it takes
 ; the first present slot among the three slots of the other side (starting at slot 4 for a near
@@ -8357,6 +8679,8 @@ BattleTextPrepB8::
     ld [wBattleTarget], a
     ret
 
+SECTION "Bank 3A BattleTextPrep21", ROMX
+
 ; Prep of battle text $21 (category 1): the name of the actor slot goes to wTextBuf1. For an actor
 ; on the near side (slot below 4; reversed in a link battle for the follower) outside link mode 1 it
 ; names the targets in wTextBuf0 with NameTargetsInTextBuf0_CountInB (B = the far monster count); in
@@ -8379,6 +8703,8 @@ BattleTextPrep21::
     jp z, NameTargetsInTextBuf0_CountInB
     ret
 
+SECTION "Bank 3A BattleTextPrep0F", ROMX
+
 ; Prep of battle text $0F (category 1): the name of the actor slot goes to wTextBuf1. In link mode 1
 ; wTextBuf0 becomes 'Monsters' (CopyTargetOrSideNameToTextBuf0_Side). Otherwise, for a target on the
 ; near side wTextBuf0 gets the target name when exactly one monster is present on the near side and
@@ -8394,6 +8720,8 @@ BattleTextPrep0F::
     call TargetOnLocalSide_Bank3A
     jp c, CopyTargetOrSideNameToTextBuf0
     jp NameTargetsInTextBuf0_CountInB
+
+SECTION "Bank 3A BattleTextPrepBE", ROMX
 
 ; Prep of battle text $BE (category 1): the name of the actor slot goes to wTextBuf0. Then the
 ; number of monsters on the actor side (near side count for a near actor, far side count for a far
@@ -8446,6 +8774,8 @@ BattleTextPrepBE::
     ld [hl], a
     ret
 
+SECTION "Bank 3A BattleTextPrep4D", ROMX
+
 ; Prep of battle text $4D (category 1): for a target on the near side wTextBuf0 gets the target name
 ; when exactly one monster is present on the near side and 'Monsters' otherwise; for a far target in
 ; link mode 1 it gets 'Monsters'; for a far target outside a link battle
@@ -8460,12 +8790,16 @@ BattleTextPrep4D::
     jp z, CopyTargetOrSideNameToTextBuf0_Side
     jp NameTargetsInTextBuf0_CountInB
 
+SECTION "Bank 3A BattleTextPrep61", ROMX
+
 ; Prep of battle texts $61, $7F (category 1): copies the name of the target slot to wTextBuf0 (text
 ; $61 says 'joined the battle!'). (C2, E-0382)
 ; prepares the arguments of battle text 61 (entry 97 of BattleTextPrepTable) (E-0180)
 BattleTextPrep61::
     call CopyTargetNameToTextBuf0
     ret
+
+SECTION "Bank 3A BattleTextPrep7E", ROMX
 
 ; Prep of battle text $7E (category 1): the name of the target slot goes to wTextBuf0 and the name
 ; of skill wBattleActionId to wTextBuf1 (text $7E says 'blew back'). (C2, E-0382)
@@ -8475,12 +8809,16 @@ BattleTextPrep7E::
     call CopyActionSkillNameToTextBuf1
     ret
 
+SECTION "Bank 3A BattleTextPrep87", ROMX
+
 ; Prep of battle text $87 (category 1): the name of item wBattleActionId (string category 5 of bank
 ; $08) goes to wTextBuf2 (the text says 'shattered!'). (C2, E-0382)
 ; prepares the arguments of battle text 87 (entry 135 of BattleTextPrepTable) (E-0180)
 BattleTextPrep87::
     call CopyActionItemNameToTextBuf2
     ret
+
+SECTION "Bank 3A BattleTextPrepA0", ROMX
 
 ; Prep of battle text $A0 (category 1): the name of the player (wPlayerName) goes to wTextBuf0, the
 ; name of the target slot to wTextBuf1 and the name of item wBattleActionId to wTextBuf2 (the text
@@ -8491,6 +8829,8 @@ BattleTextPrepA0::
     call CopyTargetNameToTextBuf1
     call CopyActionItemNameToTextBuf2
     ret
+
+SECTION "Bank 3A BattleTextPrep94", ROMX
 
 ; Prep of battle text $94 (category 1): the player name goes to wTextBuf1 and the name of item
 ; wBattleActionId to wTextBuf2. For a target on the near side wTextBuf0 gets the target name; for a
@@ -8506,6 +8846,8 @@ BattleTextPrep94::
     call CopyTargetNameToTextBuf0
     ret
 
+SECTION "Bank 3A BattleTextPrep95", ROMX
+
 ; Prep of battle texts $95-$96, $FD-$FE (category 1): the player name goes to wTextBuf1. For a
 ; target on the near side wTextBuf0 gets the target name; for a far target
 ; NameTargetsInTextBuf0_CountInB names the far targets in wTextBuf0. (C2, E-0382)
@@ -8518,6 +8860,8 @@ BattleTextPrep95::
     call CopyTargetNameToTextBuf0
     ret
 
+SECTION "Bank 3A BattleTextPrep97", ROMX
+
 ; Prep of 8 battle texts (from $97) (category 1): the player name goes to wTextBuf0 and the name of
 ; item wBattleActionId to wTextBuf2. (C2, E-0382)
 ; prepares the arguments of battle text 97 (entry 151 of BattleTextPrepTable) (E-0180)
@@ -8526,12 +8870,16 @@ BattleTextPrep97::
     call CopyActionItemNameToTextBuf2
     ret
 
+SECTION "Bank 3A BattleTextPrep99", ROMX
+
 ; Prep of battle texts $99, $A1-$A2 (category 1): the player name (wPlayerName, five glyphs) goes to
 ; wTextBuf0. (C2, E-0382)
 ; prepares the arguments of battle text 99 (entry 153 of BattleTextPrepTable) (E-0180)
 BattleTextPrep99::
     call CopyPlayerNameToTextBuf0
     ret
+
+SECTION "Bank 3A BattleTextPrep92", ROMX
 
 ; Prep of battle text $92 (category 1): the name of skill number wSealPrayState (string category 4
 ; of bank $08) goes to wTextBuf1 (the text says 'was broken!'). (C2, E-0382)
@@ -8544,12 +8892,16 @@ BattleTextPrep92::
     call CopyStringHLToDE
     ret
 
+SECTION "Bank 3A BattleTextPrepB0", ROMX
+
 ; Prep of battle text $B0 (category 1): the name of skill wBattleActionId goes to wTextBuf1. (C2,
 ; E-0382)
 ; prepares the arguments of battle text B0 (entry 176 of BattleTextPrepTable) (E-0180)
 BattleTextPrepB0::
     call CopyActionSkillNameToTextBuf1
     ret
+
+SECTION "Bank 3A BattleTextPrepCA", ROMX
 
 ; Prep of battle text $CA (category 1): the name of the target slot goes to wTextBuf0 and the name
 ; of the slot wOriginalTarget to wTextBuf1 (the text says 'guarded'). (C2, E-0382)
@@ -8562,6 +8914,8 @@ BattleTextPrepCA::
     call CopySlotNameToHL
     ret
 
+SECTION "Bank 3A BattleTextPrepAA", ROMX
+
 ; Prep of 19 battle texts (from $AA) (category 1): the name of the actor slot goes to wTextBuf0 and
 ; the name of the formation-mapped slot (CopyMappedSlotNameToTextBuf1) to wTextBuf1. (C2, E-0382)
 ; prepares the arguments of battle text AA (entry 170 of BattleTextPrepTable) (E-0180)
@@ -8569,6 +8923,8 @@ BattleTextPrepAA::
     call CopyActorNameToTextBuf0
     call CopyMappedSlotNameToTextBuf1
     ret
+
+SECTION "Bank 3A BattleTextPrepF2", ROMX
 
 ; Prep of battle text $F2 (category 1): the name of the target slot goes to wTextBuf2, the name of
 ; the actor slot to wTextBuf0 and the name of the formation-mapped slot to wTextBuf1 (the text says
@@ -8579,6 +8935,8 @@ BattleTextPrepF2::
     call CopyActorNameToTextBuf0
     call CopyMappedSlotNameToTextBuf1
     ret
+
+SECTION "Bank 3A ShowActionRefusedMessage", ROMX
 
 ; D = reason 1-6 why the action could not be used (the callers pass the D that CheckSkillMPCost
 ; returns: 1 not enough MP, 2 the action matches wQueuedActionId, 3-6 the seal checks; the seal-pray
@@ -8701,6 +9059,8 @@ ShowActionRefusedMessage::
     jr nz, .loop
     ret
 
+SECTION "Bank 3A BuildActionMessageNames_Data1", ROMX
+
 ; Twenty string ids for battle text ids (category 0 of BeginStringDisplay_Bank2F), one per action id
 ; $D0 to $E3 (index wBattleActionId - $D0); $FF means no message. For example $6C, $6E, $FF, $FF,
 ; $FF, $FF, $70, $FF, $80, $72, ..., $81. ShowActionRefusedMessage uses it when D is 3 and
@@ -8783,6 +9143,8 @@ ShowSpecialActionMessage::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
     ret
+
+SECTION "Bank 3A ShowSpecialActionMessage_Data", ROMX
 
 ; Twenty one-byte string indexes, one per special battle action $D0-$E3 (index wBattleActionId -
 ; $D0), in string category 0 of bank $2F: $66 (entries 0, 1 and 12) is "<BUF0> and <BUF1> tried
@@ -8892,6 +9254,8 @@ NameTargetsInTextBuf0_CountInB::
     call CopyTargetNameToTextBuf0
     jr CopyTargetOrSideNameToTextBuf0_Monsters
 
+SECTION "Bank 3A CopyTargetOrSideNameToTextBuf0", ROMX
+
 ; E = 1: copies the name of the target slot to wTextBuf0 (CopyTargetOrSideNameToTextBuf0_Target).
 ; Any other E: copies the name of the first slot of the target side and then writes 'Monsters' over
 ; it, so wTextBuf0 reads 'Monsters' (CopyTargetOrSideNameToTextBuf0_Side). E is the count of present
@@ -8914,10 +9278,14 @@ CopyTargetOrSideNameToTextBuf0_Monsters::
     call WriteMonstersWordToTextBuf0
     ret
 
+SECTION "Bank 3A CopyTargetOrSideNameToTextBuf0_Target", ROMX
+
 ; Copies the target's name into wTextBuf0. (C2, E-0357; probed E-0382)
 CopyTargetOrSideNameToTextBuf0_Target::
     call CopyTargetNameToTextBuf0
     ret
+
+SECTION "Bank 3A CheckAllTargetsSame", ROMX
 
 ; B = hTemp0, then CheckAllTargetsSame_CountInB. The same code as NameTargetsInTextBuf0; no call to
 ; this entry was found in src/ (BattleText0Hook0E jumps to CheckAllTargetsSame_CountInB). (C2,
@@ -9015,6 +9383,8 @@ CheckAllTargetsSame_CountInB::
     call CopyTargetNameToTextBuf0
     jr CheckAllTargetsSame_Monsters
 
+SECTION "Bank 3A CheckAllTargetsSame_SideOrTarget", ROMX
+
 ; E = 1: copies the name of the target slot to wTextBuf0; any other E: copies the first slot name of
 ; the target side and then writes 'Monsters' over it. It is the copy of
 ; CopyTargetOrSideNameToTextBuf0 inside the block of CheckAllTargetsSame; nothing jumps to it (the
@@ -9033,10 +9403,14 @@ CheckAllTargetsSame_Monsters::
     call WriteMonstersWordToTextBuf0
     ret
 
+SECTION "Bank 3A CheckAllTargetsSame_Target", ROMX
+
 ; Copies the target's name into wTextBuf0. (C2, E-0357; probed E-0382)
 CheckAllTargetsSame_Target::
     call CopyTargetNameToTextBuf0
     ret
+
+SECTION "Bank 3A WriteTargetNameOrTheMonsters", ROMX
 
 ; B = hTemp0, then WriteTargetNameOrTheMonsters_CountInB. No call to this entry was found in src/
 ; (BattleText0Hook0D and BattleText0HookListSidesTwice jump to
@@ -9142,6 +9516,8 @@ WriteTargetNameOrTheMonsters_CountInB::
     call CopyTargetNameToTextBuf0
     jr WriteTargetNameOrTheMonsters_Monsters
 
+SECTION "Bank 3A WriteTargetNameOrTheMonsters_SideOrTarget", ROMX
+
 ; E = 1: copies the name of the target slot to wTextBuf0; any other E: copies the first slot name of
 ; the target side and then writes 'Monsters' over it. It is the copy of
 ; CopyTargetOrSideNameToTextBuf0 inside the block of WriteTargetNameOrTheMonsters; nothing jumps to
@@ -9160,10 +9536,14 @@ WriteTargetNameOrTheMonsters_Monsters::
     call WriteMonstersWordToTextBuf0
     ret
 
+SECTION "Bank 3A WriteTargetNameOrTheMonsters_Target", ROMX
+
 ; Copies the target's name into wTextBuf0. (C2, E-0357; probed E-0382)
 WriteTargetNameOrTheMonsters_Target::
     call CopyTargetNameToTextBuf0
     ret
+
+SECTION "Bank 3A CopyActorNameToTextBuf0", ROMX
 
 ; Copies the name of the acting battler to wTextBuf0 (<BUF0>) for a battle message: wNameSlot =
 ; wBattleActor, then CopySlotNameToHL with HL = wTextBuf0. CopySlotNameToHL gives, by slot: for
@@ -9184,6 +9564,8 @@ CopyActorNameToTextBuf0::
     call CopySlotNameToHL
     ret
 
+SECTION "Bank 3A CopyActorNameToTextBuf1", ROMX
+
 ; Like CopyActorNameToTextBuf0 but into wTextBuf1 (<BUF1>): wNameSlot = wBattleActor, then
 ; CopySlotNameToHL with HL = wTextBuf1, which writes the name of that battle slot ($F0-terminated;
 ; battler record name, or species name with a letter, per slot as described at
@@ -9195,6 +9577,8 @@ CopyActorNameToTextBuf1::
     ld [wNameSlot], a
     call CopySlotNameToHL
     ret
+
+SECTION "Bank 3A CopyMappedSlotNameToTextBuf1", ROMX
 
 ; Far-calls ActorFormationSlotToTemp0, which leaves in hTemp0 a slot picked from the formation byte
 ; of the actor side (wFormationSlot0 for actor slots 0-3, wFormationSlot1 for 4-7): the first slot
@@ -9212,6 +9596,8 @@ CopyMappedSlotNameToTextBuf1::
     call CopySlotNameToHL
     ret
 
+SECTION "Bank 3A CopyActionSkillNameToTextBuf1", ROMX
+
 ; Copies string wBattleActionId of category 4 (the skill names, String_08_04_01 and on) with its $F0
 ; terminator to wTextBuf1 (<BUF1>): H = 4, L = wBattleActionId, DE = wTextBuf1, CopyStringHLToDE. Id
 ; 0 gives just $F0. Called by the message steps of bank $3A for messages that name the skill used.
@@ -9225,6 +9611,8 @@ CopyActionSkillNameToTextBuf1::
     call CopyStringHLToDE
     ret
 
+SECTION "Bank 3A CopyTargetNameToTextBuf0", ROMX
+
 ; Like CopyActorNameToTextBuf0 but for the target: wNameSlot = wBattleTarget, then CopySlotNameToHL
 ; with HL = wTextBuf0 (<BUF0>) writes the $F0-terminated name of that battle slot (battler record
 ; name, or species name with a letter, per slot as described at CopyActorNameToTextBuf0). (C2,
@@ -9237,6 +9625,8 @@ CopyTargetNameToTextBuf0::
     call CopySlotNameToHL
     ret
 
+SECTION "Bank 3A CopyTargetNameToTextBuf1", ROMX
+
 ; Like CopyActorNameToTextBuf0 but for the target and into wTextBuf1 (<BUF1>): wNameSlot =
 ; wBattleTarget, then CopySlotNameToHL with HL = wTextBuf1 writes the $F0-terminated name of that
 ; battle slot (forms as described at CopyActorNameToTextBuf0). (C2, E-0384)
@@ -9248,6 +9638,8 @@ CopyTargetNameToTextBuf1::
     call CopySlotNameToHL
     ret
 
+SECTION "Bank 3A CopyTargetNameToTextBuf2", ROMX
+
 ; Like CopyActorNameToTextBuf0 but for the target and into wTextBuf2 (<BUF2>): wNameSlot =
 ; wBattleTarget, then CopySlotNameToHL with HL = wTextBuf2 writes the $F0-terminated name of that
 ; battle slot (forms as described at CopyActorNameToTextBuf0). (C2, E-0384)
@@ -9258,6 +9650,8 @@ CopyTargetNameToTextBuf2::
     ld [wNameSlot], a
     call CopySlotNameToHL
     ret
+
+SECTION "Bank 3A WriteBattleDamageToTextBuf1", ROMX
 
 ; Writes the damage word wBattleDamageHi:wBattleDamageLo to wTextBuf1 (<BUF1>) as decimal digits for
 ; a battle message: BC = the damage, HL = wTextBuf1, WriteBCAsDecimalString. One byte per digit (0 =
@@ -9272,6 +9666,8 @@ WriteBattleDamageToTextBuf1::
     ld b, a
     call WriteBCAsDecimalString
     ret
+
+SECTION "Bank 3A CopyTargetSideNameToTextBuf0", ROMX
 
 ; Sets wNameSlot to wBattleTarget & 4 (slot 0 or 4, the first slot of the target side) and calls
 ; CopySlotNameToHL with HL = wTextBuf0, so wTextBuf0 gets the name of that slot. All three callers
@@ -9289,6 +9685,8 @@ CopyTargetSideNameToTextBuf0::
     call CopySlotNameToHL
     ret
 
+SECTION "Bank 3A CopyPlayerNameToTextBuf0", ROMX
+
 ; Copies the name of the player (wPlayerName: the first 5 glyphs, a $8D or $8E mark right after them
 ; if there is one, then $F0) to wTextBuf0 with CopyFiveGlyphsPlusMarks. The battle text preps
 ; BattleTextPrepA0, BattleTextPrep97 and BattleTextPrep99 use it to fill <BUF0> with the name of the
@@ -9300,6 +9698,8 @@ CopyPlayerNameToTextBuf0::
     call CopyFiveGlyphsPlusMarks
     ret
 
+SECTION "Bank 3A CopyPlayerNameToTextBuf1", ROMX
+
 ; Copies the name of the player (wPlayerName: the first 5 glyphs, a $8D or $8E mark right after them
 ; if there is one, then $F0) to wTextBuf1 with CopyFiveGlyphsPlusMarks. BattleTextPrep94 and
 ; BattleTextPrep95 use it to fill <BUF1> with the name of the player. (C2, E-0384)
@@ -9309,6 +9709,8 @@ CopyPlayerNameToTextBuf1::
     ld hl, wTextBuf1
     call CopyFiveGlyphsPlusMarks
     ret
+
+SECTION "Bank 3A CopyActionItemNameToTextBuf2", ROMX
 
 ; Copies the name of item wBattleActionId (string category 5 of bank $08, through CopyStringHLToDE
 ; with H = 5 and L = the id) to wTextBuf2, $F0 terminated. BattleTextPrep87, BattleTextPrepA0,
@@ -9322,6 +9724,8 @@ CopyActionItemNameToTextBuf2::
     call CopyStringHLToDE
     ret
 
+SECTION "Bank 3A CopyActorSideNameToTextBuf0", ROMX
+
 ; Sets wNameSlot to wBattleActor & 4 (slot 0 or 4, the first slot of the actor side) and calls
 ; CopySlotNameToHL with HL = wTextBuf0, so wTextBuf0 gets the name of that slot. No call to it was
 ; found in src/; CopyTargetSideNameToTextBuf0 is the same code for wBattleTarget. (C2, E-0384)
@@ -9334,6 +9738,8 @@ CopyActorSideNameToTextBuf0::
     ld [wNameSlot], a
     call CopySlotNameToHL
     ret
+
+SECTION "Bank 3A CopySlotNameToHL", ROMX
 
 ; A = battle slot, HL = destination: writes the name of that slot there, $F0 terminated. Slots 0-2
 ; go on into CopyBattlerNameToHL (the name of the battler record); slots 3-7 go to
@@ -9373,11 +9779,15 @@ CopyBattlerNameToHL::
     inc hl
     jr .skip
 
+SECTION "Bank 3A CopySlotNameToHL_LinkBattlerName", ROMX
+
 ; In link mode 1 copies the battler record's name (CopyBattlerNameToHL). (C2, E-0357; probed E-0384)
 CopySlotNameToHL_LinkBattlerName::
     ld a, b
     pop bc
     jr CopyBattlerNameToHL
+
+SECTION "Bank 3A CopySlotNameToHL_HighSlot", ROMX
 
 ; A foe slot's name: slot 3 or 7, or one whose name byte is $FF, gets its species name with a letter
 ; when others share it; in link mode 1 the battler record's name; otherwise the battler name with a
@@ -9417,6 +9827,8 @@ CopySlotNameToHL_HighSlot::
     call CopySlotNameToHL_SpeciesLetter
     ret
 
+SECTION "Bank 3A CopySlotSpeciesNameToHL", ROMX
+
 ; Copies slot A's species name (category = the high byte of wBattleMonsterId + 2, index = the low
 ; byte) to HL, keeping the slot and destination. (C2, E-0357; probed E-0384)
 CopySlotSpeciesNameToHL::
@@ -9440,6 +9852,8 @@ CopySlotSpeciesNameToHL::
     ld [wBattleTempPtrHi], a
     call CopyStringHLToDE
     ret
+
+SECTION "Bank 3A CopySlotNameToHL_BattlerNameWithLetter", ROMX
 
 ; Copies the battler's name and appends glyph $47 and, when another slot of the side has the same
 ; name byte, its letter by order (A $0A, B $0B, C $0C, also in wBattleArg1); otherwise wBattleArg1 =
@@ -9520,6 +9934,8 @@ CopySlotNameToHL_BattlerNameWithLetter::
     xor a
     ld [wBattleArg1], a
     ret
+
+SECTION "Bank 3A CopySlotNameToHL_SpeciesLetter", ROMX
 
 ; When another foe slot has the same species, appends the letter $0A + the number of earlier ones to
 ; the species name. (C2, E-0357; probed E-0384)
@@ -9606,6 +10022,8 @@ CopySlotNameToHL_SpeciesLetter::
     ld a, $f0
     ld [hl], a
     ret
+
+SECTION "Bank 3A ListSideMonsterIdsToTemp0", ROMX
 
 ; Clears the $10 bytes at wTemp0, then lists the species words (wBattleMonsterId entries) of the
 ; occupied slots (CarryUnlessBattleSlotOutSlotEmpty clear) of slots 0-2 at wTemp0 and of slots 4-6
@@ -9711,6 +10129,8 @@ ListSideMonsterIdsToTemp0::
     ld b, d
     ret
 
+SECTION "Bank 3A ActionEffect_Ironize_Text", ROMX
+
 ; Chooses the message for Ironize in D: $47 ('turned into iron!', one monster) for a foe target
 ; (wBattleTarget >= 4) outside link mode 1; otherwise ListSideMonsterIdsToTemp0 runs and D = $47
 ; when it lists exactly one occupied slot among slots 0-2 (E = 1; slots 4-6 for the link follower),
@@ -9735,6 +10155,8 @@ ActionEffect_Ironize_Text::
     jr z, .loop
     ld d, $46
     ret
+
+SECTION "Bank 3A WriteMonstersWordToTextBuf0", ROMX
 
 ; Writes the text 'Monsters' (glyphs $16 $32 $31 $36 $37 $28 $35 $36) and the $F0 terminator to
 ; wTextBuf0; HL ends on the $F0 byte. CopyTargetOrSideNameToTextBuf0_Monsters,
@@ -9762,6 +10184,8 @@ WriteMonstersWordToTextBuf0::
     inc hl
     ld [hl], $f0
     ret
+
+SECTION "Bank 3A ListFarSideSlots", ROMX
 
 ; Lists the far side's three slots (4-6, or 0-2 for the link follower) that are present (or fallen,
 ; with wBattleArg1 set) in wSlotChoices and shows their names in three windows at VRAM $96D0, $9770
@@ -9880,6 +10304,8 @@ GetBattleMaxHP_Bank3A::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_Bank3A
 
+SECTION "Bank 3A GetBattleMaxMP_Bank3A", ROMX
+
 ; A = battle slot: HL = the wBattleMaxMP word of that slot, A = its low byte (a jump to
 ; GetBattleStatWord_Bank3A with HL = wBattleMaxMP). Bank $3A copy of the helper. (C2, E-0384)
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
@@ -9903,6 +10329,8 @@ GetBattleStatWord_Bank3A::
     deref_hl
     ret
 
+SECTION "Bank 3A AddDoubleAToHL_Bank3A", ROMX
+
 ; HL += 2 * A, with A doubled in 8 bits first (so a slot number above $7F wraps); A is clobbered. It
 ; points HL at the word of slot A in a word array such as wBattleHP. The same 7 bytes appear in 12
 ; banks. (C2, E-0384)
@@ -9912,6 +10340,8 @@ AddDoubleAToHL_Bank3A::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank 3A ActorOnLocalSide_Bank3A", ROMX
 
 ; Carry set when wBattleActor is a slot 0-3; when wLinkMode is 1 and wLinkRole bit 1 is set the test
 ; is reversed (carry set for slots 4-7). Which side is local is inferred from that reversal, not
@@ -9936,6 +10366,8 @@ ActorOnLocalSide_Bank3A::
     cp $04
     ret
 
+SECTION "Bank 3A TargetOnLocalSide_Bank3A", ROMX
+
 ; Carry set when wBattleTarget is a slot 0-3; when wLinkMode is 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set for slots 4-7). Which side is local is inferred from that reversal,
 ; not checked. A = wBattleTarget on return. The same 27 bytes appear in 12 banks. (C2, E-0384)
@@ -9959,6 +10391,8 @@ TargetOnLocalSide_Bank3A::
     cp $04
     ret
 
+SECTION "Bank 3A ClearBattleStatusBitsWithMaskD_Bank3A", ROMX
+
 ; ANDs status byte 0 of slot E with entry D of ClearBattleStatusBitsWithMaskD_Bank3A_Data. (C2,
 ; E-0357; probed E-0384)
 ClearBattleStatusBitsWithMaskD_Bank3A::
@@ -9973,6 +10407,8 @@ ClearBattleStatusBitsWithMaskD_Bank3A::
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 3A ClearBattleStatusBitsWithMaskD_Bank3A_Data", ROMX
 
 ; Seven AND masks for status byte 0 of a battle slot, selected by register D (0-6).
 ; ClearBattleStatusBitsWithMaskD_Bank3A ANDs the byte of slot E with entry D: $DF clears
@@ -9995,6 +10431,8 @@ SetBit0OfLevelUpGainsIndexed_Bank3A::
     pop hl
     ret
 
+SECTION "Bank 3A SetBit1OfLevelUpGainsIndexed_Bank3A", ROMX
+
 ; Sets bit 1 of the byte at wLevelUpGains + A (A = slot); HL is kept, A is clobbered. The same 13
 ; bytes appear in 12 banks. (C2, E-0384)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
@@ -10007,6 +10445,8 @@ SetBit1OfLevelUpGainsIndexed_Bank3A::
     pop hl
     ret
 
+SECTION "Bank 3A SetBit2OfLevelUpGainsIndexed_Bank3A", ROMX
+
 ; Sets bit 2 of the byte at wLevelUpGains + A (A = slot); HL is kept, A is clobbered. The same 13
 ; bytes appear in 12 banks. (C2, E-0384)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
@@ -10018,6 +10458,8 @@ SetBit2OfLevelUpGainsIndexed_Bank3A::
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank 3A PersonalityIndexOfSlot_Bank3A", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]), where g(v) is 0 for v >= $C0, 1 for v >= $40 and 2 below that; HL and BC
@@ -10083,6 +10525,8 @@ PersonalityIndexOfSlot_Bank3A::
     pop hl
     ret
 
+SECTION "Bank 3A CheckSlotStatusBlockWide_Bank3A", ROMX
+
 ; A = battle slot: carry set when the slot cannot act: CheckSlotStatusBlock sets carry (slot out, or
 ; a blocking status), or status byte 3 has bit 6 or 7 set ($C0), or status byte 4 has bit 2 or 3 set
 ; ($0C); otherwise carry clear. A, BC and HL are kept. RunBattleActions_ShowHeroBlewBackG and
@@ -10117,6 +10561,8 @@ CheckSlotStatusBlockWide_Bank3A::
     pop hl
     ret
 
+SECTION "Bank 3A SlotHasStatus3Or4Bits_Bank3A", ROMX
+
 ; A = battle slot: A = status byte 3 of the slot & $C0, or byte 4 & $0C when that is zero; Z set
 ; when both are clear; HL is kept. No call to this bank copy was found in src/; the same 17 bytes
 ; appear in 13 banks. (C2, E-0384)
@@ -10136,6 +10582,8 @@ SlotHasStatus3Or4Bits_Bank3A::
 .done:
     pop hl
     ret
+
+SECTION "Bank 3A EffectOBJPalettes", ROMX
 
 ; LoadEffectOBJPaletteC copies the 8 bytes at $7D9A + 8 * C to wOBJPaletteBuffer on CGB; 59 whole
 ; palettes lie before the label at $7F79 (E-0173, C1)

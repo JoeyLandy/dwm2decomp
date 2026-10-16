@@ -1,7 +1,7 @@
 ; ROM bank $38: monster picture and attribute tables
 ; The annotated listing of this bank is build/listing/bank38.asm.
 
-SECTION "Bank 38", ROMX[$4000], BANK[$38]
+SECTION "Bank 38", ROMX
     db $38
 
 ; E-0041 (C1: LoadMonsterPicture indexes it with the monster id and decompresses the stream to VRAM;

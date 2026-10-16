@@ -1,7 +1,7 @@
 ; ROM bank $7D: field sprites
 ; The annotated listing of this bank is build/listing/bank7d.asm.
 
-SECTION "Bank 7D", ROMX[$4000], BANK[$7D]
+SECTION "Bank 7D", ROMX
     db $7d
 
 ; compressed sprite graphics number $00 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4

@@ -1,7 +1,7 @@
 ; ROM bank $21: compressed monster sprites
 ; The annotated listing of this bank is build/listing/bank21.asm.
 
-SECTION "Bank 21", ROMX[$4000], BANK[$21]
+SECTION "Bank 21", ROMX
     db $21
 
 ; compressed sprite graphics of monster id $05A (MadGopher) (MonsterSpriteTable; the debug viewer

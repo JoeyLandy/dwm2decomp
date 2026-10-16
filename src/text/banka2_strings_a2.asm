@@ -1,7 +1,7 @@
 ; ROM bank $A2: strings and monster loading
 ; The annotated listing of this bank is build/listing/banka2.asm.
 
-SECTION "Bank A2", ROMX[$4000], BANK[$A2]
+SECTION "Bank A2", ROMX
     db $a2
 
 ; wMonsterId (16 bits, $250 or more), C = a byte offset in the 26-byte record, hTemp0 = a count, DE
@@ -41,6 +41,8 @@ CopyMonsterTableBytes::
     pop de
     call CopyBytesDEFromHL_BankA2
     ret
+
+SECTION "Bank A2 LoadMonsterRecordTo_HighIds", ROMX
 
 ; Monster ids from $250 on, kept in this bank: copies the 26-byte record at $4056 + 26 x (id - $24F)
 ; to DE (CopyBytesDEFromHL_BankA2). (C2, E-0357; probed E-0385)

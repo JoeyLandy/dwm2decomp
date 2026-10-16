@@ -1,7 +1,7 @@
 ; ROM bank $67: key-world data
 ; The annotated listing of this bank is build/listing/bank67.asm.
 
-SECTION "Bank 67", ROMX[$4000], BANK[$67]
+SECTION "Bank 67", ROMX
     db $67
 
 ; 1 sub-chunk(s) of a 4 x 4 grid of screens; LoadMapScreen_Type0 skips the 8-byte header before each

@@ -1,7 +1,7 @@
 ; ROM bank $A3: battle helpers: battler stats, personality index
 ; The annotated listing of this bank is build/listing/banka3.asm.
 
-SECTION "Bank A3", ROMX[$4000], BANK[$A3]
+SECTION "Bank A3", ROMX
     db $a3
 
 ; A = a battle slot: HL = wBattleATK, then GetBattleStatWord_BankA3: HL = the word of that slot at
@@ -15,25 +15,35 @@ GetBattleATK_BankA3::
     ld hl, wBattleATK
     jr GetBattleStatWord_BankA3
 
+SECTION "Bank A3 GetBattleDEF_BankA3", ROMX
+
 ; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleDEF_BankA3::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankA3
+
+SECTION "Bank A3 GetBattleMaxHP_BankA3", ROMX
 
 ; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankA3
 
+SECTION "Bank A3 GetBattleMaxMP_BankA3", ROMX
+
 ; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankA3
 
+SECTION "Bank A3 GetBattleHP_BankA3", ROMX
+
 ; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleHP_BankA3::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankA3
+
+SECTION "Bank A3 GetBattleMP_BankA3", ROMX
 
 ; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA3). (C2, E-0357; probed E-0385)
 GetBattleMP_BankA3::
@@ -50,6 +60,8 @@ GetBattleStatWord_BankA3::
     deref_hl
     ret
 
+SECTION "Bank A3 AddDoubleAToHL_BankA3", ROMX
+
 ; HL += 2 * A, with A doubled in 8 bits first (an A of $80 or more wraps); A is clobbered. This bank
 ; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
 ; source. (C2, E-0385)
@@ -59,6 +71,8 @@ AddDoubleAToHL_BankA3::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank A3 ActorOnLocalSide_BankA3", ROMX
 
 ; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise; but when wLinkMode is 1 and
 ; wLinkRole bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank
@@ -84,6 +98,8 @@ ActorOnLocalSide_BankA3::
     cp $04
     ret
 
+SECTION "Bank A3 TargetOnLocalSide_BankA3", ROMX
+
 ; Carry set when wBattleTarget is below 4, clear otherwise; but when wLinkMode is 1 and wLinkRole
 ; bit 1 is set the test is reversed (carry set for 4 or more). A is clobbered. This bank holds a
 ; copy of the shared block of battle helper routines; no call to this copy was found in the source.
@@ -108,6 +124,8 @@ TargetOnLocalSide_BankA3::
     cp $04
     ret
 
+SECTION "Bank A3 ClearBattleStatusBitsWithMaskD_BankA3", ROMX
+
 ; D = an index 0-6, E = a slot: ANDs the byte at wBattleStatus + 9 * E (status byte 0 of the slot)
 ; with ClearBitMaskTable_BankA3[D] ($DF, $FE, $00, $FD, $73, $EF, $BF). A, D, HL are clobbered. Not
 ; reached from the traced code (a configured code entry); no caller was found in the source. (C2,
@@ -126,6 +144,8 @@ ClearBattleStatusBitsWithMaskD_BankA3:: ; configured code entry (E-0205); C0
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank A3 ClearBitMaskTable_BankA3", ROMX
 
 ; the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 *
 ; E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks
@@ -153,6 +173,8 @@ SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A3 SetBit1OfLevelUpGainsIndexed_BankA3", ROMX
+
 ; A = an index: sets bit 1 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
 ; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
 ; source. (C2, E-0385)
@@ -166,6 +188,8 @@ SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A3 SetBit2OfLevelUpGainsIndexed_BankA3", ROMX
+
 ; A = an index: sets bit 2 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. This bank
 ; holds a copy of the shared block of battle helper routines; no call to this copy was found in the
 ; source. (C2, E-0385)
@@ -178,6 +202,8 @@ SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank A3 PersonalityIndexOfSlot_BankA3", ROMX
 
 ; A = a slot 0-7: returns A = 9 * g(wSlotPersonalityHi[slot]) + 3 * g(wSlotPersonalityMid[slot]) +
 ; g(wSlotPersonalityLo[slot]), where g(v) = 0 for $C0 or more, 1 for $40 to $BF and 2 below $40 (so
@@ -242,6 +268,8 @@ PersonalityIndexOfSlot_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A3 CheckSlotStatusBlockWide_BankA3", ROMX
+
 ; A = a slot: carry set when CheckSlotStatusBlock sets it (the slot is out, or a status bit it tests
 ; is set), or when bits 6-7 of status byte 3 or bits 2-3 of status byte 4 (wBattleStatus3 + 9 * A)
 ; are set; otherwise carry clear. A, BC, HL are kept. This bank holds a copy of the shared block of
@@ -275,6 +303,8 @@ CheckSlotStatusBlockWide_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A3 SlotHasStatus3Or4Bits_BankA3", ROMX
+
 ; A = a slot: A = status byte 3 of the slot (wBattleStatus3 + 9 * A) and $C0, or when that is 0
 ; status byte 4 and $0C; Z is set when both are clear. HL is kept. This bank holds a copy of the
 ; shared block of battle helper routines; no call to this copy was found in the source. (C2, E-0385)
@@ -295,6 +325,8 @@ SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank A3 RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3", ROMX
+
 ; Runs ActorFormationSlotToTemp0 (hTemp0 = the formation partner slot of wBattleActor), then sets
 ; the byte of wSlotMarks for that slot to 3. With no formation hTemp0 is $FF and the byte written is
 ; wSlotMarks + $FF, outside the 8 marks. Called by RunBattleActions_StatusChecks_PairRefusal,
@@ -310,6 +342,8 @@ RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3::
     add_a_to_hl
     ld [hl], $03
     ret
+
+SECTION "Bank A3 ActorFormationSlotToTemp0", ROMX
 
 ; hTemp0 = the formation partner slot of the actor wBattleActor. wFormationSlot0 (actors 0-3) or
 ; wFormationSlot1 (actors 4-7) holds the formation case 0-2 chosen by
@@ -351,6 +385,8 @@ ActorFormationSlotToTemp0::
     ldh [hTemp0], a
     pop bc
     ret
+
+SECTION "Bank A3 ActorFormationSlotToTemp0_Data", ROMX
 
 ; Three pairs of slot numbers, one pair per formation 0-2: (0,1), (0,2) and (1,2).
 ; ActorFormationSlotToTemp0 indexes it with 2 * the side formation byte (wFormationSlot0 for side 0
@@ -410,6 +446,8 @@ SaveActionChoicesAndPickFormations::
     call SaveActionChoicesAndPickFormations_ApplyFormation
     ld [wFormationSlot1], a
     ret
+
+SECTION "Bank A3 FindFormationForSide", ROMX
 
 ; DE = the three action words of one side (wBattleActionChoice or wBattleActionChoice + 8); the side
 ; is taken from wBattleActor bit 2 (hTemp0 = the first slot of the side, 0 or 4, is set first).
@@ -549,6 +587,8 @@ FindFormationForSide::
     ld a, $01
     ret
 
+SECTION "Bank A3 SlotHasStatus3Or4Bits_BankA3_2", ROMX
+
 ; A = a slot: A = status byte 3 of the slot (wBattleStatus3 + 9 * A) and $C0, or when that is 0
 ; status byte 4 and $0C; Z is set when both are clear. HL is kept. The second copy of this helper in
 ; the bank (the first is SlotHasStatus3Or4Bits_BankA3); called three times by FindFormationForSide.
@@ -569,6 +609,8 @@ SlotHasStatus3Or4Bits_BankA3_2::
 .done:
     pop hl
     ret
+
+SECTION "Bank A3 FormationTable", ROMX
 
 ; SaveActionChoicesAndPickFormations_ApplyFormation walks these 5-byte records until a 0 byte; a
 ; record applies when each slot of the side chose the given action and can act
@@ -854,6 +896,8 @@ FormationCompatibilityRoll::
     ld a, $01
     ret
 
+SECTION "Bank A3 FormationChanceFactors", ROMX
+
 ; the roll multiplies (matrix value + 1) * (the two slots' wSlotTrait sum) by
 ; FormationChanceFactors[action - $D0], divides by 10 and succeeds when a random 0-99 is below it
 ; (E-0172, C1)
@@ -984,6 +1028,8 @@ SaveActionChoicesAndPickFormations_ApplyFormation::
     ld a, $02
     ret
 
+SECTION "Bank A3 ActorActionIsD0ToE3", ROMX
+
 ; hTemp0 = 1 when the action chosen by the actor (the first byte of the word at wBattleActionChoice
 ; + 2 * wBattleActor) is $D0-$E3, else 0. $D0-$E3 are the combined actions that FormationTable
 ; records give. Far-called by RunBattleActions_StatusChecks_CheckAction_CheckMP, which then goes to
@@ -1008,6 +1054,8 @@ ActorActionIsD0ToE3::
     xor a
     ldh [hTemp0], a
     ret
+
+SECTION "Bank A3 PersonalityIndexOfSlot_BankA3_2", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[slot]) + 3 * g(wSlotPersonalityMid[slot]) +
 ; g(wSlotPersonalityLo[slot]), with g(v) = 0 for v >= $C0, 1 for v >= $40 and 2 below $40, so A is
@@ -1073,6 +1121,8 @@ PersonalityIndexOfSlot_BankA3_2::
     pop hl
     ret
 
+SECTION "Bank A3 RollRandomLoBelowChance_LoadActorChance", ROMX
+
 ; hTemp0 = the actor's resolve chance class, indexed by its monster id (the word at wBattleMonsterId
 ; + 2 * wBattleActor): from MonsterResolveChanceTable_Foes when wLinkMode is 0 or 2 and wBattleActor
 ; is 4 or more (a foe), otherwise from MonsterResolveChanceTable. Far-called by
@@ -1104,6 +1154,8 @@ RollRandomLoBelowChance_LoadActorChance::
     ld a, [hl]
     ldh [hTemp0], a
     ret
+
+SECTION "Bank A3 CancelTargetActionUnlessSpecial", ROMX
 
 ; Far-called by ResolveStepBranchOnAction_RemoveEffects_RevertForm right after it shows the text '0
 ; turned back to normal!'. Looks at the action chosen by the target (the word at wBattleActionChoice
@@ -1145,6 +1197,8 @@ CancelTargetActionUnlessSpecial::
     ld [hl], $03
     ret
 
+SECTION "Bank A3 RemoveCFromActionQueue_A3", ROMX
+
 ; C = a slot number: removes the first byte equal to C from the queue of 8 slots at wActionQueue and
 ; shifts the later bytes down one place; the byte after the queue (wActionQueue + 8) is shifted into
 ; the eighth place and then set to $FF. A value that is not in the queue changes nothing. DE is kept
@@ -1185,6 +1239,8 @@ RemoveCFromActionQueue_A3::
     jr nz, .loop
     pop de
     ret
+
+SECTION "Bank A3 PickDuckBehindAlly", ROMX
 
 ; Far-called by ResolveStepBegin to find the slot the target ducks behind (when C is not $FF the
 ; caller stores C in wDuckBehindSlot and shows battle text $33). Advances the random state
@@ -1243,6 +1299,8 @@ PickDuckBehindAlly::
     ld c, a
     ret
 
+SECTION "Bank A3 ActionEffect_Chance_PickEffect", ROMX
+
 ; Far-called by ActionEffect_Chance. Returns C = the action $B0-$BD at
 ; ActionEffect_Chance_PickEffect_Data[wRandomLo mod 14], after AdvanceRandom. With wLinkMode 0 and
 ; wBattleKind not 2, 3 or 5 a player-side actor (wBattleActor bit 2 clear) keeps the first pick and
@@ -1292,6 +1350,8 @@ ActionEffect_Chance_PickEffect::
     cp $b2
     jr z, ActionEffect_Chance_PickEffect
     ret
+
+SECTION "Bank A3 ActionEffect_Chance_PickEffect_Data", ROMX
 
 ; Fourteen bytes, the battle action ids ACTION_B0 to ACTION_BD in order ($B0-$BD).
 ; ActionEffect_Chance_PickEffect takes wRandomLo mod 14 (the remainder of DivideBByA) as the index
@@ -1360,6 +1420,8 @@ StoreBattleStateToPartyRecords_BankA3::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank A3 MonsterResolveChanceTable", ROMX
 
 ; RollRandomLoBelowChance_LoadActorChance reads the byte at $4B57 + the actor's wBattleMonsterId for
 ; the party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance

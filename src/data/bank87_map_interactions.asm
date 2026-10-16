@@ -1,7 +1,7 @@
 ; ROM bank $87: map interactions and steps
 ; The annotated listing of this bank is build/listing/bank87.asm.
 
-SECTION "Bank 87", ROMX[$4000], BANK[$87]
+SECTION "Bank 87", ROMX
     db $87
 
 ; Step triggers on maps, called each frame by FieldState_WalkATalks: returns while a text window is
@@ -125,6 +125,8 @@ FieldState_WalkATalks_RunStepTriggers::
     ld a, $0a
     add_a_to_hl
     jr .skip
+
+SECTION "Bank 87 MapStepTriggerTable", ROMX
 
 ; FieldState_StepChecks (CheckStepTriggerAndDispatchTalk), once per step (wStepTriggerFlag), reads
 ; the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose
@@ -858,6 +860,8 @@ CheckMapInteractionOnA_KeyWorldFloor::
     xor a
     ret
 
+SECTION "Bank 87 MapInteractionTable", ROMX
+
 ; CheckMapInteractionOnA reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to
 ; CheckMapInteractionOnA_SpriteSlots at $4709); its list of 10-byte entries ends with $FF; an entry
 ; matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map,
@@ -1157,6 +1161,8 @@ CheckMapInteractionOnA_SpriteSlots::
     pop hl
     ld a, c
     ret
+
+SECTION "Bank 87 MapInteractions00", ROMX
 
 ; list for entry $00 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,

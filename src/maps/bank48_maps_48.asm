@@ -1,7 +1,7 @@
 ; ROM bank $48: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank48.asm.
 
-SECTION "Bank 48", ROMX[$4000], BANK[$48]
+SECTION "Bank 48", ROMX
     db $48
 
 ; Eight background palettes of four little-endian BGR555 colors each ($40 bytes), the palette set of

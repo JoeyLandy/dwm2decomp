@@ -1,7 +1,7 @@
 ; ROM bank $33: link sessions; strings
 ; The annotated listing of this bank is build/listing/bank33.asm.
 
-SECTION "Bank 33", ROMX[$4000], BANK[$33]
+SECTION "Bank 33", ROMX
     db $33
 
 ; E = block number of ScreenBlockTable (D is overwritten with 0 and ignored). The record is a word
@@ -48,6 +48,8 @@ CopyBlockToTileBuffer::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 33 CopyBlockToTileBufferBlankingText", ROMX
 
 ; E = block number of ScreenBlockTable (D is overwritten with 0 and ignored): like
 ; CopyBlockToTileBuffer, but every tile from $15 to $A3 (the text glyphs) is written as the blank
@@ -99,6 +101,8 @@ CopyBlockToTileBufferBlankingText::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 33 ScreenBlockTable", ROMX
 
 ; CopyBlockToTileBuffer and CopyBlockToTileBufferBlankingText read the word at $405F + 2 * E and
 ; copy that record (word offset into wScreenTileBuffer, width, rows, tiles) into the screen buffer;
@@ -757,6 +761,8 @@ ExchangeJoypadAndDrawMonsters::
     farcall DrawRecordBufBSpeciesSprites
     ret
 
+SECTION "Bank 33 TeamMode_Screen", ROMX
+
 ; Link session 6's screen (Team Mode): before the menu starts, the fee steps by
 ; wTitleScreenSubState; afterwards, once no fade runs, the screen states (waiting, the list, the
 ; info screens, the swap menu and the record panels). (C1, E-0357)
@@ -824,6 +830,8 @@ TeamMode_Screen_DrawFrameAndName::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_DrawTeamGold", ROMX
+
 ; Team Mode, step 1: draws the gold and four numbers into the screen buffer and copies it to the BG
 ; map. (C1, E-0357)
 RunLinkSession6Exchange_DrawTeamGold::
@@ -841,6 +849,8 @@ RunLinkSession6Exchange_DrawTeamGold::
     inc [hl]
     ret
 
+SECTION "Bank 33 TeamMode_Screen_ShowForTeamMode1Hero", ROMX
+
 ; Team Mode, step 2: after the fade 'For Team Mode, 1000G is charged.' (category 5, string $19).
 ; (C1, E-0357)
 TeamMode_Screen_ShowForTeamMode1Hero::
@@ -854,6 +864,8 @@ TeamMode_Screen_ShowForTeamMode1Hero::
     xor a
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 33 TeamMode_Screen_ShowYourPalRefusedThe", ROMX
 
 ; Team Mode, step 3: the partner's refusal ($FE) gives 'Your pal refused the Team Mode.' ($0A); this
 ; side's no gives 'You refused the Team Mode.' ($09); otherwise below 1000 gold 'Not enough money.
@@ -923,6 +935,8 @@ TeamMode_Screen_ShowYourPalRefusedThe::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 33 TeamMode_PayFee", ROMX
+
 ; Team Mode, step 4: the partner's refusal as above; the partner's 1 gives 'You paid the 1000G
 ; battle fee.' (string 7); its $10 gives "Your pal doesn't have enough gold." (string 1) and the
 ; offer to pay for both (three steps on). (C1, E-0357)
@@ -967,6 +981,8 @@ TeamMode_PayFee::
     inc [hl]
     ret
 
+SECTION "Bank 33 TeamMode_Screen_StartChoosing", ROMX
+
 ; Team Mode fee step 5: clears wLinkSendByte and wLinkScreenFlag and moves to step 6
 ; (RunLinkSession6Exchange_ChooseTeamMonster, whose steps wLinkScreenFlag picks). Reached after 'You
 ; paid the 1000G battle fee.' (TeamMode_PayFee) and from TeamMode_ReturnToChoice, which sets step 5
@@ -979,6 +995,8 @@ TeamMode_Screen_StartChoosing::
     xor a
     ld [wLinkScreenFlag], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_ChooseTeamMonster", ROMX
 
 ; Step 6 of TeamMode_Screen (wTitleScreenSubState, wTitleScreenState 0), 'Choose a monster for the
 ; Team Mode.': runs the case of wLinkScreenFlag, 0 RunLinkSession6Exchange_ChooseTeamMonster_Clear,
@@ -1013,6 +1031,8 @@ RunLinkSession6Exchange_ChooseTeamMonster_Clear::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_ShowChooseAMonsterFor", ROMX
+
 ; Choosing the team monster, step 1: draws it and 'Choose a monster for the Team ...' (string 8).
 ; (C1, E-0357)
 RunLinkSession6Exchange_ShowChooseAMonsterFor::
@@ -1025,6 +1045,8 @@ RunLinkSession6Exchange_ShowChooseAMonsterFor::
     ld hl, wLinkScreenFlag
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_ChooseTeamMonster_Finish", ROMX
 
 ; Step 2 of RunLinkSession6Exchange_ChooseTeamMonster (wLinkScreenFlag 2): clears
 ; wTitleScreenSubState and wLinkScreenFlag, sets wTitleScreenState to 1 and wScreenState to 0, so
@@ -1040,6 +1062,8 @@ RunLinkSession6Exchange_ChooseTeamMonster_Finish::
     xor a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 33 TeamMode_Screen_ShowYouRefusedToPay", ROMX
 
 ; Team Mode, step 7 (paying for both): no gives 'You refused to pay the battle ...' (string 5, sends
 ; $40); below 1000 gold 'Insufficient gold for Team Mode.' (string 4, sends $30); otherwise pays
@@ -1095,6 +1119,8 @@ TeamMode_Screen_ShowYouRefusedToPay::
     inc [hl]
     ret
 
+SECTION "Bank 33 TeamMode_BackToChoose", ROMX
+
 ; Team Mode, step 8: the partner's refusal ends; on its $20 goes back two steps (to choosing the
 ; monster). (C1, E-0357)
 TeamMode_BackToChoose::
@@ -1119,6 +1145,8 @@ TeamMode_BackToChoose::
     ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
+
+SECTION "Bank 33 TeamMode_WaitPartner", ROMX
 
 ; Team Mode, step 9: the partner's refusal ends; on its $30 or $40 goes on. (C1, E-0357)
 TeamMode_WaitPartner::
@@ -1146,6 +1174,8 @@ TeamMode_WaitPartner::
     call BeginString_Bank07_Cat5
     ret
 
+SECTION "Bank 33 TeamMode_Screen_QuitUnpaid", ROMX
+
 ; Team Mode fee step 10: sends $FE (wLinkSendByte), sets wTitleScreenState to 1, clears
 ; wTitleScreenSubState and sets wScreenState to 2 (TeamMode_Screen_Leave). Reached from
 ; TeamMode_WaitPartner (step 9) when the partner answers $30 or $40, after this side could not or
@@ -1161,6 +1191,8 @@ TeamMode_Screen_QuitUnpaid::
     ld a, $02
     ld [wScreenState], a
     ret
+
+SECTION "Bank 33 TeamMode_Screen_ShowYourPalRefusedTo", ROMX
 
 ; Team Mode, step 11 (waiting for the partner who pays): its $10 or $30 gives 'Insufficient gold for
 ; Team Mode.', $20 'Your pal paid your battle fee.' (string 3), $40 'Your pal refused to pay the
@@ -1225,6 +1257,8 @@ TeamMode_Screen_ShowYourPalRefusedTo::
     call BeginString_Bank07_Cat5
     ret
 
+SECTION "Bank 33 TeamMode_ReturnToChoice", ROMX
+
 ; Team Mode, step 12: the partner's refusal ends; 0 or $20 returns to step 5. (C1, E-0357)
 TeamMode_ReturnToChoice::
     ld a, [wLinkMessage]
@@ -1251,6 +1285,8 @@ TeamMode_ReturnToChoice::
     call BeginString_Bank07_Cat5
     ret
 
+SECTION "Bank 33 TeamMode_GiveUp", ROMX
+
 ; Team Mode, step 13: on the partner's $10, $30, $40 or $FE gives up (sends $FE, screen state 2).
 ; (C2, E-0357; probed E-0380)
 TeamMode_GiveUp::
@@ -1275,6 +1311,8 @@ TeamMode_GiveUp::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 33 BeginString_Bank07_Cat5", ROMX
+
 ; A = string index: stores A in wStringIndex and 5 in wStringCategory, then far-calls
 ; BeginStringDisplay_Bank07, which starts printing that string. Category 5 of the bank $07 table
 ; holds the Team Mode and fee messages ('Please wait.' is index $0C, 'Your pal refused the Team
@@ -1287,6 +1325,8 @@ BeginString_Bank07_Cat5::
     farcall BeginStringDisplay_Bank07
     ret
 
+SECTION "Bank 33 TeamMode_Screen_Start", ROMX
+
 ; Team Mode screen state 0 (wScreenState 0 of TeamMode_Screen, set by
 ; RunLinkSession6Exchange_ChooseTeamMonster_Finish): moves to state 1
 ; (TeamMode_Screen_GoToPickAfterText). (C2, E-0372; probed E-0380)
@@ -1294,6 +1334,8 @@ TeamMode_Screen_Start::
     ld hl, wScreenState
     inc [hl]
     ret
+
+SECTION "Bank 33 TeamMode_Screen_GoToPickAfterText", ROMX
 
 ; Team Mode screen state 1: once wTextFlags is clear, adds 2 to wScreenState, passing over state 2
 ; (TeamMode_Screen_Leave) to state 3 (TeamMode_Screen_StartPick), which leads to the pick list. (C2,
@@ -1306,6 +1348,8 @@ TeamMode_Screen_GoToPickAfterText::
     inc [hl]
     inc [hl]
     ret
+
+SECTION "Bank 33 TeamMode_Screen_Leave", ROMX
 
 ; Session 6, screen state 2 (leaving): its five waiting steps. (C1, E-0357)
 TeamMode_Screen_Leave::
@@ -1331,6 +1375,8 @@ TeamMode_Screen_Leave_OnPartnerQuit::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 TeamMode_Screen_Leave_ShowPleaseWait", ROMX
+
 ; Leaving, step 1: after the text 'Please wait.'. (C1, E-0357)
 TeamMode_Screen_Leave_ShowPleaseWait::
     ld a, [wTextFlags]
@@ -1341,6 +1387,8 @@ TeamMode_Screen_Leave_ShowPleaseWait::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 TeamMode_Screen_Leave_SendReady", ROMX
 
 ; Step 2 of TeamMode_Screen_Leave: once wTextFlags is clear (after 'Please wait.'), sends 1
 ; (wLinkSendByte) and moves to step 3. (C2, E-0372; probed E-0380)
@@ -1354,6 +1402,8 @@ TeamMode_Screen_Leave_SendReady::
     inc [hl]
     ret
 
+SECTION "Bank 33 TeamMode_Screen_Leave_OnPartnerReady", ROMX
+
 ; Step 3 of TeamMode_Screen_Leave: waits until the partner's wLinkMessage is 1, then clears
 ; wLinkSendByte and moves to step 4. (C2, E-0372; probed E-0380)
 TeamMode_Screen_Leave_OnPartnerReady::
@@ -1365,6 +1415,8 @@ TeamMode_Screen_Leave_OnPartnerReady::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 TeamMode_Screen_Leave_ExitToTitleMenu", ROMX
 
 ; Step 4 of TeamMode_Screen_Leave: once wTextFlags bit 0 is clear, zeroes the $6F bytes from
 ; wScreenState, then writes wGameMode = 5, wModeState = 1, wWorldMapState = 0, wGameMode2Arg = 0 and
@@ -1396,12 +1448,16 @@ TeamMode_Screen_Leave_ExitToTitleMenu::
     inc [hl]
     ret
 
+SECTION "Bank 33 TeamMode_Screen_StartPick", ROMX
+
 ; Team Mode screen state 3: moves to state 4 (RunLinkSession6Exchange_Pick, the team pick list).
 ; (C2, E-0372; probed E-0380)
 TeamMode_Screen_StartPick::
     ld hl, wScreenState
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_Pick", ROMX
 
 ; Session 6, screen state 4 (picking the team monster): sixteen steps: the list, the panel, the
 ; cursor, 'Info / OK', waiting and the record exchange. (C1, E-0357)
@@ -1433,10 +1489,14 @@ RunLinkSession6Exchange_Pick_RunList::
     farcall BreedMenu
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_ListMonsters", ROMX
+
 ; Picking, step 2: lists the monsters that may be picked and draws the page indicator. (C1, E-0357)
 RunLinkSession6Exchange_Pick_ListMonsters::
     farcall DrawRecordListPageIndicators_1B
     ret
+
+SECTION "Bank 33 CallDrawListEntriesCell5RecordPanel", ROMX
 
 ; Far-calls DrawListEntriesCell5RecordPanel (bank $1B), which draws the family icon, level and sex
 ; mark of the record under the list cursor into the record panel and adds 1 to wScreenStep. It is
@@ -1447,6 +1507,8 @@ CallDrawListEntriesCell5RecordPanel::
     farcall DrawListEntriesCell5RecordPanel
     ret
 
+SECTION "Bank 33 CallClearAndDrawListEntriesCell5Name", ROMX
+
 ; Far-calls ClearAndDrawListEntriesCell5NameAtTiles1780 (bank $1B), which blanks 5 tiles at vTiles1
 ; + $780, draws the name of the record under the list cursor there and adds 1 to wScreenStep. It is
 ; step 5 of RunLinkSession6Exchange_Pick and is also called by
@@ -1455,6 +1517,8 @@ CallDrawListEntriesCell5RecordPanel::
 CallClearAndDrawListEntriesCell5Name::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_DrawInfoWindow", ROMX
 
 ; Copies the 10 x 11 info window PlayerWinLossWindow_TileRect (a name row of tiles $00-$04 over four
 ; labelled number rows) to wWindowTileBuffer + $6E (row 5, column 10) with
@@ -1474,6 +1538,8 @@ RunLinkSession6Exchange_DrawInfoWindow::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_MarkCursor", ROMX
 
 ; Picking, step 7: after the text marks the cursor, draws four numbers into the window and redraws,
 ; then clears the mark. (C1, E-0357)
@@ -1501,6 +1567,8 @@ RunLinkSession6Exchange_Pick_MarkCursor::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe", ROMX
 
 ; Picking, step 8: the partner's refusal gives 'Your pal refused the Team Mode.' (to leaving); the
 ; list cursor: a page change back seven steps, $FD back four, B 'You refused the Team Mode.' (to
@@ -1577,6 +1645,8 @@ RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe::
     call ShowStringA10_Bank33
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_ShowInfoOKYesN", ROMX
+
 ; Picking, step 9: after the text shows 'Info / OK' (bank-$1B string $1E) with sound $6C in its 8 x
 ; 5 box. (C1, E-0357)
 RunLinkSession6Exchange_Pick_ShowInfoOKYesN::
@@ -1614,6 +1684,8 @@ RunLinkSession6Exchange_Pick_ShowInfoOKYesN::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_InfoOKChoice", ROMX
 
 ; Picking, step 10: the partner's refusal as before; the Info / OK choice: B goes on; Info opens the
 ; stats screen (state $0C); OK records the pick and goes on two steps. (C1, E-0357)
@@ -1672,6 +1744,8 @@ RunLinkSession6Exchange_Pick_InfoOKChoice::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor", ROMX
+
 ; Picking, step 11: clears the five marks, redraws and asks 'Choose a monster for the Team ...'
 ; again (three steps back). (C1, E-0357)
 RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor::
@@ -1693,6 +1767,8 @@ RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_ShowPleaseWait", ROMX
+
 ; Picking, step 12: redraws, counts the pick, 'Please wait.' and finishes the picks
 ; (FinishPickedRecordsEntryAndStep_33). (C1, E-0357)
 RunLinkSession6Exchange_Pick_ShowPleaseWait::
@@ -1707,6 +1783,8 @@ RunLinkSession6Exchange_Pick_ShowPleaseWait::
     call ShowStringA10_Bank33
     call FinishPickedRecordsEntryAndStep_33
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_CopyRecord", ROMX
 
 ; Picking, step 13: copies the picked SRAM record into wRecordBufA for the exchange (into
 ; wRecordBufB), clears the link scene and sends 1. (C2, E-0357; probed E-0380)
@@ -1746,6 +1824,8 @@ RunLinkSession6Exchange_Pick_CopyRecord::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_StartExchange", ROMX
+
 ; Picking, step 14: on the partner's 1 starts the $A5-byte record exchange; on $FE 'Your pal refused
 ; the Team Mode.'. (C1, E-0357)
 RunLinkSession6Exchange_Pick_StartExchange::
@@ -1779,6 +1859,8 @@ RunLinkSession6Exchange_Pick_StartExchange::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_Pick_EndExchange", ROMX
+
 ; Step 15 of RunLinkSession6Exchange_Pick: waits for wLinkMessage $F0 (the end of the $A5-byte
 ; record exchange started in step 14), then increments wScreenState to 5
 ; (RunLinkSession6Exchange_FightInfo) and clears wScreenStep. (C2, E-0372; probed E-0380)
@@ -1791,6 +1873,8 @@ RunLinkSession6Exchange_Pick_EndExchange::
     xor a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo", ROMX
 
 ; Session 6, screen state 5 (the fight info): its eighteen steps. (C1, E-0357)
 RunLinkSession6Exchange_FightInfo::
@@ -1845,6 +1929,8 @@ CopyBBytesThenMark1::
     ld [de], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_SendReady", ROMX
+
 ; Step 1 of RunLinkSession6Exchange_FightInfo: sends 1 (wLinkSendByte) and moves to step 2, which
 ; waits for the partner's 1. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_SendReady::
@@ -1853,6 +1939,8 @@ RunLinkSession6Exchange_FightInfo_SendReady::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_StartExchange", ROMX
 
 ; Step 2 of RunLinkSession6Exchange_FightInfo: on the partner's 1, starts a 16-byte exchange: the
 ; word at wLinkTimeoutLo/Hi = wLinkRecvBuffer (where step 0 packed this side's four key bytes, the
@@ -1880,6 +1968,8 @@ RunLinkSession6Exchange_FightInfo_StartExchange::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_EndExchange", ROMX
+
 ; Step 3 of RunLinkSession6Exchange_FightInfo: waits for wLinkMessage $F0 (the 16-byte exchange of
 ; step 2 has ended), then clears wLinkSendByte and moves to step 4
 ; (RunLinkSession6Exchange_FightInfo_DrawWindow). (C2, E-0372; probed E-0380)
@@ -1892,6 +1982,8 @@ RunLinkSession6Exchange_FightInfo_EndExchange::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_DrawWindow", ROMX
 
 ; Fight info, step 4: draws the 10 x 11 info window with the partner's name and four numbers, 'Fight
 ; / Info / Ex' (bank-$1B string $20) in its 9 x 7 box and string 1 of category 1. (C1, E-0357)
@@ -1962,6 +2054,8 @@ RunLinkSession6Exchange_FightInfo_DrawWindow::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_AskBattle", ROMX
+
 ; Fight info, step 5: redraws and asks 'Battle in Team Mode?' (category 5, string $0D). (C1, E-0357)
 RunLinkSession6Exchange_FightInfo_AskBattle::
     call BGMapAddressAtScroll_Bank33
@@ -1975,6 +2069,8 @@ RunLinkSession6Exchange_FightInfo_AskBattle::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_Choice", ROMX
 
 ; Fight info, step 6: the partner's refusal ends; the three-way choice: Fight goes on, Info opens
 ; the partner's monster's stats (state $0D, keeping the list place), Ex or B 'You refused the Team
@@ -2048,6 +2144,8 @@ RunLinkSession6Exchange_FightInfo_Choice::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_RecordNotice", ROMX
+
 ; Fight info, step 7: copies $104 bytes from wWindowTileBuffer + $64 to wScreenTileBuffer, starts
 ; 'The battle results will be recorded.' (BeginString_Bank07_Cat5, string $0E), sets wLinkSendByte =
 ; 0 and goes on to step 8. (C1, E-0372)
@@ -2063,6 +2161,8 @@ RunLinkSession6Exchange_FightInfo_RecordNotice::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_ConfirmRecord", ROMX
 
 ; Step 8 of RunLinkSession6Exchange_FightInfo, the answer to 'The battle results will be recorded.'
 ; (step 7): on the partner's $FE goes to screen state 2 (TeamMode_Screen_Leave) with 'Your pal
@@ -2104,6 +2204,8 @@ RunLinkSession6Exchange_FightInfo_ConfirmRecord::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_ShowPleaseWait", ROMX
+
 ; Fight info, step 9: 'Please wait.'. (C1, E-0357)
 RunLinkSession6Exchange_FightInfo_ShowPleaseWait::
     ld hl, wScreenStep
@@ -2111,6 +2213,8 @@ RunLinkSession6Exchange_FightInfo_ShowPleaseWait::
     ld a, $0c ; 'Please wait.'
     call BeginString_Bank07_Cat5
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_ReadyToSave", ROMX
 
 ; Step 10 of RunLinkSession6Exchange_FightInfo: once wTextFlags is clear (after 'Please wait.', step
 ; 9), moves to step 11 and sends 1; step 11 (RunLinkSession6Exchange_FightInfo_SaveAnswer) starts
@@ -2124,6 +2228,8 @@ RunLinkSession6Exchange_FightInfo_ReadyToSave::
     ld a, $01
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_SaveAnswer", ROMX
 
 ; Fight info, step 11: on the partner's 1 'Saving... Please wait.' (string $1A); on $FE 'Your pal
 ; refused the Team Mode.'. (C1, E-0357)
@@ -2156,6 +2262,8 @@ RunLinkSession6Exchange_FightInfo_SaveAnswer::
     call BeginString_Bank07_Cat5
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_Save", ROMX
+
 ; Fight info, step 12: after the text checks the save (ReloadSaveBlocksWithChecksum, keeping the
 ; gold) and saves, then sends 5. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_FightInfo_Save::
@@ -2182,6 +2290,8 @@ RunLinkSession6Exchange_FightInfo_Save::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_KeepPartner", ROMX
+
 ; Fight info, step 13: on the partner's 5 keeps the partner's name (wLinkSeedCopy) and the picked
 ; record number. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_FightInfo_KeepPartner::
@@ -2205,6 +2315,8 @@ RunLinkSession6Exchange_FightInfo_KeepPartner::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_ExchangeSeed", ROMX
 
 ; Fight info, step 14: starts a 2-byte exchange of the random seed. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_FightInfo_ExchangeSeed::
@@ -2234,6 +2346,8 @@ RunLinkSession6Exchange_FightInfo_ExchangeSeed::
     ld a, $01
     ld [wLinkReady], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_SyncSeed", ROMX
 
 ; Step 15 of RunLinkSession6Exchange_FightInfo: waits for wLinkMessage $F0 (the 2-byte seed exchange
 ; of step 14 has ended), clears wLinkSendByte and wLinkReady, then makes both sides use one seed:
@@ -2268,6 +2382,8 @@ RunLinkSession6Exchange_FightInfo_SyncSeed::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_SendStart", ROMX
+
 ; Step 16 of RunLinkSession6Exchange_FightInfo: moves to step 17 and sends $D2 (wLinkSendByte); step
 ; 17 starts the battle when the partner's $D2 arrives. (C2, E-0372; probed E-0380)
 RunLinkSession6Exchange_FightInfo_SendStart::
@@ -2277,6 +2393,8 @@ RunLinkSession6Exchange_FightInfo_SendStart::
     ld a, $d2
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_FightInfo_StartLinkBattle", ROMX
 
 ; Step 17 of RunLinkSession6Exchange_FightInfo: on the partner's $D2 clears wLinkSendByte, sets
 ; wGameMode = 7 with wModeState, wWorldMapState and wGameMode2Arg cleared and wModeChangeRequest = 1
@@ -2306,6 +2424,8 @@ RunLinkSession6Exchange_FightInfo_StartLinkBattle::
     ld [wLinkMessage], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_RunStatsScreen", ROMX
+
 ; Session 6, screen states 6-12: runs the stats screen until its step $0A, then three states on.
 ; (C1, E-0357)
 RunLinkSession6Exchange_RunStatsScreen::
@@ -2321,6 +2441,8 @@ RunLinkSession6Exchange_RunStatsScreen::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_RunRecordScreens", ROMX
+
 ; Session 6, screen state 13: runs the record screens (RunScreenStateWhenNotFading_F1); back in
 ; state $0E restores the list place. (C1, E-0357)
 RunLinkSession6Exchange_RunRecordScreens::
@@ -2333,6 +2455,8 @@ RunLinkSession6Exchange_RunRecordScreens::
     ld a, [wItemGridY]
     ld [wListPageIndex], a
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromStats", ROMX
 
 ; Session 6, screen state 14 (back from the partner's stats): its eight steps. (C1, E-0357)
 RunLinkSession6Exchange_BackFromStats::
@@ -2376,6 +2500,8 @@ RunLinkSession6Exchange_BackFromStats_DrawInfo::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromStats_Delay", ROMX
+
 ; Steps 1 and 2 of RunLinkSession6Exchange_BackFromStats: each only increments wScreenStep, so the
 ; redraw waits two calls between drawing the info window (step 0) and the panel (step 3). (C2,
 ; E-0372; probed E-0380)
@@ -2383,6 +2509,8 @@ RunLinkSession6Exchange_BackFromStats_Delay::
     ld hl, wScreenStep
     inc [hl]
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromStats_DrawPanel", ROMX
 
 ; Back from stats, step 3: draws the picked monster's family icon, level and sex mark in its 13 x 2
 ; panel. (C1, E-0357)
@@ -2474,6 +2602,8 @@ RunLinkSession6Exchange_BackFromStats_DrawPanel::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_PickedPanelTileRect", ROMX
+
 ; A tile rectangle 13 wide and 2 rows high, 26 bytes. Row 0: frame $B6, $EA and $ED, blanks $C3,
 ; five name tiles $F8 to $FC, blank $C3, tile $C7 and frame $B7; row 1: the bottom frame $B3, $B4
 ; (11 times) and $B5. RunLinkSession6Exchange_BackFromStats_DrawPanel copies it to wWindowTileBuffer
@@ -2490,6 +2620,8 @@ RunLinkSession6Exchange_PickedPanelTileRect::
 RunLinkSession6Exchange_BackFromStats_DrawName::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromStats_DrawWindows", ROMX
 
 ; Back from stats, step 5: draws both info windows with their four numbers and the partner's name.
 ; (C1, E-0357)
@@ -2531,6 +2663,8 @@ RunLinkSession6Exchange_BackFromStats_DrawWindows::
     inc [hl]
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromStats_ShowChoices", ROMX
+
 ; Back from stats, step 6: shows 'Fight / Info / Ex' in its box with the cursor on Info. (C1,
 ; E-0357)
 RunLinkSession6Exchange_BackFromStats_ShowChoices::
@@ -2562,6 +2696,8 @@ RunLinkSession6Exchange_BackFromStats_ShowChoices::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromStats_Return", ROMX
+
 ; Back from stats, step 7: redraws, restores hide tile $70 and returns to the saved state and step.
 ; (C1, E-0357)
 RunLinkSession6Exchange_BackFromStats_Return::
@@ -2585,6 +2721,8 @@ RunLinkSession6Exchange_BackFromStats_Return::
     ld [wScreenStep], a
     call SetDefaultStringWindow_Bank33
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats", ROMX
 
 ; Session 6, screen state 15 (back from this side's stats): its eight steps. (C1, E-0357)
 RunLinkSession6Exchange_BackFromOwnStats::
@@ -2617,10 +2755,14 @@ RunLinkSession6Exchange_BackFromOwnStats_DrawBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats_DrawPanel", ROMX
+
 ; Back from this side's stats, step 3: draws the record panel. (C1, E-0357)
 RunLinkSession6Exchange_BackFromOwnStats_DrawPanel::
     call CallDrawListEntriesCell5RecordPanel
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats_ListPage", ROMX
 
 ; Back from this side's stats, step 1: lists the monsters that may be picked, clamps the page cursor
 ; of five and draws the page indicator. (C1, E-0357)
@@ -2645,6 +2787,8 @@ RunLinkSession6Exchange_BackFromOwnStats_ListPage::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats_DrawNames", ROMX
+
 ; Back from this side's stats, step 2: draws the page's names and marks the party members. (C1,
 ; E-0357)
 RunLinkSession6Exchange_BackFromOwnStats_DrawNames::
@@ -2654,15 +2798,21 @@ RunLinkSession6Exchange_BackFromOwnStats_DrawNames::
     farcall MarkPartyMembersInRecordListPage
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats_DrawName", ROMX
+
 ; Back from this side's stats, step 4: draws the cursor entry's name. (C1, E-0357)
 RunLinkSession6Exchange_BackFromOwnStats_DrawName::
     call CallClearAndDrawListEntriesCell5Name
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats_DrawInfo", ROMX
+
 ; Back from this side's stats, step 5: draws the info window. (C2, E-0357; probed E-0380)
 RunLinkSession6Exchange_BackFromOwnStats_DrawInfo::
     call RunLinkSession6Exchange_DrawInfoWindow
     ret
+
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats_AskPick", ROMX
 
 ; Back from this side's stats, step 6: shows 'Info / OK' and the pick question (bank-$1B string
 ; $12), the four numbers and the choice box. (C1, E-0357)
@@ -2702,6 +2852,8 @@ RunLinkSession6Exchange_BackFromOwnStats_AskPick::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 33 RunLinkSession6Exchange_BackFromOwnStats_Return", ROMX
+
 ; Back from this side's stats, step 7: redraws, restores hide tile $70 and returns to the saved
 ; state and step. (C1, E-0357)
 RunLinkSession6Exchange_BackFromOwnStats_Return::
@@ -2726,6 +2878,8 @@ RunLinkSession6Exchange_BackFromOwnStats_Return::
     call SetDefaultStringWindow_Bank33
     ret
 
+SECTION "Bank 33 LoadRecordByteForPickedRecords", ROMX
+
 ; C = field offset: enables SRAM, selects SRAM bank 0, loads field C of record number
 ; [wPickedRecords] (the first picked record) into hTemp0 with LoadSRAMRecordByte, then disables SRAM
 ; and selects bank 0 again. HL = wPickedRecords and A = 0 on return. No label or table in the source
@@ -2745,6 +2899,8 @@ LoadRecordByteForPickedRecords::
     ld [rRAMB], a
     ret
 
+SECTION "Bank 33 DrawBoxAndKeyRows", ROMX
+
 ; Copies the 8 x 5 tile rectangle DrawBoxAndKeyRows_TileRect to wWindowTileBuffer + $110
 ; (CopyRectTo20ByteRowsJp_Bank33), then draws the four numbers at wKeyNameBuf as two-digit tiles
 ; from wWindowTileBuffer + $B1, two rows apart (DrawFourTwoDigitNumbers); the fourth number lands on
@@ -2763,6 +2919,8 @@ DrawBoxAndKeyRows::
     ld hl, wWindowTileBuffer + $b1
     call DrawFourTwoDigitNumbers
     ret
+
+SECTION "Bank 33 ListAvailableRecordsForSelection_Bank33", ROMX
 
 ; Builds the pick list wListEntries from the first $1E stored records (sRecords, SRAM bank 0); the
 ; 30 bytes of wListEntries and of wListEntries2 are zeroed first. A record is listed when its
@@ -2891,6 +3049,8 @@ ListAvailableRecordsForSelection_Bank33::
     farcall MovePartyRecordsToFrontOfList
     ret
 
+SECTION "Bank 33 ShowStringA10_Bank33", ROMX
+
 ; A = string number minus $10: sets wStringIndex = A + $10 and wStringCategory = 0, then farcalls
 ; BeginStringDisplay_Bank1B to start showing that string of category 0 of bank $1B in the current
 ; text window. Callers pass A = $0C ('Please wait.') from
@@ -2904,6 +3064,8 @@ ShowStringA10_Bank33::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank1B
     ret
+
+SECTION "Bank 33 SetDefaultStringWindow_Bank33", ROMX
 
 ; Sets the text window for the next string: wTextWindowTileLo/Hi = vTiles1 ($8800), wTextWindowRows
 ; = 2 and wTextWindowWidth = $12, so BeginStringDisplay clears and fills 18 tiles per line for 2
@@ -2924,6 +3086,8 @@ SetDefaultStringWindow_Bank33::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 33 StoreListEntriesCell5RecordInPickedRecords", ROMX
+
 ; wPickedRecords (its first byte only) = the record index in the list cell under the cursor,
 ; wListEntries + 5 * wListPageIndex + wListCursor (SetArg5ToListEntriesCell5). Called by
 ; RunLinkSession6Exchange_Pick_ShowYourPalRefusedThe and RunLinkSession6Exchange_Pick_InfoOKChoice.
@@ -2939,6 +3103,8 @@ StoreListEntriesCell5RecordInPickedRecords::
     ld a, [hl]
     ld [de], a
     ret
+
+SECTION "Bank 33 CopyListEntriesCell5NameToTextBuf0_Bank33", ROMX
 
 ; Copies the name of the record in the list cell under the cursor (wListEntries + 5 * wListPageIndex
 ; + wListCursor) to wTextBuf0 so a message with <BUF0> shows it: with SRAM bank 0 enabled,
@@ -2977,6 +3143,8 @@ CopyListEntriesCell5NameToTextBuf0_Bank33::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 33 FinishPickedRecordsEntryAndStep_33", ROMX
+
 ; Closes the pick: wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4 (the RAM notes call
 ; 4 the end of the picks and $FF a finished pick), wScreenSubStep = 0 and wScreenStep += 1. Called
 ; by RunLinkSession6Exchange_Pick_ShowPleaseWait right after it incremented wPickCount. (C2, E-0380)
@@ -2995,6 +3163,8 @@ FinishPickedRecordsEntryAndStep_33::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 33 StoreBAtWordTableEntry_Bank33", ROMX
 
 ; HL = table of 16-bit addresses, A = index, B = tile number: stores B at the address held by entry
 ; A (the index is doubled in 8 bits, so it wraps above $7F); BC is kept, A, DE and HL are clobbered.
@@ -3015,6 +3185,8 @@ StoreBAtWordTableEntry_Bank33::
     ld a, b
     ld [de], a
     ret
+
+SECTION "Bank 33 BGMapAddressAtScroll_Bank33", ROMX
 
 ; HL = $9800 + (hScrollY AND $F8) * 4 + hScrollX / 8: the BG map address of the tile at the current
 ; scroll position (hScrollX, hScrollY); A and DE are clobbered (DE ends equal to HL). Called before
@@ -3051,6 +3223,8 @@ BGMapAddressAtScroll_Bank33::
     ld a, d
     ld h, a
     ret
+
+SECTION "Bank 33 DrawScreenBufferRectToBGMap_33", ROMX
 
 ; HL = BG map address, DE = offset into wScreenTileBuffer, B = width, C = rows: copies that
 ; rectangle of the screen buffer to the BG map at HL (CopyRectFromBankToBGMapWrapped) and sets
@@ -3121,6 +3295,8 @@ DrawScreenBufferRectToBGMap_33::
     ldh [c], a
     ret
 
+SECTION "Bank 33 CopyRectTo20ByteRowsJp_Bank33", ROMX
+
 ; DE = source, HL = destination, B = width, C = rows: copies the B x C rectangle from DE to HL with
 ; the destination rows 20 bytes ($14) apart; BC and HL are kept and DE ends just past the source.
 ; When wIsCGB is non-zero it then also fills the same B x C rectangle with 0 at HL + $0E68 (the
@@ -3189,6 +3365,8 @@ CopyRectTo20ByteRowsJp_Bank33::
     ld a, $00
     ldh [rSVBK], a
     ret
+
+SECTION "Bank 33 WriteGoldDigitsToScreenTileBufferRow1Col14", ROMX
 
 ; Writes the gold (wGoldLo, wGoldMid, wGoldHi) as up to five digit tiles ($E0 + digit) at
 ; wScreenTileBuffer + $22 to + $26, without leading zeros: a leading zero leaves its tile unchanged,
@@ -3266,6 +3444,8 @@ WriteGoldDigitsToScreenTileBufferRow1Col14::
     ld [hl], a
     ret
 
+SECTION "Bank 33 DrawFourTwoDigitNumbers", ROMX
+
 ; DE = four bytes, HL = tile buffer address: draws the four bytes at DE as four two-digit numbers
 ; with RunFourTimes_DrawTwoDigitByte, called three times and entered once more by falling into it;
 ; the numbers go to HL, HL + $28, HL + $50 and HL + $78 (two 20-byte rows apart). DE ends 4 bytes on
@@ -3310,6 +3490,8 @@ RunFourTimes_DrawTwoDigitByte::
     ld h, a
     ret
 
+SECTION "Bank 33 WriteC3AtWordTableEntries_Bank33", ROMX
+
 ; HL = table of 16-bit addresses, C = count: stores $C3 (a tile number) at the addresses held by
 ; entries 0 to C - 1; C = 0 still writes entry 0, because the loop tests the count after each write.
 ; Called by RunLinkSession6Exchange_Pick_ShowChooseAMonsterFor with C = 5 and
@@ -3343,6 +3525,8 @@ WriteC3AtWordTableEntries_Bank33::
     cp b
     jr c, .loop
     ret
+
+SECTION "Bank 33 DrawPlayerNameAndString0Category1", ROMX
 
 ; Draws the player name heading of the Team Mode window: blanks 5 tiles at vTiles2
 ; (FillTilesFromRequest), copies the 10 bytes of wPlayerName to wNameGlyphBuf with $F0 after them
@@ -3390,6 +3574,8 @@ DrawPlayerNameAndString0Category1::
     farcall ShowString_Bank07
     ret
 
+SECTION "Bank 33 StoreC5BEC6AtHLStride2_Bank33", ROMX
+
 ; HL = address: stores $C5 at HL, $BE at HL + 2 and $C6 at HL + 4 (three tile numbers two bytes
 ; apart) and leaves HL = the old HL + 4 and A = $C6. Called by
 ; RunLinkSession6Exchange_BackFromOwnStats_ListPage to draw three tiles of the page indicator at
@@ -3408,6 +3594,8 @@ StoreC5BEC6AtHLStride2_Bank33::
     ld a, $c6
     ld [hl], a
     ret
+
+SECTION "Bank 33 TeamModeGoldBox_TileRect", ROMX
 
 ; A tile rectangle 8 wide and 3 high, 24 bytes: a top frame ($B0, $B1 six times, $B2), a middle row
 ; $B6, $BF, six blanks $C3 and $B7, and a bottom frame ($B3, $B4 six times, $B5).
@@ -3546,6 +3734,8 @@ ShowString_Bank33::
     call BeginStringDisplay_Bank33
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 33 BeginStringDisplay_Bank33_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -3923,6 +4113,8 @@ ShowString_Bank33_2::
     call BeginStringDisplay_Bank33_2
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 33 BeginStringDisplay_Bank33_2_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

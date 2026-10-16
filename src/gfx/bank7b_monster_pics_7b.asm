@@ -1,7 +1,7 @@
 ; ROM bank $7B: compressed monster pictures and palettes
 ; The annotated listing of this bank is build/listing/bank7b.asm.
 
-SECTION "Bank 7B", ROMX[$4000], BANK[$7B]
+SECTION "Bank 7B", ROMX
     db $7b
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $17D (Dimensaur) (MonsterPictureTable /

@@ -1,7 +1,7 @@
 ; ROM bank $08: string tables: system text, monster, skill and item names
 ; The annotated listing of this bank is build/listing/bank08.asm.
 
-SECTION "Bank 08", ROMX[$4000], BANK[$08]
+SECTION "Bank 08", ROMX
     db $08
 
 ; Starts showing string wStringIndex of category wStringCategory: categories below 9 call
@@ -22,6 +22,8 @@ BeginStringDisplay_Bank08::
     call BeginStringDisplay
     ret
 
+SECTION "Bank 08 CopyStringToBuffer_Bank08", ROMX
+
 ; Copies string wStringIndex of category wStringCategory, with its $F0 end, to the address in
 ; wStringDestLo/wStringDestHi (CopyStringToBuffer, which also sets wStringBank): categories below 9
 ; from StringDatabase in this bank, 9 and above from bank $95 through
@@ -40,6 +42,8 @@ CopyStringToBuffer_Bank08::
     call CopyStringToBuffer
     ret
 
+SECTION "Bank 08 ShowString_Bank08", ROMX
+
 ; BeginStringDisplay_Bank08, then RunStringDisplayToEnd: draws a whole string of the bank $08 table
 ; (bank $95 for categories 9 and above) at once. Used by the debug menu, the pause menu, the library
 ; and the arena among others. (C1, E-0375)
@@ -48,6 +52,8 @@ ShowString_Bank08::
     call BeginStringDisplay_Bank08
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 08 StringDatabase", ROMX
 
 ; Nine words, each the pointer to the string list of one category 0-8: StringTable_System,
 ; StringTable_MonsterFamilies, StringTable_MonsterNames, StringTable_MonsterNames2,

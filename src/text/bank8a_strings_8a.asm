@@ -1,7 +1,7 @@
 ; ROM bank $8A: string tables
 ; The annotated listing of this bank is build/listing/bank8a.asm.
 
-SECTION "Bank 8A", ROMX[$4000], BANK[$8A]
+SECTION "Bank 8A", ROMX
     db $8a
 
 ; Starts the text printer on string wStringIndex of category wStringCategory from this bank: DE =

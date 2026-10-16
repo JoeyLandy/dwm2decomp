@@ -1,7 +1,7 @@
 ; ROM bank $6F: key-world map screens
 ; The annotated listing of this bank is build/listing/bank6f.asm.
 
-SECTION "Bank 6F", ROMX[$4000], BANK[$6F]
+SECTION "Bank 6F", ROMX
     db $6f
 
 ; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)

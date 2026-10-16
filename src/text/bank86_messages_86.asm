@@ -1,7 +1,7 @@
 ; ROM bank $86: messages
 ; The annotated listing of this bank is build/listing/bank86.asm.
 
-SECTION "Bank 86", ROMX[$4000], BANK[$86]
+SECTION "Bank 86", ROMX
     db $86
 
 ; Starts the text printer on string wStringIndex of category wStringCategory from this bank: DE =

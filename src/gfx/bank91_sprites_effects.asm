@@ -1,7 +1,7 @@
 ; ROM bank $91: monster sprites and battle effect graphics
 ; The annotated listing of this bank is build/listing/bank91.asm.
 
-SECTION "Bank 91", ROMX[$4000], BANK[$91]
+SECTION "Bank 91", ROMX
     db $91
 
 ; compressed sprite graphics of monster id $15F (DracoLord) (MonsterSpriteTable; the debug viewer

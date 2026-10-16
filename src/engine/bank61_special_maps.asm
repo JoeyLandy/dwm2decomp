@@ -1,7 +1,7 @@
 ; ROM bank $61: special maps, warps and map loading
 ; The annotated listing of this bank is build/listing/bank61.asm.
 
-SECTION "Bank 61", ROMX[$4000], BANK[$61]
+SECTION "Bank 61", ROMX
     db $61
 
 ; Sets wPartyStrength from the party. For each of the wPartyCount monsters (record numbers from
@@ -128,6 +128,8 @@ ComputePartyStrengthLevelPartyStrength::
 .set_party_strength:
     ld [wPartyStrength], a
     ret
+
+SECTION "Bank 61 ComputePartyStrengthForKey", ROMX
 
 ; Sets wPartyStrength for key generation. For each of the wPartyCount monsters it adds to a total in
 ; hTemp4/hTemp5 the value ((AGL + INT) / 2 + ATK + DEF + MAX HP + MAX MP) / 50, and to a second
@@ -371,6 +373,8 @@ ComputePartyStrengthForKey::
     ld [wPartyStrength], a
     ret
 
+SECTION "Bank 61 LoadMapHeaderByMapType", ROMX
+
 ; Loads the header of a special map (bit 7 of wMapType set); LoadMapHeader far-calls it. It jumps by
 ; wMapType & 7: 0 LoadKeyWorldTilesetAndHeader, 1 LoadMapHeaderByMapType_Type1, 2
 ; LoadMapHeaderByMapType_Type2, 3 and 4 LoadMapHeaderByMapType_Type3, 5
@@ -396,6 +400,8 @@ LoadMapHeaderByMapType_Type7::
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
+
+SECTION "Bank 61 LoadMapHeaderByMapType_Type6", ROMX
 
 ; Map type 6's header: special map record $50 or $51 by bit 0 of the floor's wKeyWorldFloorInfo byte
 ; 1, with C = 2 x bit 0 of its wKeyWorldFloorState byte 3. (C1, E-0357)
@@ -427,6 +433,8 @@ LoadMapHeaderByMapType_Type6::
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
+
+SECTION "Bank 61 LoadMapType5TilesetAndHeader", ROMX
 
 ; Map type 5 of LoadMapHeaderByMapType. Byte 2 of the wKeyWorldFloorState entry of wKeyWorldFloor
 ; (16 bytes each) picks a 6-byte record of MapType5TilesetTable: its first far pointer is
@@ -506,6 +514,8 @@ LoadMapType5TilesetAndHeader::
     ld a, $05
     ld [wMapMoveType], a
     ret
+
+SECTION "Bank 61 MapType5TilesetTable", ROMX
 
 ; LoadMapType5TilesetAndHeader indexes it with 6 * byte 2 of the floor's wKeyWorldFloorState entry,
 ; decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to
@@ -611,6 +621,8 @@ LoadMapHeaderByMapType_Type1::
     ld [wMapMoveType], a
     ret
 
+SECTION "Bank 61 LoadMapHeaderByMapType_Type2", ROMX
+
 ; Map type 2's header: special map record $61, or $62 for the floor's second half (wKeyWorldFloor
 ; bit 7), which is also kept in wKeyWorldSetting (0 or 1). (C1, E-0357)
 LoadMapHeaderByMapType_Type2::
@@ -629,6 +641,8 @@ LoadMapHeaderByMapType_Type2::
     call LoadSpecialMapHeader
     ret
 
+SECTION "Bank 61 LoadMapHeaderByMapType_Type3", ROMX
+
 ; Map type 3's header: the special map record numbered by the floor's wKeyWorldFloorState byte 0
 ; (without bit 7). (C1, E-0357)
 LoadMapHeaderByMapType_Type3::
@@ -641,6 +655,8 @@ LoadMapHeaderByMapType_Type3::
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
+
+SECTION "Bank 61 LoadKeyWorldTilesetAndHeader", ROMX
 
 ; Map type 0 (the key world) of LoadMapHeaderByMapType. wKeyWorldGoalKind picks a 6-byte record of
 ; KeyWorldTilesetTable: its first far pointer is decompressed to vTiles2 and, on a Game Boy Color,
@@ -746,6 +762,8 @@ LoadKeyWorldTilesetAndHeader::
 .return:
     ret
 
+SECTION "Bank 61 LoadKeyWorldTilesetAndHeader_Data", ROMX
+
 ; Ten bytes indexed by wKeyWorldGoalKind (0-9), each stored in wMapSpriteKind: $11, $11, $21, $11,
 ; $12, $12, $11, $11, $11, $31. LoadKeyWorldTilesetAndHeader also sets wMapTallTileMin to $29 when
 ; the low nibble is nonzero and wMapEventTile to $2C when the high nibble is nonzero, which every
@@ -776,6 +794,8 @@ LoadMapScreen_Type7::
     ldh [hTemp0], a
     call LoadSpecialMapScreen
     ret
+
+SECTION "Bank 61 LoadMapScreen_Type6", ROMX
 
 ; Map type 6's screen: from special map $50 or $51 (bit 0 of floor info byte 1), the variant from
 ; floor state byte 3 ($FF read as 0); then the door tiles when that byte is $FF or odd. (C1, E-0357)
@@ -823,6 +843,8 @@ LoadMapScreen_Type6::
 .call_draw_door_tiles_for_key_world_floor:
     call DrawDoorTilesForKeyWorldFloor
     ret
+
+SECTION "Bank 61 DrawDoorTilesForKeyWorldFloor", ROMX
 
 ; Writes a 2 x 2 tile block at wScreenTileBuffer + $AC: tiles $1A, $1B over $1E, $1F, or $1C, $1D
 ; over $1E, $1F when byte 3 of the wKeyWorldFloorState entry of wKeyWorldFloor (16 bytes each) is
@@ -889,6 +911,8 @@ DrawDoorTilesForKeyWorldFloor::
     ld a, $00
     ldh [rSVBK], a
     ret
+
+SECTION "Bank 61 LoadMapScreen_Type5", ROMX
 
 ; Map type 5's screen: the room for the floor and area from wKeyWorldRoomTable picks a room record
 ; in bank $72; decompresses the screen (hMapScreenX, hMapScreenY) into wScreenTileBuffer and, on
@@ -1006,6 +1030,8 @@ LoadMapScreen_Type5::
     call DrawKeyWorldExitTile
     call CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea
     ret
+
+SECTION "Bank 61 CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea", ROMX
 
 ; The floor state of wKeyWorldFloor holds two entries of 4 bytes at bytes 4-7 and 8-11 (byte 0 =
 ; area, byte 1 = a stored value, byte 2 = entry number B, byte 3 = a flag). For each entry whose
@@ -1235,6 +1261,8 @@ SetKeyWorldEntryTileOnScreen::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 61 LookupKeyWorldScreenSpotRecordsNibblePairForTemp0", ROMX
+
 ; Replaces hTemp0 (a spot number 0-7) by the packed pair of that spot: record n of
 ; KeyWorldScreenSpotRecords (16 bytes, 8 pairs of (X, Y) bytes), n = the wKeyWorldRoomTable byte at
 ; 2 x byte 1 of the wKeyWorldFloorState entry of wKeyWorldFloor + 2 x wKeyWorldArea; the result is
@@ -1284,6 +1312,8 @@ LookupKeyWorldScreenSpotRecordsNibblePairForTemp0::
     ldh [hTemp0], a
     pop hl
     ret
+
+SECTION "Bank 61 DrawKeyWorldExitTile", ROMX
 
 ; Draws the exit or stairs block of a room screen. The kind is byte 1 of the wKeyWorldFloorInfo
 ; entry of wKeyWorldFloor (kept in hTemp0). The wKeyWorldRoomTable byte at 1 + 2 x byte 1 of the
@@ -1420,6 +1450,8 @@ DrawKeyWorldExitTile::
     ld a, $00
     ldh [rSVBK], a
     ret
+
+SECTION "Bank 61 DrawKeyWorldExitTile_Data", ROMX
 
 ; Six screen positions packed as screen X in the high nibble and screen Y in the low nibble: $00
 ; (0,0), $30 (3,0), $11 (1,1), $22 (2,2), $03 (0,3) and $33 (3,3). DrawKeyWorldExitTile uses a
@@ -1661,6 +1693,8 @@ LoadMapScreen_Type2::
     call LoadSpecialMapScreen
     ret
 
+SECTION "Bank 61 LoadMapScreen_Type3", ROMX
+
 ; Map types 3 and 4's screen: from the special map numbered by floor state byte 0 (without bit 7).
 ; (C1, E-0357)
 LoadMapScreen_Type3::
@@ -1673,6 +1707,8 @@ LoadMapScreen_Type3::
     ldh [hTemp0], a
     call LoadSpecialMapScreen
     ret
+
+SECTION "Bank 61 LoadMapScreen_Type0", ROMX
 
 ; Map type 0's screen (the key world's overworld): finds the chunk for the screen in wKeyWorldChunks
 ; (screens in blocks of 4 x 4), reads the screen's far pointer (3 bytes per screen, 12 per row) and
@@ -1785,6 +1821,8 @@ LoadMapScreen_Type0::
     call DrawKeyWorldFloorInfo3ObjectTilesForScreen
     call DrawKeyWorldGoalAtScreen
     ret
+
+SECTION "Bank 61 DrawKeyWorldGoalAtScreen", ROMX
 
 ; On a key world map (wMapType $80) draws the goal as a 2 x 2 tile block $46, $47 over $56, $57. If
 ; wKeyWorldActive is set and wKeyWorldKey has bit 7 set with its low 7 bits equal to wKeyWorldSlot,
@@ -1921,6 +1959,8 @@ DrawKeyWorldGoalAtScreen::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 61 DrawKeyWorldAreaExitTilesForScreen", ROMX
+
 ; Walks the area exit list wKeyWorldAreaExits (4-byte entries; it starts at wKeyWorldObjects, byte 3
 ; of the first entry, and stops at an $FF in byte 3). For the first entry one of whose two cells
 ; (bytes 0 and 1, X in the high nibble) is the current screen it writes a 2 x 2 tile block at
@@ -2027,6 +2067,8 @@ DrawKeyWorldAreaExitTilesForScreen::
 
 .return:
     ret
+
+SECTION "Bank 61 DrawKeyWorldFloorInfo3ObjectTilesForScreen", ROMX
 
 ; Walks the wKeyWorldFloorInfo entries (4 bytes each, $FF in byte 3 ends the list). For the first
 ; entry whose cell (byte 0, X in the high nibble) is the current screen it draws by kind (byte 1) at
@@ -2166,6 +2208,8 @@ DrawKeyWorldFloorInfo3ObjectTilesForScreen::
 .return:
     ret
 
+SECTION "Bank 61 Write2x2TileBlockAtDE", ROMX
+
 ; A = first tile, DE = a tile buffer address (rows of 20 tiles). Writes A and A + 1 at DE and DE + 1
 ; and A + $10 and A + $11 at DE + 20 and DE + 21. DE ends at DE + 21 and A at the last tile (A +
 ; $11). (C2, E-0384)
@@ -2189,6 +2233,8 @@ Write2x2TileBlockAtDE::
     inc a
     ld [de], a
     ret
+
+SECTION "Bank 61 Write4x2TileBlockAtDE", ROMX
 
 ; A = first tile, DE = a tile buffer address (rows of 20 tiles). Writes A to A + 3 at DE to DE + 3
 ; and A + 4 to A + 7 at DE + 20 to DE + 23. DE ends at DE + 23 and A at A + 7. (C2, E-0384)
@@ -2225,6 +2271,8 @@ Write4x2TileBlockAtDE::
     ld [de], a
     ret
 
+SECTION "Bank 61 Write2x2SameTileAtDE", ROMX
+
 ; A = a tile or attribute value, DE = a buffer address (rows of 20). Writes A at DE, DE + 1, DE + 20
 ; and DE + 21. DE ends at DE + 21 and A is kept. (C2, E-0384)
 ; writes tile A to two cells at DE and two cells one 20-tile row below (E-0125)
@@ -2245,6 +2293,8 @@ Write2x2SameTileAtDE::
     inc de
     ld [de], a
     ret
+
+SECTION "Bank 61 KeyWorldTilesetTable", ROMX
 
 ; LoadKeyWorldTilesetAndHeader indexes it with 6 * wKeyWorldGoalKind, decompresses the first far
 ; pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; all 10 tile
@@ -2293,10 +2343,14 @@ CheckWarpAtPlayer_NoWarp::
     ld c, $00
     ret
 
+SECTION "Bank 61 CheckWarpAtPlayer_Type1", ROMX
+
 ; Map type 1: no warp here (C = 0). (C2, E-0357; probed E-0384)
 CheckWarpAtPlayer_Type1::
     ld c, $00
     ret
+
+SECTION "Bank 61 CheckWarpAtPlayer_AreaExit", ROMX
 
 ; Map type 2: warps by the floor's area exit on screen row 1
 ; (WarpByKeyWorldAreaExitsEntryAtScreenRow1). (C1, E-0357)
@@ -2304,15 +2358,21 @@ CheckWarpAtPlayer_AreaExit::
     call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
+SECTION "Bank 61 CheckWarpAtPlayer_WarpList", ROMX
+
 ; Map type 3: the floor's warp list (CheckKeyWorldWarpTable). (C1, E-0357)
 CheckWarpAtPlayer_WarpList::
     call CheckKeyWorldWarpTable
     ret
 
+SECTION "Bank 61 CheckWarpAtPlayer_SpecialMap_Type4", ROMX
+
 ; Map type 4: on screen row 1 warps to screen (0, 1) (WarpToScreen01Event83). (C1, E-0357)
 CheckWarpAtPlayer_SpecialMap_Type4::
     call WarpToScreen01Event83
     ret
+
+SECTION "Bank 61 CheckWarpAtPlayer_FloorInfoExit", ROMX
 
 ; Map type 5: the exit from screen (1, 4) of area 0 (WarpByKeyWorldFloorInfo1EntryAtScreen14). (C1,
 ; E-0357)
@@ -2320,11 +2380,15 @@ CheckWarpAtPlayer_FloorInfoExit::
     call WarpByKeyWorldFloorInfo1EntryAtScreen14
     ret
 
+SECTION "Bank 61 CheckWarpAtPlayer_LinkedMap", ROMX
+
 ; Map type 7: on screen row 1 warps to the linked map (CheckWarpAtPlayer_LinkedMap_ScreenRow1). (C1,
 ; E-0357)
 CheckWarpAtPlayer_LinkedMap::
     call CheckWarpAtPlayer_LinkedMap_ScreenRow1
     ret
+
+SECTION "Bank 61 CheckWarpAtPlayer_LinkedMap_ScreenRow1", ROMX
 
 ; Map type 7 of CheckWarpAtPlayer_SpecialMap. C = 0 (no warp) unless hMapScreenY is 1, in which case
 ; it far-calls WarpToLinkedMapForCurrentMap and returns with the C of that routine. (C1, E-0384)
@@ -2341,6 +2405,8 @@ CheckWarpAtPlayer_LinkedMap_ScreenRow1::
 .call_warp_to_linked_map_for_current_map:
     farcall WarpToLinkedMapForCurrentMap
     ret
+
+SECTION "Bank 61 WarpByKeyWorldFloorInfo1EntryAtScreen14", ROMX
 
 ; Map type 5 of CheckWarpAtPlayer_SpecialMap. Only when wKeyWorldArea is 0, byte 1 of the
 ; wKeyWorldFloorInfo entry of wKeyWorldFloor is 5 and the player is on screen (1, 4) does it warp:
@@ -2404,6 +2470,8 @@ WarpByKeyWorldFloorInfo1EntryAtScreen14::
     ld c, $01
     ret
 
+SECTION "Bank 61 WarpToScreen01Event83", ROMX
+
 ; Map type 4 of CheckWarpAtPlayer_SpecialMap. On screen row 1 (hMapScreenY = 1) it warps to screen
 ; (0, 1): hMapScreenX = 0, wWarpDestX $40, wWarpDestY $38, wWarpDestFacing $FF, byte 1 of the floor
 ; state entry of wKeyWorldFloor is copied to its byte 0, sound $60, wMapType = $83, StartPaletteFade
@@ -2452,6 +2520,8 @@ WarpToScreen01Event83::
     ld [wFieldTransitionKind], a
     ld c, $01
     ret
+
+SECTION "Bank 61 WarpByKeyWorldAreaExitsEntryAtScreenRow1", ROMX
 
 ; Map type 2 of CheckWarpAtPlayer_SpecialMap. On screen row 1 (hMapScreenY = 1) it warps to the
 ; screen named by the area exit list: byte 0 (or byte 1 when bit 7 of wKeyWorldFloor is set) of
@@ -2511,6 +2581,8 @@ WarpByKeyWorldAreaExitsEntryAtScreenRow1::
     ld [wFieldTransitionKind], a
     ld c, $01
     ret
+
+SECTION "Bank 61 CheckKeyWorldWarpTable", ROMX
 
 ; Map type 3 of CheckWarpAtPlayer_SpecialMap. The warp list is the word of KeyWorldWarpListTable at
 ; index (byte 0 of the floor state entry of wKeyWorldFloor) & $7F; its entries are 9 bytes and a
@@ -2639,6 +2711,8 @@ CheckKeyWorldWarpTable::
     ld c, $01
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType", ROMX
+
 ; Per-step warp check for special maps (bit 7 of wMapType set), called through
 ; CheckWarpsAtPlayerPosition. It jumps by wMapType & 7: 0 CheckWarpsByMapType_RunThreeWarpChecks, 1
 ; CheckWarpsByMapType_Type1, 2 CheckWarpsByMapType_Type2, 3 CheckWarpsByMapType_Type3, 5
@@ -2665,6 +2739,8 @@ CheckWarpsByMapType::
 CheckWarpsByMapType_NoWarps::
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_RunThreeWarpChecks", ROMX
+
 ; Map type 0 (the key world) of CheckWarpsByMapType. Calls CheckWarpsByMapType_KeyWorldGoalWarp,
 ; then CheckWarpsByMapType_KeyWorldObjects, then CheckWarpsByMapType_FloorEntrances, and returns at
 ; the first one that returns A non-zero (A = 0 after all three). (C1, E-0384)
@@ -2683,10 +2759,14 @@ CheckWarpsByMapType_RunThreeWarpChecks::
     ret nz
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_Type1", ROMX
+
 ; Key-world warps, map type 1: nothing (CheckWarpsByMapType_Type1_Stub). (C2, E-0357; probed E-0384)
 CheckWarpsByMapType_Type1::
     call CheckWarpsByMapType_Type1_Stub
     ret
+
+SECTION "Bank 61 CheckWarpsByMapType_Type2", ROMX
 
 ; Key-world warps, map type 2: the floor toggle (CheckWarpsByMapType_FloorToggle). (C2, E-0357;
 ; probed E-0384)
@@ -2694,21 +2774,29 @@ CheckWarpsByMapType_Type2::
     call CheckWarpsByMapType_FloorToggle
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_Type3", ROMX
+
 ; Key-world warps, map type 3: the floor's warp list (CheckWarpsByMapType_FloorWarpList). (C1,
 ; E-0357)
 CheckWarpsByMapType_Type3::
     call CheckWarpsByMapType_FloorWarpList
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_Type5", ROMX
+
 ; Key-world warps, map type 5: the room exits (CheckWarpsByMapType_RoomExits). (C1, E-0357)
 CheckWarpsByMapType_Type5::
     call CheckWarpsByMapType_RoomExits
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_Type6", ROMX
+
 ; Key-world warps, map type 6: back to the rooms (CheckWarpsByMapType_BackOneArea). (C1, E-0357)
 CheckWarpsByMapType_Type6::
     call CheckWarpsByMapType_BackOneArea
     ret
+
+SECTION "Bank 61 CheckWarpsByMapType_BackOneArea", ROMX
 
 ; Standing at ($40, $40): goes back one area (wKeyWorldArea - 1) to the room screen that the room
 ; table entry's high nibble gives through the position table; warps to ($40, $40) facing down as map
@@ -2785,6 +2873,8 @@ CheckWarpsByMapType_BackOneArea::
     ld [wFieldTransitionKind], a
     ld c, $01
     ret
+
+SECTION "Bank 61 CheckWarpsByMapType_BackOneArea_Data", ROMX
 
 ; Six screen positions packed as screen X in the high nibble and screen Y in the low nibble: $00,
 ; $30, $11, $22, $03, $33. CheckWarpsByMapType_BackOneArea indexes it with the high nibble of the
@@ -3010,6 +3100,8 @@ CheckWarpsByMapType_RoomExits::
     ld c, $01
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_RoomExits_Data", ROMX
+
 ; Six screen positions packed as screen X in the high nibble and screen Y in the low nibble: $00
 ; (0,0), $30 (3,0), $11 (1,1), $22 (2,2), $03 (0,3) and $33 (3,3), the same six bytes as
 ; DrawKeyWorldExitTile_Data. CheckWarpsByMapType_RoomExits indexes it with the low nibble ($F means
@@ -3062,6 +3154,8 @@ CheckWarpsByMapType_FloorToggle::
     ld a, $01
     ld [wFieldTransitionKind], a
     ret
+
+SECTION "Bank 61 CheckWarpsByMapType_FloorWarpList", ROMX
 
 ; Walks the floor's warp list (KeyWorldWarpListTable by floor state byte 0; 9-byte entries, $80
 ; ends): an entry whose screen and position match the player (and no warp is running, bit 7) warps;
@@ -3198,11 +3292,15 @@ CheckWarpsByMapType_FloorWarpList::
     ld c, $00
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_Type1_Stub", ROMX
+
 ; A bare ret. CheckWarpsByMapType_Type1 calls it, so map type 1 has no warp check. (C2, E-0384)
 ; a bare ret (E-0116) (E-0344: the address in its name dropped or read as the label there; was
 ; CheckWarpsByMapType_Type1_Stub)
 CheckWarpsByMapType_Type1_Stub::
     ret
+
+SECTION "Bank 61 CheckWarpsByMapType_FloorEntrances", ROMX
 
 ; The floor entrances in wKeyWorldFloorInfo ($FF ends): when the player stands on an entrance's
 ; screen at tile (4 or 5, 4), or (4, 4) for kinds 4 and 5, and no warp is running, kinds 4 and 5
@@ -3571,6 +3669,8 @@ CheckWarpsByMapType_KeyWorldGoalWarp::
     ld a, $01
     ret
 
+SECTION "Bank 61 CheckWarpsByMapType_KeyWorldObjects", ROMX
+
 ; The key-world objects: when the player stands at the middle of an object's screen (tile (4, 4))
 ; and no warp is running, warps to ($40, $40) with sound $60, a fade and the field transition; an
 ; object whose byte is 0 enters its floor (numbered by its place in wKeyWorldObjects) as map type
@@ -3842,6 +3942,8 @@ KeyWorldAreaEncounterIndex::
     pop de
     pop hl
     ret
+
+SECTION "Bank 61 SpecialMapTable", ROMX
 
 ; LoadSpecialMapHeader and LoadSpecialMapScreen map bank $61 and read the word $60D8 + 2 * hTemp0;
 ; every non-zero word is $61D8 + 26 * n (E-0144, C1)

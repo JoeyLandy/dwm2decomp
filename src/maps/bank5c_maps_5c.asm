@@ -1,7 +1,7 @@
 ; ROM bank $5C: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank5c.asm.
 
-SECTION "Bank 5C", ROMX[$4000], BANK[$5C]
+SECTION "Bank 5C", ROMX
     db $5c
 
 ; compressed tileset of map $C8 (the first map record using it)

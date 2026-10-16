@@ -1,7 +1,7 @@
 ; ROM bank $04: field events: chests, vases and barrels, key-world events, Yold talk
 ; The annotated listing of this bank is build/listing/bank04.asm.
 
-SECTION "Bank 04", ROMX[$4000], BANK[$04]
+SECTION "Bank 04", ROMX
     db $04
 
 ; The sprite work shared by the field states: AdvancePlayerAnimCounterAndRunPlayerSpriteMode (the
@@ -14,6 +14,8 @@ FieldStateCommonUpdate::
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode
     call UpdateAndDrawSpriteSlots
     ret
+
+SECTION "Bank 04 RestoreSpriteSnapshot", ROMX
 
 ; When wSaveStateFlag bit 7 is set: clears wSaveStateFlag, sets wSpriteSlotCount =
 ; wSpriteSnapshotCount and copies the $50 bytes at wSpriteSnapshot to wSpriteSlots (the first five
@@ -36,6 +38,8 @@ RestoreSpriteSnapshot::
     ld bc, $0050
     call CopyBytes
     ret
+
+SECTION "Bank 04 SetupKeyWorldObjectsForMapType", ROMX
 
 ; Called by LoadMapObjectsForScreen on a special map (wMapType bit 7). Clears wKeyWorldObjFlag and,
 ; by wMapType & 7, picks an entry of KeyWorldObjectGridTable and the source of the object graphics
@@ -199,6 +203,8 @@ SetupKeyWorldObjectsForMapType::
     add_a_to_hl
     call SetupKeyWorldObjectsForMapType_LoadObjects
     ret
+
+SECTION "Bank 04 SetupKeyWorldObjectsForMapType_LoadObjects", ROMX
 
 ; Loads the objects of the current key-world screen into the sprite slots: from the floor's table of
 ; per-screen pointers (indexed by hMapScreenY * width + hMapScreenX), the screen's object list gives
@@ -418,6 +424,8 @@ SetupKeyWorldObjectsForMapType_LoadObjects::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+SECTION "Bank 04 KeyWorldGoalGraphicsTable", ROMX
+
 ; SetupKeyWorldObjectsForMapType_LoadObjects, for an object whose graphics number (hTemp0) is below
 ; 9 and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 +
 ; wKeyWorldGoalKind; 9 rows end at the code at $42CD (E-0221, C1)
@@ -487,6 +495,8 @@ SetupKeyWorldObjectsForMapType_PlaceFirstSlot::
     ld a, $03
     ld [wSpriteSlots + $7], a
     ret
+
+SECTION "Bank 04 DecompressGraphicsTemp0ToTemp4", ROMX
 
 ; hTemp0/1 is a little-endian graphics id, hTemp4/5 the VRAM destination and hTemp3 the object
 ; palette slot. With hTemp2=0, index the three-byte MonsterSpriteTable by 3*id for pointer/bank;
@@ -599,6 +609,8 @@ DecompressGraphicsTemp0ToTemp4::
     ld c, $08
     call CopyFromBank
     ret
+
+SECTION "Bank 04 FieldSpriteGraphicsTable", ROMX
 
 ; DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero reads the word $43AC + 2 * hTemp0/7 in bank
 ; $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode
@@ -739,6 +751,8 @@ FreezeFieldAnimation::
     ld [wObject4 + OBJ_FLAGS], a
     ret
 
+SECTION "Bank 04 ResumeFieldAnimation", ROMX
+
 ; Clears bit 1 of hPlayerStateFlags and of OBJ_FLAGS of sprite slots 0-4 (wSpriteSlots and
 ; wObject1-wObject4), keeping their other bits, so the player animation counter and the object
 ; timers run again; the counterpart of FreezeFieldAnimation, far-called by fifteen scenes and menus.
@@ -765,6 +779,8 @@ ResumeFieldAnimation::
     and $fd
     ld [wObject4 + OBJ_FLAGS], a
     ret
+
+SECTION "Bank 04 UpdateAndDrawSpriteSlots", ROMX
 
 ; Returns at once when wFieldActionRequest bit 7 is set or wSpriteSlotCount is 0. Otherwise runs
 ; UpdateSpriteSlots, then draws each of the wSpriteSlotCount 16-byte slots: hSpriteAttrXor =
@@ -878,6 +894,8 @@ UpdateAndDrawSpriteSlots::
     jp nz, .loop
     ret
 
+SECTION "Bank 04 UpdateSpriteSlots", ROMX
+
 ; Runs the update of each of the wSpriteSlotCount 16-byte slots from wSpriteSlots: B = count, HL =
 ; wSpriteSlots, then falls into UpdateSpriteSlots_RunSlot, which dispatches on slot byte 0 (0 still,
 ; 1 no handler, 2 wander left and right, 3 wander in four directions, 4 and 5 frame sequences). A
@@ -914,6 +932,8 @@ UpdateSpriteSlots_NextSlot::
     dec b
     jr nz, UpdateSpriteSlots_RunSlot
     ret
+
+SECTION "Bank 04 UpdateSpriteSlots_Still", ROMX
 
 ; Sprite slot type 0, a still object: unless its flags (slot byte $0D) have bit 1 set, counts its
 ; animation timer up; then picks its animation frame. (C2, E-0357; probed E-0374)
@@ -1004,6 +1024,8 @@ UpdateSpriteSlots_PickFrame::
     dec b
     jp nz, UpdateSpriteSlots_RunSlot
     ret
+
+SECTION "Bank 04 UpdateSpriteSlots_Wander", ROMX
 
 ; Sprite slot type 2, an object that wanders left and right. Unless OBJ_FLAGS bit 1 is set it counts
 ; its timer (slot byte 9). While a move runs (move byte $A bit 7) it steps one pixel, left (OBJ_X -
@@ -1195,11 +1217,15 @@ UpdateSpriteSlots_Wander::
     ld a, [hl]
     jp UpdateSpriteSlots_PickFrame
 
+SECTION "Bank 04 UpdateSpriteSlots_NoHandler", ROMX
+
 ; Sprite slot type 1: a bare ret. UpdateSpriteSlots_RunSlot pushes BC and the slot pointer twice
 ; before the jump table (rst $00 consumes its own return address), so this ret would jump to the
 ; slot's own address in wSpriteSlots instead of returning to the loop. (C2, E-0369; probed E-0375)
 UpdateSpriteSlots_NoHandler::
     ret
+
+SECTION "Bank 04 UpdateSpriteSlots_WanderFourWays", ROMX
 
 ; Sprite slot type 3, an object that wanders in four directions. Unless OBJ_FLAGS bit 1 is set it
 ; counts its timer (slot byte 9). While a move runs (move byte $A bit 7) it steps one pixel in the
@@ -1457,6 +1483,8 @@ UpdateSpriteSlots_WanderFourWays::
     ld a, [hl]
     jp UpdateSpriteSlots_PickFrame
 
+SECTION "Bank 04 IsCellBlockedByFieldEventKind", ROMX
+
 ; B = pixel X, C = pixel Y: the blocked-cell test of the four-way wandering objects
 ; (UpdateSpriteSlots_WanderFourWays). While the pending field event kind (wPendingFieldEvent & $0F)
 ; is $0A it returns IsCellBlockedByFieldEventKind_IsCellTall (A = 1 when all four tiles under the
@@ -1476,6 +1504,8 @@ IsCellBlockedByFieldEventKind::
     call IsCellBlockedByFieldEventKind_IsCellTall
     ret
 
+SECTION "Bank 04 UpdateSpriteSlots_FrameLoopType4", ROMX
+
 ; Sprite slot type 4: hTemp0/hTemp1 = UpdateSpriteSlots_FrameLoopType4_Data and on to
 ; UpdateSpriteSlots_StepFrameLoop, which plays it as a looping list of (frame, frames to hold) pairs
 ; into OBJ_SUBINDEX: frames 0, 3, 4, 5 twice ($E or $A frames each), then 0, 1, 2, 1, 2, 0, 6, 7, 6.
@@ -1487,6 +1517,8 @@ UpdateSpriteSlots_FrameLoopType4::
     ld a, h
     ldh [hTemp1], a
     jr UpdateSpriteSlots_StepFrameLoop
+
+SECTION "Bank 04 UpdateSpriteSlots_FrameLoopType5", ROMX
 
 ; Sprite slot type 5: hTemp0/hTemp1 = UpdateSpriteSlots_FrameLoopType5_Data, then falls into
 ; UpdateSpriteSlots_StepFrameLoop, which plays it as a looping list of (frame, frames to hold) pairs
@@ -1582,6 +1614,8 @@ UpdateSpriteSlots_StepFrameLoop::
     ld [hl], a
     jp UpdateSpriteSlots_NextSlot
 
+SECTION "Bank 04 UpdateSpriteSlots_FrameLoopType4_Data", ROMX
+
 ; Seventeen (frame, hold count) byte pairs and an $FF, $FF end marker: frames 0, 3, 4, 5 held $0E,
 ; $0A, $0E, $0A frames, repeated once; then frames 0, 1, 2, 1, 2, 0, 6, 7, 6 held $10, $0E, $0E,
 ; $0E, $0E, $20, $0E, $20, $0E frames. UpdateSpriteSlots_StepFrameLoop plays the list in a loop for
@@ -1668,6 +1702,8 @@ IsTileUnderCellBlocking::
     pop bc
     ret
 
+SECTION "Bank 04 IsCellBlockedByFieldEventKind_IsCellTall", ROMX
+
 ; B = pixel X, C = pixel Y: copies the 2 x 2 tiles of wScreenTileBuffer under that cell to
 ; wTilesUnderPoint (as IsTileUnderCellBlocking does) and returns A = 1 when all four tile ids are
 ; above wMapTallTileMin, A = 0 when any is at or below it; BC and DE kept.
@@ -1736,6 +1772,8 @@ IsCellBlockedByFieldEventKind_IsCellTall::
     pop de
     pop bc
     ret
+
+SECTION "Bank 04 IsCellOccupiedByParty", ROMX
 
 ; Returns A = 1 when the metatile cell at pixel (B, C) is occupied by the player or by any party
 ; follower (each checked at its position and the position 15 pixels on), otherwise 0. Used before an
@@ -1848,6 +1886,8 @@ IsCellOccupiedByParty::
     xor a
     pop bc
     ret
+
+SECTION "Bank 04 FieldSpritePaletteIndex", ROMX
 
 ; on CGB, with hTemp2 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hTemp0 in bank
 ; $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hTemp3; values 0-20 (E-0143,
@@ -2046,6 +2086,8 @@ LoadPlayerAndFollowerSpriteGraphics::
     call LoadAltObjectGraphicsIfPlayerStateFlagsBit3
     ret
 
+SECTION "Bank 04 LoadPlayerSpriteGraphics", ROMX
+
 ; Load player graphics at VRAM $8000 with object palette slot 0. Without override bit 7, story flag
 ; 0 selects field graphics id 0/1 and writes the player variant; with override bit 7, copy the full
 ; hPlayerSpriteGfxId word to hTemp0/1 and use override bit 0 as hTemp2 (0 monster, 1 field). Clear
@@ -2104,6 +2146,8 @@ LoadPlayerSpriteGraphics::
     call DecompressGraphicsTemp0ToTemp4
     ret
 
+SECTION "Bank 04 LoadAltObjectGraphicsIfPlayerStateFlagsBit3", ROMX
+
 ; When hPlayerStateFlags bit 3 is set: decompresses ScallopShellSpriteTiles from bank $7E to vTiles0
 ; + $700 (DecompressToVRAM) and copies 8 bytes from bank $7E at SharedOBJPalettes + $108 into OBJ
 ; palette 7 of wOBJPaletteBuffer (+ $38), then sets wOBJPaletteUploadRequest = $7F. Only
@@ -2136,6 +2180,8 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
+
+SECTION "Bank 04 AdvancePlayerAnimCounterAndRunPlayerSpriteMode", ROMX
 
 ; Unless hPlayerStateFlags bit 1 is set, adds 1 to hPlayerAnimCounter, and 3 more when bit 2
 ; (moving) is set. Then dispatches on hPlayerSpriteMode: 0 DrawPlayerAndFollowers, 1
@@ -2171,6 +2217,8 @@ DrawPlayerAndFollowers::
     call DrawPartyFollowerSprites
     ret
 
+SECTION "Bank 04 DrawPlayerAndFlagFollower", ROMX
+
 ; Player sprite mode 1 (entry 1 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode by
 ; hPlayerSpriteMode): draws the player (DrawPlayerSprite) and the single follower that
 ; DrawFollowerSpriteAfterLandHo shows when EVENT_SCENE_LAND_HO (flag $1B) is set and hFieldDrawFlags
@@ -2180,6 +2228,8 @@ DrawPlayerAndFlagFollower::
     call DrawFollowerSpriteAfterLandHo
     ret
 
+SECTION "Bank 04 DrawPlayerWithOverlay", ROMX
+
 ; Player sprite mode 2 (entry 2 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode by
 ; hPlayerSpriteMode): draws the player (DrawPlayerSprite) and then the overlay meta-sprite set $21
 ; (hPlayerStateFlags bit 3 set) or $22, 8 pixels lower with tile offset $70 and palette 7
@@ -2188,6 +2238,8 @@ DrawPlayerWithOverlay::
     call DrawPlayerSprite
     call DrawPlayerOverlaySprite21Or22
     ret
+
+SECTION "Bank 04 DrawPlayerOverlaySprite21Or22", ROMX
 
 ; Draws the overlay of sprite mode 2 after DrawPlayerSprite: adds 8 to the 16-bit origin Y it left
 ; (hSpriteOriginY/Hi), sets hSpriteTileOffset = $70 and palette 7 (hSpriteAttrXor low 3 bits), and
@@ -2229,6 +2281,8 @@ DrawPlayerOverlaySprite21Or22::
     ldh [hSpriteSubIndex], a
     farcall DrawMetaSprite
     ret
+
+SECTION "Bank 04 DrawFollowerSpriteAfterLandHo", ROMX
 
 ; The single follower of sprite mode 1. Returns when hFieldDrawFlags bit 1 is set or
 ; EVENT_SCENE_LAND_HO is clear. Otherwise draws the follower in wFollowerRecords: set
@@ -2302,6 +2356,8 @@ DrawFollowerSpriteAfterLandHo::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite_Sets98
     ret
+
+SECTION "Bank 04 DrawPlayerSprite", ROMX
 
 ; Return if field draw-mask bit 0 hides the player. Set the frame from facing (3 uses side frame 1
 ; mirrored with attribute $20), or selector 2 when UseSpecialSpritePoseAtPosition returns 1, plus
@@ -2418,6 +2474,8 @@ DrawPlayerSprite::
 .call_draw_meta_sprite_set_bank27:
     farcall DrawMetaSpriteSet_Bank27
     ret
+
+SECTION "Bank 04 DrawPartyFollowerSprites", ROMX
 
 ; Sprite mode 0 followers: for each of wPartyCount members draws the follower from its 5-byte
 ; wFollowerRecords entry, skipped while its hFieldDrawFlags bit is set (bit 1, 2, 3 for members
@@ -2557,6 +2615,8 @@ DrawPartyFollowerSprites::
     jp nz, .loop
     ret
 
+SECTION "Bank 04 UseSpecialSpritePoseAtPosition", ROMX
+
 ; Return A=1 during a nonzero fade only when map=$5A, screen=(0,0) and player Y=$80; B/C are ignored
 ; in that path. Without a fade, search the nine six-byte SpecialSpritePoseRegions records: match map
 ; and screen, require B=pixel X and minimum Y <= C <= maximum Y with unsigned inclusive comparisons.
@@ -2641,6 +2701,8 @@ UseSpecialSpritePoseAtPosition::
     ld a, $06
     add_a_to_hl
     jr .skip2
+
+SECTION "Bank 04 SpecialSpritePoseRegions", ROMX
 
 ; Nine six-byte regions and $FF sentinel, searched only while no fade runs by
 ; UseSpecialSpritePoseAtPosition. Match map/screen, B=X and minimum <= C=Y <= maximum to return A=1.
@@ -3438,6 +3500,8 @@ StartMessageCommand09HL_B04::
     ld [wScriptStep], a
     ret
 
+SECTION "Bank 04 StartTreasureFlagDE_B04", ROMX
+
 ; DE = story flag of a treasure: starts script command $0A (RunOneTimeTreasure) with DE in
 ; wMessageIndex (low) and wMessageGroup (high), which that command tests and sets as a flag; sets
 ; wModeState = 1, wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep = 0 and
@@ -3465,6 +3529,8 @@ StartTreasureFlagDE_B04::
     ld [wScriptStep], a
     ret
 
+SECTION "Bank 04 StartScriptAtHL_B04", ROMX
+
 ; HL = script address: stores it in wScriptPointerLo/Hi, sets wScriptStartRequest = $80 (the script
 ; engine starts fetching at HL) and wModeState = 1. wScriptRunning is not touched here. The talk and
 ; map event handlers of this bank use it to start their scripts (over 180 call sites). (C2, E-0374)
@@ -3480,6 +3546,8 @@ StartScriptAtHL_B04::
     ld a, $01
     ld [wModeState], a
     ret
+
+SECTION "Bank 04 ReadableTalkEvents", ROMX
 
 ; Talk category $0A (DispatchTalkEvent_Readable): dispatches on wTalkEventGroup through 35 entries:
 ; scene starters (0-2, 4-6), the Vault keeper (7), notices (8, $16, $17), the pedestal (9), the
@@ -3545,6 +3613,8 @@ ReadableTalkEvents_AtSeaScene::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_HehSoTheseAreTheNewcomers", ROMX
+
 ; Readable talk 1 (wTalkEventGroup = 1 in ReadableTalkEvents): starts Script_HehSoTheseAre
 ; (StartScriptAtHL_B04), whose first message begins 'Heh, so these are the newcomers?'. (C2, E-0374)
 ; starts Script_HehSoTheseAre (StartScriptAtHL_B04); its first message begins 'Heh, so these are the
@@ -3556,6 +3626,8 @@ Talk_HehSoTheseAreTheNewcomers::
     ld hl, Script_HehSoTheseAre ; script '*: Heh, so these are the'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_ListenYouTwoQuitYourHorsing", ROMX
 
 ; Readable talk 2: starts Script_ListenYouTwoQuit (StartScriptAtHL_B04), whose first message begins
 ; 'Listen you two! Quit your horsing'. The seven bytes after its ret are never reached: they decode
@@ -3585,6 +3657,8 @@ Talk_OhItsAllSpinningAround::
     call SetFlagBit
     ret
 
+SECTION "Bank 04 Talk_SceneSpinning", ROMX
+
 ; Readable talk 5: starts Script_SceneSpinning (StartScriptAtHL_B04), runs field command 0
 ; (RunFieldCommandTemp0 with hTemp0 = 0) and sets EVENT_MAP_00_OBJECT_REMOVED (flag 6). (C1, E-0374)
 ; map event: starts script $4F7C, runs RunFieldCommandTemp0 with hTemp0 = 0 and sets story flag 6
@@ -3601,6 +3675,8 @@ Talk_SceneSpinning::
     call SetFlagBit
     ret
 
+SECTION "Bank 04 Talk_WarubouCalmDownAndListen", ROMX
+
 ; Readable talk 6: only when EVENT_SCENE_WARUBOU_SMELLS (flag $0A) is set, starts
 ; Script_WarubouCalmDownAnd ('Warubou: Calm down and listen!'); otherwise nothing happens. (C2,
 ; E-0374)
@@ -3614,6 +3690,8 @@ Talk_WarubouCalmDownAndListen::
     ld hl, Script_WarubouCalmDownAnd ; script 'Warubou: Calm down and listen! What'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk0046_ThanksForComingBy", ROMX
 
 ; Talk (the Vault keeper): the first time runs field command 1 and the 'You must be the farm...'
 ; script (setting EVENT_THANKS_FOR_COMING_BY), then 'Thanks for coming by...' ($0046); after the
@@ -3680,6 +3758,8 @@ Talk0046_ThanksForComingBy::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0047_HeroReadTheNoticeWeGuarantee", ROMX
+
 ; Readable talk 8, a notice: starts message $0047 through StartMessageCommand09HL_B04, '<BUF0> read
 ; the notice.' followed by the notice text beginning We guarantee the safekeeping of. (C2, E-0374)
 ; starts message $0047 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -3690,6 +3770,8 @@ TalkMsg0047_HeroReadTheNoticeWeGuarantee::
     ld hl, $0047 ; '0 read the notice. 'We guarantee'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk_HeroCheckedThePedestalIts", ROMX
 
 ; Readable talk 9: starts Script_HeroCheckedThePedestal (StartScriptAtHL_B04), whose first message
 ; begins '<BUF0> checked the pedestal.'. (C2, E-0374)
@@ -3702,6 +3784,8 @@ Talk_HeroCheckedThePedestalIts::
     ld hl, Script_HeroCheckedThePedestal ; script '0 checked the pedestal. It's the'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 ReadableTalkEvents_LibraryDesk", ROMX
 
 ; Readable talk $0A, the library front desk: turns sprite slot 0 (OBJ_STATE 0 when hPlayerX is $40,
 ; else 3), sets wDataBank = $1F and starts a script. Before EVENT_THANKS_FOR_COMING_BY_025:
@@ -3766,6 +3850,8 @@ ReadableTalkEvents_LibraryDesk::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0233_HeroCheckedTheBookshelfMonster", ROMX
+
 ; Readable talk $0B, a library bookshelf: starts message $0233 through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Monster Skills. (C2, E-0374)
 ; starts message $0233 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -3776,6 +3862,8 @@ TalkMsg0233_HeroCheckedTheBookshelfMonster::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0234_HeroCheckedTheBookshelfMonster", ROMX
+
 ; Readable talk $0C, a library bookshelf: starts message $0234 through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Monster Growth. (C2, E-0374)
 ; starts message $0234 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -3785,6 +3873,8 @@ TalkMsg0234_HeroCheckedTheBookshelfMonster::
     ld hl, $0234 ; '0 checked the bookshelf. 'Monster Growth…'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0235_HeroCheckedTheBookshelfPersonalities", ROMX
 
 ; Readable talk $0D, a library bookshelf: starts message $0235 through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Personalities of Monsters.
@@ -3797,6 +3887,8 @@ TalkMsg0235_HeroCheckedTheBookshelfPersonalities::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0236_HeroCheckedTheBookshelfNuts", ROMX
+
 ; Readable talk $0E, a library bookshelf: starts message $0236 through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Nuts and Seeds. (C2, E-0374)
 ; starts message $0236 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -3807,6 +3899,8 @@ TalkMsg0236_HeroCheckedTheBookshelfNuts::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0237_HeroCheckedTheBookshelfWorldLeaf", ROMX
+
 ; Readable talk $0F, a library bookshelf: starts message $0237 through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book WorldLeaf. (C2, E-0374)
 ; starts message $0237 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -3816,6 +3910,8 @@ TalkMsg0237_HeroCheckedTheBookshelfWorldLeaf::
     ld hl, $0237 ; '0 checked the bookshelf. 'WorldLeaf… An'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0238_HeroCheckedTheBookshelfMagic", ROMX
 
 ; Readable talk $10, a library bookshelf: starts message $0238 through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Magic Key Guide. (C2,
@@ -3828,6 +3924,8 @@ TalkMsg0238_HeroCheckedTheBookshelfMagic::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0239_HeroCheckedTheBookshelfMagic", ROMX
+
 ; Readable talk $11, a library bookshelf: starts message $0239 through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Magic Key Guide. (C2,
 ; E-0374)
@@ -3839,6 +3937,8 @@ TalkMsg0239_HeroCheckedTheBookshelfMagic::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg023A_HeroCheckedTheBookshelfStarry", ROMX
+
 ; Readable talk $12, a library bookshelf: starts message $023A through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Starry Shrine. (C2, E-0374)
 ; starts message $023A through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -3848,6 +3948,8 @@ TalkMsg023A_HeroCheckedTheBookshelfStarry::
     ld hl, $023a ; '0 checked the bookshelf. 'Starry Shrine…'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg023B_HeroCheckedTheBookshelfEgg", ROMX
 
 ; Readable talk $13, a library bookshelf: starts message $023B through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Egg Evaluators. (C2, E-0374)
@@ -3859,6 +3961,8 @@ TalkMsg023B_HeroCheckedTheBookshelfEgg::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg023C_HeroCheckedTheBookshelfAccessory", ROMX
+
 ; Readable talk $14, a library bookshelf: starts message $023C through StartMessageCommand09HL_B04
 ; (script command 9): '<BUF0> checked the bookshelf.' and then the book Accessory Guide. (C2,
 ; E-0374)
@@ -3869,6 +3973,8 @@ TalkMsg023C_HeroCheckedTheBookshelfAccessory::
     ld hl, $023c ; '0 checked the bookshelf. 'Accessory Guide…'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg023D_HeroCheckedTheBookshelfHidden", ROMX
 
 ; Readable talk 21 (ReadableTalkEvents): starts message $023D through StartMessageCommand09HL_B04
 ; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
@@ -3882,6 +3988,8 @@ TalkMsg023D_HeroCheckedTheBookshelfHidden::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg023E_HeroReadTheNoticePleaseReturn", ROMX
+
 ; Readable talk 22 (ReadableTalkEvents): starts message $023E through StartMessageCommand09HL_B04
 ; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
 ; 1, wModeState = 1); the hero reads the notice 'Please return books to their proper places!'. (C2,
@@ -3893,6 +4001,8 @@ TalkMsg023E_HeroReadTheNoticePleaseReturn::
     ld hl, $023e ; '0 read the notice. 'Please return'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ReadableTalkEvents_Notice", ROMX
 
 ; Talk event $0A step 23: a notice (message $0042) shown before the three-item scene and again after
 ; the game's end. (C2, E-0357; probed E-0374)
@@ -3909,6 +4019,8 @@ ReadableTalkEvents_Notice::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0010_HeroPeeredIntoTheVaseFreshly", ROMX
+
 ; Readable talk 24 (ReadableTalkEvents): starts message $0010 through StartMessageCommand09HL_B04
 ; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
 ; 1, wModeState = 1); the hero peers into the vase: 'Freshly caught fish were inside.'. (C2, E-0374)
@@ -3919,6 +4031,8 @@ TalkMsg0010_HeroPeeredIntoTheVaseFreshly::
     ld hl, $0010 ; '0 peered into the vase. Freshly'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg000F_HeroPeeredIntoTheBarrelIt", ROMX
 
 ; Readable talk 25 (ReadableTalkEvents): starts message $000F through StartMessageCommand09HL_B04
 ; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
@@ -3931,6 +4045,8 @@ TalkMsg000F_HeroPeeredIntoTheBarrelIt::
     ld hl, $000f ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ReadableTalkEvents_GreatLogKey", ROMX
 
 ; Readable talk 26 (ReadableTalkEvents): returns at once unless EVENT_SCENE_OASIS_KEY is set. Then
 ; it appends two key entries to wKeyList: twice CountKeysOrFull (hTemp0 = the first free entry) and
@@ -3961,6 +4077,8 @@ ReadableTalkEvents_GreatLogKey::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 IfFlag00D1Msg0D33_YouSavedUsAll", ROMX
+
 ; Readable talk 27 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D33
 ; ('You saved us all by yourself.') through StartMessageCommand09HL_B04 (script command $09:
 ; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1);
@@ -3975,6 +4093,8 @@ IfFlag00D1Msg0D33_YouSavedUsAll::
     ld hl, $0d33 ; '*: You saved us all by'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 IfFlag00D1Msg0D34_PleaseEatUpEat", ROMX
 
 ; Readable talk 28 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D34
 ; ('Please, eat up, eat up!') through StartMessageCommand09HL_B04 (script command $09:
@@ -3991,6 +4111,8 @@ IfFlag00D1Msg0D34_PleaseEatUpEat::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 IfFlag00D1Msg0D35_HmISawYour", ROMX
+
 ; Readable talk 29 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D35
 ; ('Hm? I saw your family.') through StartMessageCommand09HL_B04 (script command $09:
 ; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1);
@@ -4006,6 +4128,8 @@ IfFlag00D1Msg0D35_HmISawYour::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 IfFlag00D1Msg0D36_TheKingdomIsRejoicing", ROMX
+
 ; Readable talk 30 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D36
 ; ('The Kingdom is rejoicing!') through StartMessageCommand09HL_B04 (script command $09:
 ; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1);
@@ -4020,6 +4144,8 @@ IfFlag00D1Msg0D36_TheKingdomIsRejoicing::
     ld hl, $0d36 ; '*: The Kingdom is rejoicing!'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 IfFlag00D1Msg0D37_InsteadOfStandingAround", ROMX
 
 ; Readable talk 31 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D37
 ; ('Instead of standing around, you should go and enjoy yourselves.') through
@@ -4037,6 +4163,8 @@ IfFlag00D1Msg0D37_InsteadOfStandingAround::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 IfFlag00D1Msg0D38_JustImagineIfYou", ROMX
+
 ; Readable talk 32 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D38
 ; ('Just imagine if' the hero were not here) through StartMessageCommand09HL_B04 (script command
 ; $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState =
@@ -4051,6 +4179,8 @@ IfFlag00D1Msg0D38_JustImagineIfYou::
     ld hl, $0d38 ; '*: Just imagine if you weren't'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 IfFlag00D1Msg0D39_AhGreatLogsMightyHero", ROMX
 
 ; Readable talk 33 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D39
 ; (GreatLog 'mighty hero!') through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1
@@ -4067,6 +4197,8 @@ IfFlag00D1Msg0D39_AhGreatLogsMightyHero::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 IfFlag00D1Msg0D3A_ToBeHonestI", ROMX
+
 ; Readable talk 34 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D3A
 ; ('To be honest, I was getting ready to clear out.') through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
@@ -4081,6 +4213,8 @@ IfFlag00D1Msg0D3A_ToBeHonestI::
     ld hl, $0d3a ; '*: To be honest, I was'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents", ROMX
 
 ; Talk category 3 (DispatchTalkEvent_Yold far-calls it): jumps through its table of 110 handlers by
 ; wTalkEventGroup, with no range check. The handlers cover the people, signs, barrels, vases, ovens
@@ -4213,6 +4347,8 @@ TalkMsg0800_ThisIsTheVillageOfYold::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0801_InTheNorthwestIsAVillage", ROMX
+
 ; Yold talk 1 (YoldTalkEvents): starts message $0801 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'In the northwest is a village that is famous for mermaids.'. (C2, E-0374)
@@ -4224,6 +4360,8 @@ TalkMsg0801_InTheNorthwestIsAVillage::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0802_AroundThesePartsItsFaster", ROMX
+
 ; Yold talk 2 (YoldTalkEvents): starts message $0802 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); about travel 'by boat than walking'. (C2, E-0374)
@@ -4234,6 +4372,8 @@ TalkMsg0802_AroundThesePartsItsFaster::
     ld hl, $0802 ; '*: Around these parts it's faster'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0803_ISawAHauntedShipIn", ROMX
 
 ; Yold talk 3 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0874
 ; (the speaker has not seen 'the ghost ship in some time now' but is still afraid at night),
@@ -4256,6 +4396,8 @@ TalkMsg0803_ISawAHauntedShipIn::
     ld hl, $0874 ; '*: I haven't seen the ghost'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0804_TheVolcanicIslandOffTheCoast", ROMX
 
 ; Yold talk 4 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0875
 ; (the island 'appears to have calmed down again.'), otherwise message $0804 (the volcanic island
@@ -4280,6 +4422,8 @@ TalkMsg0804_TheVolcanicIslandOffTheCoast::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0805_MermaidsLivedInTheSeaIn", ROMX
+
 ; Yold talk 5 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0876
 ; ('Will the HarMirror make me appear beautiful'), otherwise message $0805 ('Mermaids lived in the
 ; sea in the northwest.'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1
@@ -4300,6 +4444,8 @@ TalkMsg0805_MermaidsLivedInTheSeaIn::
     ld hl, $0876 ; '*: Sigh… Will the HarMirror make'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_NoisyBirds", ROMX
 
 ; Yold talk 6: 'The birds are noisy' the first time (setting its flag), message $0808 afterwards,
 ; message $0877 after the mermaid kingdom scene (EVENT_SCENE_MERMAID_KINGDOM_05F). (C2, E-0357;
@@ -4327,6 +4473,8 @@ YoldTalkEvents_NoisyBirds::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 YoldTalkEvents_Shop", ROMX
+
 ; Yold talk 7: a shop: screen table 4, script data in bank $10, script Script_IDon. (C2, E-0357;
 ; probed E-0374)
 YoldTalkEvents_Shop::
@@ -4337,6 +4485,8 @@ YoldTalkEvents_Shop::
     ld hl, Script_IDon ; script '*: I don't have much but…'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 TalkMsg080A_HeroPeeredIntoTheBarrelA", ROMX
 
 ; Yold talk 8 (YoldTalkEvents): starts message $080A through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
@@ -4350,6 +4500,8 @@ TalkMsg080A_HeroPeeredIntoTheBarrelA::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg080B_HeroPeeredIntoTheBarrelIt", ROMX
+
 ; Yold talk 9 (YoldTalkEvents): starts message $080B through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); the hero peers into the barrel: 'It was filled with colorful fruits.'. (C2,
@@ -4361,6 +4513,8 @@ TalkMsg080B_HeroPeeredIntoTheBarrelIt::
     ld hl, $080b ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 BarrelItem_TinyMedal", ROMX
 
 ; Yold talk 10 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_TINYMEDAL and story
@@ -4380,6 +4534,8 @@ BarrelItem_TinyMedal::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 BarrelItem_Warp", ROMX
+
 ; Yold talk 11 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_WARP and story flag
 ; $0062 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -4398,6 +4554,8 @@ BarrelItem_Warp::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg088A_HeroPeeredIntoTheVaseIt", ROMX
+
 ; Yold talk 12 (YoldTalkEvents): starts message $088A through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); the hero peers into the vase ('It was ...'). (C2, E-0374)
@@ -4408,6 +4566,8 @@ TalkMsg088A_HeroPeeredIntoTheVaseIt::
     ld hl, $088a ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0889_HeroPeeredIntoTheOvenIt", ROMX
 
 ; Yold talk 13 (YoldTalkEvents): starts message $0889 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
@@ -4421,6 +4581,8 @@ TalkMsg0889_HeroPeeredIntoTheOvenIt::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0037_HeroTriedToOpenTheChest", ROMX
+
 ; Yold talk 14 (YoldTalkEvents): starts message $0037 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); the hero tries to open the chest: 'But the chest was locked tight.'. (C2, E-0374)
@@ -4432,6 +4594,8 @@ TalkMsg0037_HeroTriedToOpenTheChest::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg080C_WelcomeToPolonaItsATourist", ROMX
+
 ; Yold talk 15 (YoldTalkEvents): starts message $080C through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'Welcome to Polona.', a resort known for its mermaids. (C2, E-0374)
@@ -4442,6 +4606,8 @@ TalkMsg080C_WelcomeToPolonaItsATourist::
     ld hl, $080c ; '*: Welcome to Polona. It's a'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg080D_YouCouldMeetMermaidsHere", ROMX
 
 ; Yold talk 16 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0878
 ; ('The mermaids came back.'), otherwise message $080D ('You could meet mermaids here in the past,
@@ -4464,6 +4630,8 @@ TalkMsg080D_YouCouldMeetMermaidsHere::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg080E_ImFromThePortInThe", ROMX
+
 ; Yold talk 17 (YoldTalkEvents): starts message $080E through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); the speaker is 'from the port in the northeast'. (C2, E-0374)
@@ -4475,6 +4643,8 @@ TalkMsg080E_ImFromThePortInThe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg080F_YoureNotSupposedToGoNear", ROMX
+
 ; Yold talk 18 (YoldTalkEvents): starts message $080F through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); a warning about going 'near the cave in the west.'. (C2, E-0374)
@@ -4485,6 +4655,8 @@ TalkMsg080F_YoureNotSupposedToGoNear::
     ld hl, $080f ; '*: You're not supposed to go'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_MermaidPast", ROMX
 
 ; Yold talk 19, the mermaid past: after EVENT_IN_THE_PAST_MERMAIDS_ARE message $084A ('Mermaids
 ; exist.'). Otherwise FindPartyMemberWithSkill76To7DOr92 looks for a party member knowing
@@ -4552,6 +4724,8 @@ YoldTalkEvents_MermaidPast::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 YoldTalkEvents_Inn", ROMX
+
 ; Yold talk 20, an inn: starts Script_WelcomeToOurInn_3 ('Welcome to our inn!', then a jump to the
 ; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C2, E-0369;
 ; probed E-0374)
@@ -4562,6 +4736,8 @@ YoldTalkEvents_Inn::
     ld a, $10
     ld [wDataBank], a
     ret
+
+SECTION "Bank 04 Talk_HaveYouHeardTheLegendAbout", ROMX
 
 ; Yold talk 21 (YoldTalkEvents): starts Script_HaveYouHeardThe through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); its question $4818
@@ -4577,6 +4753,8 @@ Talk_HaveYouHeardTheLegendAbout::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg081B_AhhThisIsHeavenlyItMakes", ROMX
+
 ; Yold talk 22 (YoldTalkEvents): starts message $081B through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'This is heavenly! It makes me feel alive again!'. (C2, E-0374)
@@ -4587,6 +4765,8 @@ TalkMsg081B_AhhThisIsHeavenlyItMakes::
     ld hl, $081b ; '*: Ahh… This is heavenly! It'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg081C_ICameFromFarAwayTo", ROMX
 
 ; Yold talk 23 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0879
 ; (the speaker has now seen 'mermaids too.'), otherwise message $081C ('I came from far away to see
@@ -4609,6 +4789,8 @@ TalkMsg081C_ICameFromFarAwayTo::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg088B_HeroReadTheSignWelcomeTo", ROMX
+
 ; Yold talk 24 (YoldTalkEvents): starts message $088B through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); the hero reads the sign ('Welcome to ...'). (C2, E-0374)
@@ -4619,6 +4801,8 @@ TalkMsg088B_HeroReadTheSignWelcomeTo::
     ld hl, $088b ; '0 read the sign. 'Welcome to'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0889_HeroPeeredIntoTheOvenIt_04", ROMX
 
 ; Yold talk 25 (YoldTalkEvents): starts message $0889 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
@@ -4633,6 +4817,8 @@ TalkMsg0889_HeroPeeredIntoTheOvenIt_04::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg081D_ThisIsPortRitzWhereShips", ROMX
+
 ; Yold talk 26 (YoldTalkEvents): starts message $081D through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'This is Port Ritz, where ships gather from all over the world.'. (C2, E-0374)
@@ -4643,6 +4829,8 @@ TalkMsg081D_ThisIsPortRitzWhereShips::
     ld hl, $081d ; '*: This is Port Ritz, where'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg081E_ThePiratesWereSwallowedBy", ROMX
 
 ; Yold talk 27 (YoldTalkEvents): when EVENT_THE_PIRATES_WERE_SWALLOWED_BY is set starts message
 ; $087A ('The pirates hid their loot on the volcanic island'), otherwise message $081E ('The pirates
@@ -4666,6 +4854,8 @@ TalkMsg081E_ThePiratesWereSwallowedBy::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg081F_TheresThisOldSailorManIn", ROMX
+
 ; Yold talk 28 (YoldTalkEvents): starts message $081F through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); about an old 'sailor man in the tavern who likes his grog too much.'. (C2,
@@ -4677,6 +4867,8 @@ TalkMsg081F_TheresThisOldSailorManIn::
     ld hl, $081f ; '*: There's this old sailor man'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk_HowMayOurChurchServeYou", ROMX
 
 ; Yold talk 29 (YoldTalkEvents): sets wDataBank = $1F, then starts Script_HowMayOurChurch through
 ; StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1);
@@ -4694,6 +4886,8 @@ Talk_HowMayOurChurchServeYou::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0821_AllSortsOfPeopleComeHere", ROMX
+
 ; Yold talk 30 (YoldTalkEvents): starts message $0821 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'All sorts of people come here from around the world.'. (C2, E-0374)
@@ -4705,6 +4899,8 @@ TalkMsg0821_AllSortsOfPeopleComeHere::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0822_IWentToPolonaAWhile", ROMX
+
 ; Yold talk 31 (YoldTalkEvents): starts message $0822 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'I went to Polona a while back'. (C2, E-0374)
@@ -4714,6 +4910,8 @@ TalkMsg0822_IWentToPolonaAWhile::
     ld hl, $0822 ; '*: I went to Polona a'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_Shop2", ROMX
 
 ; Yold talk 32: a shop: screen table 6, script data in bank $10, 'I offer quality merchandise'. (C2,
 ; E-0357; probed E-0374)
@@ -4725,6 +4923,8 @@ YoldTalkEvents_Shop2::
     ld hl, Script_IOfferQualityMerchandise ; script '*: I offer quality merchandise. Would'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0824_ThereIsALighthouseToThe", ROMX
 
 ; Yold talk 33 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0D13
 ; ('The lighthouse is out east.', still roamed by monsters though the MoonRock is back), otherwise
@@ -4748,6 +4948,8 @@ TalkMsg0824_ThereIsALighthouseToThe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0825_MyShipSankInTheEastern", ROMX
+
 ; Yold talk 34 (YoldTalkEvents): starts message $0825 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'My ship sank in the eastern sea.'. (C2, E-0374)
@@ -4759,6 +4961,8 @@ TalkMsg0825_MyShipSankInTheEastern::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0826_TheOldManInTheTaverns", ROMX
+
 ; Yold talk 35 (YoldTalkEvents): starts message $0826 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); about the old man in the tavern: 'He tells me all sorts of things.'. (C2, E-0374)
@@ -4769,6 +4973,8 @@ TalkMsg0826_TheOldManInTheTaverns::
     ld hl, $0826 ; '*: The old man in the'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0827_ThisPortUsedToBeLively", ROMX
 
 ; Yold talk 36 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $087B
 ; ('The sea around here is safe now.'), otherwise message $0827 ('This port used to be lively in the
@@ -4790,6 +4996,8 @@ TalkMsg0827_ThisPortUsedToBeLively::
     ld hl, $087b ; '*: The sea around here is'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0829_TheLighthouseHadTheMoonRock", ROMX
 
 ; Yold talk 37 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $087C
 ; ('The MoonRock glows at night from atop the lighthouse again.'), otherwise message $0829 ('The
@@ -4813,6 +5021,8 @@ TalkMsg0829_TheLighthouseHadTheMoonRock::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg082A_TheSeasLevelHasGoneDown", ROMX
+
 ; Yold talk 38 (YoldTalkEvents): when EVENT_THE_PIRATES_WERE_SWALLOWED_BY is set starts message
 ; $087D (the sea level 'has risen.'), otherwise message $082A (the sea level 'has gone down.'),
 ; through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
@@ -4834,6 +5044,8 @@ TalkMsg082A_TheSeasLevelHasGoneDown::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg082B_ListenDidYouKnowMermaids", ROMX
+
 ; Yold talk 39 (YoldTalkEvents): starts message $082B through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'Mermaids appear to love dancing.'. (C2, E-0374)
@@ -4844,6 +5056,8 @@ TalkMsg082B_ListenDidYouKnowMermaids::
     ld hl, $082b ; '*: Listen, did you know? Mermaids'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg088D_HeroPeeredIntoTheOvenTwo", ROMX
 
 ; Yold talk 40 (YoldTalkEvents): starts message $088D through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
@@ -4856,6 +5070,8 @@ TalkMsg088D_HeroPeeredIntoTheOvenTwo::
     ld hl, $088d ; '0 peered into the oven. Two'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk_HeroTriedToCheckTheChest", ROMX
 
 ; Yold talk 41 (YoldTalkEvents): starts Script_HeroTriedToCheck through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
@@ -4871,6 +5087,8 @@ Talk_HeroTriedToCheckTheChest::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg082E_HeroPeeredIntoTheBarrelIt", ROMX
+
 ; Yold talk 42 (YoldTalkEvents): starts message $082E through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); the hero peers into the barrel: 'It was filled with gigantic beans.'. (C2,
@@ -4882,6 +5100,8 @@ TalkMsg082E_HeroPeeredIntoTheBarrelIt::
     ld hl, $082e ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 BarrelItem_TinyMedal_Flag0063", ROMX
 
 ; Yold talk 43 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_TINYMEDAL and story
@@ -4901,6 +5121,8 @@ BarrelItem_TinyMedal_Flag0063::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 YoldTalkEvents_SecondInn", ROMX
+
 ; Yold talk 44, a second inn with the same code as YoldTalkEvents_Inn (talk 20): starts
 ; Script_WelcomeToOurInn_4 ('Welcome to our inn!', then the inn script Script_It_3 in the data bank)
 ; and sets wDataBank = $10. (C2, E-0369; probed E-0374)
@@ -4911,6 +5133,8 @@ YoldTalkEvents_SecondInn::
     ld a, $10
     ld [wDataBank], a
     ret
+
+SECTION "Bank 04 TalkMsg082F_ThisAreaWasALotMore", ROMX
 
 ; Yold talk 45 (YoldTalkEvents): when EVENT_THE_PIRATES_WERE_SWALLOWED_BY is set starts message
 ; $087E ('the shoals sank almost instantly.'), otherwise message $082F ('This area was a lot more
@@ -4933,6 +5157,8 @@ TalkMsg082F_ThisAreaWasALotMore::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0830_WhenYoureOutAtSeaYou", ROMX
+
 ; Yold talk 46 (YoldTalkEvents): starts message $0830 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); about seeing 'some peculiar sights.' at sea, among them a ghost ship. (C2,
@@ -4945,6 +5171,8 @@ TalkMsg0830_WhenYoureOutAtSeaYou::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk_SceneWhoAreYou", ROMX
+
 ; Yold talk 47 (YoldTalkEvents): starts Script_SceneWhoAreYou through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script plays
 ; sound $28, waits 140 frames, runs SCRIPT_SCENE_WHO_ARE_YOU and walks objects 0-2. (C2, E-0374)
@@ -4955,6 +5183,8 @@ Talk_SceneWhoAreYou::
     ld hl, Script_SceneWhoAreYou
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0834_WhenThatOldManGetsGrogged", ROMX
 
 ; Yold talk 48 (YoldTalkEvents): after EVENT_SCENE_MERMAID_KINGDOM_05F message $0D14 ('Another
 ; master was here with two monsters', naming Kameha); otherwise after EVENT_THE_PIRATES message
@@ -4986,6 +5216,8 @@ TalkMsg0834_WhenThatOldManGetsGrogged::
     ld hl, $0d14 ; '*: Another master was here with'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0835_TheOldFellowThereTheInstant", ROMX
 
 ; Yold talk 49 (YoldTalkEvents): after EVENT_SCENE_MERMAID_KINGDOM_05F message $087F ('Did you hear?
 ; Pirates hid their treasure on the volcanic island.'); otherwise after
@@ -5020,6 +5252,8 @@ TalkMsg0835_TheOldFellowThereTheInstant::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0836_TheVolcanicIslandOffTheCoast", ROMX
+
 ; Yold talk 50 (YoldTalkEvents): starts message $0836 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'The volcanic island off the coast is vicious to ships.'. (C2, E-0374)
@@ -5030,6 +5264,8 @@ TalkMsg0836_TheVolcanicIslandOffTheCoast::
     ld hl, $0836 ; '*: The volcanic island off the'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_ShowHnnnrHicGnnZzz", ROMX
 
 ; Yold talk 51, a sleeper: before the pirates' story it wakes only for a party monster of species
 ; $3C-$5B with a high byte (PartyHasSpeciesLo3CTo5BWithHiSet), otherwise mutters (message $0837,
@@ -5083,6 +5319,8 @@ YoldTalkEvents_ShowHnnnrHicGnnZzz::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 PartyHasSpeciesLo3CTo5BWithHiSet", ROMX
+
 ; Carry set when some party record (wPartyCount entries of wPartyList, read with LoadSRAMRecordWord
 ; with SRAM enabled) has a MON_SPECIES word whose high byte is non-zero and low byte is $3C-$5B (for
 ; ids up to $17F this is MONSTER_PETITEEL through MONSTER_STARFISH); A = 0 either way, carry clear
@@ -5125,6 +5363,8 @@ PartyHasSpeciesLo3CTo5BWithHiSet::
     scf
     ret
 
+SECTION "Bank 04 YoldTalkEvents_WhoAreYou", ROMX
+
 ; Yold talk 52: 'Who are you? This is ...' the first time (setting its flag), then 'You can keep
 ; trying'; after EVENT_SCENE_WATCH_OUT the watch-out scene script. (C2, E-0357; probed E-0374)
 YoldTalkEvents_WhoAreYou::
@@ -5150,6 +5390,8 @@ YoldTalkEvents_WhoAreYou::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 ChestItem_Rib", ROMX
+
 ; Yold talk 53 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_RIB and story flag $0067
 ; in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That command
@@ -5167,6 +5409,8 @@ ChestItem_Rib::
     ld de, $0067
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_LoveWater", ROMX
 
 ; Yold talk 54 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_LOVEWATER and story flag
@@ -5186,6 +5430,8 @@ ChestItem_LoveWater::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_LoveWater_Flag0069", ROMX
+
 ; Yold talk 55 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_LOVEWATER and story flag
 ; $0069 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -5203,6 +5449,8 @@ ChestItem_LoveWater_Flag0069::
     ld de, $0069
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_ExitBell", ROMX
 
 ; Yold talk 56 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_EXITBELL and story flag
@@ -5222,6 +5470,8 @@ ChestItem_ExitBell::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_MermScale", ROMX
+
 ; Yold talk 57 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_MERMSCALE and story flag
 ; $006B in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -5239,6 +5489,8 @@ ChestItem_MermScale::
     ld de, $006b
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_Warp", ROMX
 
 ; Yold talk 58 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WARP and story flag
@@ -5258,6 +5510,8 @@ ChestItem_Warp::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0843_ISawAChildCrossThe", ROMX
+
 ; Yold talk 59 (YoldTalkEvents): starts message $0843 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'I saw a child cross the sea on a giant clam.'. (C2, E-0374)
@@ -5267,6 +5521,8 @@ TalkMsg0843_ISawAChildCrossThe::
     ld hl, $0843 ; '*: I saw a child cross'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0844_WatchMeDanceAndYoullWant", ROMX
 
 ; Yold talk 60 (YoldTalkEvents): starts message $0844 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
@@ -5278,6 +5534,8 @@ TalkMsg0844_WatchMeDanceAndYoullWant::
     ld hl, $0844 ; '*: Watch me dance, and you'll'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_OfferMap41Warp", ROMX
 
 ; Yold talk 61: does nothing until EVENT_IN_THE_PAST_MERMAIDS_ARE is set (WarpToMap41 sets it); then
 ; starts Script_DoYouWantTo_2, which asks 'Do you want to go ...' and on yes says 'Close your eyes a
@@ -5291,6 +5549,8 @@ YoldTalkEvents_OfferMap41Warp::
     ld hl, Script_DoYouWantTo_2 ; script '*: Do you want to go'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_ShowThisIsTheMermaid", ROMX
 
 ; Yold talk 62: message $084E the first time (setting EVENT_THIS_IS_THE_MERMAID), then the mermaid
 ; script. (C2, E-0357; probed E-0374)
@@ -5308,6 +5568,8 @@ YoldTalkEvents_ShowThisIsTheMermaid::
     ld hl, Script_ThisIsTheMermaid ; script '*: This is the mermaid kingdom.'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 TalkMsg084F_IKnowNotAllHumansAre", ROMX
 
 ; Yold talk 63 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0881 ('Our words of
 ; thanks could never do justice'), otherwise message $084F ('I know not all humans are bad'),
@@ -5330,6 +5592,8 @@ TalkMsg084F_IKnowNotAllHumansAre::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0850_ThePiratesCaughtUsInNets", ROMX
+
 ; Yold talk 64 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0882 ('Mermaids and
 ; humans can live side by side in harmony again!'), otherwise message $0850 ('The pirates caught us
 ; in nets'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message
@@ -5351,6 +5615,8 @@ TalkMsg0850_ThePiratesCaughtUsInNets::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0851_TheHarMirrorWasExquisite", ROMX
+
 ; Yold talk 65 (YoldTalkEvents): starts message $0851 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'The HarMirror was exquisite.'. (C2, E-0374)
@@ -5362,6 +5628,8 @@ TalkMsg0851_TheHarMirrorWasExquisite::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0852_TheMoonRockFellFromTheSky", ROMX
+
 ; Yold talk 66 (YoldTalkEvents): starts message $0852 through StartMessageCommand09HL_B04 (script
 ; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
 ; wModeState = 1); 'The MoonRock fell from the sky.'. (C2, E-0374)
@@ -5372,6 +5640,8 @@ TalkMsg0852_TheMoonRockFellFromTheSky::
     ld hl, $0852 ; '*: The MoonRock fell from the'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0853_ThePiratesSankWithTheirShip", ROMX
 
 ; Yold talk 67 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0883 ('Thanks to you,
 ; the spectral ship sank again'), otherwise message $0853 ('The pirates sank with their ship.'),
@@ -5394,6 +5664,8 @@ TalkMsg0853_ThePiratesSankWithTheirShip::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0854_WeMermaidsArePeacefulBeings", ROMX
+
 ; Yold talk 68 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0884 ('That wandering
 ; ghost ship' is gone), otherwise message $0854 ('We mermaids are peaceful beings.'), through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
@@ -5414,6 +5686,8 @@ TalkMsg0854_WeMermaidsArePeacefulBeings::
     ld hl, $0884 ; '*: That wandering ghost ship's gone!'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_SailorRingGiver", ROMX
 
 ; Yold talk 69: the sailor ring giver. Before the crate scene 'Welcome, young human' once, then
 ; message $0858; after EVENT_SCENE_CRATE it gives item $5F when the inventory has room (marking
@@ -5459,6 +5733,8 @@ YoldTalkEvents_SailorRingGiver::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk_SceneSailorRing", ROMX
+
 ; Yold talk 70 (YoldTalkEvents): starts Script_SceneSailorRing through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script runs
 ; only the scene command SCRIPT_SCENE_SAILOR_RING. (C2, E-0374)
@@ -5470,6 +5746,8 @@ Talk_SceneSailorRing::
     ld hl, Script_SceneSailorRing
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_HowCouldWeDieBeforeEnjoying", ROMX
 
 ; Yold talk 71 (YoldTalkEvents): starts Script_HowCouldWeDie through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
@@ -5485,6 +5763,8 @@ Talk_HowCouldWeDieBeforeEnjoying::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_TheTreasuresAreOursNoOne", ROMX
+
 ; Yold talk 72 (YoldTalkEvents): starts Script_TheTreasuresAreOurs through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
 ; message $085A ('The treasures are ours'), runs encounter $17, sets EVENT_THE_TREASURES_ARE_OURS_NO
@@ -5499,6 +5779,8 @@ Talk_TheTreasuresAreOursNoOne::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_ItNagsAndNagsThatWe", ROMX
+
 ; Yold talk 73 (YoldTalkEvents): starts Script_ItNagsAndNags through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
 ; message $085C ('It nags and nags that we'), runs encounter $17, sets EVENT_IT_NAGS_AND_NAGS_THAT
@@ -5511,6 +5793,8 @@ Talk_ItNagsAndNagsThatWe::
     ld hl, Script_ItNagsAndNags ; script '*: It nags and nags that'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_WhoDisturbsUs", ROMX
 
 ; Yold talk 74: the first time starts Script_WhoDisturbsUsIn ('Who disturbs us in our ...') and sets
 ; EVENT_WHO_DISTURBS_US_IN_OUR; afterwards Script_YouSeemToNot ('...You seem to not understand...').
@@ -5532,6 +5816,8 @@ YoldTalkEvents_WhoDisturbsUs::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 YoldTalkEvents_ShowHeroCheckedTheTreasure", ROMX
+
 ; Yold talk 75, a treasure: with room in the inventory it puts item $31 in the free slot (marking
 ; wInventorySortFlags bit 6) and starts 'Hero checked the treasure'; with a full inventory message
 ; $0888. (C2, E-0357; probed E-0375)
@@ -5551,6 +5837,8 @@ YoldTalkEvents_ShowHeroCheckedTheTreasure::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 YoldTalkEvents_CheckCrate", ROMX
+
 ; Yold talk 76, a crate: starts Script_HeroCheckedTheCrate ('<PLAYER> checked the crate. There was
 ; ...', then SCRIPT_SET_TILES_FLAG_310, which redraws a 2 x 2 tile block and sets story flag $310)
 ; and sets EVENT_HERO_CHECKED_THE_CRATE_THERE. (C2, E-0369; probed E-0375)
@@ -5562,11 +5850,15 @@ YoldTalkEvents_CheckCrate::
     call SetFlagBit
     ret
 
+SECTION "Bank 04 YoldTalkEvents_ResetFirstSlotState", ROMX
+
 ; Yold talk 77: clears byte 7 of the first sprite slot. (C2, E-0357; probed E-0375)
 YoldTalkEvents_ResetFirstSlotState::
     xor a
     ld [wSpriteSlots + $7], a
     ret
+
+SECTION "Bank 04 ChestItem_LogTwig", ROMX
 
 ; Yold talk 78 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_LOGTWIG and story flag
@@ -5585,6 +5877,8 @@ ChestItem_LogTwig::
     ld de, $0079
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_ShowHeroCheckedThePedestal", ROMX
 
 ; Yold talk 79, a pedestal: after EVENT_THE_PIRATES_WERE_SWALLOWED_BY message $0867 ('The MoonRock
 ; sat on the pedestal'); before it, message $0865 ('It has a hole to accept an item') only when
@@ -5610,6 +5904,8 @@ YoldTalkEvents_ShowHeroCheckedThePedestal::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 YoldTalkEvents_KamehaThanks", ROMX
+
 ; Yold talk 80: at Y $30, sets EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING and starts Kameha's thanks;
 ; at X $50 also moves the first slot and objects 1 and 2 to X $40. (C2, E-0357; probed E-0375)
 YoldTalkEvents_KamehaThanks::
@@ -5629,6 +5925,8 @@ YoldTalkEvents_KamehaThanks::
     ld [wObject2 + OBJ_X], a
     ret
 
+SECTION "Bank 04 Talk_KamehaUrkHowYouCatchUp", ROMX
+
 ; Yold talk 81 (YoldTalkEvents): starts Script_KamehaUrkHowYou (message $0869 ('Kameha: Urk! How you
 ; catch up?'), the crew walks, message $086A, then SCRIPT_SCENE_CREW_FOLLOWS) through
 ; StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1).
@@ -5642,6 +5940,8 @@ Talk_KamehaUrkHowYouCatchUp::
     ld hl, Script_KamehaUrkHowYou ; script 'Kameha: Urk! How you catch up?'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_KamehaArrrrhClearTheWayIm", ROMX
 
 ; Yold talk 82 (YoldTalkEvents): starts Script_KamehaArrrrhClearThe (message $086B ('Kameha: Arrrrh,
 ; clear the way!'), SCRIPT_SCENE_KAMEHA_FLEES, then message $0891 ('Kameha: Aiyeeeeeh...')) through
@@ -5657,6 +5957,8 @@ Talk_KamehaArrrrhClearTheWayIm::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_SceneMermaidKingdom", ROMX
+
 ; Yold talk 83 (YoldTalkEvents): starts Script_SceneMermaidKingdom (a 140-frame wait, then
 ; SCRIPT_SCENE_MERMAID_KINGDOM) through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script,
 ; wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -5668,6 +5970,8 @@ Talk_SceneMermaidKingdom::
     ld hl, Script_SceneMermaidKingdom
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 ChestItem_Repellent", ROMX
 
 ; Yold talk 84 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_REPELLENT and story flag
@@ -5687,6 +5991,8 @@ ChestItem_Repellent::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Warp_Flag00E1", ROMX
+
 ; Yold talk 85 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WARP and story flag
 ; $00E1 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -5704,6 +6010,8 @@ ChestItem_Warp_Flag00E1::
     ld de, $00e1
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_WorldLeaf", ROMX
 
 ; Yold talk 86 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WORLDLEAF and story flag
@@ -5723,6 +6031,8 @@ ChestItem_WorldLeaf::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_LifeAcorn", ROMX
+
 ; Yold talk 87 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_LIFEACORN and story flag
 ; $00E3 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -5740,6 +6050,8 @@ ChestItem_LifeAcorn::
     ld de, $00e3
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_DEFseed", ROMX
 
 ; Yold talk 88 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_DEFSEED and story flag
@@ -5759,6 +6071,8 @@ ChestItem_DEFseed::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg088C_HeroPeeredIntoTheVaseThere", ROMX
+
 ; Yold talk 89 (YoldTalkEvents): starts message $088C ('<BUF0> peered into the vase. There') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -5769,6 +6083,8 @@ TalkMsg088C_HeroPeeredIntoTheVaseThere::
     ld hl, $088c ; '0 peered into the vase. There'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ChestItem_WorldDew", ROMX
 
 ; Yold talk 90 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WORLDDEW and story flag
@@ -5788,6 +6104,8 @@ ChestItem_WorldDew::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_War", ROMX
+
 ; Yold talk 91 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WAR and story flag $00E6
 ; in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That command
@@ -5805,6 +6123,8 @@ ChestItem_War::
     ld de, $00e6
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 VaseItem_Antidote", ROMX
 
 ; Yold talk 92 (YoldTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_ANTIDOTE and story flag
@@ -5824,6 +6144,8 @@ VaseItem_Antidote::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 VaseItem_LoveWater", ROMX
+
 ; Yold talk 93 (YoldTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_LOVEWATER and story flag
 ; $00E8 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -5841,6 +6163,8 @@ VaseItem_LoveWater::
     ld de, $00e8
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 VaseItem_Warp", ROMX
 
 ; Yold talk 94 (YoldTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_WARP and story flag $00F2
@@ -5860,6 +6184,8 @@ VaseItem_Warp::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0861_HeroPeeredIntoTheBarrelA", ROMX
+
 ; Yold talk 95 (YoldTalkEvents): starts message $0861 ('<BUF0> peered into the barrel. A') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -5870,6 +6196,8 @@ TalkMsg0861_HeroPeeredIntoTheBarrelA::
     ld hl, $0861 ; '0 peered into the barrel. A'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 BarrelItem_BadMeat", ROMX
 
 ; Yold talk 96 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_BADMEAT and story
@@ -5889,6 +6217,8 @@ BarrelItem_BadMeat::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 BarrelItem_PorkChop", ROMX
+
 ; Yold talk 97 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_PORKCHOP and story
 ; flag $00EA in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1).
@@ -5906,6 +6236,8 @@ BarrelItem_PorkChop::
     ld de, $00ea
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_OrcaCape", ROMX
 
 ; Yold talk 98 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_ORCACAPE and story flag
@@ -5925,6 +6257,8 @@ ChestItem_OrcaCape::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Repellent_Flag00EC", ROMX
+
 ; Yold talk 99 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_REPELLENT and story flag
 ; $00EC in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -5942,6 +6276,8 @@ ChestItem_Repellent_Flag00EC::
     ld de, $00ec
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_WorldLeaf_Flag00ED", ROMX
 
 ; Yold talk 100 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WORLDLEAF and story
@@ -5961,6 +6297,8 @@ ChestItem_WorldLeaf_Flag00ED::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_AGLseed", ROMX
+
 ; Yold talk 101 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_AGLSEED and story
 ; flag $00EE in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1).
@@ -5978,6 +6316,8 @@ ChestItem_AGLseed::
     ld de, $00ee
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 BarrelItem_Potion", ROMX
 
 ; Yold talk 102 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_POTION and story
@@ -5997,6 +6337,8 @@ BarrelItem_Potion::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 BarrelItem_INTseed", ROMX
+
 ; Yold talk 103 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_INTSEED and story
 ; flag $00F0 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1).
@@ -6015,6 +6357,8 @@ BarrelItem_INTseed::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0862_HeroPeeredIntoTheBarrelThere", ROMX
+
 ; Yold talk 104 (YoldTalkEvents): starts message $0862 ('<BUF0> peered into the barrel. There')
 ; through StartMessageCommand09HL_B04 (script command 9 with the word in
 ; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6025,6 +6369,8 @@ TalkMsg0862_HeroPeeredIntoTheBarrelThere::
     ld hl, $0862 ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0864_HeroCheckedTheLedgerVoyage", ROMX
 
 ; Yold talk 105 (YoldTalkEvents): starts message $0864 ('<BUF0> checked the ledger.') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
@@ -6037,6 +6383,8 @@ TalkMsg0864_HeroCheckedTheLedgerVoyage::
     ld hl, $0864 ; '0 checked the ledger. 'Voyage Log…'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_KamehaEscape", ROMX
 
 ; Yold talk 106: starts Script_SceneKamehaEscape (SCRIPT_SCENE_KAMEHA_ESCAPE), removes ITEM_MOONROCK
 ; ($31) from the inventory (FindTemp0InInventoryList, then RemoveInventorySlotShiftDown on the slot
@@ -6054,6 +6402,8 @@ YoldTalkEvents_KamehaEscape::
     call SetFlagBit
     ret
 
+SECTION "Bank 04 TalkMsg00FF_Composing", ROMX
+
 ; Yold talk 107 (YoldTalkEvents): starts message $00FF (word $00FF: group 0, string $FF; the
 ; generated comment reads it as 'Composing') through StartMessageCommand09HL_B04 (script command 9
 ; with the word in wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6064,6 +6414,8 @@ TalkMsg00FF_Composing::
     ld hl, $00ff ; 'Composing'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk_ThickSuctionCuppedTentacles", ROMX
 
 ; Yold talk 108 (YoldTalkEvents): starts Script_ThickSuctionCuppedTentacles (message $0893 ('Thick,
 ; suction- cupped tentacles snaked out'), encounter $1E, then sets
@@ -6078,6 +6430,8 @@ Talk_ThickSuctionCuppedTentacles::
     ld hl, Script_ThickSuctionCuppedTentacles ; script 'Thick, suction- cupped tentacles snaked out'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 YoldTalkEvents_Church", ROMX
 
 ; Yold talk 109, the church: 'Our church is impoverished' the first time (setting its flag), then 'I
 ; am a servant'; script data in bank $1F. (C2, E-0357; probed E-0375)
@@ -6097,6 +6451,8 @@ YoldTalkEvents_Church::
     ld hl, Script_IAmAServant_3 ; script '*: I am a servant to'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 KalkaTalkEvents", ROMX
 
 ; Talk category 2 (DispatchTalkEvent_Kalka far-calls it): jumps through its table of 70 handlers by
 ; wTalkEventGroup, with no range check. The handlers cover the people, inns, item shop, churches,
@@ -6189,6 +6545,8 @@ TalkMsg0130_ThisIsKalkaAnOasisVillage::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0131_AThievingBandRunsAmokHere", ROMX
+
 ; Kalka talk 1 (KalkaTalkEvents): message $01A3 ('The King caught the thieves!') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0131 ('A thieving band runs amok').
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -6208,6 +6566,8 @@ TalkMsg0131_AThievingBandRunsAmokHere::
     ld hl, $01a3 ; '*: The King caught the thieves!'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0132_PardonAPlugForANavel", ROMX
 
 ; Kalka talk 2 (KalkaTalkEvents): message $01A4 ('The last king was a') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0132 ('Pardon? A plug for a'). Messages
@@ -6229,6 +6589,8 @@ TalkMsg0132_PardonAPlugForANavel::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0133_TheOasisWaterTravelsThrough", ROMX
+
 ; Kalka talk 3 (KalkaTalkEvents): starts message $0133 (on the oasis water travelling through an
 ; underground canal) through StartMessageCommand09HL_B04 (script command 9 with the word in
 ; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6239,6 +6601,8 @@ TalkMsg0133_TheOasisWaterTravelsThrough::
     ld hl, $0133 ; '*: The oasis' water travels through'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0134_TheLeaderOfTheThievesIs", ROMX
 
 ; Kalka talk 4 (KalkaTalkEvents): message $01A5 ('We recovered everything that was') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0134 ('The leader of the thieves').
@@ -6259,6 +6623,8 @@ TalkMsg0134_TheLeaderOfTheThievesIs::
     ld hl, $01a5 ; '*: We recovered everything that was'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0135_TheLogsNavelWhatIsThat", ROMX
 
 ; Kalka talk 5 (KalkaTalkEvents): once EVENT_SCENE_RIVAL_DEFEATED_05A is set starts
 ; Script_HelloHaveYouFound ('Hello, have you found a', then a script_skip_if_no to Script_OhThat and
@@ -6282,6 +6648,8 @@ TalkMsg0135_TheLogsNavelWhatIsThat::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0136_TheLogsNavelLetMeThink", ROMX
+
 ; Kalka talk 6 (KalkaTalkEvents): message $0D07 ('The shortage of water has') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0136 (an answer about the Log Navel).
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -6302,6 +6670,8 @@ TalkMsg0136_TheLogsNavelLetMeThink::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0137_HeroCheckedTheOvenASharp", ROMX
+
 ; Kalka talk 7 (KalkaTalkEvents): starts message $0137 ('<BUF0> checked the oven. A sharp') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6312,6 +6682,8 @@ TalkMsg0137_HeroCheckedTheOvenASharp::
     ld hl, $0137 ; '0 checked the oven. A sharp,'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 VaseItem_Herb", ROMX
 
 ; Kalka talk 8 (KalkaTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command $0A
 ; (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_HERB and story flag $0046
@@ -6330,6 +6702,8 @@ VaseItem_Herb::
     ld de, $0046
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 TalkMsg0138_TheUndergroundCanalIsAhead", ROMX
 
 ; Kalka talk 9 (KalkaTalkEvents): tests EVENT_SCENE_RIVAL_DEFEATED_05A, EVENT_YOU_WILL_SO_WE_CAN and
 ; EVENT_WHAT_OPEN_THE_CANAL_GATE in that order and acts on the first one set: message $0D08, $017A
@@ -6371,6 +6745,8 @@ TalkMsg0138_TheUndergroundCanalIsAhead::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_Inn", ROMX
+
 ; Kalka talk 10, the inn: turns the innkeeper toward the player (slot byte 7 = 2 at X $30, else 1)
 ; and starts 'Welcome to our inn' with script data in bank $10. (C2, E-0357; probed E-0375)
 KalkaTalkEvents_Inn::
@@ -6390,6 +6766,8 @@ KalkaTalkEvents_Inn::
     ld a, $10
     ld [wDataBank], a
     ret
+
+SECTION "Bank 04 TalkMsg0139_TheKingCalledACircusTroupe", ROMX
 
 ; Kalka talk 11 (KalkaTalkEvents): message $01A6 ('The circus has moved onto') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0139 ('The King called a circus').
@@ -6411,6 +6789,8 @@ TalkMsg0139_TheKingCalledACircusTroupe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg013A_ThisIsAsiyaTheDesertFlower", ROMX
+
 ; Kalka talk 12 (KalkaTalkEvents): starts message $013A ('This is Asiya, the desert') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6421,6 +6801,8 @@ TalkMsg013A_ThisIsAsiyaTheDesertFlower::
     ld hl, $013a ; '*: This is Asiya, the desert'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg013B_OurKingCameIntoAnEnormous", ROMX
 
 ; Kalka talk 13 (KalkaTalkEvents): message $0D0B ('The King gave away his') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $013B ('Our King came into an'). Messages
@@ -6442,6 +6824,8 @@ TalkMsg013B_OurKingCameIntoAnEnormous::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg013C_ISawALakeLikeA", ROMX
+
 ; Kalka talk 14 (KalkaTalkEvents): message $0D0A ('The band of thieves made') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $013C ('I saw a lake like'). Messages go
 ; through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -6461,6 +6845,8 @@ TalkMsg013C_ISawALakeLikeA::
     ld hl, $0d0a ; '*: The band of thieves made'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg013D_StrongMonstersAreInTheWell", ROMX
 
 ; Kalka talk 15 (KalkaTalkEvents): tests EVENT_SCENE_RIVAL_DEFEATED_05A, EVENT_YOU_WILL_SO_WE_CAN,
 ; EVENT_STRONG_MONSTERS_ARE_IN_THE and EVENT_KING_THEN_MAKE_WAY_TO in that order and acts on the
@@ -6514,6 +6900,8 @@ TalkMsg013D_StrongMonstersAreInTheWell::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg013E_OurKingHasBeenAFan", ROMX
+
 ; Kalka talk 16 (KalkaTalkEvents): starts message $013E ('Our King has been a') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6523,6 +6911,8 @@ TalkMsg013E_OurKingHasBeenAFan::
     ld hl, $013e ; '*: Our King has been a'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg013F_TheCircusMasterWasTrying", ROMX
 
 ; Kalka talk 17 (KalkaTalkEvents): message $01A7 (on the popularity of His Majesty) once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $013F ('The circus master was trying').
@@ -6543,6 +6933,8 @@ TalkMsg013F_TheCircusMasterWasTrying::
     ld hl, $01a7 ; '*: His Majesty's popularity has been'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 KalkaTalkEvents_ItemShop", ROMX
 
 ; Kalka talk 18, the item shop: screen table 3; 'Welcome to my item shop' the first time (setting
 ; its flag), then 'Hello, how may I ...'. (C2, E-0357; probed E-0375)
@@ -6565,6 +6957,8 @@ KalkaTalkEvents_ItemShop::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0140_NoOneEntersTheCastleWithout", ROMX
+
 ; Kalka talk 19 (KalkaTalkEvents): message $016A ('The King has given permission') once
 ; EVENT_SCENE_MONSTER_INSPECTION is set, otherwise message $0140 ('No one enters the castle').
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -6584,6 +6978,8 @@ TalkMsg0140_NoOneEntersTheCastleWithout::
     ld hl, $016a ; '*: The King has given permission'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0141_IfYouWantToGetIn", ROMX
 
 ; Kalka talk 20 (KalkaTalkEvents): tests EVENT_YOU_WILL_SO_WE_CAN and EVENT_SCENE_MONSTER_INSPECTION
 ; in that order and acts on the first one set; EVENT_YOU_WILL_SO_WE_CAN set: message $017C ('We have
@@ -6616,6 +7012,8 @@ TalkMsg0141_IfYouWantToGetIn::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0142_DidYouWantSomethingHoney", ROMX
+
 ; Kalka talk 21 (KalkaTalkEvents): message $017D ('Hi! Did you hear the') once
 ; EVENT_YOU_WILL_SO_WE_CAN is set, otherwise message $0142 ('Did you want something, honey?').
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -6636,6 +7034,8 @@ TalkMsg0142_DidYouWantSomethingHoney::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0143_WhenWeGetAHotSpell", ROMX
+
 ; Kalka talk 22 (KalkaTalkEvents): starts message $0143 ('When we get a hot') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6645,6 +7045,8 @@ TalkMsg0143_WhenWeGetAHotSpell::
     ld hl, $0143 ; '*: When we get a hot'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 KalkaTalkEvents_Church", ROMX
 
 ; Kalka talk 23, the church: 'The church welcomes you' the first time (setting its flag), then 'I am
 ; a servant'; script data in bank $1F. (C2, E-0357; probed E-0375)
@@ -6664,6 +7066,8 @@ KalkaTalkEvents_Church::
     ld hl, Script_IAmAServant ; script '*: I am a servant to'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 KalkaTalkEvents_Leader", ROMX
 
 ; Kalka talk 24, the leader: before EVENT_DID_YOU_SAY_YES_YES, one of three scripts by whether the
 ; party has three members and whether one is marked in record byte $55 bit 7; afterwards, with three
@@ -6711,6 +7115,8 @@ KalkaTalkEvents_Leader::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg014F_HeroPeeredIntoTheVaseIt", ROMX
+
 ; Kalka talk 25 (KalkaTalkEvents): starts message $014F ('<BUF0> peered into the vase. It') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6721,6 +7127,8 @@ TalkMsg014F_HeroPeeredIntoTheVaseIt::
     ld hl, $014f ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 VaseItem_Antidote_Flag0047", ROMX
 
 ; Kalka talk 26 (KalkaTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_ANTIDOTE and story
@@ -6740,6 +7148,8 @@ VaseItem_Antidote_Flag0047::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0137_HeroCheckedTheOvenASharp_04", ROMX
+
 ; Kalka talk 27 (KalkaTalkEvents): starts message $0137 ('<BUF0> checked the oven. A sharp'), the
 ; same reply as Kalka talk 7 (TalkMsg0137_HeroCheckedTheOvenASharp), through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
@@ -6752,6 +7162,8 @@ TalkMsg0137_HeroCheckedTheOvenASharp_04::
     ld hl, $0137 ; '0 checked the oven. A sharp,'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 IfFlag056Msg018F_WeDidntHelpTheThievesOne", ROMX
 
 ; Kalka talk 28 (KalkaTalkEvents): does nothing until EVENT_SCENE_TREASURE_THEFT is set; then starts
 ; message $018F (a denial of helping the thieves) through StartMessageCommand09HL_B04 (script
@@ -6768,6 +7180,8 @@ IfFlag056Msg018F_WeDidntHelpTheThievesOne::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg01BE_HeroCheckedTheDresserThere", ROMX
+
 ; Kalka talk 29 (KalkaTalkEvents): starts message $01BE ('<BUF0> checked the dresser. There was')
 ; through StartMessageCommand09HL_B04 (script command 9 with the word in
 ; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6778,6 +7192,8 @@ TalkMsg01BE_HeroCheckedTheDresserThere::
     ld hl, $01be ; '0 checked the dresser. There was'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0037_HeroTriedToOpenTheChest_04", ROMX
 
 ; Kalka talk 30 (KalkaTalkEvents): starts message $0037 ('<BUF0> tried to open the chest.'), the
 ; reply Yold talk 14 also uses (TalkMsg0037_HeroTriedToOpenTheChest), through
@@ -6793,6 +7209,8 @@ TalkMsg0037_HeroTriedToOpenTheChest_04::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_SecondInn", ROMX
+
 ; Kalka talk 31, a second inn (the first is KalkaTalkEvents_Inn): starts Script_WelcomeToOurInn_2
 ; ('Welcome to our inn!', then the inn script Script_It_3 in the data bank) and sets wDataBank =
 ; $10; unlike KalkaTalkEvents_Inn it does not turn the innkeeper. (C2, E-0369; probed E-0375)
@@ -6803,6 +7221,8 @@ KalkaTalkEvents_SecondInn::
     ld a, $10
     ld [wDataBank], a
     ret
+
+SECTION "Bank 04 TalkMsg0150_IHeardThatTheThievesDisappear", ROMX
 
 ; Kalka talk 32 (KalkaTalkEvents): message $01A8 ('Making a hideout in Mirage') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0150 ('I heard that the thieves').
@@ -6825,6 +7245,8 @@ TalkMsg0150_IHeardThatTheThievesDisappear::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0154_SeveralOfOurMembersCameBack", ROMX
+
 ; Kalka talk 33 (KalkaTalkEvents): message $01A9 ('They let us out when') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0154 ('Several of our members came').
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -6844,6 +7266,8 @@ TalkMsg0154_SeveralOfOurMembersCameBack::
     ld hl, $01a9 ; '*: They let us out when'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0155_WhenTheThievesRaidedUsWe", ROMX
 
 ; Kalka talk 34 (KalkaTalkEvents): message $01AA ('Come back and join the') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0155 ('When the thieves raided us').
@@ -6865,6 +7289,8 @@ TalkMsg0155_WhenTheThievesRaidedUsWe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0156_IWonderIfTheOthersAre", ROMX
+
 ; Kalka talk 35 (KalkaTalkEvents): message $01AB (the troupe reforming) once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0156 ('I wonder if the others').
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -6885,6 +7311,8 @@ TalkMsg0156_IWonderIfTheOthersAre::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0157_HehDidYouSeeTheLooks", ROMX
+
 ; Kalka talk 36 (KalkaTalkEvents): starts message $0157 ('Heh, did you see the') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -6894,6 +7322,8 @@ TalkMsg0157_HehDidYouSeeTheLooks::
     ld hl, $0157 ; '*: Heh, did you see the'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0158_ThisIsTheKingsTreasuryNo", ROMX
 
 ; Kalka talk 37 (KalkaTalkEvents): message $01AC once EVENT_SCENE_RIVAL_DEFEATED_05A is set;
 ; otherwise $0192 ('The prisoner in the dungeon') once EVENT_SCENE_TREASURE_THEFT is set; otherwise
@@ -6924,6 +7354,8 @@ TalkMsg0158_ThisIsTheKingsTreasuryNo::
     ld hl, $01ac ; '*: We're more vigilant now! No'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0159_WhatSeeHisMajestysTreasure", ROMX
 
 ; Kalka talk 38 (KalkaTalkEvents): tests EVENT_SCENE_RIVAL_DEFEATED_05A, EVENT_SCENE_TREASURE_THEFT
 ; and EVENT_YOU_WILL_SO_WE_CAN in that order and acts on the first one set: message $01AD ('I will
@@ -6966,6 +7398,8 @@ TalkMsg0159_WhatSeeHisMajestysTreasure::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_Snooping", ROMX
+
 ; Kalka talk 39: 'Why are you snooping?' until EVENT_YOU_WILL_SO_WE_CAN, then message $017F; after
 ; the rival is defeated (EVENT_SCENE_RIVAL_DEFEATED_05A) message $01AE. (C2, E-0357; probed E-0375)
 KalkaTalkEvents_Snooping::
@@ -6988,6 +7422,8 @@ KalkaTalkEvents_Snooping::
     ld hl, $01ae ; '*: Welcome, our honored guests! The'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg015A_HisMajestyIsHonestAndMost", ROMX
 
 ; Kalka talk 40 (KalkaTalkEvents): tests EVENT_YOU_WILL_SO_WE_CAN and
 ; EVENT_KING_WHAT_NEVER_MIND_THEN in that order and acts on the first one set;
@@ -7021,6 +7457,8 @@ TalkMsg015A_HisMajestyIsHonestAndMost::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_PoorChurchScene", ROMX
+
 ; Kalka talk 41: unless bit 3 of story byte $61 (wStoryFlags + $61) is set, starts
 ; Script_ScenePoorChurch (a 20-frame wait, then SCRIPT_SCENE_POOR_CHURCH).
 ; KalkaTalkEvents_WaitStoryFlagsPlus61 clears that bit again unless bit 4 is set. (C2, E-0369;
@@ -7034,6 +7472,8 @@ KalkaTalkEvents_PoorChurchScene::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg015F_HeroCheckedTheDresserThere", ROMX
+
 ; Kalka talk 42 (KalkaTalkEvents): starts message $015F ('<BUF0> checked the dresser. There were')
 ; through StartMessageCommand09HL_B04 (script command 9 with the word in
 ; wScriptParam0/wScriptParam1, wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -7044,6 +7484,8 @@ TalkMsg015F_HeroCheckedTheDresserThere::
     ld hl, $015f ; '0 checked the dresser. There were'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 KalkaTalkEvents_King", ROMX
 
 ; Kalka talk 43, the king: picks the script or message from the story so far: the first audience,
 ; then 'So have you ...', the way-making and 'Strong monsters are in the ...' stages, the water
@@ -7110,6 +7552,8 @@ KalkaTalkEvents_King::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0166_ThatFoolIsATerribleSwindler", ROMX
+
 ; Kalka talk 44 (KalkaTalkEvents): message $01B1 ('The dungeon is full of') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0166 ('That fool is a terrible').
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -7129,6 +7573,8 @@ TalkMsg0166_ThatFoolIsATerribleSwindler::
     ld hl, $01b1 ; '*: The dungeon is full of'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0167_HumphAMirageLakeHeSays", ROMX
 
 ; Kalka talk 45 (KalkaTalkEvents): message $0193 ('How can we reach the') once
 ; EVENT_SCENE_TREASURE_THEFT is set, otherwise message $0167 ('Humph! A mirage lake, he'). Messages
@@ -7150,6 +7596,8 @@ TalkMsg0167_HumphAMirageLakeHeSays::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_CanalGate", ROMX
+
 ; Kalka talk 46: does nothing until EVENT_KING_WHAT_NEVER_MIND_THEN is set; then starts
 ; Script_WhatOpenTheCanal ('What? Open the Canal Gate ...', SCRIPT_SCENE_CANAL_GATE, the speaker
 ; walks off and is hidden) and sets EVENT_WHAT_OPEN_THE_CANAL_GATE. (C2, E-0369; probed E-0375)
@@ -7163,6 +7611,8 @@ KalkaTalkEvents_CanalGate::
     ld de, EVENT_WHAT_OPEN_THE_CANAL_GATE
     call SetFlagBit
     ret
+
+SECTION "Bank 04 VaseItem_Herb_Flag004B", ROMX
 
 ; Kalka talk 47 (KalkaTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_HERB and story flag
@@ -7182,6 +7632,8 @@ VaseItem_Herb_Flag004B::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 VaseItem_PorkChop", ROMX
+
 ; Kalka talk 48 (KalkaTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_PORKCHOP and story
 ; flag $004C in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1).
@@ -7199,6 +7651,8 @@ VaseItem_PorkChop::
     ld de, $004c
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 VaseItem_TinyMedal", ROMX
 
 ; Kalka talk 49 (KalkaTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_TINYMEDAL and story
@@ -7218,6 +7672,8 @@ VaseItem_TinyMedal::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 VaseItem_Bookmark", ROMX
+
 ; Kalka talk 50 (KalkaTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_BOOKMARK and story
 ; flag $004E in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1).
@@ -7235,6 +7691,8 @@ VaseItem_Bookmark::
     ld de, $004e
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_ExitBell_Flag004F", ROMX
 
 ; Kalka talk 51 (KalkaTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_EXITBELL and story
@@ -7254,6 +7712,8 @@ ChestItem_ExitBell_Flag004F::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Wind", ROMX
+
 ; Kalka talk 52 (KalkaTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WIND and story flag
 ; $0050 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -7271,6 +7731,8 @@ ChestItem_Wind::
     ld de, $0050
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_WarpWing", ROMX
 
 ; Kalka talk 53 (KalkaTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WARPWING and story
@@ -7290,6 +7752,8 @@ ChestItem_WarpWing::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_AGL", ROMX
+
 ; Kalka talk 54 (KalkaTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_AGL and story flag
 ; $0052 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
@@ -7308,6 +7772,8 @@ ChestItem_AGL::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_MakingANewHome", ROMX
+
 ; Kalka talk 55: before EVENT_SCENE_RIVAL_DEFEATED_05A starts Script_I_13 ('I'm making a new home',
 ; encounter $16, 'Gaah! You're too strong!', lines from the King, then hides the speaker and sets
 ; EVENT_YOU_WILL_SO_WE_CAN); afterwards Script_SceneWaterReward (SCRIPT_SCENE_WATER_REWARD). (C2,
@@ -7325,6 +7791,8 @@ KalkaTalkEvents_MakingANewHome::
     ld hl, Script_SceneWaterReward
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 KalkaTalkEvents_WhereIsEverybody", ROMX
 
 ; Kalka talk 56: after the treasure theft, 'Wh-where is everybody?' when the inventory holds none of
 ; items $19-$1C, the second version when it holds any of them, message $018E after EVENT_CHECK_ITEM.
@@ -7374,6 +7842,8 @@ KalkaTalkEvents_WhereIsEverybody::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_MonstersInTow", ROMX
+
 ; Kalka talk 57: sets bit 4 of story byte $61 (wStoryFlags + $61), starts Script_SceneMonstersInTow
 ; (sets EVENT_SCENE_MONSTERS_IN_TOW and runs SCRIPT_SCENE_MONSTERS_IN_TOW) and removes
 ; ITEM_WATERCALL ($30) from the inventory (FindTemp0InInventoryList, then
@@ -7390,6 +7860,8 @@ KalkaTalkEvents_MonstersInTow::
     farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ret
+
+SECTION "Bank 04 TalkMsg0194_ThievesDroveUsFromOurHomes", ROMX
 
 ; Kalka talk 58 (KalkaTalkEvents): message $01B2 ('Cooh, our home come back') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0194 ('Thieves drove us from our').
@@ -7411,6 +7883,8 @@ TalkMsg0194_ThievesDroveUsFromOurHomes::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0195_TheLeaderOfTheThievesIs", ROMX
+
 ; Kalka talk 59 (KalkaTalkEvents): message $01B4 ('Cooh! This bed perfect for') once
 ; EVENT_SCENE_RIVAL_DEFEATED_05A is set, otherwise message $0195 ('The leader of the thieves').
 ; Messages go through StartMessageCommand09HL_B04 (script command 9, wModeState = 1). (C2, E-0375)
@@ -7431,6 +7905,8 @@ TalkMsg0195_TheLeaderOfTheThievesIs::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_MonsterFan", ROMX
+
 ; Kalka talk 60: runs field command 3, then 'Heh, you have monsters in ...' the first time and 'You
 ; again? You ...' after its flag. (C1, E-0357)
 KalkaTalkEvents_MonsterFan::
@@ -7449,6 +7925,8 @@ KalkaTalkEvents_MonsterFan::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg01B5_KyoohSwimmingInADesertThis", ROMX
+
 ; Kalka talk 61 (KalkaTalkEvents): starts message $01B5 ('Kyooh! Swimming in a desert...') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -7459,6 +7937,8 @@ TalkMsg01B5_KyoohSwimmingInADesertThis::
     ld hl, $01b5 ; '*: Kyooh! Swimming in a desert…'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg01BC_HeroCheckedTheTreasureChest", ROMX
 
 ; Kalka talk 62 (KalkaTalkEvents): starts message $01BC ('<BUF0> checked the treasure chest.
 ; Thieves') through StartMessageCommand09HL_B04 (script command 9 with the word in
@@ -7471,6 +7951,8 @@ TalkMsg01BC_HeroCheckedTheTreasureChest::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg01BD_HeroPeeredIntoTheVaseIt", ROMX
+
 ; Kalka talk 63 (KalkaTalkEvents): starts message $01BD ('<BUF0> peered into the vase. It') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -7481,6 +7963,8 @@ TalkMsg01BD_HeroPeeredIntoTheVaseIt::
     ld hl, $01bd ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg01C0_HeroCheckedTheTreasureChest", ROMX
 
 ; Kalka talk 64 (KalkaTalkEvents): starts message $01C0 ('<BUF0> checked the treasure chest. But')
 ; through StartMessageCommand09HL_B04 (script command 9 with the word in
@@ -7493,6 +7977,8 @@ TalkMsg01C0_HeroCheckedTheTreasureChest::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg01BF_HeroPeeredIntoTheVaseThe", ROMX
+
 ; Kalka talk 65 (KalkaTalkEvents): starts message $01BF ('<BUF0> peered into the vase. The') through
 ; StartMessageCommand09HL_B04 (script command 9 with the word in wScriptParam0/wScriptParam1,
 ; wScriptRunning = 1, wModeState = 1). (C2, E-0375)
@@ -7503,6 +7989,8 @@ TalkMsg01BF_HeroPeeredIntoTheVaseThe::
     ld hl, $01bf ; '0 peered into the vase. The'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 VaseItem_BeefJerky", ROMX
 
 ; Kalka talk 66 (KalkaTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts script command
 ; $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_BEEFJERKY and story
@@ -7522,6 +8010,8 @@ VaseItem_BeefJerky::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_RivalFade", ROMX
+
 ; Kalka talk 67: does nothing until EVENT_SCENE_MONSTERS_IN_TOW is set; then starts
 ; Script_SceneRivalFade (sound $60 and SCRIPT_SCENE_RIVAL_FADE). (C2, E-0369; probed E-0375)
 ; starts Script_SceneRivalFade (E-0248)
@@ -7533,6 +8023,8 @@ KalkaTalkEvents_RivalFade::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 KalkaTalkEvents_WaitStoryFlagsPlus61", ROMX
+
 ; Kalka talk 68: unless bit 4 of story byte $61 is set, clears its bit 3. (C2, E-0357; probed
 ; E-0375)
 KalkaTalkEvents_WaitStoryFlagsPlus61::
@@ -7542,6 +8034,8 @@ KalkaTalkEvents_WaitStoryFlagsPlus61::
     and $f7
     ld [wStoryFlags + $61], a
     ret
+
+SECTION "Bank 04 KalkaTalkEvents_Church2", ROMX
 
 ; Kalka talk 69, a second church: 'Our church is impoverished' the first time, then 'I am a
 ; servant'. (C2, E-0357; probed E-0375)
@@ -7561,6 +8055,8 @@ KalkaTalkEvents_Church2::
     ld hl, Script_IAmAServant_2 ; script '*: I am a servant to'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 DarckTalkEvents", ROMX
 
 ; Talk category 6 (DispatchTalkEvent_Darck far-calls it): jumps by wTalkEventGroup through two
 ; entries, with no range check: 0 DarckTalkEvents_HeardFromLord, 1 DarckTalkEvents_FightDarck. (C2,
@@ -7615,6 +8111,8 @@ DarckTalkEvents_HeardFromLord::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 DarckTalkEvents_FightDarck", ROMX
+
 ; Darck talk 1: the first time starts Script_DarckFawahahahYouChased ('Darck: Fawahahah! You chased
 ; your treasures', which sets EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR), afterwards
 ; Script_DarckFwahahahahBravoSplendid ('Darck: Fwahahahah! Bravo! Splendid! ...'); both run
@@ -7632,6 +8130,8 @@ DarckTalkEvents_FightDarck::
     ld hl, Script_DarckFwahahahahBravoSplendid ; script 'Darck: Fwahahahah! Bravo! Splendid! You've come'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 FieldTalkEvents", ROMX
 
 ; Talk category 0 (DispatchTalkEvent_Field far-calls it): jumps by wTalkEventGroup through 40
 ; entries, with no range check. Entries 0, 3 and 39 do nothing (FieldTalkEvents_NoEvent); 1-2, 4-26
@@ -7696,6 +8196,8 @@ Talk_CountdownMessage::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_EncounterMessage", ROMX
+
 ; Field talk 29 (FieldTalkEvents): starts Script_EncounterMessage (the single command
 ; SCRIPT_ENCOUNTER_MESSAGE ($9C), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi
 ; = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7707,6 +8209,8 @@ Talk_EncounterMessage::
     ld hl, Script_EncounterMessage
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 FieldTalkEvents_ObjectPathAfterThreeItems2", ROMX
 
 ; Field talk 28: after the three-item scene starts the object path script $1C. (C2, E-0357; probed
 ; E-0375)
@@ -7721,6 +8225,8 @@ FieldTalkEvents_ObjectPathAfterThreeItems2::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 FieldTalkEvents_ObjectPathAfterThreeItems", ROMX
+
 ; Field talk 27: after the three-item scene starts the object path script $1B. (C2, E-0357; probed
 ; E-0375)
 FieldTalkEvents_ObjectPathAfterThreeItems::
@@ -7734,6 +8240,8 @@ FieldTalkEvents_ObjectPathAfterThreeItems::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_HealParty", ROMX
+
 ; Field talk 26 (FieldTalkEvents): starts Script_HealParty (the single command SCRIPT_HEAL_PARTY
 ; ($9B), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script,
 ; wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7745,6 +8253,8 @@ Talk_HealParty::
     ld hl, Script_HealParty
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_RandomBattle", ROMX
 
 ; Field talk 25 (FieldTalkEvents): starts Script_RandomBattle (the single command
 ; SCRIPT_RANDOM_BATTLE ($9A), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi =
@@ -7758,6 +8268,8 @@ Talk_RandomBattle::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_ArenaGridBattle", ROMX
+
 ; Field talk 24 (FieldTalkEvents): starts Script_ArenaGridBattle (script_hold_dpad $00, 5, then
 ; SCRIPT_ARENA_GRID_BATTLE ($95)) through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script,
 ; wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7769,6 +8281,8 @@ Talk_ArenaGridBattle::
     ld hl, Script_ArenaGridBattle
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_ArenaRounds", ROMX
 
 ; Field talk 31 (FieldTalkEvents): starts Script_ArenaRounds (script_hold_dpad $00, 5, then
 ; SCRIPT_ARENA_ROUNDS ($96)) through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script,
@@ -7782,6 +8296,8 @@ Talk_ArenaRounds::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_BreedFade", ROMX
+
 ; Field talk 21 (FieldTalkEvents): starts Script_BreedFade (the single command SCRIPT_BREED_FADE
 ; ($8B), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script,
 ; wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7793,6 +8309,8 @@ Talk_BreedFade::
     ld hl, Script_BreedFade
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_BreedChildSprite", ROMX
 
 ; Field talk 22 (FieldTalkEvents): starts Script_BreedChildSprite (the single command
 ; SCRIPT_BREED_CHILD_SPRITE ($8C), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi
@@ -7806,6 +8324,8 @@ Talk_BreedChildSprite::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_BreedChildScene", ROMX
+
 ; Field talk 23 (FieldTalkEvents): starts Script_BreedChildScene (the single command
 ; SCRIPT_BREED_CHILD_SCENE ($8D), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi
 ; = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7817,6 +8337,8 @@ Talk_BreedChildScene::
     ld hl, Script_BreedChildScene
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_NpcBreedWarp", ROMX
 
 ; Field talk 32 (FieldTalkEvents): starts Script_NpcBreedWarp (the single command
 ; SCRIPT_NPC_BREED_WARP ($8F), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi =
@@ -7830,6 +8352,8 @@ Talk_NpcBreedWarp::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_LinkMessage", ROMX
+
 ; Field talk 33 (FieldTalkEvents): starts Script_LinkMessage (the single command SCRIPT_LINK_MESSAGE
 ; ($9F), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script,
 ; wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7841,6 +8365,8 @@ Talk_LinkMessage::
     ld hl, Script_LinkMessage
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 FieldTalkEvents_TalkToFollower", ROMX
 
 ; Field talk 34, talking to the first follower: while the followers trail the player, turns follower
 ; 0 to face the player and starts its personality message (wScriptParam1 = 0). (C2, E-0357; probed
@@ -7859,6 +8385,8 @@ FieldTalkEvents_TalkToFollower::
     ld hl, Script_PersonalityMessage
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 FieldTalkEvents_TalkToSecondFollower", ROMX
 
 ; Field talk 35, the second follower: as talk 34 for follower 1 when the party has at least two
 ; members. (C2, E-0357; probed E-0375)
@@ -7879,6 +8407,8 @@ FieldTalkEvents_TalkToSecondFollower::
     ld hl, Script_PersonalityMessage
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 FieldTalkEvents_TalkToThirdFollower", ROMX
 
 ; Field talk 36, the third follower: as talk 34 for follower 2 when the party has three members.
 ; (C2, E-0357; probed E-0375)
@@ -7902,6 +8432,8 @@ FieldTalkEvents_TalkToThirdFollower::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 FieldTalkEvents_KamehaStoleScene", ROMX
+
 ; Field talk 37: when wFollowerDelay is 0, starts Script_SceneKamehaStole (a facing command, then
 ; SCRIPT_SCENE_KAMEHA_STOLE); otherwise does nothing. (C2, E-0369; probed E-0375)
 ; starts Script_SceneKamehaStole (E-0248)
@@ -7913,6 +8445,8 @@ FieldTalkEvents_KamehaStoleScene::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 FieldTalkEvents_ResumeFollowers", ROMX
+
 ; Field talk 38: clears wFollowerDelay, so StepFollowersTowardTargets moves the followers again and
 ; UpdatePlayerMovement_AdvanceStep_SnapFollowers stops holding them on the player
 ; (SceneKamehaStole_DrawBlocks in bank $73 sets it to 1; the follower talks 34-36 only read it). It
@@ -7922,6 +8456,8 @@ FieldTalkEvents_ResumeFollowers::
     xor a
     ld [wFollowerDelay], a
     ret
+
+SECTION "Bank 04 Talk_FollowersStep10", ROMX
 
 ; Field talk 16 (FieldTalkEvents): starts Script_FollowersStep10 (the single command
 ; SCRIPT_FOLLOWERS_STEP_10 ($90), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi
@@ -7935,6 +8471,8 @@ Talk_FollowersStep10::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_FollowersStep11", ROMX
+
 ; Field talk 17 (FieldTalkEvents): starts Script_FollowersStep11 (the single command
 ; SCRIPT_FOLLOWERS_STEP_11 ($91), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi
 ; = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7946,6 +8484,8 @@ Talk_FollowersStep11::
     ld hl, Script_FollowersStep11
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_PlayerAndFollowersStep", ROMX
 
 ; Field talk 18 (FieldTalkEvents): starts Script_PlayerAndFollowersStep (the single command
 ; SCRIPT_PLAYER_AND_FOLLOWERS_STEP ($92), then script_end) through StartScriptAtHL_B04
@@ -7959,6 +8499,8 @@ Talk_PlayerAndFollowersStep::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_WarpWithFollowers", ROMX
+
 ; Field talk 19 (FieldTalkEvents): starts Script_WarpWithFollowers (the single command
 ; SCRIPT_WARP_WITH_FOLLOWERS ($93), then script_end) through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). (C2, E-0375)
@@ -7970,6 +8512,8 @@ Talk_WarpWithFollowers::
     ld hl, Script_WarpWithFollowers
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_FollowersStep14", ROMX
 
 ; Field talk 20 (FieldTalkEvents): starts Script_FollowersStep14 (the single command
 ; SCRIPT_FOLLOWERS_STEP_14 ($94), then script_end) through StartScriptAtHL_B04 (wScriptPointerLo/Hi
@@ -7983,10 +8527,14 @@ Talk_FollowersStep14::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 FieldTalkEvents_NoEvent", ROMX
+
 ; Field talk 0, 3 and 39: returns at once; these entries start nothing. (C2, E-0369; probed E-0375)
 ; starts Script_FieldScene01 (E-0248)
 FieldTalkEvents_NoEvent::
     ret
+
+SECTION "Bank 04 Talk_FieldScene01", ROMX
 
 ; Field talk 1 (FieldTalkEvents): starts Script_FieldScene01 through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
@@ -8001,6 +8549,8 @@ Talk_FieldScene01::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_RandomGoldOrItem", ROMX
+
 ; Field talk 2 (FieldTalkEvents): starts Script_RandomGoldOrItem through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
 ; one command SCRIPT_RANDOM_GOLD_OR_ITEM, run by RandomGoldOrItem: random gold (AddGoldCapped) or an
@@ -8013,6 +8563,8 @@ Talk_RandomGoldOrItem::
     ld hl, Script_RandomGoldOrItem
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_PartyDefeatedReturn", ROMX
 
 ; Field talk 4 (FieldTalkEvents): starts Script_PartyDefeatedReturn through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
@@ -8028,6 +8580,8 @@ Talk_PartyDefeatedReturn::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_ReturnMessage", ROMX
+
 ; Field talk 5 (FieldTalkEvents): starts Script_ReturnMessage through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
 ; one command SCRIPT_RETURN_MESSAGE, run by ReturnMessage: a message chosen by a story flag. (C2,
@@ -8040,6 +8594,8 @@ Talk_ReturnMessage::
     ld hl, Script_ReturnMessage
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_ReturnWarp", ROMX
 
 ; Field talk 6 (FieldTalkEvents): starts Script_ReturnWarp through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
@@ -8054,6 +8610,8 @@ Talk_ReturnWarp::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_MapExitWarp", ROMX
+
 ; Field talk 7 (FieldTalkEvents): starts Script_MapExitWarp through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
 ; one command SCRIPT_MAP_EXIT_WARP, run by MapExitWarp: a fade, then the warp destination from the
@@ -8066,6 +8624,8 @@ Talk_MapExitWarp::
     ld hl, Script_MapExitWarp
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_MapLinkWarp", ROMX
 
 ; Field talk 8 (FieldTalkEvents): starts Script_MapLinkWarp through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
@@ -8080,6 +8640,8 @@ Talk_MapLinkWarp::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_PlayerSpriteFlash", ROMX
+
 ; Field talk 9 (FieldTalkEvents): starts Script_PlayerSpriteFlash through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
 ; one command SCRIPT_PLAYER_SPRITE_FLASH, run by PlayerSpriteFlash: a screen flash and turns while
@@ -8093,6 +8655,8 @@ Talk_PlayerSpriteFlash::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_PlayerSpriteMessage", ROMX
+
 ; Field talk 10 (FieldTalkEvents): starts Script_PlayerSpriteMessage through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
 ; one command SCRIPT_PLAYER_SPRITE_MESSAGE, run by PlayerSpriteMessage: message $12 of the current
@@ -8105,6 +8669,8 @@ Talk_PlayerSpriteMessage::
     ld hl, Script_PlayerSpriteMessage
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk_KeyWorldDoorItem", ROMX
 
 ; Field talks 11, 12 and 13 (FieldTalkEvents): starts Script_KeyWorldDoorItem through
 ; StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1);
@@ -8120,6 +8686,8 @@ Talk_KeyWorldDoorItem::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_AreaItem", ROMX
+
 ; Field talk 14 (FieldTalkEvents): starts Script_AreaItem through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
 ; one command SCRIPT_AREA_ITEM, run by AreaItemEvent: gives an item (AppendItemStepPtrLoToInventory)
@@ -8133,6 +8701,8 @@ Talk_AreaItem::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_StepTriggerReward", ROMX
+
 ; Field talk 15 (FieldTalkEvents): starts Script_StepTriggerReward through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script is the
 ; one command SCRIPT_STEP_TRIGGER_REWARD, run by StepTriggerReward: gold (AddGoldCapped), an item or
@@ -8145,6 +8715,8 @@ Talk_StepTriggerReward::
     ld hl, Script_StepTriggerReward
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents", ROMX
 
 ; Talk category 7 (DispatchTalkEvent_ElvenVillage far-calls it): jumps through its table of 184
 ; handlers by wTalkEventGroup, with no range check. The handlers cover the people, vases, barrels,
@@ -8368,6 +8940,8 @@ ElvenVillageTalkEvents_CyalScenes::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_ShowYoureAHumanHow", ROMX
+
 ; Elven village talk 1: messages $0701, $0702, $0706 and others and two scripts, chosen by the
 ; village story from the first meeting with a human to the key boss beaten (EVENT_KEY_BOSS_BEATEN);
 ; some set their own flags. (C2, E-0357; probed E-0375)
@@ -8436,6 +9010,8 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_Cyal", ROMX
+
 ; Elven village talk 2, Cyal: 'Are you maybe a ...' at first, message $0707 after Cyal's 'Yay, you',
 ; Cyal's 'Listen, hero' script after the elder's scene, message $0747 then $0748 after the key boss
 ; is beaten. (C2, E-0357; probed E-0375)
@@ -8480,6 +9056,8 @@ ElvenVillageTalkEvents_Cyal::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0708_HelloMunchkinEnjoyYourStay", ROMX
+
 ; Elven village talk 3 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN set gives $0749 'We owe you a big thanks.'; else
 ; EVENT_ROLT_WAIT_GONE_ALREADY set gives $0755 'Not only their parents, but Cyal was taken too?';
@@ -8521,6 +9099,8 @@ TalkMsg0708_HelloMunchkinEnjoyYourStay::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0709_AHumanHereItsBeenSeveral", ROMX
+
 ; Elven village talk 4 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN set gives $074A 'Thanks to you, we can live in peace, free of fear.';
 ; else EVENT_CYAL_LISTEN_HERO_WE_SHOULD set gives $0718 'Cyal and Rolt have no family except each
@@ -8552,6 +9132,8 @@ TalkMsg0709_AHumanHereItsBeenSeveral::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg070A_YoureNotLikeUsYouScare", ROMX
+
 ; Elven village talk 5 (ElvenVillageTalkEvents): starts message $074B 'You look kind and caring.'
 ; when EVENT_KEY_BOSS_BEATEN is set, otherwise $070A ('... You scare me...'), through
 ; StartMessageCommand09HL_B04 (script command $09). (C2, E-0375)
@@ -8571,6 +9153,8 @@ TalkMsg070A_YoureNotLikeUsYouScare::
     ld hl, $074b ; '*: You look kind and caring.'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg070B_HeyThereImATalkingHorse", ROMX
 
 ; Elven village talk 6 (ElvenVillageTalkEvents), the talking horse: picks one message by story
 ; flags, tested in this order: EVENT_KEY_BOSS_BEATEN set gives $074C 'Brave human, hear this.'; else
@@ -8613,6 +9197,8 @@ TalkMsg070B_HeyThereImATalkingHorse::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg070C_ThisHorseWasHereBeforeUs", ROMX
+
 ; Elven village talk 7 (ElvenVillageTalkEvents): starts message $074D 'The talking horse came from
 ; somewhere outside this world.' when EVENT_KEY_BOSS_BEATEN is set, otherwise $070C 'This horse was
 ; here before us.', through StartMessageCommand09HL_B04 (script command $09). (C2, E-0375)
@@ -8632,6 +9218,8 @@ TalkMsg070C_ThisHorseWasHereBeforeUs::
     ld hl, $074d ; '*: The talking horse came from'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg070D_ThisIsElvenVillageYoureA", ROMX
 
 ; Elven village talk 8 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN set gives $074E 'You put down that fiend?'; else
@@ -8673,6 +9261,8 @@ TalkMsg070D_ThisIsElvenVillageYoureA::
     ld hl, $074e ; '*: You put down that fiend?'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0752_IveHeardThatHumansAre", ROMX
 
 ; Elven village talk 9 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN set gives $074F ('... a savage but I must thank you as a courtesy.');
@@ -8716,6 +9306,8 @@ TalkMsg0752_IveHeardThatHumansAre::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_Shop", ROMX
+
 ; Elven village talk 10: a shop: screen table $10, 'Welcome, how may I ...'. (C2, E-0357; probed
 ; E-0375)
 ElvenVillageTalkEvents_Shop::
@@ -8726,6 +9318,8 @@ ElvenVillageTalkEvents_Shop::
     ld hl, Script_WelcomeHowMayI_5 ; script '*: Welcome! How may I help'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_ShowWellWellItIs", ROMX
 
 ; Elven village talk 11: 'Well, well, it is ...' messages and scripts by the village story (the
 ; elder's scene, Rolt's departure, the key boss beaten), setting its flags on first hearing. (C2,
@@ -8795,6 +9389,8 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_MasterAgDevil", ROMX
+
 ; Elven village talk 12: does nothing until EVENT_CYAL_EEEK_HERO_HELP_ME is set; then starts
 ; Script_MasterAgDevilAHuman ('Master ..., a human, ruff!', 'What shall we do, ruff?' ...). (C2,
 ; E-0369; probed E-0375)
@@ -8806,6 +9402,8 @@ ElvenVillageTalkEvents_MasterAgDevil::
     ld hl, Script_MasterAgDevilAHuman ; script '*: Master AgDevil, a human, ruff!'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0723_TchWeHaveToEatThe", ROMX
 
 ; Elven village talk 13 (ElvenVillageTalkEvents): starts message $0726 ('... Say your prayers,
 ; ruff!') when EVENT_THAT is set, otherwise $0723 'Tch, we have to eat the lousy food like we always
@@ -8827,6 +9425,8 @@ TalkMsg0723_TchWeHaveToEatThe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_ThatsWhatWellDo", ROMX
+
 ; Elven village talk 14: the first time starts Script_That_3 ('That's what we'll do, kid.', setting
 ; EVENT_THAT), afterwards Script_You_11 ('You've come back again, ruff?'); both run encounter $09,
 ; then '...Too strong... Arroooh!', SCRIPT_SCENE_TOO_STRONG and set EVENT_SCENE_TOO_STRONG. (C2,
@@ -8844,6 +9444,8 @@ ElvenVillageTalkEvents_ThatsWhatWellDo::
     ld hl, Script_You_11 ; script '*: You've come back again, ruff?'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 TalkMsg072F_ThisIsElvensLookoutPostWe", ROMX
 
 ; Elven village talk 15 (ElvenVillageTalkEvents), the lookout post: picks one message by story
 ; flags, tested in this order: EVENT_KEY_BOSS_BEATEN set gives $0750 ('... We stand guard against
@@ -8889,6 +9491,8 @@ TalkMsg072F_ThisIsElvensLookoutPostWe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0730_HorridMonstersThatAttack", ROMX
+
 ; Elven village talk 16 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN set gives $0751 'Beating AgDevil...'; else
 ; EVENT_ROLT_WAIT_GONE_ALREADY set gives $0733 ('... They have no pity, not even for small
@@ -8920,6 +9524,8 @@ TalkMsg0730_HorridMonstersThatAttack::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_KeyBossBattle", ROMX
+
 ; Elven village talk 17: the first time starts Script_TheHumanInThe ('The human in the forest ...')
 ; and sets EVENT_THE_HUMAN_IN_THE_FOREST; afterwards Script_WhatYouAgainRude ('What, you again?
 ; Rude, rude, ...'). Both run encounter $0B, then SCRIPT_KEY_BOSS_BEATEN and 'Rolt: Wow... <PLAYER>,
@@ -8940,6 +9546,8 @@ ElvenVillageTalkEvents_KeyBossBattle::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_RoltFoundYou", ROMX
+
 ; Elven village talk 18: does nothing until EVENT_ROLT_WAIT_GONE_ALREADY is set; then starts
 ; Script_RoltI ('Rolt: I've found you at last!' ... 'Rolt: Shut up! Give back Cyal!',
 ; SCRIPT_SCENE_GIVE_BACK_CYAL) and sets EVENT_ROLT_IVE_FOUND_YOU_AT. (C2, E-0369; probed E-0375)
@@ -8953,6 +9561,8 @@ ElvenVillageTalkEvents_RoltFoundYou::
     ld de, EVENT_ROLT_IVE_FOUND_YOU_AT
     call SetFlagBit
     ret
+
+SECTION "Bank 04 VaseItem_TinyMedal_Flag0153", ROMX
 
 ; Elven village talk 19 (ElvenVillageTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 =
@@ -8973,6 +9583,8 @@ VaseItem_TinyMedal_Flag0153::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 VaseItem_INTseed", ROMX
+
 ; Elven village talk 20 (ElvenVillageTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 =
 ; ITEM_INTSEED and story flag $0154 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep
@@ -8992,6 +9604,8 @@ VaseItem_INTseed::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 VaseItem_Potion", ROMX
+
 ; Elven village talk 21 (ElvenVillageTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_POTION
 ; and story flag $0155 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -9010,6 +9624,8 @@ VaseItem_Potion::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0756_HeroPeeredIntoTheVaseIt", ROMX
+
 ; Elven village talk 22 (ElvenVillageTalkEvents): starts message $0756 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero peers into the vase: 'It was
@@ -9022,6 +9638,8 @@ TalkMsg0756_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0758_HeroCheckedTheOvenStewSimmered", ROMX
+
 ; Elven village talk 23 (ElvenVillageTalkEvents): starts message $0758 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero checks the oven: 'Stew
@@ -9033,6 +9651,8 @@ TalkMsg0758_HeroCheckedTheOvenStewSimmered::
     ld hl, $0758 ; '0 checked the oven. Stew simmered'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ChestItem_WorldDew_Flag0156", ROMX
 
 ; Elven village talk 24 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -9053,6 +9673,8 @@ ChestItem_WorldDew_Flag0156::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_ExitBell_Flag0157", ROMX
+
 ; Elven village talk 25 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_EXITBELL and story flag $0157 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep
@@ -9071,6 +9693,8 @@ ChestItem_ExitBell_Flag0157::
     ld de, $0157
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_MysticNut", ROMX
 
 ; Elven village talk 26 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -9091,6 +9715,8 @@ ChestItem_MysticNut::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0757_HeroCheckedTheOvenASharp", ROMX
+
 ; Elven village talk 27 (ElvenVillageTalkEvents): starts message $0757 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero checks the oven: 'A sharp
@@ -9102,6 +9728,8 @@ TalkMsg0757_HeroCheckedTheOvenASharp::
     ld hl, $0757 ; '0 checked the oven. A sharp'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk075F_KiralFetchMeMy", ROMX
 
 ; Kiral: before anything 'Hoh? Ah, excuse my incivility.'; then by progress 'I need help with
 ; my...', 'Fetch me my treasure from...' ($075F), the 'Ah! Back! The treasure? What?' script,
@@ -9215,6 +9843,8 @@ Talk075F_KiralFetchMeMy::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk075A_PiiGgzzPiiiiii", ROMX
+
 ; The robot: 'Pii... Ggzz... Piiiiii...' ($075A, clearing object 1's state) at first; after the
 ; WizStone scene 'I AM THE LATEST ROBOSTER.' ($0788); after EVENT_KIRAL_FETCH_ME_MY_167 'MY NAME IS
 ; LEO...' ($078B). (C2, E-0357; probed E-0375)
@@ -9244,6 +9874,8 @@ Talk075A_PiiGgzzPiiiiii::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0760_HeroCheckedTheBookshelfA", ROMX
+
 ; Elven village talk 34 (ElvenVillageTalkEvents): starts message $0760 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero checks the bookshelf: 'A
@@ -9256,6 +9888,8 @@ TalkMsg0760_HeroCheckedTheBookshelfA::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0761_HeroCheckedTheBookshelfA", ROMX
+
 ; Elven village talk 35 (ElvenVillageTalkEvents): starts message $0761 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero checks the bookshelf: 'A
@@ -9267,6 +9901,8 @@ TalkMsg0761_HeroCheckedTheBookshelfA::
     ld hl, $0761 ; '0 checked the bookshelf. A very'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 VaseItem_TinyMedal_Flag015B", ROMX
 
 ; Elven village talk 36 (ElvenVillageTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 =
@@ -9287,6 +9923,8 @@ VaseItem_TinyMedal_Flag015B::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0762_HeroPeeredIntoTheVaseRolled", ROMX
+
 ; Elven village talk 37 (ElvenVillageTalkEvents): starts message $0762 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero peers into the vase: 'Rolled
@@ -9298,6 +9936,8 @@ TalkMsg0762_HeroPeeredIntoTheVaseRolled::
     ld hl, $0762 ; '0 peered into the vase. Rolled'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0763_HeroPeeredIntoTheBarrelIt", ROMX
 
 ; Elven village talk 38 (ElvenVillageTalkEvents): starts message $0763 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
@@ -9311,6 +9951,8 @@ TalkMsg0763_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0764_HeroPeeredIntoTheBarrelThere", ROMX
+
 ; Elven village talk 39 (ElvenVillageTalkEvents): starts message $0764 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero peers into the barrel:
@@ -9323,6 +9965,8 @@ TalkMsg0764_HeroPeeredIntoTheBarrelThere::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0765_HeroPeeredIntoTheBarrelThere", ROMX
+
 ; Elven village talk 40 (ElvenVillageTalkEvents): starts message $0765 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero peers into the barrel:
@@ -9334,6 +9978,8 @@ TalkMsg0765_HeroPeeredIntoTheBarrelThere::
     ld hl, $0765 ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 BarrelItem_WorldDew", ROMX
 
 ; Elven village talk 41 (ElvenVillageTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 =
@@ -9354,6 +10000,8 @@ BarrelItem_WorldDew::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0766_HeroPeeredIntoTheBarrelA", ROMX
+
 ; Elven village talk 42 (ElvenVillageTalkEvents): starts message $0766 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero peers into the barrel: 'A
@@ -9365,6 +10013,8 @@ TalkMsg0766_HeroPeeredIntoTheBarrelA::
     ld hl, $0766 ; '0 peered into the barrel. A'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk0768_HeroPeeredIntoThe", ROMX
 
 ; A barrel: its 'peered into the barrel. A...' script until EVENT_HERO_PEERED_INTO_THE_BARREL, then
 ; '0 peered into the barrel. There...' ($0768). (C2, E-0357; probed E-0375)
@@ -9385,6 +10035,8 @@ Talk0768_HeroPeeredIntoThe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk0768_HeroPeeredIntoThe_2", ROMX
+
 ; Another barrel: as Talk0768_HeroPeeredIntoThe with EVENT_HERO_PEERED_INTO_THE_BARREL_15E and
 ; Script_HeroPeeredIntoThe_3. (C2, E-0357; probed E-0375)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
@@ -9404,6 +10056,8 @@ Talk0768_HeroPeeredIntoThe_2::
     ld hl, $0768 ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk078E_RobosterStoppedMovingEntirely", ROMX
 
 ; Rob-N the guard robot: by progress 'PROFESSOR... SAY GUARD... TREASURE... NEVER...', 'PRO...
 ; SOR... AY... GGGGUARD...' (after EVENT_KIRAL_FETCH_ME_MY), 'PIPIPI... GGGGGGAGAGAGA...' and 'PI...
@@ -9457,6 +10111,8 @@ Talk078E_RobosterStoppedMovingEntirely::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk077B_HeroPeeredIntoThe", ROMX
+
 ; The WizStone barrel: before the barrel scene its script; after it, with room in the bag, adds the
 ; WizStone ($3C, asking for a bag sort) with '...There...' ($077A) and sets
 ; EVENT_HERO_PEERED_INTO_THE, else $077B; once taken, $077C. (C2, E-0357; probed E-0375)
@@ -9497,6 +10153,8 @@ Talk077B_HeroPeeredIntoThe::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg07B7_TheTowersEntryIsSealedTight", ROMX
+
 ; Elven village talk 47 (ElvenVillageTalkEvents): starts message $07B7 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the message reads '... entry is
@@ -9508,6 +10166,8 @@ TalkMsg07B7_TheTowersEntryIsSealedTight::
     ld hl, $07b7 ; 'The tower's entry is sealed tight.'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg078F_ThisIsTheTown", ROMX
 
 ; Elven village talk 48 (ElvenVillageTalkEvents): starts message $0CE2 'Welcome to the town of
 ; Miagen.' when EVENT_KEY_BOSS_BEATEN_2 is set, otherwise $078F 'This is the town of Miagen.',
@@ -9528,6 +10188,8 @@ TalkMsg078F_ThisIsTheTown::
     ld hl, $0ce2 ; '*: Welcome to the town of'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0790_AreYouFriendsWith", ROMX
 
 ; Elven village talk 49 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CE3 'So you defeated the evildoer?'; else
@@ -9560,6 +10222,8 @@ TalkMsg0790_AreYouFriendsWith::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0791_WowYouHaveMonsters", ROMX
+
 ; Elven village talk 50 (ElvenVillageTalkEvents): starts message $0CE4 'Wow, you have monsters!
 ; Wicked!' when EVENT_KEY_BOSS_BEATEN_2 is set, otherwise $0791 'Wow! You have monsters! Neat!',
 ; through StartMessageCommand09HL_B04 (script command $09). (C2, E-0375)
@@ -9580,6 +10244,8 @@ TalkMsg0791_WowYouHaveMonsters::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0792_AreYourMonstersGood", ROMX
+
 ; Elven village talk 51 (ElvenVillageTalkEvents): starts message $0CE5 ('... I like them!') when
 ; EVENT_KEY_BOSS_BEATEN_2 is set, otherwise $0792 'Are your monsters good?', through
 ; StartMessageCommand09HL_B04 (script command $09). (C2, E-0375)
@@ -9599,6 +10265,8 @@ TalkMsg0792_AreYourMonstersGood::
     ld hl, $0ce5 ; '*: Your monsters are good, it's'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0793_MonstersCanBeGood", ROMX
 
 ; Elven village talk 52 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CE6 'So there are evil masters...'; else
@@ -9631,6 +10299,8 @@ TalkMsg0793_MonstersCanBeGood::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0794_YouAppearToHave", ROMX
+
 ; Elven village talk 53 (ElvenVillageTalkEvents): starts message $0CE7 'Controlling monsters is no
 ; easy feat, is it?' when EVENT_KEY_BOSS_BEATEN_2 is set, otherwise $0794 'You appear to have the
 ; power to control monsters.', through StartMessageCommand09HL_B04 (script command $09). (C2,
@@ -9651,6 +10321,8 @@ TalkMsg0794_YouAppearToHave::
     ld hl, $0ce7 ; '*: Controlling monsters is no easy'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk07A4_CouldYouHumorThis", ROMX
 
 ; The old man: after the second key boss 'I thank you in all...' ($0CE8); after
 ; EVENT_THANK_YOU_FOR_GETTING_THE 'Things haven't been good for...' ($07CE); after the treasure
@@ -9715,6 +10387,8 @@ Talk07A4_CouldYouHumorThis::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk07A6_OurDaughtersOnlyMemento", ROMX
+
 ; The old woman: after the second key boss 'The atmosphere has cheered up,...' ($0CE9); after
 ; EVENT_HERO_RECEIVED_A_SAGE_ROCK 'We are grateful that you...' ($07D3); after
 ; EVENT_THANK_YOU_FOR_GETTING_THE the 'Thank you for recovering our...' script, the version that
@@ -9772,6 +10446,8 @@ Talk07A6_OurDaughtersOnlyMemento::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0799_MonstersRaidedThisHouse", ROMX
+
 ; Elven village talk 56 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CEA 'I long to have a family of my own.'; else
 ; EVENT_THANK_YOU_FOR_GETTING_THE set gives $07D4 'The old couple look happy after they got their
@@ -9812,6 +10488,8 @@ TalkMsg0799_MonstersRaidedThisHouse::
     ld hl, $0cea ; '*: I long to have a'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg079A_TheOldPeopleAcross", ROMX
 
 ; Elven village talk 57 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CEB 'Old people say that a cheerful town is a good
@@ -9855,6 +10533,8 @@ TalkMsg079A_TheOldPeopleAcross::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg079B_MonstersHaveTakenTo", ROMX
+
 ; Elven village talk 58 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CEC 'Monsters can be good or evil on the whims of their
 ; masters, I guess.'; else EVENT_HERO_OPENED_THE_TREASURE_CHEST set gives $07C8 ('... I can
@@ -9887,6 +10567,8 @@ TalkMsg079B_MonstersHaveTakenTo::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg079C_GrrrrImSoAngry", ROMX
+
 ; Elven village talk 59 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CED 'The thief was selling what he stole from us for a
 ; lot of gold.'; else EVENT_HERO_OPENED_THE_TREASURE_CHEST set gives $07C9 ('... This is so
@@ -9918,6 +10600,8 @@ TalkMsg079C_GrrrrImSoAngry::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_ShopHelloWhatMayI", ROMX
+
 ; Elven village talk 60 (ElvenVillageTalkEvents): a shop, like ElvenVillageTalkEvents_Shop with
 ; screen table $11: sets wScreenTableIndex = $11 and wDataBank = $10, then starts
 ; Script_HelloWhatMayI_2 through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script,
@@ -9934,6 +10618,8 @@ ElvenVillageTalkEvents_ShopHelloWhatMayI::
     ld hl, Script_HelloWhatMayI_2 ; script '*: Hello! What may I do'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_TravelersInn", ROMX
 
 ; Elven village talk 61 (ElvenVillageTalkEvents), the traveler inn: sets wSpriteSlots + 7 (slot 0,
 ; OBJ_STATE) to 0 when hPlayerX is $30 and to 1 otherwise, starts Script_WelcomeToOurTraveler
@@ -9958,6 +10644,8 @@ ElvenVillageTalkEvents_TravelersInn::
     ld a, $10
     ld [wDataBank], a
     ret
+
+SECTION "Bank 04 TalkMsg079F_IfYouTravelWest", ROMX
 
 ; Elven village talk 62 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CEE 'It sure was a thrilling time when the thief was
@@ -9989,6 +10677,8 @@ TalkMsg079F_IfYouTravelWest::
     ld hl, $0cee ; '*: It sure was a thrilling'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk07D7_MilayouIEBeen", ROMX
 
 ; Milayou: by progress the 'Excuse me, are you a...' script, 'Have you changed your mind?'
 ; (EVENT_I_CAN), 'I've been checking around, and...' ($07D7), the forest script (pendant-seller
@@ -10067,6 +10757,8 @@ Talk07D7_MilayouIEBeen::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg07A9_ThisIsTheTravelersHutStay", ROMX
+
 ; Elven village talk 64 (ElvenVillageTalkEvents): starts message $07A9 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the message reads '... Stay and rest
@@ -10078,6 +10770,8 @@ TalkMsg07A9_ThisIsTheTravelersHutStay::
     ld hl, $07a9 ; '*: This is the traveler's hut.'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg07AA_ThatDealerHowExpensive", ROMX
 
 ; Elven village talk 65 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CF2 'That merchant, he was a thief.'; else
@@ -10121,6 +10815,8 @@ TalkMsg07AA_ThatDealerHowExpensive::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk07C1_WhatMonstersAttackedYou", ROMX
+
 ; Talk: at first the 'Lately, the town of Miagen...' script; after the mercy scene 'What? Monsters
 ; attacked you in...' ($07C1); after EVENT_THANK_YOU_FOR_GETTING_THE 'The thieving monsters had
 ; a...' ($07D9); after the second key boss 'People say you can't judge...' ($0CF3). (C2, E-0357;
@@ -10156,6 +10852,8 @@ Talk07C1_WhatMonstersAttackedYou::
     ld hl, $0cf3 ; '*: People say you can't judge'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg07AE_ThatDealersWaresCould", ROMX
 
 ; Elven village talk 67 (ElvenVillageTalkEvents): picks one message by story flags, tested in this
 ; order: EVENT_KEY_BOSS_BEATEN_2 set gives $0CF4 'That greedy hound of a dealer was behind those
@@ -10197,6 +10895,8 @@ TalkMsg07AE_ThatDealersWaresCould::
     ld hl, $0cf4 ; '*: That greedy hound of a'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk07AF_HowDoesThisOrnament", ROMX
 
 ; The pendant seller: shows ornament, jewelry and vase in turn ($07AF-$07B1, then 'I've no use for
 ; the...'), the second round $07B3-$07B5 after EVENT_THANK_YOU_I_KNEW_YOU, each setting its flag,
@@ -10310,6 +11010,8 @@ Talk07AF_HowDoesThisOrnament::
     ld [wStoryFlags + $68], a
     ret
 
+SECTION "Bank 04 TalkMsg07B8_WhoAreYou", ROMX
+
 ; Elven village talk 69 (ElvenVillageTalkEvents): starts message $07BA 'What, not you again!' when
 ; EVENT_YOU_1BA is set, otherwise $07B8 'Who are you?', through StartMessageCommand09HL_B04 (script
 ; command $09). It sets no flag; EVENT_YOU_1BA is set by Script_You_12, which talk 70 starts. (C2,
@@ -10331,6 +11033,8 @@ TalkMsg07B8_WhoAreYou::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_SceneMercyBattle", ROMX
+
 ; Elven village talk 70 (ElvenVillageTalkEvents): starts Script_We when EVENT_YOU_1BA is set,
 ; otherwise Script_You_12 (which sets EVENT_YOU_1BA), through StartScriptAtHL_B04
 ; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1). Both scripts run
@@ -10351,6 +11055,8 @@ ElvenVillageTalkEvents_SceneMercyBattle::
     ld hl, Script_We ; script '*: We'll smash you as often'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk07BF_HeroFoundThePretty", ROMX
 
 ; The treasure chest: with room in the bag adds the Pretty ring ($3D, asking for a bag sort) and
 ; runs '0 opened the treasure chest...'; otherwise '0 found the Pretty Ring. But...' ($07BF). (C2,
@@ -10374,6 +11080,8 @@ Talk07BF_HeroFoundThePretty::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 ElvenVillageTalkEvents_SecondKeyBossBattle", ROMX
+
 ; Elven village talk 72 (ElvenVillageTalkEvents): starts Script_WhatIsItYou_2 when
 ; EVENT_WHAT_IS_IT_YOU is set, otherwise Script_WhatIsItYou (which sets EVENT_WHAT_IS_IT_YOU),
 ; through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80,
@@ -10395,6 +11103,8 @@ ElvenVillageTalkEvents_SecondKeyBossBattle::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 VaseItem_DEFseed", ROMX
+
 ; Elven village talk 73 (ElvenVillageTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 =
 ; ITEM_DEFSEED and story flag $01C8 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep
@@ -10413,6 +11123,8 @@ VaseItem_DEFseed::
     ld de, $01c8
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 VaseItem_TinyMedal_Flag01C9", ROMX
 
 ; Elven village talk 74 (ElvenVillageTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 =
@@ -10433,6 +11145,8 @@ VaseItem_TinyMedal_Flag01C9::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0CFB_HeroTriedToOpenTheChest", ROMX
+
 ; Elven village talk 75 (ElvenVillageTalkEvents): starts message $0CFB through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero tries to open the chest:
@@ -10444,6 +11158,8 @@ TalkMsg0CFB_HeroTriedToOpenTheChest::
     ld hl, $0cfb ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0CFA_HeroPeeredIntoTheOvenA", ROMX
 
 ; Elven village talk 76 (ElvenVillageTalkEvents): starts message $0CFA through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
@@ -10457,6 +11173,8 @@ TalkMsg0CFA_HeroPeeredIntoTheOvenA::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0CFC_HeroPeeredIntoTheVaseCold", ROMX
+
 ; Elven village talk 77 (ElvenVillageTalkEvents): starts message $0CFC through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero peers into the vase: 'Cold
@@ -10468,6 +11186,8 @@ TalkMsg0CFC_HeroPeeredIntoTheVaseCold::
     ld hl, $0cfc ; '0 peered into the vase. Cold'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 VaseItem_Potion_Flag01CA", ROMX
 
 ; Elven village talk 78 (ElvenVillageTalkEvents), a one-time vase: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 1 (vase), wScriptParam1 = ITEM_POTION
@@ -10487,6 +11207,8 @@ VaseItem_Potion_Flag01CA::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0CFD_HeroPeeredIntoTheOvenMeat", ROMX
+
 ; Elven village talk 79 (ElvenVillageTalkEvents): starts message $0CFD through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the hero peers into the oven: 'Meat
@@ -10498,6 +11220,8 @@ TalkMsg0CFD_HeroPeeredIntoTheOvenMeat::
     ld hl, $0cfd ; '0 peered into the oven. Meat'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ChestItem_Laurel", ROMX
 
 ; Elven village talk 80 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10516,6 +11240,8 @@ ChestItem_Laurel::
     ld de, $01cb
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_LootChest", ROMX
 
 ; Elven village talk 81 (ElvenVillageTalkEvents), a chest of loot: starts group-0 message $00A1 (the
 ; hero checks the treasure chest: 'But it was empty...') when EVENT_KEY_BOSS_BEATEN_2 is set,
@@ -10538,6 +11264,8 @@ ElvenVillageTalkEvents_LootChest::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ChestItem_ExitBell_Flag01CC", ROMX
+
 ; Elven village talk 82 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_EXITBELL and story flag $01CC in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep
@@ -10556,6 +11284,8 @@ ChestItem_ExitBell_Flag01CC::
     ld de, $01cc
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_TinyMedal", ROMX
 
 ; Elven village talk 83 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10576,6 +11306,8 @@ ChestItem_TinyMedal::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Friend", ROMX
+
 ; Elven village talk 84 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_FRIEND and story flag $01CE in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep =
@@ -10594,6 +11326,8 @@ ChestItem_Friend::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 Talk_HeroCheckedTheTreasureChest", ROMX
+
 ; Elven village talk 85 (ElvenVillageTalkEvents): starts Script_HeroCheckedTheTreasure_3 through
 ; StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1);
 ; that script shows message $0C48 (the hero checks the treasure chest), runs encounter $32 and then
@@ -10608,6 +11342,8 @@ Talk_HeroCheckedTheTreasureChest::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0C03_TheTowersManyTreasuresAre", ROMX
+
 ; Elven village talk 96 (ElvenVillageTalkEvents): starts message $0C03 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the message reads '... heavily
@@ -10620,6 +11356,8 @@ TalkMsg0C03_TheTowersManyTreasuresAre::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0C02_OnlyAHandfulOfMastersHave", ROMX
+
 ; Elven village talk 97 (ElvenVillageTalkEvents): starts message $0C02 through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the message reads 'Only a handful of
@@ -10631,6 +11369,8 @@ TalkMsg0C02_OnlyAHandfulOfMastersHave::
     ld hl, $0c02 ; '*: Only a handful of masters'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_ShowThisIsThePower", ROMX
 
 ; Elven village talk 98: message $0C00 the first time (setting EVENT_THIS_IS_THE_POWER), then $0C01.
 ; (C2, E-0357; probed E-0375)
@@ -10649,6 +11389,8 @@ ElvenVillageTalkEvents_ShowThisIsThePower::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk_SceneChestBattle", ROMX
+
 ; Elven village talks 99, 100, 101 and 102 (ElvenVillageTalkEvents): starts Script_SceneChestBattle
 ; through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80,
 ; wModeState = 1); that script is the one command SCRIPT_SCENE_CHEST_BATTLE.
@@ -10662,6 +11404,8 @@ Talk_SceneChestBattle::
     ld hl, Script_SceneChestBattle
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_PowerTowerChestBattle", ROMX
 
 ; Power Tower's top: the chest battle script (Script_SceneChestBattle) until map $CE's object is
 ; removed, then 'You've conquered the Power Tower.' ($0C17). (C2, E-0357; probed E-0375)
@@ -10682,6 +11426,8 @@ ElvenVillageTalkEvents_PowerTowerChestBattle::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ChestItem_TinyMedal_Flag01D5", ROMX
+
 ; Elven village talk 104 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_TINYMEDAL and story flag $01D5 in wMessageIndex/wMessageGroup (wScriptRunning = 1,
@@ -10701,6 +11447,8 @@ ChestItem_TinyMedal_Flag01D5::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_AGL_Flag01D6", ROMX
+
 ; Elven village talk 105 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_AGL
 ; and story flag $01D6 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -10718,6 +11466,8 @@ ChestItem_AGL_Flag01D6::
     ld de, $01d6
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_SkyBell", ROMX
 
 ; Elven village talk 106 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10738,6 +11488,8 @@ ChestItem_SkyBell::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Herb", ROMX
+
 ; Elven village talk 107 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HERB
 ; and story flag $01DA in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -10755,6 +11507,8 @@ ChestItem_Herb::
     ld de, $01da
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_OrcaCape_Flag01DB", ROMX
 
 ; Elven village talk 108 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10775,6 +11529,8 @@ ChestItem_OrcaCape_Flag01DB::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_LoveWater_Flag01DC", ROMX
+
 ; Elven village talk 109 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_LOVEWATER and story flag $01DC in wMessageIndex/wMessageGroup (wScriptRunning = 1,
@@ -10793,6 +11549,8 @@ ChestItem_LoveWater_Flag01DC::
     ld de, $01dc
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_LoveWater_Flag01DE", ROMX
 
 ; Elven village talk 110 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10813,6 +11571,8 @@ ChestItem_LoveWater_Flag01DE::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_StoneFang", ROMX
+
 ; Elven village talk 111 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_STONEFANG and story flag $01DF in wMessageIndex/wMessageGroup (wScriptRunning = 1,
@@ -10832,6 +11592,8 @@ ChestItem_StoneFang::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Herb_Flag0169", ROMX
+
 ; Elven village talk 112 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HERB
 ; and story flag $0169 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -10849,6 +11611,8 @@ ChestItem_Herb_Flag0169::
     ld de, $0169
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_LoveWater_Flag016B", ROMX
 
 ; Elven village talk 113 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10869,6 +11633,8 @@ ChestItem_LoveWater_Flag016B::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Sailor", ROMX
+
 ; Elven village talk 114 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_SAILOR and story flag $016C in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep =
@@ -10886,6 +11652,8 @@ ChestItem_Sailor::
     ld de, $016c
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_SilvrCape", ROMX
 
 ; Elven village talk 115 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10906,6 +11674,8 @@ ChestItem_SilvrCape::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_MagicCape", ROMX
+
 ; Elven village talk 116 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_MAGICCAPE and story flag $016F in wMessageIndex/wMessageGroup (wScriptRunning = 1,
@@ -10924,6 +11694,8 @@ ChestItem_MagicCape::
     ld de, $016f
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_DracoCape", ROMX
 
 ; Elven village talk 117 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10944,6 +11716,8 @@ ChestItem_DracoCape::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Herb_Flag0171", ROMX
+
 ; Elven village talk 118 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HERB
 ; and story flag $0171 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -10961,6 +11735,8 @@ ChestItem_Herb_Flag0171::
     ld de, $0171
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_TinyMedal_Flag0172", ROMX
 
 ; Elven village talk 119 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -10981,6 +11757,8 @@ ChestItem_TinyMedal_Flag0172::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 Talk_HeroCheckedTheTreasureChest_2", ROMX
+
 ; Elven village talk 120 (ElvenVillageTalkEvents): starts Script_HeroCheckedTheTreasure_4 through
 ; StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1);
 ; that script shows message $0C49 (the hero checks the treasure chest) and then runs
@@ -10995,6 +11773,8 @@ Talk_HeroCheckedTheTreasureChest_2::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0C1B_ItsNotThatEasyToWin", ROMX
+
 ; Elven village talk 128 (ElvenVillageTalkEvents): starts message $0C1B through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
 ; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); the message reads '... You have to
@@ -11005,6 +11785,8 @@ TalkMsg0C1B_ItsNotThatEasyToWin::
     ld hl, $0c1b ; '*: It's not that easy to'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 TalkMsg0C1A_InThisTowerYourOpponents", ROMX
 
 ; Elven village talk 129 (ElvenVillageTalkEvents): starts message $0C1A through
 ; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
@@ -11017,6 +11799,8 @@ TalkMsg0C1A_InThisTowerYourOpponents::
     ld hl, $0c1a ; '*: In this Tower, your opponents'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_ShowThisIsTheBaffle", ROMX
 
 ; Elven village talk 130: message $0C18 the first time (setting EVENT_THIS_IS_THE_BAFFLE), then
 ; $0C19. (C2, E-0357; probed E-0375)
@@ -11035,6 +11819,8 @@ ElvenVillageTalkEvents_ShowThisIsTheBaffle::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk_SceneChestBattle_2", ROMX
+
 ; Elven village talks 131, 132, 133 and 134 (ElvenVillageTalkEvents): starts Script_SceneChestBattle
 ; through StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80,
 ; wModeState = 1), the same as Talk_SceneChestBattle; that script is the one command
@@ -11047,6 +11833,8 @@ Talk_SceneChestBattle_2::
     ld hl, Script_SceneChestBattle
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_BaffleTowerChestBattle", ROMX
 
 ; Baffle Tower's top: the chest battle script until map $D7's object is removed, then 'You've
 ; conquered the Baffle Tower.' ($0C2F). (C2, E-0357; probed E-0375)
@@ -11067,6 +11855,8 @@ ElvenVillageTalkEvents_BaffleTowerChestBattle::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ChestItem_SkyBell_Flag0175", ROMX
+
 ; Elven village talk 136 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_SKYBELL and story flag $0175 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep
@@ -11085,6 +11875,8 @@ ChestItem_SkyBell_Flag0175::
     ld de, $0175
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_Smart", ROMX
 
 ; Elven village talk 137 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -11105,6 +11897,8 @@ ChestItem_Smart::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_ExitBell_Flag0177", ROMX
+
 ; Elven village talk 138 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_EXITBELL and story flag $0177 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep
@@ -11124,6 +11918,8 @@ ChestItem_ExitBell_Flag0177::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Herb_Flag0179", ROMX
+
 ; Elven village talk 139 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HERB
 ; and story flag $0179 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -11141,6 +11937,8 @@ ChestItem_Herb_Flag0179::
     ld de, $0179
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_AwakeSand", ROMX
 
 ; Elven village talk 140 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -11161,6 +11959,8 @@ ChestItem_AwakeSand::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Cleric", ROMX
+
 ; Elven village talk 141 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_CLERIC and story flag $017B in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep =
@@ -11178,6 +11978,8 @@ ChestItem_Cleric::
     ld de, $017b
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_ExitBell_Flag017D", ROMX
 
 ; Elven village talk 142 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -11198,6 +12000,8 @@ ChestItem_ExitBell_Flag017D::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_BraveCape", ROMX
+
 ; Elven village talk 143 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_BRAVECAPE and story flag $017E in wMessageIndex/wMessageGroup (wScriptRunning = 1,
@@ -11216,6 +12020,8 @@ ChestItem_BraveCape::
     ld de, $017e
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_MoonHerb", ROMX
 
 ; Elven village talk 144 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -11236,6 +12042,8 @@ ChestItem_MoonHerb::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_MermScale_Flag00D6", ROMX
+
 ; Elven village talk 145 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
 ; ITEM_MERMSCALE and story flag $00D6 in wMessageIndex/wMessageGroup (wScriptRunning = 1,
@@ -11254,6 +12062,8 @@ ChestItem_MermScale_Flag00D6::
     ld de, $00d6
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_LoveWater_Flag00D7", ROMX
 
 ; Elven village talk 146 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -11274,6 +12084,8 @@ ChestItem_LoveWater_Flag00D7::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Thief", ROMX
+
 ; Elven village talk 147 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_THIEF
 ; and story flag $00D8 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -11292,6 +12104,8 @@ ChestItem_Thief::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Herb_Flag00DA", ROMX
+
 ; Elven village talk 148 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_HERB
 ; and story flag $00DA in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -11309,6 +12123,8 @@ ChestItem_Herb_Flag00DA::
     ld de, $00da
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_GoldCape", ROMX
 
 ; Elven village talk 149 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -11329,6 +12145,8 @@ ChestItem_GoldCape::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Mage", ROMX
+
 ; Elven village talk 150 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_MAGE
 ; and story flag $00DC in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0,
@@ -11346,6 +12164,8 @@ ChestItem_Mage::
     ld de, $00dc
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_Antidote", ROMX
 
 ; Elven village talk 151 (ElvenVillageTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts
 ; script command $0A (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 =
@@ -11366,6 +12186,8 @@ ChestItem_Antidote::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 TalkMsg0C33_ItsBrutalUpAheadIWouldnt", ROMX
+
 ; Elven village talk 160 ($A0): starts message $0C33 through StartMessageCommand09HL_B04 (script
 ; command $09, wModeState = 1); the line warns that it is 'brutal up ahead'. (C2, E-0375)
 ; starts message $0C33 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -11376,6 +12198,8 @@ TalkMsg0C33_ItsBrutalUpAheadIWouldnt::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0C32_TheMonstersHereAreAwfulIm", ROMX
+
 ; Elven village talk 161 ($A1): starts message $0C32 ('The monsters here are awful.' ...) through
 ; StartMessageCommand09HL_B04 (script command $09, wModeState = 1). (C2, E-0375)
 ; starts message $0C32 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -11385,6 +12209,8 @@ TalkMsg0C32_TheMonstersHereAreAwfulIm::
     ld hl, $0c32 ; '*: The monsters here are awful.'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 ElvenVillageTalkEvents_ShowIfYouveMadeIt", ROMX
 
 ; Elven village talk 162: message $0C30 the first time (setting EVENT_IF_YOUVE_MADE_IT), then $0C31.
 ; (C2, E-0357; probed E-0375)
@@ -11403,6 +12229,8 @@ ElvenVillageTalkEvents_ShowIfYouveMadeIt::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 Talk_SoulTowerChestBattle", ROMX
+
 ; Elven village talks 163-166 ($A3-$A6), the Soul Tower group (Talk0C47 follows them): starts
 ; Script_SceneChestBattle (StartScriptAtHL_B04: wScriptPointerLo/Hi, wScriptStartRequest = $80,
 ; wModeState = 1), the script that runs SCRIPT_SCENE_CHEST_BATTLE. Talk_SceneChestBattle and
@@ -11415,6 +12243,8 @@ Talk_SoulTowerChestBattle::
     ld hl, Script_SceneChestBattle
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 Talk0C47", ROMX
 
 ; Soul Tower's top: the chest battle script until map $E0's object is removed, then 'You've
 ; conquered the Soul Tower.' ($0C47). (C2, E-0357; probed E-0375)
@@ -11435,6 +12265,8 @@ Talk0C47::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 ChestItem_ExitBell_Flag00F5", ROMX
+
 ; Elven village talk 168 ($A8), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_EXITBELL in
 ; wScriptParam1 and story flag $00F5 in wMessageIndex/wMessageGroup. That command gives the item and
@@ -11452,6 +12284,8 @@ ChestItem_ExitBell_Flag00F5::
     ld de, $00f5
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_War_Flag00F6", ROMX
 
 ; Elven village talk 169 ($A9), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_WAR in wScriptParam1
@@ -11471,6 +12305,8 @@ ChestItem_War_Flag00F6::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_WorldDew_Flag00F7", ROMX
+
 ; Elven village talk 170 ($AA), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_WORLDDEW in
 ; wScriptParam1 and story flag $00F7 in wMessageIndex/wMessageGroup. That command gives the item and
@@ -11488,6 +12324,8 @@ ChestItem_WorldDew_Flag00F7::
     ld de, $00f7
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_TinyMedal_Flag00F9", ROMX
 
 ; Elven village talk 171 ($AB), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_TINYMEDAL in
@@ -11507,6 +12345,8 @@ ChestItem_TinyMedal_Flag00F9::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_SteelFang", ROMX
+
 ; Elven village talk 172 ($AC), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_STEELFANG in
 ; wScriptParam1 and story flag $00FA in wMessageIndex/wMessageGroup. That command gives the item and
@@ -11524,6 +12364,8 @@ ChestItem_SteelFang::
     ld de, $00fa
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_DrakScale", ROMX
 
 ; Elven village talk 173 ($AD), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_DRAKSCALE in
@@ -11543,6 +12385,8 @@ ChestItem_DrakScale::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Life", ROMX
+
 ; Elven village talk 174 ($AE), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_LIFE in wScriptParam1
 ; and story flag $00FD in wMessageIndex/wMessageGroup. That command gives the item and sets the flag
@@ -11560,6 +12404,8 @@ ChestItem_Life::
     ld de, $00fd
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_Divine", ROMX
 
 ; Elven village talk 175 ($AF), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_DIVINE in
@@ -11579,6 +12425,8 @@ ChestItem_Divine::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Herb_Flag00FF", ROMX
+
 ; Elven village talk 176 ($B0), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_HERB in wScriptParam1
 ; and story flag $00FF in wMessageIndex/wMessageGroup. That command gives the item and sets the flag
@@ -11596,6 +12444,8 @@ ChestItem_Herb_Flag00FF::
     ld de, $00ff
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_PltnmCape", ROMX
 
 ; Elven village talk 177 ($B1), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_PLTNMCAPE in
@@ -11615,6 +12465,8 @@ ChestItem_PltnmCape::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Wise", ROMX
+
 ; Elven village talk 178 ($B2), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_WISE in wScriptParam1
 ; and story flag $01F4 in wMessageIndex/wMessageGroup. That command gives the item and sets the flag
@@ -11632,6 +12484,8 @@ ChestItem_Wise::
     ld de, $01f4
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_ExitBell_Flag01F5", ROMX
 
 ; Elven village talk 179 ($B3), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_EXITBELL in
@@ -11651,6 +12505,8 @@ ChestItem_ExitBell_Flag01F5::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Herb_Flag01F7", ROMX
+
 ; Elven village talk 180 ($B4), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_HERB in wScriptParam1
 ; and story flag $01F7 in wMessageIndex/wMessageGroup. That command gives the item and sets the flag
@@ -11668,6 +12524,8 @@ ChestItem_Herb_Flag01F7::
     ld de, $01f7
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 ChestItem_Fight", ROMX
 
 ; Elven village talk 181 ($B5), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_FIGHT in
@@ -11687,6 +12545,8 @@ ChestItem_Fight::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_Starry", ROMX
+
 ; Elven village talk 182 ($B6), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_STARRY in
 ; wScriptParam1 and story flag $01F9 in wMessageIndex/wMessageGroup. That command gives the item and
@@ -11705,6 +12565,8 @@ ChestItem_Starry::
     call StartTreasureFlagDE_B04
     ret
 
+SECTION "Bank 04 ChestItem_LoveWater_Flag01FA", ROMX
+
 ; Elven village talk 183 ($B7), a treasure chest: starts script command $0A (RunOneTimeTreasure)
 ; through StartTreasureFlagDE_B04 with kind 0 (a chest) in wScriptParam0, ITEM_LOVEWATER in
 ; wScriptParam1 and story flag $01FA in wMessageIndex/wMessageGroup. That command gives the item and
@@ -11722,6 +12584,8 @@ ChestItem_LoveWater_Flag01FA::
     ld de, $01fa
     call StartTreasureFlagDE_B04
     ret
+
+SECTION "Bank 04 KeyWorldTalkEvents", ROMX
 
 ; Talk category 9, the key worlds (DispatchTalkEvent_KeyWorld in bank $13 reaches it by farcall):
 ; jumps on wTalkEventGroup through nine handlers: 0 Talk_KeyWorldBossBattle, 1
@@ -11755,6 +12619,8 @@ Talk_KeyWorldBossBattle::
     ld hl, Script_KeyWorldBossBattle
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 KeyWorldTalkEvents_Warubou", ROMX
 
 ; Key world talk 1, Warubou: starts his script with screen table $0F on a floor of kind 3, otherwise
 ; $12 or $13 by bit 7 of wKeyWorldFloorState. (C2, E-0357; probed E-0375)
@@ -11792,6 +12658,8 @@ KeyWorldTalkEvents_Warubou::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 KeyWorldTalkEvents_WarubouInn", ROMX
+
 ; Key world talk 2: on map type $84 (wMapType) starts Script_WarubouWaHeyYou_3 ('Warubou: Wa-hey!
 ; You did it, <PLAYER>!'); otherwise only when IsPlayerAtKeyWorldGoalKindTriggerColumn gives A = 1
 ; starts Script_WarubouWaHeyThat ('Warubou: Wa-hey! That ...'), else returns. Then turns the first
@@ -11822,6 +12690,8 @@ KeyWorldTalkEvents_WarubouInn::
     ld a, $10
     ld [wDataBank], a
     ret
+
+SECTION "Bank 04 IsPlayerAtKeyWorldGoalKindTriggerColumn", ROMX
 
 ; Returns A = 1 when the player stands where wKeyWorldGoalKind wants: kind 1 on map screen column 0
 ; (hMapScreenX = 0) with hPlayerX $20 or $40; kind 7 on column 0 with hPlayerX $40; kind 8 on column
@@ -11883,6 +12753,8 @@ IsPlayerAtKeyWorldGoalKindTriggerColumn::
     xor a
     ret
 
+SECTION "Bank 04 Talk_KeyWorldFloorBattle", ROMX
+
 ; Key world talk 3: starts Script_KeyWorldFloorBattle (StartScriptAtHL_B04: wScriptPointerLo/Hi,
 ; wScriptStartRequest = $80, wModeState = 1), the bank-$10 script that runs
 ; SCRIPT_KEY_WORLD_FLOOR_BATTLE. (C2, E-0375)
@@ -11895,6 +12767,8 @@ Talk_KeyWorldFloorBattle::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0120_WarubouQuitDawdlingWarooh", ROMX
+
 ; Key world talk 4: starts message $0120, 'Warubou: Quit dawdling, warooh!', through
 ; StartMessageCommand09HL_B04 (script command $09, wModeState = 1). (C2, E-0375)
 ; starts message $0120 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -11905,6 +12779,8 @@ TalkMsg0120_WarubouQuitDawdlingWarooh::
     call StartMessageCommand09HL_B04
     ret
 
+SECTION "Bank 04 TalkMsg0122_WarubouWaheyYouDidItHero", ROMX
+
 ; Key world talk 5: starts message $0122, 'Warubou: Wa-hey! You did it, <PLAYER>!', through
 ; StartMessageCommand09HL_B04 (script command $09, wModeState = 1). (C2, E-0375)
 ; starts message $0122 through StartMessageCommand09HL_B04 (script command $09); that string begins
@@ -11914,6 +12790,8 @@ TalkMsg0122_WarubouWaheyYouDidItHero::
     ld hl, $0122 ; 'Warubou: Wa-hey! You did it, 0!'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 KeyWorldTalkEvents_ShowWarubouUseAMagic", ROMX
 
 ; Key world talk 6: Warubou's 'Use a magic ...' hint (message $0121), except for goal kinds 5, 7 and
 ; 8. (C2, E-0357; probed E-0375)
@@ -11928,6 +12806,8 @@ KeyWorldTalkEvents_ShowWarubouUseAMagic::
     ld hl, $0121 ; 'Warubou: Use a Magic Key and'
     call StartMessageCommand09HL_B04
     ret
+
+SECTION "Bank 04 Talk_WarubouWaheyYouDidItHero", ROMX
 
 ; Key world talk 7: sets wDataBank = $10 and starts Script_WarubouWaHeyYou_3 (StartScriptAtHL_B04),
 ; whose message is 'Warubou: Wa-hey! You did it, <PLAYER>!' and which jumps on to Script_It_3 in the
@@ -11944,6 +12824,8 @@ Talk_WarubouWaheyYouDidItHero::
     call StartScriptAtHL_B04
     ret
 
+SECTION "Bank 04 Talk_WarubouWaheySoThisIsIt", ROMX
+
 ; Key world talk 8: sets wDataBank = $1F and starts Script_WarubouWaHeySo (StartScriptAtHL_B04),
 ; whose first message is 'Warubou: Wa-hey! So, this is it?'. (C2, E-0375)
 ; sets wDataBank = $1F, then starts Script_WarubouWaHeySo (StartScriptAtHL_B04); its first message
@@ -11957,6 +12839,8 @@ Talk_WarubouWaheySoThisIsIt::
     ld hl, Script_WarubouWaHeySo ; script 'Warubou: Wa-hey! So, this is it?'
     call StartScriptAtHL_B04
     ret
+
+SECTION "Bank 04 InventoryHasFreeSlotCheck", ROMX
 
 ; Looks for a free inventory slot: when the last slot (wInventory + $17) holds an item (neither $FF
 ; nor 0) it returns A = 0 with carry clear (the inventory is full). Otherwise it scans wInventory

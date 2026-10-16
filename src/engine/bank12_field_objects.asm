@@ -1,7 +1,7 @@
 ; ROM bank $12: field objects and paths, key-world field code, arena rounds
 ; The annotated listing of this bank is build/listing/bank12.asm.
 
-SECTION "Bank 12", ROMX[$4000], BANK[$12]
+SECTION "Bank 12", ROMX
     db $12
 
 ; Runs SCRIPT_COUNTDOWN_MESSAGE: open message $10 in the current message group, then run its box
@@ -20,6 +20,8 @@ CountdownMessage_Open::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 EncounterCounterMessage", ROMX
 
 ; Runs SCRIPT_ENCOUNTER_MESSAGE: open message $0F in the current message group, then share
 ; CountdownMessage's wait-and-finish stage. (C1, E-0358)
@@ -40,6 +42,8 @@ CountdownMessage_Finish::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 EncounterCounterMessage_Open", ROMX
+
 ; Opens message $0F without changing wMessageGroup, then advances to the shared message-wait stage.
 ; (C2, E-0358; probed E-0376)
 EncounterCounterMessage_Open::
@@ -48,6 +52,8 @@ EncounterCounterMessage_Open::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 RandomBattleEvent", ROMX
 
 ; Starts a random-battle transition on script step 0. wMapType bit 7 selects intro 1 instead of 0;
 ; after NextRandomSeed, bit 0 of wKeyRandomLo selects transition substep 0 or 2. Saves the field
@@ -80,6 +86,8 @@ RandomBattleEvent::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ObjectPath1C", ROMX
 
 ; Runs SCRIPT_OBJECT_PATH_1C, a twelve-stage player-and-follower path. Hop the player and each
 ; follower in turn, leave for map $00 screen (0,2) at ($70,$F0), arrange the entry line, then hop
@@ -114,6 +122,8 @@ ObjectPath1C_HopThirdFollowerDown::
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
+SECTION "Bank 12 ObjectPath1C_HopSecondFollowerDown", ROMX
+
 ; Entry hop for follower 2: face it down, apply the curve to its Y and add one to that Y; follower 3
 ; also adds one to Y. Once the curve resets its phase, a two-monster party skips follower 3's hop
 ; and goes straight to FinishObjectPath. (C2, E-0358; probed E-0376)
@@ -137,6 +147,8 @@ ObjectPath1C_HopSecondFollowerDown::
     ld a, $0b
     ld [wScriptStep], a
     ret
+
+SECTION "Bank 12 ObjectPath1C_HopFirstFollowerDown", ROMX
 
 ; Entry hop for follower 1: face it down, apply the curve to its Y and add one to that Y; followers
 ; 2 and 3 also add one to Y. On curve completion, a one-monster party skips the other followers'
@@ -163,6 +175,8 @@ ObjectPath1C_HopFirstFollowerDown::
     ld [wScriptStep], a
     ret
 
+SECTION "Bank 12 ObjectPath1C_HopPlayerDown", ROMX
+
 ; Entry hop for the player: face down, apply the curve to hPlayerY, then increment the player's and
 ; all three followers' Y bytes. Only the curve helper advances the stage, after sixteen calls from
 ; phase 0. (C2, E-0358; probed E-0376)
@@ -182,6 +196,8 @@ ObjectPath1C_HopPlayerDown::
     inc [hl]
     ret
 
+SECTION "Bank 12 ObjectPath1C_WalkPartyToEntryY", ROMX
+
 ; Moves the player and all three followers one pixel down per call. Advances when the updated
 ; hPlayerY equals $20; this is an equality check on an eight-bit coordinate, not a clamp. (C2,
 ; E-0358; probed E-0376)
@@ -200,6 +216,8 @@ ObjectPath1C_WalkPartyToEntryY::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ObjectPath1C_PrepareEntryLine", ROMX
 
 ; After the fade, face the player and all followers up and place the followers at Y = $E0, $D0, $C0.
 ; Set the player's moving bit and advance to walking the entry line; the player's coordinates come
@@ -221,6 +239,8 @@ ObjectPath1C_PrepareEntryLine::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ObjectPath1C_LeaveMap", ROMX
 
 ; Moves the player and all followers down one pixel, facing follower 3 up. When follower 3's updated
 ; Y equals $B0, request map $00 screen (0,2), destination ($70,$F0), transition kind 0, and start
@@ -254,6 +274,8 @@ ObjectPath1C_LeaveMap::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
+SECTION "Bank 12 ObjectPath1C_HopThirdFollowerRight", ROMX
+
 ; Outgoing follower-3 hop: face it right and increment its X while the curve changes its Y. The
 ; player and followers 1 and 2 increment Y; followers 1 and 2 face up. AdvanceObjectPathHopPhase
 ; supplies the shared sixteen-call stage timing. (C2, E-0358; probed E-0376)
@@ -280,6 +302,8 @@ ObjectPath1C_HopThirdFollowerRight::
     farcall AddStepDeltaToPointedByte
     jp AdvanceObjectPathHopPhase
 
+SECTION "Bank 12 ObjectPath1C_HopSecondFollower", ROMX
+
 ; Outgoing follower-2 hop: update the follower chain from the player's pre-move Y, face follower 1
 ; up, increment the player's Y, and apply the curve to follower 2's Y. Finish through
 ; AdvanceObjectPathHopPhase. (C2, E-0358; probed E-0376)
@@ -297,6 +321,8 @@ ObjectPath1C_HopSecondFollower::
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
     jp AdvanceObjectPathHopPhase
+
+SECTION "Bank 12 ObjectPath1C_HopFirstFollower", ROMX
 
 ; Outgoing follower-1 hop: update the follower chain using the player's pre-move Y, face the player
 ; up, increment hPlayerY, and apply the curve to follower 1's Y. Finish through
@@ -317,6 +343,8 @@ ObjectPath1C_HopFirstFollower::
     farcall AddStepDeltaToPointedByte
     jp AdvanceObjectPathHopPhase
 
+SECTION "Bank 12 ObjectPath1C_HopPlayerRight", ROMX
+
 ; Begin the outgoing path by setting the player's moving bit. Update followers using the player's
 ; pre-move X, apply the hop curve to hPlayerY, increment hPlayerX, and use AdvanceObjectPathHopPhase
 ; to advance after sixteen calls from phase 0. (C2, E-0358; probed E-0376)
@@ -334,6 +362,8 @@ ObjectPath1C_HopPlayerRight::
     ld hl, hPlayerX
     inc [hl]
     jp AdvanceObjectPathHopPhase
+
+SECTION "Bank 12 ObjectPath1B", ROMX
 
 ; Runs SCRIPT_OBJECT_PATH_1B, a twelve-stage player-and-follower path. Hop the outgoing chain, leave
 ; for map $1A screen (2,0) at ($60,$B0), arrange the entry line, walk to Y = $50, then hop left and
@@ -365,6 +395,8 @@ FinishObjectPath::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 ObjectPath1B_HopThirdFollowerLeft", ROMX
+
 ; Last entry hop: face follower 3 left and decrement its X, while applying the curve to its Y. The
 ; curve helper advances to FinishObjectPath on completion. Follower 3's direct movement changes from
 ; the Y decrements in the preceding stages to an X decrement here. (C2, E-0358; probed E-0376)
@@ -377,6 +409,8 @@ ObjectPath1B_HopThirdFollowerLeft::
     ld de, wFollowerRecords + $c
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
+
+SECTION "Bank 12 ObjectPath1B_HopSecondFollowerLeft", ROMX
 
 ; Entry hop for follower 2: face it left, curve its Y and decrement its X, but decrement follower
 ; 3's Y. On curve completion, exactly two party members skip follower 3's hop and select
@@ -400,6 +434,8 @@ ObjectPath1B_HopSecondFollowerLeft::
     ld a, $0b
     ld [wScriptStep], a
     ret
+
+SECTION "Bank 12 ObjectPath1B_HopFirstFollowerLeft", ROMX
 
 ; Entry hop for follower 1: face it left, curve its Y and decrement its X, but decrement followers 2
 ; and 3's Y. When the curve resets the phase, exactly one party member selects FinishObjectPath;
@@ -426,6 +462,8 @@ ObjectPath1B_HopFirstFollowerLeft::
     ld [wScriptStep], a
     ret
 
+SECTION "Bank 12 ObjectPath1B_HopPlayerLeft", ROMX
+
 ; Entry hop for the player: face left, curve hPlayerY and decrement hPlayerX, but decrement all
 ; three followers' Y bytes. The curve helper advances after sixteen calls from phase 0; it does not
 ; move the followers' X bytes. (C2, E-0358; probed E-0376)
@@ -444,6 +482,8 @@ ObjectPath1B_HopPlayerLeft::
     ld hl, wFollowerRecords + $c
     dec [hl]
     ret
+
+SECTION "Bank 12 ScriptApplyStepDeltaAtDE_Bank12", ROMX
 
 ; DE points to an eight-bit coordinate. Store DE in wStepPtrLo/wStepPtrHi and far-call
 ; AddStepDeltaToPointedByte in bank $5F, which adds the curve entry for wScriptParam0 / 2 modulo
@@ -468,6 +508,8 @@ ScriptApplyStepDeltaAtDE_Bank12::
     inc [hl]
     ret
 
+SECTION "Bank 12 ObjectPath1B_WalkPartyToEntryY", ROMX
+
 ; Updates followers from the player's pre-move Y, then moves the player one pixel up. Advances only
 ; when the updated hPlayerY equals $50; the follower helper refreshes its targets at 16-pixel
 ; boundaries. (C2, E-0358; probed E-0376)
@@ -482,6 +524,8 @@ ObjectPath1B_WalkPartyToEntryY::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ObjectPath1B_PrepareEntryLine", ROMX
 
 ; After the fade, face the player and followers up and set follower Y to $C0, $D0, $E0. Set the
 ; player's moving bit and advance to the entry walk. The player's position is supplied by the
@@ -503,6 +547,8 @@ ObjectPath1B_PrepareEntryLine::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ObjectPath1B_LeaveMap", ROMX
 
 ; Decrements the player's and all three followers' Y bytes. When follower 3's updated Y equals $F0,
 ; request map $1A screen (2,0) at ($60,$B0), transition kind 0, and start the fade that advances the
@@ -534,6 +580,8 @@ ObjectPath1B_LeaveMap::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
+SECTION "Bank 12 ObjectPath1B_HopThirdFollowerUp", ROMX
+
 ; Outgoing follower-3 hop: face it up and decrement the player's and all followers' Y bytes, then
 ; add the curve to follower 3's Y. Continue through AdvanceObjectPathHopPhase for stage timing. (C2,
 ; E-0358; probed E-0376)
@@ -556,6 +604,8 @@ ObjectPath1B_HopThirdFollowerUp::
     farcall AddStepDeltaToPointedByte
     jr AdvanceObjectPathHopPhase
 
+SECTION "Bank 12 ObjectPath1B_HopSecondFollowerUp", ROMX
+
 ; Outgoing follower-2 hop: update the follower chain from the player's pre-move Y, decrement
 ; hPlayerY, and curve follower 2's Y. AdvanceObjectPathHopPhase handles completion; this stage does
 ; not explicitly change facing. (C2, E-0358; probed E-0376)
@@ -572,6 +622,8 @@ ObjectPath1B_HopSecondFollowerUp::
     farcall AddStepDeltaToPointedByte
     jr AdvanceObjectPathHopPhase
 
+SECTION "Bank 12 ObjectPath1B_HopFirstFollowerUp", ROMX
+
 ; Outgoing follower-1 hop: update the follower chain from the player's pre-move Y, decrement
 ; hPlayerY, and curve follower 1's Y. Continue through AdvanceObjectPathHopPhase, without explicitly
 ; changing facing. (C2, E-0358; probed E-0376)
@@ -587,6 +639,8 @@ ObjectPath1B_HopFirstFollowerUp::
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
     jr AdvanceObjectPathHopPhase
+
+SECTION "Bank 12 ObjectPath1B_HopPlayerUp", ROMX
 
 ; Begin the outgoing path by setting the player's moving bit. Update followers from the player's
 ; pre-move Y, apply the curve to hPlayerY and decrement that Y. Falls through to
@@ -622,6 +676,8 @@ AdvanceObjectPathHopPhase::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ArenaRounds", ROMX
 
 ; Runs SCRIPT_ARENA_ROUNDS through 26 stages: enter map $0B, walk the party into position, approach
 ; for three battles, stage the next opposing side between battles, then heal and leave. Shared
@@ -670,6 +726,8 @@ ArenaRounds_CloseThirdBattle::
     dec [hl]
     ret
 
+SECTION "Bank 12 ArenaRounds_AfterSecondBattle", ROMX
+
 ; Decrement the arena counter. If it becomes exactly 2, show closing column 7 and select stage 22;
 ; otherwise show column 5 and advance to stage 14. In both branches, increment wArenaRound, rebuild
 ; the remaining random foes and copy the current round into wEncounterMonsters, even when selecting
@@ -697,6 +755,8 @@ ArenaRounds_AfterSecondBattle::
     farcall ArenaRounds_SetUpBattle
     ret
 
+SECTION "Bank 12 ArenaRounds_AfterFirstBattle", ROMX
+
 ; Decrement the arena counter. A result of exactly 2 selects closing column 7 and stage 22; every
 ; other result selects column 3 and the next stage. Both paths still increment wArenaRound and
 ; prepare the remaining round list and current foes. This condition alone does not establish a win
@@ -723,6 +783,8 @@ ArenaRounds_AfterFirstBattle::
     farcall IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     farcall ArenaRounds_SetUpBattle
     ret
+
+SECTION "Bank 12 ArenaRounds_PrepareEntryWalk", ROMX
 
 ; Hold field draw mask $0E while the opening message runs. Once idle, set the player moving and
 ; facing down at X = $40; put follower X at $40, first follower Y at 0 and followers 2/3 facing
@@ -754,6 +816,8 @@ ArenaRounds_PrepareEntryWalk::
     inc [hl]
     ret
 
+SECTION "Bank 12 ArenaRounds_EnterArena", ROMX
+
 ; Request map $0B screen (0,0), destination ($E0,0), transition kind 0, and start the fade that
 ; advances the script. Open message index wAreaGraphicsIndex + 5 in the current group, wrapping as a
 ; byte, then set wArenaFlags = $80 to select the special message row and sprite-selection path. (C1,
@@ -777,6 +841,8 @@ ArenaRounds_EnterArena::
     ld a, $80
     ld [wArenaFlags], a
     ret
+
+SECTION "Bank 12 ArenaGridBattle", ROMX
 
 ; Runs SCRIPT_ARENA_GRID_BATTLE through 27 stages, sharing the party entrance, battle approach,
 ; opposing-side arrival and exit with ArenaRounds. It adds an opening follow-up message. Between
@@ -837,6 +903,8 @@ ArenaScene_RestoreCallerScript::
     ld [wScriptInDataBank], a
     ret
 
+SECTION "Bank 12 ArenaScene_HealAndLeaveArena", ROMX
+
 ; Heal the party through FullyHealParty, then request map $04 screen (1,0), destination ($40,$30),
 ; transition kind 3. Start the fade that advances to restoring the caller script. The heal helper
 ; uses the incoming SRAM bank and assumes a nonempty party. (C1, E-0359)
@@ -856,6 +924,8 @@ ArenaScene_HealAndLeaveArena::
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
     ret
+
+SECTION "Bank 12 ArenaScene_WaitBeforeExit", ROMX
 
 ; Shared exit delay: increment wScriptParam0 once per call, queue sound $6D only when it becomes 1,
 ; and wait for exact equality with $3C. At $3C reset the counter and advance the stage. A fresh
@@ -880,6 +950,8 @@ ArenaScene_WaitBeforeExit::
     inc [hl]
     ret
 
+SECTION "Bank 12 ArenaGridBattle_CloseThirdBattle", ROMX
+
 ; After the third grid battle, show message-table column 7, advance to the shared message wait and
 ; decrement the reused arena counter wRecordCapacity. No battle-result flag is tested in this stage.
 ; (C2, E-0359; probed E-0376)
@@ -892,6 +964,8 @@ ArenaGridBattle_CloseThirdBattle::
     dec [hl]
     ret
 
+SECTION "Bank 12 ArenaScene_OpenThirdBattleMessage", ROMX
+
 ; Show column 6 of ArenaRankMessageTable in the current group and advance to the shared message wait
 ; before the third battle approach. Used by both arena commands. (C2, E-0359; probed E-0376)
 ArenaScene_OpenThirdBattleMessage::
@@ -900,6 +974,8 @@ ArenaScene_OpenThirdBattleMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ArenaGridBattle_AfterSecondBattle", ROMX
 
 ; Show column 5, advance the stage and decrement the arena counter;
 ; SetupScreenCountPlusOneFromRecordCapacity immediately increments it again and updates the grid
@@ -924,6 +1000,8 @@ ArenaGridBattle_AfterSecondBattle::
     farcall ArenaGridBattle_SetUpFromGrid
     ret
 
+SECTION "Bank 12 ArenaScene_OpenSecondBattleMessage", ROMX
+
 ; Show column 4 of ArenaRankMessageTable, then advance to the shared message wait before the second
 ; battle approach. Does not change the current message group. (C2, E-0359; probed E-0376)
 ArenaScene_OpenSecondBattleMessage::
@@ -932,6 +1010,8 @@ ArenaScene_OpenSecondBattleMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ArenaScene_ReleaseArenaObjects", ROMX
 
 ; Move arena object 0 upward one pixel, facing up, until its updated Y equals $30. Then face all
 ; four arena objects left, set field event kind 7, clear their moving bits, queue sound 0 and
@@ -965,6 +1045,8 @@ ArenaScene_ReleaseArenaObjects::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ArenaScene_WalkArenaObjectsIn", ROMX
 
 ; Bring four arena objects into position, including slots not yet drawable. A timer borrowed from
 ; wMessageIndex reveals slot counts 2,3,4 at $10,$20,$30 and holds at $60. Each slot increments Y
@@ -1070,6 +1152,8 @@ ArenaScene_WalkArenaObjectsIn::
     jr nz, .loop
     ret
 
+SECTION "Bank 12 ArenaScene_LoadOpposingSide", ROMX
+
 ; Set up the next map-$0B objects and their graphics from wEncounterMonsters. Request object
 ; palettes, show one slot initially, mark all four arena objects moving, disable the field-event
 ; updater, queue sound $6D, reset the borrowed message timer and advance to their entrance
@@ -1098,6 +1182,8 @@ ArenaScene_LoadOpposingSide::
     inc [hl]
     ret
 
+SECTION "Bank 12 ArenaGridBattle_AfterFirstBattle", ROMX
+
 ; Show column 3, advance, decrement the arena counter, and call the grid-selection helper that
 ; increments it back and sets wScreenCountPlusOne. Rank 0 selects the fixed encounter list; other
 ; ranks select GridEncounterTable using the refreshed wGridCursorX. Prepare the next three foes in
@@ -1120,6 +1206,8 @@ ArenaGridBattle_AfterFirstBattle::
     farcall SetupScreenCountPlusOneFromRecordCapacity
     farcall ArenaGridBattle_SetUpFromGrid
     ret
+
+SECTION "Bank 12 ArenaScene_ApproachForBattle", ROMX
 
 ; Move all three follower X bytes right and all three opposing monster X bytes left, one pixel per
 ; call. After sixteen calls from phase 0, reset the phase, advance the script, increment the arena
@@ -1152,6 +1240,8 @@ ArenaScene_ApproachForBattle::
     farcall SetModeState3AndSaveScreen
     ret
 
+SECTION "Bank 12 ArenaScene_WaitMessage", ROMX
+
 ; Shared message wait used throughout both arena dispatch tables. Run the box with freeze flag 0;
 ; while active return without changing the step. On idle, clear wMessageIndex so it can serve as an
 ; animation timer, then advance the script stage. (C1, E-0359)
@@ -1164,6 +1254,8 @@ ArenaScene_WaitMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ArenaScene_WalkPartyIntoRing", ROMX
 
 ; Walk the player in five legs selected by wScriptParam0: Y to $20, X to $30, Y to $40, X to $20,
 ; then Y back to $30. Update followers during the first four legs, but not the final upward leg. A
@@ -1290,6 +1382,8 @@ ArenaScene_WalkPartyIntoRing::
     inc [hl]
     ret
 
+SECTION "Bank 12 ArenaGridBattle_PrepareEntryWalk", ROMX
+
 ; Wait for the follow-up message to become idle, then place the player/follower entry line at X =
 ; $40 and face the player and followers 2/3 down, with first follower Y = 0. Mark the player moving,
 ; queue sound $6D, save wFieldEventKind in wScriptParam1 and disable it during the route. Reset the
@@ -1322,6 +1416,8 @@ ArenaGridBattle_PrepareEntryWalk::
     inc [hl]
     ret
 
+SECTION "Bank 12 ArenaGridBattle_OpenFollowup", ROMX
+
 ; After the opening message becomes idle, show ArenaRankMessageTable column 1, set field draw mask
 ; $0E and advance to preparing the entry walk. Returns without these changes while the first box
 ; remains active. (C1, E-0359)
@@ -1336,6 +1432,8 @@ ArenaGridBattle_OpenFollowup::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 ArenaGridBattle_EnterArena", ROMX
 
 ; Request map $0B screen (0,0), destination ($E0,0), transition kind 0, and start the fade that
 ; advances the script. Show message-table column 0 using the incoming wArenaFlags, then clear
@@ -1359,6 +1457,8 @@ ArenaGridBattle_EnterArena::
     xor a
     ld [wArenaFlags], a
     ret
+
+SECTION "Bank 12 StartArenaRankMessage", ROMX
 
 ; A selects one of eight message columns. For normal ranks 0-4, read the low byte at
 ; ArenaRankMessageTable + 16 * wArenaRank + 2 * A; wArenaFlags bit 7 forces row 5. Pass only that
@@ -1401,6 +1501,8 @@ StartArenaRankMessage::
     ld a, [de]
     call StartMessageA
     ret
+
+SECTION "Bank 12 ArenaRankMessageTable", ROMX
 
 ; six rows of eight stored message words; ranks 0-4 select their row, wArenaFlags bit 7 forces row
 ; 5. Columns 0/1 are opening/follow-up, 2/4/6 announce the three battles, 3/5 follow the first two
@@ -1464,6 +1566,8 @@ LinkMessageEvent_FinishToMode8::
     ld [wScriptRunning], a
     ret
 
+SECTION "Bank 12 NpcBreedWarp", ROMX
+
 ; Runs SCRIPT_NPC_BREED_WARP through 25 stages. Save/warp preparation is supplied by the caller;
 ; enter map $14 and use the shared MonsterScene two-record animation, then choose the return map
 ; from the ten-entry selector table, fade and resume the saved caller script with command $F4 and
@@ -1520,6 +1624,8 @@ NpcBreedWarp_RestoreCallerScript::
     ld [wScriptInDataBank], a
     ret
 
+SECTION "Bank 12 NpcBreedWarp_StartReturnFade", ROMX
+
 ; Use wScreenTableIndex (valid 0-9) to choose NpcBreedReturnMapIds. Screen X is 0 for selectors
 ; 1,3,5,6,7 and 2 for the others; screen Y is 0 and destination is ($40,$40). Clear the draw mask,
 ; select transition kind 0 and start the fade/step helper, then mark the saved position valid. No
@@ -1560,6 +1666,8 @@ NpcBreedWarp_StartReturnFade::
     ld a, $01
     ld [wSavedPositionValid], a
     ret
+
+SECTION "Bank 12 NpcBreedReturnMapIds", ROMX
 
 ; Ten one-byte return-map ids indexed by wScreenTableIndex (0-9); NpcBreedWarp_StartReturnFade
 ; chooses screen X separately and performs no index bounds check. (C1, E-0360)
@@ -1634,6 +1742,8 @@ BreedChildScene_LoadChildGraphics::
     inc [hl]
     ret
 
+SECTION "Bank 12 BreedChildSprite", ROMX
+
 ; Runs SCRIPT_BREED_CHILD_SPRITE through 17 stages: enter map $14, load only the child into object
 ; 1, use shared slot-0 movement and timed waits, show the prepared effect object, then run the same
 ; effect wait, species/plus message and caller return as BreedChildScene. Shared movement still
@@ -1698,6 +1808,8 @@ BreedChildScene_RestoreCallerScript::
     ld [wScriptInDataBank], a
     ret
 
+SECTION "Bank 12 BreedChildScene_WaitMessageAndRestoreClip", ROMX
+
 ; Run the child message with freeze flag 0 and wait for idle carry. On idle, advance the stage and
 ; copy wScriptParam0 into the clipping mode. The copy is unconditional: only the nonzero-plus branch
 ; of the preceding formatter saved clipping into that parameter. (C1, E-0360)
@@ -1710,6 +1822,8 @@ BreedChildScene_WaitMessageAndRestoreClip::
     ld a, [wScriptParam0]
     ldh [hSpriteWindowClipMode], a
     ret
+
+SECTION "Bank 12 BreedChildScene_OpenChildMessage", ROMX
 
 ; Advance the stage and copy the child species name from bank $08 to wTextBuf2 + 1, preserving byte
 ; 0: string index is species low byte, category is species high byte + 2 modulo 256. For MON_PLUS =
@@ -1768,6 +1882,8 @@ BreedChildScene_OpenChildMessage::
     ldh [hSpriteWindowClipMode], a
     ret
 
+SECTION "Bank 12 BreedChildScene_WaitEffect", ROMX
+
 ; Wait for the field effect using the shared byte counter: queue sound $74 when the incoming phase
 ; is $C2, then increment toward exact $E0. From phase 0 completion takes 224 calls. On completion
 ; reset the phase, hide object 5, face object 1 down at Y=$3C and advance the stage. This does not
@@ -1793,6 +1909,8 @@ BreedChildScene_WaitEffect::
     inc [hl]
     ret
 
+SECTION "Bank 12 BreedChildScene_StartEffect", ROMX
+
 ; Run field command $0E, which shares the effect placement setter with $0D but selects a different
 ; graphics record. Advance the script stage; the following wait supplies the delay and sound cue.
 ; (C1, E-0360)
@@ -1804,6 +1922,8 @@ BreedChildScene_StartEffect::
     inc [hl]
     ret
 
+SECTION "Bank 12 BreedChildSprite_ShowEffectObject", ROMX
+
 ; Show the prepared script effect by setting object 5 byte 0 to $80, then advance. This stage uses
 ; the graphics/template prepared earlier; it does not load new graphics. (C2, E-0360; probed E-0376)
 BreedChildSprite_ShowEffectObject::
@@ -1812,6 +1932,8 @@ BreedChildSprite_ShowEffectObject::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 BreedChildSprite_LoadChildGraphics", ROMX
 
 ; Clear clipping and enable the low four draw-mask bits. Copy the child species word to object 1,
 ; load its monster graphics at VRAM $8600/palette slot 6 and prepare field command $0D, then hide
@@ -1854,6 +1976,8 @@ BreedChildSprite_LoadChildGraphics::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 BreedFade", ROMX
 
 ; Runs SCRIPT_BREED_FADE through 25 stages. Enter map $14 and run the shared two-record MonsterScene
 ; sequence, then request map $0D screen (1,0) at ($40,$40) and start a palette fade. After the fade
@@ -1911,6 +2035,8 @@ BreedFade_RestoreCallerWhenIdle::
     ld [wScriptInDataBank], a
     ret
 
+SECTION "Bank 12 BreedFade_StartReturnFade", ROMX
+
 ; Assign map $0D screen (1,0), destination ($40,$40), clear the draw mask and select transition kind
 ; 0. Start palette fade $0F, mark the saved position valid and advance to the fade wait. The
 ; duplicate write of screen X = 1 is retained. Unlike the general fade/step helper, this body does
@@ -1939,6 +2065,8 @@ BreedFade_StartReturnFade::
     inc [hl]
     ret
 
+SECTION "Bank 12 MonsterScene_HideEffectObject", ROMX
+
 ; Hide script object 5 by clearing its byte 0 and advance. Shared by the link, NPC breeding and
 ; breed-fade presentations; no palette or graphics load occurs here. (C2, E-0360; probed E-0376)
 MonsterScene_HideEffectObject::
@@ -1947,6 +2075,8 @@ MonsterScene_HideEffectObject::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 MonsterScene_WaitMessage", ROMX
 
 ; Run the current message with freeze flag 0. Advance only on idle carry; while the box remains
 ; active, leave the script step unchanged. Used after the shared message $0E. (C1, E-0360)
@@ -1958,6 +2088,8 @@ MonsterScene_WaitMessage::
     inc [hl]
     ret
 
+SECTION "Bank 12 MonsterScene_OpenMessage", ROMX
+
 ; Show message index $0E in the group already selected by the caller, then advance to the shared
 ; message wait. Does not select a new message group. (C2, E-0360; probed E-0376)
 MonsterScene_OpenMessage::
@@ -1967,6 +2099,8 @@ MonsterScene_OpenMessage::
     inc [hl]
     ret
 
+SECTION "Bank 12 MonsterScene_ReenterWithEffect", ROMX
+
 ; Set wFieldInitFlag = $8D, requesting field command $0D on the next InitFieldScreen, then jump to
 ; MonsterScene_EnterMap14. The entry helper starts a fade and advances the script; the field
 ; initializer masks off bit 7 before dispatching the requested command. (C1, E-0360)
@@ -1974,6 +2108,8 @@ MonsterScene_ReenterWithEffect::
     ld a, $8d
     ld [wFieldInitFlag], a
     jp MonsterScene_EnterMap14
+
+SECTION "Bank 12 MonsterScene_WalkSlot0Down", ROMX
 
 ; Face slot 0 down, set its moving bit and increment its Y each call. Only updated Y=$C8 advances
 ; the stage and sets object 1 facing right and object 2 left. The writes to both object states also
@@ -1995,6 +2131,8 @@ MonsterScene_WalkSlot0Down::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 MonsterScene_SlideSecondRight", ROMX
 
 ; Face object 2 right and increment the phase byte every call. Move X right by one only when the
 ; updated phase low two bits are zero, one pixel every four calls from phase 0. At updated X=$58,
@@ -2021,6 +2159,8 @@ MonsterScene_SlideSecondRight::
     inc [hl]
     ret
 
+SECTION "Bank 12 MonsterScene_RevealSecond", ROMX
+
 ; Wait sixty calls from phase 0 using the equality-based counter. On completion, reset the phase,
 ; put object 2 at Y=$40 and advance. This stage does not change its X or explicitly change its
 ; facing. (C2, E-0360; probed E-0376)
@@ -2033,6 +2173,8 @@ MonsterScene_RevealSecond::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 MonsterScene_SlideFirstLeft", ROMX
 
 ; Face object 1 left and increment the phase byte every call. On updated phases divisible by four,
 ; decrement its X. At updated X=$48, face down, reset the phase and advance; the counter and X both
@@ -2058,6 +2200,8 @@ MonsterScene_SlideFirstLeft::
     inc [hl]
     ret
 
+SECTION "Bank 12 MonsterScene_Wait30Calls", ROMX
+
 ; Shared pause throughout these scene tables: increment the byte phase once per call and return
 ; until the result equals $1E. At equality reset the phase and advance the script. From phase 0 that
 ; is thirty calls; arbitrary larger phases wrap before completing. (C2, E-0360; probed E-0376)
@@ -2068,6 +2212,8 @@ MonsterScene_Wait30Calls::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 MonsterScene_RevealFirst", ROMX
 
 ; Wait sixty calls from phase 0; on exact counter completion reset the phase, place object 1 at
 ; Y=$40 and advance. The scene supplies the object species and X coordinate separately. (C2, E-0360;
@@ -2081,6 +2227,8 @@ MonsterScene_RevealFirst::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 MonsterScene_WalkSlot0Up", ROMX
 
 ; Decrement slot 0 Y each call, including byte wrap. Only when the updated Y equals $58, clear its
 ; moving bit and advance. The same body is reused before and after the shared message. (C2, E-0360;
@@ -2096,6 +2244,8 @@ MonsterScene_WalkSlot0Up::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 MonsterScene_LoadBufferedGraphics", ROMX
 
 ; Clear clipping and enable the low four draw-mask bits. Copy species words from wRecordBufA/B to
 ; objects 1/2; load their monster graphics at VRAM $8600/$8700 with palette slots 6/7. Request
@@ -2153,6 +2303,8 @@ MonsterScene_LoadBufferedGraphics::
     inc [hl]
     ret
 
+SECTION "Bank 12 MonsterScene_EnterMap14", ROMX
+
 ; Shared entry/re-entry helper: request map $14 screen (0,0), destination ($E0,0) and transition
 ; kind 0, then far-call ScriptStartFadeAndAdvanceStep. That helper starts fade $0F, sets mode
 ; substate 4, clears the transition step and phase, and advances the script. (C1, E-0360)
@@ -2170,6 +2322,8 @@ MonsterScene_EnterMap14::
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
     ret
+
+SECTION "Bank 12 SavePlayerPositionStateAndStep", ROMX
 
 ; Snapshot thirteen bytes: slot 0 state, player X/Y/facing, then direction/X/Y from each of the
 ; three five-byte follower records. Skip the followers' target coordinates, and advance the
@@ -2205,6 +2359,8 @@ SavePlayerPositionStateAndStep::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 FollowersStep14", ROMX
 
 ; SCRIPT_FOLLOWERS_STEP_14 has three stages: face down and freeze the player animation counter, move
 ; player Y down by two toward exact $80 while stepping followers twice, then wait for the last party
@@ -2280,6 +2436,8 @@ WarpWithFollowers_StaggerDownTo50::
     inc [hl]
     ret
 
+SECTION "Bank 12 WarpWithFollowers_StartEntryFade", ROMX
+
 ; Request map 1 screen (1,0), destination (current player X,$F0), transition kind 0. Far-call
 ; ScriptStartFadeAndAdvanceStep in bank $5F, which starts fade $0F, selects mode substate 4, clears
 ; transition step and phase, and advances the script. The banked-call helper restores bank $12 on
@@ -2299,6 +2457,8 @@ WarpWithFollowers_StartEntryFade::
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
     ret
+
+SECTION "Bank 12 PlayerAndFollowersStep", ROMX
 
 ; SCRIPT_PLAYER_AND_FOLLOWERS_STEP has six stages: shared initialization, walk down to Y=$80, start
 ; the next-screen field action with vertical delta $FF80, continue movement/action until request bit
@@ -2335,6 +2495,8 @@ PlayerAndFollowersStep_WalkDownTo20::
     inc [hl]
     ret
 
+SECTION "Bank 12 FollowersStep11", ROMX
+
 ; SCRIPT_FOLLOWERS_STEP_11 has three stages: shared down-facing initialization, walk player Y down
 ; by two toward exact $60 while stepping followers twice, then use the shared last-party-follower Y
 ; wait and request the next script command. Unlike the six-stage commands, this table does not start
@@ -2365,6 +2527,8 @@ FollowersStep11_WalkDownTo60::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 FollowersStep10", ROMX
 
 ; SCRIPT_FOLLOWERS_STEP_10 uses the same first four stages as PlayerAndFollowersStep: initialize,
 ; walk to $80, start the next-screen field action and wait for its request bit 7 to clear. Its fifth
@@ -2409,6 +2573,8 @@ FollowerScene_FinishWhenLastYMatches::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 FollowersStep10_WalkDownTo50", ROMX
+
 ; Step followers at the incoming player Y, increment Y, step followers at the intermediate Y and
 ; increment Y again. Advance only on updated Y=$50. Both Y increments wrap as bytes, and equality
 ; rather than a crossing/clamp determines completion. Party count does not limit the follower helper
@@ -2429,6 +2595,8 @@ FollowersStep10_WalkDownTo50::
     inc [hl]
     ret
 
+SECTION "Bank 12 FollowerScene_WaitScreenAction", ROMX
+
 ; Far-call UpdatePlayerMovement and then RunFieldActionRequestActionIfBit7 in bank $02. Advance the
 ; script only if request bit 7 is clear after both calls; otherwise return at the same stage. This
 ; checks the field-action lifetime rather than the remaining vertical delta or a follower
@@ -2442,6 +2610,8 @@ FollowerScene_WaitScreenAction::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 FollowerScene_StartNextScreenAction", ROMX
 
 ; Set field-action request $80 and screen-scroll direction 8, increment map-screen Y with byte wrap,
 ; set player step-in-progress bit 0, and write vertical step delta $FF80 (little-endian signed
@@ -2469,6 +2639,8 @@ FollowerScene_StartNextScreenAction::
     inc [hl]
     ret
 
+SECTION "Bank 12 FollowerScene_WalkDownTo80", ROMX
+
 ; Step followers using player Y, increment player Y once, step followers again at the intermediate
 ; Y, then increment Y again. Advance only when updated Y=$80. Boundary-sensitive target capture can
 ; occur on either helper call, before that call moves the followers. The arithmetic wraps and does
@@ -2489,6 +2661,8 @@ FollowerScene_WalkDownTo80::
     inc [hl]
     ret
 
+SECTION "Bank 12 FollowerScene_BeginDown", ROMX
+
 ; Face the player down (0), set hPlayerStateFlags bit 1, queue sound $65 and advance the script
 ; step. The bit freezes the player animation counter; this body does not set moving bit 2,
 ; initialize coordinates or follower targets, or clear other player-state bits. Script step
@@ -2503,6 +2677,8 @@ FollowerScene_BeginDown::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 PlayerSpriteFlash", ROMX
 
 ; SCRIPT_PLAYER_SPRITE_FLASH selects eight unchecked stages: save background palettes/queue sound,
 ; flash for thirty calls, choose a sprite-slot graphics id, turn once, activate/load the override
@@ -2531,6 +2707,8 @@ PlayerSpriteFlash_ResumeScript::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 12 PlayerSpriteFlash_ActivateAndTurn", ROMX
 
 ; Only when incoming phase is zero, set override bit 7, far-call LoadPlayerSpriteGraphics in bank
 ; $04 and request object-palette upload $7F. Then fall through to the three-call turn helper.
@@ -2567,6 +2745,8 @@ PlayerSpriteFlash_TurnAfterThreeCalls::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 PlayerSpriteFlash_SelectSlotGraphics", ROMX
 
 ; Face down and rejection-sample NextRandomSeed high byte & 7 until the index is below the captured
 ; slot count and the slot X/Y are unsigned below $A0/$90. HL remains at slot byte 12 after reading
@@ -2628,6 +2808,8 @@ PlayerSpriteFlash_SelectSlotGraphics::
     inc [hl]
     ret
 
+SECTION "Bank 12 PlayerSpriteFlash_FlashPalettes", ROMX
+
 ; Far-call ScriptStepFlashScreenNegative in bank $12 and return. The helper owns the phase counter,
 ; palette writes and stage advance; this wrapper adds no independent wait or state change. The
 ; banked-call convention is retained even though the callee is in this bank. (C2, E-0362; probed
@@ -2635,6 +2817,8 @@ PlayerSpriteFlash_SelectSlotGraphics::
 PlayerSpriteFlash_FlashPalettes::
     farcall ScriptStepFlashScreenNegative
     ret
+
+SECTION "Bank 12 PlayerSpriteFlash_SavePalettes", ROMX
 
 ; Queue sound $7A. On CGB copy all 64 background-palette bytes to wBGPaletteCopy; on DMG leave that
 ; copy untouched. Increment the script stage without clearing its phase or altering clipping. The
@@ -2654,6 +2838,8 @@ PlayerSpriteFlash_SavePalettes::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 PlayerSpriteMessage", ROMX
 
 ; SCRIPT_PLAYER_SPRITE_MESSAGE has three unchecked stages: open message $12 in the existing group,
 ; wait for idle carry, then clear the player override, reload default graphics and request the next
@@ -2680,6 +2866,8 @@ PlayerSpriteMessage_RestoreAndResume::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 PlayerSpriteMessage_WaitMessage", ROMX
+
 ; Run the bank-$12 message helper with freeze flag 0. Return without advancing while idle carry is
 ; clear; on idle carry increment the eight-bit script stage. The override stays active until the
 ; following restore stage. (C1, E-0362)
@@ -2691,6 +2879,8 @@ PlayerSpriteMessage_WaitMessage::
     inc [hl]
     ret
 
+SECTION "Bank 12 PlayerSpriteMessage_OpenMessage", ROMX
+
 ; Start message index $12 in the group already selected by the caller: StartMessageA writes the
 ; index and clears message state to 0. Increment the script stage, without loading graphics,
 ; clearing override or changing the message group. (C2, E-0362; probed E-0376)
@@ -2700,6 +2890,8 @@ PlayerSpriteMessage_OpenMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 MapLinkWarp", ROMX
 
 ; SCRIPT_MAP_LINK_WARP has two unchecked stages: the shared timed player/follower lift, then a
 ; destination-selection stage that requests the next script command and starts a transition only if
@@ -2766,6 +2958,8 @@ MapLinkWarp_SelectDestination::
 .call_map_link_warp_decode_packed_destination:
     call MapLinkWarp_DecodePackedDestination
     ret
+
+SECTION "Bank 12 MapExitWarpTable", ROMX
 
 ; Sixteen five-byte normal-map link records and $FF sentinel. Byte 0 matches incoming map, byte 1
 ; becomes map id, byte 2 matches (active key - 1) modulo 256 to select saved goal bytes; bytes 3/4
@@ -2836,6 +3030,8 @@ MapLinkWarp_SelectKeyWorldGoal::
     call MapLinkWarp_StartTransition
     ret
 
+SECTION "Bank 12 MapLinkWarp_DecodePackedDestination", ROMX
+
 ; DE points at a packed position byte: high nibble is pixel X, low nibble shifted left four is pixel
 ; Y. Write warp X/Y, increment DE and fall through to the packed-screen/transition helper. No
 ; coordinate bias is added; valid values are multiples of 16. (C1, E-0362)
@@ -2880,6 +3076,8 @@ MapLinkWarp_StartTransition::
     and $7f
     ldh [hPlayerStateFlags], a
     ret
+
+SECTION "Bank 12 MapExitWarp", ROMX
 
 ; Script command type 8A (SCRIPT_MAP_EXIT_WARP), run through ScriptCommand8A for Script_MapExitWarp,
 ; which Talk_MapExitWarp starts. wScriptStep picks two steps: 0 lifts the player and followers for
@@ -2998,6 +3196,8 @@ MapExitWarp_StartFade::
     and $7f
     ldh [hPlayerStateFlags], a
     ret
+
+SECTION "Bank 12 MapExitDestinationTable", ROMX
 
 ; MapExitWarp_StartFade, for maps without bit 7 of wMapType, scans 7-byte records from $52AD for the
 ; one whose first byte equals hMapId (there is no terminator and no bounds check), skips three more
@@ -3129,6 +3329,8 @@ HealPartyEvent_FacePlayer::
     ldh [hPlayerFacing], a
     ret
 
+SECTION "Bank 12 ReturnWarp", ROMX
+
 ; Script command type 89 (SCRIPT_RETURN_WARP), run through ScriptCommand89 for Script_ReturnWarp,
 ; which Talk_ReturnWarp starts. Eight steps by wScriptStep: lift the party for 90 calls
 ; (WarpScene_LiftPartyFor90Calls), start the return warp (ReturnWarp_StartWarp:
@@ -3179,6 +3381,8 @@ HealPartyEvent_ShowGreeting::
     ld [wObject1 + OBJ_STATE], a
     ret
 
+SECTION "Bank 12 ReturnWarp_StartWarp", ROMX
+
 ; Return warp, step 1: starts the return warp (StartReturnWarpByFlag25) with transition step $80.
 ; (C1, E-0357)
 ReturnWarp_StartWarp::
@@ -3186,6 +3390,8 @@ ReturnWarp_StartWarp::
     ld a, $80
     ld [wFieldTransitionStep], a
     ret
+
+SECTION "Bank 12 WarpScene_LiftPartyFor90Calls", ROMX
 
 ; Each call subtracts four from player Y unless it equals $E0; when moved, facing=(incoming phase >>
 ; 1)&3. Starting at incoming phases 8,16,24, likewise subtract four from follower 1,2,3 Y unless
@@ -3251,6 +3457,8 @@ WarpScene_LiftPartyFor90Calls::
     inc [hl]
     ret
 
+SECTION "Bank 12 ReturnMessage", ROMX
+
 ; Script command type 88 (SCRIPT_RETURN_MESSAGE), run through ScriptCommand88 for
 ; Script_ReturnMessage, which Talk_ReturnMessage starts. Six steps by wScriptStep: halve the gold
 ; and show a message chosen by story flags (ReturnMessage_SetGoldAndShow), then the palette save,
@@ -3306,6 +3514,8 @@ StartReturnWarpByFlag25::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
+SECTION "Bank 12 ReturnMessage_SetGoldAndShow", ROMX
+
 ; Return message, step 0: sets the gold (HalveGold); before EVENT_THANKS_FOR_COMING_BY_025 message
 ; $0C with object 0 facing right; after it object 1 faces down and message $14 (after
 ; EVENT_SCENE_LIMBO_MONSTER2) or $13. (C2, E-0357; probed E-0376)
@@ -3337,6 +3547,8 @@ ReturnMessage_SetGoldAndShow::
     call StartMessageA
     ret
 
+SECTION "Bank 12 HealPartyEvent_PlayHealSound", ROMX
+
 ; Heal party event, step 2: after the box closes, saves the GBC background palettes and plays sound
 ; $7A. (C1, E-0357)
 HealPartyEvent_PlayHealSound::
@@ -3357,6 +3569,8 @@ HealPartyEvent_PlayHealSound::
     ld a, $7a
     call QueueSoundEffect
     ret
+
+SECTION "Bank 12 HealPartyEvent_HealParty", ROMX
 
 ; Heal party event, step 4: notes whether a party member has fallen (MON_STATUS bit 7) and fully
 ; heals the party; with none fallen shows message $16 (after EVENT_SCENE_LIMBO_MONSTER2) or $11 and
@@ -3420,6 +3634,8 @@ HealPartyEvent_HealParty::
     inc [hl]
     ret
 
+SECTION "Bank 12 HealPartyEvent_MoveFallenBack", ROMX
+
 ; Heal party event, step 5: moves the fallen members to the back, reloads the names and sprites,
 ; shows the followers again and shows message $16 or $11. (C1, E-0357)
 HealPartyEvent_MoveFallenBack::
@@ -3445,6 +3661,8 @@ HealPartyEvent_MoveFallenBack::
     call StartMessageA
     ret
 
+SECTION "Bank 12 HealPartyEvent_WaitAndResume", ROMX
+
 ; Heal party event, step 6: waits for the message box to close, then resumes the script. (C1,
 ; E-0357)
 HealPartyEvent_WaitAndResume::
@@ -3454,6 +3672,8 @@ HealPartyEvent_WaitAndResume::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 12 PartyDefeatedReturn", ROMX
 
 ; Script command type 87 (SCRIPT_PARTY_DEFEATED_RETURN), run through ScriptCommand87 for
 ; Script_PartyDefeatedReturn, which Talk_PartyDefeatedReturn starts. Nine steps by wScriptStep:
@@ -3487,6 +3707,8 @@ PartyDefeatedReturn_ShowReturnMessage::
     farcall DispatchTalkEvent
     ret
 
+SECTION "Bank 12 PartyDefeatedReturn_StartWarp", ROMX
+
 ; Party defeated return, step 7: starts the return warp (StartReturnWarpByFlag25), field return
 ; phase 0, transition step $80. (C1, E-0357)
 PartyDefeatedReturn_StartWarp::
@@ -3497,6 +3719,8 @@ PartyDefeatedReturn_StartWarp::
     ld [wFieldTransitionStep], a
     ret
 
+SECTION "Bank 12 PartyDefeatedReturn_Wait", ROMX
+
 ; Party defeated return, step 6: waits $B4 frames. (C2, E-0357; probed E-0376)
 PartyDefeatedReturn_Wait::
     ld b, $b4
@@ -3505,6 +3729,8 @@ PartyDefeatedReturn_Wait::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 PartyDefeatedReturn_CheckAllFallen", ROMX
 
 ; Party defeated return, step 5: when every party member has fallen (MON_STATUS bit 7) plays music
 ; $42 and goes on to the return; otherwise resumes the script. (C2, E-0357; probed E-0376)
@@ -3538,6 +3764,8 @@ PartyDefeatedReturn_CheckAllFallen::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 PartyDefeatedReturn_ShowNextFallenName", ROMX
+
 ; Party defeated return, step 3: shows message $000B with the next marked member's name in the open
 ; box (kept open unless it is the last) and goes back to step 2. (C2, E-0357; probed E-0376)
 PartyDefeatedReturn_ShowNextFallenName::
@@ -3551,6 +3779,8 @@ PartyDefeatedReturn_ShowNextFallenName::
     jr nz, PartyDefeatedReturn_ShowFallenName_SetMessageIndex
     ld de, MSG_ALREADY_OPEN | $000b
     jr PartyDefeatedReturn_ShowFallenName_SetMessageIndex
+
+SECTION "Bank 12 PartyDefeatedReturn_CheckMarkedMembers", ROMX
 
 ; Party defeated return, step 2: after the box closes, goes to step 4 when no marked member is left,
 ; otherwise to step 3. (C1, E-0357)
@@ -3571,6 +3801,8 @@ PartyDefeatedReturn_CheckMarkedMembers::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 PartyDefeatedReturn_ShowFallenName", ROMX
 
 ; Party defeated return, step 1: shows message $000A with the first marked member's name (kept open
 ; when more follow). (C2, E-0357; probed E-0376)
@@ -3636,6 +3868,8 @@ PartyDefeatedReturn_ShowFallenName_SetMessageIndex::
     call CopyBytes
     ret
 
+SECTION "Bank 12 PartyDefeatedReturn_CountMarked", ROMX
+
 ; Party defeated return, step 0: counts the party members marked in wStatusFieldStep (one bit each)
 ; into wScriptParam0 and keeps the bits in wScriptParam1. (C2, E-0357; probed E-0376)
 PartyDefeatedReturn_CountMarked::
@@ -3659,6 +3893,8 @@ PartyDefeatedReturn_CountMarked::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 KeyWorldBossBattle", ROMX
 
 ; Script command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE), run through ScriptCommand85 for
 ; Script_KeyWorldBossBattle, which Talk_KeyWorldBossBattle starts. Eight steps by wScriptStep: a
@@ -3719,6 +3955,8 @@ KeyWorldBossBattle_MarkCleared::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 KeyWorldBossBattle_FlickerBoss", ROMX
+
 ; Key world boss battle, step 6: the boss sprite flickers (one sprite slot or none; every 8 frames,
 ; then 4 from frame $1E, 2 from $3C) for $78 frames. (C2, E-0357; probed E-0376)
 KeyWorldBossBattle_FlickerBoss::
@@ -3762,6 +4000,8 @@ KeyWorldBossBattle_FlickerBoss::
     inc [hl]
     ret
 
+SECTION "Bank 12 KeyWorldBossBattle_RunMessageToEnd", ROMX
+
 ; Key world boss battle step 5 and floor battle step 3 (KeyWorldFloorBattle): runs the key world's
 ; message box each frame (KeyWorldBossBattle_RunMessageBox with A = 0, so the animation is frozen
 ; while it is open) until it is idle, then clears wScriptParam0 and moves on. (C1, E-0370)
@@ -3775,6 +4015,8 @@ KeyWorldBossBattle_RunMessageToEnd::
     inc [hl]
     ret
 
+SECTION "Bank 12 KeyWorldBossBattle_ShowWarubouWaheyNoGood", ROMX
+
 ; Key world boss battle, step 4: Warubou's 'Wa-hey! No good, no good!' (message $0129). (C2, E-0357;
 ; probed E-0376)
 KeyWorldBossBattle_ShowWarubouWaheyNoGood::
@@ -3784,10 +4026,14 @@ KeyWorldBossBattle_ShowWarubouWaheyNoGood::
     call StartMessageHL_B0F_Bank12
     ret
 
+SECTION "Bank 12 KeyWorldBossBattle_FlashScreen", ROMX
+
 ; Key world boss battle, step 3: runs the negative screen flash. (C2, E-0357; probed E-0376)
 KeyWorldBossBattle_FlashScreen::
     farcall ScriptStepFlashScreenNegative
     ret
+
+SECTION "Bank 12 KeyWorldBossBattle_SavePalettes", ROMX
 
 ; Key world boss battle, step 2: saves the GBC background palettes for the flash. (C2, E-0357;
 ; probed E-0376)
@@ -3804,6 +4050,8 @@ KeyWorldBossBattle_SavePalettes::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 KeyWorldBossBattle_StartBattle", ROMX
 
 ; Key world boss battle, step 1: after the box closes starts the boss battle (intro 3): one monster
 ; (wKeyWorldEncounter word 0 at level byte 2, encounter kind 0) when bytes 3-4 are zero, otherwise
@@ -3875,6 +4123,8 @@ KeyWorldBossBattle_StartBattle::
     farcall SetModeState3AndSaveScreen
     ret
 
+SECTION "Bank 12 KeyWorldBossBattle_ShowMessage", ROMX
+
 ; Key world boss battle, step 0: a random message of $00D0-$00DF. (C2, E-0357; probed E-0376)
 KeyWorldBossBattle_ShowMessage::
     call NextRandomSeed
@@ -3886,6 +4136,8 @@ KeyWorldBossBattle_ShowMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 KeyWorldFloorBattle", ROMX
 
 ; Script command type 9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE), run through ScriptCommand9E for
 ; Script_KeyWorldFloorBattle, which Talk_KeyWorldFloorBattle starts. Six steps by wScriptStep: a
@@ -3921,6 +4173,8 @@ KeyWorldFloorBattle_MarkCleared::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 KeyWorldFloorBattle_ShowWarubouWaheyThatWas", ROMX
+
 ; Key world floor battle, step 2: Warubou's 'Wa-hey... That was no good.' (message $012A). (C2,
 ; E-0357; probed E-0376)
 KeyWorldFloorBattle_ShowWarubouWaheyThatWas::
@@ -3929,6 +4183,8 @@ KeyWorldFloorBattle_ShowWarubouWaheyThatWas::
     ld hl, $012a ; 'Warubou: Wa-hey… That was no good.'
     call StartMessageHL_B0F_Bank12
     ret
+
+SECTION "Bank 12 KeyWorldFloorBattle_StartBattle", ROMX
 
 ; Key world floor battle, step 1: after the box closes starts a battle (intro 3, kind 0) against the
 ; floor's entry: its monster word and level. (C1, E-0357)
@@ -3959,6 +4215,8 @@ KeyWorldFloorBattle_StartBattle::
     farcall SetModeState3AndSaveScreen
     ret
 
+SECTION "Bank 12 KeyWorldFloorBattle_ShowMessage", ROMX
+
 ; Key world floor battle, step 0: a random message of $00E0-$00EF. (C2, E-0357; probed E-0376)
 KeyWorldFloorBattle_ShowMessage::
     call NextRandomSeed
@@ -3970,6 +4228,8 @@ KeyWorldFloorBattle_ShowMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 RandomGoldOrItem", ROMX
 
 ; Script command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM), run through ScriptCommand84 for
 ; Script_RandomGoldOrItem, which Talk_RandomGoldOrItem starts. Clears wJoypadHeld and wJoypadPressed
@@ -4025,6 +4285,8 @@ RandomGoldOrItem_Give::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 RandomGoldOrItem_UseUpTrigger", ROMX
+
 ; Random gold or item, step 7: after the box closes sets the trigger kind to $FF (used up). (C1,
 ; E-0357)
 RandomGoldOrItem_UseUpTrigger::
@@ -4036,6 +4298,8 @@ RandomGoldOrItem_UseUpTrigger::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 RandomGoldOrItem_ShowMessage", ROMX
 
 ; Random gold or item, step 6: message 5 with the amount of gold, or message 6 with the item's name.
 ; (C2, E-0357; probed E-0376)
@@ -4068,6 +4332,8 @@ RandomGoldOrItem_ShowMessage::
     ld [wMessageGroup], a
     ret
 
+SECTION "Bank 12 RandomGoldOrItem_HopMarker", ROMX
+
 ; Random gold or item, step 5: makes the trigger marker hop (the hop curve on wTriggerIndex) for 16
 ; frames. (C2, E-0357; probed E-0376)
 RandomGoldOrItem_HopMarker::
@@ -4089,11 +4355,15 @@ RandomGoldOrItem_HopMarker::
     inc [hl]
     ret
 
+SECTION "Bank 12 RandomGoldOrItem_PickFind", ROMX
+
 ; Random gold or item, step 4: picks the gold or item at random
 ; (RandomGoldOrItem_PickFind_RollFind). (C1, E-0357)
 RandomGoldOrItem_PickFind::
     farcall RandomGoldOrItem_PickFind_RollFind
     ret
+
+SECTION "Bank 12 RandomGoldOrItem_ReplaceTiles", ROMX
 
 ; Random gold or item, step 3: replaces the 2x2 tiles at the trigger's spot (wMessageGroup and
 ; wMessageIndex high nibbles) with tiles $40 $41 / $50 $51; on the GBC their palette becomes 1 (3 on
@@ -4201,6 +4471,8 @@ RandomGoldOrItem_ReplaceTiles::
     inc [hl]
     ret
 
+SECTION "Bank 12 ScriptStepAnimateSpriteBySteps", ROMX
+
 ; Script step (RandomGoldOrItem step 2, and far-called by SceneStrongestMaster_AnimateSprite): sets
 ; the frame wScriptParam1 from the counter wScriptParam0 before counting it: 0-5 give 0, 6-11 give
 ; 1, 12-23 give 3 and 24 or more give 4 (the 2 stored for 12-17 is overwritten, because A then holds
@@ -4249,6 +4521,8 @@ ScriptStepAnimateSpriteBySteps::
     inc [hl]
     ret
 
+SECTION "Bank 12 DrawScriptMetaSpriteAtScrollOffset", ROMX
+
 ; Draws metasprite set $23 (the read of wMapSpriteKind is dead: A is reloaded with $10, so the set
 ; is always $23) with sub-index wScriptParam1, attribute XOR 7 and tile offset $70, at the 16-bit
 ; scroll position plus (wMessageIndex + 8, wMessageGroup + $10), through DrawMetaSprite.
@@ -4296,6 +4570,8 @@ DrawScriptMetaSpriteAtScrollOffset::
     farcall DrawMetaSprite
     ret
 
+SECTION "Bank 12 PlaySound83AndAdvanceScriptStep", ROMX
+
 ; Script step (RandomGoldOrItem step 1, and far-called by SceneStrongestMaster_PlaySound): queues
 ; sound effect $83 (wSoundEffectRequest) and increments wScriptStep. (C2, E-0376)
 ; QueueSoundEffect $83, then wScriptStep += 1 (E-0114)
@@ -4305,6 +4581,8 @@ PlaySound83AndAdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 SetupScriptSpriteInFrontOfPlayer", ROMX
 
 ; Script step (RandomGoldOrItem step 0, and far-called by SceneStrongestMaster_SetUpSprite): sets DE
 ; = $5994 and B = $7E, the compressed graphics StarBurstDebrisSpriteTiles (the source spells the
@@ -4322,6 +4600,8 @@ SetupScriptSpriteInFrontOfPlayer::
     ld de, KeyWorldBossBattle_ShowMessage
     ld b, $7e
     jr SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace
+
+SECTION "Bank 12 SpawnScriptSpriteInFrontOfPlayer", ROMX
 
 ; A picks compressed graphics in bank $7E: 1 gives SpawnScriptSpriteInFrontOfPlayer_Data, any other
 ; value SparkleAndCurvedStreakTiles; then it goes on at
@@ -4434,6 +4714,8 @@ SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace::
     inc [hl]
     ret
 
+SECTION "Bank 12 FieldScene01", ROMX
+
 ; Script command type 83 (SCRIPT_FIELD_SCENE_01), run through ScriptCommand83 for
 ; Script_FieldScene01, which Talk_FieldScene01 starts. wScriptParam1 picks the variant: 1 runs
 ; FieldScene01_Variant1 (gather the followers, load a sprite in front of the player and hop onto
@@ -4458,6 +4740,8 @@ FieldScene01::
 .call_field_scene01_get_off:
     call FieldScene01_GetOff
     ret
+
+SECTION "Bank 12 FieldScene01_GetOff", ROMX
 
 ; Field scene 1, the getting-off variant (wScriptParam1 not 1 or 2): clears the joypad and runs its
 ; two steps by wScriptStep. (C1, E-0357)
@@ -4488,6 +4772,8 @@ FieldScene01_GetOff_Start::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 FieldScene01_HopForward", ROMX
 
 ; Field scene 1, getting off, step 1: the player hops forward (a pixel in its facing every other
 ; frame, down a pixel every four) for $20 frames; then the followers gather on the player and are
@@ -4571,6 +4857,8 @@ FieldScene01_HopForward::
     ld hl, hPlayerY
     dec [hl]
     ret
+
+SECTION "Bank 12 FieldScene01_Variant1", ROMX
 
 ; Field scene 1, variant 1 (wScriptParam1 = 1): clears the joypad and runs its steps by wScriptStep:
 ; gather the followers, load the sprite, wait, spin, flicker, show it, and climb on. (C1, E-0357)
@@ -4658,6 +4946,8 @@ FieldScene01_HopOnSprite::
     dec [hl]
     ret
 
+SECTION "Bank 12 FieldScene01_DrawSprite", ROMX
+
 ; Field scene 1, variant 1, step 7: draws the sprite and moves on; plays music $2B in a key world of
 ; map type $80 or on a map listed in FieldScene01_DrawSprite_Data. (C1, E-0357)
 FieldScene01_DrawSprite::
@@ -4687,6 +4977,8 @@ FieldScene01_DrawSprite::
     ld a, $2b
     call QueueMusic
     ret
+
+SECTION "Bank 12 FieldScene01_DrawSprite_Data", ROMX
 
 ; A $FF-terminated list of map ids holding one id, $30 (then $FF). FieldScene01_DrawSprite searches
 ; it for hMapId on a map that is not a special map; on a match, or in a key world of map type $80,
@@ -4771,6 +5063,8 @@ FieldScene01_LoadSprite::
     inc [hl]
     ret
 
+SECTION "Bank 12 FieldScene01_Variant2", ROMX
+
 ; Field scene 1, variant 2 (wScriptParam1 = 2): clears the joypad and runs its steps by wScriptStep:
 ; as variant 1 up to the climb, then travel until land and get off. (C1, E-0357)
 FieldScene01_Variant2::
@@ -4798,6 +5092,8 @@ FieldScene01_Wait::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 FieldScene01_HopAndSpin", ROMX
 
 ; Field scene 1, step 5: the player hops while spinning (a quarter turn every other frame) for $20
 ; frames; then faces the first follower's way and sound $7A plays. (C2, E-0357; probed E-0376)
@@ -4831,6 +5127,8 @@ FieldScene01_HopAndSpin::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 FieldScene01_EnableTriggers", ROMX
 
 ; Field scene 1, variant 2, step 9: enables triggers and sets hPlayerStateFlags bits 5 and 7 while
 ; the player hops down off the sprite for $20 frames; then clears them, gathers and shows the
@@ -4897,6 +5195,8 @@ FieldScene01_EnableTriggers::
 
 .return:
     ret
+
+SECTION "Bank 12 FieldScene01_Variant2_RideUntilLand", ROMX
 
 ; Field scene 1, variant 2, step 8: once the step is done, holds the direction the player faces (one
 ; tile on, within the screen); when the tiles there are above wMaxBlockingTile the player gets off
@@ -5017,6 +5317,8 @@ FieldScene01_Variant2_RideUntilLand::
     ld [wJoypadHeld], a
     ret
 
+SECTION "Bank 12 FieldScene01_HopOnSprite2", ROMX
+
 ; Field scene 1, variant 2, step 7: the player hops onto the sprite in front (as variant 1, step 8)
 ; for $20 frames; then its Y snaps to the tile grid and player sprite mode 2. (C1, E-0357)
 FieldScene01_HopOnSprite2::
@@ -5081,6 +5383,8 @@ FieldScene01_HopOnSprite2::
     dec [hl]
     ret
 
+SECTION "Bank 12 FieldScene01_FlickerSprite", ROMX
+
 ; Field scene 1, step 6: the sprite flickers (every 2 frames, slowing to 4 and 8) for $78 frames;
 ; then hides the followers. (C1, E-0357)
 FieldScene01_FlickerSprite::
@@ -5120,6 +5424,8 @@ FieldScene01_FlickerSprite::
     ld a, $0e
     ldh [hFieldDrawFlags], a
     ret
+
+SECTION "Bank 12 DrawScriptMetaSprite21AtScrollOffset", ROMX
 
 ; Draws the FieldScene01 sprite: metasprite set $21 when wMapSpriteKind & $0F is 1, otherwise $22,
 ; sub-index 0, tile offset $70, attribute XOR 7, or $27 (which adds OAM bit 5, the horizontal flip)
@@ -5176,6 +5482,8 @@ DrawScriptMetaSprite21AtScrollOffset::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
+
+SECTION "Bank 12 FieldScene01_LoadSprite2", ROMX
 
 ; Field scene 1, variant 2, step 3: as variant 1's step 3 with the sprite LumpyBlobSpriteTiles:
 ; decompresses it to VRAM $8700 with its palette from bank $7E, puts it 16 pixels in front of the
@@ -5254,6 +5562,8 @@ FieldScene01_LoadSprite2::
     inc [hl]
     ret
 
+SECTION "Bank 12 ScriptStepMoveFollowersToLeader", ROMX
+
 ; Script step that brings the followers onto the leader chain: when wScriptParam0 is 0 it far-calls
 ; SetFollowerTargetsFromLeader (targets become the current positions of the player and of followers
 ; 1 and 2) and sets wScriptParam0 = 1; later calls far-call StepFollowersTowardTargets and count
@@ -5279,6 +5589,8 @@ ScriptStepMoveFollowersToLeader::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 KeyWorldDoorItem", ROMX
 
 ; Script command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM), run through ScriptCommand86 for
 ; Script_KeyWorldDoorItem, which Talk_KeyWorldDoorItem starts; the item is in wScriptParam0/1. Five
@@ -5314,6 +5626,8 @@ KeyWorldDoorItem_OpenDoor::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 12 KeyWorldDoorItem_GiveItem", ROMX
 
 ; Key world door item, step 2: with no item resumes at once; otherwise marks the door opened, adds
 ; item wScriptParam0 to the inventory unless its bit 7 is set, redraws the door tiles and the screen
@@ -5351,6 +5665,8 @@ KeyWorldDoorItem_GiveItem::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 KeyWorldDoorItem_WaitForMessage", ROMX
+
 ; Key world door item, step 1: waits for the message box to close. (C1, E-0357)
 KeyWorldDoorItem_WaitForMessage::
     xor a
@@ -5359,6 +5675,8 @@ KeyWorldDoorItem_WaitForMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 KeyWorldDoorItem_ShowItemMessage", ROMX
 
 ; Key world door item, step 0: no item: message 0; item $80: a new key (GenerateNewKeyEntry) with
 ; message 8, or message 9 and no item when it returns hTemp0 = 0; item $81: the same new key when
@@ -5434,6 +5752,8 @@ KeyWorldDoorItem_ShowItemMessage::
     ld [wScriptStep], a
     ret
 
+SECTION "Bank 12 AreaItemEvent", ROMX
+
 ; Script command type 81 (SCRIPT_AREA_ITEM), run through ScriptCommand81 for Script_AreaItem, which
 ; Talk_AreaItem starts. wScriptParam0/1 point at the item record (byte 1 the item, byte 3 nonzero
 ; once taken). Three steps by wScriptStep: show the item message, wait for the box, then give the
@@ -5480,6 +5800,8 @@ AreaItemEvent_GiveItem::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 AreaItemEvent_WaitForMessage", ROMX
+
 ; Area item, step 1: waits for the message box to close. (C1, E-0357)
 AreaItemEvent_WaitForMessage::
     xor a
@@ -5488,6 +5810,8 @@ AreaItemEvent_WaitForMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 12 AreaItemEvent_ShowItemMessage", ROMX
 
 ; Area item, step 0: an item already taken (record byte 3 set) gives message 0; otherwise its name,
 ; message 2 when the last inventory slot is free, or message 3 and no item. (C2, E-0357; probed
@@ -5537,6 +5861,8 @@ AreaItemEvent_ShowItemMessage::
     ld [wScriptParam1], a
     ret
 
+SECTION "Bank 12 StepTriggerReward", ROMX
+
 ; Script command type 80 (SCRIPT_STEP_TRIGGER_REWARD), run through ScriptCommand80 for
 ; Script_StepTriggerReward, which Talk_StepTriggerReward starts. Step 0 shows a message chosen by
 ; the kind byte of the active trigger record (ActiveTriggerRecord) and stores the next step in
@@ -5562,6 +5888,8 @@ StepTriggerReward_SetScriptStartRequestTo80::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 StepTriggerReward_StartBattle", ROMX
+
 ; Step trigger reward, step 4: starts a battle (intro 5), marks the trigger used (bit 7) and resumes
 ; the script. (C1, E-0357)
 StepTriggerReward_StartBattle::
@@ -5577,6 +5905,8 @@ StepTriggerReward_StartBattle::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 12 StepTriggerReward_GiveItem", ROMX
 
 ; Step trigger reward, step 3: gives the trigger's item, marks it used and sets the trigger kind to
 ; $FF. (C2, E-0357; probed E-0376)
@@ -5595,6 +5925,8 @@ StepTriggerReward_GiveItem::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 12 StepTriggerReward_GiveGold", ROMX
 
 ; Step trigger reward, step 2: gives ten times the trigger's value in gold (AddGoldCapped), marks it
 ; used and sets the trigger kind to $FF. (C2, E-0357; probed E-0376)
@@ -5627,6 +5959,8 @@ StepTriggerReward_GiveGold::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 12 StepTriggerReward_WaitMessage", ROMX
+
 ; Step trigger reward, step 1: after the box closes, goes to the step chosen in step 0
 ; (wScriptParam0). (C1, E-0357)
 StepTriggerReward_WaitMessage::
@@ -5636,6 +5970,8 @@ StepTriggerReward_WaitMessage::
     ld a, [wScriptParam0]
     ld [wScriptStep], a
     ret
+
+SECTION "Bank 12 StepTriggerReward_ShowMessage", ROMX
 
 ; Step trigger reward, step 0: by the trigger's kind: 0, an item: message 6 then the item (step 3),
 ; or message 7 when the bag is full (step 5); 1, gold: message 5 with ten times its value (step 2);
@@ -5742,6 +6078,8 @@ StepTriggerReward_ShowMessage::
     ld [wScriptParam0], a
     ret
 
+SECTION "Bank 12 ActiveTriggerRecord", ROMX
+
 ; Points HL at the active trigger's record: wScreenTriggers + 4 x wTriggerIndex when the screen has
 ; triggers, otherwise wMapObjects + 8 x wTriggerIndex. (C2, E-0357; probed E-0377)
 ActiveTriggerRecord::
@@ -5763,6 +6101,8 @@ ActiveTriggerRecord::
     ld hl, wScreenTriggers
     add_a_to_hl
     ret
+
+SECTION "Bank 12 FullyHealParty", ROMX
 
 ; Heal the records indexed by wPartyList, for a nonzero wPartyCount: copy each maximum HP/MP word to
 ; its current HP/MP and clear the entire MON_STATUS byte. Enable SRAM while doing so and disable it
@@ -5813,6 +6153,8 @@ FullyHealParty::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 12 ScriptStepFlashScreenNegative", ROMX
 
 ; Use incoming phase bit 2 to alternate four-call palette groups. When set, write DMG bytes
 ; ($D2,$D2,$E2) and on CGB copy the 64 saved background bytes; otherwise write ($2D,$2D,$1D) and
@@ -5881,6 +6223,8 @@ ScriptStepFlashScreenNegative::
     inc [hl]
     ret
 
+SECTION "Bank 12 StepScriptParam0Counter_Bank12", ROMX
+
 ; Frame counter for a script step: wScriptParam0 += 1; when it then equals B it is reset to 0 and
 ; carry is set, otherwise carry is clear; A = 0 either way. Ten script steps in this bank call it
 ; with B = the number of frames to wait before moving on (the same 18 bytes appear in 3 banks). (C2,
@@ -5901,6 +6245,8 @@ StepScriptParam0Counter_Bank12::
     ld [wScriptParam0], a
     scf
     ret
+
+SECTION "Bank 12 PartyDefeatedReturn_MoveFallenBack", ROMX
 
 ; Party defeated return, step 4: the first call hides the followers; the next moves the fallen
 ; members to the back, reloads the names and sprites and shows the followers again. (C1, E-0357)
@@ -5929,6 +6275,8 @@ PartyDefeatedReturn_MoveFallenBack::
     inc [hl]
     ret
 
+SECTION "Bank 12 SetBit1AtHL_Bank12", ROMX
+
 ; [HL] |= $02 (sets bit 1 of the byte at HL); A = the new byte, other registers kept. Its two
 ; callers, WarpWithFollowers_StaggerDownTo50 and FollowerScene_BeginDown, set bit 1 of
 ; hPlayerStateFlags with it (the same 5 bytes appear in 4 banks). (C2, E-0377)
@@ -5938,6 +6286,8 @@ SetBit1AtHL_Bank12::
     or $02
     ld [hl], a
     ret
+
+SECTION "Bank 12 ClearBit1AtHL_Bank12", ROMX
 
 ; [HL] &= $FD (clears bit 1 of the byte at HL); A = the new byte, other registers kept. Its one
 ; caller in this bank clears bit 1 of hPlayerStateFlags with it (the same 5 bytes appear in 4
@@ -5949,6 +6299,8 @@ ClearBit1AtHL_Bank12::
     ld [hl], a
     ret
 
+SECTION "Bank 12 SetBit2AtHL_B12", ROMX
+
 ; [HL] |= $04 (sets bit 2 of the byte at HL); A = the new byte, other registers kept. Steps of this
 ; bank set bit 2 of hPlayerStateFlags (ObjectPath1C_HopPlayerRight and others) or of the sprite flag
 ; bytes (wSpriteSlots + $D, wObject1 + OBJ_FLAGS and the next objects) with it. (C2, E-0377)
@@ -5958,6 +6310,8 @@ SetBit2AtHL_B12::
     or $04
     ld [hl], a
     ret
+
+SECTION "Bank 12 ClearBit2AtHL_Bank12", ROMX
 
 ; [HL] &= $FB (clears bit 2 of the byte at HL); A = the new byte, other registers kept. Callers in
 ; this bank clear bit 2 of hPlayerStateFlags (FinishObjectPath) or of the sprite flag bytes
@@ -5969,6 +6323,8 @@ ClearBit2AtHL_Bank12::
     and $fb
     ld [hl], a
     ret
+
+SECTION "Bank 12 UpdateFollowersOnStep_Bank12", ROMX
 
 ; Use incoming A low four bits as the tile-boundary test: when they are zero, far-call
 ; SetFollowerTargetsFromLeader in bank $02 to capture the current leader chain positions. Always
@@ -5986,6 +6342,8 @@ UpdateFollowersOnStep_Bank12::
 .call_step_followers_toward_targets:
     farcall StepFollowersTowardTargets
     ret
+
+SECTION "Bank 12 RunMessageBox_Bank12", ROMX
 
 ; The bank-$12 message box runner, one frame per call: A = the freeze flag, kept on the stack (0
 ; freezes the field animation in state 0 and resumes it in state 3). Returns at once while
@@ -6055,6 +6413,8 @@ RunMessageBox_Bank12_Open::
     inc [hl]
     ret
 
+SECTION "Bank 12 RunMessageBox_Bank12_ShowText", ROMX
+
 ; Bank-$12 message box, state 1: once the window is open, starts string wMessageIndex of category 1
 ; (BeginStringDisplay_Bank09). (C1, E-0357)
 RunMessageBox_Bank12_ShowText::
@@ -6070,6 +6430,8 @@ RunMessageBox_Bank12_ShowText::
     ld hl, wMessageState
     inc [hl]
     ret
+
+SECTION "Bank 12 RunMessageBox_Bank12_Close", ROMX
 
 ; Bank-$12 message box, state 2: when the text has finished, goes idle at once if wMessageGroup bit
 ; 6 keeps the box open; otherwise plays sound $69 and closes the window. (C2, E-0357; probed E-0377)
@@ -6105,6 +6467,8 @@ RunMessageBox_Bank12_Close::
     inc [hl]
     ret
 
+SECTION "Bank 12 RunMessageBox_Bank12_Finish", ROMX
+
 ; Final state (3) shared by the bank-$12 message runners (RunMessageBox_Bank12,
 ; RunMessageBoxStateIfActive_Bank12 and KeyWorldBossBattle_RunMessageBoxState): once the window is
 ; closed (wTextWindowState low bits 0), unfreezes the animation unless the flag on the stack is set
@@ -6126,6 +6490,8 @@ RunMessageBox_Bank12_Finish::
     ld a, $ff
     ld [wMessageState], a
     ret
+
+SECTION "Bank 12 RunMessageBoxStateIfActive_Bank12", ROMX
 
 ; The bank-$12 short message box runner, one frame per call: as RunMessageBox_Bank12 (A = the freeze
 ; flag on the stack, nothing while wMessageState is $FF), but its box flags are in wMessageIndex
@@ -6187,6 +6553,8 @@ RunMessageBoxStateIfActive_Bank12_Open::
     inc [hl]
     ret
 
+SECTION "Bank 12 RunMessageBoxStateIfActive_Bank12_ShowText", ROMX
+
 ; Bank-$12 short message box, state 1: once the window is open, starts string wMessageIndex & $3F of
 ; category 9 (BeginStringDisplay_Bank09). (C1, E-0357)
 RunMessageBoxStateIfActive_Bank12_ShowText::
@@ -6203,6 +6571,8 @@ RunMessageBoxStateIfActive_Bank12_ShowText::
     ld hl, wMessageState
     inc [hl]
     ret
+
+SECTION "Bank 12 RunMessageBoxStateIfActive_Bank12_Close", ROMX
 
 ; Bank-$12 short message box, state 2: when the text has finished, goes idle if wMessageIndex bit 6
 ; keeps the box open; otherwise sound $69 and closes the window. (C2, E-0357; probed E-0377)
@@ -6237,6 +6607,8 @@ RunMessageBoxStateIfActive_Bank12_Close::
     ld hl, wMessageState
     inc [hl]
     ret
+
+SECTION "Bank 12 KeyWorldBossBattle_RunMessageBoxState", ROMX
 
 ; The key world's message box: unless idle, runs its state (four states: open, text from bank $8A,
 ; close, finish) by wMessageState. (C1, E-0357)
@@ -6287,6 +6659,8 @@ KeyWorldBossBattle_OpenMessageBox::
     inc [hl]
     ret
 
+SECTION "Bank 12 KeyWorldBossBattle_StartMessageText", ROMX
+
 ; Key world message box, state 1: once the window is open, starts string wMessageIndex of category 0
 ; in bank $8A (BeginStringDisplay_Bank8A). (C1, E-0357)
 KeyWorldBossBattle_StartMessageText::
@@ -6302,6 +6676,8 @@ KeyWorldBossBattle_StartMessageText::
     ld hl, wMessageState
     inc [hl]
     ret
+
+SECTION "Bank 12 KeyWorldBossBattle_CloseMessageBox", ROMX
 
 ; Key world message box, state 2: when the text has finished, closes the window (no sound). (C2,
 ; E-0357; probed E-0377)
@@ -6327,6 +6703,8 @@ KeyWorldBossBattle_CloseMessageBox::
     inc [hl]
     ret
 
+SECTION "Bank 12 StartMessageHL_B0F_Bank12", ROMX
+
 ; Starts a message box: wMessageIndex = L and wMessageGroup = H (the message word: H bits 0-5 the
 ; group, bits 6-7 the box flags), wMessageState = 0 so the next RunMessageBoxFar_Bank12 call opens
 ; it; returns A = 0. KeyWorldBossBattle_ShowWarubouWaheyNoGood, KeyWorldBossBattle_ShowMessage,
@@ -6342,6 +6720,8 @@ StartMessageHL_B0F_Bank12::
     ld [wMessageState], a
     ret
 
+SECTION "Bank 12 StartMessageA", ROMX
+
 ; Starts string A: wMessageIndex = A and wMessageState = 0, so the next message box call opens the
 ; window and shows it; wMessageGroup is left as it is (its bits 7 and 6 are the box flags that
 ; RunMessageBox_Bank12 reads). Returns A = 0. The script steps of this bank call it before running
@@ -6353,6 +6733,8 @@ StartMessageA::
     xor a
     ld [wMessageState], a
     ret
+
+SECTION "Bank 12 RunMessageBoxFar_Bank12", ROMX
 
 ; One frame of the bank-$5F message box: wStepPtrLo = A (the freeze flag of RunMessageBox: 0 freezes
 ; the field animation while the box is shown), far-calls RunMessageBox, then returns carry set once
@@ -6373,6 +6755,8 @@ RunMessageBoxFar_Bank12::
 .return_carry:
     scf
     ret
+
+SECTION "Bank 12 RunMessageBoxCarryWhenIdle_Bank12", ROMX
 
 ; One frame of the bank-$12 message box: RunMessageBox_Bank12 with A = the freeze flag, then falls
 ; into RunMessageBoxCarryWhenIdle_Bank12_CheckIdle: carry set once wMessageState is $FF (idle),
@@ -6397,6 +6781,8 @@ RunMessageBoxCarryWhenIdle_Bank12_CheckIdle::
     scf
     ret
 
+SECTION "Bank 12 RunMessageBoxThenContinue", ROMX
+
 ; One frame of the short message box: RunMessageBoxStateIfActive_Bank12 with A = the freeze flag,
 ; then RunMessageBoxCarryWhenIdle_Bank12_CheckIdle: carry set once wMessageState is $FF (idle),
 ; otherwise A = 0 and carry clear. Four script steps in this bank call it. (C1, E-0377)
@@ -6407,10 +6793,14 @@ RunMessageBoxThenContinue::
     call RunMessageBoxStateIfActive_Bank12
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckIdle
 
+SECTION "Bank 12 KeyWorldBossBattle_RunMessageBox", ROMX
+
 ; Runs the key world message box, then returns carry when it is idle. (C1, E-0357)
 KeyWorldBossBattle_RunMessageBox::
     call KeyWorldBossBattle_RunMessageBoxState
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckIdle
+
+SECTION "Bank 12 ReadTileBuffer2x2AtPixel_Bank12_2", ROMX
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 x (C / 8) + B / 8 (rows of 20 entries);
 ; copies that entry and the next to wTilesUnderPoint and wTilesUnderPoint + $1, and the two entries
@@ -6456,6 +6846,8 @@ ReadTileBuffer2x2AtPixel_Bank12_2::
     ld [wTilesUnderPoint + $3], a
     ret
 
+SECTION "Bank 12 RunDrawTriggerMarkerSprite", ROMX
+
 ; Draws the trigger marker and the scene object for the frame: DrawTriggerMarkerSprite, then
 ; RunDrawTriggerMarkerSprite_DrawSceneObject (wObject5 when its bit 6 is set). Six field states in
 ; bank $02 far-call it each frame after DrawFieldSprites. (C1, E-0377)
@@ -6466,6 +6858,8 @@ RunDrawTriggerMarkerSprite::
     call DrawTriggerMarkerSprite
     call RunDrawTriggerMarkerSprite_DrawSceneObject
     ret
+
+SECTION "Bank 12 GenerateNewKeyEntry", ROMX
 
 ; Adds a generated key: clears wKeyRetryCount, takes the first free wKeyList slot
 ; (FindFreeKeySlotToTemp0; with none it returns hTemp0 = 0) and writes kind $FE there
@@ -6573,6 +6967,8 @@ GenerateNewKeyEntry::
     ld [wInventorySortFlags], a
     ret
 
+SECTION "Bank 12 FindFreeKeySlotToTemp0", ROMX
+
 ; hTemp0 = the index of the first free wKeyList entry (byte 0 = $FF), or $80 when the 32 entries are
 ; all used or 20 of the entries before the free one are generated keys (byte 3 bit 7 clear; entries
 ; with bit 7 set are not counted). GenerateNewKeyEntry and two key events in bank $0D call it. (C2,
@@ -6619,6 +7015,8 @@ FindFreeKeySlotToTemp0::
     ld a, $80
     ldh [hTemp0], a
     ret
+
+SECTION "Bank 12 WriteKeyEntryTemp0", ROMX
 
 ; Writes key entry hTemp0 of wKeyList with kind hTemp1 in byte 0. For a kind other than $FE byte 3
 ; becomes $80 and bytes 1-2 are left as they were. For kind $FE (a generated key) it far-calls
@@ -6667,6 +7065,8 @@ WriteKeyEntryTemp0::
     ld [hl], a
     ret
 
+SECTION "Bank 12 CountKeysOrFull", ROMX
+
 ; hTemp0 = the number of wKeyList entries before the first one whose byte 0 is $FF, or $80 when all
 ; 32 entries are used. Key events in banks $04, $0C, $0F, $13, $73 and others call it before giving
 ; a key. (C2, E-0377)
@@ -6694,6 +7094,8 @@ CountKeysOrFull::
     ld a, b
     ldh [hTemp0], a
     ret
+
+SECTION "Bank 12 DeleteKeyEntryTemp0", ROMX
 
 ; Removes key entry hTemp0: far-calls ClearKeyWorldActiveForMatchingKeyEntry (the and $7F before the
 ; bit 7 test makes this unconditional); when the kind byte has bit 7 set and is not $FE, writes $FF
@@ -6843,6 +7245,8 @@ DeleteKeyEntryTemp0::
     dec [hl]
     ret
 
+SECTION "Bank 12 PlaceSpecialMapObjectsOnEntry", ROMX
+
 ; On screen entry (two map-load paths in bank $02 far-call it after the screen is drawn): on map $7F
 ; or $92 at screen (0, 0) outside the special map types, or on map type $82, runs field command $12
 ; (RunFieldCommandTemp0, which loads the scene-object sprite of
@@ -6911,6 +7315,8 @@ PlaceSpecialMapObjectsOnEntry::
     ld [wObject5], a
     ret
 
+SECTION "Bank 12 LoadSpriteGraphics7EToTiles0", ROMX
+
 ; Loads the floating scene sprite drawn by DrawAnimatedMetaSprite1B: decompresses
 ; FloatingOrbSpriteTiles (bank $7E) to vTiles0 + $300 when hTemp0 is 0, or to vTiles0 + $700
 ; otherwise, and sets wSpriteFloatY = $30. On CGB it copies the 8 palette bytes at SharedOBJPalettes
@@ -6966,6 +7372,8 @@ LoadSpriteGraphics7EToTiles0::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+SECTION "Bank 12 CycleSpriteFloatYDown", ROMX
+
 ; wSpriteFloatY -= 2; when the result is $C0 or more (it went below 0) it becomes $30 again, so the
 ; floating sprite moves up 2 pixels a call and restarts at $30. Scene steps in banks $5F and $73
 ; far-call it each frame before DrawAnimatedMetaSprite1B. (C2, E-0377)
@@ -6980,6 +7388,8 @@ CycleSpriteFloatYDown::
     ld a, $30
     ld [wSpriteFloatY], a
     ret
+
+SECTION "Bank 12 DrawAnimatedMetaSprite1B", ROMX
 
 ; Draws meta-sprite set $1B (DrawMetaSprite) for the sprite LoadSpriteGraphics7EToTiles0 loaded:
 ; hTemp0 = 0 uses tile offset $30 and attribute bits 3, otherwise $70 and 7. The sub-index is
@@ -7026,6 +7436,8 @@ DrawAnimatedMetaSprite1B::
     ldh [hSpriteOriginY], a
     farcall DrawMetaSprite
     ret
+
+SECTION "Bank 12 DrawAnimatedMetaSprite1B_Data", ROMX
 
 ; 30 bytes of sprite sub-index for the animated meta-sprite set $1B: ten $00, ten $01 and ten $02.
 ; DrawAnimatedMetaSprite1B indexes it with the frame counter (wFrameCounterLo and wFrameCounterHi)
@@ -7091,6 +7503,8 @@ RunFieldCommandTemp0_LoadSceneObject20::
     ld [wObject5 + $7], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject19", ROMX
+
 ; Field command 19: the scene object (wObject5) gets the command's sprite at tile $30 with palette 3
 ; (RunFieldCommandTemp0_LoadGfxPalette3), hidden, position left as it was. (C1, E-0370)
 RunFieldCommandTemp0_LoadSceneObject19::
@@ -7106,6 +7520,8 @@ RunFieldCommandTemp0_LoadSceneObject19::
     xor a
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject18", ROMX
 
 ; Field command 18: the scene object gets the command's sprite (tile $40, palette 4), hidden,
 ; position left as it was, its animation reset. (C1, E-0357)
@@ -7129,6 +7545,8 @@ RunFieldCommandTemp0_LoadSceneObject18::
     ld [wObject5 + $7], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject17", ROMX
+
 ; Field command 17: the scene object gets the command's sprite (tile $40, palette 4), hidden,
 ; position left as it was, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject17::
@@ -7150,6 +7568,8 @@ RunFieldCommandTemp0_LoadSceneObject17::
     ld [wObject5 + $7], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject16", ROMX
+
 ; Field command 16: the scene object gets the command's sprite (tile $40, palette 4) at ($30, $40),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject16::
@@ -7170,6 +7590,8 @@ RunFieldCommandTemp0_LoadSceneObject16::
     ld [wObject5], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject15", ROMX
+
 ; Field command 15: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject15::
@@ -7189,6 +7611,8 @@ RunFieldCommandTemp0_LoadSceneObject15::
     xor a
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject13", ROMX
 
 ; Placement shared by field commands $0D/$0E: load the selected effect graphics, then set object 5
 ; tile offset $30, sprite-set selector from returned A, attributes 3 and position ($50,$3C). Show it
@@ -7219,6 +7643,8 @@ RunFieldCommandTemp0_LoadSceneObject13::
     ld [wObject5 + $7], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject12", ROMX
+
 ; Field command 12: the scene object gets the command's sprite (tile $40, palette 4) at ($78, $50),
 ; hidden, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject12::
@@ -7245,6 +7671,8 @@ RunFieldCommandTemp0_LoadSceneObject12::
     ld a, h
     ld [wObject5 + $7], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject11", ROMX
 
 ; Field command 11: the scene object gets the command's sprite (tile $40, palette 4) at the player's
 ; position, hidden, its animation reset. (C1, E-0357)
@@ -7273,6 +7701,8 @@ RunFieldCommandTemp0_LoadSceneObject11::
     ld [wObject5 + $7], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject10", ROMX
+
 ; Field command 10: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject10::
@@ -7292,6 +7722,8 @@ RunFieldCommandTemp0_LoadSceneObject10::
     xor a
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject9", ROMX
 
 ; Field command 9: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
 ; shown (above the screen until moved). (C1, E-0357)
@@ -7313,6 +7745,8 @@ RunFieldCommandTemp0_LoadSceneObject9::
     ld [wObject5], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject8", ROMX
+
 ; Field command 8: the scene object gets the command's sprite (tile $40, palette 4) at ($50, $30),
 ; hidden. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject8::
@@ -7333,6 +7767,8 @@ RunFieldCommandTemp0_LoadSceneObject8::
     ld [wObject5], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject7", ROMX
+
 ; Field command 7: the scene object gets the command's sprite (tile $40, palette 4) at ($30, $E0),
 ; shown (above the screen until moved). (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject7::
@@ -7352,6 +7788,8 @@ RunFieldCommandTemp0_LoadSceneObject7::
     ld a, $80
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject6", ROMX
 
 ; Field command 6: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $70),
 ; shown, its animation reset. (C1, E-0357)
@@ -7378,6 +7816,8 @@ RunFieldCommandTemp0_LoadSceneObject6::
     ld [wObject5 + $7], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject5", ROMX
+
 ; Field command 5: the scene object gets the command's sprite (tile $40, palette 4) at ($40, 0),
 ; shown. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject5::
@@ -7397,6 +7837,8 @@ RunFieldCommandTemp0_LoadSceneObject5::
     ld a, $80
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject4", ROMX
 
 ; Field command 4: the scene object gets the command's sprite (tile $40, palette 4) at ($50, $30),
 ; hidden. (C1, E-0357)
@@ -7418,6 +7860,8 @@ RunFieldCommandTemp0_LoadSceneObject4::
     ld [wObject5], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject3", ROMX
+
 ; Field command 3: the scene object gets the command's sprite (tile $40, palette 4), hidden,
 ; position left as it was. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject3::
@@ -7433,6 +7877,8 @@ RunFieldCommandTemp0_LoadSceneObject3::
     xor a
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject2", ROMX
 
 ; Field command 2: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $30),
 ; hidden. (C1, E-0357)
@@ -7454,6 +7900,8 @@ RunFieldCommandTemp0_LoadSceneObject2::
     ld [wObject5], a
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject1", ROMX
+
 ; Field command 1: the scene object gets the command's sprite (tile $40, palette 4), hidden,
 ; position left as it was. (C1, E-0357)
 RunFieldCommandTemp0_LoadSceneObject1::
@@ -7469,6 +7917,8 @@ RunFieldCommandTemp0_LoadSceneObject1::
     xor a
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadSceneObject0", ROMX
 
 ; Field command 0: the scene object gets the command's sprite (tile $40, palette 4) at ($60, $40),
 ; shown. (C1, E-0357)
@@ -7489,6 +7939,8 @@ RunFieldCommandTemp0_LoadSceneObject0::
     ld a, $80
     ld [wObject5], a
     ret
+
+SECTION "Bank 12 RunFieldCommandTemp0_LoadGfxPalette4", ROMX
 
 ; hTemp0 selects a four-byte FieldCommandSpriteTable record after masking bit 7 and multiplying by
 ; four with byte wrap. Decompress the bank-$7E pointer to VRAM $8400. On CGB copy eight palette
@@ -7545,6 +7997,8 @@ RunFieldCommandTemp0_LoadGfxPalette4::
     ld a, [hl]
     ret
 
+SECTION "Bank 12 RunFieldCommandTemp0_LoadGfxPalette3", ROMX
+
 ; hTemp0 selects a four-byte FieldCommandSpriteTable record: mask bit 7, multiply the remaining byte
 ; by four with byte wrap and add it to the table. Decompress its pointer from bank $7E into VRAM
 ; $8300. On CGB use record byte 2 low seven bits to select eight palette bytes at $7E:$4BBD +
@@ -7600,6 +8054,8 @@ RunFieldCommandTemp0_LoadGfxPalette3::
     ld a, [hl]
     ret
 
+SECTION "Bank 12 RunDrawTriggerMarkerSprite_DrawSceneObject", ROMX
+
 ; Unless wFieldActionRequest bit 7 is set, draws the scene object (wObject5) when its bit 6 is set,
 ; through DrawFieldSprites' entry drawing (DrawFieldSprites_DrawEntry with DE = wObject5); runs each
 ; field frame after DrawTriggerMarkerSprite. (C1, E-0370)
@@ -7612,6 +8068,8 @@ RunDrawTriggerMarkerSprite_DrawSceneObject::
     bit 6, a
     ret z
     jr DrawFieldSprites_DrawEntry
+
+SECTION "Bank 12 DrawFieldSprites", ROMX
 
 ; Draws the script meta-sprite object: returns when wFieldActionRequest bit 7 is set or wObject5 bit
 ; 7 is clear; otherwise falls into DrawFieldSprites_DrawEntry with DE = wObject5, which draws that
@@ -7680,6 +8138,8 @@ DrawFieldSprites_DrawEntry::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
+
+SECTION "Bank 12 DrawFieldSprites_AnimateSubIndex", ROMX
 
 ; A = the entry's sprite-set byte (bit 7 set): wObject5 + $6 (frame counter) += 1, then by set (A &
 ; $7F): sets $13, $1A, $17, $1E and $18 step their looping duration lists
@@ -7761,6 +8221,8 @@ DrawFieldSprites_AnimateSubIndex::
 .return:
     ret
 
+SECTION "Bank 12 DrawFieldSprites_StepFrameLoop", ROMX
+
 ; Steps a frame-duration list: when the counter reaches the current frame's duration it restarts and
 ; the frame advances, wrapping to 0 at $FF. (C2, E-0357; probed E-0377)
 DrawFieldSprites_StepFrameLoop::
@@ -7788,6 +8250,8 @@ DrawFieldSprites_StepFrameLoop::
 
 .return:
     ret
+
+SECTION "Bank 12 DrawFieldSprites_StepFramePairs", ROMX
 
 ; Steps a list of (sub-index, duration) pairs, holding on the last frame at $FF; returns the current
 ; sub-index. (C2, E-0357; probed E-0377)
@@ -7822,6 +8286,8 @@ DrawFieldSprites_StepFramePairs::
     dec hl
     ld a, [hl]
     ret
+
+SECTION "Bank 12 DrawFieldSprites_AnimateSubIndex_Data1", ROMX
 
 ; A list of frame durations in frames, 8, 8, 8, 8, ended by $FF: four frames of 8 frames each, for
 ; sprite set $13. DrawFieldSprites_StepFrameLoop counts wObject5 + $6 up to the duration of frame
@@ -8013,6 +8479,8 @@ FindTriggerEntryForCurrentScreen::
     ld [wTriggerIndex], a
     jr FindTriggerEntryForCurrentScreen_StoreTrigger
 
+SECTION "Bank 12 FindTriggerEntryForCurrentScreen_ScreenTriggers", ROMX
+
 ; The same search over wScreenTriggers (4-byte entries: the screen in byte 2, the cell in byte 3):
 ; on maps $30 and above (not special map types) it searches the first three entries whatever
 ; wScreenTriggerCount is (it returns when the count is 0), on map type $85 wScreenTriggerCount
@@ -8083,6 +8551,8 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers::
     ld [wTriggerIndex], a
     jr FindTriggerEntryForCurrentScreen_StoreTrigger
 
+SECTION "Bank 12 FindTriggerEntryForCurrentScreen_StoreTrigger", ROMX
+
 ; The end of the trigger search (the found entry's address on the stack, HL past its first byte):
 ; stores the next byte in wTriggerCell and the kind in wTriggerKind (the entry's low two bits, or
 ; for 0 a kind from FindTriggerEntryForCurrentScreen_ScreenTriggers_Data by the entry's next byte);
@@ -8149,6 +8619,8 @@ LoadTriggerMarkerGraphics::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
+
+SECTION "Bank 12 FindTriggerEntryForCurrentScreen_StoreTrigger_Data", ROMX
 
 ; 45 bytes, each a trigger kind 0-10 (0 means none), indexed by the second byte of the map object
 ; entry (wMapObjects) or screen trigger entry (wScreenTriggers) that was found for the screen.
@@ -8357,6 +8829,8 @@ DrawTriggerMarkerSprite::
     farcall DrawMetaSprite
     ret
 
+SECTION "Bank 12 DrawTriggerMarkerSprite_Data1", ROMX
+
 ; Eleven meta-sprite set numbers, indexed by wTriggerKind (0-10): $00, $09, $01, $01, $02, $03, $04,
 ; $05, $06, $07, $08. DrawTriggerMarkerSprite stores the byte in hSpriteSetIndex and draws that set
 ; (sub-index 0, tile offset $40) with DrawMetaSprite. (C1, E-0381)
@@ -8454,6 +8928,8 @@ CheckTriggerCellOnA::
 .return:
     ret
 
+SECTION "Bank 12 CheckStepTriggerAndDispatchTalk", ROMX
+
 ; Stepping onto a trigger (the field movement update in bank $02 far-calls it): returns when
 ; wTriggerEnable is 1, wFieldStepFlags is $C0, or wTriggerKind is $FF, 2 or 3 (those wait for the A
 ; button, CheckTriggerCellOnA). When the player position (hPlayerX, hPlayerY) is on the trigger cell
@@ -8507,6 +8983,8 @@ CheckStepTriggerAndDispatchTalk::
 
 .return:
     ret
+
+SECTION "Bank 12 FieldState_WalkAMenu_CheckKeyWorldItemOnA", ROMX
 
 ; Field state 5's A button in a key world: when idle and A is pressed on map type $85, a treasure
 ; tile $2C in front starts talk event group $0E (the area item) with a pointer to whichever of the
@@ -8704,6 +9182,8 @@ FieldState_WalkAMenu_CheckKeyWorldItemOnA::
     ld [wJoypadPressed], a
     ret
 
+SECTION "Bank 12 FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data", ROMX
+
 ; Eight packed screen coordinates, $01, $10, $12, $13, $20, $21, $23 and $32 (high nibble the screen
 ; X, low nibble the screen Y). FieldState_WalkAMenu_CheckKeyWorldItemOnA indexes it with a byte of
 ; the current floor entry in wKeyWorldFloorState, compares the result with the screen the player is
@@ -8772,6 +9252,8 @@ IsPlayerOnTriggerCell::
     pop bc
     ret
 
+SECTION "Bank 12 IsPlayerOnTriggerCell_Data", ROMX
+
 ; Sixteen (X, Y) cell pairs, indexed by wTriggerCell times 2: (1,2), (1,7), (2,1), (2,4), (2,6),
 ; (3,3), (4,5), (4,7), (5,1), (5,3), (6,5), (7,2), (7,4), (7,7), (8,1), (8,6) (cells of 16 pixels).
 ; IsPlayerOnTriggerCell uses them on special map types other than $85; the player is on the trigger
@@ -8825,6 +9307,8 @@ ReadTileBuffer2x2AtPixel_Bank12::
     ld a, [hl]
     ld [wTilesUnderPoint + $3], a
     ret
+
+SECTION "Bank 12 RunPeriodicFieldEventChecks", ROMX
 
 ; Once every 100 calls on the town maps ($20, $30, $48, $70, $A8, $B0, $B8, $C8) or in the key world
 ; (map type $80), tries the town events in turn until one sets wPendingFieldEvent and returns carry:
@@ -8916,6 +9400,8 @@ RunPeriodicFieldEventChecks::
     sub a
     ret
 
+SECTION "Bank 12 EventCheckGoldAtLeast10000", ROMX
+
 ; Town event $CC, the first check of RunPeriodicFieldEventChecks: when EVENT_KING_YOU_WILL_I_KNEW is
 ; set, EVENT_KING_IF_YOU_SEE is clear and the gold is at least 10,000 ($2710), wPendingFieldEvent =
 ; $CC and carry set; otherwise A = 0 and carry clear. (C2, E-0377)
@@ -8951,6 +9437,8 @@ EventCheckGoldAtLeast10000::
 .done:
     sub a
     ret
+
+SECTION "Bank 12 TriggerEventCDIfPartyHPTotalBelow100", ROMX
 
 ; Town event $CD: with EVENT_KING_YOU_WILL_I_KNEW_195 set and EVENT_KING_IF_YOU_SEE_196 clear, sums
 ; the MON_HP words of the wPartyCount records in wPartyList (16 bits in hTemp2/hTemp3, SRAM enabled
@@ -9018,6 +9506,8 @@ TriggerEventCDIfPartyHPTotalBelow100::
     sub a
     ret
 
+SECTION "Bank 12 TriggerEventCEIfPartyMPTotalBelow100", ROMX
+
 ; Town event $CE: with EVENT_KING_YOU_WILL_I_KNEW_198 set and EVENT_KING_IF_YOU_SEE_199 clear, sums
 ; the MON_MP words of the wPartyCount records in wPartyList (16 bits in hTemp2/hTemp3, SRAM enabled
 ; for the loop and disabled after); a total below 100 sets wPendingFieldEvent = $CE and carry,
@@ -9084,6 +9574,8 @@ TriggerEventCEIfPartyMPTotalBelow100::
     sub a
     ret
 
+SECTION "Bank 12 TriggerEventCFIfPartyLevelTotalBelow100", ROMX
+
 ; Town event $CF: with EVENT_KING_YOU_WILL_I_KNEW_19B set and EVENT_KING_IF_YOU_SEE_19C clear, sums
 ; the MON_LEVEL bytes of the wPartyCount records in wPartyList (16 bits in hTemp2/hTemp3, SRAM
 ; enabled for the loop and disabled after); a total below 100 sets wPendingFieldEvent = $CF and
@@ -9147,6 +9639,8 @@ TriggerEventCFIfPartyLevelTotalBelow100::
 .done:
     sub a
     ret
+
+SECTION "Bank 12 TriggerEventC9IfExpDigitsRepeat", ROMX
 
 ; Town event $C9: with at least 1,000 gold, when a party member has a 24-bit MON_EXP whose ones,
 ; tens and hundreds digits are equal (Number24ToPackedBCD), wPendingFieldEvent = $C9 and carry;
@@ -9229,6 +9723,8 @@ TriggerEventC9IfExpDigitsRepeat::
     ld [rRAMG], a
     sub a
     ret
+
+SECTION "Bank 12 TriggerEventCBIfMemberStatused", ROMX
 
 ; Town event $CB: with at least 1,000 gold, when a party member has MON_STATUS bit 7, 2 or 0 set,
 ; wPendingFieldEvent = $CB and carry; otherwise A = 0 and carry clear. For such a member it compares
@@ -9323,6 +9819,8 @@ TriggerEventCBIfMemberStatused::
     ld [rRAMG], a
     sub a
     ret
+
+SECTION "Bank 12 RunPeriodicFieldEventChecks_LowHPTownEvent", ROMX
 
 ; Town event $C8: when wEventItemSlot is $FF or 0 and the gold is at least 1,000, sums the party
 ; MON_MAX_HP words, divides the sum by 100 (rounded down) and multiplies by 30; when the party total
@@ -9429,6 +9927,8 @@ RunPeriodicFieldEventChecks_LowHPTownEvent::
     sub a
     ret
 
+SECTION "Bank 12 TriggerEventC7IfGold1000AndNoItems19To1C", ROMX
+
 ; Town event $C7: when wEventItemSlot is $FF or 0 and the gold is at least 1,000, scans wInventory
 ; up to the first $00 or $FF byte (there is no 24-slot limit); when no item before it is $19-$1C
 ; (ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB, ITEM_SIRLOIN), wPendingFieldEvent = $C7 and carry;
@@ -9486,6 +9986,8 @@ TriggerEventC7IfGold1000AndNoItems19To1C::
     sub a
     ret
 
+SECTION "Bank 12 TriggerEventC6IfGoldAtLeast", ROMX
+
 ; Town event $C6: when wEventItemSlot is $FF or 0 and the gold is at least 5,000 ($1388),
 ; wPendingFieldEvent = $C6 and carry; otherwise A = 0 and carry clear. Called by
 ; RunPeriodicFieldEventChecks. (C2, E-0377)
@@ -9523,6 +10025,8 @@ TriggerEventC6IfGoldAtLeast::
 .done:
     sub a
     ret
+
+SECTION "Bank 12 TriggerEventC4OrC5IfGold1000", ROMX
 
 ; Town event $C4 or $C5, the last check of RunPeriodicFieldEventChecks: with at least 1,000 gold and
 ; the last bag slot (wInventory + $17) $FF or 0, steps NextTableByte and sets wPendingFieldEvent =
@@ -9566,6 +10070,8 @@ TriggerEventC4OrC5IfGold1000::
     ld [wPendingFieldEvent], a
     scf
     ret
+
+SECTION "Bank 12 TriggerEventC3IfGoldDigitSum30", ROMX
 
 ; Town event $C3: with at least 5,000 gold and the last bag slot (wInventory + $17) $FF or 0, adds
 ; up the decimal digits of the 24-bit gold (Number24ToPackedBCD); a sum of 30 or more sets
@@ -9644,6 +10150,8 @@ TriggerEventC3IfGoldDigitSum30::
     ld [wPendingFieldEvent], a
     scf
     ret
+
+SECTION "Bank 12 TriggerEventC2IfPartyHPLastDigitsMatch", ROMX
 
 ; Town event $C2: with at least 1,000 gold, compares the ones digits (HLToDecimalDigits) of the
 ; MON_HP of the first two, or three, wPartyList members; when they all match, or the party has one
@@ -9729,6 +10237,8 @@ TriggerEventC2IfPartyHPLastDigitsMatch::
     sub a
     ret
 
+SECTION "Bank 12 TriggerEventC1IfGoldDigitSumAtMost12", ROMX
+
 ; Town event $C1: with the last bag slot (wInventory + $17) $FF or 0 and at least 1,000 gold, adds
 ; up the decimal digits of the 24-bit gold (Number24ToPackedBCD); a sum of 12 or less sets
 ; wPendingFieldEvent = $C1 and carry, otherwise A = 0 and carry clear. Called by
@@ -9808,6 +10318,8 @@ TriggerEventC1IfGoldDigitSumAtMost12::
     scf
     ret
 
+SECTION "Bank 12 TriggerEventC0IfHPDigitsRepeat", ROMX
+
 ; Town event $C0: when a party member has a MON_HP whose decimal digits (HLToDecimalDigits) are all
 ; equal, such as 77 or 333, or a single-digit HP (0-9), wPendingFieldEvent = $C0 and carry;
 ; otherwise A = 0 and carry clear. There is no gold condition. SRAM is enabled for the loop and
@@ -9875,6 +10387,8 @@ TriggerEventC0IfHPDigitsRepeat::
     scf
     ret
 
+SECTION "Bank 12 ClearPendingFieldEventIfBit7AndNot6", ROMX
+
 ; When wPendingFieldEvent has bit 7 set and bit 6 clear (an event whose sprite has been placed),
 ; clears wPendingFieldEvent and wTownEventTimer; otherwise changes nothing. Scenes in bank $61 and
 ; map code in bank $11 far-call it (nine sites). (C2, E-0377)
@@ -9890,6 +10404,8 @@ ClearPendingFieldEventIfBit7AndNot6::
     ld [wPendingFieldEvent], a
     ld [wTownEventTimer], a
     ret
+
+SECTION "Bank 12 ClearPendingFieldEventWhenFieldIdle", ROMX
 
 ; On map load (two map-load paths in bank $02 far-call it after the screen objects are set up):
 ; returns when ClearPendingFieldEventWhenFieldIdle_BeforeCrate returns A nonzero (it cleared the
@@ -9915,6 +10431,8 @@ ClearPendingFieldEventWhenFieldIdle::
     xor a
     ld [wPendingFieldEvent], a
     ret
+
+SECTION "Bank 12 RunPendingFieldEventPendingFieldEvent", ROMX
 
 ; No call, jump or table entry in src/ reaches it (it follows the ret of
 ; ClearPendingFieldEventWhenFieldIdle). It clears wPendingFieldEvent when the kind (low nibble) is 8
@@ -9950,6 +10468,8 @@ RunPendingFieldEventPendingFieldEvent::
     xor a
     ld [wPendingFieldEvent], a
     ret
+
+SECTION "Bank 12 RunPendingFieldEventPendingFieldEvent_IfKeyWorld", ROMX
 
 ; Entered from ClearPendingFieldEventWhenFieldIdle with A = wMapType (bit 7 set): returns unless A
 ; is exactly $80 (the key world), then falls into RunPendingFieldEventPendingFieldEvent_PlaceSprite.
@@ -10068,6 +10588,8 @@ RunPendingFieldEventPendingFieldEvent_PlaceSprite::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+SECTION "Bank 12 RollFieldEventOnTallTiles", ROMX
+
 ; Called by RunPendingFieldEventPendingFieldEvent_PlaceSprite after ReadTileBuffer2x2AtPixel_Bank12
 ; filled wTilesUnderPoint. When the wMapSpriteKind low nibble is 1 and a tile there is at or below
 ; wMapTallTileMin, steps NextRandomSeed once; when wKeyRandomHi & 7 is then 0, the bag holds item
@@ -10152,6 +10674,8 @@ RollFieldEventOnTallTiles::
     ld a, $01
     ret
 
+SECTION "Bank 12 PendingFieldEventSpriteIds", ROMX
+
 ; Sixteen bytes indexed by the pending event's kind (wPendingFieldEvent & $0F): the field sprite
 ; graphics id of that kind. RunPendingFieldEventPendingFieldEvent_PlaceSprite stores the byte in
 ; wSpriteSlots + 2 and in hTemp0 (hTemp1 = 0, hTemp2 = 1 to use FieldSpriteGraphicsTable, hTemp3 =
@@ -10198,6 +10722,8 @@ ClearPendingFieldEventWhenFieldIdle_BeforeCrate::
     xor a
     ret
 
+SECTION "Bank 12 FindPartyIndexOfSpeciesTemp0", ROMX
+
 ; hTemp0/hTemp1 = a species word: hTemp0 = the party index (wPartyList order) of the first member
 ; whose MON_SPECIES word equals it, or $80 when none does. SRAM is enabled for the search and
 ; disabled after. Talk events in bank $13 and scenes in banks $5F and $73 far-call it. (C2, E-0377)
@@ -10242,6 +10768,8 @@ FindPartyIndexOfSpeciesTemp0::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 12 FindTemp0InInventoryList", ROMX
+
 ; hTemp0 = an item id: hTemp0 = the index of the first wInventory slot holding it, or $FF when an
 ; empty slot ($00 or $FF) comes first or none of the 24 slots holds it. B, C and HL change. Talk and
 ; field events in banks $04, $12, $13 and others far-call it to test whether the bag holds an item.
@@ -10278,6 +10806,8 @@ FindTemp0InInventoryList::
     ldh [hTemp0], a
     ret
 
+SECTION "Bank 12 RemoveInventorySlotShiftDown", ROMX
+
 ; hTemp0 = an inventory slot (0-$17): removes it by moving each later wInventory byte down one slot
 ; and setting the last slot, wInventory + $17, to $FF; for slot $17 only that store happens. There
 ; is no range check (a slot above $17 runs the copy past the bag). Item-taking events in banks $04,
@@ -10309,6 +10839,8 @@ RemoveInventorySlotShiftDown::
     ld a, $ff
     ld [wInventory + $17], a
     ret
+
+SECTION "Bank 12 FindPartyMemberWithSkill76To7DOr92", ROMX
 
 ; Searches the party for a dancer: for each wPartyList record reads the MON_SKILLS bytes up to the
 ; first $FF (at most 8); hTemp1 = the party index of the first member knowing one of SKILL_ODDDANCE
@@ -10391,12 +10923,16 @@ FindPartyMemberWithSkill76To7DOr92::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 12 GreatLogTalkEvents_Talk204_PassCheck", ROMX
+
 ; Clears hTemp1 and returns. GreatLogTalkEvents_Talk204 far-calls it and returns early only when
 ; hTemp1 bit 7 is set, so its test always passes. (C2, E-0370; probed E-0377)
 GreatLogTalkEvents_Talk204_PassCheck::
     xor a
     ldh [hTemp1], a
     ret
+
+SECTION "Bank 12 SubtractGoldFloorZero", ROMX
 
 ; hTemp0/hTemp1 = an amount taken from the 24-bit gold (wGoldLo/Mid/Hi), but the floor test is
 ; inverted: with wGoldHi = 0 the amount is subtracted with no check, so a larger amount wraps the
@@ -10443,6 +10979,8 @@ SubtractGoldFloorZero::
     ld [wGoldHi], a
     ret
 
+SECTION "Bank 12 AddGoldCapped", ROMX
+
 ; hTemp0/hTemp1 = an amount: adds it to the 24-bit gold (wGoldLo/Mid/Hi) and caps the result at
 ; 99,999 ($01869F). Talk events in bank $13, Great Log scenes in bank $73 and two routines of this
 ; bank call it. (C2, E-0377)
@@ -10488,6 +11026,8 @@ AddGoldCapped::
     ld [wGoldHi], a
     ret
 
+SECTION "Bank 12 HalveGold", ROMX
+
 ; Halves the gold (the 24-bit wGoldHi/Mid/Lo shifted right): the return message's penalty. (C2,
 ; E-0357; probed E-0377)
 HalveGold::
@@ -10501,6 +11041,8 @@ HalveGold::
     rra
     ld [wGoldLo], a
     ret
+
+SECTION "Bank 12 DeductGoldPenalty", ROMX
 
 ; The gold penalty of DeductGoldPenaltyAndFormatLoss (bank $73): takes all the gold when it is below
 ; 150, 150 when it is below 1,500, otherwise one tenth of it rounded down (Divide24ByA by 10). (C2,

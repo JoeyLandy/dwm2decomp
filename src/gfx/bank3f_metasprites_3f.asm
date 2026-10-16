@@ -1,7 +1,7 @@
 ; ROM bank $3F: meta-sprite frames
 ; The annotated listing of this bank is build/listing/bank3f.asm.
 
-SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
+SECTION "Bank 3F", ROMX
     db $3f
 
 ; Effect tile $15 with wEffectFlags bit 3 draws the effect sprite over each present slot of the
@@ -79,6 +79,8 @@ DrawEffectSpriteAtEffectSpriteX_Bank3F::
     ld de, MetaSprites3FTable
     call BuildOamFromSpriteTable_Bank3F
     ret
+
+SECTION "Bank 3F MetaSprites3FTable", ROMX
 
 ; the caller of BuildOamFromSpriteTable_Bank3F passes DE = $MetaSprites3FTable; the builder takes
 ; the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the
@@ -192,6 +194,8 @@ BuildOamFromSpriteTable_Bank3F::
 
 .return:
     ret
+
+SECTION "Bank 3F MetaSprites3FSet00", ROMX
 
 ; meta-sprite set 0 of MetaSprites3FTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame

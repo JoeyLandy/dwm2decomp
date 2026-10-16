@@ -1,7 +1,7 @@
 ; ROM bank $0D: TinyMedal prizes, egg appraisal and blessing, key appraisal
 ; The annotated listing of this bank is build/listing/bank0d.asm.
 
-SECTION "Bank 0D", ROMX[$4000], BANK[$0D]
+SECTION "Bank 0D", ROMX
     db $0d
 
 ; Loads DE = BeginStringDisplay_Bank0D_StringCategories (this bank string table: one category of 47
@@ -27,6 +27,8 @@ ShowString_Bank0D::
     call BeginStringDisplay_Bank0D
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 0D BeginStringDisplay_Bank0D_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -307,6 +309,8 @@ EggServiceMenu::
 EggServiceMenu_EmptyState::
     ret
 
+SECTION "Bank 0D EggServiceMenu_Init", ROMX
+
 ; Egg service, state 0: clears the service's state, copies the screen to the window buffer and sets
 ; message mode 6 for its messages. (C2, E-0357; probed E-0376)
 EggServiceMenu_Init::
@@ -344,6 +348,8 @@ EggServiceMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_DrawPrice", ROMX
+
 ; Egg service state 1, by wScreenStep: 0 EggServiceMenu_DrawPrice_LoadTiles (copies 14 glyph tiles
 ; from bank $1F), 1 EggServiceMenu_DrawPrice_DrawGoldBox (the gold box with the five digits of
 ; wGoldLo/Mid/Hi), 2 EggServiceMenu_DrawPrice_DrawChoiceBox (the 11 x 7 choice box, drawn to the BG
@@ -371,6 +377,8 @@ EggServiceMenu_DrawPrice_LoadTiles::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D EggServiceMenu_DrawPrice_DrawGoldBox", ROMX
 
 ; Egg service price display, step 1: draws the gold box with the five digits of wGold. (C2, E-0357;
 ; probed E-0376)
@@ -405,6 +413,8 @@ EggServiceMenu_DrawPrice_DrawGoldBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_DrawPrice_DrawChoiceBox", ROMX
+
 ; Egg service price display, step 2: draws the service's choice box and moves on. (C1, E-0357)
 EggServiceMenu_DrawPrice_DrawChoiceBox::
     ld de, EggServiceMenu_DrawPrice_DrawChoiceBox_TileRect
@@ -422,6 +432,8 @@ EggServiceMenu_DrawPrice_DrawChoiceBox::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_ChooseOption", ROMX
+
 ; Egg service, state 2: the three-option menu (appraise, bless, cancel) through
 ; HandleThreeOptionMenuInput_15. (C1, E-0357)
 EggServiceMenu_ChooseOption::
@@ -429,6 +441,8 @@ EggServiceMenu_ChooseOption::
     ld [wThreeOptionResult], a
     farcall HandleThreeOptionMenuInput_15
     ret
+
+SECTION "Bank 0D EggServiceMenu_ListEggs", ROMX
 
 ; Egg service, state 3: lists the stored eggs (ListRecordsInUseEggs; wSharedMenuWork 0 for
 ; appraisal, 1 for blessing); with none it returns to the menu with a message, otherwise moves on
@@ -478,10 +492,14 @@ EggServiceMenu_ListEggs::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_SkippedState", ROMX
+
 ; Egg service, state 4: a lone ret; EggServiceMenu_ListEggs moves from state 3 straight to state 5.
 ; (C2, E-0369; probed E-0376)
 EggServiceMenu_SkippedState::
     ret
+
+SECTION "Bank 0D EggServiceMenu_ChooseAndPay", ROMX
 
 ; Egg service state 5, choosing an egg, by wScreenStep: 6 EggServiceMenu_ChooseAndPay_ListCursor
 ; (the paged egg cursor), 12 EggServiceMenu_ChooseAndPay_Confirm (the yes/no), 15
@@ -519,6 +537,8 @@ EggServiceMenu_ChooseAndPay::
 EggServiceMenu_ChooseAndPay_RunChooseEggStep::
     farcall BreedMenu
     ret
+
+SECTION "Bank 0D EggServiceMenu_ChooseAndPay_ListCursor", ROMX
 
 ; Choosing an egg, step 6: the paged egg list cursor: page changes step back to redraw; A picks the
 ; egg (asking to confirm); B cancels. (C1, E-0357)
@@ -634,6 +654,8 @@ EggServiceMenu_ChooseAndPay_ListCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_ChooseAndPay_Confirm", ROMX
+
 ; Choosing an egg, step 12: the confirmation: yes opens the egg's details screen (SwapMonstersMenu
 ; at state $0D, returning to state 5, step 12); no or B goes back. (C1, E-0357)
 EggServiceMenu_ChooseAndPay_Confirm::
@@ -693,6 +715,8 @@ EggServiceMenu_ChooseAndPay_Confirm::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D EggServiceMenu_ChooseAndPay_CheckPrice", ROMX
 
 ; Choosing an egg, step 15: checks the gold against the price (IsAmountInArg1AboveGold, 24-bit).
 ; Appraisal (wSharedMenuWork 0) costs 20: with enough gold nothing is paid here
@@ -792,6 +816,8 @@ EggServiceMenu_ChooseAndPay_CheckPrice::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D DrawBoxWithPageIndicator", ROMX
+
 ; Copies the 13 x 9 list box DrawBoxWithPageIndicator_TileRect to wWindowTileBuffer + $BB
 ; (CopyRectTo20ByteRows_Bank0D), far-calls ClampRecordListPageCursor4 and, when wListPages is 2 or
 ; more, writes tiles $C5, $BE, $C6 at wWindowTileBuffer + $162 (StoreC5BEC6AtHLStride2_Bank0D) and
@@ -826,6 +852,8 @@ DrawBoxWithPageIndicator::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_ChooseAndPay_RedrawMarks", ROMX
+
 ; Choosing an egg, step 17: redraws the egg list marks and returns to the list (step 7). (C1,
 ; E-0357)
 EggServiceMenu_ChooseAndPay_RedrawMarks::
@@ -849,6 +877,8 @@ EggServiceMenu_ChooseAndPay_RedrawMarks::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D EggServiceMenu_Appraise", ROMX
 
 ; Appraising an egg (step 18 of EggServiceMenu_ChooseAndPay), by wScreenSubStep: 0
 ; EggServiceMenu_Appraise_ClearResult, 1 EggServiceMenu_Appraise_RateStats (the average of six stat
@@ -878,6 +908,8 @@ EggServiceMenu_Appraise_ClearResult::
     ld [wTwoChoiceCursor], a
     call EndScriptCommandAndIncScreenSubStep
     ret
+
+SECTION "Bank 0D EggServiceMenu_Appraise_RateStats", ROMX
 
 ; Appraisal, sub-step 1: rates the egg's stats: the average of six stat words (fields from
 ; EggServiceMenu_ChooseAndPay_CheckAndPay_Data), reduced to a rating 0-3 for the message. (C2,
@@ -958,6 +990,8 @@ EggServiceMenu_Appraise_StoreResult::
     call EndScriptCommandAndIncScreenSubStep
     ret
 
+SECTION "Bank 0D EggServiceMenu_Appraise_RateStats_Data", ROMX
+
 ; Six MON record offsets, each a word: $5D MON_MAX_HP, $61 MON_MAX_MP, $63 MON_ATK, $65 MON_DEF, $67
 ; MON_AGL and $69 MON_INT. EggServiceMenu_Appraise_RateStats loads each word from the egg record,
 ; adds them, divides by 6 and rates the average: under 51 gives 0, under 101 gives 1, under 201
@@ -1011,6 +1045,8 @@ EggServiceMenu_Appraise_RateSkills::
     ld a, $02
     jp EggServiceMenu_Appraise_StoreResult
 
+SECTION "Bank 0D EggServiceMenu_Appraise_RateMaxLevel", ROMX
+
 ; Appraisal, sub-step 3: rates the egg's maximum level: below 41 is 0, below 61 is 1, below 81 is 2,
 ; otherwise 3. (C2, E-0357; probed E-0384)
 EggServiceMenu_Appraise_RateMaxLevel::
@@ -1039,6 +1075,8 @@ EggServiceMenu_Appraise_RateMaxLevel::
 .skip3:
     ld a, $02
     jp EggServiceMenu_Appraise_StoreResult
+
+SECTION "Bank 0D EggServiceMenu_Appraise_NameTrait", ROMX
 
 ; Appraisal, sub-step 4: picks one of three personality bytes of the chosen egg and stores its
 ; number, not its value, in wTwoChoiceCursor for the message. It starts with MON_PERSONALITY (result
@@ -1115,6 +1153,8 @@ EggServiceMenu_Appraise_NameTrait::
     ld a, b
     jp EggServiceMenu_Appraise_StoreResult
 
+SECTION "Bank 0D EggServiceMenu_Appraise_ShowSex", ROMX
+
 ; Appraisal, sub-step 5: the egg's sex (MON_SEX bit 0). (C2, E-0357; probed E-0384)
 EggServiceMenu_Appraise_ShowSex::
     call GetListEntriesCell4AddressWithSRAM
@@ -1124,6 +1164,8 @@ EggServiceMenu_Appraise_ShowSex::
     ldh a, [hTemp0]
     and $01
     jp EggServiceMenu_Appraise_StoreResult
+
+SECTION "Bank 0D EggServiceMenu_Appraise_PayAndMark", ROMX
 
 ; Appraisal, sub-step 6: pays the 20-gold fee, sets the egg's MON_EGG byte to 2 (appraised, as read
 ; here) and moves to the closing step. (C2, E-0357; probed E-0384)
@@ -1160,6 +1202,8 @@ EggServiceMenu_Appraise_PayAndMark::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D GetListEntriesCell4AddressWithSRAM", ROMX
+
 ; Enables SRAM (rRAMG2 = $0A) with SRAM bank 0 (rRAMB = 0), far-calls SetArg5ToListEntriesCell4 and
 ; returns HL = wArg5 (high) / wArg6 (low), the address of the chosen list entry (wListEntries + 4 *
 ; wListPageIndex + wListCursor), which holds the record index. The appraisal sub-steps
@@ -1179,6 +1223,8 @@ GetListEntriesCell4AddressWithSRAM::
     ld l, a
     ret
 
+SECTION "Bank 0D EndScriptCommandAndIncScreenSubStep", ROMX
+
 ; wScreenSubStep += 1 and ends the script command (wScriptCommandType = 0, wScriptStartRequest =
 ; $80), so the script shows the next message and the next sub-step runs when the command resumes.
 ; Used by EggServiceMenu_Appraise_ClearResult and EggServiceMenu_Appraise_StoreResult. (C2, E-0376)
@@ -1192,6 +1238,8 @@ EndScriptCommandAndIncScreenSubStep::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D EggServiceMenu_RunDetailsScreen", ROMX
 
 ; Egg service, state 13: runs the monster details screen (SwapMonstersMenu) until it finishes (step
 ; $0A), then skips a state. (C1, E-0357)
@@ -1208,6 +1256,8 @@ EggServiceMenu_RunDetailsScreen::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice", ROMX
 
 ; Egg service state 15, the egg list with the price, by wScreenStep: 0 load map $0A tiles and
 ; palettes, 1 glyph and frame tiles, 2 clear the name tiles, 3 the list box, 4 the species names, 5
@@ -1247,6 +1297,8 @@ EggServiceMenu_DrawListAndPrice_LoadTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice_LoadGlyphs", ROMX
+
 ; Egg list screen, step 1: copies the glyph tiles and draws the frame pair. (C1, E-0357)
 EggServiceMenu_DrawListAndPrice_LoadGlyphs::
     ld hl, EggListGlyphTileDests
@@ -1254,6 +1306,8 @@ EggServiceMenu_DrawListAndPrice_LoadGlyphs::
     call CopyGlyphTileListFromBank1F
     call EggServiceMenu_DrawPrice_LoadTiles
     ret
+
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice_ClearNameTiles", ROMX
 
 ; Egg list screen, step 2: clears the name and number tiles and sets the text window. (C1, E-0357)
 EggServiceMenu_DrawListAndPrice_ClearNameTiles::
@@ -1282,6 +1336,8 @@ EggServiceMenu_DrawListAndPrice_ClearNameTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice_DrawListBox", ROMX
+
 ; Egg list screen, step 3: draws the list box with its page indicator. (C1, E-0357)
 EggServiceMenu_DrawListAndPrice_DrawListBox::
     call DrawBoxWithPageIndicator
@@ -1295,6 +1351,8 @@ EggServiceMenu_DrawListAndPrice_DrawSpeciesNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice_DrawMarks", ROMX
 
 ; Egg list screen, step 5: draws the page's marks. (C1, E-0357)
 EggServiceMenu_DrawListAndPrice_DrawMarks::
@@ -1312,6 +1370,8 @@ EggServiceMenu_DrawListAndPrice_DrawMarks::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice_MarkEntry", ROMX
+
 ; Egg list screen, step 6: marks the chosen entry and draws the price box frame. (C2, E-0357; probed
 ; E-0376)
 EggServiceMenu_DrawListAndPrice_MarkEntry::
@@ -1327,6 +1387,8 @@ EggServiceMenu_DrawListAndPrice_MarkEntry::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice_ShowPrice", ROMX
 
 ; Egg list screen, step 7: shows the price (for a blessing the computed amount as digits without
 ; leading zeros in the text buffer, message 8; for an appraisal message 3). (C1, E-0357)
@@ -1396,6 +1458,8 @@ EggServiceMenu_DrawListAndPrice_ShowPrice::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_DrawListAndPrice_RestoreSprites", ROMX
+
 ; Egg list screen, step 8: reloads the player's sprites, redraws the screen and returns to the saved
 ; state and step. (C1, E-0357)
 EggServiceMenu_DrawListAndPrice_RestoreSprites::
@@ -1435,6 +1499,8 @@ EggServiceMenu_DrawListAndPrice_RestoreSprites::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D EggServiceMenu_BlessingPrice", ROMX
+
 ; The blessing price of the egg under the list cursor: HL = 20 * its MON_PLUS + 20 (the record index
 ; read through SetArg5ToListEntriesCell4; SRAM enabled for the read, then disabled). Clobbers A, BC.
 ; (C2, E-0369; probed E-0384)
@@ -1459,6 +1525,8 @@ EggServiceMenu_BlessingPrice::
     ld a, $14
     add_a_to_hl
     ret
+
+SECTION "Bank 0D HandleTwoChoiceCursorInput_0D", ROMX
 
 ; One frame of a two-entry choice: Up or Down (wJoypadPressedRepeat bits 6, 7) blanks the cursor,
 ; toggles wChoiceCursor between 0 and 1, plays sound $69 and draws the cursor tile $BB; A
@@ -1529,6 +1597,8 @@ HandleTwoChoiceCursorInput_0D::
     ld [wArg5], a
     ret
 
+SECTION "Bank 0D BlinkCursorBlinkAE_Bank0D", ROMX
+
 ; Blinks the two-choice cursor: while wJoypadRepeatTimer is below $14 it just draws the cursor tile
 ; $BB; after that it counts wCursorBlinkAE up, drawing $BB for 1-$0F and the blank $C3 for $10-$17,
 ; and at $18 resets the count to 0 and draws $BB. The tile goes to the wChoiceCursor position
@@ -1558,6 +1628,8 @@ DrawCursorTileBB_Bank0D::
     ld b, $bb
     jr DrawTileAtChoiceCursor
 
+SECTION "Bank 0D DrawBlankTileC3_Bank0D", ROMX
+
 ; B = $C3 (the blank tile) and joins DrawTileAtChoiceCursor, which writes it in the BG map at the
 ; scroll position + DrawTileAtChoiceCursor_Data[wChoiceCursor] ($12D or $16D), erasing the
 ; two-choice cursor. Used by HandleTwoChoiceCursorInput_0D and BlinkCursorBlinkAE_Bank0D. (C1,
@@ -1566,6 +1638,8 @@ DrawCursorTileBB_Bank0D::
 DrawBlankTileC3_Bank0D::
     ld b, $c3
     jr DrawTileAtChoiceCursor
+
+SECTION "Bank 0D DrawArrowTileBCAtChoiceCursorEntry", ROMX
 
 ; B = $BC (the confirmed-choice arrow) and falls into DrawTileAtChoiceCursor, which writes it in the
 ; BG map at the scroll position + DrawTileAtChoiceCursor_Data[wChoiceCursor] ($12D or $16D) after
@@ -1595,6 +1669,8 @@ DrawTileAtChoiceCursor::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 0D DrawTileAtChoiceCursor_Data", ROMX
 
 ; Two little-endian word offsets into the BG map from the scroll position
 ; (BGMapAddressAtScroll_Bank0D): $012D and $016D, which are row 9 and row 11 at column 13.
@@ -1665,6 +1741,8 @@ CopyRectTo20ByteRows_Bank0D::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 0D DrawScreenBufferRect_Bank0D", ROMX
+
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: copies that
 ; rectangle of wScreenTileBuffer + DE to the BG map (CopyRectToBGMapWrapped) and, on CGB, the same
 ; rectangle of wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, then rSVBK = rVBK = 0. It also
@@ -1728,6 +1806,8 @@ DrawScreenBufferRect_Bank0D::
     ldh [rVBK], a
     ret
 
+SECTION "Bank 0D BGMapAddressAtScroll_Bank0D", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry at the top-left of the screen
 ; (pixel hScrollX, hScrollY); DE = the row offset, A clobbered. The egg, rename, key and medal
 ; screens add a tile offset to it before drawing. One of the per-bank copies of this helper. (C1,
@@ -1752,6 +1832,8 @@ BGMapAddressAtScroll_Bank0D::
     add_a_to_hl
     ret
 
+SECTION "Bank 0D CopyBytesDEToHL_Bank0D", ROMX
+
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy, BC = 0 and A = 0. One of the per-bank copies of this helper. (C2, E-0376)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
@@ -1765,6 +1847,8 @@ CopyBytesDEToHL_Bank0D::
     or c
     jr nz, CopyBytesDEToHL_Bank0D
     ret
+
+SECTION "Bank 0D CopyLow3BitsToWRAMBank2_Bank0D", ROMX
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07 (a CGB attribute keeps only
 ; its palette number), then sets rSVBK = 0. DE and HL end past the copy, BC = 0, A = 0. The egg, key
@@ -1789,6 +1873,8 @@ CopyLow3BitsToWRAMBank2_Bank0D::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 0D StoreBAtWordTableEntry_Bank0D", ROMX
+
 ; HL = a table of 16-bit addresses, A = index: stores B at the address in entry A (DE = that address
 ; on return, HL = the entry high byte); BC kept, A = B. The egg, key and medal lists use it to draw
 ; or erase a mark tile at one of a list of window-buffer positions. One of the per-bank copies of
@@ -1806,6 +1892,8 @@ StoreBAtWordTableEntry_Bank0D::
     ld a, b
     ld [de], a
     ret
+
+SECTION "Bank 0D DrawC5BEC6AtScrollOffsetDE_Bank0D", ROMX
 
 ; Writes tiles $C5, $BE and $C6 into the BG map at BGMapAddressAtScroll_Bank0D + DE, two entries
 ; apart (each after WaitForVRAMAccess, with interrupts off); HL ends at the third tile. The key list
@@ -1839,6 +1927,8 @@ DrawC5BEC6AtScrollOffsetDE_Bank0D::
     ei
     ret
 
+SECTION "Bank 0D StoreC5BEC6AtHLStride2_Bank0D", ROMX
+
 ; Writes tiles $C5 at [HL], $BE at [HL + 2] and $C6 at [HL + 4] (a buffer row with gaps for the page
 ; numbers between them); HL ends at HL + 4, A = $C6. DrawBoxWithPageIndicator uses it at
 ; wWindowTileBuffer + $162. One of the per-bank copies of this helper. (C2, E-0376)
@@ -1856,6 +1946,8 @@ StoreC5BEC6AtHLStride2_Bank0D::
     ld a, $c6
     ld [hl], a
     ret
+
+SECTION "Bank 0D CopyScreenBufferRectWithAttrs_0D", ROMX
 
 ; Copies C rows inside the screen buffer (C = 0 means 256): per row it copies the word wArg1:wArg2
 ; (wArg1 the high byte) of bytes from wScreenTileBuffer + DE to wScreenTileBuffer + HL and, on CGB,
@@ -1923,6 +2015,8 @@ CopyScreenBufferRectWithAttrs_0D::
     jr nz, CopyScreenBufferRectWithAttrs_0D
     ret
 
+SECTION "Bank 0D EraseCEntriesOfWordTable_Bank0D", ROMX
+
 ; Writes the blank tile $C3 at the addresses in entries 0 to C - 1 of the word table at HL
 ; (StoreBAtWordTableEntry_Bank0D per entry); with C = 0 it still blanks entry 0. HL is kept. The key
 ; and medal lists use it with C = 4 to erase the four cursor marks. (C2, E-0376)
@@ -1946,6 +2040,8 @@ EraseCEntriesOfWordTable_Bank0D::
     cp b
     jr c, .loop
     ret
+
+SECTION "Bank 0D CopyGlyphTileListFromBank1F", ROMX
 
 ; HL = a list of VRAM destination words, DE = a list of bank $1F source words: from entry
 ; wGlyphListStart on, copies one 16-byte tile per entry (CopyFromBankWaitVRAM, B = $1F, C = $10)
@@ -2003,6 +2099,8 @@ CopyGlyphTileListFromBank1F::
     ld [wGlyphListStart], a
     ld [wGlyphListPos], a
     ret
+
+SECTION "Bank 0D EggPriceGlyphDestList", ROMX
 
 ; Fifteen words: 14 VRAM tile addresses, vTiles1 + $240 up to + $2F0 in steps of $10, then vTiles1 +
 ; $6E0 and + $6F0, and the end mark rIE ($FFFF). CopyGlyphTileListFromBank1F copies one 16-byte tile
@@ -2105,6 +2203,8 @@ CloseRenameMenu_RunCloseBreedStep::
     farcall CloseBreedMenu
     ret
 
+SECTION "Bank 0D CloseRenameMenu_ReloadTilesAndFinish", ROMX
+
 ; Closing the renaming, step 1: reloads the name tiles and three frame tiles, clears the list state
 ; and lets the script continue. (C1, E-0357)
 CloseRenameMenu_ReloadTilesAndFinish::
@@ -2149,6 +2249,8 @@ CloseRenameMenu_ReloadTilesAndFinish::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D RenameMenu", ROMX
+
 ; The renaming at the Christener, script command SCRIPT_RENAME ($F0; ScriptCommandF0 in bank $10
 ; far-calls it once per frame), by wScreenState: 0 RenameMenu_Init (EggServiceMenu_Init: message
 ; mode 6), 1 RenameMenu_DrawFrame (the yes/no box), 2 RenameMenu_ReadAnswer (yes goes on, no ends),
@@ -2176,6 +2278,8 @@ RenameMenu::
 RenameMenu_Init::
     farcall EggServiceMenu
     ret
+
+SECTION "Bank 0D RenameMenu_DrawFrame", ROMX
 
 ; Renaming state 1, by wScreenStep: 0 LoadFourFrameTilesAndStep (four frame tiles from bank $1F), 1
 ; RenameMenu_DrawFrame_DrawYesNo (the 6 x 5 yes/no box drawn to the BG map with sound $6C, then
@@ -2218,6 +2322,8 @@ LoadFourFrameTilesAndStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D RenameMenu_DrawFrame_DrawYesNo", ROMX
+
 ; Renaming frame, step 1: draws the yes/no box and plays sound $6C. (C1, E-0357)
 RenameMenu_DrawFrame_DrawYesNo::
     ld de, RenameMenu_DrawFrame_DrawYesNo_TileRect
@@ -2237,6 +2343,8 @@ RenameMenu_DrawFrame_DrawYesNo::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0D RenameMenu_ReadAnswer", ROMX
 
 ; Renaming, state 2: the yes/no answer: yes moves on to choosing the monster; no ends. (C1, E-0357)
 RenameMenu_ReadAnswer::
@@ -2274,6 +2382,8 @@ RenameMenu_ReadAnswer::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D RenameMenu_DrawNameList", ROMX
+
 ; Renaming state 3, by wScreenStep: 0 RenameMenu_DrawNameList_DrawFrame (the party list frame,
 ; restoring the yes/no box area), 1 ClearStringWindowAt1500AndIncScreenStep (clears the name tiles),
 ; 2 RenameMenu_DrawNameList_DrawList (loads the name tiles and draws the list). (C1, E-0376)
@@ -2308,6 +2418,8 @@ RenameMenu_DrawNameList_DrawFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D ClearStringWindowAt1500AndIncScreenStep", ROMX
+
 ; Sets the text window to tiles vTiles1 + $500 with wTextWindowRows = 1 and wTextWindowWidth = $0F,
 ; clears those 15 tiles with FillTilesFromRequest, then wScreenStep += 1. Step 1 of
 ; RenameMenu_DrawNameList; RenameMenu_PickMonster_LoadFrameTiles also calls it. (C1, E-0376)
@@ -2330,6 +2442,8 @@ ClearStringWindowAt1500AndIncScreenStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D RenameMenu_DrawNameList_DrawList", ROMX
+
 ; Renaming name list, step 2: loads the name tiles, draws the list and moves on. (C1, E-0357)
 RenameMenu_DrawNameList_DrawList::
     call LoadRecordListNameTiles
@@ -2348,10 +2462,14 @@ RenameMenu_DrawNameList_DrawList::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0D RenameMenu_PartyCursorStep", ROMX
+
 ; Renaming, state 4: the party cursor (RenameMenu_PartyCursor). (C1, E-0357)
 RenameMenu_PartyCursorStep::
     call RenameMenu_PartyCursor
     ret
+
+SECTION "Bank 0D RenameMenu_EnterName", ROMX
 
 ; Renaming, state 5: runs the name entry for the chosen party member (mode 3, with its sex, family
 ; and species); when it finishes moves on. (C1, E-0357)
@@ -2402,6 +2520,8 @@ RenameMenu_EnterName::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0D RenameMenu_PickMonster", ROMX
+
 ; Renaming state 6, after the name entry, by wScreenStep: 0 RenameMenu_PickMonster_LoadTiles (map
 ; $13 tiles and palettes), 1 RenameMenu_PickMonster_LoadFrameTiles (frame tiles, clears the name
 ; tiles, then step 2), 2 RenameMenu_PickMonster_WriteName (writes the name just entered,
@@ -2437,6 +2557,8 @@ RenameMenu_PickMonster_LoadTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D RenameMenu_PickMonster_LoadFrameTiles", ROMX
+
 ; Choosing the monster, step 1: loads four frame tiles and clears the name tiles. (C1, E-0357)
 RenameMenu_PickMonster_LoadFrameTiles::
     call LoadFourFrameTilesAndStep
@@ -2444,6 +2566,8 @@ RenameMenu_PickMonster_LoadFrameTiles::
     ld a, $02
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D RenameMenu_PickMonster_WriteName", ROMX
 
 ; Choosing the monster, step 2: writes the name just entered (wNameGlyphBuf, up to 10 glyphs) into
 ; the chosen member's record and reloads the name tiles. (C1, E-0357)
@@ -2496,6 +2620,8 @@ RenameMenu_PickMonster_WriteName::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D RenameMenu_PickMonster_ShowPickTheMonsterTo", ROMX
+
 ; Choosing the monster, step 3: shows 'Pick the monster to rename.' (message $23 of bank $F2). (C1,
 ; E-0357)
 RenameMenu_PickMonster_ShowPickTheMonsterTo::
@@ -2508,6 +2634,8 @@ RenameMenu_PickMonster_ShowPickTheMonsterTo::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D RenameMenu_PickMonster_ReloadSprites", ROMX
 
 ; Choosing the monster, step 4: reloads the sprites, redraws the screen and goes to the party cursor
 ; (state 4). (C1, E-0357)
@@ -2547,6 +2675,8 @@ RenameMenu_PickMonster_ReloadSprites::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D RenameMenu_PartyCursor", ROMX
 
 ; The renaming party cursor: Up/Down move over the party (wrapping), A picks the member, B cancels;
 ; the cursor blinks. (C1, E-0357)
@@ -2645,6 +2775,8 @@ RenameMenu_PartyCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D RenameMenu_PartyCursor_Blink", ROMX
+
 ; Blinks the renaming cursor: 16 frames shown, 8 hidden. (C1, E-0357)
 RenameMenu_PartyCursor_Blink::
     ld a, [wJoypadRepeatTimer]
@@ -2665,10 +2797,14 @@ RenameMenu_PartyCursor_Show::
     ld b, $bb
     jr RenameMenu_PartyCursor_DrawTile
 
+SECTION "Bank 0D RenameMenu_PartyCursor_Hide", ROMX
+
 ; Hides the renaming cursor (tile $C3). (C1, E-0357)
 RenameMenu_PartyCursor_Hide::
     ld b, $c3
     jr RenameMenu_PartyCursor_DrawTile
+
+SECTION "Bank 0D RenameMenu_PartyCursor_MarkChosen", ROMX
 
 ; Marks the chosen party member on the renaming list (tile $BC). (C1, E-0357)
 RenameMenu_PartyCursor_MarkChosen::
@@ -2695,6 +2831,8 @@ RenameMenu_PartyCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 0D RenameMenu_PartyCursor_DrawTile_Data", ROMX
 
 ; Three little-endian word offsets into the BG map from the scroll position
 ; (BGMapAddressAtScroll_Bank0D): $0061, $00A1 and $00E1, which are rows 3, 5 and 7 at column 1.
@@ -2811,6 +2949,8 @@ KeyAppraisalMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_DrawGoldBox", ROMX
+
 ; Key appraisal state 1, by wScreenStep: 0 DrawGoldBoxAndStep (the gold box with the five digits of
 ; wGoldLo/Mid/Hi), 1 KeyAppraisalMenu_DrawGoldBox_DrawYesNo (the yes/no box drawn to the BG map with
 ; sound $6C, wTwoChoiceCursor = 0, then wScreenState 2). (C1, E-0376)
@@ -2859,6 +2999,8 @@ DrawGoldBoxAndStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_DrawGoldBox_DrawYesNo", ROMX
+
 ; Key appraisal gold box, step 1: draws the yes/no box and plays sound $6C. (C1, E-0357)
 KeyAppraisalMenu_DrawGoldBox_DrawYesNo::
     ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
@@ -2878,6 +3020,8 @@ KeyAppraisalMenu_DrawGoldBox_DrawYesNo::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ReadAnswer", ROMX
 
 ; Key appraisal, state 2: the yes/no answer: yes with at least one key moves on to choosing a key;
 ; yes with none, or no, ends (with the matching message). (C1, E-0357)
@@ -2930,6 +3074,8 @@ KeyAppraisalMenu_ReadAnswer::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_HasAnyKey", ROMX
+
 ; A = 0 when byte 0 of any of the 32 four-byte wKeyList entries is not $FF, else A = $FF; it checks
 ; all 32 entries without stopping at an $FF. HL ends at the entry found (or past the last), C = its
 ; index. KeyAppraisalMenu_ReadAnswer uses it: with no key the appraisal ends with the 'no keys'
@@ -2963,6 +3109,8 @@ KeyAppraisalMenu_HasAnyKey::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey", ROMX
 
 ; Key appraisal state 3, by wScreenStep: 0-4 build and draw the key list
 ; (BuildKeyListIndexListEntries, names and marks), 5 KeyAppraisalMenu_ChooseKey_ListCursor (the
@@ -3010,6 +3158,8 @@ KeyAppraisalMenu_ChooseKey_Refuse::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_BuildList", ROMX
+
 ; Choosing a key, step 0: draws the key list frame and builds the list of keys owned
 ; (BuildKeyListIndexListEntries). (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_BuildList::
@@ -3026,6 +3176,8 @@ KeyAppraisalMenu_ChooseKey_BuildList::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_ClearTiles", ROMX
 
 ; Choosing a key, step 1: clears the name and message tiles. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_ClearTiles::
@@ -3078,6 +3230,8 @@ KeyAppraisalMenu_ChooseKey_ClearTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_DrawListBox", ROMX
+
 ; Choosing a key, step 2: draws the list box, clamps the page and cursor, draws the page indicator
 ; when there are several pages and the cursor. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_DrawListBox::
@@ -3122,6 +3276,8 @@ KeyAppraisalMenu_ChooseKey_DrawListBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_DrawKeyNames", ROMX
+
 ; Choosing a key, step 3: draws the names and marks of the keys on the page. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_DrawKeyNames::
     xor a
@@ -3134,6 +3290,8 @@ KeyAppraisalMenu_ChooseKey_DrawKeyNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_RedrawScreen", ROMX
 
 ; Choosing a key, step 4: draws the screen and hides the cursor (it blinks in the next step). (C1,
 ; E-0357)
@@ -3150,6 +3308,8 @@ KeyAppraisalMenu_ChooseKey_RedrawScreen::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_ListCursor", ROMX
 
 ; Choosing a key, step 5: the paged key cursor: Select copies a key list back
 ; (KeyAppraisalMenu_ChooseKey_ListCursor_SortKeys); page changes redraw; A picks the key and asks to
@@ -3260,6 +3420,8 @@ KeyAppraisalMenu_ChooseKey_ListCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_ConfirmPrice", ROMX
+
 ; Choosing a key, step 7: the price confirmation: yes checks the gold against the price (10 * (key
 ; level + 1)) and, with enough, skips to the result window; without enough gold it ends with the
 ; refusal; no redraws the list. (C1, E-0357)
@@ -3347,6 +3509,8 @@ KeyAppraisalMenu_ChooseKey_ConfirmPrice::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_ConfirmPrice_CloseBox", ROMX
+
 ; After the yes/no answer of KeyAppraisalMenu_ChooseKey_ConfirmPrice: copies the 6 x 5 rectangle
 ; KeyAppraisalMenu_CloseBoxTileRect over the yes/no box at wWindowTileBuffer + $112 (where
 ; KeyAppraisalMenu_ChooseKey_DrawYesNo drew it), draws the page indicator at wWindowTileBuffer +
@@ -3376,6 +3540,8 @@ KeyAppraisalMenu_ChooseKey_ConfirmPrice_CloseBox::
     call DrawScreenBufferRect_Bank0D
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_DrawLargeFrame", ROMX
+
 ; Choosing a key, step 9: runs CopyRectToWindowTileBufferRow5AndDraw (the 20 x 11 rectangle
 ; CopyRectToWindowTileBufferRow5AndDraw_TileRect into wWindowTileBuffer + $64, then a 20 x 13
 ; redraw) and moves to step 10 (KeyAppraisalMenu_ChooseKey_ShowSaveInfo). (C1, E-0369)
@@ -3386,6 +3552,8 @@ KeyAppraisalMenu_ChooseKey_DrawLargeFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_ShowSaveInfo", ROMX
+
 ; Choosing a key, step 10: shows the save details window (ShowSaveFileInfoWindow). (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_ShowSaveInfo::
     farcall ShowSaveFileInfoWindow
@@ -3395,6 +3563,8 @@ KeyAppraisalMenu_ChooseKey_ShowSaveInfo::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_ShowLinkMessage", ROMX
 
 ; Choosing a key, step 11: in link mode draws the bottom box; then shows message $0B and, after it,
 ; moves on. (C1, E-0357)
@@ -3442,6 +3612,8 @@ KeyAppraisalMenu_ChooseKey_ShowLinkMessage::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_DrawYesNo", ROMX
+
 ; Choosing a key, step 6: draws the yes/no box (sound $6C) and moves on. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_DrawYesNo::
     call KeyAppraisalMenu_DrawCompletionMark
@@ -3463,6 +3635,8 @@ KeyAppraisalMenu_ChooseKey_DrawYesNo::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_EraseMarks", ROMX
+
 ; Choosing a key, step 8: erases the cursor marks and returns to the cursor (step 5). (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_EraseMarks::
     ld c, $04
@@ -3479,6 +3653,8 @@ KeyAppraisalMenu_ChooseKey_EraseMarks::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_AskSave", ROMX
 
 ; Choosing a key, step 13: the save question: yes moves on to saving, no skips five steps. (C1,
 ; E-0357)
@@ -3516,6 +3692,8 @@ KeyAppraisalMenu_ChooseKey_AskSave::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_PayAndAppraise", ROMX
 
 ; Choosing a key, step 14: on the first call clears a byte of the chosen key's 4-byte entry (marking
 ; it appraised, as read here) and pays the price (10 * (level + 1)); on later calls saves the game
@@ -3579,6 +3757,8 @@ KeyAppraisalMenu_ChooseKey_PayAndAppraise::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_PrepareResult", ROMX
+
 ; Choosing a key, step 15: blanks two tile pairs and puts the key's name in the text buffer for the
 ; result message. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_PrepareResult::
@@ -3595,6 +3775,8 @@ KeyAppraisalMenu_ChooseKey_PrepareResult::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_RestoreScreen", ROMX
 
 ; Choosing a key, step 16: reloads the player's sprites, restores the screen and redraws the gold
 ; box. (C1, E-0357)
@@ -3620,6 +3802,8 @@ KeyAppraisalMenu_ChooseKey_RestoreScreen::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_ReturnToList", ROMX
 
 ; Choosing a key, step 17: KeyAppraisalMenu_ChooseKey_FindUnappraisedKey looks for a key still
 ; unappraised (byte 0 $FE) among the 32 wKeyList entries. When one is found it returns to choosing
@@ -3653,6 +3837,8 @@ KeyAppraisalMenu_ChooseKey_ReturnToList::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D BlankTwoTilePairsAndDraw", ROMX
+
 ; Writes the blank tile $C3 at wWindowTileBuffer + $B0, + $B1, + $C4 and + $C5 (two pairs on rows 8
 ; and 9) and draws the 20 x 13 screen buffer rectangle at offset $1CC from the scroll position
 ; (DrawScreenBufferRect_Bank0D). KeyAppraisalMenu_ChooseKey_PrepareResult and an earlier key step
@@ -3673,6 +3859,8 @@ BlankTwoTilePairsAndDraw::
     ld de, $01cc
     call DrawScreenBufferRect_Bank0D
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_FindUnappraisedKey", ROMX
 
 ; Scans the 32 four-byte wKeyList entries for the first key not yet appraised (byte 0 $FE): returns
 ; A = $FF when one is found, with B = the number of entries before it whose byte 0 is not $FF and C
@@ -3713,6 +3901,8 @@ KeyAppraisalMenu_ChooseKey_FindUnappraisedKey::
     pop hl
     ld a, $ff
     ret
+
+SECTION "Bank 0D ClampKeyListPageCursor", ROMX
 
 ; For a paged list of 4 rows a page: wListPages = ceil(wListCount / 4). When wListPageIndex is not
 ; the last page, wListLastRow = 3. On the last page wListLastRow = (wListCount mod 4) - 1 (3 when it
@@ -3779,6 +3969,8 @@ ClampKeyListPageCursor::
 .return:
     ret
 
+SECTION "Bank 0D EraseCursorForArg5Layout", ROMX
+
 ; Writes the blank tile $C3 into the BG map at the scroll position + the cursor offset for row
 ; wListCursor from one of three layouts chosen by wArg5: 0 EraseCursorForArg5Layout_Data1 (column 6
 ; of rows 5-8), 1 EraseCursorForArg5Layout_Data2 (column 4), other values
@@ -3821,6 +4013,8 @@ EraseCursorForArg5Layout::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 0D EraseCursorForArg5Layout_Data1", ROMX
 
 ; Four little-endian word offsets into the BG map from the scroll position: $00A6, $00C6, $00E6 and
 ; $0106, rows 5 to 8 at column 6. EraseCursorForArg5Layout uses this layout when wArg5 is 0 and
@@ -3981,6 +4175,8 @@ DrawKeyListPageMarks::
 
 .return:
     ret
+
+SECTION "Bank 0D DrawKeyListPageMarks_Data1", ROMX
 
 ; Four little-endian addresses inside wWindowTileBuffer (20 tiles per row): $C3CD, $C3F5, $C41D and
 ; $C445, which are rows 10, 12, 14 and 16 at column 5, one per key slot on a page.
@@ -4155,6 +4351,8 @@ DrawKeyListPageNames::
 .return:
     ret
 
+SECTION "Bank 0D DrawNameGlyphBufGlyphsOverlaying8DAnd8E", ROMX
+
 ; Draws the $F0-terminated text at wNameGlyphBuf as glyph tiles, one tile per character
 ; (DrawNameGlyph picks the source and the VRAM tile for position wGlyphListStart of row C, then
 ; CopyFromBankWaitVRAM); the marks $8D and $8E are ORed onto the previous tile (OrFromBankWaitVRAM)
@@ -4212,6 +4410,8 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E::
     ld [wGlyphListStart], a
     ld [wGlyphListPos], a
     ret
+
+SECTION "Bank 0D DrawNameGlyph", ROMX
 
 ; Draws one glyph of wNameGlyphBuf: copies its font tile (GlyphFont + 16 * glyph) to the destination
 ; for position C from one of four tables (GlyphTileDestTable0-3, by wArg5). (C2, E-0357; probed
@@ -4280,6 +4480,8 @@ DrawNameGlyph::
     ld b, $1f
     ld c, $10
     ret
+
+SECTION "Bank 0D GlyphTileDestTable0", ROMX
 
 ; the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 *
 ; C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address)
@@ -4436,6 +4638,8 @@ BuildKeyListIndexListEntries::
     ld [wListCount], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_KeyPrice", ROMX
+
 ; The appraisal price of the key under the cursor: 10 * (its level byte + 1). (C2, E-0357; probed
 ; E-0376)
 KeyAppraisalMenu_KeyPrice::
@@ -4459,6 +4663,8 @@ KeyAppraisalMenu_KeyPrice::
     ld c, $0a
     call Multiply8
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_ChooseKey_GetPrice", ROMX
 
 ; A = 0: HL = the appraisal price of the key under the cursor (KeyAppraisalMenu_KeyPrice). A
 ; non-zero: writes that price as decimal digits to DE without leading zeros ('0' when every digit is
@@ -4509,6 +4715,8 @@ KeyAppraisalMenu_ChooseKey_GetPrice::
     ld [de], a
     ret
 
+SECTION "Bank 0D KeyAppraisalMenu_DrawCompletionMark", ROMX
+
 ; Draws the save's completion mark during the key appraisal (sprite part $90 at ($88, $28)) when the
 ; saved game has the flag at sSavedPlayerName + $22B and the step is past $0A. (C1, E-0357)
 KeyAppraisalMenu_DrawCompletionMark::
@@ -4535,6 +4743,8 @@ KeyAppraisalMenu_DrawCompletionMark::
     jr c, .loop
     farcall DrawSpritePart9000At88_28
     ret
+
+SECTION "Bank 0D KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -4729,6 +4939,8 @@ MedalPrizeMenu_CheckMedals::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_AddMedalItems", ROMX
+
 ; Medal prizes, state 1: counts the inventory slots holding ITEM_TINYMEDAL ($2C)
 ; (MedalPrizeMenu_CountTinyMedalItems) and adds them to wTinyMedalsLo/Hi. With none,
 ; wTwoChoiceCursor = 1. When the total stays below 1,000 it removes those items
@@ -4810,6 +5022,8 @@ MedalPrizeMenu_AddMedalItems::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_RemoveItem2C", ROMX
+
 ; HL = wInventory slot C (its callers pass wInventory and C = 0), B = a count: clears the slots
 ; holding ITEM_TINYMEDAL ($2C) from slot C to slot 23, then compacts wInventory (the non-zero slots
 ; move down in order over the zero ones). The count does not work as a limit: after each clear it
@@ -4882,6 +5096,8 @@ MedalPrizeMenu_RemoveItem2C::
     jr nz, .loop
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_Init", ROMX
+
 ; Medal prizes, state 0: clears the state, copies the screen, sets message mode 7, hides the
 ; sprites; with medal items ($2C) in the inventory moves on to count them, otherwise skips. (C2,
 ; E-0357; probed E-0376)
@@ -4938,6 +5154,8 @@ MedalPrizeMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_DrawCountBox", ROMX
+
 ; Medal prizes state 3, by wScreenStep: 0 MedalPrizeMenu_DrawCountBox_LoadTiles (box and digit tiles
 ; from bank $1F), 1 DrawTinyMedalCountBoxAndStep (the 'Medal:' box with the count), 2
 ; MedalPrizeMenu_DrawCountBox_DrawYesNo (the yes/no box, sound $6C, then the next state). (C1,
@@ -4992,6 +5210,8 @@ MedalPrizeMenu_DrawCountBox_LoadTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D DrawTinyMedalCountBoxAndStep", ROMX
+
 ; Copies the 11 x 3 box DrawTinyMedalCountBoxAndStep_TileRect to wWindowTileBuffer + $6D
 ; (CopyRectTo20ByteRows_Bank0D) and writes wTinyMedalsLo/Hi as three digit tiles $E0 + digit at
 ; wWindowTileBuffer + $88 (HLToDecimalDigits; leading zeros as the blank $C3 through
@@ -5030,6 +5250,8 @@ DrawTinyMedalCountBoxAndStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_DrawCountBox_DrawYesNo", ROMX
+
 ; Medal count box, step 2: draws the yes/no box (sound $6C) and moves on. (C1, E-0357)
 MedalPrizeMenu_DrawCountBox_DrawYesNo::
     ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
@@ -5049,6 +5271,8 @@ MedalPrizeMenu_DrawCountBox_DrawYesNo::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ReadAnswer", ROMX
 
 ; Medal prizes, state 4: the yes/no answer: yes closes the box and moves on to the prize list; no
 ; ends. (C1, E-0357)
@@ -5101,6 +5325,8 @@ MedalPrizeMenu_ReadAnswer::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize", ROMX
+
 ; Medal prizes state 5, by wScreenStep: 0-4 draw the prize list (frame, tiles, list box, names and
 ; prices, screen), 5-7 the description of the prize under the cursor and the paged cursor
 ; (MedalPrizeMenu_ChoosePrize_ReplayDirection), 8-9 the yes/no and
@@ -5145,6 +5371,8 @@ MedalPrizeMenu_ChoosePrize_DrawFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_ClearTiles", ROMX
+
 ; Choosing a prize, step 1: clears the name and message tiles. (C1, E-0357)
 MedalPrizeMenu_ChoosePrize_ClearTiles::
     ld hl, vTiles1 + $240
@@ -5184,6 +5412,8 @@ MedalPrizeMenu_ChoosePrize_ClearTiles::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_DrawListBox", ROMX
 
 ; Choosing a prize, step 2: draws the list box for the page (the second page's box depends on
 ; whether the game was completed), the page indicator and the cursor. (C1, E-0357)
@@ -5230,6 +5460,8 @@ MedalPrizeMenu_ChoosePrize_DrawListBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_DrawPage", ROMX
+
 ; Choosing a prize, step 3: draws the prize names and their prices for the page. (C1, E-0357)
 MedalPrizeMenu_ChoosePrize_DrawPage::
     ld a, $01
@@ -5240,6 +5472,8 @@ MedalPrizeMenu_ChoosePrize_DrawPage::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_RedrawScreen", ROMX
 
 ; Choosing a prize, step 4: draws the screen and hides the cursor. (C1, E-0357)
 MedalPrizeMenu_ChoosePrize_RedrawScreen::
@@ -5255,6 +5489,8 @@ MedalPrizeMenu_ChoosePrize_RedrawScreen::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_ShowDescription", ROMX
 
 ; Choosing a prize, step 5: shows the description of the prize under the cursor (string $22 +
 ; entry), or for entry 0 the following lines' text. (C1, E-0357)
@@ -5356,6 +5592,8 @@ MedalPrizeMenu_ChoosePrize_ShowDescription::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_WaitDescription", ROMX
+
 ; Choosing a prize, step 6: while the description shows, remembers a direction pressed (Up, Down,
 ; Right, Left as 1-4) so the cursor can move at once; A or B end the description. (C1, E-0357)
 MedalPrizeMenu_ChoosePrize_WaitDescription::
@@ -5412,6 +5650,8 @@ MedalPrizeMenu_ChoosePrize_WaitDescription::
 .set_shared_menu_work:
     ld [wSharedMenuWork], a
     jr .check_screen_step
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_ReplayDirection", ROMX
 
 ; Choosing a prize, step 7: replays the remembered direction into the paged list cursor
 ; (UpdatePagedListCursor) and acts on the result: page or row changes redraw, A asks to confirm, B
@@ -5559,6 +5799,8 @@ MedalPrizeMenu_ChoosePrize_ReplayDirection::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_DrawYesNo", ROMX
+
 ; Choosing a prize, step 8: draws the yes/no box (sound $6C) and moves on. (C1, E-0357)
 MedalPrizeMenu_ChoosePrize_DrawYesNo::
     ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
@@ -5578,6 +5820,8 @@ MedalPrizeMenu_ChoosePrize_DrawYesNo::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_ConfirmPrice", ROMX
 
 ; Choosing a prize, step 9: the confirmation: yes checks the medals against the prize's price
 ; (MedalPrizeMenu_ChoosePrize_ReplayDirection_Data) and trades them; no redraws the list. (C1,
@@ -5657,6 +5901,8 @@ MedalPrizeMenu_ChoosePrize_ConfirmPrice::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_RedrawPricePanel", ROMX
+
 ; Redraws the prize list box (by page and game completion), the prices and the page indicator. (C1,
 ; E-0357)
 MedalPrizeMenu_RedrawPricePanel::
@@ -5688,6 +5934,8 @@ MedalPrizeMenu_RedrawPricePanel::
     call DrawScreenBufferRect_Bank0D
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_EraseMarks", ROMX
+
 ; Choosing a prize, step 10: erases the cursor marks and returns to the cursor (step 5). (C1,
 ; E-0357)
 MedalPrizeMenu_ChoosePrize_EraseMarks::
@@ -5706,6 +5954,8 @@ MedalPrizeMenu_ChoosePrize_EraseMarks::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_RedrawListBox", ROMX
+
 ; Choosing a prize, step 11: redraws the list box and steps back one step. (C1, E-0357)
 MedalPrizeMenu_RedrawListBox::
     call MedalPrizeMenu_RedrawPricePanel
@@ -5717,6 +5967,8 @@ MedalPrizeMenu_RedrawListBox::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_CheckRoom", ROMX
 
 ; Choosing a prize, step 12: checks there is room for the prize: an item prize (entry 0) needs a
 ; free inventory slot, a monster prize a free SRAM record slot (MedalPrizeMenu_FindFreeRecord);
@@ -5744,6 +5996,8 @@ MedalPrizeMenu_ChoosePrize_CheckRoom::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_HasRoom", ROMX
+
 ; There is room: clears the result and moves on to the trade. (C2, E-0357; probed E-0376)
 MedalPrizeMenu_ChoosePrize_HasRoom::
     xor a
@@ -5756,6 +6010,8 @@ MedalPrizeMenu_ChoosePrize_HasRoom::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_CheckRoom_ItemSlot", ROMX
 
 ; For an item prize: moves on when an inventory slot is free, otherwise steps back with refusal 1.
 ; (C2, E-0357; probed E-0376)
@@ -5773,6 +6029,8 @@ MedalPrizeMenu_ChoosePrize_CheckRoom_ItemSlot::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D ScriptStepCheckKeyListFull", ROMX
 
 ; No caller in src/ or the listing. If the key list is full (FindFreeKeySlotToTemp0 returns hTemp0
 ; bit 7 set: no $FF entry, or 20 entries without bit 7 of byte 3) it sets wTwoChoiceCursor = 2 and
@@ -5798,6 +6056,8 @@ ScriptStepCheckKeyListFull::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_PayMedals", ROMX
 
 ; Choosing a prize, step 13: trades the medals: subtracts the prize's price (from the price table by
 ; entry) from wTinyMedals, redraws the count, and sets the message by prize kind (item or monster).
@@ -5850,6 +6110,8 @@ MedalPrizeMenu_ChoosePrize_PayMedals::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_GivePrize", ROMX
+
 ; Choosing a prize, step 14: gives the prize of the list entry (SetArg5ToListEntriesCell4). Entry 0
 ; puts item $1E in the first free inventory slot (MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot);
 ; any other entry creates a monster record in the first free record (MedalPrizeMenu_FindFreeRecord,
@@ -5888,6 +6150,8 @@ MedalPrizeMenu_ChoosePrize_GivePrize::
     ld a, $03
     jr MedalPrizeMenu_ChoosePrize_GivePrize_StepBack
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_GivePrize_NoMessage", ROMX
+
 ; Clears the result before stepping back. (C2, E-0357; probed E-0376)
 MedalPrizeMenu_ChoosePrize_GivePrize_NoMessage::
     xor a
@@ -5904,6 +6168,8 @@ MedalPrizeMenu_ChoosePrize_GivePrize_StepBack::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_GivePrize_CheckItemRoom", ROMX
+
 ; After an item prize: with a free inventory slot left goes back with no message, otherwise with
 ; refusal 1. (C2, E-0357; probed E-0376)
 MedalPrizeMenu_ChoosePrize_GivePrize_CheckItemRoom::
@@ -5912,6 +6178,8 @@ MedalPrizeMenu_ChoosePrize_GivePrize_CheckItemRoom::
     jr nz, MedalPrizeMenu_ChoosePrize_GivePrize_NoMessage
     ld a, $01
     jr MedalPrizeMenu_ChoosePrize_GivePrize_StepBack
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom", ROMX
 
 ; Far-calls FindFreeKeySlotToTemp0; when bit 7 of hTemp0 is clear (a free key slot) it continues at
 ; MedalPrizeMenu_ChoosePrize_GivePrize_NoMessage (wTwoChoiceCursor = 0), otherwise at
@@ -5929,6 +6197,8 @@ MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom::
     jr z, MedalPrizeMenu_ChoosePrize_GivePrize_NoMessage
     ld a, $02
     jr MedalPrizeMenu_ChoosePrize_GivePrize_StepBack
+
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster", ROMX
 
 ; HL = the free SRAM record slot (from MedalPrizeMenu_FindFreeRecord): creates a prize monster's
 ; record there: from MonsterTable entry $179 + prize (LoadMonsterRecord) and its species
@@ -6145,6 +6415,8 @@ MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 0D WriteBlankName10_Bank0D", ROMX
+
 ; HL = destination: writes ten $F0 (blank) bytes at HL with no terminator, through
 ; WriteNameBlanks_Bank0D; HL ends past them, A = $F0, B = 0.
 ; MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster uses it for the blank name of a new prize
@@ -6153,6 +6425,8 @@ MedalPrizeMenu_ChoosePrize_GivePrize_CreateMonster::
 WriteBlankName10_Bank0D::
     ld b, $0a
     jr WriteNameBlanks_Bank0D
+
+SECTION "Bank 0D WriteUnknownNamePlaceholder_Bank0D", ROMX
 
 ; HL = destination: writes '???' ($98 three times) and then seven $F0 bytes through
 ; WriteNameBlanks_Bank0D, ten bytes with no terminator; HL ends past them, B = 0.
@@ -6175,6 +6449,8 @@ WriteNameBlanks_Bank0D::
     dec b
     jr nz, WriteNameBlanks_Bank0D
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_FindFreeRecord", ROMX
 
 ; Finds a free SRAM record slot within the farm's capacity (MedalPrizeMenu_FindFreeRecord_Data by
 ; wFarmLevel): returns A = 0 with HL at it, or $FF when every slot is in use. (C2, E-0357; probed
@@ -6220,6 +6496,8 @@ MedalPrizeMenu_FindFreeRecord::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_FindFreeRecord_Data", ROMX
+
 ; Three bytes, 10, 20 and 30: the number of SRAM monster record slots (sRecords, $A5 bytes each)
 ; MedalPrizeMenu_FindFreeRecord looks through, picked by wFarmLevel. The routine stops at the first
 ; slot whose first byte is 0 or $FF and returns $FF when none of that many slots is free. (C1,
@@ -6254,6 +6532,8 @@ MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot::
     xor a
     ret
 
+SECTION "Bank 0D KeyListHasFreeSlot", ROMX
+
 ; Looks at byte 0 of the first 12 four-byte entries of wKeyList: returns A = 0 with HL at the first
 ; entry holding $FF (free) and C = its index, or A = $FF (C = 12) when none is free. Only the first
 ; 12 entries are checked, although wKeyList holds up to 32. (C2, E-0376)
@@ -6278,6 +6558,8 @@ KeyListHasFreeSlot::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_DrawPrices", ROMX
 
 ; Draws the medal prices of the prizes on the current page into the screen buffer: the prices are
 ; the bytes of MedalPrizeMenu_ChoosePrize_ReplayDirection_Data from entry 4 * wListPageIndex (3, 3,
@@ -6358,6 +6640,8 @@ MedalPrizeMenu_DrawPrices::
     jr c, .loop
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_DrawPrices_Data", ROMX
+
 ; Four little-endian addresses inside wWindowTileBuffer: $C3D7, $C3FF, $C427 and $C44F, which are
 ; rows 10, 12, 14 and 16 at column 15. MedalPrizeMenu_DrawPrices writes the two digit tiles (tens,
 ; ones) of the medal price of prize c of the page at the address of entry c, for up to four prizes a
@@ -6394,6 +6678,8 @@ WriteTileBAtCursorListCursor::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 0D WriteTileBAtCursorListCursor_Data", ROMX
 
 ; Four little-endian word offsets into the BG map from the scroll position
 ; (BGMapAddressAtScroll_Bank0D): $00A4, $00E4, $0124 and $0164, which are rows 5, 7, 9 and 11 at
@@ -6438,6 +6724,8 @@ MedalPrizeMenu_CountTinyMedalItems::
     ld a, $ff
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_DrawFrame_ListPrizes", ROMX
+
 ; Fills the prize list with entries 0-5, or 0-6 after the game is completed, and sets wListCount.
 ; (C2, E-0357; probed E-0376)
 MedalPrizeMenu_ChoosePrize_DrawFrame_ListPrizes::
@@ -6463,6 +6751,8 @@ MedalPrizeMenu_ChoosePrize_DrawFrame_ListPrizes::
     jr c, .loop
     ld [wListCount], a
     ret
+
+SECTION "Bank 0D MedalPrizeMenu_DrawPrizeNames", ROMX
 
 ; Draws the names of the prizes on the current page from their strings (category from
 ; BeginStringDisplay_Bank0D_StringCategories, index $28 + entry). (C1, E-0357)
@@ -6550,6 +6840,8 @@ MedalPrizeMenu_DrawPrizeNames::
 .return:
     ret
 
+SECTION "Bank 0D MedalPrizeMenu_DrawC5BEC6AtScrollOffsetDE_Bank0D", ROMX
+
 ; Draws the prize list's page indicator ('page/pages' on screen and in the window buffer). (C1,
 ; E-0357)
 MedalPrizeMenu_DrawC5BEC6AtScrollOffsetDE_Bank0D::
@@ -6570,6 +6862,8 @@ MedalPrizeMenu_DrawC5BEC6AtScrollOffsetDE_Bank0D::
     ld [wArg2], a
     farcall DrawPageOfPagesAtArg1_Bank1E
     ret
+
+SECTION "Bank 0D DrawTinyMedalCountBoxAndStep_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -6649,6 +6943,8 @@ ScriptCommandE9_RunFar::
     farcall CloseMenuE9
     ret
 
+SECTION "Bank 0D NpcBreedMenu", ROMX
+
 ; Script command type F4 (SCRIPT_NPC_BREED), run each frame through ScriptCommandF4 in bank $10:
 ; breeding with the monster of a townsperson. Dispatches on wScreenState: 0 NpcBreedMenu_Init, 4
 ; NpcBreedMenu_ChooseAndBreed, 12 NpcBreedMenu_RunMonsterScreen, $11 NpcBreedMenu_RedrawListScreen;
@@ -6690,9 +6986,13 @@ NpcBreedMenu_Init::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_EmptyState", ROMX
+
 ; Townsperson breeding, states 1-3, 5-11 and 13-16: a lone ret. (C2, E-0369; probed E-0376)
 NpcBreedMenu_EmptyState::
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed", ROMX
 
 ; State 4 of NpcBreedMenu, by wScreenStep: most of steps 0-16 run the parent list of BreedMenu
 ; (NpcBreedMenu_ChooseAndBreed_RunChooseParentsStep), with step 4 drawing the family, sex and level,
@@ -6743,6 +7043,8 @@ NpcBreedMenu_ChooseAndBreed_RunChooseParentsStep::
     farcall BreedMenu
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_RunRecordList", ROMX
+
 ; Choosing a parent, step 12: runs the breeding list's steps and reloads two frame tiles. (C1,
 ; E-0357)
 NpcBreedMenu_ChooseAndBreed_RunRecordList::
@@ -6758,6 +7060,8 @@ NpcBreedMenu_ChooseAndBreed_RunRecordList::
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel", ROMX
 
 ; Choosing a parent, step 4: draws the family icon and the sex mark and level of the monster under
 ; the cursor. (C1, E-0357)
@@ -6790,6 +7094,8 @@ NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_Cancel", ROMX
+
 ; Choosing a parent, step 9, the step BreedMenu_ChooseParents_ListCursor moves to on B:
 ; wTwoChoiceCursor = 1 and ends the script command, so the script continues. (C2, E-0369; probed
 ; E-0376)
@@ -6801,6 +7107,8 @@ NpcBreedMenu_ChooseAndBreed_Cancel::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_CopyScreenBlockAndStep", ROMX
 
 ; Saves a block of the screen: through CopyScreenBufferRectWithAttrs_0D (wArg1 = 0, wArg2 = 8)
 ; copies 5 rows of 8 bytes of wScreenTileBuffer from offset $00AC (row 8, column 12 of the 20-wide
@@ -6825,6 +7133,8 @@ NpcBreedMenu_CopyScreenBlockAndStep::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_CheckPick", ROMX
 
 ; Choosing a parent, step 17: checks the monster in list cell 5 (wListEntries + 5 * wListPageIndex +
 ; wListCursor). A MON_LEVEL below 10 gives wTwoChoiceCursor 2, and the only party member
@@ -6915,6 +7225,8 @@ NpcBreedMenu_ChooseAndBreed_CheckPick::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_StartCountingScript", ROMX
+
 ; Choosing a parent, step 18: copies the chosen record into wRecordBufA and starts the counting
 ; script (PrepareCounterPtr0LoCountersAndRequestScript); on the next call closes the box. (C1,
 ; E-0357)
@@ -6935,6 +7247,8 @@ NpcBreedMenu_ChooseAndBreed_StartCountingScript::
     ld de, $01cc
     call DrawScreenBufferRect_Bank0D
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_LoadNpcMonster", ROMX
 
 ; Choosing a parent, step 19: reloads the chosen record into wRecordBufA
 ; (NpcBreedMenu_ChooseAndBreed_LoadChosenRecord), copies the townsperson's preset monster ($A5 bytes
@@ -6977,6 +7291,8 @@ NpcBreedMenu_ChooseAndBreed_LoadNpcMonster::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_ComputeChild", ROMX
+
 ; Breeding, step 20: computes the child (ComputeBreedingChild, kind 1); when done, checks whether
 ; the child is new to the library and moves on. (C1, E-0357)
 NpcBreedMenu_ChooseAndBreed_ComputeChild::
@@ -6997,6 +7313,8 @@ NpcBreedMenu_ChooseAndBreed_ComputeChild::
     xor a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_DrawYesNo", ROMX
 
 ; Breeding, step 21: plays sound $6C, loads the box tiles and draws the yes/no box. (C1, E-0357)
 NpcBreedMenu_ChooseAndBreed_DrawYesNo::
@@ -7037,6 +7355,8 @@ NpcBreedMenu_ChooseAndBreed_DrawYesNo::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_ReadAnswer", ROMX
+
 ; Breeding, step 22: the yes/no answer: yes moves on to the breeding, no leaves the decision to the
 ; script. (C1, E-0357)
 NpcBreedMenu_ChooseAndBreed_ReadAnswer::
@@ -7074,6 +7394,8 @@ NpcBreedMenu_ChooseAndBreed_ReadAnswer::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_ReplaceParent", ROMX
 
 ; Breeding, step 23: deletes the parent's record (DeleteSRAMRecordAndCompact), writes the child's
 ; record in its place and saves; the next call moves on. (C1, E-0357)
@@ -7158,6 +7480,8 @@ NpcBreedMenu_ChooseAndBreed_ReplaceParent::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_ReplaceParent_Data", ROMX
+
 ; Ten little-endian word story flag numbers: $010E, $0118, $011A, $0125 and $0129
 ; (EVENT_WHEN_YOU_BREED_THE_OFFSPRING, EVENT_BREEDING_COULD_RESULT_IN, EVENT_IF_YOU_GET_AN,
 ; EVENT_BREEDING_COULD_RESULT_IN_125, EVENT_ALL_RIGHTY_WELL_DO), then $0032 to $0036
@@ -7176,6 +7500,8 @@ NpcBreedMenu_ChooseAndBreed_RedrawScreenBoxes::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_StartResultTalk", ROMX
 
 ; Breeding, step 25: starts talk event group $20 (the result), saving the script position to return
 ; to. (C1, E-0357)
@@ -7201,6 +7527,8 @@ NpcBreedMenu_ChooseAndBreed_StartResultTalk::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_RestorePlayerPosition", ROMX
+
 ; Breeding, step 26: restores the player's position state. (C2, E-0357; probed E-0376)
 NpcBreedMenu_ChooseAndBreed_RestorePlayerPosition::
     call RestorePlayerPositionState_Bank0D
@@ -7208,6 +7536,8 @@ NpcBreedMenu_ChooseAndBreed_RestorePlayerPosition::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_RestoreScreen", ROMX
 
 ; Breeding, step 27: restores the field screen from the window buffer and lets the script continue.
 ; (C1, E-0357)
@@ -7251,6 +7581,8 @@ NpcBreedMenu_ChooseAndBreed_RestoreScreen::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_RunMonsterScreen", ROMX
+
 ; Townsperson breeding, state 12: runs the monster screen (SwapMonstersMenu) until it finishes, then
 ; skips five states. (C1, E-0357)
 NpcBreedMenu_RunMonsterScreen::
@@ -7265,6 +7597,8 @@ NpcBreedMenu_RunMonsterScreen::
     add $05
     ld [wScreenState], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_RedrawListScreen", ROMX
 
 ; State $11 of NpcBreedMenu, by wScreenStep: step 0 decompresses the map tiles of the townsperson
 ; and palettes (NpcBreedMenu_RedrawListScreen_LoadTiles), 1 copies the glyph and frame tiles, 5
@@ -7291,6 +7625,8 @@ NpcBreedMenu_RedrawListScreen::
 NpcBreedMenu_RedrawListScreen_RunListMonstersStep::
     farcall BreedMenu
     ret
+
+SECTION "Bank 0D NpcBreedMenu_RedrawListScreen_LoadTiles", ROMX
 
 ; Redrawing the breeding list, step 0: decompresses the townsperson's map tiles and palettes (by
 ; wScreenTableIndex). (C1, E-0357)
@@ -7328,6 +7664,8 @@ NpcBreedMenu_RedrawListScreen_LoadTiles::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_RedrawListScreen_LoadTiles_Data1", ROMX
 
 ; Sixteen 3-byte far pointers (address low, address high, bank), indexed by wScreenTableIndex times
 ; 3. Each points at a compressed map tile set in bank $48: Map04Tileset ($6B82) for indexes 0, 2, 4
@@ -7368,6 +7706,8 @@ NpcBreedMenu_RedrawListScreen_LoadGlyphs::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_RedrawListScreen_ClearNameTiles", ROMX
+
 ; Redrawing the breeding list, step 6: clears the name tiles and sets the text window. (C1, E-0357)
 NpcBreedMenu_RedrawListScreen_ClearNameTiles::
     ld hl, vTiles1 + $270
@@ -7406,6 +7746,8 @@ NpcBreedMenu_RedrawListScreen_ClearNameTiles::
     inc [hl]
     ret
 
+SECTION "Bank 0D NpcBreedMenu_RedrawListScreen_DrawNameAndSpecies", ROMX
+
 ; Redrawing the breeding list, step 7: draws the name and species name of the monster under the
 ; cursor. (C1, E-0357)
 NpcBreedMenu_RedrawListScreen_DrawNameAndSpecies::
@@ -7422,6 +7764,8 @@ NpcBreedMenu_RedrawListScreen_DrawNameAndSpecies::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg", ROMX
 
 ; After the child is computed, with its species id in wArg6/wArg7: wTwoChoiceCursor = 0 when the
 ; id's bit is set in the bit field BreedShowNameSpeciesBits or its species flag is set
@@ -7527,6 +7871,8 @@ NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg::
     ld [de], a
     ret
 
+SECTION "Bank 0D CopyMonsterNameToBuffer_B0D", ROMX
+
 ; HL = monster id: with wDataBank = $08 it reads entry 2 of StringDatabase (the monster name list)
 ; with ReadWordFromDataBank, then the string pointer at that list + 2 * HL, and copies 16 bytes from
 ; it in bank $08 to wNameGlyphBuf with CopyFromBankWaitVRAM; wDataBank is restored. A bank-$0D copy
@@ -7563,6 +7909,8 @@ CopyMonsterNameToBuffer_B0D::
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
+
+SECTION "Bank 0D RestorePlayerPositionState_Bank0D", ROMX
 
 ; Puts back the player state saved in wSavedPlayerState (SavePlayerPositionState): byte 0 to
 ; wSpriteSlots + 7, bytes 1-3 to hPlayerX, hPlayerY and hPlayerFacing, bytes 4-6 to wFollowerRecords
@@ -7601,6 +7949,8 @@ RestorePlayerPositionState_Bank0D::
     ld [wSavedPositionValid], a
     ret
 
+SECTION "Bank 0D LoadFamilyIconTileForRecordB_Bank0D", ROMX
+
 ; B = SRAM record index: with SRAM enabled (bank 0) loads the MON_FAMILY byte of the record
 ; (LoadSRAMRecordByte into hTemp0), sets wWorkBuf = its low four bits and wWorkBuf + 1 = wArg1,
 ; far-calls LoadFamilyIconTileForWorkBuf and disables SRAM. A bank-$0D copy of
@@ -7626,6 +7976,8 @@ LoadFamilyIconTileForRecordB_Bank0D::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 0D NpcBreedMenu_ChooseAndBreed_LoadChosenRecord", ROMX
+
 ; Copies SRAM record wSelectedRecord into wRecordBufA. (C2, E-0357; probed E-0384)
 NpcBreedMenu_ChooseAndBreed_LoadChosenRecord::
     ld a, $0a
@@ -7649,6 +8001,8 @@ NpcBreedMenu_ChooseAndBreed_LoadChosenRecord::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 0D NpcBreedMenu_FamilySexLevelTileRect", ROMX
 
 ; A packed 12 x 5 tile rectangle (60 bytes, one row per 12 bytes): a frame of border tiles ($B0-$B7)
 ; around three interior rows, with $C3 the blank tile and $C7 the family icon tile.

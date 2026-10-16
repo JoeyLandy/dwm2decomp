@@ -1,7 +1,7 @@
 ; ROM bank $27: meta-sprite frames
 ; The annotated listing of this bank is build/listing/bank27.asm.
 
-SECTION "Bank 27", ROMX[$4000], BANK[$27]
+SECTION "Bank 27", ROMX
     db $27
 
 ; Draws one meta-sprite of bank $27 into the shadow OAM. hSpriteSetIndex picks the set; when bit 0
@@ -32,6 +32,8 @@ DrawMetaSpriteSet_Bank27::
     ld de, MetaSprites27Table
     call DrawMetaSpriteSet_Bank27_BuildOam
     ret
+
+SECTION "Bank 27 MetaSprites27Table", ROMX
 
 ; DrawMetaSpriteSet_Bank27 passes DE = $MetaSprites27Table to the builder, which takes the word at
 ; DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 127
@@ -772,6 +774,8 @@ DrawMetaSpriteSet_Bank27_BuildOam::
     jr nz, .loop5
     ret
 
+SECTION "Bank 27 BGTileUnderPointIsSpriteHideTile_Bank27", ROMX
+
 ; DE = the address of an X byte with its Y byte at DE - 1 (screen coordinates). Reads the $9800 BG
 ; map tile under (X + hScrollX - 4, Y + hScrollY - 12), with rows wrapping inside the map, after
 ; rSTAT bit 1 clears (interrupts off), and compares it with hSpriteHideTile. Returns A = that tile
@@ -827,6 +831,8 @@ BGTileUnderPointIsSpriteHideTile_Bank27::
     pop bc
     pop hl
     ret
+
+SECTION "Bank 27 MetaSprites27Set00", ROMX
 
 ; meta-sprite set 0 of MetaSprites27Table: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame

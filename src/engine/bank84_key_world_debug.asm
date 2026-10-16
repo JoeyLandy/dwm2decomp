@@ -1,7 +1,7 @@
 ; ROM bank $84: key-world helpers and debug field code
 ; The annotated listing of this bank is build/listing/bank84.asm.
 
-SECTION "Bank 84", ROMX[$4000], BANK[$84]
+SECTION "Bank 84", ROMX
     db $84
 
 ; Builds the floor state of every floor entrance of a freshly generated key world. Sets
@@ -66,6 +66,8 @@ KeyWorldLayout_FillEntrances::
 .skip2:
     jr .skip
 
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance", ROMX
+
 ; Builds one floor state entry by the entrance kind in hTemp0 (jump table of seven: 0
 ; KeyWorldLayout_BuildEntrance_Blank, 1 to 5 KeyWorldLayout_BuildEntrance_Kind1 to
 ; KeyWorldLayout_BuildEntrance_Kind5, 6 KeyWorldLayout_BuildEntrance_FixedState). DE = the 16-byte
@@ -89,12 +91,16 @@ KeyWorldLayout_BuildEntrance::
 KeyWorldLayout_BuildEntrance_Blank::
     ret
 
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_FixedState", ROMX
+
 ; Entrance kind 6: sets byte 0 of the floor state entry at DE to $54 and leaves the other 15 bytes
 ; alone. (C2, E-0384)
 KeyWorldLayout_BuildEntrance_FixedState::
     ld a, $54
     ld [de], a
     ret
+
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_Kind1", ROMX
 
 ; Entrance kind 1: DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the 16-byte block of the
 ; area layout for this entrance (KeyWorldAreaLayoutTable). Byte 0 of the entry = the byte of
@@ -122,6 +128,8 @@ KeyWorldLayout_BuildEntrance_Kind1::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_Kind2", ROMX
 
 ; Entrance kind 2: DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of the
 ; entrance. Byte 0 of the entry = the byte of KeyWorldLayout_BuildEntrance_Kind2_Data picked by
@@ -162,6 +170,8 @@ KeyWorldLayout_BuildEntrance_Kind2::
     jr nz, .loop
     ret
 
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_Kind3", ROMX
+
 ; Entrance kind 3: DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of the
 ; entrance. Byte 0 of the entry = the byte of KeyWorldLayout_BuildEntrance_Kind2_Data picked by
 ; wKeyWorldGoalKind plus $40, with bit 7 set when bit 1 of the new wKeyRandomHi (one NextRandomSeed
@@ -200,6 +210,8 @@ KeyWorldLayout_BuildEntrance_Kind3::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_Kind4", ROMX
 
 ; Entrance kind 4 (rooms): DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of
 ; the entrance. Byte 0 of the entry = block byte 1 (the room count, also left in hTemp0), byte 1 =
@@ -273,6 +285,8 @@ KeyWorldLayout_BuildEntrance_Kind4::
     call KeyWorldLayout_BuildEntrance_GenerateRooms
     ret
 
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_Kind5", ROMX
+
 ; Entrance kind 5 (rooms): DE = the 16-byte floor state entry, [hTemp8/hTemp9] = the layout block of
 ; the entrance. Byte 0 of the entry = block byte 1 (the room count, also left in hTemp0), byte 1 =
 ; wKeyWorldGenRoom (the number of the first room), byte 2 = a byte of
@@ -339,6 +353,8 @@ KeyWorldLayout_BuildEntrance_Kind5::
     xor a
     call KeyWorldLayout_BuildEntrance_GenerateRooms
     ret
+
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_Kind1_Data", ROMX
 
 ; Ten bytes indexed by wKeyWorldGoalKind (0-9): $00, $00, $03, $01, $00, $00, $04, $05, $02, $00.
 ; KeyWorldLayout_BuildEntrance_Kind1 (entrance kind 1) stores the byte as byte 0 of the 16-byte
@@ -515,6 +531,8 @@ KeyWorldLayout_BuildEntrance_GenerateRooms::
     jr nz, .loop
     ret
 
+SECTION "Bank 84 KeyWorldNextRoomRows", ROMX
+
 ; E-0193 (C1: KeyWorldLayout_BuildEntrance_GenerateRooms.loop reads the byte at $42C7 + 16 * (hTemp4
 ; & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for
 ; KeyWorldLayout_BuildEntrance_PickOtherExit; 6 rows end at that routine). E-0364: the sum is the
@@ -570,6 +588,8 @@ KeyWorldLayout_BuildEntrance_PickOtherExit::
     ldh [hTemp4], a
     pop hl
     ret
+
+SECTION "Bank 84 KeyWorldLayout_BuildEntrance_PickTwoExits", ROMX
 
 ; Picks two different exits for a room. Input DE = 2 * the room record number ($A0-$B4 range or
 ; $00-$47 in practice). The three exit values of the record are the 3 bytes behind the word at $4001
@@ -632,6 +652,8 @@ KeyWorldLayout_BuildEntrance_PickTwoExits::
     pop hl
     ret
 
+SECTION "Bank 84 RandomBelowC", ROMX
+
 ; Draws a random number below C: calls NextRandomSeed (wKeyRandomLo/Hi = 5 * seed + 11) until the
 ; low 4 bits of the new wKeyRandomHi are less than C, and returns A = that value (0 to C - 1). C
 ; must be 1 to 16; with C = 0 it would never finish. Because it draws repeatedly the number of seed
@@ -646,6 +668,8 @@ RandomBelowC::
     cp c
     jr nc, RandomBelowC
     ret
+
+SECTION "Bank 84 ApplyMapScreenFlagEvents", ROMX
 
 ; Redraws the flag-dependent tiles of the current map screen. It walks the 8-byte entries of
 ; MapScreenFlagTiles (map id, screen X, screen Y, tile, story flag word, offset word; the list ends
@@ -698,6 +722,8 @@ ApplyMapScreenFlagEvents::
     ld a, $08
     add_a_to_hl
     jr .skip
+
+SECTION "Bank 84 ApplyMapScreenFlagEvents_DrawTiles", ROMX
 
 ; Draws one flag-dependent map tile. HL = the 8-byte MapScreenFlagTiles entry, hTemp0 = its tile;
 ; the entry offset word (entry + 6) is added to wScreenTileBuffer. A normal tile writes hTemp0 and
@@ -788,6 +814,8 @@ ApplyMapScreenFlagEvents_DrawTiles::
     ld a, $00
     ldh [rSVBK], a
     ret
+
+SECTION "Bank 84 MapScreenFlagTiles", ROMX
 
 ; ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match
 ; and the story flag is set, ApplyMapScreenFlagEvents_DrawTiles writes the tile and tile + 1 at
@@ -1273,6 +1301,8 @@ ItemUsable_LogTwig_Check::
     ldh [hTempA], a
     ret
 
+SECTION "Bank 84 ItemUsable_LogTwig_Check_Data", ROMX
+
 ; Eleven 3-byte records ended by $FF (34 bytes): map id, position in the screen ($44 in every
 ; record, x nibble then y nibble), and screen (x nibble then y nibble). The maps are $20, $30, $48,
 ; $70, $A0, $A8, $B0, $B8, $C8, $D1 and $DA, with screens $00, $76, $B4, $B4, $10, $00, $01, $44,
@@ -1460,6 +1490,8 @@ ItemUsable_LogTwig_KeyWorld::
     pop hl
     ret
 
+SECTION "Bank 84 LogTwigSpotList", ROMX
+
 ; ItemUsable_LogTwig_Check, on maps from $20, walks 4-byte records from $49A1 until $FF and returns
 ; at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or
 ; fourth byte equals the player's tile position; on no match it goes on to
@@ -1544,6 +1576,8 @@ IsPlayerOnTriggerCell_Bank84::
     xor a
     ret
 
+SECTION "Bank 84 RunFieldReturnPhase_AfterLogTwig", ROMX
+
 ; Back in the field after the LogTwig, on a region map: finds the map's region; with a recorded key
 ; world for this region whose goal cell is this screen, marks the goal there
 ; (RunFieldReturnPhase_AfterLogTwig_DrawMarker), otherwise marks the table's spot when the screen
@@ -1605,6 +1639,8 @@ RunFieldReturnPhase_AfterLogTwig::
     call RunFieldReturnPhase_AfterLogTwig_DrawMarker
     jr RunFieldReturnPhase_AfterLogTwig_DrawGoal
 
+SECTION "Bank 84 RunFieldReturnPhase_AfterLogTwig_Data", ROMX
+
 ; The same eleven 3-byte records and $FF end as ItemUsable_LogTwig_Check_Data (34 bytes): map id,
 ; position in the screen ($44 in every record) and screen. RunFieldReturnPhase_AfterLogTwig searches
 ; it for hMapId (it has no check for the $FF end), keeps the record number in hTemp0 and b, and when
@@ -1657,6 +1693,8 @@ RunFieldReturnPhase_AfterLogTwig_InKeyWorld::
     ld c, a
     call RunFieldReturnPhase_AfterLogTwig_DrawMarker
     jr RunFieldReturnPhase_AfterLogTwig_DrawGoal
+
+SECTION "Bank 84 RunFieldReturnPhase_AfterLogTwig_DrawGoal", ROMX
 
 ; Draws the key-world goal tiles ($46/$47 over $56/$57) at wKeyWorldGoal in wScreenTileBuffer with
 ; the CGB palette (5 in key worlds, 3 for regions 4 and $0A, 5 for 5-7, otherwise 1), then copies
@@ -1775,6 +1813,8 @@ RunFieldReturnPhase_AfterLogTwig_DrawGoal::
     call DrawFullScreenBufferToBGMap
     ret
 
+SECTION "Bank 84 RunFieldReturnPhase_AfterLogTwig_DrawMarker", ROMX
+
 ; Draws a 2 x 2 tile marker for a screen cell. Input C = the cell (x in the high nibble, y in the
 ; low nibble; the tile column is 2 * x, the tile row 2 * y; wScreenTileBuffer is 20 tiles wide):
 ; tiles $40, $41 on the top row and $50, $51 on the row below. On a CGB (wIsCGB non-zero) it also
@@ -1861,6 +1901,8 @@ RunFieldReturnPhase_AfterLogTwig_DrawMarker::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 84 RunFieldReturnPhase_AfterLogTwig_DrawMarker_Data", ROMX
+
 ; Five CGB palette numbers, $01, $01, $03, $02, $02, indexed by b, the record number that
 ; RunFieldReturnPhase_AfterLogTwig found for the map in RunFieldReturnPhase_AfterLogTwig_Data.
 ; RunFieldReturnPhase_AfterLogTwig_DrawMarker writes the number as the background attribute of the
@@ -1928,6 +1970,8 @@ ClearKeyWorldActiveForMatchingKeyEntry::
     ld a, $00
     ld [wKeyWorldActive], a
     ret
+
+SECTION "Bank 84 KeyWorldAreaLayoutTable", ROMX
 
 ; KeyWorldLayout_FillEntrances reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's
 ; first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to

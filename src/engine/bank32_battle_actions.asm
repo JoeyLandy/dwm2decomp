@@ -1,7 +1,7 @@
 ; ROM bank $32: battle action steps and resolve steps
 ; The annotated listing of this bank is build/listing/bank32.asm.
 
-SECTION "Bank 32", ROMX[$4000], BANK[$32]
+SECTION "Bank 32", ROMX
     db $32
 
 ; One tick of the animation sequence record at wSequencePtrLo and wSequencePtrHi (bytes: 0 started
@@ -37,6 +37,8 @@ TickSequencePtrLoSequence::
 .return:
     ret
 
+SECTION "Bank 32 CountDownSequencePtrLoFrameTimer", ROMX
+
 ; Frame timer of the sequence record at wSequencePtrLo and wSequencePtrHi (byte 5): $FF holds the
 ; frame (returns at once), 0 advances to the next frame
 ; (CountDownSequencePtrLoFrameTimer_NextFrame), any other value is counted down by one. Called only
@@ -57,6 +59,8 @@ CountDownSequencePtrLoFrameTimer::
     dec a
     ld [hld], a
     ret
+
+SECTION "Bank 32 CountDownSequencePtrLoFrameTimer_NextFrame", ROMX
 
 ; Advances the frame index (byte 3) of the sequence at wSequencePtrLo and falls into
 ; TickSequencePtrLoSequence_LoadFrame to load that frame. Reached when the frame timer (byte 5)
@@ -123,6 +127,8 @@ TickSequencePtrLoSequence_LoadFrame::
     ld [hl], b
     ret
 
+SECTION "Bank 32 LookupSequencePtrLoFrameWord", ROMX
+
 ; Returns BC = the current frame word of the sequence record at wSequencePtrLo and wSequencePtrHi: C
 ; = its first byte (the frame code) and B = its second byte (the timer, or the step-back count for
 ; $FE). It reads the list pointer from SequenceFrameTable at 2 * byte 2 of the record, then the word
@@ -149,6 +155,8 @@ LookupSequencePtrLoFrameWord::
     ld b, [hl]
     ld c, a
     ret
+
+SECTION "Bank 32 SequenceFrameTable", ROMX
 
 ; LookupSequencePtrLoFrameWord reads the word at $40A6 + 2 * [seq + 2], then the word at 2 * [seq +
 ; 3] of that list; TickSequencePtrLoSequence_LoadFrame ends the sequence at $FFFF, steps back B
@@ -1762,6 +1770,8 @@ RunBattleActions_StatusChecks_StartAction_Begin::
 .return:
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_StartAction_Statuses", ROMX
+
 ; Starting the next action, step 1 (wBattleSubStep 1 of RunBattleActions_StatusChecks_StartAction).
 ; An actor with the BSTAT5_IRONIZED bits (status 5 bits 6-7) shows battle text $15
 ; (ShowBattleTextCategory0) and is skipped (wBattleSubStep = 0, wActionQueuePos += 1). One with
@@ -1851,6 +1861,8 @@ RunBattleActions_StatusChecks_StartAction_Statuses::
 .return:
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_StartAction_Curse", ROMX
+
 ; Starting the next action, step 2: wBattleSubStep += 1 first. When the actor has BSTAT0_CURSED and
 ; RollStatusTickEffect returns carry, reads its HP (GetBattleHP_Bank32): at 0 HP goes to resolve
 ; step 9 (wBattleResolveStep = 9, wBattleSubStep = 0), otherwise returns. Without the curse or the
@@ -1877,6 +1889,8 @@ RunBattleActions_StatusChecks_StartAction_Curse::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_StartAction_Confused", ROMX
+
 ; Starting the next action, step 3: a confused actor picks a random action
 ; (PickRandomActionWhenUncontrolled) with battle text $14. (C1, E-0357)
 RunBattleActions_StatusChecks_StartAction_Confused::
@@ -1892,6 +1906,8 @@ RunBattleActions_StatusChecks_StartAction_Confused::
     farcall ShowBattleTextCategory0
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_StartAction_Finish", ROMX
+
 ; Starting the next action, step 4 (also step 3's end when the actor is not confused, and step 0's
 ; target for a follow-up action): resolve step 1 (RunBattleActions_StatusChecks_CheckAction) with
 ; wBattleSubStep 0. (C2, E-0372; probed E-0380)
@@ -1901,6 +1917,8 @@ RunBattleActions_StatusChecks_StartAction_Finish::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_StartAction_AllDone", ROMX
 
 ; Starting the next action, step 5 (the action queue is used up): wBattleSubPhase 9
 ; (RunBattleActions_WearOffAndDefeat in RunBattleActions' table), with wBattleResolveStep and
@@ -1913,6 +1931,8 @@ RunBattleActions_StatusChecks_StartAction_AllDone::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 32 ShowActorStatusRecoveryMessage", ROMX
 
 ; Shows the message of a status that costs the actor (wBattleActor) its action, using D as the
 ; battle text index of ShowBattleTextCategory0. Looks in order at BSTAT0_PARALYZED (text $17,
@@ -1992,6 +2012,8 @@ ShowActorStatusRecoveryMessage::
 
 .return:
     ret
+
+SECTION "Bank 32 RollStatusTickEffect", ROMX
 
 ; The roll made for a cursed actor (BSTAT0_CURSED) at the start of each of its actions, called by
 ; RunBattleActions_StatusChecks_StartAction_Curse. After AdvanceRandom nothing happens (carry clear,
@@ -2080,6 +2102,8 @@ RollStatusTickEffect::
     call ShowBattleTextCategory0Entry
     jr ShowBattleTextCategory0Entry_ReturnCarry
 
+SECTION "Bank 32 ShowBattleTextCategory0Entry", ROMX
+
 ; D = battle text index: far-calls ShowBattleTextCategory0 (bank $3A) and returns. Called only by
 ; RollStatusTickEffect, for the texts $0F-$12. (C1, E-0380)
 ; far-calls ShowBattleTextCategory0 and returns; the next entry returns carry (E-0126)
@@ -2087,10 +2111,14 @@ ShowBattleTextCategory0Entry::
     farcall ShowBattleTextCategory0
     ret
 
+SECTION "Bank 32 ShowBattleTextCategory0Entry_ReturnCarry", ROMX
+
 ; Returns carry. (C2, E-0357; probed E-0380)
 ShowBattleTextCategory0Entry_ReturnCarry::
     scf
     ret
+
+SECTION "Bank 32 ActorLosesSixthOfMaxHP", ROMX
 
 ; The actor loses a sixth of its max HP: wBattleDamage = max HP / 6, subtracted from its HP with no
 ; floor. (C2, E-0357; probed E-0380)
@@ -2125,6 +2153,8 @@ ActorLosesSixthOfMaxHP::
     sbc h
     ld [de], a
     ret
+
+SECTION "Bank 32 ActorLosesSixthOfMaxMP", ROMX
 
 ; The actor (wBattleActor) loses a sixth of its maximum MP: damage = max MP / 6 (0 when the maximum
 ; is 0) is stored in wBattleDamageLo and wBattleDamageHi and returned in BC, and is subtracted from
@@ -2167,6 +2197,8 @@ ActorLosesSixthOfMaxMP::
     ld [wBattleDamageHi], a
     ret
 
+SECTION "Bank 32 ClearActorStatus3", ROMX
+
 ; Sets status byte 3 of the actor (wBattleStatus3 + 9 * wBattleActor) to 0. Called by
 ; RollStatusTickEffect. (C2, E-0380)
 ; the actor's status byte 3 (wBattleStatus3 + 9 * actor) = 0 (E-0115)
@@ -2176,6 +2208,8 @@ ClearActorStatus3::
     call AddAx9ToHL
     ld [hl], $00
     ret
+
+SECTION "Bank 32 PickRandomActionWhenUncontrolled", ROMX
 
 ; A confused actor picks a random action (called only by
 ; RunBattleActions_StatusChecks_StartAction_Confused, which then shows text $14). AdvanceRandom
@@ -2264,6 +2298,8 @@ PickRandomActionWhenUncontrolled::
     ld [wBattleTarget], a
     ret
 
+SECTION "Bank 32 PickRandomActionWhenUncontrolled_Data1", ROMX
+
 ; A count byte 3 followed by three action ids, $C2, $C3 and $C5. PickRandomActionWhenUncontrolled
 ; uses it when wLinkMode is 1 or the actor slot is below 4 (and wRandomLo is $C0 or more): it
 ; divides wRandomHi by the count, takes the remainder as the index and uses that action. (C1,
@@ -2307,6 +2343,8 @@ ResetEffectStateForAction::
     xor a
     ld [wActionRepeatFlag], a
     ret
+
+SECTION "Bank 32 RollSleepWakeUp", ROMX
 
 ; The sleep check: rolls against the sleep counter (status bits 2-3: 1 below $E0, 2 below $A0, 3
 ; below $60; none: always below $FF) to keep sleeping (counting the counter down, text $13, carry);
@@ -2403,6 +2441,8 @@ RollSleepWakeUp::
     ld [hl], $bf
     jr RollSleepWakeUp_RestoreTarget
 
+SECTION "Bank 32 RollSleepWakeUp_ShowWokeUp", ROMX
+
 ; On RollSleepWakeUp's wake path, when the actor had neither BSTAT3_AIRBORNE bits nor
 ; BSTAT4_HIGH_JUMP bits set: shows battle text $82 ('0 woke up!', with the actor as wBattleTarget)
 ; and falls into RollSleepWakeUp_RestoreTarget. (C1, E-0372)
@@ -2419,6 +2459,8 @@ RollSleepWakeUp_RestoreTarget::
     ccf
     ret
 
+SECTION "Bank 32 ClearActorStatus3Bits0To5", ROMX
+
 ; Keeps only bits 7-6 of status byte 3 of the actor (wBattleStatus3 + 9 * wBattleActor), clearing
 ; bits 0-5. Called by ShowActorStatusRecoveryMessage after a message. (C2, E-0380)
 ; keeps only bits 7-6 of the actor's status byte 3 (E-0115)
@@ -2430,6 +2472,8 @@ ClearActorStatus3Bits0To5::
     and $c0
     ld [hl], a
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_CheckAction", ROMX
 
 ; Step 1 of RunBattleActions_StatusChecks: wBattleSubStep picks 0
 ; RunBattleActions_StatusChecks_CheckAction_CheckMP (does the actor have the MP for its action; an
@@ -2495,6 +2539,8 @@ RunBattleActions_StatusChecks_PairRefusal:: ; configured code entry (E-0387); C0
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_CheckAction_CheckMP", ROMX
 
 ; Checking the action, step 0: for a skill (not $D0-$E3, $BF or $C9-$CF) checks the MP cost; with
 ; too little MP a player-controlled actor (or AI mode below 2) shows the 'not enough MP' line and
@@ -2577,6 +2623,8 @@ RunBattleActions_StatusChecks_CheckAction_CheckMP::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_CheckAction_FoeDupes", ROMX
 
 ; Checking the action, step 1: outside link mode 1 (wLinkMode), for a foe actor (wBattleActor 4 or
 ; more) when wActionQueuePos is non-zero: if an earlier wActionQueue entry that is a foe (4 or more,
@@ -2662,6 +2710,8 @@ RunBattleActions_StatusChecks_CheckAction_FoeDupes::
     inc [hl]
     ret
 
+SECTION "Bank 32 FoeNoRepeatSkills", ROMX
+
 ; 62 skill ids ending in $FF, from SKILL_FIREBAL to SKILL_WARCRY (among them SKILL_BEAT,
 ; SKILL_SLEEPALL, SKILL_FIREAIR, SKILL_CALLHELP, SKILL_GIGASLASH and
 ; SKILL_KODANCE).RunBattleActions_StatusChecks_CheckAction_FoeDupes scans it for wBattleActionId: an
@@ -2719,6 +2769,8 @@ RunBattleActions_StatusChecks_CheckAction_Target::
     inc [hl]
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_CheckAction_SealPray", ROMX
+
 ; Checking the action, step 3: first moves on (wBattleResolveStep += 1, wBattleSubStep = 0). When
 ; wBattleActionId matches wQueuedActionId or its pair (QueuedActionMatches), the action that
 ; RunBattleActions_StatusChecks_ShatterChecks_Detect stores when it breaks a BSTAT8_SEAL_PRAY,
@@ -2739,6 +2791,8 @@ RunBattleActions_StatusChecks_CheckAction_SealPray::
     call nz, CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_CheckAction_MPAgain", ROMX
 
 ; Checking the action, step 4: runs CheckSkillMPCost again. When the actor can pay (carry), or
 ; cannot with D = 7, goes back two sub-steps (wBattleSubStep -= 2). Otherwise calls
@@ -2761,6 +2815,8 @@ RunBattleActions_StatusChecks_CheckAction_MPAgain::
     ld hl, wBattleSubStep
     dec [hl]
     ret
+
+SECTION "Bank 32 CheckFormationPartnersCanAct", ROMX
 
 ; Called from the pair block RunBattleActions_StatusChecks_PairRefusal when the chosen action of the
 ; actor is $D0-$E3 (ActorActionIsD0ToE3). Checks the actor and its formation partner
@@ -2874,6 +2930,8 @@ CheckFormationPartnersCanAct::
     pop de
     scf
     ret
+
+SECTION "Bank 32 CheckSkillMPCost", ROMX
 
 ; Can the actor (wBattleActor) use the action in wBattleActionId? Out: carry set = yes, D unchanged;
 ; carry clear with A = 0 and D = the reason: 1 not enough MP, 2 the action matches wQueuedActionId
@@ -2999,6 +3057,8 @@ CheckSkillMPCost::
     xor a
     ret
 
+SECTION "Bank 32 CheckActorStatusAndFoeTargets", ROMX
+
 ; Seal check of CheckSkillMPCost for a skill with record byte 5 bit 6. Carry set = allowed; carry
 ; clear with A = 0 and D = 3 when the actor has BSTAT1_SPELLS_SEALED, D = 4 when bit 3 of the side
 ; flags of the actor is set (wSideFlags0 for slots 0-3, wSideFlags1 for 4-7), or D = 7 for an actor
@@ -3076,6 +3136,8 @@ CheckActorStatusAndFoeTargets::
     scf
     ret
 
+SECTION "Bank 32 CheckActorStatusBit7AndFoeBit6", ROMX
+
 ; Seal check of CheckSkillMPCost for a skill with record byte 5 bit 4. Carry set = allowed; carry
 ; clear with A = 0 and D = 5 when the actor has BSTAT1_BREATH_SEALED; for an actor with wSlotAIMode
 ; 2 or more D = 7 when every present slot of the other side has BSTAT2_WIND_GUARD (status byte 2 bit
@@ -3133,6 +3195,8 @@ CheckActorStatusBit7AndFoeBit6::
     scf
     ret
 
+SECTION "Bank 32 CheckActorStatusBit6", ROMX
+
 ; Seal check of CheckSkillMPCost for a skill with record byte 5 bit 5. Carry set = allowed; carry
 ; clear with A = 0 and D = 6 when the actor has BSTAT1_DANCE_SEALED (bit 6 of status byte 1). (C2,
 ; E-0380)
@@ -3154,6 +3218,8 @@ CheckActorStatusBit6::
 .return_carry:
     scf
     ret
+
+SECTION "Bank 32 ActionIsSpecialBFOrC9ToCF", ROMX
 
 ; Tests wBattleActionId: A = 0 and carry clear when it is $BF or $C9-$CF (actions that cost no MP
 ; and are not skills), otherwise carry set (A = the id). (C2, E-0380)
@@ -3182,6 +3248,8 @@ ActionIsSpecialBFOrC9ToCF::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 32 CheckActionD0ToE3OrSpecial", ROMX
 
 ; Pays the MP of the action in wBattleActionId: an action $D0-$E3 goes to PayActorMPCost_CpD6 (both
 ; monsters of the pair pay), a special action ($BF, $C9-$CF) returns with nothing paid, and any
@@ -3239,6 +3307,8 @@ PayActorMPCost::
     call SetBit1OfLevelUpGainsIndexed_Bank32
     ret
 
+SECTION "Bank 32 PayActorMPCost_CpD6", ROMX
+
 ; Pays the MP of a two-monster action: actions $D6 and $D9 take all MP from both the actor and its
 ; formation partner; others charge each its saved skill's cost; then reloads the actor's action
 ; record. (C2, E-0357; probed E-0380)
@@ -3289,6 +3359,8 @@ PayActorMPCost_CpD6::
     call LoadActorChosenActionRecord
     ret
 
+SECTION "Bank 32 SetSubPhase7AndResetSteps", ROMX
+
 ; wBattleSubPhase = 7 (RunBattleActions_MarkActorDone), wBattleResolveStep = 0 and wBattleSubStep =
 ; 0: ends the current action. Used when an action is refused or shattered. (C2, E-0380)
 ; wBattleSubPhase = 7, wBattleResolveStep = 0, wBattleSubStep = 0 (E-0115)
@@ -3300,6 +3372,8 @@ SetSubPhase7AndResetSteps::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_PersonalityText", ROMX
 
 ; Status checks, step 2: by the actor's personality act (bits 6, 4, 2) shows battle text $34, $32 or
 ; $30. (C1, E-0357)
@@ -3329,6 +3403,8 @@ RunBattleActions_StatusChecks_PersonalityText::
 .call_show_battle_text_category02:
     farcall ShowBattleTextCategory0
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_ShowActionText", ROMX
 
 ; Status checks, step 3: shows the action's battle text, selects its effect and, in battle kinds 4-5
 ; outside a link, remembers a foe's skill below $B0 (not $AB or $AC) for learning
@@ -3362,6 +3438,8 @@ RunBattleActions_StatusChecks_ShowActionText::
     ret nc
     ld [wLearnSkillState], a
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_BreakFree", ROMX
 
 ; Status checks, step 4: an actor held by status 3 (bits 6-7 = 1) breaks free only when it is not
 ; paralyzed and has body flag bit 4, otherwise loses the turn (sub-phase on, resolve step 6);
@@ -3433,6 +3511,8 @@ RunBattleActions_StatusChecks_BreakFree::
     farcall ShowBattleTextCategory0
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_SelectEffect", ROMX
+
 ; Status checks, step 5: once the sound channels are free goes on and, unless the action is $CD,
 ; selects its effect (flags $80). (C2, E-0357; probed E-0380)
 RunBattleActions_StatusChecks_SelectEffect::
@@ -3452,6 +3532,8 @@ RunBattleActions_StatusChecks_SelectEffect::
     farcall SelectEffectByEffectFlags
     ret
 
+SECTION "Bank 32 CompareActionIdWithCD", ROMX
+
 ; Compares wBattleActionId with $CD (carry when below, Z when equal). Called only by
 ; RunBattleActions_StatusChecks_SelectEffect. (C2, E-0380)
 ; compares wBattleActionId with $CD: carry when below, Z when equal (E-0115)
@@ -3459,6 +3541,8 @@ CompareActionIdWithCD::
     ld a, [wBattleActionId]
     cp ACTION_CD
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_ShatterChecks", ROMX
 
 ; Step 6 of RunBattleActions_StatusChecks: wBattleSubStep picks 0
 ; RunBattleActions_StatusChecks_ShatterChecks_Detect, 1
@@ -3550,6 +3634,8 @@ RunBattleActions_StatusChecks_ShatterChecks_Detect::
     inc [hl]
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_ShowGWasShattered", ROMX
+
 ; Shatter checks, step 1: battle text $B0 ('... was shattered!'). (C1, E-0357)
 RunBattleActions_StatusChecks_ShowGWasShattered::
     ld hl, wBattleSubStep
@@ -3557,6 +3643,8 @@ RunBattleActions_StatusChecks_ShowGWasShattered::
     ld d, $b0 ; battle text 'G was shattered!'
     farcall ShowBattleText
     ret
+
+SECTION "Bank 32 RunBattleActions_StatusChecks_ShowSealPrayBroken", ROMX
 
 ; Shatter checks, step 2: when a SealPray was set, battle text $92 ('SealPray was broken!') and
 ; clears it. (C1, E-0357)
@@ -3572,12 +3660,16 @@ RunBattleActions_StatusChecks_ShowSealPrayBroken::
     ld [wSealPrayState], a
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_ShatterChecks_End", ROMX
+
 ; Shatter checks, step 3: CheckActionD0ToE3OrSpecial (actions $D0-$E3 go on to PayActorMPCost_CpD6),
 ; then ends the action (SetSubPhase7AndResetSteps). (C2, E-0372; probed E-0380)
 RunBattleActions_StatusChecks_ShatterChecks_End::
     call CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     ret
+
+SECTION "Bank 32 CheckLinkRuleViolation", ROMX
 
 ; Step 7 of RunBattleActions_StatusChecks (also called by
 ; RunBattleStep4_ResolveSkill_CheckLinkRules): adds 1 to wBattleResolveStep, then returns unless
@@ -3679,6 +3771,8 @@ CheckLinkRuleViolation::
     ld [wDataBankSave], a
     ret
 
+SECTION "Bank 32 CheckLinkRuleViolation_Data", ROMX
+
 ; A table of 232 ($E8) rule-mask bytes, one per battle action id $00 to $E7. A value is a bit mask
 ; of link-battle rule groups, 0 meaning no rule applies: $00 for id 0; $40 for ids $01-$15; $10 for
 ; $16-$24; $20 for $25-$3C; $01 for $3D; $02 for $3E-$3F; $08 for $40-$47; $02 for $48-$70; $08 for
@@ -3717,6 +3811,8 @@ RunBattleActions_StatusChecks_PayActionMP::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_DroppedDead", ROMX
+
 ; Step 9 of RunBattleActions_StatusChecks: wBattleSubStep picks 0
 ; RunBattleActions_StatusChecks_ShowHeroDroppedDead (defeat the actor and show the message) and 1
 ; RunBattleActions_StatusChecks_DroppedDead_AnyLeft (go on to the next phase when its side has
@@ -3750,6 +3846,8 @@ RunBattleActions_StatusChecks_ShowHeroDroppedDead::
     inc [hl]
     ret
 
+SECTION "Bank 32 RunBattleActions_StatusChecks_DroppedDead_AnyLeft", ROMX
+
 ; Dropped dead, step 1: after the text, when the actor's side has nobody left that can act goes to
 ; the next battle phase; otherwise resolve step 7. (C2, E-0357; probed E-0380)
 RunBattleActions_StatusChecks_DroppedDead_AnyLeft::
@@ -3782,12 +3880,16 @@ RunBattleActions_StatusChecks_DroppedDead_AnyLeft::
 .return:
     ret
 
+SECTION "Bank 32 LoadBattleActor", ROMX
+
 ; A = wBattleActor. Called by RunBattleActions_StatusChecks_ShowHeroDroppedDead and
 ; RunBattleActions_StatusChecks_DroppedDead_AnyLeft. (C2, E-0380)
 ; A = wBattleActor (E-0115)
 LoadBattleActor::
     ld a, [wBattleActor]
     ret
+
+SECTION "Bank 32 SlotCStatusCheckOrBattleSlotOut", ROMX
 
 ; C = slot: in a link battle (wLinkMode 1) or for a slot below 4 it returns the carry of
 ; CheckSlotStatusBlock for slot C (absent or blocked by a status); otherwise the carry of
@@ -3810,6 +3912,8 @@ SlotCStatusCheckOrBattleSlotOut::
     call CheckSlotStatusBlock
     ret
 
+SECTION "Bank 32 ReadByteAtHLPlusA", ROMX
+
 ; HL += A (the sum carries into H), then A = the byte at HL. Used throughout bank $32 to read
 ; per-slot or per-entry bytes. (C2, E-0380)
 ; HL += A, then A = the byte at HL
@@ -3817,6 +3921,8 @@ ReadByteAtHLPlusA::
     add_a_to_hl
     ld a, [hl]
     ret
+
+SECTION "Bank 32 LoadActorChosenActionRecord", ROMX
 
 ; wBattleActionId and the first byte of wRecordBuffer = the action the actor (wBattleActor) chose
 ; (the byte at wBattleActionChoice + 2 * actor), wRecordBuffer + 1 = 0, then far-calls
@@ -3835,6 +3941,8 @@ LoadActorChosenActionRecord::
     ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
     ret
+
+SECTION "Bank 32 RunBattleStep4_ResolveSkill", ROMX
 
 ; Fight step 4, sub-phase 0 (RunBattleStep4_SkillChecks calls it once per frame): wBattleResolveStep
 ; picks 0 RunBattleStep4_SaveAndStart, 1 RunBattleStep4_ResolveSkill_CheckMP, 2
@@ -3929,6 +4037,8 @@ RunBattleStep4_SaveAndStart::
     ld [wBattleTarget], a
     ret
 
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_CheckMP", ROMX
+
 ; Fight step 4, resolve step 1: checks the MP cost; with too little builds the message, pays a
 ; two-monster action's MP if needed and goes to resolve step 5. (C1, E-0357)
 RunBattleStep4_ResolveSkill_CheckMP::
@@ -3955,6 +4065,8 @@ RunBattleStep4_ResolveSkill_CheckMP::
 .return:
     ret
 
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_ShowActionText", ROMX
+
 ; Fight step 4, resolve step 2: unless an attack was inhaled, shows the action's battle text and
 ; selects its effect. (C1, E-0357)
 RunBattleStep4_ResolveSkill_ShowActionText::
@@ -3970,6 +4082,8 @@ RunBattleStep4_ResolveSkill_ShowActionText::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_SelectEffect", ROMX
 
 ; Fight step 4, resolve step 3: once the sound channels are free selects the effect (flags $80) and
 ; goes on. (C2, E-0357; probed E-0380)
@@ -3987,6 +4101,8 @@ RunBattleStep4_ResolveSkill_SelectEffect::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_ShatterChecks", ROMX
 
 ; Fight step 4, resolve step 4: wBattleSubStep picks 0
 ; RunBattleStep4_ResolveSkill_ShatterChecks_Detect, 1 RunBattleStep4_ResolveSkill_ShowGWasShattered
@@ -4072,6 +4188,8 @@ RunBattleStep4_ResolveSkill_ShatterChecks_Detect::
     inc [hl]
     ret
 
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_ShowGWasShattered", ROMX
+
 ; Fight step 4's shatter checks, step 1: battle text $B0. (C1, E-0357)
 RunBattleStep4_ResolveSkill_ShowGWasShattered::
     ld hl, wBattleSubStep
@@ -4079,6 +4197,8 @@ RunBattleStep4_ResolveSkill_ShowGWasShattered::
     ld d, $b0 ; battle text 'G was shattered!'
     farcall ShowBattleText
     ret
+
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_ShowSealPrayWasBroken", ROMX
 
 ; Fight step 4's shatter checks, step 2: battle text $92 when a SealPray was set, and clears it.
 ; (C1, E-0357)
@@ -4094,6 +4214,8 @@ RunBattleStep4_ResolveSkill_ShowSealPrayWasBroken::
     ld [wSealPrayState], a
     ret
 
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_ShatterChecks_Done", ROMX
+
 ; Fight step 4's shatter checks, step 3: resolve step 5
 ; (RunBattleStep4_ResolveSkill_EndAfterShatter) with wBattleSubStep 0. (C2, E-0372; probed E-0380)
 RunBattleStep4_ResolveSkill_ShatterChecks_Done::
@@ -4102,6 +4224,8 @@ RunBattleStep4_ResolveSkill_ShatterChecks_Done::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_EndAfterShatter", ROMX
 
 ; Fight step 4, resolve step 5, reached only after a target's BSTAT8_SEAL_PRAY shattered the skill
 ; (the shatter checks' steps 1-3; without one, step 4 skips to step 6): wBattleSubPhase 5
@@ -4114,10 +4238,14 @@ RunBattleStep4_ResolveSkill_EndAfterShatter::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_CheckLinkRules", ROMX
+
 ; Fight step 4, resolve step 6: the link rule check (CheckLinkRuleViolation). (C1, E-0357)
 RunBattleStep4_ResolveSkill_CheckLinkRules::
     call CheckLinkRuleViolation
     ret
+
+SECTION "Bank 32 RunBattleStep4_ResolveSkill_PayActionMP", ROMX
 
 ; Fight step 4, resolve step 7: pays the MP of the action through CheckActionD0ToE3OrSpecial (any
 ; action, not only a two-monster one); then wBattleSubPhase += 1 and wBattleResolveStep and
@@ -4131,6 +4259,8 @@ RunBattleStep4_ResolveSkill_PayActionMP::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 32 ApplyDamageToTarget", ROMX
 
 ; Resolve step $0C (ResolveStepApplyDamage). It adds 2 to wBattleResolveStep, clears wBattleSubStep
 ; and, unless the top two bits of wResolveMsgArg are 00 (then it returns at once, with no HP change
@@ -4201,6 +4331,8 @@ ApplyDamageToTarget::
 .return:
     ret
 
+SECTION "Bank 32 RunDefeatSequence", ROMX
+
 ; Resolve step $0D (ResolveStepDefeat). ApplyDamageToTarget only leaves this step to run when it
 ; took the HP of the target to 0. Runs one case of wBattleSubStep2 per call: 0
 ; RunDefeatSequence_Defeat, 1 RunDefeatSequence_BlankPicture, 2 RunDefeatSequence_ShowDefeatText,
@@ -4229,12 +4361,16 @@ RunDefeatSequence_Defeat::
     call DefeatTarget
     ret
 
+SECTION "Bank 32 RunDefeatSequence_BlankPicture", ROMX
+
 ; The defeat, sub-step 1: blanks the target's picture. (C1, E-0357)
 RunDefeatSequence_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret
+
+SECTION "Bank 32 RunDefeatSequence_ShowDefeatText", ROMX
 
 ; The defeat, sub-step 2: marks the target's level-up gains (bit 2) and, unless the action took it
 ; out by itself (below), shows the defeat line: text $8A/$8B by side, for Geyser by the actor's
@@ -4269,6 +4405,8 @@ RunDefeatSequence_ShowDefeatText::
     farcall ShowBattleText
     ret
 
+SECTION "Bank 32 RunDefeatSequence_ShowDefeatText_CheckAction", ROMX
+
 ; Decides whether the defeat text of RunDefeatSequence_ShowDefeatText is shown: Z set (no text) for
 ; SKILL_BEAT and SKILL_DEFEAT; for SKILL_SACRIFICE and ACTION_D6 it subtracts 1000 from the damage
 ; word wBattleDamageLo/wBattleDamageHi by subtracting $E8 from the low byte and then $03 with borrow
@@ -4295,6 +4433,8 @@ RunDefeatSequence_ShowDefeatText_CheckAction::
     ld a, [hl]
     sbc $03
     ret
+
+SECTION "Bank 32 BlankTargetMonsterPicture", ROMX
 
 ; Overwrites the battle picture of the target with a flat pattern: it picks a picture 0, 1 or 2 and
 ; fills the 36 tiles ($24) at vTiles2 + $140, + $380 or + $5C0 with the byte pair $FF, $00, writing
@@ -4372,6 +4512,8 @@ BlankTargetMonsterPicture::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 32 DefeatTarget", ROMX
 
 ; Takes the monster in slot wBattleTarget out of the fight. It first calls RecomputeTargetMaxHPAndMP
 ; (which does nothing unless bit 4 or 5 of status byte 1 is set), clears bits 6-7 of status byte 6
@@ -4458,6 +4600,8 @@ DefeatTarget::
 .return:
     ret
 
+SECTION "Bank 32 DefeatTarget_AdjustHitsAndGuards", ROMX
+
 ; Part of DefeatTarget: when the skill targets a whole side (wRecordBufferData + $4 low nibble 2),
 ; an ally guard moved the attack (wRedirectFlags bit 1, wOriginalTarget not $FF), the defeated
 ; wBattleTarget is a higher slot than wOriginalTarget, and wMultiHitCount has bit 7 set and is not
@@ -4516,6 +4660,8 @@ DefeatTarget_AdjustHitsAndGuards::
     jr nz, .loop
     ret
 
+SECTION "Bank 32 ResetTargetAGLAndDEFToBase", ROMX
+
 ; Sets wBattleAGL and wBattleDEF of the slot wBattleTarget back to the base values of its battler
 ; record (GetBaseAGL, GetBaseDEF); the other stats are not touched. All registers and the word
 ; wBattleStatResultLo/wBattleStatResultHi are kept. DefeatTarget and RestoreTransformedStats call it
@@ -4564,6 +4710,8 @@ ResetTargetAGLAndDEFToBase::
     pop bc
     pop af
     ret
+
+SECTION "Bank 32 RecomputeTargetMaxHPAndMP", ROMX
 
 ; Does nothing unless bit 4 or 5 of status byte 1 of wBattleTarget is set (BSTAT1_DRAGON_FORM,
 ; BSTAT1_TRANSFORMED). Otherwise it rebuilds the slot from its battler record: with bit 5 it first
@@ -4780,6 +4928,8 @@ RecomputeTargetMaxHPAndMP::
     farcall PackResistancesFromBattleArgs
     ret
 
+SECTION "Bank 32 RecomputeTargetMaxHPAndMP_TargetSlot", ROMX
+
 ; C = the target slot (into the name-byte reset below). (C2, E-0357; probed E-0380)
 RecomputeTargetMaxHPAndMP_TargetSlot::
     ld a, [wBattleTarget]
@@ -4807,6 +4957,8 @@ ResetFoeSlotNameToSpecies::
     add_a_to_hl
     ld [hl], $ff
     ret
+
+SECTION "Bank 32 RestoreTransformedStats", ROMX
 
 ; Clears wSideFlags0 and wSideFlags1, then for slots 0 and 1, but only those still in the fight
 ; (wBattleSlotOut clear), runs RecomputeTargetMaxHPAndMP, restores AGL and DEF when status byte 6
@@ -4882,6 +5034,8 @@ RestoreTransformedStats::
     ld [hli], a
     ld [hl], a
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect", ROMX
 
 ; Resolve step $0E (ResolveStep0ECallEffect): the effect of the action, run by wBattleSubStep: 0
 ; ResolveStep0EEffect_Start chooses the path from wBattleActionId, 1 ResolveStep0EEffect_ShowMessage
@@ -5100,6 +5254,8 @@ ResolveStep0EEffect_Start::
     ld [wEffectSubStep], a
     jp SetBattleSubStep1
 
+SECTION "Bank 32 ResolveStep0EEffect_Start_PickRandomAttack", ROMX
+
 ; Advances the random number and writes a new command for wBattleActor in wBattleActionChoice: the
 ; action is entry wRandomLo & 3 of the table after the routine, which holds only zeros
 ; (ACTION_FIGHT); for action 0 the target is slot (wRandomLo & 3) of the other side, moving down to
@@ -5155,6 +5311,8 @@ ResolveStep0EEffect_Start_PickRandomAttack::
     ld [hl], a
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_Start_PickRandomAttack_Data", ROMX
+
 ; Five bytes, all $00 (ACTION_FIGHT). ResolveStep0EEffect_Start_PickRandomAttack indexes it by
 ; wRandomLo masked with 3 (entries 0 to 3) to pick the action id it stores in wBattleActionChoice
 ; for wBattleActor, so every pick is the plain attack; the fifth byte is not reached by that index.
@@ -5174,6 +5332,8 @@ ResolveStep0EEffect_ShowMessage::
     inc [hl]
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_Finish", ROMX
+
 ; Resolve step $0E, sub-step 2 (also sub-step 1 when wEffectSubStep is 0, no message): the next
 ; resolve step, with wBattleSubStep 0. (C2, E-0372; probed E-0380)
 ResolveStep0EEffect_Finish::
@@ -5182,6 +5342,8 @@ ResolveStep0EEffect_Finish::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Recoil", ROMX
 
 ; Sub-step 3 of ResolveStep0EEffect, started for SKILL_RAMMING; runs the case of wBattleSubStep2: 0
 ; ResolveStep0EEffect_Recoil_Start, 1 ResolveStep0EEffect_Recoil_LoseHP (the actor loses most of its
@@ -5210,6 +5372,8 @@ ResolveStep0EEffect_Recoil_Start::
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Recoil_LoseHP", ROMX
 
 ; The recoil effect, sub-step 1: the actor loses four fifths of its HP plus one (shown as the
 ; damage, text $35/$36 by side); at 0 HP it falls (sub-step 2). (C1, E-0357)
@@ -5297,6 +5461,8 @@ ResolveStep0EEffect_Recoil_LoseHP::
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_Recoil_DefeatActor", ROMX
+
 ; The recoil effect, sub-step 2: the actor's defeat (RecoilEffect_DefeatSteps) with the actor as
 ; target. (C1, E-0357)
 ResolveStep0EEffect_Recoil_DefeatActor::
@@ -5308,6 +5474,8 @@ ResolveStep0EEffect_Recoil_DefeatActor::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
+
+SECTION "Bank 32 RecoilEffect_DefeatSteps", ROMX
 
 ; The defeat steps of the actor in the recoil effect: runs the case of wEffectSubStep, 0
 ; RecoilEffect_DefeatSteps_Defeat, 1 RecoilEffect_DefeatSteps_BlankPicture, 2
@@ -5335,12 +5503,16 @@ RecoilEffect_DefeatSteps_Defeat::
     call DefeatTarget
     ret
 
+SECTION "Bank 32 RecoilEffect_DefeatSteps_BlankPicture", ROMX
+
 ; A defeat, step 1: blanks the target's picture. (C1, E-0357)
 RecoilEffect_DefeatSteps_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
+
+SECTION "Bank 32 RecoilEffect_DefeatSteps_ShowDefeatText", ROMX
 
 ; A defeat, step 2: marks its level-up gains (bit 2) and shows text $90 ($8D for a foe actor); then
 ; the next sub-step. (C1, E-0357)
@@ -5364,6 +5536,8 @@ RecoilEffect_DefeatSteps_ShowDefeatText::
     ld [wEffectSubStep], a
     ret
 
+SECTION "Bank 32 SetBattleSubStep1", ROMX
+
 ; Sets wBattleSubStep2 to 0 and wBattleSubStep to 1, which sends the effect of resolve step $0E back
 ; to ResolveStep0EEffect_ShowMessage (then ResolveStep0EEffect_Finish). The status cases of
 ; ResolveStep0EEffect_Start jump here when they have no effect, SkipTurnIfActorAbsent calls it, and
@@ -5375,6 +5549,8 @@ SetBattleSubStep1::
     ld a, $01
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Brutalize", ROMX
 
 ; Sub-step 4 of ResolveStep0EEffect, started for SKILL_KAMIKAZE; runs the case of wBattleSubStep2: 0
 ; ResolveStep0EEffect_Brutalize_Start, 1 ResolveStep0EEffect_Brutalize_LeaveOneHP (the actor is left
@@ -5404,6 +5580,8 @@ ResolveStep0EEffect_Brutalize_Start::
     ld hl, wBattleSubStep2
     inc [hl]
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Brutalize_LeaveOneHP", ROMX
 
 ; The Brutalize effect, sub-step 1: leaves the actor at 1 HP (0 when it had exactly 1, which defeats
 ; it) with battle text $38. (C1, E-0357)
@@ -5457,6 +5635,8 @@ ResolveStep0EEffect_Brutalize_LeaveOneHP::
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_Brutalize_DefeatActor", ROMX
+
 ; The Brutalize effect, sub-step 2: defeats the actor (ResolveStep0EEffect_Brutalize_DefeatTarget
 ; with wBattleActor as wBattleTarget), keeping the target in wLoadSlot and restoring it; the
 ; defeat's last step advances wBattleSubStep2. (C1, E-0372)
@@ -5469,6 +5649,8 @@ ResolveStep0EEffect_Brutalize_DefeatActor::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Brutalize_DefeatTarget", ROMX
 
 ; The defeat steps of the actor in the Brutalize effect: runs the case of wEffectSubStep, 0
 ; ResolveStep0EEffect_Brutalize_DefeatTarget_Defeat, 1
@@ -5496,12 +5678,16 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_Defeat::
     call DefeatTarget
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_Brutalize_DefeatTarget_Blank", ROMX
+
 ; The Brutalize defeat, step 1: blanks the picture. (C1, E-0357)
 ResolveStep0EEffect_Brutalize_DefeatTarget_Blank::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Brutalize_DefeatTarget_Message", ROMX
 
 ; The Brutalize defeat, step 2 (wEffectSubStep 2 of ResolveStep0EEffect_Brutalize_DefeatTarget):
 ; sets bit 2 of the target's level-up gains entry, shows battle text $90 when the actor is on the
@@ -5527,10 +5713,14 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_Message::
     ld [wEffectSubStep], a
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_Brutalize_Finish", ROMX
+
 ; The Brutalize effect, sub-step 3: back to resolve sub-step 1. (C2, E-0357; probed E-0380)
 ResolveStep0EEffect_Brutalize_Finish::
     call SetBattleSubStep1
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Sacrifice", ROMX
 
 ; Resolve step $0E, sub-step 5 (Sacrifice, Farewell, LifeDance and action $D6): for $D6 switches to
 ; the formation partner once; then by sub-step: the actor check, the cost, the defeat and the end.
@@ -5567,6 +5757,8 @@ ResolveStep0EEffect_Sacrifice_CheckActor::
     call CarryUnlessBattleSlotOutSlotEmpty
     jp c, ResolveStep0EEffect_Sacrifice_End
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_Sacrifice_LoseHP", ROMX
 
 ; The sacrifice, step 1: marks the actor's level-up gains bit 0; half the time (wRandomLo bit 0) the
 ; actor loses all but 1% of its HP (at least 1 kept) with battle text $38 ('0 was brutalized!', the
@@ -5670,6 +5862,8 @@ ResolveStep0EEffect_Sacrifice_LoseHP::
 .return:
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_Sacrifice_DefeatActor", ROMX
+
 ; The sacrifice, step 2: the actor's defeat with the actor as target. (C1, E-0357)
 ResolveStep0EEffect_Sacrifice_DefeatActor::
     ld a, [wBattleTarget]
@@ -5680,6 +5874,8 @@ ResolveStep0EEffect_Sacrifice_DefeatActor::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
+
+SECTION "Bank 32 SacrificeEffect_DefeatSteps", ROMX
 
 ; The defeat steps of the actor in the Sacrifice effect: runs the case of wEffectSubStep, 0
 ; SacrificeEffect_DefeatSteps_Defeat, 1 SacrificeEffect_DefeatSteps_BlankPicture, 2
@@ -5706,12 +5902,16 @@ SacrificeEffect_DefeatSteps_Defeat::
     call DefeatTarget
     ret
 
+SECTION "Bank 32 SacrificeEffect_DefeatSteps_BlankPicture", ROMX
+
 ; The sacrifice's defeat, step 1: blanks the picture. (C1, E-0357)
 SacrificeEffect_DefeatSteps_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
+
+SECTION "Bank 32 SacrificeEffect_DefeatSteps_ShowHeroDroppedDead", ROMX
 
 ; The sacrifice's defeat, step 2: marks the level-up gains and shows text $8C for LifeDance, else
 ; $90 ($8D for a foe). (C1, E-0357)
@@ -5766,11 +5966,15 @@ ResolveStep0EEffect_Sacrifice_End::
     ld [wBattleSubStep2], a
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_DoNothing", ROMX
+
 ; Resolve step $0E, sub-steps 6, 7 and 8: a bare ret, so nothing advances; ResolveStep0EEffect_Start
 ; sets only sub-steps 1, 3, 4, 5 and 9, and no write of 6-8 was found in the routines read here.
 ; (C2, E-0372; probed E-0380)
 ResolveStep0EEffect_DoNothing::
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_QuarterRecoil", ROMX
 
 ; Sub-step 9 of ResolveStep0EEffect, started for SKILL_TWINSLASH; runs the case of wBattleSubStep2:
 ; 0 ResolveStep0EEffect_QuarterRecoil_Start, 1 ResolveStep0EEffect_QuarterRecoil_LoseHP (the actor
@@ -5801,6 +6005,8 @@ ResolveStep0EEffect_QuarterRecoil_Start::
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
     ret
+
+SECTION "Bank 32 ResolveStep0EEffect_QuarterRecoil_LoseHP", ROMX
 
 ; The quarter-recoil effect, sub-step 1: the actor loses a quarter of the damage dealt (at least 1)
 ; with text $35/$36 by side; at 0 HP it falls. (C1, E-0357)
@@ -5904,6 +6110,8 @@ ResolveStep0EEffect_QuarterRecoil_LoseHP::
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_QuarterRecoil_DefeatActor", ROMX
+
 ; The quarter-recoil effect, sub-step 2: the actor's defeat with the actor as target. (C1, E-0357)
 ResolveStep0EEffect_QuarterRecoil_DefeatActor::
     ld a, [wBattleTarget]
@@ -5914,6 +6122,8 @@ ResolveStep0EEffect_QuarterRecoil_DefeatActor::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
+
+SECTION "Bank 32 QuarterRecoilEffect_DefeatSteps", ROMX
 
 ; The defeat steps of the actor in the quarter-recoil effect: runs the case of wEffectSubStep, 0
 ; QuarterRecoilEffect_DefeatSteps_Defeat, 1 QuarterRecoilEffect_DefeatSteps_BlankPicture, 2
@@ -5939,12 +6149,16 @@ QuarterRecoilEffect_DefeatSteps_Defeat::
     call DefeatTarget
     ret
 
+SECTION "Bank 32 QuarterRecoilEffect_DefeatSteps_BlankPicture", ROMX
+
 ; A defeat, step 1: blanks the picture. (C1, E-0357)
 QuarterRecoilEffect_DefeatSteps_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
+
+SECTION "Bank 32 QuarterRecoilEffect_DefeatSteps_ShowDefeatText", ROMX
 
 ; A defeat, step 2: marks the level-up gains and shows text $90 ($8D for a foe); then the next
 ; sub-step. (C1, E-0357)
@@ -5968,10 +6182,14 @@ QuarterRecoilEffect_DefeatSteps_ShowDefeatText::
     ld [wEffectSubStep], a
     ret
 
+SECTION "Bank 32 ResolveStep0EEffect_QuarterRecoil_Finish", ROMX
+
 ; The quarter-recoil effect, sub-step 3: back to resolve sub-step 1. (C2, E-0357; probed E-0380)
 ResolveStep0EEffect_QuarterRecoil_Finish::
     call SetBattleSubStep1
     ret
+
+SECTION "Bank 32 ActionEffect_Surge_CureTarget", ROMX
 
 ; Far-called by ActionEffect_Surge: marks the target done (SetTargetSlotMarksTo3) when it was
 ; asleep, paralyzed or confused (status 0 and $D0), clears status byte 0 and marks its level-up
@@ -6052,6 +6270,8 @@ ActionEffect_Surge_CureTarget::
     ld [hl], a
     ret
 
+SECTION "Bank 32 SetTargetSlotMarksTo3", ROMX
+
 ; Sets wSlotMarks[wBattleTarget] to 3 and keeps BC, DE and HL (A is not kept).
 ; ActionEffect_Surge_CureTarget and ActionEffect_DeMagic_ClearTargetStatus call it for a target that
 ; has a status they are about to remove. (C2, E-0380)
@@ -6117,6 +6337,8 @@ ActionEffect_DeMagic_ClearTargetStatus::
     ld [hl], a
     ret
 
+SECTION "Bank 32 RunBattleSubStep", ROMX
+
 ; Resolve step 5 of an action (RunActionResolveStep_EffectSubSteps): runs the case of
 ; wBattleSubStep, 0 RunBattleSubStep_SelectEffect, 1 RunBattleSubStep_DealDamage, 2
 ; RunBattleSubStep_DefeatDamagedSlot. (C1, E-0380)
@@ -6137,6 +6359,8 @@ RunBattleSubStep_SelectEffect::
     farcall SelectEffectByEffectFlags
     farcall SelectEffectByEffectFlags2Flags
     ret
+
+SECTION "Bank 32 RunBattleSubStep_DealDamage", ROMX
 
 ; The effect, sub-step 1: takes the damage from the target's HP (to 0 at most), marks its level-up
 ; gains (bit 0) and shows text $35 ($36 for a foe actor), swapping actor and target for the message;
@@ -6202,6 +6426,8 @@ RunBattleSubStep_DealDamage::
     ld [wBattleActor], a
     ret
 
+SECTION "Bank 32 RunBattleSubStep_DefeatDamagedSlot", ROMX
+
 ; The effect, sub-step 2 (after RunBattleSubStep_DealDamage left the damaged slot at 0 HP):
 ; RunBattleSubStep_DealDamage swapped wBattleActor and wBattleTarget after its message, so the slot
 ; now in wBattleActor is the one that took the damage; runs RunBattleSubStep_DefeatSteps with it as
@@ -6215,6 +6441,8 @@ RunBattleSubStep_DefeatDamagedSlot::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
+
+SECTION "Bank 32 RunBattleSubStep_DefeatSteps", ROMX
 
 ; The defeat steps after RunBattleSubStep_DealDamage took a slot to 0 HP: runs the case of
 ; wBattleSubStep2, 0 RunBattleSubStep_DefeatSteps_Defeat, 1
@@ -6241,12 +6469,16 @@ RunBattleSubStep_DefeatSteps_Defeat::
     call DefeatTarget
     ret
 
+SECTION "Bank 32 RunBattleSubStep_DefeatSteps_BlankPicture", ROMX
+
 ; The effect's defeat, step 1: blanks the picture. (C1, E-0357)
 RunBattleSubStep_DefeatSteps_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret
+
+SECTION "Bank 32 RunBattleSubStep_DefeatSteps_ShowDefeatText", ROMX
 
 ; The effect's defeat, step 2: marks the level-up gains and shows text $8A ($8B for a foe actor),
 ; then the next resolve step with the hits ended ($81). (C1, E-0357)
@@ -6274,6 +6506,8 @@ RunBattleSubStep_DefeatSteps_ShowDefeatText::
     ld [wMultiHitCount], a
     ret
 
+SECTION "Bank 32 SkipTurnIfActorAbsent", ROMX
+
 ; When wBattleSlotOut[wBattleActor] is non-zero (the actor is not in the fight; carry set by
 ; CarryUnlessBattleSlotOutSlotEmpty) it runs SetBattleSubStep1 and returns carry set so that the
 ; caller can return; for a present actor it returns carry clear and changes nothing.
@@ -6289,6 +6523,8 @@ SkipTurnIfActorAbsent::
     scf
     ret
 
+SECTION "Bank 32 ScaleHLTo80Percent_Bank32", ROMX
+
 ; HL = HL * 8 / 10, computed with a 24-bit product (Multiply8By16) and Divide24ByA; A = the
 ; remainder; DE is kept and BC is not. Used by ResolveStep0EEffect_Recoil_LoseHP. (C2, E-0380)
 ; HL = HL * 8 / 10 (24-bit intermediate; Multiply8By16 then Divide24ByA), A = the remainder; DE kept
@@ -6303,6 +6539,8 @@ ScaleHLTo80Percent_Bank32::
     call Divide24ByA
     pop de
     ret
+
+SECTION "Bank 32 UseItemDefeat_RunSteps", ROMX
 
 ; The defeat steps of an item use: runs the case of wBattleSubStep2, 0
 ; UseItemDefeat_RunSteps_Defeat, 1 UseItemDefeat_RunSteps_BlankPicture, 2
@@ -6331,12 +6569,16 @@ UseItemDefeat_RunSteps_Defeat::
     call DefeatTarget
     ret
 
+SECTION "Bank 32 UseItemDefeat_RunSteps_BlankPicture", ROMX
+
 ; Another defeat, step 1: blanks the picture. (C1, E-0357)
 UseItemDefeat_RunSteps_BlankPicture::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret
+
+SECTION "Bank 32 UseItemDefeat_RunSteps_ShowDefeatText", ROMX
 
 ; Another defeat, step 2: marks the level-up gains and shows text $8A/$8B by the target's side; then
 ; the next resolve step. (C1, E-0357)
@@ -6355,6 +6597,8 @@ UseItemDefeat_RunSteps_ShowDefeatText::
 .call_show_battle_text:
     farcall ShowBattleText
     ret
+
+SECTION "Bank 32 ApplyDamageModifiers", ROMX
 
 ; Looks at bits 0-3 of status byte 7 of wBattleTarget, clears them (bits 4-7 stay) and then applies
 ; only the first one found to the damage word wBattleDamageLo/wBattleDamageHi: bit 0 doubles it,
@@ -6416,12 +6660,16 @@ GetBattleMaxMP_Bank32::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_Bank32
 
+SECTION "Bank 32 GetBattleHP_Bank32", ROMX
+
 ; A = battle slot: HL = the word wBattleHP[slot], A = its low byte (the shared tail
 ; GetBattleStatWord_Bank32 does the indexing). (C2, E-0380)
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
 GetBattleHP_Bank32::
     ld hl, wBattleHP
     jr GetBattleStatWord_Bank32
+
+SECTION "Bank 32 GetBattleMP_Bank32", ROMX
 
 ; A = battle slot: HL = the word wBattleMP[slot], A = its low byte (the shared tail
 ; GetBattleStatWord_Bank32 does the indexing). (C2, E-0380)
@@ -6439,6 +6687,8 @@ ReadSlotAIModeIndexed_Bank32::
     ld a, [hl]
     ret
 
+SECTION "Bank 32 GetBattleStatWord_Bank32", ROMX
+
 ; The shared tail of GetBattleMaxMP_Bank32, GetBattleHP_Bank32 and GetBattleMP_Bank32 (and of two
 ; unlabeled ld hl / jr loaders in the db bytes beside them): HL = a per-slot word table, A = slot:
 ; returns HL = the word at HL + 2 * A (A doubled in 8 bits) and A = its low byte (deref_hl). (C2,
@@ -6449,6 +6699,8 @@ GetBattleStatWord_Bank32::
     deref_hl
     ret
 
+SECTION "Bank 32 AddDoubleAToHL_Bank32", ROMX
+
 ; HL += 2 * A, where A is doubled in 8 bits first (so $90 adds $20); A is clobbered and BC and DE
 ; are kept. Used to index the per-slot word arrays such as wBattleHP. (C2, E-0380)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
@@ -6457,6 +6709,8 @@ AddDoubleAToHL_Bank32::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank 32 ActorOnLocalSide_Bank32", ROMX
 
 ; Carry set when wBattleActor is a slot of the local side: slots 0-3, or slots 4-7 when wLinkMode is
 ; 1 and wLinkRole bit 1 is set (the sides are reversed on that Game Boy); carry clear otherwise. A =
@@ -6482,6 +6736,8 @@ ActorOnLocalSide_Bank32::
     cp $04
     ret
 
+SECTION "Bank 32 TargetOnLocalSide_Bank32", ROMX
+
 ; Carry set when wBattleTarget is a slot of the local side: slots 0-3, or slots 4-7 when wLinkMode
 ; is 1 and wLinkRole bit 1 is set (the sides are reversed on that Game Boy); carry clear otherwise.
 ; A = wBattleTarget on return. (C2, E-0380)
@@ -6505,6 +6761,8 @@ TargetOnLocalSide_Bank32::
     cp $04
     ret
 
+SECTION "Bank 32 ClearBattleStatusBitsWithMaskD_Bank32", ROMX
+
 ; ANDs status byte 0 of slot E with entry D of ClearBattleStatusBitsWithMaskD_Bank32_Data. (C2,
 ; E-0357; probed E-0380)
 ClearBattleStatusBitsWithMaskD_Bank32::
@@ -6519,6 +6777,8 @@ ClearBattleStatusBitsWithMaskD_Bank32::
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 32 ClearBattleStatusBitsWithMaskD_Bank32_Data", ROMX
 
 ; Seven AND masks for the first status byte of a battler (BSTAT0_*): $DF clears bit 5
 ; (BSTAT0_CURSED), $FE bit 0 (BSTAT0_POISONED), $00 all bits, $FD bit 1 (BSTAT0_BADLY_POISONED), $73
@@ -6540,6 +6800,8 @@ SetBit0OfLevelUpGainsIndexed_Bank32::
     pop hl
     ret
 
+SECTION "Bank 32 SetBit1OfLevelUpGainsIndexed_Bank32", ROMX
+
 ; A = battle slot: sets bit 1 of wLevelUpGains[slot]; HL is kept, A is clobbered. (C2, E-0380)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
@@ -6551,6 +6813,8 @@ SetBit1OfLevelUpGainsIndexed_Bank32::
     pop hl
     ret
 
+SECTION "Bank 32 SetBit2OfLevelUpGainsIndexed_Bank32", ROMX
+
 ; A = battle slot: sets bit 2 of wLevelUpGains[slot]; HL is kept, A is clobbered. (C2, E-0380)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
@@ -6561,6 +6825,8 @@ SetBit2OfLevelUpGainsIndexed_Bank32::
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank 32 PersonalityIndexOfSlot_Bank32", ROMX
 
 ; A = battle slot 0-7: returns A = 9 * g(wSlotPersonalityHi[slot]) + 3 *
 ; g(wSlotPersonalityMid[slot]) + g(wSlotPersonalityLo[slot]), a number from 0 to 26, with g(v) = 0
@@ -6625,6 +6891,8 @@ PersonalityIndexOfSlot_Bank32::
     pop hl
     ret
 
+SECTION "Bank 32 CheckSlotStatusBlockWide_Bank32", ROMX
+
 ; A = battle slot: carry set when CheckSlotStatusBlock sets it (absent slot, status byte 0 AND $D0,
 ; byte 3 AND $3F, byte 5 AND $C0 or bit 3 of byte 8), or when byte 3 AND $C0 or byte 4 AND $0C is
 ; non-zero, so any bit of byte 3 counts; carry clear otherwise. A, BC and HL are kept. (C2, E-0380)
@@ -6656,6 +6924,8 @@ CheckSlotStatusBlockWide_Bank32::
     pop bc
     pop hl
     ret
+
+SECTION "Bank 32 SlotHasStatus3Or4Bits_Bank32", ROMX
 
 ; A = battle slot: returns A = status byte 3 AND $C0 of that slot, or, when that is 0, status byte 4
 ; AND $0C; Z set when both are 0. HL is kept. (C2, E-0380)

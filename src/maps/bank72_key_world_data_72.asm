@@ -1,7 +1,7 @@
 ; ROM bank $72: key-world data
 ; The annotated listing of this bank is build/listing/bank72.asm.
 
-SECTION "Bank 72", ROMX[$4000], BANK[$72]
+SECTION "Bank 72", ROMX
     db $72
 
 ; LoadMapScreen_Type5 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with

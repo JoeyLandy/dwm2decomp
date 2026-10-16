@@ -1,7 +1,7 @@
 ; ROM bank $39: battle target choice
 ; The annotated listing of this bank is build/listing/bank39.asm.
 
-SECTION "Bank 39", ROMX[$4000], BANK[$39]
+SECTION "Bank 39", ROMX
     db $39
 
 ; Picks the target of the action chosen for wBattleActor. wBattleActionId = the action id in
@@ -53,6 +53,8 @@ ChooseActionTarget::
     call JumpToWordAtHL
     ret
 
+SECTION "Bank 39 TargetRandomFoe", ROMX
+
 ; Target = a random present foe: the opposite side is slots 4-6 for an actor in 0-3 and 0-2 for an
 ; actor in 4-7; the first present slot is taken, and each later present one replaces it when bit 7
 ; of wRandomLo is set after AdvanceRandom, so later slots are favoured. $FF is stored when no foe is
@@ -66,6 +68,8 @@ TargetRandomFoe::
     and $04
     xor $04
     jp TargetRandomPresentOfThree
+
+SECTION "Bank 39 TargetSavedSlotOrRandomFoe", ROMX
 
 ; Target = the slot saved in wSavedActionChoices + 1 + 2 x wBattleActor when that slot is present
 ; (any slot 0-7 with wBattleSlotOut 0, not only a foe); otherwise TargetRandomFoe chooses. A saved
@@ -91,6 +95,8 @@ TargetSavedSlotOrRandomFoe::
     add_a_to_hl
     ld [hl], c
     ret
+
+SECTION "Bank 39 TargetFirstFoe", ROMX
 
 ; Target = the first present slot of the opposite side in slot order (4, 5, 6 for an actor in 0-3;
 ; 0, 1, 2 for an actor in 4-7); the first slot of the side plus 3 (7 or 3) when none is present. No
@@ -120,6 +126,8 @@ TargetFirstFoe::
     ld [hl], c
     ret
 
+SECTION "Bank 39 TargetRandomAlly", ROMX
+
 ; Target = a random present slot of the actor own side, the actor included: A = wBattleActor & 4
 ; goes to TargetRandomPresentOfThree (first present slot, each later one replacing it when bit 7 of
 ; wRandomLo is set after AdvanceRandom); $FF when none is present. (C2, E-0382)
@@ -129,6 +137,8 @@ TargetRandomAlly::
     ld a, [wBattleActor]
     and $04
     jp TargetRandomPresentOfThree
+
+SECTION "Bank 39 TargetFirstAlly", ROMX
 
 ; Target = the first present slot of the actor own side in slot order, the actor itself included;
 ; the first slot plus 3 (3 or 7) when none is present. No random number is used. (C2, E-0382)
@@ -155,6 +165,8 @@ TargetFirstAlly::
     add_a_to_hl
     ld [hl], c
     ret
+
+SECTION "Bank 39 TargetRandomAllySlot", ROMX
 
 ; Target = one of the three slots of the actor own side chosen by three coin flips, one
 ; AdvanceRandom each, bit 7 of wRandomLo: the last slot whose flip is set, or the first slot when
@@ -185,6 +197,8 @@ TargetRandomAllySlot::
     add_a_to_hl
     ld [hl], d
     ret
+
+SECTION "Bank 39 TargetRandomOtherAlly", ROMX
 
 ; Target = a present slot of the actor own side other than the actor: the first such slot, and each
 ; later one replaces it when bit 7 of wRandomLo is set after AdvanceRandom (no random number is
@@ -240,6 +254,8 @@ TargetRandomOtherAlly::
     ld [hl], d
     ret
 
+SECTION "Bank 39 TargetSelf", ROMX
+
 ; Target = wBattleActor itself, with no check. It fills 446 of the 2280 entries of the tables
 ; ActionTargetRoutines0 to ActionTargetRoutines4, the second most common entry after TargetFirstFoe.
 ; (C2, E-0382)
@@ -253,6 +269,8 @@ TargetSelf::
     ld [hl], a
     ret
 
+SECTION "Bank 39 TargetOwnSideFirstSlot", ROMX
+
 ; Target = wBattleActor & 4, the first slot (0 or 4) of the actor own side; presence is not checked.
 ; The tables list it for actions 32, 123, 187 and 206. (C2, E-0382)
 ; target = wBattleActor & 4, slot 0 or 4 of the actor's side; presence is not checked (E-0061)
@@ -265,6 +283,8 @@ TargetOwnSideFirstSlot::
     and $04
     ld [hl], a
     ret
+
+SECTION "Bank 39 TargetRandomOtherSlot", ROMX
 
 ; Target = a random slot 0-7 other than the actor: it draws wRandomLo & 7 after AdvanceRandom until
 ; the slot is not the actor, is present, and is not slot 3 or 7 (slot & 3 = 3), then stores that
@@ -294,6 +314,8 @@ TargetRandomOtherSlot::
     and $07
     ld [hl], a
     ret
+
+SECTION "Bank 39 TargetRandomPresentOfThree", ROMX
 
 ; Picks a target among the three slots from A: the first present one, then each later present one
 ; takes its place on a coin flip (random bit 7); stores it as the actor's target choice ($FF when
@@ -330,6 +352,8 @@ TargetRandomPresentOfThree::
     add_a_to_hl
     ld [hl], d
     ret
+
+SECTION "Bank 39 ActionTargetModeTable", ROMX
 
 ; ChooseActionTarget reads the record at $41AC + 4 * wSlotAIMode[actor] and takes the second word
 ; for battlers 4-7 when wLinkMode is 0 or 2, else the first; it then calls entry wBattleActionId of
@@ -2786,6 +2810,8 @@ ChooseTarget_SquallHit::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_SquallHit_2", ROMX
+
 ; SquallHit's other target routine: as ChooseTarget_SquallHit, but also leaving out foes under
 ; AquaWall (status 2 bit 3) or Ironize (status 5 bits 6-7) and requiring one foe that no status
 ; blocks (CheckSlotStatusBlock) before estimating the damage. (C1, E-0357)
@@ -2928,6 +2954,8 @@ ChooseTarget_SquallHit_2::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Heal", ROMX
+
 ; Heal: E = the actor's side, D = 3, then the most-hurt search (ChooseTarget_Heal_RateAllies). (C2,
 ; E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -3009,6 +3037,8 @@ ChooseTarget_Heal_RateAllies::
     jr nz, ChooseTarget_Heal_RateAllies
     call ChooseTarget_Heal_MostHurt
     ret
+
+SECTION "Bank 39 ChooseTarget_Heal_2", ROMX
 
 ; Heal (another): sums the max HP of the present allies, except that an ally with body flag bit 0
 ; (wSlotBodyFlags) adds 30 x BC (BC is the loop pair, b = slots left and c = slot, not its max HP;
@@ -3174,6 +3204,8 @@ ChooseTarget_Heal_2::
     ld d, $03
     jp ChooseTarget_Heal_RateAllies
 
+SECTION "Bank 39 ChooseTarget_Vivify", ROMX
+
 ; Vivify's target: one of the fallen allies (wBattleSlotOut 1), each later one replacing the first
 ; on a coin flip; with none, the actor itself. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -3256,6 +3288,8 @@ ChooseTarget_Vivify::
     add_a_to_hl
     ld [hl], c
     ret
+
+SECTION "Bank 39 ChooseTarget_Antidote", ROMX
 
 ; Antidote's target: a badly poisoned ally (BSTAT0_BADLY_POISONED; one at random among three, a coin
 ; flip between two), otherwise a poisoned one (BSTAT0_POISONED); stored as the actor's target
@@ -3392,6 +3426,8 @@ ChooseTarget_Antidote::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_TwinHits", ROMX
+
 ; TwinHits' target: the ally (own side) with the highest ATK, leaving out empty slots, paralyzed
 ; ones (BSTAT0_PARALYZED) and those already ATK-doubled (BSTAT1_ATK_DOUBLED); ties go to the later
 ; one on a coin flip; with none, the actor itself. (C2, E-0357; probed E-0382)
@@ -3476,6 +3512,8 @@ ChooseTarget_TwinHits::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Upper", ROMX
+
 ; Upper's target: of the present allies, only those whose DEF is above the value BuffCapOfBaseDEF
 ; gives are kept (HL = that value, BC = DEF, skipped without carry; read literally this passes
 ; allies already past the cap), and the one with the lowest DEF is taken; with none, the actor
@@ -3543,6 +3581,8 @@ ChooseTarget_Upper::
     ld [hl], c
     ret
 
+SECTION "Bank 39 ChooseTarget_Sap", ROMX
+
 ; Sap's target: a foe without BSTAT2_BOUNCE whose DEF is at least 2, leaving out Sap resistance
 ; (byte 3 bits 4-5) 3; the lowest level wins, the later one on ties (SetActorTargetFromHRAMChoice).
 ; (C2, E-0357; probed E-0382)
@@ -3605,6 +3645,8 @@ ChooseTarget_Sap::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_Slow", ROMX
+
 ; Slow's target: as Sap's (ChooseTarget_Sap) but by AGL: a foe without bounce, AGL at least 2; it
 ; reads the Sap resistance field (byte 3 bits 4-5) too, not Slow's (bits 2-3), the lowest level
 ; winning. (C2, E-0357; probed E-0382)
@@ -3666,6 +3708,8 @@ ChooseTarget_Slow::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_Speed", ROMX
 
 ; Speed's target: as Upper's (ChooseTarget_Upper) but with AGL and BuffCapOfBaseAGL: only allies
 ; whose AGL is above that value, the lowest AGL taken; with none, the actor itself. (C2, E-0357;
@@ -3733,6 +3777,8 @@ ChooseTarget_Speed::
     ld [hl], c
     ret
 
+SECTION "Bank 39 ChooseTarget_UltraDown", ROMX
+
 ; UltraDown's target: a foe whose DEF or AGL is at least 2, leaving out level 3 of the field it
 ; reads, Beat's (byte 2 bits 4-5); the lowest level wins, the later one on ties; without one, the
 ; last foe that passed the stat check, else the last present one (SetActorTargetFromHRAMChoice).
@@ -3798,6 +3844,8 @@ ChooseTarget_UltraDown::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_Cover", ROMX
 
 ; Cover's target: of the allies other than the actor, those with HP x 10 below their max HP (under a
 ; tenth), the one with the least; the last such ally is also kept in hTemp5; finished by
@@ -3865,6 +3913,8 @@ ChooseTarget_Cover::
     call ChooseTarget_Cover_StoreChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_MouthShut", ROMX
+
 ; MouthShut's target: a foe with at least one mouth skill (ChooseTarget_MouthShut_CountMouthSkills)
 ; not already breath-sealed, leaving out MouthShut resistance (byte 6 bits 6-7) 3; the lowest level
 ; wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
@@ -3922,6 +3972,8 @@ ChooseTarget_MouthShut::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice4
     ret
+
+SECTION "Bank 39 ChooseTarget_SickLick", ROMX
 
 ; SickLick's target: a foe with DEF at least 2 that is not asleep or paralyzed (status 0 & $CC) and
 ; has no status byte 3 (frozen, dancing, airborne ...), leaving out LegSweep resistance (byte 5 bits
@@ -3994,6 +4046,8 @@ ChooseTarget_SickLick::
     call SetActorTargetFromHRAMChoice4
     ret
 
+SECTION "Bank 39 ChooseTarget_LegSweep", ROMX
+
 ; LegSweep's target: a foe without body flag bit 4 that is not asleep, confused or paralyzed (status
 ; 0 & $DC) and has no status byte 3, leaving out LegSweep resistance (byte 5 bits 2-3) 3; the lowest
 ; level wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
@@ -4060,6 +4114,8 @@ ChooseTarget_LegSweep::
     call SetActorTargetFromHRAMChoice4
     ret
 
+SECTION "Bank 39 ChooseTarget_NapAttack", ROMX
+
 ; NapAttack's target: a foe not asleep or paralyzed (status 0 & $CC) with no status byte 3, leaving
 ; out Sleep resistance (byte 2 bits 6-7) 3; the lowest level wins, the later one on ties
 ; (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
@@ -4119,6 +4175,8 @@ ChooseTarget_NapAttack::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_OddDance", ROMX
+
 ; OddDance's target: a foe with MP left, leaving out RobMagic resistance (byte 2 bits 2-3) 3; the
 ; lowest level wins (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -4170,6 +4228,8 @@ ChooseTarget_OddDance::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_MetalCut", ROMX
 
 ; MetalCut's target: among foes with body flag bit 0, meant as the one with the least HP + DEF, but
 ; the best starts at $FFFF and a foe is skipped when its sum is below it, so in practice none is
@@ -4229,6 +4289,8 @@ ChooseTarget_MetalCut::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
+SECTION "Bank 39 ChooseTarget_DrakSlash", ROMX
+
 ; DrakSlash's target: the weakest foe of family 1 (TargetWeakestFoeOfFamilyD; dragons, by the
 ; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -4238,6 +4300,8 @@ ChooseTarget_DrakSlash::
     ld d, $01
     call TargetWeakestFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_BeastCut", ROMX
 
 ; BeastCut's target: the weakest foe of family 2 (TargetWeakestFoeOfFamilyD; beasts, by the skill's
 ; name). (C2, E-0357; probed E-0382)
@@ -4249,6 +4313,8 @@ ChooseTarget_BeastCut::
     call TargetWeakestFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_BirdBlow", ROMX
+
 ; BirdBlow's target: the weakest foe of family 3 (TargetWeakestFoeOfFamilyD; birds, by the skill's
 ; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -4258,6 +4324,8 @@ ChooseTarget_BirdBlow::
     ld d, $03
     call TargetWeakestFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_DevilCut", ROMX
 
 ; DevilCut's target: the weakest foe of family 6 (TargetWeakestFoeOfFamilyD; devils, by the skill's
 ; name). (C2, E-0357; probed E-0382)
@@ -4269,6 +4337,8 @@ ChooseTarget_DevilCut::
     call TargetWeakestFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_ZombieCut", ROMX
+
 ; ZombieCut's target: the weakest foe of family 7 (TargetWeakestFoeOfFamilyD; zombies, by the
 ; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -4278,6 +4348,8 @@ ChooseTarget_ZombieCut::
     ld d, $07
     call TargetWeakestFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_CleanCut", ROMX
 
 ; CleanCut's target: the weakest foe of family 8 (TargetWeakestFoeOfFamilyD). (C2, E-0357; probed
 ; E-0382)
@@ -4289,6 +4361,8 @@ ChooseTarget_CleanCut::
     call TargetWeakestFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_SlimeBlow", ROMX
+
 ; SlimeBlow's target: the weakest foe of family 0 (TargetWeakestFoeOfFamilyD; slimes, by the skill's
 ; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -4298,6 +4372,8 @@ ChooseTarget_SlimeBlow::
     ld d, $00
     call TargetWeakestFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_BugBlow", ROMX
 
 ; BugBlow's target: the weakest foe of family 5 (TargetWeakestFoeOfFamilyD; bugs, by the skill's
 ; name). (C2, E-0357; probed E-0382)
@@ -4309,6 +4385,8 @@ ChooseTarget_BugBlow::
     call TargetWeakestFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_Shears", ROMX
+
 ; Shears' target: the weakest foe of family 4 (TargetWeakestFoeOfFamilyD). (C2, E-0357; probed
 ; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -4318,6 +4396,8 @@ ChooseTarget_Shears::
     ld d, $04
     call TargetWeakestFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_PoisonHit", ROMX
 
 ; PoisonHit's target: a foe not yet poisoned (status 0 bits 0-1), leaving out PoisonGas resistance
 ; (byte 4 bits 0-1) 3; the lowest level wins (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
@@ -4370,6 +4450,8 @@ ChooseTarget_PoisonHit::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_Paralyze", ROMX
 
 ; Paralyze's target: a foe not asleep or paralyzed (status 0 & $CC), leaving out PalsyAir resistance
 ; (byte 5 bits 6-7) 3; the lowest level wins (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
@@ -4424,6 +4506,8 @@ ChooseTarget_Paralyze::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_LushLicks", ROMX
 
 ; LushLicks' target: a foe not asleep, confused or paralyzed (status 0 & $DC) with no status byte 3,
 ; leaving out LegSweep resistance (byte 5 bits 2-3) 3; the lowest level wins
@@ -4484,6 +4568,8 @@ ChooseTarget_LushLicks::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_Transform", ROMX
+
 ; Transform target: the present foe with the highest max HP + max MP (16-bit sum), the later one on
 ; ties; a foe whose sum is 0 is still taken. With no foe present $FF is stored, since the fallback
 ; to the last present foe is never needed once one foe is present. (C2, E-0382)
@@ -4536,6 +4622,8 @@ ChooseTarget_Transform::
     jr nz, .loop
     call SetActorTargetFromTemp0OrTemp3
     ret
+
+SECTION "Bank 39 ChooseTarget_Beat", ROMX
 
 ; Beat target: finds the lowest Beat resistance level (byte 2 bits 4-5, level 3 left out) among
 ; present foes without BSTAT2_BOUNCE and counts the foes at that level in hTemp2, which starts at
@@ -4722,6 +4810,8 @@ ChooseTarget_Beat::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Blaze", ROMX
+
 ; Blaze's target: loads the action's skill record part (kind 9, or $0D for the enemy side outside
 ; link play) for its damage estimate in hTemp8/9; for each foe without bounce or MagicBack (status 2
 ; & $22) and Blaze resistance (byte 0 bits 4-5) below 3, scales the estimate by the level
@@ -4869,6 +4959,8 @@ ChooseTarget_Blaze::
 .done:
     ld [hl], a
     ret
+
+SECTION "Bank 39 ChooseTarget_Ramming", ROMX
 
 ; Ramming's target: the first pass (foes not dodging, BSTAT6_DODGE, with Sacrifice resistance byte 3
 ; bits 0-1 below 3) never takes one, since its best level hTemp4 stays $FF and every level is
@@ -5018,6 +5110,8 @@ ChooseTarget_Ramming::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
+SECTION "Bank 39 ChooseTarget_Sleep", ROMX
+
 ; Sleep's target: a foe not asleep or paralyzed (status 0 & $CC), with no status byte 3 and no
 ; bounce or MagicBack (status 2 & $22), leaving out Sleep resistance (byte 2 bits 6-7) 3; the lowest
 ; level wins (SetActorTargetFromHRAMChoice4). (C2, E-0357; probed E-0382)
@@ -5083,6 +5177,8 @@ ChooseTarget_Sleep::
     call SetActorTargetFromHRAMChoice4
     ret
 
+SECTION "Bank 39 ChooseTarget_RobMagic", ROMX
+
 ; RobMagic's target: a foe with MP left and no bounce or MagicBack (status 2 & $22), leaving out
 ; RobMagic resistance (byte 2 bits 2-3) 3; the lowest level wins (SetActorTargetFromHRAMChoice).
 ; (C2, E-0357; probed E-0382)
@@ -5141,6 +5237,8 @@ ChooseTarget_RobMagic::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_FireSlash", ROMX
 
 ; FireSlash's target: a foe not airborne (status 3 bits 6-7) or in HighJump (status 4 bits 2-3); the
 ; lowest Blaze resistance (byte 0 bits 4-5; 3 is not left out here) wins, the least HP + DEF on ties
@@ -5223,6 +5321,8 @@ ChooseTarget_FireSlash::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_BoltSlash", ROMX
+
 ; BoltSlash's target: a foe not airborne (status 3 bits 6-7) or in HighJump (status 4 bits 2-3); the
 ; lowest Bolt resistance (byte 1 bits 4-5, 3 not left out) wins, the least HP + DEF on ties
 ; (SetActorTargetFromHRAMChoice). (C2, E-0357; probed E-0382)
@@ -5303,6 +5403,8 @@ ChooseTarget_BoltSlash::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_VacuSlash", ROMX
 
 ; VacuSlash's target: as BoltSlash's (ChooseTarget_BoltSlash) but by Vacuum resistance (byte 1 bits
 ; 6-7). (C2, E-0357; probed E-0382)
@@ -5385,6 +5487,8 @@ ChooseTarget_VacuSlash::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_IceSlash", ROMX
+
 ; IceSlash's target: as BoltSlash's (ChooseTarget_BoltSlash) but by IceBolt resistance (byte 1 bits
 ; 2-3). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -5466,6 +5570,8 @@ ChooseTarget_IceSlash::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_WindBeast", ROMX
+
 ; WindBeast's target: the lowest Vacuum resistance (byte 1 bits 6-7) among all present foes (no
 ; status check), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
 ; E-0382)
@@ -5539,6 +5645,8 @@ ChooseTarget_WindBeast::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_GigaSlash", ROMX
 
 ; GigaSlash's target: when every present foe is in HighJump (status 4 bits 2-3), the weakest by HP +
 ; DEF (EstimateAndPickWeakestTarget); when every one has a blocking status and AquaWall or Ironize,
@@ -5666,6 +5774,8 @@ ChooseTarget_GigaSlash::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_AquaCut", ROMX
+
 ; AquaCut's target: as BoltSlash's (ChooseTarget_BoltSlash) but by Watershot resistance (byte 0 bits
 ; 6-7). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -5747,6 +5857,8 @@ ChooseTarget_AquaCut::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_Watershot", ROMX
+
 ; Watershot's target: the lowest Watershot resistance (byte 0 bits 6-7) among all present foes (no
 ; status check), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C2, E-0357; probed
 ; E-0382)
@@ -5820,6 +5932,8 @@ ChooseTarget_Watershot::
     jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
+
+SECTION "Bank 39 ChooseTarget_MegaMagic", ROMX
 
 ; MegaMagic target: for each present foe with MegaMagic resistance (byte 4 bits 6-7) below 3, the
 ; damage estimate (ChooseTarget_MegaMagic_EstimateDamage, in effect 90 / 100 of the loop pair BC,
@@ -5939,6 +6053,8 @@ ChooseTarget_MegaMagic::
     ld [hl], a
     ret
 
+SECTION "Bank 39 TargetFoeWeightedBySlotOrder", ROMX
+
 ; Target = a present foe picked with fixed weights: AdvanceRandom is called first, the present slots
 ; of the opposite side are listed in slot order in hTemp1-hTemp3 (count in hTemp0), and
 ; PickWeightedTargetCandidate chooses by wRandomLo. One foe: that foe; two: the first below $AB,
@@ -5977,6 +6093,8 @@ TargetFoeWeightedBySlotOrder::
     jr nz, .loop
     call PickWeightedTargetCandidate
     ret
+
+SECTION "Bank 39 ChooseTarget_SquallHit_3", ROMX
 
 ; SquallHit's third routine, a variant of TargetFoeWeightedBySlotOrder that keys each entry by (HP +
 ; DEF) / 2 and sorts the three entries so the smaller keys come first before
@@ -6117,6 +6235,8 @@ ChooseTarget_SquallHit_3::
 .call_pick_weighted_target_candidate:
     call PickWeightedTargetCandidate
     ret
+
+SECTION "Bank 39 ChooseTarget_Heal_3", ROMX
 
 ; Heal (third): for each present ally below its max HP keeps max HP / HP (quotient and remainder,
 ; DivideHLByBC) in wWorkBuf; a full-HP ally keeps a zero entry. The pick starts with the first
@@ -6296,6 +6416,8 @@ ChooseTarget_Heal_3::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Heal_4", ROMX
+
 ; Heal (fourth): averages the present allies' max HP; of the allies whose HP is below that average
 ; (up to three, their HP kept in wBattleDamage/wTargetEstimates/wEffectTemp), the one with the least
 ; HP, the earlier on ties; with none, Heal's third routine (ChooseTarget_Heal_3). (C2, E-0357;
@@ -6440,6 +6562,8 @@ ChooseTarget_Heal_4::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Vivify_2", ROMX
+
 ; Same choice as ChooseTarget_Vivify: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to
@@ -6447,6 +6571,8 @@ ChooseTarget_Heal_4::
 ; was ChooseTarget_Vivify_2)
 ChooseTarget_Vivify_2::
     jp ChooseTarget_Vivify
+
+SECTION "Bank 39 ChooseTarget_Antidote_2", ROMX
 
 ; Same choice as ChooseTarget_Antidote: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6456,6 +6582,8 @@ ChooseTarget_Vivify_2::
 ChooseTarget_Antidote_2::
     jp ChooseTarget_Antidote
 
+SECTION "Bank 39 ChooseTarget_TwinHits_2", ROMX
+
 ; Same choice as ChooseTarget_TwinHits: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to
@@ -6463,6 +6591,8 @@ ChooseTarget_Antidote_2::
 ; was ChooseTarget_TwinHits_2)
 ChooseTarget_TwinHits_2::
     jp ChooseTarget_TwinHits
+
+SECTION "Bank 39 ChooseTarget_Upper_2", ROMX
 
 ; Same choice as ChooseTarget_Upper: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6472,6 +6602,8 @@ ChooseTarget_TwinHits_2::
 ChooseTarget_Upper_2::
     jp ChooseTarget_Upper
 
+SECTION "Bank 39 ChooseTarget_Sap_2", ROMX
+
 ; Same choice as ChooseTarget_Sap: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
@@ -6479,6 +6611,8 @@ ChooseTarget_Upper_2::
 ; was ChooseTarget_Sap_2)
 ChooseTarget_Sap_2::
     jp ChooseTarget_Sap
+
+SECTION "Bank 39 ChooseTarget_Slow_2", ROMX
 
 ; Same choice as ChooseTarget_Slow: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6488,6 +6622,8 @@ ChooseTarget_Sap_2::
 ChooseTarget_Slow_2::
     jp ChooseTarget_Slow
 
+SECTION "Bank 39 ChooseTarget_Speed_2", ROMX
+
 ; Same choice as ChooseTarget_Speed: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to
@@ -6495,6 +6631,8 @@ ChooseTarget_Slow_2::
 ; was ChooseTarget_Speed_2)
 ChooseTarget_Speed_2::
     jp ChooseTarget_Speed
+
+SECTION "Bank 39 ChooseTarget_UltraDown_2", ROMX
 
 ; Same choice as ChooseTarget_UltraDown: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6504,6 +6642,8 @@ ChooseTarget_Speed_2::
 ChooseTarget_UltraDown_2::
     jp ChooseTarget_UltraDown
 
+SECTION "Bank 39 ChooseTarget_Cover_2", ROMX
+
 ; Same choice as ChooseTarget_Cover: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to
@@ -6511,6 +6651,8 @@ ChooseTarget_UltraDown_2::
 ; was ChooseTarget_Cover_2)
 ChooseTarget_Cover_2::
     jp ChooseTarget_Cover
+
+SECTION "Bank 39 ChooseTarget_MouthShut_2", ROMX
 
 ; Same choice as ChooseTarget_MouthShut: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6520,6 +6662,8 @@ ChooseTarget_Cover_2::
 ChooseTarget_MouthShut_2::
     jp ChooseTarget_MouthShut
 
+SECTION "Bank 39 ChooseTarget_SickLick_2", ROMX
+
 ; Same choice as ChooseTarget_SickLick: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to
@@ -6527,6 +6671,8 @@ ChooseTarget_MouthShut_2::
 ; was ChooseTarget_SickLick_2)
 ChooseTarget_SickLick_2::
     jp ChooseTarget_SickLick
+
+SECTION "Bank 39 ChooseTarget_LegSweep_2", ROMX
 
 ; Same choice as ChooseTarget_LegSweep: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6536,6 +6682,8 @@ ChooseTarget_SickLick_2::
 ChooseTarget_LegSweep_2::
     jp ChooseTarget_LegSweep
 
+SECTION "Bank 39 ChooseTarget_NapAttack_2", ROMX
+
 ; Same choice as ChooseTarget_NapAttack: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to
@@ -6543,6 +6691,8 @@ ChooseTarget_LegSweep_2::
 ; was ChooseTarget_NapAttack_2)
 ChooseTarget_NapAttack_2::
     jp ChooseTarget_NapAttack
+
+SECTION "Bank 39 ChooseTarget_OddDance_2", ROMX
 
 ; Same choice as ChooseTarget_OddDance: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6552,6 +6702,8 @@ ChooseTarget_NapAttack_2::
 ChooseTarget_OddDance_2::
     jp ChooseTarget_OddDance
 
+SECTION "Bank 39 ChooseTarget_MetalCut_2", ROMX
+
 ; Same choice as ChooseTarget_MetalCut: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to
@@ -6559,6 +6711,8 @@ ChooseTarget_OddDance_2::
 ; was ChooseTarget_MetalCut_2)
 ChooseTarget_MetalCut_2::
     jp ChooseTarget_MetalCut
+
+SECTION "Bank 39 ChooseTarget_DrakSlash_2", ROMX
 
 ; DrakSlash's other target: a random foe of family 1 (TargetRandomFoeOfFamilyD; dragons, by the
 ; skill's name). (C2, E-0357; probed E-0382)
@@ -6571,6 +6725,8 @@ ChooseTarget_DrakSlash_2::
     call TargetRandomFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_BeastCut_2", ROMX
+
 ; BeastCut's other target: a random foe of family 2 (TargetRandomFoeOfFamilyD; beasts, by the
 ; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6581,6 +6737,8 @@ ChooseTarget_BeastCut_2::
     ld d, $02
     call TargetRandomFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_BirdBlow_2", ROMX
 
 ; BirdBlow's other target: a random foe of family 3 (TargetRandomFoeOfFamilyD; birds, by the skill's
 ; name). (C2, E-0357; probed E-0382)
@@ -6593,6 +6751,8 @@ ChooseTarget_BirdBlow_2::
     call TargetRandomFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_DevilCut_2", ROMX
+
 ; DevilCut's other target: a random foe of family 6 (TargetRandomFoeOfFamilyD; devils, by the
 ; skill's name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6603,6 +6763,8 @@ ChooseTarget_DevilCut_2::
     ld d, $06
     call TargetRandomFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_ZombieCut_2", ROMX
 
 ; ZombieCut's other target: a random foe of family 7 (TargetRandomFoeOfFamilyD; zombies, by the
 ; skill's name). (C2, E-0357; probed E-0382)
@@ -6615,6 +6777,8 @@ ChooseTarget_ZombieCut_2::
     call TargetRandomFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_CleanCut_2", ROMX
+
 ; CleanCut's other target: a random foe of family 8 (TargetRandomFoeOfFamilyD). (C2, E-0357; probed
 ; E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6625,6 +6789,8 @@ ChooseTarget_CleanCut_2::
     ld d, $08
     call TargetRandomFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_SlimeBlow_2", ROMX
 
 ; SlimeBlow's other target: a random foe of family 0 (TargetRandomFoeOfFamilyD; slimes, by the
 ; skill's name). (C2, E-0357; probed E-0382)
@@ -6637,6 +6803,8 @@ ChooseTarget_SlimeBlow_2::
     call TargetRandomFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_BugBlow_2", ROMX
+
 ; BugBlow's other target: a random foe of family 5 (TargetRandomFoeOfFamilyD; bugs, by the skill's
 ; name). (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6647,6 +6815,8 @@ ChooseTarget_BugBlow_2::
     ld d, $05
     call TargetRandomFoeOfFamilyD
     ret
+
+SECTION "Bank 39 ChooseTarget_Shears_2", ROMX
 
 ; Shears's other target: a random foe of family 4 (TargetRandomFoeOfFamilyD). (C2, E-0357; probed
 ; E-0382)
@@ -6659,6 +6829,8 @@ ChooseTarget_Shears_2::
     call TargetRandomFoeOfFamilyD
     ret
 
+SECTION "Bank 39 ChooseTarget_PoisonHit_2", ROMX
+
 ; Same choice as ChooseTarget_PoisonHit: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to
@@ -6666,6 +6838,8 @@ ChooseTarget_Shears_2::
 ; was ChooseTarget_PoisonHit_2)
 ChooseTarget_PoisonHit_2::
     jp ChooseTarget_PoisonHit
+
+SECTION "Bank 39 ChooseTarget_Paralyze_2", ROMX
 
 ; Same choice as ChooseTarget_Paralyze: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6675,6 +6849,8 @@ ChooseTarget_PoisonHit_2::
 ChooseTarget_Paralyze_2::
     jp ChooseTarget_Paralyze
 
+SECTION "Bank 39 ChooseTarget_LushLicks_2", ROMX
+
 ; Same choice as ChooseTarget_LushLicks: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target
@@ -6682,6 +6858,8 @@ ChooseTarget_Paralyze_2::
 ; there; was ChooseTarget_LushLicks_2)
 ChooseTarget_LushLicks_2::
     jp ChooseTarget_LushLicks
+
+SECTION "Bank 39 ChooseTarget_Transform_2", ROMX
 
 ; Same choice as ChooseTarget_Transform: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6691,6 +6869,8 @@ ChooseTarget_LushLicks_2::
 ChooseTarget_Transform_2::
     jp ChooseTarget_Transform
 
+SECTION "Bank 39 ChooseTarget_Beat_2", ROMX
+
 ; Same choice as ChooseTarget_Beat: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to
@@ -6698,6 +6878,8 @@ ChooseTarget_Transform_2::
 ; was ChooseTarget_Beat_2)
 ChooseTarget_Beat_2::
     jp ChooseTarget_Beat
+
+SECTION "Bank 39 ChooseTarget_Blaze_2", ROMX
 
 ; Same choice as ChooseTarget_Blaze: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6707,12 +6889,16 @@ ChooseTarget_Beat_2::
 ChooseTarget_Blaze_2::
     jp ChooseTarget_Blaze
 
+SECTION "Bank 39 ChooseTarget_Berserker", ROMX
+
 ; Same choice as ChooseTarget_Ramming: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 110 Berserker, 111 Ramming; writes the
 ; target to wBattleTargetChoice (E-0086)
 ChooseTarget_Berserker::
     jp ChooseTarget_Ramming
+
+SECTION "Bank 39 ChooseTarget_Sleep_2", ROMX
 
 ; Same choice as ChooseTarget_Sleep: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6722,6 +6908,8 @@ ChooseTarget_Berserker::
 ChooseTarget_Sleep_2::
     jp ChooseTarget_Sleep
 
+SECTION "Bank 39 ChooseTarget_RobMagic_2", ROMX
+
 ; Same choice as ChooseTarget_RobMagic: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to
@@ -6729,6 +6917,8 @@ ChooseTarget_Sleep_2::
 ; was ChooseTarget_RobMagic_2)
 ChooseTarget_RobMagic_2::
     jp ChooseTarget_RobMagic
+
+SECTION "Bank 39 ChooseTarget_FireSlash_2", ROMX
 
 ; Same choice as ChooseTarget_FireSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6738,6 +6928,8 @@ ChooseTarget_RobMagic_2::
 ChooseTarget_FireSlash_2::
     jp ChooseTarget_FireSlash
 
+SECTION "Bank 39 ChooseTarget_BoltSlash_2", ROMX
+
 ; Same choice as ChooseTarget_BoltSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to
@@ -6745,6 +6937,8 @@ ChooseTarget_FireSlash_2::
 ; was ChooseTarget_BoltSlash_2)
 ChooseTarget_BoltSlash_2::
     jp ChooseTarget_BoltSlash
+
+SECTION "Bank 39 ChooseTarget_VacuSlash_2", ROMX
 
 ; Same choice as ChooseTarget_VacuSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6754,6 +6948,8 @@ ChooseTarget_BoltSlash_2::
 ChooseTarget_VacuSlash_2::
     jp ChooseTarget_VacuSlash
 
+SECTION "Bank 39 ChooseTarget_IceSlash_2", ROMX
+
 ; Same choice as ChooseTarget_IceSlash: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to
@@ -6762,6 +6958,8 @@ ChooseTarget_VacuSlash_2::
 ChooseTarget_IceSlash_2::
     jp ChooseTarget_IceSlash
 
+SECTION "Bank 39 ChooseTarget_WindBeast_2", ROMX
+
 ; Same choice as ChooseTarget_WindBeast: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to
@@ -6769,6 +6967,8 @@ ChooseTarget_IceSlash_2::
 ; was ChooseTarget_WindBeast_2)
 ChooseTarget_WindBeast_2::
     jp ChooseTarget_WindBeast
+
+SECTION "Bank 39 ChooseTarget_GigaSlash_2", ROMX
 
 ; GigaSlash's other target: among all present foes, the lowest GigaSlash resistance (byte 6 bits
 ; 2-3, 3 not left out), the least HP + DEF on ties (SetActorTargetFromHRAMChoice). (C2, E-0357;
@@ -6845,6 +7045,8 @@ ChooseTarget_GigaSlash_2::
     call SetActorTargetFromHRAMChoice
     ret
 
+SECTION "Bank 39 ChooseTarget_AquaCut_2", ROMX
+
 ; Same choice as ChooseTarget_AquaCut: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to
@@ -6853,6 +7055,8 @@ ChooseTarget_GigaSlash_2::
 ChooseTarget_AquaCut_2::
     jp ChooseTarget_AquaCut
 
+SECTION "Bank 39 ChooseTarget_Watershot_2", ROMX
+
 ; Same choice as ChooseTarget_Watershot: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to
@@ -6860,6 +7064,8 @@ ChooseTarget_AquaCut_2::
 ; was ChooseTarget_Watershot_2)
 ChooseTarget_Watershot_2::
     jp ChooseTarget_Watershot
+
+SECTION "Bank 39 ChooseTarget_PanicAll", ROMX
 
 ; PanicAll's target: a foe not asleep or paralyzed (status 0 & $CC), with no status byte 3 and no
 ; bounce or MagicBack (status 2 & $22), leaving out PanicAll resistance (byte 3 bits 6-7) 3; the
@@ -6926,6 +7132,8 @@ ChooseTarget_PanicAll::
     call SetActorTargetFromHRAMChoice4
     ret
 
+SECTION "Bank 39 ChooseTarget_MegaMagic_2", ROMX
+
 ; Same choice as ChooseTarget_MegaMagic: jumps there. (C2, E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to
@@ -6933,6 +7141,8 @@ ChooseTarget_PanicAll::
 ; was ChooseTarget_MegaMagic_2)
 ChooseTarget_MegaMagic_2::
     jp ChooseTarget_MegaMagic
+
+SECTION "Bank 39 ChooseTarget_Antidote_3", ROMX
 
 ; Antidote's third routine: a poisoned or badly poisoned ally (status 0 & 3), picked by
 ; PickWeightedTargetCandidate; with none, the actor itself (TargetAllyWithStatusMask). (C2, E-0357;
@@ -6947,6 +7157,8 @@ ChooseTarget_Antidote_3::
     ld hl, wBattleStatus
     ld d, $03
     jp TargetAllyWithStatusMask
+
+SECTION "Bank 39 ChooseTarget_Upper_3", ROMX
 
 ; Upper's third routine: lists the present allies whose DEF differs from the BuffCapOfBaseDEF value
 ; in slot order and picks one (PickWeightedTargetCandidate: one sure, two 171:85, three 128:85:43);
@@ -7003,6 +7215,8 @@ ChooseTarget_Upper_3::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Speed_3", ROMX
+
 ; Speed's third routine: as Upper's (ChooseTarget_Upper_3) with AGL and BuffCapOfBaseAGL. (C2,
 ; E-0357; probed E-0382)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -7057,6 +7271,8 @@ ChooseTarget_Speed_3::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Sap_3", ROMX
+
 ; Sap's third routine: a foe with DEF at least 2, picked by PickWeightedTargetCandidate, else any
 ; foe by slot order (TargetFoeWithStatAboveOne with GetBattleDEF_Bank39). (C1, E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -7066,6 +7282,8 @@ ChooseTarget_Speed_3::
 ChooseTarget_Sap_3::
     ld de, GetBattleDEF_Bank39
     jp TargetFoeWithStatAboveOne
+
+SECTION "Bank 39 TargetFoeWithAGLAboveOne", ROMX
 
 ; Per-action target routine of ChooseActionTarget: loads DE = GetBattleAGL_Bank39 and jumps to
 ; TargetFoeWithStatAboveOne, so it lists the present foes whose AGL word is 2 or more and picks one
@@ -7077,6 +7295,8 @@ ChooseTarget_Sap_3::
 TargetFoeWithAGLAboveOne::
     ld de, GetBattleAGL_Bank39
     jp TargetFoeWithStatAboveOne
+
+SECTION "Bank 39 TargetAllyConfused", ROMX
 
 ; Not called and not listed in any table in src/. It sets A = wBattleActor & 4 (the first slot of
 ; the side of the actor), HL = wBattleStatus and D = $10 (BSTAT0_CONFUSED) and jumps to
@@ -7092,6 +7312,8 @@ TargetAllyConfused::
     ld d, $10
     jp TargetAllyWithStatusMask
 
+SECTION "Bank 39 TargetAllyParalyzed", ROMX
+
 ; Not called and not listed in any table in src/. As TargetAllyConfused with D = $40
 ; (BSTAT0_PARALYZED): it sets A = wBattleActor & 4, HL = wBattleStatus and jumps to
 ; TargetAllyWithStatusMask, which picks one present slot of the side of the actor whose first status
@@ -7104,6 +7326,8 @@ TargetAllyParalyzed::
     ld d, $40
     jp TargetAllyWithStatusMask
 
+SECTION "Bank 39 TargetAllyCursed", ROMX
+
 ; Not called and not listed in any table in src/. As TargetAllyConfused with D = $20
 ; (BSTAT0_CURSED): it sets A = wBattleActor & 4, HL = wBattleStatus and jumps to
 ; TargetAllyWithStatusMask, which picks one present slot of the side of the actor whose first status
@@ -7115,6 +7339,8 @@ TargetAllyCursed::
     ld hl, wBattleStatus
     ld d, $20
     jp TargetAllyWithStatusMask
+
+SECTION "Bank 39 TargetAllyWithStatusMask", ROMX
 
 ; Lists the present slots of the side from A whose status byte (HL, 9 bytes per slot) has a bit of
 ; mask D, and picks one (PickWeightedTargetCandidate); with none the actor targets itself. (C2,
@@ -7163,6 +7389,8 @@ TargetAllyWithStatusMask::
     ld [hl], a
     ret
 
+SECTION "Bank 39 TargetFoeWithStatAboveOne", ROMX
+
 ; Lists the present opposite slots for which the check at DE returns 2 or more, and picks one
 ; (PickWeightedTargetCandidate); with none falls back on TargetFoeWeightedBySlotOrder. (C1, E-0357)
 TargetFoeWithStatAboveOne::
@@ -7209,6 +7437,8 @@ TargetFoeWithStatAboveOne::
     jp z, TargetFoeWeightedBySlotOrder
     call PickWeightedTargetCandidate
     ret
+
+SECTION "Bank 39 ChooseTarget_Heal_SmallestHPShare", ROMX
 
 ; Heal (fifth): the present ally with the largest max HP / HP (quotient, then remainder), so the
 ; smallest share of its HP left, ties going to the later one on a coin flip; with no ally present it
@@ -7292,6 +7522,8 @@ ChooseTarget_Heal_SmallestHPShare::
     ldh a, [hTemp0]
     ld [hl], a
     ret
+
+SECTION "Bank 39 ChooseTarget_MPass", ROMX
 
 ; MPass' target: the ally other than the actor with the largest max MP / MP (quotient, then
 ; remainder), so the smallest share of MP left, ties going to the later one on a coin flip; with
@@ -7383,6 +7615,8 @@ ChooseTarget_MPass::
     ld [hl], a
     ret
 
+SECTION "Bank 39 SlotStatus4Bits23", ROMX
+
 ; A = battle slot: HL = wBattleStatus4 + 9 * A (status byte 4 of that slot) and A = that byte & $0C,
 ; the bits BSTAT4_HIGH_JUMP and BSTAT4_HIGH_JUMP_HI; Z set when both are clear.
 ; ChooseTarget_SquallHit, ChooseTarget_SquallHit_2 and ChooseTarget_GigaSlash use it to find out
@@ -7394,6 +7628,8 @@ SlotStatus4Bits23::
     ld a, [hl]
     and $0c
     ret
+
+SECTION "Bank 39 EstimateAndPickWeakestTarget", ROMX
 
 ; Sets wBattleTempBuf + 2 and hTemp1 to 0, then for the three slots from wBattleTarget calls
 ; StoreSlotHPPlusDEFToTargetEstimates (HP + DEF in wTargetEstimates, $FFFF for an empty slot, DEF
@@ -7467,6 +7703,8 @@ PickWeakestEstimatedTarget::
     ld [hl], a
     ret
 
+SECTION "Bank 39 StoreSlotHPPlusDEFToTargetEstimates", ROMX
+
 ; C = battle slot: stores HP + DEF of the slot (GetBattleHP_Bank39, GetBattleDEF_Bank39) as the word
 ; wTargetEstimates[C & 3]. When hTemp1 is not 0 and bit 2 of status byte 6 of the slot
 ; (BSTAT6_BERSERK) is set, the DEF is halved first; an empty slot (CarryUnlessBattleSlotOutSlotEmpty
@@ -7501,6 +7739,8 @@ StoreSlotHPPlusDEFToTargetEstimates::
     add hl, de
     jr StoreHLToTargetEstimatesSlotC
 
+SECTION "Bank 39 StoreFFFFToTargetEstimatesSlotC", ROMX
+
 ; C = battle slot: stores $FFFF as the word wTargetEstimates[C & 3] by loading HL = $FFFF and
 ; falling into StoreHLToTargetEstimatesSlotC; the largest possible estimate, so the slot is not
 ; picked as the weakest. (C2, E-0382)
@@ -7529,6 +7769,8 @@ StoreHLToTargetEstimatesSlotC::
     ld a, h
     ld [de], a
     ret
+
+SECTION "Bank 39 AnySlotStatusMaskSet", ROMX
 
 ; A = battle slot: NZ when the slot has any of these status bits, with A = the masked byte of the
 ; first one found: byte 0 & $40 (BSTAT0_PARALYZED), byte 3 & $C0 (BSTAT3_AIRBORNE,
@@ -7560,6 +7802,8 @@ AnySlotStatusMaskSet::
 
 .return:
     ret
+
+SECTION "Bank 39 ComputeDamageEstimateForAction", ROMX
 
 ; Leaves the damage estimate of wBattleActionId in wBattleDamageLo and wBattleDamageHi, keeping BC.
 ; ACTION_FIGHT and every id from SKILL_WINDBEAST up, except SKILL_MULTICUT, SKILL_EVILSLASH and
@@ -7606,6 +7850,8 @@ ComputeDamageEstimateForAction::
     pop bc
     ret
 
+SECTION "Bank 39 MultiplyDamageBy50IfSlotBodyFlagsBit0", ROMX
+
 ; C = battle slot: when bit 0 of wSlotBodyFlags[C] is set (the metal bit, by the note of
 ; wSlotBodyFlags), the word wBattleDamageLo and wBattleDamageHi is multiplied by 50 with
 ; Multiply8By16 and only the low 16 bits are kept. BC and DE are kept, but A ends as the low byte of
@@ -7639,6 +7885,8 @@ MultiplyDamageBy50IfSlotBodyFlagsBit0::
     pop bc
     pop af
     ret
+
+SECTION "Bank 39 EstimateThreeTargets", ROMX
 
 ; Sets hTemp1 = 1 and, for the three slots from wBattleTarget, stores $FFFF in wTargetEstimates when
 ; status byte 3 & $C0 or status byte 4 & $0C of the slot is set, otherwise HP + DEF through
@@ -7677,6 +7925,8 @@ EstimateThreeTargets::
     jr nz, .loop
     call PickWeakestEstimatedTarget
     ret
+
+SECTION "Bank 39 ChooseTarget_Heal_MostHurt", ROMX
 
 ; Heal target: the ally with the highest max HP / HP (a larger remainder breaks a tie, the earlier
 ; slot otherwise), on the actor's side; stores it as wBattleTarget and the actor's target choice.
@@ -7745,6 +7995,8 @@ ChooseTarget_Heal_MostHurt::
     ld [hl], a
     ret
 
+SECTION "Bank 39 BuffCapOfBaseDEF", ROMX
+
 ; C = battle slot: HL = the base DEF of the slot (GetBaseDEF) scaled like this. A base of 999 or
 ; more comes back as it is; otherwise it is doubled and the result is 999 if the double reaches 999;
 ; otherwise, when wLinkMode is 1 or wBattleActor is below 4, it is doubled again and the result is
@@ -7783,6 +8035,8 @@ BuffCapOfBaseDEF::
 .return:
     ret
 
+SECTION "Bank 39 BuffCapOfBaseAGL", ROMX
+
 ; C = battle slot: as BuffCapOfBaseDEF but for the base AGL (GetBaseAGL): a base of 999 or more
 ; comes back unchanged; otherwise x 2, with 999 when the double reaches 999, and for wLinkMode 1 or
 ; wBattleActor below 4 x 4 (999 when that reaches 999). ChooseTarget_Speed and ChooseTarget_Speed_3
@@ -7818,6 +8072,8 @@ BuffCapOfBaseAGL::
 
 .return:
     ret
+
+SECTION "Bank 39 ChooseTarget_MouthShut_CountMouthSkills", ROMX
 
 ; A = battle slot: counts how many of the eight skills of that slot (16 bytes at wBattleSkills + 16
 ; * A, the skill id in every second byte) have an id in $40-$47, $70-$75 or $89. Returns A = the
@@ -7856,6 +8112,8 @@ ChooseTarget_MouthShut_CountMouthSkills::
     pop bc
     ret
 
+SECTION "Bank 39 SetActorTargetFromTemp0OrTemp3", ROMX
+
 ; Stores hTemp0, or hTemp3 when hTemp0 is $FF, OR hTempA into wBattleTargetChoice[2 * wBattleActor].
 ; TargetWeakestFoeOfFamilyD and TargetRandomFoeOfFamilyD leave the chosen slot in hTemp0 ($FF for
 ; none), the last present foe in hTemp3 and the first slot of the foe side (0 or 4) in hTempA;
@@ -7878,6 +8136,8 @@ SetActorTargetFromTemp0OrTemp3::
     or e
     ld [hl], a
     ret
+
+SECTION "Bank 39 SetActorTargetFromHRAMChoice", ROMX
 
 ; Stores the first of hTemp0, hTemp3 and hTemp2 that is not $FF (hTemp2 when both others are $FF),
 ; OR hTempA, into wBattleTargetChoice[2 * wBattleActor]. Shared last step of many per-action target
@@ -7904,6 +8164,8 @@ SetActorTargetFromHRAMChoice::
     or e
     ld [hl], a
     ret
+
+SECTION "Bank 39 SetActorTargetFromHRAMChoice4", ROMX
 
 ; Stores the first of hTemp0, hTemp4 and hTemp3 that is not $FF (hTemp2 when all three are $FF), OR
 ; hTempA, into wBattleTargetChoice[2 * wBattleActor]. The four-choice form of
@@ -7934,6 +8196,8 @@ SetActorTargetFromHRAMChoice4::
     ld [hl], a
     ret
 
+SECTION "Bank 39 ChooseTarget_Cover_StoreChoice", ROMX
+
 ; Cover target choice: stores hTempA OR the first of hTemp0, hTemp5 and hTemp4 that is not $FF, else
 ; hTemp3, into wBattleTargetChoice[2 * wBattleActor]. Called by ChooseTarget_Cover. (C2, E-0382)
 ChooseTarget_Cover_StoreChoice::
@@ -7958,6 +8222,8 @@ ChooseTarget_Cover_StoreChoice::
     or e
     ld [hl], a
     ret
+
+SECTION "Bank 39 PickWeightedTargetCandidate", ROMX
 
 ; hTemp0 = the number of candidates and hTemp1-hTemp3 = the candidate slots in priority order;
 ; stores the pick in wBattleTargetChoice[2 * wBattleActor] using wRandomLo as it is (it does not
@@ -8010,6 +8276,8 @@ PickWeightedTargetCandidate::
     add_a_to_hl
     ld [hl], b
     ret
+
+SECTION "Bank 39 TargetWeakestFoeOfFamilyD", ROMX
 
 ; D = species family: among the present foes (the three slots of the side opposite the actor, hTempA
 ; = their first slot) whose family from LoadSpeciesFamily equals D, picks the one with the smallest
@@ -8083,6 +8351,8 @@ TargetWeakestFoeOfFamilyD::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
+SECTION "Bank 39 TargetRandomFoeOfFamilyD", ROMX
+
 ; D = species family: goes through the present foes (the three slots opposite the actor) and keeps
 ; the first whose family from LoadSpeciesFamily is D; every later match replaces the current pick
 ; when bit 0 of wRandomLo is set after AdvanceRandom. With no match the last present foe is used
@@ -8139,6 +8409,8 @@ TargetRandomFoeOfFamilyD::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
+SECTION "Bank 39 ChooseTarget_Blaze_ScaleEstimate", ROMX
+
 ; A = resistance level: HL = the damage estimate hTemp8:hTemp9 for level 0, half of it (signed
 ; shift) for 2 and 0 for 3. For level 1 it runs Multiply8By16 and Divide24ByA by $55 / $64 without
 ; loading BC from HL, so the result is 85% of the caller's BC (the loop pair: B = slots left, C =
@@ -8175,6 +8447,8 @@ ChooseTarget_Blaze_ScaleEstimate::
 
 .return:
     ret
+
+SECTION "Bank 39 ChooseTarget_MegaMagic_EstimateDamage", ROMX
 
 ; A = resistance level. Loads HL = the actor's MP + 2 x its level, but then runs Multiply8By16 with
 ; A = $5A, which multiplies BC (the caller's loop pair: B = slots left, C = slot) and discards HL,
@@ -8223,6 +8497,8 @@ ChooseTarget_MegaMagic_EstimateDamage::
 .return:
     ret
 
+SECTION "Bank 39 ReadByteAtHLPlus4APlus3C_Bank39", ROMX
+
 ; A = [HL + 4 * A + 3 * C]: the offset is added up in 8 bits (it wraps above $FF) and added to HL,
 ; which ends pointing at the byte. With A = C = a slot it is HL + 7 * slot, which is how
 ; ChooseTarget_Blaze, ChooseTarget_GigaSlash and others step through 7-byte per-slot records. A copy
@@ -8237,6 +8513,8 @@ ReadByteAtHLPlus4APlus3C_Bank39::
     add_a_to_hl
     ld a, [hl]
     ret
+
+SECTION "Bank 39 TestSlotStatus2Bit3OrStatus5Bits67", ROMX
 
 ; C = battle slot: NZ at once when bit 3 of status byte 2 of the slot (BSTAT2_AQUA_WALL) is set;
 ; otherwise A = status byte 5 & $C0 (BSTAT5_IRONIZED, BSTAT5_IRONIZE_TURNS_HI), NZ when either is
@@ -8257,6 +8535,8 @@ TestSlotStatus2Bit3OrStatus5Bits67::
     and $c0
     ret
 
+SECTION "Bank 39 GetBattleATK_Bank39", ROMX
+
 ; A = battle slot: loads HL = wBattleATK and jumps to ReadSlotWord_Bank39, so HL = the word of that
 ; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_TwinHits and
 ; ComputeDamageEstimateForAction. (C2, E-0382)
@@ -8266,6 +8546,8 @@ GetBattleATK_Bank39::
     ld hl, wBattleATK
     jr ReadSlotWord_Bank39
 
+SECTION "Bank 39 GetBattleDEF_Bank39", ROMX
+
 ; A = battle slot: loads HL = wBattleDEF and jumps to ReadSlotWord_Bank39, so HL = the word of that
 ; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_AquaCut,
 ; ChooseTarget_BoltSlash and the other slash targets. (C2, E-0382)
@@ -8273,6 +8555,8 @@ GetBattleATK_Bank39::
 GetBattleDEF_Bank39::
     ld hl, wBattleDEF
     jr ReadSlotWord_Bank39
+
+SECTION "Bank 39 GetBattleMaxHP_Bank39", ROMX
 
 ; A = battle slot: loads HL = wBattleMaxHP and jumps to ReadSlotWord_Bank39, so HL = the word of
 ; that slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_Cover
@@ -8282,6 +8566,8 @@ GetBattleMaxHP_Bank39::
     ld hl, wBattleMaxHP
     jr ReadSlotWord_Bank39
 
+SECTION "Bank 39 GetBattleMaxMP_Bank39", ROMX
+
 ; A = battle slot: loads HL = wBattleMaxMP and jumps to ReadSlotWord_Bank39, so HL = the word of
 ; that slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_MPass
 ; and ChooseTarget_Transform. (C2, E-0382)
@@ -8290,6 +8576,8 @@ GetBattleMaxMP_Bank39::
     ld hl, wBattleMaxMP
     jr ReadSlotWord_Bank39
 
+SECTION "Bank 39 GetBattleHP_Bank39", ROMX
+
 ; A = battle slot: loads HL = wBattleHP and jumps to ReadSlotWord_Bank39, so HL = the word of that
 ; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_AquaCut,
 ; ChooseTarget_Beat, ChooseTarget_Blaze and many other target routines. (C2, E-0382)
@@ -8297,6 +8585,8 @@ GetBattleMaxMP_Bank39::
 GetBattleHP_Bank39::
     ld hl, wBattleHP
     jr ReadSlotWord_Bank39
+
+SECTION "Bank 39 GetBattleMP_Bank39", ROMX
 
 ; A = battle slot: loads HL = wBattleMP and jumps to ReadSlotWord_Bank39, so HL = the word of that
 ; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_MPass,
@@ -8307,6 +8597,8 @@ GetBattleMP_Bank39::
     ld hl, wBattleMP
     jr ReadSlotWord_Bank39
 
+SECTION "Bank 39 GetBattleAGL_Bank39", ROMX
+
 ; A = battle slot: loads HL = wBattleAGL and jumps to ReadSlotWord_Bank39, so HL = the word of that
 ; slot (2 bytes per slot, low byte first) and A = its low byte. Called by ChooseTarget_Slow,
 ; ChooseTarget_Speed and ChooseTarget_UltraDown. (C2, E-0382)
@@ -8314,6 +8606,8 @@ GetBattleMP_Bank39::
 GetBattleAGL_Bank39::
     ld hl, wBattleAGL
     jr ReadSlotWord_Bank39
+
+SECTION "Bank 39 ReadSlotAIModeIndexed_Bank39", ROMX
 
 ; A = index: A = wSlotAIMode[A] and HL = the address of that byte. Nothing in src/ calls this bank
 ; 39 copy; copies exist in banks $05, $31 and $32. (C2, E-0382)
@@ -8324,12 +8618,16 @@ ReadSlotAIModeIndexed_Bank39::
     ld a, [hl]
     ret
 
+SECTION "Bank 39 ReadSlotWord_Bank39", ROMX
+
 ; HL = the word at HL + 2 x A. (C2, E-0357; probed E-0382)
 ReadSlotWord_Bank39::
     add a
     add_a_to_hl
     deref_hl
     ret
+
+SECTION "Bank 39 AddDoubleAToHL_Bank39", ROMX
 
 ; HL += 2 * A, with A doubled in 8 bits first (so an A of $80 or more wraps); A ends as the low byte
 ; of the new HL. Nothing in src/ calls this bank 39 copy; per-bank copies exist in 12 banks. (C2,
@@ -8340,6 +8638,8 @@ AddDoubleAToHL_Bank39::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank 39 ActorOnLocalSide_Bank39", ROMX
 
 ; Carry set when wBattleActor is below 4; when wLinkMode is 1 and bit 1 of wLinkRole is set the test
 ; is reversed (carry set when wBattleActor is 4 or more). A = wBattleActor on return. Nothing in
@@ -8364,6 +8664,8 @@ ActorOnLocalSide_Bank39::
     cp $04
     ret
 
+SECTION "Bank 39 TargetOnLocalSide_Bank39", ROMX
+
 ; Carry set when wBattleTarget is below 4; when wLinkMode is 1 and bit 1 of wLinkRole is set the
 ; test is reversed (carry set when wBattleTarget is 4 or more). A = wBattleTarget on return. Nothing
 ; in src/ calls this bank 39 copy. (C2, E-0382)
@@ -8387,6 +8689,8 @@ TargetOnLocalSide_Bank39::
     cp $04
     ret
 
+SECTION "Bank 39 ClearBattleStatusBitsWithMaskD_Bank39", ROMX
+
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank39_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0382)
 ClearBattleStatusBitsWithMaskD_Bank39::
@@ -8401,6 +8705,8 @@ ClearBattleStatusBitsWithMaskD_Bank39::
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 39 ClearBattleStatusBitsWithMaskD_Bank39_Data", ROMX
 
 ; Seven AND masks for the first status byte of a battler (BSTAT0_*): $DF clears bit 5
 ; (BSTAT0_CURSED), $FE bit 0 (BSTAT0_POISONED), $00 all bits, $FD bit 1 (BSTAT0_BADLY_POISONED), $73
@@ -8423,6 +8729,8 @@ SetBit0OfLevelUpGainsIndexed_Bank39::
     pop hl
     ret
 
+SECTION "Bank 39 SetBit1OfLevelUpGainsIndexed_Bank39", ROMX
+
 ; Sets bit 1 of the byte wLevelUpGains[A]. HL is kept and A is clobbered. Nothing in src/ calls this
 ; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
@@ -8435,6 +8743,8 @@ SetBit1OfLevelUpGainsIndexed_Bank39::
     pop hl
     ret
 
+SECTION "Bank 39 SetBit2OfLevelUpGainsIndexed_Bank39", ROMX
+
 ; Sets bit 2 of the byte wLevelUpGains[A]. HL is kept and A is clobbered. Nothing in src/ calls this
 ; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
@@ -8446,6 +8756,8 @@ SetBit2OfLevelUpGainsIndexed_Bank39::
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank 39 PersonalityIndexOfSlot_Bank39", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]), where g(v) is 0 for v of $C0 or more, 1 for $40 or more and 2 below $40,
@@ -8509,6 +8821,8 @@ PersonalityIndexOfSlot_Bank39::
     pop hl
     ret
 
+SECTION "Bank 39 CheckSlotStatusBlockWide_Bank39", ROMX
+
 ; A = battle slot: carry set when CheckSlotStatusBlock sets it (the slot is out, or status byte 0 &
 ; $D0, byte 3 & $3F, byte 5 & $C0 or byte 8 bit 3 is set), or else when status byte 3 & $C0 or
 ; status byte 4 & $0C of the slot is set; otherwise carry clear. A, BC and HL are kept. Nothing in
@@ -8541,6 +8855,8 @@ CheckSlotStatusBlockWide_Bank39::
     pop bc
     pop hl
     ret
+
+SECTION "Bank 39 SlotHasStatus3Or4Bits_Bank39", ROMX
 
 ; A = battle slot: A = status byte 3 & $C0 of the slot when that is not 0, otherwise status byte 4 &
 ; $0C; Z set when both are clear. HL is kept. Nothing in src/ calls this bank 39 copy. (C2, E-0382)

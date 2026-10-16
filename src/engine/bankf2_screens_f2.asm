@@ -1,7 +1,7 @@
 ; ROM bank $F2: screens and game mode 8
 ; The annotated listing of this bank is build/listing/bankf2.asm.
 
-SECTION "Bank F2", ROMX[$4000], BANK[$F2]
+SECTION "Bank F2", ROMX
     db $f2
 
 ; Start-up of game mode 8 (the egg hand-over scene): the main loop runs it through
@@ -87,6 +87,8 @@ GameMode8_Init::
     ld a, $01
     jp ResumeAfterModeChange
 
+SECTION "Bank F2 GameMode8_Update", ROMX
+
 ; Per-frame routine of game mode 8 (the egg hand-over scene), run through
 ; RunGameModeUpdate_EggHandOver. It returns at once while wFadeState is non-zero. When
 ; wScreenSubStep is not 0 it first calls GameMode8_Update_DrawSprites, so the sprite slots and field
@@ -140,6 +142,8 @@ GameMode8_Update_Start::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F2 GameMode8_Update_Wait", ROMX
+
 ; Egg hand-over, steps 1, 3, 6, 7, 9 and 10 of the table in GameMode8_Update: a pause. It adds 1 to
 ; wScreenCounter and returns while the result is below $10; once it is $10 or more it clears
 ; wScreenCounter and adds 1 to wScreenSubStep. GameMode8_Update keeps redrawing the sprites while it
@@ -156,6 +160,8 @@ GameMode8_Update_Wait::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F2 GameMode8_Update_WalkObject1", ROMX
 
 ; Egg hand-over, step 2: object 1 walks left, on three counts of every four, to X $58, where it
 ; stops (flag bit 1); next step. (C2, E-0357; probed E-0386)
@@ -179,6 +185,8 @@ GameMode8_Update_WalkObject1::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F2 GameMode8_Update_ShowEgg", ROMX
+
 ; Egg hand-over, step 4: shows object 5 and sets wArg1 to 1; next step. (C2, E-0357; probed E-0386)
 GameMode8_Update_ShowEgg::
     ld a, $80
@@ -189,6 +197,8 @@ GameMode8_Update_ShowEgg::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F2 GameMode8_Update_WalkSprite0", ROMX
 
 ; Egg hand-over, step 5: sprite 0 walks right, on three counts of four, to X $38, where it stops;
 ; next step. (C2, E-0357; probed E-0386)
@@ -210,6 +220,8 @@ GameMode8_Update_WalkSprite0::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank F2 GameMode8_Update_HideEgg", ROMX
+
 ; Egg hand-over, step 8: hides object 5 and clears wArg1; next step. (C2, E-0357; probed E-0386)
 GameMode8_Update_HideEgg::
     ld a, $00
@@ -219,6 +231,8 @@ GameMode8_Update_HideEgg::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F2 GameMode8_Update_WalkSprite0Off", ROMX
 
 ; Egg hand-over, step 11: sprite 0 turns left and walks off, on three counts of four, until X $E0;
 ; next step. (C2, E-0357; probed E-0386)
@@ -241,6 +255,8 @@ GameMode8_Update_WalkSprite0Off::
     inc a
     ld [wScreenSubStep], a
     ret
+
+SECTION "Bank F2 GameMode8_Update_ShowHeroReceivedGsEgg", ROMX
 
 ; Egg hand-over, step 12: '<player> received <monster>'s egg. Please raise ...' (string $0E), with
 ; the player's name and the egg's species from wChildRecord; next step. (C1, E-0357)
@@ -269,6 +285,8 @@ GameMode8_Update_ShowHeroReceivedGsEgg::
     inc [hl]
     ret
 
+SECTION "Bank F2 GameMode8_Update_CopyStringMaxC", ROMX
+
 ; HL = source string, DE = destination, C = the most bytes to copy (0 counts as 256). Copies bytes
 ; from HL to DE until it reads a $F0 end byte (not copied) or has copied C bytes, then stores $F0 at
 ; DE, so the destination needs room for C + 1 bytes. It returns with A = $F0, HL after the last byte
@@ -290,12 +308,16 @@ GameMode8_Update_CopyStringMaxC::
     ld [de], a
     ret
 
+SECTION "Bank F2 GameMode8_Update_BackToTitleMenu", ROMX
+
 ; Egg hand-over, step 13: calls GameMode8_Update_EndMode, which clears the screen variables and
 ; wLinkScene and requests game mode 5 with wModeState 1 (GameMode5_Init_TitleMenu), so the scene
 ; ends at the title menu, not in the field. (C2, E-0386)
 GameMode8_Update_BackToTitleMenu::
     call GameMode8_Update_EndMode
     ret
+
+SECTION "Bank F2 CopyMonsterNameToBuffer_BF2", ROMX
 
 ; HL = monster id. Copies the 16 bytes of that monster name to wNameGlyphBuf: with wDataBank
 ; temporarily set to $08 it reads the pointer of entry 2 of StringDatabase
@@ -337,6 +359,8 @@ CopyMonsterNameToBuffer_BF2::
     call CopyFromBankWaitVRAM
     ret
 
+SECTION "Bank F2 RunTextUntilTextWindowStateDone_BankF2", ROMX
+
 ; Opens the default text window and waits for it: it blanks the window tiles (FillTilesRequest with
 ; HL = vTiles1, DE = $1202), sets wTextWindowState to 1 (opening), wTextWindowStep to 0 and
 ; hSpriteWindowClipMode to 2, then far-calls StepTextWindowOpenClose until the low two bits of
@@ -363,6 +387,8 @@ RunTextUntilTextWindowStateDone_BankF2::
     jr nz, .loop
     ret
 
+SECTION "Bank F2 GameMode8_Update_EndMode", ROMX
+
 ; Clears the screen variables ($6F bytes from wScreenState) and wLinkScene and requests game mode 5,
 ; mode state 1. (C2, E-0357; probed E-0386)
 GameMode8_Update_EndMode::
@@ -385,6 +411,8 @@ GameMode8_Update_EndMode::
     ld a, $01
     ld [wModeChangeRequest], a
     ret
+
+SECTION "Bank F2 GameMode8_Update_SetUpScene", ROMX
 
 ; Sets up the egg hand-over: sprite slot 0 and its graphics from one of two sets by EVENT_NEVER_SET
 ; (the other set is never used), object 1 from one of two sets by wLinkHatchData, field command $0D,
@@ -464,6 +492,8 @@ GameMode8_Update_SetUpScene::
 .return:
     ret
 
+SECTION "Bank F2 CopyBytesDEFromHL_BankF2", ROMX
+
 ; HL = source, DE = destination, B = number of bytes (0 counts as 256). Copies B bytes from HL to DE
 ; and returns with B = 0, HL and DE advanced by the count and A = the last byte copied.
 ; GameMode8_Update_SetUpScene uses it for the 16-byte records copied to wSpriteSlots and wObject1
@@ -476,6 +506,8 @@ CopyBytesDEFromHL_BankF2::
     dec b
     jr nz, CopyBytesDEFromHL_BankF2
     ret
+
+SECTION "Bank F2 GameMode8_Update_SetUpScene_Data1", ROMX
 
 ; Six bytes copied into hTemp0-hTemp5 for DecompressGraphicsTemp0ToTemp4: graphics id word (hTemp0,
 ; hTemp1), hTemp2 (0 = monster sprite table, non-zero = field sprite table), hTemp3 (object palette
@@ -555,6 +587,8 @@ BGMapAddressAtScroll_BankF2::
     add_a_to_hl
     ret
 
+SECTION "Bank F2 DrawScreenBufferRectToBGMap_1B_BankF2", ROMX
+
 ; HL = BG map address, DE = offset into wScreenTileBuffer, B = width, C = rows. Copies the B x C
 ; rectangle from wScreenTileBuffer + DE to the BG map at HL with CopyRectToBGMapWrapped and sets
 ; wTextCursorLo/Hi to HL + $01C1. On a CGB (wIsCGB not 0) it then selects VRAM bank 1 and work RAM
@@ -621,11 +655,15 @@ DrawScreenBufferRectToBGMap_1B_BankF2::
     ldh [c], a
     ret
 
+SECTION "Bank F2 GameMode8_Update_DrawSprites", ROMX
+
 ; Updates and draws the sprite slots, then the field sprites. (C1, E-0357)
 GameMode8_Update_DrawSprites::
     farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
     ret
+
+SECTION "Bank F2 BeginStringDisplay_BankF2", ROMX
 
 ; Starts the message wStringIndex of category wStringCategory from this bank string table
 ; (BeginStringDisplay_BankF2_StringCategories: the egg service and rename messages, such as 'Hello,
@@ -651,6 +689,8 @@ ShowString_BankF2::
     call BeginStringDisplay_BankF2
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank F2 BeginStringDisplay_BankF2_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -918,6 +958,8 @@ ShowStatsHeadingTiles::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank F2 ShowInfoOKLabelTiles", ROMX
+
 ; Draws string $0E of category 0 of the bank $0E table (the text 'InfoOK') as tiles at vTiles2 +
 ; $700, with a text window of wTextWindowRows 1 and wTextWindowWidth 7, then sets the window back to
 ; the default (vTiles1, rows 2, width $12) and copies 16 bytes from Tiles1Plus6E0Tiles_2 and 16 from
@@ -964,6 +1006,8 @@ ShowInfoOKLabelTiles::
     call CopyFromBankWaitVRAM
     ret
 
+SECTION "Bank F2 DrawRecordBufBMasterNameTiles", ROMX
+
 ; Draws the master name of the record in wRecordBufB as tiles. It copies the 16-byte plain tile
 ; pattern at SolidColor1Tile (the one FillTilesFromRequest uses) five times to vTiles2 + $290 onward
 ; with CopyTileBytesToVRAMCounted_BankF2, copies the up to 10 bytes at wRecordBufB + MON_MASTER_NAME
@@ -991,6 +1035,8 @@ DrawRecordBufBMasterNameTiles::
     ld [wNameGlyphBuf + $a], a
     call CopyGlyphTilesToVRAM
     ret
+
+SECTION "Bank F2 ShowCombinedPersonalityName", ROMX
 
 ; Shows the combined personality name of the record in wRecordBufB: it calls
 ; CombinedPersonalityLevelIndex, stores the result (0 to 26) in wStringIndex and 7 in
@@ -1030,6 +1076,8 @@ ShowCombinedPersonalityName::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank F2 CombinedPersonalityLevelIndex", ROMX
+
 ; A = 9 * L(MON_PERSONALITY) + 3 * L(MON_PERSONALITY + 3) + L(MON_PERSONALITY + 1), all bytes read
 ; from wRecordBufB, where L(v) is 0 for v of $C0 or more, 1 for v from $40 to $BF and 2 below $40
 ; (PersonalityGradeOfA). The result runs from 0 to 26 and is the index of the personality name that
@@ -1056,6 +1104,8 @@ CombinedPersonalityLevelIndex::
     add b
     ret
 
+SECTION "Bank F2 PersonalityGradeOfA", ROMX
+
 ; Grades one personality byte: A = the byte; returns C = 0 when A >= $C0, C = 1 when A >= $40,
 ; otherwise C = 2 (A is unchanged; carry is set only in the last case).
 ; CombinedPersonalityLevelIndex applies it to the bytes MON_PERSONALITY, MON_PERSONALITY + 3 and
@@ -1073,6 +1123,8 @@ PersonalityGradeOfA::
     inc c
     ret
 
+SECTION "Bank F2 ShowRecordBufBPersonalityAndMasterName", ROMX
+
 ; Draws the two name lines of the second record page for wRecordBufB. ShowCombinedPersonalityName
 ; shows the personality name (category 7 string CombinedPersonalityLevelIndex, one row of 9 tiles at
 ; vTiles2 + $200) and puts the default text window back; then DrawRecordBufBMasterNameTiles fills
@@ -1086,6 +1138,8 @@ ShowRecordBufBPersonalityAndMasterName::
     call ShowCombinedPersonalityName
     call DrawRecordBufBMasterNameTiles
     ret
+
+SECTION "Bank F2 DrawRecordBufBExpAndExpToNextLevel", ROMX
 
 ; Draws the experience of wRecordBufB as two seven-digit numbers on the second record page. First
 ; MON_EXP (24 bits, low byte first) goes through wDigits, Number24ToPackedBCD and
@@ -1201,6 +1255,8 @@ DrawRecordBufBExpAndExpToNextLevel::
     ld [wArg7], a
     jr .call_bg_map_address_at_scroll_bank_f2_2
 
+SECTION "Bank F2 ShowRecordBufBEquippedItemName", ROMX
+
 ; Shows the name of the item equipped by the monster of wRecordBufB: string number MON_ITEM of
 ; category $0B (StringTable95_Cat0B in bank $95: 'None', then names such as 'VIT Belt' and 'Life
 ; Ring') through ShowString_Bank08, in a window of 2 rows and 6 tiles at vTiles2 + $320. It writes 0
@@ -1230,6 +1286,8 @@ ShowRecordBufBEquippedItemName::
     ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     ret
+
+SECTION "Bank F2 ShowSpeciesFieldAbilityName", ROMX
 
 ; Shows the field ability name of the species of wRecordBufB: loads the species record of
 ; MON_SPECIES (LoadSpeciesRecord), takes the string number SPECIES_FIELD_ABILITY of category $0D
@@ -1264,6 +1322,8 @@ ShowSpeciesFieldAbilityName::
     farcall ShowString_Bank08
     ret
 
+SECTION "Bank F2 DrawRecordBufBParents", ROMX
+
 ; Draws the parents on the pedigree page of the record screens for wRecordBufB:
 ; DrawRecordBufBParents_DrawNames draws their names and master names, then
 ; DrawRecordBufBParents_DrawIcons their family icons, plus values and marks. No inputs; all
@@ -1276,6 +1336,8 @@ DrawRecordBufBParents::
     call DrawRecordBufBParents_DrawNames
     call DrawRecordBufBParents_DrawIcons
     ret
+
+SECTION "Bank F2 DrawRecordBufBParents_DrawNames", ROMX
 
 ; Draws record B's two parents, parent 1 first when wRecordBufB's MON_FAMILY bit 4 is clear and
 ; parent 2 first when it is set (two 4-byte tables after it: species offset, name offset, species
@@ -1414,6 +1476,8 @@ DrawRecordBufBParents_DrawNames::
     call CopyGlyphTilesToVRAM
     ret
 
+SECTION "Bank F2 ShowRecordBufBEntryStringAtArg1", ROMX
+
 ; Shows the name of one species word of wRecordBufB. wArg3 = the offset of the word in wRecordBufB
 ; and wArg1:wArg2 = the VRAM address (high:low) of the window. The string number is the low byte at
 ; that offset and the category is the high byte after it plus 2 (category 2 for ids below $100,
@@ -1447,6 +1511,8 @@ ShowRecordBufBEntryStringAtArg1::
     ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     ret
+
+SECTION "Bank F2 DrawRecordBufBParents_DrawNames_Data1", ROMX
 
 ; Eight bytes, two 4-byte records, one per parent, in the order parent 1 then parent 2: each is the
 ; wRecordBufB offsets of the species word, the name, the species word again (the species string
@@ -1579,6 +1645,8 @@ DrawRecordBufBParents_DrawIcons::
 .return:
     ret
 
+SECTION "Bank F2 PickNameBufferForFirstByte_BankF2", ROMX
+
 ; DE points at a byte: returns BC = wNameBufPlaceholder ($CCCD) when the byte is $98, otherwise BC =
 ; wNameBufAlt ($CDCC). DrawRecordBufBParents_DrawIcons calls it with DE at the plus-value offset of
 ; its parent table ($98 = MON_PARENT1_PLUS for parent 1, $A3 = MON_PARENT2_PLUS for parent 2) and
@@ -1599,6 +1667,8 @@ PickNameBufferForFirstByte_BankF2::
 
 .return:
     ret
+
+SECTION "Bank F2 DrawRecordBufBParents_DrawIcons_Data1", ROMX
 
 ; Six bytes, two 3-byte records, parent 1 then parent 2: the wRecordBufB offset of the species word,
 ; of the plus value, and of the species word again for DrawSpeciesIconForRecordBufBEntry (wArg5).
@@ -1635,6 +1705,8 @@ LoadTemp0WordFromRecordBufB::
     ldh [hTemp1], a
     ret
 
+SECTION "Bank F2 CopyShortStringToNameGlyphBuf_BankF2", ROMX
+
 ; HL = source string. Copies bytes to wNameGlyphBuf, at most 10, stopping before a $F0, then stores
 ; a $F0 terminator after them (so at wNameGlyphBuf + $0A when there is no $F0 in the first 10
 ; bytes). Returns with HL after the last byte read (after the $F0 when one stopped the copy), DE =
@@ -1660,6 +1732,8 @@ CopyShortStringToNameGlyphBuf_BankF2::
     ld [de], a
     ret
 
+SECTION "Bank F2 DrawSevenDigitsFromArg1_BankF2", ROMX
+
 ; HL = a VRAM (BG map) address. Writes the seven bytes wArg1-wArg7 as tiles $E0 + digit at HL
 ; onward, each after WaitForVRAMAccess with interrupts off, and turns interrupts back on after each
 ; byte (they are left enabled). HL ends 7 past the start, C = 0. A digit of $E3 (a blanked leading
@@ -1682,6 +1756,8 @@ DrawSevenDigitsFromArg1_BankF2::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank F2 DecompressRecordBufBSpeciesGraphics", ROMX
 
 ; Loads the three monster pictures of the pedigree page of wRecordBufB. For picture c = 0, 1, 2 it
 ; reads the species word at the wRecordBufB offset DecompressRecordBufBSpeciesGraphics_Data2[c]
@@ -1766,6 +1842,8 @@ DecompressRecordBufBSpeciesGraphics::
     jr c, .loop
     ret
 
+SECTION "Bank F2 DecompressRecordBufBSpeciesGraphics_Data1", ROMX
+
 ; Three 3-byte records for the three species pictures of record B: $00, $00, $80; $08, $00, $81;
 ; $10, $00, $82. DecompressRecordBufBSpeciesGraphics copies record c (c = 0-2) to wArg3-wArg5 for
 ; DecompressGraphicsArg1ToArg4: wArg3 is the offset into wOBJPaletteBuffer ($00, $08, $10, palette
@@ -1849,6 +1927,8 @@ DrawRecordBufBSpeciesSprites::
     cp $03
     jr c, .loop
     ret
+
+SECTION "Bank F2 DrawRecordBufBSpeciesSprites_Data", ROMX
 
 ; Three 4-byte records, one per species picture of record B: $00, $10, $78, $00; $10, $30, $68, $01;
 ; $20, $30, $88, $02. DrawRecordBufBSpeciesSprites copies record c (c = 0-2) to wArg3-wArg6 for
@@ -1970,6 +2050,8 @@ DrawLevelAndStatusRowForRecordBufBLevel::
     ei
     ret
 
+SECTION "Bank F2 WriteThreeC3TilesAtHL_BankF2", ROMX
+
 ; HL = a VRAM address. Writes the blank tile $C3 to the three bytes from HL (each after
 ; WaitForVRAMAccess, interrupts off, enabled again after each). HL is unchanged; A, C and E are
 ; clobbered. Only DrawLevelAndStatusRowForRecordBufBLevel calls it, to blank the three status mark
@@ -1992,6 +2074,8 @@ WriteThreeC3TilesAtHL_BankF2::
     pop hl
     ret
 
+SECTION "Bank F2 WriteTileC1AtHL_BankF2", ROMX
+
 ; HL = a VRAM address. Writes tile $C1 there after WaitForVRAMAccess with interrupts off and leaves
 ; interrupts enabled; HL is unchanged and A = $C1. DrawLevelAndStatusRowForRecordBufBLevel calls it
 ; when bit 0 of MON_STATUS is set. (C1, E-0386)
@@ -2004,6 +2088,8 @@ WriteTileC1AtHL_BankF2::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank F2 WriteTileC0AtHL_BankF2", ROMX
 
 ; HL = a VRAM address. Writes tile $C0 there after WaitForVRAMAccess with interrupts off and leaves
 ; interrupts enabled; HL is unchanged and A = $C0. DrawLevelAndStatusRowForRecordBufBLevel calls it
@@ -2018,6 +2104,8 @@ WriteTileC0AtHL_BankF2::
     ei
     ret
 
+SECTION "Bank F2 WriteTileC2AtHL_BankF2", ROMX
+
 ; HL = a VRAM address. Writes tile $C2 there after WaitForVRAMAccess with interrupts off and leaves
 ; interrupts enabled; HL is unchanged and A = $C2. DrawLevelAndStatusRowForRecordBufBLevel calls it
 ; when bit 7 of MON_STATUS is set. (C1, E-0386)
@@ -2031,6 +2119,8 @@ WriteTileC2AtHL_BankF2::
     ei
     ret
 
+SECTION "Bank F2 DrawRecordBufBStatsScreen", ROMX
+
 ; Draws the values of the first record page for wRecordBufB: the level and status row
 ; (DrawLevelAndStatusRowForRecordBufBLevel), the column of ATK, DEF, AGL, INT and WLD
 ; (DrawRecordBufBStatColumn) and the HP and MP numbers (DrawRecordBufBHpMpDigits). No inputs; all
@@ -2043,6 +2133,8 @@ DrawRecordBufBStatsScreen::
     call DrawRecordBufBStatColumn
     call DrawRecordBufBHpMpDigits
     ret
+
+SECTION "Bank F2 DrawRecordBufBHpMpDigits", ROMX
 
 ; Draws four numbers of wRecordBufB as three digits each: for c = 0-3 it reads the word at the
 ; wRecordBufB offset DrawRecordBufBHpMpDigits_Data1[c] (MON_HP, MON_MAX_HP, MON_MP, MON_MAX_MP),
@@ -2090,6 +2182,8 @@ DrawRecordBufBHpMpDigits::
     cp $04
     jr c, .loop
     ret
+
+SECTION "Bank F2 DrawRecordBufBHpMpDigits_Data1", ROMX
 
 ; Four wRecordBufB offsets of words: $5B (MON_HP), $5D (MON_MAX_HP), $5F (MON_MP) and $61
 ; (MON_MAX_MP). DrawRecordBufBHpMpDigits reads word c (c = 0-3), converts it to digits
@@ -2154,6 +2248,8 @@ DrawRecordBufBStatColumn::
     jr c, .loop
     ret
 
+SECTION "Bank F2 DrawRecordBufBStatColumn_Data", ROMX
+
 ; Five wRecordBufB offsets of word stats: $63 (MON_ATK), $65 (MON_DEF), $67 (MON_AGL), $69 (MON_INT)
 ; and $6B (MON_WLD). DrawRecordBufBStatColumn reads word c (c = 0-4) and writes its three digit
 ; tiles in a column that starts at the scroll position plus $70 and goes down two BG map rows ($40)
@@ -2188,6 +2284,8 @@ WriteThreeDigitsAtHL::
     ei
     ret
 
+SECTION "Bank F2 DrawSpeciesIconForRecordBufBEntry", ROMX
+
 ; wArg5 = the offset in wRecordBufB of a species word. Reads the word into hTemp0/hTemp1 and
 ; far-calls DrawSpeciesAndFamilyIconForTemp0, which loads the family icon of that species into tile
 ; number wArg4 (it overwrites wArg5-wArg7 and wWorkBuf), then jumps to DrawRecordBufBPlusValue,
@@ -2208,6 +2306,8 @@ DrawSpeciesIconForRecordBufBEntry::
     farcall DrawSpeciesAndFamilyIconForTemp0
     pop bc
     jp DrawRecordBufBPlusValue
+
+SECTION "Bank F2 DrawRecordBufBFamilyIconAndPlus", ROMX
 
 ; Draws the family icon and the plus value of the monster in wRecordBufB. Sets wWorkBuf to the low
 ; nibble of wRecordBufB + MON_FAMILY and wWorkBuf + 1 to wArg4, then far-calls
@@ -2287,6 +2387,8 @@ DrawRecordBufBPlusValue::
     ei
     ret
 
+SECTION "Bank F2 BGMapAddressAtScroll_BankF2_2", ROMX
+
 ; HL = the BG map 0 cell at the scroll origin: vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8 (32
 ; cells per tile row, so the pixel row divided by 8 times 32, plus the tile column). Clobbers A and
 ; DE. The callers add a cell offset to it before drawing tiles (DrawRecordBufBPlusValue adds
@@ -2312,6 +2414,8 @@ BGMapAddressAtScroll_BankF2_2::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank F2 CopyTileBytesToVRAMCounted_BankF2", ROMX
 
 ; Copies one tile, 16 bytes, from [HL] to [DE]. For each byte it disables interrupts, waits until
 ; bit 1 of rSTAT is clear (the screen is not in OAM scan or drawing, so VRAM is open), writes the
@@ -2340,6 +2444,8 @@ CopyTileBytesToVRAMCounted_BankF2::
     dec a
     jr nz, .loop
     ret
+
+SECTION "Bank F2 PermuteArg5To7ByMonster", ROMX
 
 ; Reorders the three bytes wArg5-wArg7 for one monster. Input: wArg2:wArg1 = a monster id (wArg1 the
 ; low byte; MonsterArgOrderTable has 384 rows). It reads the 3-byte row MonsterArgOrderTable + 3 *
@@ -2390,6 +2496,8 @@ PermuteArg5To7ByMonster::
     ld a, [wArg3]
     ld [wArg7], a
     ret
+
+SECTION "Bank F2 MonsterArgOrderTable", ROMX
 
 ; PermuteArg5To7ByMonster reads the 3 bytes at $51C3 + 3 * (wArg2:wArg1), stores wArg5 + k at wArg1
 ; + byte k, then copies wArg1-3 back to wArg5-7; all 384 entries are permutations; the caller,
@@ -3990,6 +4098,8 @@ KeyAppraisalMenu_ChooseKey_ListCursor_SortKeys::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank F2 CopyWorkBuf1ToKeyList", ROMX
+
 ; Copies $C0 bytes from wWorkBuf + 1 to wKeyList. The first $80 bytes are the 32 four-byte key
 ; entries; the next $40 bytes land on wKeySeeds (the 32 seed words) and come from wKeyGenList, which
 ; sits right behind the first $80 bytes of wWorkBuf + 1. So one copy puts back both the reordered
@@ -4009,6 +4119,8 @@ CopyWorkBuf1ToKeyList::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank F2 ReorderKeyList", ROMX
 
 ; Rebuilds the key list in wWorkBuf + 1 in a new order, alternating on each call by the byte
 ; wWorkBuf (0 or 1, flipped here). It first fills the $C0 bytes from wWorkBuf + 1 with $FF and sets
@@ -4052,6 +4164,8 @@ ReorderKeyList::
     ld hl, wKeyList
     call CopyFlaggedKeys
     ret
+
+SECTION "Bank F2 CopyUnflaggedKeys", ROMX
 
 ; Copies the keys that do not have byte 3 bit 7 with a kind below 7 (CopyUnflaggedKeys_CheckEntry
 ; loop over 32 entries). (C2, E-0357; probed E-0386)
@@ -4134,6 +4248,8 @@ CopyUnflaggedKeys_NextEntry::
     jr nz, CopyUnflaggedKeys_CheckEntry
     ret
 
+SECTION "Bank F2 CopyFlaggedKeys", ROMX
+
 ; Copies the keys whose byte 3 has bit 7 set and kind below 7, with their seeds. (C2, E-0357; probed
 ; E-0386)
 CopyFlaggedKeys::
@@ -4204,6 +4320,8 @@ CopyFlaggedKeys::
     jr nz, .loop
     ret
 
+SECTION "Bank F2 VaultMenu_ReorderBagOrStorage", ROMX
+
 ; Reorders either the bag grid or the Vault storage by the current order list. When wScreenState is
 ; 3 (storing) it jumps to VaultMenu_ReorderBagOrStorage_ToggleBagOrder, which rebuilds wItemGrid
 ; from the bag; in every other state it calls VaultMenu_ReorderBagOrStorage_SortStorage, which
@@ -4221,6 +4339,8 @@ VaultMenu_ReorderBagOrStorage::
     jr z, VaultMenu_ReorderBagOrStorage_ToggleBagOrder
     call VaultMenu_ReorderBagOrStorage_SortStorage
     ret
+
+SECTION "Bank F2 VaultMenu_Store_MoveItems_RebuildBagGrid", ROMX
 
 ; Far-called by VaultMenu_Store_MoveItems after an item has been stored (wScreenState 3): clears 24
 ; bytes of wWorkBuf and rebuilds wItemGrid in the current order, ItemOrderListA when wCounterPtr0Lo
@@ -4249,6 +4369,8 @@ VaultMenu_Store_MoveItems_RebuildBagGrid::
 .call_vault_menu_store_map_items_to_inventory2:
     call VaultMenu_Store_MapItemsToInventory
     ret
+
+SECTION "Bank F2 VaultMenu_ReorderBagOrStorage_ToggleBagOrder", ROMX
 
 ; The storing branch of VaultMenu_ReorderBagOrStorage (reached by jr when wScreenState is 3): clears
 ; 24 bytes of wWorkBuf, switches the item order (ItemOrderListA with wCounterPtr0Lo = 1 when it was
@@ -4341,6 +4463,8 @@ VaultMenu_Store_MapItemsToInventory::
     jr nz, .loop2
     ret
 
+SECTION "Bank F2 VaultMenu_ReorderBagOrStorage_SortStorage", ROMX
+
 ; Sorts storage: switches the order list as VaultMenu_ReorderBagOrStorage_ToggleBagOrder, rebuilds
 ; the 100 two-byte entries of wItemStorage in the list's order in wWorkBuf (entries whose item is
 ; not in the list are not copied) and copies them back. (C2, E-0357; probed E-0386)
@@ -4422,6 +4546,8 @@ VaultMenu_ReorderBagOrStorage_SortStorage::
     dec b
     jr nz, .loop3
     ret
+
+SECTION "Bank F2 ItemOrderListA", ROMX
 
 ; passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to
 ; VaultMenu_Store_MapItemsToInventory, which walks the list up to $FF and, for each byte found among
@@ -4560,6 +4686,8 @@ ClampPartyHPAndMPToMax::
     jp nz, .loop
     ret
 
+SECTION "Bank F2 CompareHLWithDE_BankF2", ROMX
+
 ; Compares HL with DE as unsigned 16-bit numbers, high bytes first. C = 0 when HL < DE, C = 1 when
 ; they are equal, C = $FF when HL > DE; HL, DE and B are kept (A ends as the last byte compared). A
 ; copy of CompareHLWithDE for this bank. ClampPartyHPAndMPToMax calls it with HL = the maximum and
@@ -4586,6 +4714,8 @@ CompareHLWithDE_BankF2::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank F2 GreatLogTalkEvents_ClearArenaData", ROMX
 
 ; Clears $20F bytes to 0, from wArenaEntry through wArenaEntry + $20E (HL walks up, BC counts down).
 ; The range includes wScreenState and wScreenStep (wArenaEntry + $200 and + $201). Far-called by

@@ -1,7 +1,7 @@
 ; ROM bank $05: battle AI: per-skill scoring routines (AIScore_*) and their conditions
 ; The annotated listing of this bank is build/listing/bank05.asm.
 
-SECTION "Bank 05", ROMX[$4000], BANK[$05]
+SECTION "Bank 05", ROMX
     db $05
 
 ; A = battle slot: returns HL = the ATK word of the slot from wBattleATK (wBattleATK + 2 * A, A
@@ -12,6 +12,8 @@ GetBattleATK_Bank05::
     ld hl, wBattleATK
     jr GetBattleStatWord_Bank05
 
+SECTION "Bank 05 GetBattleDEF_Bank05", ROMX
+
 ; A = battle slot: returns HL = the DEF word of the slot from wBattleDEF (wBattleDEF + 2 * A, A
 ; doubled in 8 bits) and A = its low byte, through GetBattleStatWord_Bank05. The AI condition and
 ; scoring routines of this bank call it. (C2, E-0375)
@@ -19,6 +21,8 @@ GetBattleATK_Bank05::
 GetBattleDEF_Bank05::
     ld hl, wBattleDEF
     jr GetBattleStatWord_Bank05
+
+SECTION "Bank 05 GetBattleMaxHP_Bank05", ROMX
 
 ; A = battle slot: returns HL = the max HP word of the slot from wBattleMaxHP (wBattleMaxHP + 2 * A,
 ; A doubled in 8 bits) and A = its low byte, through GetBattleStatWord_Bank05. The AI condition and
@@ -28,6 +32,8 @@ GetBattleMaxHP_Bank05::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_Bank05
 
+SECTION "Bank 05 GetBattleMaxMP_Bank05", ROMX
+
 ; A = battle slot: returns HL = the max MP word of the slot from wBattleMaxMP (wBattleMaxMP + 2 * A,
 ; A doubled in 8 bits) and A = its low byte, through GetBattleStatWord_Bank05. The AI condition and
 ; scoring routines of this bank call it. (C2, E-0375)
@@ -35,6 +41,8 @@ GetBattleMaxHP_Bank05::
 GetBattleMaxMP_Bank05::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_Bank05
+
+SECTION "Bank 05 GetBattleHP_Bank05", ROMX
 
 ; A = battle slot: returns HL = the HP word of the slot from wBattleHP (wBattleHP + 2 * A, A doubled
 ; in 8 bits) and A = its low byte, through GetBattleStatWord_Bank05. The AI condition and scoring
@@ -44,6 +52,8 @@ GetBattleHP_Bank05::
     ld hl, wBattleHP
     jr GetBattleStatWord_Bank05
 
+SECTION "Bank 05 GetBattleMP_Bank05", ROMX
+
 ; A = battle slot: returns HL = the MP word of the slot from wBattleMP (wBattleMP + 2 * A, A doubled
 ; in 8 bits) and A = its low byte, through GetBattleStatWord_Bank05. The AI condition and scoring
 ; routines of this bank call it. (C2, E-0375)
@@ -52,6 +62,8 @@ GetBattleMP_Bank05::
     ld hl, wBattleMP
     jr GetBattleStatWord_Bank05
 
+SECTION "Bank 05 GetBattleAGL_Bank05", ROMX
+
 ; A = battle slot: returns HL = the AGL word of the slot from wBattleAGL (wBattleAGL + 2 * A, A
 ; doubled in 8 bits) and A = its low byte, through GetBattleStatWord_Bank05. The AI condition and
 ; scoring routines of this bank call it. (C2, E-0375)
@@ -59,6 +71,8 @@ GetBattleMP_Bank05::
 GetBattleAGL_Bank05::
     ld hl, wBattleAGL
     jr GetBattleStatWord_Bank05
+
+SECTION "Bank 05 ReadSlotAIModeIndexed_Bank05_2", ROMX
 
 ; A = battle slot: returns A = wSlotAIMode[slot] (the byte at wSlotAIMode + A); clobbers HL. The
 ; same code appears again in this bank as ReadSlotAIModeIndexed_Bank05; this copy is called by
@@ -72,6 +86,8 @@ ReadSlotAIModeIndexed_Bank05_2::
     ld a, [hl]
     ret
 
+SECTION "Bank 05 GetBattleStatWord_Bank05", ROMX
+
 ; The shared tail of GetBattleATK_Bank05 ... GetBattleAGL_Bank05: HL = a per-slot word table, A =
 ; slot: returns HL = the word at HL + 2 * A (A doubled in 8 bits) and A = its low byte (deref_hl).
 ; (C2, E-0369; probed E-0375)
@@ -81,6 +97,8 @@ GetBattleStatWord_Bank05::
     deref_hl
     ret
 
+SECTION "Bank 05 AddDoubleAToHL_Bank05", ROMX
+
 ; HL += 2 * A, with A doubled in 8 bits first (so A = $80 or more wraps: $81 adds 2); A ends as the
 ; new L. No caller in src reaches this copy; the same 7 bytes appear in 12 banks. (C2, E-0375)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
@@ -89,6 +107,8 @@ AddDoubleAToHL_Bank05::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank 05 ActorOnLocalSide_Bank05", ROMX
 
 ; Carry set when wBattleActor is below 4 (slots 0-3), with A = wBattleActor; in a link battle
 ; (wLinkMode = 1) with wLinkRole bit 1 set the test is reversed: carry set when it is 4 or more.
@@ -114,6 +134,8 @@ ActorOnLocalSide_Bank05::
     cp $04
     ret
 
+SECTION "Bank 05 TargetOnLocalSide_Bank05", ROMX
+
 ; Carry set when wBattleTarget is below 4 (slots 0-3), with A = wBattleTarget; in a link battle
 ; (wLinkMode = 1) with wLinkRole bit 1 set the test is reversed: carry set when it is 4 or more.
 ; Which side is local is inferred from the reversal, not checked. No caller in src reaches this
@@ -138,6 +160,8 @@ TargetOnLocalSide_Bank05::
     cp $04
     ret
 
+SECTION "Bank 05 ClearBattleStatusBitsWithMaskD_Bank05", ROMX
+
 ; D = mask number 0-6, E = slot: ANDs ClearBitMaskTable_Bank05[D] ($DF, $FE, $00, $FD, $73, $EF,
 ; $BF) into status byte 0 of the slot (wBattleStatus + 9 * E), clearing BSTAT0_CURSED,
 ; BSTAT0_POISONED, the whole byte, BSTAT0_BADLY_POISONED, the sleep bits (BSTAT0_ASLEEP and both
@@ -157,6 +181,8 @@ ClearBattleStatusBitsWithMaskD_Bank05:: ; configured code entry (E-0205); C0
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 05 ClearBitMaskTable_Bank05", ROMX
 
 ; the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 *
 ; E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks
@@ -184,6 +210,8 @@ SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank 05 SetBit1OfLevelUpGainsIndexed_Bank05", ROMX
+
 ; Sets bit 1 of the byte at wLevelUpGains + A (other bits kept); HL is kept and A ends as the low
 ; byte of that address. No caller in src reaches this copy; the same 13 bytes appear in 12 banks.
 ; (C2, E-0375)
@@ -197,6 +225,8 @@ SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank 05 SetBit2OfLevelUpGainsIndexed_Bank05", ROMX
+
 ; Sets bit 2 of the byte at wLevelUpGains + A (other bits kept); HL is kept and A ends as the low
 ; byte of that address. No caller in src reaches this copy; the same 13 bytes appear in 12 banks.
 ; (C2, E-0375)
@@ -209,6 +239,8 @@ SetBit2OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank 05 PersonalityIndexOfSlot_Bank05", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]), where g(v) = 0 for v >= $C0, 1 for $40-$BF and 2 below $40: an index
@@ -273,6 +305,8 @@ PersonalityIndexOfSlot_Bank05:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank 05 CheckSlotStatusBlockWide_Bank05", ROMX
+
 ; A = slot: carry set when CheckSlotStatusBlock sets it (the slot is out, or asleep, paralysed,
 ; confused, frozen ... vacant, ironized or byte 8 bit 3), or when status byte 3 & $C0
 ; (BSTAT3_AIRBORNE, BSTAT3_AIRBORNE_HI) or byte 4 & $0C (BSTAT4_HIGH_JUMP, BSTAT4_HIGH_JUMP_HI) is
@@ -307,6 +341,8 @@ CheckSlotStatusBlockWide_Bank05:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
+SECTION "Bank 05 SlotHasStatus3Or4Bits_Bank05", ROMX
+
 ; A = slot: returns A = status byte 3 & $C0 (BSTAT3_AIRBORNE, BSTAT3_AIRBORNE_HI), or when that is 0
 ; status byte 4 & $0C (BSTAT4_HIGH_JUMP, BSTAT4_HIGH_JUMP_HI), with Z set when both are clear; HL is
 ; kept. No caller in src reaches this copy; the same 17 bytes appear in 13 banks. (C2, E-0375)
@@ -326,6 +362,8 @@ SlotHasStatus3Or4Bits_Bank05:: ; configured code entry (E-0205); C0
 .done:
     pop hl
     ret
+
+SECTION "Bank 05 ActorCanPayMPCost_Bank05", ROMX
 
 ; Cost = wRecordBufferData (byte 0 of the loaded skill record): returns C = $FF (can pay) when the
 ; cost is 0, when the cost is $FF and the MP word of the actor (wBattleMP + 2 * wBattleActor) is not
@@ -366,6 +404,8 @@ ActorCanPayMPCost_Bank05::
     ld c, $ff
     ret
 
+SECTION "Bank 05 SkillPassesStatus1Bit0Check", ROMX
+
 ; C = 0 (fail) when the loaded skill record has bit 6 of wRecordBufferData + 5 set (the flag $40
 ; that AIScore_StopSpell_Conditions_AnyFoeSealable takes as a spell) and the actor has
 ; BSTAT1_SPELLS_SEALED; C = $FF otherwise. Compare refusal code 3 of CheckSkillMPCost. (C2, E-0375)
@@ -387,6 +427,8 @@ SkillPassesStatus1Bit0Check::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 SkillPassesStatus1Bit7Check", ROMX
 
 ; C = 0 (fail) when the loaded skill record has bit 4 of wRecordBufferData + 5 set (the flag $10
 ; that AnyFoeWithSkillFlag10VulnerableSlotResistances6 pairs with BSTAT1_BREATH_SEALED) and the
@@ -411,6 +453,8 @@ SkillPassesStatus1Bit7Check::
     ld c, $ff
     ret
 
+SECTION "Bank 05 SkillPassesStatus1Bit6Check", ROMX
+
 ; C = 0 (fail) when the loaded skill record has bit 5 of wRecordBufferData + 5 set (the flag $20
 ; that AIScore_DanceShut_Conditions_AnyFoeSealable takes as a dance) and the actor has
 ; BSTAT1_DANCE_SEALED (status byte 1 bit 6, wBattleStatus1); C = $FF otherwise. (C2, E-0375)
@@ -432,6 +476,8 @@ SkillPassesStatus1Bit6Check::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 SkillPassesSideFlagBit3Check", ROMX
 
 ; When bit 3 is set in wSideFlags0 or wSideFlags1 (either side), C = 0 (fail) if the skill number in
 ; wRecordBuffer is SKILL_THICKFOG ($84) or the loaded skill record has bit 6 of wRecordBufferData +
@@ -461,6 +507,8 @@ SkillPassesSideFlagBit3Check::
     ld c, $ff
     ret
 
+SECTION "Bank 05 SkillPassesRepeatCheck", ROMX
+
 ; C = 0 (fail) when bit 7 of wRecordBufferData + 8 of the loaded skill record is set and the skill
 ; number in wRecordBuffer is the queued action (QueuedActionMatches: wQueuedActionId, or the other
 ; id of one of its pairs); C = $FF otherwise. CheckSkillUsableElseResetAISkillScore runs it second,
@@ -481,6 +529,8 @@ SkillPassesRepeatCheck::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeLacksStatus2Mask22", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with neither BSTAT2_BOUNCE nor BSTAT2_MAGIC_BACK (status byte
 ; 2 & $22 clear); C = 0 when every present foe has one of those bits, or none is present
@@ -496,6 +546,8 @@ AnyFoeLacksStatus2Mask22::
     ld e, $22
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus5Bits67", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with neither BSTAT5_IRONIZED nor BSTAT5_IRONIZE_TURNS_HI
@@ -514,6 +566,8 @@ AnyFoeLacksStatus5Bits67::
     call AnySlotLacksStatusMask
     ret
 
+SECTION "Bank 05 AnyFoeLacksStatus2Bit3", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with BSTAT2_AQUA_WALL clear;
 ; CheckSkillUsableElseResetAISkillScore runs it fourth of the checks every scored skill goes
@@ -530,6 +584,8 @@ AnyFoeLacksStatus2Bit3::
     ld e, $08
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus3And4Bits", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present with
 ; status byte 3 & $C0 (BSTAT3_AIRBORNE, BSTAT3_AIRBORNE_HI) and status byte 4 & $0C
@@ -581,6 +637,8 @@ AnyFoeLacksStatus3And4Bits::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeHasMPReadsWrongOffset", ROMX
+
 ; Meant to pass (C = $FF) when a present foe has MP, but it reads the word at wBattleMP + 16 * slot
 ; (swap a) instead of 2 * slot: for foes in slots 4, 5 and 6 that is the first word of wBattleAGL,
 ; wBattleINT and wBattleExtraStat (slot 0 values), and for slots 0-2 the slot-0 words of wBattleMP,
@@ -622,6 +680,8 @@ AnyFoeHasMPReadsWrongOffset::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_TakeMagic_Conditions_FoeHasTakeableSkill", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2 (the check is skipped). Otherwise, for each present
 ; foe of the three slots of the other side (wBattleActor & 4, xor 4), it reads the eight bytes at
@@ -726,6 +786,8 @@ AIScore_TakeMagic_Conditions_FoeHasTakeableSkill::
     ld c, $01
     ret
 
+SECTION "Bank 05 AnyFoeLacksStatus0Bit6", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with BSTAT0_PARALYZED clear; C = 0 when every present foe has
 ; one of those bits, or none is present (AnySlotLacksStatusMask). (C2, E-0375)
@@ -740,6 +802,8 @@ AnyFoeLacksStatus0Bit6::
     ld e, $40
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyActiveFoeHasSkillFlag40", ROMX
 
 ; C = 1 when the AI mode of the actor (wSlotAIMode) is below 2 (the check is skipped); otherwise C =
 ; $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present, lacks
@@ -794,6 +858,8 @@ AnyActiveFoeHasSkillFlag40::
     ld c, $01
     ret
 
+SECTION "Bank 05 AnyFoeHasSkillFlag10", ROMX
+
 ; C = 1 when the AI mode of the actor is below 2 (the check is skipped); otherwise C = $FF when one
 ; of the three slots of the other side (wBattleActor & 4, xor 4) is present and has a skill whose
 ; record byte 5 has bit 4 ($10) set (SlotHasSkillWithFlagD), else C = 0. No seal status is tested.
@@ -841,6 +907,8 @@ AnyFoeHasSkillFlag10::
     ld c, $01
     ret
 
+SECTION "Bank 05 AIScore_DanceShut_Conditions_UnsealedDancer", ROMX
+
 ; DanceShut AI condition: passes when some present foe is not yet dance-sealed (BSTAT1_DANCE_SEALED)
 ; and knows a skill with flag $20 (a dance); C = 1 below AI mode 2. (C2, E-0357; probed E-0375)
 AIScore_DanceShut_Conditions_UnsealedDancer::
@@ -887,6 +955,8 @@ AIScore_DanceShut_Conditions_UnsealedDancer::
 .done:
     ld c, $01
     ret
+
+SECTION "Bank 05 AnyFoeNotFullyResistant", ROMX
 
 ; Resistance gate for the skill being scored: wRecordBufferData + 1 is its resistance class (0 none,
 ; otherwise RESIST_* + 1, the order of AnyFoeNotFullyResistant_Data, which gives the
@@ -947,6 +1017,8 @@ AnyFoeNotFullyResistant::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeHasDEFAtLeast2", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present with a
 ; DEF word (GetBattleDEF_Bank05) of 2 or more, else C = 0. (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with DEF (GetBattleDEF_Bank05) of
@@ -981,6 +1053,8 @@ AnyFoeHasDEFAtLeast2::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_SquallHit_Conditions_AnyFoeAGL2", ROMX
+
 ; SquallHit AI condition: passes when some present foe has an AGL of 2 or more. (C2, E-0357; probed
 ; E-0375)
 AIScore_SquallHit_Conditions_AnyFoeAGL2::
@@ -1013,6 +1087,8 @@ AIScore_SquallHit_Conditions_AnyFoeAGL2::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_FireAir_Conditions_FoeLacksWindGuard", ROMX
+
 ; Condition of AIScore_FireAir_Conditions: C = $FF when some present foe lacks BSTAT2_WIND_GUARD
 ; (status 2 bit 6), else C = 0 (AnySlotLacksStatusMask). (C2, E-0369; probed E-0375)
 AIScore_FireAir_Conditions_FoeLacksWindGuard::
@@ -1024,6 +1100,8 @@ AIScore_FireAir_Conditions_FoeLacksWindGuard::
     ld b, $03
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus0Bit4", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with BSTAT0_CONFUSED clear; C = 0 when every present foe has
@@ -1040,6 +1118,8 @@ AnyFoeLacksStatus0Bit4::
     call AnySlotLacksStatusMask
     ret
 
+SECTION "Bank 05 AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned", ROMX
+
 ; Condition of AIScore_PoisonAir_Conditions: C = $FF when some present foe lacks
 ; BSTAT0_BADLY_POISONED (status 0 bit 1), else C = 0 (AnySlotLacksStatusMask); BSTAT0_POISONED is
 ; not tested. (C2, E-0369; probed E-0375)
@@ -1052,6 +1132,8 @@ AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned::
     ld b, $03
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus0Bits01", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with neither BSTAT0_POISONED nor BSTAT0_BADLY_POISONED (status
@@ -1069,6 +1151,8 @@ AnyFoeLacksStatus0Bits01::
     call AnySlotLacksStatusMask
     ret
 
+SECTION "Bank 05 AnyFoeLacksStatus0MaskCC", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with none of BSTAT0_ASLEEP, BSTAT0_PARALYZED and the two sleep
 ; turn bits (status byte 0 & $CC clear); C = 0 when every present foe has one of those bits, or none
@@ -1084,6 +1168,8 @@ AnyFoeLacksStatus0MaskCC::
     ld hl, wBattleStatus
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AIScore_AquaWall_Conditions_UnsealedFoeSkill", ROMX
 
 ; Condition of AIScore_AquaWall_Conditions: C = $FF when some present foe with none of
 ; BSTAT1_SPELLS_SEALED, BSTAT1_DANCE_SEALED and BSTAT1_BREATH_SEALED (status 1 & $C1) knows a skill
@@ -1135,6 +1221,8 @@ AIScore_AquaWall_Conditions_UnsealedFoeSkill::
     ld c, $01
     ret
 
+SECTION "Bank 05 AnyFoeLacksStatus5Bits01", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with neither BSTAT5_RADIANT_BLIND nor BSTAT5_SANDSTORM_BLIND
 ; (status byte 5 & $03 clear); no caller in src reaches it; C = 0 when every present foe has one of
@@ -1150,6 +1238,8 @@ AnyFoeLacksStatus5Bits01::
     ld e, $03
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus5Bit0And1Bit1", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present with
 ; BSTAT5_RADIANT_BLIND (status byte 5 bit 0) clear and BSTAT1_BLINDED (status byte 1 bit 1) clear; C
@@ -1191,6 +1281,8 @@ AnyFoeLacksStatus5Bit0And1Bit1::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeLacksStatus5Bit1And1Bit1", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present with
 ; BSTAT5_SANDSTORM_BLIND (status byte 5 bit 1) clear and BSTAT1_BLINDED (status byte 1 bit 1) clear;
 ; C = 0 when no present foe has both clear. No caller in src reaches it. (C2, E-0375)
@@ -1230,6 +1322,8 @@ AnyFoeLacksStatus5Bit1And1Bit1::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus5Bits01And1Bit1", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present with
 ; both BSTAT5_RADIANT_BLIND and BSTAT5_SANDSTORM_BLIND (status byte 5 & $03) clear and
@@ -1271,6 +1365,8 @@ AnyFoeLacksStatus5Bits01And1Bit1::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeLacksStatus1Bit0", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with BSTAT1_SPELLS_SEALED clear; C = 0 when every present foe
 ; has one of those bits, or none is present (AnySlotLacksStatusMask). (C2, E-0375)
@@ -1285,6 +1381,8 @@ AnyFoeLacksStatus1Bit0::
     ld e, $01
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus1Bit7", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with BSTAT1_BREATH_SEALED clear; C = 0 when every present foe
@@ -1301,6 +1399,8 @@ AnyFoeLacksStatus1Bit7::
     call AnySlotLacksStatusMask
     ret
 
+SECTION "Bank 05 AIScore_DanceShut_Conditions_FoeNotDanceSealed", ROMX
+
 ; DanceShut AI condition: passes when some present foe lacks status 1 bit 6. (C2, E-0357; probed
 ; E-0375)
 AIScore_DanceShut_Conditions_FoeNotDanceSealed::
@@ -1312,6 +1412,8 @@ AIScore_DanceShut_Conditions_FoeNotDanceSealed::
     ld e, $40
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeNotBlocked", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) passes
 ; CheckSlotStatusBlock (present and none of: asleep, paralysed, confused, BSTAT3_FROZEN ...
@@ -1338,6 +1440,8 @@ AnyFoeNotBlocked::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_LegSweep_Conditions_AnyFoeTrippable", ROMX
 
 ; LegSweep AI condition: passes when some present foe can be tripped: not marked in wSlotBodyFlags
 ; bit 4, no status 3 bits 6-7, and status 3 bits 2-3 clear. (C2, E-0357; probed E-0375)
@@ -1390,6 +1494,8 @@ AIScore_LegSweep_Conditions_AnyFoeTrippable::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeHasClearStatus3", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present
 ; (CarryUnlessBattleSlotOutSlotEmpty) with status byte 3 entirely clear (none of BSTAT3_FROZEN ...
 ; BSTAT3_AIRBORNE_HI); C = 0 when every present foe has one of those bits, or none is present
@@ -1405,6 +1511,8 @@ AnyFoeHasClearStatus3::
     ld e, $ff
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AIGateFoeStatus2Mask22", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2. Otherwise, only when the resistance class of the
 ; loaded skill (wRecordBufferData + 1, TestRecordBufferData1) is 3 (RESIST_BANG + 1): C = 0 when one
@@ -1457,6 +1565,8 @@ AIGateFoeStatus2Mask22::
     ld c, $01
     ret
 
+SECTION "Bank 05 AIScore_FireAir_WindGuardCheck", ROMX
+
 ; FireAir AI condition: for an elemental skill with resistance class 3 (wRecordBufferData + 1),
 ; fails when a present foe has status 2 bit 6 set; passes otherwise; C = 1 below AI mode 2. (C2,
 ; E-0357; probed E-0375)
@@ -1505,6 +1615,8 @@ AIScore_FireAir_WindGuardCheck::
     ld c, $01
     ret
 
+SECTION "Bank 05 ActorLacksStatus4Bits01", ROMX
+
 ; C = 0 (fail) when the actor (wBattleActor) has BSTAT4_CHARGE_UP or BSTAT4_CHARGE_UP_HI (status
 ; byte 4 & $03), else C = $FF. No caller in src reaches it. (C2, E-0375)
 ; C = 0 when the actor's status byte 4 (wBattleStatus4) & $03 is set, else C = $FF (the correct form
@@ -1522,6 +1634,8 @@ ActorLacksStatus4Bits01::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 ActorLacksStatus4Bits67", ROMX
 
 ; C = 0 (fail) when the actor (wBattleActor) has BSTAT4_FOCUS_LO or BSTAT4_FOCUS (status byte 4 &
 ; $C0), else C = $FF. (C2, E-0375)
@@ -1541,6 +1655,8 @@ ActorLacksStatus4Bits67::
     ld c, $ff
     ret
 
+SECTION "Bank 05 ActorLacksStatus1Bit2", ROMX
+
 ; C = 0 (fail) when the actor (wBattleActor) has BSTAT1_ATK_DOUBLED, else C = $FF. No caller in src
 ; reaches it. (C2, E-0375)
 ; C = 0 when the actor's status byte 1 (wBattleStatus1) bit 2 is set, else C = $FF (E-0094)
@@ -1556,6 +1672,8 @@ ActorLacksStatus1Bit2::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 ActorLacksStatus1Bit3", ROMX
 
 ; C = 0 (fail) when the actor (wBattleActor) has BSTAT1_CRITICAL, else C = $FF. No caller in src
 ; reaches it. (C2, E-0375)
@@ -1573,6 +1691,8 @@ ActorLacksStatus1Bit3::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_TakeMagic_Conditions_NotYetSet", ROMX
+
 ; TakeMagic AI condition: fails when the actor already has BSTAT2_TAKE_MAGIC. (C2, E-0357; probed
 ; E-0375)
 AIScore_TakeMagic_Conditions_NotYetSet::
@@ -1587,6 +1707,8 @@ AIScore_TakeMagic_Conditions_NotYetSet::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_TailWind_Conditions_NotYetSet", ROMX
 
 ; TailWind AI condition: fails when the actor already has BSTAT2_WIND_GUARD. (C2, E-0357; probed
 ; E-0375)
@@ -1603,6 +1725,8 @@ AIScore_TailWind_Conditions_NotYetSet::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyAllyLacksStatus2Bit6", ROMX
+
 ; C = $FF when one of the three slots of the side of the actor (wBattleActor & 4 and the next two,
 ; the actor included) is present with BSTAT2_WIND_GUARD (status byte 2 bit 6) clear, else C = 0
 ; (AnySlotLacksStatusMask). (C2, E-0375)
@@ -1616,6 +1740,8 @@ AnyAllyLacksStatus2Bit6::
     ld hl, wBattleStatus2
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AllOtherAlliesHaveStatus0Bit6", ROMX
 
 ; Looks at the actor's own three slots other than the actor: C = $FF when one of them is present
 ; with status byte 0 (wBattleStatus) bit 6 (BSTAT0_PARALYZED) clear, or when none of them is
@@ -1659,6 +1785,8 @@ AllOtherAlliesHaveStatus0Bit6::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_Antidote_Conditions_AllyPoisoned", ROMX
+
 ; Antidote AI condition: passes when some present ally is poisoned (status 0 bits 0-1). (C2, E-0357;
 ; probed E-0375)
 AIScore_Antidote_Conditions_AllyPoisoned::
@@ -1669,6 +1797,8 @@ AIScore_Antidote_Conditions_AllyPoisoned::
     ld e, $03
     call AnySlotHasStatusMask
     ret
+
+SECTION "Bank 05 AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep", ROMX
 
 ; NumbOff AI condition: passes when some present ally is paralysed or asleep (status 0 & $CC). (C2,
 ; E-0357; probed E-0375)
@@ -1681,6 +1811,8 @@ AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep::
     call AnySlotHasStatusMask
     ret
 
+SECTION "Bank 05 AIScore_DeChaos_Conditions_AllyConfused", ROMX
+
 ; DeChaos AI condition: passes when some present ally is confused (status 0 bit 4). (C2, E-0357;
 ; probed E-0375)
 AIScore_DeChaos_Conditions_AllyConfused::
@@ -1692,6 +1824,8 @@ AIScore_DeChaos_Conditions_AllyConfused::
     call AnySlotHasStatusMask
     ret
 
+SECTION "Bank 05 AIScore_CurseOff_Conditions_AllyCursed", ROMX
+
 ; CurseOff AI condition: passes when some present ally is cursed (status 0 bit 5). (C2, E-0357;
 ; probed E-0375)
 AIScore_CurseOff_Conditions_AllyCursed::
@@ -1702,6 +1836,8 @@ AIScore_CurseOff_Conditions_AllyCursed::
     ld e, $20
     call AnySlotHasStatusMask
     ret
+
+SECTION "Bank 05 AnyAllySlotResistances4Bits2To5NotAllSet", ROMX
 
 ; Sets A = wBattleActor & 4 (the side of the actor) and falls into
 ; AnySideSlotLacksMaxAirResistances: C = $FF when a present slot of that side is not at level 3 in
@@ -1752,6 +1888,8 @@ AnySideSlotLacksMaxAirResistances::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_SuckAir_Conditions_FoeNotAirResistant", ROMX
+
 ; SuckAir AI condition: the resistance test of AnyAllySlotResistances4Bits2To5NotAllSet applied to
 ; the foes. (C2, E-0357; probed E-0375)
 AIScore_SuckAir_Conditions_FoeNotAirResistant::
@@ -1760,6 +1898,8 @@ AIScore_SuckAir_Conditions_FoeNotAirResistant::
     xor $04
     jp AnySideSlotLacksMaxAirResistances
 
+SECTION "Bank 05 AIScore_SlimeBlow_Conditions_SlimeFoePresent", ROMX
+
 ; SlimeBlow AI condition: a foe of family 0 (slimes) is present (FoeOfFamilyEPresent). (C2, E-0357;
 ; probed E-0375)
 AIScore_SlimeBlow_Conditions_SlimeFoePresent::
@@ -1767,11 +1907,15 @@ AIScore_SlimeBlow_Conditions_SlimeFoePresent::
     call FoeOfFamilyEPresent
     ret
 
+SECTION "Bank 05 AIScore_DrakSlash_Conditions_DragonFoePresent", ROMX
+
 ; DrakSlash AI condition: a foe of family 1 (dragons) is present. (C2, E-0357; probed E-0375)
 AIScore_DrakSlash_Conditions_DragonFoePresent::
     ld e, $01
     call FoeOfFamilyEPresent
     ret
+
+SECTION "Bank 05 AIScore_BeastCut_Conditions_BeastFoePresent", ROMX
 
 ; BeastCut AI condition: a foe of family 2 (beasts) is present. (C2, E-0357; probed E-0375)
 AIScore_BeastCut_Conditions_BeastFoePresent::
@@ -1779,11 +1923,15 @@ AIScore_BeastCut_Conditions_BeastFoePresent::
     call FoeOfFamilyEPresent
     ret
 
+SECTION "Bank 05 AIScore_BirdBlow_Conditions_BirdFoePresent", ROMX
+
 ; BirdBlow AI condition: a foe of family 3 (birds) is present. (C2, E-0357; probed E-0375)
 AIScore_BirdBlow_Conditions_BirdFoePresent::
     ld e, $03
     call FoeOfFamilyEPresent
     ret
+
+SECTION "Bank 05 AIScore_BugBlow_Conditions_BugFoePresent", ROMX
 
 ; BugBlow AI condition: a foe of family 5 (bugs) is present. (C2, E-0357; probed E-0375)
 AIScore_BugBlow_Conditions_BugFoePresent::
@@ -1791,11 +1939,15 @@ AIScore_BugBlow_Conditions_BugFoePresent::
     call FoeOfFamilyEPresent
     ret
 
+SECTION "Bank 05 AIScore_Shears_Conditions_PlantFoePresent", ROMX
+
 ; Shears AI condition: a foe of family 4 (plants) is present. (C2, E-0357; probed E-0375)
 AIScore_Shears_Conditions_PlantFoePresent::
     ld e, $04
     call FoeOfFamilyEPresent
     ret
+
+SECTION "Bank 05 AIScore_DevilCut_Conditions_DevilFoePresent", ROMX
 
 ; DevilCut AI condition: a foe of family 6 (devils) is present. (C2, E-0357; probed E-0375)
 AIScore_DevilCut_Conditions_DevilFoePresent::
@@ -1803,11 +1955,15 @@ AIScore_DevilCut_Conditions_DevilFoePresent::
     call FoeOfFamilyEPresent
     ret
 
+SECTION "Bank 05 AIScore_ZombieCut_Conditions_ZombieFoePresent", ROMX
+
 ; ZombieCut AI condition: a foe of family 7 (zombies) is present. (C2, E-0357; probed E-0375)
 AIScore_ZombieCut_Conditions_ZombieFoePresent::
     ld e, $07
     call FoeOfFamilyEPresent
     ret
+
+SECTION "Bank 05 AIScore_CleanCut_Conditions_MaterialFoePresent", ROMX
 
 ; CleanCut AI condition: a foe of family 8 (materials) is present. (C2, E-0357; probed E-0375)
 AIScore_CleanCut_Conditions_MaterialFoePresent::
@@ -1815,11 +1971,15 @@ AIScore_CleanCut_Conditions_MaterialFoePresent::
     call FoeOfFamilyEPresent
     ret
 
+SECTION "Bank 05 AIScore_AquaCut_Conditions_WaterFoePresent", ROMX
+
 ; AquaCut AI condition: a foe of family 9 (water) is present. (C2, E-0357; probed E-0375)
 AIScore_AquaCut_Conditions_WaterFoePresent::
     ld e, $09
     call FoeOfFamilyEPresent
     ret
+
+SECTION "Bank 05 AIScore_MetalCut_Conditions_MetalFoePresent", ROMX
 
 ; C = 0 when one of the three slots of the other side (wBattleActor & 4, xor 4) is present and
 ; marked metal (wSlotBodyFlags bit 0), else C = $FF. AIScore_MetalCut_Conditions resets the score
@@ -1853,6 +2013,8 @@ AIScore_MetalCut_Conditions_MetalFoePresent::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_UltraDown_Conditions_AnyFoeLowerable", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present and not
 ; at level 3 in wSlotResistances byte 2 bits 5-4 (RESIST_BEAT; & $30 not $30); else C = 0. The DEF,
@@ -1906,6 +2068,8 @@ AIScore_UltraDown_Conditions_AnyFoeLowerable::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeOpenToSlotResistances1Field0", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present without
 ; BSTAT1_BLINDED, with status byte 5 & $03 clear (neither BSTAT5_RADIANT_BLIND nor
 ; BSTAT5_SANDSTORM_BLIND) and below level 3 in wSlotResistances byte 1 bits 1-0 (RESIST_RADIANT);
@@ -1955,6 +2119,8 @@ AnyFoeOpenToSlotResistances1Field0::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_StopSpell_Conditions_AnyFoeSealable", ROMX
+
 ; StopSpell AI condition: passes when some present foe is not spell-sealed, knows a spell (skill
 ; flag $40) and is not fully resistant (resistance byte 2 & $03 not $03). (C2, E-0357; probed
 ; E-0375)
@@ -2001,6 +2167,8 @@ AIScore_StopSpell_Conditions_AnyFoeSealable::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeWithMPOpenToSlotResistances2Field1", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present with an
 ; MP word (GetBattleMP_Bank05) that is not 0 and below level 3 in wSlotResistances byte 2 bits 3-2
 ; (RESIST_ROBMAGIC); else C = 0. (C2, E-0375)
@@ -2040,6 +2208,8 @@ AnyFoeWithMPOpenToSlotResistances2Field1::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_Sap_Conditions_AnyFoeSappable", ROMX
 
 ; Sap AI condition: passes when some present foe with DEF of 2 or more is not fully resistant to it
 ; (resistance byte 3 & $30 not $30). (C2, E-0357; probed E-0375)
@@ -2081,6 +2251,8 @@ AIScore_Sap_Conditions_AnyFoeSappable::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_Slow_Conditions_AnyFoeSlowable", ROMX
+
 ; Slow AI condition: passes when some present foe with AGL of 2 or more is not fully resistant to it
 ; (resistance byte 3 & $0C not $0C). (C2, E-0357; probed E-0375)
 AIScore_Slow_Conditions_AnyFoeSlowable::
@@ -2120,6 +2292,8 @@ AIScore_Slow_Conditions_AnyFoeSlowable::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyFoeOpenToSlotResistances4Field0", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present with
 ; neither BSTAT0_POISONED nor BSTAT0_BADLY_POISONED and below level 3 in wSlotResistances byte 4
@@ -2162,6 +2336,8 @@ AnyFoeOpenToSlotResistances4Field0::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeOpenToSlotResistances5Field3", ROMX
+
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present without
 ; BSTAT0_PARALYZED and below level 3 in wSlotResistances byte 5 bits 7-6 (RESIST_PALSYAIR); else C =
 ; 0. (C2, E-0375)
@@ -2203,6 +2379,8 @@ AnyFoeOpenToSlotResistances5Field3::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_Curse_Conditions_AnyFoeCursable", ROMX
+
 ; Curse AI condition: passes when some present foe that is not cursed (status 0 bit 5) is not fully
 ; resistant (resistance byte 5 & $30 not $30). (C2, E-0357; probed E-0375)
 AIScore_Curse_Conditions_AnyFoeCursable::
@@ -2239,6 +2417,8 @@ AIScore_Curse_Conditions_AnyFoeCursable::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_DanceShut_Conditions_AnyFoeSealable", ROMX
 
 ; DanceShut AI condition: passes when some present foe that is not dance-sealed knows a dance (flag
 ; $20) and is not fully resistant (resistance byte 5 & $03 not $03). (C2, E-0357; probed E-0375)
@@ -2284,6 +2464,8 @@ AIScore_DanceShut_Conditions_AnyFoeSealable::
     ld [wRecordBuffer], a
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyFoeWithSkillFlag10VulnerableSlotResistances6", ROMX
 
 ; C = $FF when one of the three slots of the other side (wBattleActor & 4, xor 4) is present without
 ; BSTAT1_BREATH_SEALED, has a skill whose record byte 5 has bit 4 ($10) set (SlotHasSkillWithFlagD)
@@ -2334,6 +2516,8 @@ AnyFoeWithSkillFlag10VulnerableSlotResistances6::
     ld [wRecordBuffer], a
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyAllyOutOrHPBelowQuarter", ROMX
 
 ; C = $FF when one of the three wBattleSlotOut bytes of the side of the actor (from wBattleActor &
 ; 4) is exactly 1 (a defeated or absent battler), or when a present slot of that side has HP times 4
@@ -2387,6 +2571,8 @@ AnyAllyOutOrHPBelowQuarter::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AtLeastTwoFoesPresent", ROMX
+
 ; C = $FF when at least two of the three slots of the other side (wBattleActor & 4, xor 4) are
 ; present (CarryUnlessBattleSlotOutSlotEmpty), else C = 0; the opposite of FewerThanTwoFoesPresent.
 ; (C2, E-0375)
@@ -2420,6 +2606,8 @@ AtLeastTwoFoesPresent::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_TatsuCall_Conditions_FourthSlotFree", ROMX
+
 ; TatsuCall AI condition: passes only when the actor's side has its fourth slot free (wBattleSlotOut
 ; of slot 3 of the side is set), so a called monster has a place. (C2, E-0357; probed E-0375)
 AIScore_TatsuCall_Conditions_FourthSlotFree::
@@ -2440,6 +2628,8 @@ AIScore_TatsuCall_Conditions_FourthSlotFree::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyOwnSideSlotOutIs1", ROMX
 
 ; C = $FF when one of the three wBattleSlotOut bytes of the side of the actor (from wBattleActor &
 ; 4) is exactly 1 (a defeated or absent battler), else C = 0 ($FF and other values do not count).
@@ -2464,6 +2654,8 @@ AnyOwnSideSlotOutIs1::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FastestFoeAGLAbove31PercentOfActor", ROMX
 
 ; Threshold = the AGL of the actor (GetBattleAGL_Bank05) times 31 divided by 100, rounded down
 ; (Multiply8By16, Divide24ByA; the low 16 bits are kept). C = $FF when the highest AGL among the
@@ -2524,6 +2716,8 @@ FastestFoeAGLAbove31PercentOfActor::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyAllyHPAtMostThreeQuarters", ROMX
+
 ; C = $FF when a present slot of the side of the actor (three slots from wBattleActor & 4) has HP at
 ; most three quarters of its max HP (CompareHPWithThreeQuartersMax: 3 * max HP, 16-bit, shifted
 ; right twice arithmetically), else C = 0. (C2, E-0375)
@@ -2554,6 +2748,8 @@ AnyAllyHPAtMostThreeQuarters::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyAllyMPAtMostThreeQuarters", ROMX
+
 ; C = $FF when a present slot of the side of the actor has MP at most three quarters of its max MP
 ; (CompareMPWithThreeQuartersMax), else C = 0. No caller in src reaches it. (C2, E-0375)
 ; C = $FF when an occupied ally slot has MP at most three quarters of its max, else $00 (E-0124)
@@ -2583,6 +2779,8 @@ AnyAllyMPAtMostThreeQuarters::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_Upper_Conditions_AnyAllyRaisable", ROMX
+
 ; Upper AI condition: passes when some present ally's DEF can still be raised
 ; (AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise). (C2, E-0357; probed E-0375)
 AIScore_Upper_Conditions_AnyAllyRaisable::
@@ -2609,6 +2807,8 @@ AIScore_Upper_Conditions_AnyAllyRaisable::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_Speed_Conditions_AnyAllyRaisable", ROMX
+
 ; Speed AI condition: passes when some present ally's AGL can still be raised
 ; (AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise). (C2, E-0357; probed E-0375)
 AIScore_Speed_Conditions_AnyAllyRaisable::
@@ -2634,6 +2834,8 @@ AIScore_Speed_Conditions_AnyAllyRaisable::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 CheckLoneFoeHPNotBelowAIDamageEstimates", ROMX
 
 ; Counts the present slots among the three slots opposite the actor (D = the last one found). With
 ; two or three present, C = $FF. With one, C = 0 when the HP of that foe (GetBattleHP_Bank05) is
@@ -2689,6 +2891,8 @@ CheckLoneFoeHPNotBelowAIDamageEstimates::
     ld c, $ff
     ret
 
+SECTION "Bank 05 NoUnflaggedFoeSpeciesOrLink", ROMX
+
 ; C = $FF in link battles (wLinkMode non-zero). Otherwise it counts in hTemp0 the present foes (the
 ; three slots opposite the actor) whose monster id (wBattleMonsterId) has its wSpeciesFlags bit
 ; clear (TestSpeciesFlag): C = 0 when there is one or more, C = $FF when every present foe is
@@ -2741,6 +2945,8 @@ NoUnflaggedFoeSpeciesOrLink::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckFoeStatus7Bit2", ROMX
+
 ; C = 1 when the AI mode of the actor (wSlotAIMode) is below 3. Otherwise C = 0 when one of the
 ; three slots opposite the actor is present with BSTAT7_COUNTER (status byte 7 bit 2) set, else C =
 ; $FF. AIScore_Fight adds weight row $03 to wAISkillScore2 when it gives 0. (C2, E-0375)
@@ -2786,6 +2992,8 @@ CheckFoeStatus7Bit2::
     ld c, $01
     ret
 
+SECTION "Bank 05 AnyAllyLacksStatus1Bits23And4Bits01", ROMX
+
 ; C = $FF when one of the three slots on the actor side (the actor included) is present with status
 ; byte 1 & $0C (BSTAT1_ATK_DOUBLED, BSTAT1_CRITICAL) clear and status byte 4 & $03 (BSTAT4_CHARGE_UP
 ; and its high bit) clear; C = 0 when every present ally has one of them or none is present. (C2,
@@ -2826,6 +3034,8 @@ AnyAllyLacksStatus1Bits23And4Bits01::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_MagicWall_Conditions_AllyLacksMagicWall", ROMX
+
 ; MagicWall AI condition: passes when some present ally lacks status 8 bit 6. (C2, E-0357; probed
 ; E-0375)
 AIScore_MagicWall_Conditions_AllyLacksMagicWall::
@@ -2836,6 +3046,8 @@ AIScore_MagicWall_Conditions_AllyLacksMagicWall::
     ld hl, wBattleStatus8
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AIScore_SideStep_Conditions_NotYetSet", ROMX
 
 ; SideStep AI condition: fails when the actor already has status 5 bits 2-3 set. (C2, E-0357; probed
 ; E-0375)
@@ -2852,6 +3064,8 @@ AIScore_SideStep_Conditions_NotYetSet::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_Surge_Conditions_AnyAllyToCure", ROMX
 
 ; Surge AI condition: passes when some present ally has a status to cure: any bit of status 0,
 ; status 1 & $C3, status 5 & $03, status 6 bit 7 or status 8 bit 7. (C2, E-0357; probed E-0375)
@@ -2898,6 +3112,8 @@ AIScore_Surge_Conditions_AnyAllyToCure::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_DeMagic_Conditions_AnyFoeToClear", ROMX
 
 ; DeMagic AI condition: C = $FF when some present foe carries an effect it removes (status 1 & $3C,
 ; status 2 & $6F, status 5 & $CC, status 6 bit 6 or status 8 bit 6), or when slot 3 of the actor
@@ -2955,6 +3171,8 @@ AIScore_DeMagic_Conditions_AnyFoeToClear::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckSide0FlagNot1", ROMX
+
 ; C = 0 when the actor side byte (wSide0Flag for slots 0-3, wSide1Flag for 4-7) is 1, else C = $FF.
 ; Condition routines in bank $05 reset the score with ResetAISkillScore when it gives 0. (C2,
 ; E-0375)
@@ -2977,6 +3195,8 @@ CheckSide0FlagNot1::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckBattleKindNot4Or5", ROMX
+
 ; C = 0 when wBattleKind is 4 or 5, else C = $FF. No caller was found in src/. (C2, E-0375)
 ; C = 0 when wBattleKind is 4 or 5, else C = $FF (E-0094)
 CheckBattleKindNot4Or5::
@@ -2993,6 +3213,8 @@ CheckBattleKindNot4Or5::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_SealPray_QueuedSkillInList", ROMX
 
 ; Check of AIScore_SealPray: C = 0 when wQueuedActionId is SKILL_MEGAMAGIC, SKILL_BIGBANG,
 ; SKILL_HELLBLAST, SKILL_WHITEFIRE, SKILL_WHITEAIR, SKILL_MULTICUT or SKILL_GIGASLASH; C = $FF
@@ -3024,6 +3246,8 @@ AIScore_SealPray_QueuedSkillInList::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FailIfFoeAIDamageEstimatesAtLeastEstimate", ROMX
 
 ; For each present foe among the three slots opposite the actor, compares a wAIDamageEstimates word
 ; with EstimateSkillDamage (C = that foe slot) byte by byte: C = 0 as soon as the high byte of the
@@ -3075,6 +3299,8 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 EstimateSkillDamage", ROMX
 
 ; Estimated damage of skill wRecordBuffer in HL, C = a slot (the foe being checked). By default HL =
 ; the words at wRecordBufferData + $9 and + $B added, with no scaling. Skills $48-$4A start from the
@@ -3365,6 +3591,8 @@ MultiplyHLByAPercent::
     call Divide24ByA
     ret
 
+SECTION "Bank 05 SlotFamilyBelowWater", ROMX
+
 ; C = battle slot: loads the species record of its monster id (wBattleMonsterId; LoadSpeciesRecord
 ; into wSpeciesRecord) and returns A = the family; carry set when the family is below 9 (Slime to
 ; Material), Z when it is 9 (Water). EstimateSkillDamage uses Z to cap skill $4A at 220 instead of
@@ -3384,6 +3612,8 @@ SlotFamilyBelowWater::
     ld a, [wSpeciesRecord]
     cp $09
     ret
+
+SECTION "Bank 05 PassIfFoesAverageResistanceAtLeast2", ROMX
 
 ; Resistance class wRecordBufferData + $1 of the skill being scored (0 = none): C = $FF when it is
 ; 0. Otherwise it finds the byte and 2-bit field (AnyFoeNotFullyResistant_Data) in the 7-byte
@@ -3462,6 +3692,8 @@ PassIfFoesAverageResistanceAtLeast2::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AllyAverageAGLAtLeastFoes", ROMX
+
 ; C = 1 when the AI mode of the actor (wSlotAIMode) is below 2. Otherwise compares the average AGL
 ; of the present slots on the actor side (the actor included) with that of the present foes
 ; (AverageAGLOfSideA, which uses hTemp0-hTemp2): C = $FF when the ally average is at least the foe
@@ -3494,6 +3726,8 @@ AllyAverageAGLAtLeastFoes::
 .done2:
     ld c, $01
     ret
+
+SECTION "Bank 05 PassIfFoeAverageDEFAtMostTwiceAllyATK", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2. Otherwise C = $FF when the average DEF of the
 ; present foes is at most twice the average ATK of the present slots on the actor side (the actor
@@ -3599,6 +3833,8 @@ PassIfFoeAverageDEFAtMostTwiceAllyATK::
     ld c, $01
     ret
 
+SECTION "Bank 05 PassIfTwiceATKAboveHighestFoeDEF", ROMX
+
 ; C = 1 when the AI mode of the actor is below 2. Otherwise it keeps the HIGHEST DEF among the
 ; present foes in hTemp0/hTemp1 (it replaces the kept value only when the new DEF is larger, the
 ; opposite of FindLowestFoeDEF): C = $FF when that DEF is below twice the ATK of the actor; C = 0
@@ -3687,6 +3923,8 @@ PassIfTwiceATKAboveHighestFoeDEF::
     ld c, $01
     ret
 
+SECTION "Bank 05 AIScore_TwinHits_CompareATKWithFoeDEF", ROMX
+
 ; TwinHits AI check: passes when the actor's ATK is more than twice, or less than half, the lowest
 ; foe DEF found by FindLowestFoeDEF; fails when it lies between; C = 1 below AI mode 2. (C2, E-0357;
 ; probed E-0375)
@@ -3729,6 +3967,8 @@ AIScore_TwinHits_CompareATKWithFoeDEF::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 AIScore_TwinHits_CheckAllyATK", ROMX
 
 ; TwinHits AI check for the allies: passes unless some present ally's ATK lies between half and
 ; twice the lowest foe DEF; C = 1 below AI mode 2. (C2, E-0357; probed E-0375)
@@ -3784,6 +4024,8 @@ AIScore_TwinHits_CheckAllyATK::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 PassIfFoeAverageATKAtMostTwiceAllyDEF", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2. Otherwise averages the ATK of the present foes for
 ; which SlotIsBlinded gives Z (BSTAT1_BLINDED clear and status byte 5 & $03 clear): C = $FF when no
@@ -3894,6 +4136,8 @@ PassIfFoeAverageATKAtMostTwiceAllyDEF::
     ld c, $01
     ret
 
+SECTION "Bank 05 HPBandOfSlotTemp0", ROMX
+
 ; hTemp0 = battle slot: C = 0 when its HP is at least 2/3 of its max HP, 1 when at least 1/2, 2 when
 ; at least 1/3, 3 when at least 1/4, 4 when at least 1/10, else 5 (each threshold rounded down;
 ; GetBattleHP_Bank05, GetBattleMaxHP_Bank05). HL = the HP on return. AIScore_Meditate_WeighHPBand
@@ -3988,6 +4232,8 @@ HPBandOfSlotTemp0::
     ld c, $05
     ret
 
+SECTION "Bank 05 ActorHPIsNotOne", ROMX
+
 ; C = 0 when the HP word of the actor is exactly 1 (CompareSlotHPWith1), else C = $FF. Callers add a
 ; weight row (AddAIWeight or AddAIWeightToScore2) when it gives 0, and condition routines in bank
 ; $05 reset the score with ResetAISkillScore instead. (C2, E-0375)
@@ -4002,6 +4248,8 @@ ActorHPIsNotOne::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FewerThanTwoAlliesAtHP1", ROMX
 
 ; Counts the present slots on the actor side (the actor included) whose HP word is exactly 1
 ; (CompareSlotHPWith1): C = $FF when fewer than two, else C = 0. (C2, E-0375)
@@ -4035,6 +4283,8 @@ FewerThanTwoAlliesAtHP1::
     ld c, $ff
     ret
 
+SECTION "Bank 05 ActorLacksStatus1Bits23And4Bits01", ROMX
+
 ; C = 0 when the actor status byte 1 & $0C (BSTAT1_ATK_DOUBLED, BSTAT1_CRITICAL) or status byte 4 &
 ; $03 (BSTAT4_CHARGE_UP and its high bit) is set, else C = $FF. Callers add a weight row
 ; (AddAIWeight or AddAIWeightToScore2) when it gives 0, and condition routines in bank $05 reset the
@@ -4063,6 +4313,8 @@ ActorLacksStatus1Bits23And4Bits01::
     ld c, $ff
     ret
 
+SECTION "Bank 05 ActorLacksStatus4Bits45", ROMX
+
 ; C = 0 when the actor status byte 4 & $30 (BSTAT4_SUCK_AIR and its high bit) is set, else C = $FF.
 ; (C2, E-0375)
 ; C = 0 when the actor's status byte 4 (wBattleStatus4) & $30 is set, else C = $FF (E-0100)
@@ -4079,6 +4331,8 @@ ActorLacksStatus4Bits45::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FailIfFoeKnowsSkills42To47", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2. Otherwise, for each present foe without
 ; BSTAT1_BREATH_SEALED, it scans eight entries (every other byte) for SKILL_SCORCHING,
@@ -4144,6 +4398,8 @@ FailIfFoeKnowsSkills42To47::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 AIScore_Transform_NoWeakerFoe", ROMX
 
 ; Check of AIScore_Transform: for each present foe counts how many of max HP, max MP, ATK and DEF
 ; are below the actor's (in hTemp8); C = 0 when some foe is below the actor in at least three of
@@ -4259,12 +4515,16 @@ AIScore_Transform_NoWeakerFoe::
     ld c, $01
     ret
 
+SECTION "Bank 05 SetCToZero", ROMX
+
 ; Sets C = 0 and returns; nothing else changes. Score routines call it in place of a check, so the
 ; weight row or score reset that follows a 0 always happens. (C2, E-0375)
 ; C = 0
 SetCToZero::
     ld c, $00
     ret
+
+SECTION "Bank 05 FailIfFoeSkill3DThreatensActorHP", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2. Otherwise it scans the skill lists of the three
 ; slots opposite the actor (present or not) for SKILL_MEGAMAGIC: on a match it compares 2 * MP + 2 *
@@ -4359,6 +4619,8 @@ FailIfFoeSkill3DThreatensActorHP::
     ld c, $01
     ret
 
+SECTION "Bank 05 PassIfFoeAIDamageEstimatesAtLeastEstimate", ROMX
+
 ; Inverts FailIfFoeAIDamageEstimatesAtLeastEstimate: C = $FF when that routine gives C = 0, else C =
 ; 0 (see its note for the byte-wise compare and the one-byte stride through wAIDamageEstimates). AI
 ; score routines add a weight row when it gives 0. (C2, E-0375)
@@ -4374,6 +4636,8 @@ PassIfFoeAIDamageEstimatesAtLeastEstimate::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 ActorMPBelowThreeQuarters", ROMX
 
 ; C = $FF when 4 * the MP of the actor is below 3 * its max MP (MP under three quarters of max;
 ; 16-bit words wBattleMP and wBattleMaxMP), else C = 0. (C2, E-0375)
@@ -4401,6 +4665,8 @@ ActorMPBelowThreeQuarters::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_MagicBack_Conditions_NotYetSet", ROMX
+
 ; MagicBack AI condition: fails when the actor already has status 2 bits 1 or 5. (C2, E-0357; probed
 ; E-0375)
 AIScore_MagicBack_Conditions_NotYetSet::
@@ -4416,6 +4682,8 @@ AIScore_MagicBack_Conditions_NotYetSet::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 LinkRuleCheckLinkRules1Bit6", ROMX
 
 ; Link-rule check for action category bit 6. C = $FF unless wLinkMode is neither 0 nor 2 and
 ; wLinkRules + $1 has bit 7 (rules on) and bit 6 set. Then C = 0 when wLinkRules + $2 bit 6 is clear
@@ -4456,6 +4724,8 @@ LinkRuleCheckLinkRules1Bit6::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 CheckLinkRules1RuleBit5", ROMX
 
 ; Link-rule check for action category bit 5. C = $FF unless wLinkMode is neither 0 nor 2 and
 ; wLinkRules + $1 has bit 7 (rules on) and bit 5 set. Then C = 0 when wLinkRules + $2 bit 5 is clear
@@ -4498,6 +4768,8 @@ CheckLinkRules1RuleBit5::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckLinkRules1RuleBit4", ROMX
+
 ; Link-rule check for action category bit 4. C = $FF unless wLinkMode is neither 0 nor 2 and
 ; wLinkRules + $1 has bit 7 (rules on) and bit 4 set. Then C = 0 when wLinkRules + $2 bit 4 is clear
 ; (no use allowed) or bit 4 is set in wLinkRuleFlags + actor / 4, the byte of the actor side
@@ -4538,6 +4810,8 @@ CheckLinkRules1RuleBit4::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 CheckLinkRules1RuleBit3", ROMX
 
 ; Link-rule check for action category bit 3. C = $FF unless wLinkMode is neither 0 nor 2 and
 ; wLinkRules + $1 has bit 7 (rules on) and bit 3 set. Then C = 0 when wLinkRules + $2 bit 3 is clear
@@ -4580,6 +4854,8 @@ CheckLinkRules1RuleBit3::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckLinkRules1RuleBit2", ROMX
+
 ; Link-rule check for action category bit 2. C = $FF unless wLinkMode is neither 0 nor 2 and
 ; wLinkRules + $1 has bit 7 (rules on) and bit 2 set. Then C = 0 when wLinkRules + $2 bit 2 is clear
 ; (no use allowed) or bit 2 is set in wLinkRuleFlags + actor / 4, the byte of the actor side
@@ -4620,6 +4896,8 @@ CheckLinkRules1RuleBit2::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 CheckLinkRules1RuleBit1", ROMX
 
 ; Link-rule check for action category bit 1. C = $FF unless wLinkMode is neither 0 nor 2 and
 ; wLinkRules + $1 has bit 7 (rules on) and bit 1 set. Then C = 0 when wLinkRules + $2 bit 1 is clear
@@ -4662,6 +4940,8 @@ CheckLinkRules1RuleBit1::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_MegaMagic_LinkRule", ROMX
+
 ; MegaMagic link rule: in a link battle whose rules (wLinkRules + 1 bit 7 and bit 0) restrict it,
 ; fails when the next rule byte forbids it outright or the side's rule flag (wLinkRuleFlags) is set;
 ; passes otherwise and in normal battles. (C2, E-0357; probed E-0375)
@@ -4696,6 +4976,8 @@ AIScore_MegaMagic_LinkRule::
     ld c, $ff
     ret
 
+SECTION "Bank 05 LinkRuleCheckLinkRuleTurnLimitTurnLimit", ROMX
+
 ; C = $FF unless wLinkMode is neither 0 nor 2 and wLinkRuleTurnLimit bit 7 is set (a turn limit is
 ; on). Then, with T = its bits 0-6, C = 0 when wBattleTurn - T (8-bit) is negative ($80-$FF) or
 ; below 4, and C = $FF from four turns past the limit on. WeighLinkRuleBit6AndTurnLimit adds weight
@@ -4728,6 +5010,8 @@ LinkRuleCheckLinkRuleTurnLimitTurnLimit::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AllySlotsCheckThenFewerThanTwoFoes", ROMX
 
 ; Over the three slots on the actor side: C = $FF when the actor slot itself is not present or
 ; another slot of its side is present; when the actor is alone on its side it returns
@@ -4768,6 +5052,8 @@ AllySlotsCheckThenFewerThanTwoFoes::
     ld c, $ff
     ret
 
+SECTION "Bank 05 FewerThanTwoFoesPresent", ROMX
+
 ; Counts the present slots among the three slots opposite the actor in E: C = $FF when fewer than
 ; two are present, C = 0 for two or three. Score routines in banks $05 and $E2 add a weight row when
 ; it gives 0. (C2, E-0375)
@@ -4800,6 +5086,8 @@ FewerThanTwoFoesPresent::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FailIfFoeKnowsSkillList", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2. Otherwise C = 0 when a present foe knows a skill
 ; CountSkillsInList counts (SKILL_BLAZEMOST, SKILL_FIREBOLT, SKILL_EXPLODET, SKILL_INFERMOST,
@@ -4842,6 +5130,8 @@ FailIfFoeKnowsSkillList::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 CheckFoeStatus6Bit3", ROMX
 
 ; C = 1 when the AI mode of the actor is below 3. Otherwise C = 0 when one of the three slots
 ; opposite the actor is present with BSTAT6_IMITATE (status byte 6 bit 3) set, else C = $FF. (C2,
@@ -4887,6 +5177,8 @@ CheckFoeStatus6Bit3::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 AIScore_Sacrifice_LowHPAndFoesVulnerable", ROMX
 
 ; Check of AIScore_Sacrifice: C = 0 only when the actor's HP is below a tenth of its max HP, another
 ; ally on its side is present, and no present foe has its RESIST_SACRIFICE field (wSlotResistances
@@ -4954,6 +5246,8 @@ AIScore_Sacrifice_LowHPAndFoesVulnerable::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 CompareFoeAverageATKWithAllyDEF", ROMX
 
 ; Takes X = twice the average ATK of the present foes and Y = the average DEF of the present slots
 ; on the actor side (the actor included): C = $FF when X is at most Y. Otherwise C = $FF when X - Y
@@ -5089,6 +5383,8 @@ CompareFoeAverageATKWithAllyDEF::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIGateLoneAllyMPAndSkills", ROMX
+
 ; C = 1 when the AI mode of the actor is below 3. Otherwise it looks for exactly one other present
 ; ally: when that ally has at most 20 MP and knows SKILL_LIFESONG, C = 0; else when it is not
 ; BSTAT1_SPELLS_SEALED and knows SKILL_VIVIFY or SKILL_REVIVE, C = 0; any other case C = $FF. The
@@ -5207,6 +5503,8 @@ AIGateLoneAllyMPAndSkills::
     ld c, $01
     ret
 
+SECTION "Bank 05 FailIfAllyLacksMPForHealSkill", ROMX
+
 ; C = 1 when the AI mode of the actor is below 3. Otherwise it walks the other slots of the actor
 ; side, skipping ones CheckSlotStatusBlock rejects and ones with BSTAT1_DANCE_SEALED. For the first
 ; such ally it takes the first of SKILL_HEAL ... SKILL_HEALUSALL in its list: C = 0 when its MP is
@@ -5293,6 +5591,8 @@ FailIfAllyLacksMPForHealSkill::
     ld c, $01
     ret
 
+SECTION "Bank 05 HealSkillMPCosts", ROMX
+
 ; FailIfAllyLacksMPForHealSkill reads the byte $5A33 + (skill - $16) for skills $16-$1A an ally
 ; knows and compares it with that ally's MP; the bytes after these five decode as an untraced
 ; routine (ld a, [wBattleActor] ...) and stay data (E-0174, C1)
@@ -5356,6 +5656,8 @@ FailIfAbleAllyKnowsSkillList:: ; configured code entry (E-0175); C0
 .done2:
     ld c, $01
     ret
+
+SECTION "Bank 05 FailIfAllyLacksMPForSkillList", ROMX
 
 ; C = 1 when the AI mode of the actor is below 3. Otherwise it takes the first other slot of the
 ; actor side that CheckSlotStatusBlock accepts and scans its eight skills for SKILL_TIDALWAVE,
@@ -5467,6 +5769,8 @@ FailIfAllyLacksMPForSkillList::
     ld c, $01
     ret
 
+SECTION "Bank 05 FailIfAllyLacksMPForSkillList_AllySkillMPCosts", ROMX
+
 ; FailIfAllyLacksMPForSkillList compares an ally's MP (GetBattleMP_Bank05) with the byte at $5AF8 +
 ; E for the skill it found (E = position in its skill list $4D, $3D, $3E, $3F, $66, $67); 6 bytes,
 ; then code (E-0228, C1)
@@ -5550,6 +5854,8 @@ FailIfAbleAllyKnowsSkill42To47:: ; configured code entry (E-0228); C0
     ld c, $01
     ret
 
+SECTION "Bank 05 FailIfAbleAllyWithStatus6KnowsSkill78To92", ROMX
+
 ; C = 1 when the AI mode of the actor is below 3. Otherwise, for each other slot of the actor side
 ; that CheckSlotStatusBlock accepts and that HAS BSTAT1_DANCE_SEALED, it scans eight entries for
 ; SKILL_PANIDANCE, SKILL_KODANCE, SKILL_LUREDANCE, SKILL_LIFEDANCE, SKILL_HUSTLE, SKILL_SIDESTEP or
@@ -5626,6 +5932,8 @@ FailIfAbleAllyWithStatus6KnowsSkill78To92::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 AIScore_BeDragon_CountHighStats", ROMX
 
 ; BeDragon AI check: counts how many of the actor's stats are already high (max HP 999, max MP 300,
 ; ATK 300, DEF 200, AGL 286 or more); fails with three or more, passes otherwise. (C2, E-0357;
@@ -5722,6 +6030,8 @@ AIScore_BeDragon_CountHighStats::
     ld c, $ff
     ret
 
+SECTION "Bank 05 PassIfSkill83OrNoAllyHasStatus", ROMX
+
 ; C = $FF when SKILL_DEMAGIC is among the eight skills of the actor. Otherwise C = 0 when a present
 ; slot on the actor side (the actor included) has one or more effects
 ; CountActiveStatusEffectsOfSlotC counts (status byte 1 bits 2-5, byte 2 bits 0-3, 5 and 6, byte 5 &
@@ -5770,6 +6080,8 @@ PassIfSkill83OrNoAllyHasStatus::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FailIfFoeHPAtMostFourFifthsAIDamageEstimates", ROMX
 
 ; C = 0 when the HP of a present foe is at most (E / 5) * 4, E being its word at wAIDamageEstimates
 ; + 2 * (slot & 3) (ScaleHLToFourFifths, rounded down before the multiply), else C = $FF. (C2,
@@ -5825,6 +6137,8 @@ FailIfFoeHPAtMostFourFifthsAIDamageEstimates::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckBattleKindNot2Or3", ROMX
+
 ; C = 0 when wBattleKind is 2 or 3, else C = $FF. (C2, E-0375)
 ; C = 0 when wBattleKind is 2 or 3, else C = $FF (E-0100)
 CheckBattleKindNot2Or3::
@@ -5843,6 +6157,8 @@ CheckBattleKindNot2Or3::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_MegaMagic_LinkModeAllows", ROMX
+
 ; Passes in normal and type-2 link battles, fails in other link modes. (C2, E-0357; probed E-0375)
 AIScore_MegaMagic_LinkModeAllows::
     ld a, [wLinkMode]
@@ -5856,6 +6172,8 @@ AIScore_MegaMagic_LinkModeAllows::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 PassIfSideFlagOrOtherAllyPresent", ROMX
 
 ; C = $FF when the actor side byte (wSide0Flag for slots 0-3, wSide1Flag for 4-7) is 1, or when
 ; another slot of the actor side is present; C = 0 when every other slot of its side is empty. (C2,
@@ -5899,6 +6217,8 @@ PassIfSideFlagOrOtherAllyPresent::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyAllyLacksStatus2Bit2", ROMX
+
 ; C = $FF when one of the three slots on the actor side (the actor included) is present with
 ; BSTAT2_DAMAGE_HALVED (status byte 2 bit 2) clear, else C = 0 (AnySlotLacksStatusMask). (C2,
 ; E-0375)
@@ -5913,6 +6233,8 @@ AnyAllyLacksStatus2Bit2::
     ld e, $04
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyAllyLacksStatus2Bit2_2", ROMX
 
 ; The same test as AnyAllyLacksStatus2Bit2: C = $FF when one of the three slots on the actor side
 ; (the actor included) is present with BSTAT2_DAMAGE_HALVED clear, else C = 0. It computes the side
@@ -5933,6 +6255,8 @@ AnyAllyLacksStatus2Bit2_2::
     ld e, $04
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 FailIfFoeHPAtLeast150PercentOfActor", ROMX
 
 ; C = 1 when the AI mode of the actor is below 3. Otherwise, with T = the HP of the actor plus half
 ; of it (sra, so a signed halving), C = 0 when the HP of a present foe minus T (16-bit) has bit 15
@@ -5992,6 +6316,8 @@ FailIfFoeHPAtLeast150PercentOfActor::
     ld c, $01
     ret
 
+SECTION "Bank 05 FailIfLinkModeZeroAndPlayerStateFlagsBit3", ROMX
+
 ; C = 0 when wLinkMode is 0 and bit 3 of hPlayerStateFlags (one of its field-state flags) is set,
 ; else C = $FF. No caller was found in src/. (C2, E-0375)
 ; C = $00 when wLinkMode is 0 and bit 3 of hPlayerStateFlags is set, else $FF (E-0122)
@@ -6008,6 +6334,8 @@ FailIfLinkModeZeroAndPlayerStateFlagsBit3::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyFoeOpenToSlotResistances2Field3", ROMX
 
 ; C = $FF when one of the three slots opposite the actor is present without BSTAT0_ASLEEP and with
 ; its RESIST_SLEEP field (wSlotResistances byte 2 bits 7-6) below 3; else C = 0. (C2, E-0375)
@@ -6048,6 +6376,8 @@ AnyFoeOpenToSlotResistances2Field3::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnyFoeVulnerableBySlotResistances5Bits23", ROMX
+
 ; C = $FF when one of the three slots opposite the actor is present with its status byte 3 zero and
 ; its RESIST_LEGSWEEP field (wSlotResistances byte 5 bits 3-2) below 3; else C = 0. (C2, E-0375)
 ; C = $FF when an occupied foe has a zero wBattleStatus3 byte and bits 2-3 of its wSlotResistances +
@@ -6087,6 +6417,8 @@ AnyFoeVulnerableBySlotResistances5Bits23::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_EerieLite_Conditions_AnyFoeAffectable", ROMX
 
 ; EerieLite AI condition: passes when some present foe is not under BSTAT8_EERIE_LITE and is not
 ; fully resistant (resistance byte 2 & $30 not $30). (C2, E-0357; probed E-0375)
@@ -6137,6 +6469,8 @@ AIScore_EerieLite_Conditions_AnyFoeAffectable::
     ld c, $ff
     ret
 
+SECTION "Bank 05 PassIfBattleTurnNonZero", ROMX
+
 ; C = $FF when wBattleTurn is non-zero, else C = 0. Condition routines in bank $05 reset the score
 ; with ResetAISkillScore when it gives 0. (C2, E-0375)
 ; C = $FF when wBattleTurn is non-zero, else $00 (E-0122)
@@ -6150,6 +6484,8 @@ PassIfBattleTurnNonZero::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyFoeLacksStatus4Bits23ThenStatus3Bits67", ROMX
 
 ; Runs AnySlotLacksStatusMask over the side opposite the actor for status byte 4 & $0C
 ; (BSTAT4_HIGH_JUMP field) and returns its C = 0; when it gives $FF it returns the same test for
@@ -6177,6 +6513,8 @@ AnyFoeLacksStatus4Bits23ThenStatus3Bits67::
     ld e, $c0
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AnyFoeVulnerableBySlotResistances3Bits67", ROMX
 
 ; C = $FF when one of the three slots opposite the actor is present without BSTAT0_CONFUSED and with
 ; its RESIST_PANICALL field (wSlotResistances byte 3 bits 7-6) below 3; else C = 0. (C2, E-0375)
@@ -6217,6 +6555,8 @@ AnyFoeVulnerableBySlotResistances3Bits67::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIScore_EvilSlash_CheckFoes", ROMX
+
 ; EvilSlash AI condition: C = 0 when a present foe has status byte 0 & $C0 (BSTAT0_PARALYZED,
 ; BSTAT0_ASLEEP) or status byte 3 & $3F (frozen, dancing, tripped, shivering, cowering or vacant)
 ; set; C = $FF otherwise. The byte-3 read comes after ld a, [hli] and two inc hl. (C2, E-0375)
@@ -6253,6 +6593,8 @@ AIScore_EvilSlash_CheckFoes::
 .done:
     ld c, $00
     ret
+
+SECTION "Bank 05 AIAddScoresForTwoLists_SealingFoes", ROMX
 
 ; First check of AIAddScoresForTwoLists: C = 1 when the AI mode of the actor is below 4; otherwise C
 ; = $FF. With wAIFlag 0 it returns $FF at once; with it set the foe loop never tests a foe, because
@@ -6312,6 +6654,8 @@ AIAddScoresForTwoLists_SealingFoes::
     ld c, $01
     ret
 
+SECTION "Bank 05 SlotActionIs9C33Or92Or93", ROMX
+
 ; C = slot: Z set when the action id byte of its wBattleActionChoice word is SKILL_SEALPRAY,
 ; SKILL_STOPSPELL, SKILL_DANCESHUT or SKILL_MOUTHSHUT; A = that id and HL points at it.
 ; AIAddScoresForTwoLists_SealingFoes uses it. (C2, E-0375)
@@ -6332,6 +6676,8 @@ SlotActionIs9C33Or92Or93::
     cp $93
     ret
 
+SECTION "Bank 05 SlotResistances5EntryHasBits2And3_Bank05_2", ROMX
+
 ; C = slot: Z set when the slot's RESIST_LEGSWEEP field (bits 3-2 of wSlotResistances byte 5, 7-byte
 ; entries) is 3, the strongest level; returns A = that byte & $0C and HL pointing at it. The same
 ; code is SlotResistances5EntryHasBits2And3_Bank05 later in this bank; this copy is used only by
@@ -6351,6 +6697,8 @@ SlotResistances5EntryHasBits2And3_Bank05_2::
     and $0c
     cp $0c
     ret
+
+SECTION "Bank 05 FailIfAllyCanUseSkill63Or64", ROMX
 
 ; C = 1 when the AI mode of the actor is below 4, C = $FF when wAIFlag is 0. Otherwise C = 0 when
 ; another slot of the actor side passes CheckSlotStatusBlock, lacks BSTAT1_ATK_DOUBLED, has a
@@ -6412,6 +6760,8 @@ FailIfAllyCanUseSkill63Or64::
     ld c, $01
     ret
 
+SECTION "Bank 05 SlotCLacksSkill63Or64WithMP", ROMX
+
 ; C = slot: walks its eight wBattleSkills entries (every other byte, stopping at $FF) and returns no
 ; carry at the first SKILL_BIATTACK when its MP word is at least 3 or SKILL_QUADHITS when it is at
 ; least 6; carry when there is none. D = the last cost tested, E counts down. (C2, E-0375)
@@ -6461,6 +6811,8 @@ SlotCLacksSkill63Or64WithMP::
     pop hl
     jr c, .loop2
     ret
+
+SECTION "Bank 05 AIAddScoresForTwoLists_OtherAllies", ROMX
 
 ; Second check of AIAddScoresForTwoLists: C = 1 when the AI mode of the actor is below 4; C = $FF
 ; when wAIFlag is 0; otherwise C = 0 when some ally other than the actor that is not blocked
@@ -6517,6 +6869,8 @@ AIAddScoresForTwoLists_OtherAllies::
     ld c, $01
     ret
 
+SECTION "Bank 05 SlotCHasMP3AndSkill6B", ROMX
+
 ; C = slot: carry when its MP word is below 3. Otherwise it scans its eight wBattleSkills entries
 ; (every other byte): Z, no carry and A = 0 when SKILL_EVILSLASH is among them; when it is not, NZ
 ; with the carry of the last compare (set when the eighth id is below $6B).
@@ -6552,6 +6906,8 @@ SlotCHasMP3AndSkill6B::
     xor a
     ret
 
+SECTION "Bank 05 SlotResistances5EntryHasBits2And3_Bank05", ROMX
+
 ; C = slot: Z set when its RESIST_LEGSWEEP field (wSlotResistances byte 5 bits 3-2, 7-byte records)
 ; is 3; A = that byte & $0C and HL points at it. The same code as
 ; SlotResistances5EntryHasBits2And3_Bank05_2; AIAddScoresForTwoLists_OtherAllies uses this copy.
@@ -6571,6 +6927,8 @@ SlotResistances5EntryHasBits2And3_Bank05::
     and $0c
     cp $0c
     ret
+
+SECTION "Bank 05 FailIfFoeHurtAndHealerCanCast", ROMX
 
 ; C = 1 when the AI mode of the actor is below 4. Otherwise, at the first present foe whose HP is at
 ; most half its max HP (2 * HP <= max), it checks every slot of that side: C = 0 when one passes
@@ -6654,6 +7012,8 @@ FailIfFoeHurtAndHealerCanCast::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 SlotCHasCastableHealSkill", ROMX
 
 ; C = slot: walks eight entries, every other byte and stopping at $FF, from wBattleTargetChoice + 16
 ; * C (not the wBattleSkills list), and returns no carry at the first heal the slot could use:
@@ -6741,6 +7101,8 @@ SlotCHasCastableHealSkill::
     jr c, .loop2
     ret
 
+SECTION "Bank 05 TestSlotStatus1Bit0OrSideFlagBit3", ROMX
+
 ; C = slot: NZ when it has BSTAT1_SPELLS_SEALED; otherwise the flags of testing bit 3 of its side
 ; byte (wSideFlags0 for slots 0-3, wSideFlags1 for 4-7): NZ when set, Z when clear. HL points at the
 ; byte tested. SlotCHasCastableHealSkill uses it for the Heal skills. (C2, E-0375)
@@ -6761,6 +7123,8 @@ TestSlotStatus1Bit0OrSideFlagBit3::
     bit 3, [hl]
     ret
 
+SECTION "Bank 05 TestSlotStatus1Bit6", ROMX
+
 ; C = slot: Z clear when it has BSTAT1_DANCE_SEALED (status byte 1 bit 6); HL points at that byte.
 ; SlotCHasCastableHealSkill uses it for SKILL_LIFEDANCE and SKILL_HUSTLE. (C2, E-0375)
 ; C = slot: Z clear when bit 6 of its status byte 1 (wBattleStatus1) is set; HL points at the byte
@@ -6771,6 +7135,8 @@ TestSlotStatus1Bit6::
     call AddAx9ToHL
     bit BSTAT1_DANCE_SEALED, [hl]
     ret
+
+SECTION "Bank 05 SlotCHasCastableHealSkill_Data", ROMX
 
 ; Eight bytes, $02, $05, $07, $12, $24, $01, $0C, $1C, read as MP costs. SlotCHasCastableHealSkill
 ; takes the cost at index 5, 6 or 7 for SKILL_LIFEDANCE, SKILL_HUSTLE and SKILL_LOVERAIN ($01, $0C,
@@ -6833,6 +7199,8 @@ AIGateFoeSlotResistances2Bits45::
     ld c, $01
     ret
 
+SECTION "Bank 05 CheckAIFlagSetModeGated", ROMX
+
 ; C = 1 when the AI mode of the actor is below 3; otherwise C = 0 when wAIFlag is non-zero and C =
 ; $FF when it is zero. (C2, E-0375)
 ; C = 1 when wSlotAIMode[actor] (the AI mode) is below 3; otherwise C = 0 when wAIFlag is non-zero,
@@ -6856,6 +7224,8 @@ CheckAIFlagSetModeGated::
     ld c, $01
     ret
 
+SECTION "Bank 05 AIScore_AquaWall_Conditions_NotYetSet", ROMX
+
 ; AquaWall AI condition: fails when the actor already has BSTAT2_AQUA_WALL. (C2, E-0357; probed
 ; E-0375)
 AIScore_AquaWall_Conditions_NotYetSet::
@@ -6870,6 +7240,8 @@ AIScore_AquaWall_Conditions_NotYetSet::
 .done:
     ld c, $00
     ret
+
+SECTION "Bank 05 UnreferencedEstimateWeakestFoeHit", ROMX
 
 ; C = 1 (through UnreferencedResultC1) when the AI mode of the actor is below 2. Otherwise it keeps
 ; in DE the LOWEST ATK of the opposite slots that CheckSlotStatusBlock accepts (DE starts at $FFFF
@@ -6943,6 +7315,8 @@ UnreferencedEstimateWeakestFoeHit:: ; configured code entry (E-0237); C0
     ld c, $ff
     ret
 
+SECTION "Bank 05 UnreferencedReturnC0", ROMX
+
 ; Sets C = 0 and returns. It sits after the last ret of UnreferencedEstimateWeakestFoeHit; no jump
 ; or call to it was found. (C2, E-0375)
 ; ld c, $00 / ret after UnreferencedEstimateWeakestFoeHit's ret; nothing reaches it (E-0237)
@@ -6951,11 +7325,15 @@ UnreferencedReturnC0:: ; configured code entry (E-0237); C0
     ld c, $00
     ret
 
+SECTION "Bank 05 UnreferencedResultC1", ROMX
+
 ; Sets C = 1 and returns. UnreferencedEstimateWeakestFoeHit jumps here when the AI mode of the actor
 ; is below 2 (jr c), so it is reached from that unreferenced routine. (C2, E-0375)
 UnreferencedResultC1::
     ld c, $01
     ret
+
+SECTION "Bank 05 AIScore_Curse_Conditions_FoeNotCursed", ROMX
 
 ; Curse AI condition: passes when some present foe is not yet cursed (status 0 bit 5). (C2, E-0357;
 ; probed E-0375)
@@ -6968,6 +7346,8 @@ AIScore_Curse_Conditions_FoeNotCursed::
     ld b, $03
     call AnySlotLacksStatusMask
     ret
+
+SECTION "Bank 05 AIScore_SuckAir_Conditions_SkillFlagCheck", ROMX
 
 ; Condition of AIScore_SuckAir_Conditions, as written: steps through the actor's eight skill ids at
 ; wBattleSkillsPrefix + 16 * actor, storing each in wRecordBuffer, and each time calls
@@ -7003,6 +7383,8 @@ AIScore_SuckAir_Conditions_SkillFlagCheck::
     ld [wRecordBuffer], a
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyAllyHPBelow", ROMX
 
 ; C = $FF when a present slot on the actor side (the actor included) has HP below the threshold
 ; AnyAllyHPBelow_HealThreshold gives for the skill in wRecordBuffer, else C = 0. Condition routines
@@ -7046,6 +7428,8 @@ AnyAllyHPBelow::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AnyAllyHPBelow_HealThreshold", ROMX
 
 ; A = slot: returns HL = the HP threshold AnyAllyHPBelow compares that slot's HP with, by the skill
 ; id in wRecordBuffer: three quarters of max HP (max / 2 + max / 4) for SKILL_HEALMORE,
@@ -7105,6 +7489,8 @@ AnyAllyHPBelow_HealThreshold::
     pop bc
     ret
 
+SECTION "Bank 05 AIScore_MPass_AnyAllyMPAboveMax", ROMX
+
 ; MPass AI condition: C = $FF when some present ally other than the actor has MP ABOVE its max MP,
 ; else C = 0. It compares max MP (HL) with MP (BC) and takes the carry, so the test is reversed from
 ; what the name says. (C2, E-0375)
@@ -7148,6 +7534,8 @@ AIScore_MPass_AnyAllyMPAboveMax::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 MPBandOfSlotTemp0", ROMX
 
 ; hTemp0 = battle slot: the MP version of HPBandOfSlotTemp0. C = 0 when its MP is at least 2/3 of
 ; its max MP, 1 when at least 1/2, 2 when at least 1/3, 3 when at least 1/4, 4 when at least 1/10,
@@ -7243,6 +7631,8 @@ MPBandOfSlotTemp0::
     ld c, $05
     ret
 
+SECTION "Bank 05 AIScore_MegaMagic_FoeHPPlusDEFHigh", ROMX
+
 ; MegaMagic AI condition: passes when some present foe has HP + DEF of at least $578 (1,400); C = 1
 ; below AI mode 3. (C2, E-0357; probed E-0375)
 AIScore_MegaMagic_FoeHPPlusDEFHigh::
@@ -7294,6 +7684,8 @@ AIScore_MegaMagic_FoeHPPlusDEFHigh::
     ld c, $01
     ret
 
+SECTION "Bank 05 AnyFoeHasSkillWithFlagD", ROMX
+
 ; C = $FF when a present foe without BSTAT1_BREATH_SEALED has a skill whose record byte 5 has bit 4
 ; set (SlotCSkillFlagMatchD with D = $10, which skips SKILL_SUCKAIR and SKILL_SUCKALL), else C = 0.
 ; wRecordBuffer is saved and restored. In the skill records in the ROM that bit is set for $40-$47
@@ -7336,6 +7728,8 @@ AnyFoeHasSkillWithFlagD::
     ld [wRecordBuffer], a
     ld c, $ff
     ret
+
+SECTION "Bank 05 SlotCSkillFlagMatchD", ROMX
 
 ; C = slot, D = mask: loads record byte 5 of each of the eight skills of the slot (every other byte
 ; of wBattleSkills + 16 * C, skipping SKILL_SUCKAIR and SKILL_SUCKALL) into hTemp0 with
@@ -7389,6 +7783,8 @@ SlotCSkillFlagMatchD::
     pop bc
     ret
 
+SECTION "Bank 05 AllyCheckSide0FlagAndOtherSlots", ROMX
+
 ; C = 0 when the actor side byte (wSide0Flag for slots 0-3, wSide1Flag for 4-7) is 1 or when no
 ; other slot of the actor side is present; C = $FF when another ally is present and the side byte is
 ; not 1. Callers add a weight row (AddAIWeight or AddAIWeightToScore2) when it gives 0, and
@@ -7434,6 +7830,8 @@ AllyCheckSide0FlagAndOtherSlots::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckBattleKindAtLeast2OrLinkModeSet", ROMX
+
 ; C = 0 when wLinkMode is 0 and wBattleKind is below 2, else C = $FF. AIScore_Fight adds weight row
 ; $66 when it gives 0; condition routines in bank $05 reset the score with ResetAISkillScore
 ; instead. (C2, E-0375)
@@ -7451,6 +7849,8 @@ CheckBattleKindAtLeast2OrLinkModeSet::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FoeHPCheckReadsWrongSlot", ROMX
 
 ; Meant to give C = 0 when the HP of a foe is below 4 times its wAIDamageEstimates word. It never
 ; advances C, so it tests the first slot opposite the actor three times; when that slot is present
@@ -7501,6 +7901,8 @@ FoeHPCheckReadsWrongSlot::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CheckActorSlot0To3OrLinkModeSet", ROMX
+
 ; C = 0 when wLinkMode is 0 and the actor is in slots 4-7, else C = $FF. AIScore_Fight adds weight
 ; row $68 when it gives 0. (C2, E-0375)
 ; C = 0 when wLinkMode is 0 and the actor is in slots 4-7, else C = $FF (E-0100)
@@ -7517,6 +7919,8 @@ CheckActorSlot0To3OrLinkModeSet::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_Meditate_Conditions_HPBelowTwoThirds", ROMX
 
 ; Meditate AI condition: passes when the actor's HP is below two thirds of its max. (C2, E-0357;
 ; probed E-0375)
@@ -7538,6 +7942,8 @@ AIScore_Meditate_Conditions_HPBelowTwoThirds::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FailIfSkillHasResistanceClass", ROMX
 
 ; C = 1 when the AI mode of the actor is below 2 and C = $FF when the skill has no resistance class
 ; (wRecordBufferData + $1 = 0). Otherwise it walks the resistance level of the present foes for that
@@ -7606,6 +8012,8 @@ FailIfSkillHasResistanceClass::
     ld c, $01
     ret
 
+SECTION "Bank 05 FailIfTwoAlliesBelowHalfHP", ROMX
+
 ; C = 1 when the AI mode of the actor is below 3 or when the actor does NOT know SKILL_HEALUS,
 ; SKILL_HEALUSALL, SKILL_HUSTLE or SKILL_LOVERAIN (SkillListHas19Or1AOr7COrA1 gives NZ). Otherwise C
 ; = 0 when two or more present slots on its side have HP below half their max HP (max halved,
@@ -7666,6 +8074,8 @@ FailIfTwoAlliesBelowHalfHP::
     ld c, $01
     ret
 
+SECTION "Bank 05 SkillListHas19Or1AOr7COrA1", ROMX
+
 ; HL = the byte before a skill list, B = how many entries: walks every other byte from HL + 1 and
 ; returns Z as soon as one is SKILL_HEALUS, SKILL_HEALUSALL, SKILL_HUSTLE or SKILL_LOVERAIN;
 ; otherwise A = 1 and Z clear. HL ends one byte past the last id read. (C2, E-0375)
@@ -7687,6 +8097,8 @@ SkillListHas19Or1AOr7COrA1::
     ld a, $01
     or a
     ret
+
+SECTION "Bank 05 AIScore_Sap_CompareATKWithDEF", ROMX
 
 ; Sap AI check: X = twice the average ATK of the present slots on the actor side, Y = the average
 ; DEF of the present foes. C = $FF when X is at most Y, or when X - Y is at most half the foe
@@ -7821,6 +8233,8 @@ AIScore_Sap_CompareATKWithDEF::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AIGateCompareAllyStatAverages", ROMX
+
 ; C = 1 when the AI mode of the actor is below 4 or when the actor does NOT know SKILL_HEAL ...
 ; SKILL_HEALUSALL, SKILL_HUSTLE, SKILL_MEDITATE or SKILL_LOVERAIN (SkillListHasAnyOf16To1AA1 gives
 ; NZ). Otherwise it averages max HP + max MP + ATK + DEF (AddSlotStatSumToTemp0, 24-bit) over the
@@ -7932,6 +8346,8 @@ AIGateCompareAllyStatAverages::
     ld c, $01
     ret
 
+SECTION "Bank 05 SkillListHasAnyOf16To1AA1", ROMX
+
 ; HL = the byte before a skill list, B = how many entries: walks every other byte from HL + 1 and
 ; returns Z as soon as one is SKILL_HEAL ... SKILL_HEALUSALL, SKILL_HUSTLE, SKILL_MEDITATE or
 ; SKILL_LOVERAIN; otherwise A = 1 and Z clear. (C2, E-0375)
@@ -7962,6 +8378,8 @@ SkillListHasAnyOf16To1AA1::
     ld a, $01
     or a
     ret
+
+SECTION "Bank 05 AddSlotStatSumToTemp0", ROMX
 
 ; C = slot: adds its max HP + max MP + ATK + DEF (summed in 16 bits) to the 24-bit total in
 ; hTemp0-hTemp2 (low byte first) and increments D; E and BC are kept. AIGateCompareAllyStatAverages
@@ -7998,6 +8416,8 @@ AddSlotStatSumToTemp0::
     ldh [hTemp2], a
     inc d
     ret
+
+SECTION "Bank 05 AIScore_BiAttack_FoeHPCheck", ROMX
 
 ; BiAttack AI check: fails when a present foe's HP is below 120% of its damage estimate
 ; (wAIDamageEstimates), i.e. a normal attack would already finish it. (C2, E-0357; probed E-0375)
@@ -8048,6 +8468,8 @@ AIScore_BiAttack_FoeHPCheck::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_Berserker_SpeedAndHPCheck", ROMX
 
 ; Check of AIScore_Berserker: C = 1 when the actor's AI mode is below 2; C = $FF when fewer than two
 ; foes are present or when the actor's AGL is at most 120% of the AGL of the last present foe;
@@ -8122,6 +8544,8 @@ AIScore_Berserker_SpeedAndHPCheck::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 AIScore_Ramming_LastFoeHPAndResist", ROMX
 
 ; Check of AIScore_Ramming: C = 1 when the actor's AI mode is below 2; C = $FF when fewer than two
 ; foes are present, when the skill has no resistance class (wRecordBufferData + 1 = 0), or when the
@@ -8204,6 +8628,8 @@ AIScore_Ramming_LastFoeHPAndResist::
 .done2:
     ld c, $01
     ret
+
+SECTION "Bank 05 AIScore_Kamikaze_HealerAllyAndFoeHP", ROMX
 
 ; Check of AIScore_Kamikaze: C = 1 when the actor's AI mode is below 3; C = $FF in link battles
 ; (wLinkMode), battle kind 2 or more, with wAIFlag 0, or when no other ally is present with AI mode
@@ -8344,6 +8770,8 @@ AIScore_Kamikaze_HealerAllyAndFoeHP::
     ld c, $01
     ret
 
+SECTION "Bank 05 ActorStatus4CheckReadsAddress", ROMX
+
 ; Apparently meant to test the actor status byte 4 & $03 like its neighbours, but it never loads the
 ; byte: it tests A & 3 where A is the low byte of wBattleStatus4 + 9 * actor that AddAx9ToHL leaves.
 ; So C = $FF for actor slots 0 and 4 and C = 0 for slots 1, 2, 3, 5, 6 and 7, whatever the status.
@@ -8365,6 +8793,8 @@ ActorStatus4CheckReadsAddress::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 AIScore_BiAttack_ATKCheck", ROMX
 
 ; BiAttack AI check: passes when 5/4 of the actor's ATK is at least the foes' average DEF, fails
 ; otherwise. (C2, E-0357; probed E-0375)
@@ -8423,6 +8853,8 @@ AIScore_BiAttack_ATKCheck::
     ld c, $ff
     ret
 
+SECTION "Bank 05 ActorLacksStatus2Bit1And5Bits01", ROMX
+
 ; C = 0 when the actor has BSTAT2_BOUNCE (status byte 2 bit 1) or status byte 5 & $03
 ; (BSTAT5_RADIANT_BLIND, BSTAT5_SANDSTORM_BLIND) set, else C = $FF. After reading byte 2 with ld a,
 ; [hli] it steps twice more, so the second byte is 5, not 4 as the name says. AIScore_Fight adds
@@ -8449,6 +8881,8 @@ ActorLacksStatus2Bit1And5Bits01::
 .done2:
     ld c, $ff
     ret
+
+SECTION "Bank 05 ResistanceAverageGateForAISide", ROMX
 
 ; C = 1 when wLinkMode is not 1 and the actor is in slots 4-7. Otherwise as
 ; PassIfFoesAverageResistanceAtLeast2: C = $FF when the skill has no resistance class
@@ -8536,6 +8970,8 @@ ResistanceAverageGateForAISide::
 .done3:
     ld c, $01
     ret
+
+SECTION "Bank 05 ResistanceAverageGateForFoeAIMode3", ROMX
 
 ; C = 1 when wLinkMode is 1, when the actor is in slots 0-3, or when its AI mode is below 3.
 ; Otherwise as PassIfFoesAverageResistanceAtLeast2: C = $FF when the skill has no resistance class
@@ -8625,6 +9061,8 @@ ResistanceAverageGateForFoeAIMode3::
     ld c, $01
     ret
 
+SECTION "Bank 05 ResetAISkillScore", ROMX
+
 ; Starts the AI score of a skill: the word wAISkillScore = 0 and the word wAISkillScore2 = $FFFF.
 ; Condition routines (AIFireSkillUsable, AIHealUsable, AIScore_Beat_Conditions and others) call it
 ; on their failing branch. (C2, E-0375)
@@ -8638,6 +9076,8 @@ ResetAISkillScore::
     ld [wAISkillScore2 + $1], a
     ret
 
+SECTION "Bank 05 AddBCToAISkillScore", ROMX
+
 ; The word wAISkillScore += BC (16-bit, the carry out of the high byte is lost). No caller was found
 ; in src/. (C2, E-0375)
 ; the word wAISkillScore/wAISkillScore + $1 += BC (E-0094)
@@ -8649,6 +9089,8 @@ AddBCToAISkillScore::
     adc b
     ld [wAISkillScore + $1], a
     ret
+
+SECTION "Bank 05 AddBCToAISkillScore2", ROMX
 
 ; The word wAISkillScore2 += BC (16-bit, the carry out is lost). No caller was found in src/. (C2,
 ; E-0375)
@@ -8662,6 +9104,8 @@ AddBCToAISkillScore2::
     ld [wAISkillScore2 + $1], a
     ret
 
+SECTION "Bank 05 ReadSlotAIModeIndexed_Bank05", ROMX
+
 ; A = battle slot: returns A = its AI mode, the byte at wSlotAIMode + A; HL points at it. Many AI
 ; checks in this bank gate on it (C = 1 below a set mode). The same code is
 ; ReadSlotAIModeIndexed_Bank05_2. (C2, E-0375)
@@ -8671,6 +9115,8 @@ ReadSlotAIModeIndexed_Bank05::
     add_a_to_hl
     ld a, [hl]
     ret
+
+SECTION "Bank 05 AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise", ROMX
 
 ; A = C = slot: whether that slot's DEF can still be raised: A = 0 and no carry when its DEF is 999
 ; or more; otherwise carry while DEF is below its base DEF (GetBaseDEF, in wBattleStatResultLo and
@@ -8725,6 +9171,8 @@ AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise::
     scf
     ret
 
+SECTION "Bank 05 AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise", ROMX
+
 ; A = C = slot: whether that slot's AGL can still be raised: A = 0 and no carry when its AGL is 999
 ; or more; otherwise carry while AGL is below its base AGL (GetBaseAGL, in wBattleStatResultLo and
 ; wBattleStatResultHi) times 4, or times 2 for slots 4-7 when wLinkMode is 0 or 2; no carry
@@ -8778,6 +9226,8 @@ AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise::
     scf
     ret
 
+SECTION "Bank 05 CompareHPWithThreeQuartersMax", ROMX
+
 ; C = slot: compares its HP with (3 * max HP) / 4 (the halvings use sra, a signed shift): carry when
 ; the HP is below, Z when equal (CompareHLToBC); BC kept. (C2, E-0375)
 ; C = slot: compares its HP with 3/4 of its max HP (CompareHLToBC): carry when below; BC kept
@@ -8804,6 +9254,8 @@ CompareHPWithThreeQuartersMax::
     pop bc
     ret
 
+SECTION "Bank 05 CompareHPWithHalfMax", ROMX
+
 ; A = the slot whose max HP is used, C = the slot whose HP is used (callers would pass the same
 ; slot): compares 2 * HP with the max HP (CompareHLToBC): carry when the HP is below 1/2 of max, Z
 ; when exactly 1/2; BC kept. No caller was found in src/. (C2, E-0375)
@@ -8823,6 +9275,8 @@ CompareHPWithHalfMax::
     call CompareHLToBC
     pop bc
     ret
+
+SECTION "Bank 05 CompareHPWithQuarterMax", ROMX
 
 ; A = the slot whose max HP is used, C = the slot whose HP is used (callers would pass the same
 ; slot): compares 4 * HP with the max HP (CompareHLToBC): carry when the HP is below 1/4 of max, Z
@@ -8844,6 +9298,8 @@ CompareHPWithQuarterMax::
     call CompareHLToBC
     pop bc
     ret
+
+SECTION "Bank 05 CompareHPWithTenthMax", ROMX
 
 ; A = the slot whose max HP is used, C = the slot whose HP is used (callers would pass the same
 ; slot): compares 10 * HP with the max HP (CompareHLToBC): carry when the HP is below 1/10 of max, Z
@@ -8870,6 +9326,8 @@ CompareHPWithTenthMax::
     pop bc
     ret
 
+SECTION "Bank 05 CompareSlotHPWith1", ROMX
+
 ; A = slot: NZ (A = the high byte) when its HP word is 256 or more; otherwise compares the low byte
 ; with 1: Z when the HP is 1, carry when it is 0. HL = the HP. (C2, E-0375)
 ; A = slot: returns NZ when its HP (GetBattleHP_Bank05) is 256 or more; otherwise compares the low
@@ -8882,6 +9340,8 @@ CompareSlotHPWith1::
     ld a, l
     cp $01
     ret
+
+SECTION "Bank 05 SlotHasSkillWithFlagD", ROMX
 
 ; C = slot, D = mask: for each of the eight skills of the slot (every other byte of wBattleSkills +
 ; 16 * C, none skipped, no $FF stop) it loads record byte 5 into hTemp0 (LoadSkillRecordPart with
@@ -8932,6 +9392,8 @@ SlotHasSkillWithFlagD::
     pop bc
     ret
 
+SECTION "Bank 05 CountSkillsWithZeroRecordByte1", ROMX
+
 ; C = slot: walks eight CONSECUTIVE bytes from wBattleSkills + 16 * C (it steps HL once per pass, so
 ; it reads the first four skill ids and the bytes after them), skips $FF, and counts the ids whose
 ; skill record byte 1 is 0 (LoadSkillRecordPart with wBattleArg0 = 1, wBattleArg1 = 1 into hTemp0).
@@ -8978,6 +9440,8 @@ CountSkillsWithZeroRecordByte1::
     pop bc
     ret
 
+SECTION "Bank 05 Get2BitFieldEOfHL", ROMX
+
 ; E = field number: A = bits 1-0 of [HL] for field 0, bits 3-2 for 1, bits 5-4 for 2 and bits 7-6
 ; for 3 or any other E, moved down to bits 1-0; HL and E kept. The resistance checks use it on
 ; wSlotResistances bytes (AnyFoeNotFullyResistant_Data gives the field). (C2, E-0375)
@@ -9014,6 +9478,8 @@ Get2BitFieldEOfHL::
     and $03
     ret
 
+SECTION "Bank 05 GetSlotSpeciesFamily", ROMX
+
 ; A = battle slot: copies its monster id (wBattleMonsterId) to wSpeciesIdLo/Hi and returns A = the
 ; family, byte 0 of wSpeciesRecord after LoadSpeciesFamily; BC kept. FoeOfFamilyEPresent uses it.
 ; (C2, E-0375)
@@ -9032,6 +9498,8 @@ GetSlotSpeciesFamily::
     pop bc
     ld a, [wSpeciesRecord]
     ret
+
+SECTION "Bank 05 FindLowestFoeDEF", ROMX
 
 ; Finds the lowest DEF among the present foes, in hTemp0/hTemp1. (C2, E-0357; probed E-0375)
 FindLowestFoeDEF::
@@ -9087,6 +9555,8 @@ FindLowestFoeDEF::
 .return:
     ret
 
+SECTION "Bank 05 SlotIsBlinded", ROMX
+
 ; C = slot: Z clear when the slot is blinded: when BSTAT1_BLINDED is set in its wBattleStatus1 byte
 ; (A is then not meaningful), otherwise A = its wBattleStatus5 byte & 3 (BSTAT5_RADIANT_BLIND,
 ; BSTAT5_SANDSTORM_BLIND) with Z set only when both are clear. HL is left at the byte read; BC and
@@ -9110,6 +9580,8 @@ SlotIsBlinded::
 
 .return:
     ret
+
+SECTION "Bank 05 CountSkillsInList", ROMX
 
 ; A = slot: A = how many of its 8 skills (the even bytes of wBattleSkills + 16 * slot) are
 ; SKILL_BLAZEMOST, SKILL_FIREBOLT, SKILL_EXPLODET, SKILL_INFERMOST, SKILL_THORDAIN, SKILL_BLIZZARD,
@@ -9157,6 +9629,8 @@ CountSkillsInList::
     or a
     pop bc
     ret
+
+SECTION "Bank 05 CountSkillsInList_2", ROMX
 
 ; A = slot: A = how many of its 8 skills (even bytes of wBattleSkills + 16 * slot) are the ids
 ; CountSkillsInList counts or SKILL_SACRIFICE, SKILL_MEGAMAGIC, SKILL_BIGBANG or SKILL_HELLBLAST
@@ -9211,6 +9685,8 @@ CountSkillsInList_2::
     pop bc
     ret
 
+SECTION "Bank 05 CountSkillsInRanges", ROMX
+
 ; A = slot: A = how many of its 8 skills (even bytes of wBattleSkills + 16 * slot) are SKILL_HEAL to
 ; SKILL_CURSEOFF ($16-$24), SKILL_LIFEDANCE, SKILL_HUSTLE, SKILL_SURGE, SKILL_MEDITATE or
 ; SKILL_LIFESONG, with Z set when there are none; 0 and $FF entries are skipped; BC kept. No caller
@@ -9257,6 +9733,8 @@ CountSkillsInRanges::
     or a
     ret
 
+SECTION "Bank 05 CountSkills16To1AOr1ETo20", ROMX
+
 ; A = slot: A = how many of the first 8 bytes at wBattleSkills + 16 * slot are $16-$1A (SKILL_HEAL
 ; to SKILL_HEALUSALL) or $1E-$20 (SKILL_VIVIFY, SKILL_REVIVE, SKILL_FAREWELL); BC kept, flags not
 ; set from the count. Unlike its neighbours it does not skip the odd bytes, so it reads skills 0-3
@@ -9290,6 +9768,8 @@ CountSkills16To1AOr1ETo20::
     ld a, c
     pop bc
     ret
+
+SECTION "Bank 05 AverageAGLOfSideA", ROMX
 
 ; A = first slot of a side (0 or 4): HL = the sum of the AGL words (wBattleAGL) of the present slots
 ; among A, A + 1 and A + 2, divided by how many are present (DivideHLByA, A = the remainder). The
@@ -9329,6 +9809,8 @@ AverageAGLOfSideA::
     ldh a, [hTemp0]
     call DivideHLByA
     ret
+
+SECTION "Bank 05 CountActiveStatusEffectsOfSlotC", ROMX
 
 ; C = slot: D = how many of these are set in its 9-byte status record (wBattleStatus + 9 * slot),
 ; counted with IncrementD: status byte 1 bits 2-5 (BSTAT1_ATK_DOUBLED, CRITICAL, DRAGON_FORM,
@@ -9383,12 +9865,16 @@ CountActiveStatusEffectsOfSlotC::
     call nz, IncrementD
     ret
 
+SECTION "Bank 05 IncrementD", ROMX
+
 ; D += 1 (8 bits: Z set when it wraps to 0; carry kept). CountActiveStatusEffectsOfSlotC calls it
 ; with call nz for each status bit it counts. (C2, E-0375)
 ; D += 1 (E-0072)
 IncrementD::
     inc d
     ret
+
+SECTION "Bank 05 CountSkillsWithFlag6", ROMX
 
 ; A = slot: walks its 8 skill entries (byte pairs at wBattleSkills + 16 * slot) and, for each skill
 ; number other than $FF, loads byte 5 of its skill record into hTemp2 (LoadSkillRecordPart with
@@ -9438,6 +9924,8 @@ CountSkillsWithFlag6::
     pop bc
     ret
 
+SECTION "Bank 05 CountSkillsBelow16Or2ETo34Except31", ROMX
+
 ; C = slot: A = how many of its 8 skills (even bytes of wBattleSkills + 16 * slot) are $01-$15
 ; (SKILL_BLAZE to SKILL_SACRIFICE) or $2E-$34 except $31 (SKILL_SURROUND, SKILL_SLEEP,
 ; SKILL_SLEEPALL, SKILL_ROBMAGIC, SKILL_STOPSPELL, SKILL_PANICALL; not SKILL_TAKEMAGIC), with Z set
@@ -9478,6 +9966,8 @@ CountSkillsBelow16Or2ETo34Except31::
     or a
     ret
 
+SECTION "Bank 05 CountSlotSkills40To47", ROMX
+
 ; A = slot: A = how many of its 8 skills (every other byte of wBattleSkills + 16 * slot) are $40-$47
 ; (SKILL_FIREAIR to SKILL_WHITEAIR), with Z set when there are none; BC kept. No caller names it in
 ; src/. (C2, E-0375)
@@ -9506,6 +9996,8 @@ CountSlotSkills40To47::
     or a
     pop bc
     ret
+
+SECTION "Bank 05 CountSkillsInRanges_2", ROMX
 
 ; A = slot: A = how many of its 8 skills (even bytes of wBattleSkills + 16 * slot) are $01-$15
 ; (SKILL_BLAZE to SKILL_SACRIFICE), $40-$67 (SKILL_FIREAIR to SKILL_GIGASLASH), $6A-$70
@@ -9556,6 +10048,8 @@ CountSkillsInRanges_2::
     pop bc
     ret
 
+SECTION "Bank 05 ReadByteAtHLPlus4APlus3C_Bank05", ROMX
+
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits (it wraps above $FF) and then added to HL
 ; with carry; HL is left at the byte read; BC and DE kept. The bank $05 callers pass A = C = slot,
 ; so it reads byte n of the 7-byte wSlotResistances record of that slot (HL = wSlotResistances + n).
@@ -9570,6 +10064,8 @@ ReadByteAtHLPlus4APlus3C_Bank05::
     add_a_to_hl
     ld a, [hl]
     ret
+
+SECTION "Bank 05 AnyFoeNotFullyResistant_Data", ROMX
 
 ; Twenty-seven (byte offset, field) pairs, indexed by the resistance number RESIST_* (the resistance
 ; class minus 1): the byte offset 0-6 inside the seven-byte record of a battle slot in
@@ -9618,6 +10114,8 @@ AnySlotLacksStatusMask::
     ld c, $ff
     ret
 
+SECTION "Bank 05 AnySlotHasStatusMask", ROMX
+
 ; A = first slot, B = slot count, HL = one status byte of slot 0, E = mask: C = $FF at the first
 ; present slot whose byte HL + 9 * slot has a bit of E set; C = 0 when none does (the opposite test
 ; to AnySlotLacksStatusMask). HL and DE kept. Used by the Antidote, DeChaos, NumbOff and CurseOff
@@ -9651,6 +10149,8 @@ AnySlotHasStatusMask::
 .done:
     ld c, $ff
     ret
+
+SECTION "Bank 05 FoeOfFamilyEPresent", ROMX
 
 ; E = family (0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6 Devil, 7 Zombie, 8 Material, 9
 ; Water, as LoadSpeciesFamily reads them): C = 0 when one of the three present slots opposite
@@ -9689,6 +10189,8 @@ FoeOfFamilyEPresent::
     ld c, $ff
     ret
 
+SECTION "Bank 05 CompareMPWithThreeQuartersMax", ROMX
+
 ; C = slot: compares its MP (wBattleMP) with (3 * max MP) / 4 (wBattleMaxMP, shifted right twice
 ; with sra, so a product of $8000 or more would go negative): carry when MP is below it, Z when
 ; equal. BC kept; HL = MP. AnyAllyMPAtMostThreeQuarters passes on carry or Z. (C2, E-0375)
@@ -9715,6 +10217,8 @@ CompareMPWithThreeQuartersMax::
     pop bc
     ret
 
+SECTION "Bank 05 ScaleHLToFourFifths", ROMX
+
 ; HL = (HL / 5) * 4, the quotient rounded down before the multiply (DivideHLByA; A = the remainder);
 ; BC and DE kept. FailIfFoeHPAtMostFourFifthsAIDamageEstimates scales each present foe word in
 ; wAIDamageEstimates with it before comparing it with that foe HP. (C2, E-0375)
@@ -9732,6 +10236,8 @@ ScaleHLToFourFifths::
     pop de
     ret
 
+SECTION "Bank 05 TestRecordBufferData1", ROMX
+
 ; A = wRecordBufferData + $1, byte 1 of the loaded skill record (the resistance index
 ; AnyFoeNotFullyResistant reads), with Z set when it is 0. AIGateFoeStatus2Mask22 and
 ; AIScore_FireAir_WindGuardCheck then compare it with 3. (C2, E-0375)
@@ -9741,6 +10247,8 @@ TestRecordBufferData1::
     ld a, [wRecordBufferData + $1]
     or a
     ret
+
+SECTION "Bank 05 ReadActorResistanceFieldForSkillA", ROMX
 
 ; A = resistance index (1-27), C = slot: looks up the pair at AnyFoeNotFullyResistant_Data + 2 * (A
 ; - 1) (D = byte in the record, E = 2-bit field), then returns A = that field (Get2BitFieldEOfHL) of
@@ -9770,6 +10278,8 @@ ReadActorResistanceFieldForSkillA::
     or a
     ld a, e
     ret
+
+SECTION "Bank 05 AIScore_Kamikaze_CheckSkills", ROMX
 
 ; C = slot, B = how many skill entries to read: scans skill numbers at every other byte from
 ; wBattleSkills + 256 * C (it loads D = C, E = 0 and adds DE, where 16 * C was likely meant) and
@@ -9812,6 +10322,8 @@ AIScore_Kamikaze_CheckSkills::
     xor a
     ret
 
+SECTION "Bank 05 AIScore_Fight_Conditions", ROMX
+
 ; The conditions of AIScore_Fight (which returns at once when C = 0): runs
 ; AnyFoeLacksStatus3And4Bits; when it gives C = 0 it resets the skill score (ResetAISkillScore:
 ; wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is returned. Otherwise it returns the C of
@@ -9831,6 +10343,8 @@ AIScore_Fight_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIFireSkillUsable", ROMX
 
 ; Usability check of AIScore_Blaze and AIScore_Firebal (both return at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit0Check, SkillPassesSideFlagBit3Check,
@@ -9880,6 +10394,8 @@ AIFireSkillUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Beat_Conditions", ROMX
+
 ; The conditions of AIScore_Beat (which returns at once when C = 0): runs ActorCanPayMPCost_Bank05,
 ; SkillPassesStatus1Bit0Check, SkillPassesSideFlagBit3Check, SkillPassesRepeatCheck,
 ; AnyFoeLacksStatus2Mask22, AnyFoeLacksStatus5Bits67, AnyFoeNotFullyResistant and
@@ -9927,6 +10443,8 @@ AIScore_Beat_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Sacrifice_Conditions", ROMX
 
 ; The conditions of AIScore_Sacrifice: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit0Check,
 ; SkillPassesSideFlagBit3Check, SkillPassesRepeatCheck, AnyFoeLacksStatus2Mask22,
@@ -9989,6 +10507,8 @@ AIScore_Sacrifice_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIHealUsable", ROMX
+
 ; Usability check of AIScore_Heal and AIScore_HealUs (both return at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit0Check, SkillPassesSideFlagBit3Check,
 ; SkillPassesRepeatCheck and AnyAllyHPBelow in turn; the first that gives C = 0 resets the skill
@@ -10023,6 +10543,8 @@ AIHealUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_MPass_Conditions", ROMX
+
 ; The conditions of AIScore_MPass: resets the skill's score (ResetAISkillScore) when C is already 0
 ; on entry, then when ActorLacksStatus4Bits67 or AllOtherAlliesHaveStatus0Bit6 gives 0; the next
 ; step, SetCToZero, always gives 0, so every path resets the score and
@@ -10053,6 +10575,8 @@ AIScore_MPass_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Vivify_Conditions", ROMX
+
 ; The conditions of AIScore_Vivify (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore and AnyOwnSideSlotOutIs1 in turn; the first that gives
 ; C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C
@@ -10077,6 +10601,8 @@ AIScore_Vivify_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Farewell_Conditions", ROMX
 
 ; The conditions of AIScore_Farewell (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus0Bit6, AnyOwnSideSlotOutIs1 and
@@ -10110,6 +10636,8 @@ AIScore_Farewell_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Antidote_Conditions", ROMX
+
 ; The conditions of AIScore_Antidote (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore and AIScore_Antidote_Conditions_AllyPoisoned in turn;
 ; the first that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0,
@@ -10137,6 +10665,8 @@ AIScore_Antidote_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_DeChaos_Conditions", ROMX
+
 ; The conditions of AIScore_DeChaos (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore and AIScore_DeChaos_Conditions_AllyConfused in turn;
 ; the first that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0,
@@ -10163,6 +10693,8 @@ AIScore_DeChaos_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_NumbOff_Conditions", ROMX
 
 ; The conditions of AIScore_NumbOff (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore and AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep
@@ -10192,6 +10724,8 @@ AIScore_NumbOff_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_CurseOff_Conditions", ROMX
+
 ; The conditions of AIScore_CurseOff (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore and AIScore_CurseOff_Conditions_AllyCursed in turn;
 ; the first that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0,
@@ -10218,6 +10752,8 @@ AIScore_CurseOff_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_Upper_Conditions", ROMX
 
 ; The conditions of AIScore_Upper (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked and
@@ -10249,6 +10785,8 @@ AIScore_Upper_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Sap_Conditions", ROMX
+
 ; The conditions of AIScore_Sap (which returns at once when C = 0): runs
 ; AIUsableAndFoeLacksStatus2And5 and AIScore_Sap_Conditions_AnyFoeSappable in turn; the first that
 ; gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF)
@@ -10272,6 +10810,8 @@ AIScore_Sap_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIUsableAndFoeLacksStatus2And5", ROMX
 
 ; Usability check of the Sap, Slow, Surround, Sleep and StopSpell conditions and AIPanicAllUsable:
 ; runs CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus2Mask22 and
@@ -10299,6 +10839,8 @@ AIUsableAndFoeLacksStatus2And5::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Speed_Conditions", ROMX
 
 ; The conditions of AIScore_Speed (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked and
@@ -10330,6 +10872,8 @@ AIScore_Speed_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Slow_Conditions", ROMX
+
 ; The conditions of AIScore_Slow (which returns at once when C = 0): runs
 ; AIUsableAndFoeLacksStatus2And5, AnyFoeNotBlocked and AIScore_Slow_Conditions_AnyFoeSlowable in
 ; turn; the first that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0,
@@ -10358,6 +10902,8 @@ AIScore_Slow_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_TwinHits_Conditions", ROMX
+
 ; TwinHits AI conditions: the usual usability checks, then an ally lacking status 1 bits 2-3 and
 ; status 4 bits 0-1; otherwise the score is reset. (C2, E-0357; probed E-0375)
 AIScore_TwinHits_Conditions::
@@ -10374,6 +10920,8 @@ AIScore_TwinHits_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Surround_Conditions", ROMX
 
 ; The conditions of AIScore_Surround (which returns at once when C = 0): runs
 ; AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus5Bits01And1Bit1, AnyFoeNotBlocked and
@@ -10407,6 +10955,8 @@ AIScore_Surround_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Sleep_Conditions", ROMX
+
 ; The conditions of AIScore_Sleep (which returns at once when C = 0): runs
 ; AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0MaskCC and AnyFoeOpenToSlotResistances2Field3 in
 ; turn; the first that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0,
@@ -10434,6 +10984,8 @@ AIScore_Sleep_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_TakeMagic_Conditions", ROMX
 
 ; The conditions of AIScore_TakeMagic (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AIScore_TakeMagic_Conditions_FoeHasTakeableSkill,
@@ -10478,6 +11030,8 @@ AIScore_TakeMagic_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_RobMagic_Conditions", ROMX
+
 ; The conditions of AIScore_RobMagic (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeHasMPReadsWrongOffset,
 ; AnyFoeWithMPOpenToSlotResistances2Field1 and ActorMPBelowThreeQuarters in turn; the first that
@@ -10511,6 +11065,8 @@ AIScore_RobMagic_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_StopSpell_Conditions", ROMX
 
 ; The conditions of AIScore_StopSpell (which returns at once when C = 0): runs
 ; AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0Bit6, AnyActiveFoeHasSkillFlag40,
@@ -10553,6 +11109,8 @@ AIScore_StopSpell_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIPanicAllUsable", ROMX
+
 ; Usability check of AIScore_PanicAll and AIScore_PanicAll_2 (both return at once when C = 0): runs
 ; AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0Bit6, AnyFoeNotFullyResistant,
 ; AnyFoeLacksStatus0Bit4 and AnyFoeVulnerableBySlotResistances3Bits67 in turn; the first that gives
@@ -10589,6 +11147,8 @@ AIPanicAllUsable::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIIronizeUsable", ROMX
 
 ; Usability check of AIScore_Ironize and AIScore_Ironize_2 (both return at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus0Bit6,
@@ -10643,6 +11203,8 @@ AIIronizeUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_MagicBack_Conditions", ROMX
+
 ; The conditions of AIScore_MagicBack (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus0Bit6, AnyActiveFoeHasSkillFlag40,
 ; AnyFoeNotBlocked, ActorLacksStatus4Bits67, AIScore_MagicBack_Conditions_NotYetSet and
@@ -10692,6 +11254,8 @@ AIScore_MagicBack_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Barrier_Conditions", ROMX
 
 ; The conditions of AIScore_Barrier (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus0Bit6, AnyFoeHasSkillFlag10,
@@ -10743,6 +11307,8 @@ AIScore_Barrier_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_MagicWall_Conditions", ROMX
+
 ; The conditions of AIScore_MagicWall (which returns at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus0Bit6, AnyActiveFoeHasSkillFlag40,
 ; AnyFoeLacksStatus1Bit0, AnyFoeNotBlocked, ActorLacksStatus4Bits67 and
@@ -10793,6 +11359,8 @@ AIScore_MagicWall_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIUsableAndActorLacksStatus4Bits67", ROMX
+
 ; Usability check of AIScore_Transform and AIScore_BeDragon (both return at once when C = 0): runs
 ; CheckSkillUsableStatusElseResetAISkillScore and ActorLacksStatus4Bits67 in turn; the first that
 ; gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF)
@@ -10815,6 +11383,8 @@ AIUsableAndActorLacksStatus4Bits67::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 CheckSkillUsableStatusElseResetAISkillScore", ROMX
 
 ; The usability check that 17 bank $05 condition routines (Vivify to MagicWall, AIIronizeUsable and
 ; the other AIUsable* checks) and AIScore_Chance start with: runs ActorCanPayMPCost_Bank05,
@@ -10851,6 +11421,8 @@ CheckSkillUsableStatusElseResetAISkillScore::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_MegaMagic_Conditions", ROMX
+
 ; MegaMagic AI conditions: an attack skill usable, the actor lacks status 4 bits 6-7, and the battle
 ; is a link battle or of kind 2 or more; otherwise the score is reset. (C2, E-0357; probed E-0375)
 AIScore_MegaMagic_Conditions::
@@ -10871,6 +11443,8 @@ AIScore_MegaMagic_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIAttackSkillUsable", ROMX
 
 ; Usability check of the BigBang, WindBeast and Vacuum scores, the MegaMagic and FireAir conditions
 ; and AIAndFoeLacksStatus3And4: runs ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck,
@@ -10908,6 +11482,8 @@ AIAttackSkillUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_FireAir_Conditions", ROMX
+
 ; The conditions of AIScore_FireAir (which returns at once when C = 0): runs AIAttackSkillUsable,
 ; SkillPassesStatus1Bit7Check and AIScore_FireAir_Conditions_FoeLacksWindGuard in turn; the first
 ; that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 =
@@ -10935,6 +11511,8 @@ AIScore_FireAir_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIAndFoeLacksStatus3And4", ROMX
+
 ; Usability check of the RockThrow, Watershot, Tidalwave, CallHelp, FireSlash and GigaSlash scores:
 ; runs AIAttackSkillUsable and AnyFoeLacksStatus3And4Bits in turn; the first that gives C = 0 resets
 ; the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is
@@ -10957,6 +11535,8 @@ AIAndFoeLacksStatus3And4::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_SlimeBlow_Conditions", ROMX
 
 ; The conditions of AIScore_SlimeBlow (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
@@ -10985,6 +11565,8 @@ AIScore_SlimeBlow_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_DrakSlash_Conditions", ROMX
+
 ; The conditions of AIScore_DrakSlash (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
 ; returns at once with C = 0), then AIScore_DrakSlash_Conditions_DragonFoePresent, which gives C = 0
@@ -11011,6 +11593,8 @@ AIScore_DrakSlash_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_BeastCut_Conditions", ROMX
 
 ; The conditions of AIScore_BeastCut (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
@@ -11039,6 +11623,8 @@ AIScore_BeastCut_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_BirdBlow_Conditions", ROMX
+
 ; The conditions of AIScore_BirdBlow (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
 ; returns at once with C = 0), then AIScore_BirdBlow_Conditions_BirdFoePresent, which gives C = 0
@@ -11066,6 +11652,8 @@ AIScore_BirdBlow_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_BugBlow_Conditions", ROMX
+
 ; The conditions of AIScore_BugBlow (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
 ; returns at once with C = 0), then AIScore_BugBlow_Conditions_BugFoePresent, which gives C = 0 when
@@ -11091,6 +11679,8 @@ AIScore_BugBlow_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_Shears_Conditions", ROMX
 
 ; The conditions of AIScore_Shears (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
@@ -11119,6 +11709,8 @@ AIScore_Shears_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_DevilCut_Conditions", ROMX
+
 ; The conditions of AIScore_DevilCut (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
 ; returns at once with C = 0), then AIScore_DevilCut_Conditions_DevilFoePresent, which gives C = 0
@@ -11145,6 +11737,8 @@ AIScore_DevilCut_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_ZombieCut_Conditions", ROMX
 
 ; The conditions of AIScore_ZombieCut (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
@@ -11173,6 +11767,8 @@ AIScore_ZombieCut_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_CleanCut_Conditions", ROMX
+
 ; The conditions of AIScore_CleanCut (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
 ; returns at once with C = 0), then AIScore_CleanCut_Conditions_MaterialFoePresent, which gives C =
@@ -11199,6 +11795,8 @@ AIScore_CleanCut_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_AquaCut_Conditions", ROMX
 
 ; The conditions of AIScore_AquaCut (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
@@ -11227,6 +11825,8 @@ AIScore_AquaCut_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_MetalCut_Conditions", ROMX
+
 ; The conditions of AIScore_MetalCut (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore (which resets the skill score itself; the routine then
 ; returns at once with C = 0), then AIScore_MetalCut_Conditions_MetalFoePresent, which gives C = 0
@@ -11252,6 +11852,8 @@ AIScore_MetalCut_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 CheckSkillUsableElseResetAISkillScore", ROMX
 
 ; The usability check of the SlimeBlow to MetalCut, PoisonHit, SquallHit, BiAttack, RainSlash and
 ; SandStorm conditions, AIParalyzeUsable, AIScore_EvilSlash and AIScore_Massacre: runs
@@ -11290,6 +11892,8 @@ CheckSkillUsableElseResetAISkillScore::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_PoisonHit_Conditions", ROMX
+
 ; The conditions of AIScore_PoisonHit (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore, AnyFoeLacksStatus0Bits01 and
 ; AnyFoeOpenToSlotResistances4Field0 in turn; the first that gives C = 0 resets the skill score
@@ -11320,6 +11924,8 @@ AIScore_PoisonHit_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_Paralyze_Conditions", ROMX
+
 ; The conditions of AIScore_Paralyze (which returns at once when C = 0): runs AIParalyzeUsable and
 ; AnyFoeOpenToSlotResistances5Field3 in turn; the first that gives C = 0 resets the skill score
 ; (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is returned
@@ -11344,6 +11950,8 @@ AIScore_Paralyze_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_NapAttack_Conditions", ROMX
 
 ; The conditions of AIScore_NapAttack (which returns at once when C = 0): runs AIParalyzeUsable and
 ; AnyFoeOpenToSlotResistances2Field3 in turn; the first that gives C = 0 resets the skill score
@@ -11370,6 +11978,8 @@ AIScore_NapAttack_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIParalyzeUsable", ROMX
 
 ; Usability check of the Paralyze and NapAttack conditions: runs
 ; CheckSkillUsableElseResetAISkillScore, AnyFoeLacksStatus0MaskCC and AnyFoeNotBlocked in turn; the
@@ -11398,6 +12008,8 @@ AIParalyzeUsable::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_SquallHit_Conditions", ROMX
 
 ; The conditions of AIScore_SquallHit (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore, AIScore_SquallHit_Conditions_AnyFoeAGL2,
@@ -11441,6 +12053,8 @@ AIScore_SquallHit_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_BiAttack_Conditions", ROMX
+
 ; BiAttack AI conditions: usable, and the DEF check (AIScore_BiAttack_ATKCheck); otherwise the score
 ; is reset and C = 0. (C2, E-0357; probed E-0375)
 AIScore_BiAttack_Conditions::
@@ -11458,6 +12072,8 @@ AIScore_BiAttack_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_RainSlash_Conditions", ROMX
 
 ; The conditions of AIScore_RainSlash (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore and AtLeastTwoFoesPresent in turn; the first that gives C =
@@ -11484,6 +12100,8 @@ AIScore_RainSlash_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_MultiCut_Conditions", ROMX
+
 ; The conditions of AIScore_MultiCut (which returns at once when C = 0): runs AIAttackSkillUsable_2
 ; and AnyFoeNotFullyResistant in turn; the first that gives C = 0 resets the skill score
 ; (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is returned
@@ -11506,6 +12124,8 @@ AIScore_MultiCut_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIAttackSkillUsable_2", ROMX
 
 ; Usability check of the MultiCut and HighJump conditions and AIAndPassUnlessRecordBufferData5Bit4:
 ; runs ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67 and
@@ -11537,6 +12157,8 @@ AIAttackSkillUsable_2::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_ChargeUp_Conditions", ROMX
 
 ; The conditions of AIScore_ChargeUp (which returns at once when C = 0): runs
 ; ActorLacksStatus4Bits67, CheckLoneFoeHPNotBelowAIDamageEstimates,
@@ -11570,6 +12192,8 @@ AIScore_ChargeUp_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_PsycheUp_Conditions", ROMX
 
 ; The conditions of AIScore_PsycheUp (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Bit3,
@@ -11607,6 +12231,8 @@ AIScore_PsycheUp_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_HighJump_Conditions", ROMX
+
 ; The conditions of AIScore_HighJump (which returns at once when C = 0): calls
 ; AIAttackSkillUsable_2, which resets the skill score (ResetAISkillScore: wAISkillScore = 0,
 ; wAISkillScore2 = $FFFF) when it fails, but its C is not tested; then ActorLacksStatus4Bits67
@@ -11628,6 +12254,8 @@ AIScore_HighJump_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_TwinSlash_Conditions", ROMX
 
 ; The conditions of AIScore_TwinSlash (which returns at once when C = 0): runs
 ; AIAttackSkillUsable_3, AnyFoeHasDEFAtLeast2 and AllOtherAlliesHaveStatus0Bit6 in turn; the first
@@ -11656,6 +12284,8 @@ AIScore_TwinSlash_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIAttackSkillUsable_3", ROMX
 
 ; Usability check of AIScore_Berserker, the TwinSlash conditions and
 ; AIAndAnyFoeNotFullyResistantAndActorHPNotOne: runs ActorCanPayMPCost_Bank05,
@@ -11694,6 +12324,8 @@ AIAttackSkillUsable_3::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIAndAnyFoeNotFullyResistantAndActorHPNotOne", ROMX
+
 ; Usability check of AIScore_Ramming and the Kamikaze conditions: runs AIAttackSkillUsable_3,
 ; AnyFoeNotFullyResistant and ActorHPIsNotOne in turn; the first that gives C = 0 resets the skill
 ; score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is returned
@@ -11721,6 +12353,8 @@ AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Kamikaze_Conditions", ROMX
+
 ; The conditions of AIScore_Kamikaze: returns when AIAndAnyFoeNotFullyResistantAndActorHPNotOne
 ; gives C = 0; then resets the skill's score (ResetAISkillScore) when AnyFoeNotBlocked or
 ; AllOtherAlliesHaveStatus0Bit6 gives 0 (the latter passes when some other present ally lacks
@@ -11743,6 +12377,8 @@ AIScore_Kamikaze_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_SleepAir_Conditions", ROMX
 
 ; The conditions of AIScore_SleepAir (which returns at once when C = 0): runs
 ; AIAndPassUnlessRecordBufferData5Bit4, AnyFoeLacksStatus0MaskCC and
@@ -11772,6 +12408,8 @@ AIScore_SleepAir_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIAndPassUnlessRecordBufferData5Bit4", ROMX
+
 ; Usability check of the SleepAir, PalsyAir, PoisonGas and PoisonAir conditions: runs
 ; AIAttackSkillUsable_2 and SkillPassesStatus1Bit7Check in turn; the first that gives C = 0 resets
 ; the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is
@@ -11797,6 +12435,8 @@ AIAndPassUnlessRecordBufferData5Bit4::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_PalsyAir_Conditions", ROMX
 
 ; The conditions of AIScore_PalsyAir (which returns at once when C = 0): runs
 ; AIAndPassUnlessRecordBufferData5Bit4, AnyFoeLacksStatus0Bit6, AnyFoeOpenToSlotResistances5Field3
@@ -11830,6 +12470,8 @@ AIScore_PalsyAir_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_PoisonGas_Conditions", ROMX
+
 ; The conditions of AIScore_PoisonGas (which returns at once when C = 0): runs
 ; AIAndPassUnlessRecordBufferData5Bit4, AnyFoeLacksStatus0Bits01 and
 ; AnyFoeOpenToSlotResistances4Field0 in turn; the first that gives C = 0 resets the skill score
@@ -11857,6 +12499,8 @@ AIScore_PoisonGas_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_PoisonAir_Conditions", ROMX
 
 ; The conditions of AIScore_PoisonAir (which returns at once when C = 0): runs
 ; AIAndPassUnlessRecordBufferData5Bit4, AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned and
@@ -11886,6 +12530,8 @@ AIScore_PoisonAir_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Curse_Conditions", ROMX
 
 ; The conditions of AIScore_Curse (which returns at once when C = 0): runs ActorCanPayMPCost_Bank05,
 ; SkillPassesStatus1Bit7Check, SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67,
@@ -11927,6 +12573,8 @@ AIScore_Curse_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_OddDance_Conditions", ROMX
+
 ; The conditions of AIScore_OddDance (which returns at once when C = 0): runs AIDanceUsable,
 ; AnyFoeHasMPReadsWrongOffset, AnyFoeWithMPOpenToSlotResistances2Field1 and
 ; ActorMPBelowThreeQuarters in turn; the first that gives C = 0 resets the skill score
@@ -11961,6 +12609,8 @@ AIScore_OddDance_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_PaniDance_Conditions", ROMX
+
 ; The conditions of AIScore_PaniDance (which returns at once when C = 0): runs AIDanceUsable,
 ; AnyFoeNotFullyResistant, AnyFoeLacksStatus0Bit4 and AnyFoeNotBlocked in turn; the first that gives
 ; C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C
@@ -11991,6 +12641,8 @@ AIScore_PaniDance_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIDanceUsable", ROMX
 
 ; Usability check of the OddDance, PaniDance, KODance and LureDance conditions: runs
 ; ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check, SkillPassesRepeatCheck and
@@ -12023,6 +12675,8 @@ AIDanceUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_KODance_Conditions", ROMX
+
 ; The conditions of AIScore_KODance (which returns at once when C = 0): runs AIDanceUsable and
 ; AnyFoeNotFullyResistant in turn; the first that gives C = 0 resets the skill score
 ; (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is returned
@@ -12044,6 +12698,8 @@ AIScore_KODance_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_LureDance_Conditions", ROMX
 
 ; The conditions of AIScore_LureDance (which returns at once when C = 0): runs AIDanceUsable,
 ; AnyFoeLacksStatus3And4Bits, AnyFoeNotBlocked, AnyFoeVulnerableBySlotResistances5Bits23 and
@@ -12080,6 +12736,8 @@ AIScore_LureDance_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_LifeDance_Conditions", ROMX
 
 ; The conditions of AIScore_LifeDance (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check, SkillPassesRepeatCheck,
@@ -12121,6 +12779,8 @@ AIScore_LifeDance_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Hustle_Conditions", ROMX
+
 ; The conditions of AIScore_Hustle (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check, SkillPassesRepeatCheck and AnyAllyHPBelow
 ; in turn; the first that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0,
@@ -12151,6 +12811,8 @@ AIScore_Hustle_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_SideStep_Conditions", ROMX
 
 ; The conditions of AIScore_SideStep (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check, SkillPassesRepeatCheck, AnyFoeNotBlocked,
@@ -12192,6 +12854,8 @@ AIScore_SideStep_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_SandStorm_Conditions", ROMX
+
 ; The conditions of AIScore_SandStorm (which returns at once when C = 0): runs
 ; CheckSkillUsableElseResetAISkillScore, AnyFoeLacksStatus5Bits01And1Bit1, AnyFoeNotBlocked and
 ; AnyFoeOpenToSlotResistances1Field0 in turn; the first that gives C = 0 resets the skill score
@@ -12223,6 +12887,8 @@ AIScore_SandStorm_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Radiant_Conditions", ROMX
 
 ; The conditions of AIScore_Radiant (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus5Bits01And1Bit1,
@@ -12259,6 +12925,8 @@ AIScore_Radiant_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_EerieLite_Conditions", ROMX
+
 ; The conditions of AIScore_EerieLite (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, AnyFoeNotFullyResistant and
 ; AIScore_EerieLite_Conditions_AnyFoeAffectable in turn; the first that gives C = 0 resets the skill
@@ -12286,6 +12954,8 @@ AIScore_EerieLite_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Surge_Conditions", ROMX
+
 ; The conditions of AIScore_Surge (which returns at once when C = 0): runs ActorCanPayMPCost_Bank05
 ; and AIScore_Surge_Conditions_AnyAllyToCure in turn; the first that gives C = 0 resets the skill
 ; score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is returned. When
@@ -12310,6 +12980,8 @@ AIScore_Surge_Conditions::
     ld c, $00
     ret
 
+SECTION "Bank 05 AIScore_UltraDown_Conditions", ROMX
+
 ; The conditions of AIScore_UltraDown (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05 and AIScore_UltraDown_Conditions_AnyFoeLowerable in turn; the first that
 ; gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF)
@@ -12333,6 +13005,8 @@ AIScore_UltraDown_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_DeMagic_Conditions", ROMX
 
 ; The conditions of AIScore_DeMagic (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05 and AIScore_DeMagic_Conditions_AnyFoeToClear in turn; the first that
@@ -12360,6 +13034,8 @@ AIScore_DeMagic_Conditions::
     call ResetAISkillScore
     ld c, $00
     ret
+
+SECTION "Bank 05 AIScore_ThickFog_Conditions", ROMX
 
 ; The conditions of AIScore_ThickFog (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesSideFlagBit3Check, AnyActiveFoeHasSkillFlag40 and
@@ -12397,6 +13073,8 @@ AIScore_ThickFog_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_TatsuCall_Conditions", ROMX
+
 ; The conditions of AIScore_TatsuCall (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05 and AIScore_TatsuCall_Conditions_FourthSlotFree in turn; the first that
 ; gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF)
@@ -12419,6 +13097,8 @@ AIScore_TatsuCall_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_SuckAir_Conditions", ROMX
 
 ; The conditions of AIScore_SuckAir (which returns at once when C = 0): runs
 ; SkillPassesStatus1Bit7Check, ActorLacksStatus4Bits67,
@@ -12457,6 +13137,8 @@ AIScore_SuckAir_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Focus_Conditions", ROMX
+
 ; The conditions of AIScore_Focus (which returns at once when C = 0): runs ActorLacksStatus4Bits67;
 ; when it gives C = 0 it resets the skill score (ResetAISkillScore: wAISkillScore = 0,
 ; wAISkillScore2 = $FFFF) and C = 0 is returned. Otherwise it returns the C of
@@ -12475,6 +13157,8 @@ AIScore_Focus_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AILickSkillUsable", ROMX
 
 ; Usability check of AIScore_LushLicks, AIScore_Ahhh and the LegSweep conditions: runs
 ; ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67,
@@ -12522,6 +13206,8 @@ AILickSkillUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIStatusLickUsable", ROMX
+
 ; Usability check of AIScore_SickLick and AIScore_AhhhStatusLick: runs ActorCanPayMPCost_Bank05,
 ; SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus3And4Bits,
 ; AnyFoeHasClearStatus3 and AnyFoeVulnerableBySlotResistances5Bits23 in turn; the first that gives C
@@ -12562,6 +13248,8 @@ AIStatusLickUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_LegSweep_Conditions", ROMX
+
 ; The conditions of AIScore_LegSweep (which returns at once when C = 0): runs AILickSkillUsable,
 ; AIScore_LegSweep_Conditions_AnyFoeTrippable and AllyCheckSide0FlagAndOtherSlots in turn; the first
 ; that gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 =
@@ -12589,6 +13277,8 @@ AIScore_LegSweep_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Geyser_Conditions", ROMX
 
 ; The conditions of AIScore_Geyser (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus3And4Bits,
@@ -12624,6 +13314,8 @@ AIScore_Geyser_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_DanceShut_Conditions", ROMX
 
 ; The conditions of AIScore_DanceShut (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check, AnyFoeLacksStatus5Bits67,
@@ -12675,6 +13367,8 @@ AIScore_DanceShut_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_MouthShut_Conditions", ROMX
+
 ; The conditions of AIScore_MouthShut (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus1Bit7
 ; and AnyFoeHasSkillWithFlagD in turn; the first that gives C = 0 resets the skill score
@@ -12709,6 +13403,8 @@ AIScore_MouthShut_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_StrongD_Conditions", ROMX
 
 ; The conditions of AIScore_StrongD (which returns at once when C = 0): when
 ; AllyCheckSide0FlagAndOtherSlots gives C = 0 it jumps to ResetAISkillScore (score reset:
@@ -12762,6 +13458,8 @@ AIScore_DodgeAlternative_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Dodge_Conditions", ROMX
+
 ; The conditions of AIScore_Dodge (which returns at once when C = 0): runs
 ; AIScore_DodgeAlternative_Conditions and AnyFoeLacksStatus5Bits01And1Bit1 in turn; the first that
 ; gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF)
@@ -12785,6 +13483,8 @@ AIScore_Dodge_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIBuffSkillUsable", ROMX
 
 ; Usability check of the TailWind and StormWind conditions, AIGuardSkillUsable and
 ; AIScore_DodgeAlternative_Conditions: runs ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck,
@@ -12816,6 +13516,8 @@ AIBuffSkillUsable::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIGuardSkillUsable", ROMX
 
 ; Usability check of AIScore_BladeD and the Cover conditions: runs AIBuffSkillUsable,
 ; AnyFoeNotBlocked, CheckAIFlagSetModeGated and PassIfBattleTurnNonZero in turn; the first that
@@ -12853,6 +13555,8 @@ AIGuardSkillUsable::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Cover_Conditions", ROMX
+
 ; The conditions of AIScore_Cover (which returns at once when C = 0): runs AIGuardSkillUsable,
 ; AllyCheckSide0FlagAndOtherSlots and ActorHPIsNotOne in turn; the first that gives C = 0 resets the
 ; skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C = 0 is returned
@@ -12879,6 +13583,8 @@ AIScore_Cover_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_TailWind_Conditions", ROMX
 
 ; The conditions of AIScore_TailWind (which returns at once when C = 0): runs AIBuffSkillUsable,
 ; AnyFoeNotBlocked, AIScore_TailWind_Conditions_NotYetSet and AnyFoeHasSkillWithFlagD in turn; the
@@ -12914,6 +13620,8 @@ AIScore_TailWind_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_StormWind_Conditions", ROMX
+
 ; The conditions of AIScore_StormWind (which returns at once when C = 0): runs AIBuffSkillUsable,
 ; AnyFoeNotBlocked, AnyAllyLacksStatus2Bit6 and AnyFoeHasSkillWithFlagD in turn; the first that
 ; gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF)
@@ -12944,6 +13652,8 @@ AIScore_StormWind_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_AquaWall_Conditions", ROMX
 
 ; The conditions of AIScore_AquaWall (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, AnyFoeLacksStatus0Bit6, AIScore_AquaWall_Conditions_UnsealedFoeSkill and
@@ -12981,6 +13691,8 @@ AIScore_AquaWall_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_SealPray_Conditions", ROMX
+
 ; SealPray AI condition: the actor can pay the MP cost; otherwise the score is reset. (C2, E-0357;
 ; probed E-0375)
 AIScore_SealPray_Conditions::
@@ -12993,6 +13705,8 @@ AIScore_SealPray_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_SuckAll_Conditions", ROMX
 
 ; The conditions of AIScore_SuckAll (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus3And4Bits,
@@ -13073,6 +13787,8 @@ AIScore_SuckAll_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Imitate_Conditions", ROMX
+
 ; The conditions of AIScore_Imitate (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck, AnyFoeLacksStatus5Bits67,
 ; AnyFoeLacksStatus0MaskCC, AnyFoeNotBlocked, CheckAIFlagSetModeGated and PassIfBattleTurnNonZero in
@@ -13122,6 +13838,8 @@ AIScore_Imitate_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_Meditate_Conditions", ROMX
+
 ; The conditions of AIScore_Meditate (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05 and AIScore_Meditate_Conditions_HPBelowTwoThirds in turn; the first that
 ; gives C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF)
@@ -13144,6 +13862,8 @@ AIScore_Meditate_Conditions::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_LifeSong_Conditions", ROMX
 
 ; The conditions of AIScore_LifeSong (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, AnyOwnSideSlotOutIs1 and CheckSide0FlagNot1 in turn; the first that
@@ -13172,6 +13892,8 @@ AIScore_LifeSong_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AIScore_LoveRain_Conditions", ROMX
+
 ; The conditions of AIScore_LoveRain (which returns at once when C = 0): runs
 ; ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck and AnyAllyHPBelow in turn; the first that gives
 ; C = 0 resets the skill score (ResetAISkillScore: wAISkillScore = 0, wAISkillScore2 = $FFFF) and C
@@ -13199,6 +13921,8 @@ AIScore_LoveRain_Conditions::
     call ResetAISkillScore
     ret
 
+SECTION "Bank 05 AINeverUsableResetAISkillScore", ROMX
+
 ; Usability check of AIScore_Whistle and AIScore_ZoneOut (both return at once when C = 0):
 ; SetCToZero gives C = 0, so it always resets the skill score (ResetAISkillScore: wAISkillScore = 0,
 ; wAISkillScore2 = $FFFF) and returns C = 0; the AI never scores these skills. (C2, E-0375)
@@ -13213,6 +13937,8 @@ AINeverUsableResetAISkillScore::
 .call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
+
+SECTION "Bank 05 AIScore_Guard_Conditions", ROMX
 
 ; The conditions of AIScore_Guard (which returns at once when C = 0): runs AnyFoeLacksStatus5Bits67,
 ; AnyFoeLacksStatus0MaskCC, AnyFoeNotBlocked, CheckAIFlagSetModeGated and PassIfBattleTurnNonZero in

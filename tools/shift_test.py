@@ -96,7 +96,8 @@ def assemble(src: Path, out: Path) -> tuple[bytes | None, str]:
     log = []
     for cmd in ([RGBDS / "rgbasm.exe", "-I", src, "-I", out / "assets", "-I", ROOT / "local/roms", "-o", obj,
                  src / "main.asm"],
-                [RGBDS / "rgblink.exe", "-n", out / "dwm2.sym", "-o", rom, obj]):
+                [RGBDS / "rgblink.exe", *(["-l", src / "layout.link"] if (src / "layout.link").exists() else []),
+                 "-n", out / "dwm2.sym", "-o", rom, obj]):
         p = subprocess.run([str(c) for c in cmd], cwd=out, capture_output=True, text=True)
         log.append(p.stdout + p.stderr)
         if p.returncode:

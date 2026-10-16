@@ -1,7 +1,7 @@
 ; ROM bank $41: sound tracks
 ; The annotated listing of this bank is build/listing/bank41.asm.
 
-SECTION "Bank 41", ROMX[$4000], BANK[$41]
+SECTION "Bank 41", ROMX
     db $41
 
 ; E-0018. Sound ids 28-48.

@@ -1,7 +1,7 @@
 ; ROM bank $62: key-world map screens
 ; The annotated listing of this bank is build/listing/bank62.asm.
 
-SECTION "Bank 62", ROMX[$4000], BANK[$62]
+SECTION "Bank 62", ROMX
     db $62
 
 ; The 8-byte header in front of the compressed tile map KeyWorld01_0_Y2X1_Tiles: $03, $02, $04, $0B,

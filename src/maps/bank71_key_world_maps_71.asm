@@ -1,7 +1,7 @@
 ; ROM bank $71: key-world map screens
 ; The annotated listing of this bank is build/listing/bank71.asm.
 
-SECTION "Bank 71", ROMX[$4000], BANK[$71]
+SECTION "Bank 71", ROMX
     db $71
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)

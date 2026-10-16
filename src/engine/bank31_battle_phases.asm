@@ -1,7 +1,7 @@
 ; ROM bank $31: battle phases, the end of a battle, slot drawing
 ; The annotated listing of this bank is build/listing/bank31.asm.
 
-SECTION "Bank 31", ROMX[$4000], BANK[$31]
+SECTION "Bank 31", ROMX
     db $31
 
 ; Start-up of game mode 4, the battle (RunGameModeInit_Battle far-calls it). Starts music 2, sends
@@ -87,6 +87,8 @@ GameMode4_Init::
     ld a, $0b
     jp ResumeAfterModeChange
 
+SECTION "Bank 31 GameMode4_Update", ROMX
+
 ; Frame routine of game mode 4, the battle (RunGameModeUpdate_Battle far-calls it). In link mode it
 ; runs LinkExchangeJoypadPerFrame, then (unless wEffectId is $FF) RunBattleEffectAnimation and, when
 ; wEffectAnimState is 2, TickSequencePtrLoSequence with interrupts off; the phase machine then runs
@@ -151,6 +153,8 @@ BattlePhase0_WaitForFade::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattlePhase0_DrawScreen", ROMX
+
 ; Clears the window and copies the screen rectangle (ClearWindowAndCopyRectFar), draws the screen
 ; tile buffer to the background map (CopyScreenBufferRect20x11ToBGMapRow7), wBattleStep += 1,
 ; wBattleArg0 = 0 and, in link mode, wArg1 = 0 (the part counter of BattlePhase0_Intro). (C1,
@@ -169,6 +173,8 @@ BattlePhase0_DrawScreen::
     xor a
     ld [wArg1], a
     ret
+
+SECTION "Bank 31 BattlePhase0_Intro", ROMX
 
 ; Intro message of the battle. Outside link battles it jumps to BattlePhase0_Intro_Message. In link
 ; battles it is a jump table on wArg1, one part per call: 0 BattlePhase0_Intro_SendSync, 1
@@ -196,6 +202,8 @@ BattlePhase0_Intro_SendSync::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 31 BattlePhase0_Intro_ReceiveSync", ROMX
+
 ; Part 1: once the partner's $D2 arrives, clears the send byte; next part. (C2, E-0357; probed
 ; E-0378)
 BattlePhase0_Intro_ReceiveSync::
@@ -208,6 +216,8 @@ BattlePhase0_Intro_ReceiveSync::
     inc a
     ld [wArg1], a
     ret
+
+SECTION "Bank 31 BattlePhase0_Intro_ExchangeNames", ROMX
 
 ; Part 2: starts exchanging names: sends wPlayerName (10 bytes) and receives the partner's into
 ; wBattleTextWork (link buffer, ready); next part. (C2, E-0357; probed E-0378)
@@ -236,6 +246,8 @@ BattlePhase0_Intro_ExchangeNames::
     ld [wLinkReady], a
     ret
 
+SECTION "Bank 31 BattlePhase0_Intro_CopyPartnerName", ROMX
+
 ; Part 3: once the exchange ends ($F0), ends the partner's name and copies it to wTextBuf0 (five
 ; letters plus marks); then the intro message. (C1, E-0357)
 BattlePhase0_Intro_CopyPartnerName::
@@ -254,6 +266,8 @@ BattlePhase0_Intro_CopyPartnerName::
     ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     jp BattlePhase0_Intro_Message_AllSame
+
+SECTION "Bank 31 BattlePhase0_Intro_Message", ROMX
 
 ; Battle start, step 2 outside link battles: copies the foes' names (the three monster id words of
 ; wBattlePictureIds; the second when there are two or more foes, the third with three) to
@@ -329,26 +343,36 @@ BattlePhase0_Intro_Message::
     ld a, $00
     jr BattlePhase0_Intro_Message_Show
 
+SECTION "Bank 31 BattlePhase0_Intro_Message_AllSame", ROMX
+
 ; Intro message 1 (HL = wTextBuf0). (C1, E-0357)
 BattlePhase0_Intro_Message_AllSame::
     ld hl, wTextBuf0
     ld a, $01
     jr BattlePhase0_Intro_Message_Show
 
+SECTION "Bank 31 BattlePhase0_Intro_Message_FirstTwoMatch", ROMX
+
 ; Intro message 2. (C1, E-0357)
 BattlePhase0_Intro_Message_FirstTwoMatch::
     ld a, $02
     jr BattlePhase0_Intro_Message_Show
+
+SECTION "Bank 31 BattlePhase0_Intro_Message_TwoFoesDiffer", ROMX
 
 ; Intro message 3. (C1, E-0357)
 BattlePhase0_Intro_Message_TwoFoesDiffer::
     ld a, $03
     jr BattlePhase0_Intro_Message_Show
 
+SECTION "Bank 31 BattlePhase0_Intro_Message_LastTwoDiffer", ROMX
+
 ; Intro message 4. (C1, E-0357)
 BattlePhase0_Intro_Message_LastTwoDiffer::
     ld a, $04
     jr BattlePhase0_Intro_Message_Show
+
+SECTION "Bank 31 BattlePhase0_Intro_Message_LastTwoMatch", ROMX
 
 ; Intro message 5. (C1, E-0357)
 BattlePhase0_Intro_Message_LastTwoMatch::
@@ -364,6 +388,8 @@ BattlePhase0_Intro_Message_Show::
     inc [hl]
     ret
 
+SECTION "Bank 31 CopyMonsterNameToDE_Bank31", ROMX
+
 ; HL = a monster id, DE = destination: H += 2 (the monster names are string categories 2 and 3, one
 ; per high byte of the id) and CopyStringHLToDE copies the name with its $F0 end byte to DE. The
 ; intro message calls it for up to three foes. (C2, E-0378)
@@ -375,6 +401,8 @@ CopyMonsterNameToDE_Bank31::
     ld h, a
     call CopyStringHLToDE
     ret
+
+SECTION "Bank 31 BattlePhase0_RollSurpriseRound", ROMX
 
 ; Waits until wTextFlags is 0, then wBattlePhase += 1, wBattleStep = 0, wBattleSubPhase = 0. In link
 ; battles and in battle kinds 2 and up it sets wBattleTurn = 1 and returns. Otherwise it draws
@@ -466,6 +494,8 @@ BattlePhase0_RollSurpriseRound::
 
 .return:
     ret
+
+SECTION "Bank 31 BattlePhase0_RollSurpriseRound_FoeName", ROMX
 
 ; The foes' name for the next message in wTextBuf0: one foe's own name, 'Monsters' when all are the
 ; same species, otherwise a fixed text (BattlePhase0_RollSurpriseRound_FoeName_Data1, or Data2 for
@@ -561,6 +591,8 @@ BattlePhase0_RollSurpriseRound_FoeName::
 .return:
     ret
 
+SECTION "Bank 31 BattlePhase0_RollSurpriseRound_FoeName_OneFoe", ROMX
+
 ; Copies the foe's name (monster id DE: categories 2 and 3 of the strings) to wTextBuf0, keeping
 ; wStringCategory and wStringIndex. (C2, E-0357; probed E-0378)
 BattlePhase0_RollSurpriseRound_FoeName_OneFoe::
@@ -592,6 +624,8 @@ BattlePhase0_RollSurpriseRound_FoeName_OneFoe::
     ld [wStringIndex], a
     ret
 
+SECTION "Bank 31 BattlePhase0_RollSurpriseRound_FoeName_Data1", ROMX
+
 ; The text "monsters" ending in $F0 (9 bytes, lower case m: $30 $32 $31 $36 $37 $28 $35 $36 $F0).
 ; BattlePhase0_RollSurpriseRound_FoeName copies it to wTextBuf0 as the generic name of a group of
 ; foes of different species, for every wStringIndex except $0B to $0E. (C1, E-0381)
@@ -620,6 +654,8 @@ BattlePhase0_StartFightPhase::
     ld a, [wBattleArg0]
     or a
     ret
+
+SECTION "Bank 31 BattlePhaseFight", ROMX
 
 ; Phase 1 of RunBattlePhase, the fight: a jump table on wBattleStep with BattleFight_BeginRound
 ; (start a round), Step1 (RunBattleSetup, the command menus), Step2 (RunBattleCommandEntry, the turn
@@ -650,12 +686,16 @@ BattleFight_BeginRound::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleFight_ChooseCommands", ROMX
+
 ; Runs RunBattleSetup, the command menus of the round (a jump table on wBattleSubPhase). (C1,
 ; E-0378)
 ; wBattlePhase 1, wBattleStep 1 (E-0044)
 BattleFight_ChooseCommands::
     call RunBattleSetup
     ret
+
+SECTION "Bank 31 BattleFight_Step2", ROMX
 
 ; Far-calls RunBattleCommandEntry: the turn order and the command entry of every slot (sub-steps on
 ; wBattleSubPhase). (C1, E-0378)
@@ -664,6 +704,8 @@ BattleFight_Step2::
     farcall RunBattleCommandEntry
     ret
 
+SECTION "Bank 31 BattleFight_RunActions", ROMX
+
 ; Far-calls RunBattleActions: executes the chosen actions (sub-steps on wBattleSubPhase). (C1,
 ; E-0378)
 ; wBattlePhase 1, wBattleStep 3 (E-0044)
@@ -671,12 +713,16 @@ BattleFight_RunActions::
     farcall RunBattleActions
     ret
 
+SECTION "Bank 31 BattleFight_Step4", ROMX
+
 ; Far-calls RunBattleStep4, the last sub-steps of the round (not seen in the first battle by earlier
 ; readings). (C1, E-0378)
 ; wBattlePhase 1, wBattleStep 4 (E-0044)
 BattleFight_Step4::
     farcall RunBattleStep4
     ret
+
+SECTION "Bank 31 BattlePhaseEnd", ROMX
 
 ; Phase 2 of RunBattlePhase, after the fight: a jump table on wBattleStep, entries 0-9:
 ; BattleEnd_DrawScreen to Step6, BattleEnd_LinkFinish for both 7 and 8, and BattleEnd_QueueEndSound
@@ -708,6 +754,8 @@ BattleEnd_DrawScreen::
     ld hl, wBattleStep
     inc [hl]
     ret
+
+SECTION "Bank 31 BattleEnd_Result", ROMX
 
 ; Shows the closing message of the battle. Sets wTextSpeed = 1, BattleEnd_Result_SetResult sets the
 ; result in wBattleScene, and the string of category 0 of bank $2F is chosen: 6 (the wiped-out text
@@ -761,6 +809,8 @@ BattleEnd_Result::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_WaitForSound", ROMX
+
 ; Waits for the message and the sound. When all twelve bytes of wSoundChannelSlots, wSoundChannel1
 ; to wSoundChannel5 (two bytes each) are $FF it counts wBattleEndTimer down
 ; (BattleEnd_WaitForSound_CountDownTimer; nothing here tests the timer). Returns while wTextFlags is
@@ -802,6 +852,8 @@ BattleEnd_WaitForSound::
     ld [wBattleSubPhase], a
     ret
 
+SECTION "Bank 31 BattleEnd_WaitForSound_CountDownTimer", ROMX
+
 ; Counts wBattleEndTimer down. (C2, E-0357; probed E-0378)
 BattleEnd_WaitForSound_CountDownTimer::
     ld a, [wBattleEndTimer]
@@ -809,6 +861,8 @@ BattleEnd_WaitForSound_CountDownTimer::
     ld [wBattleEndTimer], a
     ret nz
     ret
+
+SECTION "Bank 31 BattleEnd_Records", ROMX
 
 ; Stores the result of the battle in the party records and builds the record of a foe that may join.
 ; BattleEnd_Records_UpdatePartyRecords runs first (not in link battles); wBattleStep += 1 and
@@ -940,6 +994,8 @@ BattleEnd_Records::
     farcall LoadTableEntryForRecordBufASpeciesToRecordBufAExp
     ret
 
+SECTION "Bank 31 CopyBBytesDEToHL_Bank31", ROMX
+
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
 ; the copy, B = 0, A is clobbered. BattleEnd_Records uses it to build the record in wRecordBufA.
 ; (C2, E-0378)
@@ -952,6 +1008,8 @@ CopyBBytesDEToHL_Bank31::
     dec b
     jr nz, CopyBBytesDEToHL_Bank31
     ret
+
+SECTION "Bank 31 BattleEnd_Records_CopySkillsSkippingC8", ROMX
 
 ; HL = destination, DE = source, B = count: fills the 8 bytes at HL with $FF, then copies B source
 ; bytes to HL, leaving out the bytes equal to $C8; HL ends at the start + 8 and DE past the source
@@ -991,6 +1049,8 @@ BattleEnd_Records_CopySkillsSkippingC8::
     ld h, a
     ret
 
+SECTION "Bank 31 BattleEnd_Records_WriteUnknownName", ROMX
+
 ; Writes 10 bytes at HL: three $98 placeholder glyphs and seven $F0 end bytes; HL ends past them.
 ; BattleEnd_Records uses it for the parent names and master names of the built record. (C2, E-0378)
 ; writes three $98 placeholder glyphs and seven $F0 bytes at HL
@@ -1011,6 +1071,8 @@ BattleEnd_Records_WriteUnknownName::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 31 BattleEnd_Records_SumExpAward", ROMX
 
 ; Clears the 24-bit wBattleExpAward and adds the experience of each foe slot from 4 (wBattleFoeCount
 ; slots) whose wBattleSlotOut byte is 1, through the table after it: pointers to BATTLER_EXP in
@@ -1055,6 +1117,8 @@ BattleEnd_Records_SumExpAward::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 31 BattleEnd_Records_SumExpAward_Data", ROMX
 
 ; Three little-endian pointers, $D1D7, $D225 and $D273: the BATTLER_EXP field (24-bit experience) of
 ; wBattlerRecordSlot4, wBattlerRecordSlot5 and wBattlerRecordSlot6. BattleEnd_Records_SumExpAward
@@ -1158,6 +1222,8 @@ BattleEnd_Records_ReplaceSpecialFoe::
 .return:
     ret
 
+SECTION "Bank 31 BattleEnd_Records_ReplaceSpecialFoe_SetMonster", ROMX
+
 ; Writes monster id HL into the foe's wEncounterMonsters entry (hTemp0/1) and reloads its battler
 ; record. (C2, E-0357; probed E-0378)
 BattleEnd_Records_ReplaceSpecialFoe_SetMonster::
@@ -1172,6 +1238,8 @@ BattleEnd_Records_ReplaceSpecialFoe_SetMonster::
     ld [de], a
     farcall BattleEnd_Records_ReloadFoeBattler
     ret
+
+SECTION "Bank 31 BattleEnd_AwardExperience", ROMX
 
 ; Like BattleEnd_WaitForSound it counts wBattleEndTimer down when the twelve sound bytes are all $FF
 ; (BattleEnd_AwardExperience_CountDownTimer), then always runs BattleEnd_GainExperience, a jump
@@ -1208,6 +1276,8 @@ BattleEnd_AwardExperience::
     call BattleEnd_GainExperience
     ret
 
+SECTION "Bank 31 BattleEnd_AwardExperience_CountDownTimer", ROMX
+
 ; Counts wBattleEndTimer down. (C2, E-0357; probed E-0378)
 BattleEnd_AwardExperience_CountDownTimer::
     ld a, [wBattleEndTimer]
@@ -1215,6 +1285,8 @@ BattleEnd_AwardExperience_CountDownTimer::
     ld [wBattleEndTimer], a
     ret nz
     ret
+
+SECTION "Bank 31 BattleEnd_OfferJoin", ROMX
 
 ; Offers a defeated foe to join the party. A jump table on wBattleSubPhase: 0
 ; BattleEnd_OfferJoin_Start (decide the offer), 1 BattleEnd_OfferJoin_DrawThenAskToJoin, 2
@@ -1269,6 +1341,8 @@ BattleEnd_OfferJoin_Start::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 31 BattleEnd_OfferJoin_DrawThenAskToJoin", ROMX
+
 ; Part 1 of the join offer, a jump table on wBattleResolveStep: 0
 ; BattleEnd_OfferJoin_DrawThenAskToJoin_LoadPicture (draw the screen and the monster picture), 1
 ; BattleEnd_OfferJoin_DrawThenAskToJoin_Ask (BattleEnd_AskToJoin). (C1, E-0378)
@@ -1297,10 +1371,14 @@ BattleEnd_OfferJoin_DrawThenAskToJoin_LoadPicture::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_OfferJoin_DrawThenAskToJoin_Ask", ROMX
+
 ; Join offer, part 1, step 1: asks whether it may join (BattleEnd_AskToJoin). (C1, E-0357)
 BattleEnd_OfferJoin_DrawThenAskToJoin_Ask::
     farcall BattleEnd_AskToJoin
     ret
+
+SECTION "Bank 31 BattleEnd_OfferJoin_RunSwapMenu", ROMX
 
 ; Join offer, part 2: the swap menu (SwapMonstersMenu); when it is done (step $0A) restores the
 ; sprite and field settings, rebuilds the battle screen, reloads the battle tiles and returns to
@@ -1333,6 +1411,8 @@ BattleEnd_OfferJoin_RunSwapMenu::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_OfferJoin_RedrawBattleScreen", ROMX
+
 ; Join offer, part 3: redraws the battle screen at sub-step 3, runs the sub-steps and reloads the
 ; picture when the screen flags ask. (C1, E-0357)
 BattleEnd_OfferJoin_RedrawBattleScreen::
@@ -1344,6 +1424,8 @@ BattleEnd_OfferJoin_RedrawBattleScreen::
     or a
     call nz, LoadBattleMonsterPictureAndTitle
     ret
+
+SECTION "Bank 31 BuildAndDrawBattleScreen", ROMX
 
 ; BuildBattleScreenBuffer, then copies the 20 x 18 wScreenTileBuffer to vBGMap0
 ; (CopyRect32StrideToVRAM). BattleEnd_OfferJoin_RedrawBattleScreen calls it at wBattleSubStep 3.
@@ -1358,6 +1440,8 @@ BuildAndDrawBattleScreen::
     call CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 BattleEnd_OfferJoin_AddJoinedMonster", ROMX
+
 ; Join offer, part 4: adds the monster that joined (BattleEnd_AddJoinedMonster), reloading the
 ; picture when the screen flags ask. (C1, E-0357)
 BattleEnd_OfferJoin_AddJoinedMonster::
@@ -1366,6 +1450,8 @@ BattleEnd_OfferJoin_AddJoinedMonster::
     or a
     call nz, LoadBattleMonsterPictureAndTitle
     ret
+
+SECTION "Bank 31 BuildBattleScreenBuffer", ROMX
 
 ; Builds the battle screen in wScreenTileBuffer by calling in turn LoadBattleMonsterPictureAndTitle,
 ; ClearAttributesAndScreenBuffer_Bank31, CopyRectRecordForBattlePartyCount_Bank31,
@@ -1384,6 +1470,8 @@ BuildBattleScreenBuffer::
     call LoadBattleMonsterPictureAttributes
     call ClearWindowAndCopyRectFar
     ret
+
+SECTION "Bank 31 LoadBattleMonsterPictureAndTitle", ROMX
 
 ; Clears wBattleScreenFlags, loads the picture of the monster id of wDisplaySlot (the word at
 ; wBattleMonsterId + 2 * slot) to vTiles2 + $140 (LoadMonsterPicture), uploads the background
@@ -1437,6 +1525,8 @@ LoadBattleMonsterPictureAndTitle::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 31 BattleEnd_ReturnToField", ROMX
+
 ; Leaving the battle, a jump table on wBattleSubPhase: 0 BattleEnd_ReturnToField_PlayEndMusic (music
 ; and fade), 1 BattleEnd_ReturnToField_FinishFade (wait for the fade), 2
 ; BattleEnd_ReturnToField_PlayTransitionMusic (back to the field). (C1, E-0378)
@@ -1473,6 +1563,8 @@ BattleEnd_ReturnToField_PlayEndMusic::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_ReturnToField_FinishFade", ROMX
+
 ; Battle end, step 6, part 1: waits for the fade; next part. (C2, E-0357; probed E-0378)
 BattleEnd_ReturnToField_FinishFade::
     ld a, [wFadeState]
@@ -1481,6 +1573,8 @@ BattleEnd_ReturnToField_FinishFade::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 31 BattleEnd_ReturnToField_PlayTransitionMusic", ROMX
 
 ; Battle end, step 6, part 2: plays the transition music; in battle kinds 2 and 3 puts the followers
 ; on the player; back to the field (game mode 1), reloading the field tiles. (C1, E-0357)
@@ -1520,6 +1614,8 @@ BattleEnd_ReturnToField_PlayTransitionMusic::
     inc [hl]
     ret
 
+SECTION "Bank 31 SetFollowersToPlayer", ROMX
+
 ; Copies hPlayerFacing to the direction byte and hPlayerX, hPlayerY to the X and Y bytes of the
 ; three follower records in wFollowerRecords (offsets 0, 5 and 10; the target bytes are left as they
 ; are). BattleEnd_ReturnToField_PlayTransitionMusic calls it for battle kinds 2 and 3. (C2, E-0378)
@@ -1539,6 +1635,8 @@ SetFollowersToPlayer::
     ld [wFollowerRecords + $7], a
     ld [wFollowerRecords + $c], a
     ret
+
+SECTION "Bank 31 BattleEnd_LinkFinish", ROMX
 
 ; Ends a link battle, a jump table on wBattleSubPhase: 0 BattleEnd_LinkFinish_SendSync, 1
 ; BattleEnd_LinkFinish_ReceiveSync, 2 BattleEnd_LinkFinish_FadeOutAndStore. Both wBattleStep 7 and 8
@@ -1589,6 +1687,8 @@ BattleEnd_LinkFinish_SendSync::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_LinkFinish_ReceiveSync", ROMX
+
 ; Battle end, step 7, part 1: waits for the partner's 1; next part. (C2, E-0357; probed E-0378)
 BattleEnd_LinkFinish_ReceiveSync::
     ld a, [wLinkMessage]
@@ -1597,6 +1697,8 @@ BattleEnd_LinkFinish_ReceiveSync::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 31 BattleEnd_LinkFinish_FadeOutAndStore", ROMX
 
 ; Battle end, step 7, part 2: fades out, stores the battle state into the party records, switches to
 ; game mode 6 and clears the link state. (C1, E-0357)
@@ -1631,6 +1733,8 @@ BattleEnd_LinkFinish_FadeOutAndStore::
     ld [wLinkScreenStep], a
     ret
 
+SECTION "Bank 31 BattleEnd_QueueEndSound", ROMX
+
 ; In wBattleScene 4 queues sound effect $7E (QueueSoundEffect), otherwise music $42 (QueueMusic),
 ; and sets wBattleStep = 7. (C2, E-0378)
 ; wBattlePhase 2, wBattleStep 9 (E-0044)
@@ -1650,6 +1754,8 @@ BattleEnd_QueueEndSound::
     ld a, $07
     ld [wBattleStep], a
     ret
+
+SECTION "Bank 31 BattleEnd_Result_SetMessageName", ROMX
 
 ; Sets the name for BattleEnd_Result's closing message in wTextBuf0: in link battles the partner's
 ; name (wBattleArg0 = 0); otherwise one foe's name (wBattleArg0 0), the species name followed by
@@ -1704,6 +1810,8 @@ BattleEnd_Result_SetMessageName::
     ld [hl], $f0
     jr BattleEnd_Result_SetMessageName_Done
 
+SECTION "Bank 31 BattleEnd_Result_SetMessageName_FoeName", ROMX
+
 ; Copies foe name DE (categories 2 and 3) to wTextBuf0. (C2, E-0357; probed E-0378)
 BattleEnd_Result_SetMessageName_FoeName::
     ld l, e
@@ -1713,6 +1821,8 @@ BattleEnd_Result_SetMessageName_FoeName::
     ld de, wTextBuf0
     call CopyStringHLToDE
     jr BattleEnd_Result_SetMessageName_Done
+
+SECTION "Bank 31 BattleEnd_Result_SetMessageName_PartnerName", ROMX
 
 ; Copies the partner's name (wBattleTextWork, up to 10 letters) to wTextBuf0 (wBattleArg0 0). (C2,
 ; E-0357; probed E-0378)
@@ -1735,6 +1845,8 @@ BattleEnd_Result_SetMessageName_PartnerName::
     ld a, $00
     ld [wBattleArg0], a
     jr BattleEnd_Result_SetMessageName_Done
+
+SECTION "Bank 31 BattleEnd_Result_SetMessageName_Monsters", ROMX
 
 ; wTextBuf0 = 'monsters' (wBattleArg0 2). (C2, E-0357; probed E-0378)
 BattleEnd_Result_SetMessageName_Monsters::
@@ -1762,6 +1874,8 @@ BattleEnd_Result_SetMessageName_Monsters::
 ; Returns. (C2, E-0357; probed E-0378)
 BattleEnd_Result_SetMessageName_Done::
     ret
+
+SECTION "Bank 31 IncrementPlayTime_Bank31", ROMX
 
 ; Counts the play time one frame: wPlayFrames, wPlaySeconds and wPlayMinutes roll over at 60 and the
 ; 16-bit hours (wPlayHoursLo/Hi) go up by 1. At 999 hours (the word $03E7) with 59 minutes it
@@ -1819,6 +1933,8 @@ IncrementPlayTime_Bank31::
     ld [hld], a
     ld [hl], c
     ret
+
+SECTION "Bank 31 BattleFight_BeginRound_StartRound", ROMX
 
 ; Starts a fight round: sets bit 7 of all eight wSideControl bytes (computer-controlled for now),
 ; clears wPersonalityActs and wActionQueue, sets wBattleActionChoice to $FF, no item
@@ -1930,6 +2046,8 @@ BattleFight_BeginRound_StartRound::
     jr nz, .loop3
     ret
 
+SECTION "Bank 31 RunBattleSetup", ROMX
+
 ; The command phase of a fight round, called every frame by BattleFight_ChooseCommands:
 ; wBattleSubPhase picks one of 13 parts. 0 is the main menu (RunBattleSetup_MainMenu: FIGHT, PLAN,
 ; ITEM, RUN), which sets the sub-phase to 3 for FIGHT, 1 for PLAN (RunBattleSetup_PlanMenu) or 2 for
@@ -2033,6 +2151,8 @@ RunBattleSetup_MainMenu_SaveTactics::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_Draw", ROMX
+
 ; Main menu, step 1: the player's side under computer control for now; draws the battle window, the
 ; foes' tile blocks, the menu text (string 0 of bank $09's category 2, 'FIGHTEMPLAN', with the rest
 ; of the words in the box) and the menu box; next step. (C1, E-0357)
@@ -2064,6 +2184,8 @@ RunBattleSetup_MainMenu_Draw::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_DrawCursor", ROMX
+
 ; Main menu, step 2: draws the menu and the cursor ($BB) at the choice in wMenuState bits 0-1; next
 ; step. (C1, E-0357)
 RunBattleSetup_MainMenu_DrawCursor::
@@ -2083,6 +2205,8 @@ RunBattleSetup_MainMenu_DrawCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_Cursor", ROMX
 
 ; Main menu, step 3: moves the cursor in the 2 x 2 menu; A plays sound $69, clears the sub-states
 ; and redraws the foes' area; next step. (C1, E-0357)
@@ -2107,6 +2231,8 @@ RunBattleSetup_MainMenu_Cursor::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_CopyMenuWindow", ROMX
+
 ; Main menu, step 4 (after A in RunBattleSetup_MainMenu_Cursor): copies the 14 x 5 menu window from
 ; wWindowTileBuffer to the BG map at row 13 (RunBattleSetup_MainMenu_DrawMenuWindow); next step.
 ; (C1, E-0370)
@@ -2115,6 +2241,8 @@ RunBattleSetup_MainMenu_CopyMenuWindow::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_Choose", ROMX
 
 ; Main menu, step 5, the choice: FIGHT (0) clears the player's actions, restores the tactics and
 ; goes to the fight (sub-phase 3); PLAN (1) takes the first able monster as wCommandMonster for the
@@ -2244,6 +2372,8 @@ RunBattleSetup_MainMenu_Choose::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_Choose_ClearActions", ROMX
+
 ; Clears the action choices of the player's three slots ($FF). (C2, E-0357; probed E-0379)
 RunBattleSetup_MainMenu_Choose_ClearActions::
     ld a, [wLinkRole]
@@ -2260,6 +2390,8 @@ RunBattleSetup_MainMenu_Choose_ClearActions::
     ld [hli], a
     ld [hli], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_RestoreTactics", ROMX
 
 ; Restores the player's three slots' tactics and last tactics from wFleeWork. (C2, E-0357; probed
 ; E-0379)
@@ -2302,6 +2434,8 @@ RunBattleSetup_MainMenu_RestoreTactics::
     jr nz, .loop
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_ShowMessage", ROMX
+
 ; Main menu, step 6: shows the chosen message (BeginStringDisplay_Bank2F); next step. (C1, E-0357)
 RunBattleSetup_MainMenu_ShowMessage::
     call ClearWindowAndCopyRectFar
@@ -2310,6 +2444,8 @@ RunBattleSetup_MainMenu_ShowMessage::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_RedrawWindow", ROMX
 
 ; Main menu, step 7: after the text, redraws the window and returns to step 2. (C1, E-0357)
 RunBattleSetup_MainMenu_RedrawWindow::
@@ -2323,6 +2459,8 @@ RunBattleSetup_MainMenu_RedrawWindow::
     ld a, $02
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_ShowFled", ROMX
 
 ; Main menu, step 8: '<player> fled!' (string $D8 of category 1) with sound $82; next step. (C1,
 ; E-0357)
@@ -2350,6 +2488,8 @@ RunBattleSetup_MainMenu_ShowFled::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_TryFlee", ROMX
 
 ; Main menu, step 9, the flee attempt: it works on the first turn, when the party's highest level is
 ; more than 5 above the foes', with a chance of turn / 8 (7 in 8 from turn 4), or when no foe can
@@ -2457,6 +2597,8 @@ RunBattleSetup_MainMenu_TryFlee::
     ld [wDataBankSave], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_TryFlee_CountAbleFoes", ROMX
+
 ; Counts the foes that can act (not blocked by CheckSlotStatusBlockWide_Bank31); Z when none. (C2,
 ; E-0357; probed E-0379)
 RunBattleSetup_MainMenu_TryFlee_CountAbleFoes::
@@ -2478,6 +2620,8 @@ RunBattleSetup_MainMenu_TryFlee_CountAbleFoes::
     ld a, e
     or a
     ret
+
+SECTION "Bank 31 LowerPersonalityAfterFleeing", ROMX
 
 ; After fleeing, lowers each present party monster's personality Hi, Mid, Lo and trait (not below 0)
 ; by its row of the table: by level band (below 10, 20, 30, or 30 and over) and trait ($97 or more
@@ -2538,6 +2682,8 @@ LowerPersonalityAfterFleeing::
     jr nz, .loop
     ret
 
+SECTION "Bank 31 LowerPersonalityAfterFleeing_LowerByte", ROMX
+
 ; DE = first byte of an array, C = index, HL = the address of the amount: the byte at DE + C is
 ; lowered by the byte at HL, and a result below 0 is stored as 0. Returns A = the stored byte, DE =
 ; the address DE + C, HL unchanged, carry clear and Z set when the stored byte is 0. Its only
@@ -2559,6 +2705,8 @@ LowerPersonalityAfterFleeing_LowerByte::
     xor a
     ld [de], a
     ret
+
+SECTION "Bank 31 LowerPersonalityAfterFleeing_Data1", ROMX
 
 ; Four rows of four bytes, one row per level band (below 10, below 20, below 30, 30 and over): the
 ; amounts subtracted from wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo and wSlotTrait
@@ -2608,6 +2756,8 @@ RunBattleSetup_MainMenu_StartFight::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_ShowRetireNow", ROMX
+
 ; Main menu, step 11: 'Retire now?' ($27); next step. (C1, E-0357)
 RunBattleSetup_MainMenu_ShowRetireNow::
     call ClearWindowAndCopyRectFar
@@ -2620,6 +2770,8 @@ RunBattleSetup_MainMenu_ShowRetireNow::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_DrawYesNo", ROMX
 
 ; Main menu, step 12: after the text, draws the yes/no box with the cursor on no; next step. (C1,
 ; E-0357)
@@ -2639,6 +2791,8 @@ RunBattleSetup_MainMenu_DrawYesNo::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_YesNoCursor", ROMX
 
 ; Main menu, step 13: the yes/no cursor; A on no redraws the foes' area and returns to the main menu
 ; (step 1); on yes 'You threw in the towel!' ($60) and the next step. (C1, E-0357)
@@ -2679,6 +2833,8 @@ RunBattleSetup_MainMenu_YesNoCursor::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_YesNoCursor_Data1", ROMX
+
 ; Two little-endian BG map addresses, $992F and $996F: vBGMap0 row 9, column 15 and row 11, column
 ; 15, the places of the two answers. RunBattleSetup_MainMenu_YesNoCursor indexes it by wMenuSubState
 ; bit 0 when A is pressed and writes the fixed cursor tile $BC there. (C1, E-0381)
@@ -2706,6 +2862,8 @@ RunBattleSetup_MainMenu_Retire::
     ld [wDataBankSave], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_ShowNoFleeingFromThis", ROMX
+
 ; Main menu, step 15: 'No fleeing from this battle!' ($20); next step. (C1, E-0357)
 RunBattleSetup_MainMenu_ShowNoFleeingFromThis::
     call ClearWindowAndCopyRectFar
@@ -2719,6 +2877,8 @@ RunBattleSetup_MainMenu_ShowNoFleeingFromThis::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_MainMenu_BackToMenu", ROMX
+
 ; Main menu, step 16: after the text, back to step 1. (C2, E-0357; probed E-0380)
 RunBattleSetup_MainMenu_BackToMenu::
     ld a, [wTextFlags]
@@ -2727,6 +2887,8 @@ RunBattleSetup_MainMenu_BackToMenu::
     ld a, $01
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu", ROMX
 
 ; Sub-phase 1 of RunBattleSetup, the PLAN menu: wBattleResolveStep ($00-$23, 36 entries) picks the
 ; step. The steps draw and run, one after the other, the tactic window (Charge, Mixed, Defense,
@@ -2814,6 +2976,8 @@ RunBattleSetup_PlanMenu_DrawTactics::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowTacticCursor", ROMX
+
 ; PLAN menu, step 1: puts the cursor ($BB) on the monster's last tactic (wBattleLoadWork); next
 ; step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowTacticCursor::
@@ -2841,6 +3005,8 @@ RunBattleSetup_PlanMenu_ShowTacticCursor::
     ld a, $03
     ld [wListLastPageSize], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_TacticCursor", ROMX
 
 ; PLAN menu, step 2: moves the cursor; A plays sound $69, keeps the choice and sets it as the
 ; monster's tactic: Command (3) lets the player pick its move (two steps on), or with
@@ -2943,6 +3109,8 @@ RunBattleSetup_PlanMenu_TacticCursor::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_BackToMainMenu", ROMX
+
 ; PLAN menu, step 3: redraws the foes' area and returns to the main menu (step 1). (C1, E-0357)
 RunBattleSetup_PlanMenu_BackToMainMenu::
     call CopyScreenBufferRect12x11ToBGMapRow7
@@ -2951,6 +3119,8 @@ RunBattleSetup_PlanMenu_BackToMainMenu::
     xor a
     ld [wBattleSubPhase], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawActions", ROMX
 
 ; PLAN menu, step 4 (Command chosen): draws the action window (string 2 of bank $09's category 2,
 ; 'FightSklGuard') with the monster's name and puts the choice at its last action (wSideControl bits
@@ -2984,6 +3154,8 @@ RunBattleSetup_PlanMenu_DrawActions::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowActionCursor", ROMX
+
 ; PLAN menu, step 5: draws the window and the cursor ($BB) at that choice; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowActionCursor::
     call RunBattleSetup_PlanMenu_CopyLeftBoxToBGMap
@@ -3002,6 +3174,8 @@ RunBattleSetup_PlanMenu_ShowActionCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ChooseAction", ROMX
 
 ; PLAN menu, step 6, the action: B goes back to the tactics (step 7, then 0); A keeps the choice in
 ; wSideControl bits 4-5: Fight attacks the only foe (action 0) or chooses a foe (step $0C); Skill
@@ -3110,6 +3284,8 @@ RunBattleSetup_PlanMenu_ChooseAction::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_AfterAction", ROMX
+
 ; PLAN menu, step 7: redraws; with an action chosen goes on to the next monster (step $20),
 ; otherwise back to the tactics (step 0). (C1, E-0357)
 RunBattleSetup_PlanMenu_AfterAction::
@@ -3123,6 +3299,8 @@ RunBattleSetup_PlanMenu_AfterAction::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ClearForNoSkills", ROMX
+
 ; PLAN menu, step 8: redraws and clears the message window; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ClearForNoSkills::
     call RunBattleSetup_PlanMenu_CopyLeftBoxToBGMap
@@ -3130,6 +3308,8 @@ RunBattleSetup_PlanMenu_ClearForNoSkills::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowItHasNoUsable", ROMX
 
 ; PLAN menu, step 9: 'It has no usable battle skills!' ($29); next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowItHasNoUsable::
@@ -3143,6 +3323,8 @@ RunBattleSetup_PlanMenu_ShowItHasNoUsable::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_RedrawFoes", ROMX
+
 ; PLAN menu, step 10: after the text redraws the foes' area; next step. (C2, E-0357; probed E-0380)
 RunBattleSetup_PlanMenu_RedrawFoes::
     ld a, [wTextFlags]
@@ -3154,12 +3336,16 @@ RunBattleSetup_PlanMenu_RedrawFoes::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_BackToActions", ROMX
+
 ; PLAN menu, step 11: back to the action window (step 4). (C1, E-0357)
 RunBattleSetup_PlanMenu_BackToActions::
     call CopyMessageBoxToBGMapRow13
     ld a, $04
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawFightFoeList", ROMX
 
 ; PLAN menu, step 12: draws the foe list (the other side's present slots); next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_DrawFightFoeList::
@@ -3173,6 +3359,8 @@ RunBattleSetup_PlanMenu_DrawFightFoeList::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowFoeCursor", ROMX
 
 ; PLAN menu, step 13: puts the target cursor on the first present foe; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowFoeCursor::
@@ -3202,6 +3390,8 @@ RunBattleSetup_PlanMenu_ShowFoeCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ChooseFoe", ROMX
 
 ; PLAN menu, step 14, choosing a foe to attack: B goes back (step 15, then 4); A attacks it (action
 ; 0 at that slot on the other side) and goes on (step 15, then $20). (C1, E-0357)
@@ -3257,6 +3447,8 @@ RunBattleSetup_PlanMenu_ChooseFoe::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_AfterFoeTarget", ROMX
+
 ; PLAN menu, step 15: redraws; to the next monster ($20) with a target chosen, otherwise back to the
 ; action window (4). (C1, E-0357)
 RunBattleSetup_PlanMenu_AfterFoeTarget::
@@ -3273,6 +3465,8 @@ RunBattleSetup_PlanMenu_AfterFoeTarget::
 .set_battle_resolve_step:
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawSkillList", ROMX
 
 ; PLAN menu, step 16: the skill list: the page and entry from the monster's last skill (wSideControl
 ; bits 0-2), the four skill names of the page and the selected skill's description (category 9);
@@ -3321,6 +3515,8 @@ RunBattleSetup_PlanMenu_DrawSkillList::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowSkillCursor", ROMX
+
 ; PLAN menu, step 17: draws the list, the cursor and the page indicator; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowSkillCursor::
     call RunBattleSetup_PlanMenu_RedrawLowerRows
@@ -3342,6 +3538,8 @@ RunBattleSetup_PlanMenu_ShowSkillCursor::
     ld a, $03
     ld [wListLastPageSize], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ChooseSkill", ROMX
 
 ; PLAN menu, step 18, choosing a skill: B goes back to the action window; A: a skill whose record
 ; byte 3 has bit 0 clear gives 'That skill can't be used in battle!' ($25), too little MP (cost $FF
@@ -3551,6 +3749,8 @@ RunBattleSetup_PlanMenu_ChooseSkill::
     inc [hl]
     jr .return
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ReturnToStep", ROMX
+
 ; PLAN menu, step 19: redraws and goes to the step kept in wBattleArg1. (C1, E-0357)
 RunBattleSetup_PlanMenu_ReturnToStep::
     call RunBattleSetup_PlanMenu_RedrawLowerRows
@@ -3559,6 +3759,8 @@ RunBattleSetup_PlanMenu_ReturnToStep::
     xor a
     ld [wBattleArg1], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ClearForSkillMessage", ROMX
 
 ; PLAN menu, step 20: redraws and clears the message window; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ClearForSkillMessage::
@@ -3570,6 +3772,8 @@ RunBattleSetup_PlanMenu_ClearForSkillMessage::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowSkillMessage", ROMX
+
 ; PLAN menu, step 21: shows message wStringIndex of category 0; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowSkillMessage::
     call CopyMessageBoxToBGMapRow13
@@ -3579,6 +3783,8 @@ RunBattleSetup_PlanMenu_ShowSkillMessage::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_RedrawFoesAgain", ROMX
 
 ; PLAN menu, step 22: after the text redraws the foes' area; next step. (C2, E-0357; probed E-0380)
 RunBattleSetup_PlanMenu_RedrawFoesAgain::
@@ -3591,12 +3797,16 @@ RunBattleSetup_PlanMenu_RedrawFoesAgain::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_BackToSkills", ROMX
+
 ; PLAN menu, step 23: back to the skill list (step $10). (C1, E-0357)
 RunBattleSetup_PlanMenu_BackToSkills::
     call CopyMessageBoxToBGMapRow13
     ld a, $10
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawAllyTargets", ROMX
 
 ; PLAN menu, step 24: draws the ally list (string 3 of category 2); next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_DrawAllyTargets::
@@ -3613,6 +3823,8 @@ RunBattleSetup_PlanMenu_DrawAllyTargets::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowAllyCursor", ROMX
 
 ; PLAN menu, step 25: puts the cursor on the first present ally (fallen ones count for SKILL_VIVIFY
 ; and SKILL_REVIVE); next step. (C1, E-0357)
@@ -3649,6 +3861,8 @@ RunBattleSetup_PlanMenu_ShowAllyCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ChooseAlly", ROMX
 
 ; PLAN menu, step 26, choosing an ally: B goes back to the skill list; A on itself with SKILL_MPASS,
 ; SKILL_MPASSMORE, SKILL_MPASSMOST or SKILL_COVER gives 'That skill isn't for own use!' ($65);
@@ -3727,12 +3941,16 @@ RunBattleSetup_PlanMenu_ChooseAlly::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ReturnFromAllyList", ROMX
+
 ; PLAN menu, step 27: redraws and goes to the step kept in wBattleArg0. (C1, E-0357)
 RunBattleSetup_PlanMenu_ReturnFromAllyList::
     call RunBattleSetup_CopyLeftBoxToBGMap
     ld a, [wBattleArg0]
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawFoeList", ROMX
 
 ; PLAN menu, step 28: draws the foe list for a skill (fallen ones too for SKILL_VIVIFY and
 ; SKILL_REVIVE); next step. (C1, E-0357)
@@ -3755,6 +3973,8 @@ RunBattleSetup_PlanMenu_DrawFoeList::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowSkillFoeCursor", ROMX
 
 ; PLAN menu, step 29: puts the cursor on the first present foe; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowSkillFoeCursor::
@@ -3791,6 +4011,8 @@ RunBattleSetup_PlanMenu_ShowSkillFoeCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ChooseSkillFoe", ROMX
 
 ; PLAN menu, step 30, choosing a foe for the skill: B back to the skill list; A makes it the target
 ; (the other side) and goes on to the next monster. (C1, E-0357)
@@ -3844,12 +4066,16 @@ RunBattleSetup_PlanMenu_ChooseSkillFoe::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ReturnFromFoeList", ROMX
+
 ; PLAN menu, step 31: redraws and goes to the step kept in wBattleArg0. (C1, E-0357)
 RunBattleSetup_PlanMenu_ReturnFromFoeList::
     call CopyScreenBufferRect14x7ToBGMapRow11
     ld a, [wBattleArg0]
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_NextMonster", ROMX
 
 ; PLAN menu, step 32: on to the next able monster of the side (back to step 0 for it); after the
 ; third, to the fight (sub-phase 3). (C2, E-0357; probed E-0380)
@@ -3883,6 +4109,8 @@ RunBattleSetup_PlanMenu_NextMonster::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowMessage", ROMX
+
 ; PLAN menu, step 33: shows message wStringIndex of category 0; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowMessage::
     call CopyMessageBoxToBGMapRow13
@@ -3893,12 +4121,16 @@ RunBattleSetup_PlanMenu_ShowMessage::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_BackToAllyList", ROMX
+
 ; PLAN menu, step 35: back to the ally list (step $18). (C1, E-0357)
 RunBattleSetup_PlanMenu_BackToAllyList::
     call CopyMessageBoxToBGMapRow13
     ld a, $18
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu", ROMX
 
 ; Sub-phase 2 of RunBattleSetup, the ITEM menu: wBattleResolveStep ($00-$13, 20 entries) picks the
 ; step. Steps 0-2 draw and run the bag list, 4-7 the side window, 8-11 the ally list, 12-15 the foe
@@ -3965,6 +4197,8 @@ RunBattleSetup_ItemMenu_DrawBagPage::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_DrawList", ROMX
+
 ; ITEM menu, step 1: draws the list; on the first pass puts the cursor ($BB) on the item and the
 ; page indicator; next step. (C1, E-0357)
 RunBattleSetup_ItemMenu_DrawList::
@@ -3992,6 +4226,8 @@ RunBattleSetup_ItemMenu_DrawList::
     ld a, $03
     ld [wListLastPageSize], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ChooseItem", ROMX
 
 ; ITEM menu, step 2, choosing an item: A loads it: record byte 4 bit 0 gives 'This item can't be
 ; used in battle!' ($1E); by record byte 6: 0 choose an ally (step 8), 1 the user's whole side ($10)
@@ -4114,6 +4350,8 @@ RunBattleSetup_ItemMenu_ChooseItem::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_BackToMainMenu", ROMX
+
 ; ITEM menu, step 3: redraws and returns to the main menu. (C1, E-0357)
 RunBattleSetup_ItemMenu_BackToMainMenu::
     call CopyScreenBufferRect20x9ToBGMapRow9
@@ -4122,6 +4360,8 @@ RunBattleSetup_ItemMenu_BackToMainMenu::
     xor a
     ld [wBattleSubPhase], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_DrawSideWindow", ROMX
 
 ; ITEM menu, step 4: draws the side window ('TOWHAlyEnem', string 3 of category 2); next step. (C1,
 ; E-0357)
@@ -4146,6 +4386,8 @@ RunBattleSetup_ItemMenu_DrawSideWindow::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ShowSideCursor", ROMX
+
 ; ITEM menu, step 5: puts the cursor ($BB) on the side choice; next step. (C1, E-0357)
 RunBattleSetup_ItemMenu_ShowSideCursor::
     call CopyScreenBufferRect8x7ToBGMapRow11
@@ -4164,6 +4406,8 @@ RunBattleSetup_ItemMenu_ShowSideCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ChooseSide", ROMX
 
 ; ITEM menu, step 6, choosing a side: items with record byte 6 bit 0 set target that whole side ($10
 ; allies, $20 foes); a meat (ITEM_BEEFJERKY to ITEM_METEORB) thrown at the foes goes to the first
@@ -4243,6 +4487,8 @@ RunBattleSetup_ItemMenu_ChooseSide::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_AfterSide", ROMX
+
 ; ITEM menu, step 7: redraws; goes to step 8 (allies) or $0C (foes) when a target must be chosen,
 ; otherwise back to step 0. (C1, E-0357)
 RunBattleSetup_ItemMenu_AfterSide::
@@ -4260,6 +4506,8 @@ RunBattleSetup_ItemMenu_AfterSide::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_DrawAllyTargets", ROMX
+
 ; ITEM menu, step 8: draws the ally target list; next step. (C1, E-0357)
 RunBattleSetup_ItemMenu_DrawAllyTargets::
     ld hl, vTiles1 + $6d0
@@ -4273,6 +4521,8 @@ RunBattleSetup_ItemMenu_DrawAllyTargets::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ShowAllyCursor", ROMX
 
 ; ITEM menu, step 9: puts the cursor on the first present ally (fallen ones count for
 ; ITEM_WORLDLEAF); next step. (C1, E-0357)
@@ -4307,6 +4557,8 @@ RunBattleSetup_ItemMenu_ShowAllyCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ChooseAlly", ROMX
 
 ; ITEM menu, step 10, choosing an ally: B goes back (step 11, then 0 or the side window); A makes
 ; the ally the item's target (wBattleItemTarget = its slot) and goes on to the fight. (C1, E-0357)
@@ -4348,6 +4600,8 @@ RunBattleSetup_ItemMenu_ChooseAlly::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_AfterAllyTarget", ROMX
+
 ; ITEM menu, step 11: redraws; with a target chosen goes to the fight (sub-phase 3); otherwise back
 ; to the side window (step 4) for items whose record byte 6 is 4 or 5, or to the item list (step 0).
 ; (C1, E-0357)
@@ -4382,6 +4636,8 @@ RunBattleSetup_ItemMenu_AfterAllyTarget::
     ld [wBattleArg0], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_DrawFoeList", ROMX
+
 ; ITEM menu, step 12: draws the foe target list (fallen ones too for ITEM_WORLDLEAF); next step.
 ; (C1, E-0357)
 RunBattleSetup_ItemMenu_DrawFoeList::
@@ -4399,6 +4655,8 @@ RunBattleSetup_ItemMenu_DrawFoeList::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ShowFoeCursor", ROMX
 
 ; ITEM menu, step 13: puts the cursor on the first present foe; next step. (C1, E-0357)
 RunBattleSetup_ItemMenu_ShowFoeCursor::
@@ -4433,6 +4691,8 @@ RunBattleSetup_ItemMenu_ShowFoeCursor::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ChooseFoe", ROMX
 
 ; ITEM menu, step 14, choosing a foe: B goes back; A makes the foe the target (slot 4-6, bit 2 set)
 ; and goes on. (C1, E-0357)
@@ -4476,6 +4736,8 @@ RunBattleSetup_ItemMenu_ChooseFoe::
 .return:
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_AfterFoeTarget", ROMX
+
 ; ITEM menu, step 15: redraws; as step 11. (C1, E-0357)
 RunBattleSetup_ItemMenu_AfterFoeTarget::
     call RunBattleSetup_CopyLeftBoxToBGMap
@@ -4508,6 +4770,8 @@ RunBattleSetup_ItemMenu_AfterFoeTarget::
     ld [wBattleArg0], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ClearForMessage", ROMX
+
 ; ITEM menu, step 16: redraws and clears the message window; next step. (C1, E-0357)
 RunBattleSetup_ItemMenu_ClearForMessage::
     call CopyScreenBufferRect20x9ToBGMapRow9
@@ -4516,12 +4780,16 @@ RunBattleSetup_ItemMenu_ClearForMessage::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_DrawMessageWindow", ROMX
+
 ; ITEM menu, step 17: draws the message window; next step. (C1, E-0357)
 RunBattleSetup_ItemMenu_DrawMessageWindow::
     call CopyMessageBoxToBGMapRow13
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_ShowMessage", ROMX
 
 ; ITEM menu, step 18: shows message wStringIndex of category 0 and redraws the foes' area; next
 ; step. (C1, E-0357)
@@ -4535,6 +4803,8 @@ RunBattleSetup_ItemMenu_ShowMessage::
     call LayoutTileBlocksForBattleFoeCount
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_BackToList", ROMX
+
 ; ITEM menu, step 19: after the text, back to the item list (step 0). (C1, E-0357)
 RunBattleSetup_ItemMenu_BackToList::
     ld a, [wTextFlags]
@@ -4544,6 +4814,8 @@ RunBattleSetup_ItemMenu_BackToList::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 RunBattleSetup_MarkSlotsToAct", ROMX
 
 ; Battle setup, sub-phase 3: marks every slot still at 0 with 1 (to act), resets the actor, redraws
 ; the foes' area and the window; next sub-phase. (C1, E-0357)
@@ -4573,6 +4845,8 @@ RunBattleSetup_MarkSlotsToAct::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_ShowSelectingHeroSMove", ROMX
+
 ; Battle setup, sub-phase 4: in link battles, 'Selecting <partner>'s move...' ($22) with the
 ; partner's name; next sub-phase. (C1, E-0357)
 RunBattleSetup_ShowSelectingHeroSMove::
@@ -4595,6 +4869,8 @@ RunBattleSetup_ShowSelectingHeroSMove::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_SendLinkSync", ROMX
+
 ; Battle setup, sub-phase 5: in link battles sends 1; next sub-phase. (C2, E-0357; probed E-0380)
 RunBattleSetup_SendLinkSync::
     ld a, [wLinkMode]
@@ -4607,6 +4883,8 @@ RunBattleSetup_SendLinkSync::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_SendLinkChoices", ROMX
 
 ; Battle setup, sub-phase 6: in link battles, once the partner's 1 arrives, packs this side's three
 ; tactics, the random seed, the menu state (twice), the six action bytes, the three slot marks and
@@ -4719,6 +4997,8 @@ RunBattleSetup_SendLinkChoices::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_StartLinkExchange", ROMX
+
 ; Battle setup, sub-phase 7: in link battles starts the exchange (sends $FF, ready); next sub-phase.
 ; (C2, E-0357; probed E-0380)
 RunBattleSetup_StartLinkExchange::
@@ -4734,6 +5014,8 @@ RunBattleSetup_StartLinkExchange::
 
 .return:
     ret
+
+SECTION "Bank 31 RunBattleSetup_UnpackPartnerChoices", ROMX
 
 ; Battle setup, sub-phase 8: in link battles, once wLinkMessage is $F0 (the exchange is over),
 ; clears wLinkSendByte and wLinkReady and copies the 19-byte block received at wLinkPartnerName into
@@ -4880,6 +5162,8 @@ RunBattleSetup_UnpackPartnerChoices::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_CompareSeeds", ROMX
+
 ; Battle setup, sub-phase 9: in link battles compares the seed this side packed in sub-phase 6
 ; (wBattleSetupFlagsLo/Hi, the buffer bytes wLinkRecvBuffer + 3 and + 4) with wRandomSeed2Lo/Hi,
 ; which RunBattleSetup_UnpackPartnerChoices set (the own wRandomLo/Hi on the side with wLinkRole bit
@@ -4923,6 +5207,8 @@ RunBattleSetup_CompareSeeds::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_WaitPartnerSeed", ROMX
+
 ; Battle setup, sub-phase 10: in link battles waits for the partner's $22 or $33 and keeps it in
 ; wCounterPtr0Hi; next sub-phase. (C2, E-0357; probed E-0380)
 RunBattleSetup_WaitPartnerSeed::
@@ -4945,6 +5231,8 @@ RunBattleSetup_WaitPartnerSeed::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 31 RunBattleSetup_RetryOnSeedMismatch", ROMX
 
 ; Battle setup, sub-phase 11: in link battles, unless both sides reported matching seeds ($22 in
 ; wCounterPtr0Lo and wCounterPtr0Hi), goes back to the exchange (sub-phase 5); otherwise next
@@ -4971,6 +5259,8 @@ RunBattleSetup_RetryOnSeedMismatch::
     inc [hl]
     ret
 
+SECTION "Bank 31 RunBattleSetup_ClearWindow", ROMX
+
 ; Battle setup, sub-phase 12: clears the window and goes to the next battle step. (C1, E-0357)
 RunBattleSetup_ClearWindow::
     call FillTilesFromRequest
@@ -4979,6 +5269,8 @@ RunBattleSetup_ClearWindow::
     xor a
     ld [wBattleSubPhase], a
     ret
+
+SECTION "Bank 31 ToggleEntryBitsByJoypadAndBlink", ROMX
 
 ; HL = a cursor entry byte (bits 0-1 = the choice, bit 6 = the cursor tile is blanked), DE = a table
 ; of words, the offsets from vBGMap0 of each choice tile. Up or Down (wJoypadPressedRepeat $40 or
@@ -5035,6 +5327,8 @@ ToggleEntryBitsByJoypadAndBlink::
 .return:
     ret
 
+SECTION "Bank 31 ThreeEntryListCursor", ROMX
+
 ; The cursor of a three-entry list ([HL], positions at DE): Up and Down move it with wrap among 0-2
 ; (sound $69); otherwise it blinks every 16 frames. (C1, E-0357)
 ThreeEntryListCursor::
@@ -5088,6 +5382,8 @@ ThreeEntryListCursor::
 
 .return:
     ret
+
+SECTION "Bank 31 MoveBattleCommandCursor", ROMX
 
 ; HL = a cursor entry byte (low nibble = the row, bit 6 = the cursor tile is blanked, bit 7 = redraw
 ; wanted), DE = a table of BG map offsets as for ToggleEntryBitsByJoypadAndBlink. Up and Down
@@ -5277,6 +5573,8 @@ MoveBattleCommandCursor::
 .return:
     ret
 
+SECTION "Bank 31 SetBit6AndBlankEntryTile_Bank31", ROMX
+
 ; HL = a cursor entry byte (bits 0-5 = the entry number), DE = a table of words, the offsets from
 ; vBGMap0 of each entry tile: sets bit 6 of [HL] (the cursor is blanked) and writes the blank tile
 ; $C3 at vBGMap0 + the table word of that entry (WriteVRAMByte). HL and DE are kept, A is clobbered.
@@ -5305,6 +5603,8 @@ SetBit6AndBlankEntryTile_Bank31::
     call WriteVRAMByte
     pop hl
     ret
+
+SECTION "Bank 31 ClearBit6AndCursorEntryTile_Bank31", ROMX
 
 ; HL = a cursor entry byte (bits 0-5 = the entry number), DE = a table of words, the offsets from
 ; vBGMap0 of each entry tile: clears bit 6 of [HL] (the cursor is shown) and writes the cursor tile
@@ -5335,6 +5635,8 @@ ClearBit6AndCursorEntryTile_Bank31::
     pop hl
     ret
 
+SECTION "Bank 31 WriteFiveTilesFromTable", ROMX
+
 ; A = 0-2, HL = the destination: clears wMenuSubState, then writes five consecutive tile numbers to
 ; HL..HL+4, starting at $D0, $D5 or $DA by A (the three bytes of WriteFiveTilesFromTable_Data).
 ; Returns HL = HL + 5. The PLAN menu calls it with A = wCommandMonster and 3 to put the name tiles
@@ -5358,6 +5660,8 @@ WriteFiveTilesFromTable::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 31 WriteFiveTilesFromTable_Data", ROMX
 
 ; Three bytes, $D0, $D5 and $DA: the first of five consecutive tile ids ($D0-$D4, $D5-$D9, $DA-$DE)
 ; for party slot 0, 1 and 2, the name cells that appear in the battle menu window rectangles.
@@ -5424,6 +5728,8 @@ CountUsableSkills::
     ld [wCommandCursor], a
     ret
 
+SECTION "Bank 31 ShowSkillPageNames", ROMX
+
 ; Shows the four skill names of page wCommandCursor of the monster wCommandMonster, with string
 ; category 4, in the four name tile blocks (ShowStringAAtTiles16D0 and the three after it). It first
 ; stores the address of the monster skill list, wBattleSkills + 16 * wCommandMonster, in
@@ -5469,6 +5775,8 @@ ShowSkillPageNames::
     call ShowStringAAtTiles2080
     ret
 
+SECTION "Bank 31 ShowSkillPageNames_EmptyEntry", ROMX
+
 ; A = 0 with Z set and carry clear, whatever it was. ShowSkillPageNames calls it when a skill place
 ; holds $FF, so the empty place is shown as string 0, an empty string. (C2, E-0380)
 ; A = 0 (xor a, so Z set and carry clear); a two-byte handler stub (E-0110) (E-0344: the address in
@@ -5476,6 +5784,8 @@ ShowSkillPageNames::
 ShowSkillPageNames_EmptyEntry::
     xor a
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_RedrawSkillList", ROMX
 
 ; Skill list redraw: a page change redraws the cursor and the page's names; a new entry shows its
 ; description (category 9) and MP cost. (C1, E-0357)
@@ -5526,6 +5836,8 @@ RunBattleSetup_PlanMenu_RedrawSkillList::
     ld a, [de]
     call WriteVRAMByte
     ret
+
+SECTION "Bank 31 CountUsableItems", ROMX
 
 ; Counts the bag's items (24 places, stopping at $FF or 0) into C and those usable in battle (below
 ; $0D, $19-$1F, $22-$27) into E; the page count and last row from C. (C2, E-0357; probed E-0380)
@@ -5579,6 +5891,8 @@ CountUsableItems::
     ld [wCommandCursor], a
     ret
 
+SECTION "Bank 31 CountUsableItems_TrimPageCount", ROMX
+
 ; One page fewer when the items fill the last page exactly. (C2, E-0357; probed E-0380)
 CountUsableItems_TrimPageCount::
     push af
@@ -5587,6 +5901,8 @@ CountUsableItems_TrimPageCount::
     ld [wCommandPageCount], a
     pop af
     ret
+
+SECTION "Bank 31 ShowInventoryPageItemNames", ROMX
 
 ; Shows the four item names of bag page wCommandCursor (wInventory + 4 * page), with string category
 ; 5, in the four name tile blocks (ShowStringAAtTiles16D0 and the three after it). An empty place
@@ -5619,6 +5935,8 @@ ShowInventoryPageItemNames::
     call ShowStringAAtTiles2080
     ret
 
+SECTION "Bank 31 ShowInventoryPageItemNames_EmptyEntry", ROMX
+
 ; A = 0 with Z set and carry clear, whatever it was. ShowInventoryPageItemNames calls it when a bag
 ; place holds $FF, so the empty place is shown as string 0, an empty string. (C2, E-0380)
 ; A = 0 (xor a, so Z set and carry clear); a two-byte handler stub (E-0110) (E-0344: the address in
@@ -5626,6 +5944,8 @@ ShowInventoryPageItemNames::
 ShowInventoryPageItemNames_EmptyEntry::
     xor a
     ret
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_RedrawItemList", ROMX
 
 ; Item list redraw: a page change redraws the cursor and the page's names; a new entry shows its
 ; description (category 6). (C1, E-0357)
@@ -5666,6 +5986,8 @@ RunBattleSetup_ItemMenu_RedrawItemList::
     call ShowStringBank08AtTilesHL_Bank31
     ret
 
+SECTION "Bank 31 LoadSelectedInventoryItemRecord", ROMX
+
 ; wItemId = wInventory[(wCommandCursor and $0F) * 4 + (wMenuOption and 3)], the item under the
 ; cursor of the bag list, then LoadItemRecord copies its 13-byte record to wItemRecord. Called by
 ; the ITEM menu steps that need the record of the chosen item. (C2, E-0380)
@@ -5686,6 +6008,8 @@ LoadSelectedInventoryItemRecord::
     farcall LoadItemRecord
     ret
 
+SECTION "Bank 31 ShowStringAAtTiles16D0", ROMX
+
 ; A = a string index: stores it in wStringIndex and draws that string (the category is already in
 ; wStringCategory) as tiles at vTiles1 + $6D0, 9 tiles wide and 1 row (DE = $0901), through
 ; ShowStringBank08AtTilesHL_Bank31. HL is kept. This is the first of four name tile blocks, $90
@@ -5700,6 +6024,8 @@ ShowStringAAtTiles16D0::
     call ShowStringBank08AtTilesHL_Bank31
     pop hl
     ret
+
+SECTION "Bank 31 ShowStringAAtTiles1760", ROMX
 
 ; A = a string index: stores it in wStringIndex and draws that string (the category is already in
 ; wStringCategory) as tiles at vTiles1 + $760, 9 tiles wide and 1 row, through
@@ -5716,6 +6042,8 @@ ShowStringAAtTiles1760::
     pop hl
     ret
 
+SECTION "Bank 31 ShowStringAAtTiles17F0", ROMX
+
 ; A = a string index: stores it in wStringIndex and draws that string (the category is already in
 ; wStringCategory) as tiles at vTiles1 + $7F0, 9 tiles wide and 1 row, through
 ; ShowStringBank08AtTilesHL_Bank31. HL is kept. Third of the four name tile blocks of a list page.
@@ -5731,6 +6059,8 @@ ShowStringAAtTiles17F0::
     pop hl
     ret
 
+SECTION "Bank 31 ShowStringAAtTiles2080", ROMX
+
 ; A = a string index: stores it in wStringIndex and draws that string (the category is already in
 ; wStringCategory) as tiles at vTiles2 + $80, 9 tiles wide and 1 row, through
 ; ShowStringBank08AtTilesHL_Bank31. HL is not kept. Fourth and last of the name tile blocks of a
@@ -5742,6 +6072,8 @@ ShowStringAAtTiles2080::
     ld de, $0901
     call ShowStringBank08AtTilesHL_Bank31
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_ShowSkillDescAndMP", ROMX
 
 ; Shows skill A's description (category 9) and its MP cost as three digits (a cost of $FF shows the
 ; monster's whole MP). (C1, E-0357)
@@ -5777,6 +6109,8 @@ RunBattleSetup_PlanMenu_ShowSkillDescAndMP::
     call WriteDecimalDigitTiles
     ret
 
+SECTION "Bank 31 DrawInventoryPageIndicator", ROMX
+
 ; Returns at once when wCommandPageCount is 0. Otherwise writes five tiles at vBGMap0 + $226: $C5,
 ; the digit tile $E0 + (wCommandCursor and 7) + 1, $BE, the digit tile $E0 + wCommandPageCount + 1,
 ; and $C6, the page marker of the skill list and the item list (page X of Y). (C1, E-0380)
@@ -5803,6 +6137,8 @@ DrawInventoryPageIndicator::
     ld a, $c6
     call WriteVRAMByte
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_DrawCursor_Data", ROMX
 
 ; Four little-endian BG map offsets from vBGMap0, $01C1, $0201, $01C8 and $0208: row 14 column 1,
 ; row 16 column 1, row 14 column 8 and row 16 column 8, the four places of the 2 by 2 battle main
@@ -5871,6 +6207,8 @@ SetSlotTacticAndSlotLastTacticForCommandMonster::
     ld [hl], a
     ret
 
+SECTION "Bank 31 LoadSelectedSkillRecord_Bank31", ROMX
+
 ; Loads the record of the skill under the cursor of the skill list: wRecordBuffer = the skill at
 ; wBattleSkills + 16 * wCommandMonster + 2 * (4 * (wCommandCursor and 1) + (wMenuCursor and 3)),
 ; wRecordBuffer + 1 = 0, then LoadSkillRecord copies its 17-byte record to wRecordBufferData. Its
@@ -5899,6 +6237,8 @@ LoadSelectedSkillRecord_Bank31::
     ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
     ret
+
+SECTION "Bank 31 CountPresentFoesOfLinkRoleSide_Bank31", ROMX
 
 ; Counts the present slots (wBattleSlotOut 0) of the side opposite this Game Boy: slots 4-6 when
 ; wLinkRole bit 1 is clear, slots 0-2 when it is set. D = how many are present, E = the number of
@@ -5929,6 +6269,8 @@ CountPresentFoesOfLinkRoleSide_Bank31::
     jr nz, .loop
     ret
 
+SECTION "Bank 31 CountPresentSlotsOfLinkRoleSide_Bank31", ROMX
+
 ; Counts the present slots (wBattleSlotOut 0) of this side: slots 0-2 when wLinkRole bit 1 is clear,
 ; slots 4-6 when it is set. D = how many are present; clobbers A and BC. The PLAN menu skill step
 ; uses it for a skill with target code $21: when only one slot of the side is present, the monster
@@ -5955,6 +6297,8 @@ CountPresentSlotsOfLinkRoleSide_Bank31::
     jr nz, .loop
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_AllyListForSkill", ROMX
+
 ; The ally list may include fallen allies for SKILL_VIVIFY and SKILL_REVIVE
 ; (RunBattleSetup_AllyListWithFallen), otherwise only present ones
 ; (RunBattleSetup_AllyListPresentOnly). (C2, E-0357; probed E-0380)
@@ -5965,6 +6309,8 @@ RunBattleSetup_PlanMenu_AllyListForSkill::
     cp $1f
     jr z, RunBattleSetup_AllyListWithFallen
     jr RunBattleSetup_AllyListPresentOnly
+
+SECTION "Bank 31 RunBattleSetup_ItemMenu_AllyListForItem", ROMX
 
 ; The ally list may include fallen allies for ITEM_WORLDLEAF (RunBattleSetup_AllyListWithFallen),
 ; otherwise only present ones (RunBattleSetup_AllyListPresentOnly). (C2, E-0357; probed E-0380)
@@ -6006,6 +6352,8 @@ RunBattleSetup_AllyListWithFallen::
     jr nz, .loop
     jr RunBattleSetup_DrawAllyList
 
+SECTION "Bank 31 RunBattleSetup_AllyListPresentOnly", ROMX
+
 ; Copies the three wBattleSlotOut bytes of the side at (wLinkRole << 1) & 4 into wSlotChoices (0 for
 ; a present slot, nonzero for a fallen or empty one), so only present allies can be chosen; then
 ; draws the list (RunBattleSetup_DrawAllyList). Used for every skill and item other than
@@ -6031,6 +6379,8 @@ RunBattleSetup_AllyListPresentOnly::
     dec b
     jr nz, .loop
     jr RunBattleSetup_DrawAllyList
+
+SECTION "Bank 31 RunBattleSetup_DrawAllyList", ROMX
 
 ; Builds the ally target window in the screen buffer (RunBattleSetup_DrawAllyList_BuildBox) and
 ; blanks with tile $C3 (FillFiveC3AtHL) the five-tile name of each of the three slots whose
@@ -6063,6 +6413,8 @@ RunBattleSetup_DrawAllyList::
     call nz, FillFiveC3AtHL
     ret
 
+SECTION "Bank 31 FillFiveC3AtHL", ROMX
+
 ; HL = an address: stores tile $C3 (the blank tile) in the five bytes from HL; HL is kept and A =
 ; $C3. RunBattleSetup_DrawAllyList uses it to blank the five name tiles of an ally slot that cannot
 ; be chosen. (C2, E-0380)
@@ -6077,6 +6429,8 @@ FillFiveC3AtHL::
     ld [hl], a
     pop hl
     ret
+
+SECTION "Bank 31 MoveTargetCursor", ROMX
 
 ; Moves the target cursor byte at HL (low two bits = the slot 0-2) to a slot that can be chosen: B =
 ; the side base (0 or 4), E = the step (1 or $FF), A not 0 starts one step away from the current
@@ -6139,6 +6493,8 @@ MoveTargetCursor::
     ld [hl], a
     ret
 
+SECTION "Bank 31 TargetCursor", ROMX
+
 ; The target cursor: Up and Down step to the previous or next choosable slot; otherwise it blinks
 ; every 16 frames. (C1, E-0357)
 TargetCursor::
@@ -6187,6 +6543,8 @@ TargetCursor::
 .return:
     ret
 
+SECTION "Bank 31 UnreferencedDebugScreenCaller", ROMX
+
 ; Far-calls RunDebugState_E0, the debug state of bank $E0, and returns. No call, jump or table entry
 ; in the source reaches it, so it looks unused. (C1, E-0380)
 ; far-calls RunDebugState_E0 (E-0122) (E-0344: the address in its name dropped or read as the label
@@ -6194,6 +6552,8 @@ TargetCursor::
 UnreferencedDebugScreenCaller::
     farcall RunDebugState_E0
     ret
+
+SECTION "Bank 31 BattleEnd_Result_SetResult", ROMX
 
 ; Sets the battle result (wBattleScene): in battle kinds below 8, 1 when none of the player's slots
 ; can act (present and not paralysed) or a foe is still present; with no foe left, 0 when one fell
@@ -6287,6 +6647,8 @@ BattleEnd_Result_SetResult::
     ld [wBattleScene], a
     ret
 
+SECTION "Bank 31 CountSlotsAbleToAct", ROMX
+
 ; E = how many of B slots from C are present and not paralysed; carry when none. (C2, E-0357; probed
 ; E-0380)
 CountSlotsAbleToAct::
@@ -6310,6 +6672,8 @@ CountSlotsAbleToAct::
     ld a, e
     cp $01
     ret
+
+SECTION "Bank 31 BattleEnd_Result_CountSlots", ROMX
 
 ; B = how many slots, C = the first slot, D and E = running counts (the caller clears them): over
 ; those slots of wBattleSlotOut, E counts the slots that are 0 (present) and D those with any other
@@ -6340,6 +6704,8 @@ BattleEnd_Result_CountSlots::
     ld a, e
     cp $01
     ret
+
+SECTION "Bank 31 BattleEnd_Records_UpdatePartyRecords", ROMX
 
 ; Battle end, step 3: outside link battles, for each party member stores its tactics into its record
 ; and settles the record's status, HP, MP, wBattleExtraStat and personality from the battle (SRAM
@@ -6379,6 +6745,8 @@ BattleEnd_Records_UpdatePartyRecords::
 .return:
     ret
 
+SECTION "Bank 31 BattleEnd_Records_StoreTactics", ROMX
+
 ; C = slot (and record): stores wSlotTactic & 3 in bits 4-5 and wSlotLastTactic & 3 in bits 6-7 of
 ; the record's MON_SEX byte, keeping its low nibble (bit 0 is the sex); also sets wBattleResultByte
 ; = wMenuState & 3. BC kept; SRAM must be enabled. (C2, E-0372; probed E-0380)
@@ -6413,6 +6781,8 @@ BattleEnd_Records_StoreTactics::
     ld [wBattleResultByte], a
     pop bc
     ret
+
+SECTION "Bank 31 RecordStatusAfterBattle", ROMX
 
 ; The record's status after battle: cleared, then bit 7 when the slot fell; otherwise (not in battle
 ; kind 4) bit 0 for battle status bit 5 and bit 2 for battle status bits 0-1. (C2, E-0357; probed
@@ -6449,11 +6819,15 @@ RecordStatusAfterBattle::
     set 7, [hl]
     ret
 
+SECTION "Bank 31 RecordStatusAfterBattle_MarkCursed", ROMX
+
 ; Sets bit 0 of the record's status byte (HL = MON_STATUS) for a slot whose battle status has
 ; BSTAT0_CURSED; called by RecordStatusAfterBattle. (C2, E-0372; probed E-0380)
 RecordStatusAfterBattle_MarkCursed::
     set 0, [hl]
     ret
+
+SECTION "Bank 31 RecordStatusAfterBattle_MarkPoisoned", ROMX
 
 ; Sets bit 2 of the record's status byte (HL = MON_STATUS, the bit read as poison) for a slot whose
 ; battle status has BSTAT0_POISONED or BSTAT0_BADLY_POISONED; called by RecordStatusAfterBattle.
@@ -6461,6 +6835,8 @@ RecordStatusAfterBattle_MarkCursed::
 RecordStatusAfterBattle_MarkPoisoned::
     set 2, [hl]
     ret
+
+SECTION "Bank 31 BattleEnd_Records_StoreHP", ROMX
 
 ; HL = the record MON_STATUS address, C = slot: saves the status byte in wBattleArg0, then stores at
 ; MON_HP 0 when status bit 7 (fell) is set, otherwise the wBattleHP word of the slot, cut down to
@@ -6521,6 +6897,8 @@ BattleEnd_Records_StoreHP::
     inc hl
     ret
 
+SECTION "Bank 31 BattleEnd_Records_StoreMP", ROMX
+
 ; HL = the MON_MP address of the record, C = slot: stores in MON_MP the wBattleMP word of the slot,
 ; cut down to the MON_MAX_MP word two bytes on when that is lower (the test is the sign of
 ; MON_MAX_MP minus the MP as a 16-bit number), and a battle MP with bit 15 set stores MON_MAX_MP.
@@ -6571,6 +6949,8 @@ BattleEnd_Records_StoreMP::
     ld h, a
     ret
 
+SECTION "Bank 31 BattleEnd_Records_StoreExtraStat", ROMX
+
 ; Unless the record fell (wBattleArg0 bit 7), copies the slot's wBattleExtraStat word to HL, which
 ; BattleEnd_Records_StoreMP left at MON_WLD; returns HL at MON_PERSONALITY either way. (C2, E-0372;
 ; probed E-0380)
@@ -6601,6 +6981,8 @@ BattleEnd_Records_StoreExtraStat::
     adc $00
     ld h, a
     ret
+
+SECTION "Bank 31 BattleEnd_Records_StorePersonality", ROMX
 
 ; Unless the record fell (wBattleArg0 bit 7), copies the slot's wSlotPersonalityHi,
 ; wSlotPersonalityLo, wSlotTrait and wSlotPersonalityMid bytes to the four MON_PERSONALITY bytes at
@@ -6652,6 +7034,8 @@ BattleEnd_Records_StorePersonality::
 
 .return:
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience", ROMX
 
 ; Runner of the experience part of the battle end, called every frame by BattleEnd_AwardExperience:
 ; wBattleSubPhase picks one of 10 parts. 0 BattleEnd_GainExperience_Start shows the award, 1
@@ -6779,6 +7163,8 @@ BattleEnd_GainExperience_AwardParty::
     ld [wBattleArg0], a
     ret
 
+SECTION "Bank 31 AddExpToRecordCCapped", ROMX
+
 ; C = a party slot: adds the 24-bit wBattleExpAward (low byte first) to the 3-byte MON_EXP of record
 ; wPartyList[C] (SRAMRecordAddressMapped; the caller enables SRAM). The sum is taken in 24 bits and
 ; wraps without any overflow test, and a sum above 9,999,999 ($98967F) is stored as 9,999,999. BC is
@@ -6823,6 +7209,8 @@ AddExpToRecordCCapped::
     ld [hl], c
     pop bc
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_CheckLevelUp", ROMX
 
 ; Part 2 of the experience part, a runner on wBattleResolveStep: step 0 is
 ; BattleEnd_GainExperience_CheckLevelUp_RaiseLevel (test one member and raise its battle level) and
@@ -6889,6 +7277,8 @@ BattleEnd_GainExperience_CheckLevelUp_RaiseLevel::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_GainExperience_CheckLevelUp_ShowGains", ROMX
+
 ; Level-up, step 1: '<name> was promoted to Lv<n>!' with the stat gains
 ; (ComputeLevelUpStatGainsForBattleArg1); next part. (C1, E-0357)
 BattleEnd_GainExperience_CheckLevelUp_ShowGains::
@@ -6918,6 +7308,8 @@ BattleEnd_GainExperience_CheckLevelUp_ShowGains::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_RunNewSkillSteps", ROMX
 
 ; Experience, part 3: counts the end timer down while the sound is idle and runs its steps (new
 ; skills). (C1, E-0357)
@@ -6958,6 +7350,8 @@ BattleEnd_GainExperience_CopySkillsToWorkBuf::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_ShowNewSkills", ROMX
 
 ; New skills, step 1: each skill it can now learn (FindNewlyLearnableSkills) is shown ('At Lv<n>,
 ; <name> learned <skill>!', '<old> became <skill>!' or 'devised <skill> from the skills it knows!')
@@ -7024,12 +7418,16 @@ BattleEnd_GainExperience_ShowNewSkills::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 31 BattleEnd_GainExperience_ChooseSkillToForget", ROMX
+
 ; New skills, step 2: runs the forget-skill screen (ForgetSkillMenu) each frame; with eight or fewer
 ; skills in the work list it moves on to part 4 (BattleEnd_GainExperience_StoreSkillsAndLevelUp),
 ; otherwise it asks which skill to forget. (C1, E-0372)
 BattleEnd_GainExperience_ChooseSkillToForget::
     call ForgetSkillMenu
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_StoreSkillsAndLevelUp", ROMX
 
 ; Experience, part 4: stores the work list as the monster's skills, applies the level-up and says
 ; 'It has reached the limit for growth.' at its level cap; back two parts (the next level or
@@ -7051,6 +7449,8 @@ BattleEnd_GainExperience_StoreSkillsAndLevelUp::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 ApplyLevelUpToRecordBattleArg0", ROMX
 
 ; Level-up of the record wPartyList[wBattleArg0] (the caller enables SRAM): MON_LEVEL + 1, and
 ; wLevelUpGains + 0..5 are added to the words MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL and
@@ -7113,6 +7513,8 @@ ApplyLevelUpToRecordBattleArg0::
     call AddAToWordAtHL_Bank31_2
     ret
 
+SECTION "Bank 31 AddAToWordAtHL_Bank31_2", ROMX
+
 ; A = an amount, HL = a little-endian word: the word += A (unsigned, wrapping at $10000 with no
 ; cap); HL ends on the high byte and A is clobbered. Used six times by
 ; ApplyLevelUpToRecordBattleArg0. (C2, E-0380)
@@ -7125,6 +7527,8 @@ AddAToWordAtHL_Bank31_2::
     adc [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_ShowGrowthLimit", ROMX
 
 ; For the record wPartyList[wBattleArg0] (the caller enables SRAM): when MON_LEVEL is at least
 ; MON_MAX_LEVEL, starts the message 'It has reached the limit for growth.' (category 5, string $0A)
@@ -7146,6 +7550,8 @@ BattleEnd_GainExperience_ShowGrowthLimit::
     farcall BeginStringDisplay_Bank2F
     ret
 
+SECTION "Bank 31 StoreWorkBufToRecordSkills", ROMX
+
 ; Copies the 8 bytes at wWorkBuf to MON_SKILLS of the record wPartyList[wBattleArg0] (the caller
 ; enables SRAM): the skill list built in wWorkBuf by the new-skill steps becomes the skills of the
 ; monster. Nothing around the 8 bytes changes. (C2, E-0380)
@@ -7164,6 +7570,8 @@ StoreWorkBufToRecordSkills::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_AwardFarm", ROMX
 
 ; Experience, part 5: the farm's share: the award divided by 20, 15 or 10 by wFarmLevel, added to
 ; each farm record (state 1, byte $6E clear); next part. (C2, E-0357; probed E-0380)
@@ -7209,6 +7617,8 @@ BattleEnd_GainExperience_AwardFarm::
     inc [hl]
     ret
 
+SECTION "Bank 31 DivideBattleExpAwardByModeFactor", ROMX
+
 ; Divides the 24-bit wBattleExpAward (low byte first) by 20 when wFarmLevel is 0, by 15 when it is 1
 ; and by 10 for any other value, rounding down, and stores the quotient back. Called by
 ; BattleEnd_GainExperience_AwardFarm, so it makes the share of the farm records. (C2, E-0380)
@@ -7245,6 +7655,8 @@ DivideBattleExpAwardByModeFactor::
     ld a, e
     ld [wBattleExpAward + $2], a
     ret
+
+SECTION "Bank 31 AddExpToRecordHLCapped", ROMX
 
 ; HL = the start of a monster record in SRAM (kept, as is BC): adds the 24-bit wBattleExpAward to
 ; the 3-byte MON_EXP at HL + $58 with the same wrap and 9,999,999 cap as AddExpToRecordCCapped.
@@ -7295,6 +7707,8 @@ AddExpToRecordHLCapped::
     pop hl
     pop bc
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_FindFarmLevelUp", ROMX
 
 ; Experience, part 6: finds a farm record that reached its next level (wBattleArg1, next part), or
 ; skips two parts when none did. (C2, E-0357; probed E-0380)
@@ -7347,6 +7761,8 @@ BattleEnd_GainExperience_FindFarmLevelUp::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_GainExperience_LevelUpFarmRecord", ROMX
+
 ; Experience, part 7: levels the farm record up quietly (ComputeLevelUpStatGainsForBattleArg1,
 ; ApplyLevelUpToRecordBattleArg1, then FullHealRecordBattleArg1) and returns to part 6. (C2, E-0357;
 ; probed E-0380)
@@ -7363,6 +7779,8 @@ BattleEnd_GainExperience_LevelUpFarmRecord::
     ld hl, wBattleSubPhase
     dec [hl]
     ret
+
+SECTION "Bank 31 ApplyLevelUpToRecordBattleArg1", ROMX
 
 ; Level-up of the SRAM record number wBattleArg1, used as it is without the party list (the caller
 ; enables SRAM): MON_LEVEL + 1, and wLevelUpGains + 0..5 are added to the words MON_MAX_HP,
@@ -7425,6 +7843,8 @@ ApplyLevelUpToRecordBattleArg1::
     call AddAToWordAtHL_Bank31
     ret
 
+SECTION "Bank 31 AddAToWordAtHL_Bank31", ROMX
+
 ; A = an amount, HL = a little-endian word: the word += A (unsigned, wrapping at $10000 with no
 ; cap); HL ends on the high byte and A is clobbered. Used six times by
 ; ApplyLevelUpToRecordBattleArg1. (C2, E-0380)
@@ -7437,6 +7857,8 @@ AddAToWordAtHL_Bank31::
     adc [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 31 FullHealRecordBattleArg1", ROMX
 
 ; For SRAM record number wBattleArg1 (taken as it is, not mapped through the party list): copies the
 ; word MON_MAX_HP to MON_HP, the word MON_MAX_MP to MON_MP and sets MON_STATUS to 0, so the record
@@ -7484,6 +7906,8 @@ FullHealRecordBattleArg1::
     ld [hl], $00
     ret
 
+SECTION "Bank 31 BattleEnd_GainExperience_Finish", ROMX
+
 ; Experience, part 8: ends the experience phase: next battle step (wBattleStep + 1) with
 ; wBattleSubPhase 0. Reached from part 6 (BattleEnd_GainExperience_FindFarmLevelUp) when no farm
 ; record reaches its next level. (C2, E-0372; probed E-0380)
@@ -7493,6 +7917,8 @@ BattleEnd_GainExperience_Finish::
     xor a
     ld [wBattleSubPhase], a
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_LearnSkill", ROMX
 
 ; Part 9 of BattleEnd_GainExperience (entry 9 of its jump table, picked by wBattleSubPhase). Part 0
 ; jumps here when the battle gives no experience (battle kinds 4, 5 and 8 up) outside a link battle.
@@ -7532,6 +7958,8 @@ BattleEnd_GainExperience_LearnSkill_Start::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_GainExperience_LearnSkill_Done", ROMX
+
 ; Ends the experience phase from the learned-skill steps: next battle step (wBattleStep + 1) with
 ; wBattleSubPhase and wBattleResolveStep cleared. Reached when
 ; BattleEnd_GainExperience_LearnSkill_Start's conditions fail, when
@@ -7545,6 +7973,8 @@ BattleEnd_GainExperience_LearnSkill_Done::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 31 BattleEnd_GainExperience_LearnSkill_CopySkills", ROMX
 
 ; Learned skill, step 1: copies the first party monster's skills to wWorkBuf, then calls
 ; ClearTemp0AndA, which clears hTemp0, so it always ends the step here (next battle step); the rest,
@@ -7611,6 +8041,8 @@ BattleEnd_GainExperience_LearnSkill_CopySkills::
     inc [hl]
     ret
 
+SECTION "Bank 31 BattleEnd_GainExperience_LearnSkill_EndAfterText", ROMX
+
 ; Learned skill, step 2: returns while wTextFlags is set, then ends the phase
 ; (BattleEnd_GainExperience_LearnSkill_Done). (C2, E-0372; probed E-0380)
 BattleEnd_GainExperience_LearnSkill_EndAfterText::
@@ -7618,6 +8050,8 @@ BattleEnd_GainExperience_LearnSkill_EndAfterText::
     or a
     ret nz
     jp BattleEnd_GainExperience_LearnSkill_Done
+
+SECTION "Bank 31 AddAx4EToHL", ROMX
 
 ; HL = HL + A * $4E (16-bit sum; $4E is the size of one battler record). A and BC are changed.
 ; Nothing in src/ calls it (see BattlerRecordFieldAddress for a similar multiply). (C2, E-0380)
@@ -7629,6 +8063,8 @@ AddAx4EToHL::
     pop bc
     add hl, bc
     ret
+
+SECTION "Bank 31 RecordReachedNextLevelExp", ROMX
 
 ; A = SRAM record number (taken as it is, not mapped through the party list); returns C = 1 when the
 ; record has reached the experience for its next level, else C = 0. It enables SRAM bank 0 itself
@@ -7703,6 +8139,8 @@ RecordReachedNextLevelExp::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 31 CopyTenByteNameToTextBuf0", ROMX
+
 ; HL = source: copies 10 bytes (a record name, MON_NAME) to wTextBuf0 and writes the end mark $F0 as
 ; the eleventh byte, so a full 10-character name is still ended. HL ends 10 bytes past the source,
 ; DE at the $F0 and B = 0. Called by BattleEnd_GainExperience_CheckLevelUp_ShowGains with HL at
@@ -7721,6 +8159,8 @@ CopyTenByteNameToTextBuf0::
     ld a, $f0
     ld [de], a
     ret
+
+SECTION "Bank 31 WriteLevelUpNumbersToTextBufs", ROMX
 
 ; HL = 10 bytes into a record (the address left after the name by the copy in
 ; CopyTenByteNameToTextBuf0, which is MON_SPECIES; see CopyTenByteNameToTextBuf0): writes the
@@ -7762,6 +8202,8 @@ WriteLevelUpNumbersToTextBufs::
     call WriteDecimalByteString
     ret
 
+SECTION "Bank 31 ShowStringHL_Bank31", ROMX
+
 ; H = string category, L = string index: stores them in wStringCategory and wStringIndex and
 ; far-calls BeginStringDisplay_Bank2F, which starts printing that bank $2F battle text and sets
 ; wTextFlags. Callers pass an immediate such as $0500: BattleEnd_GainExperience_Start (the
@@ -7776,6 +8218,8 @@ ShowStringHL_Bank31::
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank2F
     ret
+
+SECTION "Bank 31 RemoveKnownSkillsFromAllSkillLists", ROMX
 
 ; Enables SRAM bank 0, then for each of the 30 records from sRecords (record number in B, $A5 bytes
 ; each) whose first byte (MON_STATE) is not 0 runs RemoveKnownSkillsFromRecordSkillList; at the end
@@ -7818,6 +8262,8 @@ RemoveKnownSkillsFromAllSkillLists::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 31 RemoveKnownSkillsFromRecordSkillList", ROMX
+
 ; B = SRAM record number (taken as it is), SRAM already enabled: for each of the eight bytes of its
 ; MON_SKILLS that is not $FF runs RemoveKnownSkillsFromRecordSkillList_RemoveOne, so every known
 ; skill is removed from the record MON_SKILL_LIST. B is kept. Called only by
@@ -7844,6 +8290,8 @@ RemoveKnownSkillsFromRecordSkillList::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 31 RemoveKnownSkillsFromRecordSkillList_RemoveOne", ROMX
 
 ; A = skill, B = record: replaces every copy of the skill in the record's 25-byte MON_SKILL_LIST
 ; with $FF, then packs the list (its non-$FF entries to the front, $FF after) through
@@ -7898,6 +8346,8 @@ RemoveKnownSkillsFromRecordSkillList_RemoveOne::
     dec b
     jr nz, .loop3
     ret
+
+SECTION "Bank 31 ForgetSkillMenu", ROMX
 
 ; The screen that asks which skill to forget when a monster would get more than eight skills. Runs
 ; the step picked by wBattleSubStep: 0 ForgetSkillMenu_Start (counts the skills and sets up the
@@ -7993,6 +8443,8 @@ ForgetSkillMenu_Start::
     ld [wMenuState], a
     ret
 
+SECTION "Bank 31 ForgetSkillMenu_DrawList", ROMX
+
 ; Skill list screen, step 1: draws the list, the monster's MP, the page and the selected skill's
 ; name and cost; next step. (C1, E-0357)
 ForgetSkillMenu_DrawList::
@@ -8032,6 +8484,8 @@ ForgetSkillMenu_DrawList::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 31 ForgetSkillMenu_Cursor", ROMX
 
 ; Skill list screen, step 2: moves the cursor; A picks the skill (its name to wTextBuf2) and goes
 ; on; Up/Down redraw the cost; Left/Right change the page. (C1, E-0357)
@@ -8081,6 +8535,8 @@ ForgetSkillMenu_Cursor::
     call DrawCommandCursorPageNumber
     ret
 
+SECTION "Bank 31 ForgetSkillMenu_AskForget", ROMX
+
 ; Skill list screen, step 3: marks the chosen skill ($BC) and asks 'Forget <skill>? Are you sure?';
 ; next step. (C1, E-0357)
 ForgetSkillMenu_AskForget::
@@ -8108,6 +8564,8 @@ ForgetSkillMenu_AskForget::
     inc [hl]
     ret
 
+SECTION "Bank 31 ForgetSkillMenu_DrawYesNo", ROMX
+
 ; Skill list screen, step 4: draws the yes/no box with the cursor on no; next step. (C1, E-0357)
 ForgetSkillMenu_DrawYesNo::
     ld a, [wTextFlags]
@@ -8125,6 +8583,8 @@ ForgetSkillMenu_DrawYesNo::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 31 ForgetSkillMenu_ReadAnswer", ROMX
 
 ; Skill list screen, step 5: yes removes the skill from the work list and says '<skill> was
 ; forgotten.'; no or B goes back to the list (step 1). (C1, E-0357)
@@ -8167,6 +8627,8 @@ ForgetSkillMenu_ReadAnswer::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 31 ForgetSkillMenu_RestartAfterText", ROMX
+
 ; Skill list screen, step 6: returns while wTextFlags is set, then sets wBattleSubStep to 0, so step
 ; 0 (ForgetSkillMenu_Start) recounts the skills and closes the screen when eight or fewer remain.
 ; (C2, E-0372; probed E-0380)
@@ -8177,6 +8639,8 @@ ForgetSkillMenu_RestartAfterText::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 31 ForgetSkillMenu_PackSkillList", ROMX
 
 ; Packs the 56-byte work list wWorkBuf: copies its non-$FF skills in order to wBattlerRecords + $4
 ; (filled with $FF first) and the 56 bytes back, so the skills come first and $FF fills the rest; A
@@ -8216,6 +8680,8 @@ ForgetSkillMenu_PackSkillList::
     jr nz, .loop2
     pop af
     ret
+
+SECTION "Bank 31 ForgetSkillMenu_WriteSkillNames", ROMX
 
 ; Writes the four skill names of the current page (category 4) into the list window, a blank for
 ; $FF. (C1, E-0357)
@@ -8273,6 +8739,8 @@ ForgetSkillMenu_WriteSkillNames::
     ld a, h
     ld [wTextWindowTileHi], a
     ret
+
+SECTION "Bank 31 ForgetSkillMenu_WriteSkillNames_Data", ROMX
 
 ; Four little-endian VRAM addresses, $95C0, $9650, $96E0 and $9770, $90 bytes (9 tiles) apart: where
 ; the four skill names of the current page are drawn. ForgetSkillMenu_WriteSkillNames indexes it by
@@ -8367,6 +8835,8 @@ ShowSelectedSkillNameAndCost::
     ld [wTextWindowTileHi], a
     ret
 
+SECTION "Bank 31 ForgetSkillMenu_RedrawSkillCost", ROMX
+
 ; Redraws the cost of the selected skill after the cursor moved up or down: runs
 ; ShowSelectedSkillNameAndCost, then copies the three digit tiles it left at wWindowTileBuffer + $9E
 ; to vBGMap0 + $206 (BG row 16, column 6). Called by ForgetSkillMenu_Cursor. (C1, E-0380)
@@ -8387,6 +8857,8 @@ ForgetSkillMenu_RedrawSkillCost::
     call WriteVRAMByte
     ret
 
+SECTION "Bank 31 DrawCommandCursorPageNumber", ROMX
+
 ; Writes the digit tile $E1 + (wCommandCursor and $0F), the number of the current page of the skill
 ; list counted from 1, to vBGMap0 + $10F (BG row 8, column 15). Called by ForgetSkillMenu_DrawList
 ; and ForgetSkillMenu_Cursor. (C1, E-0380)
@@ -8398,6 +8870,8 @@ DrawCommandCursorPageNumber::
     ld hl, vBGMap0 + $10f
     call WriteVRAMByte
     ret
+
+SECTION "Bank 31 CountDownBattleEndTimerWhenSoundIdle", ROMX
 
 ; When the first two bytes of all six sound channel slots (wSoundChannelSlots, wSoundChannel1 to
 ; wSoundChannel5) are $FF, which presumably means no sound is playing, wBattleEndTimer is
@@ -8435,6 +8909,8 @@ CountDownBattleEndTimerWhenSoundIdle::
     ld [wBattleEndTimer], a
     ret nz
     ret
+
+SECTION "Bank 31 ClearAttributesAndScreenBuffer_Bank31", ROMX
 
 ; On a Game Boy Color (wIsCGB non-zero) clears the tile attributes of the visible 20 x 18 BG map to
 ; 0: switches VRAM to bank 1 (rVBK), writes 0 through WriteVRAMByteInc to 20 bytes of each of 18
@@ -8485,6 +8961,8 @@ ClearAttributesAndScreenBuffer_Bank31::
     jr nz, .loop3
     ret
 
+SECTION "Bank 31 FillScreenTileBufferRow11Col4WithC3_Bank31", ROMX
+
 ; Fills the $160 bytes from wScreenTileBuffer + $E0 (BG row 7 onward) with $C3, the blank tile; A,
 ; BC and HL are changed. Called by the RunBattleSetup menu steps, ForgetSkillMenu_DrawList and
 ; ClearAndLayoutTileBlocksForBattleFoeCount, which then build their boxes in the cleared area and
@@ -8503,6 +8981,8 @@ FillScreenTileBufferRow11Col4WithC3_Bank31::
     or c
     jr nz, .loop
     ret
+
+SECTION "Bank 31 GameMode4_Init_BuildBattleScreen_LoadNameTiles", ROMX
 
 ; Draws name glyph tiles for the battle screen: first a string of five $90 glyphs into each of the
 ; three name tile areas vTiles1 + $500, $550 and $5A0 (CopyGlyphTilesToVRAM), then for each of
@@ -8568,6 +9048,8 @@ GameMode4_Init_BuildBattleScreen_LoadNameTiles::
     jr nz, .loop
     ret
 
+SECTION "Bank 31 BattlerNameTileAddresses", ROMX
+
 ; Six words, the VRAM destinations of the battler name glyphs by battle slot: vTiles1 + $500, + $550
 ; and + $5A0 for slots 0-2, and the same three for slots 3-5.
 ; GameMode4_Init_BuildBattleScreen_LoadNameTiles copies each party battler's 10-byte name from
@@ -8594,6 +9076,8 @@ CopyRectRecordForBattlePartyCount_Bank31::
     call ReadScreenBufferRectHeader_Bank31
     call CopyRectToStride32_Bank31
     ret
+
+SECTION "Bank 31 PartyCountRects", ROMX
 
 ; CopyRectRecordForBattlePartyCount_Bank31 reads word wBattlePartyCount - 1 of $72C3 and copies that
 ; record into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31);
@@ -8646,6 +9130,8 @@ LayoutTileBlocksForBattleFoeCount::
     ld hl, wScreenTileBuffer + $ed
     jr LayoutTileBlocksForBattleFoeCount_WriteBlock
 
+SECTION "Bank 31 LayoutTileBlocksForBattleFoeCount_TableBlock", ROMX
+
 ; HL = the address held in the word at HL (deref_hl), then falls into the block writer (see
 ; LayoutTileBlocksForBattleFoeCount_WriteBlock) to write one 6 x 6 block of tile numbers from D
 ; there. LayoutTileBlocksForBattleFoeCount calls it for the first block (address from its first
@@ -8683,6 +9169,8 @@ LayoutTileBlocksForBattleFoeCount_WriteBlock::
 ; E-0380)
 LayoutTileBlocksForBattleFoeCount_Done::
     ret
+
+SECTION "Bank 31 LayoutTileBlocksForBattleFoeCount_Data1", ROMX
 
 ; Three little-endian pointers, $C27F, $C27C and $C279: addresses in wScreenTileBuffer ($E7, $E4 and
 ; $E1 bytes in; row 0 of the 32-byte-wide picture area, columns 7, 4 and 1) where the first 6 by 6
@@ -8760,6 +9248,8 @@ LoadBattleMonsterPictureAttributes::
     call LoadMonsterPictureAttributesFromDE
     ret
 
+SECTION "Bank 31 LoadMonsterPictureAttributesFromDE", ROMX
+
 ; DE = address of a monster id word, C = palette number, HL = BG map address: stores C in hTemp0,
 ; reads the id word at [DE] and calls LoadMonsterPictureAttributes, which writes that picture 6 x 6
 ; colour attribute bytes (plus the palette number) to VRAM bank 1 at HL. DE is kept as it came.
@@ -8781,6 +9271,8 @@ LoadMonsterPictureAttributesFromDE::
     pop de
     ret
 
+SECTION "Bank 31 DrawPartySlotStatusPanels", ROMX
+
 ; Draws the HP, MP and status (or level) of the first one, two or three party slots into
 ; wScreenTileBuffer, by wBattlePartyCount: slot 0 (DrawSlotPanelStats0) always, slot 1
 ; (DrawSlotPanelStats1) unless the count is 1, slot 2 (DrawSlotPanelStats2) unless it is 1 or 2.
@@ -8799,6 +9291,8 @@ DrawPartySlotStatusPanels::
     ret z
     call DrawSlotPanelStats2
     ret
+
+SECTION "Bank 31 DrawSlotPanelStats0", ROMX
 
 ; Draws the HP digits, MP digits and status marks (or level) of party slot 0 into wScreenTileBuffer:
 ; C = 0, or 4 when wLinkMode is neither 0 nor 2 and wLinkRole bit 1 is set (the far side of a link
@@ -8824,6 +9318,8 @@ DrawSlotPanelStats0::
     call DrawSlotStatusMarks
     ret
 
+SECTION "Bank 31 DrawSlotPanelStats1", ROMX
+
 ; Draws the HP digits, MP digits and status marks (or level) of party slot 1 into wScreenTileBuffer:
 ; C = 1, or 5 when wLinkMode is neither 0 nor 2 and wLinkRole bit 1 is set (the far side of a link
 ; battle), then calls DrawSlotHPDigits, DrawSlotMPDigits and DrawSlotStatusMarks. Called by
@@ -8847,6 +9343,8 @@ DrawSlotPanelStats1::
     call DrawSlotMPDigits
     call DrawSlotStatusMarks
     ret
+
+SECTION "Bank 31 DrawSlotPanelStats2", ROMX
 
 ; Draws the HP digits, MP digits and status marks (or level) of party slot 2 into wScreenTileBuffer:
 ; C = 2, or 6 when wLinkMode is neither 0 nor 2 and wLinkRole bit 1 is set (the far side of a link
@@ -8872,6 +9370,8 @@ DrawSlotPanelStats2::
     call DrawSlotStatusMarks
     ret
 
+SECTION "Bank 31 CopyPartySlotPanelsToVRAM", ROMX
+
 ; Copies the panels of the first one, two or three party slots (by wBattlePartyCount, like
 ; DrawPartySlotStatusPanels) from the screen buffer to the BG map: CopySlotPanel0ToVRAM always,
 ; CopySlotPanel1ToVRAM unless the count is 1, CopySlotPanel2ToVRAM unless it is 1 or 2. No caller
@@ -8888,6 +9388,8 @@ CopyPartySlotPanelsToVRAM::
     ret z
     call CopySlotPanel2ToVRAM
     ret
+
+SECTION "Bank 31 CopySlotPanel0ToVRAM", ROMX
 
 ; Copies the panel of party slot 0 from the screen buffer to the BG map: C = 0, or 4 when wLinkMode
 ; is neither 0 nor 2 and wLinkRole bit 1 is set, then CopySlotHPDigitsPanelToVRAM (the HP digit
@@ -8913,6 +9415,8 @@ CopySlotPanel0ToVRAM::
     call CopySlotPanelRowToVRAM
     ret
 
+SECTION "Bank 31 CopySlotPanel1ToVRAM", ROMX
+
 ; Copies the panel of party slot 1 from the screen buffer to the BG map: C = 1, or 5 when wLinkMode
 ; is neither 0 nor 2 and wLinkRole bit 1 is set, then CopySlotHPDigitsPanelToVRAM (the HP digit
 ; tiles), CopySlotMPDigitsPanelToVRAM (the MP digit tiles) and CopySlotPanelRowToVRAM (the five-tile
@@ -8936,6 +9440,8 @@ CopySlotPanel1ToVRAM::
     call CopySlotMPDigitsPanelToVRAM
     call CopySlotPanelRowToVRAM
     ret
+
+SECTION "Bank 31 CopySlotPanel2ToVRAM", ROMX
 
 ; Copies the panel of party slot 2 from the screen buffer to the BG map: C = 2, or 6 when wLinkMode
 ; is neither 0 nor 2 and wLinkRole bit 1 is set, then CopySlotHPDigitsPanelToVRAM (the HP digit
@@ -8961,6 +9467,8 @@ CopySlotPanel2ToVRAM::
     call CopySlotPanelRowToVRAM
     ret
 
+SECTION "Bank 31 ClearWindowAndCopyRectFar", ROMX
+
 ; Blanks the text window tiles (FillTilesFromRequest: wTextWindowWidth passes of wTextWindowRows
 ; tiles at wTextWindowTileLo/Hi) and far-calls CopyRectRecordToScreenBuffer in bank $1A, which
 ; builds the 20 x 5 message box at wScreenTileBuffer + $1A0 (BG row 13). Called by the battle screen
@@ -8973,6 +9481,8 @@ ClearWindowAndCopyRectFar::
     call FillTilesFromRequest
     farcall CopyRectRecordToScreenBuffer
     ret
+
+SECTION "Bank 31 CopyMessageBoxToBGMapRow13", ROMX
 
 ; Copies the 20 x 5 message box at wWindowTileBuffer + $38 (the same bytes as wScreenTileBuffer +
 ; $1A0, built by CopyRectRecordToScreenBuffer) to vBGMap0 + $1A0 (BG row 13) with
@@ -8988,6 +9498,8 @@ CopyMessageBoxToBGMapRow13::
     lb bc, $14, $05
     call CopyRect32StrideToVRAM
     ret
+
+SECTION "Bank 31 RunBattleSetup_MainMenu_BuildMenuWindow", ROMX
 
 ; Builds the battle main menu's window in the screen buffer (far-calls
 ; CopyRectRecordToScreenBuffer_2 in bank $1A) and falls into RunBattleSetup_MainMenu_DrawMenuWindow,
@@ -9007,6 +9519,8 @@ RunBattleSetup_MainMenu_DrawMenuWindow::
     call CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawTactics_BuildBox", ROMX
+
 ; Far-calls CopyRectRecordToScreenBuffer_3 (bank $1A), which copies the tile record of a 12 x 11 box
 ; at wScreenTileBuffer + $E0 (BG row 7) into the screen buffer, rows 32 bytes apart; the rest of the
 ; buffer is not touched. Called by RunBattleSetup_PlanMenu_DrawTactics. (C2, E-0380)
@@ -9015,6 +9529,8 @@ RunBattleSetup_MainMenu_DrawMenuWindow::
 RunBattleSetup_PlanMenu_DrawTactics_BuildBox::
     farcall CopyRectRecordToScreenBuffer_3
     ret
+
+SECTION "Bank 31 CopyScreenBufferRect12x11ToBGMapRow7", ROMX
 
 ; Copies a 12 x 11 rectangle from wScreenTileBuffer + $E0 to vBGMap0 + $E0 (BG row 7, column 0) with
 ; CopyRect32StrideToVRAM. Called by RunBattleSetup_MainMenu_YesNoCursor,
@@ -9030,6 +9546,8 @@ CopyScreenBufferRect12x11ToBGMapRow7::
     call CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawActions_BuildBox", ROMX
+
 ; Far-calls CopyRectRecordToScreenBuffer_5 (bank $1A), which copies the tile record of an 8 x 9 box
 ; at wScreenTileBuffer + $120 (BG row 9) into the screen buffer, rows 32 bytes apart; the rest of
 ; the buffer is not touched. Called by RunBattleSetup_PlanMenu_DrawActions. (C2, E-0380)
@@ -9038,6 +9556,8 @@ CopyScreenBufferRect12x11ToBGMapRow7::
 RunBattleSetup_PlanMenu_DrawActions_BuildBox::
     farcall CopyRectRecordToScreenBuffer_5
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_CopyLeftBoxToBGMap", ROMX
 
 ; Copies an 8 x 9 rectangle from wScreenTileBuffer + $120 to vBGMap0 + $120 (BG row 9, column 0)
 ; with CopyRect32StrideToVRAM; it has the same code as RunBattleSetup_CopyLeftBoxToBGMap. This copy
@@ -9056,6 +9576,8 @@ RunBattleSetup_PlanMenu_CopyLeftBoxToBGMap::
     call CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_DrawBagPage_BuildBox", ROMX
+
 ; Far-calls CopyRectRecordToScreenBuffer_7 (bank $1A), which copies the tile record of a 12 x 9 box
 ; at wScreenTileBuffer + $120 (BG row 9) into the screen buffer, rows 32 bytes apart; the rest of
 ; the buffer is not touched. Called by RunBattleSetup_ItemMenu_DrawBagPage. (C2, E-0380)
@@ -9064,6 +9586,8 @@ RunBattleSetup_PlanMenu_CopyLeftBoxToBGMap::
 RunBattleSetup_ItemMenu_DrawBagPage_BuildBox::
     farcall CopyRectRecordToScreenBuffer_7
     ret
+
+SECTION "Bank 31 CopyScreenBufferRect20x9ToBGMapRow9", ROMX
 
 ; Copies a 20 x 9 rectangle from wScreenTileBuffer + $120 to vBGMap0 + $120 (BG rows 9 to 17) with
 ; CopyRect32StrideToVRAM, then sets wBattleArg0 to 1. Called by the ITEM menu steps
@@ -9082,6 +9606,8 @@ CopyScreenBufferRect20x9ToBGMapRow9::
     ld [wBattleArg0], a
     ret
 
+SECTION "Bank 31 RunBattleSetup_DrawAllyList_BuildBox", ROMX
+
 ; Far-calls CopyRectRecordToScreenBuffer_8 (bank $1A), which copies the tile record of an 8 x 9 box
 ; at wScreenTileBuffer + $120 (BG row 9) into the screen buffer, rows 32 bytes apart; the rest of
 ; the buffer is not touched. Called by RunBattleSetup_DrawAllyList. (C2, E-0380)
@@ -9090,6 +9616,8 @@ CopyScreenBufferRect20x9ToBGMapRow9::
 RunBattleSetup_DrawAllyList_BuildBox::
     farcall CopyRectRecordToScreenBuffer_8
     ret
+
+SECTION "Bank 31 RunBattleSetup_CopyLeftBoxToBGMap", ROMX
 
 ; Copies an 8 x 9 rectangle from wScreenTileBuffer + $120 to vBGMap0 + $120 (BG row 9, column 0)
 ; with CopyRect32StrideToVRAM; same code as RunBattleSetup_PlanMenu_CopyLeftBoxToBGMap. This copy is
@@ -9106,6 +9634,8 @@ RunBattleSetup_CopyLeftBoxToBGMap::
     call CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 RunBattleSetup_ItemMenu_DrawSideWindow_BuildBox", ROMX
+
 ; Far-calls CopyRectRecordToScreenBuffer_9 (bank $1A), which copies the tile record of an 8 x 7 box
 ; at wScreenTileBuffer + $160 (BG row 11) into the screen buffer, rows 32 bytes apart; the rest of
 ; the buffer is not touched. Called by RunBattleSetup_ItemMenu_DrawSideWindow. (C2, E-0380)
@@ -9114,6 +9644,8 @@ RunBattleSetup_CopyLeftBoxToBGMap::
 RunBattleSetup_ItemMenu_DrawSideWindow_BuildBox::
     farcall CopyRectRecordToScreenBuffer_9
     ret
+
+SECTION "Bank 31 CopyScreenBufferRect8x7ToBGMapRow11", ROMX
 
 ; Copies an 8 x 7 rectangle from wScreenTileBuffer + $160 to vBGMap0 + $160 (BG row 11, column 0)
 ; with CopyRect32StrideToVRAM. Called by RunBattleSetup_ItemMenu_ShowSideCursor and
@@ -9128,6 +9660,8 @@ CopyScreenBufferRect8x7ToBGMapRow11::
     call CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 RunBattleSetup_PlanMenu_DrawSkillList_BuildBoxes", ROMX
+
 ; Far-calls CopyRectRecordsAndToScreenBuffer (bank $1A), which copies two tile records into the
 ; screen buffer: a 12 x 9 box at wScreenTileBuffer + $120 (BG row 9) and an 8 x 3 box at
 ; wScreenTileBuffer + $1CC (BG row 14, column 12); nothing else changes. Called by
@@ -9137,6 +9671,8 @@ CopyScreenBufferRect8x7ToBGMapRow11::
 RunBattleSetup_PlanMenu_DrawSkillList_BuildBoxes::
     farcall CopyRectRecordsAndToScreenBuffer
     ret
+
+SECTION "Bank 31 RunBattleSetup_PlanMenu_RedrawLowerRows", ROMX
 
 ; Copies two rectangles of wScreenTileBuffer (32-byte rows) to the same places of vBGMap0 with
 ; CopyRect32StrideToVRAM: 7 x 1 tiles at offset $10C (row 8, column 12) and 20 x 9 tiles at offset
@@ -9158,6 +9694,8 @@ RunBattleSetup_PlanMenu_RedrawLowerRows::
     call CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 RunBattleSetup_DrawFoeList_BuildBox", ROMX
+
 ; Far-calls CopyRectRecordToScreenBuffer_10 (bank $1A), which copies the tile record of a 14 x 7 box
 ; at wScreenTileBuffer + $160 (BG row 11) into the screen buffer, rows 32 bytes apart; the rest of
 ; the buffer is not touched. Called by RunBattleSetup_PlanMenu_DrawFightFoeList,
@@ -9167,6 +9705,8 @@ RunBattleSetup_PlanMenu_RedrawLowerRows::
 RunBattleSetup_DrawFoeList_BuildBox::
     farcall CopyRectRecordToScreenBuffer_10
     ret
+
+SECTION "Bank 31 CopyScreenBufferRect14x7ToBGMapRow11", ROMX
 
 ; Copies a 14 x 7 rectangle from wScreenTileBuffer + $160 to vBGMap0 + $160 (BG row 11, column 0)
 ; with CopyRect32StrideToVRAM. Called by the foe cursor steps of the PLAN and ITEM menus
@@ -9182,6 +9722,8 @@ CopyScreenBufferRect14x7ToBGMapRow11::
     lb bc, $0e, $07
     call CopyRect32StrideToVRAM
     ret
+
+SECTION "Bank 31 CopyScreenBufferRect20x11ToBGMapRow7", ROMX
 
 ; Copies a 20 x 11 rectangle from wScreenTileBuffer + $E0 to vBGMap0 + $E0 (BG rows 7 to 17) by
 ; loading DE, HL and BC and falling into CopyRect32StrideToVRAM. Called by the screen drawing steps
@@ -9230,6 +9772,8 @@ CopyRect32StrideToVRAM::
     jr nz, CopyRect32StrideToVRAM
     ret
 
+SECTION "Bank 31 ReadScreenBufferRectHeader_Bank31", ROMX
+
 ; HL = address of a 4-byte rectangle header (word offset, width, rows): returns HL =
 ; wScreenTileBuffer + offset, B = width, C = rows and DE = the byte after the header, where the
 ; tiles start. Used by CopyRectRecordForBattlePartyCount_Bank31. (C2, E-0380)
@@ -9249,6 +9793,8 @@ ReadScreenBufferRectHeader_Bank31::
     add hl, de
     pop de
     ret
+
+SECTION "Bank 31 CopyRectToStride32_Bank31", ROMX
 
 ; DE = source tiles with rows packed, HL = destination with rows 32 bytes apart, B = width, C =
 ; rows: copies the B x C rectangle. DE ends past the source, HL at the start of the row below the
@@ -9273,6 +9819,8 @@ CopyRectToStride32_Bank31::
     dec c
     jr nz, CopyRectToStride32_Bank31
     ret
+
+SECTION "Bank 31 TileRect_PartyCountRects_1", ROMX
 
 ; a rectangle record of PartyCountRects (offset, width, rows, tiles) (E-0221, C1)
 ; record: offset $0000; 8 x 7 tiles
@@ -9403,6 +9951,8 @@ DrawSlotStatusMarks::
     pop bc
     ret
 
+SECTION "Bank 31 DrawSlotStatusMarks_BlankMarks", ROMX
+
 ; Writes tile $C3 to the five mark places of the slot panel in wScreenTileBuffer ($A1 to $A5 plus 6
 ; * (C and 3)); HL kept. DrawSlotStatusMarks runs it first when the slot has a status bit set.
 ; DrawSlotStatusMarks_DrawLevel uses only the first four of these places, for the level. (C2,
@@ -9420,6 +9970,8 @@ DrawSlotStatusMarks_BlankMarks::
     pop hl
     ret
 
+SECTION "Bank 31 DrawSlotStatusMarks_CurseMark", ROMX
+
 ; Writes the curse mark $C0 (BSTAT0_CURSED) at the first mark place of slot C's panel; HL kept. (C2,
 ; E-0372; probed E-0380)
 DrawSlotStatusMarks_CurseMark::
@@ -9429,6 +9981,8 @@ DrawSlotStatusMarks_CurseMark::
     ld [hl], $c0
     pop hl
     ret
+
+SECTION "Bank 31 DrawSlotStatusMarks_PoisonMark", ROMX
 
 ; Writes the poison mark $C1 (BSTAT0_POISONED) at the third mark place of slot C's panel; HL kept.
 ; (C2, E-0372; probed E-0380)
@@ -9440,6 +9994,8 @@ DrawSlotStatusMarks_PoisonMark::
     pop hl
     ret
 
+SECTION "Bank 31 DrawSlotStatusMarks_BadPoisonMark", ROMX
+
 ; Writes the bad poison mark $C7 (BSTAT0_BADLY_POISONED) at the third mark place of slot C's panel,
 ; the poison mark's place; HL kept. (C2, E-0372; probed E-0380)
 DrawSlotStatusMarks_BadPoisonMark::
@@ -9449,6 +10005,8 @@ DrawSlotStatusMarks_BadPoisonMark::
     ld [hl], $c7
     pop hl
     ret
+
+SECTION "Bank 31 DrawSlotStatusMarks_SleepMark", ROMX
 
 ; Writes the sleep mark $C8 (BSTAT0_ASLEEP) at the fourth mark place of slot C's panel; HL kept.
 ; (C2, E-0372; probed E-0380)
@@ -9460,6 +10018,8 @@ DrawSlotStatusMarks_SleepMark::
     pop hl
     ret
 
+SECTION "Bank 31 DrawSlotStatusMarks_ConfusionMark", ROMX
+
 ; Writes the confusion mark $C9 (BSTAT0_CONFUSED) at the second mark place of slot C's panel; HL
 ; kept. (C2, E-0372; probed E-0380)
 DrawSlotStatusMarks_ConfusionMark::
@@ -9470,6 +10030,8 @@ DrawSlotStatusMarks_ConfusionMark::
     pop hl
     ret
 
+SECTION "Bank 31 DrawSlotStatusMarks_ParalysisMark", ROMX
+
 ; Writes the paralysis mark $CA (BSTAT0_PARALYZED) at the fifth mark place of slot C's panel, where
 ; DrawSlotStatusMarks otherwise writes $C2 or $C3; HL kept. (C2, E-0372; probed E-0380)
 DrawSlotStatusMarks_ParalysisMark::
@@ -9479,6 +10041,8 @@ DrawSlotStatusMarks_ParalysisMark::
     ld [hl], $ca
     pop hl
     ret
+
+SECTION "Bank 31 ReadWordTableEntryForSlotC", ROMX
 
 ; HL = table of words, C = slot: HL = the word at HL + 2 * (C and 3), and A = its low byte (the
 ; table index is added to L with the carry into H, then it falls into DerefHL_Bank31). Used by
@@ -9500,6 +10064,8 @@ ReadWordTableEntryForSlotC::
 DerefHL_Bank31::
     deref_hl
     ret
+
+SECTION "Bank 31 SlotStatusMarkFirstAddrs", ROMX
 
 ; Three words, wScreenTileBuffer + $A1, + $A7 and + $AD: the first of the five status-mark tiles of
 ; the panels of slots 0, 1 and 2, picked by C & 3 through ReadWordTableEntryForSlotC.
@@ -9589,6 +10155,8 @@ CopySlotPanelRowToVRAM::
 .return:
     ret
 
+SECTION "Bank 31 DrawSlotHPDigits", ROMX
+
 ; C = battle slot. Writes the HP of the slot (the word wBattleHP + 2 * C) as three digit tiles ($E0
 ; + digit, leading zeros blank $C3, HLToDecimalDigits and WriteDecimalDigitTiles) into
 ; wScreenTileBuffer at +$62, +$68 or +$6E for the panel C and 3 = 0, 1 or 2. Only the shown slots
@@ -9653,6 +10221,8 @@ DrawSlotHPDigits::
     pop bc
     ret
 
+SECTION "Bank 31 DrawSlotMPDigits", ROMX
+
 ; C = battle slot. Writes the MP of the slot (the word wBattleMP + 2 * C) as three digit tiles ($E0
 ; + digit, leading zeros blank $C3) into wScreenTileBuffer at +$82, +$88 or +$8E for the panel C and
 ; 3 = 0, 1 or 2. Only the shown slots are drawn: 0-2, or 4-6 when wLinkMode is non-zero and
@@ -9716,6 +10286,8 @@ DrawSlotMPDigits::
     pop bc
     ret
 
+SECTION "Bank 31 DrawSlotStatusMarks_DrawLevel", ROMX
+
 ; C = slot: in wLinkMode 2 far-calls DrawSlotLevel_BankA0; otherwise, only for the displayed side
 ; (slots 0-2, or 4-6 when wLinkMode is nonzero and wLinkRole bit 1 is set; never slots 3 and 7),
 ; writes the level label tiles $EA, $AF and the slot's wBattleLevel in two digits
@@ -9777,6 +10349,8 @@ DrawSlotStatusMarks_DrawLevel::
     pop bc
     ret
 
+SECTION "Bank 31 CopySlotHPDigitsPanelToVRAM", ROMX
+
 ; C = battle slot. Copies the three HP digit tiles of the slot panel from wScreenTileBuffer to the
 ; same offset of vBGMap0 (offsets +$62, +$68 or +$6E from DrawSlotHPDigits_Data by C and 3), only
 ; for the shown slots (0-2, or 4-6 when wLinkMode is non-zero and wLinkRole bit 1 is set; never 3
@@ -9835,6 +10409,8 @@ CopySlotHPDigitsPanelToVRAM::
 
 .return:
     ret
+
+SECTION "Bank 31 CopySlotMPDigitsPanelToVRAM", ROMX
 
 ; C = battle slot. Copies the three MP digit tiles of the slot panel from wScreenTileBuffer to the
 ; same offset of vBGMap0 (offsets +$82, +$88 or +$8E from DrawSlotMPDigits_Data by C and 3), only
@@ -9895,6 +10471,8 @@ CopySlotMPDigitsPanelToVRAM::
 .return:
     ret
 
+SECTION "Bank 31 CopySlotLevelPanelToVRAM", ROMX
+
 ; C = battle slot. Copies the two level tiles (digits) of the slot panel from wScreenTileBuffer to
 ; the same offset of vBGMap0 (offsets from DrawSlotStatusMarks_DrawLevel_Data: +$A1, +$A7 or +$AD by
 ; C and 3), only for the shown slots (0-2, or 4-6 when wLinkMode is non-zero and wLinkRole bit 1 is
@@ -9951,6 +10529,8 @@ CopySlotLevelPanelToVRAM::
 .return:
     ret
 
+SECTION "Bank 31 ShowStringBank09AtTilesHL_Bank31", ROMX
+
 ; HL = VRAM tile address, D = width in tiles, E = rows (the callers pass for example DE = $0801):
 ; saves the text window (wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth),
 ; sets it to HL and DE, far-calls ShowString_Bank09 to draw string wStringIndex of category
@@ -9993,6 +10573,8 @@ ShowStringBank09AtTilesHL_Bank31::
     ld a, d
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank 31 ShowStringBank08AtTilesHL_Bank31", ROMX
 
 ; HL = VRAM tile address, D = width in tiles, E = rows (the callers pass DE = $0603 or $0901): saves
 ; the text window (wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth), sets it
@@ -10037,6 +10619,8 @@ ShowStringBank08AtTilesHL_Bank31::
     ld a, d
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank 31 UnreferencedShowFiveGlyphsAtTilesHL_Bank31", ROMX
 
 ; No caller in src (the copy in bank $A0 is the same code and has none either). DE = pointer to five
 ; glyphs, HL = VRAM tile address: copies the five glyphs to wTextBuf0 with CopyFiveGlyphsPlusMarks
@@ -10085,6 +10669,8 @@ UnreferencedShowFiveGlyphsAtTilesHL_Bank31:: ; configured code entry (E-0238); C
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 31 DrawSlotHPDigits_Data", ROMX
+
 ; Three little-endian offsets, $0062, $0068 and $006E: row 3, columns 2, 8 and 14 of the
 ; 32-byte-wide screen tile buffer and of vBGMap0, the HP digit places of battle slots 0 to 2.
 ; DrawSlotHPDigits indexes it by the slot masked with 3 and writes three digit tiles of wBattleHP at
@@ -10125,6 +10711,8 @@ GetBattleATK_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wBattleATK
     jr GetBattleStatWord_Bank31
 
+SECTION "Bank 31 GetBattleDEF_Bank31", ROMX
+
 ; A = battle slot (0-7): sets HL = wBattleDEF and continues in GetBattleStatWord_Bank31, which
 ; returns HL = the defence word of that slot (low byte first, from wBattleDEF + 2 * A) and A = its
 ; low byte. No caller of this copy in src (the same code is in other banks). (C2, E-0380)
@@ -10132,6 +10720,8 @@ GetBattleATK_Bank31:: ; configured code entry (E-0212); C0
 GetBattleDEF_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wBattleDEF
     jr GetBattleStatWord_Bank31
+
+SECTION "Bank 31 GetBattleMaxHP_Bank31", ROMX
 
 ; A = battle slot (0-7): sets HL = wBattleMaxHP and continues in GetBattleStatWord_Bank31, which
 ; returns HL = the maximum HP word of that slot (low byte first, from wBattleMaxHP + 2 * A) and A =
@@ -10141,6 +10731,8 @@ GetBattleMaxHP_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_Bank31
 
+SECTION "Bank 31 GetBattleMaxMP_Bank31", ROMX
+
 ; A = battle slot (0-7): sets HL = wBattleMaxMP and continues in GetBattleStatWord_Bank31, which
 ; returns HL = the maximum MP word of that slot (low byte first, from wBattleMaxMP + 2 * A) and A =
 ; its low byte. No caller of this copy in src (the same code is in other banks). (C2, E-0380)
@@ -10148,6 +10740,8 @@ GetBattleMaxHP_Bank31:: ; configured code entry (E-0212); C0
 GetBattleMaxMP_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_Bank31
+
+SECTION "Bank 31 GetBattleHP_Bank31", ROMX
 
 ; A = battle slot (0-7): sets HL = wBattleHP and continues in GetBattleStatWord_Bank31, which
 ; returns HL = the current HP word of that slot (low byte first, from wBattleHP + 2 * A) and A = its
@@ -10157,6 +10751,8 @@ GetBattleHP_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wBattleHP
     jr GetBattleStatWord_Bank31
 
+SECTION "Bank 31 GetBattleMP_Bank31", ROMX
+
 ; A = battle slot (0-7): sets HL = wBattleMP and continues in GetBattleStatWord_Bank31, which
 ; returns HL = the current MP word of that slot (low byte first, from wBattleMP + 2 * A) and A = its
 ; low byte. No caller of this copy in src (the same code is in other banks). (C2, E-0380)
@@ -10165,6 +10761,8 @@ GetBattleMP_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wBattleMP
     jr GetBattleStatWord_Bank31
 
+SECTION "Bank 31 GetBattleAGL_Bank31", ROMX
+
 ; A = battle slot (0-7): sets HL = wBattleAGL and continues in GetBattleStatWord_Bank31, which
 ; returns HL = the agility word of that slot (low byte first, from wBattleAGL + 2 * A) and A = its
 ; low byte. No caller of this copy in src (the same code is in other banks). (C2, E-0380)
@@ -10172,6 +10770,8 @@ GetBattleMP_Bank31:: ; configured code entry (E-0212); C0
 GetBattleAGL_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wBattleAGL
     jr GetBattleStatWord_Bank31
+
+SECTION "Bank 31 ReadSlotAIModeIndexed_Bank31", ROMX
 
 ; A = slot: returns A = the byte at wSlotAIMode + A (the AI mode of that slot) and leaves HL
 ; pointing at it. No caller of this copy in src. (C2, E-0380)
@@ -10182,6 +10782,8 @@ ReadSlotAIModeIndexed_Bank31:: ; configured code entry (E-0212); C0
     ld a, [hl]
     ret
 
+SECTION "Bank 31 GetBattleStatWord_Bank31", ROMX
+
 ; The shared tail of GetBattleATK_Bank31 ... GetBattleAGL_Bank31: HL = a per-slot word table, A =
 ; slot: returns HL = the word at HL + 2 * A (A doubled in 8 bits) and A = its low byte (deref_hl).
 ; (C2, E-0372; probed E-0380)
@@ -10191,6 +10793,8 @@ GetBattleStatWord_Bank31::
     deref_hl
     ret
 
+SECTION "Bank 31 AddDoubleAToHL_Bank31", ROMX
+
 ; HL += 2 * A. A is doubled in 8 bits first, so A above $7F wraps (A = $90 adds $20); the sum
 ; carries into H. A is clobbered. No caller of this copy in src. (C2, E-0380)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
@@ -10199,6 +10803,8 @@ AddDoubleAToHL_Bank31::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank 31 ActorOnLocalSide_Bank31", ROMX
 
 ; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise. When wLinkMode is 1 and bit 1
 ; of wLinkRole is set the test is reversed (carry set for slots 4 and up); other link modes use the
@@ -10224,6 +10830,8 @@ ActorOnLocalSide_Bank31::
     cp $04
     ret
 
+SECTION "Bank 31 TargetOnLocalSide_Bank31", ROMX
+
 ; Carry set when wBattleTarget is below 4 (slots 0-3), clear otherwise. When wLinkMode is 1 and bit
 ; 1 of wLinkRole is set the test is reversed (carry set for slots 4 and up); other link modes use
 ; the plain test. A is clobbered. No caller of this copy in src. (C2, E-0380)
@@ -10247,6 +10855,8 @@ TargetOnLocalSide_Bank31::
     cp $04
     ret
 
+SECTION "Bank 31 ClearBattleStatusBitsWithMaskD_Bank31", ROMX
+
 ; D = mask number 0-6 (not range checked), E = slot: ANDs ClearBitMaskTable_Bank31[D] ($DF, $FE,
 ; $00, $FD, $73, $EF, $BF) into status byte 0 of the slot (wBattleStatus + 9 * E). The masks clear
 ; BSTAT0_CURSED, BSTAT0_POISONED, the whole byte, BSTAT0_BADLY_POISONED, the sleep bits
@@ -10266,6 +10876,8 @@ ClearBattleStatusBitsWithMaskD_Bank31:: ; configured code entry (E-0212); C0
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 31 ClearBitMaskTable_Bank31", ROMX
 
 ; the copy in bank $31 of ClearBitMaskTable_Bank31 (E-0205), read by the routine at $7B54; the block
 ; $7B54-$7BEE has the same bytes as $4075-$410F in banks $05, $A1 and $A3, apart from the table
@@ -10294,6 +10906,8 @@ SetBit0OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
     pop hl
     ret
 
+SECTION "Bank 31 SetBit1OfLevelUpGainsIndexed_Bank31", ROMX
+
 ; A = slot: sets bit 1 of the byte at wLevelUpGains + A and keeps HL (A is clobbered). In battle
 ; bits 0, 1 and 2 of wLevelUpGains[slot] ask for a redraw of the HP digits, MP digits and status
 ; marks of the slot panel: RedrawChangedSlotPanels draws what is flagged and clears the bits. Bit 1
@@ -10308,6 +10922,8 @@ SetBit1OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
     pop hl
     ret
 
+SECTION "Bank 31 SetBit2OfLevelUpGainsIndexed_Bank31", ROMX
+
 ; A = slot: sets bit 2 of the byte at wLevelUpGains + A and keeps HL (A is clobbered). In battle
 ; bits 0, 1 and 2 of wLevelUpGains[slot] ask for a redraw of the HP digits, MP digits and status
 ; marks of the slot panel: RedrawChangedSlotPanels draws what is flagged and clears the bits. Bit 2
@@ -10321,6 +10937,8 @@ SetBit2OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank 31 PersonalityIndexOfSlot_Bank31", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]), with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (a number 0-26; the
@@ -10385,6 +11003,8 @@ PersonalityIndexOfSlot_Bank31:: ; configured code entry (E-0212); C0
     pop hl
     ret
 
+SECTION "Bank 31 CheckSlotStatusBlockWide_Bank31", ROMX
+
 ; A = slot: carry set when CheckSlotStatusBlock sets it (the slot is absent, or status byte 0 & $D0,
 ; byte 3 & $3F, byte 5 & $C0 or byte 8 bit 3 is set), or when status byte 3 & $C0 or status byte 4 &
 ; $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear. A, BC and HL are kept. Its only caller
@@ -10418,6 +11038,8 @@ CheckSlotStatusBlockWide_Bank31::
     pop hl
     ret
 
+SECTION "Bank 31 SlotHasStatus3Or4Bits_Bank31", ROMX
+
 ; A = slot: returns A = status byte 3 & $C0 (wBattleStatus3 + 9 * slot) or, when that is zero,
 ; status byte 4 & $0C; Z set when both are clear. HL is kept. No caller of this copy in src. (C2,
 ; E-0380)
@@ -10437,6 +11059,8 @@ SlotHasStatus3Or4Bits_Bank31::
 .done:
     pop hl
     ret
+
+SECTION "Bank 31 LetterFrameIconTiles", ROMX
 
 ; Tiles: 704 bytes = 44 tiles of 2bpp for vTiles1 + $240 (tile numbers $A4-$CF). Rendered: Latin
 ; capital letters I N F O T E S K L P A and a colon, rounded window frame pieces and a vertical bar,

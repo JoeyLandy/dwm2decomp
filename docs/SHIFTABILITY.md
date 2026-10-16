@@ -132,11 +132,24 @@ pointer into bank $NN, and `ld a, $NN` that goes straight into B, rROMB0 or wDat
 BANK(...)` setups and 14 `ld a, BANK(...)` switches; the `farcall` fold also accepts the BANK form, so the 3,842
 `farcall` lines stay as they were. tools/hardcoded_refs.py `code_bank`: 468 to 96, and the 96 left are not banks.
 
+## M2 batch 5 (E-0393): code can move between banks
+
+Each bank file is now floating sections, and src/layout.link places them, so the matching build is unchanged while
+a section moves to another bank by moving its line in the layout. Sections split only after an unconditional
+ret, reti, jp or jr (9,071 sections); the cartridge header is pinned with `ORG $0104`.
+
+- tools/bank_check.py: a call, jp or jr into another switchable bank is an error. A pointer into another bank with
+  no bank named beside it is a warning: 511 on the matching layout, mostly script and data pointers whose bank is
+  fixed by the code that reads them.
+- tools/move_section.py: `--list` (255 sections with no unbanked tie to their bank) and `--move NAME --to BB`.
+  ScriptWaitFrames and ScriptStepObject moved from bank $5F to empty banks run 3,000 identical frames. A routine
+  reached by plain `call`s from its bank is caught by the bank check and diverges at frame 803 when moved.
+
 ## Next (M2)
 
 1. Done for six of the nine (E-0392). Left: 60:$4BF4 (index range not read) and 0F:$4000 x2 (a window base chosen
    by wMessageGroup, which no label names).
-2. Per-bank sections in place of one fixed section per bank, now that code bank numbers are BANK(label) (E-0391);
-   data far pointers already use `dfar`.
+2. Done (E-0393). What limits moves now: plain calls inside a bank, and the 511 pointers whose bank the reading
+   code fixes (script, text and graphics banks). Moving one of those needs its reader changed too.
 3. Widen what runs: the scripted runs reach under 5% of the routines. Longer --explore scripts, or save states at
    later points of the game, would extend the read gate.

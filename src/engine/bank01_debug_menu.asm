@@ -1,7 +1,7 @@
 ; ROM bank $01: debug menu: message test, debug battle set-up, monster creation, results
 ; The annotated listing of this bank is build/listing/bank01.asm.
 
-SECTION "Bank 01", ROMX[$4000], BANK[$01]
+SECTION "Bank 01", ROMX
     db $01
 
 ; Start-up of game mode 0, the debug menu (far-called by RunGameModeInit_DebugMenu): fills 112 tiles
@@ -38,6 +38,8 @@ GameMode0_Init::
     ld [wLCDCShadow], a
     ld a, $01
     jp ResumeAfterModeChange
+
+SECTION "Bank 01 DebugMode_InitByModeState", ROMX
 
 ; Builds the debug screen picked by wModeState through its jump table (GameMode0_Update keeps the
 ; same order for the updates): 0 and 1 DebugMainMenu_Init, 2 DebugMapEditor_Init, 3
@@ -157,6 +159,8 @@ DebugMessageTest_Init::
     ld [wMenuRowCount], a
     ret
 
+SECTION "Bank 01 DebugMessageTest_Init_TileRect", ROMX
+
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
@@ -199,6 +203,8 @@ DebugMonsterRecordViewer_Init::
     ld hl, $0000
     call DebugShowMonsterRecord
     ret
+
+SECTION "Bank 01 DebugMonsterRecordViewer_Init_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -259,6 +265,8 @@ DebugSkillViewer_Init::
     ld [hl], a
     ret
 
+SECTION "Bank 01 DebugStaffRoll_Init", ROMX
+
 ; Builds debug screen 8 ('8:STAFF ROLL' in the debug menu), shown as the staff roll ('SCENARIO &
 ; GAME DESIGNERS' ...): queues music $31 (QueueMusic, wMusicRequest) and clears the 56 bytes at
 ; wWorkBuf. DebugStaffRoll_Update then far-calls DebugStaffRoll_Update_RunScene, which runs
@@ -273,6 +281,8 @@ DebugStaffRoll_Init::
     ld bc, $0038
     call FillBytes
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_Init", ROMX
 
 ; Builds debug screen 7 ('7:HAIGOU' in the debug menu), titled 'RESULTS DISPLAY' with 'Species' and
 ; 'Gender': loads palette 0, prints '0123456789ABCDEF' to vTiles2 + $100 and the title string
@@ -437,6 +447,8 @@ DebugResultsDisplay_Init::
     jr nz, .loop
     ret
 
+SECTION "Bank 01 DebugMainMenu_Init", ROMX
+
 ; Builds debug screens 0 and 1, the debug menu: loads palette 0, prints string 0/1 ('DEBUG MODE',
 ; 'SELECT' and the items '1:GOTO PROGRAM' to 'B:MESSAGE CHK') into a 16-wide, 8-row window at
 ; vTiles1, and lays tile numbers from $80 in a 16 x 2 rectangle at vBGMap0 + $A3
@@ -464,6 +476,8 @@ DebugMainMenu_Init::
     ld a, $80
     call FillRectWithTileSequence
     ret
+
+SECTION "Bank 01 DebugMapEditor_Init", ROMX
 
 ; Builds debug screen 2 ('2:EDIT'), titled '? EDIT ?' with WORLD, MAP X/Y and POS X/Y: prints
 ; '0123456789ABCDEF' to vTiles2 + $100 and string 0/2 into a 16 x 8 window at vTiles1, lays tile
@@ -527,6 +541,8 @@ DebugMapEditor_Init::
     ld a, $01
     ld [wDebugSubState], a
     ret
+
+SECTION "Bank 01 DebugMapEditor_Init_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -594,6 +610,8 @@ DebugAutomap_Init::
     ldh a, [hMapScreenY]
     ld [wDebugValue3], a
     ret
+
+SECTION "Bank 01 DebugAutomap_Init_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -678,6 +696,8 @@ DebugMonsterPictureViewer_Init::
     ld [wDebugState], a
     ret
 
+SECTION "Bank 01 DebugMonsterPictureViewer_Init_TileRect", ROMX
+
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 6 tiles, one row per line
@@ -745,6 +765,8 @@ DebugSoundTest_Init::
     ld [wTemp0], a
     ld [wTemp1], a
     ret
+
+SECTION "Bank 01 DebugSoundTest_Init_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -831,6 +853,8 @@ DebugBattleSetup_Init::
     ld [wMenuState], a
     ret
 
+SECTION "Bank 01 DebugBattleSetup_Init_TileRect", ROMX
+
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 14 tiles, one row per line
@@ -890,6 +914,8 @@ FillRectWithTileSequence::
     ldh [c], a
     ret
 
+SECTION "Bank 01 LoadPalette0FromData", ROMX
+
 ; On CGB copies the 8 bytes of LoadPalette0FromData_Data (palette 0, four colours) to
 ; wBGPaletteBuffer, sets wBGPaletteUploadRequest = $7F, copies the same 8 bytes to wBGPaletteBuffer
 ; again and sets wOBJPaletteUploadRequest = $7F, so wOBJPaletteBuffer is not changed by it. Does
@@ -915,6 +941,8 @@ LoadPalette0FromData::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
+
+SECTION "Bank 01 LoadPalette0FromData_Data", ROMX
 
 ; Four little-endian RGB555 colours, $5E4D, $7FFF, $66F2 and $0000: one CGB palette of four colours.
 ; LoadPalette0FromData copies it to wBGPaletteBuffer, sets wBGPaletteUploadRequest to $7F, copies it
@@ -1019,11 +1047,15 @@ DebugMessageTest_Update_ShowBank08::
     farcall BeginStringDisplay_Bank08
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank09", ROMX
+
 ; Message test, library 1 ($01): shows the chosen message from the message table of bank $09 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank09::
     farcall BeginStringDisplay_Bank09
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank28", ROMX
 
 ; Message test, library 2 ($02): shows the chosen message from the message table of bank $28 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1031,11 +1063,15 @@ DebugMessageTest_Update_ShowBank28::
     farcall BeginStringDisplay_Bank28
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank29", ROMX
+
 ; Message test, library 3 ($03): shows the chosen message from the message table of bank $29 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank29::
     farcall BeginStringDisplay_Bank29
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank2A", ROMX
 
 ; Message test, library 4 ($04): shows the chosen message from the message table of bank $2A by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1043,11 +1079,15 @@ DebugMessageTest_Update_ShowBank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank2B", ROMX
+
 ; Message test, library 5 ($05): shows the chosen message from the message table of bank $2B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank2B::
     farcall BeginStringDisplay_Bank2B
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank2C", ROMX
 
 ; Message test, library 6 ($06): shows the chosen message from the message table of bank $2C by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1055,11 +1095,15 @@ DebugMessageTest_Update_ShowBank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank2D", ROMX
+
 ; Message test, library 7 ($07): shows the chosen message from the message table of bank $2D by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank2D::
     farcall BeginStringDisplay_Bank2D
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank2E", ROMX
 
 ; Message test, library 8 ($08): shows the chosen message from the message table of bank $2E by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1067,11 +1111,15 @@ DebugMessageTest_Update_ShowBank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank7C", ROMX
+
 ; Message test, library 9 ($09): shows the chosen message from the message table of bank $7C by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank7C::
     farcall BeginStringDisplay_Bank7C
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank80", ROMX
 
 ; Message test, library 10 ($0A): shows the chosen message from the message table of bank $80 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1079,11 +1127,15 @@ DebugMessageTest_Update_ShowBank80::
     farcall BeginStringDisplay_Bank80
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank82", ROMX
+
 ; Message test, library 11 ($0B): shows the chosen message from the message table of bank $82 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank82::
     farcall BeginStringDisplay_Bank82
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank86", ROMX
 
 ; Message test, library 12 ($0C): shows the chosen message from the message table of bank $86 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1091,11 +1143,15 @@ DebugMessageTest_Update_ShowBank86::
     farcall BeginStringDisplay_Bank86
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank89", ROMX
+
 ; Message test, library 13 ($0D): shows the chosen message from the message table of bank $89 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank89::
     farcall BeginStringDisplay_Bank89
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank07", ROMX
 
 ; Message test, library 14 ($0E): shows the chosen message from the message table of bank $07 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1103,11 +1159,15 @@ DebugMessageTest_Update_ShowBank07::
     farcall BeginStringDisplay_Bank07
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank2F", ROMX
+
 ; Message test, library 15 ($0F): shows the chosen message from the message table of bank $2F by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank2F::
     farcall BeginStringDisplay_Bank2F
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank37", ROMX
 
 ; Message test, library 16 ($10): shows the chosen message from the message table of bank $37 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1115,11 +1175,15 @@ DebugMessageTest_Update_ShowBank37::
     farcall BeginStringDisplay_Bank37
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank88", ROMX
+
 ; Message test, library 17 ($11): shows the chosen message from the message table of bank $88 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank88::
     farcall BeginStringDisplay_Bank88
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank83", ROMX
 
 ; Message test, library 18 ($12): shows the chosen message from the message table of bank $83 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1127,11 +1191,15 @@ DebugMessageTest_Update_ShowBank83::
     farcall BeginStringDisplay_Bank83
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank1D", ROMX
+
 ; Message test, library 19 ($13): shows the chosen message from the message table of bank $1D by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank1D::
     farcall BeginStringDisplay_Bank1D
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank8A", ROMX
 
 ; Message test, library 20 ($14): shows the chosen message from the message table of bank $8A by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1139,11 +1207,15 @@ DebugMessageTest_Update_ShowBank8A::
     farcall BeginStringDisplay_Bank8A
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBankF0", ROMX
+
 ; Message test, library 21 ($15): shows the chosen message from the message table of bank $F0 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBankF0::
     farcall BeginStringDisplay_BankF0
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank1BSecond", ROMX
 
 ; Message test, library 22 ($16): shows the chosen message from the message table of bank $1B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1151,11 +1223,15 @@ DebugMessageTest_Update_ShowBank1BSecond::
     farcall BeginBreedingStringDisplay
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank1F", ROMX
+
 ; Message test, library 23 ($17): shows the chosen message from the message table of bank $1F by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank1F::
     farcall BeginStringDisplay_Bank1F
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBankF0Second", ROMX
 
 ; Message test, library 24 ($18): shows the chosen message from the message table of bank $F0 (a
 ; second table in that bank) by far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1163,11 +1239,15 @@ DebugMessageTest_Update_ShowBankF0Second::
     farcall BeginStringDisplay_BankF0_2
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank0D", ROMX
+
 ; Message test, library 25 ($19): shows the chosen message from the message table of bank $0D by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank0D::
     farcall BeginStringDisplay_Bank0D
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank33", ROMX
 
 ; Message test, library 26 ($1A): shows the chosen message from the message table of bank $33 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1175,11 +1255,15 @@ DebugMessageTest_Update_ShowBank33::
     farcall BeginStringDisplay_Bank33
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank24", ROMX
+
 ; Message test, library 27 ($1B): shows the chosen message from the message table of bank $24 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank24::
     farcall BeginStringDisplay_Bank24
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank0E", ROMX
 
 ; Message test, library 28 ($1C): shows the chosen message from bank $0E's message table
 ; MessageStrings_Bank0E by far-calling BeginMessageDisplay_Bank0E in bank $0E, which takes indexes
@@ -1188,11 +1272,15 @@ DebugMessageTest_Update_ShowBank0E::
     farcall BeginMessageDisplay_Bank0E
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank0ESecond", ROMX
+
 ; Message test, library 29 ($1D): shows the chosen message from the message table of bank $0E by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank0ESecond::
     farcall BeginStringDisplay_Bank0E
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBankF2", ROMX
 
 ; Message test, library 30 ($1E): shows the chosen message from the message table of bank $F2 by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1200,11 +1288,15 @@ DebugMessageTest_Update_ShowBankF2::
     farcall BeginStringDisplay_BankF2
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank33Second", ROMX
+
 ; Message test, library 31 ($1F): shows the chosen message from the message table of bank $33 (a
 ; second table in that bank) by far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank33Second::
     farcall BeginStringDisplay_Bank33_2
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank0B", ROMX
 
 ; Message test, library 32 ($20): shows the chosen message from the message table of bank $0B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
@@ -1212,11 +1304,15 @@ DebugMessageTest_Update_ShowBank0B::
     farcall BeginStringDisplay_Bank0B
     ret
 
+SECTION "Bank 01 DebugMessageTest_Update_ShowBank1B", ROMX
+
 ; Message test, library 33 ($21): shows the chosen message from the message table of bank $1B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank1B::
     farcall BeginStringDisplay_Bank1B
     ret
+
+SECTION "Bank 01 DebugMessageTest_Update_HandleInput", ROMX
 
 ; The message test's input when A is not pressed. Up and Down move between its three numbers
 ; (wMenuState 0-2: the library at wTemp0, then the two message numbers at wTemp1 and wMenuRowCount,
@@ -1381,6 +1477,8 @@ DebugMessageTest_Update_HandleInput::
     call WriteVRAMByte
     jr DebugMessageTest_Update_DrawUnselectedNumbers
 
+SECTION "Bank 01 DebugMessageTest_Update_DrawLibrary", ROMX
+
 ; Redraws the message test's library number (wTemp0) at BG row 3, column 13, then the other two
 ; numbers. (C1, E-0357)
 DebugMessageTest_Update_DrawLibrary::
@@ -1388,6 +1486,8 @@ DebugMessageTest_Update_DrawLibrary::
     ld de, vBGMap0 + $6d
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_DrawUnselectedNumbers
+
+SECTION "Bank 01 DebugMessageTest_Update_BlinkCategory", ROMX
 
 ; Blinks the message test's second number when it is selected: on frames with bit 3 of
 ; wFrameCounterLo clear it blanks its two digits at BG row 5; otherwise it is drawn. Then redraws
@@ -1405,6 +1505,8 @@ DebugMessageTest_Update_BlinkCategory::
     call WriteVRAMByte
     jr DebugMessageTest_Update_DrawUnselectedNumbers
 
+SECTION "Bank 01 DebugMessageTest_Update_DrawCategory", ROMX
+
 ; Redraws the message test's second number (wTemp1) at BG row 5, column 13, then the others. (C1,
 ; E-0357)
 DebugMessageTest_Update_DrawCategory::
@@ -1412,6 +1514,8 @@ DebugMessageTest_Update_DrawCategory::
     ld de, vBGMap0 + $ad
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_DrawUnselectedNumbers
+
+SECTION "Bank 01 DebugMessageTest_Update_BlinkMessageIndex", ROMX
 
 ; Blinks the message test's third number (wMenuRowCount) the same way at BG row 7. (C1, E-0357)
 DebugMessageTest_Update_BlinkMessageIndex::
@@ -1424,6 +1528,8 @@ DebugMessageTest_Update_BlinkMessageIndex::
     call WriteVRAMByte
     jr DebugMessageTest_Update_DrawUnselectedNumbers
 
+SECTION "Bank 01 DebugMessageTest_Update_DrawMessageIndex", ROMX
+
 ; Redraws the message test's third number (wMenuRowCount) at BG row 7, column 13, then the others.
 ; (C1, E-0357)
 DebugMessageTest_Update_DrawMessageIndex::
@@ -1431,6 +1537,8 @@ DebugMessageTest_Update_DrawMessageIndex::
     ld de, vBGMap0 + $ed
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_DrawUnselectedNumbers
+
+SECTION "Bank 01 DebugMessageTest_Update_DrawUnselectedNumbers", ROMX
 
 ; Redraws the message test's numbers that are not selected (wMenuState), so only the selected one
 ; blinks. (C1, E-0357)
@@ -1460,6 +1568,8 @@ DebugMessageTest_Update_DrawUnselectedNumbers::
 
 .return:
     ret
+
+SECTION "Bank 01 DebugMessageTest_WrapNumber", ROMX
 
 ; Wraps the selected message-test number to its limit B: a value of B + 1 becomes 0 and $FF becomes
 ; B (unless B is $FF, meaning no limit), then redraws it. (C1, E-0357)
@@ -1511,6 +1621,8 @@ DebugMessageTest_WrapNumber::
     pop af
     ret
 
+SECTION "Bank 01 DebugMessageTest_ClearDependentNumbers", ROMX
+
 ; Clears the message numbers that depend on the one just changed: changing the library clears both,
 ; changing the first clears the second. (C2, E-0357; probed E-0374)
 DebugMessageTest_ClearDependentNumbers::
@@ -1531,6 +1643,8 @@ DebugMessageTest_ClearDependentNumbers::
 
 .return:
     ret
+
+SECTION "Bank 01 DebugMessageTestTable", ROMX
 
 ; DebugMessageTest_Update_ShowBank1B reads the word at $4E54 + 2 * wTemp0; a zero high byte takes
 ; the value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up
@@ -1842,6 +1956,8 @@ DebugShowMonsterRecord::
 DebugShowMonsterRecord_Done::
     ret
 
+SECTION "Bank 01 DebugSkillViewer_Update", ROMX
+
 ; Each frame of the skill viewer (debug screen 9, '9:TOKUGI CHECK'): B returns to the debug menu.
 ; Left and Right step the skill number wDebugCursor through 0-$AE with wrap; the number is copied to
 ; wDebugValue0 and nothing more happens while it equals the one there before. A new number is drawn
@@ -2035,6 +2151,8 @@ DebugSkillViewer_Update::
     call DebugSkillViewer_Update_DrawFourDigits
     ret
 
+SECTION "Bank 01 DebugSkillViewer_Update_ToCappedBCD", ROMX
+
 ; For the debug skill viewer: converts HL to packed decimal digits (Number24ToPackedBCD) and caps
 ; the display at 9999: when the value has a digit above the thousands it shows $99 $99. (C2, E-0357;
 ; probed E-0374)
@@ -2055,6 +2173,8 @@ DebugSkillViewer_Update_ToCappedBCD::
     ld a, $99
     ldh [hTemp0], a
     ret
+
+SECTION "Bank 01 DebugSkillViewer_Update_DrawFourDigits", ROMX
 
 ; Draws the four packed-decimal digits in hTemp1 and hTemp0 at HL for the debug skill viewer,
 ; suppressing leading zeros: a digit is drawn as tile B + digit once any digit so far was non-zero,
@@ -2113,6 +2233,8 @@ DebugSkillViewer_Update_DrawFourDigits::
     ei
     ret
 
+SECTION "Bank 01 DebugSkillViewer_Update_IndexOfFlagValue", ROMX
+
 ; A = a skill record byte (byte 4): returns A = C = its position in the list $11, $12, $14, $21,
 ; $22, $31, $32, $40, $80 (1-9), or 10 for any other value; A = 0 returns at once with A = 0 and C
 ; unchanged. DebugSkillViewer_Update uses the result as the string index of category $11. (C2,
@@ -2155,6 +2277,8 @@ DebugSkillViewer_Update_IndexOfFlagValue::
     ld a, c
     ret
 
+SECTION "Bank 01 DebugSkillViewer_Update_DrawFlagBits", ROMX
+
 ; Draws B flag tiles at HL for the debug skill viewer: for each bit tested by the mask bytes at
 ; DebugSkillViewer_Update_DrawFlagBits_Data, tile C + 1 when that bit of D is set, otherwise tile C.
 ; (C1, E-0357)
@@ -2183,6 +2307,8 @@ DebugSkillViewer_Update_DrawFlagBits::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 01 DebugSkillViewer_Update_DrawFlagBits_Data", ROMX
 
 ; Eight single-bit masks $80, $40, $20, $10, $08, $04, $02, $01, indexed by the tile number 0-7
 ; counted from the left. DebugSkillViewer_Update_DrawFlagBits tests the flag byte in D against each
@@ -2285,6 +2411,8 @@ DebugShowMonsterRecord_Number24ToPackedBCD::
     ei
     ret
 
+SECTION "Bank 01 WriteDecimalByteTiles_Bank01", ROMX
+
 ; A = number, HL = VRAM address, B = the tile of digit 0, C = the blank tile: writes three tiles at
 ; HL, HL + 1 and HL + 2: the hundreds and tens as tile B + digit, a leading zero (A below 100, or
 ; below 10) as tile C, and the ones as tile B + digit. HL ends on the last tile and D = the ones
@@ -2320,6 +2448,8 @@ WriteDecimalByteTiles_Bank01::
     call WriteTileDPlusBAtHL
     ret
 
+SECTION "Bank 01 DivModAByE_Bank01", ROMX
+
 ; D = A / E and A = A mod E by repeated subtraction (E must not be 0); E is kept. Used by
 ; WriteDecimalByteTiles_Bank01 with E = 100 and 10. (C2, E-0374)
 ; D = A / E and A = A mod E by repeated subtraction (E-0122)
@@ -2332,6 +2462,8 @@ DivModAByE_Bank01::
     jr nc, .loop
     add e
     ret
+
+SECTION "Bank 01 WriteTileDPlusBAtHL", ROMX
 
 ; Writes tile D + B at VRAM address HL with WriteVRAMByte between di and ei; AF is kept. The digit
 ; writer of the debug record and skill viewers (WriteDecimalByteTiles_Bank01, WriteHexByteTilesAtHL,
@@ -2347,6 +2479,8 @@ WriteTileDPlusBAtHL::
     pop af
     ret
 
+SECTION "Bank 01 WriteTileCAtHL", ROMX
+
 ; Writes tile C at VRAM address HL with WriteVRAMByte between di and ei; AF is kept.
 ; WriteDecimalByteTiles_Bank01 uses it for blank leading digits. (C1, E-0374)
 ; writes tile C at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
@@ -2358,6 +2492,8 @@ WriteTileCAtHL::
     ei
     pop af
     ret
+
+SECTION "Bank 01 WriteHexByteTilesAtHL", ROMX
 
 ; A = byte, B = the tile of digit 0, HL = VRAM address: writes the high nibble of A at HL + 1 and
 ; the low nibble at HL + 2 as tiles B + nibble (falling into
@@ -2384,6 +2520,8 @@ DebugShowMonsterRecord_DrawLowHexDigit::
     call WriteTileDPlusBAtHL
     ret
 
+SECTION "Bank 01 DebugStaffRoll_Update", ROMX
+
 ; Each frame of debug screen 8 ('8:STAFF ROLL'): far-calls DebugStaffRoll_Update_RunScene (bank
 ; $E0), which runs the credits or one of the staff roll scenes. (C1, E-0374)
 ; update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI
@@ -2391,6 +2529,8 @@ DebugShowMonsterRecord_DrawLowHexDigit::
 DebugStaffRoll_Update::
     farcall DebugStaffRoll_Update_RunScene
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_Update", ROMX
 
 ; Each frame of the debug breeding screen (debug screen 7, '7:HAIGOU'), by wScreenState: 0 runs
 ; DebugResultsDisplay_Update_HandleInput (the field editor), 1 DebugResultsDisplay_Update_ShowChild.
@@ -2507,6 +2647,8 @@ DebugResultsDisplay_Update::
     call DebugResultsDisplay_Update_BlinkResistance
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_Update_BlinkResistance", ROMX
+
 ; The debug breeding screen's blink timer: wDebugCounter counts 0 to $17; for counts below $10 the
 ; selected value is drawn, for $10-$17 it is blanked, then the count restarts. (C1, E-0357)
 DebugResultsDisplay_Update_BlinkResistance::
@@ -2551,6 +2693,8 @@ DebugResultsDisplay_Update_DrawResistance::
     ei
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_Update_BlankResistance", ROMX
+
 ; Blanks the selected resistance digit on the debug breeding screen (the off phase of its blink).
 ; (C1, E-0357)
 DebugResultsDisplay_Update_BlankResistance::
@@ -2561,6 +2705,8 @@ DebugResultsDisplay_Update_BlankResistance::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_ResistanceAddress", ROMX
 
 ; HL = the screen address of resistance wSharedMenuWork on the debug breeding screen: a row for
 ; parent A (wDebugCursor = 4) or B, from the two address words in
@@ -2594,6 +2740,8 @@ DebugResultsDisplay_ResistanceAddress::
     pop af
     add_a_to_hl
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_ResistanceAddress_Data1", ROMX
 
 ; Two BG map addresses, $9986 and $99A6 (vBGMap0 row 12, column 6 and row 13, column 6).
 ; DebugResultsDisplay_ResistanceAddress uses this pair when wDebugCursor is 4 (the first parent):
@@ -2803,6 +2951,8 @@ DebugResultsDisplay_Update_ShowChild::
     ld [wNameEntryState], a
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_Update_ShowChild_DrawBCD", ROMX
+
 ; Writes C as two hex-digit tiles ($10 + each nibble) at DE, waiting for VRAM access before each.
 ; (C1, E-0357)
 DebugResultsDisplay_Update_ShowChild_DrawBCD::
@@ -2827,6 +2977,8 @@ DebugResultsDisplay_Update_ShowChild_DrawBCD::
     ld [de], a
     ei
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_Update_HandleInput", ROMX
 
 ; State 0 of DebugResultsDisplay_Update, the input of the debug breeding screen ('RESULTS DISPLAY').
 ; A builds the parents and computes the child (DebugResultsDisplay_Update_BuildParents), B leaves
@@ -2946,6 +3098,8 @@ DebugResultsDisplay_Update_HandleInput::
     jr c, .loop4
     ret
 
+SECTION "Bank 01 CopySpeciesResistancesFromIndexCToDE", ROMX
+
 ; C = first resistance index, DE = destination: copies the species resistances from index C through
 ; $1A (wSpeciesRecord + SPECIES_RESISTANCES + C, one at a time through LoadSpeciesResistanceArg4 in
 ; bank $0E, which leaves each in wArg5) to DE, DE + 1, ...; the first byte is copied before the
@@ -2972,6 +3126,8 @@ CopySpeciesResistancesFromIndexCToDE::
     cp $1b
     jr c, CopySpeciesResistancesFromIndexCToDE
     ret
+
+SECTION "Bank 01 DebugToggleArg1Marker", ROMX
 
 ; Toggles wArg1 between 0 and 2 and, with interrupts off after WaitForVRAMAccess, writes tile $10 +
 ; wArg1 (tile $10 or $12) at vBGMap0 + $81 (BG row 4, column 1).
@@ -3000,6 +3156,8 @@ DebugToggleArg1Marker::
     ei
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_Update_PressStart", ROMX
+
 ; Start on the debug breeding screen: on parent A's plus-value field (4) or parent B's (7) it opens
 ; the resistance editor (wScreenState + 2, starting at resistance 0); on other fields it toggles the
 ; marker at the top left (DebugToggleArg1Marker). (C1, E-0357)
@@ -3023,6 +3181,8 @@ DebugResultsDisplay_Update_PressStart::
     ld [wSharedMenuWork], a
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_Update_PrevField", ROMX
+
 ; Up on the debug breeding screen: redraws the current field and moves to the previous one (stops at
 ; field 0). (C1, E-0357)
 DebugResultsDisplay_Update_PrevField::
@@ -3035,6 +3195,8 @@ DebugResultsDisplay_Update_PrevField::
     call DebugResultsDisplay_BlinkSelectedField
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_Update_NextField", ROMX
+
 ; Down on the debug breeding screen: redraws the current field and moves to the next one (stops at
 ; field 9). (C1, E-0357)
 DebugResultsDisplay_Update_NextField::
@@ -3046,6 +3208,8 @@ DebugResultsDisplay_Update_NextField::
     ld [wDebugCursor], a
     call DebugResultsDisplay_BlinkSelectedField
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_Update_IncreaseField", ROMX
 
 ; Right on the debug breeding screen: increases the selected field. The species fields (0 and 2)
 ; count 0-$174, wrapping to 0, and the species name is redrawn; the sex fields (1 and 3) toggle
@@ -3122,6 +3286,8 @@ DebugResultsDisplay_Update_IncreaseField::
     ld hl, vTiles2 + $300
     jr DebugResultsDisplay_Update_DrawSpeciesName
 
+SECTION "Bank 01 DebugResultsDisplay_Update_DrawParentBName", ROMX
+
 ; Redraws parent B's species name (from wDebugValue3) at vTiles2 + $400. (C1, E-0357)
 DebugResultsDisplay_Update_DrawParentBName::
     ld de, wDebugValue3
@@ -3146,6 +3312,8 @@ DebugResultsDisplay_Update_DrawSpeciesName::
     pop de
     call DrawMonsterNameForWordAtDE_Bank01
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_Update_DecreaseField", ROMX
 
 ; Left on the debug breeding screen: decreases the selected field. The species fields wrap from 0 to
 ; $174, the sex fields toggle, the other fields go on to
@@ -3218,6 +3386,8 @@ DebugResultsDisplay_Update_DecreaseField::
     ld hl, vTiles2 + $300
     jp DebugResultsDisplay_Update_DrawSpeciesName
 
+SECTION "Bank 01 DebugResultsDisplay_Update_IncreaseField_Number", ROMX
+
 ; Right on the numeric fields of the debug breeding screen: parent A's plus value (field 4,
 ; wScreenStep), level (5, wScreenCounter) and item (6, wGlyphListStart), and parent B's plus value
 ; (7, wScreenSubStep), level (8, wGlyphListPos) and item (9, wGridCursorX). Plus values and levels
@@ -3278,6 +3448,8 @@ DebugResultsDisplay_Update_IncreaseField_Number::
     ld c, $1b
     jr .skip3
 
+SECTION "Bank 01 DebugResultsDisplay_Update_DecreaseField_Number", ROMX
+
 ; Left on the numeric fields of the debug breeding screen: the same fields counted down, wrapping
 ; from 0 to 99 (or $1B for items). (C1, E-0357)
 DebugResultsDisplay_Update_DecreaseField_Number::
@@ -3336,6 +3508,8 @@ DebugResultsDisplay_Update_DecreaseField_Number::
     ld c, $1c
     jr .skip3
 
+SECTION "Bank 01 DebugResultsDisplay_Update_ExitToMenu", ROMX
+
 ; B on the debug breeding screen: clears all its values and leaves for the debug menu (wModeState =
 ; 0 and a mode change request). (C2, E-0357; probed E-0374)
 DebugResultsDisplay_Update_ExitToMenu::
@@ -3353,6 +3527,8 @@ DebugResultsDisplay_Update_ExitToMenu::
     ld hl, wModeChangeRequest
     inc [hl]
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_Update_BuildParents", ROMX
 
 ; A on the debug breeding screen: when both levels (wScreenCounter, wGlyphListPos) are at least 10
 ; and the parents' sexes (wDebugValue2, wDebugSubState) differ, clears $1EF bytes from wRecordBufA
@@ -3467,6 +3643,8 @@ DebugResultsDisplay_Update_BuildParents::
     ld [wNameEntryState], a
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_BlinkSelectedField", ROMX
+
 ; The blink of the selected field on the debug breeding screen: wDebugCounter + 1; counts 1-$0F draw
 ; the field (DebugResultsDisplay_DrawSelectedField), $10-$17 blank its three tiles
 ; (StepDebugCursorDebugCounter_BlankField), and $18 sets the counter to 0 and draws.
@@ -3566,6 +3744,8 @@ DebugResultsDisplay_DrawSelectedField::
     call WriteHexByteTilesAtDE
     ret
 
+SECTION "Bank 01 PackTwoDigitsOfCAsBCD", ROMX
+
 ; C = the tens and ones digits of C packed as BCD (tens in the high nibble), through
 ; HLToDecimalDigits (wDigits); the hundreds are dropped and DE is kept. Used for the two-digit
 ; fields of the debug breeding screen. (C2, E-0374)
@@ -3585,6 +3765,8 @@ PackTwoDigitsOfCAsBCD::
     ld c, a
     pop de
     ret
+
+SECTION "Bank 01 StepDebugCursorDebugCounter_BlankField", ROMX
 
 ; Blanks the three digit tiles of debug field wDebugCursor (screen address from
 ; DrawDebugFieldValueDebugCursor_Data2): the off phase of the field's blink. (C1, E-0357)
@@ -3617,6 +3799,8 @@ StepDebugCursorDebugCounter_BlankField::
     inc de
     ei
     ret
+
+SECTION "Bank 01 DebugResultsDisplay_DrawSelectedField_Data1", ROMX
 
 ; Ten words, indexed by the field number wDebugCursor (0-9): each is the address of the RAM value
 ; that field shows. They are wDebugValue0, wDebugValue2, wDebugValue3, wDebugSubState, wScreenStep,
@@ -3657,6 +3841,8 @@ DrawMonsterNameForWordAtDE_Bank01::
     ld [wNameGlyphBuf + $a], a
     call CopyGlyphTilesToVRAM
     ret
+
+SECTION "Bank 01 CopyMonsterNameToBuffer_B01", ROMX
 
 ; HL = monster id: with wDataBank = $08 it reads entry 2 of StringDatabase
 ; (StringTable_MonsterNames) with ReadWordFromDataBank, then the string pointer at that list + 2 *
@@ -3699,6 +3885,8 @@ CopyMonsterNameToBuffer_B01::
     call CopyFromBankWaitVRAM
     ret
 
+SECTION "Bank 01 DebugResultsDisplay_Update_WriteUnknownName", ROMX
+
 ; Fills wNameGlyphBuf with nine $98 placeholder glyphs followed by $F0; HL ends on the $F0.
 ; DebugResultsDisplay_Update_ShowChild draws it as the child name placeholder. (C2, E-0374)
 ; fills wNameGlyphBuf with nine $98 placeholder glyphs and $F0
@@ -3716,6 +3904,8 @@ DebugResultsDisplay_Update_WriteUnknownName::
     ld a, $f0
     ld [hl], a
     ret
+
+SECTION "Bank 01 DebugAutomap_Update", ROMX
 
 ; Each frame of the automap check (debug screen 3, '3:AUTOMAP CHECK'). A starts a key world
 ; (DebugAutomap_Update_EnterKeyWorld) when wDebugState is $FF or wDebugSubState bit 7 is clear,
@@ -3980,6 +4170,8 @@ DebugAutomap_Update::
     jr nz, .loop
     ret
 
+SECTION "Bank 01 DebugAutomap_Update_Data", ROMX
+
 ; Thirteen map ids: $00, $05, $20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA. When bit 7 of
 ; wDebugSubState is set, DebugAutomap_Update (B pressed) stores the entry at index wDebugState & $1F
 ; into hMapId and enters the field (game mode 1, wMapType 0). wDebugState is byte 0 of the chosen
@@ -4080,6 +4272,8 @@ DebugAutomap_Update_EnterKeyWorld::
     inc [hl]
     ret
 
+SECTION "Bank 01 LoadKeyEntryFieldsToDebugState", ROMX
+
 ; A = key slot: wDebugState = byte 0 and wDebugSubState = byte 3 of its wKeyList entry ($C707 + 4 *
 ; A), and wDebugValue1 = byte 3 | $80 (the level, marked for redrawing). Used by DebugAutomap_Init
 ; and when the key changes in DebugAutomap_Update. (C2, E-0374)
@@ -4107,6 +4301,8 @@ LoadKeyEntryFieldsToDebugState::
     ld [wDebugValue1], a
     ret
 
+SECTION "Bank 01 DebugAutomap_Update_DrawLevel", ROMX
+
 ; Draws the debug automap's level number (wDebugValue1 & $7F) at BG row 9, column 10; for a slot
 ; from SRAM (wDebugState $FF) or a key whose bit 7 of wDebugSubState is set it shows and stores 0.
 ; (C1, E-0357)
@@ -4129,6 +4325,8 @@ DebugAutomap_Update_DrawLevel::
     ld de, vBGMap0 + $12a
     call WriteHexByteTilesAtDE
     ret
+
+SECTION "Bank 01 DebugAutomap_Update_DrawKeyName", ROMX
 
 ; Draws the key name on the debug automap screen: clears the 15-glyph name, then shows a fixed
 ; five-glyph string when the slot is from SRAM and wDebugSubState bit 7 is set, the name of the
@@ -4207,6 +4405,8 @@ DebugAutomap_Update_DrawKeyName::
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     ret
+
+SECTION "Bank 01 DebugMenuNames", ROMX
 
 ; the debug menu copies the string at $5F56 + 16 * (wDebugState - 1) up to $F0 to wNameGlyphBuf and
 ; draws it with CopyGlyphTilesToVRAM; 10 rows, then an 8-byte string for the 11th entry (E-0233, C1)
@@ -4440,6 +4640,8 @@ DebugMapEditor_Update::
     jr nz, .loop2
     ret
 
+SECTION "Bank 01 DebugMainMenu_Update", ROMX
+
 ; Each frame of the debug menu (wModeState 0 and 1): Down or Right select the next of 12 items and
 ; Up or Left the previous one (wDebugCursor, wrapping); the selected line is highlighted by writing
 ; its 16 tiles (wDebugCursor * 16 + $A0 on) at vBGMap0 + $122. A on item 0 ('1:GOTO PROGRAM') enters
@@ -4625,6 +4827,8 @@ DebugMainMenu_Update::
     ld hl, wModeChangeRequest
     inc [hl]
     ret
+
+SECTION "Bank 01 DebugMonsterPictureViewer_Update", ROMX
 
 ; Each frame of the picture viewer (debug screen 4, '4:GRAFHICS'). A cycles wDebugState 0-3 (the
 ; sprite pose), B returns to the debug menu, Up or Down switch wDebugCursor between the picture
@@ -4974,6 +5178,8 @@ DebugMonsterPictureViewer_Update::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
+SECTION "Bank 01 DebugSoundTest_Update", ROMX
+
 ; Each frame of the sound test (debug screen 5, '5:SOUNDS'). Start plays the selection: on the music
 ; line (wMenuState 0) it resets the sound hardware (InitSoundHardware) and queues music
 ; DebugSoundTestMusic[wTemp0]; on the effect line it queues effect DebugSoundTestEffects[wTemp1]. Up
@@ -5085,12 +5291,16 @@ DebugSoundTest_Update::
     call WriteVRAMByte
     jr DebugSoundTest_Update_Done
 
+SECTION "Bank 01 DebugSoundTest_Update_DrawMusicNumber", ROMX
+
 ; Redraws the sound test's music number (wTemp0) at BG row 7, column 9. (C1, E-0357)
 DebugSoundTest_Update_DrawMusicNumber::
     ld a, [wTemp0]
     ld de, vBGMap0 + $e9
     call WriteHexByteTilesAtDE
     jr DebugSoundTest_Update_Done
+
+SECTION "Bank 01 DebugSoundTest_Update_BlinkEffectNumber", ROMX
 
 ; Blinks the sound test's sound-effect number when it is selected: blank on frames with bit 3 of
 ; wFrameCounterLo clear, otherwise drawn. (C1, E-0357)
@@ -5104,6 +5314,8 @@ DebugSoundTest_Update_BlinkEffectNumber::
     call WriteVRAMByte
     jr DebugSoundTest_Update_Done
 
+SECTION "Bank 01 DebugSoundTest_Update_DrawEffectNumber", ROMX
+
 ; Redraws the sound test's sound-effect number (wTemp1) at BG row 8, column 9. (C1, E-0357)
 DebugSoundTest_Update_DrawEffectNumber::
     ld a, [wTemp1]
@@ -5113,6 +5325,8 @@ DebugSoundTest_Update_DrawEffectNumber::
 ; The sound test's shared exit: returns. (C2, E-0357; probed E-0374)
 DebugSoundTest_Update_Done::
     ret
+
+SECTION "Bank 01 DebugSoundTest_WrapAndDrawId", ROMX
 
 ; Wraps the selected sound-test number to its count B (B wraps to 0, $FF to B - 1) and draws the
 ; sound id it selects: the byte of DebugSoundTestMusic (row 7, column 12) or DebugSoundTestEffects
@@ -5154,6 +5368,8 @@ DebugSoundTest_WrapAndDrawId::
     call WriteHexByteTilesAtDE
     pop af
     ret
+
+SECTION "Bank 01 DebugSoundTestMusic", ROMX
 
 ; DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and
 ; DebugSoundTest_WrapAndDrawId draws it in hex; 32 entries (E-0238, C1)
@@ -5341,6 +5557,8 @@ DebugBattleSetup_Update_StartBattle::
     inc [hl]
     ret
 
+SECTION "Bank 01 DebugBattleSetup_CopyMonsterId", ROMX
+
 ; Copies one word from DE to HL; a zero word is stored as 1. DE and HL end past the word, A = the
 ; high byte. The debug battle set-up uses it three times to copy the foe monster ids into
 ; wEncounterMonsters (DebugBattleSetup_Update and DebugBattleSetup_Update_LoadEncounter). (C2,
@@ -5363,6 +5581,8 @@ DebugBattleSetup_CopyMonsterId::
     inc hl
     inc hl
     ret
+
+SECTION "Bank 01 DebugBattleSetup_Update_LoadEncounter", ROMX
 
 ; Copies the debug battle set-up into the encounter: from wWorkBuf + $C, three foes' monster ids
 ; (wEncounterMonsters), a level (wWildLevel), a band (wWildBand) and a class (wEncounterClass), then
@@ -5390,6 +5610,8 @@ DebugBattleSetup_Update_LoadEncounter::
     ld a, [hli]
     ld [wEncounterClass], a
     jr DebugBattleSetup_Update_StartBattle
+
+SECTION "Bank 01 DebugBattleSetup_Update_HandleInput", ROMX
 
 ; Input of the debug battle set-up screen ('? BATTLE ?'): A clears the selected value, B stores the
 ; foe count and the three monster words and leaves, Up and Down move between the 12 values, Right
@@ -5571,6 +5793,8 @@ DebugBattleSetup_Update_HandleInput::
 .return:
     ret
 
+SECTION "Bank 01 DrawDebugValueHexForMenuState", ROMX
+
 ; Draws field wMenuState of the battle set-up: the word wWorkBuf[wMenuState] as three hex digits
 ; (WriteThreeHexDigitsAtDE) at the BG address DebugBattleSetup_Update_HandleInput_Data[wMenuState]
 ; (rows 4-15, column 7). DebugBattleSetup_Update_HandleInput calls it after a change and before the
@@ -5594,6 +5818,8 @@ DrawDebugValueHexForMenuState::
     ld c, a
     call WriteThreeHexDigitsAtDE
     ret
+
+SECTION "Bank 01 DebugBattleSetup_WrapValueAfterStep", ROMX
 
 ; DE = a battle set-up value after a step of 1, HL = where it goes: stores DE at HL when it is at
 ; most the limit DebugBattleSetup_WrapValueAfterStep_Data[wMenuState] (limit - DE is computed only
@@ -5638,6 +5864,8 @@ DebugBattleSetup_WrapValueAfterStep::
     ld [hl], d
     ret
 
+SECTION "Bank 01 DebugBattleSetup_WrapValueAfterBigStep", ROMX
+
 ; DE = a battle set-up value after a step of 16 (Select held), HL = where it goes: stores DE at HL
 ; when it is at most the limit DebugBattleSetup_WrapValueAfterStep_Data[wMenuState]; otherwise a
 ; negative DE (bit 15 set) stores the limit and a positive one stores 0. It wraps rather than
@@ -5676,6 +5904,8 @@ DebugBattleSetup_WrapValueAfterBigStep::
     inc hl
     ld [hl], d
     ret
+
+SECTION "Bank 01 DebugBattleSetup_Update_EnsureSave", ROMX
 
 ; Makes sure the debug battle has usable party data. It returns without changes when wPartyCount is
 ; 1-3, wFarmLevel is below 3 and each of the first wPartyCount bytes of wPartyList is below 10, 20
@@ -5730,6 +5960,8 @@ DebugBattleSetup_Update_EnsureSave::
     call DebugBattleSetup_CreateDefaultGame
     ret
 
+SECTION "Bank 01 DebugBattleSetup_Update_EnsureSave_InParty", ROMX
+
 ; Returns Z when party record A has state 2 (MON_STATE). (C2, E-0357; probed E-0374)
 DebugBattleSetup_Update_EnsureSave_InParty::
     ld c, MON_STATE
@@ -5737,6 +5969,8 @@ DebugBattleSetup_Update_EnsureSave_InParty::
     ld a, [hl]
     cp $02
     ret
+
+SECTION "Bank 01 DebugBattleSetup_Update_HandleInput_Data", ROMX
 
 ; Twelve BG map addresses, $9887, $98A7, ... $99E7 (vBGMap0 rows 4 to 15, column 7, one per row),
 ; indexed by the field number wMenuState (0-11) of the debug battle set-up screen.
@@ -5945,6 +6179,8 @@ DebugBattleSetupShowFieldString::
     call WriteVRAMByte
     ret
 
+SECTION "Bank 01 DebugBattleSetupShowFieldString_Data1", ROMX
+
 ; Three VRAM glyph-tile addresses, vTiles2 + $200, + $2A0 and + $330 ($9200, $92A0, $9330), indexed
 ; by wMenuState - 1 for fields 1-3 (the three monsters). DebugBattleSetupShowFieldString puts one in
 ; wTextWindowTileLo/Hi with a window of 9 tiles by 1 row ($0901) before ShowString_Bank88 draws the
@@ -5989,6 +6225,8 @@ WriteHexByteTilesAtDE::
     ld [de], a
     ret
 
+SECTION "Bank 01 WriteThreeHexDigitsAtDE", ROMX
+
 ; DE = VRAM address: writes the low nibble of B, then the high and low nibbles of C, as tiles $10 +
 ; nibble at DE, DE + 1 and DE + 2, each after WaitForVRAMAccess; DE ends on the last tile. Draws
 ; 12-bit numbers (monster, picture and sprite ids, battle set-up words) on the debug screens. (C1,
@@ -6021,6 +6259,8 @@ WriteThreeHexDigitsAtDE::
     pop af
     ld [de], a
     ret
+
+SECTION "Bank 01 DebugBattleSetup_CreateDefaultGame", ROMX
 
 ; Creates the default debug game: the player at map 0, screen (2, 0), position ($40, $40) with the
 ; followers on the same spot, a fixed six-glyph player name, 99,999 gold ($01869F), three party
@@ -6146,6 +6386,8 @@ DebugBattleSetup_CreateDefaultGame::
     call DebugBattleSetup_CreateDefaultGame_RandomMonsters
     ret
 
+SECTION "Bank 01 DebugBattleSetup_CreateDefaultGame_RandomMonsters", ROMX
+
 ; Fills the debug save with 30 random monsters (PickRandomMonsterSkipping7ETo82 for records 0 to
 ; $1D), then marks records 0-2 with state 2 (in the party) and the next 27 with state 1. (C2,
 ; E-0357; probed E-0374)
@@ -6190,6 +6432,8 @@ DebugBattleSetup_CreateDefaultGame_RandomMonsters::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 01 PickRandomMonsterSkipping7ETo82", ROMX
+
 ; Draws table random numbers (NextTableByte) until E = wRandomLo | wRandomHi is neither 0 nor
 ; $7E-$82, then creates record wBattleArg0 from MonsterTable entry D = 0, E with
 ; PickRandomMonsterSkipping7ETo82_CreateRecord (random sex and personality, state 1). Only ids 1-$FF
@@ -6219,6 +6463,8 @@ PickRandomMonsterSkipping7ETo82::
     ld d, $00
     call PickRandomMonsterSkipping7ETo82_CreateRecord
     ret
+
+SECTION "Bank 01 CreateMonsterRecordInSlot_Build", ROMX
 
 ; Builds monster record wBattleArg0 in SRAM from MonsterTable entry DE (LoadMonsterRecord): state
 ; hTemp3, species, sex (random when wBattleArg1 is $FF, otherwise from
@@ -6490,6 +6736,8 @@ CreateMonsterRecordInSlot_Build::
     farcall SetSpeciesFlag
     ret
 
+SECTION "Bank 01 CopyBBytesDEToHL_Bank01", ROMX
+
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
 ; the copy, B = 0. The bank $01 copy of a helper found in 4 banks; CreateMonsterRecordInSlot_Build
 ; copies the owner name, resistances and default names with it. (C2, E-0374)
@@ -6503,6 +6751,8 @@ CopyBBytesDEToHL_Bank01::
     jr nz, CopyBBytesDEToHL_Bank01
     ret
 
+SECTION "Bank 01 FillBBytesAtHL_Bank01", ROMX
+
 ; Stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0, A is kept.
 ; CreateMonsterRecordInSlot_Build uses it to fill $16 bytes with $FF after the starting skills of a
 ; new record. (C2, E-0374)
@@ -6513,6 +6763,8 @@ FillBBytesAtHL_Bank01::
     dec b
     jr nz, FillBBytesAtHL_Bank01
     ret
+
+SECTION "Bank 01 WriteUnknownNamePlaceholder_Bank01", ROMX
 
 ; Writes the placeholder name '???' ($98 three times), seven $F0 bytes and a 0 at HL (11 bytes); HL
 ; ends past them, A = 0, B = 0. CreateMonsterRecordInSlot_Build calls it twice in a row for the two
@@ -6535,6 +6787,8 @@ WriteUnknownNamePlaceholder_Bank01::
     ld a, $00
     ld [hli], a
     ret
+
+SECTION "Bank 01 CreateMonsterRecordOfKindTemp1", ROMX
 
 ; Creates a monster record of kind hTemp1 (0-8) in record slot hTemp2 with state hTemp3: enables
 ; SRAM (bank 0), stores the kind in wBattleArg1, clears wBattleArg2 (no random personality), takes
@@ -6578,6 +6832,8 @@ CreateMonsterRecordOfKindTemp1::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 01 PickRandomMonsterSkipping7ETo82_CreateRecord", ROMX
+
 ; The record creation of PickRandomMonsterSkipping7ETo82 for a random monster: wBattleArg1 and
 ; wBattleArg2 = $FF (random sex and personality), state 1. (C2, E-0357; probed E-0374)
 PickRandomMonsterSkipping7ETo82_CreateRecord::
@@ -6595,6 +6851,8 @@ CreateMonsterRecordInSlot::
     ld [wBattleArg0], a
     call CreateMonsterRecordInSlot_Build
     ret
+
+SECTION "Bank 01 DebugBattleSetup_ClearKeyList", ROMX
 
 ; Copies the 128 bytes of DebugBattleSetup_ClearKeyList_Data (all $FF in this ROM) into wKeyList,
 ; four bytes per pass for 32 passes (B ends 0), so the debug default-game set-up that calls it, just
@@ -6624,6 +6882,8 @@ DebugBattleSetup_ClearKeyList::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 01 DebugBattleSetup_ClearKeyList_Data", ROMX
 
 ; A block of $80 bytes all $FF: 32 four-byte wKeyList entries filled with the end marker $FF.
 ; DebugBattleSetup_ClearKeyList copies all of it over wKeyList (32 times 4 bytes) to empty the key

@@ -1,7 +1,7 @@
 ; ROM bank $1C: shops, the vault and the inn; item names
 ; The annotated listing of this bank is build/listing/bank1c.asm.
 
-SECTION "Bank 1C", ROMX[$4000], BANK[$1C]
+SECTION "Bank 1C", ROMX
     db $1c
 
 ; Script command E1 (SCRIPT_INN_CLOSE), run every frame by ScriptCommandE1: ends the inn session. It
@@ -67,6 +67,8 @@ CloseInnMenu::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C InnMenu", ROMX
 
 ; Script command E0 (SCRIPT_INN), run every frame by ScriptCommandE0, by a jump table on
 ; wScreenState (9 states): 0 InnMenu_Init, 1 InnMenu_ShowPrice, 2 InnMenu_Pay, 3 InnMenu_FadeOut, 4
@@ -146,6 +148,8 @@ InnMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C InnMenu_ShowPrice", ROMX
+
 ; State 1 of InnMenu: draws the gold panel for the price message. It copies the 24-byte 8 x 3 frame
 ; InnMenu_ShowPrice_Data to wScreenSubStep, writes the gold as digit tiles into the frame at
 ; wScreenArea (row 1, DrawGoldDigitsAtHLWrapped_1C), copies the frame into wWindowTileBuffer and
@@ -206,6 +210,8 @@ InnMenu_ShowPrice::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C InnMenu_ShowPrice_Data", ROMX
 
 ; An 8 by 3 tile picture of the gold panel, three rows of tile ids: top border $B0 $B1 x6 $B2,
 ; middle $B6 $BF $C3 x5 $B7, bottom $B3 $B4 x6 $B5. InnMenu_ShowPrice copies the 24 bytes to
@@ -277,6 +283,8 @@ InnMenu_Pay::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C InnMenu_FadeOut", ROMX
+
 ; State 3 of InnMenu: sets wFadeMode = $87 and starts a palette fade (StartPaletteFade with A = 4)
 ; for the night; wScreenState += 1. InnMenu_WaitFade follows. (C1, E-0379)
 ; starts a palette fade (StartPaletteFade) for the night (E-0276)
@@ -289,6 +297,8 @@ InnMenu_FadeOut::
     inc [hl]
     ret
 
+SECTION "Bank 1C InnMenu_WaitFade", ROMX
+
 ; State 4 of InnMenu: returns while wFadeState is not 0 (the fade started by InnMenu_FadeOut is
 ; still running); once it is 0, wScreenState += 1. (C2, E-0379)
 ; waits until wFadeState is 0, then advances wScreenState (E-0276)
@@ -300,11 +310,15 @@ InnMenu_WaitFade::
     inc [hl]
     ret
 
+SECTION "Bank 1C InnMenu_PassOneFrame", ROMX
+
 ; The inn, state 5: goes to the next state. (C2, E-0357; probed E-0379)
 InnMenu_PassOneFrame::
     ld hl, wScreenState
     inc [hl]
     ret
+
+SECTION "Bank 1C InnMenu_RestoreParty", ROMX
 
 ; State 6 of InnMenu: with SRAM bank 0 on, for each of the wPartyCount records in wPartyList whose
 ; MON_STATUS bit 7 is clear, copies MON_MAX_HP (2 bytes) to MON_HP and MON_MAX_MP (2 bytes) to
@@ -383,6 +397,8 @@ InnMenu_RestoreParty::
     call QueueMusic
     ret
 
+SECTION "Bank 1C InnMenu_Morning", ROMX
+
 ; State 7 of InnMenu: adds 1 to wScreenStep each call (once per frame) and returns until it reaches
 ; $90. Then it resets wScreenStep, sends the SGB palette set (SendSGBPaletteSetForSGBPaletteSet),
 ; sets wFadeMode = $87 and starts the next palette fade (StartPaletteFade with A = $F8; the fade in
@@ -420,6 +436,8 @@ InnMenu_Morning::
     farcall RefreshKeyWorldObjectsOnEntry
     ret
 
+SECTION "Bank 1C InnMenu_RestartMusic", ROMX
+
 ; State 8 of InnMenu: returns until wFadeState is 0; then far-calls RestartMapMusic, sets wFadeMode
 ; = 7, wScreenState += 1 (to 9, past the table) and ends the script command (wScriptCommandType = 0,
 ; wScriptStartRequest = $80), so the script shows 'Good morning and farewell!' and calls
@@ -439,6 +457,8 @@ InnMenu_RestartMusic::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C SendSGBPaletteSetForSGBPaletteSet", ROMX
 
 ; Does nothing when wSGBActive is 0. Otherwise stores the four 16-bit palette numbers 4 *
 ; wSGBPaletteSet + 0, 1, 2 and 3 in wSGBPaletteNum0Lo ... wSGBPaletteNum3Hi, builds a PAL_SET packet
@@ -488,6 +508,8 @@ SendSGBPaletteSetForSGBPaletteSet::
     farcall LoadSGBObjectPalettesFromPointers
     ret
 
+SECTION "Bank 1C CopyLow3BitsToWRAMBank2_Bank1C", ROMX
+
 ; Sets rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07, then sets rSVBK = 0 (not
 ; the bank it found). DE and HL end past the copy, BC = 0; BC = 0 copies 65536 bytes. Addresses in
 ; $D000-$DFFF mean WRAM bank 2 during the copy, which is where the CGB attribute buffers
@@ -512,6 +534,8 @@ CopyLow3BitsToWRAMBank2_Bank1C::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 1C CopyBytesDEToHL_Bank1C", ROMX
+
 ; DE = source, HL = destination, BC = count: copies BC bytes, DE and HL end past the copy and BC =
 ; 0. The count is tested after the first byte, so BC = 0 copies 65536 bytes. (C2, E-0379)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
@@ -525,6 +549,8 @@ CopyBytesDEToHL_Bank1C::
     or c
     jr nz, CopyBytesDEToHL_Bank1C
     ret
+
+SECTION "Bank 1C CopyRectTo20ByteRowsJp_Bank1C", ROMX
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 bytes apart (the layout of the
 ; screen and window tile buffers). On the GBC (wIsCGB non-zero) it then zero-fills the same-shaped
@@ -596,6 +622,8 @@ CopyRectTo20ByteRowsJp_Bank1C::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 1C TryStartFieldMenu", ROMX
+
 ; Returns A = $FF after freezing the field when all of these hold: story flag 2
 ; (EVENT_SCENE_LONG_FACES_002) is set, wTextWindowState bits 0-1 are clear, bit 7 of
 ; wFieldActionRequest is clear, wPartyCount is not 0 and bit 0 of hPlayerStateFlags is clear. Then
@@ -630,6 +658,8 @@ TryStartFieldMenu::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 1C DrawGoldDigitsAtHLWrapped_1C", ROMX
 
 ; HL = destination: writes the gold wGoldHi:wGoldMid:wGoldLo as up to five digit tiles ($E0 + digit)
 ; starting at HL. It copies the gold to wDigits, runs Number24ToPackedBCD and walks the digits from
@@ -723,6 +753,8 @@ DrawGoldDigitsAtHLWrapped_1C::
     jr nz, .loop
     ret
 
+SECTION "Bank 1C IsAmountInArg1AboveGold", ROMX
+
 ; Compares the 24-bit amount wArg3:wArg2:wArg1 (wArg3 is the high byte) with the gold
 ; wGoldHi:wGoldMid:wGoldLo and returns the result in wArg1: $FF when the amount is greater than the
 ; gold, 0 when it is less or equal (so the low byte of the amount is overwritten; wArg2 and wArg3
@@ -768,6 +800,8 @@ IsAmountInArg1AboveGold::
     ld [wArg1], a
     ret
 
+SECTION "Bank 1C BGMapAddressAtScroll_Bank1C", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8: the BG map entry at the top-left corner of the
 ; visible screen (hScrollY / 8 rows of 32 entries, hScrollX / 8 columns); clobbers A and DE. Used by
 ; CloseInnMenu, InnMenu_ShowPrice and InnMenu_Pay_DrawGoldPanel. (C1, E-0379)
@@ -790,6 +824,8 @@ BGMapAddressAtScroll_Bank1C::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank 1C InnMenu_Init_SetPrice", ROMX
 
 ; The inn's price: 10 gold (wDigits 0, 1, 0; the 24-bit amount wArg7:wArg8:wMenuInputResult = 10),
 ; its digits without leading zeros in wTextBuf0. (C2, E-0357; probed E-0379)
@@ -837,6 +873,8 @@ InnMenu_Init_SetPrice::
     ld a, $f0
     ld [de], a
     ret
+
+SECTION "Bank 1C DrawScreenBufferRectToBGMap_1C", ROMX
 
 ; B = width, C = rows, DE = offset into wScreenTileBuffer, HL = BG map address: copies the rectangle
 ; to the BG map with CopyRectToBGMapWrapped, sets wTextCursorLo/Hi to HL + $1C1, and on the GBC
@@ -903,6 +941,8 @@ DrawScreenBufferRectToBGMap_1C::
     ldh [c], a
     ret
 
+SECTION "Bank 1C InnMenu_Pay_TakeGold", ROMX
+
 ; Takes the price (wArg7:wArg8:wMenuInputResult, 24 bits) from the gold, with no floor. (C2, E-0357;
 ; probed E-0379)
 InnMenu_Pay_TakeGold::
@@ -931,6 +971,8 @@ InnMenu_Pay_TakeGold::
     ld [wGoldLo], a
     ret
 
+SECTION "Bank 1C InnMenu_Pay_RestoreWindowTop", ROMX
+
 ; Moves the window buffer's second eight rows ($A0 bytes) up to the top, with their GBC attributes.
 ; (C2, E-0357; probed E-0379)
 InnMenu_Pay_RestoreWindowTop::
@@ -946,6 +988,8 @@ InnMenu_Pay_RestoreWindowTop::
     ld bc, $00a0
     call CopyLow3BitsToWRAMBank2_Bank1C
     ret
+
+SECTION "Bank 1C InnMenu_Pay_DrawGoldPanel", ROMX
 
 ; Draws the gold panel: copies its 8 x 3 frame into a buffer, writes the gold digits into it and
 ; puts it at the window and screen buffers' top right (or lower when the text window's bit 7 is
@@ -994,6 +1038,8 @@ InnMenu_Pay_DrawGoldPanel::
     ld de, $0168
     call DrawScreenBufferRectToBGMap_1C
     ret
+
+SECTION "Bank 1C InnMenu_Pay_DrawGoldPanel_Data", ROMX
 
 ; The same 8 by 3 tile picture of the gold panel as InnMenu_ShowPrice_Data: top border $B0 $B1 x6
 ; $B2, middle $B6 $BF $C3 x5 $B7, bottom $B3 $B4 x6 $B5. InnMenu_Pay_DrawGoldPanel copies it to
@@ -1061,6 +1107,8 @@ AddArg1ToGoldCapped99999::
     ld [wGoldLo], a
     ret
 
+SECTION "Bank 1C CloseShopMenu", ROMX
+
 ; Script command E3 (SCRIPT_SHOP_CLOSE), run every frame by ScriptCommandE3, and also called by
 ; CloseVaultMenu: ends the shop session by a jump table on wGridCursorY (4 steps; steps 0-2 each add
 ; 1 to it, step 3 clears it): 0 CloseShopMenu_RestoreScreen (puts the saved screen back), 1
@@ -1084,10 +1132,14 @@ CloseShopMenu_RestoreScreen::
     call CloseShopMenu_RestoreSavedScreen
     ret
 
+SECTION "Bank 1C CloseShopMenu_ResumeScript", ROMX
+
 ; Closing the shop, step 1 (CloseShopMenu_ClearStateAndResume). (C2, E-0357; probed E-0379)
 CloseShopMenu_ResumeScript::
     call CloseShopMenu_ClearStateAndResume
     ret
+
+SECTION "Bank 1C CloseShopMenu_ReloadTextTiles", ROMX
 
 ; Closing the shop, step 2: reloads the text tiles, clears $0F tiles at VRAM $8D00 and resets the
 ; text window. (C1, E-0357)
@@ -1122,6 +1174,8 @@ CloseShopMenu_ReloadTextTiles::
     ld [wGridCursorY], a
     ret
 
+SECTION "Bank 1C CloseShopMenu_RedrawNamesAndFinish", ROMX
+
 ; Closing the shop, step 3: redraws the party's name tiles and icons, clears the message mode and
 ; $70 bytes of screen state, refills wTextBuf0 with the player's name (and suffix) and resumes the
 ; script. (C1, E-0357)
@@ -1155,6 +1209,8 @@ CloseShopMenu_RedrawNamesAndFinish::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C ShopMenu", ROMX
 
 ; Script command E2 (SCRIPT_SHOP), run every frame by ScriptCommandE2, by a jump table on
 ; wScreenState (5 states): 0 ShopMenu_Init, 1 ShopMenu_Setup, 2 ShopMenu_ChooseAction, 3
@@ -1222,6 +1278,8 @@ ShopMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Setup", ROMX
+
 ; State 1 of ShopMenu, by wScreenStep (5 entries): 0 ShopMenu_Setup_AdvanceScreenStep, 1
 ; ShopMenu_Setup_LoadTiles, 2 ShopMenu_Setup_InitItemList, 3 ShopMenu_Setup_DrawBoxes, 4
 ; ShopMenu_Setup_Finish. In the normal run wScreenStep goes 0, 2, 3: step 0 falls through into the
@@ -1252,10 +1310,14 @@ ShopMenu_Setup_LoadTiles::
     call CopyTileListFromBank1F_1C
     ret
 
+SECTION "Bank 1C ShopMenu_Setup_InitItemList", ROMX
+
 ; Shop setup, step 2: sets up the item list screen (InitItemListScreenListAndCount). (C1, E-0357)
 ShopMenu_Setup_InitItemList::
     call InitItemListScreenListAndCount
     ret
+
+SECTION "Bank 1C ShopMenu_Setup_DrawBoxes", ROMX
 
 ; Shop setup, step 3: draws the 8 x 7 box and the choice box, then the next state with the script
 ; resuming. (C1, E-0357)
@@ -1275,6 +1337,8 @@ ShopMenu_Setup_DrawBoxes::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C ShopMenu_Setup_DrawBoxes_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -1302,6 +1366,8 @@ ShopMenu_Setup_Finish::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C ShopMenu_ChooseAction", ROMX
 
 ; State 2 of ShopMenu, the Buy / Sell / Exit menu; the row is wListLastRow (0-2). Up (bit 6 of
 ; wJoypadPressedRepeat) or Down (bit 7) wraps the row, hides the old cursor (tile $C3) and shows the
@@ -1450,10 +1516,14 @@ ShopMenu_ChooseAction_ShowCursor::
     ld b, $bb
     jr ShopMenu_ChooseAction_DrawCursorTile
 
+SECTION "Bank 1C ShopMenu_ChooseAction_HideCursor", ROMX
+
 ; Draws the blank tile ($C3) at the choice. (C1, E-0357)
 ShopMenu_ChooseAction_HideCursor::
     ld b, $c3
     jr ShopMenu_ChooseAction_DrawCursorTile
+
+SECTION "Bank 1C ShopMenu_ChooseAction_MarkChosen", ROMX
 
 ; Draws the chosen tile ($BC) at the choice. (C1, E-0357)
 ShopMenu_ChooseAction_MarkChosen::
@@ -1478,6 +1548,8 @@ ShopMenu_ChooseAction_DrawCursorTile::
     ld [hl], b
     ei
     ret
+
+SECTION "Bank 1C ShopMenu_ChooseAction_DrawCursorTile_Data", ROMX
 
 ; Three words that are offsets from the BG map entry at the top left of the visible screen
 ; (BGMapAddressAtScroll_Bank1C_2): $0021, $0061, $00A1, which are rows 1, 3 and 5 of column 1.
@@ -1571,6 +1643,8 @@ ShopMenu_Buy_WriteWindowMap::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1C ShopMenu_Buy_DrawWindow", ROMX
+
 ; Buying, step 1: draws the 19 x 9 window from BG map 1 at the screen's row 4, column 1. (C1,
 ; E-0357)
 ShopMenu_Buy_DrawWindow::
@@ -1584,6 +1658,8 @@ ShopMenu_Buy_DrawWindow::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_CountItems", ROMX
 
 ; Buying, step 2: counts the shop's items, works out the pages of four, clamps the page and cursor
 ; (the last page's size) and, with two or more pages, draws the page brackets and 'page / pages'.
@@ -1694,6 +1770,8 @@ ShopMenu_Buy_CountItems::
     ld [wScreenCounter], a
     ld [wGlyphListPos], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_DrawItemNames", ROMX
 
 ; Buying, step 3: clears nine name places, then draws the page's item names glyph by glyph
 ; (ItemNamesCopy_1C) into tile places. (C1, E-0357)
@@ -1856,6 +1934,8 @@ ShopMenu_Buy_DrawItemNames::
 .return:
     ret
 
+SECTION "Bank 1C ShopMenu_Buy_PassOneFrame", ROMX
+
 ; Buying, step 4: only advances wScreenStep to step 5 (ShopMenu_Buy_DrawPrices).
 ; ShopMenu_Buy_DrawItemNames advances by two past it, and no path to step 4 was found in this
 ; reading. (C2, E-0370; probed E-0379)
@@ -1864,6 +1944,8 @@ ShopMenu_Buy_PassOneFrame::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_DrawPrices", ROMX
 
 ; Buying, step 5: draws the page's four prices from the bank-$F2 price tables as digits with the
 ; gold mark ($DF), or blanks for an empty place. (C1, E-0357)
@@ -1986,6 +2068,8 @@ ShopMenu_Buy_DrawPrices::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_ItemCursor", ROMX
 
 ; Buying, step 6: the item cursor: Right/Left turn the page (two or more pages), Up/Down move within
 ; it (sound $69), A confirms; B, after a short wait, leaves with answer 1 and resumes the script.
@@ -2124,6 +2208,8 @@ ShopMenu_Buy_ItemCursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1C BlinkCursorSelectedRecord_Bank1C", ROMX
+
 ; Blinks the item cursor of the Buying and Selling lists. Adds 1 to wSelectedRecord; below $10 it
 ; draws the cursor tile $BB at item place wItemGridX (DrawItemGridXCursor), from $10 to $17 the
 ; blank tile $C3 (EraseItemGridXCursor), and at $18 it resets the count to 0 and draws $BB again.
@@ -2153,6 +2239,8 @@ DrawItemGridXCursor::
     ld b, $bb
     jr DrawItemGridXCursorTile
 
+SECTION "Bank 1C EraseItemGridXCursor", ROMX
+
 ; Sets B = $C3, the blank tile, and continues in DrawItemGridXCursorTile: removes the cursor from
 ; item place wItemGridX. Called before the cursor moves to another place or page
 ; (ShopMenu_Buy_CountItems, the item cursor steps and ShopMenu_Sell_ListItems) and by
@@ -2163,6 +2251,8 @@ DrawItemGridXCursor::
 EraseItemGridXCursor::
     ld b, $c3
     jr DrawItemGridXCursorTile
+
+SECTION "Bank 1C DrawItemGridXCursorConfirmed", ROMX
 
 ; Sets B = $BC, the confirmed-cursor tile, and continues in DrawItemGridXCursorTile at item place
 ; wItemGridX. Called when A picks an item in ShopMenu_Buy_ItemCursor and ShopMenu_Sell_ItemCursor.
@@ -2194,6 +2284,8 @@ DrawItemGridXCursorTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1C DrawItemGridXCursorTile_Data", ROMX
 
 ; Four words that are offsets from the top left BG map entry of the visible screen: $00A2, $00E2,
 ; $0122, $0162, which are rows 5, 7, 9 and 11 of column 2. DrawItemGridXCursorTile indexes them with
@@ -2238,6 +2330,8 @@ ShopMenu_Buy_CheckRoom::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_StartQuantity", ROMX
 
 ; Buying, step 8: sets the quantity to 01, saves the 4 x 3 area at the screen's row 10 (with its GBC
 ; attributes) to BG map 1 at $9FB0 and clears its attributes for the quantity box. (C1, E-0357)
@@ -2374,6 +2468,8 @@ ShopMenu_Buy_StartQuantity::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_EnterQuantity", ROMX
 
 ; Buying, step 9: the quantity entry: B restores the area and returns to the item cursor (answer 1,
 ; step 6); Right/Left move between the tens and ones digit; Up/Down change the digit (sound $69),
@@ -2630,6 +2726,8 @@ ShopMenu_Buy_EnterQuantity::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Buy_EnterQuantity_BlinkDigit", ROMX
+
 ; Blinks the digit being edited in the Buying quantity box. Adds 1 to wCursorBlinkCD; below $10 it
 ; draws the digit itself ($E0 + wNumberTens or wNumberOnes, chosen by wNumberEditPos) through
 ; ShopMenu_Buy_EnterQuantity_ShowDigit, from $10 to $17 the digit cursor tile $CB through
@@ -2666,6 +2764,8 @@ ShopMenu_Buy_EnterQuantity_ShowDigit::
     ld b, a
     jr ShopMenu_Buy_EnterQuantity_DrawDigitTile
 
+SECTION "Bank 1C ShopMenu_Buy_EnterQuantity_ShowEditCursor", ROMX
+
 ; B = the digit cursor tile ($CB). (C1, E-0357)
 ShopMenu_Buy_EnterQuantity_ShowEditCursor::
     ld b, $cb
@@ -2691,6 +2791,8 @@ ShopMenu_Buy_EnterQuantity_DrawDigitTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_EnterQuantity_DrawNumber", ROMX
 
 ; Draws the whole quantity of the Buying quantity box: the tile $E0 + wNumberTens at the scroll
 ; origin + $0161 (row 11, column 1) and $E0 + wNumberOnes at + $0162, each address stepped back a
@@ -2739,6 +2841,8 @@ ShopMenu_Buy_EnterQuantity_DrawNumber::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data", ROMX
 
 ; One word, the offset $0161 from the top left BG map entry of the visible screen (row 11, column
 ; 1): the place of the tens digit of the quantity. ShopMenu_Buy_EnterQuantity_DrawNumber and
@@ -2826,6 +2930,8 @@ ShopMenu_Buy_EnterQuantity_ComputeTotal::
     ld a, l
     ld [wThreeDigits], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_WriteTotal", ROMX
 
 ; Buying, step 10: turns the 24-bit total in wThreeDigits into decimal digits (Number24ToPackedBCD)
 ; in the seven bytes wScreenList to wScreenCountPlusOne, replaces the leading zeros (all but the
@@ -2946,6 +3052,8 @@ ShopMenu_Buy_WriteTotal::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Buy_DrawYesNo", ROMX
+
 ; Buying, step 11: saves the 6 x 5 area at the screen's row 8, column 14 to BG map 1 at $9FD0,
 ; clears it for the yes/no box and plays sound $6C. (C1, E-0357)
 ShopMenu_Buy_DrawYesNo::
@@ -2996,6 +3104,8 @@ ShopMenu_Buy_DrawYesNo::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_YesNoCursor", ROMX
 
 ; Buying, step 12: the yes/no cursor: Up/Down toggle (sound $69); A on yes checks the gold
 ; (IsAmountInArg1AboveGold: too little gives answer 0) and the room (held + quantity above 24 gives
@@ -3139,6 +3249,8 @@ ShopMenu_Buy_YesNoCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Buy_YesNoCursor_Blink", ROMX
+
 ; Blinks the yes/no cursor of the Buying confirmation. While wJoypadRepeatTimer is below $14 it only
 ; draws the cursor tile $BB at yes/no place wShopCursorToggle; from $14 on it adds 1 to
 ; wShopCursorBlink and draws $BB below $10, the blank tile $C3 from $10 to $17
@@ -3165,6 +3277,8 @@ ShopMenu_Buy_YesNoCursor_Blink::
     ld b, $bb
     jr ShopMenu_Buy_YesNoCursor_DrawTile
 
+SECTION "Bank 1C ShopMenu_Buy_YesNoCursor_Hide", ROMX
+
 ; Sets B = $C3, the blank tile, and continues in ShopMenu_Buy_YesNoCursor_DrawTile, which writes B
 ; at yes/no place wShopCursorToggle (scroll origin + $012F or $016F). ShopMenu_Buy_YesNoCursor calls
 ; it to hide the cursor before moving it, and ShopMenu_Buy_YesNoCursor_Blink for the hidden part of
@@ -3174,6 +3288,8 @@ ShopMenu_Buy_YesNoCursor_Blink::
 ShopMenu_Buy_YesNoCursor_Hide::
     ld b, $c3
     jr ShopMenu_Buy_YesNoCursor_DrawTile
+
+SECTION "Bank 1C ShopMenu_Buy_YesNoCursor_MarkChosen", ROMX
 
 ; B = the chosen tile ($BC) for the yes/no cursor. (C1, E-0357)
 ShopMenu_Buy_YesNoCursor_MarkChosen::
@@ -3199,6 +3315,8 @@ ShopMenu_Buy_YesNoCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_YesNoCursor_DrawTile_Data", ROMX
 
 ; Two words that are offsets from the top left BG map entry of the visible screen: $012F and $016F,
 ; which are rows 9 and 11 of column 15. ShopMenu_Buy_YesNoCursor_DrawTile indexes them with
@@ -3235,12 +3353,16 @@ DrawTwoBoxesAndRequestScript80::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Buy_ClearBoxes", ROMX
+
 ; Buying, step 15: clears the two boxes, resumes the script at step 6, then step $10. (C1, E-0357)
 ShopMenu_Buy_ClearBoxes::
     call DrawTwoBoxesAndRequestScript80
     ld a, $10
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_BlankCursors", ROMX
 
 ; Buying, step 16: blanks the four cursor places; back to the item cursor (step 6) on page 0,
 ; otherwise step 0 (redraw), with the cursor reset. (C1, E-0357)
@@ -3280,6 +3402,8 @@ ShopMenu_Buy_BlankCursors::
     ld [wItemGridX], a
     ld [wItemGridY], a
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_Pay", ROMX
 
 ; Buying, step 14: pays (SubtractArg1AmountFromGold) and puts the quantity of the item into the
 ; first free inventory places (up to 24); a now full bag ends the shopping (state 1, step 1),
@@ -3448,6 +3572,8 @@ ShopMenu_Buy_Pay::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C ShopMenu_Sell", ROMX
 
 ; Runner for wScreenState 4, the Selling screens of the shop (ShopMenu_ChooseAction moves to it when
 ; the second choice is picked and the bag holds items). It jumps through wScreenStep: 0
@@ -3618,6 +3744,8 @@ ShopMenu_Sell_ListItems::
     ld [wGlyphListPos], a
     ret
 
+SECTION "Bank 1C ShopMenu_Sell_DrawItemNames", ROMX
+
 ; Selling, step 3: clears nine name places, then draws the page's held item names glyph by glyph
 ; (ItemNamesCopy_1C). (C1, E-0357)
 ShopMenu_Sell_DrawItemNames::
@@ -3776,6 +3904,8 @@ ShopMenu_Sell_DrawItemNames::
 .return:
     ret
 
+SECTION "Bank 1C ShopMenu_Sell_DrawPrices", ROMX
+
 ; Selling, step 4: draws the page's four sell prices (ComputeSellPrice: the item's value times the
 ; shop's percentage / 100) as digits with leading blanks and the gold mark ($DF), or blanks. (C1,
 ; E-0357)
@@ -3911,6 +4041,8 @@ ShopMenu_Sell_DrawPrices::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Sell_ItemCursor", ROMX
 
 ; Selling, step 5: the item cursor: Right/Left turn the page, Up/Down move (sound $69), A confirms;
 ; B, after a short wait, leaves with answer 2 and resumes the script. (C1, E-0357)
@@ -4052,6 +4184,8 @@ ShopMenu_Sell_ItemCursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1C ShopMenu_Sell_CheckSellable", ROMX
+
 ; Selling, step 6: an item worth nothing answers 1 (it cannot be sold) and stays; otherwise starts
 ; the quantity entry at 1 and goes on. (C2, E-0357; probed E-0379)
 ShopMenu_Sell_CheckSellable::
@@ -4108,6 +4242,8 @@ ShopMenu_Sell_CheckSellable::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C ShopMenu_Sell_StartQuantity", ROMX
 
 ; Selling, step 7: sets the quantity to 01, saves the 7 x 3 area at the screen's row 10 (with its
 ; GBC attributes) to BG map 1 at $9FB0 and clears its attributes for the quantity box. (C1, E-0357)
@@ -4261,6 +4397,8 @@ ShopMenu_Sell_StartQuantity::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C ShopMenu_Sell_EnterQuantity", ROMX
 
 ; Selling, step 8: the quantity entry: B restores the area and returns to the item cursor (answer 1,
 ; step 5); Right/Left move between the digits; Up/Down change the digit, at most the number held
@@ -4526,6 +4664,8 @@ ShopMenu_Sell_EnterQuantity::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1C ShopMenu_Sell_EnterQuantity_BlinkDigit", ROMX
+
 ; Blinks the digit being edited in the Selling quantity box, the same as
 ; ShopMenu_Buy_EnterQuantity_BlinkDigit. Adds 1 to wCursorBlinkCD; below $10 it draws the digit ($E0
 ; + wNumberTens or wNumberOnes by wNumberEditPos) through ShopMenu_Sell_EnterQuantity_ShowDigit,
@@ -4562,6 +4702,8 @@ ShopMenu_Sell_EnterQuantity_ShowDigit::
     ld b, a
     jr ShopMenu_Sell_EnterQuantity_DrawDigitTile
 
+SECTION "Bank 1C ShopMenu_Sell_EnterQuantity_ShowEditCursor", ROMX
+
 ; B = the digit cursor tile ($CB). (C1, E-0357)
 ShopMenu_Sell_EnterQuantity_ShowEditCursor::
     ld b, $cb
@@ -4586,6 +4728,8 @@ ShopMenu_Sell_EnterQuantity_DrawDigitTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1C ShopMenu_Sell_EnterQuantity_DrawNumber", ROMX
 
 ; Draws the whole quantity of the Selling quantity box, the same as
 ; ShopMenu_Buy_EnterQuantity_DrawNumber: $E0 + wNumberTens at the scroll origin + $0161 (offset from
@@ -4701,6 +4845,8 @@ ShopMenu_Sell_EnterQuantity_ComputeTotal::
     ld [wThreeDigits], a
     ret
 
+SECTION "Bank 1C ShopMenu_Sell_WriteTotal", ROMX
+
 ; Selling, step 9: keeps the chosen item and writes the total's decimal digits (leading zeros
 ; dropped) into wTextBuf0 for the message. (C2, E-0357; probed E-0379)
 ShopMenu_Sell_WriteTotal::
@@ -4809,6 +4955,8 @@ ShopMenu_Sell_WriteTotal::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Sell_YesNoCursor", ROMX
+
 ; Selling, step 11: the yes/no cursor: Up/Down toggle (sound $69); A on yes answers 0 and goes on
 ; two steps; no or B clears the box, answers 1 and goes back three steps; the cursor blinks. (C1,
 ; E-0357)
@@ -4893,6 +5041,8 @@ ShopMenu_Sell_YesNoCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Sell_YesNoCursor_Blink", ROMX
+
 ; Blinks the yes/no cursor of the Selling confirmation, the same as ShopMenu_Buy_YesNoCursor_Blink.
 ; While wJoypadRepeatTimer is below $14 it only draws the cursor tile $BB at yes/no place
 ; wShopCursorToggle; from $14 on it adds 1 to wShopCursorBlink and draws $BB below $10, the blank
@@ -4919,6 +5069,8 @@ ShopMenu_Sell_YesNoCursor_Blink::
     ld b, $bb
     jr ShopMenu_Sell_YesNoCursor_DrawTile
 
+SECTION "Bank 1C ShopMenu_Sell_YesNoCursor_Hide", ROMX
+
 ; Sets B = $C3, the blank tile, and continues in ShopMenu_Sell_YesNoCursor_DrawTile, which writes B
 ; at yes/no place wShopCursorToggle. ShopMenu_Sell_YesNoCursor calls it to hide the cursor before
 ; moving it, and ShopMenu_Sell_YesNoCursor_Blink for the hidden part of the blink. (C1, E-0379)
@@ -4927,6 +5079,8 @@ ShopMenu_Sell_YesNoCursor_Blink::
 ShopMenu_Sell_YesNoCursor_Hide::
     ld b, $c3
     jr ShopMenu_Sell_YesNoCursor_DrawTile
+
+SECTION "Bank 1C ShopMenu_Sell_YesNoCursor_MarkChosen", ROMX
 
 ; B = the chosen tile ($BC) for the yes/no cursor. (C1, E-0357)
 ShopMenu_Sell_YesNoCursor_MarkChosen::
@@ -4953,6 +5107,8 @@ ShopMenu_Sell_YesNoCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1C ShopMenu_Sell_YesNoCursor_DrawTile_Data", ROMX
 
 ; Two words that are offsets from the top left BG map entry of the visible screen: $012F and $016F,
 ; which are rows 9 and 11 of column 15, the same as ShopMenu_Buy_YesNoCursor_DrawTile_Data.
@@ -4983,6 +5139,8 @@ ShopMenu_Sell_ClearYesNo::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C ShopMenu_Sell_Pay", ROMX
 
 ; Selling, step 13: pays the total (AddArg1ToGoldCapped99999, at most 99,999), removes the items,
 ; recounts the bag; an empty bag ends the selling (state 1, step 1); otherwise redraws the gold and
@@ -5100,6 +5258,8 @@ ShopMenu_Sell_Pay::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C ShopMenu_Buy_ApplyGoldPass", ROMX
+
 ; HL = the address of a 3-byte price in bank $F2. With ITEM_GOLDPASS in any of the 24 wInventory
 ; places, reads that price, writes 90% of it (times 9, then divided by 10, 24 bits) to wArg1-wArg3
 ; and returns HL = wArg1, so the caller's ReadFarPointerAtDEInBankB reads the discounted price;
@@ -5151,6 +5311,8 @@ ShopMenu_Buy_ApplyGoldPass::
     pop hl
     ret
 
+SECTION "Bank 1C LoadScreenNumberListPointer", ROMX
+
 ; HL = the word at ScreenNumberListTable + 2 * wScreenTableIndex, read with ROM bank $F2 mapped; B =
 ; the byte after that word, which is the low byte of the next table entry (not a bank). DE is kept.
 ; The word is the start of a list of 24-bit numbers, three bytes per item id:
@@ -5174,6 +5336,8 @@ LoadScreenNumberListPointer::
     call ReadFarPointerAtDEInBankB
     pop de
     ret
+
+SECTION "Bank 1C ComputeSellPrice", ROMX
 
 ; E:HL = the ItemValueTable word at DE (DE = 2 * item id) times ShopPercentTable[wScreenTableIndex],
 ; divided by 100: a 24-bit quotient with E the high byte. A = the remainder, D = 0; BC is kept. The
@@ -5201,6 +5365,8 @@ ComputeSellPrice::
     call Divide24ByA
     pop bc
     ret
+
+SECTION "Bank 1C ShopMenu_Buy_Pay_Data", ROMX
 
 ; An 8 by 5 tile picture of the gold and item count box (five rows of 8 tile ids): top border $B0
 ; $B1 x6 $B2; gold row $B6 $BF $C3 x5 $B7; divider $B8 $B9 x6 $BA; count row $B6 $AE $AD $EC $AF $C3
@@ -5974,6 +6140,8 @@ CopyTileBytesToVRAM_Bank1C::
     jr nz, .loop
     ret
 
+SECTION "Bank 1C BGMapAddressAtScroll_Bank1C_2", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry at the top left of the view;
 ; clobbers A and DE. Every box and cursor routine of the shop and vault adds an offset to this to
 ; place its tiles. (C1, E-0379)
@@ -5996,6 +6164,8 @@ BGMapAddressAtScroll_Bank1C_2::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank 1C DrawRectBothBanksSetTextCursorLoPlus1C1", ROMX
 
 ; Copies the rectangle at DE (B = width in tiles, C = rows) to the BG map at HL with
 ; CopyRectToBGMapWrapped_1C, then sets wTextCursorLo/wTextCursorHi to HL + $01C1. When wIsCGB is
@@ -6041,6 +6211,8 @@ DrawRectBothBanksSetTextCursorLoPlus1C1::
     ldh [rVBK], a
     ret
 
+SECTION "Bank 1C ClearRectSetTextCursorLoPlus1C1_Bank1C", ROMX
+
 ; Copies the rectangle at DE (B = width in tiles, C = rows) to the BG map at HL with
 ; CopyRectToBGMapWrapped_1C and sets wTextCursorLo/wTextCursorHi to HL + $01C1; the same as
 ; DrawRectBothBanksSetTextCursorLoPlus1C1 without the second copy for the Game Boy Color attributes.
@@ -6070,6 +6242,8 @@ ClearRectSetTextCursorLoPlus1C1_Bank1C::
     pop bc
     pop de
     ret
+
+SECTION "Bank 1C CopyRectToBGMapWrapped_1C", ROMX
 
 ; Copies a B x C rectangle (B = tiles per row, C = rows) from DE to the BG map at HL, one tile at a
 ; time with interrupts off while it waits for rSTAT bit 1 to clear. A start address that the scroll
@@ -6181,6 +6355,8 @@ CopyRectToBGMapWrapped_1C::
 .return:
     ret
 
+SECTION "Bank 1C ListDistinctInventoryItemsToItemGrid", ROMX
+
 ; Lists the kinds of item in the bag: clears the $18 bytes of wItemGrid, then for each item id 1 to
 ; $62 in turn adds it to the grid once if any of the 24 wInventory places holds it, so wItemGrid
 ; ends as the distinct ids in ascending order followed by zeros. wGlyphListStart = how many ids were
@@ -6245,6 +6421,8 @@ ListDistinctInventoryItemsToItemGrid::
     ld [wGlyphListStart], a
     jr .next
 
+SECTION "Bank 1C LoadArg1PointerForScreenTableIndex", ROMX
+
 ; HL = wArg1/wArg2 = the word at ShopItemListTable + 2 * wScreenTableIndex, the start of the list of
 ; item ids (ended by $FF) that this shop sells; E = its low byte. Callers (ShopMenu_Buy_CountItems,
 ; ShopMenu_Buy_DrawItemNames, ShopMenu_Buy_DrawPrices, the quantity and total steps,
@@ -6269,6 +6447,8 @@ LoadArg1PointerForScreenTableIndex::
     ld [wArg1], a
     ret
 
+SECTION "Bank 1C LoadArg1ByteForItemGridXItemGridY", ROMX
+
 ; Finds the item under the Buying cursor: calls LoadArg1PointerForScreenTableIndex, adds 4 *
 ; wItemGridY + wItemGridX, and leaves HL = that address and wArg1 = the item id there (wArg2 keeps
 ; the high byte of the list pointer). Far-called by StepItemDescriptionText, which uses it for the
@@ -6290,6 +6470,8 @@ LoadArg1ByteForItemGridXItemGridY::
     ld a, [hl]
     ld [wArg1], a
     ret
+
+SECTION "Bank 1C RemoveItemCountFromInventory", ROMX
 
 ; Removes copies of the chosen item from the bag: the item is wItemGrid[4 * wItemGridY + wItemGridX]
 ; (kept in wListCursorBlink), the count 10 * wNumberTens + wNumberOnes. It rewrites the 24
@@ -6382,6 +6564,8 @@ RemoveItemCountFromInventory::
     jr c, .loop2
     ret
 
+SECTION "Bank 1C CountItemInInventoryToDigits", ROMX
+
 ; Counts the wInventory places (of 24) holding the item wItemGrid[4 * wItemGridY + wItemGridX], then
 ; splits the count into wCountTens (count / 10) and wCountOnes (count mod 10) with DivideHLByA.
 ; Called by ShopMenu_Sell_StartQuantity, which shows the number held and limits the quantity to it,
@@ -6424,6 +6608,8 @@ CountItemInInventoryToDigits::
     ld a, l
     ld [wCountTens], a
     ret
+
+SECTION "Bank 1C CopyTileListFromBank1F_1C", ROMX
 
 ; Copies a list of 16-byte tiles from bank $1F into VRAM in one call. HL = list of destination
 ; addresses (words), DE = list of source addresses (words in bank $1F); starting at entry
@@ -6488,6 +6674,8 @@ CopyTileListFromBank1F_1C::
     inc [hl]
     ret
 
+SECTION "Bank 1C InitItemListScreenListAndCount", ROMX
+
 ; Sets up the 8 x 5 gold and item count box in RAM: copies the $28 bytes of ShopMenu_Buy_Pay_Data
 ; (the frame tiles) to wScreenList, writes the digits of the gold held into the box at wGoldDigits
 ; (DrawGoldDigitsAtHLWrapped_1C), counts the wInventory places holding neither 0 nor $FF into
@@ -6548,6 +6736,8 @@ InitItemListScreenListAndCount::
     inc [hl]
     ret
 
+SECTION "Bank 1C DrawGoldBoxFromScreenList", ROMX
+
 ; Copies the 8 x 5 box at wScreenList to wWindowTileBuffer + $70 (CopyRectTo20ByteRowsJp_Bank1C),
 ; redraws the 20 x 13 screen at the scroll position (DrawScreenBufferRectToBGMap_1C, DE = $01CC) and
 ; adds 1 to wScreenStep. InitItemListScreenListAndCount fills wScreenList with the frame of
@@ -6569,6 +6759,8 @@ DrawGoldBoxFromScreenList::
     inc [hl]
     ret
 
+SECTION "Bank 1C CloseShopMenu_ClearStateAndResume", ROMX
+
 ; Closing the shop, step 1: clears the list and screen state and resumes the script. (C2, E-0357;
 ; probed E-0379)
 CloseShopMenu_ClearStateAndResume::
@@ -6585,6 +6777,8 @@ CloseShopMenu_ClearStateAndResume::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C CloseShopMenu_RestoreSavedScreen", ROMX
 
 ; Closing the shop, step 0: copies the saved screen ($104 bytes, with GBC attributes) back into the
 ; window buffer and redraws 13 rows. (C1, E-0357)
@@ -6610,6 +6804,8 @@ CloseShopMenu_RestoreSavedScreen::
     inc [hl]
     ret
 
+SECTION "Bank 1C ResetTextCounter0Counters", ROMX
+
 ; Clears wTextCounter0, wTextCounter1, wTextCounter2, wTextCounter3, wTextCounter4, wTextCounter5
 ; and wTextCounter6 and sets wTextTimer = $3C (60), the full value ShopMenu_Description waits for,
 ; so the item description line restarts at its first step (ShopMenu_Description_Clear). Called by
@@ -6628,6 +6824,8 @@ ResetTextCounter0Counters::
     ld a, $3c
     ld [wTextTimer], a
     ret
+
+SECTION "Bank 1C ShopMenu_Description", ROMX
 
 ; The item description line: once wTextTimer has counted up to 60 it steps every frame through
 ; clear, prepare, draw and done; a key other than A sets wTextCounter6 and the timer full, except
@@ -6710,6 +6908,8 @@ ShopMenu_Description_Clear::
     ld [wTextCounter0], a
     jp ShopMenu_Description_ClearAgain
 
+SECTION "Bank 1C ShopMenu_Description_Clear_TileRect", ROMX
+
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 5 tiles, one row per line
@@ -6755,9 +6955,13 @@ ShopMenu_Description_DrawGlyph::
     farcall StepItemDescriptionText
     ret
 
+SECTION "Bank 1C ShopMenu_Description_Done", ROMX
+
 ; Item description, step 3: done (a bare ret). (C2, E-0357; probed E-0379)
 ShopMenu_Description_Done::
     ret
+
+SECTION "Bank 1C ShopMenu_DrawPageIndicatorTiles", ROMX
 
 ; Draws the page indicator frame of the shop lists: the tiles $C5, $BE and $C6 at the scroll origin
 ; + $018E, + $0190 and + $0192 (row 12, columns 14, 16 and 18), each stepped back a row if the view
@@ -6798,6 +7002,8 @@ ShopMenu_DrawPageIndicatorTiles::
     ei
     pop hl
     ret
+
+SECTION "Bank 1C Multiply24By8_Bank1C", ROMX
 
 ; DEHL = A * EHL: multiplies the 24-bit number in E:H:L (E the high byte) by the 8-bit A, giving a
 ; product of up to 32 bits with D the top byte. It does three Multiply8 calls (A * L, A * H, A * E)
@@ -6848,6 +7054,8 @@ Multiply24By8_Bank1C::
     ld d, a
     ret
 
+SECTION "Bank 1C CloseVaultMenu", ROMX
+
 ; Script command SCRIPT_VAULT_CLOSE (ScriptCommandE6 calls it once per frame): calls CloseShopMenu,
 ; which runs one of four closing steps picked by wGridCursorY (restore the saved screen,
 ; CloseShopMenu_ClearStateAndResume, reload the text tiles, redraw the names). The vault shares the
@@ -6857,6 +7065,8 @@ Multiply24By8_Bank1C::
 CloseVaultMenu::
     call CloseShopMenu
     ret
+
+SECTION "Bank 1C VaultMenu", ROMX
 
 ; Script command SCRIPT_VAULT (ScriptCommandE5 calls it once per frame): jumps through wScreenState:
 ; 0 VaultMenu_Init, 1 VaultMenu_Setup, 2 VaultMenu_ChooseAction, 3 VaultMenu_Store, 4
@@ -6922,6 +7132,8 @@ VaultMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C VaultMenu_Setup", ROMX
+
 ; State 1 of VaultMenu: jumps through wScreenStep: 0 VaultMenu_Setup_CopyTiles (which continues into
 ; step 1), 1 VaultMenu_Setup_LoadTiles, 2 VaultMenu_Setup_CountItems, 3
 ; VaultMenu_Setup_LoadFrameTiles, 4 VaultMenu_Setup_InitItemList, 5 VaultMenu_Setup_DrawBoxes. The
@@ -6956,6 +7168,8 @@ VaultMenu_Setup_LoadTiles::
     call CopyTileListFromBank1F_1C
     ret
 
+SECTION "Bank 1C VaultMenu_Setup_CountItems", ROMX
+
 ; Vault setup, step 2: counts the stored items (VaultMenu_CountItems). (C2, E-0357; probed E-0379)
 VaultMenu_Setup_CountItems::
     farcall VaultMenu_CountItems
@@ -6963,6 +7177,8 @@ VaultMenu_Setup_CountItems::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C VaultMenu_Setup_LoadFrameTiles", ROMX
 
 ; Vault setup, step 3: loads four frame tiles into VRAM $9240-$9270. (C1, E-0357)
 VaultMenu_Setup_LoadFrameTiles::
@@ -6991,10 +7207,14 @@ VaultMenu_Setup_LoadFrameTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1C VaultMenu_Setup_InitItemList", ROMX
+
 ; Vault setup, step 4: sets up the item list screen. (C1, E-0357)
 VaultMenu_Setup_InitItemList::
     call InitItemListScreenListAndCount
     ret
+
+SECTION "Bank 1C VaultMenu_Setup_DrawBoxes", ROMX
 
 ; Vault setup, step 5: draws the 11 x 7 box and the choice box, then the next state with the script
 ; resuming. (C1, E-0357)
@@ -7014,6 +7234,8 @@ VaultMenu_Setup_DrawBoxes::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1C VaultMenu_Setup_DrawBoxes_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -7153,10 +7375,14 @@ VaultMenu_ChooseAction_BlinkCursor::
     ld b, $bb
     jr VaultMenu_ChooseAction_DrawCursorTile
 
+SECTION "Bank 1C VaultMenu_ChooseAction_HideCursor", ROMX
+
 ; Draws the blank tile ($C3) at the vault choice. (C1, E-0357)
 VaultMenu_ChooseAction_HideCursor::
     ld b, $c3
     jr VaultMenu_ChooseAction_DrawCursorTile
+
+SECTION "Bank 1C VaultMenu_ChooseAction_MarkChosen", ROMX
 
 ; Draws the chosen tile ($BC) at the vault choice. (C1, E-0357)
 VaultMenu_ChooseAction_MarkChosen::
@@ -7182,6 +7408,8 @@ VaultMenu_ChooseAction_DrawCursorTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1C VaultMenu_ChooseAction_DrawCursorTile_Data", ROMX
 
 ; Three words that are offsets from the top left BG map entry of the visible screen
 ; (BGMapAddressAtScroll_Bank1C_2): $0021, $0061, $00A1, which are rows 1, 3 and 5 of column 1.
@@ -7237,6 +7465,8 @@ VaultMenu_Store_WriteWindowMapStep::
     farcall VaultMenu_Store_WriteWindowMap
     ret
 
+SECTION "Bank 1C VaultMenu_Store_DrawWindow", ROMX
+
 ; Storing, step 1: draws the 11 x 9 window from BG map 1. (C1, E-0357)
 VaultMenu_Store_DrawWindow::
     call BGMapAddressAtScroll_Bank1C_2
@@ -7247,6 +7477,8 @@ VaultMenu_Store_DrawWindow::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C VaultMenu_Store_DrawRows", ROMX
 
 ; Storing, step 2: loads three tiles and draws their rows, clears the vault mode and resumes the
 ; script. (C1, E-0357)
@@ -7263,10 +7495,14 @@ VaultMenu_Store_DrawRows::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C VaultMenu_Store_Choice", ROMX
+
 ; Storing, step 3: the choice (VaultMenu_Store_ItemsGoldExit). (C1, E-0357)
 VaultMenu_Store_Choice::
     farcall VaultMenu_Store_ItemsGoldExit
     ret
+
+SECTION "Bank 1C VaultMenu_Store_BackToChoice", ROMX
 
 ; Storing, step 4: back to the vault's choice (state 1, step 2) with the script resuming. (C2,
 ; E-0357; probed E-0379)
@@ -7284,11 +7520,15 @@ VaultMenu_Store_BackToChoice::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C VaultMenu_Store_SaveListArea", ROMX
+
 ; Storing, step 5: saves the 9 x 12 area at the screen's row 4 to BG map 1
 ; (VaultMenu_SaveListAreaToBGMap1). (C1, E-0357)
 VaultMenu_Store_SaveListArea::
     farcall VaultMenu_SaveListAreaToBGMap1
     ret
+
+SECTION "Bank 1C VaultMenu_Store_SaveArea", ROMX
 
 ; Storing, step 6: copies the blank tiles for the four name places, then saves the 3 x 7 area
 ; (VaultMenu_SaveQuantityAreaToBGMap1). (C1, E-0357)
@@ -7303,6 +7543,8 @@ VaultMenu_Store_SaveArea::
     ld [wScreenCounter], a
     farcall VaultMenu_SaveQuantityAreaToBGMap1
     ret
+
+SECTION "Bank 1C VaultMenu_Store_DrawItemNames", ROMX
 
 ; Storing, step 9: draws the page's item names glyph by glyph, from the bag's distinct items (state
 ; 3) or the stored items (eight a row). (C1, E-0357)
@@ -7447,25 +7689,35 @@ VaultMenu_Store_DrawItemNames::
 .return:
     ret
 
+SECTION "Bank 1C VaultMenu_Store_DrawListWindowStep", ROMX
+
 ; Storing, step 7 (VaultMenu_Store_DrawListWindow). (C1, E-0357)
 VaultMenu_Store_DrawListWindowStep::
     farcall VaultMenu_Store_DrawListWindow
     ret
+
+SECTION "Bank 1C VaultMenu_Store_DrawPageNumbersStep", ROMX
 
 ; Storing, step 8 (VaultMenu_Store_DrawPageNumbers). (C1, E-0357)
 VaultMenu_Store_DrawPageNumbersStep::
     farcall VaultMenu_Store_DrawPageNumbers
     ret
 
+SECTION "Bank 1C VaultMenu_Store_DrawCountStep", ROMX
+
 ; Storing, step 10 (VaultMenu_Store_DrawCount). (C1, E-0357)
 VaultMenu_Store_DrawCountStep::
     farcall VaultMenu_Store_DrawCount
     ret
 
+SECTION "Bank 1C VaultMenu_Store_ItemCursorStep", ROMX
+
 ; Storing, step 11: the item cursor (VaultMenu_Store_ItemCursor). (C1, E-0357)
 VaultMenu_Store_ItemCursorStep::
     farcall VaultMenu_Store_ItemCursor
     ret
+
+SECTION "Bank 1C VaultMenu_Store_RestoreAreas", ROMX
 
 ; Storing, step 12: restores the two saved areas from BG map 1 and returns to step 3 with the script
 ; resuming. (C1, E-0357)
@@ -7490,10 +7742,14 @@ VaultMenu_Store_RestoreAreas::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C VaultMenu_Store_EnterQuantityStep", ROMX
+
 ; Storing, step 13: the quantity entry (VaultMenu_Store_EnterQuantity). (C1, E-0357)
 VaultMenu_Store_EnterQuantityStep::
     farcall VaultMenu_Store_EnterQuantity
     ret
+
+SECTION "Bank 1C VaultMenu_Store_MoveItems", ROMX
 
 ; Storing or taking out, step 14: in state 3 (storing) removes the entered count of the chosen item
 ; from the bag (RemoveItemCountFromInventory; the storage slot was already filled on A at step 13 by
@@ -7514,12 +7770,16 @@ VaultMenu_Store_MoveItems::
     farcall VaultMenu_Store_MoveItems_RebuildBagGrid
     ret
 
+SECTION "Bank 1C VaultMenu_Store_RedrawList", ROMX
+
 ; Storing, step 15: redraws the item list screen and goes on (VaultMenu_Store_BackToList). (C1,
 ; E-0357)
 VaultMenu_Store_RedrawList::
     call InitItemListScreenListAndDraw
     farcall VaultMenu_Store_BackToList
     ret
+
+SECTION "Bank 1C VaultMenu_Store_RestoreAreasAgain", ROMX
 
 ; Storing, step 16: restores the two saved areas and returns to step 4. (C1, E-0357)
 VaultMenu_Store_RestoreAreasAgain::
@@ -7541,16 +7801,22 @@ VaultMenu_Store_RestoreAreasAgain::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1C VaultMenu_Store_SaveGoldArea", ROMX
+
 ; Storing, step 17: saves the 3 x 13 area and resets the quantity entry
 ; (VaultMenu_SaveGoldAreaToBGMap1). (C1, E-0357)
 VaultMenu_Store_SaveGoldArea::
     farcall VaultMenu_SaveGoldAreaToBGMap1
     ret
 
+SECTION "Bank 1C VaultMenu_Store_DrawBankedGoldStep", ROMX
+
 ; Storing, step 19 (VaultMenu_Store_DrawBankedGold). (C1, E-0357)
 VaultMenu_Store_DrawBankedGoldStep::
     farcall VaultMenu_Store_DrawBankedGold
     ret
+
+SECTION "Bank 1C VaultMenu_Store_CopyTile", ROMX
 
 ; Storing, step 18: copies a tile from VRAM $94C0 to $9700 and reloads $94C0. (C1, E-0357)
 VaultMenu_Store_CopyTile::
@@ -7567,15 +7833,21 @@ VaultMenu_Store_CopyTile::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1C VaultMenu_Store_DrawAmountBoxStep", ROMX
+
 ; Storing, step 20 (VaultMenu_Store_DrawAmountBox). (C1, E-0357)
 VaultMenu_Store_DrawAmountBoxStep::
     farcall VaultMenu_Store_DrawAmountBox
     ret
 
+SECTION "Bank 1C VaultMenu_Store_GoldEntry", ROMX
+
 ; Storing, step 21 (VaultMenu_Store_EnterGold). (C1, E-0357)
 VaultMenu_Store_GoldEntry::
     farcall VaultMenu_Store_EnterGold
     ret
+
+SECTION "Bank 1C VaultMenu_Store_RestoreGoldArea", ROMX
 
 ; Step 22 of VaultMenu_Store and VaultMenu_TakeOut, also called by VaultMenu_Store_AskAgain: copies
 ; the 13 x 3 area saved at BG map 1 + $370 (by VaultMenu_SaveGoldAreaToBGMap1) back to the screen at
@@ -7606,6 +7878,8 @@ VaultMenu_Store_RestoreGoldArea::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C VaultMenu_Store_RedrawGold", ROMX
+
 ; Storing, step 23: redraws the gold panel and resumes the script. (C1, E-0357)
 VaultMenu_Store_RedrawGold::
     ld hl, wScreenList
@@ -7635,6 +7909,8 @@ VaultMenu_Store_RedrawGold::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1C VaultMenu_Store_AskAgain", ROMX
+
 ; Storing, step 24: clears the area, asks the two-way choice again and returns to the vault's choice
 ; (state 1, step 2). (C1, E-0357)
 VaultMenu_Store_AskAgain::
@@ -7644,6 +7920,8 @@ VaultMenu_Store_AskAgain::
     ld a, $02
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1C VaultMenu_TakeOut", ROMX
 
 ; State 4 of VaultMenu, taking items out of the vault (the items move from wItemStorage to
 ; wInventory). It jumps through the same 25 wScreenStep entries as VaultMenu_Store except step 3,
@@ -7685,10 +7963,14 @@ VaultMenu_TakeOut_Choice::
     farcall VaultMenu_TakeOut_ItemsGoldExit
     ret
 
+SECTION "Bank 1C VaultMenu_TakeOut_GoldEntry", ROMX
+
 ; Taking out, step 21 (VaultMenu_TakeOut_EnterGold). (C1, E-0357)
 VaultMenu_TakeOut_GoldEntry::
     farcall VaultMenu_TakeOut_EnterGold
     ret
+
+SECTION "Bank 1C InitItemListScreenListAndDraw", ROMX
 
 ; Like InitItemListScreenListAndCount but for a redraw: copies the first $20 bytes of
 ; ShopMenu_Buy_Pay_Data (four rows of the 8-wide box) to wScreenList, writes the gold digits at
@@ -7754,6 +8036,8 @@ InitItemListScreenListAndDraw::
     lb bc, $08, $04
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ret
+
+SECTION "Bank 1C VaultMenu_Store_BlankNameTiles", ROMX
 
 ; Clears the nine tile places of name place wScreenCounter with blank tiles. (C1, E-0357)
 VaultMenu_Store_BlankNameTiles::

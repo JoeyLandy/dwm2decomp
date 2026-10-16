@@ -1,7 +1,7 @@
 ; ROM bank $11: map records and warps
 ; The annotated listing of this bank is build/listing/bank11.asm.
 
-SECTION "Bank 11", ROMX[$4000], BANK[$11]
+SECTION "Bank 11", ROMX
     db $11, $c9
 
 ; Far-called by UpdatePlayerMovement (bank $02) after it has stepped hMapScreenX or hMapScreenY to
@@ -219,6 +219,8 @@ CheckWarpAtPlayer::
     ld c, $01
     ret
 
+SECTION "Bank 11 CheckWarpsAtPlayerPosition", ROMX
+
 ; The per-step warp check, far-called by FieldState_StepChecks, UpdatePlayerMovement_AdvanceStep and
 ; RunFieldActionRequestActionIfBit7_StepChecks; returns C = 1 when it started a warp. Special maps
 ; (wMapType bit 7) use CheckWarpsByMapType. Otherwise CheckMapExitTable runs first and a warp there
@@ -432,6 +434,8 @@ CheckWarpsAtPlayerPosition::
     ld c, $01
     ret
 
+SECTION "Bank 11 WarpToLinkedMapForCurrentMap", ROMX
+
 ; Far-called by UpdatePlayerMovement (bank $02) when CheckWarpAtPlayer finds nothing after the
 ; player steps down to the next screen, and by CheckWarpAtPlayer_LinkedMap_ScreenRow1 (bank $61);
 ; returns C = 1 when it warped, otherwise C = 0. Special maps go to
@@ -493,6 +497,8 @@ WarpToLinkedMapForCurrentMap::
     call WarpToLinkedMapForCurrentMap_StartWarp
     ld c, $01
     ret
+
+SECTION "Bank 11 WarpToLinkedMapForCurrentMap_Data1", ROMX
 
 ; Eleven map ids in ascending order, $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9 and $E2, ended
 ; by $FF: the maps WarpToLinkedMapForCurrentMap looks hMapId up in. The position N where hMapId is
@@ -571,6 +577,8 @@ WarpToLinkedMapForCurrentMap_SpecialMap::
     ld c, $01
     ret
 
+SECTION "Bank 11 WarpToLinkedMapForCurrentMap_StartWarp", ROMX
+
 ; The warp helper of WarpToLinkedMapForCurrentMap (its only caller), not a script command. DE points
 ; at two packed bytes: wWarpDestX = byte 0 & $F0, wWarpDestY = (byte 0 & $0F) x 16, hMapScreenX/Y =
 ; high/low nibble of byte 1. Sets wWarpPending = 1, queues sound $60, wFieldTransitionKind = 1,
@@ -621,6 +629,8 @@ WarpToLinkedMapForCurrentMap_StartWarp::
     ld c, $01
     ret
 
+SECTION "Bank 11 StartWarpTransition", ROMX
+
 ; Starts the warp of WarpToLinkedMapForCurrentMap_SpecialMap (its only caller, from both branches)
 ; after the destination is set: wWarpDestFacing = $F0, queues sound $60, palette fade 4, wModeState
 ; = 4, wFieldTransitionStep = 0, sets hPlayerStateFlags bit 5 and clears bits 7 and 0,
@@ -649,6 +659,8 @@ StartWarpTransition::
     ld a, $01
     ld [wFieldTransitionKind], a
     ret
+
+SECTION "Bank 11 CheckMapExitTable", ROMX
 
 ; Called by CheckWarpsAtPlayerPosition before its warp list; returns C = 1 when it warped. Maps
 ; below $20, and maps not in the 4-byte records of CheckMapExitTable_Data (map id, position byte,
@@ -709,6 +721,8 @@ CheckMapExitTable::
     inc de
     call CheckMapExitEntry
     ret
+
+SECTION "Bank 11 CheckMapExitEntry", ROMX
 
 ; The exit-table entry at DE: when the player stands on its position and screen and is not already
 ; leaving (hPlayerStateFlags bit 5), warps (sound $60) to the entry's map from the table, screen (0,
@@ -788,6 +802,8 @@ CheckMapExitEntry::
     farcall ClearPendingFieldEventIfBit7AndNot6
     ld c, $01
     ret
+
+SECTION "Bank 11 CheckMapExitTable_Data", ROMX
 
 ; Eleven 4-byte records and an $FF end mark: map id ($20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8,
 ; $D1, $DA, ascending), a position byte (always $44: the player X cell in the high nibble, the Y

@@ -1,7 +1,7 @@
 ; ROM bank $09: string tables
 ; The annotated listing of this bank is build/listing/bank09.asm.
 
-SECTION "Bank 09", ROMX[$4000], BANK[$09]
+SECTION "Bank 09", ROMX
     db $09
 
 ; Starts showing string wStringIndex of category wStringCategory from the bank $09 table
@@ -13,6 +13,8 @@ BeginStringDisplay_Bank09::
     call BeginStringDisplay
     ret
 
+SECTION "Bank 09 CopyStringToBuffer_Bank09", ROMX
+
 ; Copies string wStringIndex of category wStringCategory from
 ; BeginStringDisplay_Bank09_StringCategories, with its $F0 end, to the address in
 ; wStringDestLo/wStringDestHi (CopyStringToBuffer; wStringBank = $09). (C2, E-0375)
@@ -22,6 +24,8 @@ CopyStringToBuffer_Bank09::
     call CopyStringToBuffer
     ret
 
+SECTION "Bank 09 ShowString_Bank09", ROMX
+
 ; BeginStringDisplay_Bank09, then RunStringDisplayToEnd: draws a whole bank $09 string at once (the
 ; pause menu page headings and key names among them). (C1, E-0375)
 ; BeginStringDisplay_Bank09 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
@@ -29,6 +33,8 @@ ShowString_Bank09::
     call BeginStringDisplay_Bank09
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 09 BeginStringDisplay_Bank09_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

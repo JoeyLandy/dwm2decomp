@@ -1,7 +1,7 @@
 ; ROM bank $94: special map screens
 ; The annotated listing of this bank is build/listing/bank94.asm.
 
-SECTION "Bank 94", ROMX[$4000], BANK[$94]
+SECTION "Bank 94", ROMX
     db $94
 
 ; Eight background palettes of four little-endian BGR555 colors each ($40 bytes), the palette set of

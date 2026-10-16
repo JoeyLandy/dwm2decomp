@@ -1,7 +1,7 @@
 ; ROM bank $1D: the vault menu, scripts and glyph tiles
 ; The annotated listing of this bank is build/listing/bank1d.asm.
 
-SECTION "Bank 1D", ROMX[$4000], BANK[$1D]
+SECTION "Bank 1D", ROMX
     db $1d
 
 ; Loads DE with BeginStringDisplay_Bank1D_StringCategories, this bank string table, and calls
@@ -409,6 +409,8 @@ VaultMenu_Store_WriteWindowMap::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1D BGMap1TileRun", ROMX
+
 ; VaultMenu_Store_WriteWindowMap copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState =
 ; 3) (E-0226, C1)
 ; record: 99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F
@@ -475,6 +477,8 @@ LoadThreeTilesAndDrawRows::
     ld de, LoadThreeTilesAndDrawRows_TileRect_3
     call DrawRectSetTextCursorLoPlus21_Bank1D
     ret
+
+SECTION "Bank 1D LoadThreeTilesAndDrawRows_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -782,6 +786,8 @@ VaultMenu_ItemsGoldExit_Cursor::
     ld a, $02
     ret
 
+SECTION "Bank 1D VaultMenu_ItemsGoldExit_BlinkCursor", ROMX
+
 ; Blinks the cursor of the vault three-way choice (VaultMenu_Store_ItemsGoldExit and
 ; VaultMenu_TakeOut_ItemsGoldExit). While wJoypadRepeatTimer is below $14 it only draws the cursor
 ; tile $BB at choice place wVaultMode; from $14 on it adds 1 to wCursorBlinkEF and draws $BB below
@@ -814,6 +820,8 @@ VaultMenu_ItemsGoldExit_ShowCursor::
     ld b, $bb
     jr VaultMenu_DrawChoiceCursorTile
 
+SECTION "Bank 1D VaultMenu_ItemsGoldExit_HideCursor", ROMX
+
 ; Sets B = $C3, the blank tile, and continues in VaultMenu_DrawChoiceCursorTile, which writes B at
 ; vault choice place wVaultMode. VaultMenu_ItemsGoldExit_Cursor calls it to hide the cursor before
 ; moving it, and VaultMenu_ItemsGoldExit_BlinkCursor for the hidden part of the blink. (C1, E-0379)
@@ -822,6 +830,8 @@ VaultMenu_ItemsGoldExit_ShowCursor::
 VaultMenu_ItemsGoldExit_HideCursor::
     ld b, $c3
     jr VaultMenu_DrawChoiceCursorTile
+
+SECTION "Bank 1D VaultMenu_BlinkCursorBlinkEF_Bank1D_MarkChosen", ROMX
 
 ; B = the chosen tile ($BC) for the vault choice. (C1, E-0357)
 VaultMenu_BlinkCursorBlinkEF_Bank1D_MarkChosen::
@@ -847,6 +857,8 @@ VaultMenu_DrawChoiceCursorTile::
     ei
     ret
 
+SECTION "Bank 1D VaultMenu_DrawChoiceCursorTile_Data", ROMX
+
 ; Three words that are offsets from the top left BG map entry of the visible screen
 ; (BGMapAddressAtScroll_Bank1D): $0061, $00A1, $00E1, which are rows 3, 5 and 7 of column 1.
 ; VaultMenu_DrawChoiceCursorTile indexes them with wVaultMode and writes tile B at that entry. (C1,
@@ -870,6 +882,8 @@ VaultMenu_SaveListAreaToBGMap1::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1D VaultMenu_SaveQuantityAreaToBGMap1", ROMX
 
 ; Saves the vault quantity box area: copies 3 rows of 7 tiles from the BG map at the scroll origin +
 ; $0140 (row 10, column 0, around the digits at + $0161) to BG map 1 at $9FE0 (vBGMap1 + $3E0) with
@@ -895,6 +909,8 @@ VaultMenu_SaveQuantityAreaToBGMap1::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1D VaultMenu_Store_DrawListWindow", ROMX
 
 ; Storing, step 7: draws the 12 x 9 item window (with page brackets when two or more pages) and on
 ; the GBC clears its attributes. (C1, E-0357)
@@ -975,6 +991,8 @@ VaultMenu_Store_DrawListWindow::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1D VaultMenu_Store_DrawListWindow_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -1070,6 +1088,8 @@ VaultMenu_Store_DrawPageNumbers::
     ld [wGlyphListPos], a
     ret
 
+SECTION "Bank 1D CountNonZeroItemGridBytes", ROMX
+
 ; C = the number of non-zero bytes among the $18 bytes of wItemGrid (B ends $18, HL = wItemGrid +
 ; $18, A is clobbered). VaultMenu_Store_CountListRows uses it in state 3 to count the distinct bag
 ; items after ListDistinctInventoryItemsToItemGrid has filled wItemGrid. (C2, E-0379)
@@ -1092,6 +1112,8 @@ CountNonZeroItemGridBytes::
     cp $18
     jr c, .loop
     ret
+
+SECTION "Bank 1D VaultMenu_CountItems", ROMX
 
 ; Counts the stored items (100 two-byte slots) into wSavedSpriteClipMode and the bag's items into
 ; wListPages. (C2, E-0357; probed E-0379)
@@ -1139,6 +1161,8 @@ VaultMenu_CountItems::
     ld [wListPages], a
     ret
 
+SECTION "Bank 1D BlinkCursorSelectedRecord_Bank1D", ROMX
+
 ; Adds 1 to wSelectedRecord and draws the vault item cursor of the list: below $10 the cursor tile
 ; $BB at item place wItemGridX (VaultMenu_Store_PutItemCursorTile), from $10 to $17 the blank tile
 ; $C3 (VaultMenu_Store_EraseItemCursor), and at $18 it resets the count to 0 and draws $BB. The same
@@ -1161,6 +1185,8 @@ BlinkCursorSelectedRecord_Bank1D::
 .skip:
     ld b, $bb
     jr VaultMenu_Store_PutItemCursorTile
+
+SECTION "Bank 1D VaultMenu_Store_EraseItemCursor", ROMX
 
 ; Draws the blank tile ($C3) at item cursor wItemGridX (VaultMenu_Store_PutItemCursorTile).
 ; VaultMenu_Store_CountListRows calls it, and BlinkCursorSelectedRecord_Bank1D, which has no caller
@@ -1189,6 +1215,8 @@ VaultMenu_Store_PutItemCursorTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1D VaultMenu_Store_PutItemCursorTile_Data", ROMX
 
 ; Four words that are offsets from the top left BG map entry of the visible screen: $00A9, $00E9,
 ; $0129, $0169, which are rows 5, 7, 9 and 11 of column 9. VaultMenu_Store_PutItemCursorTile indexes
@@ -1363,6 +1391,8 @@ VaultMenu_Store_DrawCount::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1D VaultMenu_Store_DrawCount_Data", ROMX
 
 ; A 7 by 3 tile picture of the count box (three rows of 7 tile ids): top border $B0 $B1 x5 $B2,
 ; middle $B6 $C3 $C3 $BE $C3 $C3 $B7, bottom $B3 $B4 x5 $B5. VaultMenu_Store_DrawCount copies it to
@@ -1559,6 +1589,8 @@ VaultMenu_Store_ItemCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1D VaultMenu_Store_ItemCursor_Blink", ROMX
+
 ; Blinks the item cursor of the vault list. While wJoypadRepeatTimer is below $14 it only draws the
 ; cursor tile $BB at item place wItemGridX (VaultMenu_Store_ItemCursor_ShowCursor); from $14 on it
 ; adds 1 to wSelectedRecord and draws $BB below $10, the blank tile $C3 from $10 to $17, and at $18
@@ -1591,6 +1623,8 @@ VaultMenu_Store_ItemCursor_ShowCursor::
     ld b, $bb
     jr VaultMenu_Store_ItemCursor_DrawTile
 
+SECTION "Bank 1D VaultMenu_Store_ItemCursor_HideCursor", ROMX
+
 ; Sets B = $C3, the blank tile, and continues in VaultMenu_Store_ItemCursor_DrawTile: removes the
 ; cursor from item place wItemGridX of the vault list. VaultMenu_Store_ItemCursor calls it before
 ; the cursor moves, and VaultMenu_Store_ItemCursor_Blink for the hidden part of the blink. (C1,
@@ -1600,6 +1634,8 @@ VaultMenu_Store_ItemCursor_ShowCursor::
 VaultMenu_Store_ItemCursor_HideCursor::
     ld b, $c3
     jr VaultMenu_Store_ItemCursor_DrawTile
+
+SECTION "Bank 1D VaultMenu_Store_ItemCursor_MarkChosen", ROMX
 
 ; B = the chosen tile ($BC) for the item cursor. (C1, E-0357)
 VaultMenu_Store_ItemCursor_MarkChosen::
@@ -1625,6 +1661,8 @@ VaultMenu_Store_ItemCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1D VaultMenu_Store_ItemCursor_DrawTile_Data", ROMX
 
 ; Four words that are offsets from the top left BG map entry of the visible screen: $00A9, $00E9,
 ; $0129, $0169, which are rows 5, 7, 9 and 11 of column 9, identical to
@@ -1678,6 +1716,8 @@ VaultMenu_Store_CheckRoom::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 1D VaultMenu_Store_EnterQuantity", ROMX
 
 ; Storing, step 13: the quantity entry: B clears the box and returns to the item cursor (answer 2,
 ; step $0B); Right/Left move between the digits; Up/Down change the digit, at most the count
@@ -1966,6 +2006,8 @@ VaultMenu_Store_EnterQuantity::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1D VaultMenu_Store_EnterQuantity_BlinkDigit", ROMX
+
 ; Blinks the digit being edited in the vault quantity box. While wJoypadRepeatTimer is below $14 it
 ; only draws the digit ($E0 + wNumberTens or wNumberOnes, by wNumberEditPos) through
 ; VaultMenu_Store_EnterQuantity_ShowDigit; from $14 on it adds 1 to wCursorBlinkCD and draws the
@@ -2006,6 +2048,8 @@ VaultMenu_Store_EnterQuantity_ShowDigit::
     ld b, a
     jr VaultMenu_Store_EnterQuantity_DrawDigitTile
 
+SECTION "Bank 1D VaultMenu_Store_EnterQuantity_ShowEditCursor", ROMX
+
 ; B = the digit cursor tile ($CB). (C1, E-0357)
 VaultMenu_Store_EnterQuantity_ShowEditCursor::
     ld b, $cb
@@ -2029,6 +2073,8 @@ VaultMenu_Store_EnterQuantity_DrawDigitTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1D VaultMenu_Store_EnterQuantity_DrawDigitTile_Data", ROMX
 
 ; Two words that are offsets from the top left BG map entry of the visible screen: $0161 and $0162,
 ; which are row 11 columns 1 and 2: the tens and ones places of the quantity.
@@ -2068,6 +2114,8 @@ DrawNumberTensNumberOnesDigitsAtScroll161::
     ei
     ret
 
+SECTION "Bank 1D CheckListPagesPlusNumberAtMost18", ROMX
+
 ; A = $FF when wListPages + 10 * wNumberTens + wNumberOnes (the sum taken as one byte) is more than
 ; $18 (24), else 0. VaultMenu_Store_EnterQuantity calls it when A is pressed outside state 3 (taking
 ; out): 0 means the bag has room for the entered count, $FF makes it answer wTwoChoiceCursor = 1.
@@ -2086,6 +2134,8 @@ CheckListPagesPlusNumberAtMost18::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 1D VaultMenu_Store_AddToStorage", ROMX
 
 ; Adds the quantity of the chosen bag item to storage: to its slot, or a new slot after the used
 ; ones; $FF (nothing changed) when the slot would reach 100 or more. (C2, E-0357; probed E-0379)
@@ -2154,6 +2204,8 @@ VaultMenu_Store_AddToStorage::
     ld [wTextCounter1], a
     ld a, $ff
     ret
+
+SECTION "Bank 1D VaultMenu_Store_MoveItems_TakeOut", ROMX
 
 ; Taking out the quantity of the chosen stored item: takes it from its slot (clearing the slot at 0)
 ; and puts the copies in the bag's free places; then answers 0 when the bag is full, 1 when storage
@@ -2238,6 +2290,8 @@ VaultMenu_Store_MoveItems_TakeOut::
     ld a, $02
     ld [wTwoChoiceCursor], a
     jp VaultMenu_Store_AfterStoring_Finish
+
+SECTION "Bank 1D VaultMenu_Store_AfterStoring", ROMX
 
 ; After storing: answers 0 when the bag is empty, 1 when storage holds 9,900 or more items in all,
 ; otherwise 2; then the next step. (C2, E-0357; probed E-0379)
@@ -2341,6 +2395,8 @@ VaultMenu_Store_AfterStoring_Finish::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1D OrderList1D_1", ROMX
+
 ; two $FF-terminated lists holding the numbers $01-$62 in two different orders; no reader was found,
 ; directly or by a computed base (E-0227, C1)
 ; record: 95 numbers, then $FF
@@ -2371,6 +2427,8 @@ ClearVRAM9700Block_Unreferenced:: ; configured code entry (E-0227); C0
     or c
     jr nz, .loop
     ret
+
+SECTION "Bank 1D VaultMenu_Store_BackToList", ROMX
 
 ; Storing, step 15: with answer 2 (more to do) returns to the item list (step 7) with the cursor
 ; reset and the count cleared; otherwise goes on; the script resumes. (C1, E-0357)
@@ -2408,6 +2466,8 @@ VaultMenu_Store_BackToList::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1D VaultMenu_SaveGoldAreaToBGMap1", ROMX
+
 ; Saves a 13 x 3 area: copies 3 rows of 13 tiles from the BG map at the scroll origin + $0147 (row
 ; 10, column 7) to BG map 1 at $9F70 (vBGMap1 + $370) with attributes (SaveBGMapRectWithAttrs), adds
 ; 1 to wScreenStep, clears wCursorBlinkCD and the three bytes of wThreeDigits and sets
@@ -2431,6 +2491,8 @@ VaultMenu_SaveGoldAreaToBGMap1::
     ld a, $02
     ld [wNumberEditPos], a
     ret
+
+SECTION "Bank 1D VaultMenu_Store_DrawBankedGold", ROMX
 
 ; Draws the banked gold (six digits, leading blanks) in its 9 x 3 box at the screen's row 10, column
 ; 11. (C1, E-0357)
@@ -2576,6 +2638,8 @@ VaultMenu_Store_DrawBankedGold::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 1D VaultMenu_Store_DrawBankedGold_Data", ROMX
 
 ; A 9 by 3 tile picture of the banked gold box (three rows of 9 tile ids): top border $B0 $B1 x7
 ; $B2, middle $B6 $BF $C3 x6 $B7, bottom $B3 $B4 x7 $B5. VaultMenu_Store_DrawBankedGold copies it to
@@ -2839,6 +2903,8 @@ VaultMenu_Store_EnterGold::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1D VaultMenu_TakeOut_EnterGold", ROMX
+
 ; Taking out gold, step 21: as storing, but the amount is added to the gold in hand, and a total
 ; over 99,999 is refused (wTwoChoiceCursor = 1). (C1, E-0357)
 VaultMenu_TakeOut_EnterGold::
@@ -2977,6 +3043,8 @@ VaultMenu_TakeOut_EnterGold::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 1D VaultMenu_EnterThreeDigits", ROMX
 
 ; The three-digit amount entry: A answers 1, B 2; Up/Down raise or lower the digit at wNumberEditPos
 ; (wrapping 9 to 0), keeping the amount within the limit digits wCountTens / wCountOnes / wItemGrid;
@@ -3301,6 +3369,8 @@ VaultMenu_EnterThreeDigits::
     xor a
     ret
 
+SECTION "Bank 1D VaultMenu_EnterThreeDigits_BlinkCursor", ROMX
+
 ; Blinks the amount cursor once the pad has been still for 20 frames: the digit for 16 counts, the
 ; cursor tile $CB for 8; drawn at digit place wNumberEditPos. (C1, E-0357)
 VaultMenu_EnterThreeDigits_BlinkCursor::
@@ -3348,6 +3418,8 @@ VaultMenu_EnterThreeDigits_BlinkCursor::
     ei
     ret
 
+SECTION "Bank 1D VaultMenu_EnterThreeDigits_BlinkCursor_Data", ROMX
+
 ; Three words that are offsets from the top left BG map entry of the visible screen: $006E, $006F,
 ; $0070, which are row 3 columns 14, 15 and 16: the three digit places of the number editor.
 ; VaultMenu_EnterThreeDigits_BlinkCursor indexes them with wNumberEditPos (0 to 2) and writes either
@@ -3387,6 +3459,8 @@ DrawThreeDigitsAtScrollOffset6E::
     jr c, .loop
     ret
 
+SECTION "Bank 1D SplitItemStorageEntryIntoDigits", ROMX
+
 ; Reads the count byte of the Vault entry under the item cursor, wItemStorage + 8 * wItemGridY + 2 *
 ; wItemGridX + 1 (each entry is an item id followed by a count, four entries per row), and stores
 ; count / 10 in wCountTens and count mod 10 in wCountOnes by DivideHLByA; a count above 99 would
@@ -3417,6 +3491,8 @@ SplitItemStorageEntryIntoDigits::
     ld a, l
     ld [wCountTens], a
     ret
+
+SECTION "Bank 1D SaveBGMapRectWithAttrs", ROMX
 
 ; Copies a rectangle of the BG map into VRAM at DE: HL = offset of its top-left tile from the screen
 ; origin at the current scroll (BGMapAddressAtScroll_Bank1D + HL), B = number of rows, C = tiles per
@@ -3489,6 +3565,8 @@ SaveBGMapRectWithAttrs::
     pop hl
     pop hl
     ret
+
+SECTION "Bank 1D VaultMenu_Store_FindStorageSlots", ROMX
 
 ; Looks for room in the Vault for the first bag item that has any. It walks the 24 slots of
 ; wInventory (0 and $FF are skipped) and for each item the 100 two-byte entries of wItemStorage in
@@ -3565,6 +3643,8 @@ VaultMenu_Store_FindStorageSlots::
     xor a
     ret
 
+SECTION "Bank 1D ItemStorageHasNonZeroEntry", ROMX
+
 ; A = 0 when one of the 100 two-byte entries at wItemStorage has a non-zero first byte (item id),
 ; else A = $FF; the count byte is not looked at. Clobbers C and HL. No call to it is named in src/.
 ; (C2, E-0379)
@@ -3591,6 +3671,8 @@ ItemStorageHasNonZeroEntry::
     xor a
     ret
 
+SECTION "Bank 1D BGMapAddressAtScroll_Bank1D", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for the top-left pixel of the
 ; screen at the current scroll; clobbers A and DE. The Vault menu drawing steps add their own
 ; offsets to it. Same bytes as the BGMapAddressAtScroll_Bank1D copies in other banks. (C1, E-0379)
@@ -3613,6 +3695,8 @@ BGMapAddressAtScroll_Bank1D::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank 1D DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D", ROMX
 
 ; Copies the B x C tile rectangle at DE (B = width, C = rows) to the BG map at HL with
 ; CopyRectToBGMapWrapped_Bank1D and sets wTextCursorLo and wTextCursorHi to HL + $1C1 (14 rows down,
@@ -3668,6 +3752,8 @@ DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D::
     ldh [c], a
     ret
 
+SECTION "Bank 1D DrawRectSetTextCursorLoPlus21_Bank1D", ROMX
+
 ; Copies the B x C tile rectangle at DE (B = width, C = rows) to the BG map at HL with
 ; CopyRectToBGMapWrapped_Bank1D and sets wTextCursorLo and wTextCursorHi to HL + $21 (one row down,
 ; one column right of the box corner). BC, DE and HL are unchanged; A is clobbered. Called by the
@@ -3698,6 +3784,8 @@ DrawRectSetTextCursorLoPlus21_Bank1D::
     pop bc
     pop de
     ret
+
+SECTION "Bank 1D CopyRectToBGMapWrapped_Bank1D", ROMX
 
 ; Copies a tile rectangle from DE to the BG map at HL: B = width, C = rows, the source runs on
 ; without gaps. Each tile goes out through WriteVRAMByteInc; when HL reaches the start of the next
@@ -3748,6 +3836,8 @@ CopyRectToBGMapWrapped_Bank1D::
 .return:
     ret
 
+SECTION "Bank 1D TenTimesNumberTensPlusNumberOnes", ROMX
+
 ; HL = 10 * wNumberTens + wNumberOnes, computed as 2 * tens + 8 * tens + ones in 16 bits (so tens
 ; values above 25 still fit); clobbers A and DE. Turns the two digits of a number being edited into
 ; its value for CheckListPagesPlusNumberAtMost18, VaultMenu_Store_AddToStorage and
@@ -3771,6 +3861,8 @@ TenTimesNumberTensPlusNumberOnes::
     ld a, [wNumberOnes]
     add_a_to_hl
     ret
+
+SECTION "Bank 1D VaultMenu_EnterThreeDigits_CapAtLimit", ROMX
 
 ; Caps the three-digit amount at the limit digits (wCountTens, wCountOnes, wItemGrid) and redraws it
 ; when it was over. (C1, E-0357)
@@ -3806,6 +3898,8 @@ VaultMenu_EnterThreeDigits_CapAtLimit::
 
 .return:
     ret
+
+SECTION "Bank 1D VaultMenu_Store_CountListRows", ROMX
 
 ; Recounts the list on screen in rows of four: in state 3 (storing) the bag's distinct items in
 ; wItemGrid (CountNonZeroItemGridBytes), otherwise the stored items (wSavedSpriteClipMode;
@@ -3888,6 +3982,8 @@ VaultMenu_Store_CountListRows::
 
 .return:
     ret
+
+SECTION "Bank 1D DrawRecordStatsBoxForArg1", ROMX
 
 ; Fills the stats box of SRAM record wArg1 in wWindowTileBuffer, with SRAM bank 0 enabled for the
 ; duration and disabled again at the end. Writes the sex mark tile ($CC + bit 0 of MON_SEX) at
@@ -3979,6 +4075,8 @@ DrawRecordStatsBoxForArg1::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 1D DrawRecordStatsBoxForArg1_Data1", ROMX
+
 ; Four bytes $5B, $5D, $5F, $61: the record offsets of the four word fields MON_HP, MON_MAX_HP,
 ; MON_MP and MON_MAX_MP. DrawRecordStatsBoxForArg1 loops c = 0 to 3, reads field c of SRAM record
 ; wArg1 with LoadSRAMRecordWord, converts it with HLToDecimalDigits and draws the three digits at
@@ -4048,6 +4146,8 @@ DrawListEntriesCell5PedigreeSprites::
     dec b
     jr nz, .loop4
     ret
+
+SECTION "Bank 1D DrawListEntriesCell5SpeciesSprite", ROMX
 
 ; Draws the species sprite of the record in the list cell wListEntries + 5 * wListPageIndex +
 ; wListCursor (SetArg5ToListEntriesCell5): reads its MON_SPECIES word from SRAM bank 0 (disabled
@@ -4120,6 +4220,8 @@ DrawListEntriesCell5SpeciesSprite::
     jr nz, .loop4
     ret
 
+SECTION "Bank 1D LoadListEntriesCell5RecordAndContinue", ROMX
+
 ; Takes the record number in the list cell wListEntries + 5 * wListPageIndex + wListCursor
 ; (SetArg5ToListEntriesCell5), enables SRAM bank 0 and jumps to CopyRecordNameToTextBuf0 with A =
 ; that record number, which copies its name into wTextBuf0 (at most 10 letters, $F0-terminated) and
@@ -4135,6 +4237,8 @@ LoadListEntriesCell5RecordAndContinue::
     ld [rRAMB], a
     ld a, [hl]
     jr CopyRecordNameToTextBuf0
+
+SECTION "Bank 1D CopySelectedRecordNameToTextBuf0", ROMX
 
 ; Enables SRAM bank 0 (rRAMG2, rRAMB = 0) and copies the name (MON_NAME) of SRAM record
 ; wSelectedRecord into wTextBuf0, at most 10 letters and $F0-terminated, by falling into
@@ -4180,6 +4284,8 @@ CopyRecordNameToTextBuf0::
     ld a, $f0
     ld [de], a
     ret
+
+SECTION "Bank 1D DrawRecordNameAndSpeciesNameTiles", ROMX
 
 ; Draws two names as glyph tiles for SRAM record wArg1, with SRAM bank 0 enabled and disabled again
 ; at the end. Its MON_NAME goes to wNameGlyphBuf ($F0 stored at +$A) and CopyGlyphTilesToVRAM draws
@@ -4248,6 +4354,8 @@ DrawRecordNameAndSpeciesNameTiles::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 1D LoadAreaGraphicsForAreaGraphicsIndex", ROMX
+
 ; Uses wAreaGraphicsIndex as an index into two 3-byte far pointer tables: the entry of
 ; AreaTilesetTable is decompressed to vTiles2 (DecompressToVRAM) and the entry of AreaPaletteTable
 ; gives $40 bytes that CopyFromBankWaitVRAM copies to wBGPaletteBuffer. Both tables hold two entries
@@ -4281,6 +4389,8 @@ LoadAreaGraphicsForAreaGraphicsIndex::
     ld c, $40
     call CopyFromBankWaitVRAM
     ret
+
+SECTION "Bank 1D AreaTilesetTable", ROMX
 
 ; LoadAreaGraphicsForAreaGraphicsIndex decompresses the far pointer at $5D78 + 3 *
 ; wAreaGraphicsIndex to vTiles2; two entries decode, the bytes after them are AreaPaletteTable
@@ -4319,6 +4429,8 @@ SetArg5ToListEntriesCell5::
     ld [wArg6], a
     ret
 
+SECTION "Bank 1D SetArg5ToListEntriesCell4", ROMX
+
 ; HL = wListEntries + 4 * wListPageIndex + wListCursor, the address of the list cell under the
 ; cursor for lists of four cells per page (the index is added as one byte); also stores H in wArg5
 ; and L in wArg6. Clobbers A and B. Called, mostly by farcall, by the egg, key, prize and breed list
@@ -4338,6 +4450,8 @@ SetArg5ToListEntriesCell4::
     ld a, l
     ld [wArg6], a
     ret
+
+SECTION "Bank 1D ShowListEntriesCell5RecordItemName", ROMX
 
 ; Shows the item name of a record: takes the record number in the list cell wListEntries + 5 *
 ; wListPageIndex + wListCursor, reads its MON_ITEM byte from SRAM bank 0 (disabled again straight
@@ -4377,6 +4491,8 @@ ShowListEntriesCell5RecordItemName::
     farcall ShowString_Bank08
     ret
 
+SECTION "Bank 1D ShowCursorRecordFieldAbility", ROMX
+
 ; For the record in cell 5 of wListEntries (SetArg5ToListEntriesCell5) reads its MON_SPECIES word
 ; from SRAM bank 0, loads the species record (LoadSpeciesRecord) and shows string
 ; SPECIES_FIELD_ABILITY of category $0D, the field ability name, through ShowString_Bank08 with the
@@ -4414,6 +4530,8 @@ ShowCursorRecordFieldAbility::
     ld [hl], $06
     farcall ShowString_Bank08
     ret
+
+SECTION "Bank 1D CountRecordsInUse", ROMX
 
 ; Sets wRecordsInUse to the number of SRAM records among the first wRecordCapacity ones ($A5 bytes
 ; apart from sRecords) whose state byte MON_STATE is 1 or 2; the capacity comes from
@@ -4460,6 +4578,8 @@ CountRecordsInUse::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 1D ListPartyRecordsWithState2ToListEntries", ROMX
 
 ; Clears wRecordCapacity bytes of wListEntries (10, 20 or 30, from
 ; LoadRecordCapacityFromFarmLevelTable), sets wListCount to 0, then takes the record numbers of
@@ -4525,6 +4645,8 @@ ListPartyRecordsWithState2ToListEntries::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 1D ListRecordsState1NotEggs", ROMX
 
 ; Clears 30 bytes of wListEntries and sets wListCount and wRecordsFlagged to 0, then scans the first
 ; wRecordCapacity SRAM records in order: a record whose MON_STATE is 1 and whose MON_EGG is 0 has
@@ -4603,6 +4725,8 @@ ListRecordsState1NotEggs::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 1D ListRecordsInUseNotEggs", ROMX
 
 ; Clears 30 bytes each of wListEntries and wListEntries2 and sets wListCount and wRecordsFlagged to
 ; 0, then scans the first wRecordCapacity SRAM records in order: a record whose MON_STATE is 1 or 2
@@ -4805,6 +4929,8 @@ MovePartyRecordsToFrontOfList::
 .return:
     ret
 
+SECTION "Bank 1D ListRecordsInUseEggs", ROMX
+
 ; Clears 30 bytes of wListEntries and sets wListCount and wRecordsFlagged to 0, then scans the first
 ; wRecordCapacity SRAM records in order and appends the number of each one whose MON_STATE is 1 or 2
 ; and whose MON_EGG is non-zero (appraised or not) to wListEntries. At the end wListCount and
@@ -4886,6 +5012,8 @@ ListRecordsInUseEggs::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 1D DrawRecordListPageSpeciesNames", ROMX
 
 ; Draws the species names of the records on page wListPageIndex of wListEntries (four records per
 ; page, at most wListCount of them) as glyph tiles. For each record it reads MON_SPECIES from SRAM
@@ -4990,6 +5118,8 @@ DrawRecordListPageSpeciesNames::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 1D DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D", ROMX
+
 ; Draws the $F0-terminated text at wNameGlyphBuf glyph by glyph, one VRAM tile slot per glyph, with
 ; C = the name number on the page (kept for DrawNameGlyph_Bank1D) and wArg5 = the slot layout.
 ; wGlyphListPos walks the text and wGlyphListStart the slots: an ordinary glyph is copied into its
@@ -5049,6 +5179,8 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D::
     ld [wGlyphListStart], a
     ld [wGlyphListPos], a
     ret
+
+SECTION "Bank 1D DrawNameGlyph_Bank1D", ROMX
 
 ; For the glyph being drawn: DE = its 16-byte pattern in the font (glyph x 16), HL = its VRAM tile
 ; from the destination table for layout wArg5 (0-4) at wGlyphListStart; B = $1F, C = $10. (C2,
@@ -5119,6 +5251,8 @@ DrawNameGlyph_Bank1D::
     ld b, $1f
     ld c, $10
     ret
+
+SECTION "Bank 1D GlyphTileDestTable_1D_0", ROMX
 
 ; DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299),
 ; reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL
@@ -5273,6 +5407,8 @@ DrawRecordListNameTiles_Bank1D::
     ld [hl], $12
     ret
 
+SECTION "Bank 1D DrawRecordListNameTiles_Bank1D_Data", ROMX
+
 ; Three words, VRAM tile addresses $8D00, $8D50, $8DA0 (vTiles1 + $500, + $550, + $5A0).
 ; DrawRecordListNameTiles_Bank1D copies the name of party member c (from wPartyList, c below
 ; wPartyCount) to wNameGlyphBuf and has CopyGlyphTilesToVRAM draw its glyph tiles at word c. (C1,
@@ -5304,6 +5440,8 @@ BGMapAddressAtScroll_Bank1D_2::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank 1D DrawRecordListPageMarks", ROMX
 
 ; Draws a mark beside each record on page wListPageIndex of wListEntries (four per page, at most
 ; wListCount of them). The tile is $CC + bit 0 of MON_SEX when the record MON_EGG is 2 (an appraised
@@ -5469,6 +5607,8 @@ DrawRecordListPageMarks::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 1D DrawRecordListPageMarks_Data1", ROMX
+
 ; Four words that are offsets from the top left BG map entry of the visible screen: $0032, $0072,
 ; $00B2, $00F2, which are rows 1, 3, 5 and 7 of column 18. The BG map write (only when wArg1 is 0)
 ; uses this table when wArg2 is 0. DrawRecordListPageMarks writes the mark of list entry c (c = 0 to
@@ -5576,6 +5716,8 @@ SwapMonstersMenu_MonstersOrEggsCursor::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank 1D SwapMonstersMenu_MonstersOrEggsCursor_Blink", ROMX
+
 ; Blinks the Monsters / Eggs cursor of the swap menu: while wJoypadRepeatTimer is below $14 it just
 ; shows the cursor; from then on wListCursorBlink counts up on every call, values below $10 show the
 ; cursor tile and $10 to $17 hide it with the blank tile, and at $18 the counter restarts at 0 and
@@ -5608,6 +5750,8 @@ SwapMonstersMenu_MonstersOrEggsCursor_Show::
     ld b, $bb
     jr SwapMonstersMenu_DrawMonstersOrEggsTile
 
+SECTION "Bank 1D SwapMonstersMenu_MonstersOrEggsCursor_Hide", ROMX
+
 ; Loads B = $C3 (the blank tile) and jumps to SwapMonstersMenu_DrawMonstersOrEggsTile, which writes
 ; B at the place of the Monsters / Eggs choice wMenuChoice. Called by
 ; SwapMonstersMenu_MonstersOrEggsCursor before it moves the cursor and when B cancels, and reached
@@ -5617,6 +5761,8 @@ SwapMonstersMenu_MonstersOrEggsCursor_Show::
 SwapMonstersMenu_MonstersOrEggsCursor_Hide::
     ld b, $c3
     jr SwapMonstersMenu_DrawMonstersOrEggsTile
+
+SECTION "Bank 1D SwapMonstersMenu_MarkMonstersOrEggs", ROMX
 
 ; B = the chosen tile $BC, then falls into SwapMonstersMenu_DrawMonstersOrEggsTile: marks the
 ; confirmed choice when A is pressed on the Monsters / Eggs cursor
@@ -5649,6 +5795,8 @@ SwapMonstersMenu_DrawMonstersOrEggsTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1D SwapMonstersMenu_DrawMonstersOrEggsTile_Data", ROMX
 
 ; Two words that are offsets from the top left BG map entry of the visible screen: $0128 and $0168,
 ; which are rows 9 and 11 of column 8. SwapMonstersMenu_DrawMonstersOrEggsTile indexes them with
@@ -5738,6 +5886,8 @@ HandleListCursorInput_1D::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank 1D UpdateTwoChoiceCursor_Bank1D", ROMX
+
 ; Cursor of a yes/no question with the choice in wTwoChoiceCursor (0 or 1). Up or Down (bits 6 and 7
 ; of wJoypadPressedRepeat) erase the old cursor, toggle wTwoChoiceCursor, restart the blink
 ; (wScreenCounter = 0), draw the cursor tile at the new place, queue sound $69 and answer
@@ -5817,6 +5967,8 @@ UpdateTwoChoiceCursor_Bank1D::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank 1D BlinkTwoChoiceCursor", ROMX
+
 ; Blinks the yes/no cursor: while wJoypadRepeatTimer is below $14 it draws the cursor; from then on
 ; wScreenCounter counts up on every call, values below $10 draw the cursor tile, $10 to $17 erase it
 ; with the blank tile, and at $18 the counter restarts at 0 and the cursor is drawn. Called by
@@ -5846,6 +5998,8 @@ DrawTwoChoiceCursor::
     ld b, $bb
     jr DrawTileAtTwoChoiceCursor
 
+SECTION "Bank 1D EraseTwoChoiceCursor", ROMX
+
 ; Loads B = $C3 (the blank tile) and jumps to DrawTileAtTwoChoiceCursor, which writes B at the place
 ; of the choice wTwoChoiceCursor. Called before the cursor moves and by BlinkTwoChoiceCursor. (C1,
 ; E-0379)
@@ -5853,6 +6007,8 @@ DrawTwoChoiceCursor::
 EraseTwoChoiceCursor::
     ld b, $c3
     jr DrawTileAtTwoChoiceCursor
+
+SECTION "Bank 1D DrawTwoChoiceCursorConfirmed", ROMX
 
 ; Loads B = $BC (the tile of a confirmed choice) and falls into the routine below it (see
 ; DrawTileAtTwoChoiceCursor), which writes B at the place of the choice wTwoChoiceCursor. Called by
@@ -5882,6 +6038,8 @@ DrawTileAtTwoChoiceCursor::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1D DrawTileAtTwoChoiceCursor_Data", ROMX
 
 ; Two words that are offsets from the top left BG map entry of the visible screen: $012F and $016F,
 ; which are rows 9 and 11 of column 15. DrawTileAtTwoChoiceCursor indexes them with wTwoChoiceCursor
@@ -5970,6 +6128,8 @@ UpdateListCursorListCursor::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank 1D UpdateListCursorListCursor_Blink", ROMX
+
 ; Blinks the list cursor at row wListCursor: while wJoypadRepeatTimer is below $14 the cursor tile
 ; $BB is drawn; from $14 on, wListCursorAux counts up each call, $00-$0F drawing $BB and $10-$17 the
 ; blank $C3, and restarts at 0 after $17. (C1, E-0370)
@@ -5992,10 +6152,14 @@ UpdateListCursorListCursor_Show::
     ld b, $bb
     jr UpdateListCursorListCursor_DrawTile
 
+SECTION "Bank 1D UpdateListCursorListCursor_Hide", ROMX
+
 ; B = the blank tile ($C3), then the draw at row wListCursor. (C1, E-0357)
 UpdateListCursorListCursor_Hide::
     ld b, $c3
     jr UpdateListCursorListCursor_DrawTile
+
+SECTION "Bank 1D UpdateListCursorListCursor_Mark", ROMX
 
 ; B = the chosen-cursor tile ($BC), then the draw at row wListCursor. (C1, E-0357)
 UpdateListCursorListCursor_Mark::
@@ -6022,6 +6186,8 @@ UpdateListCursorListCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1D UpdateListCursorListCursor_DrawTile_Data", ROMX
 
 ; Four words that are offsets from the top left BG map entry of the visible screen: $0021, $0061,
 ; $00A1, $00E1, which are rows 1, 3, 5 and 7 of column 1. UpdateListCursorListCursor_DrawTile
@@ -6183,6 +6349,8 @@ UpdatePagedListCursor::
     ld [wMenuInputResult], a
     ret
 
+SECTION "Bank 1D UpdatePagedListCursor_Blink", ROMX
+
 ; Blinks the paged-list cursor once the pad has been still for 20 frames: the cursor tile for 16
 ; counts, a blank for 8. (C1, E-0357)
 UpdatePagedListCursor_Blink::
@@ -6204,10 +6372,14 @@ UpdatePagedListCursor_DrawCursorTile::
     ld b, $bb
     jr UpdatePagedListCursor_DrawTile
 
+SECTION "Bank 1D UpdatePagedListCursor_DrawBlankTile", ROMX
+
 ; B = the blank tile ($C3), then the draw. (C1, E-0357)
 UpdatePagedListCursor_DrawBlankTile::
     ld b, $c3
     jr UpdatePagedListCursor_DrawTile
+
+SECTION "Bank 1D UpdatePagedListCursor_DrawChosenTile", ROMX
 
 ; B = the chosen-cursor tile ($BC), then the draw. (C1, E-0357)
 UpdatePagedListCursor_DrawChosenTile::
@@ -6244,6 +6416,8 @@ UpdatePagedListCursor_DrawTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 1D UpdatePagedListCursor_DrawTile_Data", ROMX
 
 ; Six layouts of five words (60 bytes), all offsets from the top left BG map entry of the visible
 ; screen. Layout 0: rows 1, 3, 5, 7, 9 of column 1; layout 1: the same rows of column 8; layouts 2
@@ -6345,6 +6519,8 @@ LoadPedigreeSpeciesSpriteGraphics::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 1D LoadPedigreeSpeciesSpriteGraphics_Data1", ROMX
+
 ; Three 3-byte entries for pedigree slot c (0 to 2): $00 $00 $80, $08 $00 $81, $10 $00 $82.
 ; LoadPedigreeSpeciesSpriteGraphics copies entry c to wArg3, wArg4 and wArg5 for
 ; LoadSpeciesSpriteGraphicsAndPalette: wArg3 is the offset in wOBJPaletteBuffer (0, 8, $10) where
@@ -6442,6 +6618,8 @@ DrawPedigreeSpeciesSprites::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 1D DrawPedigreeSpeciesSprites_Data", ROMX
+
 ; Three 4-byte entries for pedigree slot c (0 to 2): $00 $10 $78 $00, $10 $30 $68 $01, $20 $30 $88
 ; $02. DrawPedigreeSpeciesSprites loads the bytes as H (tile offset $00, $10, $20), L (X offset $10,
 ; $30, $30), D (Y offset $78, $68, $88) and E (attribute XOR 0, 1, 2) and calls
@@ -6522,6 +6700,8 @@ LoadSpeciesSpriteGraphicsAndPalette::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+SECTION "Bank 1D DecompressGraphicsArg1ToArg4", ROMX
+
 ; Graphics number = word wArg1/wArg2: decompresses its picture (far pointer from MonsterSpriteTable
 ; in bank $04) to the VRAM address wArg4/wArg5; on CGB also copies its 8 palette bytes from bank $27
 ; ($7328 + 8 x number) into wOBJPaletteBuffer + wArg3 and requests an object palette upload. (C1,
@@ -6597,6 +6777,8 @@ DecompressGraphicsArg1ToArg4::
 .return:
     ret
 
+SECTION "Bank 1D DrawSpeciesMetaSpriteAtScrollOffset", ROMX
+
 ; Draws the meta-sprite of the species whose id word is in wArg1 (low) and wArg2 (high) at the
 ; screen position hScrollX + L, hScrollY + D (16-bit, with the carry into the high bytes), with tile
 ; offset H and attribute XOR E. The set index is wArg1 & $7F, drawn by DrawMetaSpriteSet_Bank27 when
@@ -6659,12 +6841,16 @@ DrawSpeciesMetaSpriteAtScrollOffset::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
+SECTION "Bank 1D DrawThreeMetaSpritePartsAtGridCursor_SetAttrs", ROMX
+
 ; Sets the sprite attribute bits from wArg6 and draws the meta-sprite (DrawMetaSpriteSetFromArgs).
 ; (C1, E-0357)
 DrawThreeMetaSpritePartsAtGridCursor_SetAttrs::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
     jr DrawMetaSpriteSetFromArgs
+
+SECTION "Bank 1D DrawMetaSpritePartC0", ROMX
 
 ; Sets C = 0 and falls into the routine below it (see DrawSpritePart9000At88_28_SetAttrs, see
 ; DrawMetaSpriteSetFromArgs): hSpriteAttrXor = wArg6 and hSpriteSubIndex = bit 4 of wFrameCounterLo
@@ -6738,6 +6924,8 @@ DrawMetaSpriteSetFromArgs::
 .call_draw_meta_sprite_set_bank27:
     farcall DrawMetaSpriteSet_Bank27
     ret
+
+SECTION "Bank 1D MarkPartyMembersInRecordListPage", ROMX
 
 ; For each party member (wPartyList, wPartyCount of them) looks for its record number in the cells
 ; of page wListPageIndex of wListEntries (five cells per page, rows 0 to wListLastRow). When it is
@@ -6976,6 +7164,8 @@ SwapMonstersMenu_ListParty_StartOption::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 1D LoadTileListSixPerCall", ROMX
+
 ; Copies saved tiles back to the tile area, six per call. wArg3 (high byte) and wArg4 (low byte)
 ; point to a list of VRAM tile addresses that ends at an entry whose first byte is $FF; wArg1 (high)
 ; and wArg2 (low) give the base of the saved copies, 16 bytes per list entry. Starting at list entry
@@ -7055,6 +7245,8 @@ LoadTileListSixPerCall::
     ld [wArg5], a
     ret
 
+SECTION "Bank 1D CopyTileBytesToVRAM_Bank1D", ROMX
+
 ; Copies 16 bytes from [HL] to [DE], each byte stored after waiting for rSTAT bit 1 to clear with
 ; interrupts off; HL and DE end 16 bytes further on; clobbers A and C (C ends 0). One tile of 16
 ; bytes at a time for LoadTileListSixPerCall, CopyListedTilesSixPerFrame and UploadTilesFromData.
@@ -7079,6 +7271,8 @@ CopyTileBytesToVRAM_Bank1D::
     jr nz, .loop
     ret
 
+SECTION "Bank 1D SaveTilesToBGMap1TopHalf", ROMX
+
 ; Starts saving the menu tiles into BG map 1: sets HL to CloseHibernateMenu_RestoreGlyphs_Data (a
 ; list of VRAM tile addresses), wArg1 and wArg2 to $9C and $00 (the base of the saved copies,
 ; vBGMap1), DE to vBGMap1 (not used afterwards) and wGlyphListPos to 0, then jumps to the shared
@@ -7099,6 +7293,8 @@ SaveTilesToBGMap1TopHalf::
     xor a
     ld [wGlyphListPos], a
     jr CopyListedTilesSixPerFrame
+
+SECTION "Bank 1D SaveTilesToBGMap1BottomHalf", ROMX
 
 ; Starts saving the menu tiles into the second half of BG map 1: sets HL to
 ; SaveTilesToBGMap1BottomHalf_Data (13 VRAM tile addresses), wArg1 and wArg2 to $9E and $00 (the
@@ -7181,6 +7377,8 @@ CopyListedTilesSixPerFrame::
     inc [hl]
     ret
 
+SECTION "Bank 1D UploadTilesFromData", ROMX
+
 ; Copies five 16-byte tiles from UploadTilesFromData_Tiles with CopyTileBytesToVRAM_Bank1D: the
 ; first two to vTiles2 + $6E0 and vTiles2 + $6F0, the other three to vTiles2 + $7C0, $7D0 and $7E0.
 ; Far-called by the swap menu detail pages and the link record screen when they draw their pedigree
@@ -7198,6 +7396,8 @@ UploadTilesFromData::
     call CopyTileBytesToVRAM_Bank1D
     call CopyTileBytesToVRAM_Bank1D
     ret
+
+SECTION "Bank 1D UploadTilesFromData_Tiles", ROMX
 
 ; HL = $6D20 and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
@@ -7226,6 +7426,8 @@ LoadRecordCapacityFromFarmLevelTable::
     ld c, a
     ld [wRecordCapacity], a
     ret
+
+SECTION "Bank 1D LoadRecordCapacityFromFarmLevelTable_Data", ROMX
 
 ; Three bytes, 10, 20 and 30: the number of records for farm levels 0, 1 and 2.
 ; LoadRecordCapacityFromFarmLevelTable indexes it by wFarmLevel and stores the byte in
@@ -7316,6 +7518,8 @@ CountFlaggedSRAMRecords::
     ld [rRAMG2], a
     ld [rRAMB], a
     ret
+
+SECTION "Bank 1D PackRecordFieldsToBank1Slot", ROMX
 
 ; Packs SRAM record wArg1 (sRecords + $A5 * wArg1) into the compact slot whose address is wArg3
 ; (low) and wArg4 (high) in SRAM bank wArg2. It clears the 7 bytes from wPackWork, then writes slot
@@ -7583,6 +7787,8 @@ PackRecordFieldsToBank1Slot_PackName::
     jp z, PackRecordFieldsToBank1Slot_Parent1NameMarks
     jp PackRecordFieldsToBank1Slot_Parent2NameMarks
 
+SECTION "Bank 1D PackRecordFieldsToBank1Slot_PackName_Data", ROMX
+
 ; Six record field offsets, $01 (MON_NAME), $0F (MON_MASTER_NAME), $1E (MON_PARENT1_MASTER), $29
 ; (MON_PARENT2_MASTER), $8E (MON_PARENT1_NAME) and $99 (MON_PARENT2_NAME).
 ; PackRecordFieldsToBank1Slot_PackName indexes it by wPackFieldIndex (0 to 5) to find the name to
@@ -7623,6 +7829,8 @@ PackRecordFieldsToBank1Slot_NameMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
 
+SECTION "Bank 1D PackRecordFieldsToBank1Slot_MasterNameMarks", ROMX
+
 ; Mark step of field 1 (MON_MASTER_NAME), jumped to from PackRecordFieldsToBank1Slot_PackName when
 ; wPackFieldIndex is 1: with rRAMB = wArg2 stores Pack2BitFieldsFromPackFields (the marks of letters
 ; 1-4) at slot offset $22 (slot address wArg3/wArg4, through SRAMRecordAddressOfArg1) and ORs the
@@ -7659,6 +7867,8 @@ PackRecordFieldsToBank1Slot_MasterNameMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
 
+SECTION "Bank 1D PackRecordFieldsToBank1Slot_Parent1MasterMarks", ROMX
+
 ; Field 2's marks: packs into slot offset $23 and bits 2-3 of offset $27; next field. (C2, E-0357;
 ; probed E-0384)
 PackRecordFieldsToBank1Slot_Parent1MasterMarks::
@@ -7692,6 +7902,8 @@ PackRecordFieldsToBank1Slot_Parent1MasterMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
 
+SECTION "Bank 1D PackRecordFieldsToBank1Slot_Parent2MasterMarks", ROMX
+
 ; Field 3's marks: packs into slot offset $24 and bits 0-1 of offset $27; next field. (C2, E-0357;
 ; probed E-0384)
 PackRecordFieldsToBank1Slot_Parent2MasterMarks::
@@ -7723,6 +7935,8 @@ PackRecordFieldsToBank1Slot_Parent2MasterMarks::
     inc a
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
+
+SECTION "Bank 1D PackRecordFieldsToBank1Slot_Parent1NameMarks", ROMX
 
 ; Field 4's marks: packs into slot offset $25 and the top two bits of offset $28; next field. (C2,
 ; E-0357; probed E-0384)
@@ -7756,6 +7970,8 @@ PackRecordFieldsToBank1Slot_Parent1NameMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackName
 
+SECTION "Bank 1D PackRecordFieldsToBank1Slot_Parent2NameMarks", ROMX
+
 ; Field 5's marks: packs into slot offset $26 and bits 4-5 of offset $28; then clears the field
 ; number and packs the two-bit values (PackRecordFieldsToBank1Slot_PackOtherFields). (C2, E-0357;
 ; probed E-0384)
@@ -7787,6 +8003,8 @@ PackRecordFieldsToBank1Slot_Parent2NameMarks::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_PackOtherFields
 
+SECTION "Bank 1D Pack2BitFieldsFromPackFields", ROMX
+
 ; B = (wPackFields & 3) << 6 | (wPackFields + 1 & 3) << 4 | (wPackFields + 2 & 3) << 2 |
 ; (wPackFields + 3 & 3), and A = B: four 2-bit values from four bytes packed into one, the reverse
 ; of the unpacking (see UnpackByteAtHLTo2BitFieldsArg5). Used by
@@ -7817,6 +8035,8 @@ Pack2BitFieldsFromPackFields::
     or b
     ld b, a
     ret
+
+SECTION "Bank 1D PackRecordFieldsToBank1Slot_PackOtherFields", ROMX
 
 ; Jumped to from field 5's mark step: packs the rest of SRAM record wArg1 into the compact slot
 ; (wArg3/wArg4, SRAM bank wArg2), switching rRAMB between 0 (record) and wArg2 (slot) per byte: the
@@ -8410,6 +8630,8 @@ PackRecordFieldsToBank1Slot_PackOtherFields::
     ld [wArg5], a
     ret
 
+SECTION "Bank 1D UnpackRecordFromBank1Slot", ROMX
+
 ; Unpacks the compact slot at wArg3 (low) and wArg4 (high) in SRAM bank wArg2 into SRAM record
 ; wArg1, the reverse of the packing (see PackRecordFieldsToBank1Slot). Slot byte 0 gives MON_STATE
 ; (bits 6-5) and MON_FAMILY (bits 4-0), byte 1 gives MON_SEX (high nibble kept, bit 3 moved to bit
@@ -8631,6 +8853,8 @@ UnpackRecordFromBank1Slot::
     ld [rRAMB], a
     jp UnpackRecordFromBank1Slot_UnpackOtherFields
 
+SECTION "Bank 1D CopyTenBytesThenSelectSRAMBank0", ROMX
+
 ; Copies 10 bytes from [HL] to [DE]; after each byte is read it selects SRAM bank 0 (rRAMB = 0), so
 ; the first read can come from the bank that was selected and every write goes to bank 0. HL and DE
 ; end 10 bytes further on; clobbers A and C. Called six times by UnpackRecordFromBank1Slot, once per
@@ -8654,6 +8878,8 @@ CopyTenBytesThenSelectSRAMBank0::
     cp $0a
     jr c, .loop
     ret
+
+SECTION "Bank 1D UnpackRecordFromBank1Slot_UnpackOtherFields", ROMX
 
 ; Jumped to from UnpackRecordFromBank1Slot after the six names: the reverse of
 ; PackRecordFieldsToBank1Slot_PackOtherFields, from the compact slot (wArg3/wArg4, SRAM bank wArg2)
@@ -9258,6 +9484,8 @@ UnpackRecordFromBank1Slot_UnpackOtherFields::
     ld [wArg5], a
     ret
 
+SECTION "Bank 1D LoadRecordNameEntry0", ROMX
+
 ; Reads name entry 0 of the compact slot at wArg3 (low) and wArg4 (high) in SRAM bank wArg2: unpacks
 ; slot byte $21 into the four 2-bit mark fields wArg5 to wArg8 (marks of letters 1-4), puts the mark
 ; of letter 5 (bits 7-6 of slot byte $27) in wMenuInputResult, and builds the name from the 5
@@ -9293,6 +9521,8 @@ LoadRecordNameEntry0::
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
+SECTION "Bank 1D LoadRecordNameEntry1", ROMX
+
 ; Reads name entry 1 of the compact slot at wArg3 (low) and wArg4 (high) in SRAM bank wArg2: unpacks
 ; slot byte $22 into wArg5 to wArg8, puts the mark of letter 5 (bits 5-4 of slot byte $27) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset 8 in wNameGlyphBuf. Entry
@@ -9323,6 +9553,8 @@ LoadRecordNameEntry1::
     add_a_to_hl
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
+
+SECTION "Bank 1D LoadRecordNameEntry2", ROMX
 
 ; Reads name entry 2 of the compact slot at wArg3 (low) and wArg4 (high) in SRAM bank wArg2: unpacks
 ; slot byte $23 into wArg5 to wArg8, puts the mark of letter 5 (bits 3-2 of slot byte $27) in
@@ -9356,6 +9588,8 @@ LoadRecordNameEntry2::
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
+SECTION "Bank 1D LoadRecordNameEntry3", ROMX
+
 ; Reads name entry 3 of the compact slot at wArg3 (low) and wArg4 (high) in SRAM bank wArg2: unpacks
 ; slot byte $24 into wArg5 to wArg8, puts the mark of letter 5 (bits 1-0 of slot byte $27) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset $12 in wNameGlyphBuf.
@@ -9385,6 +9619,8 @@ LoadRecordNameEntry3::
     add_a_to_hl
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
+
+SECTION "Bank 1D LoadRecordNameEntry4", ROMX
 
 ; Reads name entry 4 of the compact slot at wArg3 (low) and wArg4 (high) in SRAM bank wArg2: unpacks
 ; slot byte $25 into wArg5 to wArg8, puts the mark of letter 5 (bits 7-6 of slot byte $28) in
@@ -9420,6 +9656,8 @@ LoadRecordNameEntry4::
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
+SECTION "Bank 1D LoadRecordNameEntry5", ROMX
+
 ; Reads name entry 5 of the compact slot at wArg3 (low) and wArg4 (high) in SRAM bank wArg2: unpacks
 ; slot byte $26 into wArg5 to wArg8, puts the mark of letter 5 (bits 5-4 of slot byte $28) in
 ; wMenuInputResult, and builds the name from the 5 letters at slot offset $1C in wNameGlyphBuf.
@@ -9450,6 +9688,8 @@ LoadRecordNameEntry5::
     add_a_to_hl
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
+
+SECTION "Bank 1D BuildFiveGlyphNameWithMarksToNameGlyphBuf", ROMX
 
 ; Builds a name in wNameGlyphBuf from up to five letters at HL: the first 11 bytes of the buffer are
 ; filled with $F0, then each letter is copied and followed by the mark $8D when the mark field of
@@ -9517,6 +9757,8 @@ BuildFiveGlyphNameWithMarksToNameGlyphBuf::
     ld [de], a
     ret
 
+SECTION "Bank 1D UnpackByteAtHLTo2BitFieldsArg5", ROMX
+
 ; Selects SRAM bank wArg2 (rRAMB) and splits the byte at HL into four 2-bit fields: wArg5 = bits
 ; 7-6, wArg6 = bits 5-4, wArg7 = bits 3-2, wArg8 = bits 1-0. A ends as wArg8. Called by
 ; LoadRecordNameEntry0 to LoadRecordNameEntry5 and UnpackRecordFromBank1Slot_UnpackOtherFields. (C2,
@@ -9548,6 +9790,8 @@ UnpackByteAtHLTo2BitFieldsArg5::
     ld [wArg8], a
     ret
 
+SECTION "Bank 1D EnableSRAMBank0", ROMX
+
 ; Writes $0A to rRAMG2 (cartridge RAM on) and selects SRAM bank 0 (rRAMB = 0); A ends 0. Same bytes
 ; as the other EnableSRAMBank0 copies; used by the pack and unpack routines of this bank to switch
 ; back to the record bank. (C2, E-0379; probed E-0384)
@@ -9559,6 +9803,8 @@ EnableSRAMBank0::
     xor a
     ld [rRAMB], a
     ret
+
+SECTION "Bank 1D SRAMRecordAddressOfArg1", ROMX
 
 ; HL = the 16-bit pointer wArg4:wArg3 (wArg3 is the low byte), DE = sRecords + $A5 * wArg1, the
 ; start of SRAM record wArg1 (Multiply8 gives HL = $A5 * wArg1); clobbers A and BC. The pack and

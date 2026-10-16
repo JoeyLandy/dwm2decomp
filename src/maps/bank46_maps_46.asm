@@ -1,7 +1,7 @@
 ; ROM bank $46: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank46.asm.
 
-SECTION "Bank 46", ROMX[$4000], BANK[$46]
+SECTION "Bank 46", ROMX
     db $46
 
 ; Tiles: 2048 bytes = 128 tiles of 2bpp that fill vTiles1 ($8800-$8FFF); only 56 tiles are drawn,

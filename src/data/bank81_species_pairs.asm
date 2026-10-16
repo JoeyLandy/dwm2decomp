@@ -1,7 +1,7 @@
 ; ROM bank $81: species pair tables and EXP curves
 ; The annotated listing of this bank is build/listing/bank81.asm.
 
-SECTION "Bank 81", ROMX[$4000], BANK[$81]
+SECTION "Bank 81", ROMX
     db $81
 
 ; Checks the parents of the record in wRecordBufB against the breeding recipes of its species. It
@@ -132,6 +132,8 @@ CheckBreedingRecipes::
     ld [wSpeciesIdHi], a
     ret
 
+SECTION "Bank 81 CheckBreedingRecipes_CompareHLToBC", ROMX
+
 ; Walks the recipe list HL (one list of SpeciesPairCheckTable, here the list of the record species)
 ; and reports in C whether the two parents fit it: C = 0 when a rule matches, C = $FF when the list
 ; ends ($FF rule) without a match. Inputs: HL = the list; hTemp0/hTemp1 = species of the first
@@ -248,6 +250,8 @@ CheckBreedingRecipes_CompareHLToBC::
 
 .skip3:
     jr .loop3
+
+SECTION "Bank 81 SpeciesPairCheckTable", ROMX
 
 ; the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and
 ; runs CheckBreedingRecipes_CompareHLToBC over it twice, with the two parents swapped; a group of
@@ -1989,6 +1993,8 @@ PackRecordBufAToLinkWorkBuf_LoadExp::
     ld a, [hl]
     ld [de], a
     ret
+
+SECTION "Bank 81 ExpCurveIndex81", ROMX
 
 ; PackRecordBufAToLinkWorkBuf_LoadExp reads the byte $5486 + wWorkBuf+9 and uses it as the row of
 ; the $129-byte table at $555D; 215 bytes up to that table, values 0-31 (E-0151, C1)

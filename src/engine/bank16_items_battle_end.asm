@@ -1,7 +1,7 @@
 ; ROM bank $16: item use (usable and apply routines) and the end of a battle
 ; The annotated listing of this bank is build/listing/bank16.asm.
 
-SECTION "Bank 16", ROMX[$4000], BANK[$16]
+SECTION "Bank 16", ROMX
     db $16, $f0, $c6, $cd, $92, $4a, $c9
 
 ; Copies the 13-byte ItemTable record of item wItemId (ItemTable + 13 x id) to wItemRecord. Called
@@ -30,6 +30,8 @@ LoadItemRecord::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 16 CheckItemUsable", ROMX
 
 ; Returns at once when wItemId is $FF; otherwise jumps through a table of usability checks by
 ; wItemId (ItemUsable_Herb for 1-2, ItemUsable_WorldDew for 3 and 11, ItemUsable_Potion for 4-5, and
@@ -152,6 +154,8 @@ CheckItemUsable::
 ItemUsable_Item00::
     ret
 
+SECTION "Bank 16 ItemUsable_Herb", ROMX
+
 ; Usability check for items 1 and 2 ('Herb', 'LoveWater'), also used by FieldSkillUsable_HealOne:
 ; refused (wItemId = $FF) when the target wTargetRecord (party slot, through wPartyList) has fallen
 ; (MON_STATUS bit 7, RefuseItemIfTargetFallen) or its MON_HP equals MON_MAX_HP; usable otherwise.
@@ -182,6 +186,8 @@ ItemUsable_Herb::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ItemUsable_WorldDew", ROMX
 
 ; Usability check for items 3 and 11 ('WorldDew', 'SageRock'), also used by
 ; FieldSkillUsable_HealParty: refused (wItemId = $FF) when no party member is below full HP without
@@ -290,6 +296,8 @@ ItemUsable_WorldDew::
     ld [wItemUseMessage], a
     ret
 
+SECTION "Bank 16 ItemUsable_WorldDew_CountHealable", ROMX
+
 ; WorldDew check for party member A: skips one that is not in the party, has fallen (MON_STATUS bit
 ; 7) or is at full HP; otherwise copies its name (five glyphs and marks) into wTextBuf3 at 16 x D
 ; and counts it (D + 1). (C2, E-0357; probed E-0377)
@@ -340,6 +348,8 @@ ItemUsable_WorldDew_CountHealable::
     inc d
     ret
 
+SECTION "Bank 16 ItemUsable_Potion", ROMX
+
 ; Usability check for items 4 and 5 ('Potion', 'ElfWater'), also used by FieldSkillUsable_GiveMP:
 ; refused (wItemId = $FF) when the target wTargetRecord has fallen (MON_STATUS bit 7) or its MON_MP
 ; equals MON_MAX_MP; usable otherwise. (C2, E-0377)
@@ -370,6 +380,8 @@ ItemUsable_Potion::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_Antidote", ROMX
+
 ; Antidote: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 2;
 ; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -385,6 +397,8 @@ ItemUsable_Antidote::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ItemUsable_MoonHerb", ROMX
 
 ; MoonHerb: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 3;
 ; usable otherwise. (C2, E-0357; probed E-0377)
@@ -402,6 +416,8 @@ ItemUsable_MoonHerb::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_Laurel", ROMX
+
 ; Laurel: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 0;
 ; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -417,6 +433,8 @@ ItemUsable_Laurel::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ListPartyMembersWithField55Bit0", ROMX
 
 ; Check of field skill 11 (FieldSkillUsable_CurePartyPoison). It looks at party places 0, 1 and 2 in
 ; turn (as far as wPartyCount) and stops at the first living member (MON_STATUS bit 7 clear) with
@@ -485,6 +503,8 @@ ListPartyMembersWithField55Bit0::
     ld [wItemUseMessage], a
     ret
 
+SECTION "Bank 16 CopyEligibleRecordNameToTextBuf3Row", ROMX
+
 ; Step of ListPartyMembersWithField55Bit0, called for party slots 0, 1 and 2. A = party slot, D =
 ; names listed so far: sets wTargetRecord = A; when A is below wPartyCount and the MON_STATUS byte
 ; of that member has bit 7 clear and bit 0 set, copies its name (five glyphs plus any $8D/$8E marks,
@@ -527,6 +547,8 @@ CopyEligibleRecordNameToTextBuf3Row::
     inc d
     ret
 
+SECTION "Bank 16 ItemUsable_AwakeSand", ROMX
+
 ; AwakeSand: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit
 ; 1; usable otherwise. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -542,6 +564,8 @@ ItemUsable_AwakeSand::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ItemUsable_SkyBell", ROMX
 
 ; SkyBell: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 4;
 ; usable otherwise. (C2, E-0357; probed E-0377)
@@ -559,6 +583,8 @@ ItemUsable_SkyBell::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_WorldLeaf", ROMX
+
 ; WorldLeaf: usable only on a fallen monster (status bit 7); refused otherwise. (C2, E-0357; probed
 ; E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -572,6 +598,8 @@ ItemUsable_WorldLeaf::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ItemUsable_ATKseed", ROMX
 
 ; ATKseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
 ; for its ATK (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
@@ -590,6 +618,8 @@ ItemUsable_ATKseed::
     call ShowRaiseAmountOrRefuse
     ret
 
+SECTION "Bank 16 ItemUsable_DEFseed", ROMX
+
 ; DEFseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
 ; for its DEF (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -606,6 +636,8 @@ ItemUsable_DEFseed::
     ld hl, $03e7
     call ShowRaiseAmountOrRefuse
     ret
+
+SECTION "Bank 16 ItemUsable_AGLseed", ROMX
 
 ; AGLseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
 ; for its AGL (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
@@ -624,6 +656,8 @@ ItemUsable_AGLseed::
     call ShowRaiseAmountOrRefuse
     ret
 
+SECTION "Bank 16 ItemUsable_INTseed", ROMX
+
 ; INTseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
 ; for its INT (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -640,6 +674,8 @@ ItemUsable_INTseed::
     ld hl, $03e7
     call ShowRaiseAmountOrRefuse
     ret
+
+SECTION "Bank 16 ItemUsable_LifeAcorn", ROMX
 
 ; LifeAcorn: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
 ; for its max HP (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
@@ -658,6 +694,8 @@ ItemUsable_LifeAcorn::
     call ShowRaiseAmountOrRefuse
     ret
 
+SECTION "Bank 16 ItemUsable_MysticNut", ROMX
+
 ; MysticNut: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
 ; for its max MP (ShowRaiseAmountOrRefuse). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -674,6 +712,8 @@ ItemUsable_MysticNut::
     ld hl, $03e7
     call ShowRaiseAmountOrRefuse
     ret
+
+SECTION "Bank 16 ItemUsable_Quest", ROMX
 
 ; Quest: refused for a fallen monster or when personality byte 0 (MON_PERSONALITY) is already $FF.
 ; (C2, E-0357; probed E-0377)
@@ -692,6 +732,8 @@ ItemUsable_Quest::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_Horror", ROMX
+
 ; Horror: refused for a fallen monster or when personality byte 0 (MON_PERSONALITY) is already 0.
 ; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -708,6 +750,8 @@ ItemUsable_Horror::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ItemUsable_BeNice", ROMX
 
 ; BeNice: refused for a fallen monster or when personality byte 1 (MON_PERSONALITY) is already $FF.
 ; (C2, E-0357; probed E-0377)
@@ -726,6 +770,8 @@ ItemUsable_BeNice::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_Cheater", ROMX
+
 ; Cheater: refused for a fallen monster or when personality byte 1 (MON_PERSONALITY) is already 0.
 ; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -742,6 +788,8 @@ ItemUsable_Cheater::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ItemUsable_Smart", ROMX
 
 ; Smart: refused for a fallen monster or when personality byte 3 (MON_PERSONALITY) is already $FF.
 ; (C2, E-0357; probed E-0377)
@@ -760,6 +808,8 @@ ItemUsable_Smart::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_Comedy", ROMX
+
 ; Comedy: refused for a fallen monster or when personality byte 3 (MON_PERSONALITY) is already 0.
 ; (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -777,6 +827,8 @@ ItemUsable_Comedy::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_BeefJerky", ROMX
+
 ; BeefJerky: refused only for a fallen monster. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin, 29 BadMeat, 30 MeteOrb; item names
@@ -786,11 +838,15 @@ ItemUsable_BeefJerky::
     ret nz
     ret
 
+SECTION "Bank 16 ItemUsable_BeastTail", ROMX
+
 ; BeastTail: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 31 BeastTail; item names from StringTable_ItemNames (E-0085)
 ItemUsable_BeastTail::
     ret
+
+SECTION "Bank 16 ItemUsable_Repellent", ROMX
 
 ; Repellent: refused where there are no encounters (wEncounterRate & $7F = 0). (C2, E-0357; probed
 ; E-0377)
@@ -804,6 +860,8 @@ ItemUsable_Repellent::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_Mist", ROMX
+
 ; Mist: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 34 Mist?, 35 Friend?, 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?, 43 Bookmark; item
@@ -811,12 +869,16 @@ ItemUsable_Repellent::
 ItemUsable_Mist::
     ret
 
+SECTION "Bank 16 ItemUsable_Warp", ROMX
+
 ; Warp: the WarpWing's check (ItemUsable_WarpWing). (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 40 Warp?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Warp::
     call ItemUsable_WarpWing
     ret
+
+SECTION "Bank 16 ItemUsable_LogTwig", ROMX
 
 ; LogTwig: in a key world only in map type $80, otherwise only on the region maps $20, $30, $48,
 ; $70, $A0, $A8, $B0, $B8, $C8, $D1 and $DA; then ItemUsable_LogTwig_Check decides, and when it
@@ -870,6 +932,8 @@ ItemUsable_LogTwig::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_WarpWing", ROMX
+
 ; Usability check of items $29 WarpWing and $36 TidalBell (CheckItemUsable), also run by
 ; ItemUsable_Warp and FieldSkillUsable_MapAroundPlayer: on a special map (wMapType bit 7) usable
 ; only when wMapType is $80; on any other map usable only when the MapItemUseFlags byte for hMapId
@@ -896,6 +960,8 @@ ItemUsable_WarpWing::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ItemUsable_ExitBell", ROMX
 
 ; ExitBell: in a key world only in map types $81, $85 and $86; elsewhere only where the map's
 ; MapItemUseFlags byte has bit 5. (C2, E-0357; probed E-0377)
@@ -925,6 +991,8 @@ ItemUsable_ExitBell::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_TinyMedal", ROMX
+
 ; Usability check of items $2C TinyMedal and $2D GoldPass: no check; it returns at once, so wItemId
 ; is kept and the item passes. (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -933,11 +1001,15 @@ ItemUsable_ExitBell::
 ItemUsable_TinyMedal::
     ret
 
+SECTION "Bank 16 ItemUsable_Item2F", ROMX
+
 ; Item $2F: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 47 (no name); item names from StringTable_ItemNames (E-0085)
 ItemUsable_Item2F::
     ret
+
+SECTION "Bank 16 ItemUsable_WaterCall", ROMX
 
 ; WaterCall: only outside key worlds on map $2F, screen (0, 1), standing at ($40, $30) facing right
 ; or at ($50, $40) facing up, and before EVENT_SCENE_MONSTERS_IN_TOW. (C2, E-0357; probed E-0377)
@@ -990,6 +1062,8 @@ ItemUsable_WaterCall::
 .return:
     ret
 
+SECTION "Bank 16 ItemUsable_MoonRock", ROMX
+
 ; MoonRock: only on map $40, screen (0, 0), at Y $40 with X $40-$50 facing up, and before
 ; EVENT_THE_PIRATES_WERE_SWALLOWED_BY. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -1028,6 +1102,8 @@ ItemUsable_MoonRock::
 
 .return:
     ret
+
+SECTION "Bank 16 ItemUsable_Crest", ROMX
 
 ; Crest: only on map $49, screen (0, 0), at ($40, $40) facing up, after EVENT_SCENE_SHIELD_1E4 and
 ; before EVENT_SCENE_SHIELD2_1E5. (C2, E-0357; probed E-0377)
@@ -1069,11 +1145,15 @@ ItemUsable_Crest::
 .return:
     ret
 
+SECTION "Bank 16 ItemUsable_YunaSoul", ROMX
+
 ; YunaSoul: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 51 YunaSoul; item names from StringTable_ItemNames (E-0085)
 ItemUsable_YunaSoul::
     ret
+
+SECTION "Bank 16 ItemUsable_SleepHerb", ROMX
 
 ; SleepHerb: only on map $61, screen (0, 0), at ($40, $40) facing up, before
 ; EVENT_SCENE_SHIELD_GUARDIAN. (C2, E-0357; probed E-0377)
@@ -1112,6 +1192,8 @@ ItemUsable_SleepHerb::
 .return:
     ret
 
+SECTION "Bank 16 ItemUsable_Change", ROMX
+
 ; Change: only outside key worlds on maps $70-$9F except $76, $9A, $9B and map $7A's screen row 1,
 ; and only while wScreenSavedFlag is set. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -1147,6 +1229,8 @@ ItemUsable_Change::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 ItemUsable_HarMirror", ROMX
+
 ; Usability check of items $37 HarMirror and $38 Sky: no check; it returns at once, so wItemId is
 ; kept and the item passes. (C2, E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -1155,6 +1239,8 @@ ItemUsable_Change::
 ItemUsable_HarMirror::
     ret
 
+SECTION "Bank 16 ItemUsable_Heaven", ROMX
+
 ; Heaven: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; item names from
@@ -1162,11 +1248,15 @@ ItemUsable_HarMirror::
 ItemUsable_Heaven::
     ret
 
+SECTION "Bank 16 ItemUsable_Accessory", ROMX
+
 ; Accessory: no check. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 62 Accessory, 63 Accessory; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Accessory::
     ret
+
+SECTION "Bank 16 ItemUsable_VITbelt", ROMX
 
 ; VITbelt: refused only for a fallen monster. (C2, E-0357; probed E-0377)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
@@ -1176,6 +1266,8 @@ ItemUsable_Accessory::
 ItemUsable_VITbelt::
     call RefuseItemIfTargetFallen
     ret
+
+SECTION "Bank 16 RefuseItemIfTargetFallen", ROMX
 
 ; Loads A = wTargetRecord and falls through into RefuseItemIfRecordFallen: when the target has
 ; MON_STATUS bit 7 (fallen) set the item is refused (wItemId = $FF, A = $FF, Z clear); otherwise Z
@@ -1202,6 +1294,8 @@ RefuseItemIfRecordFallen::
     ld [wItemId], a
     or a
     ret
+
+SECTION "Bank 16 SaveForbiddenHere", ROMX
 
 ; Returns C = 1 when the game refuses to save here and C = 0 when saving is allowed: on a special
 ; map (wMapType bit 7) saving is refused while wEncounterRate & $7F is non-zero; on any other map it
@@ -1240,6 +1334,8 @@ SaveForbiddenHere::
 .return:
     ret
 
+SECTION "Bank 16 ShowRaiseAmountOrRefuse", ROMX
+
 ; HL = cap, BC = current value (the seed checks pass 999 and the stat word): when they are equal
 ; sets wItemId = $FF (refused). Otherwise writes the raise as a decimal string ending in $F0 at
 ; wTextBuf3 (WriteDecimalByteString): wItemEffectAmount, or HL - BC when that is smaller; a
@@ -1275,6 +1371,8 @@ ShowRaiseAmountOrRefuse::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 ApplyItemEffect", ROMX
 
 ; Uses item wItemId on party slot wTargetRecord; the pause menu far-calls it with SRAM bank 0
 ; enabled (PauseMenu_Items_UseItem_Apply, PauseMenu_Items_UseItem_ApplyAgain,
@@ -1398,6 +1496,8 @@ ApplyItemEffect::
 ItemApply_Item00::
     ret
 
+SECTION "Bank 16 ItemApply_Herb", ROMX
+
 ; Herb: adds the item's amount (wItemEffectAmount) plus a random 0-10 to the target's HP, capped at
 ; its max, and uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater
@@ -1418,6 +1518,8 @@ ItemApply_Herb::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_WorldDew", ROMX
+
 ; WorldDew: heals each of the three party places in turn (the helper skips fallen monsters) and uses
 ; the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew (E-0089)
@@ -1430,6 +1532,8 @@ ItemApply_WorldDew::
     call ItemApply_WorldDew_HealMember
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_WorldDew_HealMember", ROMX
 
 ; WorldDew effect for party slot A: returns when A is not below wPartyCount; otherwise sets
 ; wTargetRecord = A and, unless the member has fallen (RefuseItemIfTargetFallen, which then also
@@ -1450,6 +1554,8 @@ ItemApply_WorldDew_HealMember::
     call StoreHLToRecordField
     ret
 
+SECTION "Bank 16 ItemApply_Potion", ROMX
+
 ; Potion: adds the item's amount plus a random 0-10 to the target's MP, capped at its max, and uses
 ; the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion (E-0089)
@@ -1469,6 +1575,8 @@ ItemApply_Potion::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_ElfWater", ROMX
+
 ; ElfWater: refills the target's MP to its max and uses the item up by its chance. (C2, E-0357;
 ; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 5 ElfWater (E-0089)
@@ -1483,6 +1591,8 @@ ItemApply_ElfWater::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_Antidote", ROMX
+
 ; Antidote: clears the target's status bit 2 and uses the item up by its chance. (C2, E-0357; probed
 ; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 6 Antidote (E-0089)
@@ -1493,6 +1603,8 @@ ItemApply_Antidote::
     res 2, [hl]
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_MoonHerb", ROMX
 
 ; MoonHerb: clears the target's status bit 3 and uses the item up by its chance. (C2, E-0357; probed
 ; E-0377)
@@ -1505,6 +1617,8 @@ ItemApply_MoonHerb::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_Laurel", ROMX
+
 ; Laurel: clears the target's status bit 0 and uses the item up by its chance. (C2, E-0357; probed
 ; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 8 Laurel (E-0089)
@@ -1515,6 +1629,8 @@ ItemApply_Laurel::
     res 0, [hl]
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_AwakeSand", ROMX
 
 ; AwakeSand: clears the target's status bit 1 and uses the item up by its chance. (C2, E-0357;
 ; probed E-0377)
@@ -1527,6 +1643,8 @@ ItemApply_AwakeSand::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_SkyBell", ROMX
+
 ; SkyBell: clears the target's status bit 4 and uses the item up by its chance. (C2, E-0357; probed
 ; E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 10 SkyBell (E-0089)
@@ -1538,10 +1656,14 @@ ItemApply_SkyBell::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_SageRock", ROMX
+
 ; SageRock: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 11 SageRock (E-0089)
 ItemApply_SageRock::
     ret
+
+SECTION "Bank 16 ItemApply_WorldLeaf", ROMX
 
 ; WorldLeaf: revives the target (status cleared, HP to max), sets wLevelUpGains to 1 and uses the
 ; item up by its chance. (C2, E-0357; probed E-0377)
@@ -1563,6 +1685,8 @@ ItemApply_WorldLeaf::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_ATKseed", ROMX
+
 ; ATKseed: applies the item's amount (wItemEffectAmount) to the target's ATK through its helper,
 ; then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 13 ATKseed (E-0089)
@@ -1574,6 +1698,8 @@ ItemApply_ATKseed::
     call ItemApply_ATKseed_RaiseATK
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_DEFseed", ROMX
 
 ; DEFseed: applies the item's amount (wItemEffectAmount) to the target's DEF through its helper,
 ; then uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1587,6 +1713,8 @@ ItemApply_DEFseed::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_AGLseed", ROMX
+
 ; AGLseed: applies the item's amount (wItemEffectAmount) to the target's AGL through its helper,
 ; then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 15 AGLseed (E-0089)
@@ -1598,6 +1726,8 @@ ItemApply_AGLseed::
     call ItemApply_AGLseed_RaiseAGL
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_INTseed", ROMX
 
 ; INTseed: applies the item's amount (wItemEffectAmount) to the target's INT through its helper,
 ; then uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1611,6 +1741,8 @@ ItemApply_INTseed::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_LifeAcorn", ROMX
+
 ; LifeAcorn: applies the item's amount (wItemEffectAmount) to the target's max HP through its
 ; helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn (E-0089)
@@ -1622,6 +1754,8 @@ ItemApply_LifeAcorn::
     call ItemApply_LifeAcorn_RaiseMaxHP
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_MysticNut", ROMX
 
 ; MysticNut: applies the item's amount (wItemEffectAmount) to the target's max MP through its
 ; helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1635,6 +1769,8 @@ ItemApply_MysticNut::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_Quest", ROMX
+
 ; Quest: applies the item's amount (wItemEffectAmount) to the target's personality byte 0 through
 ; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 19 Quest? (E-0089)
@@ -1646,6 +1782,8 @@ ItemApply_Quest::
     call ItemApply_Quest_RaiseFirstAxis
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_Horror", ROMX
 
 ; Horror: applies the item's amount (wItemEffectAmount) to the target's personality byte 0 through
 ; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1659,6 +1797,8 @@ ItemApply_Horror::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_BeNice", ROMX
+
 ; BeNice: applies the item's amount (wItemEffectAmount) to the target's personality byte 1 through
 ; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 21 BeNice? (E-0089)
@@ -1670,6 +1810,8 @@ ItemApply_BeNice::
     call ItemApply_BeNice_RaiseSecondAxis
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_Cheater", ROMX
 
 ; Cheater: applies the item's amount (wItemEffectAmount) to the target's personality byte 1 through
 ; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1683,6 +1825,8 @@ ItemApply_Cheater::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_Smart", ROMX
+
 ; Smart: applies the item's amount (wItemEffectAmount) to the target's personality byte 3 through
 ; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 23 Smart? (E-0089)
@@ -1694,6 +1838,8 @@ ItemApply_Smart::
     call ItemApply_Smart_RaiseFourthAxis
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_Comedy", ROMX
 
 ; Comedy: applies the item's amount (wItemEffectAmount) to the target's personality byte 3 through
 ; its helper, then uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1707,6 +1853,8 @@ ItemApply_Comedy::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_BeefJerky", ROMX
+
 ; BeefJerky: lowers the target's record field $6B by the item's amount, not below 0
 ; (ApplyMeatToRecordField6B), and uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 25 BeefJerky, 26
@@ -1719,6 +1867,8 @@ ItemApply_BeefJerky::
     call ApplyMeatToRecordField6B
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_BadMeat", ROMX
 
 ; BadMeat: lowers field $6B as the other meats do, poisons the target (status bit 2) and uses the
 ; item up by its chance. (C2, E-0357; probed E-0377)
@@ -1736,15 +1886,21 @@ ItemApply_BadMeat::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_MeteOrb", ROMX
+
 ; MeteOrb: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 30 MeteOrb (E-0089)
 ItemApply_MeteOrb::
     ret
 
+SECTION "Bank 16 ItemApply_BeastTail", ROMX
+
 ; BeastTail: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 31 BeastTail (E-0089)
 ItemApply_BeastTail::
     ret
+
+SECTION "Bank 16 ItemApply_Repellent", ROMX
 
 ; Repellent: no encounters for 200 steps (wEncounterDelay = $C8); the item is used up by its chance.
 ; (C2, E-0357; probed E-0377)
@@ -1755,6 +1911,8 @@ ItemApply_Repellent::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_ShinyHarp", ROMX
+
 ; ShinyHarp: sets the field's return action to 1 (wDataBankSave), which the field runs on return,
 ; and uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 33 ShinyHarp (E-0089)
@@ -1764,11 +1922,15 @@ ItemApply_ShinyHarp::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_Mist", ROMX
+
 ; Mist: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 34 Mist?, 35 Friend?,
 ; 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire? (E-0089)
 ItemApply_Mist::
     ret
+
+SECTION "Bank 16 ItemApply_Warp", ROMX
 
 ; Warp: sets the field's return action to 2 (wDataBankSave), which the field runs on return, and
 ; uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1779,6 +1941,8 @@ ItemApply_Warp::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_WarpWing", ROMX
+
 ; WarpWing: sets the field's return action to 3 (wDataBankSave), which the field runs on return, and
 ; uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 41 WarpWing (E-0089)
@@ -1787,6 +1951,8 @@ ItemApply_WarpWing::
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
+
+SECTION "Bank 16 ItemApply_ExitBell", ROMX
 
 ; ExitBell: sets the field's return action to 4 (wDataBankSave), which the field runs on return, and
 ; uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1797,17 +1963,23 @@ ItemApply_ExitBell::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_Bookmark", ROMX
+
 ; Bookmark: only uses the item up by its chance. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 43 Bookmark (E-0089)
 ItemApply_Bookmark::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_TinyMedal", ROMX
+
 ; TinyMedal: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 44 TinyMedal, 45
 ; GoldPass (E-0089)
 ItemApply_TinyMedal::
     ret
+
+SECTION "Bank 16 ItemApply_LogTwig", ROMX
 
 ; LogTwig: sets the field's return action to 9 (wDataBankSave), which the field runs on return, and
 ; uses the item up by its chance. (C2, E-0357; probed E-0377)
@@ -1818,10 +1990,14 @@ ItemApply_LogTwig::
     call ConsumeSelectedItemByChance
     ret
 
+SECTION "Bank 16 ItemApply_Item2F", ROMX
+
 ; Item $2F: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 47 (no name) (E-0089)
 ItemApply_Item2F::
     ret
+
+SECTION "Bank 16 ItemApply_WaterCall", ROMX
 
 ; WaterCall: sets the field's return action to 5 (wDataBankSave); the item is kept. (C2, E-0357;
 ; probed E-0377)
@@ -1831,6 +2007,8 @@ ItemApply_WaterCall::
     ld [wDataBankSave], a
     ret
 
+SECTION "Bank 16 ItemApply_MoonRock", ROMX
+
 ; MoonRock: sets the field's return action to 6 (wDataBankSave); the item is kept. (C2, E-0357;
 ; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 49 MoonRock (E-0089)
@@ -1838,6 +2016,8 @@ ItemApply_MoonRock::
     ld a, $06
     ld [wDataBankSave], a
     ret
+
+SECTION "Bank 16 ItemApply_Crest", ROMX
 
 ; Crest: sets the field's return action to 7 (wDataBankSave); the item is kept. (C2, E-0357; probed
 ; E-0377)
@@ -1847,10 +2027,14 @@ ItemApply_Crest::
     ld [wDataBankSave], a
     ret
 
+SECTION "Bank 16 ItemApply_YunaSoul", ROMX
+
 ; YunaSoul: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 51 YunaSoul (E-0089)
 ItemApply_YunaSoul::
     ret
+
+SECTION "Bank 16 ItemApply_SleepHerb", ROMX
 
 ; SleepHerb: sets the field's return action to 8 (wDataBankSave); the item is kept. (C2, E-0357;
 ; probed E-0377)
@@ -1860,6 +2044,8 @@ ItemApply_SleepHerb::
     ld [wDataBankSave], a
     ret
 
+SECTION "Bank 16 ItemApply_Change", ROMX
+
 ; Change: sets the field's return action to $0A (wDataBankSave); the item is kept. (C2, E-0357;
 ; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 53 Change? (E-0089)
@@ -1867,6 +2053,8 @@ ItemApply_Change::
     ld a, $0a
     ld [wDataBankSave], a
     ret
+
+SECTION "Bank 16 ItemApply_TidalBell", ROMX
 
 ; TidalBell: adds 50 to wTownEventTimer, at most $F0. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 54 TidalBell (E-0089)
@@ -1885,17 +2073,23 @@ ItemApply_TidalBell::
     ld [wTownEventTimer], a
     ret
 
+SECTION "Bank 16 ItemApply_HarMirror", ROMX
+
 ; HarMirror: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 55 HarMirror, 56
 ; Sky?, 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty? (E-0089)
 ItemApply_HarMirror::
     ret
 
+SECTION "Bank 16 ItemApply_Accessory", ROMX
+
 ; Accessory: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 62 Accessory, 63
 ; Accessory (E-0089)
 ItemApply_Accessory::
     ret
+
+SECTION "Bank 16 ItemApply_VITbelt", ROMX
 
 ; VITbelt: equips it: raises the target's max HP (and the current value with it) by 30
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
@@ -1908,6 +2102,8 @@ ItemApply_VITbelt::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_DracoBelt", ROMX
+
 ; DracoBelt: equips it: raises the target's max HP (and the current value with it) by 80
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
 ; (EquipItemOnRecordTargetRecord). (C2, E-0357; probed E-0377)
@@ -1918,6 +2114,8 @@ ItemApply_DracoBelt::
     call AddAToRecordWordPairCapped
     call EquipItemOnRecordTargetRecord
     ret
+
+SECTION "Bank 16 ItemApply_MagicBelt", ROMX
 
 ; MagicBelt: equips it: raises the target's max MP (and the current value with it) by 30
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
@@ -1930,6 +2128,8 @@ ItemApply_MagicBelt::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_OddBelt", ROMX
+
 ; OddBelt: equips it: raises the target's max MP (and the current value with it) by 80
 ; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
 ; (EquipItemOnRecordTargetRecord). (C2, E-0357; probed E-0377)
@@ -1941,6 +2141,8 @@ ItemApply_OddBelt::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_StoneFang", ROMX
+
 ; StoneFang: equips it: raises the target's ATK by 10, capped at 999 (AddAToRecordWordCapped), and
 ; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 68 StoneFang (E-0089)
@@ -1950,6 +2152,8 @@ ItemApply_StoneFang::
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
+
+SECTION "Bank 16 ItemApply_SteelFang", ROMX
 
 ; SteelFang: equips it: raises the target's ATK by 50, capped at 999 (AddAToRecordWordCapped), and
 ; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
@@ -1961,6 +2165,8 @@ ItemApply_SteelFang::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_MermScale", ROMX
+
 ; MermScale: equips it: raises the target's DEF by 10, capped at 999 (AddAToRecordWordCapped), and
 ; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 70 MermScale (E-0089)
@@ -1970,6 +2176,8 @@ ItemApply_MermScale::
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
+
+SECTION "Bank 16 ItemApply_DrakScale", ROMX
 
 ; DrakScale: equips it: raises the target's DEF by 50, capped at 999 (AddAToRecordWordCapped), and
 ; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
@@ -1981,6 +2189,8 @@ ItemApply_DrakScale::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_AGL", ROMX
+
 ; ITEM_AGL ($48): equips it: raises the target's AGL by 10, capped at 999 (AddAToRecordWordCapped),
 ; and stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 72 AGL? (E-0089)
@@ -1991,6 +2201,8 @@ ItemApply_AGL::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_Starry", ROMX
+
 ; Starry: equips it: raises the target's AGL by 50, capped at 999 (AddAToRecordWordCapped), and
 ; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 73 Starry? (E-0089)
@@ -2000,6 +2212,8 @@ ItemApply_Starry::
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
+
+SECTION "Bank 16 ItemApply_SmartEquipment", ROMX
 
 ; Item $4A (Smart): equips it: raises the target's INT by 50, capped at 999
 ; (AddAToRecordWordCapped), and stores the equipment in field $A4. (C2, E-0357; probed E-0377)
@@ -2012,6 +2226,8 @@ ItemApply_SmartEquipment::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_Wise", ROMX
+
 ; Wise: equips it: raises the target's INT by 100, capped at 999 (AddAToRecordWordCapped), and
 ; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 75 Wise? (E-0089)
@@ -2021,6 +2237,8 @@ ItemApply_Wise::
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
+
+SECTION "Bank 16 ItemApply_MagicCape", ROMX
 
 ; Effect of the capes, items $4C-$52 (MagicCape to BraveCape): only EquipItemOnRecordTargetRecord,
 ; which stores item - $3F ($0D-$13) in MON_ITEM of the target with no stat change. By the
@@ -2032,6 +2250,8 @@ ItemApply_MagicCape::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_DScale", ROMX
+
 ; DScale: equips it: raises the target's DEF by 5, capped at 999 (AddAToRecordWordCapped), and
 ; stores the equipment in field $A4. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 83 D-Scale (E-0089)
@@ -2042,11 +2262,15 @@ ItemApply_DScale::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_None", ROMX
+
 ; None (ITEM_NONE): no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 84 None, 85 None, 86
 ; None, 87 None, 88 None, 89 None (E-0089)
 ItemApply_None::
     ret
+
+SECTION "Bank 16 ItemApply_Life", ROMX
 
 ; Life: equips it (field $A4) with no stat change. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 90 Life?, 91 Divine?,
@@ -2055,10 +2279,14 @@ ItemApply_Life::
     call EquipItemOnRecordTargetRecord
     ret
 
+SECTION "Bank 16 ItemApply_Item62", ROMX
+
 ; Item $62: no effect here. (C2, E-0357; probed E-0377)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 98 (no name) (E-0089)
 ItemApply_Item62::
     ret
+
+SECTION "Bank 16 EquipItemOnRecordTargetRecord", ROMX
 
 ; Equips item wItemId on party slot wTargetRecord by storing wItemId - $3F in MON_ITEM. When that
 ; field was 0 it runs ConsumeSelectedItemByChance and sets hTemp0 = 0. Otherwise it swaps: wItemId =
@@ -2110,6 +2338,8 @@ EquipItemOnRecordTargetRecord::
     ldh [hTemp0], a
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonusKeepA", ROMX
+
 ; Preserving A, takes back the stat bonus of equipment item A (ids $40-$62) from the record in
 ; wTargetRecord by running RemoveEquipmentBonus. EquipItemOnRecordTargetRecord calls it with the
 ; item a monster gives up when it is given another one. (C2, E-0370; probed E-0377)
@@ -2120,6 +2350,8 @@ RemoveEquipmentBonusKeepA::
     call RemoveEquipmentBonus
     pop af
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus", ROMX
 
 ; A = equipment item id ($40-$62): jumps by A - $40 to the step that takes that item's bonus back,
 ; lowering one or two stat words of the record (RemoveEquipmentBonus_VITbelt and the others; a
@@ -2177,6 +2409,8 @@ RemoveEquipmentBonus_VITbelt::
     call SubtractAFromRecordWordPairFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_DracoBelt", ROMX
+
 ; Removing ITEM_DRACOBELT (item $41, entry 1 of RemoveEquipmentBonus): unless the max HP of record
 ; wTargetRecord is 999, lowers it (MON_MAX_HP) and the HP word before it by 80
 ; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C2,
@@ -2186,6 +2420,8 @@ RemoveEquipmentBonus_DracoBelt::
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus_MagicBelt", ROMX
 
 ; Removing ITEM_MAGICBELT (item $42, entry 2 of RemoveEquipmentBonus): unless the max MP of record
 ; wTargetRecord is 999, lowers it (MON_MAX_MP) and the MP word before it by 30
@@ -2197,6 +2433,8 @@ RemoveEquipmentBonus_MagicBelt::
     call SubtractAFromRecordWordPairFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_OddBelt", ROMX
+
 ; Removing ITEM_ODDBELT (item $43, entry 3 of RemoveEquipmentBonus): unless the max MP of record
 ; wTargetRecord is 999, lowers it (MON_MAX_MP) and the MP word before it by 80
 ; (SubtractAFromRecordWordPairFloor1); a result below zero becomes 1, but an exact 0 stays 0. (C2,
@@ -2207,6 +2445,8 @@ RemoveEquipmentBonus_OddBelt::
     call SubtractAFromRecordWordPairFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_StoneFang", ROMX
+
 ; Removing ITEM_STONEFANG (item $44, entry 4 of RemoveEquipmentBonus): unless the ATK of record
 ; wTargetRecord is 999, lowers it (MON_ATK) by 10 (SubtractAFromRecordWordFloor1); a result below
 ; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
@@ -2215,6 +2455,8 @@ RemoveEquipmentBonus_StoneFang::
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus_SteelFang", ROMX
 
 ; Removing ITEM_STEELFANG (item $45, entry 5 of RemoveEquipmentBonus): unless the ATK of record
 ; wTargetRecord is 999, lowers it (MON_ATK) by 50 (SubtractAFromRecordWordFloor1); a result below
@@ -2225,6 +2467,8 @@ RemoveEquipmentBonus_SteelFang::
     call SubtractAFromRecordWordFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_MermScale", ROMX
+
 ; Removing ITEM_MERMSCALE (item $46, entry 6 of RemoveEquipmentBonus): unless the DEF of record
 ; wTargetRecord is 999, lowers it (MON_DEF) by 10 (SubtractAFromRecordWordFloor1); a result below
 ; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
@@ -2233,6 +2477,8 @@ RemoveEquipmentBonus_MermScale::
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus_DrakScale", ROMX
 
 ; Removing ITEM_DRAKSCALE (item $47, entry 7 of RemoveEquipmentBonus): unless the DEF of record
 ; wTargetRecord is 999, lowers it (MON_DEF) by 50 (SubtractAFromRecordWordFloor1); a result below
@@ -2243,6 +2489,8 @@ RemoveEquipmentBonus_DrakScale::
     call SubtractAFromRecordWordFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_AGL", ROMX
+
 ; Removing ITEM_AGL (item $48, entry 8 of RemoveEquipmentBonus): unless the AGL of record
 ; wTargetRecord is 999, lowers it (MON_AGL) by 10 (SubtractAFromRecordWordFloor1); a result below
 ; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
@@ -2251,6 +2499,8 @@ RemoveEquipmentBonus_AGL::
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus_Starry", ROMX
 
 ; Removing ITEM_STARRY (item $49, entry 9 of RemoveEquipmentBonus): unless the AGL of record
 ; wTargetRecord is 999, lowers it (MON_AGL) by 50 (SubtractAFromRecordWordFloor1); a result below
@@ -2261,6 +2511,8 @@ RemoveEquipmentBonus_Starry::
     call SubtractAFromRecordWordFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_Smart", ROMX
+
 ; Removing ITEM_SMART_4A (item $4A, entry 10 of RemoveEquipmentBonus): unless the INT of record
 ; wTargetRecord is 999, lowers it (MON_INT) by 50 (SubtractAFromRecordWordFloor1); a result below
 ; zero becomes 1, but an exact 0 stays 0. (C2, E-0370; probed E-0377)
@@ -2269,6 +2521,8 @@ RemoveEquipmentBonus_Smart::
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus_Wise", ROMX
 
 ; Removing ITEM_WISE (item $4B, entry 11 of RemoveEquipmentBonus): unless the INT of record
 ; wTargetRecord is 999, lowers it (MON_INT) by 100 (SubtractAFromRecordWordFloor1); a result below
@@ -2279,6 +2533,8 @@ RemoveEquipmentBonus_Wise::
     call SubtractAFromRecordWordFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_Capes", ROMX
+
 ; Removing a cape (items $4C-$52, ITEM_MAGICCAPE to ITEM_BRAVECAPE; entries 12-18 of
 ; RemoveEquipmentBonus): returns with no stat change. Their equipped values $0D-$13 (item - $3F in
 ; MON_ITEM) are read when a battle loads instead, where GameMode4_Init_CopyPartyToBattlers_Member
@@ -2286,6 +2542,8 @@ RemoveEquipmentBonus_Wise::
 ; (ApplyIncrementOffsetRows19ForA0DTo13). (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_Capes::
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus_DScale", ROMX
 
 ; Removing the DScale (item $53, ITEM_DSCALE; entry 19 of RemoveEquipmentBonus): unless the DEF of
 ; record wTargetRecord is 999, lowers it by 5 (SubtractAFromRecordWordFloor1 with C = MON_DEF); a
@@ -2296,10 +2554,14 @@ RemoveEquipmentBonus_DScale::
     call SubtractAFromRecordWordFloor1
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_NoneItems", ROMX
+
 ; Removing an item $54-$59 (ITEM_NONE to ITEM_NONE_59, entries 20-25 of RemoveEquipmentBonus):
 ; returns with no change. (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_NoneItems::
     ret
+
+SECTION "Bank 16 RemoveEquipmentBonus_LevelUpItems", ROMX
 
 ; Removing an item $5A-$61 (ITEM_LIFE to ITEM_CLERIC, entries 26-33 of RemoveEquipmentBonus):
 ; returns with no stat change. The equipped values of War to Cleric ($1D-$22 in MON_ITEM) are read
@@ -2308,10 +2570,14 @@ RemoveEquipmentBonus_NoneItems::
 RemoveEquipmentBonus_LevelUpItems::
     ret
 
+SECTION "Bank 16 RemoveEquipmentBonus_LastItem", ROMX
+
 ; Removing item $62 (ITEM_62, entry 34, the last of RemoveEquipmentBonus): returns with no change.
 ; (C2, E-0370; probed E-0377)
 RemoveEquipmentBonus_LastItem::
     ret
+
+SECTION "Bank 16 AddAToRecordWordCapped", ROMX
 
 ; A = amount, C = field offset, record of party slot wTargetRecord (SRAMRecordAddressMapped): the
 ; word at field C += A, then CapDETo999 limits it to 999, so a word already above 999 also comes
@@ -2340,6 +2606,8 @@ AddAToRecordWordCapped::
     ld a, e
     ld [hl], a
     ret
+
+SECTION "Bank 16 AddAToRecordWordPairCapped", ROMX
 
 ; Like AddAToRecordWordCapped for the word at field C and then for the word two bytes before it
 ; (MON_HP before MON_MAX_HP, MON_MP before MON_MAX_MP): A is added to both, each capped at 999. Used
@@ -2386,6 +2654,8 @@ AddAToRecordWordPairCapped::
     ld [hl], a
     ret
 
+SECTION "Bank 16 SubtractAFromRecordWordFloor1", ROMX
+
 ; A = amount, C = field offset, record of party slot wTargetRecord: leaves the word unchanged when
 ; it is 999; otherwise word -= A, and a result below zero (bit 15 set) becomes 1, while an exact 0
 ; stays 0. hTemp0 = A. The RemoveEquipmentBonus steps for ATK, DEF, AGL and INT use it. (C2, E-0377)
@@ -2427,6 +2697,8 @@ SubtractAFromRecordWordFloor1::
     ld a, e
     ld [hl], a
     ret
+
+SECTION "Bank 16 SubtractAFromRecordWordPairFloor1", ROMX
 
 ; Takes an equipment bonus back: unless the word at field C of the record of party slot
 ; wTargetRecord is 999, subtracts A from it and from the word two bytes before it (the current HP or
@@ -2495,6 +2767,8 @@ SubtractAFromRecordWordPairFloor1::
     ld [hl], a
     ret
 
+SECTION "Bank 16 CapDETo999", ROMX
+
 ; DE = min(DE, 999 ($03E7)); A is clobbered. AddAToRecordWordCapped and AddAToRecordWordPairCapped
 ; call it. (C2, E-0377)
 ; DE = min(DE, 999 ($03E7)) (E-0103)
@@ -2511,6 +2785,8 @@ CapDETo999::
     ld e, $e7
     ld d, $03
     ret
+
+SECTION "Bank 16 ConsumeSelectedItemByChance", ROMX
 
 ; Advances the random table (NextTableByte), takes A = (wRandomHi:wRandomLo) mod 100 (DivideHLByA)
 ; and compares it with the byte at wItemRecord + 3: when A is below it, wItemId = $FF,
@@ -2540,6 +2816,8 @@ ConsumeSelectedItemByChance::
     ld [hl], $ff
     call CompactInventory
     ret
+
+SECTION "Bank 16 CompactInventory", ROMX
 
 ; Copies the 24 wInventory bytes to wWorkBuf, fills wInventory with $FF, then copies back in order
 ; every byte that is neither $FF nor $00, so the items close up at the front and the rest is $FF. An
@@ -2580,6 +2858,8 @@ CompactInventory::
     jr nz, .loop2
     ret
 
+SECTION "Bank 16 AddWItemIdToInventory", ROMX
+
 ; Puts wItemId in the first wInventory slot holding $00 or $FF, or sets wItemId = $FF when all 24
 ; slots are taken; returns at once when wItemId is ITEM_00 or $FF. No call or jump to it was found.
 ; (C2, E-0377)
@@ -2611,6 +2891,8 @@ AddWItemIdToInventory::
     ld [hl], a
     ret
 
+SECTION "Bank 16 RemoveWItemIdFromInventory", ROMX
+
 ; Sets the first wInventory slot holding wItemId to $FF and closes up the bag (CompactInventory), or
 ; sets wItemId = $FF when no slot holds it; returns at once when wItemId is ITEM_00 or $FF. No call
 ; or jump to it was found. (C2, E-0377)
@@ -2640,6 +2922,8 @@ RemoveWItemIdFromInventory::
     ld [hl], $ff
     call CompactInventory
     ret
+
+SECTION "Bank 16 ItemTable", ROMX
 
 ; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wItemId) to wItemRecord;
 ; CheckItemUsable dispatches on the same id; wInventory is a 24-slot bag of such ids, empty at the
@@ -3254,12 +3538,16 @@ FieldSkillUsable_HealOne::
     call SetItemMessage12IfItemRefused
     ret
 
+SECTION "Bank 16 FieldSkillUsable_HealParty", ROMX
+
 ; Field skills 3-4 (party HP healing): the WorldDew's check, refusing with message $12. (C2, E-0357;
 ; probed E-0377)
 FieldSkillUsable_HealParty::
     call ItemUsable_WorldDew
     call SetItemMessage12IfItemRefused
     ret
+
+SECTION "Bank 16 FieldSkillUsable_GiveMP", ROMX
 
 ; Field skills 5-7 (MP to another monster): refuses when the target is the caster itself, otherwise
 ; the Potion's check; refusal message $12. (C2, E-0357; probed E-0377)
@@ -3280,6 +3568,8 @@ FieldSkillUsable_GiveMP::
     call SetItemMessage12IfItemRefused
     ret
 
+SECTION "Bank 16 FieldSkillUsable_Revive", ROMX
+
 ; Field skills 8-9 (revival): the WorldLeaf's check, refusing with message $12. (C2, E-0357; probed
 ; E-0377)
 FieldSkillUsable_Revive::
@@ -3287,12 +3577,16 @@ FieldSkillUsable_Revive::
     call SetItemMessage12IfItemRefused
     ret
 
+SECTION "Bank 16 FieldSkillUsable_CurePoison", ROMX
+
 ; Field skill 10 (poison cure): the Antidote's check, refusing with message $12. (C2, E-0357; probed
 ; E-0377)
 FieldSkillUsable_CurePoison::
     call ItemUsable_Antidote
     call SetItemMessage12IfItemRefused
     ret
+
+SECTION "Bank 16 FieldSkillUsable_CurePartyPoison", ROMX
 
 ; Field skill 11: ListPartyMembersWithField55Bit0 lists the party members with MON_STATUS bit 0 set
 ; (the bit ItemUsable_Laurel tests and FieldSkillEffect_CurePartyPoison clears, not the poison bit 2
@@ -3304,6 +3598,8 @@ FieldSkillUsable_CurePartyPoison::
     call ListPartyMembersWithField55Bit0
     call SetItemMessage12IfItemRefused
     ret
+
+SECTION "Bank 16 FieldSkillUsable_Encounters", ROMX
 
 ; Field skills 12-14 and 16: the Repellent's check; skill 16 refused gives message $15, otherwise
 ; collects the area's encounter ids (CollectUniqueEncounterIdsToWorkBuf2); the others refuse with
@@ -3328,12 +3624,16 @@ FieldSkillUsable_Encounters::
     call CollectUniqueEncounterIdsToWorkBuf2
     ret
 
+SECTION "Bank 16 FieldSkillUsable_LeaveDungeon", ROMX
+
 ; Field skill 15 (leaving a dungeon): the ExitBell's check, refusing with message $14. (C2, E-0357;
 ; probed E-0377)
 FieldSkillUsable_LeaveDungeon::
     call ItemUsable_ExitBell
     call SetItemMessage14IfItemRefused
     ret
+
+SECTION "Bank 16 FieldSkillUsable_DrawRandomItem", ROMX
 
 ; Field skill 17: the Repellent's check; then refuses with message $17 when the gold is under 100,
 ; or $16 when the last inventory slot is taken. (C2, E-0357; probed E-0377)
@@ -3367,6 +3667,8 @@ FieldSkillUsable_DrawRandomItem::
     ld a, $16
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FieldSkillUsable_Warp", ROMX
 
 ; Field skill 18: the Warp's check; then refuses with message $18 when there are no map objects or
 ; every one has bit 7 set. (C2, E-0357; probed E-0377)
@@ -3403,11 +3705,15 @@ FieldSkillUsable_Warp::
 .return:
     ret
 
+SECTION "Bank 16 FieldSkillUsable_MapAroundPlayer", ROMX
+
 ; Field skill 19: the WarpWing's check, refusing with message $14. (C2, E-0357; probed E-0377)
 FieldSkillUsable_MapAroundPlayer::
     call ItemUsable_WarpWing
     call SetItemMessage14IfItemRefused
     ret
+
+SECTION "Bank 16 SetItemMessage12IfItemRefused", ROMX
 
 ; When wItemId is $FF (the check refused) sets wItemMessage = $12 and returns Z set; otherwise
 ; returns Z clear with nothing changed. The healing, MP, revival and cure field skills
@@ -3422,6 +3728,8 @@ SetItemMessage12IfItemRefused::
     ld [wItemMessage], a
     ret
 
+SECTION "Bank 16 SetItemMessage14IfItemRefused", ROMX
+
 ; When wItemId is $FF (the check refused) sets wItemMessage = $14 and returns Z set; otherwise
 ; returns Z clear with nothing changed. FieldSkillUsable_Encounters, FieldSkillUsable_LeaveDungeon,
 ; FieldSkillUsable_DrawRandomItem, FieldSkillUsable_Warp and FieldSkillUsable_MapAroundPlayer call
@@ -3435,6 +3743,8 @@ SetItemMessage14IfItemRefused::
     ld a, $14
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect", ROMX
 
 ; The effect of field skill wInventorySlot (unless refused): one routine per skill (healing, MP,
 ; revival, cures, field effects). (C2, E-0357; probed E-0377)
@@ -3478,6 +3788,8 @@ FieldSkillEffect_HealOne::
     ld [wItemMessage], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_HealOneMore", ROMX
+
 ; Field skill 1: wItemEffectAmount = 15 and wItemEffectRange = 75, then HealRecordHPByRandomAmount
 ; heals the target by (wRandomLo mod 16) + 75, so 75-90 HP, capped at its max HP; wItemMessage = 6.
 ; (C2, E-0377)
@@ -3490,6 +3802,8 @@ FieldSkillEffect_HealOneMore::
     ld a, $06
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FullHealRecordTargetRecord", ROMX
 
 ; Entry 2 of the field-skill effect jumptable in FieldSkillEffect (picked by wInventorySlot), and
 ; the tail FieldSkillEffect_Revive reuses: copies the max HP word (MON_MAX_HP) of the party member
@@ -3508,6 +3822,8 @@ FullHealRecordTargetRecord::
     ld a, $06
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect_HealPartyHurt", ROMX
 
 ; Field skill 3: sets wItemEffectAmount to 30 and wItemEffectRange to 90, copies wItemUseMessage to
 ; wItemMessage, then runs HealPartyRecordAIfHurt for party slots 0, 1 and 2 (it falls into the
@@ -3562,6 +3878,8 @@ HealPartyRecordAIfHurt::
     call HealRecordHPByRandomAmount
     ret
 
+SECTION "Bank 16 FieldSkillEffect_FullHealParty", ROMX
+
 ; Field skill 4: fully heals each party member, with the use message. (C2, E-0357; probed E-0378)
 FieldSkillEffect_FullHealParty::
     ld a, [wItemUseMessage]
@@ -3594,6 +3912,8 @@ FullHealPartyRecordA::
     call StoreHLToRecordField
     ret
 
+SECTION "Bank 16 FieldSkillEffect_GiveMP", ROMX
+
 ; Field skill 5: gives the target 15 MP; message 7. (C2, E-0357; probed E-0378)
 FieldSkillEffect_GiveMP::
     ld a, $0f
@@ -3602,6 +3922,8 @@ FieldSkillEffect_GiveMP::
     ld a, $07
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect_GiveMoreMP", ROMX
 
 ; Field skill 6: gives the target 30 MP; message 7. (C2, E-0357; probed E-0378)
 FieldSkillEffect_GiveMoreMP::
@@ -3612,6 +3934,8 @@ FieldSkillEffect_GiveMoreMP::
     ld [wItemMessage], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_GiveMostMP", ROMX
+
 ; Field skill 7: gives the target 80 MP; message 7. (C2, E-0357; probed E-0378)
 FieldSkillEffect_GiveMostMP::
     ld a, $50
@@ -3620,6 +3944,8 @@ FieldSkillEffect_GiveMostMP::
     ld a, $07
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect_ReviveHalf", ROMX
 
 ; Field skill 8: revives the target (MON_STATUS cleared) with half its max HP; message 8 and the
 ; stats redraw flag (wLevelUpGains 1). (C2, E-0357; probed E-0378)
@@ -3649,6 +3975,8 @@ FieldSkillEffect_ReviveHalf::
     ld [wLevelUpGains], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_Revive", ROMX
+
 ; Field skill 9: clears MON_STATUS of the target to 0, then FullHealRecordTargetRecord sets its HP
 ; to its max HP (MP is not touched); wItemMessage = 8 and wLevelUpGains = 1, the stats redraw flag.
 ; (C2, E-0378)
@@ -3664,6 +3992,8 @@ FieldSkillEffect_Revive::
     ld [wLevelUpGains], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_CurePoison", ROMX
+
 ; Field skill 10: cures the target's poison (MON_STATUS bit 2); message 9. (C2, E-0357; probed
 ; E-0378)
 FieldSkillEffect_CurePoison::
@@ -3674,6 +4004,8 @@ FieldSkillEffect_CurePoison::
     ld a, $09
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect_CurePartyPoison", ROMX
 
 ; Field skill 11: clears flag bit 0 of each party member (ClearPartyRecordFlag55Bit0), with the use
 ; message. (C2, E-0357; probed E-0378)
@@ -3705,6 +4037,8 @@ ClearPartyRecordFlag55Bit0::
     res 0, [hl]
     ret
 
+SECTION "Bank 16 FieldSkillEffect_Whistle", ROMX
+
 ; Field skill 12 (its first message is '<name> whistled!'): sets the field's return action
 ; wDataBankSave to 1, which RunFieldReturnPhase_RunReturnAction turns into talk event group $19 (the
 ; ShinyHarp sets the same value); wItemMessage and wItemId = $FF, so no result message follows and
@@ -3717,6 +4051,8 @@ FieldSkillEffect_Whistle::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect_SetNewRecordFamily", ROMX
 
 ; Field skill 13: sets wDataBankSave to 1 and wNewRecordFamily to $10 + the opposite of the caster's
 ; sex; no message. (C2, E-0357; probed E-0378)
@@ -3737,6 +4073,8 @@ FieldSkillEffect_SetNewRecordFamily::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_StartTalkCountdown", ROMX
+
 ; Field skill 14: wTalkCountdown = 200 ($C8), which CountDownTalkCountdownThenDispatchTalkEvent
 ; counts down before dispatching talk event group $1E (the countdown message); wItemMessage and
 ; wItemId = $FF (no result message). (C2, E-0370; probed E-0378)
@@ -3748,6 +4086,8 @@ FieldSkillEffect_StartTalkCountdown::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect_LeaveDungeon", ROMX
 
 ; Field skill 15 (usable where the ExitBell is, FieldSkillUsable_LeaveDungeon): sets the field's
 ; return action wDataBankSave to 4, the ExitBell's value, which RunFieldReturnPhase_RunReturnAction
@@ -3762,11 +4102,15 @@ FieldSkillEffect_LeaveDungeon::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_SetItemMessageTo0B", ROMX
+
 ; Field skill 16: message $0B. (C2, E-0357; probed E-0378)
 FieldSkillEffect_SetItemMessageTo0B::
     ld a, $0b
     ld [wItemMessage], a
     ret
+
+SECTION "Bank 16 FieldSkillEffect_DrawRandomItem", ROMX
 
 ; Field skill 17: ends a pending event in a key world, pays 100 gold and draws one of 18 items by
 ; chance (out of 100: Herb 25, LoveWater 10, then 5, 2 or 1 each), putting it in the last inventory
@@ -3873,6 +4217,8 @@ FieldSkillEffect_DrawRandomItem::
     ld [wItemMessage], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_SenseTreasure", ROMX
+
 ; Field skill 18 (first message '<name> scanned the area sharply.'; FieldSkillUsable_Warp refuses
 ; with 'There are no treasures nearby.' when no map object lacks bit 7): sets wWorldMapByFieldSkill
 ; to 1, which RunWorldMapState_DrawObjectMarkers reads to mark the map objects on the world map;
@@ -3886,6 +4232,8 @@ FieldSkillEffect_SenseTreasure::
     ld [wItemId], a
     ret
 
+SECTION "Bank 16 FieldSkillEffect_MapAroundPlayer", ROMX
+
 ; Field skill 19: marks the 5 x 5 map screens around the player visited
 ; (MarkVisitedScreens5x5AroundPlayer); message $1C. (C2, E-0357; probed E-0378)
 FieldSkillEffect_MapAroundPlayer::
@@ -3895,6 +4243,8 @@ FieldSkillEffect_MapAroundPlayer::
     ld a, $ff
     ld [wItemId], a
     ret
+
+SECTION "Bank 16 HealRecordHPByRandomAmount", ROMX
 
 ; Takes one table random step (NextTableByte), then adds (wRandomLo mod (wItemEffectAmount + 1)) +
 ; wItemEffectRange to the HP of the party member in wTargetRecord, capped at its max HP
@@ -3918,6 +4268,8 @@ HealRecordHPByRandomAmount::
     call AddHLToRecordHPCapped
     ret
 
+SECTION "Bank 16 HealRecordMPByItemEffectAmount", ROMX
+
 ; Adds wItemEffectAmount to the MP of the party member in wTargetRecord, capped at its max MP
 ; (AddHLToRecordMPCapped). (C2, E-0378)
 ; heals record wTargetRecord's MP by wItemEffectAmount (capped at max MP) (E-0122)
@@ -3929,6 +4281,8 @@ HealRecordMPByItemEffectAmount::
     call AddHLToRecordMPCapped
     ret
 
+SECTION "Bank 16 TestTargetRecordFallen", ROMX
+
 ; Tests MON_STATUS bit 7 (fallen) of the party member in wTargetRecord: Z is clear when it is set
 ; and Z is set when it is clear. HL = the address of that status byte. (C2, E-0378)
 ; Z clear when bit 7 of byte $55 of record wTargetRecord is set (SRAMRecordAddressMapped); HL points
@@ -3939,6 +4293,8 @@ TestTargetRecordFallen::
     call SRAMRecordAddressMapped
     bit 7, [hl]
     ret
+
+SECTION "Bank 16 CollectUniqueEncounterIdsToWorkBuf2", ROMX
 
 ; Lists the monsters of the area into wWorkBuf for field skill 16 (FieldSkillUsable_Encounters calls
 ; it). In a special map (wMapType bit 7) it copies the 8 two-byte entries of the current screen
@@ -4053,6 +4409,8 @@ CollectUniqueEncounterIdsToWorkBuf2::
     ld [wWorkBuf + $1], a
     ret
 
+SECTION "Bank 16 AddressOfKeyWorldMonstersEntryForCurrentScreen", ROMX
+
 ; Returns HL = wKeyWorldMonsters + 2 * index, the monster entry of the current special-map screen.
 ; hPlayerStateFlags bit 3 set: index $20. Otherwise for wMapType low bits 0 or 1: index = 4 *
 ; wKeyWorldAreas[(hMapScreenX >> 2) + ((hMapScreenY >> 1) & $FE)] + ((hMapScreenY >> 1) & $FE); for
@@ -4127,6 +4485,8 @@ AddressOfKeyWorldMonstersEntryForCurrentScreen::
     add_a_to_hl
     ret
 
+SECTION "Bank 16 AddHLToRecordHPCapped", ROMX
+
 ; A = party slot, HL = amount: adds HL to the HP word (MON_HP) of that member, capped at its max HP
 ; word (MON_MAX_HP) through AddDEToWordAtHLCappedAtBC. A sum that reaches the max stores the max; a
 ; sum that carries past 16 bits is stored wrapped, not capped. (C2, E-0378)
@@ -4150,6 +4510,8 @@ AddHLToRecordHPCapped::
     call AddDEToWordAtHLCappedAtBC
     ret
 
+SECTION "Bank 16 AddHLToRecordMPCapped", ROMX
+
 ; A = party slot, HL = amount: adds HL to the MP word (MON_MP) of that member, capped at its max MP
 ; word (MON_MAX_MP) through AddDEToWordAtHLCappedAtBC. A sum that reaches the max stores the max; a
 ; sum that carries past 16 bits is stored wrapped, not capped. (C2, E-0378)
@@ -4172,6 +4534,8 @@ AddHLToRecordMPCapped::
     call AddDEToWordAtHLCappedAtBC
     ret
 
+SECTION "Bank 16 ItemApply_ATKseed_RaiseATK", ROMX
+
 ; ATKseed: party member's ATK up (AddToRecordFieldWordCapped, cap 999). (C2, E-0357; probed E-0378)
 ItemApply_ATKseed_RaiseATK::
     call MapIndexViaPartyListKeepHL
@@ -4179,6 +4543,8 @@ ItemApply_ATKseed_RaiseATK::
     ld de, $03e7
     call AddToRecordFieldWordCapped
     ret
+
+SECTION "Bank 16 ItemApply_DEFseed_RaiseDEF", ROMX
 
 ; DEFseed: party member's DEF up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_DEFseed_RaiseDEF::
@@ -4188,6 +4554,8 @@ ItemApply_DEFseed_RaiseDEF::
     call AddToRecordFieldWordCapped
     ret
 
+SECTION "Bank 16 ItemApply_AGLseed_RaiseAGL", ROMX
+
 ; AGLseed: party member's AGL up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_AGLseed_RaiseAGL::
     call MapIndexViaPartyListKeepHL
@@ -4195,6 +4563,8 @@ ItemApply_AGLseed_RaiseAGL::
     ld de, $03e7
     call AddToRecordFieldWordCapped
     ret
+
+SECTION "Bank 16 ItemApply_INTseed_RaiseINT", ROMX
 
 ; INTseed: party member's INT up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_INTseed_RaiseINT::
@@ -4204,6 +4574,8 @@ ItemApply_INTseed_RaiseINT::
     call AddToRecordFieldWordCapped
     ret
 
+SECTION "Bank 16 ItemApply_LifeAcorn_RaiseMaxHP", ROMX
+
 ; LifeAcorn: party member's max HP up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_LifeAcorn_RaiseMaxHP::
     call MapIndexViaPartyListKeepHL
@@ -4211,6 +4583,8 @@ ItemApply_LifeAcorn_RaiseMaxHP::
     ld de, $03e7
     call AddToRecordFieldWordCapped
     ret
+
+SECTION "Bank 16 ItemApply_MysticNut_RaiseMaxMP", ROMX
 
 ; MysticNut: party member's max MP up (cap 999). (C2, E-0357; probed E-0378)
 ItemApply_MysticNut_RaiseMaxMP::
@@ -4220,6 +4594,8 @@ ItemApply_MysticNut_RaiseMaxMP::
     call AddToRecordFieldWordCapped
     ret
 
+SECTION "Bank 16 ItemApply_Quest_RaiseFirstAxis", ROMX
+
 ; Quest: the first personality axis up (MON_PERSONALITY, cap 255). (C2, E-0357; probed E-0378)
 ItemApply_Quest_RaiseFirstAxis::
     call MapIndexViaPartyListKeepHL
@@ -4227,6 +4603,8 @@ ItemApply_Quest_RaiseFirstAxis::
     ld e, $ff
     call AddToRecordFieldByteCapped
     ret
+
+SECTION "Bank 16 ItemApply_Horror_LowerFirstAxis", ROMX
 
 ; Horror: the first personality axis down (floor 0). (C2, E-0357; probed E-0378)
 ItemApply_Horror_LowerFirstAxis::
@@ -4236,6 +4614,8 @@ ItemApply_Horror_LowerFirstAxis::
     call SubtractFromRecordFieldByteFloored
     ret
 
+SECTION "Bank 16 ItemApply_BeNice_RaiseSecondAxis", ROMX
+
 ; BeNice: the second personality axis up (cap 255). (C2, E-0357; probed E-0378)
 ItemApply_BeNice_RaiseSecondAxis::
     call MapIndexViaPartyListKeepHL
@@ -4243,6 +4623,8 @@ ItemApply_BeNice_RaiseSecondAxis::
     ld e, $ff
     call AddToRecordFieldByteCapped
     ret
+
+SECTION "Bank 16 ItemApply_Cheater_LowerSecondAxis", ROMX
 
 ; Cheater: the second personality axis down (floor 0). (C2, E-0357; probed E-0378)
 ItemApply_Cheater_LowerSecondAxis::
@@ -4252,6 +4634,8 @@ ItemApply_Cheater_LowerSecondAxis::
     call SubtractFromRecordFieldByteFloored
     ret
 
+SECTION "Bank 16 ItemApply_Smart_RaiseFourthAxis", ROMX
+
 ; Smart: the fourth personality axis up (cap 255). (C2, E-0357; probed E-0378)
 ItemApply_Smart_RaiseFourthAxis::
     call MapIndexViaPartyListKeepHL
@@ -4260,6 +4644,8 @@ ItemApply_Smart_RaiseFourthAxis::
     call AddToRecordFieldByteCapped
     ret
 
+SECTION "Bank 16 ItemApply_Comedy_LowerFourthAxis", ROMX
+
 ; Comedy: the fourth personality axis down (floor 0). (C2, E-0357; probed E-0378)
 ItemApply_Comedy_LowerFourthAxis::
     call MapIndexViaPartyListKeepHL
@@ -4267,6 +4653,8 @@ ItemApply_Comedy_LowerFourthAxis::
     ld e, $00
     call SubtractFromRecordFieldByteFloored
     ret
+
+SECTION "Bank 16 ApplyMeatToRecordField6B", ROMX
 
 ; A = party slot (mapped through wPartyList), HL = amount: lowers the word at MON_WLD of that record
 ; by HL, not below 0 (ApplyMeatToRecordField6B_SubtractDEFloor0). Called by ItemApply_BeefJerky and
@@ -4281,6 +4669,8 @@ ApplyMeatToRecordField6B::
     pop de
     call ApplyMeatToRecordField6B_SubtractDEFloor0
     ret
+
+SECTION "Bank 16 AddToRecordFieldByteCapped", ROMX
 
 ; A = record number (used as is, no party mapping), C = field offset, L = amount, E = cap: adds L to
 ; the byte at that field of the record, storing E if the sum reaches E or carries past 255
@@ -4297,6 +4687,8 @@ AddToRecordFieldByteCapped::
     call AddEToByteAtHLCappedAtC
     ret
 
+SECTION "Bank 16 SubtractFromRecordFieldByteFloored", ROMX
+
 ; A = record number (used as is, no party mapping), C = field offset, L = amount, E = floor:
 ; subtracts L from the byte at that field of the record, storing E if the result falls below E or
 ; borrows past 0 (SubtractEFromByteAtHLFlooredAtC). (C2, E-0378)
@@ -4310,6 +4702,8 @@ SubtractFromRecordFieldByteFloored::
     call SubtractEFromByteAtHLFlooredAtC
     ret
 
+SECTION "Bank 16 AddToRecordFieldWordCapped", ROMX
+
 ; A = record number (used as is, no party mapping), C = field offset, HL = amount, DE = cap: adds HL
 ; to the word at that field of the record through AddDEToWordAtHLCappedAtBC, so a sum of at least DE
 ; stores DE. A carry past 16 bits is not capped. (C2, E-0378)
@@ -4322,6 +4716,8 @@ AddToRecordFieldWordCapped::
     pop de
     call AddDEToWordAtHLCappedAtBC
     ret
+
+SECTION "Bank 16 AddEToByteAtHLCappedAtC", ROMX
 
 ; Adds E to the byte at HL. If the sum carries past 255 or is at least C, C is stored instead;
 ; otherwise the sum. (C2, E-0378)
@@ -4340,6 +4736,8 @@ AddEToByteAtHLCappedAtC::
     ld [hl], a
     ret
 
+SECTION "Bank 16 SubtractEFromByteAtHLFlooredAtC", ROMX
+
 ; Subtracts E from the byte at HL. If it borrows below 0 or the result is below C, C is stored
 ; instead; otherwise the result. (C2, E-0378)
 ; [HL] -= E, floored at C (also on underflow) (E-0122)
@@ -4356,6 +4754,8 @@ SubtractEFromByteAtHLFlooredAtC::
 .done2:
     ld [hl], a
     ret
+
+SECTION "Bank 16 AddDEToWordAtHLCappedAtBC", ROMX
 
 ; Adds DE to the little-endian word at HL. If the sum (without carry out of 16 bits) is at least BC,
 ; BC is stored; if it is below BC, the sum. A carry out of 16 bits skips the comparison and stores
@@ -4383,6 +4783,8 @@ AddDEToWordAtHLCappedAtBC::
     ld [hl], b
     ret
 
+SECTION "Bank 16 ApplyMeatToRecordField6B_SubtractDEFloor0", ROMX
+
 ; Subtracts DE from the little-endian word at HL (MON_WLD of a record in the callers), storing 0
 ; when the result would go below 0. (C2, E-0378)
 ; the word at HL -= DE, not below 0 (field $6B is MON_WLD, E-0296)
@@ -4407,6 +4809,8 @@ ApplyMeatToRecordField6B_SubtractDEFloor0::
     ld [hl], d
     ret
 
+SECTION "Bank 16 StoreCToRecordField", ROMX
+
 ; A = party slot (mapped through wPartyList), C = field offset, L = value: stores L (the low byte of
 ; the HL passed in) at that field of the record. (C2, E-0378)
 ; A = record (SRAMRecordAddressMapped), C = field offset: stores the low byte of the caller's HL
@@ -4417,6 +4821,8 @@ StoreCToRecordField::
     pop bc
     ld [hl], c
     ret
+
+SECTION "Bank 16 StoreHLToRecordField", ROMX
 
 ; A = party slot (mapped through wPartyList), C = field offset, HL = value: stores the word HL, low
 ; byte first, at that field of the record. (C2, E-0378)
@@ -4431,6 +4837,8 @@ StoreHLToRecordField::
     ld [hl], b
     ret
 
+SECTION "Bank 16 MapIndexViaPartyListKeepHL", ROMX
+
 ; MapIndexViaPartyList with HL saved and restored: A = wPartyList[A & $7F], or A unchanged when
 ; wLinkMode is non-zero and wGameMode is 4. (C2, E-0378)
 ; MapIndexViaPartyList with HL preserved (E-0072)
@@ -4439,6 +4847,8 @@ MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyList
     pop hl
     ret
+
+SECTION "Bank 16 SortInventory", ROMX
 
 ; Sorts the 24 slots of wInventory in place, smallest key first, keeping the order of equal keys.
 ; Each item id is looked up in InventorySortKeysA or InventorySortKeysB (an empty slot $FF uses the
@@ -4534,6 +4944,8 @@ SortInventory::
     jr nz, .loop2
     ret
 
+SECTION "Bank 16 SwapInventorySlotCWithNext", ROMX
+
 ; Swaps wInventory[C] and wInventory[C + 1]. HL is kept. (C2, E-0378)
 ; swaps wInventory[C] and wInventory[C + 1]; HL kept (E-0118)
 SwapInventorySlotCWithNext::
@@ -4549,6 +4961,8 @@ SwapInventorySlotCWithNext::
     ld [hl], a
     pop hl
     ret
+
+SECTION "Bank 16 InventorySortKeysA", ROMX
 
 ; SortInventory sorts the 24 inventory slots by the byte at $599E + item id (one sort order of
 ; wInventorySortFlags); 112 bytes end at InventorySortKeysB (E-0229, C1)
@@ -4812,6 +5226,8 @@ TestSpeciesFlag::
     ld c, a
     ret
 
+SECTION "Bank 16 TestSpeciesFlag_Data", ROMX
+
 ; Eight single-bit masks $01, $02, $04, $08, $10, $20, $40, $80. TestSpeciesFlag ANDs the byte
 ; wSpeciesFlags + species id / 8 with entry (species id AND 7) and returns the result in C, so
 ; species n owns bit (n AND 7), counted from the least significant bit, of byte n / 8. (C1, E-0381)
@@ -4834,6 +5250,8 @@ SetSpeciesFlag::
     ld [wSpeciesFlagCount], a
     pop af
     ret
+
+SECTION "Bank 16 CountSpeciesPerFamilyFlaggedOrListed", ROMX
 
 ; Zeroes the 11 family counters at wWorkBuf, then for every monster id 0-372 that has a family
 ; (LoadSpeciesFamily gives $FF for an unused id) adds 1 to the counter of its family when its
@@ -4910,6 +5328,8 @@ CountSpeciesPerFamilyFlaggedOrListed::
     jr c, .loop
     ret
 
+SECTION "Bank 16 BattleEnd_Records_ShapeJoiner_CountFlaggedSpecies", ROMX
+
 ; Clears the 11 per-family counters at wWorkBuf, then for every monster id $0000-$0174 that has a
 ; family (LoadSpeciesFamily; $FF is skipped) adds 1 to wWorkBuf + family when its wSpeciesFlags bit
 ; is set (TestSpeciesFlag); leaves wSpeciesIdLo/Hi = $0175. CountSpeciesPerFamilyFlaggedOrListed is
@@ -4960,6 +5380,8 @@ BattleEnd_Records_ShapeJoiner_CountFlaggedSpecies::
     ld h, a
     jr c, .loop
     ret
+
+SECTION "Bank 16 BattleEnd_OfferJoin_DecideJoinOffer", ROMX
 
 ; Decides whether a defeated foe offers to join: never in a link, battle kinds 3-5 and 8 or above,
 ; or for a display slot that is not a foe (4-6) or whose join class is 7. A species not yet seen
@@ -5178,6 +5600,8 @@ BattleEnd_OfferJoin_DecideJoinOffer::
 .return:
     ret
 
+SECTION "Bank 16 JoinChanceByClass", ROMX
+
 ; join chance out of 200 per join-chance class 0-7: 100, 50, 24, 10, 6, 2, 1, 0; the defeated
 ; monster may join when (random mod 200) is below the entry for SPECIES_JOIN_CLASS (E-0306)
 JoinChanceByClass::
@@ -5268,6 +5692,8 @@ BattleEnd_AskToJoin_Start::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_Finish", ROMX
+
 ; Asking to join, step 1: once the text has finished, ends this battle-end step (wBattleStep + 1).
 ; (C2, E-0357; probed E-0378)
 BattleEnd_AskToJoin_Finish::
@@ -5282,6 +5708,8 @@ BattleEnd_AskToJoin_Finish::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowHeroGotUpLooking", ROMX
+
 ; Asking to join, step 2: '<name> got up, looking hopeful. Allow ...' (string $0B). (C1, E-0357)
 BattleEnd_AskToJoin_ShowHeroGotUpLooking::
     ld a, [wTextFlags]
@@ -5293,6 +5721,8 @@ BattleEnd_AskToJoin_ShowHeroGotUpLooking::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_DrawYesNo", ROMX
 
 ; Asking to join, step 3: draws the yes/no box (two entries). (C1, E-0357)
 BattleEnd_AskToJoin_DrawYesNo::
@@ -5318,6 +5748,8 @@ BattleEnd_AskToJoin_DrawYesNo::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowHeroDepartedSadly", ROMX
+
 ; Asking to join, step 4: the answer: no (or B) shows '<name> departed sadly...' (string $0C) and
 ; returns to step 1; yes goes on. (C1, E-0357)
 BattleEnd_AskToJoin_ShowHeroDepartedSadly::
@@ -5338,6 +5770,8 @@ BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ld a, $01
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_CheckFarmRoom", ROMX
 
 ; Asking to join, step 5: marks yes; with the farm's monsters and eggs below the farm level's
 ; capacity (BattleEnd_AskToJoin_CheckFarmRoom_Data) moves on two sub-phases to add it, otherwise
@@ -5368,6 +5802,8 @@ BattleEnd_AskToJoin_CheckFarmRoom::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowButThereIsNo", ROMX
+
 ; Asking to join, step 6: 'But there is no more room!' (string $0D). (C1, E-0357)
 BattleEnd_AskToJoin_ShowButThereIsNo::
     ld a, $0d
@@ -5376,6 +5812,8 @@ BattleEnd_AskToJoin_ShowButThereIsNo::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowWhichWillYouChoose", ROMX
 
 ; Asking to join, step 9: 'Which will you choose?' (string $0E). (C1, E-0357)
 BattleEnd_AskToJoin_ShowWhichWillYouChoose::
@@ -5388,6 +5826,8 @@ BattleEnd_AskToJoin_ShowWhichWillYouChoose::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_DrawReleaseChoice", ROMX
 
 ; Asking to join, step 10: draws the release-or-abandon choice and plays sound $6C. (C1, E-0357)
 BattleEnd_AskToJoin_DrawReleaseChoice::
@@ -5415,6 +5855,8 @@ BattleEnd_AskToJoin_DrawReleaseChoice::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowYouHaveNoEggs", ROMX
 
 ; Asking to join, step 11: the choice: B returns to step 6; the first option (release a monster)
 ; goes to step 12; the second (abandon an egg) to step $16, or 'You have no eggs.' (string $0F) and
@@ -5464,6 +5906,8 @@ BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowChooseAMonsterTo", ROMX
+
 ; Asking to join, step 12: lists the party and the farm monsters and shows 'Choose a monster to
 ; release.' (string $11). (C1, E-0357)
 BattleEnd_AskToJoin_ShowChooseAMonsterTo::
@@ -5487,6 +5931,8 @@ BattleEnd_AskToJoin_ShowChooseAMonsterTo::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_MonsterListCursor", ROMX
 
 ; Asking to join, step 13: the list cursor (Left/Right turn pages); A picks the monster and shows
 ; its name (string $12); B returns to step 9. (C1, E-0357)
@@ -5520,6 +5966,8 @@ BattleEnd_AskToJoin_MonsterListCursor::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_MarkPick", ROMX
+
 ; Asking to join, step 14: marks the pick and draws its two options. (C1, E-0357)
 BattleEnd_AskToJoin_MarkPick::
     ld a, [wMenuState]
@@ -5549,6 +5997,8 @@ BattleEnd_AskToJoin_MarkPick::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_PickOption", ROMX
 
 ; Asking to join, step 15: the options: the first (look) goes to step 16, the second (release) to
 ; step 18; B clears the box and returns to the list (step 12). (C1, E-0357)
@@ -5602,6 +6052,8 @@ BattleEnd_AskToJoin_PickOption::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_OpenPickStats", ROMX
+
 ; Asking to join, step 16: opens the stats screen for the picked monster (screen state $0C) after
 ; saving the sprites. (C1, E-0357)
 BattleEnd_AskToJoin_OpenPickStats::
@@ -5627,6 +6079,8 @@ BattleEnd_AskToJoin_OpenPickStats::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_RedrawAfterStats", ROMX
 
 ; Asking to join, step 17: after the stats screen redraws the list with the pick and its options
 ; (step $0F). (C1, E-0357)
@@ -5663,6 +6117,8 @@ BattleEnd_AskToJoin_RedrawAfterStats::
     ld a, $0f
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_CheckRelease", ROMX
 
 ; Asking to join, step 18: refuses to release the only party member, or the last party member still
 ; able to fight (by wBattleSlotOut), with 'You can't travel all alone.' (string $15) and step 9;
@@ -5751,6 +6207,8 @@ BattleEnd_AskToJoin_CheckRelease::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_ReleaseAllowed", ROMX
+
 ; Asking to join, step 19: reached only when BattleEnd_AskToJoin_CheckRelease lets the picked
 ; monster go; moves straight on to step 20 (BattleEnd_AskToJoin_ShowGWasSetFree). (C2, E-0370;
 ; probed E-0378)
@@ -5758,6 +6216,8 @@ BattleEnd_AskToJoin_ReleaseAllowed::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowGWasSetFree", ROMX
 
 ; Asking to join, step 20: '<name> was set free in the ...' (string $13). (C1, E-0357)
 BattleEnd_AskToJoin_ShowGWasSetFree::
@@ -5767,6 +6227,8 @@ BattleEnd_AskToJoin_ShowGWasSetFree::
     ld [wStringIndex], a ; 'G was set free in the'
     call ShowStringCategory5_Bank16
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_ReleaseMonster", ROMX
 
 ; Asking to join, step 21: once the text has finished deletes the released monster's record
 ; (DeleteSRAMRecordAndCompact), rebuilds the party list ($FF for empty places) and the battle slots
@@ -5830,6 +6292,8 @@ BattleEnd_AskToJoin_ReleaseMonster::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_ShowChooseAnEggTo", ROMX
+
 ; Asking to join, step 22: 'Choose an egg to abandon.' (string $16) and the paged list of eggs. (C1,
 ; E-0357)
 BattleEnd_AskToJoin_ShowChooseAnEggTo::
@@ -5886,6 +6350,8 @@ BattleEnd_AskToJoin_ShowChooseAnEggTo::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_EggListCursor", ROMX
+
 ; Asking to join, step 23: the egg list cursor; A picks the egg, B returns to step 9. (C1, E-0357)
 BattleEnd_AskToJoin_EggListCursor::
     ld de, wMenuState
@@ -5927,6 +6393,8 @@ BattleEnd_AskToJoin_EggListCursor::
     ld a, $09
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_MarkEgg", ROMX
 
 ; Asking to join, step 24: marks the egg and draws its two options with its name. (C1, E-0357)
 BattleEnd_AskToJoin_MarkEgg::
@@ -5977,6 +6445,8 @@ BattleEnd_AskToJoin_MarkEgg::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_PickEggOption", ROMX
 
 ; Asking to join, step 25: the options: the first (look) goes to step 26; the second shows
 ; '<species>'s egg was abandoned.' (string $18) and goes to step 28; B returns to step $16. (C1,
@@ -6032,6 +6502,8 @@ BattleEnd_AskToJoin_PickEggOption::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_OpenEggStats", ROMX
+
 ; Asking to join, step 26: opens the egg's stats screen (screen state $0D). (C1, E-0357)
 BattleEnd_AskToJoin_OpenEggStats::
     ld a, [wMenuState]
@@ -6054,6 +6526,8 @@ BattleEnd_AskToJoin_OpenEggStats::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_RedrawEggsAfterStats", ROMX
 
 ; Asking to join, step 27: after the stats screen redraws the egg list with the pick and its options
 ; (step $19). (C1, E-0357)
@@ -6112,6 +6586,8 @@ BattleEnd_AskToJoin_RedrawEggsAfterStats::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AskToJoin_AbandonEgg", ROMX
+
 ; Asking to join, step 28: once the text has finished deletes the egg's record and moves on two
 ; sub-phases to add the new monster. (C2, E-0357; probed E-0384)
 BattleEnd_AskToJoin_AbandonEgg::
@@ -6147,6 +6623,8 @@ BattleEnd_AskToJoin_AbandonEgg::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 SetDEFlagOnBButton", ROMX
+
 ; Runs MovePagedListCursor, then returns at once if A was newly pressed (wJoypadPressed bit 0);
 ; otherwise writes 1 to [DE] when B was newly pressed (bit 1). DE is the cursor byte given to
 ; MovePagedListCursor, so the caller reads a back-out request there. (C1, E-0378)
@@ -6162,6 +6640,8 @@ SetDEFlagOnBButton::
     ld a, $01
     ld [de], a
     ret
+
+SECTION "Bank 16 CountFarmMonstersAndEggs", ROMX
 
 ; Enables SRAM bank 0 and scans the first N records of sRecords, N =
 ; BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel] ($0A, $14 or $1E). A record with a non-zero
@@ -6218,6 +6698,8 @@ CountFarmMonstersAndEggs::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 16 ListPartyAndStoredRecordsForPage", ROMX
 
 ; Builds the monster list of the farm page: wListEntries = the record numbers of the wPartyCount
 ; party members from wPartyList, then the stored records (first byte 1, MON_EGG 0) among the first N
@@ -6351,6 +6833,8 @@ ListPartyAndStoredRecordsForPage::
 .return:
     ret
 
+SECTION "Bank 16 ListFarmEggsToListEntries", ROMX
+
 ; Fills wListEntries ($1E bytes) with $FF, then lists in order the numbers of the records among the
 ; first N farm records (N from BattleEnd_AskToJoin_CheckFarmRoom_Data[wFarmLevel]) that are in use
 ; (first byte non-zero) and have a non-zero MON_EGG, that is the eggs. (C2, E-0378)
@@ -6405,6 +6889,8 @@ ListFarmEggsToListEntries::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 16 MovePagedListCursor", ROMX
 
 ; Moves the cursor of a paged list. DE points at the cursor byte (the entry on the page) and HL is
 ; the table of VRAM addresses that BlankTileAtTableEntryDE and DrawCursorTileAtTableEntryDE use.
@@ -6535,6 +7021,8 @@ MovePagedListCursor::
     ld [wFrameCounterLo], a
     ret
 
+SECTION "Bank 16 BlankTileAtTableEntryDE", ROMX
+
 ; HL = a table of VRAM address words, [DE] = an index: writes tile $C3 at that entry address
 ; (WriteVRAMByte). HL is kept. (C1, E-0378)
 ; HL = table of VRAM addresses, [DE] = index: writes tile $C3 at that entry's address
@@ -6550,6 +7038,8 @@ BlankTileAtTableEntryDE::
     pop hl
     ret
 
+SECTION "Bank 16 DrawCursorTileAtTableEntryDE", ROMX
+
 ; HL = a table of VRAM address words, [DE] = an index: writes the cursor tile $BB at that entry
 ; address (WriteVRAMByte). HL is kept. (C1, E-0378)
 ; HL = table of VRAM addresses, [DE] = index: writes the cursor tile $BB at that entry's address
@@ -6564,6 +7054,8 @@ DrawCursorTileAtTableEntryDE::
     call WriteVRAMByte
     pop hl
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_RedrawAfterStats_Data", ROMX
 
 ; Five words, addresses in wScreenTileBuffer (rows of 32 bytes): $C1B9, $C1F9, $C239, $C279, $C2B9,
 ; which are rows 1, 3, 5, 7 and 9 of column 1; they are the same cells as the BG map addresses in
@@ -6703,6 +7195,8 @@ DrawRecordListPageWithNumbers::
 .return:
     ret
 
+SECTION "Bank 16 DrawBattleArg0ValuesAtTiles23B0", ROMX
+
 ; Saves the text window settings, sets 1 row and width 5, shows the names of the four records
 ; numbered wBattleArg0 to wBattleArg0 + 3 ($FF gives an empty name) in the tiles from vTiles2 + $3B0
 ; (ShowRecordNamesListFromHL), then restores the window settings. (C1, E-0378)
@@ -6739,6 +7233,8 @@ DrawBattleArg0ValuesAtTiles23B0::
     ld a, h
     ld [wTextWindowTileHi], a
     ret
+
+SECTION "Bank 16 ShowRecordNamesListFromHL", ROMX
 
 ; B = number of entries, HL = list of record numbers, DE = tile address of the first name: enables
 ; SRAM bank 0 and for each number (an $FF entry gives an empty name) copies the 10-byte record name
@@ -6800,6 +7296,8 @@ ShowRecordNamesListFromHL::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 16 DrawFourListEntriesForPageListPage", ROMX
+
 ; Draws the four egg-list entries of page wListPage (wListEntries from 4 * page): with the text
 ; window set to 1 row and width 9 and SRAM bank 0 enabled it runs
 ; DrawFourListEntriesForPageListPage_DrawEgg for entries 0-3 (wBattleArg0 = 0-3), then
@@ -6852,6 +7350,8 @@ DrawFourListEntriesForPageListPage::
     ld a, h
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank 16 DrawFourListEntriesForPageListPage_DrawEgg", ROMX
 
 ; Draws one egg-list entry: its species name; an appraised egg (MON_EGG 2) gets its sex mark ($CC +
 ; sex), an unappraised one mark $C9; an empty entry is blanked. (C1, E-0357)
@@ -6907,6 +7407,8 @@ DrawFourListEntriesForPageListPage_DrawEgg::
     pop hl
     ret
 
+SECTION "Bank 16 DrawFourListEntriesForPageListPage_ShowSpecies", ROMX
+
 ; A = record index: BC = its MON_SPECIES word with $200 added (C = string index, B = string
 ; category, the species name), then falls into ShowStringBCAtTileRowBattleArg0, which shows that
 ; string at $9400 + 256 * wBattleArg0. (C1, E-0370)
@@ -6940,6 +7442,8 @@ ShowStringBCAtTileRowBattleArg0::
     farcall ShowString_Bank08
     ret
 
+SECTION "Bank 16 DrawFourListEntriesForPageListPage_DrawEgg_Data", ROMX
+
 ; Four words, addresses in wScreenTileBuffer: $C243, $C283, $C2C3, $C303, which are rows 5, 7, 9 and
 ; 11 of column 11. DrawFourListEntriesForPageListPage_DrawEgg indexes them with wBattleArg0 (the
 ; entry on the page) and stores the entry mark there: $CC plus the sex bit for an appraised egg
@@ -6959,6 +7463,8 @@ DrawListPageDigitIfLong::
     add $e1
     ld [wWindowTileBuffer + $20], a
     ret
+
+SECTION "Bank 16 RemovePartyMemberMarkedFF", ROMX
 
 ; Removes the $FF entry from wPartyList: the other entries move up in order, wPartyCount and
 ; wBattlePartyCount drop by one and the list ends with $FF. If no entry is $FF the last one is
@@ -6999,6 +7505,8 @@ RemovePartyMemberMarkedFF::
     ld [de], a
     ret
 
+SECTION "Bank 16 ShowStringCategory5_Bank16", ROMX
+
 ; Sets wStringCategory to 5 (the caller has set wStringIndex) and far-calls
 ; BeginStringDisplay_Bank2F. ShowStringCategory5Immediate_Bank16 is the same with ShowString_Bank2F.
 ; (C1, E-0378)
@@ -7010,6 +7518,8 @@ ShowStringCategory5_Bank16::
     farcall BeginStringDisplay_Bank2F
     ret
 
+SECTION "Bank 16 ShowStringCategory5Immediate_Bank16", ROMX
+
 ; Sets wStringCategory to 5 (the caller has set wStringIndex) and far-calls ShowString_Bank2F.
 ; ShowStringCategory5_Bank16 is the same with BeginStringDisplay_Bank2F. (C1, E-0378)
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls ShowString_Bank2F (E-0074)
@@ -7018,6 +7528,8 @@ ShowStringCategory5Immediate_Bank16::
     ld [wStringCategory], a
     farcall ShowString_Bank2F
     ret
+
+SECTION "Bank 16 ShowRecordNameString12", ROMX
 
 ; Copies the 10-byte name (MON_NAME) of the record wListEntries[5 * wSubMenuCursor2 + wMenuState]
 ; into wTextBuf1 with a $F0 end (SRAM bank 0 enabled for the copy) and shows string $12 of category
@@ -7060,6 +7572,8 @@ ShowRecordNameString12::
     call ShowStringCategory5Immediate_Bank16
     ret
 
+SECTION "Bank 16 ShowListedRecordNameMessage", ROMX
+
 ; Takes the record number wListEntries[4 * wMenuOption + wCommandCursorMax], reads its species word
 ; (MON_SPECIES), copies the species name (string category 2 plus the high byte, index the low byte)
 ; into wTextBuf1 and shows string $17 of category 5, the question about abandoning that egg. (C1,
@@ -7094,6 +7608,8 @@ ShowListedRecordNameMessage::
     call ShowStringCategory5Immediate_Bank16
     ret
 
+SECTION "Bank 16 ShowRecordNameString1D", ROMX
+
 ; Copies the 10-byte name (MON_NAME) of the record numbered wBattleArg0[wMenuSubState] into
 ; wTextBuf0 and shows string $1D of category 5, 'Send 0 back to the farm?'. It writes no $F0 after
 ; the 10 bytes. (C1, E-0378)
@@ -7123,6 +7639,8 @@ ShowRecordNameString1D::
     ld [wStringIndex], a ; 'Send 0 back to the farm?'
     call ShowStringCategory5_Bank16
     ret
+
+SECTION "Bank 16 CopyBattleMonsterNameWithLetterSuffix", ROMX
 
 ; DE = destination: copies the monster name of wDisplaySlot (CopyMonsterNameOfDisplaySlotToDE) and
 ; replaces its $F0 end by the letter tile $A7 + (wSlotNameSuffix[slot] and 1), then writes $F0 after
@@ -7155,6 +7673,8 @@ CopyBattleMonsterNameWithLetterSuffix::
     ld [hl], $f0
     ret
 
+SECTION "Bank 16 CopyMonsterNameOfDisplaySlotToDE", ROMX
+
 ; DE = destination: copies the name of the monster id in wBattleMonsterId for slot wDisplaySlot with
 ; CopyStringHLToDE, string category 2 plus the high byte of the id, index = the low byte, ending in
 ; $F0. (C2, E-0378)
@@ -7175,6 +7695,8 @@ CopyMonsterNameOfDisplaySlotToDE::
     ld l, a
     call CopyStringHLToDE
     ret
+
+SECTION "Bank 16 RunBattleEndStep5SubSteps", ROMX
 
 ; Runner of part 3 of the join offer (BattleEnd_OfferJoin_RedrawBattleScreen farcalls it): jumps
 ; through 5 entries by wBattleSubStep, the naming of the monster that joins. 0 _ShowPleaseNameHero
@@ -7200,6 +7722,8 @@ RunBattleEndStep5SubSteps_ShowPleaseNameHero::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 RunBattleEndStep5SubSteps_SetUpNameEntry", ROMX
 
 ; Naming the new monster, step 1: once the text has finished clears the name entry's state, sets its
 ; arguments (a monster: its letter suffix, family and species) and marks the species seen
@@ -7260,6 +7784,8 @@ RunBattleEndStep5SubSteps_SetUpNameEntry::
     inc [hl]
     ret
 
+SECTION "Bank 16 RunBattleEndStep5SubSteps_EnterName", ROMX
+
 ; Naming the new monster, step 2: runs the name entry (RunNameEntryStateWhenNotFading); when it
 ; finishes reloads two battle tile sets and copies the name into wWorkBuf + 1. (C1, E-0357)
 RunBattleEndStep5SubSteps_EnterName::
@@ -7318,12 +7844,16 @@ RunBattleEndStep5SubSteps_EnterName::
     inc [hl]
     ret
 
+SECTION "Bank 16 RunBattleEndStep5SubSteps_NameDone", ROMX
+
 ; Naming the new monster, step 3: only moves on to step 4 (RunBattleEndStep5SubSteps_StoreOnFarm),
 ; one call after RunBattleEndStep5SubSteps_EnterName copied the name. (C2, E-0370; probed E-0378)
 RunBattleEndStep5SubSteps_NameDone::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 RunBattleEndStep5SubSteps_StoreOnFarm", ROMX
 
 ; Naming the new monster, step 4: stores the monster in the first free farm record within the farm
 ; level's capacity (state 1, the new name, then $9A bytes from wRecordBufA's species on) and keeps
@@ -7398,6 +7928,8 @@ RunBattleEndStep5SubSteps_StoreOnFarm::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 16 CopyBBytesDEToHL_Bank16", ROMX
+
 ; DE = source, HL = destination, B = count (0 copies 256): copies B bytes from DE to HL. DE and HL
 ; end past the copy and B = 0. (C2, E-0378)
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
@@ -7409,6 +7941,8 @@ CopyBBytesDEToHL_Bank16::
     dec b
     jr nz, CopyBBytesDEToHL_Bank16
     ret
+
+SECTION "Bank 16 InitSlotFromRecordFlags", ROMX
 
 ; HL = a record status byte (MON_STATUS), C = battle slot: with bit 7 set the slot is marked out
 ; (InitSlotFromRecordFlags_MarkOut). Otherwise wBattleSlotOut[C] = 0, the first byte of the slot
@@ -7435,17 +7969,23 @@ InitSlotFromRecordFlags::
     call nz, SetBit5AtHL
     ret
 
+SECTION "Bank 16 SetBit5AtHL", ROMX
+
 ; Sets bit 5 of the byte at HL. (C2, E-0378)
 ; [HL] |= $20 (E-0114)
 SetBit5AtHL::
     set 5, [hl]
     ret
 
+SECTION "Bank 16 SetBit0AtHL", ROMX
+
 ; Sets bit 0 of the byte at HL. (C2, E-0378)
 ; [HL] |= $01 (E-0114)
 SetBit0AtHL::
     set 0, [hl]
     ret
+
+SECTION "Bank 16 InitSlotFromRecordFlags_MarkOut", ROMX
 
 ; Marks battle slot C as out (wBattleSlotOut + C = 1). (C2, E-0357; probed E-0378)
 InitSlotFromRecordFlags_MarkOut::
@@ -7454,6 +7994,8 @@ InitSlotFromRecordFlags_MarkOut::
     add_a_to_hl
     ld [hl], $01
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster", ROMX
 
 ; Runner of part 4 of the join offer: jumps through 20 entries by wBattleSubStep, the placing of the
 ; monster that joined. 0 _AskTakeAlong ('Will you take <name> with you?'), 1 _DrawYesNo, 2
@@ -7541,6 +8083,8 @@ BattleEnd_AddJoinedMonster_AskTakeAlong::
     ld [wMenuState], a
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_DrawYesNo", ROMX
+
 ; Adding the new monster, step 1: draws the yes/no box. (C1, E-0357)
 BattleEnd_AddJoinedMonster_DrawYesNo::
     ld a, [wTextFlags]
@@ -7561,6 +8105,8 @@ BattleEnd_AddJoinedMonster_DrawYesNo::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_ReadAnswer", ROMX
 
 ; Adding the new monster, step 2: yes goes to step 5; no or B to step 3; plays sound $6C on A. (C1,
 ; E-0357)
@@ -7590,6 +8136,8 @@ BattleEnd_AddJoinedMonster_ReadAnswer::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_ShowHeroWasSentTo", ROMX
+
 ; Adding the new monster, step 3: '<name> was sent to the farm.' (string $20), or 'was sent back to
 ; the ...' (string $1A) when BattleMonsterTableAtLeast6 returns 0. (C1, E-0357)
 BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
@@ -7609,6 +8157,8 @@ BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
     call ShowStringCategory5_Bank16
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_Finish", ROMX
+
 ; Adding the new monster, step 4: ends this battle-end step. (C2, E-0357; probed E-0378)
 BattleEnd_AddJoinedMonster_Finish::
     ld hl, wBattleStep
@@ -7618,6 +8168,8 @@ BattleEnd_AddJoinedMonster_Finish::
     xor a
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_Join", ROMX
 
 ; Adding the new monster, step 5: with a full party goes to step 8 (who goes home); otherwise
 ; '<name> joined the party.' (string $21 or $1B by BattleMonsterTableAtLeast6). (C1, E-0357)
@@ -7646,6 +8198,8 @@ BattleEnd_AddJoinedMonster_Join::
     call ShowStringCategory5_Bank16
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_AddToParty", ROMX
+
 ; Adding the new monster, step 6: once the text has finished adds it to the party (state 2), reloads
 ; the name tiles and battle slots and redraws. (C1, E-0357)
 BattleEnd_AddJoinedMonster_AddToParty::
@@ -7672,6 +8226,8 @@ BattleEnd_AddJoinedMonster_AddToParty::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_DrawScreen", ROMX
+
 ; Adding the new monster, step 7: draws the screen and goes to step 4. (C1, E-0357)
 BattleEnd_AddJoinedMonster_DrawScreen::
     ld hl, vBGMap0
@@ -7681,6 +8237,8 @@ BattleEnd_AddJoinedMonster_DrawScreen::
     ld a, $04
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo", ROMX
 
 ; Adding the new monster, step 8: draws the four monsters and 'Choose the monster to send home.'
 ; (string $1C). (C1, E-0357)
@@ -7696,6 +8254,8 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_SetUpList", ROMX
 
 ; Adding the new monster, step 9: once the text has finished sets up the four-entry list and shows
 ; its cursor. (C1, E-0357)
@@ -7725,6 +8285,8 @@ BattleEnd_AddJoinedMonster_SetUpList::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_ListCursor", ROMX
 
 ; Adding the new monster, step 10: the list cursor: B copies the new monster's name and goes to step
 ; $13 (asking again); A plays sound $69 and goes on. (C1, E-0357)
@@ -7771,6 +8333,8 @@ BattleEnd_AddJoinedMonster_ListCursor::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_DrawOptions", ROMX
+
 ; Adding the new monster, step 11: draws the two options for the pick and its name (string $1D).
 ; (C1, E-0357)
 BattleEnd_AddJoinedMonster_DrawOptions::
@@ -7802,6 +8366,8 @@ BattleEnd_AddJoinedMonster_DrawOptions::
     ld hl, wBattleSubStep
     inc [hl]
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_PickOption", ROMX
 
 ; Adding the new monster, step 12: the options: the first (look) goes to step 13; the second sends
 ; the pick home with '<name> was sent back to the ...' (string $1A) and step $12; B returns to the
@@ -7859,6 +8425,8 @@ BattleEnd_AddJoinedMonster_PickOption::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_OpenPickStats", ROMX
+
 ; Adding the new monster, step 13: lists the four and opens the pick's stats screen (screen state
 ; $0E), saving the sprites. (C1, E-0357)
 BattleEnd_AddJoinedMonster_OpenPickStats::
@@ -7895,6 +8463,8 @@ BattleEnd_AddJoinedMonster_OpenPickStats::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_RunStatsScreen", ROMX
+
 ; Adding the new monster, step 14: runs the stats screen (SwapMonstersMenu) until its step $0A, then
 ; restores the sprite state and reloads the battle tiles. (C1, E-0357)
 BattleEnd_AddJoinedMonster_RunStatsScreen::
@@ -7924,6 +8494,8 @@ BattleEnd_AddJoinedMonster_RunStatsScreen::
     inc [hl]
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_RedrawPickOptions", ROMX
+
 ; Adding the new monster, step 15: redraws the list with the pick and its options (step $0C). (C1,
 ; E-0357)
 BattleEnd_AddJoinedMonster_RedrawPickOptions::
@@ -7945,6 +8517,8 @@ BattleEnd_AddJoinedMonster_RedrawPickOptions::
     ld a, $0c
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_ShowWillYouTakeHero", ROMX
 
 ; Adding the new monster, step 16: clears the options box and asks 'Will you take <name> with you?'
 ; again (step 1). (C1, E-0357)
@@ -7977,6 +8551,8 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_BackToList", ROMX
+
 ; Adding the new monster, step 17 (B at the pick's options in
 ; BattleEnd_AddJoinedMonster_PickOption): redraws the four monsters
 ; (CopyRectAndDrawBattleArg0Values), puts the cursor tile back, clears wMenuSelectedMember, shows
@@ -7993,6 +8569,8 @@ BattleEnd_AddJoinedMonster_BackToList::
     ld a, $09
     ld [wBattleSubStep], a
     ret
+
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_SendPickToFarm", ROMX
 
 ; Adding the new monster, step 18: sends the pick to the farm restored (RestoreRecordAFully) and
 ; rebuilds the party from the others (state 2), reloads names and slots, redraws; step 4. (C1,
@@ -8035,6 +8613,8 @@ BattleEnd_AddJoinedMonster_SendPickToFarm::
     ld [wBattleSubStep], a
     ret
 
+SECTION "Bank 16 BattleEnd_AddJoinedMonster_AskAgain", ROMX
+
 ; Adding the new monster, step 19 (B in the monster list, BattleEnd_AddJoinedMonster_ListCursor):
 ; redraws the battle screen and asks 'Will you take <name> with you?' (string $19) again at step 1,
 ; with wMenuState 0. (C1, E-0370)
@@ -8054,6 +8634,8 @@ BattleEnd_AddJoinedMonster_AskAgain::
     ld [wMenuState], a
     ret
 
+SECTION "Bank 16 CopyRectAndDrawBattleArg0Values", ROMX
+
 ; Far-calls CopyRectRecordToScreenBuffer_13, then DrawBattleArg0ValuesAtTiles23B0, which draws the
 ; names of the four records numbered in wBattleArg0. (C1, E-0378)
 ; copies rectangle record $7923 to the screen buffer and draws the wBattleArg0 values at vTiles2 +
@@ -8063,6 +8645,8 @@ CopyRectAndDrawBattleArg0Values::
     farcall CopyRectRecordToScreenBuffer_13
     call DrawBattleArg0ValuesAtTiles23B0
     ret
+
+SECTION "Bank 16 RestoreRecordAFully", ROMX
 
 ; A = record number (no party mapping), HL kept: sets the record first byte (MON_STATE) to 1 and
 ; MON_STATUS to 0, copies the max HP word into the HP word and the max MP word into the MP word.
@@ -8120,6 +8704,8 @@ RestoreRecordAFully::
     pop hl
     ret
 
+SECTION "Bank 16 SetRecordState2ForB", ROMX
+
 ; Copies B into A and falls into SetRecordState2: sets the first byte (MON_STATE) of record B to 2.
 ; (C2, E-0378)
 ; A = B, then falls into SetRecordState2 (E-0126)
@@ -8140,6 +8726,8 @@ SetRecordState2::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 16 RunForPartyMembers", ROMX
 
 ; Enables SRAM bank 0 and runs RunForPartyMembers_SetBattleSlot for party places 0, 1 and 2 (A = the
 ; wPartyList entry, C = the place), stopping after wPartyCount places; then disables SRAM. It fills
@@ -8172,6 +8760,8 @@ RunForPartyMembers::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 16 RunForPartyMembers_SetBattleSlot", ROMX
 
 ; A = SRAM record, C = battle slot (from RunForPartyMembers, SRAM enabled): copies MON_LEVEL to
 ; wBattleLevel + C and the MON_HP and MON_MP words to slot C's wBattleHP and wBattleMP words, and
@@ -8272,6 +8862,8 @@ RunForPartyMembers_SetBattleSlot::
     ld [de], a
     ret
 
+SECTION "Bank 16 SetBit5AtDE", ROMX
+
 ; Sets bit 5 of the byte at DE; A is clobbered. (C2, E-0378)
 ; [DE] |= $20; clobbers A (E-0114)
 SetBit5AtDE::
@@ -8280,6 +8872,8 @@ SetBit5AtDE::
     ld [de], a
     ret
 
+SECTION "Bank 16 SetBit0AtDE", ROMX
+
 ; Sets bit 0 of the byte at DE; A is clobbered. (C2, E-0378)
 ; [DE] |= $01; clobbers A (E-0114)
 SetBit0AtDE::
@@ -8287,6 +8881,8 @@ SetBit0AtDE::
     set 0, a
     ld [de], a
     ret
+
+SECTION "Bank 16 BattleMonsterTableAtLeast6", ROMX
 
 ; A = 1 when MonsterClassByteTable_1 at the monster id of battle slot wDisplaySlot
 ; (wBattleMonsterId) holds 6 or more, else A = 0. BattleEnd_AddJoinedMonster_ShowHeroWasSentTo and
@@ -8319,6 +8915,8 @@ BattleMonsterTableAtLeast6::
 .return_0:
     xor a
     ret
+
+SECTION "Bank 16 MonsterClassByteTable_1", ROMX
 
 ; BattleMonsterTableAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and
 ; returns A = 1 when it is 6 or more; BattleEnd_AddJoinedMonster_ShowHeroWasSentTo and _Case05 call
@@ -8732,6 +9330,8 @@ CopyRect32StrideToVRAM_Bank16::
     jr nz, CopyRect32StrideToVRAM_Bank16
     ret
 
+SECTION "Bank 16 BuildBattleMenuScreen", ROMX
+
 ; Rebuilds the battle screen buffer by far-calling ClearAttributesAndScreenBuffer_Bank31,
 ; CopyRectRecordForBattlePartyCount_Bank31, DrawPartySlotStatusPanels,
 ; LayoutTileBlocksForBattleFoeCount, LoadBattleMonsterPictureAttributes and
@@ -8747,6 +9347,8 @@ BuildBattleMenuScreen::
     farcall LoadBattleMonsterPictureAttributes
     farcall CopyRectRecordToScreenBuffer
     ret
+
+SECTION "Bank 16 BattleEnd_Records_ShapeJoiner", ROMX
 
 ; Shapes the joining foe's record in wRecordBufA: its level changes by a random -2 to +2 (by 0 in
 ; battle kind 2) and is kept within 1-99, and MON_MAX_LEVEL becomes the larger of SPECIES_MAX_LEVEL
@@ -8959,6 +9561,8 @@ BattleEnd_Records_ShapeJoiner::
     ld [wRecordBufA + MON_WLD + 1], a
     ret
 
+SECTION "Bank 16 BattleEnd_Records_ShapeJoiner_LowerStat", ROMX
+
 ; Lowers stat BC (capped at 999) by a random amount: random mod (20% of the stat, low byte); returns
 ; the result in HL. (C2, E-0357; probed E-0378)
 BattleEnd_Records_ShapeJoiner_LowerStat::
@@ -9002,6 +9606,8 @@ BattleEnd_Records_ShapeJoiner_LowerStat::
     sbc $00
     ld h, a
     ret
+
+SECTION "Bank 16 BattleEnd_Records_ShapeJoiner_LowerHP", ROMX
 
 ; As the routine before for HP, then adds 8 unless the result's high byte is 3. (C2, E-0357; probed
 ; E-0378)
@@ -9051,6 +9657,8 @@ BattleEnd_Records_ShapeJoiner_LowerHP::
     ld a, $08
     add_a_to_hl
     ret
+
+SECTION "Bank 16 ShowStrings6To8Bank09InRows", ROMX
 
 ; Copies the 16-byte tile at vTiles1 + $2F0 to vTiles1 + $6D0, then with a text window of 1 row and
 ; width 3 shows strings 6, 7 and 8 of category 2 of bank $09 (ShowString_Bank09) at vTiles1 + $6D0,
@@ -9112,6 +9720,8 @@ ShowStrings6To8Bank09InRows::
     ld a, h
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank 16 BattleEnd_AskToJoin_CheckFarmRoom_Data", ROMX
 
 ; Three bytes $0A, $14, $1E (10, 20, 30): how many SRAM records of sRecords (each MON_ record is $A5
 ; bytes) the farm holds at farm level wFarmLevel 0, 1 and 2. CountFarmMonstersAndEggs,
@@ -9224,6 +9834,8 @@ LoadSaveFileSummary::
 .return:
     ret
 
+SECTION "Bank 16 CopyBytesDEFromHL_Bank16", ROMX
+
 ; HL = source, DE = destination, B = count: copies B bytes from HL to DE; both end past the copy and
 ; B = 0 (a count of 0 copies 256). (C2, E-0378)
 ; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
@@ -9234,6 +9846,8 @@ CopyBytesDEFromHL_Bank16::
     dec b
     jr nz, CopyBytesDEFromHL_Bank16
     ret
+
+SECTION "Bank 16 BuildRecordSummaryForWorkBuf", ROMX
 
 ; Builds a 12-byte summary of a compact $6F-byte record from the SRAM bank the caller selected (bank
 ; 1 in LoadSaveFileSummary): wWorkBuf = the record number (record at $A06F + $6F * number), wWorkBuf
@@ -9303,6 +9917,8 @@ BuildRecordSummaryForWorkBuf::
     and $7f
     ld [de], a
     ret
+
+SECTION "Bank 16 BuildRecordSummaryForWorkBuf_ClearAndCopy", ROMX
 
 ; DE = destination, HL = source, B and C = mark fields: fills the 10 bytes at DE with $F0, then
 ; copies 5 characters from HL, each followed by the mark tile $8C + a 2-bit field when that field is
@@ -9394,6 +10010,8 @@ BuildRecordSummaryForWorkBuf_ClearAndCopy::
 .return:
     ret
 
+SECTION "Bank 16 DecompressA4GraphicsAndContinue", ROMX
+
 ; Far-calls DecompressGraphicsA4ToTiles0, then jumps to DrawTitleSaveSummaryScreen_DrawSummary. (C1,
 ; E-0378)
 ; far-calls DecompressGraphicsA4ToTiles0 and continues at DrawTitleSaveSummaryScreen_DrawSummary
@@ -9401,6 +10019,8 @@ BuildRecordSummaryForWorkBuf_ClearAndCopy::
 DecompressA4GraphicsAndContinue::
     farcall DecompressGraphicsA4ToTiles0
     jr DrawTitleSaveSummaryScreen_DrawSummary
+
+SECTION "Bank 16 DrawTitleSaveSummaryScreen", ROMX
 
 ; Decompresses Tiles0Gfx_3 (bank $7E) to vTiles0 and, when wIsCGB is non-zero, copies 8 bytes of
 ; object palette (DrawTitleSaveSummaryScreen_OBJPaletteBufferData) to wOBJPaletteBuffer and sets
@@ -9579,6 +10199,8 @@ DrawTitleSaveSummaryScreen_DrawSummary::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 16 WriteThreeDigitTilesDigits_Bank16", ROMX
+
 ; DE = destination: writes tile $E0 + wDigits (the hundreds digit) at DE, then falls into
 ; WriteTwoDigitTilesDigits1NoBlank_Bank16 for the tens and ones; DE ends on the last tile written.
 ; (C2, E-0378)
@@ -9606,6 +10228,8 @@ WriteTwoDigitTilesDigits1NoBlank_Bank16::
     ld [de], a
     ret
 
+SECTION "Bank 16 ShowTenByteNameAtDE", ROMX
+
 ; DE = tile address, HL = 10 name bytes: sets the text window tile address to DE, copies the 10
 ; bytes to wTextBuf0 with a $F0 end and shows them with ShowString_Bank08. (C1, E-0378)
 ; window at DE: copies 10 bytes from HL to wTextBuf0 with a $F0 terminator and shows it
@@ -9628,6 +10252,8 @@ ShowTenByteNameAtDE::
     ld [de], a
     farcall ShowString_Bank08
     ret
+
+SECTION "Bank 16 DrawSaveSummaryPartyEntryC", ROMX
 
 ; C = entry number, B = number of entries, HL = the 12-byte summary: when C is below B it takes the
 ; first byte as the family icon number (wWorkBuf), loads that icon tile into a tile number from
@@ -9734,6 +10360,8 @@ DrawSaveSummaryPartyEntryC::
     pop bc
     ret
 
+SECTION "Bank 16 BlankTwoTileCellByGameMode", ROMX
+
 ; Writes tile $C3 to two tiles in each of two rows of wScreenTileBuffer: +$8F, +$90, +$AF and +$B0,
 ; or +$CF, +$D0, +$EF and +$F0 in game mode 5. (C2, E-0378)
 ; writes $C3 to wScreenTileBuffer + $8F/8 and wScreenTileBuffer + $AF/8, or to wScreenTileBuffer +
@@ -9756,6 +10384,8 @@ BlankTwoTileCellByGameMode::
     ld [wScreenTileBuffer + $ef], a
     ld [wScreenTileBuffer + $f0], a
     ret
+
+SECTION "Bank 16 ShowKeyNameOrStringForTitleKeyFlag", ROMX
 
 ; Sets the text window to the tiles at vTiles2 + $3B0 (vTiles2 + $5B0 in game mode 5), 1 row and
 ; width $0D. With wTitleKeyFlag bit 7 clear it shows string wTitleStringIndex + $0A of category 0
@@ -9815,12 +10445,16 @@ ShowKeyNameOrStringForTitleKeyFlag::
     farcall ShowString_Bank08
     ret
 
+SECTION "Bank 16 CopyKeyNameWordToDE_Bank16", ROMX
+
 ; A = word number, DE = destination: calls CopyKeyNameWordToDE, which copies that key-name word (a
 ; bank $09 string) with its $F0 to DE; DE ends past it. (C2, E-0378)
 ; calls CopyKeyNameWordToDE (bank $00) (E-0114)
 CopyKeyNameWordToDE_Bank16::
     call CopyKeyNameWordToDE
     ret
+
+SECTION "Bank 16 ShowKeyNameOrStringForTitleKeyFlag_KeyEntryName", ROMX
 
 ; Reached from ShowKeyNameOrStringForTitleKeyFlag when wTitleKeyFlag and wTitleKeyByte3 both have
 ; bit 7 set: shows string wTitleKeyEntry & $3F of category 6 (ShowString_Bank09) in the window that
@@ -9833,6 +10467,8 @@ ShowKeyNameOrStringForTitleKeyFlag_KeyEntryName::
     ld [wStringCategory], a
     farcall ShowString_Bank09
     ret
+
+SECTION "Bank 16 DrawSaveSummaryPartyEntryC_Data1", ROMX
 
 ; Three bytes $25, $2B, $31: for party entry c (0 to 2) the VRAM tile number (in the $9000 area)
 ; that LoadFamilyIconTileForWorkBuf writes the family icon to; DrawSaveSummaryPartyEntryC draws the
@@ -9880,6 +10516,8 @@ LoadFamilyIconTileForWorkBuf::
     call WriteBytesToVRAMTileWorkBuf1
     ret
 
+SECTION "Bank 16 LoadAllFamilyIconTiles", ROMX
+
 ; Writes the $B0 bytes at FamilyIconTiles (the eleven family icons) to VRAM from tile number
 ; wWorkBuf + 1 (WriteBytesToVRAMTileWorkBuf1). (C1, E-0378)
 ; writes the $B0 bytes at FamilyIconTiles (the eleven family icon tiles) to VRAM from tile wWorkBuf
@@ -9889,6 +10527,8 @@ LoadAllFamilyIconTiles::
     ld b, $b0
     call WriteBytesToVRAMTileWorkBuf1
     ret
+
+SECTION "Bank 16 LoadTilesForPartyRecords", ROMX
 
 ; Enables SRAM bank 0 and runs LoadTileForRecordFamily for party places 0, 1 and 2 with H = $C7, $C8
 ; and $C9 (the tile numbers), stopping after wPartyCount places; then disables SRAM. Each call
@@ -9921,6 +10561,8 @@ LoadTilesForPartyRecords::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 16 LoadTileForRecordFamily", ROMX
+
 ; Writes the 16-byte family icon of record A's family (FamilyIconTiles, family & $0F) to the tile at
 ; HL. (C1, E-0357)
 LoadTileForRecordFamily::
@@ -9940,6 +10582,8 @@ LoadTileForRecordFamily::
     ld b, $10
     pop af
     jr WriteBytesToVRAMTile
+
+SECTION "Bank 16 WriteBytesToVRAMTileWorkBuf1", ROMX
 
 ; DE = source, B = byte count: loads A = wWorkBuf + 1 and falls into WriteBytesToVRAMTile, which
 ; writes the B bytes to VRAM tile A in the signed numbering ($00-$7F at $9000, $80-$FF at $8800).
@@ -9972,6 +10616,8 @@ WriteBytesToVRAMTile::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 16 FamilyIconTiles", ROMX
 
 ; LoadFamilyIconTileForWorkBuf copies the 16 bytes at $7ACD + 16 * family (wWorkBuf) to VRAM; 11
 ; families (E-0229, C1)

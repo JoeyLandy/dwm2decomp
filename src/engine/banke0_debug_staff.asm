@@ -1,7 +1,7 @@
 ; ROM bank $E0: debug: staff roll and debug screens
 ; The annotated listing of this bank is build/listing/banke0.asm.
 
-SECTION "Bank E0", ROMX[$4000], BANK[$E0]
+SECTION "Bank E0", ROMX
     db $e0
 
 ; Runs the debug skill editor, state 12 of the debug battle viewer (called by
@@ -73,6 +73,8 @@ RunDebugSubState_E0_ShowHeading::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 RunDebugSubState_E0_SideField", ROMX
+
 ; Debug skill editor, sub-state 1 (the side field): Select leaves (sub-state 5); Up/Down move to the
 ; last or next field; Left/Right toggle wDebugCursor bit 0 (which side). (C1, E-0357)
 RunDebugSubState_E0_SideField::
@@ -116,6 +118,8 @@ RunDebugSubState_E0_SideField::
     ld hl, vBGMap0 + $42
     call WriteVRAMByte
     ret
+
+SECTION "Bank E0 RunDebugSubState_E0_SkillField", ROMX
 
 ; Debug skill editor, sub-state 2 (the skill field): Select leaves; A sets skill 0; Up/Down move
 ; between fields; Left/Right step the skill number through 0-$E3 with wrap, redrawing its name. (C1,
@@ -190,6 +194,8 @@ RunDebugSubState_E0_SkillField::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 RunDebugSubState_E0_CountField", ROMX
+
 ; Debug skill editor, sub-state 3 (the count field): Select leaves; Up/Down move between fields;
 ; Left/Right change wDebugValue1 by one and redraw it. (C1, E-0357)
 RunDebugSubState_E0_CountField::
@@ -243,6 +249,8 @@ RunDebugSubState_E0_CountField::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 RunDebugSubState_E0_BattleEndField", ROMX
+
 ; Debug skill editor, sub-state 4 (the battle-end flag field): Select leaves; Up/Down move between
 ; fields; Left/Right toggle wBattleEndFlag bit 0. (C1, E-0357)
 RunDebugSubState_E0_BattleEndField::
@@ -287,6 +295,8 @@ RunDebugSubState_E0_BattleEndField::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 RunDebugSubState_E0_Exit", ROMX
+
 ; Debug skill editor, sub-state 5: returns to the debug viewer's state 3. (C2, E-0357; probed
 ; E-0385)
 RunDebugSubState_E0_Exit::
@@ -295,6 +305,8 @@ RunDebugSubState_E0_Exit::
     ld a, $03
     ld [wDebugState], a
     ret
+
+SECTION "Bank E0 RunDebugSubState_E0_DrawSideMarks", ROMX
 
 ; Draws the side field's two marks from the 3-byte table RunDebugSubState_E0_DrawSideMarks_Data
 ; ($BB, $C3, $BB) indexed by (wDebugCursor bit 0) XOR 1: tiles at vBGMap0 + $69 and + $6D, so one of
@@ -320,6 +332,8 @@ RunDebugSubState_E0_DrawSideMarks::
     ld hl, vBGMap0 + $6d
     call WriteVRAMByte
     ret
+
+SECTION "Bank E0 RunDebugSubState_E0_DrawSideMarks_Data", ROMX
 
 ; Three bytes: $BB, $C3, $BB, where $BB is the cursor tile and $C3 a blank. Two overlapping pairs
 ; are read: the pair at index 0 puts the cursor on the left place and a blank on the right, the pair
@@ -362,6 +376,8 @@ ShowSkillNumberAndName_BankE0::
     farcall ShowString_Bank08
     ret
 
+SECTION "Bank E0 RunDebugSubState_E0_DrawCount", ROMX
+
 ; Draws wDebugValue1 as up to three digits (leading zeros blank) at the count field. (C1, E-0357)
 RunDebugSubState_E0_DrawCount::
     ld a, [wDebugValue1]
@@ -402,6 +418,8 @@ RunDebugSubState_E0_DrawCount::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 RunDebugSubState_E0_DrawBattleEndMarks", ROMX
+
 ; Draws the battle-end flag field's two marks from the same 3-byte table as
 ; RunDebugSubState_E0_DrawSideMarks, indexed by (wBattleEndFlag bit 0) XOR 1: tiles at vBGMap0 +
 ; $1A9 and + $1AD, one $BB mark and one $C3 blank. Called by RunDebugSubState_E0_ShowHeading and
@@ -425,6 +443,8 @@ RunDebugSubState_E0_DrawBattleEndMarks::
     ld hl, vBGMap0 + $1ad
     call WriteVRAMByte
     ret
+
+SECTION "Bank E0 ShowStringBank08AtTilesHLThenDefault_BankE0", ROMX
 
 ; HL = tile destination, DE = window size (E = rows, D = width): stores them in
 ; wTextWindowTileLo/Hi, wTextWindowRows and wTextWindowWidth, far-calls ShowString_Bank08 to show
@@ -455,6 +475,8 @@ ShowStringBank08AtTilesHLThenDefault_BankE0::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank E0 ShowStringBank09AtHLSizeDEThenDefault", ROMX
+
 ; The same as ShowStringBank08AtTilesHLThenDefault_BankE0 but it far-calls ShowString_Bank09: HL =
 ; tile destination, DE = window size (E = rows, D = width), then the window goes back to vTiles1
 ; with $1202. Called once, by RunDebugSubState_E0_ShowHeading. (C1, E-0385)
@@ -481,6 +503,8 @@ ShowStringBank09AtHLSizeDEThenDefault::
     ld a, h
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank E0 RunDebugSubState_E0_ShowHeading_Data", ROMX
 
 ; A 20 by 18 tile screen image, 360 bytes in row order, which RunDebugSubState_E0_ShowHeading writes
 ; to vBGMap0 starting at row 0 (b = 20 columns, c = 18 rows, 32 bytes between rows). It is a frame
@@ -570,6 +594,8 @@ RunDebugState_E0_ShowHeading::
     inc [hl]
     ret
 
+SECTION "Bank E0 RunDebugState_E0_ShowHeading_Data", ROMX
+
 ; Two BG map addresses, $9824 and $982A (vBGMap0 row 1, columns 4 and 10).
 ; RunDebugState_E0_ShowHeading indexes it with wDebugSubState and writes the cursor tile $BB at the
 ; chosen place. (C1, E-0381)
@@ -600,6 +626,8 @@ RunDebugState_E0_DrawSlotStats::
     ld hl, wDebugState
     inc [hl]
     ret
+
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0", ROMX
 
 ; Debug stats display for slot C (unless out): HP, max HP, MP and max MP, then level, ATK, DEF, AGL,
 ; INT, the three personality bytes, the trait and the extra stat in decimal, then the AI mode glyph,
@@ -679,6 +707,8 @@ DrawSlotHPMPStats_BankE0::
     call DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow
     ret
 
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0_DrawWordStat", ROMX
+
 ; C = battle slot, DE = a word-per-slot battle array (wBattleATK and the like), HL = VRAM position:
 ; converts the word at DE + 2 * C (WordAtDEToPackedBCD) and draws its low three digits with leading
 ; zeros left unwritten, then moves HL down one BG map row (falls into
@@ -694,6 +724,8 @@ DrawSlotHPMPStats_BankE0_DrawWordStat::
 .call_word_at_de_to_packed_bcd:
     call WordAtDEToPackedBCD
     jr DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow
+
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0_DrawByteStat", ROMX
 
 ; C = battle slot, DE = a byte-per-slot battle array (wBattleLevel, wSlotPersonalityHi and the
 ; like), HL = VRAM position: converts the byte at DE + C (Number24ToPackedBCD with wDigits + 1 and +
@@ -732,6 +764,8 @@ DrawSlotHPMPStats_BankE0_DrawThreeDigitsNextRow::
     ld h, a
     ret
 
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0_IndexWordC", ROMX
+
 ; C = battle slot, DE = the start of an array with one word per slot (wBattleHP, wBattleMaxHP,
 ; wBattleMP, wBattleMaxMP or wBattleExtraStat), HL = VRAM position: adds 2 * C to DE and falls into
 ; DrawSlotHPMPStats_BankE0_DrawWordAtDE, which draws that word as a number. Called five times by
@@ -766,6 +800,8 @@ DrawSlotHPMPStats_BankE0_DrawFourDigitsNextRow::
     adc $00
     ld h, a
     ret
+
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0_DrawFourDigits", ROMX
 
 ; HL = VRAM position: draws four decimal digits from the packed number (thousands from hTemp1's high
 ; nibble, then DrawSlotHPMPStats_BankE0_DrawThreeDigits for hundreds, tens and ones) as tiles $E0 +
@@ -824,6 +860,8 @@ DrawSlotHPMPStats_BankE0_DrawThreeDigits::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 WordAtDEToPackedBCD", ROMX
+
 ; DE = address of a 16-bit word (low byte first): copies it to wDigits and wDigits + 1, clears
 ; wDigits + 2 and runs Number24ToPackedBCD, so hTemp0 = tens and ones, hTemp1 = thousands and
 ; hundreds, hTemp2 = hundred-thousands and ten-thousands (a word never has a hundred-thousands
@@ -846,6 +884,8 @@ WordAtDEToPackedBCD::
     pop bc
     pop hl
     ret
+
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0_DrawAIModeGlyph", ROMX
 
 ; C = battle slot: writes the glyph tile for the AI mode of that slot,
 ; DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data2[wSlotAIMode[C]] ($0B, $0A, $09, $08 or $EF for
@@ -872,6 +912,8 @@ DrawSlotHPMPStats_BankE0_DrawAIModeGlyph::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0_DrawSuffixMark", ROMX
+
 ; C = battle slot: writes tile $CC + (wSlotNameSuffix[C] bit 0), so $CC or $CD, at the VRAM address
 ; for slot C & 3 in the 3-word table after it ($98C6, $98CC, $98D2). The last step of
 ; DrawSlotHPMPStats_BankE0. (C1, E-0371)
@@ -895,6 +937,8 @@ DrawSlotHPMPStats_BankE0_DrawSuffixMark::
     add $cc
     call WriteVRAMByte
     ret
+
+SECTION "Bank E0 DrawSlotHPMPStats_BankE0_DrawSuffixMark_Data", ROMX
 
 ; Three BG map addresses, $98C6, $98CC and $98D2 (vBGMap0 row 6, columns 6, 12 and 18), one per slot
 ; column. DrawSlotHPMPStats_BankE0_DrawSuffixMark indexes it with slot C & 3 and writes tile $CC
@@ -990,6 +1034,8 @@ RunDebugState_E0_Input::
     ld [wDebugState], a
     ret
 
+SECTION "Bank E0 RunDebugState_E0_MarkGains", ROMX
+
 ; Debug battle viewer, state 3: draws the screen buffer and marks every active slot's level-up gains
 ; as 7, clearing wDebugValue3. (C1, E-0357)
 RunDebugState_E0_MarkGains::
@@ -1041,12 +1087,16 @@ RunDebugState_E0_MarkGains::
     ld [wDebugValue3], a
     ret
 
+SECTION "Bank E0 RunDebugState_E0_DrawResistanceFrame", ROMX
+
 ; Debug battle viewer, state 4: draws the 20 x 16 tile map of the resistance page at vBGMap0 + $20
 ; and advances wDebugState (DrawTileMapAndStep); state 5 (RunDebugState_E0_DrawResistances) then
 ; fills in the values. (C1, E-0371)
 RunDebugState_E0_DrawResistanceFrame::
     call DrawTileMapAndStep
     ret
+
+SECTION "Bank E0 RunDebugState_E0_DrawResistances", ROMX
 
 ; Debug battle viewer, state 5: draws the six slots' 27 resistance levels as 2-bit digits
 ; (wSlotResistances). (C1, E-0357)
@@ -1072,6 +1122,8 @@ RunDebugState_E0_DrawResistances::
     ld hl, wDebugState
     inc [hl]
     ret
+
+SECTION "Bank E0 DrawPacked2BitFieldsInRows", ROMX
 
 ; Draws the 2-bit fields of the bytes at DE (a resistance record) as digits, six rows of five with
 ; each row $1B tiles further on, the last digit through DrawLowTwoBitsAsDigit. (C1, E-0357)
@@ -1139,6 +1191,8 @@ DrawPacked2BitFieldsInRows::
     rlca
     jr DrawLowTwoBitsAsDigit
 
+SECTION "Bank E0 DrawBits76OfNextDEAsDigit", ROMX
+
 ; DE += 1, then draws bits 7-6 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances
 ; HL (through DrawLowTwoBitsAsDigit). Used by DrawPacked2BitFieldsInRows to cross from one
 ; resistance byte to the next. (C1, E-0385)
@@ -1151,6 +1205,8 @@ DrawBits76OfNextDEAsDigit::
     rlca
     jr DrawLowTwoBitsAsDigit
 
+SECTION "Bank E0 DrawBits54OfDEAsDigit", ROMX
+
 ; Draws bits 5-4 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances HL (swap, then
 ; DrawLowTwoBitsAsDigit). DE is not changed. (C1, E-0385)
 ; writes bits 5-4 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
@@ -1158,6 +1214,8 @@ DrawBits54OfDEAsDigit::
     ld a, [de]
     swap a
     jr DrawLowTwoBitsAsDigit
+
+SECTION "Bank E0 DrawBits32OfDEAsDigit", ROMX
 
 ; Draws bits 3-2 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances HL (two right
 ; rotations, then DrawLowTwoBitsAsDigit). DE is not changed. (C1, E-0385)
@@ -1167,6 +1225,8 @@ DrawBits32OfDEAsDigit::
     rrca
     rrca
     jr DrawLowTwoBitsAsDigit
+
+SECTION "Bank E0 DrawBits10OfDEAsDigit", ROMX
 
 ; Draws bits 1-0 of the byte at [DE] as the digit tile $E0 + (0-3) at HL and advances HL (falls into
 ; DrawLowTwoBitsAsDigit). DE is not changed. (C1, E-0385)
@@ -1184,6 +1244,8 @@ DrawLowTwoBitsAsDigit::
     call WriteVRAMByteInc
     ret
 
+SECTION "Bank E0 RunDebugState_E0_ReturnOnA", ROMX
+
 ; Debug battle viewer, state 6: waits for A, then back to state 0. (C2, E-0357; probed E-0385)
 RunDebugState_E0_ReturnOnA::
     ld a, [wJoypadPressed]
@@ -1192,6 +1254,8 @@ RunDebugState_E0_ReturnOnA::
     xor a
     ld [wDebugState], a
     ret
+
+SECTION "Bank E0 DrawTileMapAndStep", ROMX
 
 ; Writes the 20 x 16 tile map DrawTileMapAndStep_Data to vBGMap0 + $20 row by row (WriteVRAMByteInc,
 ; 32 bytes between rows), then adds 1 to wDebugState. It is state 7 of RunDebugState_E0 (reached
@@ -1224,6 +1288,8 @@ DrawTileMapAndStep::
     inc [hl]
     ret
 
+SECTION "Bank E0 RunDebugState_E0_DrawSkillBytes", ROMX
+
 ; Debug battle viewer, state 8: draws the six slots' skill bytes (wBattleSkills) as hex columns and
 ; the three battler records' experience. (C1, E-0357)
 RunDebugState_E0_DrawSkillBytes::
@@ -1249,6 +1315,8 @@ RunDebugState_E0_DrawSkillBytes::
     ld hl, wDebugState
     inc [hl]
     ret
+
+SECTION "Bank E0 DrawEightBytesAsHexColumns", ROMX
 
 ; DE = bytes, HL = VRAM position: draws four entries with DrawFourBytesAsHexRows, then four more
 ; from where DE stopped in a second column 3 cells to the right. Each entry is the low byte of a
@@ -1296,6 +1364,8 @@ DrawFourBytesAsHexRows::
     jr nz, .loop
     ret
 
+SECTION "Bank E0 WriteHexDigitTile", ROMX
+
 ; A = 0-15, HL = VRAM position: writes the tile $E0 + A for A below 10, or the tile A - 2 ($08-$0D)
 ; for 10-15, and advances HL (WriteVRAMByteInc). Called by DrawFourBytesAsHexRows. (C1, E-0385)
 ; A = 0-15: writes tile $E0 + A for 0-9, or A - 2 for 10-15, at HL (WriteVRAMByteInc) (E-0112)
@@ -1311,6 +1381,8 @@ WriteHexDigitTile::
 .call_write_vram_byte_inc2:
     call WriteVRAMByteInc
     ret
+
+SECTION "Bank E0 RunForThreeBattlerRecords", ROMX
 
 ; Starts at BATTLER_EXP of record 3 of wBattlerRecords (records are $4E bytes) and calls
 ; RunForThreeBattlerRecords_Number24ToPackedBCD for B = 0, 1, 2, moving HL on by $4E each time. Each
@@ -1336,6 +1408,8 @@ RunForThreeBattlerRecords::
     ld b, $02
     call RunForThreeBattlerRecords_Number24ToPackedBCD
     ret
+
+SECTION "Bank E0 RunForThreeBattlerRecords_Number24ToPackedBCD", ROMX
 
 ; Draws the 24-bit number at HL as up to six digits (leading zeros blank) at battler record B's
 ; place. (C1, E-0357)
@@ -1423,6 +1497,8 @@ RunForThreeBattlerRecords_Number24ToPackedBCD::
     pop hl
     ret
 
+SECTION "Bank E0 RunForThreeBattlerRecords_Number24ToPackedBCD_Data", ROMX
+
 ; Three BG map addresses, $99E2, $99E8 and $99EE (vBGMap0 row 15, columns 2, 8 and 14).
 ; RunForThreeBattlerRecords_Number24ToPackedBCD indexes it with B = 0, 1, 2 (the three records
 ; RunForThreeBattlerRecords visits at BATTLER_EXP) and draws the 24-bit experience as digit tiles
@@ -1438,6 +1514,8 @@ RunDebugState_E0_ReturnOnB::
     xor a
     ld [wDebugState], a
     ret
+
+SECTION "Bank E0 DrawTileMapAndStep_Data", ROMX
 
 ; A 20 by 16 tile screen image, 320 bytes in row order, which DrawTileMapAndStep copies once to
 ; vBGMap0 starting at row 1 (vBGMap0 + $20, 32 bytes between rows) before it advances wDebugState.
@@ -1543,6 +1621,8 @@ DrawHexByteAtBGMap8A::
     call DrawSkillDebugDigitsAndRecord
     ret
 
+SECTION "Bank E0 RunDebugState_E0_EffectViewer_Buttons", ROMX
+
 ; The effect viewer's buttons (reached from RunDebugState_E0_EffectViewer when Right and Left are
 ; not pressed): A starts debug effect wDebugSubState (RunDebugState_E0_EffectViewer_StartEffect in
 ; bank $3A) and plays its sound (RunDebugState_E0_PlayEffectSound); Select restores
@@ -1584,6 +1664,8 @@ RunDebugState_E0_EffectViewer_Buttons::
     call ReadBGTileAtDebugCounterCell
     ret
 
+SECTION "Bank E0 RunDebugState_E0_RestoreBattleOnB", ROMX
+
 ; Returns unless B is pressed; then restores wBattlePartyCount, wBattleFoeCount, wBattleActor,
 ; wBattleTarget and wBattleActionId from the 5 bytes at wWorkBuf, sets wDebugState to 0 and
 ; wEffectId to $FF (no effect playing). Reached from the effect viewer's buttons and from
@@ -1608,6 +1690,8 @@ RunDebugState_E0_RestoreBattleOnB::
     ld a, $ff
     ld [wEffectId], a
     ret
+
+SECTION "Bank E0 RunDebugState_E0_EditStatusBits", ROMX
 
 ; Debug battle viewer, state 11 (the status bits): blinks the cursor; Start changes slot (0-7); the
 ; D-pad moves over the bits (columns 0-7, rows of the slot's status bytes); the rest follow. (C1,
@@ -1795,6 +1879,8 @@ RunDebugState_E0_EditStatusBits::
 .to_run_debug_state_e0_restore_battle_on_b:
     jp RunDebugState_E0_RestoreBattleOnB
 
+SECTION "Bank E0 RunDebugState_E0_EditStatusBits_Data1", ROMX
+
 ; Eight AND masks, $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F: each clears one bit, bit 0 to bit 7.
 ; RunDebugState_E0_EditStatusBits indexes it with the low nibble of wDebugCounter (the bit cursor,
 ; 0-7) when the toggled mark is cleared, and ANDs it into the status byte at wBattleStatus + 9 *
@@ -1829,10 +1915,14 @@ BlinkTemp0Tile::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 RunDebugState_E0_SkillEditor", ROMX
+
 ; Debug battle viewer, state 12: runs the skill editor (RunDebugSubState_E0). (C1, E-0357)
 RunDebugState_E0_SkillEditor::
     call RunDebugSubState_E0
     ret
+
+SECTION "Bank E0 RunDebugState_E0_ChooseActionTargets", ROMX
 
 ; State 13 of the debug battle viewer (choosing actions). Jumps through a table of six by
 ; wDebugSubState: 0 RunDebugState_E0_ChooseActionTargets_Start, 1
@@ -1894,6 +1984,8 @@ RunDebugState_E0_ChooseActionTargets_Start::
     ld [wDebugSubState], a
     ret
 
+SECTION "Bank E0 RunDebugState_E0_ChooseActionTargets_AIChoice", ROMX
+
 ; Choosing actions, sub-state 1: works out the actor's personality and its AI choice
 ; (RunDebugState_E0_RunAIChoice). (C1, E-0357)
 RunDebugState_E0_ChooseActionTargets_AIChoice::
@@ -1905,6 +1997,8 @@ RunDebugState_E0_ChooseActionTargets_AIChoice::
     ld [wDebugSubState], a
     ret
 
+SECTION "Bank E0 RunDebugState_E0_ChooseActionTargets_ShowActor", ROMX
+
 ; Choosing actions, sub-state 2: draws the actor's details (far-calls
 ; RunDebugState_E0_ChooseActionTargets_DrawDetails), then sets wDebugSubState to 3 (the input step).
 ; (C1, E-0371)
@@ -1913,6 +2007,8 @@ RunDebugState_E0_ChooseActionTargets_ShowActor::
     ld a, $03
     ld [wDebugSubState], a
     ret
+
+SECTION "Bank E0 RunDebugState_E0_ChooseActionTargets_Input", ROMX
 
 ; Choosing actions, sub-state 3. B (wJoypadPressed bit 1) goes to sub-state 4 and clears the two
 ; bytes of wBattleSubPhase. Otherwise on wJoypadPressedRepeat: A (bit 0) goes back to sub-state 1;
@@ -1979,6 +2075,8 @@ RunDebugState_E0_ChooseActionTargets_Input::
 .return:
     ret
 
+SECTION "Bank E0 RunDebugState_E0_ChooseActionTargets_End", ROMX
+
 ; Choosing actions, sub-state 4: clears the actor and the 16 action choices ($FF) and returns to the
 ; viewer's state 3. (C2, E-0357; probed E-0385)
 RunDebugState_E0_ChooseActionTargets_End::
@@ -1992,6 +2090,8 @@ RunDebugState_E0_ChooseActionTargets_End::
     ld bc, $0010
     jp FillBytes
 
+SECTION "Bank E0 RunDebugState_E0_ChooseActionTargets_RerunAI", ROMX
+
 ; Choosing actions, sub-state 5 (Select in the input step): runs the AI's full choice for the actor
 ; (RunDebugState_E0_ChooseActionTargets_RunFullAI), then sets wDebugSubState to 2 to redraw the
 ; details. (C1, E-0371)
@@ -2000,6 +2100,8 @@ RunDebugState_E0_ChooseActionTargets_RerunAI::
     ld a, $02
     ld [wDebugSubState], a
     ret
+
+SECTION "Bank E0 DebugActionTargetsScreenLayout", ROMX
 
 ; A 20 x 18 tile map (360 bytes, one screen row per line) for the debug battle viewer: a frame
 ; around the whole screen ($B0-$B7) with heading tiles ($80-$82 and $01, $9B-$A2, $8B $8C, $ED-$F3,
@@ -2064,6 +2166,8 @@ ReadBGTileAtDebugCounterCell::
     ld a, [hl]
     ld [wMenuRowCount], a
     ret
+
+SECTION "Bank E0 DrawSlotStatusBitsDebug", ROMX
 
 ; Draws the status page of slot wDebugSubState: the four-tile strip for that slot
 ; (DrawFourTileStripForA), then its nine status bytes (wBattleStatus + 9 * slot) as nine rows of
@@ -2131,6 +2235,8 @@ DrawSlotStatusBitsDebug::
     jr nz, .loop
     ret
 
+SECTION "Bank E0 DrawFourTileStripForA", ROMX
+
 ; A = 0-7: copies the four tiles at DrawFourTileStripForA_Data[A] (a pointer table of 8, bank $E0)
 ; to vBGMap0 + $27 with CopyRectFromBankToVRAM (4 wide, 1 row). Called by DrawSlotStatusBitsDebug
 ; with the slot number. (C1, E-0385)
@@ -2148,6 +2254,8 @@ DrawFourTileStripForA::
     ld a, $e0
     call CopyRectFromBankToVRAM
     ret
+
+SECTION "Bank E0 DrawFourTileStripForA_Data", ROMX
 
 ; Eight words, the pointers DrawFourTileStripForA_Data_Entry00 to
 ; DrawFourTileStripForA_Data_Entry07. DrawFourTileStripForA is called with A = wDebugSubState (0-7,
@@ -2224,6 +2332,8 @@ DrawSkillDebugDigitsAndRecord::
     farcall DrawSkillDebugPage
     ret
 
+SECTION "Bank E0 DrawSkillRecordFirstByteDigits", ROMX
+
 ; Loads the first byte of the record of skill wDebugValue0 into wRecordBufferData
 ; (LoadSkillRecordPart) and draws it as three decimal digit tiles ($E0 + digit, HLToDecimalDigits)
 ; at vBGMap0 + $204 to + $206. Called by DrawSkillDebugDigitsAndRecord. (C1, E-0385)
@@ -2261,6 +2371,8 @@ DrawSkillRecordFirstByteDigits::
     ld hl, vBGMap0 + $206
     call WriteVRAMByte
     ret
+
+SECTION "Bank E0 DrawSkillDebugDigitsAndRecord_DrawRecordWords", ROMX
 
 ; Loads the record of skill wDebugValue0 (LoadSkillRecord into wRecordBufferData) and draws four
 ; three-digit numbers (HLToDecimalDigits, tiles $E0 + digit): the word at record bytes 9-10 at
@@ -2346,6 +2458,8 @@ DrawSkillDebugDigitsAndRecord_DrawRecordWords::
     call WriteVRAMByte
     ret
 
+SECTION "Bank E0 DrawFullScreenFromBankE0", ROMX
+
 ; Copies the 20 x 18 tile map DrawFullScreenFromBankE0_TileRect from bank $E0 to vBGMap0
 ; (CopyRectFromBankToVRAM). Called once, by RunDebugState_E0_ShowHeading. (C1, E-0385)
 ; copies a 20 x 18 tile map from E0:$511B to vBGMap0 (CopyRectFromBankToVRAM) (E-0116) (E-0344: the
@@ -2357,6 +2471,8 @@ DrawFullScreenFromBankE0::
     ld a, $e0
     call CopyRectFromBankToVRAM
     ret
+
+SECTION "Bank E0 RunDebugState_E0_Input_DrawEffectViewerScreen", ROMX
 
 ; Copies the 20 x 18 tile map EffectViewerScreenTileRect from bank $E0 to vBGMap0. Called once, by
 ; RunDebugState_E0_Input right after it sets wDebugState to $0A (the effect viewer), so this is the
@@ -2371,6 +2487,8 @@ RunDebugState_E0_Input_DrawEffectViewerScreen::
     call CopyRectFromBankToVRAM
     ret
 
+SECTION "Bank E0 RunDebugState_E0_DrawStatusBitsScreen", ROMX
+
 ; Copies the 20 x 18 tile map that follows it in bank $E0 to vBGMap0 (CopyRectFromBankToVRAM). Its
 ; only caller is the effect viewer's Select branch, which has just switched to state $0B
 ; (RunDebugState_E0_EditStatusBits) and draws the status bits next, so this is that screen's layout.
@@ -2382,6 +2500,8 @@ RunDebugState_E0_DrawStatusBitsScreen::
     ld a, $e0
     call CopyRectFromBankToVRAM
     ret
+
+SECTION "Bank E0 DrawFullScreenFromBankE0_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -2484,6 +2604,8 @@ ShowStringBank09AtTilesHL_BankE0::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank E0 RunDebugState_E0_PlayEffectSound", ROMX
+
 ; Plays the sound of effect wDebugSubState (DebugSoundEffectList). (C2, E-0357; probed E-0385)
 RunDebugState_E0_PlayEffectSound::
     ld a, [wDebugSubState]
@@ -2492,6 +2614,8 @@ RunDebugState_E0_PlayEffectSound::
     ld a, [hl]
     call QueueSoundEffect
     ret
+
+SECTION "Bank E0 RunEffectTestEntryA", ROMX
 
 ; A = entry number: loads wBattleActor, wBattleTarget, wBattleActionId and wEffectFlags2 from the
 ; four bytes of EffectTestEntries + 4 * A, then far-calls SelectEffectByEffectFlags2Flags, which
@@ -2516,6 +2640,8 @@ RunEffectTestEntryA::
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
     ret
+
+SECTION "Bank E0 DebugSoundEffectList", ROMX
 
 ; RunDebugState_E0_PlayEffectSound (debug menu) plays QueueSoundEffect with the byte at $55BF +
 ; wDebugSubState; 60 bytes end at EffectTestEntries (E-0213, C1)
@@ -2682,6 +2808,8 @@ RunDebugState_E0_RunAIChoice::
     call ChooseTargetIfUnset
     ret
 
+SECTION "Bank E0 ChooseTargetIfUnset", ROMX
+
 ; If the target byte of the actor (wBattleTargetChoice + 2 * wBattleActor) is $FF, meaning no target
 ; yet, far-calls ChooseActionTarget; otherwise does nothing. Called twice by
 ; RunDebugState_E0_RunAIChoice. (C1, E-0385)
@@ -2699,6 +2827,8 @@ ChooseTargetIfUnset::
 
 .return:
     ret
+
+SECTION "Bank E0 RunDebugState_E0_ChooseActionTargets_DrawDetails", ROMX
 
 ; Far-called by RunDebugState_E0_ChooseActionTargets_ShowActor: draws the actor's 4 name tiles at
 ; vBGMap0 + $23 (word table after it, indexed by DisplayedSlotOfActor); unless the actor is slot 3
@@ -3084,6 +3214,8 @@ RunDebugState_E0_ChooseActionTargets_DrawDetails::
     jr nz, .loop7
     ret
 
+SECTION "Bank E0 DisplayedSlotOfActor", ROMX
+
 ; A = wBattleActor with bit 2 flipped when wLinkMode is 1 and bit 1 of wLinkRole is set (the two
 ; sides swap for that player); HL ends as wLinkRole. Called by
 ; RunDebugState_E0_ChooseActionTargets_DrawDetails to pick the label of the actor. (C2, E-0385)
@@ -3099,6 +3231,8 @@ DisplayedSlotOfActor::
     ret z
     xor $04
     ret
+
+SECTION "Bank E0 DisplayedTargetChoiceOfActor", ROMX
 
 ; A = the target choice byte wBattleTargetChoice[2 * wBattleActor], with bit 2 flipped under the
 ; same link condition as DisplayedSlotOfActor (wLinkMode 1 and wLinkRole bit 1), even when the byte
@@ -3125,6 +3259,8 @@ DisplayedTargetChoiceOfActor::
     ret z
     xor $04
     ret
+
+SECTION "Bank E0 WriteHexDigitTilesOfTemp1Temp0", ROMX
 
 ; HL = VRAM position, C = 0: draws the four hex digits of the 16-bit number hTemp1:hTemp0 as tiles
 ; (WriteVRAMByteInc), each nibble n as tile n + 1 (the tiles from the string '0123456789ABCDEF'),
@@ -3193,6 +3329,8 @@ WriteLowHexDigitTilesOfTemp1Temp0::
     call WriteVRAMByteInc
     ei
     ret
+
+SECTION "Bank E0 DebugSlotLabels", ROMX
 
 ; Eight words, one per displayed battle slot 0-7, pointing at the 4-tile labels DebugSlotLabel_Slot0
 ; to DebugSlotLabel_Slot7: slots 0-3 are tiles $80 $81 $82 and then $01-$04, slots 4-7 tiles $83
@@ -3295,6 +3433,8 @@ RunDebugState_E0_ChooseActionTargets_RunFullAI::
     farcall ChooseActionTarget
     ret
 
+SECTION "Bank E0 ShowStringBank08AtTilesHLThenDefault_BankE0_2", ROMX
+
 ; A second copy in this bank of ShowStringBank08AtTilesHLThenDefault_BankE0: HL = tile destination,
 ; DE = window size, far-calls ShowString_Bank08, then the window goes back to vTiles1 with $1202.
 ; Called three times by RunDebugState_E0_ChooseActionTargets_DrawDetails. (C1, E-0385)
@@ -3322,6 +3462,8 @@ ShowStringBank08AtTilesHLThenDefault_BankE0_2::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank E0 ShowStringBank09AtHLSizeDEThenDefault_BankE0", ROMX
+
 ; A second copy in this bank of ShowStringBank09AtHLSizeDEThenDefault: HL = tile destination, DE =
 ; window size, far-calls ShowString_Bank09, then the window goes back to vTiles1 with $1202. Nothing
 ; in src calls this copy. (C1, E-0385)
@@ -3348,6 +3490,8 @@ ShowStringBank09AtHLSizeDEThenDefault_BankE0::
     ld a, h
     ld [wTextWindowWidth], a
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Update_RunScene", ROMX
 
 ; The debug staff roll's update, far-called by DebugStaffRoll_Update: while wWorkBuf is 0 it runs
 ; DebugStaffRoll_Credits instead; otherwise it runs the field event (RunFieldEventFieldEventKind),
@@ -3536,6 +3680,8 @@ DebugStaffRoll_Scene00_Load::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprite3", ROMX
+
 ; Staff roll scene 0, step 1: after the fade, sprite 3 walks to ($60, $50) and turns; then a
 ; 15-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite3::
@@ -3558,6 +3704,8 @@ DebugStaffRoll_Scene00_WalkSprite3::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprite3Down", ROMX
+
 ; Staff roll scene 0, step 2: sprite 3 walks every other frame to ($60, $60), then a wait. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite3Down::
@@ -3579,6 +3727,8 @@ DebugStaffRoll_Scene00_WalkSprite3Down::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprite3Back", ROMX
+
 ; Staff roll scene 0, step 3: sprite 3 walks two steps a frame to ($60, $50). (C2, E-0357; probed
 ; E-0385)
 DebugStaffRoll_Scene00_WalkSprite3Back::
@@ -3592,6 +3742,8 @@ DebugStaffRoll_Scene00_WalkSprite3Back::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprite0", ROMX
 
 ; Staff roll scene 0, step 4: sprite 0 walks four steps a frame to ($60, $20), then a wait. (C2,
 ; E-0357; probed E-0385)
@@ -3613,6 +3765,8 @@ DebugStaffRoll_Scene00_WalkSprite0::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprite3Left", ROMX
+
 ; Staff roll scene 0, step 5: sprite 3 walks to ($60, $40) and turns; then a wait. (C2, E-0357;
 ; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite3Left::
@@ -3630,6 +3784,8 @@ DebugStaffRoll_Scene00_WalkSprite3Left::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprite2", ROMX
+
 ; Staff roll scene 0, step 6: sprite 2 walks to ($60, $30), then a wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprite2::
     call DrawSpriteSlots
@@ -3644,6 +3800,8 @@ DebugStaffRoll_Scene00_WalkSprite2::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkPairQuick", ROMX
 
 ; Staff roll scene 0, step 9: sprites 2 and 3 walk two steps a frame to ($50, $30) and ($50, $40),
 ; and sprite 1 turns. (C2, E-0357; probed E-0385)
@@ -3666,6 +3824,8 @@ DebugStaffRoll_Scene00_WalkPairQuick::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprite1", ROMX
 
 ; Staff roll scene 0, step 10: sprite 1 walks four steps a frame to ($10, $40), then a wait and two
 ; turns. (C2, E-0357; probed E-0385)
@@ -3692,6 +3852,8 @@ DebugStaffRoll_Scene00_WalkSprite1::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkPairUp", ROMX
 
 ; Staff roll scene 0, step 11: sprites 2 and 3 walk up to Y 0; then turns and a wait. (C2, E-0357;
 ; probed E-0385)
@@ -3722,6 +3884,8 @@ DebugStaffRoll_Scene00_WalkPairUp::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprites01", ROMX
+
 ; Staff roll scene 0, step 12: sprites 1 and 0 walk to ($40, $40) and ($60, $30); sprite 0 turns.
 ; (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkSprites01::
@@ -3739,6 +3903,8 @@ DebugStaffRoll_Scene00_WalkSprites01::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkSprites01Again", ROMX
 
 ; Staff roll scene 0, step 13: sprites 0 and 1 walk to ($40, $30) and ($40, $40); turns and a wait.
 ; (C2, E-0357; probed E-0385)
@@ -3763,6 +3929,8 @@ DebugStaffRoll_Scene00_WalkSprites01Again::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WaitAndTurn", ROMX
+
 ; Staff roll scene 0, step 14: a wait, then sprite 0 turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WaitAndTurn::
     call DrawSpriteSlots
@@ -3774,6 +3942,8 @@ DebugStaffRoll_Scene00_WaitAndTurn::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkOff", ROMX
 
 ; Staff roll scene 0, step 15: sprites 0 and 1 walk up to Y 0; then a wait, the field event ends,
 ; palette fade 4 and the next scene. (C1, E-0357)
@@ -3798,6 +3968,8 @@ DebugStaffRoll_Scene00_WalkOff::
     ld [wWorkBuf + $1], a
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkPair", ROMX
+
 ; Staff roll scene 0, step 7: sprites 2 and 3 walk to ($50, $30) and ($50, $40), then a wait. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene00_WalkPair::
@@ -3814,6 +3986,8 @@ DebugStaffRoll_Scene00_WalkPair::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene00_WalkPairRight", ROMX
 
 ; Staff roll scene 0, step 8: sprites 2 and 3 walk every other frame to ($60, $30) and ($60, $40),
 ; then a wait. (C2, E-0357; probed E-0385)
@@ -3836,6 +4010,8 @@ DebugStaffRoll_Scene00_WalkPairRight::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01", ROMX
 
 ; Staff roll scene 1 on map 2 (entry 1 of the table in DebugStaffRoll_Update_RunScene, picked by
 ; wWorkBuf + 2 - 1). Jumps through a table of 26 steps by wWorkBuf + 1, from step 0
@@ -3991,6 +4167,8 @@ DebugStaffRoll_Scene01_Load::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene01_WalkSprites", ROMX
+
 ; Staff roll scene 1, step 1: after the fade, sprites 0 and 1 walk to ($50, $30) and ($60, $30),
 ; then a wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_WalkSprites::
@@ -4010,6 +4188,8 @@ DebugStaffRoll_Scene01_WalkSprites::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_TurnSprites", ROMX
 
 ; Staff roll scene 1, step 2: sprites 0 and 1 turn by two frame tables for $9F frames, then face
 ; down. (C2, E-0357; probed E-0385)
@@ -4050,6 +4230,8 @@ DebugStaffRoll_Scene01_TurnSprites::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene01_TurnSprites_Data1", ROMX
+
 ; Five facing codes for sprite slot 0: $03, $02, $03, $00, $03. DebugStaffRoll_Scene01_TurnSprites
 ; picks one by wWorkBuf + $6 >> 5 (0-4, a new entry every 32 frames until the counter reaches $9F)
 ; and stores it as byte 5 of slot 0, which DrawSpriteSlots turns into the meta-sprite sub-index
@@ -4074,6 +4256,8 @@ DebugStaffRoll_Scene01_Wait::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopSprite2", ROMX
 
 ; Staff roll scene 1, step 4: sprite 2 walks to X $60 with a hop (its Y plus
 ; DebugStaffRoll_HopYOffsets), then a wait and a turn. (C2, E-0357; probed E-0385)
@@ -4109,6 +4293,8 @@ DebugStaffRoll_Scene01_HopSprite2::
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
+SECTION "Bank E0 DebugStaffRoll_HopYOffsets", ROMX
+
 ; Sixteen signed vertical steps for a hop, $FE x3, $FF x3, $00 x4, $01 x3, $02 x3 (-2, -1, 0, +1,
 ; +2: up then down, net zero). Many staff roll steps add entry [frame] to byte 3 of a sprite slot
 ; (the Y that DrawSpriteSlots hands to hSpriteOriginY), with the frame taken from wWorkBuf + $6,
@@ -4133,6 +4319,8 @@ DebugStaffRoll_Scene01_WalkSprite2::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopSprite2Turn", ROMX
 
 ; Staff roll scene 1, step 22: sprite 2 turns and hops for $20 frames, then a wait. (C2, E-0357;
 ; probed E-0385)
@@ -4166,6 +4354,8 @@ DebugStaffRoll_Scene01_HopSprite2Turn::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene01_TurnAndWalk", ROMX
+
 ; Staff roll scene 1, step 20: sprite 2 turns and walks to ($40, $30); then sprites 0-2 turn. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene01_TurnAndWalk::
@@ -4190,6 +4380,8 @@ DebugStaffRoll_Scene01_TurnAndWalk::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene01_StepSprite2", ROMX
+
 ; Staff roll scene 1, step 21: sprite 2 walks one step every four frames to ($30, $30). (C2, E-0357;
 ; probed E-0385)
 DebugStaffRoll_Scene01_StepSprite2::
@@ -4208,6 +4400,8 @@ DebugStaffRoll_Scene01_StepSprite2::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_Sprite2Leaves", ROMX
 
 ; Staff roll scene 1, step 24: sprite 2 moves left two pixels a frame off the screen (to $F0),
 ; animating; then two slots, turns and a wait. (C2, E-0357; probed E-0385)
@@ -4243,6 +4437,8 @@ DebugStaffRoll_Scene01_Sprite2Leaves::
     inc a
     ld [wObject1 + OBJ_STATE], a
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_PairLeaves", ROMX
 
 ; Staff roll scene 1, step 25: sprites 0 and 1 move left a pixel a frame off the screen, animating;
 ; then the field event ends, palette fade 4 and the next scene. (C1, E-0357)
@@ -4283,6 +4479,8 @@ DebugStaffRoll_Scene01_PairLeaves::
     ld [wSpriteSlots + $f], a
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopTo50", ROMX
+
 ; Staff roll scene 1, step 6: sprite 2 walks to X $50 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopTo50::
     call DrawSpriteSlots
@@ -4310,6 +4508,8 @@ DebugStaffRoll_Scene01_HopTo50::
     add [hl]
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopTo60", ROMX
 
 ; Staff roll scene 1, step 9: sprite 2 walks to X $60 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopTo60::
@@ -4339,6 +4539,8 @@ DebugStaffRoll_Scene01_HopTo60::
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopTo40", ROMX
+
 ; Staff roll scene 1, step 7: a sprite walks to X $40 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopTo40::
     call DrawSpriteSlots
@@ -4367,6 +4569,8 @@ DebugStaffRoll_Scene01_HopTo40::
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopBackTo50", ROMX
+
 ; Staff roll scene 1, step 8: a sprite walks to X $50 with a hop. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene01_HopBackTo50::
     call DrawSpriteSlots
@@ -4394,6 +4598,8 @@ DebugStaffRoll_Scene01_HopBackTo50::
     add [hl]
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopTogether", ROMX
 
 ; Staff roll scene 1, step 23: two sprites hop together for 16 frames
 ; (DebugStaffRoll_Scene01_HopTogether_Data), then a wait and a turn. (C2, E-0357; probed E-0385)
@@ -4429,6 +4635,8 @@ DebugStaffRoll_Scene01_HopTogether::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene01_HopTogether_Data", ROMX
 
 ; Eight signed vertical steps: $FD, $FE, $FF, $00, $00, $01, $02, $03 (-3 to +3, net zero).
 ; DebugStaffRoll_Scene01_HopTogether reads entry (wWorkBuf + $6) & 7 for 16 frames and adds it to
@@ -4664,6 +4872,8 @@ DebugStaffRoll_Scene02_Load::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkSprites", ROMX
+
 ; Staff roll scene 2, step 1: after the fade, two sprites walk to ($40, $70) and ($40, $80), then a
 ; wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkSprites::
@@ -4683,6 +4893,8 @@ DebugStaffRoll_Scene02_WalkSprites::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_TurnSprites", ROMX
 
 ; Staff roll scene 2, step 2: two sprites turn by two frame tables for $9F frames, then face set
 ; ways and one more slot is drawn. (C2, E-0357; probed E-0385)
@@ -4725,6 +4937,8 @@ DebugStaffRoll_Scene02_TurnSprites::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_TurnSprites_Data1", ROMX
+
 ; Five facing codes for sprite slot 0: $03, $02, $01, $02, $03. DebugStaffRoll_Scene02_TurnSprites
 ; and DebugStaffRoll_Scene03_TurnSprites pick one by wWorkBuf + $6 >> 5 (0-4, every 32 frames) and
 ; store it as byte 5 of slot 0, the facing code that DrawSpriteSlots turns into a sub-index. (C1,
@@ -4753,6 +4967,8 @@ DebugStaffRoll_Scene02_WalkSprite::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPair", ROMX
+
 ; Staff roll scene 2, step 4: two sprites walk to ($40, $30) and ($40, $20); then three turns. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPair::
@@ -4777,6 +4993,8 @@ DebugStaffRoll_Scene02_WalkPair::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkSpriteRight", ROMX
+
 ; Staff roll scene 2, step 10: a sprite walks to ($50, $20); then one more slot. (C2, E-0357; probed
 ; E-0385)
 DebugStaffRoll_Scene02_WalkSpriteRight::
@@ -4790,6 +5008,8 @@ DebugStaffRoll_Scene02_WalkSpriteRight::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairRight", ROMX
 
 ; Staff roll scene 2, step 11: two sprites walk to ($50, $30) and ($50, $20); then a turn. (C2,
 ; E-0357; probed E-0385)
@@ -4808,6 +5028,8 @@ DebugStaffRoll_Scene02_WalkPairRight::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_HopTogether", ROMX
 
 ; Staff roll scene 2, step 17: two sprites hop together for 16 frames; then a turn and a wait. (C2,
 ; E-0357; probed E-0385)
@@ -4843,6 +5065,8 @@ DebugStaffRoll_Scene02_HopTogether::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_HopSprites45", ROMX
 
 ; Staff roll scene 2, step 22: for 16 frames the Y bytes of sprites 4 and 5 both get
 ; DebugStaffRoll_HopYOffsets[wWorkBuf + 6] added, so the two hop in place (wObject2 + OBJ_SPRITE_ID
@@ -4884,6 +5108,8 @@ DebugStaffRoll_Scene02_HopSprites45::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairQuick", ROMX
+
 ; Staff roll scene 2, step 23: two sprites walk two steps a frame to ($50, $20) and ($50, $10); then
 ; fewer slots. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairQuick::
@@ -4904,6 +5130,8 @@ DebugStaffRoll_Scene02_WalkPairQuick::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkSpriteQuick", ROMX
 
 ; Staff roll scene 2, step 24: a sprite walks two steps a frame to ($50, $10); then turns, a wait
 ; and another turn. (C2, E-0357; probed E-0385)
@@ -4935,6 +5163,8 @@ DebugStaffRoll_Scene02_WalkSpriteQuick::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairOff", ROMX
+
 ; Staff roll scene 2, step 25: two sprites walk to ($A0, $70) and ($40, $70); then three turns. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairOff::
@@ -4959,6 +5189,8 @@ DebugStaffRoll_Scene02_WalkPairOff::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairLeft", ROMX
+
 ; Staff roll scene 2, step 5: two sprites walk to ($30, $30) and ($40, $30); then two turns. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairLeft::
@@ -4980,6 +5212,8 @@ DebugStaffRoll_Scene02_WalkPairLeft::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairDown", ROMX
+
 ; Staff roll scene 2, step 6: two sprites walk to ($30, $40) and ($30, $30); then a turn. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairDown::
@@ -4997,6 +5231,8 @@ DebugStaffRoll_Scene02_WalkPairDown::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairDownAgain", ROMX
 
 ; Staff roll scene 2, step 7: two sprites walk to ($30, $50) and ($30, $40); then a turn. (C2,
 ; E-0357; probed E-0385)
@@ -5016,6 +5252,8 @@ DebugStaffRoll_Scene02_WalkPairDownAgain::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkSpriteDown", ROMX
+
 ; Staff roll scene 2, step 8: a sprite walks to ($20, $50); then a turn. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkSpriteDown::
     call DrawSpriteSlots
@@ -5029,6 +5267,8 @@ DebugStaffRoll_Scene02_WalkSpriteDown::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkSpriteUp", ROMX
 
 ; Staff roll scene 2, step 9: a sprite walks to ($20, $40); then four turns, a wait and fewer slots.
 ; (C2, E-0357; probed E-0385)
@@ -5058,6 +5298,8 @@ DebugStaffRoll_Scene02_WalkSpriteUp::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairBack", ROMX
+
 ; Staff roll scene 2, step 12: two sprites walk to ($60, $30) and ($50, $30); then two turns. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WalkPairBack::
@@ -5079,6 +5321,8 @@ DebugStaffRoll_Scene02_WalkPairBack::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairToPoint", ROMX
+
 ; Staff roll scene 2, step 13: sprite 4 walks to ($60, $40) and sprite 5 to ($60, $30). The first
 ; target is the address DebugStaffRoll_HopYOffsets + 8 ($6040) loaded as an immediate into DE (D =
 ; $60, E = $40), not a byte read from the table; when sprite 5 has arrived it faces 0 and the step
@@ -5098,6 +5342,8 @@ DebugStaffRoll_Scene02_WalkPairToPoint::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkPairToPoint2", ROMX
 
 ; Staff roll scene 2, step 14: sprite 4 walks to ($60, $50) and sprite 5 to ($60, $40), the second
 ; target being the address DebugStaffRoll_HopYOffsets + 8 ($6040) loaded as an immediate into DE,
@@ -5119,6 +5365,8 @@ DebugStaffRoll_Scene02_WalkPairToPoint2::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkSpriteFar", ROMX
+
 ; Staff roll scene 2, step 15: a sprite walks to ($70, $50); then a turn. (C2, E-0357; probed
 ; E-0385)
 DebugStaffRoll_Scene02_WalkSpriteFar::
@@ -5133,6 +5381,8 @@ DebugStaffRoll_Scene02_WalkSpriteFar::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_WalkSpriteFarUp", ROMX
 
 ; Staff roll scene 2, step 16: a sprite walks to ($70, $40); then two turns and a wait. (C2, E-0357;
 ; probed E-0385)
@@ -5153,6 +5403,8 @@ DebugStaffRoll_Scene02_WalkSpriteFarUp::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_Finish", ROMX
 
 ; Staff roll scene 2, step 26: two sprites walk to ($A0, $70); then turns, a wait, a palette fade
 ; and the next scene. (C1, E-0357)
@@ -5180,6 +5432,8 @@ DebugStaffRoll_Scene02_Finish::
     xor a
     ld [wWorkBuf + $1], a
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_HopSprite5", ROMX
 
 ; Staff roll scene 2, step 18: for 16 frames the Y byte of sprite 5 gets
 ; DebugStaffRoll_HopYOffsets[wWorkBuf + 6] added, so it hops in place (wObject2 + OBJ_X is byte 3 of
@@ -5215,6 +5469,8 @@ DebugStaffRoll_Scene02_HopSprite5::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_WaitAndTurn", ROMX
+
 ; Staff roll scene 2, step 19: a 60-frame wait, then two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_WaitAndTurn::
     call DrawSpriteSlots
@@ -5230,6 +5486,8 @@ DebugStaffRoll_Scene02_WaitAndTurn::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene02_Wait", ROMX
+
 ; Staff roll scene 2, step 20: a 30-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene02_Wait::
     call DrawSpriteSlots
@@ -5238,6 +5496,8 @@ DebugStaffRoll_Scene02_Wait::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene02_StepPair", ROMX
 
 ; Staff roll scene 2, step 21: wWorkBuf + 6 counts the frames; on every eighth frame sprite 4 steps
 ; a pixel toward ($70, $50) and sprite 5 toward ($60, $50). On a tick where sprite 5 does not move
@@ -5268,6 +5528,8 @@ DebugStaffRoll_Scene02_StepPair::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene03", ROMX
 
 ; Staff roll scene 3 on map $19 (entry 3 of the table in DebugStaffRoll_Update_RunScene, picked by
 ; wWorkBuf + 2 - 1). Jumps through a table of 11 steps by wWorkBuf + 1, from step 0
@@ -5510,6 +5772,8 @@ DebugStaffRoll_Scene03_Load::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene03_WalkSprites", ROMX
+
 ; Staff roll scene 3, step 1: after the fade, two sprites walk to ($40, $50) and ($40, $60), then a
 ; wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_WalkSprites::
@@ -5529,6 +5793,8 @@ DebugStaffRoll_Scene03_WalkSprites::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene03_TurnSprites", ROMX
 
 ; Staff roll scene 3, step 2: two sprites turn by two frame tables for $9F frames, then face set
 ; ways and one more slot is drawn. (C2, E-0357; probed E-0385)
@@ -5571,6 +5837,8 @@ DebugStaffRoll_Scene03_TurnSprites::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene03_WaitAndTurn", ROMX
+
 ; Staff roll scene 3, step 3: a 45-frame wait, then a turn and another slot. (C2, E-0357; probed
 ; E-0385)
 DebugStaffRoll_Scene03_WaitAndTurn::
@@ -5585,6 +5853,8 @@ DebugStaffRoll_Scene03_WaitAndTurn::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene03_WalkSpritesUp", ROMX
 
 ; Staff roll scene 3, step 4: two sprites walk to ($40, $40) and ($40, $50), then a 30-frame wait.
 ; (C2, E-0357; probed E-0385)
@@ -5602,6 +5872,8 @@ DebugStaffRoll_Scene03_WalkSpritesUp::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene03_HopSprite5", ROMX
 
 ; Staff roll scene 3, step 5: for 16 frames the Y byte of sprite 5 gets
 ; DebugStaffRoll_HopYOffsets[wWorkBuf + 6] added (it hops in place) and its facing byte becomes
@@ -5645,6 +5917,8 @@ DebugStaffRoll_Scene03_HopSprite5::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene03_HopSprite5_Data", ROMX
 
 ; Four bytes, $03, $02, $01, $00: a descending facing-code sequence.
 ; DebugStaffRoll_Scene03_HopSprite5 loads the address into HL but no instruction indexes it: during
@@ -5693,6 +5967,8 @@ DebugStaffRoll_Scene03_Hop::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene03_Hop_Data", ROMX
+
 ; Four bytes, $02, $01, $00, $03: a facing-code sequence. DebugStaffRoll_Scene03_Hop loads the
 ; address into HL but no instruction indexes it: during the 16 hop frames it stores wWorkBuf + $6 >>
 ; 2 (0-3) as byte 5 of a sprite slot, and after the hop it adds the byte at the HL that
@@ -5733,6 +6009,8 @@ DebugStaffRoll_Scene03_TurnAndWalk::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene03_WalkOff", ROMX
+
 ; Staff roll scene 3, step 8: two sprites walk down to ($50, $A0), off the screen; then two turns
 ; and a 30-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene03_WalkOff::
@@ -5756,6 +6034,8 @@ DebugStaffRoll_Scene03_WalkOff::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene03_WalkPair", ROMX
+
 ; Staff roll scene 3, step 9: two sprites walk to ($40, $A0) and ($40, $40); then a turn. (C2,
 ; E-0357; probed E-0385)
 DebugStaffRoll_Scene03_WalkPair::
@@ -5773,6 +6053,8 @@ DebugStaffRoll_Scene03_WalkPair::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene03_Finish", ROMX
 
 ; Staff roll scene 3, step 10: two sprites walk to ($40, $A0) and ($40, $B0); then a wait, a palette
 ; fade and the next scene. (C1, E-0357)
@@ -5794,6 +6076,8 @@ DebugStaffRoll_Scene03_Finish::
     xor a
     ld [wWorkBuf + $1], a
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04", ROMX
 
 ; Staff roll scene 4 on map $1A (entry 4 of the table in DebugStaffRoll_Update_RunScene, picked by
 ; wWorkBuf + 2 - 1). Jumps through a table of 15 steps by wWorkBuf + 1, from step 0
@@ -5960,6 +6244,8 @@ DebugStaffRoll_Scene04_Load::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene04_WalkSprites", ROMX
+
 ; Staff roll scene 4, step 1: after the fade, two sprites walk to ($80, $40) and ($90, $40); then a
 ; 30-frame wait and two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WalkSprites::
@@ -5985,6 +6271,8 @@ DebugStaffRoll_Scene04_WalkSprites::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04_StepSpritesLeft", ROMX
 
 ; Staff roll scene 4, step 2: on every fourth frame (wWorkBuf + 6) sprite 0 steps a pixel toward
 ; ($70, $40) and sprite 1 toward ($80, $40). On a tick where sprite 1 does not move (it has arrived)
@@ -6015,6 +6303,8 @@ DebugStaffRoll_Scene04_StepSpritesLeft::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04_StepSpritesBack", ROMX
 
 ; Staff roll scene 4, step 3: on every fourth frame sprite 2 steps a pixel toward ($30, $40) and
 ; sprite 3 toward ($40, $40). On each tick where sprite 3 does not move (it has arrived) wWorkBuf +
@@ -6056,6 +6346,8 @@ DebugStaffRoll_Scene04_StepSpritesBack::
     ld c, $03
     call SetSpriteSlotByte5
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04_HopInTurn", ROMX
 
 ; Staff roll scene 4, step 9: two sprites hop in turn while walking to X $10 (16-frame offsets
 ; apart), then run off to ($10, $A0); then a 30-frame wait. (C2, E-0357; probed E-0385)
@@ -6139,6 +6431,8 @@ DebugStaffRoll_Scene04_HopInTurn::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene04_HopInTurn_Data", ROMX
+
 ; Thirty-two signed vertical steps for a longer hop: $FD x4, $FE x4, $FF x4, $00 x8, $01 x4, $02 x4,
 ; $03 x4 (net zero). DebugStaffRoll_Scene04_HopInTurn adds entry [wWorkBuf + $6] (frames 0-31) to
 ; byte 3 of sprite slot 2, then entry [wWorkBuf + $6 - $10] (frames 16-47) to byte 3 of slot 3, so
@@ -6190,6 +6484,8 @@ DebugStaffRoll_Scene04_HopTogether::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene04_Wait", ROMX
+
 ; Staff roll scene 4, step 11: a 60-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_Wait::
     call DrawSpriteSlots
@@ -6198,6 +6494,8 @@ DebugStaffRoll_Scene04_Wait::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04_WalkApart", ROMX
 
 ; Staff roll scene 4, step 13: two sprites walk to ($A0, $40) and ($40, $40); then a turn. (C2,
 ; E-0357; probed E-0385)
@@ -6216,6 +6514,8 @@ DebugStaffRoll_Scene04_WalkApart::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04_Finish", ROMX
 
 ; Staff roll scene 4, step 14: two sprites walk to ($A0, $40); then a wait, a palette fade and the
 ; next scene. (C1, E-0357)
@@ -6238,6 +6538,8 @@ DebugStaffRoll_Scene04_Finish::
     ld [wWorkBuf + $1], a
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene04_WaitAndTurn", ROMX
+
 ; Staff roll scene 4, step 5: a 60-frame wait, then two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WaitAndTurn::
     call DrawSpriteSlots
@@ -6252,6 +6554,8 @@ DebugStaffRoll_Scene04_WaitAndTurn::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04_StepPairRightAgain", ROMX
 
 ; Staff roll scene 4, step 12: two sprites step every four frames toward ($40, $40) and ($50, $40);
 ; then a wait and a turn. (C2, E-0357; probed E-0385)
@@ -6280,6 +6584,8 @@ DebugStaffRoll_Scene04_StepPairRightAgain::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene04_WaitAndTurnAgain", ROMX
+
 ; Staff roll scene 4, step 4: a 60-frame wait, then two turns. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WaitAndTurnAgain::
     call DrawSpriteSlots
@@ -6295,6 +6601,8 @@ DebugStaffRoll_Scene04_WaitAndTurnAgain::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene04_WaitAgain", ROMX
+
 ; Staff roll scene 4, step 6: a 60-frame wait. (C2, E-0357; probed E-0385)
 DebugStaffRoll_Scene04_WaitAgain::
     call DrawSpriteSlots
@@ -6303,6 +6611,8 @@ DebugStaffRoll_Scene04_WaitAgain::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Scene04_StepPairRight", ROMX
 
 ; Staff roll scene 4, step 7: two sprites step every four frames toward ($40, $40) and ($50, $40);
 ; then a wait. (C2, E-0357; probed E-0385)
@@ -6328,6 +6638,8 @@ DebugStaffRoll_Scene04_StepPairRight::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Scene04_WalkPair", ROMX
+
 ; Staff roll scene 4, step 8: two sprites walk to ($30, $40) and ($40, $40). (C2, E-0357; probed
 ; E-0385)
 DebugStaffRoll_Scene04_WalkPair::
@@ -6342,6 +6654,8 @@ DebugStaffRoll_Scene04_WalkPair::
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Credits", ROMX
 
 ; The staff roll's caption steps by wWorkBuf + 1: with a scene number set the credits text (draw,
 ; wait, end), otherwise the title card (draw, wait, next). (C1, E-0357)
@@ -6753,6 +7067,8 @@ DebugStaffRoll_Credits_ShowLines::
     call StartPaletteFade
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Credits_Caption", ROMX
+
 ; Staff roll credits, step 1: counts down the caption's time; after the last scene waits until every
 ; sound channel has finished, then fades, puts the player on map 0 at (0, 0), keeps the party count,
 ; sets EVENT_STAFF_ROLL_PARTY_SAVED and switches game mode; otherwise when the time runs out fades
@@ -6824,6 +7140,8 @@ DebugStaffRoll_Credits_Caption::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Credits_NextCaption", ROMX
+
 ; Staff roll credits, step 2: returns while wFadeState is non-zero; then decrements the caption
 ; count in wWorkBuf + 4 and, while captions remain, goes back to step 0 (wWorkBuf + 1 = 0) for the
 ; scene's next caption; when none remain it advances the scene number (wWorkBuf + 2) and wWorkBuf
@@ -6848,6 +7166,8 @@ DebugStaffRoll_Credits_NextCaption::
     xor a
     ld [wWorkBuf + $1], a
     ret
+
+SECTION "Bank E0 DebugStaffRoll_Credits_TitleCard", ROMX
 
 ; The staff roll's title card, step 0: clears two tile areas and shows the first string, blanks the
 ; BG map (and on the GBC its attributes with the first palette), draws the caption's tiles, sets its
@@ -6909,6 +7229,8 @@ DebugStaffRoll_Credits_TitleCard::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Credits_TitleCardFadeOut", ROMX
+
 ; The title card, step 1: counts down its time, then fades out. (C1, E-0357)
 DebugStaffRoll_Credits_TitleCardFadeOut::
     ld a, [wWorkBuf + $5]
@@ -6927,6 +7249,8 @@ DebugStaffRoll_Credits_TitleCardFadeOut::
     inc [hl]
     ret
 
+SECTION "Bank E0 DebugStaffRoll_Credits_StartFirstScene", ROMX
+
 ; The staff roll's title card, step 2 (DebugStaffRoll_Credits with wWorkBuf + 2 = 0): returns while
 ; wFadeState is non-zero; then increments the scene number wWorkBuf + 2 (to scene 1) and wWorkBuf,
 ; and clears the step wWorkBuf + 1. (C2, E-0371; probed E-0385)
@@ -6941,6 +7265,8 @@ DebugStaffRoll_Credits_StartFirstScene::
     xor a
     ld [wWorkBuf + $1], a
     ret
+
+SECTION "Bank E0 FillVRAMRectWithTileSequence", ROMX
 
 ; A = first tile number, B = width, C = rows, HL = VRAM address, DE = row stride: writes consecutive
 ; tile numbers (A increases by 1 for every cell, across rows) with WriteVRAMByteInc, interrupts off
@@ -6966,6 +7292,8 @@ FillVRAMRectWithTileSequence::
     dec c
     jr nz, FillVRAMRectWithTileSequence
     ret
+
+SECTION "Bank E0 DrawSpriteSlots", ROMX
 
 ; Draws the staff roll sprites. With wSpriteSlotCount 0 it returns at once with A = 0 and Z set.
 ; Otherwise for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots it sets hSpriteSetIndex =
@@ -7049,6 +7377,8 @@ DrawSpriteSlots::
     jr nz, .loop
     ret
 
+SECTION "Bank E0 DrawSpriteSlots_Data", ROMX
+
 ; Three 3-byte far-call entries, a code address word then a ROM bank: $4001 in bank $25
 ; (DrawMetaSpriteSet_Bank25), $4001 in bank $7F (DrawMetaSprite_Sets98) and $700A in bank $7F
 ; (DrawMetaSprite). DrawSpriteSlots indexes it with byte 0 of each 8-byte slot in wSpriteSlots (0, 1
@@ -7077,6 +7407,8 @@ IncrementSpriteSlotCounters::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank E0 StepSpriteSlotToward", ROMX
 
 ; A = slot 0-7 (the 8-byte slot at wSpriteSlots + 8 * A), D = target X, E = target Y: moves the slot
 ; X (byte 2) and Y (byte 3) one pixel toward D and E (a coordinate that already matches stays) and
@@ -7133,6 +7465,8 @@ StepSpriteSlotToward::
     or a
     ret
 
+SECTION "Bank E0 SetSpriteSlotByte5", ROMX
+
 ; A = slot 0-7, C = value: stores C in byte 5 of that slot (the facing code that DrawSpriteSlots
 ; turns into a sub-index). The other bytes and slots are untouched. Used by the staff roll turn
 ; steps. (C2, E-0385)
@@ -7149,6 +7483,8 @@ SetSpriteSlotByte5::
     inc hl
     ld [hl], c
     ret
+
+SECTION "Bank E0 StepSpriteSlotTowardDE", ROMX
 
 ; A = slot, D = target X, E = target Y: when X differs from D it moves by the step Data1[wWorkBuf +
 ; $A] (StepSpriteSlotTowardDE_Data1: 1 pixel for 8 entries, then 2) toward D; when Y differs from E
@@ -7218,6 +7554,8 @@ StepSpriteSlotTowardDE::
     or a
     ret
 
+SECTION "Bank E0 StepSpriteSlotTowardDE_Data1", ROMX
+
 ; Thirteen step sizes in pixels: $01 x8, $02 x4, then $00. StepSpriteSlotTowardDE moves byte 2 of
 ; the sprite slot (its X) toward D by the entry at wWorkBuf + $A on each call where X differs, so
 ; the walk speeds up from 1 to 2 pixels per call; wWorkBuf + $A is advanced only by the Y step. (C1,
@@ -7247,6 +7585,8 @@ StepWorkBuf5Mod15::
     ld [wWorkBuf + $5], a
     ret
 
+SECTION "Bank E0 StepWorkBuf5Mod30", ROMX
+
 ; Adds 1 to the wait counter wWorkBuf + 5; below 30 it returns with carry set and Z clear (the
 ; caller keeps waiting, ret nz), and when the value reaches 30 it resets the counter to 0 and
 ; returns with Z set. A wait of 30 calls for the staff roll steps. (C2, E-0385)
@@ -7261,6 +7601,8 @@ StepWorkBuf5Mod30::
     xor a
     ld [wWorkBuf + $5], a
     ret
+
+SECTION "Bank E0 StepWorkBuf5Mod45", ROMX
 
 ; Adds 1 to the wait counter wWorkBuf + 5; below 45 it returns with carry set and Z clear (the
 ; caller keeps waiting, ret nz), and when the value reaches 45 it resets the counter to 0 and
@@ -7277,6 +7619,8 @@ StepWorkBuf5Mod45::
     ld [wWorkBuf + $5], a
     ret
 
+SECTION "Bank E0 StepWorkBuf5Mod60", ROMX
+
 ; Adds 1 to the wait counter wWorkBuf + 5; below 60 it returns with carry set and Z clear (the
 ; caller keeps waiting, ret nz), and when the value reaches 60 it resets the counter to 0 and
 ; returns with Z set. A wait of 60 calls for the staff roll steps. (C2, E-0385)
@@ -7291,6 +7635,8 @@ StepWorkBuf5Mod60::
     xor a
     ld [wWorkBuf + $5], a
     ret
+
+SECTION "Bank E0 FillBGMapRectWithAWrapped", ROMX
 
 ; A = tile, B = width, C = rows, HL = BG map address: writes A over the B x C rectangle (waiting for
 ; VRAM access per cell), wrapping the column within its 32-cell row and the row within the 32 rows
@@ -7342,6 +7688,8 @@ FillBGMapRectWithAWrapped::
     dec c
     jr nz, FillBGMapRectWithAWrapped
     ret
+
+SECTION "Bank E0 ResetScreenPalettes_E0", ROMX
 
 ; Sets the DMG palettes wDMGPaletteBGP, wDMGPaletteOBP0 and wDMGPaletteOBP1 to $D2, $D2 and $E2,
 ; copies them to wDMGPaletteBytes and resets the fade (ResetFadeFromDMGPaletteBGP). On a Super Game
@@ -7418,6 +7766,8 @@ ResetScreenPalettes_E0::
 .return:
     ret
 
+SECTION "Bank E0 ResetScreenPalettes_E0_Palette", ROMX
+
 ; the routine before ResetScreenPalettes_E0.return copies these 8 bytes to wOBJPaletteBuffer + $20
 ; with CopyBytes (E-0213, C1)
 ; record: one CGB palette: 4 BGR555 colours
@@ -7474,6 +7824,8 @@ BeginStringDisplay_BankE0::
     call BeginStringDisplay
     ret
 
+SECTION "Bank E0 ShowString_BankE0", ROMX
+
 ; Shows the string wStringIndex of category wStringCategory: BeginStringDisplay_BankE0, then
 ; RunStringDisplayToEnd. Used for the staff roll credits lines and the title card by
 ; DebugStaffRoll_Credits_ShowLines and DebugStaffRoll_Credits_TitleCard. (C1, E-0385)
@@ -7482,6 +7834,8 @@ ShowString_BankE0::
     call BeginStringDisplay_BankE0
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank E0 BeginStringDisplay_BankE0_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -7642,25 +7996,35 @@ GetBattleATK_BankE0:: ; configured code entry (E-0213); C0
     ld hl, wBattleATK
     jr GetBattleStatWord_BankE0
 
+SECTION "Bank E0 GetBattleDEF_BankE0", ROMX
+
 ; Bank-$E0 copy of GetBattleDEF: HL = battle slot A's DEF word. (C2, E-0357; probed E-0385)
 GetBattleDEF_BankE0::
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankE0
+
+SECTION "Bank E0 GetBattleMaxHP_BankE0", ROMX
 
 ; Bank-$E0 copy of GetBattleMaxHP: HL = battle slot A's max HP word. (C2, E-0357; probed E-0385)
 GetBattleMaxHP_BankE0::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankE0
 
+SECTION "Bank E0 GetBattleMaxMP_BankE0", ROMX
+
 ; Bank-$E0 copy of GetBattleMaxMP: HL = battle slot A's max MP word. (C2, E-0357; probed E-0385)
 GetBattleMaxMP_BankE0::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankE0
 
+SECTION "Bank E0 GetBattleHP_BankE0", ROMX
+
 ; Bank-$E0 copy of GetBattleHP: HL = battle slot A's HP word. (C2, E-0357; probed E-0385)
 GetBattleHP_BankE0::
     ld hl, wBattleHP
     jr GetBattleStatWord_BankE0
+
+SECTION "Bank E0 GetBattleMP_BankE0", ROMX
 
 ; Bank-$E0 copy of GetBattleMP: HL = battle slot A's MP word; 15 unreached bytes follow the jump
 ; (two more getters). (C2, E-0357; probed E-0385)
@@ -7678,6 +8042,8 @@ GetBattleStatWord_BankE0::
     deref_hl
     ret
 
+SECTION "Bank E0 AddDoubleAToHL_BankE0", ROMX
+
 ; HL = HL + 2 * A. A is doubled in 8 bits first, so an A of $80 or more wraps ($81 adds 2); the
 ; carry out of L goes into H. A ends equal to the new L. This bank-$E0 copy of the 7-byte helper has
 ; no caller in src. (C2, E-0385)
@@ -7687,6 +8053,8 @@ AddDoubleAToHL_BankE0::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank E0 ActorOnLocalSide_BankE0", ROMX
 
 ; Carry set = the battle actor wBattleActor is in slots 0-3, carry clear = slots 4-7. In a link
 ; battle the answer is reversed (carry set for slots 4-7) when wLinkMode is 1 and bit 1 of wLinkRole
@@ -7713,6 +8081,8 @@ ActorOnLocalSide_BankE0::
     cp $04
     ret
 
+SECTION "Bank E0 TargetOnLocalSide_BankE0", ROMX
+
 ; Carry set = the battle target wBattleTarget is in slots 0-3, carry clear = slots 4-7. In a link
 ; battle the answer is reversed (carry set for slots 4-7) when wLinkMode is 1 and bit 1 of wLinkRole
 ; is set; any other wLinkMode, including 2, leaves it unreversed. A ends holding wBattleTarget. This
@@ -7738,6 +8108,8 @@ TargetOnLocalSide_BankE0::
     cp $04
     ret
 
+SECTION "Bank E0 ClearBattleStatusBitsWithMaskD_BankE0", ROMX
+
 ; ANDs status byte 0 of slot E (rows of nine bytes) with entry D of
 ; ClearBattleStatusBitsWithMaskD_BankE0_Data. (C2, E-0357; probed E-0385)
 ClearBattleStatusBitsWithMaskD_BankE0::
@@ -7752,6 +8124,8 @@ ClearBattleStatusBitsWithMaskD_BankE0::
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank E0 ClearBattleStatusBitsWithMaskD_BankE0_Data", ROMX
 
 ; Seven AND masks indexed by D: $DF (clears bit 5), $FE (bit 0), $00 (all bits), $FD (bit 1), $73
 ; (bits 7, 3 and 2), $EF (bit 4) and $BF (bit 6). ClearBattleStatusBitsWithMaskD_BankE0 ANDs the
@@ -7773,6 +8147,8 @@ SetBit0OfLevelUpGainsIndexed_BankE0::
     pop hl
     ret
 
+SECTION "Bank E0 SetBit1OfLevelUpGainsIndexed_BankE0", ROMX
+
 ; Sets bit 1 of the byte at wLevelUpGains + A and leaves its other bits, the next byte and HL
 ; unchanged; A is clobbered (it ends as the low byte of that address). This bank-$E0 copy has no
 ; caller in src. (C2, E-0385)
@@ -7786,6 +8162,8 @@ SetBit1OfLevelUpGainsIndexed_BankE0::
     pop hl
     ret
 
+SECTION "Bank E0 SetBit2OfLevelUpGainsIndexed_BankE0", ROMX
+
 ; Sets bit 2 of the byte at wLevelUpGains + A and leaves its other bits, the next byte and HL
 ; unchanged; A is clobbered (it ends as the low byte of that address). This bank-$E0 copy has no
 ; caller in src. (C2, E-0385)
@@ -7798,6 +8176,8 @@ SetBit2OfLevelUpGainsIndexed_BankE0::
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank E0 PersonalityIndexOfSlot_BankE0", ROMX
 
 ; A = slot 0-7. Returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]), a number 0-26, where g(v) = 0 for v >= $C0, 1 for $40-$BF and 2 for v <
@@ -7864,6 +8244,8 @@ PersonalityIndexOfSlot_BankE0::
     pop hl
     ret
 
+SECTION "Bank E0 CheckSlotStatusBlockWide_BankE0", ROMX
+
 ; A = slot. Carry set when CheckSlotStatusBlock sets it (slot absent, or one of its status bits set)
 ; or when status byte 3 of the slot has a bit of $C0 set (BSTAT3_AIRBORNE, BSTAT3_AIRBORNE_HI) or
 ; status byte 4 has a bit of $0C set (BSTAT4_HIGH_JUMP, BSTAT4_HIGH_JUMP_HI); otherwise carry clear.
@@ -7896,6 +8278,8 @@ CheckSlotStatusBlockWide_BankE0::
     pop bc
     pop hl
     ret
+
+SECTION "Bank E0 SlotHasStatus3Or4Bits_BankE0", ROMX
 
 ; A = slot. Z clear with A = status byte 3 & $C0 when byte 3 of the slot (wBattleStatus3 + 9 * A)
 ; has a bit of $C0 set; otherwise A = status byte 4 & $0C, so Z is clear only when byte 4 has a bit

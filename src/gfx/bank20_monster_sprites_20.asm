@@ -1,7 +1,7 @@
 ; ROM bank $20: compressed monster sprites
 ; The annotated listing of this bank is build/listing/bank20.asm.
 
-SECTION "Bank 20", ROMX[$4000], BANK[$20]
+SECTION "Bank 20", ROMX
     db $20
 
 ; compressed sprite graphics of monster id $001 (DrakSlime); 68 other ids point here too

@@ -1,7 +1,7 @@
 ; ROM bank $40: sound tracks
 ; The annotated listing of this bank is build/listing/bank40.asm.
 
-SECTION "Bank 40", ROMX[$4000], BANK[$40]
+SECTION "Bank 40", ROMX
     db $40
 
 ; E-0018 (C2 for the fields, C0 for the meaning of the second byte and of the streams). Sound ids

@@ -1,7 +1,7 @@
 ; ROM bank $3C: battle effect graphics
 ; The annotated listing of this bank is build/listing/bank3c.asm.
 
-SECTION "Bank 3C", ROMX[$4000], BANK[$3C]
+SECTION "Bank 3C", ROMX
     db $3c
 
 ; compressed battle effect graphics, entry 0 of BattleEffectGraphicsTable

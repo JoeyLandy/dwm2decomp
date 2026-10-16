@@ -1,7 +1,7 @@
 ; ROM bank $4B: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank4b.asm.
 
-SECTION "Bank 4B", ROMX[$4000], BANK[$4B]
+SECTION "Bank 4B", ROMX
     db $4b
 
 ; 1 screen far pointers, row by row (E-0142)

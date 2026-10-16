@@ -1,7 +1,7 @@
 ; ROM bank $22: compressed monster sprites
 ; The annotated listing of this bank is build/listing/bank22.asm.
 
-SECTION "Bank 22", ROMX[$4000], BANK[$22]
+SECTION "Bank 22", ROMX
     db $22
 
 ; compressed sprite graphics of monster id $0B8 (Pyuro) (MonsterSpriteTable; the debug viewer

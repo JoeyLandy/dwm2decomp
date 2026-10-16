@@ -1,7 +1,7 @@
 ; ROM bank $5D: the world map
 ; The annotated listing of this bank is build/listing/bank5d.asm.
 
-SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
+SECTION "Bank 5D", ROMX
     db $5d
 
 ; Tiles: 1024 bytes = 64 tiles of 2bpp for vTiles2 (tile numbers $00-$3F).

@@ -1,7 +1,7 @@
 ; ROM bank $5F: scene and message scripts; map data
 ; The annotated listing of this bank is build/listing/bank5f.asm.
 
-SECTION "Bank 5F", ROMX[$4000], BANK[$5F]
+SECTION "Bank 5F", ROMX
     db $5f
 
 ; compressed tileset of map $30 (the first map record using it)
@@ -320,6 +320,8 @@ RunMessageBox_Open::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunMessageBox_ShowText", ROMX
+
 ; Message step 1: once the window has opened (or at once with wMessageGroup bit 7), starts message
 ; wMessageIndex of group wMessageGroup; next step. (C1, E-0357)
 RunMessageBox_ShowText::
@@ -335,6 +337,8 @@ RunMessageBox_ShowText::
     ld hl, wMessageState
     inc [hl]
     ret
+
+SECTION "Bank 5F RunMessageBox_Close", ROMX
 
 ; Message step 2: waits for the text to finish (wTextFlags bit 0); unless wMessageGroup bit 6, plays
 ; sound $69 and starts closing the window (at the top when the player is low); next step. (C2,
@@ -365,6 +369,8 @@ RunMessageBox_Close::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunMessageBox_Finish", ROMX
+
 ; Message step 3: once the window has closed (or at once with wMessageGroup bit 6), unfreezes the
 ; player and objects unless a step pointer is set, and marks the message idle ($FF). (C2, E-0357;
 ; probed E-0384)
@@ -387,6 +393,8 @@ RunMessageBox_Finish::
     ld a, $ff
     ld [wMessageState], a
     ret
+
+SECTION "Bank 5F ShowMessageFromMessageIndex", ROMX
 
 ; Loads L = wMessageIndex and H = wMessageGroup and falls into ShowMessageHL. RunMessageBox_ShowText
 ; (message step 1) calls it to start the text of the message box. (C1, E-0384)
@@ -445,60 +453,84 @@ ShowMessageHL_ToBeginStringDisplay_Bank28::
     farcall BeginStringDisplay_Bank28
     ret
 
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank29", ROMX
+
 ; Message group 1: the strings of bank $29 onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank29::
     farcall BeginStringDisplay_Bank29
     ret
+
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank2A", ROMX
 
 ; Message group 2: the strings of bank $2A onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank2B", ROMX
+
 ; Message group 3: the strings of bank $2B onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank2B::
     farcall BeginStringDisplay_Bank2B
     ret
+
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank2C", ROMX
 
 ; Message group 4: the strings of bank $2C onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank2D", ROMX
+
 ; Message group 5: the strings of bank $2D onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank2D::
     farcall BeginStringDisplay_Bank2D
     ret
+
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank2E", ROMX
 
 ; Message group 6: the strings of bank $2E onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank7C", ROMX
+
 ; Message group 8: the strings of bank $7C onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank7C::
     farcall BeginStringDisplay_Bank7C
     ret
+
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank80", ROMX
 
 ; Message group 9: the strings of bank $80 onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank80::
     farcall BeginStringDisplay_Bank80
     ret
 
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank82", ROMX
+
 ; Message group 11: the strings of bank $82 onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank82::
     farcall BeginStringDisplay_Bank82
     ret
+
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank86", ROMX
 
 ; Message group 12: the strings of bank $86. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank86::
     farcall BeginStringDisplay_Bank86
     ret
 
+SECTION "Bank 5F ShowMessageHL_ToBeginStringDisplay_Bank89", ROMX
+
 ; Message group 13: the strings of bank $89 onward. (C1, E-0357)
 ShowMessageHL_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
+
+SECTION "Bank 5F ShowMessageHL_OnSpecialMap", ROMX
 
 ; ShowMessageHL's path for a special map other than the key world (wMapType bit 7 set and not $80):
 ; ignores the message group in H and starts string L of category 0 (wStringIndex, wStringCategory)
@@ -511,6 +543,8 @@ ShowMessageHL_OnSpecialMap::
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank28
     ret
+
+SECTION "Bank 5F StepPlayerDownTowardStepPtrLo", ROMX
 
 ; Moves the player one pixel down: sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 0,
 ; calls UpdateFollowersOnStep_Bank5F with hPlayerY as it was before the move, then adds 1 to
@@ -548,6 +582,8 @@ StepPlayerDownTowardStepPtrLo::
     ld [wStepArrived], a
     ret
 
+SECTION "Bank 5F StepPlayerRightTowardStepPtrLo", ROMX
+
 ; Moves the player one pixel right: sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 1,
 ; calls UpdateFollowersOnStep_Bank5F with hPlayerX as it was before the move, then adds 1 to
 ; hPlayerX. When the new value equals wStepPtrLo it clears bit 2 of hPlayerStateFlags and sets
@@ -583,6 +619,8 @@ StepPlayerRightTowardStepPtrLo::
     ld a, $01
     ld [wStepArrived], a
     ret
+
+SECTION "Bank 5F StepPlayerUpTowardStepPtrLo", ROMX
 
 ; Moves the player one pixel up: sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 2,
 ; calls UpdateFollowersOnStep_Bank5F with hPlayerY as it was before the move, then subtracts 1 from
@@ -620,6 +658,8 @@ StepPlayerUpTowardStepPtrLo::
     ld [wStepArrived], a
     ret
 
+SECTION "Bank 5F StepPlayerLeftTowardStepPtrLo", ROMX
+
 ; Moves the player one pixel left: sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 3,
 ; calls UpdateFollowersOnStep_Bank5F with hPlayerX as it was before the move, then subtracts 1 from
 ; hPlayerX. When the new value equals wStepPtrLo it clears bit 2 of hPlayerStateFlags and sets
@@ -656,6 +696,8 @@ StepPlayerLeftTowardStepPtrLo::
     ld [wStepArrived], a
     ret
 
+SECTION "Bank 5F UpdateFollowersOnStep_Bank5F", ROMX
+
 ; A = the moving coordinate of the player before the step: when A & $0F is 0 (a 16-pixel tile
 ; boundary) it far-calls SetFollowerTargetsFromLeader (the first follower takes the player position
 ; as target, the others the positions of the follower before them), then it always far-calls
@@ -674,6 +716,8 @@ UpdateFollowersOnStep_Bank5F::
 .call_step_followers_toward_targets:
     farcall StepFollowersTowardTargets
     ret
+
+SECTION "Bank 5F StepObjectTowardCoord", ROMX
 
 ; wStepPtrHi = the object number n of a 16-byte entry at wSpriteSlots: sets bit 2 of the flag byte
 ; (OBJ_FLAGS), stores the direction wStepTarget & 3 in OBJ_STATE and moves the object one pixel, or
@@ -788,6 +832,8 @@ StepObjectTowardCoord::
     ld [wStepArrived], a
     ret
 
+SECTION "Bank 5F AddStepDeltaToPointedByte", ROMX
+
 ; The byte at the address in wStepPtrLo and wStepPtrHi += the signed byte
 ; AddStepDeltaToPointedByte_Data[wScriptParam0 / 2]; the 16 entries add up to 0 over 32 frames, so a
 ; scene script calls it once per frame to make an object or the player hop and come back.
@@ -809,6 +855,8 @@ AddStepDeltaToPointedByte::
     add c
     ld [de], a
     ret
+
+SECTION "Bank 5F AddStepDeltaToPointedByte_Data", ROMX
 
 ; Sixteen signed bytes, one per two script frames (index wScriptParam0 / 2): -2, -1, -1, 0, -1, 0,
 ; -1, 0, then 0, 1, 0, 1, 0, 1, 1, 2, which sum to zero. AddStepDeltaToPointedByte adds the entry to
@@ -883,6 +931,8 @@ ScriptStepBlinkObjectTemp0::
     ldh [hTemp0], a
     ret
 
+SECTION "Bank 5F ScriptStartFadeAndAdvanceStep", ROMX
+
 ; Starts a palette fade (StartPaletteFade with A = $0F), sets wModeState = 4, wFieldTransitionStep =
 ; 0 and wScriptParam0 = 0 and increments wScriptStep. The scene scripts in bank $0F far-call it to
 ; end a scene step with a fade into the field transition (mode state 4). (C1, E-0384)
@@ -901,6 +951,8 @@ ScriptStartFadeAndAdvanceStep::
     inc [hl]
     ret
 
+SECTION "Bank 5F SetModeState3AndSaveScreen", ROMX
+
 ; Starts a scripted battle from the field: wModeState = 3 (FieldState_BattleTransition),
 ; wBattleTransitionStep = 0 and wFieldReturnPhase = 2, then far-calls SaveScreenBufferToBGMap1
 ; (keeps a copy of the screen in vBGMap1) and PickRandomEncounterCountdownFromTable. The callers in
@@ -918,6 +970,8 @@ SetModeState3AndSaveScreen::
     farcall SaveScreenBufferToBGMap1
     farcall PickRandomEncounterCountdownFromTable
     ret
+
+SECTION "Bank 5F AppendItemStepPtrLoToInventory", ROMX
 
 ; Puts the item id in wStepPtrLo into the first free slot of wInventory, a slot holding $00 or $FF;
 ; HL is kept. There is no bound check: with all 24 slots used it runs on past the bag to the next
@@ -947,6 +1001,8 @@ AppendItemStepPtrLoToInventory::
     set 6, a
     ld [wInventorySortFlags], a
     ret
+
+SECTION "Bank 5F SetWStepArrivedIfPartyHasField55Bit7", ROMX
 
 ; Sets wStepArrived to 1 when any of the wPartyCount monsters listed in wPartyList has bit 7 of
 ; MON_STATUS set (the dead bit), otherwise to 0. The records are read from SRAM (rRAMG is enabled
@@ -988,6 +1044,8 @@ SetWStepArrivedIfPartyHasField55Bit7::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 5F TravelerEvents_PartyHasPoison", ROMX
+
 ; wStepArrived = 1 when any party monster has status bit 2 (poison) set, otherwise 0 (SRAM enabled
 ; around the reads). (C2, E-0357; probed E-0384)
 TravelerEvents_PartyHasPoison::
@@ -1023,6 +1081,8 @@ TravelerEvents_PartyHasPoison::
     xor a
     ld [rRAMG], a
     ret
+
+SECTION "Bank 5F TravelerEvents_PartyHasStatusBit0", ROMX
 
 ; wStepArrived = 1 when any party monster has status bit 0 set, otherwise 0 (SRAM enabled around the
 ; reads). (C2, E-0357; probed E-0384)
@@ -1060,6 +1120,8 @@ TravelerEvents_PartyHasStatusBit0::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 5F LoadListedRecordNameTilesForTemp0", ROMX
+
 ; hTemp0/hTemp1 = a species word. Far-calls FindPartyIndexOfSpeciesTemp0 (hTemp0 becomes the
 ; wPartyList index of the first party monster of that species, or $80 when none), sets bits 1-3 of
 ; hFieldDrawFlags, then puts wPartyList[hTemp0] in wArg1, clears wArg2 and far-calls
@@ -1093,6 +1155,8 @@ LoadListedRecordNameTilesForTemp0::
     ldh [hFieldDrawFlags], a
     ret
 
+SECTION "Bank 5F ClearArg5IfAtOrAboveLimitForFarmLevel", ROMX
+
 ; Finds the first free monster record: wArg1 = $FF and wArg2 = 1 are passed to
 ; DeleteSRAMRecordAndCompact (no record is deleted, the stored records are compacted, and wArg5
 ; comes back as the number of the first free record, or $FF when all 30 are used). Then, unless
@@ -1123,6 +1187,8 @@ ClearArg5IfAtOrAboveLimitForFarmLevel::
     ld a, $ff
     ld [wArg5], a
     ret
+
+SECTION "Bank 5F ClearArg5IfAtOrAboveLimitForFarmLevel_Data", ROMX
 
 ; Four limit bytes, 10, 20, 30 and 30, indexed by wFarmLevel and 3.
 ; ClearArg5IfAtOrAboveLimitForFarmLevel asks DeleteSRAMRecordAndCompact about record $FF in bank 1,
@@ -1185,6 +1251,8 @@ MarkKeyEntryKindTemp0Bit6::
     pop hl
     ret
 
+SECTION "Bank 5F DrawFullScreenBufferAtScroll", ROMX
+
 ; Draws the whole screen buffer into the background map at the current scroll: HL = $9800 +
 ; (hScrollY & $F8) x 4 with the high byte masked by $9B (so the rows wrap inside vBGMap0), plus
 ; hScrollX / 8, then calls DrawFullScreenBufferToBGMap with that address. Used after scenes that
@@ -1224,6 +1292,8 @@ DrawFullScreenBufferAtScroll::
     call DrawFullScreenBufferToBGMap
     ret
 
+SECTION "Bank 5F RedrawColumnsBesideScreen", ROMX
+
 ; Takes the row address DE = $9800 + (hScrollY & $F8) x 4 (high byte masked by $9B) and calls
 ; RedrawColumnsBesideScreen_FillColumn for the column at hScrollX - 8 and the column at hScrollX +
 ; $A0, the two columns just outside the left and right edges of the visible screen. Each fills 18
@@ -1258,6 +1328,8 @@ RedrawColumnsBesideScreen::
     call RedrawColumnsBesideScreen_FillColumn
     ret
 
+SECTION "Bank 5F RedrawColumnsBesideScreen_FillColumn", ROMX
+
 ; A = pixel X, DE = the BG map row address: fills 18 ($12) entries down the column at DE + A / 8
 ; with tile $C4 (WriteVRAMByte), 32 bytes apart with H masked by $9B so the column wraps inside
 ; vBGMap0. RedrawColumnsBesideScreen calls it for hScrollX - 8 and hScrollX + $A0, just off the left
@@ -1287,6 +1359,8 @@ RedrawColumnsBesideScreen_FillColumn::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 5F SceneDancing_DanceSteps", ROMX
 
 ; Runs the dance of the Dancing scene (script command type 2C), one frame per call, by
 ; wScriptSubStep (17 entries): waits of 32 frames (SceneDancing_DanceSteps_Pause), then the player
@@ -1328,15 +1402,21 @@ SceneDancing_DanceSteps_FaceDown::
     inc [hl]
     ret
 
+SECTION "Bank 5F SceneDancing_DanceSteps_FaceUp", ROMX
+
 ; Dance step 8: everyone faces up (6E99). (C2, E-0357; probed E-0384)
 SceneDancing_DanceSteps_FaceUp::
     ld a, $02
     jr SceneDancing_DanceSteps_TurnAll
 
+SECTION "Bank 5F SceneDancing_DanceSteps_FaceRight", ROMX
+
 ; Dance step 5: everyone faces right (6E99). (C2, E-0357; probed E-0384)
 SceneDancing_DanceSteps_FaceRight::
     ld a, $01
     jr SceneDancing_DanceSteps_TurnAll
+
+SECTION "Bank 5F SceneDancing_DanceSteps_FaceLeft", ROMX
 
 ; Dance step 2: everyone faces left (6E99). (C2, E-0357; probed E-0384)
 SceneDancing_DanceSteps_FaceLeft::
@@ -1368,6 +1448,8 @@ SceneDancing_DanceSteps_TurnAll::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F SceneMermaidSong2_MoveSteps", ROMX
 
 ; Runs the moves of the Mermaid song 2 scene (script command type 2D), one frame per call, by
 ; wScriptSubStep (14 entries): waits of 32 frames, SceneMermaidSong2_MoveSteps_StepPair (sub-step
@@ -1404,6 +1486,8 @@ SceneDancing_DanceSteps_End::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 5F SceneDancing_DanceSteps_HopAll", ROMX
 
 ; Dance step 12: moves the player and the three followers up and down by the hop table
 ; (AddStepDeltaToPointedByte on each Y) over 16 frames; next step. (C2, E-0357; probed E-0384)
@@ -1444,6 +1528,8 @@ SceneDancing_DanceSteps_HopAll::
     inc [hl]
     ret
 
+SECTION "Bank 5F SceneMermaidSong2_TurnAround", ROMX
+
 ; Mermaid song, step 7: turns the player and followers a quarter-turn every four frames until they
 ; face down again; next step. (C2, E-0357; probed E-0384)
 SceneMermaidSong2_TurnAround::
@@ -1466,6 +1552,8 @@ SceneMermaidSong2_TurnAround::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F SceneMermaidSong2_MoveSteps_StepPairBack", ROMX
 
 ; Mermaid song, step 4: every eight frames turns the player and the first follower the other way and
 ; steps them one pixel apart; every four frames moves the other two followers by the table,
@@ -1539,6 +1627,8 @@ SceneMermaidSong2_MoveSteps_StepPairBack::
     inc [hl]
     ret
 
+SECTION "Bank 5F SceneMermaidSong2_MoveSteps_HopFollowers", ROMX
+
 ; Mermaid song 2, sub-step 3: adds the hop-table entry (AddStepDeltaToPointedByte_Data, index
 ; wScriptParam0 / 2) to the Y of the second and third follower records (wFollowerRecords + 7 and +
 ; $C), then falls into SceneDancing_DanceSteps_Pause, which counts wScriptParam0 up and, at 32,
@@ -1572,6 +1662,8 @@ SceneDancing_DanceSteps_Pause::
     inc [hl]
     ret
 
+SECTION "Bank 5F SceneMermaidSong2_MoveSteps_StepPair", ROMX
+
 ; Mermaid song, step 2: every eight frames turns the player and the first follower and steps them
 ; one pixel together; moves followers 2 and 3 by the table (ScriptStepMoveTwoObjectsByTable). (C2,
 ; E-0357; probed E-0384)
@@ -1600,6 +1692,8 @@ SceneMermaidSong2_MoveSteps_StepPair::
     ld hl, SceneMermaidSong2_MoveSteps_StepPairBack_Data
     call ScriptStepMoveTwoObjectsByTable
     ret
+
+SECTION "Bank 5F ScriptStepMoveTwoObjectsByTable", ROMX
 
 ; HL = a table of 32 byte pairs (dx, dy). Every call where wScriptParam0 is a multiple of 4 it adds
 ; the pair at HL + 2 x (wScriptParam0 / 4) to the X and Y of the second follower record
@@ -1650,6 +1744,8 @@ ScriptStepMoveTwoObjectsByTable::
     ld hl, wScriptParam0
     inc [hl]
     ret
+
+SECTION "Bank 5F SceneMermaidSong2_MoveSteps_StepPairBack_Data", ROMX
 
 ; Thirty-two pairs of signed bytes (dx, dy), 64 bytes, forming a closed loop: the deltas sum to zero
 ; on both axes, starting (-2, 0), (-1, 0), (-2, -1) and ending (-1, 0), (-2, 0). One pair is applied
@@ -1730,6 +1826,8 @@ RunScriptSubStep_FollowersReturn::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunScriptSubStep_SinkObject5", ROMX
+
 ; Walking step 6: object 5 hops along by the table, sinking a pixel a frame for 16 frames; then it
 ; is hidden, the player faces up, and the next step. (C2, E-0357; probed E-0384)
 RunScriptSubStep_SinkObject5::
@@ -1761,6 +1859,8 @@ RunScriptSubStep_SinkObject5::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunScriptSubStep_FaceDownAndStand", ROMX
+
 ; Walking step 5: everyone faces down and stands for 60 frames; next step. (C2, E-0357; probed
 ; E-0384)
 RunScriptSubStep_FaceDownAndStand::
@@ -1781,6 +1881,8 @@ RunScriptSubStep_FaceDownAndStand::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F RunScriptSubStep_FollowersRunRound", ROMX
 
 ; Walking step 4: for 800 frames each follower runs round the player in a loop (down to 16 below,
 ; right to 32 beside while spinning, up level, left to 32 on the other side), its leg kept in
@@ -1915,6 +2017,8 @@ RunScriptSubStep_FollowersRunRound::
     jp nz, .loop
     ret
 
+SECTION "Bank 5F RunScriptSubStep_FollowersRunRound_Data", ROMX
+
 ; A 64-byte height profile for the arc of a follower passing over the player: 17 zeros, a hump of 30
 ; values rising from 1 to $11 (17) and back to 1, then 17 more zeros. In the last leg of
 ; RunScriptSubStep_FollowersRunRound (moving left along the player) the index is the follower X
@@ -1954,6 +2058,8 @@ RunScriptSubStep_SetUpRunning::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunScriptSubStep_HopObject5", ROMX
+
 ; Walking step 2: shows object 5 and hops it up by the table, rising a pixel a frame, for 16 frames;
 ; next step. (C2, E-0357; probed E-0384)
 RunScriptSubStep_HopObject5::
@@ -1979,6 +2085,8 @@ RunScriptSubStep_HopObject5::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F RunScriptSubStep_FollowersSpread", ROMX
 
 ; Walking step 1: the first follower walks left, the second up every other frame, and the third
 ; right until 32 pixels past the player; then they face down, right and left, field command $0B
@@ -2031,6 +2139,8 @@ RunScriptSubStep_FollowersSpread::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunScriptSubStep_FollowersCatchUp", ROMX
+
 ; Walking step 0: holds the player (bit 2) and lets the followers catch up
 ; (UpdateFollowersOnStep_Bank5F) for 60 frames; next step. (C2, E-0357; probed E-0384)
 RunScriptSubStep_FollowersCatchUp::
@@ -2049,6 +2159,8 @@ RunScriptSubStep_FollowersCatchUp::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene", ROMX
 
 ; Runs one frame of the boss-win scene, by wScriptSubStep (18 entries): load the sprites and pick
 ; the messages by story progress (0), wait for the first message (1), flash the screen (2), heal the
@@ -2087,6 +2199,8 @@ BossWinScene_End::
     inc [hl]
     ret
 
+SECTION "Bank 5F StartChoiceMessageByTextYesNoResult", ROMX
+
 ; When wTextYesNoResult is 0 (the first choice) it advances wScriptSubStep and starts message column
 ; 6 of StartMessageFromTable; otherwise it steps wScriptSubStep back and starts column 7. Columns
 ; 5-7 of StartMessageFromTable_Data are all $0000, so both start the message word $0000. Nothing in
@@ -2111,6 +2225,8 @@ StartChoiceMessageByTextYesNoResult::
     call StartMessageFromTable
     ret
 
+SECTION "Bank 5F StartMessage5AndAdvanceScriptSubStep", ROMX
+
 ; Starts message column 5 of StartMessageFromTable (the word $0000 in every row of
 ; StartMessageFromTable_Data) and advances wScriptSubStep. Nothing in src/ calls or lists this
 ; routine, so it looks like unused code. (C2, E-0384)
@@ -2121,6 +2237,8 @@ StartMessage5AndAdvanceScriptSubStep::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_HopAndTurn", ROMX
 
 ; Boss-win scene, step 15: sound $65 at the start, then sprite 0 hops and turns for 32 frames; at
 ; the end sound $72, loads sprite $49 into the tiles at $8500, starts message 4 and gives back the
@@ -2187,6 +2305,8 @@ BossWinScene_HopAndTurn::
     inc [hl]
     ret
 
+SECTION "Bank 5F BossWinScene_WaitMessageAgain", ROMX
+
 ; Boss-win scene, step 14: waits for the message; next step. (C1, E-0357)
 BossWinScene_WaitMessageAgain::
     xor a
@@ -2197,6 +2317,8 @@ BossWinScene_WaitMessageAgain::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_HopUnderFloater", ROMX
 
 ; Boss-win scene, step 13: sprite 0 hops by the table for 32 frames under the floating sprite; then
 ; message 3; next step. (C1, E-0357)
@@ -2221,6 +2343,8 @@ BossWinScene_HopUnderFloater::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_FlickerObject5", ROMX
 
 ; Boss-win scene, step 12: object 5 flickers, faster and faster (wScriptParam1 / 16 added each
 ; frame), until the speed reaches 48; then it is hidden at Y $30; next step. (C1, E-0357)
@@ -2271,6 +2395,8 @@ BossWinScene_FlickerObject5::
     inc [hl]
     ret
 
+SECTION "Bank 5F BossWinScene_SinkObject5", ROMX
+
 ; Boss-win scene, step 11: object 5 hops by the table, sinking a pixel every other frame, for 32
 ; frames; next step. (C1, E-0357)
 BossWinScene_SinkObject5::
@@ -2303,6 +2429,8 @@ BossWinScene_SinkObject5::
     inc [hl]
     ret
 
+SECTION "Bank 5F BossWinScene_Shake", ROMX
+
 ; Boss-win scene, step 10: object 5 shakes at random (X $40 - 1 to + 1) for 180 frames; then sound
 ; $72 and the next step. (C2, E-0357; probed E-0384)
 BossWinScene_Shake::
@@ -2329,6 +2457,8 @@ BossWinScene_Shake::
     inc [hl]
     ret
 
+SECTION "Bank 5F BossWinScene_CheckDarck", ROMX
+
 ; Boss-win scene, step 9: waits for the message; once Darck has been defeated
 ; (EVENT_SCENE_DARCK_DEFEATED) skips to step 17, otherwise goes on. (C1, E-0357)
 BossWinScene_CheckDarck::
@@ -2345,6 +2475,8 @@ BossWinScene_CheckDarck::
     ld a, $11
     ld [wScriptSubStep], a
     ret
+
+SECTION "Bank 5F BossWinScene_HopObject5Left", ROMX
 
 ; Boss-win scene, step 8: object 5 hops along by the table (left and down a pixel a frame) for 16
 ; frames; then message 2; next step. (C1, E-0357)
@@ -2376,6 +2508,8 @@ BossWinScene_HopObject5Left::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_HopPlayer", ROMX
 
 ; Boss-win scene, step 7: sprite 0 hops by the table, moving left every other frame, for 32 frames;
 ; next step. (C1, E-0357)
@@ -2409,6 +2543,8 @@ BossWinScene_HopPlayer::
     inc [hl]
     ret
 
+SECTION "Bank 5F BossWinScene_LoadSprite2", ROMX
+
 ; Boss-win scene, step 6: waits for the message; loads sprite 2 into the tiles at $8500; next step.
 ; (C1, E-0357)
 BossWinScene_LoadSprite2::
@@ -2424,6 +2560,8 @@ BossWinScene_LoadSprite2::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_HopObject5", ROMX
 
 ; Boss-win scene, step 5: object 5 hops by the table, rising a pixel a frame, for 16 frames; then
 ; message 1; next step. (C2, E-0357; probed E-0384)
@@ -2450,6 +2588,8 @@ BossWinScene_HopObject5::
     inc [hl]
     ret
 
+SECTION "Bank 5F BossWinScene_ShowObject5", ROMX
+
 ; Boss-win scene, step 4: waits for the message; shows object 5 and treats the party as one monster
 ; (the count kept in wScriptTemp4); next step. (C1, E-0357)
 BossWinScene_ShowObject5::
@@ -2465,6 +2605,8 @@ BossWinScene_ShowObject5::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_HealParty", ROMX
 
 ; Boss-win scene, step 3: first frame fully heals the party; second puts fallen monsters behind the
 ; others (twice), reloads the name tiles, the player and follower sprites and the object palettes;
@@ -2494,6 +2636,8 @@ BossWinScene_HealParty::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_Flash", ROMX
 
 ; Boss-win scene, step 2: flashes the screen for 30 frames, swapping the palettes for their inverse
 ; every four frames; then message 0; next step. (C2, E-0357; probed E-0384)
@@ -2560,6 +2704,8 @@ BossWinScene_Flash::
     inc [hl]
     ret
 
+SECTION "Bank 5F BossWinScene_WaitMessage", ROMX
+
 ; Boss-win scene, step 1: the player faces left; waits for the message, saves the BG palettes (CGB),
 ; plays sound $7A; next step. (C1, E-0357)
 BossWinScene_WaitMessage::
@@ -2584,6 +2730,8 @@ BossWinScene_WaitMessage::
     ld hl, wScriptSubStep
     inc [hl]
     ret
+
+SECTION "Bank 5F BossWinScene_LoadSprites", ROMX
 
 ; Boss-win scene (shared by the rival, Mermaid Kingdom, Shield 2 and Darck scenes), step 0: loads
 ; the sprite tiles; chooses the message set and field command by story progress (before
@@ -2639,6 +2787,8 @@ BossWinScene_LoadSprites::
     inc [hl]
     ret
 
+SECTION "Bank 5F StartMessageFromTable", ROMX
+
 ; A = message column (0-7), wScriptMsgSelect = row (0-3): loads the word at
 ; StartMessageFromTable_Data + 16 x wScriptMsgSelect + 2 x A into wMessageIndex (low byte) and
 ; wMessageGroup (high byte) and sets wMessageState = 0, so RunMessageBox opens the box on its next
@@ -2677,6 +2827,8 @@ StartMessageFromTable::
     ld [wMessageState], a
     ret
 
+SECTION "Bank 5F StartMessageFromTable_Data", ROMX
+
 ; Four rows of eight message words (16 bytes per row), little-endian: the low byte goes to
 ; wMessageIndex and the high byte to wMessageGroup. The row is chosen by wScriptMsgSelect (0-3) and
 ; the column by register A (0-7) when StartMessageFromTable is called. Row 0 holds $0126-$012A, row
@@ -2706,6 +2858,8 @@ RunMessageBoxCarryWhenIdle_Bank5F::
 .return_carry:
     scf
     ret
+
+SECTION "Bank 5F ScriptStepObject", ROMX
 
 ; Script commands 02 and 03 (and, through ScriptCommand05_Run, 05) call this each frame.
 ; wScriptParam0: low nibble = object number (16-byte entries from wSpriteSlots), high nibble =
@@ -2806,6 +2960,8 @@ ScriptStepObject::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 5F ScriptWaitFrames", ROMX
+
 ; Script command 04: wScriptParam0/wScriptParam1 is a 16-bit counter that falls by one on each call.
 ; When it reaches zero it sets wScriptCommandType = 0 and wScriptStartRequest = $80 so the next
 ; script byte is fetched. A counter of N waits N calls, the zero call included; a low byte of 0 with
@@ -2833,6 +2989,8 @@ ScriptWaitFrames::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 5F ScriptCommand05_Run", ROMX
 
 ; Script command 05 (walk by holding a button). Each call first clears wJoypadHeld and
 ; wJoypadPressed, then returns while a field action is requested (wFieldActionRequest bit 7) or a
@@ -2891,6 +3049,8 @@ ScriptCommand05_Run::
     ld [wJoypadHeld], a
     ret
 
+SECTION "Bank 5F ScriptSetDirection", ROMX
+
 ; Script command 06. wScriptParam0 chooses what to change: 0 = hPlayerFacing, 1-3 = byte 0 (the
 ; direction) of the n-th 5-byte record at wFollowerRecords, and a value with bit 7 set = byte 7 of
 ; the 16-byte object entry numbered by the low bits (wSpriteSlots + 7 + 16 n). The byte stored there
@@ -2935,6 +3095,8 @@ ScriptSetDirection::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 5F ScriptSlideObjectY", ROMX
 
 ; Script command 0C. For 32 frames it adds the byte ScriptSlideObjectY_Data[wScriptParam0 / 2] to a
 ; Y coordinate chosen by wScriptParam1: 0 = hPlayerY, 1-3 = the Y of the n-th 5-byte follower record
@@ -2998,6 +3160,8 @@ ScriptSlideObjectY::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 5F ScriptSlideObjectY_Data", ROMX
 
 ; Sixteen signed bytes, one per two frames (index wScriptParam0 / 2): -2, -1, -1, 0, -1, 0, -1, 0,
 ; 0, 1, 0, 1, 0, 1, 1, 2, summing to zero (the same 16 bytes as AddStepDeltaToPointedByte_Data).
@@ -3119,6 +3283,8 @@ RunOneTimeTreasure_PrepareMessage::
     jr z, .loop
     jr .read_message_index
 
+SECTION "Bank 5F RunOneTimeTreasure_OpenWindow", ROMX
+
 ; Treasure, step 1: unless wScriptParam1 bit 7, freezes the player and objects, clears the window
 ; tiles, plays sound $69 and opens the text window (at the top when the player is low); next step.
 ; (C1, E-0357)
@@ -3152,6 +3318,8 @@ RunOneTimeTreasure_OpenWindow::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunOneTimeTreasure_ShowMessage", ROMX
+
 ; Treasure, step 2: once the window has opened, shows message wScriptParam0; next step. (C1, E-0357)
 RunOneTimeTreasure_ShowMessage::
     ld a, [wScriptParam1]
@@ -3169,6 +3337,8 @@ RunOneTimeTreasure_ShowMessage::
     ld hl, wScriptStep
     inc [hl]
     ret
+
+SECTION "Bank 5F RunOneTimeTreasure_CloseWindow", ROMX
 
 ; Treasure, step 3: waits for the text; unless wScriptParam1 bit 6, plays sound $69 and starts
 ; closing the window; next step. (C2, E-0357; probed E-0384)
@@ -3198,6 +3368,8 @@ RunOneTimeTreasure_CloseWindow::
     inc [hl]
     ret
 
+SECTION "Bank 5F RunOneTimeTreasure_RedrawChest", ROMX
+
 ; Treasure, step 4: once the window has closed, redraws the map (the opened chest's flag tiles),
 ; unfreezes the player and objects, and ends the script. (C1, E-0357)
 RunOneTimeTreasure_RedrawChest::
@@ -3214,6 +3386,8 @@ RunOneTimeTreasure_RedrawChest::
     ld a, $00
     ld [wModeState], a
     ret
+
+SECTION "Bank 5F ScriptCommand0E_Run", ROMX
 
 ; Script command 0E, a scripted encounter. On its first call (wScriptStep = 0) it copies
 ; wScriptParam0 to hTemp0, far-calls StartScriptedEncounterTemp0 and advances wScriptStep. On the
@@ -3298,6 +3472,8 @@ ScriptCommand0E_Run_HideSprites::
     xor a
     ld [wSpriteSlotCount], a
     ret
+
+SECTION "Bank 5F ScriptCommand0E_Run_DoNothing", ROMX
 
 ; After command 0E's scripted encounter: nothing more for every wScriptParam0 except $1E (entries
 ; 0-29 and 31-50 of the table); a bare ret. (C2, E-0371; probed E-0384)

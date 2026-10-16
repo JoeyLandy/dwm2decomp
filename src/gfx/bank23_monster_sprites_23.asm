@@ -1,7 +1,7 @@
 ; ROM bank $23: compressed monster sprites
 ; The annotated listing of this bank is build/listing/bank23.asm.
 
-SECTION "Bank 23", ROMX[$4000], BANK[$23]
+SECTION "Bank 23", ROMX
     db $23
 
 ; compressed sprite graphics of monster id $109 (BoneSlave) (MonsterSpriteTable; the debug viewer

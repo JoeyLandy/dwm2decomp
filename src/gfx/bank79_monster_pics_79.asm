@@ -1,7 +1,7 @@
 ; ROM bank $79: compressed monster pictures
 ; The annotated listing of this bank is build/listing/bank79.asm.
 
-SECTION "Bank 79", ROMX[$4000], BANK[$79]
+SECTION "Bank 79", ROMX
     db $79
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $103 (Reaper) (MonsterPictureTable /

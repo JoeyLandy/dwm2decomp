@@ -1,7 +1,7 @@
 ; ROM bank $3B: battle helpers; meta-sprites
 ; The annotated listing of this bank is build/listing/bank3b.asm.
 
-SECTION "Bank 3B", ROMX[$4000], BANK[$3B]
+SECTION "Bank 3B", ROMX
     db $3b
 
 ; C = battle slot: returns in wBattleStatResultLo and wBattleStatResultHi the base HP word of the
@@ -53,6 +53,8 @@ GetBaseHP::
     ld [wBattleStatResultHi], a
     ret
 
+SECTION "Bank 3B GetBaseMP", ROMX
+
 ; C = battle slot: returns in wBattleStatResultLo and wBattleStatResultHi the base MP word of the
 ; slot. For slots 3 and 7 (low two bits 3) the monster id comes from wSpecialSlotMonsters (word 0
 ; for slot 3, word 1 for slot 7), LoadMonsterRecord loads its record and the word at
@@ -101,6 +103,8 @@ GetBaseMP::
     ld a, b
     ld [wBattleStatResultHi], a
     ret
+
+SECTION "Bank 3B GetBaseATK", ROMX
 
 ; C = battle slot: returns in wBattleStatResultLo and wBattleStatResultHi the base ATK word of the
 ; slot. For slots 3 and 7 (low two bits 3) the monster id comes from wSpecialSlotMonsters (word 0
@@ -151,6 +155,8 @@ GetBaseATK::
     ld [wBattleStatResultHi], a
     ret
 
+SECTION "Bank 3B GetBaseDEF", ROMX
+
 ; C = battle slot: returns in wBattleStatResultLo and wBattleStatResultHi the base DEF word of the
 ; slot. For slots 3 and 7 (low two bits 3) the monster id comes from wSpecialSlotMonsters (word 0
 ; for slot 3, word 1 for slot 7), LoadMonsterRecord loads its record and the word at
@@ -199,6 +205,8 @@ GetBaseDEF::
     ld a, b
     ld [wBattleStatResultHi], a
     ret
+
+SECTION "Bank 3B GetBaseAGL", ROMX
 
 ; C = battle slot: returns in wBattleStatResultLo and wBattleStatResultHi the base AGL word of the
 ; slot. For slots 3 and 7 (low two bits 3) the monster id comes from wSpecialSlotMonsters (word 0
@@ -249,6 +257,8 @@ GetBaseAGL::
     ld [wBattleStatResultHi], a
     ret
 
+SECTION "Bank 3B GetBaseINT", ROMX
+
 ; C = battle slot: returns in wBattleStatResultLo and wBattleStatResultHi the base INT word of the
 ; slot. For slots 3 and 7 (low two bits 3) the monster id comes from wSpecialSlotMonsters (word 0
 ; for slot 3, word 1 for slot 7), LoadMonsterRecord loads its record and the word at
@@ -298,6 +308,8 @@ GetBaseINT::
     ld [wBattleStatResultHi], a
     ret
 
+SECTION "Bank 3B GetSlotLevel", ROMX
+
 ; C = battle slot: returns in wBattleStatResultLo (wBattleStatResultHi is not written) the level of
 ; the slot. For slots 3 and 7 it is byte wRecordBufferData + $7 (MonsterTable byte 9) of the monster
 ; record loaded for the wSpecialSlotMonsters entry; for every other slot it is the byte at
@@ -337,6 +349,8 @@ GetSlotLevel::
     ld a, c
     ld [wBattleStatResultLo], a
     ret
+
+SECTION "Bank 3B GetSlotPersonalityHi", ROMX
 
 ; C = battle slot: returns in wBattleStatResultLo (wBattleStatResultHi is not written) the first
 ; personality byte (the weight 9 axis of PersonalityIndexOfSlot_Bank3A) of the slot. For slots 3 and
@@ -379,6 +393,8 @@ GetSlotPersonalityHi::
     ld [wBattleStatResultLo], a
     ret
 
+SECTION "Bank 3B GetSlotPersonalityMid", ROMX
+
 ; C = battle slot: returns in wBattleStatResultLo (wBattleStatResultHi is not written) the third
 ; personality byte (the weight 3 axis) of the slot. For slots 3 and 7 it is byte wRecordBufferData +
 ; $16 (MonsterTable byte 24) of the monster record loaded for the wSpecialSlotMonsters entry; for
@@ -419,6 +435,8 @@ GetSlotPersonalityMid::
     ld a, c
     ld [wBattleStatResultLo], a
     ret
+
+SECTION "Bank 3B GetSlotPersonalityLo", ROMX
 
 ; C = battle slot: returns in wBattleStatResultLo (wBattleStatResultHi is not written) the second
 ; personality byte (the weight 1 axis) of the slot. For slots 3 and 7 it is byte wRecordBufferData +
@@ -461,6 +479,8 @@ GetSlotPersonalityLo::
     ld [wBattleStatResultLo], a
     ret
 
+SECTION "Bank 3B GetSlotTrait", ROMX
+
 ; C = battle slot: returns in wBattleStatResultLo (wBattleStatResultHi is not written) the AI trait
 ; byte of the slot. For slots 3 and 7 it is byte wRecordBufferData + $17 (MonsterTable byte 25) of
 ; the monster record loaded for the wSpecialSlotMonsters entry; for every other slot it is the byte
@@ -501,6 +521,8 @@ GetSlotTrait::
     ld [wBattleStatResultLo], a
     ret
 
+SECTION "Bank 3B GetSlotBodyFlags", ROMX
+
 ; C = battle slot: returns C, not memory: for slots 3 and 7 C = 0; otherwise the species word at
 ; BATTLER_SPECIES of the battler record goes to wSpeciesIdLo and wSpeciesIdHi, LoadSpeciesRecord
 ; runs and C = (SPECIES_UNTRIPPABLE byte with its nibbles swapped) | SPECIES_METAL byte, so bit 4 is
@@ -535,6 +557,8 @@ GetSlotBodyFlags::
 .return:
     ret
 
+SECTION "Bank 3B ReadBattleWordFromArray_Bank3B", ROMX
+
 ; HL = the word at HL + 2 * A (the value, not a pointer), A = its low byte; A is doubled in 8 bits
 ; first, so a slot number above $7F wraps. The same 10 bytes as ReadBattleWordFromArray. No call to
 ; this bank copy was found in src/. (C2, E-0384)
@@ -545,6 +569,8 @@ ReadBattleWordFromArray_Bank3B::
     deref_hl
     ret
 
+SECTION "Bank 3B LoadBCFromHL", ROMX
+
 ; C = [HL], B = [HL + 1]; HL ends on the high byte and A = the low byte. GetBaseHP, GetBaseMP,
 ; GetBaseATK, GetBaseDEF, GetBaseAGL and GetBaseINT use it to read the word of a battler record.
 ; (C2, E-0384)
@@ -554,6 +580,8 @@ LoadBCFromHL::
     ld b, [hl]
     ld c, a
     ret
+
+SECTION "Bank 3B RunBattleActions_UseItem", ROMX
 
 ; Battle fight step 3, sub-phase 8 (RunBattleActions_ItemStep far-calls it): a jumptable on
 ; wBattleResolveStep with 14 steps. 0 RunBattleActions_UseItem_PickTarget, 1
@@ -643,6 +671,8 @@ RunBattleActions_UseItem_PickTarget::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3B FirstPresentSlotFromC", ROMX
+
 ; C = first slot to test: tests slots C, C + 1 and C + 2 with CarryUnlessBattleSlotOutSlotEmpty and
 ; returns at the first one that is present, with carry clear and C = that slot. When none of the
 ; three is present it returns carry set with C = the start slot + 3 (B ends partly counted down).
@@ -662,12 +692,16 @@ FirstPresentSlotFromC::
     jr nz, .loop
     ret
 
+SECTION "Bank 3B RunBattleActions_UseItem_ShowItemText", ROMX
+
 ; Item use, step 1: shows the item's battle text (ShowActionBattleText). (C1, E-0357)
 RunBattleActions_UseItem_ShowItemText::
     ld hl, wBattleResolveStep
     inc [hl]
     farcall ShowActionBattleText
     ret
+
+SECTION "Bank 3B RunBattleActions_UseItem_ThrowMeat", ROMX
 
 ; Item use, step 2: a meat (ITEM_BEEFJERKY to ITEM_BADMEAT) thrown at the other side checks each
 ; present slot there: in battle kind 3 or with a foe of join class 7 text $7E, status 0 bit 6 text
@@ -771,6 +805,8 @@ RunBattleActions_UseItem_ThrowMeat::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3B CallWithBattleFoeCount", ROMX
+
 ; Sets hTemp0 = wBattleFoeCount and far-calls NameTargetsInTextBuf0, so wTextBuf0 gets the name of
 ; wBattleTarget when there is one foe and 'Monsters' when there are more.
 ; RunBattleActions_UseItem_ThrowMeat calls it before each of its five refusal texts so that <BUF0>
@@ -782,6 +818,8 @@ CallWithBattleFoeCount::
     ldh [hTemp0], a
     farcall NameTargetsInTextBuf0
     ret
+
+SECTION "Bank 3B RunBattleActions_UseItem_ShowHeroIsAHunk", ROMX
 
 ; Item use, step 3: when the target's status 5 has bit 6 or 7 set, shows text $66 and goes to the
 ; damage message (step $0A). (C1, E-0357)
@@ -799,6 +837,8 @@ RunBattleActions_UseItem_ShowHeroIsAHunk::
     call SetResolveStep0A
     ret
 
+SECTION "Bank 3B RunBattleActions_UseItem_RunEffect", ROMX
+
 ; Item use, step 4: runs the item's effect from the effect table (DispatchActionEffectTable_Bank3B).
 ; (C1, E-0357)
 RunBattleActions_UseItem_RunEffect::
@@ -806,6 +846,8 @@ RunBattleActions_UseItem_RunEffect::
     inc [hl]
     call DispatchActionEffectTable_Bank3B
     ret
+
+SECTION "Bank 3B RunBattleActions_UseItem_MarkUsed", ROMX
 
 ; Item use, step 5: with message flag bit 5, sets flag bit 4 when the amount is non-zero; when bit 4
 ; is set marks the item used and plays the effect, then moves the battle meter: items $01-$05 and
@@ -900,6 +942,8 @@ RunBattleActions_UseItem_MarkUsed::
     call AddHLToBattleMeterCappedAt1800
     ret
 
+SECTION "Bank 3B RunBattleActions_UseItem_ShowResultText", ROMX
+
 ; Item use, step 6 (and skips 7): shows the actor's message number when message flag bit 4 is set,
 ; otherwise the target's; without bit 4 goes to the damage message (step $0A). (C1, E-0357)
 RunBattleActions_UseItem_ShowResultText::
@@ -925,6 +969,8 @@ RunBattleActions_UseItem_ShowResultText::
     call SetResolveStep0AUnlessResolveMsgFlagsBit4
     ret
 
+SECTION "Bank 3B SetResolveStep0AUnlessResolveMsgFlagsBit4", ROMX
+
 ; Returns when wResolveMsgFlags bit 4 is set; otherwise sets wBattleResolveStep = $0A through
 ; SetResolveStep0A, which RunBattleActions_UseItem runs as RunBattleActions_UseItem_BeastTail.
 ; RunBattleActions_UseItem_ShowResultText ends with it, so an item whose result text has no actor
@@ -937,9 +983,13 @@ SetResolveStep0AUnlessResolveMsgFlagsBit4::
     call SetResolveStep0A
     ret
 
+SECTION "Bank 3B RunBattleActions_UseItem_DoNothing", ROMX
+
 ; Item use, step 7: nothing. (C2, E-0357; probed E-0384)
 RunBattleActions_UseItem_DoNothing::
     ret
+
+SECTION "Bank 3B RunBattleActions_UseItem_ApplyAmount", ROMX
 
 ; Item use, step 8 (and skips 9): by message argument bits 6-7: 0 nothing; $40 only marks the
 ; target's level-up gain bits 0-2; otherwise takes the amount from the target's HP, at 0 going back
@@ -1000,11 +1050,15 @@ RunBattleActions_UseItem_ApplyAmount::
 .return:
     ret
 
+SECTION "Bank 3B RunBattleActions_UseItem_DefeatTarget", ROMX
+
 ; Item use, step 9: far-calls UseItemDefeat_RunSteps, the defeat sub-steps picked by wBattleSubStep2
 ; (lower the target's mark and DefeatTarget, blank its picture, show the defeat text). (C1, E-0371)
 RunBattleActions_UseItem_DefeatTarget::
     farcall UseItemDefeat_RunSteps
     ret
+
+SECTION "Bank 3B RunBattleActions_UseItem_BeastTail", ROMX
 
 ; Item use, step 10: the BeastTail shows text $2B or $2A by the target's species flag for each
 ; target of the same species in turn (back to step 4); BadMeat on the far side, items aimed at the
@@ -1085,6 +1139,8 @@ RunBattleActions_UseItem_BeastTail::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3B RunOnceThenNext", ROMX
+
 ; Runs CountTargetSideSlots once (bit 7 of wMultiHitCount marks that it has run), then always
 ; NextPresentSlotAfterTarget. Returns A = wMultiHitCount & $7F (Z set when no slot is left) and C =
 ; the slot from NextPresentSlotAfterTarget. RunBattleActions_UseItem_BeastTail uses it to walk the
@@ -1108,6 +1164,8 @@ RunOnceThenNext::
     ld a, [wMultiHitCount]
     and $7f
     ret
+
+SECTION "Bank 3B CountTargetSideSlots", ROMX
 
 ; Counts into wMultiHitCount the target and every present slot on its side. (C2, E-0357; probed
 ; E-0384)
@@ -1138,6 +1196,8 @@ CountTargetSideSlots::
     or a
     jr nz, .loop
     ret
+
+SECTION "Bank 3B NextPresentSlotAfterTarget", ROMX
 
 ; C = the next present slot after wBattleTarget. It sets C = wBattleTarget + 1 and counts
 ; wMultiHitCount down by one; when the low 7 bits are then 0 it returns at once (Z set, C = target +
@@ -1175,6 +1235,8 @@ NextPresentSlotAfterTarget::
 .next:
     inc c
     jr .check_record_buffer_data
+
+SECTION "Bank 3B RunBattleActions_UseItem_ConsumeItem", ROMX
 
 ; Item use, step 11: once the item has been used (message argument bit 0 or the used mark), loads
 ; the item record for its bag place (row x 4 + column) and consumes it by its chance; when it is
@@ -1219,6 +1281,8 @@ RunBattleActions_UseItem_ConsumeItem::
     farcall ShowBattleText
     ret
 
+SECTION "Bank 3B RunBattleActions_UseItem_EndAction", ROMX
+
 ; Item use, step 12: ends the action (battle sub-phase 7, counters cleared). (C2, E-0357; probed
 ; E-0384)
 RunBattleActions_UseItem_EndAction::
@@ -1230,6 +1294,8 @@ RunBattleActions_UseItem_EndAction::
     ld [wBattleResolveStep], a
     ret
 
+SECTION "Bank 3B RunBattleActions_UseItem_ShowButNothingHappened", ROMX
+
 ; Item use, step 13: 'But nothing happened!' (text $CC), then step 12. (C1, E-0357)
 RunBattleActions_UseItem_ShowButNothingHappened::
     ld d, $cc ; battle text 'But nothing happened!'
@@ -1237,6 +1303,8 @@ RunBattleActions_UseItem_ShowButNothingHappened::
     ld a, $0c
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 3B SetResolveStep0A", ROMX
 
 ; Sets wBattleResolveStep = $0A, which RunBattleActions_UseItem runs as
 ; RunBattleActions_UseItem_BeastTail (the step that moves to the next target of an item aimed at a
@@ -1247,6 +1315,8 @@ SetResolveStep0A::
     ld a, $0a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 3B GroupTargetsBySpeciesToSpeciesGroups", ROMX
 
 ; Prepares RunBattleActions_UseItem_BeastTail: sets wSpeciesGroups to $FF $FF $FF, calls
 ; ListSideMonsterIdsToTemp0 and groups the foes of wBattleTarget (t, expected 4-6) by species word.
@@ -1448,6 +1518,8 @@ GroupTargetsBySpeciesToSpeciesGroups::
     ld [wMultiHitCount], a
     ret
 
+SECTION "Bank 3B RestoreTargetHPByActionAmount", ROMX
+
 ; Raises the HP of wBattleTarget by an amount chosen by wBattleActionId and leaves the amount
 ; actually added in the damage word (wBattleDamageLo and wBattleDamageHi). ITEM_WORLDDEW adds the
 ; max HP of the slot; ITEM_HERB and ITEM_SKY add a random 30-40; every other id adds a random 60-70
@@ -1515,6 +1587,8 @@ RestoreTargetHPByActionAmount::
     ld [hl], b
     ret
 
+SECTION "Bank 3B RestoreTargetMPIfLow_AddItemMP", ROMX
+
 ; The MP an item restores: the ElfWater ($05) the target's whole max MP, other items a random 20-30;
 ; added to the target's MP and capped at its max (the amount becomes what was added). (C2, E-0357;
 ; probed E-0384)
@@ -1566,6 +1640,8 @@ RestoreTargetMPIfLow_AddItemMP::
     ld [hl], b
     ret
 
+SECTION "Bank 3B SetDamageDEMinusBCPlusHL", ROMX
+
 ; Sets the damage word (wBattleDamageLo and wBattleDamageHi) to DE - (BC - HL), 16 bits with wrap.
 ; RestoreTargetHPByActionAmount and RestoreTargetMPIfLow_AddItemMP use it when HP or MP would pass
 ; its max: DE = the amount, BC = old value + amount, HL = the max, so the result is the part really
@@ -1585,6 +1661,8 @@ SetDamageDEMinusBCPlusHL::
     sbc b
     ld [wBattleDamageHi], a
     ret
+
+SECTION "Bank 3B SubtractMeatAmountFromTargetExtraStat", ROMX
 
 ; Subtracts the word MeatExtraStatAmounts[wBattleActionId - $19] (5, 10, 20, 100 and 5 for
 ; ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB, ITEM_SIRLOIN and ITEM_BADMEAT) from the wBattleExtraStat
@@ -1623,6 +1701,8 @@ SubtractMeatAmountFromTargetExtraStat::
     ld [hl], b
     ret
 
+SECTION "Bank 3B MeatExtraStatAmounts", ROMX
+
 ; Five words, one per item ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB, ITEM_SIRLOIN and ITEM_BADMEAT
 ; (index wBattleActionId - $19 while an item is used): 5, 10, 20, 100 and 5.
 ; SubtractMeatAmountFromTargetExtraStat subtracts the item's word from the target's wBattleExtraStat
@@ -1646,6 +1726,8 @@ AddActionAmountToBattleMeter::
     deref_hl
     call AddHLToBattleMeterCappedAt1800
     ret
+
+SECTION "Bank 3B AddActionAmountToBattleMeter_Data", ROMX
 
 ; Five little-endian words, indexed by wBattleActionId - $19 (the item ids ITEM_BEEFJERKY,
 ; ITEM_PORKCHOP, ITEM_RIB, ITEM_SIRLOIN and ITEM_BADMEAT): 10, 30, 100, 999 and 5.
@@ -1676,6 +1758,8 @@ AddHLToBattleMeterCappedAt1800::
     ld [wBattleMeter + $1], a
     ret
 
+SECTION "Bank 3B SubtractHLFromBattleMeterFloored", ROMX
+
 ; wBattleMeter -= HL, floored at 0 (a result with bit 7 of the high byte set becomes 0).
 ; RunBattleActions_UseItem_MarkUsed calls it. (C2, E-0384)
 ; wBattleMeter -= HL, floored at 0 (E-0124)
@@ -1702,6 +1786,8 @@ SubtractHLFromBattleMeterFloored::
     ld a, h
     ld [wBattleMeter + $1], a
     ret
+
+SECTION "Bank 3B RollTableDamageScaledByResistance", ROMX
 
 ; For the damage items ITEM_WIND, ITEM_BOLT, ITEM_SNOW and ITEM_FIRE ($24-$27, index wBattleActionId
 ; - $24): rolls the damage word in the range from RollTableDamageScaledByResistance_Data (8-24,
@@ -1812,6 +1898,8 @@ RollTableDamageScaledByResistance::
     ld [wBattleDamageHi], a
     ret
 
+SECTION "Bank 3B RollTableDamageScaledByResistance_Data", ROMX
+
 ; Four 4-byte entries, one per item id ITEM_WIND, ITEM_BOLT, ITEM_SNOW and ITEM_FIRE (index
 ; wBattleActionId - $24); each is two little-endian words, the low and high ends of a damage range:
 ; 8-24, 35-50, 120-140 and 180-200. RollTableDamageScaledByResistance passes them in HL and BC to
@@ -1831,6 +1919,8 @@ ItemEffect_SealSpells_RollStopSpell::
     call RollChanceByHLBits6And7_Bank3B
     ret
 
+SECTION "Bank 3B SetDamageRandomInRange", ROMX
+
 ; wBattleDamageLo and wBattleDamageHi = RandomInRange(HL, BC): a random value from HL to BC
 ; inclusive; when HL equals BC the value is HL and the random state is not advanced.
 ; RestoreTargetHPByActionAmount, RestoreTargetMPIfLow_AddItemMP and
@@ -1844,6 +1934,8 @@ SetDamageRandomInRange::
     ld [wBattleDamageHi], a
     ret
 
+SECTION "Bank 3B HLToBattleStatus8EntryOfBattleTarget_Bank3B", ROMX
+
 ; HL = wBattleStatus8 + 9 * wBattleTarget, the status byte 8 of the target slot; A is clobbered.
 ; Only ItemEffect_SealSpells_RollStopSpell calls it. The same 10 bytes appear in 2 banks. (C2,
 ; E-0384)
@@ -1856,6 +1948,8 @@ HLToBattleStatus8EntryOfBattleTarget_Bank3B::
     call AddAx9ToHL
     ret
 
+SECTION "Bank 3B TargetSlotResistancesByte0_Bank3B", ROMX
+
 ; A = byte 0 of the 7-byte wSlotResistances record of wBattleTarget (wSlotResistances + 7 *
 ; wBattleTarget); DE ends on that byte. RollTableDamageScaledByResistance reads the ITEM_FIRE level
 ; from it. (C2, E-0384)
@@ -1863,6 +1957,8 @@ HLToBattleStatus8EntryOfBattleTarget_Bank3B::
 TargetSlotResistancesByte0_Bank3B::
     ld de, wSlotResistances
     jr GetTargetResistanceByte_Bank3B
+
+SECTION "Bank 3B TargetSlotResistancesByte1_Bank3B", ROMX
 
 ; A = byte 1 of the 7-byte wSlotResistances record of wBattleTarget (wSlotResistances + 1 + 7 *
 ; wBattleTarget); DE ends on that byte. RollTableDamageScaledByResistance reads the ITEM_WIND,
@@ -1872,6 +1968,8 @@ TargetSlotResistancesByte1_Bank3B::
     ld de, wSlotResistances + $1
     jr GetTargetResistanceByte_Bank3B
 
+SECTION "Bank 3B TargetSlotResistances2Byte", ROMX
+
 ; A = byte 2 of the 7-byte wSlotResistances record of wBattleTarget (wSlotResistances + 2 + 7 *
 ; wBattleTarget); DE ends on that byte. ItemEffect_SealSpells_RollStopSpell reads the
 ; RESIST_STOPSPELL level from its bits 1-0. (C2, E-0384)
@@ -1880,6 +1978,8 @@ TargetSlotResistancesByte1_Bank3B::
 TargetSlotResistances2Byte::
     ld de, wSlotResistances + $2
     jr GetTargetResistanceByte_Bank3B
+
+SECTION "Bank 3B GetTargetSlotResistancesByte3_Bank3B", ROMX
 
 ; A = byte 3 of the target's 7-byte resistance record (GetTargetResistanceByte_Bank3B). (C2, E-0357;
 ; probed E-0384)
@@ -1905,6 +2005,8 @@ GetTargetResistanceByte_Bank3B::
     ld a, [de]
     ret
 
+SECTION "Bank 3B RollChanceByHLBits6And7_Bank3B", ROMX
+
 ; A = level 0-3, HL = a status byte: picks the chance table by the bits of [HL]. Bit 6 uses
 ; RollChanceForLevel100Down_Bank3B, else bit 7 uses RollChanceByLevel_100_100_75_0_Bank3B, else
 ; RollChanceForLevelA_Bank3B; carry set means success. ItemEffect_SealSpells_RollStopSpell calls it
@@ -1929,6 +2031,8 @@ RollChanceByHLBits6And7_Bank3B::
 
 .return:
     ret
+
+SECTION "Bank 3B RollChanceForLevelA_Bank3B", ROMX
 
 ; A = level 0-3: level 0 always succeeds (carry set), level 1 succeeds when the random byte is below
 ; $D8 (RollChance84Percent_Bank3B), level 2 when it is below $7F (RollChance50Percent_Bank3B) and
@@ -1956,6 +2060,8 @@ RollChanceForLevelA_Bank3B::
     ccf
     ret
 
+SECTION "Bank 3B RollChanceByLevel_100_100_75_0_Bank3B", ROMX
+
 ; A = level 0-3: levels 0 and 1 always succeed (carry set), level 2 succeeds when the random byte is
 ; below $BF (RollChance75Percent_Bank3B) and level 3 never (carry clear).
 ; RollChanceByHLBits6And7_Bank3B uses it when bit 7 is set and bit 6 clear. The bank $36 routine of
@@ -1976,6 +2082,8 @@ RollChanceByLevel_100_100_75_0_Bank3B::
     scf
     ccf
     ret
+
+SECTION "Bank 3B RollChanceForLevel100Down_Bank3B", ROMX
 
 ; A = level 0-3: success (carry) always for 0, about 75% for 1 (RollChance75Percent_Bank3B), about
 ; 40% for 2 (RollChance40Percent_Bank3B), never for 3; the same shape as
@@ -2003,12 +2111,16 @@ RollChanceForLevel100Down_Bank3B::
     ccf
     ret
 
+SECTION "Bank 3B RollChance84Percent_Bank3B", ROMX
+
 ; Carry when the random byte is below $D8 (216 in 256). (C2, E-0357; probed E-0384)
 RollChance84Percent_Bank3B::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $d8
     ret
+
+SECTION "Bank 3B RollChance75Percent_Bank3B", ROMX
 
 ; Carry when the random byte is below $BF (191 in 256). (C2, E-0357; probed E-0384)
 RollChance75Percent_Bank3B::
@@ -2017,6 +2129,8 @@ RollChance75Percent_Bank3B::
     cp $bf
     ret
 
+SECTION "Bank 3B RollChance50Percent_Bank3B", ROMX
+
 ; Carry when the random byte is below $7F (127 in 256). (C2, E-0357; probed E-0384)
 RollChance50Percent_Bank3B::
     call AdvanceRandom
@@ -2024,12 +2138,16 @@ RollChance50Percent_Bank3B::
     cp $7f
     ret
 
+SECTION "Bank 3B RollChance40Percent_Bank3B", ROMX
+
 ; Carry when the random byte is below $66 (102 in 256). (C2, E-0357; probed E-0384)
 RollChance40Percent_Bank3B::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $66
     ret
+
+SECTION "Bank 3B RollChance3FOf256", ROMX
 
 ; Advances the random state (AdvanceRandom), then carry set when wRandomLo is below $3F (63 in 256,
 ; about one time in four). No call to it was found in src/. (C2, E-0384)
@@ -2039,6 +2157,8 @@ RollChance3FOf256::
     ld a, [wRandomLo]
     cp $3f
     ret
+
+SECTION "Bank 3B DispatchActionEffectTable_Bank3B", ROMX
 
 ; Calls the effect routine for item id wBattleActionId from ActionIdEffectTable_3B (64 words for ids
 ; $00-$3F, no range check) with JumpToWordAtHL; the effect routine returns here and then to the
@@ -2055,6 +2175,8 @@ DispatchActionEffectTable_Bank3B::
     add hl, bc
     call JumpToWordAtHL
     ret
+
+SECTION "Bank 3B ActionIdEffectTable_3B", ROMX
 
 ; DispatchActionEffectTable_Bank3B jumps (JumpToWordAtHL) to the word at $4B11 + 2 *
 ; wBattleActionId; 64 words up to the first target at $4B91, a lone ret (E-0239, C1)
@@ -2131,6 +2253,8 @@ ActionIdEffectTable_3B::
 ActionIdEffectNone_3B::
     ret
 
+SECTION "Bank 3B RestoreTargetHPIfHurt", ROMX
+
 ; Entry of ActionIdEffectTable_3B for ids $01-$03 and $0B (ITEM_HERB, ITEM_LOVEWATER, ITEM_WORLDDEW,
 ; ITEM_SAGEROCK). When the HP of wBattleTarget differs from its max HP it runs
 ; RestoreTargetHPByActionAmount and stores resolve message $37 ('wound was healed!', actor side,
@@ -2159,6 +2283,8 @@ RestoreTargetHPIfHurt::
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
 
+SECTION "Bank 3B RestoreTargetMPIfLow", ROMX
+
 ; Entry of ActionIdEffectTable_3B for ids $04 and $05 (ITEM_POTION, ITEM_ELFWATER). When the MP of
 ; wBattleTarget differs from its max MP it runs RestoreTargetMPIfLow_AddItemMP and stores resolve
 ; message $C3 ('MP was restored!', actor side, flags $90, argument $40); at full MP it stores 'But
@@ -2186,6 +2312,8 @@ RestoreTargetMPIfLow::
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
 
+SECTION "Bank 3B CureTargetStatus0Bits01", ROMX
+
 ; Entry of ActionIdEffectTable_3B for id $06 (ITEM_ANTIDOTE). Clears status byte 0 bits 0-1
 ; (BSTAT0_POISONED, BSTAT0_BADLY_POISONED) of wBattleTarget when either is set and stores resolve
 ; message $4E ('cured of poison.', flags $90, argument $40, damage cleared); otherwise 'But nothing
@@ -2205,6 +2333,8 @@ CureTargetStatus0Bits01::
 
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
+
+SECTION "Bank 3B CureTargetStatus0Bit6", ROMX
 
 ; Entry of ActionIdEffectTable_3B for id $07 (ITEM_MOONHERB). Clears status byte 0 bit 6
 ; (BSTAT0_PARALYZED) of wBattleTarget when set, sets wSlotMarks[target] = 3 and stores resolve
@@ -2230,6 +2360,8 @@ CureTargetStatus0Bit6::
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
 
+SECTION "Bank 3B CureTargetStatus0Bit5", ROMX
+
 ; Entry of ActionIdEffectTable_3B for id $08 (ITEM_LAUREL). Clears status byte 0 bit 5
 ; (BSTAT0_CURSED) of wBattleTarget when set and stores resolve message $51 ('uncursed!', flags $90,
 ; argument $40, damage cleared); otherwise 'But nothing happened!'. Unlike the other cures it leaves
@@ -2249,6 +2381,8 @@ CureTargetStatus0Bit5::
 
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
+
+SECTION "Bank 3B CureTargetStatus0Bits237", ROMX
 
 ; Entry of ActionIdEffectTable_3B for id $09 (ITEM_AWAKESAND). Clears status byte 0 bits 2, 3 and 7
 ; (the sleep counter and BSTAT0_ASLEEP) of wBattleTarget when any is set ($8C), sets
@@ -2274,6 +2408,8 @@ CureTargetStatus0Bits237::
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
 
+SECTION "Bank 3B CureTargetStatus0Bit4", ROMX
+
 ; Entry of ActionIdEffectTable_3B for id $0A (ITEM_SKYBELL). Clears status byte 0 bit 4
 ; (BSTAT0_CONFUSED) of wBattleTarget when set, sets wSlotMarks[target] = 3 and stores resolve
 ; message $83 ('snapped out of confusion!', flags $90, argument $40, damage cleared); otherwise 'But
@@ -2298,6 +2434,8 @@ CureTargetStatus0Bit4::
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
 
+SECTION "Bank 3B ItemEffect_ReviveFallenTarget", ROMX
+
 ; Entry of ActionIdEffectTable_3B for id $0C (ITEM_WORLDLEAF), the one item that works on a fallen
 ; slot. CarryUnlessBattleSlotOutSlotEmpty on wBattleTarget: a present slot (carry clear) gets 'But
 ; nothing happened!' (StoreNothingHappenedMessage_Bank3B); an empty slot (carry and Z set) goes to
@@ -2319,12 +2457,16 @@ ItemEffect_ReviveFallenTarget::
 .to_item_effect_end_for_target:
     jp ItemEffect_EndForTarget
 
+SECTION "Bank 3B ItemEffect_None", ROMX
+
 ; A lone ret: the entry of ActionIdEffectTable_3B for the 36 ids with no battle effect here
 ; ($0D-$18, $20, $21, $28-$36 and $39-$3F). Nothing changes. (C2, E-0384)
 ; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239) (E-0344: the address in
 ; its name dropped or read as the label there; was ItemEffect_None)
 ItemEffect_None::
     ret
+
+SECTION "Bank 3B ItemEffect_Meat", ROMX
 
 ; Entry of ActionIdEffectTable_3B for ids $19-$1C (ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB,
 ; ITEM_SIRLOIN). A target that is not on the local side (TargetOnLocalSide_Bank3B carry clear) only
@@ -2403,6 +2545,8 @@ ItemEffect_Meat::
     farcall ShowBattleTextCategory0
     lb bc, $00, $00
     jp StoreMessageFlags_Bank3B
+
+SECTION "Bank 3B ItemEffect_BadMeat", ROMX
 
 ; Entry of ActionIdEffectTable_3B for id $1D (ITEM_BADMEAT). A local-side target meets the same
 ; refusals as ItemEffect_Meat and then SubtractMeatAmountFromTargetExtraStat; a target not on the
@@ -2524,6 +2668,8 @@ ItemEffect_BadMeat::
     lb bc, $00, $00
     jp StoreMessageFlags_Bank3B
 
+SECTION "Bank 3B SetBattleEndFlagAndMessage98", ROMX
+
 ; Entry of ActionIdEffectTable_3B for id $1E (ITEM_METEORB). Sets wBattleEndFlag = 1 and stores
 ; resolve message $98 ('A warm light shone from the Orb!', flags $90, argument 0) with the damage
 ; word cleared. A $C9 byte follows the code. (C2, E-0384)
@@ -2543,6 +2689,8 @@ SetBattleEndFlagAndMessage98::
 ; (E-0344: the address in its name dropped or read as the label there; was JumpToEffectFailurePath)
 JumpToEffectFailurePath::
     jp ItemEffect_EndForTarget
+
+SECTION "Bank 3B ItemEffect_SealSpells", ROMX
 
 ; Entry of ActionIdEffectTable_3B for id $22 (ITEM_MIST). When BSTAT1_SPELLS_SEALED is already set
 ; in wBattleStatus1 of wBattleTarget it ends through ItemEffect_EndForTarget. Otherwise
@@ -2573,6 +2721,8 @@ ItemEffect_SealSpells::
 .to_store_unaffected_message_bank3_b:
     jp StoreUnaffectedMessage_Bank3B
 
+SECTION "Bank 3B ItemEffect_DoubleAtk", ROMX
+
 ; Entry of ActionIdEffectTable_3B for id $23 (ITEM_FRIEND). Sets BSTAT1_ATK_DOUBLED in
 ; wBattleStatus1 of wBattleTarget and stores resolve message $43 ('ATK doubled!', flags $90,
 ; argument 0, damage cleared); when the bit is already set it ends through ItemEffect_EndForTarget.
@@ -2593,6 +2743,8 @@ ItemEffect_DoubleAtk::
 .to_item_effect_end_for_target:
     jp ItemEffect_EndForTarget
 
+SECTION "Bank 3B RollTableDamageWithMessage35", ROMX
+
 ; Entry of ActionIdEffectTable_3B for ids $24-$27 (ITEM_WIND, ITEM_BOLT, ITEM_SNOW, ITEM_FIRE).
 ; Rolls the damage with RollTableDamageScaledByResistance, then
 ; RollTableDamageWithMessage35_StoreMessage stores resolve message $35 ('took damage'), target
@@ -2603,6 +2755,8 @@ ItemEffect_DoubleAtk::
 RollTableDamageWithMessage35:: ; configured code entry (E-0236); C0
     call RollTableDamageScaledByResistance
     jp RollTableDamageWithMessage35_StoreMessage
+
+SECTION "Bank 3B ItemEffect_RaiseExtraStatAndRestoreHP", ROMX
 
 ; Entry of ActionIdEffectTable_3B for ids $37 and $38 (ITEM_HARMIRROR, ITEM_SKY). Adds 30 to the
 ; wBattleExtraStat word of wBattleTarget, capped at 999, then acts like RestoreTargetHPIfHurt: below
@@ -2652,6 +2806,8 @@ ItemEffect_RaiseExtraStatAndRestoreHP::
 .to_store_nothing_happened_message_bank3_b:
     jp StoreNothingHappenedMessage_Bank3B
 
+SECTION "Bank 3B RollTableDamageWithMessage35_StoreMessage", ROMX
+
 ; The resolve message of RollTableDamageWithMessage35: actor-side battle text $35 ('<BUF0> took
 ; <BUF1> damage!'), target-side $B5 ('But <BUF0> was unaffected!'), flags $A8, argument $80, stored
 ; by StoreResolveMessage_Bank3B. (C2, E-0371; probed E-0384)
@@ -2659,6 +2815,8 @@ RollTableDamageWithMessage35_StoreMessage::
     lb hl, $b5, $35
     lb bc, $80, $a8
     jr StoreResolveMessage_Bank3B
+
+SECTION "Bank 3B UnreferencedStoreResolveMessage35_TargetD0", ROMX
 
 ; Sets H = $D0, L = $35, B = $88, C = $A8 and falls into StoreResolveMessage_Bank3B, so
 ; wResolveMsgActor = $35, wResolveMsgTarget = $D0, wResolveMsgFlags = $A8 and wResolveMsgArg = $88.
@@ -2680,6 +2838,8 @@ StoreResolveMessage_Bank3B::
     ld a, b
     ld [wResolveMsgArg], a
     ret
+
+SECTION "Bank 3B ClearDamageAndStoreResolveMsgFlags_Bank3B", ROMX
 
 ; Clears the damage word (wBattleDamageLo and wBattleDamageHi), then falls into
 ; StoreActorMessage_Bank3B: wResolveMsgActor = L, wResolveMsgFlags = C, wResolveMsgArg = B
@@ -2703,6 +2863,8 @@ StoreActorMessage_Bank3B::
     ld [wResolveMsgArg], a
     ret
 
+SECTION "Bank 3B StoreNothingHappenedMessage_Bank3B", ROMX
+
 ; The no-effect message: target-side battle text $CC ('But nothing happened!'), flags $80, argument
 ; 0, stored by StoreTargetMessage_Bank3B; the failure path of nine bank-$3B effect routines such as
 ; RestoreTargetHPIfHurt and RestoreTargetMPIfLow. (C2, E-0371; probed E-0384)
@@ -2711,6 +2873,8 @@ StoreNothingHappenedMessage_Bank3B::
     lb bc, $00, $80
     jr StoreTargetMessage_Bank3B
 
+SECTION "Bank 3B StoreUnaffectedMessage_Bank3B", ROMX
+
 ; Target-side battle text $B5 ('But <BUF0> was unaffected!'), flags $80, argument 0, stored by
 ; StoreTargetMessage_Bank3B; ItemEffect_SealSpells takes it when its roll fails. (C2, E-0371; probed
 ; E-0384)
@@ -2718,6 +2882,8 @@ StoreUnaffectedMessage_Bank3B::
     ld h, $b5
     lb bc, $00, $80
     jr StoreTargetMessage_Bank3B
+
+SECTION "Bank 3B SetResolveMsgTargetB5AndResolveMsgFlagsTo0180", ROMX
 
 ; Sets H = $B5, B = $01, C = $80 and falls into StoreTargetMessage_Bank3B: wResolveMsgTarget = $B5
 ; ('But ... was unaffected!'), wResolveMsgFlags = $80 and wResolveMsgArg = $01. ItemEffect_BadMeat
@@ -2742,6 +2908,8 @@ StoreMessageFlags_Bank3B::
     ld [wResolveMsgArg], a
     ret
 
+SECTION "Bank 3B ClearDamageAndReadTargetStatus0", ROMX
+
 ; Clears the damage word (wBattleDamageLo and wBattleDamageHi), then returns A = status byte 0 of
 ; wBattleTarget (wBattleStatus + 9 * target) with HL pointing at it. CureTargetStatus0Bits01,
 ; CureTargetStatus0Bit6, CureTargetStatus0Bit5, CureTargetStatus0Bits237 and CureTargetStatus0Bit4
@@ -2757,6 +2925,8 @@ ClearDamageAndReadTargetStatus0::
     call AddAx9ToHL
     ld a, [hl]
     ret
+
+SECTION "Bank 3B ItemEffect_EndForTarget", ROMX
 
 ; The failure path of the bank-$3B item effects (entries of ActionIdEffectTable_3B, run from
 ; RunBattleActions_UseItem_RunEffect): ItemEffect_ReviveFallenTarget, JumpToEffectFailurePath,
@@ -2779,6 +2949,8 @@ GetBattleMaxHP_Bank3B::
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_Bank3B
 
+SECTION "Bank 3B GetBattleMaxMP_Bank3B", ROMX
+
 ; A = battle slot: HL = the wBattleMaxMP word of that slot, A = its low byte (a jump to
 ; GetBattleStatWord_Bank3B with HL = wBattleMaxMP). RestoreTargetMPIfLow_AddItemMP calls it. Bank
 ; $3B copy of the helper. (C2, E-0384)
@@ -2787,10 +2959,14 @@ GetBattleMaxMP_Bank3B::
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_Bank3B
 
+SECTION "Bank 3B GetBattleHP_Bank3B", ROMX
+
 ; HL = wBattleHP, then the slot's word (GetBattleStatWord_Bank3B). (C2, E-0357; probed E-0384)
 GetBattleHP_Bank3B::
     ld hl, wBattleHP
     jr GetBattleStatWord_Bank3B
+
+SECTION "Bank 3B GetBattleMP_Bank3B", ROMX
 
 ; HL = wBattleMP, then the slot's word (GetBattleStatWord_Bank3B). (C2, E-0357; probed E-0384)
 GetBattleMP_Bank3B::
@@ -2805,6 +2981,8 @@ GetBattleStatWord_Bank3B::
     deref_hl
     ret
 
+SECTION "Bank 3B AddDoubleAToHL_Bank3B", ROMX
+
 ; HL += 2 * A, with A doubled in 8 bits first (so a slot number above $7F wraps); A is clobbered. It
 ; points HL at the word of slot A in a word array such as wBattleHP; the HP, MP and extra-stat
 ; routines of this bank call it. The same 7 bytes appear in 12 banks. (C2, E-0384)
@@ -2814,6 +2992,8 @@ AddDoubleAToHL_Bank3B::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank 3B ActorOnLocalSide_Bank3B", ROMX
 
 ; Carry set when wBattleActor is a slot 0-3; when wLinkMode is 1 and wLinkRole bit 1 is set the test
 ; is reversed (carry set for slots 4-7). Which side is local is inferred from that reversal, not
@@ -2839,6 +3019,8 @@ ActorOnLocalSide_Bank3B::
     cp $04
     ret
 
+SECTION "Bank 3B TargetOnLocalSide_Bank3B", ROMX
+
 ; Carry set when wBattleTarget is a slot 0-3; when wLinkMode is 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set for slots 4-7). Which side is local is inferred from that reversal,
 ; not checked. A = wBattleTarget on return. RunBattleActions_UseItem_ThrowMeat and the two meat
@@ -2863,6 +3045,8 @@ TargetOnLocalSide_Bank3B::
     cp $04
     ret
 
+SECTION "Bank 3B ClearBattleStatusBitsWithMaskD_Bank3B", ROMX
+
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank3B_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0384)
 ClearBattleStatusBitsWithMaskD_Bank3B::
@@ -2877,6 +3061,8 @@ ClearBattleStatusBitsWithMaskD_Bank3B::
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 3B ClearBattleStatusBitsWithMaskD_Bank3B_Data", ROMX
 
 ; Seven AND masks for status byte 0 of a battle slot, selected by register D (0-6):
 ; ClearBattleStatusBitsWithMaskD_Bank3B ANDs the byte of slot E with entry D. $DF clears
@@ -2899,6 +3085,8 @@ SetBit0OfLevelUpGainsIndexed_Bank3B::
     pop hl
     ret
 
+SECTION "Bank 3B SetBit1OfLevelUpGainsIndexed_Bank3B", ROMX
+
 ; Sets bit 1 of the byte at wLevelUpGains + A (A = slot); HL is kept, A is clobbered.
 ; RunBattleActions_UseItem_ApplyAmount calls it. The same 13 bytes appear in 12 banks. (C2, E-0384)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
@@ -2910,6 +3098,8 @@ SetBit1OfLevelUpGainsIndexed_Bank3B::
     set 1, [hl]
     pop hl
     ret
+
+SECTION "Bank 3B SetBit2OfLevelUpGainsIndexed_Bank3B", ROMX
 
 ; Sets bit 2 of the byte at wLevelUpGains + A (A = slot); HL is kept, A is clobbered.
 ; RunBattleActions_UseItem_ApplyAmount and ItemEffect_BadMeat call it. The same 13 bytes appear in
@@ -2923,6 +3113,8 @@ SetBit2OfLevelUpGainsIndexed_Bank3B::
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank 3B PersonalityIndexOfSlot_Bank3B", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
 ; g(wSlotPersonalityLo[A]), where g(v) is 0 for v >= $C0, 1 for v >= $40 and 2 below that; HL and BC
@@ -2988,6 +3180,8 @@ PersonalityIndexOfSlot_Bank3B::
     pop hl
     ret
 
+SECTION "Bank 3B CheckSlotStatusBlockWide_Bank3B", ROMX
+
 ; A = battle slot: carry set when the slot cannot act: CheckSlotStatusBlock sets carry (slot out, or
 ; a blocking status), or status byte 3 has bit 6 or 7 set ($C0), or status byte 4 has bit 2 or 3 set
 ; ($0C); otherwise carry clear. A, BC and HL are kept. No call to this bank copy was found in src/;
@@ -3021,6 +3215,8 @@ CheckSlotStatusBlockWide_Bank3B::
     pop hl
     ret
 
+SECTION "Bank 3B SlotHasStatus3Or4Bits_Bank3B", ROMX
+
 ; A = battle slot: A = status byte 3 of the slot & $C0, or byte 4 & $0C when that is zero; Z set
 ; when both are clear; HL is kept. No call to this bank copy was found in src/; the same 17 bytes
 ; appear in 13 banks. (C2, E-0384)
@@ -3040,6 +3236,8 @@ SlotHasStatus3Or4Bits_Bank3B::
 .done:
     pop hl
     ret
+
+SECTION "Bank 3B DrawEffectSpriteAtEffectSpriteX_Bank3B", ROMX
 
 ; Draws the effect sprite from the meta-sprite sets of bank $3B: hSpriteOriginX = wEffectSpriteX
 ; (hSpriteOriginXHi 0), hSpriteOriginY = $68 (hSpriteOriginYHi 0), hSpriteSetIndex =
@@ -3068,6 +3266,8 @@ DrawEffectSpriteAtEffectSpriteX_Bank3B::
     ld de, MetaSprites3BTable
     call BuildOamFromSpriteTable_Bank3B
     ret
+
+SECTION "Bank 3B MetaSprites3BTable", ROMX
 
 ; the caller of BuildOamFromSpriteTable_Bank3B passes DE = $MetaSprites3BTable; the builder takes
 ; the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the
@@ -3200,6 +3400,8 @@ BuildOamFromSpriteTable_Bank3B::
 
 .return:
     ret
+
+SECTION "Bank 3B MetaSprites3BSet00", ROMX
 
 ; meta-sprite set 0 of MetaSprites3BTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame

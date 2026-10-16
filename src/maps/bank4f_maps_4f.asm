@@ -1,7 +1,7 @@
 ; ROM bank $4F: map screens, attributes and tilesets
 ; The annotated listing of this bank is build/listing/bank4f.asm.
 
-SECTION "Bank 4F", ROMX[$4000], BANK[$4F]
+SECTION "Bank 4F", ROMX
     db $4f
 
 ; compressed tileset of map $5A (the first map record using it)

@@ -1,7 +1,7 @@
 ; ROM bank $34: the monster table
 ; The annotated listing of this bank is build/listing/bank34.asm.
 
-SECTION "Bank 34", ROMX[$4000], BANK[$34]
+SECTION "Bank 34", ROMX
     db $34
 
 ; wMonsterId (16 bit, wMonsterId + 1 is the high byte) = monster id: copies its 26-byte MonsterTable
@@ -14,6 +14,8 @@ LoadMonsterRecord::
     ld de, wRecordBuffer
     call LoadMonsterRecordTo
     ret
+
+SECTION "Bank 34 CopyMonsterTableBytesFromMonsterTable", ROMX
 
 ; Copies part of a monster record: wMonsterId (16 bit) = monster id, C = first byte inside the
 ; 26-byte record, hTemp0 = number of bytes, DE = destination. Ids below $250 are read from
@@ -57,6 +59,8 @@ CopyMonsterTableBytesFromMonsterTable::
     call CopyBytesDEFromHL
     ret
 
+SECTION "Bank 34 LoadMonsterRecordTo", ROMX
+
 ; DE = destination: copies the 26-byte record of monster id wMonsterId (16 bit) from MonsterTable
 ; (record at $4075 + 26 * id, Multiply8By16 with A = $1A) to [DE], then falls into CopyBytesDEFromHL
 ; with B = $1A. Ids from $250 on are handed to LoadMonsterRecordTo_HighIds in bank $A2 (record at
@@ -99,6 +103,8 @@ CopyBytesDEFromHL::
     dec b
     jr nz, CopyBytesDEFromHL
     ret
+
+SECTION "Bank 34 MonsterTable", ROMX
 
 ; LoadMonsterRecord copies a 26-byte record from here by 16-bit id (wMonsterId/wMonsterId + $1); ids
 ; at or above $250 use bank $A2 instead, so this table has 592 records; record 1 holds 25, 0, 10, 7,

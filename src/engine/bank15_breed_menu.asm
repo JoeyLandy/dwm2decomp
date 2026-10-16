@@ -1,7 +1,7 @@
 ; ROM bank $15: the breeding menu
 ; The annotated listing of this bank is build/listing/bank15.asm.
 
-SECTION "Bank 15", ROMX[$4000], BANK[$15]
+SECTION "Bank 15", ROMX
     db $15
 
 ; Script command EE (ScriptCommandEE), and called by other menus as they close: by wScreenList runs
@@ -44,6 +44,8 @@ CloseBreedMenu_RestoreScreen::
     ld [wScreenList], a
     ret
 
+SECTION "Bank 15 CloseBreedMenu_RestoreGlyphs", ROMX
+
 ; Closing the breeding menu, step 1: copies the field glyph tiles back, clears the menu state and
 ; puts the text window back in place. (C1, E-0357)
 CloseBreedMenu_RestoreGlyphs::
@@ -73,6 +75,8 @@ CloseBreedMenu_RestoreGlyphs::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 CloseBreedMenu_BlankNameTiles", ROMX
+
 ; Closing the breeding menu, step 2: blanks the name tiles and reloads three frame tiles. (C1,
 ; E-0357)
 CloseBreedMenu_BlankNameTiles::
@@ -98,6 +102,8 @@ CloseBreedMenu_BlankNameTiles::
     inc a
     ld [wScreenList], a
     ret
+
+SECTION "Bank 15 CloseBreedMenu_RedrawNamesAndFinish", ROMX
 
 ; Closing the breeding menu, step 3: redraws the record list name tiles and the party's tiles,
 ; clears message mode and the $6F bytes of menu state, refills wTextBuf0 with the player's name and
@@ -142,6 +148,8 @@ CloseBreedMenu_RedrawNamesAndFinish::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu", ROMX
 
 ; Script command ED (ScriptCommandED), breeding; other menus (NpcBreedMenu, EggServiceMenu, the link
 ; sessions) call it for its shared steps. Runs the state wScreenState: 0 _Init, 1 _Setup, 2
@@ -218,6 +226,8 @@ BreedMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_Setup", ROMX
+
 ; BreedMenu state 1, by wScreenStep: 0 DrawPairAndStep_2 (glyph tiles), 1 DrawGoldBoxAndStep_Bank15
 ; (the gold box), 2 BreedMenu_Setup_DrawOptionBox (the option box and screen, then state 2).
 ; BreedMenu_RestoreScreen_Finish also returns here. (C1, E-0377)
@@ -244,6 +254,8 @@ DrawPairAndStep_2::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 DrawGoldBoxAndStep_Bank15", ROMX
 
 ; Copies the 8 x 3 gold box DrawGoldBoxAndStep_Bank15_TileRect to wWindowTileBuffer + $70, converts
 ; the gold (wGoldLo-wGoldHi through wDigits, Number24ToPackedBCD, UnpackBCDToDigitsArg1) and writes
@@ -286,6 +298,8 @@ DrawGoldBoxAndStep_Bank15::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_Setup_DrawOptionBox", ROMX
+
 ; Breeding set-up, step 2: draws the option box and the screen, then goes to the options (next
 ; state). (C1, E-0357)
 BreedMenu_Setup_DrawOptionBox::
@@ -304,11 +318,15 @@ BreedMenu_Setup_DrawOptionBox::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 15 BreedMenu_OptionCursor", ROMX
+
 ; Breeding menu, state 2: the three-option cursor (Breed / Hatch / Exit,
 ; HandleThreeOptionMenuInput_15). (C1, E-0357)
 BreedMenu_OptionCursor::
     call HandleThreeOptionMenuInput_15
     ret
+
+SECTION "Bank 15 BreedMenu_DoOption", ROMX
 
 ; Breeding menu, state 3: acts on the option in wGridCursorX. Option 0 only adds 1 to wScreenState
 ; (no egg list, no script). Any other option lists the eggs (ListRecordsInUseEggs): with
@@ -354,6 +372,8 @@ BreedMenu_DoOption::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents", ROMX
 
 ; BreedMenu state 4, by wScreenStep (66 steps): the breeding of two farm monsters. Steps 0-8 list
 ; the monsters and take the base, 17 checks it, 21-30 list and take the mate, 28 computes the child
@@ -463,6 +483,8 @@ BreedMenu_ChooseParents_Init::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_Init_TileRect", ROMX
+
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
@@ -490,6 +512,8 @@ BreedMenu_ChooseParents_ClearList::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ListMonsters", ROMX
 
 ; Choosing parents, step 2: lists the farm monsters that are not eggs, then the page cursor (below).
 ; (C1, E-0357)
@@ -526,6 +550,8 @@ BreedMenu_ChooseParents_UpdateListPages::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawNames", ROMX
+
 ; Choosing parents, step 3: draws the page's names and marks the party members. (C1, E-0357)
 BreedMenu_ChooseParents_DrawNames::
     farcall DrawRecordListPageNames
@@ -533,6 +559,8 @@ BreedMenu_ChooseParents_DrawNames::
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawFamilySexLevel", ROMX
 
 ; Choosing parents, step 4: for the record under the cursor draws its family icon, its sex mark and
 ; level (DrawRecordField0EMarkAndField56Digits). (C1, E-0357)
@@ -561,6 +589,8 @@ BreedMenu_ChooseParents_DrawFamilySexLevel::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_BlankNameTiles", ROMX
+
 ; Choosing parents, step 5: blanks the name and number tiles and puts the text window back in place.
 ; (C1, E-0357)
 BreedMenu_ChooseParents_BlankNameTiles::
@@ -582,6 +612,8 @@ BreedMenu_ChooseParents_BlankNameTiles::
     inc [hl]
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawNameAndSpecies", ROMX
+
 ; Choosing parents, step 6: draws the name and species name of the record under the cursor. (C1,
 ; E-0357)
 BreedMenu_ChooseParents_DrawNameAndSpecies::
@@ -599,6 +631,8 @@ BreedMenu_ChooseParents_DrawNameAndSpecies::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 DrawScreenBufferAtScrollAndIncScreenStep", ROMX
+
 ; Draws the 20 x 13 rectangle of the screen buffer at offset $1CC to the BG map at the scroll origin
 ; (DrawScreenBufferRect_Bank15, the lower part of the view with the window boxes), then adds 1 to
 ; wScreenStep. Step 29 of BreedMenu_ChooseParents. (C1, E-0377)
@@ -614,6 +648,8 @@ DrawScreenBufferAtScrollAndIncScreenStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_ShowCursorMark", ROMX
+
 ; Choosing parents, step 7: shows the cursor mark, redraws the screen and clears the mark. (C1,
 ; E-0357)
 BreedMenu_ChooseParents_ShowCursorMark::
@@ -627,6 +663,8 @@ BreedMenu_ChooseParents_ShowCursorMark::
     ld hl, BreedMenu_ChooseParents_ShowCursorMark_Data
     call StoreBAtWordTableEntry_Bank15
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ListCursor", ROMX
 
 ; Choosing parents, step 8: the paged list cursor: a page change redraws the list (back 7 steps), a
 ; move redraws the record (back 4), B goes on one step, A marks the entry and goes on four with the
@@ -692,6 +730,8 @@ BreedMenu_ChooseParents_ListCursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawOptionBox", ROMX
+
 ; Choosing parents, step 9: saves two screen areas, draws the option box and redraws. (C1, E-0357)
 BreedMenu_ChooseParents_DrawOptionBox::
     ld c, $0b
@@ -723,6 +763,8 @@ BreedMenu_ChooseParents_DrawOptionBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_RedrawPairBox", ROMX
+
 ; Choosing parents, step 10: redraws the pair box and the option box with the option marked; answer
 ; 1. (C1, E-0357)
 BreedMenu_ChooseParents_RedrawPairBox::
@@ -747,6 +789,8 @@ BreedMenu_ChooseParents_RedrawPairBox::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawYesNoArea", ROMX
+
 ; Choosing parents, step 12: draws the yes/no area of the box and redraws. (C1, E-0357)
 BreedMenu_ChooseParents_DrawYesNoArea::
     ld de, BreedMenu_ChooseParents_DrawYesNoArea_TileRect
@@ -761,6 +805,8 @@ BreedMenu_ChooseParents_DrawYesNoArea::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_AskYesNo", ROMX
 
 ; Choosing parents, step 13: plays sound $6C, copies the box glyphs, draws the yes/no box and resets
 ; the answer and choice. (C1, E-0357)
@@ -786,6 +832,8 @@ BreedMenu_ChooseParents_AskYesNo::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawLowerBox", ROMX
+
 ; Choosing parents, step 15: draws the 12 x 5 lower box in the window buffer. (C2, E-0357; probed
 ; E-0377)
 BreedMenu_ChooseParents_DrawLowerBox::
@@ -797,6 +845,8 @@ BreedMenu_ChooseParents_DrawLowerBox::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_BlankCursors", ROMX
 
 ; Choosing parents, step 16: blanks the five cursor places, redraws and returns to the list cursor
 ; (step 8). (C1, E-0357)
@@ -815,6 +865,8 @@ BreedMenu_ChooseParents_BlankCursors::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_CheckBase", ROMX
 
 ; Choosing parents, step 17: checks the base chosen in list cell 5 (wListEntries + 5 *
 ; wListPageIndex + wListCursor). If every one of the wListCount listed records has the same bit 0 of
@@ -955,6 +1007,8 @@ BreedMenu_ChooseParents_CheckBase::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawBaseFrame", ROMX
+
 ; Choosing parents, step 18: draws the base's frame and the lower box, blanks the cursor places and
 ; redraws. (C1, E-0357)
 BreedMenu_ChooseParents_DrawBaseFrame::
@@ -982,10 +1036,14 @@ BreedMenu_ChooseParents_DrawBaseFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_CopyListGlyphs", ROMX
+
 ; Choosing parents, step 19: BreedMenu_CopyParentListGlyphs. (C1, E-0357)
 BreedMenu_ChooseParents_CopyListGlyphs::
     call BreedMenu_CopyParentListGlyphs
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ClearBoxes", ROMX
 
 ; Choosing parents, step 20: clears three tile rows and draws two empty boxes. (C1, E-0357)
 BreedMenu_ChooseParents_ClearBoxes::
@@ -1002,6 +1060,8 @@ BreedMenu_ChooseParents_ClearBoxes::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ClearMateList", ROMX
 
 ; Choosing parents, step 21: blanks three tile areas and draws the empty list box. (C1, E-0357)
 BreedMenu_ChooseParents_ClearMateList::
@@ -1023,12 +1083,16 @@ BreedMenu_ChooseParents_ClearMateList::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_ListPartners", ROMX
+
 ; Choosing parents, step 22: notes the base's sex, lists the monsters of the other sex
 ; (BreedMenu_ListMates) and clamps the page. (C1, E-0357)
 BreedMenu_ChooseParents_ListPartners::
     call LoadSelectedRecordSex
     call BreedMenu_ListMates
     jp BreedMenu_ChooseParents_UpdateListPages
+
+SECTION "Bank 15 DrawListEntriesCell5IconAndLevelAndStep", ROMX
 
 ; For the record in the list cell under the cursor (SetArg5ToListEntriesCell5, which leaves HL on
 ; that list entry): loads its family icon tile with wArg1 = $FF
@@ -1058,6 +1122,8 @@ DrawListEntriesCell5IconAndLevelAndStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_ClearTileAreas", ROMX
+
 ; Choosing parents, step 25: clears tile areas with FillTilesBxC through ClearThreeTileRows, which
 ; falls into ClearTileAreas2700_1750_17D0: 4 tiles at vTiles2 + $7C0, 3 at vTiles1 + $400, 2 at
 ; vTiles1 + $4A0, 9 at vTiles2 + $700, 3 at vTiles1 + $750 and 2 at vTiles1 + $7D0; then wScreenStep
@@ -1068,6 +1134,8 @@ BreedMenu_ChooseParents_ClearTileAreas::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 DrawListEntriesCell5RecordNamesAndStep", ROMX
 
 ; For the record in the list cell under the cursor (SetArg5ToListEntriesCell5, pointer in
 ; wArg5/wArg6): sets wArg1 = the record and far-calls DrawRecordNameAndSpeciesName to draw its name
@@ -1093,6 +1161,8 @@ DrawListEntriesCell5RecordNamesAndStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_KeepMate", ROMX
+
 ; Choosing parents, step 27: keeps the chosen mate and resets the name entry's state. (C2, E-0357;
 ; probed E-0384)
 BreedMenu_ChooseParents_KeepMate::
@@ -1104,6 +1174,8 @@ BreedMenu_ChooseParents_KeepMate::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ComputeChild", ROMX
 
 ; Choosing parents, step 28: computes the child (ComputeBreedingChild, kind 0) and draws its name:
 ; '?????????' with a blank icon for a species the library lists but has not yet seen (or no
@@ -1203,6 +1275,8 @@ BreedMenu_ChooseParents_ComputeChild::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_MateCursor", ROMX
+
 ; Choosing parents, step 30: the mate list's cursor: a page change goes back 9 steps, a move back 6,
 ; B on one, A marks the entry and goes on three. (C1, E-0357)
 BreedMenu_ChooseParents_MateCursor::
@@ -1266,6 +1340,8 @@ BreedMenu_ChooseParents_MateCursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawPairBox", ROMX
+
 ; Choosing parents, step 31: draws the pair box with both parents, the gold box and the lower box,
 ; redraws; answer 1. (C1, E-0357)
 BreedMenu_ChooseParents_DrawPairBox::
@@ -1313,6 +1389,8 @@ BreedMenu_ChooseParents_DrawPairBox::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawPairBox_TileRect", ROMX
+
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 1 x 2 tiles, one row per line
@@ -1350,6 +1428,8 @@ BreedMenu_ChooseParents_ReloadTiles::
     ld a, $01
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_RedrawPair", ROMX
 
 ; Choosing parents, step 36: redraws the yes/no area, the names, icons and levels of the pair, then
 ; goes to step $25 with the text window back in place. (C1, E-0357)
@@ -1393,6 +1473,8 @@ BreedMenu_ChooseParents_RedrawPair::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_BlankCursorsAgain", ROMX
+
 ; Choosing parents, step 37: blanks the cursor places, redraws and goes to step $1E. (C1, E-0357)
 BreedMenu_ChooseParents_BlankCursorsAgain::
     ld c, $05
@@ -1409,6 +1491,8 @@ BreedMenu_ChooseParents_BlankCursorsAgain::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_CheckMate", ROMX
 
 ; Choosing parents, step 38: checks the chosen mate: below level 10 answer 3 (step $24); a choice
 ; that would take every party monster answer 2 (step $24); otherwise answer 0 and on. (C2, E-0357;
@@ -1506,6 +1590,8 @@ BreedMenu_ChooseParents_CheckMate::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_CheckChildIsNew", ROMX
 
 ; Choosing parents, step 39: tests the species of wChildRecord (MON_SPECIES) in three bit fields:
 ; the list wMonsterLibraryBuf and BreedShowNameSpeciesBits with TestBitInFieldAtArg3 ($80 first in
@@ -1625,6 +1711,8 @@ BreedMenu_ChooseParents_CheckChildIsNew::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_CheckChildSeen", ROMX
+
 ; Choosing parents, step 40: tests the species of wChildRecord (MON_SPECIES) in the bit field
 ; wMonsterLibraryBuf (TestBitInFieldAtArg3, $80-first order) and in wSpeciesFlags (TestSpeciesFlag);
 ; wTwoChoiceCursor = 1 only when both bits are clear, otherwise 0. Then adds 1 to wScreenStep and
@@ -1671,6 +1759,8 @@ BreedMenu_ChooseParents_CheckChildSeen::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 DrawRectIfLinkModeAndStep", ROMX
+
 ; When wLinkMode is non-zero copies the 20 x 11 box into the window buffer and draws the lower
 ; screen (CopyRectToWindowTileBufferRow5AndDraw); in every case adds 1 to wScreenStep. Step 42 of
 ; BreedMenu_ChooseParents, the start of the link-session save prompt. (C1, E-0377)
@@ -1689,6 +1779,8 @@ DrawRectIfLinkModeAndStep::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_ShowLinkSaveInfo", ROMX
+
 ; Choosing parents, step 43: in a link session shows the save file window. (C1, E-0357)
 BreedMenu_ChooseParents_ShowLinkSaveInfo::
     ld a, [wLinkMode]
@@ -1701,6 +1793,8 @@ BreedMenu_ChooseParents_ShowLinkSaveInfo::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ShowLinkPrompt", ROMX
 
 ; Choosing parents, step 44: in a link session draws the bottom box and shows string $0D (bank $1B)
 ; until its text ends. (C1, E-0357)
@@ -1751,6 +1845,8 @@ BreedMenu_ChooseParents_ShowLinkPrompt::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_StartCountingScript", ROMX
+
 ; Choosing parents, step 41: starts the counting script once
 ; (PrepareCounterPtr0LoCountersAndRequestScript); in a link session redraws the pair's names, icons
 ; and levels; goes to step $2A. (C1, E-0357)
@@ -1798,6 +1894,8 @@ BreedMenu_ChooseParents_StartCountingScript::
     ld [wTwoChoiceCursor], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_LinkYesNo", ROMX
+
 ; Choosing parents, step 47: in a link session the yes/no answer: no goes on one step, yes seven;
 ; outside a link straight on seven. (C1, E-0357)
 BreedMenu_ChooseParents_LinkYesNo::
@@ -1839,6 +1937,8 @@ BreedMenu_ChooseParents_LinkYesNo::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawLinkBoxAndSprites", ROMX
+
 ; Choosing parents, step 48: draws the 6 x 5 box (in a link session) and reloads the player's and
 ; followers' sprites. (C1, E-0357)
 BreedMenu_ChooseParents_DrawLinkBoxAndSprites::
@@ -1851,6 +1951,8 @@ BreedMenu_ChooseParents_DrawLinkBoxAndSprites::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ReloadTilesAgain", ROMX
 
 ; Choosing parents, step 50: reloads tiles six per call until done. (C1, E-0357)
 BreedMenu_ChooseParents_ReloadTilesAgain::
@@ -1872,6 +1974,8 @@ BreedMenu_ChooseParents_ReloadTilesAgain::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_SaveScreenArea", ROMX
+
 ; Choosing parents, step 49: saves the 20 x 13 screen area. (C1, E-0357)
 BreedMenu_ChooseParents_SaveScreenArea::
     ld c, $0d
@@ -1891,6 +1995,8 @@ BreedMenu_ChooseParents_SaveScreenArea::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_RedrawPairAndOptions", ROMX
+
 ; Choosing parents, step 51: redraws the pair, the gold box and the option box, then steps back one.
 ; (C1, E-0357)
 BreedMenu_ChooseParents_RedrawPairAndOptions::
@@ -1904,6 +2010,8 @@ BreedMenu_ChooseParents_RedrawPairAndOptions::
     dec a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_MarkOption", ROMX
 
 ; Choosing parents, step 52: marks the option. (C1, E-0357)
 BreedMenu_ChooseParents_MarkOption::
@@ -1932,6 +2040,8 @@ BreedMenu_ChooseParents_MarkOption::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_RedrawPairAndGold", ROMX
+
 ; Choosing parents, step 58: redraws the pair and the gold box, then steps back one. (C1, E-0357)
 BreedMenu_ChooseParents_RedrawPairAndGold::
     call DrawPairAndStep_2
@@ -1940,6 +2050,8 @@ BreedMenu_ChooseParents_RedrawPairAndGold::
     dec a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_MoveOn", ROMX
 
 ; Choosing parents, step 59: moves on. (C1, E-0357)
 BreedMenu_ChooseParents_MoveOn::
@@ -1963,6 +2075,8 @@ BreedMenu_ChooseParents_MoveOn::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_WriteFee", ROMX
 
 ; Choosing parents, step 60: writes the fee (TenTimesTemp0PlusTenToDigits of the child's plus value)
 ; into the text buffer. (C2, E-0357; probed E-0377)
@@ -1988,6 +2102,8 @@ BreedMenu_ChooseParents_WriteFee::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_Breed", ROMX
 
 ; Choosing parents, step 54: the breeding: in a link session shows string $0E and saves; then
 ; deletes both parents' records (the second index adjusted for the first) and writes the child's
@@ -2128,6 +2244,8 @@ BreedMenu_ChooseParents_Breed::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 15 RemoveRecordBFromParty", ROMX
+
 ; B = record: replaces its entry among the first wPartyCount of wPartyList with $FF and lowers
 ; wPartyCount, packs the entries of the three that are not $FF to the front, then writes 0 over
 ; entries that are $FF or still B. The places left after packing are not cleared, so removing a
@@ -2201,6 +2319,8 @@ RemoveRecordBFromParty::
     jr c, .loop3
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_ReadFeeAnswer", ROMX
+
 ; Choosing parents, step 63: the yes/no answer to the fee (TenTimesTemp0PlusTen of the plus value):
 ; no answers 1; not enough gold answers $FF; yes with the gold answers 0 and goes on two steps. (C1,
 ; E-0357)
@@ -2271,6 +2391,8 @@ BreedMenu_ChooseParents_ReadFeeAnswer::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_FeeRefused", ROMX
+
 ; Choosing parents, step 64, reached when BreedMenu_ChooseParents_ReadFeeAnswer gets no, B, or a fee
 ; above the gold: sets wScreenStep = 0 and wScreenState = $0A (BreedMenu_TalkEvent15, talk event
 ; group $15 entry 0), clears wScriptCommandType and requests script $80. (C2, E-0370; probed E-0377)
@@ -2284,6 +2406,8 @@ BreedMenu_ChooseParents_FeeRefused::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_PayAndMakeEgg", ROMX
 
 ; Choosing parents, step 65: pays the fee, lists the eggs, finds the child in the list (page and
 ; cursor of four) and clears its MON_EGG byte, then screen state 8. (C2, E-0357; probed E-0384)
@@ -2373,6 +2497,8 @@ BreedMenu_ChooseParents_PayAndMakeEgg::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseEgg", ROMX
+
 ; BreedMenu state 5 (option 1, Hatch), by wScreenStep (17 steps): lists the eggs with their species
 ; names and marks (steps 0-5), takes one with the paged cursor (6), draws the option frame and the
 ; gold box (7-8), asks yes/no (10-12), redraws the list (13-14), checks the gold for the fee (15,
@@ -2406,6 +2532,8 @@ BreedMenu_ChooseEgg_CopyListGlyphs::
     call BreedMenu_CopyEggListGlyphs
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseEgg_DrawEggList", ROMX
+
 ; Choosing an egg, step 1: draws the egg list box, marks the option and lists the eggs. (C1, E-0357)
 BreedMenu_ChooseEgg_DrawEggList::
     ld de, BreedMenu_ChooseEgg_DrawEggList_TileRect
@@ -2425,6 +2553,8 @@ BreedMenu_ChooseEgg_DrawEggList::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 ClearTileRowsAndResetWindowAndStep", ROMX
 
 ; Fills tile areas with the plain pattern tile (FillTilesBxC: 3 tiles at vTiles1 + $400, 5 at
 ; vTiles1 + $470, 15 at vTiles1 + $500, 13 at vTiles1 + $700), puts the text window back ($8800,
@@ -2456,6 +2586,8 @@ ClearTileRowsAndResetWindowAndStep::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_DrawPageFrame", ROMX
 
 ; Choosing an egg, step 3: draws the box, clamps the page cursor of four, the page arrows and
 ; numbers, and shows then clears the cursor. (C1, E-0357)
@@ -2503,6 +2635,8 @@ BreedMenu_ChooseEgg_DrawPageFrame::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseEgg_DrawSpeciesNames", ROMX
+
 ; Choosing an egg, step 4: draws the page's species names. (C1, E-0357)
 BreedMenu_ChooseEgg_DrawSpeciesNames::
     ld a, $01
@@ -2512,6 +2646,8 @@ BreedMenu_ChooseEgg_DrawSpeciesNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_DrawMarks", ROMX
 
 ; Choosing an egg, step 5: loads a mark tile and draws the page's marks. (C1, E-0357)
 BreedMenu_ChooseEgg_DrawMarks::
@@ -2529,6 +2665,8 @@ BreedMenu_ChooseEgg_DrawMarks::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_ListCursor", ROMX
 
 ; Choosing an egg, step 6: the paged cursor: a page change goes back 4 steps; B answers 1 and goes
 ; on; A marks the egg, writes its fee (from its plus value) into the text buffer and goes on four
@@ -2621,6 +2759,8 @@ BreedMenu_ChooseEgg_ListCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseEgg_DrawOptionFrame", ROMX
+
 ; Choosing an egg, step 7: saves the screen area and draws the cursor's frame (after a three-option
 ; result, a wider one). (C2, E-0357; probed E-0377)
 BreedMenu_ChooseEgg_DrawOptionFrame::
@@ -2653,6 +2793,8 @@ BreedMenu_ChooseEgg_DrawOptionFrame::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_DrawGoldBox", ROMX
 
 ; Choosing an egg, step 8: draws the gold box once, then reloads tiles six per call until done. (C1,
 ; E-0357)
@@ -2698,6 +2840,8 @@ BreedMenu_ChooseEgg_DrawGoldBox::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_BackToOptions", ROMX
+
 ; Writes the blank tile $C3 at the three option marks (BreedMenu_ChooseParents_RedrawPairBox_Data),
 ; clears wScreenStep and wScreenSubStep, sets wScreenState = 2 (BreedMenu_OptionCursor) and requests
 ; script $80. Steps 11 and 53 of BreedMenu_ChooseParents, step 9 of BreedMenu_ChooseEgg and the last
@@ -2717,6 +2861,8 @@ BreedMenu_ChooseParents_BackToOptions::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_CopyBoxGlyphTiles", ROMX
+
 ; Copies the glyph tiles listed in BreedMenu_ChooseParents_AskYesNo_TileCopySrcList to
 ; BreedMenu_ChooseParents_AskYesNo_TileCopyDestList (CopyGlyphTileListFromBank1F_Bank15) and moves
 ; on (wScreenStep += 1); it is step 10 of BreedMenu_ChooseEgg, step 22 of BreedMenu_ReturnToMap and
@@ -2729,6 +2875,8 @@ BreedMenu_CopyBoxGlyphTiles::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_AskYesNo", ROMX
 
 ; Choosing an egg, step 11: plays sound $6C, draws the yes/no box and resets the choice. (C1,
 ; E-0357)
@@ -2750,6 +2898,8 @@ BreedMenu_ChooseEgg_AskYesNo::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_YesNoCursor", ROMX
 
 ; Choosing parents, step 14: the yes/no cursor; yes opens the record's stats screen (screen state
 ; $0C, $0D or $0E, returning to the right place), saving the sprites; no or B go back. (C1, E-0357)
@@ -2883,6 +3033,8 @@ BreedMenu_ChooseParents_YesNoCursor::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BlinkCursorBlinkAE_Bank15", ROMX
+
 ; Yes/no cursor blink of the breeding menu: while wJoypadRepeatTimer is below $14 draws the cursor
 ; tile $BB; otherwise adds 1 to wCursorBlinkAE and draws $BB for 1-$0F, the blank $C3 for $10-$17
 ; (DrawBlankTileC3_Bank15), and at $18 resets it to 0 and draws $BB; the tile goes to the place of
@@ -2907,6 +3059,8 @@ BlinkCursorBlinkAE_Bank15::
     ld b, $bb
     jr BreedMenu_ChooseParents_YesNoCursor_DrawTile
 
+SECTION "Bank 15 DrawBlankTileC3_Bank15", ROMX
+
 ; B = $C3 (the blank tile), then jumps to BreedMenu_ChooseParents_YesNoCursor_DrawTile at the yes/no
 ; place of wChoiceCursor. Used by BlinkCursorBlinkAE_Bank15 and BreedMenu_ChooseParents_YesNoCursor.
 ; (C1, E-0377)
@@ -2914,6 +3068,8 @@ BlinkCursorBlinkAE_Bank15::
 DrawBlankTileC3_Bank15::
     ld b, $c3
     jr BreedMenu_ChooseParents_YesNoCursor_DrawTile
+
+SECTION "Bank 15 BreedMenu_ChooseParents_YesNoCursor_MarkChosen", ROMX
 
 ; Draws the chosen tile ($BC) at the yes/no cursor. (C1, E-0357)
 BreedMenu_ChooseParents_YesNoCursor_MarkChosen::
@@ -2941,6 +3097,8 @@ BreedMenu_ChooseParents_YesNoCursor_DrawTile::
     ei
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_YesNoCursor_DrawTile_Data", ROMX
+
 ; Two little-endian word offsets into the BG map from the scroll position
 ; (BGMapAddressAtScroll_Bank15): $012D and $016D, which are row 9 and row 11 at column 13.
 ; BreedMenu_ChooseParents_YesNoCursor_DrawTile indexes it with wChoiceCursor times 2 and writes the
@@ -2962,6 +3120,8 @@ BreedMenu_ChooseEgg_RedrawMarks::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_CheckFee", ROMX
 
 ; Choosing an egg, step 15: checks the gold for the egg's fee (TenTimesTemp0PlusTen of its plus
 ; value): too little answers 1 (step 7), otherwise answer 0 and on. (C2, E-0357; probed E-0384)
@@ -3012,6 +3172,8 @@ BreedMenu_ChooseEgg_CheckFee::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_Hatch", ROMX
 
 ; Choosing an egg, step 16: hatches the egg (clears record byte $6E, MON_EGG), pays the fee, clears
 ; wListEntries2 and goes to screen state 9. (C2, E-0357; probed E-0384)
@@ -3068,6 +3230,8 @@ BreedMenu_ChooseEgg_Hatch::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_NameEntry", ROMX
 
 ; BreedMenu state 6: runs the name entry (RunNameEntryStateWhenNotFading) for the record in list
 ; cell 4 (SetArg5ToListEntriesCell4) with wArg1 = 1, wArg2 = its sex bit, wArg3 = its family
@@ -3195,6 +3359,8 @@ BreedMenu_NameEntry::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap", ROMX
+
 ; BreedMenu state 7, after the child is named, by wScreenStep (33 steps): steps 0-3 reload the map
 ; screen (map $0D, the tiles, sprites and saved position), 4 copies the name into wTextBuf0, 5-6 ask
 ; yes/no; no goes back to the option cursor (7-9), yes adds the child to the party when there is
@@ -3253,6 +3419,8 @@ BreedMenu_ReturnToMap_LoadTiles::
     call RestorePlayerPositionState
     ret
 
+SECTION "Bank 15 DrawPairAndStep_2_2", ROMX
+
 ; The same as DrawPairAndStep_2: copies the glyph tiles of
 ; CloseBreedMenu_RestoreGlyphs_TileCopyDestList / DrawPairAndStep_2_TileCopySrcList from bank $1F,
 ; then adds 1 to wScreenStep. Step 1 of BreedMenu_ReturnToMap and step 2 of BreedMenu_RestoreScreen,
@@ -3268,6 +3436,8 @@ DrawPairAndStep_2_2::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_LoadMap", ROMX
 
 ; Returning to the map, step 2: loads map $0D's header and screen, the player's and followers'
 ; sprites and the screen's objects, restores the position and shows the sprites. (C1, E-0357)
@@ -3287,6 +3457,8 @@ BreedMenu_ReturnToMap_LoadMap::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_RestoreScreen", ROMX
 
 ; Returning to the map, step 3: restores the screen and window areas from the window buffer (tiles
 ; and GBC attributes), redraws the bottom rows and sets sprite hide tile $70. (C1, E-0357)
@@ -3329,6 +3501,8 @@ BreedMenu_ReturnToMap_RestoreScreen::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_CopyName", ROMX
+
 ; Returning to the map, step 4: copies the name glyph buffer (up to 10 glyphs) into wTextBuf0 for
 ; the script's message. (C2, E-0357; probed E-0377)
 BreedMenu_ReturnToMap_CopyName::
@@ -3357,6 +3531,8 @@ BreedMenu_ReturnToMap_CopyName::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawPayYesNo", ROMX
 
 ; Choosing parents, step 62: loads two box tiles, plays sound $6C and draws the 6 x 5 yes/no box;
 ; resets the answer. (C1, E-0357)
@@ -3389,6 +3565,8 @@ BreedMenu_ChooseParents_DrawPayYesNo::
     ld [wTwoChoiceCursor], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_LinkYesNoBox", ROMX
+
 ; Choosing parents, step 46: in a link session draws the yes/no box (as step 62); otherwise moves on
 ; with the answer cleared. (C1, E-0357)
 BreedMenu_ChooseParents_LinkYesNoBox::
@@ -3401,6 +3579,8 @@ BreedMenu_ChooseParents_LinkYesNoBox::
     xor a
     ld [wTwoChoiceCursor], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_YesNo", ROMX
 
 ; Returning to the map, step 6: the yes/no answer: no (or B) restores the box and goes on one step
 ; with answer 1; yes goes on four. (C1, E-0357)
@@ -3443,6 +3623,8 @@ BreedMenu_ReturnToMap_YesNo::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_RestoreYesNoBox", ROMX
+
 ; Restores the 6 x 5 yes/no box area from the saved screen (tiles and GBC attributes) and redraws.
 ; (C1, E-0357)
 BreedMenu_ReturnToMap_RestoreYesNoBox::
@@ -3464,6 +3646,8 @@ BreedMenu_ReturnToMap_RestoreYesNoBox::
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_CopySixWideRows", ROMX
 
 ; Copies C rows of six bytes from DE to HL, both with 20-byte rows. (C2, E-0357; probed E-0377)
 BreedMenu_ReturnToMap_CopySixWideRows::
@@ -3488,6 +3672,8 @@ BreedMenu_ReturnToMap_CopySixWideRows::
     jr nz, BreedMenu_ReturnToMap_CopySixWideRows
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_CopySixWideAttrRows", ROMX
+
 ; Copies C rows of six attribute bytes (low three bits, into WRAM bank 2), 20-byte rows. (C2,
 ; E-0357; probed E-0377)
 BreedMenu_ReturnToMap_CopySixWideAttrRows::
@@ -3511,6 +3697,8 @@ BreedMenu_ReturnToMap_CopySixWideAttrRows::
     dec c
     jr nz, BreedMenu_ReturnToMap_CopySixWideAttrRows
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawOptionBox", ROMX
 
 ; Returning to the map, step 8: reloads two frame tiles, draws the option box with the option marked
 ; and redraws. (C1, E-0357)
@@ -3546,6 +3734,8 @@ BreedMenu_ReturnToMap_DrawOptionBox::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_BackToOptions", ROMX
+
 ; Returning to the map, step 9: blanks the option marks and returns to the options (state 2). (C2,
 ; E-0357; probed E-0377)
 BreedMenu_ReturnToMap_BackToOptions::
@@ -3562,6 +3752,8 @@ BreedMenu_ReturnToMap_BackToOptions::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_AddChildToParty", ROMX
 
 ; After hatching, step 10: with room in the party (fewer than three) adds the child
 ; (wSelectedRecord) to the party (MON_STATE 2), reloads the sprites, answers 1 and steps back three;
@@ -3620,6 +3812,8 @@ BreedMenu_ReturnToMap_AddChildToParty::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawPartyBox", ROMX
+
 ; Choosing who leaves, step 11: draws the party box (16 tiles) and resets the list cursor. (C1,
 ; E-0357)
 BreedMenu_ReturnToMap_DrawPartyBox::
@@ -3640,6 +3834,8 @@ BreedMenu_ReturnToMap_DrawPartyBox::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawPartyBox_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -3711,6 +3907,8 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
     jr nz, .loop
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_CopySixteenTiles_Data1", ROMX
+
 ; Sixteen glyph ids ($A3, $50, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14,
 ; $25). BreedMenu_ReturnToMap_CopySixteenTiles counts C from 16 down to 1 and reads the byte at
 ; offset C, so the byte at offset 0 is never read and for C = 16 it reads the byte after the table
@@ -3754,6 +3952,8 @@ BreedMenu_ReturnToMap_ClearPartyBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_ListPartyAndChild", ROMX
+
 ; Choosing who leaves, step 13: lists the three party monsters and the child (four entries from
 ; wListEntries) and clamps the cursor. (C1, E-0357)
 BreedMenu_ReturnToMap_ListPartyAndChild::
@@ -3773,10 +3973,14 @@ BreedMenu_ReturnToMap_ListPartyAndChild::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawPageNames", ROMX
+
 ; Choosing who leaves, step 14: draws the four names. (C1, E-0357)
 BreedMenu_ReturnToMap_DrawPageNames::
     farcall DrawRecordListPageNames
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawIconAndStats", ROMX
 
 ; Choosing who leaves, step 15: for the entry under the cursor draws its family icon and its stats
 ; box. (C1, E-0357)
@@ -3804,6 +4008,8 @@ BreedMenu_ReturnToMap_DrawIconAndStats::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_MarkPartyMembers", ROMX
+
 ; Choosing who leaves, step 16: blanks the name tiles and marks the party members in the list
 ; (BreedMenu_ReturnToMap_MarkPartyMembers_DrawMarks). (C1, E-0357)
 BreedMenu_ReturnToMap_MarkPartyMembers::
@@ -3829,6 +4035,8 @@ BreedMenu_ReturnToMap_MarkPartyMembers::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawNameAndSpecies", ROMX
+
 ; Choosing who leaves, step 17: draws the name and species name of the entry under the cursor. (C1,
 ; E-0357)
 BreedMenu_ReturnToMap_DrawNameAndSpecies::
@@ -3845,6 +4053,8 @@ BreedMenu_ReturnToMap_DrawNameAndSpecies::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_RedrawScreen", ROMX
+
 ; Choosing who leaves, step 18: redraws the screen. (C1, E-0357)
 BreedMenu_ReturnToMap_RedrawScreen::
     call BGMapAddressAtScroll_Bank15
@@ -3855,6 +4065,8 @@ BreedMenu_ReturnToMap_RedrawScreen::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_ListCursor", ROMX
 
 ; Choosing who leaves, step 19: the list cursor: a page change goes back 7 steps, a move back 4, B
 ; answers 1 and goes on, A marks the entry and goes on three. (C1, E-0357)
@@ -3927,6 +4139,8 @@ BreedMenu_ReturnToMap_ListCursor::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawYesNoTop", ROMX
+
 ; Choosing who leaves, step 20: loads two box tiles, saves the screen area and draws the top row of
 ; the yes/no box. (C1, E-0357)
 BreedMenu_ReturnToMap_DrawYesNoTop::
@@ -3957,6 +4171,8 @@ BreedMenu_ReturnToMap_DrawYesNoTop::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_RedrawPairBox", ROMX
+
 ; Choosing who leaves, step 21: redraws the pair box and goes to step 6 (the yes/no answer). (C1,
 ; E-0357)
 BreedMenu_ReturnToMap_RedrawPairBox::
@@ -3974,6 +4190,8 @@ BreedMenu_ReturnToMap_RedrawPairBox::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawYesNoBox", ROMX
 
 ; Choosing who leaves, step 25: loads the box tiles, saves a screen area, draws the yes/no box and
 ; the lower row, marks the first answer and blanks the four list marks. (C1, E-0357)
@@ -4016,6 +4234,8 @@ BreedMenu_ReturnToMap_DrawYesNoBox::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_BackToList", ROMX
+
 ; Choosing who leaves, step 26: returns to the list cursor (step $13). (C1, E-0357)
 BreedMenu_ReturnToMap_BackToList::
     call BGMapAddressAtScroll_Bank15
@@ -4029,6 +4249,8 @@ BreedMenu_ReturnToMap_BackToList::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_CopyLeaverName", ROMX
 
 ; Choosing who leaves, step 27: copies the chosen entry's name into wTextBuf0 for the script. (C2,
 ; E-0357; probed E-0384)
@@ -4070,6 +4292,8 @@ BreedMenu_ReturnToMap_CopyLeaverName::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_SendToFarm", ROMX
 
 ; Choosing who leaves, step 28: sends the chosen monster to the farm (MON_STATE 1); unless it was
 ; the child (entry 3), rebuilds the party from the other three and marks them in the party (state
@@ -4149,6 +4373,8 @@ BreedMenu_ReturnToMap_SendToFarm::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_ReloadSprites", ROMX
+
 ; Choosing who leaves, step 29: reloads the player's and followers' sprites. (C1, E-0357)
 BreedMenu_ReturnToMap_ReloadSprites::
     farcall LoadPlayerAndFollowerSpriteGraphics
@@ -4158,6 +4384,8 @@ BreedMenu_ReturnToMap_ReloadSprites::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ReturnToMap_DrawOptionAndGoldBoxes", ROMX
 
 ; Returning to the map, step 30: saves the screen area, reloads two frame tiles and draws the option
 ; box and the gold box. (C1, E-0357)
@@ -4187,6 +4415,8 @@ BreedMenu_ReturnToMap_DrawOptionAndGoldBoxes::
     call DrawGoldBoxAndStep_Bank15
     ret
 
+SECTION "Bank 15 BreedMenu_ReturnToMap_MarkOption", ROMX
+
 ; Returning to the map, step 31: redraws the pair and marks the option. (C1, E-0357)
 BreedMenu_ReturnToMap_MarkOption::
     call DrawPairAndStep_2_2
@@ -4203,6 +4433,8 @@ BreedMenu_ReturnToMap_MarkOption::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_TalkEvent17ThenNameEntry", ROMX
 
 ; BreedMenu state 8, after BreedMenu_ChooseParents_PayAndMakeEgg: saves the script position
 ; (wScriptStartRequest, wScriptPointerLo/Hi into wScriptReturnBank and wScriptReturnLo/Hi), runs
@@ -4230,6 +4462,8 @@ BreedMenu_TalkEvent17ThenNameEntry::
     ld [wNameEntryState], a
     ld [wNameEntrySubState], a
     ret
+
+SECTION "Bank 15 BreedMenu_CopyToChildThenTalkEvent16", ROMX
 
 ; BreedMenu state 9, after BreedMenu_ChooseEgg_Hatch: copies MON_SPECIES and MON_PLUS of the record
 ; in list cell 4 (SetArg5ToListEntriesCell4) into wChildRecord, saves the script position, runs talk
@@ -4283,6 +4517,8 @@ BreedMenu_CopyToChildThenTalkEvent16::
     ld [wNameEntrySubState], a
     ret
 
+SECTION "Bank 15 BreedMenu_TalkEvent15", ROMX
+
 ; BreedMenu state $0A, after BreedMenu_ChooseParents_FeeRefused: saves the script position, runs
 ; talk event group $15 entry 0 (DispatchTalkEvent), clears wScriptInDataBank and adds 1 to
 ; wScreenState (state $0B, BreedMenu_RestoreScreen). (C1, E-0377)
@@ -4304,6 +4540,8 @@ BreedMenu_TalkEvent15::
     ld hl, wScreenState
     inc [hl]
     ret
+
+SECTION "Bank 15 BreedMenu_RestoreScreen", ROMX
 
 ; BreedMenu state $0B, by wScreenStep: blanks the BG map, reloads the map screen
 ; (BreedMenu_ReturnToMap_LoadTiles, DrawPairAndStep_2_2, _LoadMap, _RestoreScreen), draws the gold
@@ -4337,6 +4575,8 @@ BreedMenu_RestoreScreen_DrawGoldBox::
 .return:
     ret
 
+SECTION "Bank 15 BreedMenu_RestoreScreen_BlankBGMap", ROMX
+
 ; Restoring the screen, step 0: fills the BG map with the blank tile. (C1, E-0357)
 BreedMenu_RestoreScreen_BlankBGMap::
     call BGMapAddressAtScroll_Bank15
@@ -4360,6 +4600,8 @@ BreedMenu_RestoreScreen_BlankBGMap::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_RestoreScreen_CopyChildName", ROMX
 
 ; Restoring the screen, step 6: once the fade has finished, copies the child's species name into
 ; wTextBuf0 and resets the text window. (C1, E-0357)
@@ -4416,6 +4658,8 @@ BreedMenu_RestoreScreen_CopyChildName::
     ld [wScriptStartRequest], a
     ret
 
+SECTION "Bank 15 BreedMenu_RestoreScreen_Finish", ROMX
+
 ; Restoring the screen, step 7: returns to the breeding menu's state 1 with the text window reset.
 ; (C1, E-0357)
 BreedMenu_RestoreScreen_Finish::
@@ -4439,6 +4683,8 @@ BreedMenu_RestoreScreen_Finish::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_RunStatsScreen", ROMX
 
 ; Breeding menu, state 12: runs the record stats screen (SwapMonstersMenu); when it reaches its step
 ; $0A returns six states on (from step $23) or five. (C1, E-0357)
@@ -4467,6 +4713,8 @@ BreedMenu_RunStatsScreen::
     ld [wScreenState], a
     ret
 
+SECTION "Bank 15 BreedMenu_RunStatsScreenAgain", ROMX
+
 ; Breeding menu, state 13: runs the record stats screen until its step $0A, then goes on two states.
 ; (C1, E-0357)
 BreedMenu_RunStatsScreenAgain::
@@ -4482,6 +4730,8 @@ BreedMenu_RunStatsScreenAgain::
     inc a
     ld [wScreenState], a
     ret
+
+SECTION "Bank 15 BreedMenu_RedrawListScreen", ROMX
 
 ; BreedMenu state $0F, by wScreenStep (nine steps): reloads map $0D tiles and palettes, the glyphs
 ; and the pair, clears the tile rows, redraws the egg list with its species names and page marks
@@ -4522,6 +4772,8 @@ BreedMenu_RedrawListScreen_LoadTileset::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_RedrawListScreen_LoadGlyphsAndPair", ROMX
+
 ; Redrawing the list screen, step 1: copies the list glyph tiles and redraws the pair. (C1, E-0357)
 BreedMenu_RedrawListScreen_LoadGlyphsAndPair::
     ld hl, BreedMenu_ChooseParents_AskYesNo_TileCopyDestList
@@ -4530,11 +4782,15 @@ BreedMenu_RedrawListScreen_LoadGlyphsAndPair::
     call DrawPairAndStep_2
     ret
 
+SECTION "Bank 15 BreedMenu_RedrawListScreen_ClearTiles", ROMX
+
 ; Redrawing the list screen, step 2: clears the tile rows and resets the window
 ; (ClearTileRowsAndResetWindowAndStep). (C1, E-0357)
 BreedMenu_RedrawListScreen_ClearTiles::
     call ClearTileRowsAndResetWindowAndStep
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseEgg_RedrawEggList", ROMX
 
 ; Choosing an egg, step 13: redraws the egg list box, clamps the page cursor of four and draws the
 ; page arrows and numbers. (C1, E-0357)
@@ -4562,6 +4818,8 @@ BreedMenu_ChooseEgg_RedrawEggList::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_RedrawListScreen_DrawSpeciesNames", ROMX
+
 ; Redrawing the list screen, step 4: draws the page's species names. (C1, E-0357)
 BreedMenu_RedrawListScreen_DrawSpeciesNames::
     ld a, $01
@@ -4571,6 +4829,8 @@ BreedMenu_RedrawListScreen_DrawSpeciesNames::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 LoadTilesAndDrawRecordListPageMarks", ROMX
 
 ; Copies the 16-byte tile Tiles2Plus420Tiles from bank $1F to vTiles1 + $4E0, sets wArg1 = wArg2 = 1
 ; and far-calls DrawRecordListPageMarks (the sex and party marks beside the visible records of the
@@ -4595,6 +4855,8 @@ LoadTilesAndDrawRecordListPageMarks::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_RedrawListScreen_MarkCursorEntry", ROMX
+
 ; Redrawing the list screen, step 6: marks the cursor entry and draws the yes/no area. (C2, E-0357;
 ; probed E-0377)
 BreedMenu_RedrawListScreen_MarkCursorEntry::
@@ -4610,6 +4872,8 @@ BreedMenu_RedrawListScreen_MarkCursorEntry::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_RedrawListScreen_ShowEggFee", ROMX
 
 ; Redrawing the list screen, step 7: writes the egg's fee (from its plus value) and shows string $1B
 ; (bank $1B). (C1, E-0357)
@@ -4649,6 +4913,8 @@ BreedMenu_RedrawListScreen_ShowEggFee::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_RedrawListScreen_RestoreSprites", ROMX
 
 ; Redrawing the list screen, step 8: reloads the player's sprites, redraws the bottom rows, restores
 ; the sprite state and hide tile $70, and returns to the saved screen state and step. (C1, E-0357)
@@ -4690,6 +4956,8 @@ BreedMenu_RedrawListScreen_RestoreSprites::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 BreedMenu_ClearListMarks", ROMX
 
 ; BreedMenu state $10, by wScreenStep (ten steps): reloads the tiles and glyphs, blanks the name
 ; tiles, draws the four names, the icon and stats of the entry under the cursor, marks the party
@@ -4733,6 +5001,8 @@ BreedMenu_ClearListMarks_BlankNameTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ChooseParents_ReloadFrameTilesIfLinked", ROMX
+
 ; Choosing parents, step 45: in a link session reloads three frame tiles (as step 61); otherwise
 ; moves on. (C1, E-0357)
 BreedMenu_ChooseParents_ReloadFrameTilesIfLinked::
@@ -4743,6 +5013,8 @@ BreedMenu_ChooseParents_ReloadFrameTilesIfLinked::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_ReloadLinkFrameTiles", ROMX
 
 ; Choosing parents, step 61: (in a link session) reloads three frame tiles and moves on. (C1,
 ; E-0357)
@@ -4768,6 +5040,8 @@ BreedMenu_ChooseParents_ReloadLinkFrameTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ClearListMarks_MarkCursorEntry", ROMX
+
 ; Clearing the list marks, step 8: blanks the four marks, marks the cursor entry and draws the
 ; yes/no area. (C2, E-0357; probed E-0377)
 BreedMenu_ClearListMarks_MarkCursorEntry::
@@ -4786,6 +5060,8 @@ BreedMenu_ClearListMarks_MarkCursorEntry::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 BreedMenu_ShowSelectedRecord", ROMX
 
 ; BreedMenu state $12, by wScreenStep (11 steps): reloads the tiles, lists the possible mates of the
 ; chosen record by sex (BreedMenu_ShowSelectedRecord_ListMates), copies the glyphs, draws the pair
@@ -4826,6 +5102,8 @@ BreedMenu_ShowSelectedRecord_DrawRecordName::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ShowSelectedRecord_DrawIcons", ROMX
+
 ; Showing the chosen record, step 9: loads the family icons of the chosen record and of the one
 ; under the cursor and draws its box. (C1, E-0357)
 BreedMenu_ShowSelectedRecord_DrawIcons::
@@ -4849,6 +5127,8 @@ BreedMenu_ShowSelectedRecord_DrawIcons::
     call BreedMenu_DrawYesNoBox
     ret
 
+SECTION "Bank 15 BreedMenu_ShowSelectedRecord_ListMates", ROMX
+
 ; Showing the chosen record, step 1: notes the chosen record's sex, lists the possible mates and
 ; clamps the page. (C1, E-0357)
 BreedMenu_ShowSelectedRecord_ListMates::
@@ -4856,11 +5136,15 @@ BreedMenu_ShowSelectedRecord_ListMates::
     call BreedMenu_ListMates
     jp BreedMenu_ListMonsters_UpdateListPages
 
+SECTION "Bank 15 BreedMenu_ShowSelectedRecord_DrawPairNames", ROMX
+
 ; Showing the chosen record, step 4: clears three tile rows and draws the pair's names. (C1, E-0357)
 BreedMenu_ShowSelectedRecord_DrawPairNames::
     call ClearThreeTileRows
     call DrawListEntriesCell5RecordNamesAndStep
     ret
+
+SECTION "Bank 15 BreedMenu_ListMonsters", ROMX
 
 ; BreedMenu state $11, by wScreenStep (ten steps): reloads the tiles and glyphs, lists the farm
 ; monsters that are not eggs (BreedMenu_ListMonsters_ListNonEggs), blanks the tiles, draws the page
@@ -4916,6 +5200,8 @@ BreedMenu_ListMonsters_UpdateListPages::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_ShowSelectedRecord_BlankTiles", ROMX
+
 ; Showing the chosen record, step 3: blanks three tile areas. (C1, E-0357)
 BreedMenu_ShowSelectedRecord_BlankTiles::
     ld hl, vTiles1 + $240
@@ -4932,12 +5218,16 @@ BreedMenu_ShowSelectedRecord_BlankTiles::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 BreedMenu_DrawListPageNames", ROMX
+
 ; Far-calls DrawRecordListPageNames, which draws the names of the visible records of page
 ; wListPageIndex and adds 1 to wScreenStep. Step 6 of BreedMenu_ShowSelectedRecord and step 4 of
 ; BreedMenu_ListMonsters. (C1, E-0372)
 BreedMenu_DrawListPageNames::
     farcall DrawRecordListPageNames
     ret
+
+SECTION "Bank 15 BreedMenu_DrawYesNoBox", ROMX
 
 ; Copies the 8 x 5 yes/no box BreedMenu_ChooseParents_AskYesNo_TileRect into wWindowTileBuffer +
 ; $110 (CopyRectTo20ByteRows_Bank15) and adds 1 to wScreenStep; it does not redraw the screen. Step
@@ -4956,6 +5246,8 @@ BreedMenu_DrawYesNoBox::
     inc a
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 15 CopyGlyphTileListFromBank1F_Bank15", ROMX
 
 ; HL = list of VRAM destinations, DE = list of sources, both words and read from entry
 ; wGlyphListStart: copies one 16-byte tile from bank $1F per entry (CopyFromBankWaitVRAM), adding 1
@@ -5013,6 +5305,8 @@ CopyGlyphTileListFromBank1F_Bank15::
     ld [wGlyphListPos], a
     ret
 
+SECTION "Bank 15 DecompressGraphicsA4ToTiles0", ROMX
+
 ; Far-calls DecompressGraphicsArg1ToArg4 with graphics number $00A4 (wArg1 = $A4, wArg2 = 0), wArg3
 ; = 0 and destination wArg4/wArg5 = $8000 (vTiles0). Called at the end of ShowSaveFileInfoWindow and
 ; by DecompressA4GraphicsAndContinue. (C1, E-0377)
@@ -5028,6 +5322,8 @@ DecompressGraphicsA4ToTiles0::
     ld [wArg5], a
     farcall DecompressGraphicsArg1ToArg4
     ret
+
+SECTION "Bank 15 BreedMenu_ChooseParents_DrawLinkSprite", ROMX
 
 ; Outside a link session (wLinkMode 0) returns at once. In one, it enables SRAM bank 1 and, when the
 ; byte at sSavedPlayerName + $022B is non-zero while wScreenState is 4 and wScreenStep is below $37,
@@ -5087,6 +5383,8 @@ DrawSpritePart9000At88_28::
     farcall DrawSpritePart9000At88_28_SetAttrs
     ret
 
+SECTION "Bank 15 DrawBottomBoxForLinkAndSetScreenSubStep", ROMX
+
 ; With wLinkMode 0 only sets wScreenSubStep = 2. In a link: when wScreenSubStep is non-zero first
 ; copies the 20 x 1 row DrawBottomBoxForLinkAndSetScreenSubStep_TileRect to wWindowTileBuffer + $C8;
 ; then sets wScreenSubStep = 2 and draws the 20 x 13 screen buffer area at offset $1CC to the BG map
@@ -5125,6 +5423,8 @@ DrawBottomBoxForLinkAndSetScreenSubStep::
     call DrawScreenBufferRect_Bank15
     ret
 
+SECTION "Bank 15 CopyRectToWindowTileBufferRow5AndDraw", ROMX
+
 ; Copies the 20 x 11 box CopyRectToWindowTileBufferRow5AndDraw_TileRect into wWindowTileBuffer +
 ; $64, then draws the 20 x 13 screen buffer area at offset $1CC to the BG map at the scroll origin
 ; (DrawScreenBufferRect_Bank15). Used by DrawRectIfLinkModeAndStep and two link and key-appraisal
@@ -5143,6 +5443,8 @@ CopyRectToWindowTileBufferRow5AndDraw::
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ret
+
+SECTION "Bank 15 HandleThreeOptionMenuInput_15", ROMX
 
 ; The three-option cursor of BreedMenu_OptionCursor and EggServiceMenu_ChooseOption. Up and Down
 ; (wJoypadPressedRepeat) move wGridCursorX over 0-2 with wrap-around and sound $69, a move without
@@ -5244,6 +5546,8 @@ HandleThreeOptionMenuInput_15::
     ld [wThreeOptionResult], a
     ret
 
+SECTION "Bank 15 BlinkCursorGridCursorY_Bank15", ROMX
+
 ; Blink of the three-option cursor, using wGridCursorY as its counter: while wJoypadRepeatTimer is
 ; below $14 draws the cursor tile $BB; otherwise adds 1 to wGridCursorY and draws $BB for 1-$0F, the
 ; blank $C3 for $10-$17, and at $18 resets it to 0 and draws $BB; the tile goes to option
@@ -5268,6 +5572,8 @@ BlinkCursorGridCursorY_Bank15::
     ld b, $bb
     jr DrawThreeOptionCursorTile
 
+SECTION "Bank 15 DrawBlankTileC3_2", ROMX
+
 ; B = $C3 (the blank tile), then jumps to DrawThreeOptionCursorTile at option wGridCursorX.
 ; HandleThreeOptionMenuInput_15 calls it before moving the cursor, and BlinkCursorGridCursorY_Bank15
 ; jumps to it. (C1, E-0377)
@@ -5276,6 +5582,8 @@ BlinkCursorGridCursorY_Bank15::
 DrawBlankTileC3_2::
     ld b, $c3
     jr DrawThreeOptionCursorTile
+
+SECTION "Bank 15 DrawArrowTileBCAtGridCursorXEntry_Bank15", ROMX
 
 ; B = $BC (the arrow tile), then falls through to DrawThreeOptionCursorTile, which writes it on the
 ; BG map at the place of option wGridCursorX (DrawThreeOptionCursorTile_Data).
@@ -5306,6 +5614,8 @@ DrawThreeOptionCursorTile::
     ld [hl], a
     ei
     ret
+
+SECTION "Bank 15 DrawThreeOptionCursorTile_Data", ROMX
 
 ; Three words that are offsets from the BG map entry at the top left of the visible screen
 ; (BGMapAddressAtScroll_Bank15): $0021, $0061, $00A1, which are rows 1, 3 and 5 of column 1.
@@ -5367,6 +5677,8 @@ BreedMenu_ReturnToMap_MarkPartyMembers_DrawMarks::
     jr nz, .loop
     ret
 
+SECTION "Bank 15 CopyRectTo20ByteRows_Bank15", ROMX
+
 ; Copies a rectangle of B bytes by C rows from DE (packed) to HL, the destination rows 20 bytes
 ; apart; DE ends past the source, HL and BC are kept. On CGB (wIsCGB non-zero) it also zero-fills
 ; the same rectangle at HL + $0E68 with rSVBK = 2 (wWindowAttrBuffer for the window buffer) and sets
@@ -5426,6 +5738,8 @@ CopyRectTo20ByteRows_Bank15::
     xor a
     ldh [rSVBK], a
     ret
+
+SECTION "Bank 15 DrawScreenBufferRect_Bank15", ROMX
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: copies that
 ; rectangle of the screen buffer to the BG map (CopyRectToBGMapWrapped). Unless wStringIndex is $10,
@@ -5497,6 +5811,8 @@ DrawScreenBufferRect_Bank15::
     ldh [rVBK], a
     ret
 
+SECTION "Bank 15 BGMapAddressAtScroll_Bank15", ROMX
+
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8: the BG map entry at the top-left corner of the
 ; visible screen. Clobbers A and DE. The drawing steps of this bank add their offset to it. (C1,
 ; E-0377)
@@ -5519,6 +5835,8 @@ BGMapAddressAtScroll_Bank15::
     srl a
     add_a_to_hl
     ret
+
+SECTION "Bank 15 UnpackBCDToDigitsArg1", ROMX
 
 ; Unpacks the BCD number in hTemp3-hTemp0 into seven digits at wArg1, most significant first: wArg1
 ; = hTemp3 as one digit, then the high and low digits of hTemp2, hTemp1 and hTemp0. Leading zeros
@@ -5572,6 +5890,8 @@ UnpackBCDToDigitsArg1::
 .return:
     ret
 
+SECTION "Bank 15 CopyBytesDEToHL_Bank15", ROMX
+
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy, BC = 0. Used by the screen-buffer copies of this bank and BreedMenu_Init. (C2,
 ; E-0377)
@@ -5586,6 +5906,8 @@ CopyBytesDEToHL_Bank15::
     or c
     jr nz, CopyBytesDEToHL_Bank15
     ret
+
+SECTION "Bank 15 CopyLow3BitsToWRAMBank2_Bank15", ROMX
 
 ; Sets rSVBK = 2, copies BC bytes from DE to HL with each byte ANDed with 7 (the CGB attribute
 ; palette bits), then sets rSVBK = 0; both addresses are read in WRAM bank 2 when they are in
@@ -5609,6 +5931,8 @@ CopyLow3BitsToWRAMBank2_Bank15::
     ldh [rSVBK], a
     ret
 
+SECTION "Bank 15 StoreBAtWordTableEntry_Bank15", ROMX
+
 ; HL = table of 16-bit addresses, A = index: writes B at the address in entry A; returns with DE =
 ; that address and BC kept, A and HL clobbered. The breeding menus use it to put a mark ($BC) or
 ; blank ($C3) at a list position. (C2, E-0377)
@@ -5626,11 +5950,15 @@ StoreBAtWordTableEntry_Bank15::
     ld [de], a
     ret
 
+SECTION "Bank 15 BreedMenu_CopyParentListGlyphs", ROMX
+
 ; Copies the list's glyph tiles (list $9D) six per call (below). (C1, E-0357)
 BreedMenu_CopyParentListGlyphs::
     ld hl, BreedMenu_CopyParentListGlyphs_Data
     ld a, $9d
     jr BreedMenu_CopyGlyphsSixPerCall
+
+SECTION "Bank 15 BreedMenu_CopyEggListGlyphs", ROMX
 
 ; Copies the egg list's glyph tiles (list $9C) six per call (below). (C1, E-0357)
 BreedMenu_CopyEggListGlyphs::
@@ -5697,6 +6025,8 @@ BreedMenu_CopyGlyphsSixPerCall::
     inc [hl]
     ret
 
+SECTION "Bank 15 DrawC5BEC6AtScrollOffsetDE_Bank15", ROMX
+
 ; DE = offset from the scroll origin: writes tiles $C5, $BE and $C6 to the BG map at
 ; BGMapAddressAtScroll_Bank15 + DE, + 2 and + 4, each place first corrected by
 ; StepBGMapAddressBackOnScrollWrap (back one row when it wrapped past column 31) and written with
@@ -5736,6 +6066,8 @@ DrawC5BEC6AtScrollOffsetDE_Bank15::
     ei
     ret
 
+SECTION "Bank 15 StoreC5BEC6AtHLStride2_Bank15", ROMX
+
 ; Writes $C5 at HL, $BE at HL + 2 and $C6 at HL + 4, leaving the bytes between; HL ends at HL + 4.
 ; The breeding list steps use it on the window buffer beside DrawC5BEC6AtScrollOffsetDE_Bank15. (C2,
 ; E-0377)
@@ -5753,6 +6085,8 @@ StoreC5BEC6AtHLStride2_Bank15::
     ld a, $c6
     ld [hl], a
     ret
+
+SECTION "Bank 15 CopyTileBytesToVRAM_Bank15", ROMX
 
 ; HL = source, DE = VRAM destination: copies 16 bytes (one tile), each with interrupts off after
 ; rSTAT bit 1 clears; HL and DE advance, C = 0. Used by ShowSaveFileInfoWindow and
@@ -5776,6 +6110,8 @@ CopyTileBytesToVRAM_Bank15::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 15 CopyScreenBufferRectWithAttrs_Bank15", ROMX
 
 ; HL = destination offset, DE = source offset (both inside wScreenTileBuffer), C = rows: for each
 ; row copies BC bytes with B = wArg1 and C = wArg2 (CopyBytesDEToHL_Bank15; every caller here sets
@@ -5840,6 +6176,8 @@ CopyScreenBufferRectWithAttrs_Bank15::
     jr nz, CopyScreenBufferRectWithAttrs_Bank15
     ret
 
+SECTION "Bank 15 BlankWordTableTargets", ROMX
+
 ; HL = table of 16-bit addresses, C = count: writes the blank tile $C3 at the address in each of the
 ; first C entries (StoreBAtWordTableEntry_Bank15); C = 0 still blanks entry 0. The breeding menus
 ; erase their option and list marks with it. (C2, E-0377)
@@ -5864,6 +6202,8 @@ BlankWordTableTargets::
     jr c, .loop
     ret
 
+SECTION "Bank 15 TenTimesTemp0PlusTenToDigits", ROMX
+
 ; Computes 10 x hTemp0 + 10 (TenTimesTemp0PlusTen), converts it (wDigits, Number24ToPackedBCD) and
 ; unpacks it to seven digits at wArg1 with leading zeros as $E3 (UnpackBCDToDigitsArg1). The
 ; breeding and hatching fee from MON_PLUS: BreedMenu_ChooseParents_WriteFee,
@@ -5882,6 +6222,8 @@ TenTimesTemp0PlusTenToDigits::
     call UnpackBCDToDigitsArg1
     ret
 
+SECTION "Bank 15 TenTimesTemp0PlusTen", ROMX
+
 ; HL = 10 x hTemp0 + 10 (Multiply8, then adds 10); hTemp0 is a MON_PLUS value, so this is the
 ; breeding or hatching fee. Clobbers A, B and C. (C2, E-0377)
 ; HL = 10 * hTemp0 + 10 (E-0117)
@@ -5897,6 +6239,8 @@ TenTimesTemp0PlusTen::
     adc $00
     ld h, a
     ret
+
+SECTION "Bank 15 BreedMenu_CopyDigitsToTextBuf", ROMX
 
 ; Copies the four bytes wArg4-wArg7 (the last four digits from UnpackBCDToDigitsArg1) to wTextBuf0,
 ; skipping every $E3, and ends it with $F0, so the fee prints without leading blanks. (C2, E-0377)
@@ -5922,6 +6266,8 @@ BreedMenu_CopyDigitsToTextBuf::
     ld a, $f0
     ld [de], a
     ret
+
+SECTION "Bank 15 SubtractArg1AmountFromGold", ROMX
 
 ; wGoldHi:wGoldMid:wGoldLo -= the 24-bit amount wArg3:wArg2:wArg1, with no floor (the callers check
 ; the gold first, for example IsAmountInArg1AboveGold); an amount above the gold wraps. Used for the
@@ -5954,6 +6300,8 @@ SubtractArg1AmountFromGold::
     ld [wGoldLo], a
     ret
 
+SECTION "Bank 15 LoadFamilyIconTileForRecordB_Bank15", ROMX
+
 ; B = SRAM record: with SRAM bank 0 enabled reads its MON_FAMILY byte, sets wWorkBuf = the family
 ; (low 4 bits) and wWorkBuf + 1 = wArg1 (the tile number), and far-calls
 ; LoadFamilyIconTileForWorkBuf to write the family icon to that VRAM tile; then disables SRAM. (C1,
@@ -5977,6 +6325,8 @@ LoadFamilyIconTileForRecordB_Bank15::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 15 DrawRecordField0EMarkAndField56Digits", ROMX
 
 ; Record wArg1, with SRAM bank 0 enabled (left enabled): writes the sex mark $CC + (MON_SEX & 1) at
 ; the address in wArg2/wArg3 and, three bytes on, MON_LEVEL as two digit tiles ($E0 + digit,
@@ -6032,6 +6382,8 @@ DrawRecordField0EMarkAndField56Digits::
     pop bc
     ret
 
+SECTION "Bank 15 BlankLeadingZeroDigits_F_Bank15", ROMX
+
 ; When wDigits is 0 sets it to $E3, and then when wDigits + 1 is 0 too sets that to $E3; a non-zero
 ; digit stops it. Adding the $E0 digit-tile base turns $E3 into the blank tile $C3, so leading zeros
 ; of a three-digit number (HLToDecimalDigits) are blank. (C2, E-0377)
@@ -6053,6 +6405,8 @@ BlankLeadingZeroDigits_F_Bank15::
 .return:
     ret
 
+SECTION "Bank 15 SetBitInFieldAtArg3", ROMX
+
 ; Index = the word wArg1/wArg2, field = the address in wArg3/wArg4: TestBitInFieldAtArg3 (which also
 ; sets wArg5), then ORs the mask into the byte, setting bit index of the field (byte index / 8, mask
 ; $80 >> (index & 7)). Used when a breeding or received record is stored, on the species bit fields.
@@ -6065,6 +6419,8 @@ SetBitInFieldAtArg3::
     or b
     ld [hl], a
     ret
+
+SECTION "Bank 15 TestBitInFieldAtArg3", ROMX
 
 ; Index = the word wArg1/wArg2, field = the address in wArg3/wArg4: HL = field + index / 8 and B =
 ; the mask TestBitInFieldAtArg3_Data[index & 7] ($80 first); returns A = wArg5 = $FF when that bit
@@ -6109,6 +6465,8 @@ TestBitInFieldAtArg3::
     ld a, $ff
     ld [wArg5], a
     ret
+
+SECTION "Bank 15 TestBitInFieldAtArg3_Data", ROMX
 
 ; Eight single-bit masks $80, $40, $20, $10, $08, $04, $02, $01. TestBitInFieldAtArg3 takes the bit
 ; number in wArg1:wArg2, finds the byte at wArg3:wArg4 plus bit number / 8, ANDs it with entry (bit
@@ -6221,6 +6579,8 @@ BreedMenu_ListMates::
     farcall MovePartyRecordsToFrontOfList
     ret
 
+SECTION "Bank 15 LoadSelectedRecordSex", ROMX
+
 ; With SRAM bank 0 enabled reads MON_SEX of record wSelectedRecord (LoadSRAMRecordByte), sets wArg1
 ; = its bit 0 (the sex) and disables SRAM. Used by BreedMenu_ChooseParents_ListPartners and
 ; BreedMenu_ShowSelectedRecord_ListMates to list mates of the other sex. (C2, E-0377; probed E-0384)
@@ -6240,6 +6600,8 @@ LoadSelectedRecordSex::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 15 ClearThreeTileRows", ROMX
 
 ; Fills tile areas with the plain pattern tile (FillTilesBxC): 4 tiles at vTiles2 + $7C0, 3 at
 ; vTiles1 + $400 and 2 at vTiles1 + $4A0, then falls through to ClearTileAreas2700_1750_17D0 (9 at
@@ -6275,6 +6637,8 @@ ClearTileAreas2700_1750_17D0::
     call FillTilesBxC
     ret
 
+SECTION "Bank 15 ClearTileAreas1240_1700_14E0", ROMX
+
 ; Fills tile areas with the plain pattern tile (FillTilesBxC): 12 tiles at vTiles1 + $240, 13 at
 ; vTiles1 + $700 and 17 at vTiles1 + $4E0. Called by BreedMenu_ChooseParents_ClearList before the
 ; list is drawn. (C1, E-0377)
@@ -6291,6 +6655,8 @@ ClearTileAreas1240_1700_14E0::
     ld bc, $1101
     call FillTilesBxC
     ret
+
+SECTION "Bank 15 DrawRecordNameAndSpeciesName", ROMX
 
 ; Record wArg1, with SRAM bank 0 enabled: copies its MON_NAME into wNameGlyphBuf
 ; (CopyRecordNameToNameGlyphBuf, $F0 at + $A) and draws it with wArg5 = 2, then copies the name of
@@ -6338,6 +6704,8 @@ DrawRecordNameAndSpeciesName::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 15 BreedMenu_CopyParentRecords", ROMX
+
 ; Copies the chosen base (wSelectedRecord) into wRecordBufA and the mate under the cursor into
 ; wRecordBufB ($A5 bytes each) for ComputeBreedingChild. (C2, E-0357; probed E-0384)
 BreedMenu_CopyParentRecords::
@@ -6382,6 +6750,8 @@ BreedMenu_CopyParentRecords::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 15 CopyMonsterNameToBuffer_B15", ROMX
+
 ; HL = monster (species) number: reads the pointer of the monster names from entry 2 of
 ; StringDatabase in bank $08 (wDataBank set to 8 and restored), then the name pointer at that list +
 ; 2 x HL, and copies 16 bytes of that string from bank $08 to wNameGlyphBuf (CopyFromBankWaitVRAM).
@@ -6417,6 +6787,8 @@ CopyMonsterNameToBuffer_B15::
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
+
+SECTION "Bank 15 ShowSaveFileInfoWindow", ROMX
 
 ; Clears the text tiles and checks the save (CheckSaveData). Without a valid save it shows string
 ; $28 ('Unused.') and sets wScreenSubStep = 1. With one it draws the window: the saved name of the
@@ -6814,6 +7186,8 @@ ShowSaveFileInfoWindow::
     ld [wScreenSubStep], a
     ret
 
+SECTION "Bank 15 ShowSaveFileInfoWindow_Data1", ROMX
+
 ; Three words, addresses of cells in wWindowTileBuffer (rows of 20 bytes): $C3A8, $C3D0, $C3F8,
 ; which are rows 8, 10 and 12 of column 8. ShowSaveFileInfoWindow indexes them with the entry number
 ; (0 up to the count byte read at sSavedPlayerName + $F1) and stores tile $EA in the cell and tile
@@ -6840,6 +7214,8 @@ WriteDigitTilesFromDEToVRAM::
     jr c, WriteDigitTilesFromDEToVRAM
     ret
 
+SECTION "Bank 15 SRAMBank1RecordAddress", ROMX
+
 ; With SRAM bank 1 enabled reads the record number at HL + C and returns HL = sBank1Records + $6F x
 ; that number (a compact record of the saved party); then selects SRAM bank 0 and disables SRAM.
 ; Clobbers A, B, C and DE. Used by ShowSaveFileInfoWindow for the saved party list. (C2, E-0377;
@@ -6862,6 +7238,8 @@ SRAMBank1RecordAddress::
     ld [rRAMB], a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 15 ShowSaveFileInfoWindow_Data2", ROMX
 
 ; Three words, addresses in wWindowTileBuffer: $C3AA, $C3D2, $C3FA, which are rows 8, 10 and 12 of
 ; column 10. For each saved entry ShowSaveFileInfoWindow takes the number in byte $62 of its record
@@ -6914,6 +7292,8 @@ RestorePlayerPositionState::
     xor a
     ld [wSavedPositionValid], a
     ret
+
+SECTION "Bank 15 IncrementTwoCountersCappedAt99", ROMX
 
 ; For each of the pointers wCounterPtr0Lo/wCounterPtr0Hi and wCounterPtr1Lo/wCounterPtr1Hi (skipped
 ; when its high byte is $FF or the word is 0): adds 1 to the byte it points to unless that byte is
@@ -6969,6 +7349,8 @@ IncrementTwoCountersCappedAt99::
     ld [hl], a
     ret
 
+SECTION "Bank 15 PrepareCounterPtr0LoCountersAndRequestScript", ROMX
+
 ; Clears the six bytes wCounterPtr0Lo-wCounterArg1, enables SRAM bank 0 and clears wArg1; when
 ; wRecordBufA + MON_ITEM (the equipped item) is non-zero prepares counter 0 for it
 ; (PrepareCounterEntry), and outside a link (wLinkMode 0) counter 1 for wRecordBufB + MON_ITEM;
@@ -7020,6 +7402,8 @@ PrepareCounterPtr0LoCountersAndRequestScript::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
+
+SECTION "Bank 15 PrepareCounterEntry", ROMX
 
 ; A = equipped item (MON_ITEM), DE = wCounterPtr0Lo or wCounterPtr1Lo: hTemp0 = A + $3F, the item
 ; id. Walks the 100 entries of wItemStorage and stops at the first that holds that item or is empty
@@ -7118,6 +7502,8 @@ PrepareCounterEntry::
     xor a
     ld [wArg1], a
     ret
+
+SECTION "Bank 15 BreedMenu_Setup_DrawOptionBox_TileRect", ROMX
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
@@ -7676,6 +8062,8 @@ HibernateMenu_CountSleepers::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 15 HibernateMenu_DrawSleeperPage", ROMX
+
 ; Draws the sleeper list's page: for each entry on the page loads its name from the compact record
 ; (LoadRecordNameEntry0) and copies its glyphs to the row's tiles. (C1, E-0357)
 HibernateMenu_DrawSleeperPage::
@@ -7795,6 +8183,8 @@ HibernateMenu_DrawSleeperPage::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 15 HibernateMenu_DrawSleeperPage_Data", ROMX
+
 ; Five words, VRAM tile addresses $8D00, $8D50, $8DA0, $8F00 and $8A40 (vTiles1 + $500, $550, $5A0,
 ; $700, $240). HibernateMenu_DrawSleeperPage draws the name of sleeper c of the page with
 ; CopyGlyphTilesToVRAM at word c for c = 0 to 3; the fifth sleeper goes to
@@ -7854,6 +8244,8 @@ HibernateMenu_DrawSleeperPage_FifthNameGlyphs::
     ld [wGlyphListPos], a
     ret
 
+SECTION "Bank 15 GlyphCopyArgsForA_Bank15", ROMX
+
 ; A = glyph: returns the arguments of a CopyFromBank copy of its tile: DE = GlyphFont + 16 x A, HL =
 ; the VRAM address in entry wGlyphListStart of GlyphCopyArgsForA_Bank15_Data ($8A40, $8A50, $8A60,
 ; $8CE0, $8CF0), B = $1F (the bank) and C = $10 (bytes). Used by
@@ -7891,6 +8283,8 @@ GlyphCopyArgsForA_Bank15::
     ld c, $10
     ret
 
+SECTION "Bank 15 GlyphCopyArgsForA_Bank15_Data", ROMX
+
 ; Five words, VRAM tile addresses $8A40, $8A50, $8A60, $8CE0, $8CF0 (vTiles1 + $240, $250, $260,
 ; $4E0, $4F0). GlyphCopyArgsForA_Bank15 returns the word numbered wGlyphListStart as the destination
 ; of the glyph tile it is asked to copy; HibernateMenu_DrawSleeperPage_FifthNameGlyphs advances
@@ -7920,6 +8314,8 @@ LoadFamilyIconTileForArg1Record::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 15 HibernateMenu_DrawSleeperStatsBox", ROMX
 
 ; Draws a sleeper's stats box from its compact record (RecordAddressWithBank1Slot1D): the sex mark,
 ; the level and the packed stat fields as digits. (C2, E-0357; probed E-0384)
@@ -8032,6 +8428,8 @@ HibernateMenu_DrawSleeperStatsBox::
     ld [rRAMG2], a
     ret
 
+SECTION "Bank 15 HibernateMenu_DrawSleeperStatsBox_Data", ROMX
+
 ; Four words, addresses of cells in wWindowTileBuffer (rows of 20 bytes): $C3D4, $C3D8, $C3FC,
 ; $C400, which are row 10 column 12, row 10 column 16, row 12 column 12 and row 12 column 16.
 ; HibernateMenu_DrawSleeperStatsBox unpacks four values of the record from
@@ -8063,6 +8461,8 @@ RecordAddressWithBank1Slot1D::
     ld a, $01
     ld [rRAMB], a
     ret
+
+SECTION "Bank 15 HibernateMenu_DrawSleeperNameTiles", ROMX
 
 ; Draws a sleeper's name and its species name (from StringDatabase entry 4 in bank $08) from its
 ; compact record into VRAM. (C1, E-0357)
@@ -8131,6 +8531,8 @@ HibernateMenu_DrawSleeperNameTiles::
     xor a
     ld [rRAMG2], a
     ret
+
+SECTION "Bank 15 BlankLeadingZeroDigits_F_Bank15_2", ROMX
 
 ; The same as BlankLeadingZeroDigits_F_Bank15: wDigits 0 becomes $E3, then wDigits + 1 when it is 0
 ; too, so the leading zeros of a three-digit number draw as the blank tile $C3 after the $E0 digit

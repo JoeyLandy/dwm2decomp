@@ -1,7 +1,7 @@
 ; ROM bank $07: link cable sessions and the title screen (game mode 5)
 ; The annotated listing of this bank is build/listing/bank07.asm.
 
-SECTION "Bank 07", ROMX[$4000], BANK[$07]
+SECTION "Bank 07", ROMX
     db $07
 
 ; Loads DE = BeginStringDisplay_Bank07_StringCategories (this bank string table: 7 categories of
@@ -26,6 +26,8 @@ ShowString_Bank07::
     call BeginStringDisplay_Bank07
     call RunStringDisplayToEnd
     ret
+
+SECTION "Bank 07 BeginStringDisplay_Bank07_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -526,6 +528,8 @@ GameMode5_Init_Boot::
     ld a, $01
     jp ResumeAfterModeChange
 
+SECTION "Bank 07 GameMode5_Init_TitleMenu", ROMX
+
 ; Game mode 5 start-up, wModeState 1 (the title menu): silences the sound, clears the work and link
 ; areas, sets the SGB border and palettes and starts the fade in; clears the player, story flags and
 ; key-world data and the working SRAM areas (bank 0, the first $6F bytes of bank 1, bank 2), keeping
@@ -706,6 +710,8 @@ GameMode5_Init_TitleMenu::
     ld a, $09
     jp ResumeAfterModeChange
 
+SECTION "Bank 07 FillScreenTileBufferWithD", ROMX
+
 ; D = tile: fills the visible 20 x 18 part of wScreenTileBuffer (rows 32 bytes apart; bytes 20-31 of
 ; each row untouched) with D. Returns A = D, B = 20, C = 0 and HL = wScreenTileBuffer + 18 * 32. The
 ; link and title screens of this bank call it with D = $C3 (a blank tile) before drawing, and once
@@ -732,6 +738,8 @@ FillScreenTileBufferWithD::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 07 CopyRecordRectToScreenBuffer_Bank07", ROMX
 
 ; HL = a rectangle record: a word offset, a width byte and a row-count byte, then width x rows tile
 ; bytes. Copies the tiles row by row into wScreenTileBuffer + offset, rows 32 bytes apart. Returns
@@ -772,6 +780,8 @@ CopyRecordRectToScreenBuffer_Bank07::
     dec c
     jr nz, .loop
     ret
+
+SECTION "Bank 07 DrawScreenBufferToBGMap0_Bank07", ROMX
 
 ; Copies the visible 20 x 18 part of wScreenTileBuffer (rows 32 bytes apart) to vBGMap0: sets HL =
 ; vBGMap0, DE = wScreenTileBuffer, B = 20, C = 18 and falls into CopyRect32StrideToVRAM_Bank07. Game
@@ -815,6 +825,8 @@ CopyRect32StrideToVRAM_Bank07::
     dec c
     jr nz, CopyRect32StrideToVRAM_Bank07
     ret
+
+SECTION "Bank 07 GameMode5_Init_ReturnToTitle", ROMX
 
 ; Game mode 5 start-up, wModeState 2 (returning to the title from a game): clears the screen state,
 ; loads the save (RunLoadGameSteps until done, and the key world when in one), fades in,
@@ -921,6 +933,8 @@ GameMode5_Init_ReturnToTitle::
     ld a, $09
     jp ResumeAfterModeChange
 
+SECTION "Bank 07 GameMode5_Init_ReloadTitle", ROMX
+
 ; Game mode 5 start-up, wModeState 3: the same reload of the save and title screen as wModeState 2.
 ; (C1, E-0357)
 GameMode5_Init_ReloadTitle::
@@ -1022,6 +1036,8 @@ GameMode5_Init_ReloadTitle::
     ld a, $09
     jp ResumeAfterModeChange
 
+SECTION "Bank 07 GameMode5_Init_LinkBattleSetup", ROMX
+
 ; Game mode 5 start-up, wModeState 4 (the link battle set-up): copies the link rules
 ; (GameMode5_Init_LinkBattleSetup_LoadRules), reloads the save, decompresses the link screen tiles
 ; and shows its strings. (C1, E-0357)
@@ -1122,6 +1138,8 @@ GameMode5_Init_LinkBattleSetup::
     ld a, $09
     jp ResumeAfterModeChange
 
+SECTION "Bank 07 GameMode5_Init_LinkBattleSetup_LoadRules", ROMX
+
 ; Copies the 10 link rule bytes to wLinkRules: the saved copy (wLinkRulesCopy) when wLinkSetupMode
 ; is 2, otherwise the defaults at GameMode5_Init_LinkBattleSetup_LoadRules_Data. (C2, E-0357; probed
 ; E-0375)
@@ -1146,6 +1164,8 @@ GameMode5_Init_LinkBattleSetup_LoadRules::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 07 GameMode5_Init_LinkBattleSetup_LoadRules_Data", ROMX
 
 ; The ten default link rule bytes $01, $00, $00, $63, $29, $01, $00, $00, $63, $80, copied to
 ; wLinkRules (which has the single-level limit in +3 = 99, the total level word $0129 = 297 in
@@ -1174,6 +1194,8 @@ CopyLinkRulesToLinkRulesCopy::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 07 GameMode5_Init_ClearTiles", ROMX
 
 ; Game mode 5 start-up, wModeState 5: clears vTiles0 ($1800 bytes, waiting for VRAM access), then
 ; continues into wModeState 6. (C1, E-0357)
@@ -1316,6 +1338,8 @@ GameMode5_Init_AfterLinkBattle::
     ld a, $09
     jp ResumeAfterModeChange
 
+SECTION "Bank 07 GameMode5_Init_AfterLinkBattle_CopyPartyState", ROMX
+
 ; Copies each party member's HP (MON_HP), MP (MON_MP) and status (MON_STATUS) from its SRAM record
 ; into wBattleStateBuffer, 5 bytes per member, with SRAM enabled through rRAMG; then, unless
 ; wPartyCount is 3, writes one 5-byte entry of $FF after the last member. (C2, E-0369; probed
@@ -1376,6 +1400,8 @@ GameMode5_Init_AfterLinkBattle_CopyPartyState::
     inc de
     ret
 
+SECTION "Bank 07 GameMode5_Update", ROMX
+
 ; Per-frame routine of game mode 5 (the opening and title screens, the new player set-up and the
 ; link set-up), far-called by RunGameModeUpdate_Title. It jumps through its table by wModeState: 0
 ; GameMode5_Update_LoadScreens (intro screens and title screen), 1 GameMode5_Update_TitleMenuState
@@ -1405,10 +1431,14 @@ GameMode5_Update_ExchangeAndDrawMonsters::
     farcall ExchangeJoypadAndDrawMonsters
     ret
 
+SECTION "Bank 07 GameMode5_Update_ExchangeAndDrawSprites", ROMX
+
 ; Game mode 5 frame, wModeState 7: far-calls ExchangeJoypadAndDrawSprites. (C1, E-0357)
 GameMode5_Update_ExchangeAndDrawSprites::
     farcall ExchangeJoypadAndDrawSprites
     ret
+
+SECTION "Bank 07 MoveVerticalCursorInListHL", ROMX
 
 ; HL = cursor byte, DE = table of BG map addresses (CursorPositionWords_Bank07 + offset),
 ; wSubMenuCursor = number of entries. Every 8 frames (wFrameCounterLo & 7 = 0) it blinks the cursor
@@ -1475,6 +1505,8 @@ MoveVerticalCursorInListHL::
     call WriteBBTileAtWordTableEntryC_Bank07
     ret
 
+SECTION "Bank 07 BlinkHorizontalListCursor_Bank07", ROMX
+
 ; A blinking cursor that Left/Right move through a list: every 8 frames the cursor tile at entry
 ; [HL] alternates with a blank; Left and Right change [HL], wrapping within wSubMenuCursor2 entries,
 ; and redraw it. (C1, E-0357)
@@ -1532,6 +1564,8 @@ BlinkHorizontalListCursor_Bank07::
     call WriteBBTileAtWordTableEntryC_Bank07
     ret
 
+SECTION "Bank 07 WriteBBTileAtWordTableEntryC_Bank07", ROMX
+
 ; Loads C = [HL] and writes the cursor tile $BB at the BG map address in entry C of the word table
 ; at DE, after waiting twice for rSTAT bit 1 to clear (VRAM accessible); interrupts stay enabled. HL
 ; is kept and A = $BB. The blinking cursors of MoveVerticalCursorInListHL,
@@ -1566,6 +1600,8 @@ WriteBBTileAtWordTableEntryC_Bank07::
     ld [hl], a
     pop hl
     ret
+
+SECTION "Bank 07 EraseCursorAtEntryHL_Bank07", ROMX
 
 ; Loads C = [HL] and falls into WriteC3TileAtWordTableEntryC_Bank07, blanking (tile $C3) the cursor
 ; at entry [HL] of the word table at DE. The blinking cursors use it for their off phase, and
@@ -1606,6 +1642,8 @@ WriteC3TileAtWordTableEntryC_Bank07::
     pop hl
     ret
 
+SECTION "Bank 07 CursorPositionWords_Bank07", ROMX
+
 ; menu code in bank $07 passes $5086, $5096, $509E, $50AA ... $50FA to
 ; WriteBCTileAtWordTableEntry_Bank07, EraseCursorAtEntryHL_Bank07 and MoveVerticalCursorInListHL;
 ; each run indexed by a menu position; 60 words in all (E-0220, C1)
@@ -1634,6 +1672,8 @@ WriteBCTileAtWordTableEntry_Bank07::
     call WriteVRAMByte
     ret
 
+SECTION "Bank 07 ClearBGMap0Screen20x18", ROMX
+
 ; Writes the blank tile $C3 to the visible 20 x 18 area of vBGMap0 (rows 32 bytes apart) with
 ; WriteVRAMByteInc. Nothing in src calls, jumps to or lists it (it follows a ret), so whether it
 ; ever runs is unknown. (C1, E-0375)
@@ -1659,6 +1699,8 @@ ClearBGMap0Screen20x18::
     jr nz, .loop
     ret
 
+SECTION "Bank 07 ShowStringHL_Bank07", ROMX
+
 ; H = string category, L = string index: stores them in wStringCategory and wStringIndex and
 ; far-calls BeginStringDisplay_Bank07, which only starts the string; the text printer then draws it
 ; over the next frames while wTextFlags is non-zero, and the callers wait for that. The link set-up
@@ -1673,6 +1715,8 @@ ShowStringHL_Bank07::
     farcall BeginStringDisplay_Bank07
     ret
 
+SECTION "Bank 07 GameMode5_Init_LinkBattleSetup_ShowString_Bank07", ROMX
+
 ; Shows string H:L (category H, index L) with ShowString_Bank07. (C1, E-0357)
 GameMode5_Init_LinkBattleSetup_ShowString_Bank07::
     ld a, h
@@ -1681,6 +1725,8 @@ GameMode5_Init_LinkBattleSetup_ShowString_Bank07::
     ld [wStringIndex], a
     farcall ShowString_Bank07
     ret
+
+SECTION "Bank 07 SaveCheckScreenRects", ROMX
 
 ; after CheckSaveData, GameMode5_Init_TitleMenu.call_fill_screen_tile_buffer_with_d reads the word
 ; at $5149 + 2 * hTemp0 (hTemp0 >= 1) and passes it to CopyRecordRectToScreenBuffer_Bank07; three
@@ -1949,6 +1995,8 @@ GameMode5_Update_LoadScreens_Screen0_Load::
     ld [wWorkBuf + $1], a
     ret
 
+SECTION "Bank 07 GameMode5_Update_ShowScreen0", ROMX
+
 ; Intro screen 0, step 2: shows the screen for three seconds (60-frame units in wWorkBuf + 1), then
 ; goes to intro screen 1; after two seconds A, B or Start skips ahead. (C1, E-0357)
 GameMode5_Update_ShowScreen0::
@@ -1972,6 +2020,8 @@ GameMode5_Update_ShowScreen0::
     and $0b
     ret
 
+SECTION "Bank 07 StartFadeToTitleScreenState1", ROMX
+
 ; Sets wTitleScreenSubState = 0 and wTitleScreenState = 1 and starts palette fade 4, the same move
 ; to intro screen 1 as GameMode5_Update_ShowScreen0_FadeOut. Nothing in src calls or jumps to it: it
 ; follows GameMode5_Update_ShowScreen0, whose button check (wJoypadPressed & $0B) ends in an
@@ -1988,6 +2038,8 @@ StartFadeToTitleScreenState1::
     call StartPaletteFade
     ret
 
+SECTION "Bank 07 GameMode5_Update_ShowScreen0_FadeOut", ROMX
+
 ; Starts the next intro screen: wTitleScreenState + 1, sub-state 0, fade out. (C1, E-0357)
 GameMode5_Update_ShowScreen0_FadeOut::
     ld hl, wTitleScreenState
@@ -1997,6 +2049,8 @@ GameMode5_Update_ShowScreen0_FadeOut::
     ld a, $04
     call StartPaletteFade
     ret
+
+SECTION "Bank 07 GameMode5_Update_LoadScreens_Screen1", ROMX
 
 ; Intro screen 1 (wTitleScreenState 1), by wTitleScreenSubState: steps 0 and 1 run
 ; GameMode5_Update_LoadScreens_Screen1_Load (step 1 decompresses and draws the screen and fades in),
@@ -2056,6 +2110,8 @@ GameMode5_Update_LoadScreens_Screen1_Load::
     ld [wWorkBuf + $1], a
     ret
 
+SECTION "Bank 07 GameMode5_Update_LoadScreens_ShowScreen1", ROMX
+
 ; Intro screen 1, step 2: shows it for three seconds (A, B or Start skip after two), then intro
 ; screen 2. (C1, E-0357)
 GameMode5_Update_LoadScreens_ShowScreen1::
@@ -2079,6 +2135,8 @@ GameMode5_Update_LoadScreens_ShowScreen1::
     and $0b
     ret
 
+SECTION "Bank 07 StartFadeToTitleScreenState2", ROMX
+
 ; Sets wTitleScreenSubState = 0 and wTitleScreenState = 2 and starts palette fade 4, the same move
 ; to intro screen 2 as GameMode5_Update_LoadScreens_ShowScreen1_FadeOut. Nothing in src calls or
 ; jumps to it: it follows GameMode5_Update_LoadScreens_ShowScreen1, whose button check ends in an
@@ -2094,6 +2152,8 @@ StartFadeToTitleScreenState2::
     call StartPaletteFade
     ret
 
+SECTION "Bank 07 GameMode5_Update_LoadScreens_ShowScreen1_FadeOut", ROMX
+
 ; Starts the next intro screen: wTitleScreenState + 1, sub-state 0, fade out. (C1, E-0357)
 GameMode5_Update_LoadScreens_ShowScreen1_FadeOut::
     ld hl, wTitleScreenState
@@ -2103,6 +2163,8 @@ GameMode5_Update_LoadScreens_ShowScreen1_FadeOut::
     ld a, $04
     call StartPaletteFade
     ret
+
+SECTION "Bank 07 GameMode5_Update_LoadScreens_Screen2", ROMX
 
 ; Intro screen 2 (wTitleScreenState 2), by wTitleScreenSubState: steps 0 and 1 run
 ; GameMode5_Update_LoadScreens_Screen2_Load (step 1 decompresses and draws the screen and fades in),
@@ -2162,6 +2224,8 @@ GameMode5_Update_LoadScreens_Screen2_Load::
     ld [wWorkBuf + $1], a
     ret
 
+SECTION "Bank 07 GameMode5_Update_LoadScreens_Screen2_Wait", ROMX
+
 ; Intro screen 2, step 2: after $5A frames goes on to the next state; after $3C frames A, B or Start
 ; jump straight to state 3 (the title opening). (C1, E-0357)
 GameMode5_Update_LoadScreens_Screen2_Wait::
@@ -2196,6 +2260,8 @@ GameMode5_Update_LoadScreens_Screen2_Wait::
     call StartPaletteFade
     ret
 
+SECTION "Bank 07 GameMode5_Update_LoadScreens_TitleOpening", ROMX
+
 ; Title state 3: runs the title opening (TitleOpening); A, B or Start skip it to state 4. (C1,
 ; E-0357)
 GameMode5_Update_LoadScreens_TitleOpening::
@@ -2210,6 +2276,8 @@ GameMode5_Update_LoadScreens_TitleOpening::
     ld a, $04
     call StartPaletteFade
     ret
+
+SECTION "Bank 07 TitleOpening", ROMX
 
 ; The title opening (wTitleScreenState 3, called by GameMode5_Update_LoadScreens_TitleOpening):
 ; jumps by wTitleScreenSubState to 0 TitleOpening_Load, 1 TitleOpening_StartSparkles, 2
@@ -2327,6 +2395,8 @@ TitleOpening_Load::
     inc [hl]
     ret
 
+SECTION "Bank 07 TitleOpening_StartSparkles", ROMX
+
 ; Title opening, step 1: every 8 frames starts another of 10 falling sparkles (positions from a
 ; table), moving the ones already started. (C1, E-0357)
 TitleOpening_StartSparkles::
@@ -2357,6 +2427,8 @@ TitleOpening_StartSparkles::
     inc [hl]
     ret
 
+SECTION "Bank 07 TitleOpening_LowerTitle", ROMX
+
 ; Title opening, step 2: moves the title sprite down 1/4 pixel per frame (wWorkBuf) until it reaches
 ; Y $50, keeping the sparkles moving. (C1, E-0357)
 TitleOpening_LowerTitle::
@@ -2382,6 +2454,8 @@ TitleOpening_LowerTitle::
     inc [hl]
     ret
 
+SECTION "Bank 07 TitleOpening_Hold", ROMX
+
 ; Title opening, step 3: keeps the title sprite and sparkles drawn for wLinkMenuEntry frames, then
 ; fades out. (C1, E-0357)
 TitleOpening_Hold::
@@ -2399,6 +2473,8 @@ TitleOpening_Hold::
     ld a, $04
     call StartPaletteFade
     ret
+
+SECTION "Bank 07 TitleOpening_LoadNextScreen", ROMX
 
 ; Title opening, step 4: after the fade decompresses and draws the next screen (tiles, map,
 ; attributes and palettes) and fades in, waiting $5A frames. (C1, E-0357)
@@ -2446,6 +2522,8 @@ TitleOpening_LoadNextScreen::
     ld [wWorkBuf], a
     ret
 
+SECTION "Bank 07 TitleOpening_FadeOut", ROMX
+
 ; Title opening, step 5: waits out the $5A frames, then fades out. (C1, E-0357)
 TitleOpening_FadeOut::
     ld a, [wFadeState]
@@ -2460,6 +2538,8 @@ TitleOpening_FadeOut::
     ld a, $04
     call StartPaletteFade
     ret
+
+SECTION "Bank 07 TitleOpening_LoadTitle", ROMX
 
 ; Title opening, step 6: decompresses the title screen's tiles and both BG map layers and its
 ; palettes, fades in and clears the sparkle state. (C1, E-0357)
@@ -2519,6 +2599,8 @@ TitleOpening_LoadTitle::
     inc [hl]
     ret
 
+SECTION "Bank 07 TitleOpening_ScrollWithSparkles", ROMX
+
 ; Title opening, step 7: starts the sparkles again (one every 8 frames, up to 10) and scrolls the
 ; screen up half a pixel per frame (hScrollY from wWorkBuf + 1). (C1, E-0357)
 TitleOpening_ScrollWithSparkles::
@@ -2572,6 +2654,8 @@ TitleOpening_ScrollWithSparkles::
     inc [hl]
     ret
 
+SECTION "Bank 07 TitleOpening_Finish", ROMX
+
 ; Title opening, step 8: keeps the sparkles moving for a count of frames, then moves to the next
 ; title state with a fade. (C1, E-0357)
 TitleOpening_Finish::
@@ -2591,6 +2675,8 @@ TitleOpening_Finish::
     call StartPaletteFade
     ret
 
+SECTION "Bank 07 DrawMetaSprite0AtX50YWorkBuf1", ROMX
+
 ; Draws meta-sprite set 0, sub-index 0 (tile offset 0, attribute XOR 0) with DrawMetaSprite at X =
 ; $50 and Y = wWorkBuf + 1, the title sprite of the opening: TitleOpening_LowerTitle moves it down
 ; by adding $40 to the wWorkBuf word each frame and TitleOpening_Hold keeps drawing it. (C1, E-0375)
@@ -2609,6 +2695,8 @@ DrawMetaSprite0AtX50YWorkBuf1::
     farcall DrawMetaSprite
     ret
 
+SECTION "Bank 07 SetScrollYFromWorkBuf1", ROMX
+
 ; hScrollY = A = wWorkBuf + 1. TitleOpening_LoadTitle and TitleOpening_ScrollWithSparkles keep the
 ; scroll position of the title in the high byte of the wWorkBuf word and set the scroll with it.
 ; (C2, E-0375)
@@ -2618,6 +2706,8 @@ SetScrollYFromWorkBuf1::
     ld a, [wWorkBuf + $1]
     ldh [hScrollY], a
     ret
+
+SECTION "Bank 07 TitleOpening_MoveSparkles", ROMX
 
 ; Moves the sparkles: each 6-byte entry from HL (B of them) advances by its kind (falling toward
 ; wWorkBuf + 1 + $50, rising, or another path) and is drawn. (C1, E-0357)
@@ -2742,6 +2832,8 @@ TitleOpening_MoveSparkles::
     jp nz, TitleOpening_MoveSparkles
     ret
 
+SECTION "Bank 07 TitleOpening_MoveSparkles_DrawSparkle", ROMX
+
 ; Draws one sparkle: frame (entry byte & 3) of meta-sprite set $1E at the entry's X and Y, with tile
 ; offset $10 and palette 1. (C1, E-0357)
 TitleOpening_MoveSparkles_DrawSparkle::
@@ -2764,6 +2856,8 @@ TitleOpening_MoveSparkles_DrawSparkle::
     farcall DrawMetaSprite
     pop hl
     ret
+
+SECTION "Bank 07 TitleOpening_InitSparkle", ROMX
 
 ; Starts a sparkle entry at HL: a random X ($30-$6F) and a start Y and kind that depend on the
 ; opening step (falling from the title sprite, from slightly above it, or kind 2). (C2, E-0357;
@@ -2815,6 +2909,8 @@ TitleOpening_InitSparkle::
     xor a
     ld [hli], a
     ret
+
+SECTION "Bank 07 TitleOpening_StartSparkles_Data", ROMX
 
 ; Twelve WRAM addresses $D09F, $D0A5, $D0AB, ... $D0E1 (wWorkBuf + 2 + 6 * n), indexed by the
 ; sparkle number n kept in wLinkMenuCounter: the start of each six-byte sparkle record.
@@ -2904,6 +3000,8 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_Load::
     ldh [hScrollY], a
     ret
 
+SECTION "Bank 07 GameMode5_Update_LoadScreens_StartTitleMusic", ROMX
+
 ; Title screen with music (wTitleScreenState 4 of GameMode5_Update_LoadScreens), step 1
 ; (wTitleScreenSubState 1): after the fade (wFadeState 0) sets wWorkBuf = $B4, queues music 6
 ; (QueueMusic) and moves to step 2, GameMode5_Update_LoadScreens_TitlePressStart. That step only
@@ -2920,6 +3018,8 @@ GameMode5_Update_LoadScreens_StartTitleMusic::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 GameMode5_Update_LoadScreens_TitlePressStart", ROMX
 
 ; Title state with music, step 2: A, B or Start go to the title menu (wModeState 1); when the music
 ; has ended on all channels and the timer has run out it goes back to the intro (state 2). (C1,
@@ -2965,6 +3065,8 @@ GameMode5_Update_LoadScreens_TitlePressStart::
     inc [hl]
     ret
 
+SECTION "Bank 07 DrawCGBMetaSpriteAt38_30", ROMX
+
 ; On CGB only (wIsCGB non-zero): sets hSpriteSetIndex 0 and hSpriteSubIndex 0 (the code computes $01
 ; XOR $01), clears hSpriteTileOffset, hSpriteOriginXHi, hSpriteOriginYHi and hSpriteAttrXor, sets
 ; the origin to ($38, $30) and far-calls DrawMetaSpriteSet_BankE1. Nothing in src calls or jumps to
@@ -2991,6 +3093,8 @@ DrawCGBMetaSpriteAt38_30::
     ldh [hSpriteOriginY], a
     farcall DrawMetaSpriteSet_BankE1
     ret
+
+SECTION "Bank 07 ResetLinkScreenPalettes", ROMX
 
 ; Sets the DMG palette bytes wDMGPaletteBGP, wDMGPaletteOBP0 and wDMGPaletteOBP1 to $D2, $D2, $E2,
 ; copies them to wDMGPaletteBytes and resets the fade (ResetFadeFromDMGPaletteBGP). With the Super
@@ -3067,6 +3171,8 @@ ResetLinkScreenPalettes::
 .return:
     ret
 
+SECTION "Bank 07 GameMode5_Update_TitleMenuState", ROMX
+
 ; Game mode 5, wModeState 1, the title menu: after any fade runs the screen for wTitleScreenState:
 ; the menu, the link start, save-data-lost, continue, the link error, the save screens, the new
 ; player set-up, the link refusal and the duo set-up. (C1, E-0357)
@@ -3125,6 +3231,8 @@ GameMode5_Update_TitleMenu::
 .return2:
     ret
 
+SECTION "Bank 07 TitleMenu", ROMX
+
 ; Title state 0, run each frame by GameMode5_Update_TitleMenu: jumps by wTitleScreenSubState to 0
 ; TitleMenu_Draw (draws the menu and sends $F4), 1 TitleMenu_SendHighlight (moves the cursor and
 ; sends the highlighted entry over the link) and 2 TitleMenu_Choice (runs the chosen entry). (C1,
@@ -3182,6 +3290,8 @@ TitleMenu_Draw::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 TitleMenu_SendHighlight", ROMX
 
 ; Title menu, step 1: keeps sending $F4 while a fade or text runs; otherwise sends the highlighted
 ; entry's byte each frame ($C0 when A is pressed) so a linked partner sees the choice. Up/Down move
@@ -3295,6 +3405,8 @@ TitleMenu_SendHighlight::
 .return:
     ret
 
+SECTION "Bank 07 SendLinkByteForMenuOption", ROMX
+
 ; Sends over the link the byte of the highlighted title menu entry:
 ; SendLinkByteForMenuOption_Data[wMenuOption & $0F] ($F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3 for
 ; entries 0-7), stored in wScreenSubStep, with wScreenStep 0 around the send (SerialSendByte) and 1
@@ -3320,6 +3432,8 @@ SendLinkByteForMenuOption::
     ld a, $01
     ld [wScreenStep], a
     ret
+
+SECTION "Bank 07 TitleMenu_Choice", ROMX
 
 ; Runs the title menu entry chosen (wMenuState & $0F): continue, new game, the link entries and
 ; others. (C1, E-0357)
@@ -3391,6 +3505,8 @@ TitleMenu_Continue_ShowMaster::
     inc [hl]
     ret
 
+SECTION "Bank 07 TitleMenu_Continue_Confirm", ROMX
+
 ; Continue, step 1: A confirms (starts loading the save), B returns to the menu (blanking the
 ; screen). (C1, E-0357)
 TitleMenu_Continue_Confirm::
@@ -3421,6 +3537,8 @@ TitleMenu_Continue_Confirm::
 .call_title_menu_draw_completion_mark:
     call TitleMenu_DrawCompletionMark
     ret
+
+SECTION "Bank 07 TitleMenu_Continue_LoadSave", ROMX
 
 ; Continue, step 2: loads the save (RunLoadGameSteps until done) and the key world, sets the map
 ; size in a key world, clears the field return state and timers, puts the followers on the player,
@@ -3467,6 +3585,8 @@ TitleMenu_Continue_LoadSave::
     ld [wTitleScreenState], a
     ret
 
+SECTION "Bank 07 TitleMenu_DrawCompletionMark", ROMX
+
 ; Draws the completion mark on the title save summary: when the save (SRAM bank 1) has a battle
 ; record and the game was completed, meta-sprite set $29 at (128, 64). (C1, E-0357)
 TitleMenu_DrawCompletionMark::
@@ -3510,12 +3630,16 @@ TitleMenu_DrawCompletionMark::
     ld [rRAMG], a
     ret
 
+SECTION "Bank 07 TitleMenu_Choice_NewGame", ROMX
+
 ; Title menu 'new game': clears the screen state and starts the new player set-up (wTitleScreenState
 ; 6). (C2, E-0357; probed E-0375)
 TitleMenu_Choice_NewGame::
     call ClearScreenStateBlock
     call InitLinkScreenStateBlock
     ret
+
+SECTION "Bank 07 ClearScreenStateBlock", ROMX
 
 ; Clears the $80 bytes from wScreenState ($D780-$D7FF); returns A = 0, B = 0 and HL = $D800. Called
 ; before the new player set-up (TitleMenu_Choice_NewGame), when the save is loaded to continue
@@ -3531,6 +3655,8 @@ ClearScreenStateBlock::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 07 TitleMenu_Choice_LinkEntry2", ROMX
 
 ; Title menu link entry 2: when the partner has answered ($FF or $FE in wSubMenuCursor2), marks the
 ; entry and goes to state 4 (or 7 when refused, wGridCursorX = 2); otherwise asks to send link byte
@@ -3575,6 +3701,8 @@ TitleMenu_Choice_LinkEntry2::
     call WriteTileSound69ThenTitleScreenState7
     ret
 
+SECTION "Bank 07 WriteTileSound69ThenTitleScreenState7", ROMX
+
 ; A = tile, HL = VRAM address: writes the tile with WriteVRAMByte, queues sound $69, clears
 ; wLinkScreenStep and wSubMenuCursor2 and sets wTitleScreenState = 7
 ; (GameMode5_Update_TitleMenuState_LinkRefused). The title menu link entries
@@ -3594,6 +3722,8 @@ WriteTileSound69ThenTitleScreenState7::
     xor a
     ld [wSubMenuCursor2], a
     ret
+
+SECTION "Bank 07 TitleMenu_Choice_LinkEntry3", ROMX
 
 ; Title menu link entry 3: the same as entry 2 with link byte $F6 and the cursor on the next row.
 ; (C1, E-0357)
@@ -3637,6 +3767,8 @@ TitleMenu_Choice_LinkEntry3::
     call WriteTileSound69ThenTitleScreenState7
     ret
 
+SECTION "Bank 07 TitleMenu_Choice_LinkEntry4", ROMX
+
 ; Title menu link entry 4: as entries 2 and 3, sending link byte $B7, cursor on row 9. (C1, E-0357)
 TitleMenu_Choice_LinkEntry4::
     ld a, [wSubMenuCursor2]
@@ -3677,6 +3809,8 @@ TitleMenu_Choice_LinkEntry4::
     ld a, $bc
     call WriteTileSound69ThenTitleScreenState7
     ret
+
+SECTION "Bank 07 TitleMenu_Choice_LinkEntry6", ROMX
 
 ; Title menu link entry 6: as entry 2, sending link byte $E0, cursor on row 13. (C1, E-0357)
 TitleMenu_Choice_LinkEntry6::
@@ -3719,6 +3853,8 @@ TitleMenu_Choice_LinkEntry6::
     call WriteTileSound69ThenTitleScreenState7
     ret
 
+SECTION "Bank 07 TitleMenu_Choice_LinkEntry7", ROMX
+
 ; Title menu link entry 7: as entry 2, sending link byte $F1, cursor on row 15. (C1, E-0357)
 TitleMenu_Choice_LinkEntry7::
     ld a, [wSubMenuCursor2]
@@ -3759,6 +3895,8 @@ TitleMenu_Choice_LinkEntry7::
     ld a, $bc
     call WriteTileSound69ThenTitleScreenState7
     ret
+
+SECTION "Bank 07 TitleMenu_Choice_LinkEntry5", ROMX
 
 ; Title menu link entry 5: as entry 2, sending link byte $DC, cursor on row 11. (C1, E-0357)
 TitleMenu_Choice_LinkEntry5::
@@ -3801,6 +3939,8 @@ TitleMenu_Choice_LinkEntry5::
     call WriteTileSound69ThenTitleScreenState7
     ret
 
+SECTION "Bank 07 WriteTileSound69ThenTitleScreenState4", ROMX
+
 ; A = tile, HL = VRAM address: writes the tile with WriteVRAMByte, queues sound $69, clears
 ; wLinkScreenStep and wSubMenuCursor2 and sets wTitleScreenState = 4
 ; (GameMode5_Update_TitleMenuState_ShowGameLinkIsNot). The title menu link entries
@@ -3820,6 +3960,8 @@ WriteTileSound69ThenTitleScreenState4::
     xor a
     ld [wSubMenuCursor2], a
     ret
+
+SECTION "Bank 07 SendLinkByteForMenuOption_Data", ROMX
 
 ; Eight bytes, $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3, indexed by the title menu entry wMenuOption &
 ; $0F (0-7). SendLinkByteForMenuOption copies the entry to wScreenSubStep and sends it with
@@ -3865,6 +4007,8 @@ InitLinkScreenStateBlock::
     ld [hl], a
     ret
 
+SECTION "Bank 07 GameMode5_Update_SaveDataLost", ROMX
+
 ; Title state 2 (the save data was lost), by wTitleScreenSubState: 0
 ; GameMode5_Update_SaveDataLost_ShowSavedDataHasBeen ('Saved data has been lost.' and music $52), 1
 ; GameMode5_Update_SaveDataLost_FinishMusic (waits for the sound to end), 2
@@ -3895,6 +4039,8 @@ GameMode5_Update_SaveDataLost_ShowSavedDataHasBeen::
     inc [hl]
     ret
 
+SECTION "Bank 07 GameMode5_Update_SaveDataLost_FinishMusic", ROMX
+
 ; Save data lost, step 1: waits until the sound has finished on both channels. (C2, E-0357; probed
 ; E-0375)
 GameMode5_Update_SaveDataLost_FinishMusic::
@@ -3906,6 +4052,8 @@ GameMode5_Update_SaveDataLost_FinishMusic::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 GameMode5_Update_SaveDataLost_ClearSRAM", ROMX
 
 ; Save data lost, step 2: after the message clears all four SRAM banks and draws the empty save
 ; frame. (C1, E-0357)
@@ -3958,6 +4106,8 @@ GameMode5_Update_SaveDataLost_ClearSRAM::
     call QueueMusic
     ret
 
+SECTION "Bank 07 GameMode5_Update_StartGame", ROMX
+
 ; Title state 3, starting the game: sends $F4, fades out and switches to game mode 1 (the field),
 ; its state 1 when a script is running, 5 in a key world, 0 otherwise. (C1, E-0357)
 GameMode5_Update_StartGame::
@@ -3992,6 +4142,8 @@ GameMode5_Update_StartGame::
     ld hl, wModeChangeRequest
     inc [hl]
     ret
+
+SECTION "Bank 07 GameMode5_Update_TitleMenuState_LinkRefused", ROMX
 
 ; Title state 7 (wTitleScreenState, set by WriteTileSound69ThenTitleScreenState7 when a title-menu
 ; link entry gets $FE from the partner): sends $F4 over the link (SerialSendByte) with wScreenStep 0
@@ -4050,6 +4202,8 @@ GameMode5_Update_TitleMenuState_LinkRefused::
     ld [wTitleScreenState], a
     ret
 
+SECTION "Bank 07 GameMode5_Update_DuoSetup", ROMX
+
 ; Title state 8, the duo set-up: erases the cursor, restores the menu choice and shows message 8
 ; with three numbers (wScreenCounter, wGlyphListPos, wGlyphListStart) as digits. (C1, E-0357)
 GameMode5_Update_DuoSetup::
@@ -4105,6 +4259,8 @@ GameMode5_Update_DuoSetup::
     ld [wTitleScreenState], a
     ret
 
+SECTION "Bank 07 GameMode5_Update_TitleMenuState_ShowGameLinkIsNot", ROMX
+
 ; Title state 4, link failed: shows 'Game Link is not ...' (message 5) in the window and moves to
 ; state 5. (C1, E-0357)
 GameMode5_Update_TitleMenuState_ShowGameLinkIsNot::
@@ -4133,6 +4289,8 @@ GameMode5_Update_TitleMenuState_ShowGameLinkIsNot::
     inc [hl]
     ret
 
+SECTION "Bank 07 GameMode5_Update_BackToTitleMenu", ROMX
+
 ; Title state 5: after the message returns to the title menu (state 0). (C1, E-0357)
 GameMode5_Update_BackToTitleMenu::
     xor a
@@ -4149,6 +4307,8 @@ GameMode5_Update_BackToTitleMenu::
     ld [wTitleScreenState], a
     ld [wTitleScreenSubState], a
     ret
+
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup", ROMX
 
 ; Title state 6, the new player set-up, by wTitleScreenSubState: 0
 ; GameMode5_Update_NewPlayerSetup_FadeOut, 1 GameMode5_Update_NewPlayerSetup_BlankScreen, 2
@@ -4176,6 +4336,8 @@ GameMode5_Update_NewPlayerSetup_FadeOut::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_BlankScreen", ROMX
 
 ; New player set-up, step 1: after the fade blanks the screen buffer and attributes, draws them and
 ; prepares the text window. (C1, E-0357)
@@ -4233,6 +4395,8 @@ GameMode5_Update_NewPlayerSetup_BlankScreen::
     inc [hl]
     ret
 
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_FinishFadeIn", ROMX
+
 ; New player set-up, step 2: waits for the fade. (C2, E-0357; probed E-0375)
 GameMode5_Update_NewPlayerSetup_FinishFadeIn::
     ld a, [wFadeState]
@@ -4241,6 +4405,8 @@ GameMode5_Update_NewPlayerSetup_FinishFadeIn::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_SetGameBegun", ROMX
 
 ; New player set-up, step 3: sets the story flag EVENT_IN_THE_MIDDLE_OF_THE (the game has begun) and
 ; sets the name entry's mode (wWorkBuf) from EVENT_NEVER_SET, which is never set. (C2, E-0357;
@@ -4262,11 +4428,15 @@ GameMode5_Update_NewPlayerSetup_SetGameBegun::
     inc [hl]
     ret
 
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_EmptyStep", ROMX
+
 ; New player set-up, step 4: moves on at once. (C2, E-0357; probed E-0375)
 GameMode5_Update_NewPlayerSetup_EmptyStep::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_EnterName", ROMX
 
 ; New player set-up, step 5: runs the name entry for the player's name
 ; (RunNameEntryStateWhenNotFading); while it runs, a random player id is drawn each frame; when it
@@ -4301,6 +4471,8 @@ GameMode5_Update_NewPlayerSetup_EnterName::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_InitGame", ROMX
 
 ; New player set-up, step 6: puts the player on map $38 at screen (0, 0), position ($E0, 0), empty
 ; party, gold 100 and an empty inventory, creates the starting monster record
@@ -4337,6 +4509,8 @@ GameMode5_Update_NewPlayerSetup_InitGame::
     ld [wTitleScreenState], a
     ret
 
+SECTION "Bank 07 InitGoldAndClearInventory", ROMX
+
 ; Sets the 24-bit gold (wGoldLo, wGoldMid, wGoldHi) to 100 and clears the 24 wInventory slots
 ; (FillBytes). GameMode5_Update_NewPlayerSetup_InitGame calls it for a new game. (C2, E-0375)
 ; wGold = 100 and the 24 wInventory slots = 0 (the new-game setup path, InitLinkScreenStateBlock)
@@ -4353,6 +4527,8 @@ InitGoldAndClearInventory::
     ld a, $00
     call FillBytes
     ret
+
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_InitGame_Starter", ROMX
 
 ; Creates the starting monster in SRAM record 0 (SRAM enabled, bank 0) from MonsterTable entry 1
 ; (LoadMonsterRecord): byte 0 = 2 (in the party), the name 'Slash' with its $F0 end and four $FF
@@ -4553,6 +4729,8 @@ GameMode5_Update_NewPlayerSetup_InitGame_Starter::
     farcall SetSpeciesFlag
     ret
 
+SECTION "Bank 07 FillBBytesAtHL_Bank07", ROMX
+
 ; A = value, B = count, HL = destination: stores A in B bytes from HL (B = 0 fills 256); HL ends
 ; past the fill and B = 0. GameMode5_Update_NewPlayerSetup_InitGame_Starter fills $16 bytes after
 ; the starter skills with $FF. (C2, E-0375)
@@ -4563,6 +4741,8 @@ FillBBytesAtHL_Bank07::
     dec b
     jr nz, FillBBytesAtHL_Bank07
     ret
+
+SECTION "Bank 07 CopyBBytesDEToHL_Bank07", ROMX
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
 ; the copy, B = 0 and A = the last byte. GameMode5_Update_NewPlayerSetup_InitGame_Starter copies the
@@ -4576,6 +4756,8 @@ CopyBBytesDEToHL_Bank07::
     dec b
     jr nz, CopyBBytesDEToHL_Bank07
     ret
+
+SECTION "Bank 07 GameMode5_Update_NewPlayerSetup_WriteUnknownName", ROMX
 
 ; HL = name field: writes three $98 '?' glyphs and seven $F0 bytes (10 bytes); HL ends past them and
 ; B = 0. GameMode5_Update_NewPlayerSetup_InitGame_Starter gives the starting monster '???' as its
@@ -4597,6 +4779,8 @@ GameMode5_Update_NewPlayerSetup_WriteUnknownName::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 07 GameMode5_Update_LinkSession", ROMX
 
 ; Game mode 5, wModeState 2, a link session in progress: exchanges the joypad each frame
 ; (LinkExchangeJoypadPerFrame); in title state 1 runs the save when asked (wMenuCounter) and, when
@@ -4714,6 +4898,8 @@ GameMode5_Update_ExchangeJoypad::
 .return:
     ret
 
+SECTION "Bank 07 GameMode5_Update_ExchangeJoypadOnRecords", ROMX
+
 ; Game mode 5, wModeState 4: exchanges the joypad each frame and, on the record screens
 ; (wScreenState $0C or $0D), redraws the species sprites the current step shows. (C1, E-0357)
 GameMode5_Update_ExchangeJoypadOnRecords::
@@ -4765,6 +4951,8 @@ GameMode5_Update_ExchangeJoypadOnRecords::
 .call_draw_record_buf_b_species_sprites:
     farcall DrawRecordBufBSpeciesSprites
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState", ROMX
 
 ; The link battle set-up screens (link session 4), far-called each frame by
 ; RunLinkSession4Exchange_Receive: jumps by wTitleScreenState to 0
@@ -4826,6 +5014,8 @@ RunLinkSession4ScreenState_LoadAndSync_Start::
     ld [wTitleScreenSubState], a
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_CopyPartyState", ROMX
+
 ; Copies each party member's HP (MON_HP), MP (MON_MP) and status (MON_STATUS) from its SRAM record
 ; into wBattleStateBuffer, 5 bytes per member, with SRAM enabled through rRAMG; then, unless
 ; wPartyCount is 3, writes one 5-byte entry of $FF after the last member. Same code as
@@ -4886,6 +5076,8 @@ RunLinkSession4ScreenState_CopyPartyState::
     inc de
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_LoadAndSync_SendSync", ROMX
+
 ; Load and sync, step 1: moves to step 2 and sends link byte $D3. (C2, E-0369; probed E-0375)
 RunLinkSession4ScreenState_LoadAndSync_SendSync::
     ld a, [wTitleScreenSubState]
@@ -4894,6 +5086,8 @@ RunLinkSession4ScreenState_LoadAndSync_SendSync::
     ld a, $d3
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_LoadAndSync_SyncDone", ROMX
 
 ; Load and sync, step 2: waits for the partner's $D3 in wLinkMessage, then clears wLinkSendByte and
 ; wTitleScreenSubState and moves to wTitleScreenState 1
@@ -4909,6 +5103,8 @@ RunLinkSession4ScreenState_LoadAndSync_SyncDone::
     inc a
     ld [wTitleScreenState], a
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_ChooseBattleType", ROMX
 
 ; Link battle set-up, state 1, the battle type choice. A partner's choice is followed: $FE edit the
 ; rules, $FD battle kind 8 with the current rules, $FC battle kind 9 with preset rules B, $FB battle
@@ -5033,6 +5229,8 @@ RunLinkSession4ScreenState_ChooseBattleType::
 .return:
     ret
 
+SECTION "Bank 07 InitLinkRulesPresetA", ROMX
+
 ; Writes preset rules A to the 10 bytes of wLinkRules: 0, 0, 0, $63, $29, $01, 0, 0, $63
 ; (wLinkRuleTurnLimit), $80. Used with wBattleKind 8 and wLinkSetupMode 0 when either side picks
 ; that battle type (RunLinkSession4ScreenState_ChooseBattleType,
@@ -5058,6 +5256,8 @@ InitLinkRulesPresetA::
     ld [hli], a
     ld [hl], $80
     ret
+
+SECTION "Bank 07 InitLinkRulesPresetB", ROMX
 
 ; Writes preset rules B to the 10 bytes of wLinkRules: $01, $81, $01, $63, $29, $01, $80, $01, $9E
 ; (wLinkRuleTurnLimit), $00. Used with wBattleKind 9 and wLinkSetupMode 1 by the same callers as
@@ -5085,6 +5285,8 @@ InitLinkRulesPresetB::
     ld [hli], a
     ld [hl], $00
     ret
+
+SECTION "Bank 07 LoadInvertedBit7FlagsToWorkBuf", ROMX
 
 ; Sets wWorkBuf = 0 and wWorkBuf + 1 to + 5 to the inverse of bit 7 of wLinkRules + 1, + 5, + 6,
 ; wLinkRuleTurnLimit (wLinkRules + 8) and + 9 (1 when the bit is clear): the yes/no selections that
@@ -5124,6 +5326,8 @@ LoadInvertedBit7FlagsToWorkBuf::
     xor $01
     ld [hl], a
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_SetBattleKindAndSync", ROMX
 
 ; Link set-up state 2, the refusal and the end of the session, by wTitleScreenSubState: 0
 ; RunLinkSession4ScreenState_FollowPartnerOrRefuse (follows a preset choice of the partner, or sends
@@ -5215,6 +5419,8 @@ RunLinkSession4ScreenState_FollowPartnerOrRefuse::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_RefusalHandshake", ROMX
+
 ; Refusal state (wTitleScreenState 2), step 1: sets wLinkSendByte = 2 and moves to step 2, which
 ; waits for the partner's 2. (C2, E-0372; probed E-0375)
 RunLinkSession4ScreenState_RefusalHandshake::
@@ -5223,6 +5429,8 @@ RunLinkSession4ScreenState_RefusalHandshake::
     ld a, $02
     ld [wLinkSendByte], a
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_RefusalOpenWindow", ROMX
 
 ; Refusal state, step 2: waits for the partner's 2 in wLinkMessage, then clears wLinkSendByte,
 ; copies the 20 x 5 message box TileRect_SaveCheckScreenRects_2 into wScreenTileBuffer and from
@@ -5243,6 +5451,8 @@ RunLinkSession4ScreenState_RefusalOpenWindow::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_RefusalWaitIdle", ROMX
+
 ; Refusal state, step 3: waits until the partner's byte wLinkMessage is back to 0, then moves to
 ; step 4. (C2, E-0372; probed E-0375)
 RunLinkSession4ScreenState_RefusalWaitIdle::
@@ -5252,6 +5462,8 @@ RunLinkSession4ScreenState_RefusalWaitIdle::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_ShowRefusal", ROMX
 
 ; Refusal state, step 4: shows message $0302 'Refused the VS battle.' (this side declined,
 ; wLinkScreenFlag 0) or $0303 'The VS battle was refused.' (wLinkScreenFlag set, the partner
@@ -5270,6 +5482,8 @@ RunLinkSession4ScreenState_ShowRefusal::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_SignalAfterRefusal", ROMX
+
 ; Battle kind and sync, step 5: once the refusal message of step 4 ('Refused the VS battle.' or 'The
 ; VS battle was refused.') has finished (wTextFlags 0), sends link byte 1 and moves to step 6. (C2,
 ; E-0369; probed E-0375)
@@ -5283,6 +5497,8 @@ RunLinkSession4ScreenState_SignalAfterRefusal::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_RefusalWaitPartner", ROMX
+
 ; Refusal state, step 6: waits for the partner's 1 in wLinkMessage (step 5 sent 1 after the
 ; message), then moves to step 7. (C2, E-0372; probed E-0375)
 RunLinkSession4ScreenState_RefusalWaitPartner::
@@ -5292,6 +5508,8 @@ RunLinkSession4ScreenState_RefusalWaitPartner::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_EndLinkSession", ROMX
 
 ; Refusal state, step 7: ends the link session: clears wLinkSession, wLinkExchangeState, wLinkRole,
 ; wLinkStatus, wLinkMode, wLinkMessage, wLinkSendByte, wLinkScreenStep and $1E bytes of wWorkBuf,
@@ -5325,6 +5543,8 @@ RunLinkSession4ScreenState_EndLinkSession::
     ld a, $04
     call StartPaletteFade
     ret
+
+SECTION "Bank 07 LinkRulesEditor", ROMX
 
 ; Link set-up state 3, the rules editor, by wTitleScreenSubState (31 steps): 0
 ; LinkRulesEditor_FollowPartner, 1 LinkRulesEditor_RuleCursor (the rule list), 2
@@ -5459,6 +5679,8 @@ LinkRulesEditor_FollowPartner::
     ld [wLinkSendByte], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_RuleCursor", ROMX
+
 ; Link rules editor, step 1: the cursor over the rule list; A opens the selected rule (its current
 ; value from wWorkBuf and its step from RunLinkSession4ScreenState_EditRules_Data). (C1, E-0357)
 LinkRulesEditor_RuleCursor::
@@ -5498,6 +5720,8 @@ LinkRulesEditor_RuleCursor::
     ld [wLinkScreenFlag], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_RuleCursor_Data", ROMX
+
 ; Six step numbers of LinkRulesEditor, $03, $0B, $15, $18, $1B, $1E, indexed by the rule row
 ; wMenuSubState & 7. When A is pressed LinkRulesEditor_RuleCursor stores the entry in
 ; wTitleScreenSubState, which selects the steps LinkRulesEditor_DecideRule,
@@ -5520,6 +5744,8 @@ LinkRulesEditor_Refuse::
     xor a
     ld [wLinkScreenFlag], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_DecideRule", ROMX
 
 ; Link rules editor, step 3, the 'decide' rule: Left/Right choose yes or no; B goes back keeping the
 ; choice; A with 'no' returns to the list; with 'yes' it writes the edited rule values from wWorkBuf
@@ -5577,6 +5803,8 @@ LinkRulesEditor_DecideRule::
     inc [hl]
     ret
 
+SECTION "Bank 07 SetHLBit7FromInverseABit0", ROMX
+
 ; Sets bit 7 of [HL] to the inverse of bit 0 of A (the other bits of [HL] kept) and increments HL; A
 ; = the new byte. LinkRulesEditor_DecideRule stores the yes/no choices wWorkBuf + 1 to + 5 into
 ; wLinkRules + 1, + 5, + 6, + 8 and + 9 with it (choice 0 sets bit 7). (C2, E-0375)
@@ -5590,6 +5818,8 @@ SetHLBit7FromInverseABit0::
     ld [hli], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_SyncBeforeSend", ROMX
+
 ; Link rules editor, step 4: waits for the partner's 2 and answers 2. (C2, E-0357; probed E-0375)
 LinkRulesEditor_SyncBeforeSend::
     ld a, [wLinkMessage]
@@ -5600,6 +5830,8 @@ LinkRulesEditor_SyncBeforeSend::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 LinkRulesEditor_SendRules", ROMX
 
 ; Link rules editor, step 5: starts the transfer of the 10 rule bytes from wLinkRules, receiving the
 ; partner's into wLinkPartnerName, and sends $FF. (C2, E-0357; probed E-0375)
@@ -5624,6 +5856,8 @@ LinkRulesEditor_SendRules::
     inc [hl]
     ret
 
+SECTION "Bank 07 LinkRulesEditor_EndRulesTransfer", ROMX
+
 ; Link rules editor, step 6: waits for the partner's $F0 (transfer done). (C2, E-0357; probed
 ; E-0375)
 LinkRulesEditor_EndRulesTransfer::
@@ -5635,6 +5869,8 @@ LinkRulesEditor_EndRulesTransfer::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 LinkRulesEditor_RedrawWindow", ROMX
 
 ; Link rules editor, step 7: redraws the message window. (C1, E-0357)
 LinkRulesEditor_RedrawWindow::
@@ -5648,6 +5884,8 @@ LinkRulesEditor_RedrawWindow::
     inc [hl]
     ret
 
+SECTION "Bank 07 LinkRulesEditor_ShowConfirming", ROMX
+
 ; Link rules editor, step 8: shows message $0306 ('Confirming rules. Please wait.') with
 ; ShowStringHL_Bank07 and moves to step 9. (C1, E-0369)
 LinkRulesEditor_ShowConfirming::
@@ -5657,6 +5895,8 @@ LinkRulesEditor_ShowConfirming::
     inc [hl]
     ret
 
+SECTION "Bank 07 LinkRulesEditor_FinishConfirming", ROMX
+
 ; Link rules editor, step 9: waits for the message. (C2, E-0357; probed E-0375)
 LinkRulesEditor_FinishConfirming::
     ld a, [wTextFlags]
@@ -5665,6 +5905,8 @@ LinkRulesEditor_FinishConfirming::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 LinkRulesEditor_ReadPartnerAnswer", ROMX
 
 ; Link rules editor, step 10: a $FE from the partner (the rules were refused) sends 1 and goes to
 ; wTitleScreenState 2 at step 0 with wLinkScreenFlag 1
@@ -5697,6 +5939,8 @@ LinkRulesEditor_ReadPartnerAnswer::
     ld a, $00
     ld [wLinkScreenFlag], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_YesNoRule", ROMX
 
 ; Link rules editor, step 11, a yes/no rule: Left/Right choose; B goes back keeping it; A stores it,
 ; and 'yes' moves on to the rule's details. (C1, E-0357)
@@ -5733,6 +5977,8 @@ LinkRulesEditor_YesNoRule::
     xor a
     ld [wLinkScreenFlag], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_DrawDetails", ROMX
 
 ; Link rules editor, step 12: draws the rule details screen and, for each rule bit of wLinkRules + 1
 ; (bits 6, 5, 4 and on), stores its value in wWorkBuf + 6 onward (2 when the rule is off, else the
@@ -5837,6 +6083,8 @@ LinkRulesEditor_DrawDetails::
     inc [hl]
     ret
 
+SECTION "Bank 07 LinkRulesEditor_DrawDetails_DrawMark", ROMX
+
 ; Draws a rule detail mark: cursor tile $BC at HL + 2 * A, then moves HL down two BG map rows for
 ; the next rule. (C1, E-0357)
 LinkRulesEditor_DrawDetails_DrawMark::
@@ -5851,6 +6099,8 @@ LinkRulesEditor_DrawDetails_DrawMark::
     add hl, bc
     pop bc
     ret
+
+SECTION "Bank 07 LinkRulesEditor_DetailCursor", ROMX
 
 ; Link rules editor, step 13: the cursor over the rule details. A opens the detail chosen (step 14 +
 ; entry); B packs the chosen detail values (wWorkBuf + 6 onward, 2 meaning off) back into the rule
@@ -5961,6 +6211,8 @@ LinkRulesEditor_DetailCursor::
     ld [wTitleScreenSubState], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_ChooseValue", ROMX
+
 ; Link rules editor, step 14: chooses detail value 1 among its options (Left/Right on wWorkBuf + 6);
 ; A or B marks it and returns to the detail list (step 13). (C1, E-0357)
 LinkRulesEditor_ChooseValue::
@@ -5979,6 +6231,8 @@ LinkRulesEditor_ChooseValue::
     ld a, $0d
     ld [wTitleScreenSubState], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_ChooseValue2", ROMX
 
 ; Link rules editor, step 15: chooses detail value 2 (wWorkBuf + 7), then back to the detail list.
 ; (C1, E-0357)
@@ -5999,6 +6253,8 @@ LinkRulesEditor_ChooseValue2::
     ld [wTitleScreenSubState], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_ChooseValue3", ROMX
+
 ; Link rules editor, step 16: chooses detail value 3 (wWorkBuf + 8), then back to the detail list.
 ; (C1, E-0357)
 LinkRulesEditor_ChooseValue3::
@@ -6017,6 +6273,8 @@ LinkRulesEditor_ChooseValue3::
     ld a, $0d
     ld [wTitleScreenSubState], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_ChooseValue4", ROMX
 
 ; Link rules editor, step 17: chooses detail value 4 (wWorkBuf + 9), then back to the detail list.
 ; (C1, E-0357)
@@ -6037,6 +6295,8 @@ LinkRulesEditor_ChooseValue4::
     ld [wTitleScreenSubState], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_ChooseValue5", ROMX
+
 ; Link rules editor, step 18: chooses detail value 5 (wWorkBuf + $A), then back to the detail list.
 ; (C1, E-0357)
 LinkRulesEditor_ChooseValue5::
@@ -6055,6 +6315,8 @@ LinkRulesEditor_ChooseValue5::
     ld a, $0d
     ld [wTitleScreenSubState], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_ChooseValue6", ROMX
 
 ; Link rules editor, step 19: chooses detail value 6 (wWorkBuf + $B), then back to the detail list.
 ; (C1, E-0357)
@@ -6075,6 +6337,8 @@ LinkRulesEditor_ChooseValue6::
     ld [wTitleScreenSubState], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_ChooseValue7", ROMX
+
 ; Link rules editor, step 20: chooses detail value 7 (wWorkBuf + $C), then back to the detail list.
 ; (C1, E-0357)
 LinkRulesEditor_ChooseValue7::
@@ -6093,6 +6357,8 @@ LinkRulesEditor_ChooseValue7::
     ld a, $0d
     ld [wTitleScreenSubState], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_YesNoRule2", ROMX
 
 ; Link rules editor, step 21, the second yes/no rule (wWorkBuf + 2): B goes back keeping the choice;
 ; A stores it and 'yes' moves to its values. (C1, E-0357)
@@ -6130,6 +6396,8 @@ LinkRulesEditor_YesNoRule2::
     ld [wLinkScreenFlag], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_DrawLevelRule", ROMX
+
 ; Link rules editor, step 22: draws the level rule's panel with its two numbers (the total of
 ; wLinkRules + 4/5 and the limit in wLinkRules + 3) and sets the cursor on the entry chosen by bit 6
 ; of wLinkRules + 4's high byte. (C1, E-0357)
@@ -6152,6 +6420,8 @@ LinkRulesEditor_DrawLevelRule::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 LinkRulesEditor_LevelRuleCursor", ROMX
 
 ; Link rules editor, step 23: the level rule's values. Up/Down choose between the total level and
 ; the single-level limit; Left/Right change it: the total (wLinkRules + 4/5) between 3 and 297
@@ -6250,6 +6520,8 @@ LinkRulesEditor_LevelRuleCursor::
     ld [wTitleScreenSubState], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_DrawLevelTotal", ROMX
+
 ; Draws the total-level number of the level rule (wLinkRules + 4/5, low six bits of the high byte)
 ; at BG row 8, column 14: a left arrow when it can go lower (4 or more), up to three digits without
 ; leading zeros, and a right arrow when it can go higher. (C1, E-0357)
@@ -6310,6 +6582,8 @@ LinkRulesEditor_DrawLevelTotal::
     call WriteVRAMByte
     ret
 
+SECTION "Bank 07 LinkRulesEditor_DrawLevelLimit", ROMX
+
 ; Draws the single-level limit (wLinkRules + 3) at BG row 10, column 14: a left arrow when 2 or
 ; more, two digits, and a right arrow below 99. (C1, E-0357)
 LinkRulesEditor_DrawLevelLimit::
@@ -6353,6 +6627,8 @@ LinkRulesEditor_DrawLevelLimit::
     call WriteVRAMByte
     ret
 
+SECTION "Bank 07 LinkRulesEditor_YesNoRule3", ROMX
+
 ; Link rules editor, step 24, the third yes/no rule (wWorkBuf + 3): B goes back keeping it; A stores
 ; it and 'yes' moves to its values. (C1, E-0357)
 LinkRulesEditor_YesNoRule3::
@@ -6389,6 +6665,8 @@ LinkRulesEditor_YesNoRule3::
     ld [wLinkScreenFlag], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_DrawFamilies", ROMX
+
 ; Link rules editor, step 25: draws the family panel and the mark of each of the 11 families
 ; (LinkRulesEditor_DrawFamilies_DrawAllMarks). (C1, E-0357)
 LinkRulesEditor_DrawFamilies::
@@ -6402,6 +6680,8 @@ LinkRulesEditor_DrawFamilies::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 LinkRulesEditor_ToggleFamily", ROMX
 
 ; Link rules editor, step 26, the family exclusions: the cursor moves over the 11 families; A
 ; toggles the selected family's bit in wLinkRules + 6/7 and redraws its mark; B returns, unless
@@ -6439,6 +6719,8 @@ LinkRulesEditor_ToggleFamily::
     call LinkRulesEditor_DrawFamilyMark
     ret
 
+SECTION "Bank 07 LinkRulesEditor_ToggleFamily_FlipExclusion", ROMX
+
 ; Toggles the family under the cursor: flips its bit (from the mask table
 ; LinkRulesEditor_ToggleFamily_FlipExclusion_Data) in wLinkRules + 6 or + 7. (C2, E-0357; probed
 ; E-0375)
@@ -6468,6 +6750,8 @@ LinkRulesEditor_ToggleFamily_FlipExclusion::
 .done:
     ld [hl], a
     ret
+
+SECTION "Bank 07 LinkRulesEditor_ToggleFamily_MoveCursor", ROMX
 
 ; The family cursor of LinkRulesEditor_ToggleFamily (wMenuCursor 0-10): blinks by frame counter bit
 ; 3 (EraseCursorAtEntryHL_Bank07 or WriteBBTileAtWordTableEntryC_Bank07 at the positions in
@@ -6552,6 +6836,8 @@ LinkRulesEditor_ToggleFamily_MoveCursor::
     call WriteBBTileAtWordTableEntryC_Bank07
     ret
 
+SECTION "Bank 07 LinkRulesEditor_ToggleFamily_MoveCursor_Data", ROMX
+
 ; Eleven BG map addresses, $9943, $9945, ... $994D (vBGMap0 row 10, columns 3, 5, 7, 9, 11, 13) and
 ; $9983, $9985, ... $998B (row 12, columns 3-11), indexed by the family cursor wMenuCursor (0-10).
 ; LinkRulesEditor_ToggleFamily_MoveCursor blinks the cursor tile at the address of the selected
@@ -6573,6 +6859,8 @@ LinkRulesEditor_DrawFamilies_DrawAllMarks::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 07 LinkRulesEditor_DrawFamilyMark", ROMX
 
 ; A = family 0-10: when the family bit (from LinkRulesEditor_ToggleFamily_FlipExclusion_Data, in
 ; wLinkRules + 6 or + 7) is set, the family is excluded and the blank tile $C3 is written; otherwise
@@ -6603,6 +6891,8 @@ LinkRulesEditor_DrawFamilyMark::
 .call_write_vram_byte:
     call WriteVRAMByte
     ret
+
+SECTION "Bank 07 LinkRulesEditor_ToggleFamily_FlipExclusion_Data", ROMX
 
 ; Eleven (byte offset, bit mask) pairs, indexed by the family number 0-10: families 0-6 are bits
 ; $40, $20, $10, $08, $04, $02, $01 of wLinkRules + 6 and families 7-10 are bits $80, $40, $20, $10
@@ -6649,6 +6939,8 @@ LinkRulesEditor_YesNoRule4::
     ld [wLinkScreenFlag], a
     ret
 
+SECTION "Bank 07 LinkRulesEditor_DrawTurnLimit", ROMX
+
 ; Link rules editor, step 28: draws the turn limit panel and its number. (C1, E-0357)
 LinkRulesEditor_DrawTurnLimit::
     ld hl, LinkRulesEditor_DrawTurnLimit_TileRect
@@ -6661,6 +6953,8 @@ LinkRulesEditor_DrawTurnLimit::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 LinkRulesEditor_SetTurnLimit", ROMX
 
 ; Link rules editor, step 29, the turn limit: Left/Right change wLinkRuleTurnLimit between 10 and 99
 ; (bit 7 kept); A or B return to the rule list. (C1, E-0357)
@@ -6711,6 +7005,8 @@ LinkRulesEditor_SetTurnLimit::
 .return:
     ret
 
+SECTION "Bank 07 LinkRulesEditor_DrawTurnLimitValue", ROMX
+
 ; Draws the turn limit (wLinkRuleTurnLimit & $7F) at BG row 9, column 14: arrows when it can go
 ; lower (11 or more) or higher (below 99), and two digits. (C1, E-0357)
 LinkRulesEditor_DrawTurnLimitValue::
@@ -6750,6 +7046,8 @@ LinkRulesEditor_DrawTurnLimitValue::
     call WriteVRAMByte
     ret
 
+SECTION "Bank 07 LinkRulesEditor_FifthRule", ROMX
+
 ; Link rules editor, step 30, the fifth yes/no rule (wWorkBuf + 5): A or B store the choice and
 ; return to the rule list. (C1, E-0357)
 LinkRulesEditor_FifthRule::
@@ -6766,6 +7064,8 @@ LinkRulesEditor_FifthRule::
     xor a
     ld [wTitleScreenSubState], a
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_StartWithPresetRules", ROMX
 
 ; Link set-up state 4 (receiving the rules the other side chose), by wTitleScreenSubState: 0
 ; RunLinkSession4ScreenState_CheckPartnerPreset (follows a preset choice or opens the message box),
@@ -6847,6 +7147,8 @@ RunLinkSession4ScreenState_CheckPartnerPreset::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_ShowChoosingRules", ROMX
+
 ; Preset rules, step 1: shows message $0304 'Choosing rules. Please wait.' (ShowStringHL_Bank07),
 ; clears wLinkSendByte and moves to step 2 (RunLinkSession4ScreenState_EndChoosingMessage). (C1,
 ; E-0372)
@@ -6859,6 +7161,8 @@ RunLinkSession4ScreenState_ShowChoosingRules::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_EndChoosingMessage", ROMX
+
 ; Preset rules, step 2: waits until message $0304 ('Choosing rules. Please wait.') has finished
 ; (wTextFlags 0), then moves to step 3. (C2, E-0369; probed E-0375)
 RunLinkSession4ScreenState_EndChoosingMessage::
@@ -6868,6 +7172,8 @@ RunLinkSession4ScreenState_EndChoosingMessage::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_PartnerRulesReady", ROMX
 
 ; Preset rules, step 3: a partner's $FE sends 1 and goes to wTitleScreenState 2 with wLinkScreenFlag
 ; 1 (RunLinkSession4ScreenState_SetBattleKindAndSync, which shows 'The VS battle was refused.'); a
@@ -6896,6 +7202,8 @@ RunLinkSession4ScreenState_PartnerRulesReady::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_RequestRules", ROMX
+
 ; Preset rules, step 4: after the message sends link byte 2. (C2, E-0357; probed E-0375)
 RunLinkSession4ScreenState_RequestRules::
     ld a, [wTextFlags]
@@ -6906,6 +7214,8 @@ RunLinkSession4ScreenState_RequestRules::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_ReceiveRules", ROMX
 
 ; Preset rules, step 5: on the partner's 2 starts receiving the partner's 10 rule bytes into
 ; wLinkRules (from wLinkRecvBuffer) and sends $FF. (C2, E-0357; probed E-0375)
@@ -6933,6 +7243,8 @@ RunLinkSession4ScreenState_ReceiveRules::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_EndRulesReceive", ROMX
+
 ; Preset rules, step 6: waits for the partner's $F0 (transfer done). (C2, E-0357; probed E-0375)
 RunLinkSession4ScreenState_EndRulesReceive::
     ld a, [wLinkMessage]
@@ -6943,6 +7255,8 @@ RunLinkSession4ScreenState_EndRulesReceive::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_DrawReceivedRules", ROMX
 
 ; Preset rules, step 7 (after the partner's 10 rule bytes arrived in wLinkRules): fills
 ; wScreenTileBuffer with $C3, copies the rectangle at TileRect_SaveCheckScreenRects_2 + $1DC, draws
@@ -6965,6 +7279,8 @@ RunLinkSession4ScreenState_DrawReceivedRules::
     inc [hl]
     call CopyLinkRulesToLinkRulesCopy
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_AskAcceptRules", ROMX
 
 ; Preset rules, step 8: blinks the yes/no cursor (wMenuSelectedMember, CursorPositionWords_Bank07 +
 ; $24). A on yes plays sound $69, sets wLinkSetupMode 2, sends 1 and moves to step 9
@@ -7004,6 +7320,8 @@ RunLinkSession4ScreenState_AskAcceptRules::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_RulesAccepted", ROMX
+
 ; Preset rules, step 9: on the partner's 1 goes to the battle (state 5). (C2, E-0357; probed E-0375)
 RunLinkSession4ScreenState_RulesAccepted::
     ld a, [wLinkMessage]
@@ -7017,12 +7335,16 @@ RunLinkSession4ScreenState_RulesAccepted::
     ld [wLinkScreenFlag], a
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_DeclineDelay", ROMX
+
 ; Preset rules, step 10: reached when the received rules were declined (step 8 sends $FE and skips
 ; step 9); moves on to step 11 one frame later. (C2, E-0369; probed E-0375)
 RunLinkSession4ScreenState_DeclineDelay::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_DeclineRules", ROMX
 
 ; Preset rules, step 11 (after declining the rules): sends 1, clears wLinkScreenFlag and
 ; wTitleScreenSubState and goes to wTitleScreenState 2
@@ -7038,6 +7360,8 @@ RunLinkSession4ScreenState_DeclineRules::
     xor a
     ld [wTitleScreenSubState], a
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_State5", ROMX
 
 ; Link battle set-up, state 5. First call: on the side not driving the clock, the partner's $FE
 ; returns to rules editing and its $FD sets battle kind 8 (state 4); on that side a partner's $FC or
@@ -7148,6 +7472,8 @@ RunLinkSession4ScreenState_State5::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_PrepareSetupMenu", ROMX
+
 ; Link set-up, state 6: far-calls RunLinkSession4ScreenState_PrepareSetupMenu_Run (clears 256 bytes
 ; from wScreenState, decompresses LetterFrameIconDigitTiles to vTiles1, clears the screen buffer and
 ; opens the text window) and moves to state 7 (LinkBattleSetupMenu). (C1, E-0369)
@@ -7157,12 +7483,16 @@ RunLinkSession4ScreenState_PrepareSetupMenu::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_RunSetupMenu", ROMX
+
 ; Link set-up, state 7: far-calls LinkBattleSetupMenu each frame, the wScreenState steps of the VS
 ; battle's set-up (a message, waiting for the partner, picking records and starting the link
 ; battle). (C1, E-0369)
 RunLinkSession4ScreenState_RunSetupMenu::
     farcall LinkBattleSetupMenu
     ret
+
+SECTION "Bank 07 DrawWorkBufSelectionTilesAndPanels", ROMX
 
 ; Draws the link rules summary into the tile buffers: tile $BC for each yes/no selection wWorkBuf to
 ; wWorkBuf + 5 at wScreenTileBuffer + $68, + $CE, + $10E, + $14E and wWindowTileBuffer + $26, + $66
@@ -7208,6 +7538,8 @@ DrawWorkBufSelectionTilesAndPanels::
     call DrawWorkBufSelectionTilesAndPanels_TurnLimit
     ret
 
+SECTION "Bank 07 WriteBCTileAtHLOrHLPlusBC", ROMX
+
 ; Writes tile $BC at HL when A is 0, otherwise at HL + BC; HL ends at the written address.
 ; DrawWorkBufSelectionTilesAndPanels marks each yes/no selection with it. (C2, E-0375)
 ; writes tile $BC at HL when A = 0, else at HL + BC (E-0079)
@@ -7219,6 +7551,8 @@ WriteBCTileAtHLOrHLPlusBC::
 .done:
     ld [hl], $bc
     ret
+
+SECTION "Bank 07 DrawWorkBufSelectionTilesAndPanels_RuleMarks", ROMX
 
 ; Draws the yes/no marks of the link rules on the rules summary: for each rule bit of wLinkRules + 1
 ; (bits 6 down to 0) tile $16 (off) or a digit tile from the matching bit of wLinkRules + 2. (C2,
@@ -7304,6 +7638,8 @@ DrawWorkBufSelectionTilesAndPanels_RuleMarks::
     ld [hli], a
     ret
 
+SECTION "Bank 07 DrawWorkBufSelectionTilesAndPanels_LevelRule", ROMX
+
 ; Draws the level rule on the rules summary. With wLinkRules + 5 bit 6 set: the five label tiles of
 ; DrawWorkBufSelectionTilesAndPanels_LevelRule_Data2 at wScreenTileBuffer + $126 and the number
 ; wLinkRules + 3; with it clear: the label of DrawWorkBufSelectionTilesAndPanels_LevelRule_Data1 and
@@ -7373,6 +7709,8 @@ DrawWorkBufSelectionTilesAndPanels_LevelRule::
     add $e0
     ld [hl], a
     ret
+
+SECTION "Bank 07 DrawWorkBufSelectionTilesAndPanels_LevelRule_Data1", ROMX
 
 ; Five tile numbers, $15, $12, $15, $0B, $10: the label of the total-level rule on the rules
 ; summary. DrawWorkBufSelectionTilesAndPanels_LevelRule copies them to wScreenTileBuffer + $126 when
@@ -7476,6 +7814,8 @@ DrawWorkBufSelectionTilesAndPanels_Families::
 .return:
     ret
 
+SECTION "Bank 07 DrawWorkBufSelectionTilesAndPanels_TurnLimit", ROMX
+
 ; Draws the turn limit on the rules summary (wLinkRuleTurnLimit without bit 7, one or two digits) in
 ; wWindowTileBuffer. (C2, E-0357; probed E-0375)
 DrawWorkBufSelectionTilesAndPanels_TurnLimit::
@@ -7497,6 +7837,8 @@ DrawWorkBufSelectionTilesAndPanels_TurnLimit::
     add $e0
     ld [hl], a
     ret
+
+SECTION "Bank 07 RunLinkSession4ScreenState_ResetAndSignal", ROMX
 
 ; Link set-up state 8 (accepting the current rules), by wTitleScreenSubState: 0
 ; RunLinkSession4ScreenState_ResetAndSignal_Draw (draws the rules summary), 1
@@ -7540,6 +7882,8 @@ RunLinkSession4ScreenState_ResetAndSignal_Draw::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_ResetAndSignal_Ask", ROMX
+
 ; Reset and signal, step 1: a partner's $FE jumps to
 ; RunLinkSession4ScreenState_ResetAndSignal_Refused; otherwise blinks the yes/no cursor
 ; (wMenuSelectedMember, CursorPositionWords_Bank07 + $24). A on yes plays sound $69, sends 1 and
@@ -7580,6 +7924,8 @@ RunLinkSession4ScreenState_ResetAndSignal_Ask::
     inc [hl]
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_ResetAndSignal_Accept", ROMX
+
 ; Reset and signal, step 2: a 1 from the partner goes to wTitleScreenState 5
 ; (RunLinkSession4ScreenState_State5) at step 1 with wLinkScreenFlag 0; its $FE jumps to
 ; RunLinkSession4ScreenState_ResetAndSignal_Refused (sends 1, wLinkScreenFlag 1, wTitleScreenState
@@ -7598,6 +7944,8 @@ RunLinkSession4ScreenState_ResetAndSignal_Accept::
     ld [wLinkScreenFlag], a
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_ResetAndSignal_Decline", ROMX
+
 ; Reset and signal, step 3 (this side answered no or B at step 1): sends 1, clears
 ; wTitleScreenSubState and wLinkScreenFlag and goes to wTitleScreenState 2
 ; (RunLinkSession4ScreenState_SetBattleKindAndSync, which shows 'Refused the VS battle.'). (C2,
@@ -7613,6 +7961,8 @@ RunLinkSession4ScreenState_ResetAndSignal_Decline::
     ld [wLinkScreenFlag], a
     ret
 
+SECTION "Bank 07 RunLinkSession4ScreenState_ResetAndSignal_Refused", ROMX
+
 ; Reset and signal, step 4 (the partner sent $FE; steps 0-2 also jump here on it): sends 1, clears
 ; wTitleScreenSubState, sets wLinkScreenFlag and goes to wTitleScreenState 2
 ; (RunLinkSession4ScreenState_SetBattleKindAndSync, which shows 'The VS battle was refused.'). (C2,
@@ -7627,6 +7977,8 @@ RunLinkSession4ScreenState_ResetAndSignal_Refused::
     ld a, $01
     ld [wLinkScreenFlag], a
     ret
+
+SECTION "Bank 07 GameMode5_Update_LinkSession_Breeding", ROMX
 
 ; Link session 5's per-frame exchange: exchanges the joypad; on the record screens redraws the
 ; species sprites; when the link scene is set, completes the link breeding

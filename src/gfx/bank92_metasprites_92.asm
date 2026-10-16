@@ -1,7 +1,7 @@
 ; ROM bank $92: meta-sprite frames
 ; The annotated listing of this bank is build/listing/bank92.asm.
 
-SECTION "Bank 92", ROMX[$4000], BANK[$92]
+SECTION "Bank 92", ROMX
     db $92
 
 ; Draws a battle effect sprite from the meta-sprite table of this bank: hSpriteOriginX =
@@ -32,6 +32,8 @@ DrawEffectSpriteAtEffectSpriteX_Bank92::
     ld de, MetaSprites92Table
     call BuildOamFromSpriteTable_Bank92
     ret
+
+SECTION "Bank 92 MetaSprites92Table", ROMX
 
 ; the caller of BuildOamFromSpriteTable_Bank92 passes DE = $MetaSprites92Table; the builder takes
 ; the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the
@@ -174,6 +176,8 @@ BuildOamFromSpriteTable_Bank92::
 
 .return:
     ret
+
+SECTION "Bank 92 MetaSprites92Set00", ROMX
 
 ; meta-sprite set 0 of MetaSprites92Table: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame

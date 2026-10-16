@@ -1,7 +1,7 @@
 ; ROM bank $18: Super Game Boy border data
 ; The annotated listing of this bank is build/listing/bank18.asm.
 
-SECTION "Bank 18", ROMX[$4000], BANK[$18]
+SECTION "Bank 18", ROMX
     db $18
 
 ; Super Game Boy border set 1: border tiles $00-$7F (4096 bytes, sent with packet set $10);

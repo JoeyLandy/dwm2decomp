@@ -1,7 +1,7 @@
 ; ROM bank $30: battle commands and personality rolls
 ; The annotated listing of this bank is build/listing/bank30.asm.
 
-SECTION "Bank 30", ROMX[$4000], BANK[$30]
+SECTION "Bank 30", ROMX
     db $30
 
 ; Battle fight step 2, the turn order: returns at once while a message is being drawn (wTextFlags
@@ -102,6 +102,8 @@ RunBattleCommandEntry_Start::
 .return:
     ret
 
+SECTION "Bank 30 SumPresentSlotBytes", ROMX
+
 ; DE += the byte at HL for each of B slots from slot C that is present (HL steps per slot). (C2,
 ; E-0357; probed E-0378)
 SumPresentSlotBytes::
@@ -121,6 +123,8 @@ SumPresentSlotBytes::
     dec b
     jr nz, SumPresentSlotBytes
     ret
+
+SECTION "Bank 30 RunBattleCommandEntry_NextActor", ROMX
 
 ; Turn order, step 1: advances the second random stream in link battles; walks wBattleActor to the
 ; next slot marked 1 that is present and goes to its command entry (step 2); after slot 7 skips to
@@ -167,10 +171,14 @@ RunBattleCommandEntry_NextActor::
 .return:
     ret
 
+SECTION "Bank 30 RunBattleCommandEntry_ChooseAction", ROMX
+
 ; Turn order, step 2: the command entry for the actor (RunCommandEntryResolveStep). (C1, E-0357)
 RunBattleCommandEntry_ChooseAction::
     call RunCommandEntryResolveStep
     ret
+
+SECTION "Bank 30 RunBattleCommandEntry_ChooseTarget", ROMX
 
 ; Turn order, step 3: chooses the actor's target (ChooseTargetForActor), marks the slot done (2) and
 ; returns to step 1 with the next actor. (C1, E-0357)
@@ -186,6 +194,8 @@ RunBattleCommandEntry_ChooseTarget::
     ld hl, wBattleActor
     inc [hl]
     ret
+
+SECTION "Bank 30 ChooseTargetForActor", ROMX
 
 ; Returns D = the target of the current actor, wBattleTargetChoice[2 * wBattleActor]. A preset
 ; target is used only when the actor command is 1 (taken from wMenuState outside link play, from
@@ -243,6 +253,8 @@ ChooseTargetForActor::
     add_a_to_hl
     ld d, [hl]
     ret
+
+SECTION "Bank 30 RunBattleCommandEntry_ListSpeeds", ROMX
 
 ; Turn order, step 4: clears the action queue and the speed list, lists every present slot marked 2
 ; with a speed (RunBattleCommandEntry_ListSpeeds_RollSpeed plus the action's bonus,
@@ -309,6 +321,8 @@ RunBattleCommandEntry_ListSpeeds::
     inc [hl]
     ret
 
+SECTION "Bank 30 RunBattleCommandEntry_ListSpeeds_RollSpeed", ROMX
+
 ; BC = a random speed for slot E (its agility is the word wBattleAGL[E]): a value from 3 * agility /
 ; 10 (rounded down) up to the agility, chosen by RandomInRange. The routine calls AdvanceRandom
 ; itself and RandomInRange advances the random state again, so the first value is not used (an
@@ -334,6 +348,8 @@ RunBattleCommandEntry_ListSpeeds_RollSpeed::
     ld b, d
     pop de
     ret
+
+SECTION "Bank 30 AddActionSpeedBonus", ROMX
 
 ; BC += the speed bonus of the action chosen by slot E (wBattleActionChoice[2 * E]), the turn-order
 ; tie-breaker added to the rolled speed. Actions $62 and $D8 add 3,000 so they go first; action $69
@@ -430,6 +446,8 @@ AddActionSpeedBonus::
     pop de
     ret
 
+SECTION "Bank 30 RunBattleCommandEntry_ListSpeeds_AddItemEntry", ROMX
+
 ; When an item is being used (wBattleItemTarget not $FF), lists entry $10 with speed 2,010, ahead of
 ; every turn but the 3,000 ones. (C2, E-0357; probed E-0378)
 RunBattleCommandEntry_ListSpeeds_AddItemEntry::
@@ -447,6 +465,8 @@ RunBattleCommandEntry_ListSpeeds_AddItemEntry::
     add_a_to_hl
     ld [hl], $10
     ret
+
+SECTION "Bank 30 RunBattleCommandEntry_SortBySpeed", ROMX
 
 ; Turn order, step 5: sorts the listed speeds (words in wBattleTempBuf, up to nine) fastest first
 ; with eight passes of swapping neighbours, moving the slot numbers in wBattleArg0 along, then
@@ -549,6 +569,8 @@ RunBattleCommandEntry_SortBySpeed::
     inc [hl]
     ret
 
+SECTION "Bank 30 RunBattleCommandEntry_TotalHP", ROMX
+
 ; Turn order, step 6: totals the HP and the max HP of slots 0-2 into wBattleCommandArgs, clears the
 ; resolve counters, saves the action choices (SaveActionChoicesAndPickFormations) and marks berserk
 ; actors (SetBerserkForAction6E); next battle step. (C2, E-0357; probed E-0378)
@@ -583,6 +605,8 @@ RunBattleCommandEntry_TotalHP::
     call SetBerserkForAction6E
     ret
 
+SECTION "Bank 30 AddWordAtHLToBC_Bank30", ROMX
+
 ; BC += the word at [HL] (low byte first) and HL advances by 2; A is clobbered and the carry out of
 ; the high byte is dropped. RunBattleCommandEntry_TotalHP calls it three times in a row to total the
 ; HP words of slots 0-2, then the maximum HP words. (C2, E-0378)
@@ -595,6 +619,8 @@ AddWordAtHLToBC_Bank30::
     adc b
     ld b, a
     ret
+
+SECTION "Bank 30 SetBerserkForAction6E", ROMX
 
 ; Sets BSTAT6_BERSERK for every present slot whose chosen action is $6E. (C2, E-0357; probed E-0378)
 SetBerserkForAction6E::
@@ -622,6 +648,8 @@ SetBerserkForAction6E::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 30 RunCommandEntryResolveStep", ROMX
 
 ; Command entry of one actor, a jump table on wBattleResolveStep: 0
 ; RunCommandEntryResolveStep_Start, 1 RunCommandEntryResolveStep_CheckObeys, 2
@@ -691,6 +719,8 @@ RunCommandEntryResolveStep_Start::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 30 RunCommandEntryResolveStep_CheckObeys", ROMX
 
 ; Command entry, step 1: decides whether the actor follows the command: for party slots (any slot in
 ; link mode 1) unless paralysed and when its wBattleExtraStat band is 2 or 3, compares trait / 4 +
@@ -791,6 +821,8 @@ RunCommandEntryResolveStep_CheckObeys::
 .return:
     ret
 
+SECTION "Bank 30 ActorExtraStatBand", ROMX
+
 ; A = 0 when the word of the actor in wBattleExtraStat is below $33, 2 from $33 up to $3B5, 3 from
 ; $3B6 up; 1 is never returned. RunCommandEntryResolveStep_CheckObeys uses it: band 0 means the
 ; actor follows the command without a roll, band 1 would make it act on its own, bands 2 and 3 go on
@@ -815,11 +847,15 @@ ActorExtraStatBand::
 .return:
     ret
 
+SECTION "Bank 30 RunCommandEntryResolveStep_CheckObeys_AddTrait", ROMX
+
 ; Adds the actor's wSlotTrait byte / 4 to the word wBattleArg0 (jumps to
 ; RunCommandEntryResolveStep_CheckObeys_AddSlotByte). (C2, E-0370; probed E-0378)
 RunCommandEntryResolveStep_CheckObeys_AddTrait::
     ld hl, wSlotTrait
     jr RunCommandEntryResolveStep_CheckObeys_AddSlotByte
+
+SECTION "Bank 30 RunCommandEntryResolveStep_CheckObeys_AddTactic", ROMX
 
 ; Unless the actor's tactic (GetActorSlotTacticLow2) is 3, adds the actor's byte of
 ; wSlotPersonalityHi, wSlotPersonalityMid or wSlotPersonalityLo (tactic 0, 1 or 2, through the
@@ -831,6 +867,8 @@ RunCommandEntryResolveStep_CheckObeys_AddTactic::
     ld hl, TacticPersonalityArrays
     call ReadBattleWordFromArray_Bank30
     jr RunCommandEntryResolveStep_CheckObeys_AddSlotByte
+
+SECTION "Bank 30 TacticPersonalityArrays", ROMX
 
 ; Three words: wSlotPersonalityHi, wSlotPersonalityMid and wSlotPersonalityLo.
 ; RunCommandEntryResolveStep_CheckObeys_AddTactic picks entry A = the actor's tactic 0-2
@@ -854,6 +892,8 @@ RunCommandEntryResolveStep_CheckObeys_AddSlotByte::
     adc [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 30 AddPersonalityWeightToBattleArg0", ROMX
 
 ; The word wBattleArg0 += the byte PersonalityTacticWeights[4 * wPersonalityIndex + tactic], where
 ; tactic = wSlotTactic[actor] & 3 (GetActorSlotTacticLow2); the carry goes into the high byte. One
@@ -880,6 +920,8 @@ AddPersonalityWeightToBattleArg0::
     ld [hl], a
     ret
 
+SECTION "Bank 30 AddActorExtraStatDiv16ToBattleArg2", ROMX
+
 ; The word wBattleArg2 += the word of the actor in wBattleExtraStat divided by 16 (four shifts right
 ; of HL). The first term of the roll side of the comparison in
 ; RunCommandEntryResolveStep_CheckObeys; AddRandom0To63ToBattleArg2 adds the second. (C2, E-0378)
@@ -900,6 +942,8 @@ AddActorExtraStatDiv16ToBattleArg2::
     rr l
     jr AddHLToBattleArg2
 
+SECTION "Bank 30 AddRandom0To63ToBattleArg2", ROMX
+
 ; Advances the random value (AdvanceRandom) and adds wRandomLo & $3F (0-63) to the word wBattleArg2
 ; through AddHLToBattleArg2. (C2, E-0378)
 ; adds a random value 0-63 (wRandomLo & $3F) to the word wBattleArg2 (E-0122)
@@ -911,6 +955,8 @@ AddRandom0To63ToBattleArg2::
     ld h, $00
     jr AddHLToBattleArg2
 
+SECTION "Bank 30 AddHLToBattleArg2", ROMX
+
 ; The word wBattleArg2 += HL. (C2, E-0357; probed E-0378)
 AddHLToBattleArg2::
     ld a, [wBattleArg2]
@@ -920,6 +966,8 @@ AddHLToBattleArg2::
     adc h
     ld [wBattleArg3], a
     ret
+
+SECTION "Bank 30 AIChooseActionResolveStep", ROMX
 
 ; State 2 of RunCommandEntryResolveStep. When ForcedActionForActorStatus gives an action (NZ), B is
 ; stored as the action choice of the actor (ActorActionChoiceAddress). Otherwise, when bit 7 of
@@ -958,6 +1006,8 @@ AIChooseActionResolveStep::
     ld hl, wBattleResolveStep
     inc [hl]
     ret
+
+SECTION "Bank 30 AIModeRoutineTable", ROMX
 
 ; AIChooseActionResolveStep and AIChooseActionForActor read the word at $45D0 + 2 * AI mode and call
 ; it: mode 0 AIRunNextChoice, modes 1-3 ScoreActionsWithAIScoreTableA, mode 4 UseAIScoreTableB
@@ -1005,6 +1055,8 @@ InitAIWeightsForActor::
     ld a, $00
     ld [wLoadSlot], a
     ret
+
+SECTION "Bank 30 AddCommandWeightToAIChoiceWeights", ROMX
 
 ; Adds a weight for the command given to the side of the actor. The command is wMenuState & 3
 ; outside link battles (actors 0-3 only, 4 and up return at once), wSlotCommands[(actor >> 2) & 1]
@@ -1072,6 +1124,8 @@ AddCommandWeightToAIChoiceWeights::
 .return:
     ret
 
+SECTION "Bank 30 AddActorPersonalityTensToAIChoiceWeights", ROMX
+
 ; wAIChoiceWeights[0], [1] and [2] += the byte of the actor in wSlotPersonalityHi,
 ; wSlotPersonalityMid and wSlotPersonalityLo divided by 10 (rounded down), each sum stopping at $FF.
 ; The last one falls into AddActorPersonalityTensForIndexA. (C2, E-0378)
@@ -1104,6 +1158,8 @@ AddActorPersonalityTensForIndexA::
     ld e, b
     call AddSignedEToByteAtHLClamped
     ret
+
+SECTION "Bank 30 AddStatusAndHPWeightsToAI", ROMX
 
 ; Adds up to three weights to wAIChoiceWeights. (1) When the actor has BSTAT1_CRITICAL (status byte
 ; 1 bit 3) or any of BSTAT4_CHARGE_UP, BSTAT4_CHARGE_UP_HI, BSTAT4_SUCK_AIR, BSTAT4_SUCK_AIR_HI
@@ -1235,6 +1291,8 @@ AddStatusAndHPWeightsToAI::
 .return:
     ret
 
+SECTION "Bank 30 AnyAllyHPBelowSixthOfMax", ROMX
+
 ; Z clear with A = 1 when some present slot of the side of the actor (the three slots from
 ; wBattleActor & 4) has HP below its maximum HP / 6 (DivideHLByA, rounded down, compared as 16-bit
 ; values); Z set when none has. Slots marked in wBattleSlotOut are skipped
@@ -1275,6 +1333,8 @@ AnyAllyHPBelowSixthOfMax::
     ld a, $01
     or a
     ret
+
+SECTION "Bank 30 AddRandomPersonalityWeights", ROMX
 
 ; Adds random weights to wAIChoiceWeights[0..2]. Party style (link mode 0 with actor 0-3, and every
 ; actor in link mode 1 or 2): returns at once for tactic 3, otherwise each weight gets wRandomLo &
@@ -1356,6 +1416,8 @@ AddRandomWeightByValueBand::
     pop hl
     call AddSignedEToByteAtHLClamped
     ret
+
+SECTION "Bank 30 SortAIChoiceWeightsAndWeightSkills", ROMX
 
 ; Sorts wAIChoiceWeights[0..2] into descending order by comparing 0 with 1, 1 with 2 and 0 with 1
 ; again, and swaps the matching wAIChoiceOrder entries. A tie is never swapped: the code that would
@@ -1494,6 +1556,8 @@ AddWeightsForSkillD::
 .return:
     ret
 
+SECTION "Bank 30 ScaleSkillWeightByCommand", ROMX
+
 ; Scales skill weight E by the battle command (wMenuState, or the link's wSlotCommands): command 1
 ; doubles it (0 when the tactic is 3), command 3 keeps it, 0 and 2 clear it; then adds it to the
 ; word at HL. (C2, E-0357; probed E-0378)
@@ -1554,6 +1618,8 @@ ScaleSkillWeightByCommand::
     pop de
     ret
 
+SECTION "Bank 30 AIRunNextChoice", ROMX
+
 ; Mode 0 of AIModeRoutineTable. Slots 3 and 7 always take the AI path. For slots 0-2 (and 4-6 in
 ; link mode 1) a tactic of 3 gives action 0 and returns. Otherwise it reads the kind in
 ; wAIChoiceOrder at wAIChoiceIndex (3, 4, 5: wAIChoiceWeights + wAIChoiceIndex reaches
@@ -1608,6 +1674,8 @@ AIRunNextChoice::
     ld hl, wAIChoiceIndex
     inc [hl]
     jr AIRunNextChoice
+
+SECTION "Bank 30 AIChoiceRoutineTable", ROMX
 
 ; AIRunNextChoice reads the word at $4998 + 2 * (wAIChoiceWeights[wAIChoiceIndex] - 1) and calls it
 ; (JumpToHL); three words, and the three routines follow directly (E-0181, C1)
@@ -1679,6 +1747,8 @@ AIPickRandomActionOfKind1::
     ld [wLoadSlot], a
     ret
 
+SECTION "Bank 30 AIPickRandomSkillOfKind2", ROMX
+
 ; Choice routine 2 of AIChoiceRoutineTable. Lists the skills of the actor whose kind byte is 2 into
 ; wBattleArg0 (stopping at the first kind 0 entry); with none it returns at once, leaving wLoadSlot
 ; alone so AIRunNextChoice tries the next kind. Otherwise one AdvanceRandom picks entry (wRandomLo
@@ -1738,6 +1808,8 @@ AIPickRandomSkillOfKind2::
     ld a, $ff
     ld [wLoadSlot], a
     ret
+
+SECTION "Bank 30 AIPickRandomSkillOfKind3", ROMX
 
 ; Choice routine 3 of AIChoiceRoutineTable. Lists the skills of the actor whose kind byte is 3 into
 ; wBattleArg0 (stopping at the first kind 0 entry) and appends SKILL_GUARD ($AC) when the tactic
@@ -1809,6 +1881,8 @@ AIPickRandomSkillOfKind3::
     ld [wLoadSlot], a
     ret
 
+SECTION "Bank 30 UseAIScoreTableB", ROMX
+
 ; Mode 4 of AIModeRoutineTable. Stores the address of AIScoreRoutineTableB in wBattleExpAward / +1,
 ; where ScoreSkillForAI looks for its table of scoring routines, and continues in
 ; ScoreActorActionsForAI. (C2, E-0378)
@@ -1821,6 +1895,8 @@ UseAIScoreTableB::
     ld a, h
     ld [wBattleExpAward + $1], a
     jr ScoreActorActionsForAI
+
+SECTION "Bank 30 ScoreActionsWithAIScoreTableA", ROMX
 
 ; Modes 1-3 of AIModeRoutineTable. Stores the address of AIScoreRoutineTableA in wBattleExpAward /
 ; +1, where ScoreSkillForAI looks for its table of scoring routines, and continues in
@@ -1933,6 +2009,8 @@ ScoreActorActionsForAI::
     call ChooseHighestWeightedAction
     ret
 
+SECTION "Bank 30 DoubleWordAtDEUnlessBit15", ROMX
+
 ; Doubles the word at DE unless its bit 15 is set ($8000 and up, which includes the unusable mark
 ; $FFFF, are left alone); DE is kept. The result can reach bit 15 ($4000 becomes $8000). (C2,
 ; E-0378)
@@ -1955,6 +2033,8 @@ DoubleWordAtDEUnlessBit15::
 .done:
     pop de
     ret
+
+SECTION "Bank 30 QuarterWordAtDEUnlessBit15", ROMX
 
 ; Divides the word at DE by 4 (two shifts right) unless its bit 15 is set ($8000 and up, including
 ; $FFFF, are left alone); DE is kept. (C2, E-0378)
@@ -1979,6 +2059,8 @@ QuarterWordAtDEUnlessBit15::
 .done:
     pop de
     ret
+
+SECTION "Bank 30 ScoreSkillAtHLForAI", ROMX
 
 ; A = [HL], a skill number ($FF = none), then falls into ScoreSkillForAI with DE = the weight word
 ; of that skill. (C2, E-0378)
@@ -2066,6 +2148,8 @@ ScoreSkillForAI::
 .return:
     ret
 
+SECTION "Bank 30 ChooseHighestWeightedAction", ROMX
+
 ; Picks the largest of the ten words of wAIWeights, skipping the unusable $FFFF words; a word equal
 ; to the best so far replaces it only when wRandomLo bit 0 is set after an AdvanceRandom. The winner
 ; becomes the action choice of the actor (ActorActionChoiceAddress): entries 0-7 the skill in that
@@ -2137,6 +2221,8 @@ ChooseHighestWeightedAction::
     ld [hl], b
     ret
 
+SECTION "Bank 30 EstimateDamageVsEachFoeToAIDamageEstimates", ROMX
+
 ; For each slot of the opposite side of the actor (slots 4-6 for actor 0-3, slots 0-2 otherwise)
 ; stores in wAIDamageEstimates[slot & 3] (a word each): (the ATK of the actor - DEF / 2) / 2, 0 when
 ; that is negative, and 0 for an absent slot (CarryUnlessBattleSlotOutSlotEmpty). Used by the AI
@@ -2194,6 +2280,8 @@ EstimateDamageVsEachFoeToAIDamageEstimates::
     jr nz, .loop
     ret
 
+SECTION "Bank 30 AddSkillBaseWeightAndLoadSkill", ROMX
+
 ; A = skill number, DE = its weight word: when the word at SkillAIBaseWeightTable + 2 * A is not
 ; zero it is added to [DE] and AddSkillBaseWeightAndLoadSkill_AddRandom adds a random 0-63 to it.
 ; Then wRecordBuffer = A, wRecordBuffer + 1 = 0 and LoadSkillRecord loads the skill record into
@@ -2239,6 +2327,8 @@ AddSkillBaseWeightAndLoadSkill::
     pop de
     ret
 
+SECTION "Bank 30 AddSkillBaseWeightAndLoadSkill_AddRandom", ROMX
+
 ; Adds a random 0-63 to the word ending at DE. (C2, E-0357; probed E-0378)
 AddSkillBaseWeightAndLoadSkill_AddRandom::
     push af
@@ -2257,6 +2347,8 @@ AddSkillBaseWeightAndLoadSkill_AddRandom::
     pop af
     ret
 
+SECTION "Bank 30 RunCommandEntryResolveStep_RunAIHandlers", ROMX
+
 ; Command entry, step 3: runs the action handlers of the computer-controlled slots, then the next
 ; turn-order step. (C1, E-0357)
 RunCommandEntryResolveStep_RunAIHandlers::
@@ -2266,6 +2358,8 @@ RunCommandEntryResolveStep_RunAIHandlers::
     xor a
     ld [wBattleResolveStep], a
     ret
+
+SECTION "Bank 30 RollPersonalityActsForChosenAction", ROMX
 
 ; Rolls the personality acts for the action just chosen. It runs only for slots 0-2 in link mode 0
 ; and 2, and for every slot except 3 and 7 in link mode 1. ActorActionDataWord gives the mask of the
@@ -2304,6 +2398,8 @@ RollPersonalityActsForChosenAction::
 .return:
     ret
 
+SECTION "Bank 30 ActorActionDataWord", ROMX
+
 ; BC = the word of ActionHandlerMaskTable at 2 * the chosen action of the actor
 ; (ActorActionChoiceAddress); the table has 240 entries, $FFFF meaning no handler.
 ; RollPersonalityActsForChosenAction uses it. (C2, E-0378)
@@ -2320,6 +2416,8 @@ ActorActionDataWord::
     ld b, [hl]
     ld c, a
     ret
+
+SECTION "Bank 30 ActionHandlerMaskTable", ROMX
 
 ; ActorActionDataWord reads the word at $4D34 + 2 * the actor's chosen action byte;
 ; RollPersonalityActsForChosenAction skips $FFFF and otherwise passes it to
@@ -2610,6 +2708,8 @@ RunHandlersForSetBitsInBC::
 .return:
     ret
 
+SECTION "Bank 30 CallFlagBitHandlerE", ROMX
+
 ; E = bit number 0-15: jumps through the word FlagBitHandlerTable + 2 * E (JumpToWordAtHL) and
 ; returns with the flags of that handler. Bits 0-7 reach the personality and trait roll handlers
 ; (RollSlotTraitHighFlag40 and the others in the table); bits 8-15 reach a two-byte stub (xor a,
@@ -2622,6 +2722,8 @@ CallFlagBitHandlerE::
     add hl, de
     call JumpToWordAtHL
     ret
+
+SECTION "Bank 30 BitMaskWords16", ROMX
 
 ; 16 words $0001, $0002, ... $8000, one bit each (E-0102)
 BitMaskWords16::
@@ -2653,6 +2755,8 @@ RollPersonalityHiHighFlag01::
     ld de, $0001
     jr RollPersonalityActForHighValue
 
+SECTION "Bank 30 RollPersonalityHiLowFlag02", ROMX
+
 ; Handler of the mask bit $02 of FlagBitHandlerTable: HL = wSlotPersonalityHi, DE = $0002, and a
 ; jump to the low-value roll RollPersonalityActForLowValue: a byte of the actor of $80 or more
 ; returns carry clear without setting anything; below $80 there is a chance of 1/256 to 8/256,
@@ -2665,6 +2769,8 @@ RollPersonalityHiLowFlag02::
     ld hl, wSlotPersonalityHi
     ld de, $0002
     jr RollPersonalityActForLowValue
+
+SECTION "Bank 30 RollPersonalityMidHighFlag04", ROMX
 
 ; Handler of the mask bit $04 of FlagBitHandlerTable: HL = wSlotPersonalityMid, DE = $0004, and a
 ; jump to the high-value roll RollPersonalityActForHighValue: a byte of the actor below $80 returns
@@ -2680,6 +2786,8 @@ RollPersonalityMidHighFlag04::
     ld de, $0004
     jr RollPersonalityActForHighValue
 
+SECTION "Bank 30 RollPersonalityMidLowFlag08", ROMX
+
 ; Handler of the mask bit $08 of FlagBitHandlerTable: HL = wSlotPersonalityMid, DE = $0008, and a
 ; jump to the low-value roll RollPersonalityActForLowValue: a byte of the actor of $80 or more
 ; returns carry clear without setting anything; below $80 there is a chance of 1/256 to 8/256,
@@ -2692,6 +2800,8 @@ RollPersonalityMidLowFlag08::
     ld hl, wSlotPersonalityMid
     ld de, $0008
     jr RollPersonalityActForLowValue
+
+SECTION "Bank 30 RollPersonalityLoHighFlag10", ROMX
 
 ; Handler of the mask bit $10 of FlagBitHandlerTable: HL = wSlotPersonalityLo, DE = $0010, and a
 ; jump to the high-value roll RollPersonalityActForHighValue: a byte of the actor below $80 returns
@@ -2707,6 +2817,8 @@ RollPersonalityLoHighFlag10::
     ld de, $0010
     jr RollPersonalityActForHighValue
 
+SECTION "Bank 30 RollPersonalityLoLowFlag20", ROMX
+
 ; Handler of the mask bit $20 of FlagBitHandlerTable: HL = wSlotPersonalityLo, DE = $0020, and a
 ; jump to the low-value roll RollPersonalityActForLowValue: a byte of the actor of $80 or more
 ; returns carry clear without setting anything; below $80 there is a chance of 1/256 to 8/256,
@@ -2720,6 +2832,8 @@ RollPersonalityLoLowFlag20::
     ld de, $0020
     jr RollPersonalityActForLowValue
 
+SECTION "Bank 30 RollSlotTraitHighFlag40", ROMX
+
 ; Handler of the mask bit $40 of FlagBitHandlerTable: HL = wSlotTrait, DE = $0040, and a jump to the
 ; high-value roll RollPersonalityActForHighValue: a byte of the actor below $80 returns carry set
 ; without setting anything (which stops RunHandlersForSetBitsInBC); from $80 up there is a chance of
@@ -2732,6 +2846,8 @@ RollSlotTraitHighFlag40::
     ld hl, wSlotTrait
     ld de, $0040
     jr RollPersonalityActForHighValue
+
+SECTION "Bank 30 RollSlotTraitLowFlag80", ROMX
 
 ; Handler of the mask bit $80 of FlagBitHandlerTable: HL = wSlotTrait, DE = $0080, and a jump to the
 ; low-value roll RollPersonalityActForLowValue: a byte of the actor of $80 or more returns carry
@@ -2770,6 +2886,8 @@ RollPersonalityActForHighValue::
     jr c, RollPersonalityActOneIn64
     jr RollPersonalityActOneIn32
 
+SECTION "Bank 30 RollPersonalityActForLowValue", ROMX
+
 ; The low-value form of RollPersonalityActForHighValue (from RollPersonalityHiLowFlag02,
 ; RollPersonalityMidLowFlag08, RollPersonalityLoLowFlag20, RollSlotTraitLowFlag80): when the actor's
 ; byte is below $80, rolls a chance of 1/256 from $60, 2/256 from $3F, 4/256 from $1E, otherwise
@@ -2796,15 +2914,21 @@ RollPersonalityActOneIn32::
     ld c, $08
     jr RollPersonalityActChance
 
+SECTION "Bank 30 RollPersonalityActOneIn256", ROMX
+
 ; C = 1 (chance 1/256), then the roll. (C2, E-0357; probed E-0378)
 RollPersonalityActOneIn256::
     ld c, $01
     jr RollPersonalityActChance
 
+SECTION "Bank 30 RollPersonalityActOneIn128", ROMX
+
 ; C = 2 (chance 2/256), then the roll. (C2, E-0357; probed E-0378)
 RollPersonalityActOneIn128::
     ld c, $02
     jr RollPersonalityActChance
+
+SECTION "Bank 30 RollPersonalityActOneIn64", ROMX
 
 ; C = 4 (chance 4/256), then the roll. (C2, E-0357; probed E-0378)
 RollPersonalityActOneIn64::
@@ -2828,6 +2952,8 @@ RollPersonalityActChance::
     ld [hl], a
     scf
     ret
+
+SECTION "Bank 30 RunCommandEntryResolveStep_CheckObeys_SelfAction", ROMX
 
 ; Picks the action of a monster acting on its own: action $AB when all three personality bytes are
 ; below $40; action $AC unless Hi is the largest; otherwise its strongest usable skill (enough MP,
@@ -2896,6 +3022,8 @@ RunCommandEntryResolveStep_CheckObeys_SelfAction::
     ld [hl], $00
     ret
 
+SECTION "Bank 30 IncBIfActorEntryBelow40", ROMX
+
 ; B += 1 when the byte at HL + wBattleActor is below $40; HL is advanced by the actor number. The
 ; caller RunCommandEntryResolveStep_CheckObeys_SelfAction counts the three personality bytes below
 ; $40 this way. (C2, E-0378)
@@ -2908,6 +3036,8 @@ IncBIfActorEntryBelow40::
     ret nc
     inc b
     ret
+
+SECTION "Bank 30 CountIfActorPersonalityHiAtLeastHLEntry", ROMX
 
 ; B += 1 when wSlotPersonalityHi[actor] >= [HL + actor] (equal counts).
 ; RunCommandEntryResolveStep_CheckObeys_SelfAction calls it for the Mid and Lo arrays: B = 2 means
@@ -2929,6 +3059,8 @@ CountIfActorPersonalityHiAtLeastHLEntry::
     ret c
     inc b
     ret
+
+SECTION "Bank 30 ListActorSkills", ROMX
 
 ; Lists the actor's skills into wTemp0, leaving out those whose record byte 3 has kind 2. (C2,
 ; E-0357; probed E-0378)
@@ -2983,6 +3115,8 @@ ListActorSkills::
     dec b
     jr nz, .loop
     ret
+
+SECTION "Bank 30 FilterSkillListByMP", ROMX
 
 ; Input: the list of up to eight skill numbers in wTemp0, ended by the first $FF (as ListActorSkills
 ; leaves it). Each listed skill is loaded (LoadSkillRecordPart) and kept only when byte 0 of its
@@ -3054,6 +3188,8 @@ FilterSkillListByMP::
     ld de, wPauseMenuStep
     jr CompactSkillList
 
+SECTION "Bank 30 KeepSelfActionSkills", ROMX
+
 ; Walks the eight-entry skill list at wPauseMenuStep (left there by FilterSkillListByMP) up to its
 ; first $FF and replaces each skill that IsSkillForSelfAction rejects with $FF; then fills wTemp0
 ; with eight $FF and packs the remaining skills into it (falls into CompactSkillList). (C2, E-0370;
@@ -3115,6 +3251,8 @@ CompactSkillList::
     jr nz, .loop
     ret
 
+SECTION "Bank 30 IsSkillForSelfAction", ROMX
+
 ; Carry for skills $01-$15, $3D-$67 and $6B-$70 (the kinds a monster acting on its own may use).
 ; (C2, E-0357; probed E-0378)
 IsSkillForSelfAction::
@@ -3147,6 +3285,8 @@ IsSkillForSelfAction::
 .return_carry:
     scf
     ret
+
+SECTION "Bank 30 PickCostliestListedSkill", ROMX
 
 ; C = the skill of the wTemp0 list (up to eight, ending at the first $FF) whose record byte 0, the
 ; MP cost that FilterSkillListByMP compares with the MP, is highest; a later skill wins ties. Each
@@ -3218,6 +3358,8 @@ PickCostliestListedSkill::
     ld c, [hl]
     ret
 
+SECTION "Bank 30 ForcedActionForActorStatus", ROMX
+
 ; B = the action forced by the status of the actor, Z clear when there is one and Z set (B
 ; unchanged) when there is none. In the 9-byte status record of the actor (wBattleStatus3 is byte
 ; 3), the first match in this order wins: byte 3 bit 6 (BSTAT3_AIRBORNE) gives $CD, byte 4 bit 2
@@ -3259,6 +3401,8 @@ ForcedActionForActorStatus::
 
 .return:
     ret
+
+SECTION "Bank 30 AdjustActorPersonality", ROMX
 
 ; Outside link battles, for party slots 0-2 only: picks a 4-byte record of TacticOffsetTable by the
 ; actor's tactic, its level band (wBattleLevel below 10, 20, 30, or 30 and over: records 0-3) and
@@ -3323,6 +3467,8 @@ AdjustActorPersonality::
     call AdjustActorPersonality_Apply
     ret
 
+SECTION "Bank 30 CopyFourBytesNegatedByActorSlotTactic", ROMX
+
 ; HL = a 4-byte record: copies it to hTemp0-hTemp3, negating each byte (invert the bits and add 1)
 ; when bit 6 of the wSlotTactic byte of the actor is set (CopyByteNegateIfCBit6).
 ; AdjustActorPersonality calls it with a record of TacticOffsetTable. (C2, E-0378)
@@ -3346,6 +3492,8 @@ CopyFourBytesNegatedByActorSlotTactic::
     call CopyByteNegateIfCBit6
     ret
 
+SECTION "Bank 30 CopyByteNegateIfCBit6", ROMX
+
 ; [DE] = [HL], negated (bits inverted, plus 1) when bit 6 of C is set. A is clobbered. (C2, E-0378)
 ; [DE] = [HL], negated (two's complement) when bit 6 of C is set (E-0115)
 CopyByteNegateIfCBit6::
@@ -3357,6 +3505,8 @@ CopyByteNegateIfCBit6::
     inc a
     ld [de], a
     ret
+
+SECTION "Bank 30 AdjustActorPersonality_Apply", ROMX
 
 ; When bit 6 of the actor's tactic byte is set, negates the change at hTemp0 + wCommandEntryMonster
 ; again, so that one keeps the table's sign while the other three stay negated; then adds the four
@@ -3407,6 +3557,8 @@ AddSignedEToByteAtHLClampedForActorEntryOfHL::
     add_a_to_hl
     call AddSignedEToByteAtHLClamped
     ret
+
+SECTION "Bank 30 TacticOffsetTable", ROMX
 
 ; the code at AdjustActorPersonality.call_get_actor_slot_tactic_low2 indexes it with
 ; GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else 0) and C
@@ -3484,6 +3636,8 @@ GetActorSlotTacticLow2::
     and $03
     ret
 
+SECTION "Bank 30 ActorActionChoiceAddress", ROMX
+
 ; HL = wBattleActionChoice + 2 * wBattleActor, the action byte of the actor (the target byte follows
 ; it); A is clobbered. (C2, E-0378)
 ; HL = wBattleActionChoice + 2 * wBattleActor (the actor's action byte; the target follows) (E-0072)
@@ -3493,6 +3647,8 @@ ActorActionChoiceAddress::
     ld hl, wBattleActionChoice
     add_a_to_hl
     ret
+
+SECTION "Bank 30 AddSignedEToByteAtHLClamped", ROMX
 
 ; [HL] += E taken as a signed byte, stopping at 0 below and at $FF above. A negative E is negated in
 ; place first, so E ends as its magnitude. HL is kept. (C2, E-0378)
@@ -3519,6 +3675,8 @@ AddSignedEToByteAtHLClamped::
 .done:
     ld [hl], a
     ret
+
+SECTION "Bank 30 AIChooseActionForActor", ROMX
 
 ; Chooses a new action for the actor in wBattleActor with the full AI, outside the normal command
 ; entry: sets wPersonalityIndex from PersonalityIndexOfSlot_Bank30, builds the weights
@@ -3551,6 +3709,8 @@ AIChooseActionForActor::
     xor a
     ld [wAIFlag], a
     ret
+
+SECTION "Bank 30 AIChooseActionForActor_InitChoiceWeights", ROMX
 
 ; Like InitAIWeightsForActor but for AIChooseActionForActor: clears the $14 bytes of wAIWeights,
 ; sets wAIChoiceWeights to 0, 0, 0, wAIChoiceOrder to 1, 2, 3 and wAIChoiceIndex to 3, adds the
@@ -3587,6 +3747,8 @@ AIChooseActionForActor_InitChoiceWeights::
     ld [wLoadSlot], a
     ret
 
+SECTION "Bank 30 AIChooseActionForActor_AddSkillKindWeight", ROMX
+
 ; Adds 10 to choice weight 0, 1 or 2 by the high nibble (1, 2 or 3) of skill record byte 3. (C2,
 ; E-0357; probed E-0378)
 AIChooseActionForActor_AddSkillKindWeight::
@@ -3618,6 +3780,8 @@ AIChooseActionForActor_AddSkillKindWeight::
 
 .return:
     ret
+
+SECTION "Bank 30 AIChooseActionForActor_AddHPWeights", ROMX
 
 ; Uses the totals that RunBattleCommandEntry_TotalHP saved in wBattleCommandArgs (HP of slots 0-2 at
 ; +0, maximum HP at +2). For a party actor (slot 0-3): when twice the HP of slots 0-2 is below the
@@ -3716,6 +3880,8 @@ AIChooseActionForActor_AddHPWeights::
 .return:
     ret
 
+SECTION "Bank 30 MaybeOverrideActorActionWithDebugValue0", ROMX
+
 ; Advances the random value; when wDebugCursor is not zero and wRandomLo is below wDebugValue1, the
 ; action choice of the actor becomes wDebugValue0. No caller was found in src/ (the code follows a
 ; terminator). (C2, E-0378)
@@ -3737,6 +3903,8 @@ MaybeOverrideActorActionWithDebugValue0::
 
 .return:
     ret
+
+SECTION "Bank 30 PersonalityTacticWeights", ROMX
 
 ; AddPersonalityWeightToBattleArg0 adds the byte $5587 + 4 * wPersonalityIndex + (the actor's
 ; wSlotTactic & 3) to the word wBattleArg0; 27 personality rows (E-0173, C1)
@@ -4401,12 +4569,16 @@ ReadBattleATKOfSlot_Bank30::
     ld hl, wBattleATK
     jr ReadBattleWordFromArray_Bank30
 
+SECTION "Bank 30 ReadBattleDEFOfSlot_Bank30", ROMX
+
 ; A = slot: HL = the word of that slot in wBattleDEF (HL = wBattleDEF, then
 ; ReadBattleWordFromArray_Bank30). EstimateDamageVsEachFoeToAIDamageEstimates calls it. (C2, E-0378)
 ; HL = wBattleDEF, then ReadBattleWordFromArray_Bank30 (E-0122)
 ReadBattleDEFOfSlot_Bank30::
     ld hl, wBattleDEF
     jr ReadBattleWordFromArray_Bank30
+
+SECTION "Bank 30 ReadBattleMaxHPOfSlot_Bank30", ROMX
 
 ; A = slot: HL = the word of that slot in wBattleMaxHP (HL = wBattleMaxHP, then
 ; ReadBattleWordFromArray_Bank30). AnyAllyHPBelowSixthOfMax calls it. (C2, E-0378)
@@ -4422,6 +4594,8 @@ ReadBattleMaxHPOfSlot_Bank30::
 ReadBattleHPOfSlot_Bank30::
     ld hl, wBattleHP
     jr ReadBattleWordFromArray_Bank30
+
+SECTION "Bank 30 GetBattleMP_Bank30", ROMX
 
 ; HL = wBattleMP, then the slot's word (ReadBattleWordFromArray_Bank30). (C2, E-0357; probed E-0378)
 GetBattleMP_Bank30::
@@ -4439,6 +4613,8 @@ ReadBattleWordFromArray_Bank30::
     deref_hl
     ret
 
+SECTION "Bank 30 AddDoubleAToHL_Bank30", ROMX
+
 ; HL += 2 * A; A is doubled in 8 bits first (an A of $80 or more wraps) and clobbered; the carry out
 ; of L goes into H. RunCommandEntryResolveStep_CheckObeys uses it to index wBattleActionChoice. (C2,
 ; E-0378)
@@ -4448,6 +4624,8 @@ AddDoubleAToHL_Bank30::
     add a
     add_a_to_hl
     ret
+
+SECTION "Bank 30 ActorOnLocalSide_Bank30", ROMX
 
 ; Carry set when wBattleActor is below 4 (slots 0-3), clear otherwise; in link mode 1 with bit 1 of
 ; wLinkRole set the test is reversed (carry set when wBattleActor is 4 or more). No caller in this
@@ -4472,6 +4650,8 @@ ActorOnLocalSide_Bank30::
     cp $04
     ret
 
+SECTION "Bank 30 TargetOnLocalSide_Bank30", ROMX
+
 ; Carry set when wBattleTarget is below 4 (slots 0-3), clear otherwise; in link mode 1 with bit 1 of
 ; wLinkRole set the test is reversed. No caller in this bank. (C2, E-0378)
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
@@ -4494,6 +4674,8 @@ TargetOnLocalSide_Bank30::
     cp $04
     ret
 
+SECTION "Bank 30 ClearBattleStatusBitsWithMaskD_Bank30", ROMX
+
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank30_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0378)
 ClearBattleStatusBitsWithMaskD_Bank30::
@@ -4508,6 +4690,8 @@ ClearBattleStatusBitsWithMaskD_Bank30::
     and [hl]
     ld [hl], a
     ret
+
+SECTION "Bank 30 ClearBattleStatusBitsWithMaskD_Bank30_Data", ROMX
 
 ; Seven AND masks for the first status byte of a battler (BSTAT0_*): $DF clears bit 5
 ; (BSTAT0_CURSED), $FE bit 0 (BSTAT0_POISONED), $00 all bits, $FD bit 1 (BSTAT0_BADLY_POISONED), $73
@@ -4530,6 +4714,8 @@ SetBit0OfLevelUpGainsIndexed_Bank30::
     pop hl
     ret
 
+SECTION "Bank 30 SetBit1OfLevelUpGainsIndexed_Bank30", ROMX
+
 ; Sets bit 1 of the byte wLevelUpGains + A; HL is kept, A is clobbered. No caller in this bank. (C2,
 ; E-0378)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
@@ -4542,6 +4728,8 @@ SetBit1OfLevelUpGainsIndexed_Bank30::
     pop hl
     ret
 
+SECTION "Bank 30 SetBit2OfLevelUpGainsIndexed_Bank30", ROMX
+
 ; Sets bit 2 of the byte wLevelUpGains + A; HL is kept, A is clobbered. No caller in this bank. (C2,
 ; E-0378)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
@@ -4553,6 +4741,8 @@ SetBit2OfLevelUpGainsIndexed_Bank30::
     set 2, [hl]
     pop hl
     ret
+
+SECTION "Bank 30 PersonalityIndexOfSlot_Bank30", ROMX
 
 ; A = slot 0-7: returns A = 9 * g(Hi) + 3 * g(Mid) + g(Lo) from wSlotPersonalityHi,
 ; wSlotPersonalityMid and wSlotPersonalityLo of that slot, with g(v) = 0 for v from $C0, 1 for v
@@ -4617,6 +4807,8 @@ PersonalityIndexOfSlot_Bank30::
     pop hl
     ret
 
+SECTION "Bank 30 CheckSlotStatusBlockWide_Bank30", ROMX
+
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when byte 3 & $C0 or byte 4 & $0C of the
 ; 9-byte status record (wBattleStatus3 + 9 * slot) is non-zero; otherwise carry clear. A, BC and HL
 ; are kept. No caller in this bank. (C2, E-0378)
@@ -4648,6 +4840,8 @@ CheckSlotStatusBlockWide_Bank30::
     pop bc
     pop hl
     ret
+
+SECTION "Bank 30 SlotHasStatus3Or4Bits_Bank30", ROMX
 
 ; A = slot: A = status byte 3 & $C0 of that slot (wBattleStatus3 + 9 * slot), or byte 4 & $0C when
 ; that is zero; Z set when both are zero; HL is kept. No caller in this bank. (C2, E-0378)

@@ -1,7 +1,7 @@
 ; ROM bank $95: string tables
 ; The annotated listing of this bank is build/listing/bank95.asm.
 
-SECTION "Bank 95", ROMX[$4000], BANK[$95]
+SECTION "Bank 95", ROMX
     db $95
 
 ; compressed tileset of map $4E (the first map record using it)
@@ -80,6 +80,8 @@ BeginStringDisplay_Bank08_Overflow::
     ld [wStringCategory], a
     call BeginStringDisplay
     ret
+
+SECTION "Bank 95 CopyStringToBuffer_Bank08_Overflow", ROMX
 
 ; Copies a string of category wStringCategory - 9 from this bank's categories to the buffer
 ; (CopyStringToBuffer). (C2, E-0357; probed E-0385)

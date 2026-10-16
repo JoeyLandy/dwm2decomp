@@ -1,7 +1,7 @@
 ; ROM bank $1F: the font, scripts, strings and SGB data
 ; The annotated listing of this bank is build/listing/bank1f.asm.
 
-SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
+SECTION "Bank 1F", ROMX
     db $1f, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable copy the 16 bytes at $4010 + 16 * glyph from
@@ -387,6 +387,8 @@ SendSGBPacketSet::
     ret z
     call SpinDelay
     jr .skip3
+
+SECTION "Bank 1F SGBPacketSetTable", ROMX
 
 ; SendSGBPacketSet reads the word $5094 + 2 * wSGBPacketIndex ($FF selects wSGBPacketBuffer instead)
 ; and sends byte-0 & 7 packets of 16 bytes from there through the joypad register (E-0179, C1)
@@ -1193,6 +1195,8 @@ DrawRecordListPageNames::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1F DrawRecordListPageNames_Data", ROMX
+
 ; Five little-endian words, $8D00, $8D50, $8DA0, $8F00 and $8A40: VRAM addresses for the names of
 ; the five cells of a record list page. DrawRecordListPageNames indexes it by the cell number 0 to 3
 ; and draws that cell name with CopyGlyphTilesToVRAM; cell 4 is drawn by
@@ -1258,6 +1262,8 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F::
     ld [wGlyphListPos], a
     ret
 
+SECTION "Bank 1F GlyphCopyArgsForA", ROMX
+
 ; Sets up the arguments for copying one font glyph to VRAM. A = glyph number; returns DE = GlyphFont
 ; + 16 * A (the glyph tile in bank $1F, which starts at $4010), HL = the destination word at index
 ; wGlyphListStart of GlyphCopyArgsForA_Data ($8A40, $8A50, $8A60, $8CE0, $8CF0), B = $1F (the bank)
@@ -1290,6 +1296,8 @@ GlyphCopyArgsForA::
     ld b, $1f
     ld c, $10
     ret
+
+SECTION "Bank 1F GlyphCopyArgsForA_Data", ROMX
 
 ; Five little-endian VRAM addresses of 16-byte tiles: $8A40, $8A50, $8A60, $8CE0 and $8CF0.
 ; GlyphCopyArgsForA indexes it by wGlyphListStart (the destination tile counter of
@@ -1400,6 +1408,8 @@ DrawTileRectFromArg1Params::
     jr nz, .loop
     ret
 
+SECTION "Bank 1F FillTileRectWithArg1Tile", ROMX
+
 ; Fills a rectangle of the BG map with one tile. Inputs: wArg1/wArg2 = the address of the tile byte
 ; (high, low; every caller passes BGFillTile, tile $C3), wArg3 = width, wArg4 = rows, wArg5/wArg6 =
 ; the BG map address of the first cell. Each cell is written with interrupts off after waiting for
@@ -1504,6 +1514,8 @@ FillTileRectWithArg1Tile::
     and a
     jr nz, .loop
     ret
+
+SECTION "Bank 1F BGFillTile", ROMX
 
 ; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten
 ; callers pass this address (E-0186)
@@ -2138,6 +2150,8 @@ LoadSixteenGlyphTilesFromTable::
     jr c, .loop
     ret
 
+SECTION "Bank 1F LoadSixteenGlyphTilesFromTable_Data1", ROMX
+
 ; Sixteen glyph numbers, $A3 $54 $44 $11 $16 $19 $48 $24 $A6 $12 $31 $29 $32 $18 $14 $25 (in the
 ; text charmap: colon, H, M, P, a, I, n, f, o, O, K, b, and four numbers the charmap does not list).
 ; Same list as SwapMonstersMenu_CopySixteenTiles_Data1 except the last byte.
@@ -2250,6 +2264,8 @@ DrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     ld [wScreenStep], a
     ret
 
+SECTION "Bank 1F ClearBGMapAndLoadFrameTiles", ROMX
+
 ; Starts a stats screen: fills the whole 32 x 32 BG map from the scroll origin with BGFillTile (tile
 ; $C3) through FillTileRectWithArg1Tile, with wArg7 = 0 so the attribute bytes are cleared too on
 ; the Game Boy Color. Then copies three 16-byte tiles from bank $1F to vTiles1 + $7E0
@@ -2293,6 +2309,8 @@ ClearBGMapAndLoadFrameTiles::
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
+
+SECTION "Bank 1F MonsterDetails_DrawStatsPageFrames", ROMX
 
 ; Draws the two frames of the first stats page: MonsterDetailsStatsTileRect (12 wide, 15 rows) at
 ; the BG map scroll origin + $68, then MonsterDetailsStatsLowerLeftTileRect (8 wide, 7 rows) at the
@@ -2343,6 +2361,8 @@ MonsterDetails_DrawStatsPageFrames::
     call DrawTileRectFromArg1Params
     ret
 
+SECTION "Bank 1F MonsterDetails_DrawBlankPageFrames", ROMX
+
 ; Draws the two frames of an emptied page: MonsterDetailsBlankPageTileRect (12 wide, 18 rows) at the
 ; BG map scroll origin + 8, then MonsterDetailsBlankPageLowerLeftTileRect (8 wide, 7 rows) at the
 ; scroll origin + $160, with wArg7 = 0 through DrawTileRectFromArg1Params. It is the first step (23)
@@ -2391,6 +2411,8 @@ MonsterDetails_DrawBlankPageFrames::
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ret
+
+SECTION "Bank 1F MonsterDetails_DrawSkillsPageFrames", ROMX
 
 ; Prepares the skills page. It blanks 21 x 4 tiles at vTiles2 + $200 with FillTilesFromRequest (the
 ; area the skill names will be written into), then draws MonsterDetailsSkillsPageTileRect (12 wide,
@@ -2452,6 +2474,8 @@ MonsterDetails_DrawSkillsPageFrames::
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ret
+
+SECTION "Bank 1F ShowRecordBufBSkillNamesOrNone", ROMX
 
 ; Shows the skill names of the record in wRecordBufB on the skills page. If the first skill byte
 ; (wRecordBufB + MON_SKILLS) is $FF or 0 the record has no skills: it blanks 21 x 4 tiles at vTiles2
@@ -2562,6 +2586,8 @@ ShowRecordBufBSkillNamesOrNone::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 1F DrawSummaryFrames", ROMX
+
 ; Clears the pedigree and summary pages so the summary page can be built. Draws
 ; MonsterDetailsPedigreeLowerLeftTileRect (8 x 7) at the BG map scroll origin + $160, blanks 2 x 1
 ; tiles at vTiles2 + $6C0, draws MonsterDetailsEmptyPedigreeTileRect (12 x 18) at the scroll origin
@@ -2645,6 +2671,8 @@ DrawSummaryFrames::
     ld [wTextWindowWidth], a
     ret
 
+SECTION "Bank 1F MonsterDetails_DrawSummaryPanelFrames", ROMX
+
 ; Draws the frames of the summary page: MonsterDetailsPanelTopTileRect (12 wide, 3 rows) at the BG
 ; map scroll origin + 8 and MonsterDetailsItemBoxTileRect (8 wide, 7 rows) at the scroll origin +
 ; $160, both with wArg7 = 0 through DrawTileRectFromArg1Params. Called at step 28 of PartnerStats
@@ -2693,6 +2721,8 @@ MonsterDetails_DrawSummaryPanelFrames::
     call DrawTileRectFromArg1Params
     ret
 
+SECTION "Bank 1F BGMapAddressAtScroll_Bank1F", ROMX
+
 ; Returns HL = the BG map address of the tile at the scroll position: $9800 + (hScrollY & $F8) * 4 +
 ; hScrollX / 8 (32 tiles per map row, 8 pixels per tile; the low 3 bits of each scroll value are
 ; ignored). Clobbers A, DE. The same 41 bytes are in other banks too (for example
@@ -2730,6 +2760,8 @@ BGMapAddressAtScroll_Bank1F::
     ld a, d
     ld h, a
     ret
+
+SECTION "Bank 1F Script_Priest", ROMX
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_Priest::
