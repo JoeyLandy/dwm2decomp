@@ -172,7 +172,8 @@ The three actions the E-0397 handoff left are done:
    the 512 fixed-bank pointer loads carry link-time ASSERTs. All 147 runs (2,299 routines) PASS padded by 16 and by
    256. docs/SHIFTABILITY.md.
 
-build/run696 PASS; serial suite OK (451 tests, 3 skipped).
+Merged onto master after the breeding-paths batch (E-0400): build/run697 PASS; serial suite OK (465 tests, 3
+skipped).
 
 Open: the effect routines beyond roll and scale (Watershot, MegaMagic, MultiCut, CallHelp), the breeding child's
 later rolls (sex, resistances, skills, stats), more recipes (key worlds, late story, link play) for the read gate.
