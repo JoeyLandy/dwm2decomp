@@ -177,6 +177,7 @@ on a second platform.
 
 Checks: build/run17 PASS (zero differing bytes); data and text round trips identical; tools/bank_check.py 0 errors and
 0 warnings; serial suite build/logs/suite_h4h7.log OK (532 tests, 3 skipped).
+Merged with the parallel E-0410 (docs and three recipes): build/run18 PASS, tests/test_link_play.py OK.
 
 Open:
 1. Run `python -I tools/setup.py --rom ...` and `python -I tools/make_mod.py mods/example` on Linux or macOS (H6's
