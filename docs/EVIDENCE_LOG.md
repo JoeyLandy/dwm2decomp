@@ -2431,15 +2431,35 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
-### E-0401 — H1a: the generator no longer writes src/ (D-015)
+### E-0402 — H1a: the generator no longer writes src/ (D-015)
 
-- Date: 2026-10-17. Kind: DECISION (D-015, user-approved: the user asked for the recommended path, whose first step is making src/ the hand-edited source) and TOOL. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit f276d52. Plan: [graduation](GRADUATION.md), stage H1 of the [roadmap](ROADMAP.md).
+- Date: 2026-10-17. Kind: DECISION (D-015, user-approved: the user asked for the recommended path, whose first step is making src/ the hand-edited source) and TOOL. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit f276d52, merged with master e0bc01b (E-0398 to E-0401) before acceptance. Plan: [graduation](GRADUATION.md), stage H1 of the [roadmap](ROADMAP.md).
 - **Change.** tools/disasm_all.py and tools/present.py write the presented tree (bank files, main.asm, layout.link, assets.txt and the six .inc and ram.asm files) to build/regen/src/ unless `--write-src` is given. present.Names reads ram.asm from the tree being written. build/listing/ is written as before.
 - **Drift tool.** tools/src_drift.py lists files that differ (with changed lines), are only in the regenerated tree, or are only in src/; exit 0, 1 or 2 (no regenerated tree). tests/test_src_drift.py checks identical trees, a hand edit, a one-byte change, a line-ending change, missing and extra files, the missing tree and `--diff`, and that present.main into a scratch folder leaves src/ unchanged.
 - **Result.** `python -I tools/disasm_all.py` (181.7 s) wrote build/regen/src/ and left src/ unchanged (git status clean); tools/src_drift.py: no drift, 265 files identical. So the switch changes no source byte.
 - **Tests retargeted.** tests/test_present.py's test_regen_is_the_presented_listing (was test_src_is_the_presented_listing) and test_no_code_or_data_line_is_lost compare the listing with build/regen/src/, so a hand edit to src/ does not fail them. Other tests that read build/listing/ test the generator's own output and are moved to src/ in H1b.
 - **Limits.** Until H1b-H1d, config/names.json and config/annotations.json still feed the regenerated tree and some tests. A hand edit to src/ shows as drift; it is not yet checked by those tests.
-- **Checks run.** build/run4 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite_e0401.log OK (466 tests, 3 skipped).
+- **Checks run.** build/run4 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite_e0402.log OK (466 tests, 3 skipped).
+
+### E-0401 — Shiftability after M2: recipe runs, fixed references found by them, and asserted fixed-bank pointers
+
+- Date: 2026-10-17. Kind: OBSERVATION and DECISION (generator, config and tool changes; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 142e245 (E-0399). Details: [shiftability](SHIFTABILITY.md), "After M2".
+- **Recipe gate.** tools/shift_test.py `--recipe FILE` replays a tools/play.py recipe chain on the base and the padded ROM (script-pointer pokes moved with the padding, `call:` labels from each ROM's symbols) and compares, per reading instruction (its address mapped through the padding, and the interrupt it runs in), the stream of ROM data reads; bank-number bytes ($4000) are left out. Why per instruction: with a 16-byte pad an interrupt arrived a few cycles apart (a carry), FillTilesFromRequest copied more or fewer bytes in one VBlank, and the VBlank handler found another bank mapped; a global read order called these differences although every address read was right.
+- **Fixed references found by it** (each run that failed, then fixed, then passed):
+  - ObjSelector_Map1C_1 (69:$76F8): a selector inside MapObjects_Map1C_0_0, whose count of 2 reaches over the selector and the list at $76FC it points to; the generator now prints a selector inside a list as macros (`objsel_list MapObjects_Map1C_1_0`). Whether the game ever shows that second "object" is not known (C1).
+  - `ld de, $20e9` in LoadMonsterPictureAttributes and LoadMonsterPictureAttributeBlock: ZeroPictureAttributes.
+  - `ld hl, $2a66` in TextCmd_Pause: TextPauseFrames.
+  - FlagBitHandlerTable (30:$4F66): 16 code addresses as `db`, now `dw`; its stub at $4FC6 is the new routine FlagBitHandlerNone (xor a / ret), probed (config/probes/E-0401.json).
+  - StartMessageForGroup_Data (10:$4AFF): 11 far pointers as `db`, now `dfar`; with the pad the Egg Evaluator called the old address (found by stepping both ROMs in lockstep: the base reached BeginStringDisplay_BankF2, the padded ROM GameMode8_Update_SetUpScene + $88).
+- **Found by static passes** (no run reaches them, or not yet):
+  - SoundNextEvent's `ld hl, $38a0`, now `SoundNextEvent.next5 + 4`;
+  - StartSoundAfterBankTable's `ld hl, $3e24`, now `SoundBankTable + $11`;
+  - far pointers as `db`, now `dfar` tables: NpcBreedMenu_RedrawListScreen_LoadTiles_Data1/_Data2, DrawSpriteSlots_Data, Map06ScreensExtra, Map06AttrsExtra, Map1BScreensUnlisted, Map1BAttrsUnlisted;
+  - after these, a scan of every `db` run finds no run of four or more same-bank code-label words, or three or more far pointers to labels, outside sound data.
+- **Split sums.** 60:$4BF4 is KeyWorldSizeByStrength (config/tables.json; 100 bytes, $44 for 0-9, $88 after), and 0F:$4000 x2 is MSG_KEEP_OPEN added to a message word (config/operands.json `splits`). tools/hardcoded_refs.py `code_split`: 60 to 57, none an address.
+- **Fixed-bank pointers.** tools/present.py adds `ASSERT BANK(Label) == $BB` after each of the 512 pointer loads into another switchable bank with no bank named beside it (tools/bank_check.py: 0 warnings, 512 asserted). Moving the section Bank 10 Script_HehSoTheseAre to bank $F8 (tools/move_section.py) fails the link with 424 such assertion errors.
+- **Result.** All 147 runs of the recipe chain (tools/recipes/e0335_swap.txt and its includes), 2,299 routines executed, 4,741,338 ROM data reads: PASS with 152 banks padded by 16 and with 107 banks padded by 256. The base and the 256-padded ROM keep equal cycle counts at the end of every run.
+- **Checks.** tools/shift_test.py --recipe, as above; on master with E-0400 merged: build/run697 PASS and serial suite build/logs/suite697.log OK (465 tests, 3 skipped); before the merge: build/run696 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite696.log OK (451 tests, 3 skipped); the explore read gate (10,000 frames, 152 banks padded by 16) still PASS.
 
 ### E-0400 — Breeding paths: the wild monsters of each story map and the fewest breedings to a species
 
@@ -2455,6 +2475,35 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Negative checks** (tests/test_breed_path.py): a slot model letting every r in 0-127 occur claims Metaly and Phoenix in the two Float entries, and the game never draws them; a model with the parents swapped disagrees with ComputeBreedingChild on some breedings of the route; the dispatch decoder rejects an unexpected opcode and a routine that does not start with `ldh a, [hMapId]`.
 - **Limits.** Sex, level, plus-gated recipes, recruiting odds and whether a screen can be reached in play are not modelled. Scripted battles, the arena and key worlds are not wild sources here.
 - **Checks run.** tests/test_breed_path.py OK (14 tests); build/run3 PASS on the final tree (approved size and SHA-256, zero differing bytes; src/ regenerated unchanged); serial full suite build/logs/suite_e0400b.log OK (457 tests, 3 skipped). A first serial run (suite_e0400.log) had 27 failures, all from build/listing missing in a fresh worktree; they pass once tools/disasm_all.py has run.
+
+### E-0399 — Applying the damage: ResolveStepApplyDamage and ApplyDamageModifiers
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 7ae74c2 (E-0398). Specification: the Damage section of [mechanics](MECHANICS.md).
+- **Applying** (`apply`, ResolveStepApplyDamage through its far call to ApplyDamageToTarget, bank $32). 3,000 of 3,000 generated states agree on all eight wBattleHP words, all eight wLevelUpGains bytes, wBattleResolveStep, wBattleSubStep and wBattleSubStep2:
+  - the step +2;
+  - the top two bits of wResolveMsgArg: 00 nothing, 01 only the flag bits, 10 or 11 the HP subtraction;
+  - an HP result of 0 or below clamps to 0, steps back to the defeat step 13 and clears wBattleSubStep2.
+  - Damage equal to the HP, one above and one below are generated on purpose.
+- **Multipliers** (`modifiers`, ApplyDamageModifiers, called by the damage message step for ACTION_D7). 3,000 of 3,000 agree on the damage word and the target's wBattleStatus7: bits 0-3 cleared, then x2 for bit 0, else x10 for bit 1, else x2 for bit 2, 16-bit.
+- **Negative checks** (tests/test_mechanics.py). A model that does not count exactly 0 HP as a defeat, and one that tries bit 2 before bit 1, are each caught.
+- **Limits.** The display of the damage message, the defeat sequence (RunDefeatSequence) and the aftermath (ResolveStep0EEffect) are not checked; what wLevelUpGains bits 0-2 mean for a battle slot is as their notes give it (C1).
+- **Checks.** tools/mechanics.py apply and modifiers --n 3000: all agree; build/run696 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite696.log OK (451 tests, 3 skipped); the explore read gate (10,000 frames, 152 banks padded by 16) still PASS.
+
+### E-0398 — Skill learning: FindNewlyLearnableSkills as a checked specification
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the check compares; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 2c912f8 (E-0397). Specification: the Skill learning section of [mechanics](MECHANICS.md).
+- **Method.** As E-0396. tools/mechanics.py `learn` sets up an SRAM record (through wPartyList, or the slot itself in a link battle in game mode 4), wWorkBuf and hTemp5/6, runs FindNewlyLearnableSkills, and compares hTemp3-6 and the record's 25-byte MON_SKILL_LIST.
+- **Result.** 3,000 of 3,000 generated states agree. In one run: 1,353 results from the skill list, 194 upgrades, 176 devised (38 of them skill $3D) and 1,277 with no result. The rules:
+  - rows in skill order, skipping skills already in wWorkBuf;
+  - (MON_LEVEL + 1) & $FF against the row's level, six unsigned 16-bit stat words against the required words;
+  - the 25-byte skill list first (its entry cleared to $FF);
+  - then an upgrade from a known first prerequisite (hTemp5 = it), except for skill $3D (SKILL_MEGAMAGIC), which needs it and is devised;
+  - then devised when every further prerequisite (at least one) is known;
+  - hTemp6 = the first prerequisite of the last row that reached that test.
+- **Generation.** A quarter of the states are built around a row that can be devised, with the earlier rows the record meets put in wWorkBuf, so that the devised result occurs; one in five of those is skill $3D.
+- **Negative checks** (tests/test_mechanics.py). A model that compares MON_LEVEL without the + 1, and one that reports skill $3D as an upgrade, are each caught.
+- **Limits.** The caller's display, wWorkBuf and MON_SKILLS updates, and CheckSkillsLearnableAtLevel (foe battle records) are not checked. Skill $3D is SKILL_MEGAMAGIC in src/constants.inc, named from the ROM's skill-name table (D-007).
+- **Checks.** tools/mechanics.py learn --n 3000: all agree; build/run696 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite696.log OK (451 tests, 3 skipped); the explore read gate (10,000 frames, 152 banks padded by 16) still PASS.
 
 ### E-0397 — Damage: the plain attack, resistance scaling and resolve step 7 as checked specifications
 

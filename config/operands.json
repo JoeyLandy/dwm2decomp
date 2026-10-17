@@ -1,6 +1,9 @@
 {
   "_comment": "E-0350: 16-bit operands read by hand, keyed by the instruction's bank:address. 'bank' names the ROM bank a pointer operand points into (tools/disasm_all.py then writes the label there, or Label + $offset inside a labelled table); 'lb' writes a register pair holding two separate bytes as `lb rr, $HI, $LO`; 'expr' replaces the number with an expression of the same value (the build checks every byte). 'label' names a label the entry creates; 'why' is the reading behind each entry (C1).",
   "pointers": {
+    "00:2A47": {"bank": "00", "why": "E-0401: TextCmd_Pause reads its frame count from TextPauseFrames ($2A66) through this fixed number (found by tools/shift_test.py --recipe)"},
+    "00:2056": {"bank": "00", "why": "E-0401: LoadMonsterPictureAttributeBlock's default attribute block, the 36 zero bytes ZeroPictureAttributes ($20E9), read through this fixed number (found by tools/shift_test.py --recipe)"},
+    "00:20AE": {"bank": "00", "why": "E-0401: as 00:2056, in LoadMonsterPictureAttributes"},
     "00:1886": {"bank": "00", "why": "E-0389: FillTilesBxC copies 16 bytes from DE to each tile; $2940 is the 16 bytes $FF, $00 (eight rows of colour 1) right after FillTilesFromRequest's ret, which tools/shift_test.py found read through this fixed number"},
     "00:2927": {"bank": "00", "why": "E-0389: FillTilesFromRequest copies the same 16 bytes ($2940) to each requested tile"},
     "00:1A80": {"bank": "00", "why": "E-0389: LoadMapScreen_DrawMarker walks 3-byte records (map id, screen, position) from $1AB4, right after its own ret, comparing the first byte with hMapId until $FF; tools/shift_test.py --reads 00 found it read through this fixed number"},
@@ -90,9 +93,12 @@
   "splits": {
     "03:6851": {"make_label": true, "why": "E-0390: one byte per skill, read as $6851 + the skill number (add/adc) and used as the index into SkillTargetBoxRects right after it: 1 for the MPass skills, 0 for the others (SkillTargetBoxRects' note, E-0381)"},
     "A2:4056": {"expr": "MonsterTableA2 - $1A", "why": "E-0392: CopyMonsterTableBytes and LoadMonsterRecordTo_HighIds compute (monster id - $250) + 1, a 1-based index, times $1A (one record) and add $4056: one record before MonsterTableA2 ($4070)"},
+    "0F:4000": {"expr": "MSG_KEEP_OPEN", "why": "E-0401: not an address. SceneWarubouWarning_Answer adds $4000 to the message word wMessageGroup:wMessageIndex (add $00 / adc $40) and then 1 or 2, so the next message starts with the box kept open: bit 6 of the group byte, MSG_KEEP_OPEN"},
     "17:446C": {"expr": "SGBPaletteSets + $200", "why": "E-0390: LoadSGBObjectPalettesFromPointers_CopyPaletteEntry copies 8 bytes from $446C + 8 * index: the 8-byte entries after the 64 system-palette sets of SGBPaletteSets"}
   },
   "values": {
+    "00:38F2": {"expr": "SoundNextEvent.next5 + 4", "why": "E-0401: the 16 bytes after `.next5: inc hl / jp .loop` inside SoundNextEvent ($38A0): on the noise channel (wSoundHwChannel 3) a note number below $10 is replaced by its byte there before ComputeNotePitch; an expression on the routine's own local label, so the routine is not split by a second global name"},
+    "00:3346": {"expr": "SoundBankTable + $11", "why": "E-0401: StartSoundAfterBankTable starts the SoundBankTable walk one byte past its $FF end ($3E24), so the walk stops at once and the last range (bank $43) is used; the routine has no caller"},
     "03:7B7E": {"lb": true, "why": "L goes to wTextWindowRows and H to wTextWindowWidth: two bytes"},
     "0C:528E": {"lb": true, "why": "as 03:7B7E"},
     "0C:52A8": {"lb": true, "why": "as 03:7B7E"},

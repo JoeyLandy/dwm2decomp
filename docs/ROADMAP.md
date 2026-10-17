@@ -15,7 +15,7 @@ its identity gate on every change. A mod or translation is a separate, non-match
 | H1. Graduate src/ (started 2026-10-17; [graduation](GRADUATION.md)) | src/ becomes the hand-edited source of truth, as in pokered. The generator stops writing src/ (it writes build/regen/src/ and a drift report); the checks that rely on config/ and build/listing/ become checks on src/ and the built .sym/.map; names.json and annotations.json are retired; the tools that write config/ are retargeted or retired | In a scratch copy with config/names.json, config/annotations.json and build/listing/ removed, the matching build PASSes and the full suite passes; a hand edit to src/ survives every tool the workflow runs |
 | H2. Game data as files | Encounters, breeding rules, shops, arena and AI tables join species, skills and items as editable files packed back by the build, one table at a time | Each table packs back byte-identical and its readers (run on tools/sm83.py) load the packed bytes; matching build PASS |
 | H3. Text pipeline | Every string to a translator file (id, context, width limit); reinsertion that repacks the text banks; build-time width checks; the font as PNG; room in the charmap for more letters | Unchanged English reinserts byte-identical; a test translation that grows text builds and its screens draw on tools/sm83.py; the limits (name fields, banks fixed by their readers) documented |
-| H4. Full shiftability | The four banks that cannot be padded ($00, $1F, $69, $87), the split sums left, the 511 pointers whose bank the reader fixes; longer scripted runs or later save states for the read gate | Every bank can be padded; the padded build runs like the matching one over the widened runs |
+| H4. Full shiftability | E-0401 already pads 152 banks by 16 (107 by 256) over the 147 recipe runs, resolves the split sums and asserts the 512 fixed-bank pointer loads at link time. Left: the read gate reaches 2,299 routines, so more recipes or later save states (key worlds, late story, link play) are needed; moving a pointer whose reader fixes its bank still needs that reader changed | The recipe gate covers the code a mod is likely to touch (the routines H2 and H3 change at least); a moved fixed-bank table builds with its reader updated |
 | H5. Mod smoke test | One command that boots a modded ROM on tools/sm83.py, runs the scripted runs and reports crashes and divergence | Negative tests: a mod that breaks a pointer and one that breaks a table are both reported |
 | H6. Distribution | BPS patches from a mod build; a patcher page (patch + your own ROM); a mod template; a cross-platform setup (RGBDS is pinned for Windows today) | A clean checkout on Windows and one other platform builds a mod and its patch, and the patch applied to the reference gives the mod build byte for byte |
 | H7. Modder documentation | A modder's guide (confidence tags in plain words) and three tutorials: a monster's stats, a line of text, a breeding recipe | Each tutorial is followed from a clean checkout and its result checked by H5 |
@@ -33,11 +33,10 @@ Every stage below has met its exit gate, and the matching build has passed after
 - M5: [mechanics](MECHANICS.md) and [data tables](DATA_TABLES.md).
 
 What stays open is listed in each document and in [readability open questions](READABILITY_OPEN_QUESTIONS.md):
-- three address-like split sums;
-- 511 pointers whose bank the reading code fixes;
-- the scripted runs' reach (under 5% of the routines);
-- the other mechanics of phases 4-5 (skills learned, the effect routines beyond roll and scale, the key worlds);
-  damage was added after M5 (E-0397).
+- the other mechanics of phases 4-5 (the effect routines beyond roll and scale, the key worlds); damage, skill
+  learning and applying damage were added after M5 (E-0397 to E-0399);
+- the scripted runs' reach: 2,299 routines with the recipe chain (E-0401), the rest only by the static inventory.
+The split sums and fixed-bank pointers left after M2 are done (E-0401).
 
 
 The goal as set on 2026-10-16, after the readability goal (below): make the source safe to edit (could code and
@@ -171,7 +170,7 @@ Planning allowance: several weeks of regular sessions; recover one coherent tabl
 
 ## Phase 4 — Mechanics and state transitions
 
-**Status:** four mechanics meet the gate on the project's emulator ([mechanics](MECHANICS.md)): the join offer, level-up gains and the breeding child (M5, E-0396), and damage: the plain attack, the 16 roll-and-resistance routines and the step-7 modifiers (E-0397). Skill learning, the other effect routines, applying damage to HP, and the child's sex, resistances, skills and stats are open.
+**Status:** five mechanics meet the gate on the project's emulator ([mechanics](MECHANICS.md)): the join offer, level-up gains and the breeding child (M5, E-0396); damage: the plain attack, the 16 roll-and-resistance routines, the step-7 modifiers (E-0397) and applying it to HP (E-0399); and skill learning (E-0398). The other effect routines and the child's sex, resistances, skills and stats are open.
 
 Dependencies: relevant phase 3 records and routines, plus reproducible saves/input recipes.
 

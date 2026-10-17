@@ -1544,7 +1544,6 @@ maps/key_worlds/sand_zigzag_pit_tilemap.lz	$1B61C0	$DE
 maps/key_worlds/screen47_1.lz	$11C884	$FE
 maps/key_worlds/screen47_2.lz	$11CCD7	$54
 maps/key_worlds/screen48_1.lz	$122367	$6E
-maps/key_worlds/screen48_2.lz	$1228C7	$97
 maps/key_worlds/screen62_1.lz	$188835	$77
 maps/key_worlds/screen62_10.lz	$18A57F	$58
 maps/key_worlds/screen62_11.lz	$18A5DF	$4F
@@ -1670,6 +1669,7 @@ maps/key_worlds/screen71_4.lz	$1C4F32	$5D
 maps/key_worlds/screen71_6.lz	$1C5C24	$4C
 maps/key_worlds/screen71_7.lz	$1C5C70	$58
 maps/key_worlds/screen71_8.lz	$1C5CC8	$52
+maps/key_worlds/screen_map1_bscreens_unlisted_1.lz	$1228C7	$97
 maps/key_worlds/tiles0.lz	$240001	$48E
 maps/key_worlds/tiles1.lz	$18C001	$467
 maps/key_worlds/tiles2.lz	$190001	$4CB

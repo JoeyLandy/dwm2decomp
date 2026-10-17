@@ -8,10 +8,11 @@ Historical planning baseline: **2026-09-12**, before local verification. Current
 | --- | --- | --- |
 | Join offer, level-up gains, breeding child | C2 on tools/sm83.py: specifications that agree with the game's routines on 3,000 generated states each | E-0396, [mechanics](MECHANICS.md) |
 | Wild monsters per story map; breeding routes | C2 on tools/sm83.py: lists, draws (all 128 random states) and route pairings agree with the game; world grouping C1 | E-0400, [breeding paths](BREEDING_PATHS.md) |
-| Damage: plain attack, resistance scaling, resolve step 7 | C2 on tools/sm83.py: 3,000 of 3,000 states each; 16 roll-and-resistance routines read from src/ | E-0397, [mechanics](MECHANICS.md). Next: skill learning, ResolveStepApplyDamage |
+| Damage: plain attack, resistance scaling, resolve step 7, applying it to HP | C2 on tools/sm83.py: 3,000 of 3,000 states each; 16 roll-and-resistance routines read from src/ | E-0397, E-0399, [mechanics](MECHANICS.md). Next: the other effect routines |
+| Skill learning on a level-up | C2 on tools/sm83.py: 3,000 of 3,000 records; MegaMagic's own rule | E-0398, [mechanics](MECHANICS.md) |
 | Species, skill and item tables | C2: layouts round-trip byte for byte; the game's loaders read the exported record for every id | E-0396, [data tables](DATA_TABLES.md) |
 | Compressed assets | C2: an encoder reproduces all 3,546 LZSS streams; assets build from decoded data | E-0394, [editable assets](ASSETS.md) |
-| Code and data placement | 9,071 floating sections; padded and moved builds checked on tools/sm83.py | E-0388 to E-0393, [shiftability](SHIFTABILITY.md) |
+| Code and data placement | 9,071 floating sections; padded and moved builds checked on tools/sm83.py, over 147 recipe runs (2,299 routines); 512 fixed-bank pointers asserted at link time | E-0388 to E-0393, E-0401, [shiftability](SHIFTABILITY.md) |
 
 ## Readability investigations (2026-10-14, historical; the readability goal completed 2026-10-16, E-0386)
 

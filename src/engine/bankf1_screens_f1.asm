@@ -3189,6 +3189,7 @@ SECTION "Bank F1 RunScreenStateWhenNotFading_F1_StatsDrawFrame", ROMX
 RunScreenStateWhenNotFading_F1_StatsDrawFrame::
     call BGMapAddressAtScroll_BankF1
     ld de, PartnerStats_DrawFrame_TileRect
+    ASSERT BANK(PartnerStats_DrawFrame_TileRect) == $1F, "PartnerStats_DrawFrame_TileRect is read with bank $1F mapped"
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -3254,6 +3255,7 @@ RunScreenStateWhenNotFading_F1_StatsPage1Keys::
     ld de, $0161
     add hl, de
     ld de, BlankPictureTileRect
+    ASSERT BANK(BlankPictureTileRect) == $1F, "BlankPictureTileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -3277,6 +3279,7 @@ RunScreenStateWhenNotFading_F1_StatsLeave::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
+    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -3341,6 +3344,7 @@ RunScreenStateWhenNotFading_F1_StatsPage2Frame::
     ld de, $0068
     add hl, de
     ld de, MonsterDetailsPage2TileRect
+    ASSERT BANK(MonsterDetailsPage2TileRect) == $1F, "MonsterDetailsPage2TileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -3406,6 +3410,7 @@ RunScreenStateWhenNotFading_F1_StatsLoadSprite::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsItemBoxTileRect
+    ASSERT BANK(MonsterDetailsItemBoxTileRect) == $1F, "MonsterDetailsItemBoxTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -3630,6 +3635,7 @@ RunScreenStateWhenNotFading_F1_StatsPedigreeFrame::
     ld de, $0008
     add hl, de
     ld de, MonsterDetailsPedigreeTileRect
+    ASSERT BANK(MonsterDetailsPedigreeTileRect) == $1F, "MonsterDetailsPedigreeTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $12

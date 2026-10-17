@@ -12,8 +12,11 @@ on every generated state supports the specification on the project's emulator (C
   attack      ComputeAttackDamage: the plain attack's damage from ATK and DEF (E-0397)
   resistance  the 16 bank-$36 routines that roll damage and scale it by a resistance level (E-0397)
   step7       ResolveStepComputeDamage: the damage modifiers of resolve step 7 (E-0397)
+  learn       FindNewlyLearnableSkills: the skill a monster learns, upgrades or devises on a level-up (E-0398)
+  apply       ResolveStepApplyDamage: the damage taken from the target's HP, and the defeat step (E-0399)
+  modifiers   ApplyDamageModifiers: the wBattleStatus7 multipliers of the damage message step (E-0399)
 
-Usage: mechanics.py [join|growth|breeding|attack|resistance|step7|all] [--n 2000] [--seed 1]
+Usage: mechanics.py [join|growth|breeding|attack|resistance|step7|learn|apply|modifiers|all] [--n 2000] [--seed 1]
 Exit 1 when a model and the game disagree.
 """
 from __future__ import annotations
@@ -716,8 +719,205 @@ def step7_check(rom: bytes, n: int, seed: int) -> list[str]:
     return bad
 
 
+# ---- skill learning (E-0398) ------------------------------------------------------------------------------------
+
+SKILL_ROW = 18  # SkillRequirementTable: level byte, six required words, five prerequisite bytes
+SKILL_ROWS = 0xAA
+MON_STAT_WORDS = (0x5D, 0x61, 0x63, 0x65, 0x67, 0x69)  # MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL, MON_INT
+
+
+def skill_rows(r: Rom, L: dict) -> list[list[int]]:
+    bank, addr = L["SkillRequirementTable"]
+    return [[r.b(bank, addr + c * SKILL_ROW + k) for k in range(SKILL_ROW)] for c in range(SKILL_ROWS)]
+
+
+def learn_model(rows: list[list[int]], rec: bytes, work: bytes, temp5: int, temp6: int) -> dict:
+    """FindNewlyLearnableSkills for one SRAM record and the caller's working list wWorkBuf ($38 bytes).
+    Returns hTemp3 (the skill), hTemp4 (0 from the skill list, 1 an upgrade, 2 devised, $FF none), hTemp5,
+    hTemp6 and the record's 25-byte skill list afterwards."""
+    rec = bytearray(rec)
+    level = rec[0x56]
+    stats = [rec[o] | rec[o + 1] << 8 for o in MON_STAT_WORDS]
+    known = rec[0x34:0x3C]  # MON_SKILLS
+
+    def result(skill, kind):
+        return {"skill": skill, "kind": kind, "temp5": temp5, "temp6": temp6, "skill_list": list(rec[0x3C:0x3C + 25])}
+
+    for c, row in enumerate(rows):
+        if c in work:
+            continue
+        if (level + 1) & 0xFF < row[0]:
+            continue
+        if any(st < (row[1 + 2 * i] | row[2 + 2 * i] << 8) for i, st in enumerate(stats)):
+            continue
+        lst = rec[0x3C:0x3C + 25]  # MON_SKILL_LIST
+        if c in lst:
+            rec[0x3C + lst.index(c)] = 0xFF
+            return result(c, 0)
+        p = row[13:18]
+        if p[0] != 0xFF:
+            temp6 = p[0]
+            if c != 0x3D:
+                if p[0] in known:
+                    temp5 = p[0]
+                    return result(c, 1)
+                continue
+            if p[0] not in known:
+                continue
+        if p[1] == 0xFF:
+            continue
+        for q in p[1:]:
+            if q == 0xFF:
+                return result(c, 2)
+            if q not in known:
+                break
+        else:
+            return result(c, 2)
+    return result(0xFF, 0xFF)
+
+
+def learn_check(rom: bytes, n: int, seed: int) -> list[str]:
+    R, L, r = ram(), rom_labels(), Rom(rom)
+    rng = random.Random(seed)
+    bank, addr = L["FindNewlyLearnableSkills"]
+    rows = skill_rows(r, L)
+    devisable = [c for c, row in enumerate(rows) if row[14] != 0xFF and (row[13] == 0xFF or c == 0x3D)]
+    bad = []
+    for i in range(n):
+        # the row the state is built around; a quarter of them rows that can be devised from known skills
+        focus = rng.random() < 0.25
+        k = (0x3D if rng.random() < 0.2 else rng.choice(devisable)) if focus else rng.randrange(SKILL_ROWS)  # $3D: its own rule
+        row = rows[k]
+        rec = bytearray(rng.randrange(256) for _ in range(REC))
+        rec[0x56] = max(0, min(255, row[0] - 1 + rng.choice([0, 0, 1, 5, -1, -3])))
+        for j, o in enumerate(MON_STAT_WORDS):
+            need = row[1 + 2 * j] | row[2 + 2 * j] << 8
+            v = max(0, min(0xFFFF, need + rng.choice([0, 0, 0, 3, 50, -1, rng.randrange(-200, 400)])))
+            rec[o], rec[o + 1] = v & 0xFF, v >> 8
+        pre = [p for p in row[13:18] if p != 0xFF]
+        known = [p for p in pre if rng.random() < (0.95 if focus else 0.8)]
+        known = (known + [rng.choice([0xFF, rng.randrange(SKILL_ROWS)]) for _ in range(8)])[:8]
+        rng.shuffle(known)
+        rec[0x34:0x3C] = bytes(known)
+        lst = [rng.choice([0xFF] * (12 if focus else 1) + [rng.randrange(SKILL_ROWS)]) for _ in range(25)]
+        if rng.random() < 0.3:
+            lst[rng.randrange(25)] = k
+        rec[0x3C:0x3C + 25] = bytes(lst)
+        work = [0xFF] * 0x38
+        if focus:  # the working list holds every earlier row whose level and stats the record meets
+            stats = [rec[o] | rec[o + 1] << 8 for o in MON_STAT_WORDS]
+            skip = [c for c in range(k) if (rec[0x56] + 1) & 0xFF >= rows[c][0] and all(
+                st >= (rows[c][1 + 2 * j] | rows[c][2 + 2 * j] << 8) for j, st in enumerate(stats))]
+        else:
+            skip = [c for c in range(k) if rng.random() < 0.97] + rng.sample(range(SKILL_ROWS), rng.randrange(0, 10))
+        for j, c in enumerate(skip[:0x38]):
+            work[j] = c
+        rng.shuffle(work)
+        link, mode = rng.choice([(0, 4), (0, 1), (2, 4)])
+        slot = rng.randrange(6)
+        num = slot if link and mode == 4 else rng.randrange(0, 40)
+        temp5, temp6 = rng.randrange(256), rng.randrange(256)
+        mem = {R["wBattleArg0"]: slot | rng.choice([0, 0x80]) * (not link), R["wLinkMode"]: link, R["wGameMode"]: mode,
+               R["hTemp5"]: temp5, R["hTemp6"]: temp6, R["hTemp3"]: 0x5A, R["hTemp4"]: 0x5A}
+        for j in range(6):
+            mem[R["wPartyList"] + j] = rng.randrange(40)
+        mem[R["wPartyList"] + slot] = num
+        for j, v in enumerate(work):
+            mem[R["wWorkBuf"] + j] = v
+        base = R["sRecords"] - 0xA000 + num * REC
+        want = learn_model(rows, bytes(rec), bytes(work), temp5, temp6)
+        gb = call(rom, bank, addr, mem, sram={base + j: v for j, v in enumerate(rec)})
+        got = {"skill": gb.rb(R["hTemp3"]), "kind": gb.rb(R["hTemp4"]), "temp5": gb.rb(R["hTemp5"]),
+               "temp6": gb.rb(R["hTemp6"]), "skill_list": [gb.sram[base + 0x3C + j] for j in range(25)]}
+        if got != want:
+            bad.append(f"learn #{i}: row {k} level {rec[0x56]} skills {list(rec[0x34:0x3C])}: game {got}, model {want}")
+    return bad
+
+
+# ---- applying the damage (E-0399) -------------------------------------------------------------------------------
+
+def apply_model(s: dict) -> dict:
+    """ResolveStepApplyDamage (far call to ApplyDamageToTarget): the target's HP, the resolve step and flags."""
+    t = s["target"]
+    hp, gains = list(s["hp"]), list(s["gains"])
+    step, sub, sub2 = (s["step"] + 2) & 0xFF, 0, s["sub2"]
+    top = s["arg"] & 0xC0
+    if top == 0:
+        return {"hp": hp, "gains": gains, "step": step, "sub": sub, "sub2": sub2}
+    if top != 0x40:
+        left = hp[t] - s["damage"]
+        if left <= 0:  # the damage reaches the HP: 0, and the next step is the defeat
+            hp[t], step, sub2 = 0, (step - 1) & 0xFF, 0
+        else:
+            hp[t] = left
+    gains[t] |= 0x07
+    return {"hp": hp, "gains": gains, "step": step, "sub": sub, "sub2": sub2}
+
+
+def modifiers_model(s: dict) -> dict:
+    """ApplyDamageModifiers: clears bits 0-3 of the target's wBattleStatus7, then the first of bit 0 (x 2),
+    bit 1 (x 10) and bit 2 (x 2) changes the damage, 16-bit."""
+    t, d = s["target"], s["damage"]
+    b = s["status"][t][7]
+    if b & 1:
+        d = d * 2
+    elif b & 2:
+        d = d * 10
+    elif b & 4:
+        d = d * 2
+    return {"damage": d & 0xFFFF, "status7": b & 0xF0}
+
+
+def apply_check(rom: bytes, n: int, seed: int) -> list[str]:
+    R, L = ram(), rom_labels()
+    rng = random.Random(seed)
+    bank, addr = L["ResolveStepApplyDamage"]
+    bad = []
+    for i in range(n):
+        t = rng.randrange(8)
+        hp = [rng.choice([rng.randrange(0, 30), rng.randrange(0, 1000), rng.randrange(0, 0x10000)]) for _ in range(8)]
+        dmg = rng.choice([hp[t], hp[t] - 1, hp[t] + 1, rng.randrange(0, 60), rng.randrange(0, 0x10000)]) & 0xFFFF
+        s = {"target": t, "hp": hp, "damage": dmg, "arg": rng.randrange(256), "step": 12, "sub2": rng.randrange(1, 256),
+             "gains": [rng.randrange(256) for _ in range(8)]}
+        mem = {R["wBattleTarget"]: t, R["wBattleDamageLo"]: dmg & 0xFF, R["wBattleDamageHi"]: dmg >> 8,
+               R["wResolveMsgArg"]: s["arg"], R["wBattleResolveStep"]: s["step"], R["wBattleSubStep"]: 0x33,
+               R["wBattleSubStep2"]: s["sub2"]}
+        for k in range(8):
+            mem[R["wBattleHP"] + 2 * k], mem[R["wBattleHP"] + 2 * k + 1] = hp[k] & 0xFF, hp[k] >> 8
+            mem[R["wLevelUpGains"] + k] = s["gains"][k]
+        want = apply_model(s)
+        gb = call(rom, bank, addr, mem)
+        got = {"hp": [gb.rb(R["wBattleHP"] + 2 * k) | gb.rb(R["wBattleHP"] + 2 * k + 1) << 8 for k in range(8)],
+               "gains": [gb.rb(R["wLevelUpGains"] + k) for k in range(8)], "step": gb.rb(R["wBattleResolveStep"]),
+               "sub": gb.rb(R["wBattleSubStep"]), "sub2": gb.rb(R["wBattleSubStep2"])}
+        if got != want:
+            bad.append(f"apply #{i}: target {t} HP {hp[t]} damage {dmg} arg {s['arg']:02X}: game {got}, model {want}")
+    return bad
+
+
+def modifiers_check(rom: bytes, n: int, seed: int) -> list[str]:
+    R, L = ram(), rom_labels()
+    rng = random.Random(seed)
+    bank, addr = L["ApplyDamageModifiers"]
+    bad = []
+    for i in range(n):
+        s, mem = battle_state(rng, R)
+        t = s["target"]
+        s["status"][t][7] = rng.choice([0, 1, 2, 4, 8, 3, 6, 0x0F, rng.randrange(256)])
+        s["damage"] = rng.choice([rng.randrange(0, 300), rng.randrange(0, 0x10000)])
+        mem.update({R["wBattleStatus7"] + 9 * t: s["status"][t][7], R["wBattleDamageLo"]: s["damage"] & 0xFF,
+                    R["wBattleDamageHi"]: s["damage"] >> 8})
+        want = modifiers_model(s)
+        gb = call(rom, bank, addr, mem)
+        got = {"damage": read_damage(gb, R), "status7": gb.rb(R["wBattleStatus7"] + 9 * t)}
+        if got != want:
+            bad.append(f"modifiers #{i}: status7 {s['status'][t][7]:02X} damage {s['damage']}: game {got}, model {want}")
+    return bad
+
+
 CHECKS = {"join": join_check, "growth": growth_check, "breeding": breed_check,
-          "attack": attack_check, "resistance": resist_check, "step7": step7_check}
+          "attack": attack_check, "resistance": resist_check, "step7": step7_check, "learn": learn_check,
+          "apply": apply_check, "modifiers": modifiers_check}
 
 
 def main(argv: list[str] | None = None) -> int:

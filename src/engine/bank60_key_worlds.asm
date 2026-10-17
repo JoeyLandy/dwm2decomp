@@ -1291,10 +1291,10 @@ KeyWorldLayout_Start::
     jr nc, .loop2
     add_a_to_hl
     ld a, l
-    add $f4
+    add LOW(KeyWorldSizeByStrength)
     ld l, a
     ld a, h
-    adc $4b
+    adc HIGH(KeyWorldSizeByStrength)
     ld h, a
     ld a, [hl]
     swap a
@@ -1427,8 +1427,114 @@ KeyWorldLayout_Start::
 
 .return:
     ret
-    db $44, $44, $44, $44, $44, $44, $44, $44, $44, $44
-    ds $5a, $88
+
+SECTION "Bank 60 KeyWorldSizeByStrength", ROMX
+
+; KeyWorldLayout_Start reads the byte at $4BF4 + (wPartyStrength rounded down to 10) + a roll of
+; 0-9, through an add/adc of $4BF4; 100 bytes, $44 (4 x 4 screens) for 0-9 and $88 (8 x 8) from 10
+; on, ending where KeyWorldLayout_Start_Data begins (E-0401, C1)
+; record: the size of a new key world: high nibble wKeyWorldWidth, low nibble wKeyWorldHeight
+KeyWorldSizeByStrength::
+    db $44 ; id 0
+    db $44 ; id 1
+    db $44 ; id 2
+    db $44 ; id 3
+    db $44 ; id 4
+    db $44 ; id 5
+    db $44 ; id 6
+    db $44 ; id 7
+    db $44 ; id 8
+    db $44 ; id 9
+    db $88 ; id 10
+    db $88 ; id 11
+    db $88 ; id 12
+    db $88 ; id 13
+    db $88 ; id 14
+    db $88 ; id 15
+    db $88 ; id 16
+    db $88 ; id 17
+    db $88 ; id 18
+    db $88 ; id 19
+    db $88 ; id 20
+    db $88 ; id 21
+    db $88 ; id 22
+    db $88 ; id 23
+    db $88 ; id 24
+    db $88 ; id 25
+    db $88 ; id 26
+    db $88 ; id 27
+    db $88 ; id 28
+    db $88 ; id 29
+    db $88 ; id 30
+    db $88 ; id 31
+    db $88 ; id 32
+    db $88 ; id 33
+    db $88 ; id 34
+    db $88 ; id 35
+    db $88 ; id 36
+    db $88 ; id 37
+    db $88 ; id 38
+    db $88 ; id 39
+    db $88 ; id 40
+    db $88 ; id 41
+    db $88 ; id 42
+    db $88 ; id 43
+    db $88 ; id 44
+    db $88 ; id 45
+    db $88 ; id 46
+    db $88 ; id 47
+    db $88 ; id 48
+    db $88 ; id 49
+    db $88 ; id 50
+    db $88 ; id 51
+    db $88 ; id 52
+    db $88 ; id 53
+    db $88 ; id 54
+    db $88 ; id 55
+    db $88 ; id 56
+    db $88 ; id 57
+    db $88 ; id 58
+    db $88 ; id 59
+    db $88 ; id 60
+    db $88 ; id 61
+    db $88 ; id 62
+    db $88 ; id 63
+    db $88 ; id 64
+    db $88 ; id 65
+    db $88 ; id 66
+    db $88 ; id 67
+    db $88 ; id 68
+    db $88 ; id 69
+    db $88 ; id 70
+    db $88 ; id 71
+    db $88 ; id 72
+    db $88 ; id 73
+    db $88 ; id 74
+    db $88 ; id 75
+    db $88 ; id 76
+    db $88 ; id 77
+    db $88 ; id 78
+    db $88 ; id 79
+    db $88 ; id 80
+    db $88 ; id 81
+    db $88 ; id 82
+    db $88 ; id 83
+    db $88 ; id 84
+    db $88 ; id 85
+    db $88 ; id 86
+    db $88 ; id 87
+    db $88 ; id 88
+    db $88 ; id 89
+    db $88 ; id 90
+    db $88 ; id 91
+    db $88 ; id 92
+    db $88 ; id 93
+    db $88 ; id 94
+    db $88 ; id 95
+    db $88 ; id 96
+    db $88 ; id 97
+    db $88 ; id 98
+    db $88 ; id 99
 
 ; Ten (base, mask) byte pairs, one per tens of the party strength (wPartyStrength / 10, 0-9): (0,
 ; $0F), (8, $0F), (8, $0F), then (16, $1F) for the rest. KeyWorldLayout_Start rolls wKeyRandomHi AND
@@ -4164,6 +4270,7 @@ SetupTownObjectsForMap::
     ld a, $00
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid0
+    ASSERT BANK(TownObjectSpotGrid0) == $61, "TownObjectSpotGrid0 is read with bank $61 mapped"
     call SetupTownObjectsForMap_RollObjects
     ld a, $01
     ldh [hTemp0], a
@@ -4176,6 +4283,7 @@ SetupTownObjectsForMap::
     ld a, $03
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid1
+    ASSERT BANK(TownObjectSpotGrid1) == $61, "TownObjectSpotGrid1 is read with bank $61 mapped"
     call SetupTownObjectsForMap_RollObjects
     ld a, $02
     ldh [hTemp0], a
@@ -4188,6 +4296,7 @@ SetupTownObjectsForMap::
     ld a, $06
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid2
+    ASSERT BANK(TownObjectSpotGrid2) == $61, "TownObjectSpotGrid2 is read with bank $61 mapped"
     call SetupTownObjectsForMap_RollObjects
     ld a, $03
     ldh [hTemp0], a
@@ -4200,6 +4309,7 @@ SetupTownObjectsForMap::
     ld a, $09
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid3
+    ASSERT BANK(TownObjectSpotGrid3) == $61, "TownObjectSpotGrid3 is read with bank $61 mapped"
     call SetupTownObjectsForMap_RollObjects
     ld a, $04
     ldh [hTemp0], a
@@ -4212,6 +4322,7 @@ SetupTownObjectsForMap::
     ld a, $0b
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid4
+    ASSERT BANK(TownObjectSpotGrid4) == $61, "TownObjectSpotGrid4 is read with bank $61 mapped"
     call SetupTownObjectsForMap_RollObjects
     ld a, $05
     ldh [hTemp0], a
@@ -4224,6 +4335,7 @@ SetupTownObjectsForMap::
     ld a, $0b
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid5
+    ASSERT BANK(TownObjectSpotGrid5) == $61, "TownObjectSpotGrid5 is read with bank $61 mapped"
     call SetupTownObjectsForMap_RollObjects
     ld a, $06
     ldh [hTemp0], a
@@ -4236,6 +4348,7 @@ SetupTownObjectsForMap::
     ld a, $0d
     ld [wKeyWorldBand], a
     ld hl, TownObjectSpotGrid6
+    ASSERT BANK(TownObjectSpotGrid6) == $61, "TownObjectSpotGrid6 is read with bank $61 mapped"
     call SetupTownObjectsForMap_RollObjects
     ld a, $07
     ldh [hTemp0], a

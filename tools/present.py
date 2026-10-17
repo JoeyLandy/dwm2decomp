@@ -44,7 +44,7 @@ THIN_NOTE = re.compile(r"^(?:unless .{0,40}?, )?runs the (?:routine|field comman
 GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
 # E-0365: a hand-written reading of the whole routine (config/annotations.json) answers such a gap itself;
 # E-0368: the readability batches from E-0369 on write such readings too (tools/apply_drafts.py)
-HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370", "E-0371", "E-0372", "E-0373", "E-0374", "E-0375", "E-0376", "E-0377", "E-0378", "E-0379", "E-0380", "E-0381", "E-0382", "E-0383", "E-0384", "E-0385", "E-0386", "E-0387", "E-0388", "E-0389", "E-0390", "E-0395")
+HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369", "E-0370", "E-0371", "E-0372", "E-0373", "E-0374", "E-0375", "E-0376", "E-0377", "E-0378", "E-0379", "E-0380", "E-0381", "E-0382", "E-0383", "E-0384", "E-0385", "E-0386", "E-0387", "E-0388", "E-0389", "E-0390", "E-0395", "E-0401")
 # D-012: "(C2, E-0357; probed E-0374)"; a wrapped comment may break the line at any of its spaces (" ;")
 HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")(?:;(?: ;)? probed(?: ;)? E-\d{4})?\)")
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")
@@ -686,6 +686,52 @@ def write_text(path: Path, text: str) -> None:
 REGEN = Path("build/regen/src")  # D-015 (H1a): where the presented tree goes unless src/ is asked for
 
 
+FIXED_LOAD = re.compile(r"^(\s+)ld (?:hl|de|bc), ([A-Za-z_][\w.]*)\s*(?:;.*)?$")
+LOAD_BANKED = re.compile(r"BANK\(|^\s+farcall|^\s+ld b, \$")
+
+
+def assert_fixed_banks(bodies: dict[int, str]) -> tuple[dict[int, str], int]:
+    """E-0401 (M2): a pointer load in a switchable bank into another switchable bank, with no bank named beside it
+    (tools/bank_check.py's warning), works because the code that reads it maps that bank itself (a script or
+    message bank, a table bank). Each gets `ASSERT BANK(Label) == $BB` after it: no bytes, but a section moved away
+    from the bank its reader assumes now fails the link instead of reading another bank's bytes."""
+    where: dict[str, int] = {}
+    for bank, body in bodies.items():
+        cur = None
+        for ln in body.split("\n"):
+            m = re.match(r"^([A-Za-z_]\w*)::", ln)
+            if m:
+                cur = m.group(1)
+                where[cur] = bank
+            elif cur and (m := re.match(r"^(\.[A-Za-z_]\w*):", ln)):
+                where[cur + m.group(1)] = bank
+    n = 0
+    out = {}
+    for bank, body in bodies.items():
+        lines = body.split("\n")
+        if bank == 0:
+            out[bank] = body
+            continue
+        res, cur = [], None
+        for i, ln in enumerate(lines):
+            res.append(ln)
+            m = re.match(r"^([A-Za-z_]\w*)::", ln)
+            if m:
+                cur = m.group(1)
+                continue
+            m = FIXED_LOAD.match(ln)
+            if not m or cur is None:
+                continue
+            name = cur + m.group(2) if m.group(2).startswith(".") else m.group(2)
+            tb = where.get(name)
+            if tb in (None, 0, bank) or any(LOAD_BANKED.search(x) for x in lines[max(0, i - 3):i + 4]):
+                continue
+            res.append(f'{m.group(1)}ASSERT BANK({name}) == ${tb:02X}, "{name} is read with bank ${tb:02X} mapped"')
+            n += 1
+        out[bank] = "\n".join(res)
+    return out, n
+
+
 def main(argv: list[str]) -> int:
     """present.py [LISTING [DEST]] [--write-src]: present LISTING (build/listing) into DEST, by default
     build/regen/src/; --write-src writes src/ itself (D-015). src/ is the hand-edited source after H1a."""
@@ -699,10 +745,12 @@ def main(argv: list[str]) -> int:
     written = []
     sections: dict[int, list[str]] = {}
     ASSETS.clear()
+    presented = {int(name[4:6], 16): present(text, names, int(name[4:6], 16)) for name, text in texts.items()}
+    presented, asserted = assert_fixed_banks(presented)
     for name, text in texts.items():
         out = src_name(name, titles)
         (dest / out).parent.mkdir(parents=True, exist_ok=True)
-        body, secs = split_sections(present(text, names, int(name[4:6], 16)), int(name[4:6], 16))
+        body, secs = split_sections(presented[int(name[4:6], 16)], int(name[4:6], 16))
         sections[int(name[4:6], 16)] = secs
         write_text(dest / out, header(name, titles) + body)
         written.append(out)
@@ -726,7 +774,7 @@ def main(argv: list[str]) -> int:
         "# D-008: the asset files src/ includes, as slices of the reference ROM: path, file offset, length.\n"
         "# tools/build.py extracts them from local/roms/ into the build directory; they are never tracked.\n"
         + "".join(f"{p}\t${o:06X}\t${n:X}\n" for p, (o, n) in sorted(ASSETS.items())))
-    print(f"presented {len(texts)} bank files from {src} into {dest}/<dir>/")
+    print(f"presented {len(texts)} bank files from {src} into {dest}/<dir>/; {asserted} fixed-bank pointer loads asserted")
     return 0
 
 

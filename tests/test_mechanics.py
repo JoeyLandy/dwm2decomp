@@ -1,5 +1,5 @@
 """tools/mechanics.py and tools/tables_export.py: mechanics and data tables checked against the game (E-0396, M5;
-damage E-0397)."""
+damage E-0397, skill learning E-0398, applying damage E-0399)."""
 import sys
 import unittest
 from pathlib import Path
@@ -99,6 +99,50 @@ class AgainstTheGame(unittest.TestCase):
         finally:
             mechanics.attack_damage, mechanics.step7_model = good_attack, good_step7
             mechanics.SCALE_LEVELS.update(levels)
+
+    def test_a_wrong_learning_model_is_caught(self):
+        good = mechanics.learn_model
+        try:
+            def level_not_plus_one(rows, rec, work, t5, t6):  # compares MON_LEVEL instead of MON_LEVEL + 1
+                rec = bytearray(rec)
+                rec[0x56] = (rec[0x56] - 1) & 0xFF
+                out = good(rows, bytes(rec), work, t5, t6)
+                return out
+            mechanics.learn_model = level_not_plus_one
+            self.assertTrue(mechanics.learn_check(self.rom, 300, 11))
+
+            def no_special_3d(rows, rec, work, t5, t6):  # treats skill $3D like any other upgrade
+                rows = [list(r) for r in rows]
+                out = good(rows, rec, work, t5, t6)
+                if out["skill"] == 0x3D and out["kind"] == 2:
+                    return dict(out, kind=1, temp5=rows[0x3D][13])
+                return out
+            mechanics.learn_model = no_special_3d
+            self.assertTrue(mechanics.learn_check(self.rom, 600, 11))
+        finally:
+            mechanics.learn_model = good
+
+    def test_a_wrong_apply_model_is_caught(self):
+        good_apply, good_mod = mechanics.apply_model, mechanics.modifiers_model
+        try:
+            def defeat_only_below_zero(s):  # an HP left at exactly 0 not treated as a defeat
+                out = good_apply(s)
+                t = s["target"]
+                if s["arg"] & 0xC0 not in (0, 0x40) and s["damage"] == s["hp"][t] and s["hp"][t]:
+                    return dict(out, step=(out["step"] + 1) & 0xFF, sub2=s["sub2"])
+                return out
+            mechanics.apply_model = defeat_only_below_zero
+            self.assertTrue(mechanics.apply_check(self.rom, 300, 11))
+
+            def bit2_first(s):  # the x 2 of bit 2 tried before the x 10 of bit 1
+                b = s["status"][s["target"]][7]
+                if b & 4 and not b & 1:
+                    return {"damage": s["damage"] * 2 & 0xFFFF, "status7": b & 0xF0}
+                return good_mod(s)
+            mechanics.modifiers_model = bit2_first
+            self.assertTrue(mechanics.modifiers_check(self.rom, 300, 11))
+        finally:
+            mechanics.apply_model, mechanics.modifiers_model = good_apply, good_mod
 
     def test_tables_round_trip_and_readers(self):
         res = tables_export.check(self.rom)

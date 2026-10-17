@@ -1319,6 +1319,7 @@ LibraryMenu_ShowMonsterEntry_DrawPicture::
     ld a, l
     ld [wArg6], a
     ld de, BlankPictureTileRect
+    ASSERT BANK(BlankPictureTileRect) == $1F, "BlankPictureTileRect is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1371,6 +1372,7 @@ LibraryMenu_ShowMonsterEntry_DrawPicture::
     ld a, l
     ld [wArg6], a
     ld de, LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect
+    ASSERT BANK(LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect) == $1F, "LibraryMenu_ShowMonsterEntry_DrawPicture_TileRect is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2645,6 +2647,7 @@ LibraryMenu_ClearBGMap::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
+    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e

@@ -61,11 +61,24 @@ Map06Palettes::
 ; record: compressed 20 x 18 screen; its ROM bank
 Map06Screens0::
     dfar Map06Screens0_Y0X0 ; entry 0
-    db $80, $44, $48, $80, $44, $48, $80, $44, $48
+
+; three more far pointers to Map06Screens0_Y0X0 after Map06Screens0; no reader is known (E-0401, C1)
+; record: far pointer to a screen stream; map $06 is 1 x 1, so its record reads only the entry
+; before these
+Map06ScreensExtra::
+    dfar Map06Screens0_Y0X0 ; id 0
+    dfar Map06Screens0_Y0X0 ; id 1
+    dfar Map06Screens0_Y0X0 ; id 2
 
 Map06Attrs0::
     dfar Map06Attrs0_Y0X0 ; entry 0
-    db $4e, $45, $48, $4e, $45, $48, $4e, $45, $48
+
+; three more far pointers to Map06Attrs0_Y0X0 after Map06Attrs0; no reader is known (E-0401, C1)
+; record: far pointer to an attribute stream; map $06 is 1 x 1
+Map06AttrsExtra::
+    dfar Map06Attrs0_Y0X0 ; id 0
+    dfar Map06Attrs0_Y0X0 ; id 1
+    dfar Map06Attrs0_Y0X0 ; id 2
 
 ; LZSS-compressed: 206 bytes that expand to 360 (E-0016, E-0017)
 Map06Screens0_Y0X0::
@@ -366,8 +379,22 @@ Map1BAttrs0::
     dfar Map1BAttrs0_Y0X0 ; entry 0
     dfar Map1BAttrs0_Y1X0 ; entry 1
     dfar Map1BAttrs0_Y2X0 ; entry 2
-    db $62, $67, $48, $c7, $68, $48, $5e, $69, $48, $3e, $6a, $48, $dc, $6a, $48, $1c
-    db $6b, $48
+
+; a screen set for map $1B (1 x 3) that no map record points to: rows 0 and 2 are Map1BScreens0's,
+; row 1 a screen of its own, which the key-world screen pass also found (E-0401, C1)
+; record: far pointer to a screen stream, row by row
+Map1BScreensUnlisted::
+    dfar Map1BScreens0_Y0X0 ; id 0
+    dfar KeyWorldScreen_Map1BScreensUnlisted_1 ; id 1
+    dfar Map1BScreens0_Y2X0 ; id 2
+
+; the attribute set paired with Map1BScreensUnlisted: rows 0 and 2 are Map1BAttrs0's, row 1 an
+; attribute screen of its own (E-0401, C1)
+; record: far pointer to an attribute stream, row by row
+Map1BAttrsUnlisted::
+    dfar Map1BAttrs0_Y0X0 ; id 0
+    dfar KeyWorldScreen_Map1BAttrsUnlisted_1 ; id 1
+    dfar Map1BAttrs0_Y2X0 ; id 2
 
 ; LZSS-compressed: 206 bytes that expand to 360 (E-0016, E-0017)
 Map1BScreens0_Y0X0::
@@ -377,8 +404,8 @@ Map1BScreens0_Y0X0::
 Map1BScreens0_Y1X0::
     INCBIN "maps/map1_b/screens0_y1_x0.lz"
 
-KeyWorldScreen48_2::
-    INCBIN "maps/key_worlds/screen48_2.lz"
+KeyWorldScreen_Map1BScreensUnlisted_1::
+    INCBIN "maps/key_worlds/screen_map1_bscreens_unlisted_1.lz"
 
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
 Map1BScreens0_Y2X0::
@@ -395,7 +422,7 @@ Map1BAttrs0_Y1X0::
     db $03, $fd, $f1, $01, $01, $03, $a0, $ff, $4d, $03, $a5, $0f, $4d, $03, $c4, $ff
     db $2b, $03, $44, $00, $03, $44, $14, $03, $3c, $06, $03, $58, $14, $03, $e4, $02
 
-KeyWorldScreen48_3::
+KeyWorldScreen_Map1BAttrsUnlisted_1::
     db $68, $01, $03, $00, $00, $02, $02, $02, $02, $01, $03, $06, $01, $03, $02, $00
     db $03, $fb, $f7, $02, $03, $0a, $02, $03, $0f, $04, $03, $00, $04, $03, $1f, $09
     db $03, $fd, $f1, $01, $01, $03, $a0, $ff, $4d, $03, $a5, $0f, $4d, $03, $c4, $ff

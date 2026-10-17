@@ -1993,6 +1993,7 @@ RunLinkSession8Exchange_Trade_SetUpScene::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
+    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -3381,6 +3382,7 @@ LinkEggList_ShowChooseTheKindOf::
     xor a
     ld [wArg2], a
     ld de, SaveTilesToBGMap1BottomHalf_Data
+    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == $1D, "SaveTilesToBGMap1BottomHalf_Data is read with bank $1D mapped"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -3477,6 +3479,7 @@ ClearBGMapAtScrollAndResetScroll_BankF0::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
+    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -3740,6 +3743,7 @@ LinkRecordScreen_LoadPicture::
     ld de, $0041
     add hl, de
     ld de, SwapMonstersMenu_ShowParents2_LoadPicture_TileRect
+    ASSERT BANK(SwapMonstersMenu_ShowParents2_LoadPicture_TileRect) == $1F, "SwapMonstersMenu_ShowParents2_LoadPicture_TileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -4121,6 +4125,7 @@ LinkRecordScreen_DrawBlankPicture::
     ld de, $0041
     add hl, de
     ld de, BlankPictureTileRect
+    ASSERT BANK(BlankPictureTileRect) == $1F, "BlankPictureTileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -8289,6 +8294,7 @@ CopyNameStringFromBank08Database::
 
 .skip:
     ld de, StringDatabase_MonsterNames2
+    ASSERT BANK(StringDatabase_MonsterNames2) == $08, "StringDatabase_MonsterNames2 is read with bank $08 mapped"
 
 .call_read_far_pointer_at_de_in_bank_b:
     push hl

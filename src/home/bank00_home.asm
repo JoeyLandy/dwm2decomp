@@ -6316,8 +6316,8 @@ SECTION "Bank 00 LoadMonsterPictureAttributeBlock", ROM0
 ; palette number: reads the far pointer at MonsterAttributeMapTable + 3 * DE (bank $38; $447E), maps
 ; the bank it names, and writes its 6 x 6 attribute bytes plus hTemp0 to HL in rows 20 bytes apart
 ; (the 20-wide buffer layout), with rSVBK = 2. An entry whose address word is 0 uses the 36 zero
-; bytes at $20E9 (the padding after LoadMonsterPictureAttributes), so every attribute is hTemp0. It
-; ends with rSVBK = 0 and the caller ROM bank restored. (C1, E-0373)
+; bytes at ZeroPictureAttributes (the padding after LoadMonsterPictureAttributes), so every
+; attribute is hTemp0. It ends with rSVBK = 0 and the caller ROM bank restored. (C1, E-0373)
 ; copies the 6 x 6 picture attribute block of species DE (table $447E in bank $38, default $20E9)
 ; plus hTemp0 to HL in WRAM bank 2 (E-0128)
 LoadMonsterPictureAttributeBlock::
@@ -6344,7 +6344,7 @@ LoadMonsterPictureAttributeBlock::
     jr .skip2
 
 .skip:
-    ld de, $20e9
+    ld de, ZeroPictureAttributes
     ld a, $00
 
 .skip2:
@@ -6395,9 +6395,9 @@ SECTION "Bank 00 LoadMonsterPictureAttributes", ROM0
 ; DE = monster id, HL = BG map address, hTemp0 = palette number: reads the far pointer at
 ; MonsterAttributeMapTable + 3 * DE (bank $38), maps the bank it names, and writes its 6 x 6
 ; attribute bytes plus hTemp0 to VRAM bank 1 at HL, rows $20 apart (each byte through
-; WriteVRAMByteInc). An entry whose address word is 0 uses the 36 zero bytes at $20E9 (the padding
-; after this routine), so every attribute is hTemp0. It ends with rVBK = 0 and the caller ROM bank
-; restored. (C1, E-0373)
+; WriteVRAMByteInc). An entry whose address word is 0 uses the 36 zero bytes at
+; ZeroPictureAttributes (the padding after this routine), so every attribute is hTemp0. It ends with
+; rVBK = 0 and the caller ROM bank restored. (C1, E-0373)
 ; DE = monster id, HL = BG map address, hTemp0 = palette number: writes the 6 x 6 attribute bytes
 ; (plus hTemp0) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when
 ; the entry is zero)
@@ -6425,7 +6425,7 @@ LoadMonsterPictureAttributes::
     jr .skip2
 
 .skip:
-    ld de, $20e9
+    ld de, ZeroPictureAttributes
     ld a, $00
 
 .skip2:
@@ -6471,6 +6471,14 @@ LoadMonsterPictureAttributes::
     pop af
     ld [rROMB0], a
     ret
+
+SECTION "Bank 00 ZeroPictureAttributes", ROM0
+
+; 36 zero bytes, the default 6 x 6 picture attribute block: LoadMonsterPictureAttributes and
+; LoadMonsterPictureAttributeBlock use it when a monster's MonsterAttributeMapTable entry is 0, so
+; every attribute is just the palette in hTemp0. They are the padding after
+; LoadMonsterPictureAttributes. (C1, E-0401)
+ZeroPictureAttributes::
     ds $24, $00
 
 ; DE = destination: writes the tens digit wDigits + $1 as tile $E0 + digit, or the blank tile $C3
@@ -8383,18 +8391,19 @@ TextCmd_Voice2::
 SECTION "Bank 00 TextCmd_Pause", ROM0
 
 ; <PAUSE> ($EC): clears wTextControl bit 7; below text speed 7 it sets wTextDelayCounter from the
-; 7-byte table after it at $2A66, indexed by wTextSpeed (6, 12, 20, 26, 32, 40, 48 frames), and sets
-; wTextFlags bit 7 (a delay); at speed 7 it sets wTextFlags bits 2 and 5 instead, waiting for a
-; button with the arrow. Speeds above 7 would read past the table. (C2, E-0373)
-; <PAUSE> ($EC): waits the frames in the 7-byte table at $2A66 for the text speed wTextSpeed (6, 12,
-; 20, 26, 32, 40, 48); at speed 7 waits for a button with the arrow instead (E-0336)
+; 7-byte table after it at TextPauseFrames, indexed by wTextSpeed (6, 12, 20, 26, 32, 40, 48
+; frames), and sets wTextFlags bit 7 (a delay); at speed 7 it sets wTextFlags bits 2 and 5 instead,
+; waiting for a button with the arrow. Speeds above 7 would read past the table. (C2, E-0373)
+; <PAUSE> ($EC): waits the frames in the 7-byte table at TextPauseFrames for the text speed
+; wTextSpeed (6, 12, 20, 26, 32, 40, 48); at speed 7 waits for a button with the arrow instead
+; (E-0336)
 TextCmd_Pause::
     ld hl, wTextControl
     res 7, [hl]
     ld a, [wTextSpeed]
     cp $07
     jr z, .skip
-    ld hl, $2a66
+    ld hl, TextPauseFrames
     add_a_to_hl
     ld a, [hl]
     ld [wTextDelayCounter], a
@@ -8409,6 +8418,13 @@ TextCmd_Pause::
     set 2, [hl]
     set 5, [hl]
     ret
+
+SECTION "Bank 00 TextPauseFrames", ROM0
+
+; Seven frame counts, one per text speed 0-6 (6, 12, 20, 26, 32, 40, 48): TextCmd_Pause stores entry
+; wTextSpeed in wTextDelayCounter for the <PAUSE> command; speed 7 waits for a button instead. (C1,
+; E-0401)
+TextPauseFrames::
     db $06, $0c, $14, $1a, $20, $28, $30
 
 ; <INSTANT> ($ED): sets wTextControl bit 7, so StepTextPrinter prints on at once until a wait
@@ -10012,7 +10028,7 @@ StartSoundAfterBankTable::
     push de
     push hl
     ld [wSoundId], a
-    ld hl, $3e24
+    ld hl, SoundBankTable + $11
     jr StartSound_FromTable
 
 SECTION "Bank 00 StartFourSoundTracks", ROM0
@@ -11104,7 +11120,7 @@ SoundNextEvent::
     jr z, .loop5
     cp $10
     jr nc, .skip5
-    ld hl, $38a0
+    ld hl, SoundNextEvent.next5 + 4
     add l
     ld l, a
     ld a, h

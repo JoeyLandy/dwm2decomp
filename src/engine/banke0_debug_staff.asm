@@ -7383,8 +7383,13 @@ SECTION "Bank E0 DrawSpriteSlots_Data", ROMX
 ; (DrawMetaSpriteSet_Bank25), $4001 in bank $7F (DrawMetaSprite_Sets98) and $700A in bank $7F
 ; (DrawMetaSprite). DrawSpriteSlots indexes it with byte 0 of each 8-byte slot in wSpriteSlots (0, 1
 ; or 2), loads HL and B from the entry and calls it with rst $10 to draw the slot. (C1, E-0381)
+; DrawSpriteSlots calls entry (slot byte 0) through rst $10; read as raw bytes until the same scan
+; (E-0401, C1)
+; record: far call to the routine that draws a slot of this kind
 DrawSpriteSlots_Data::
-    db $01, $40, $25, $01, $40, $7f, $0a, $70, $7f
+    dfar DrawMetaSpriteSet_Bank25 ; id 0
+    dfar DrawMetaSprite_Sets98 ; id 1
+    dfar DrawMetaSprite ; id 2
 
 ; Adds 1 to byte 7, the animation counter, of each of the 8 slots at wSpriteSlots (an $FF wraps to
 ; 0); the other bytes are left alone. Called every frame by DebugStaffRoll_Update_RunScene before

@@ -9294,10 +9294,10 @@ SceneWarubouWarning_Answer::
     ld a, [wMessageGroup]
     ld h, a
     ld a, l
-    add $00
+    add LOW(MSG_KEEP_OPEN)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(MSG_KEEP_OPEN)
     ld h, a
     inc hl
     call StartMessageHL_B0F
@@ -9309,10 +9309,10 @@ SceneWarubouWarning_Answer::
     ld a, [wMessageGroup]
     ld h, a
     ld a, l
-    add $00
+    add LOW(MSG_KEEP_OPEN)
     ld l, a
     ld a, h
-    adc $40
+    adc HIGH(MSG_KEEP_OPEN)
     ld h, a
     inc hl
     inc hl

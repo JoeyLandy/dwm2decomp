@@ -1,4 +1,4 @@
-"""tools/shift_test.py and tools/hardcoded_refs.py: the M1 shiftability audit (E-0388)."""
+"""tools/shift_test.py and tools/hardcoded_refs.py: the M1 shiftability audit (E-0388; recipe runs E-0401)."""
 import sys
 import tempfile
 import unittest
@@ -87,6 +87,33 @@ class Frames(unittest.TestCase):
         self.assertIsNone(shift_test.first_read_difference(a, [(0, 0x150, 9), (5, 0x4000, 9)]))
         self.assertEqual(shift_test.first_read_difference(a, [(0, 0x150, 1), (5, 0x4010, 2)]), 1)
         self.assertEqual(shift_test.first_read_difference(a, a[:1]), 1)
+
+    def test_recipe_script_pointers_follow_the_padding(self):
+        pokes = ["wDataBank=0x15", "wScriptPointerLo=0x4B", "wScriptPointerHi=0x76", "wModeState=1"]
+        moved = shift_test.shifted_pokes(pokes, {0x15: 0x4001}, 16)
+        self.assertEqual(moved, ["wDataBank=0x15", "wScriptPointerLo=0x5b", "wScriptPointerHi=0x76", "wModeState=1"])
+        # below the padding, in a bank not padded, or no script pointer: unchanged
+        self.assertEqual(shift_test.shifted_pokes(pokes, {0x15: 0x7700}, 16), pokes)
+        self.assertEqual(shift_test.shifted_pokes(pokes, {0x16: 0x4001}, 16), pokes)
+        self.assertEqual(shift_test.shifted_pokes(["hMapId=0x20", "call:GenerateNewKeyEntry"], {0: 0x150}, 16),
+                         ["hMapId=0x20", "call:GenerateNewKeyEntry"])
+        # a carry into the high byte
+        self.assertEqual(shift_test.shifted_pokes(["wDataBank=0x1F", "wScriptPointerLo=0xF8", "wScriptPointerHi=0x77"],
+                                                  {0x1F: 0x4001}, 16)[1:], ["wScriptPointerLo=0x8", "wScriptPointerHi=0x78"])
+
+    def test_per_instruction_streams_ignore_interleaving_but_not_addresses(self):
+        base = {(0, 0, 0x100): [(5, 0x4010, 1), (5, 0x4011, 3)], (0x40, 0, 0x200): [(0, 0x300, 2)]}
+        same = {(0, 0, 0x100): [(5, 0x4010, 1), (5, 0x4011, 2)], (0x40, 0, 0x200): [(0, 0x300, 3)]}  # other order
+        self.assertIsNone(shift_test.first_stream_difference(base, same))
+        longer = {(0, 0, 0x100): [(5, 0x4010, 1), (5, 0x4011, 2), (5, 0x4012, 3)]}  # one more pass, one key only
+        self.assertIsNone(shift_test.first_stream_difference(base, longer))
+        wrong = {(0, 0, 0x100): [(5, 0x4010, 1), (5, 0x4001, 2)], (0x40, 0, 0x200): [(0, 0x2F0, 3)]}
+        key, _a, _b, x, y = shift_test.first_stream_difference(base, wrong)
+        self.assertEqual((key, x[:2], y[:2]), ((0x40, 0, 0x200), (0, 0x300), (0, 0x2F0)))  # the earlier one
+
+    def test_recipe_needs_reads(self):
+        with self.assertRaises(SystemExit):
+            shift_test.main(["--recipe", "tools/recipes/e0320_farm_battle.txt", "--out", "build/shift_unit"])
 
     def test_bad_arguments_are_refused(self):
         with self.assertRaises(SystemExit):

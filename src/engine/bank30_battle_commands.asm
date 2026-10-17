@@ -2730,9 +2730,28 @@ BitMaskWords16::
     db $01, $00, $02, $00, $04, $00, $08, $00, $10, $00, $20, $00, $40, $00, $80, $00
     db $00, $01, $00, $02, $00, $04, $00, $08, $00, $10, $00, $20, $00, $40, $00, $80
 
+; CallFlagBitHandlerE jumps to word E of this table (JumpToWordAtHL); bits 0-7 are the eight
+; personality and trait rolls, bits 8-15 the stub FlagBitHandlerNone; read as raw bytes until
+; tools/shift_test.py --recipe found a padded ROM jumping to the old addresses (E-0401, C1)
+; record: the handler CallFlagBitHandlerE runs for bit number E of the mask
+; RunHandlersForSetBitsInBC tests
 FlagBitHandlerTable::
-    db $86, $4f, $8e, $4f, $96, $4f, $9e, $4f, $a6, $4f, $ae, $4f, $b6, $4f, $be, $4f
-    db $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f
+    dw RollPersonalityHiHighFlag01 ; id 0
+    dw RollPersonalityHiLowFlag02 ; id 1
+    dw RollPersonalityMidHighFlag04 ; id 2
+    dw RollPersonalityMidLowFlag08 ; id 3
+    dw RollPersonalityLoHighFlag10 ; id 4
+    dw RollPersonalityLoLowFlag20 ; id 5
+    dw RollSlotTraitHighFlag40 ; id 6
+    dw RollSlotTraitLowFlag80 ; id 7
+    dw FlagBitHandlerNone ; id 8
+    dw FlagBitHandlerNone ; id 9
+    dw FlagBitHandlerNone ; id 10
+    dw FlagBitHandlerNone ; id 11
+    dw FlagBitHandlerNone ; id 12
+    dw FlagBitHandlerNone ; id 13
+    dw FlagBitHandlerNone ; id 14
+    dw FlagBitHandlerNone ; id 15
 
 ; Handler of the mask bit $01 of FlagBitHandlerTable: HL = wSlotPersonalityHi, DE = $0001, and a
 ; jump to the high-value roll RollPersonalityActForHighValue: a byte of the actor below $80 returns
@@ -2854,7 +2873,18 @@ RollSlotTraitLowFlag80:: ; configured code entry (E-0395 (traced before by a gue
     ld hl, wSlotTrait
     ld de, $0080
     jr RollPersonalityActForLowValue
-    db $af, $c9
+
+SECTION "Bank 30 FlagBitHandlerNone", ROMX
+
+; The handler of mask bits 8-15 of FlagBitHandlerTable: xor a and ret, so A = 0 and carry is clear
+; and RunHandlersForSetBitsInBC goes on to the next bit. Reached only through that table (two bytes
+; after RollSlotTraitLowFlag80). (C2, E-0401; probed E-0401)
+; the handler of bits 8-15 of FlagBitHandlerTable: xor a / ret (carry clear)
+FlagBitHandlerNone::
+    xor a
+    ret
+
+SECTION "Bank 30 RollPersonalityActForHighValue", ROMX
 
 ; HL = a per-slot personality array, DE = the act bit (from the high-value rolls
 ; RollPersonalityHiHighFlag01, RollPersonalityMidHighFlag04, RollPersonalityLoHighFlag10,

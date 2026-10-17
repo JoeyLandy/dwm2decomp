@@ -1103,6 +1103,7 @@ RunWorldMapState_DrawCloseUp::
     jr z, .done
     ld a, $40
     ld de, SharedOBJPalettes
+    ASSERT BANK(SharedOBJPalettes) == $7E, "SharedOBJPalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .skip2
@@ -2932,6 +2933,7 @@ RunWorldMapState_DrawOverview::
     jr z, .done
     ld a, $40
     ld de, SharedOBJPalettes
+    ASSERT BANK(SharedOBJPalettes) == $7E, "SharedOBJPalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .skip2

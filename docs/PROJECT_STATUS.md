@@ -159,13 +159,13 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0401): new goal, and H1a done
+## Current handoff (2026-10-17, E-0402): new goal, and H1a done
 
 The user set a new goal: an ecosystem in which people can easily translate the game or make mods and romhacks.
 docs/ROADMAP.md lists its stages H1-H7: graduate src/, game data as files, a text pipeline, full shiftability, a
 mod smoke test, distribution, modder documentation. D-015 makes src/ the hand-edited source.
 
-H1a (E-0401): tools/disasm_all.py and tools/present.py write build/regen/src/ unless given `--write-src`, and
+H1a (E-0402): tools/disasm_all.py and tools/present.py write build/regen/src/ unless given `--write-src`, and
 tools/src_drift.py compares that tree with src/. On this tree the regeneration reported no drift (265 files
 identical) and left src/ untouched. tests/test_present.py's two listing-equality tests now check build/regen/src/.
 build/run4 PASS; serial suite OK (466 tests, 3 skipped).
@@ -179,6 +179,27 @@ Open, in order (docs/GRADUATION.md):
 Next reproducible action: `python -I tools/disasm_all.py` then `python -I tools/src_drift.py` (expect no drift
 until src/ is edited), then start H1b with tests/test_generated_source.py.
 
+## Prior handoff (2026-10-17, E-0398 to E-0401): the open actions done
+
+The three actions the E-0397 handoff left are done:
+1. **Skill learning** (E-0398): FindNewlyLearnableSkills agrees with a model on 3,000 generated records (learned
+   from the list, upgraded, devised, MegaMagic's own rule); docs/MECHANICS.md.
+2. **Applying damage** (E-0399): ResolveStepApplyDamage (through ApplyDamageToTarget) and ApplyDamageModifiers
+   each agree on 3,000 states.
+3. **Shiftability** (E-0401): tools/shift_test.py `--recipe` replays the 13 play recipes on padded ROMs, comparing
+   each instruction's ROM reads; it and static scans found ten fixed references (raw code and far-pointer tables,
+   bank-$00 addresses, a selector inside an object list), all now labels. The three split sums are resolved, and
+   the 512 fixed-bank pointer loads carry link-time ASSERTs. All 147 runs (2,299 routines) PASS padded by 16 and by
+   256. docs/SHIFTABILITY.md.
+
+Merged onto master after the breeding-paths batch (E-0400): build/run697 PASS; serial suite OK (465 tests, 3
+skipped).
+
+Open: the effect routines beyond roll and scale (Watershot, MegaMagic, MultiCut, CallHelp), the breeding child's
+later rolls (sex, resistances, skills, stats), more recipes (key worlds, late story, link play) for the read gate.
+Next reproducible action: `python -I tools/shift_test.py --pad 16 --reads all --recipe tools/recipes/e0335_swap.txt`
+(about 30 minutes) after any generator change, alongside the build.
+
 ## Prior handoff (2026-10-17, E-0400): breeding paths
 
 tools/breed_path.py lists the wild monsters of each story map from the ROM and finds the fewest farm breedings
@@ -186,8 +207,8 @@ from them to a species (docs/BREEDING_PATHS.md). Three checks agree with the gam
 encounter listing on every screen of the 56 maps, FillEncounterFromEntry from all 128 random states for the 109
 entries, and ComputeBreedingChild for every breeding of a route. Finding: RandomByteTable gives only 94 of the 128
 roll values, so Phoenix's slot on the Float map is never drawn. Example: Darkdrium from the Pirate maps ($30-$45)
-in 132 breedings. build/run3 PASS; serial suite OK (457 tests, 3 skipped). E-0398 and E-0399 belong to the unmerged
-branch claude/skill-learning.
+in 132 breedings. build/run3 PASS; serial suite OK (457 tests, 3 skipped). E-0398 and E-0399 belonged to the branch
+claude/skill-learning (merged since, with its E-0400 renumbered E-0401).
 
 Open: sex, level and plus conditions in routes; the routine that ties keys to map ranges (the world grouping is
 C1); the open items of the previous handoff below.
