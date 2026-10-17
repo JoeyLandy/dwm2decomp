@@ -218,9 +218,9 @@ stay comparable. Real hardware would end it with $FF.
 tools/link_play.py runs two linked consoles in cycle lockstep, each with its own recipe, and ends every run on
 the same frame. tools/recipes/link_e0406_breeding.txt powers both on with a save and chooses BREEDING on the title
 menu, A first while B's cursor waits on it. It then plays the link breeding screens: the farm list, info and
-stats pages, and the "leveled up more" and "farm's roster" refusals. B's presses do not move its choice as A's do,
-so no child is bred. Whether the game or the serial model's timing is the cause is not settled. `--link-recipe`
-replays it on two linked base and two linked padded consoles.
+stats pages, and the "leveled up more" and "farm's roster" refusals. In this first version B's presses seemed not to
+move its choice, so no child was bred; E-0410 found that they did (below), and the recipe now breeds one.
+`--link-recipe` replays it on two linked base and two linked padded consoles.
 
 **What they found.** EnterStatusEffectFieldState_Data, the list of 64 maps where the field status steps do not
 run, had eleven byte pairs decoded as pointer words (`dw` of labels that happened to share their values). In a
@@ -232,11 +232,35 @@ SkillSupersedes_<skill>. No `dw` of a pointer-run label is left in src/.
 **Result.** All 222 runs of the chain with the tour (tools/recipes/e0406_world_tour.txt and its includes), 9,702,777 ROM data reads, PASS padded by 16 (152 banks) and by 256 (107 banks). The late story and key world's chain (tools/recipes/e0406_key_world.txt, without the tour): 178 runs, 6,690,279 reads, 2,522 routines, PASS padded by 16 and by 256. The link recipe: 15 runs, 338,121 ROM data reads on two consoles, PASS
 padded by 16 and by 256.
 
+## A linked breeding, the shrine and Darck's taunt (E-0410)
+
+**A linked breeding.** E-0406's reading that console B's presses did not move its choice was wrong. B was on the
+Info / OK box (BreedMenu_ChooseParents_YesNoCursor), where each Up or Down press toggles the cursor, and its four
+Down presses had brought it back to Info. tools/recipes/link_e0406_breeding.txt now runs to the end. A picks Stera
+(a male WingSlime, level 11). B is refused Patta (level 4, "too young to breed") and Moahm (in the party, "Choose
+from the farm's roster"), then picks Reny (a female Petiteel, level 12). Both choose Breed and record the results.
+The egg scene runs, A receives PearlGel's egg and B Petiteel's egg, and both return to the title menu with their
+cartridge RAM rewritten. 54 runs, 710,191 ROM data reads on two consoles, 579 routines.
+
+**The shrine.** Header byte 7 (wMapHeaderByte7) is non-zero in 13 map records, always $2C: map 3, map $3B and the
+11 maps sharing record $500C. On map 3, the shrine, $2C is the gate's tile: an A press facing it
+(CheckInteractionInFront) opens the plan page's key list. tools/recipes/e0406_key_world.txt now also moves the party there, gives it a key
+(GenerateNewKeyEntry) and has it appraised (Script_0D_62B8: BlueIslet). It then uses the key at the gate, which
+warps into the key's world at its gate room (wMapType $87); the party walks down into the world (wMapType $80)
+and fights. Before the appraisal the gate answers "The key could not be used yet."
+
+**Darck's taunt.** tools/recipes/e0406_late_story.txt runs DARCK_TAUNT on Darck's castle (map $A2), from the line after
+its battle (Script_SurprisinglyObedientAreYou, 10:$61D4).
+
+**Result.** The key world's chain (tools/recipes/e0406_key_world.txt with its includes, without the tour): 200 runs,
+7,480,100 ROM data reads, 2,644 routines, PASS padded by 16 (152 banks) and by 256 (107 banks). The link recipe
+PASS padded by 16 and by 256.
+
 ## Left after M2
 
 1. Done (E-0392, E-0401): no address-like split sum is left.
 2. Done (E-0393, E-0401). Plain calls inside a bank and the 512 asserted pointers still tie code to its bank; the
    link says which when a move breaks them, and moving one of those needs its reader changed too.
 3. Widened (E-0401, E-0406): the recipe runs reach 2,638 routines, with 25 later-world maps and a
-   link session; the chain with the late story's scenes and a generated key world, 2,522. A completed link breeding and
-   the story's own way into a key world (a key at the shrine) are still reached only by the static inventory.
+   link session; the chain with the late story's scenes and a generated key world, 2,522. E-0410 adds a completed
+   link breeding, a key world entered at the shrine and Darck's taunt on his own map (above).

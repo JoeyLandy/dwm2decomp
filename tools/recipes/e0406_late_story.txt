@@ -1,10 +1,11 @@
-# E-0406: scenes from the later story. ls00-ls13 start, in order, the bank-$10 scripts holding the scene commands
-# LAND_HO, KAMEHA_BACK, HOMECOMING, WATER_SOLVED, RIVAL_DEFEATED, PIRATE_GHOSTS, EXPLOSION, PRINCESS_MEDICINE,
-# SHIELD_GUARDIAN, GRAVE, (DARCK_TAUNT dropped), DARCK_DEFEATED, CYAL_ROLT and YOU_DID_IT (SCRIPT_SCENE_*), each by its
-# four RAM bytes on GreatLog's Main Street (t02! of e0327_shop_inn.txt) as e0328 to e0335 start theirs, then press
-# through. Forced states: a scene runs out of its story order, on another map. DARCK_TAUNT's script, forced there,
-# draws text from a pointer left at $010D (the cartridge header and the code after it), so it is left out
-# (includes e0335_swap.txt).
+# E-0406, E-0410: scenes from the later story. ls00-ls13 (no ls10: see dk01-dk03) start, in order, the bank-$10
+# scripts holding the scene commands LAND_HO, KAMEHA_BACK, HOMECOMING, WATER_SOLVED, RIVAL_DEFEATED, PIRATE_GHOSTS, EXPLOSION, PRINCESS_MEDICINE,
+# SHIELD_GUARDIAN, GRAVE, DARCK_DEFEATED, CYAL_ROLT and YOU_DID_IT (SCRIPT_SCENE_*), each by its four RAM bytes on
+# GreatLog's Main Street (t02! of e0327_shop_inn.txt) as e0328 to e0335 start theirs, then press through. Forced
+# states: a scene runs out of its story order, on another map. DARCK_TAUNT runs on its own map: dk01 enters Darck's
+# castle (map $A2) and dk02 starts Script_SurprisinglyObedientAreYou at 10:$61D4, the line after its battle
+# ('N... No... How could my'), which leads into the scene. Forced on Main Street the same scene drew text through a
+# pointer left at $010D, the cartridge header (includes e0335_swap.txt).
 @ e0335_swap.txt
 ls00! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xDB wScriptPointerHi=0x50 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls00b! | ls00! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
@@ -32,3 +33,6 @@ ls12! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xBD wScriptP
 ls12b! | ls12! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 ls13! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0x9E wScriptPointerHi=0x65 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls13b! | ls13! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+dk01! | k03! | hMapId=0xA2 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+dk02! | dk01! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xD4 wScriptPointerHi=0x61 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+dk03! | dk02! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120

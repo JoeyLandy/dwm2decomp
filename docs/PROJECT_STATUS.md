@@ -212,7 +212,7 @@ Open, in order (docs/GRADUATION.md):
 Next reproducible action: `python -I tools/disasm_all.py` then `python -I tools/src_drift.py` (expect no drift
 until src/ is edited), then start H1b with tests/test_generated_source.py.
 
-## Parallel handoff (2026-10-17, E-0404 to E-0406): the open items of the E-0401 handoff done
+## Parallel handoff (2026-10-17, E-0404 to E-0406, E-0410): the open items of the E-0401 handoff done
 
 Done alongside H1, from the open items of the E-0401 handoff (no change to the H1 plan above):
 1. **The other damage routines** (E-0404): all 28 remaining damage routines of bank $36 agree with models on
@@ -222,7 +222,7 @@ Done alongside H1, from the open items of the E-0401 handoff (no change to the H
 3. **Later worlds and link play for the shift gate** (E-0406):
    - a 25-map world tour recipe;
    - a serial port in tools/sm83.py and tools/link_play.py, with a linked breeding session from the title menu
-     (no child is bred: console B's later presses do not move its choice);
+     (in E-0406 no child was bred; E-0410 completes it, below);
    - `--link-recipe`.
    - The tour found two byte lists the generator had misread as pointer words (EnterStatusEffectFieldState_Data
      and AddSkillCToFreeOrWeakerSlot_Data), both now layouts.
@@ -231,17 +231,18 @@ Done alongside H1, from the open items of the E-0401 handoff (no change to the H
 build/run702 PASS; serial suite OK (473 tests, 3 skipped). Merged onto master after H1b (E-0403): no drift
 (tools/src_drift.py, 265 files identical), build/run703 PASS, serial suite OK (487 tests, 3 skipped).
 
-Not reached, with what is known:
-- **A completed link breeding.** Console B (link role 3) reads its pad in the send half of the serial exchange:
-  its Down press does set wJoypadPressed ($80) for one poll, and its A press opens the stats screen. Its list
-  cursor still never moves. B's screen runs in the receive half, which returns early while wVBlankFlags bit 7 is set.
-  So whether a press is still pending when the screen runs depends on how exchanges and VBlanks fall within a frame,
-  and the serial model approximates exactly that (C1). A serial model checked against hardware is the next step for it.
-- **The story's own way into a key world** (a key used at the shrine) has no recipe: the key world is generated and
-  entered through the debug menu's AUTOMAP CHECK (tools/recipes/e0406_key_world.txt). 13 later scenes run from
-  tools/recipes/e0406_late_story.txt, started by their RAM bytes; their chain is 178 runs, 2,522 routines,
-  PASS padded by 16 and by 256.
-Next reproducible action: `python -I tools/link_play.py tools/recipes/link_e0406_breeding.txt --shots build/link`.
+The items it left (E-0410):
+- **A completed link breeding.** Done: tools/recipes/link_e0406_breeding.txt runs to two eggs (A's PearlGel, B's
+  Petiteel) and the title menu, 54 runs, PASS padded by 16 and by 256. E-0406's reading that console B's presses
+  did not move its choice was wrong: B was on the Info / OK box, where each Down press toggles the cursor.
+- **The story's way into a key world.** Done: tools/recipes/e0406_key_world.txt takes a key to the shrine (map 3),
+  has it appraised, uses it at the gate and walks from the gate room into the world and a battle.
+- **Darck's taunt.** Done: it runs on Darck's castle (map $A2) from the line after his battle.
+- The key world's chain: 200 runs, 2,644 routines, PASS padded by 16 and by 256. On master with H1 to H3: build/run706
+  PASS, the gates PASS again, serial suite OK (509 tests, 3 skipped).
+
+Next reproducible action: `python -I tools/link_play.py tools/recipes/link_e0406_breeding.txt --sram-recipe
+tools/recipes/e0323_save.txt --shots build/link` (both consoles' screens, ending on the title menu).
 
 ## Prior handoff (2026-10-17, E-0398 to E-0401): the open actions done
 
