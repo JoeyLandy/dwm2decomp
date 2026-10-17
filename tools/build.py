@@ -10,6 +10,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RGBDS = ROOT / "tools/rgbds"
+sys.path.insert(0, str(ROOT / "tools"))  # python -I leaves the script's directory off the path
+import source_tree  # noqa: E402
 MANIFEST = ROOT / "config/targets/dwm2-cobi-us-rev0.json"
 REF = ROOT / "local/roms/dwm2-cobi-us.gbc"
 
@@ -85,6 +87,7 @@ def main() -> int:
                source_tree_sha256=hashlib.sha256(b"".join(
                    p.read_bytes() for p in sorted((ROOT / "src").rglob("*.asm")) + [ROOT / "src/assets.txt", ROOT / "src/layout.link"]
                    if p.exists())).hexdigest(),
+               source_digest=source_tree.digest(),  # D-015 (H1b): every src/ file, for tools/source_tree.fresh_build
                assets_extracted=assets, mod=str(mod) if mod else None)
     (out / "report.json").write_text(json.dumps(rep, indent=2))
     if mod:  # E-0394: a modded ROM is not the matching target; its difference is reported, not judged

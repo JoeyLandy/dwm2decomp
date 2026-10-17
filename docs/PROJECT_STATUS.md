@@ -159,7 +159,19 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0402): new goal, and H1a done
+## Current handoff (2026-10-17, E-0403): H1b started
+
+tests/test_generated_source.py is split (docs/GRADUATION.md). tests/test_source_audits.py checks src/ itself, and
+tests/test_generator_listing.py keeps the generator's own checks, skipping without build/listing/.
+tools/source_tree.py gives the moved checks label banks from src/ alone, and a .sym only from a build of the
+current tree (tools/build.py now records `source_digest`). A hand-added comment in src/ leaves the audits passing;
+a raw RAM address is caught. build/run7 PASS; serial suite OK (479 tests, 3 skipped).
+
+Next: the other listing readers, one file at a time, in docs/GRADUATION.md's table: tests/test_present.py,
+test_fold_idioms.py, test_incbin_identified.py, test_note_grounding.py, test_resistances.py, test_step_names.py,
+test_story_flags.py, test_text.py, then the tests that import the generator.
+
+## Prior handoff (2026-10-17, E-0402): new goal, and H1a done
 
 The user set a new goal: an ecosystem in which people can easily translate the game or make mods and romhacks.
 docs/ROADMAP.md lists its stages H1-H7: graduate src/, game data as files, a text pipeline, full shiftability, a

@@ -2431,6 +2431,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0403 — H1b, first file: tests/test_generated_source.py split into source audits and generator checks
+
+- Date: 2026-10-17. Kind: TOOL and TEST (no source byte changed). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 6a7f1a2. Plan: [graduation](GRADUATION.md), H1b.
+- **tools/source_tree.py.** Bank files; each global label's bank from its SECTION and src/layout.link (33,096 labels, all equal to the bank in build/run6's .sym); a digest of every src/ file, path and bytes, which tools/build.py now records as `source_digest` (the older `source_tree_sha256` left out the .inc files and is kept as it was); fresh_build and fresh_sym, which use only a passing build whose digest is the current tree's.
+- **tests/test_source_audits.py (31 tests, src/).** Ported from the listing to src/'s spelling (lower-case hex, the `lb` macro read as the `ld` it assembles to, ASSERT lines skipped):
+  - the raw-address audit;
+  - the helper-call bank audit (label banks from source_tree);
+  - the spot checks of E-0123 to E-0364;
+  - the main.asm includes;
+  - the field-message helpers.
+  - Changed where src/ differs. Banked calls: every literal setup is now a farcall (3,843), so the check is that no bare `rst $10` with a literal label and bank is left; three computed ones remain (banks $30, $E0, $10), which no macro spells. Decompress arguments: the 126 `ld de, X` before DecompressTo name a stream in the ROM built from src/, decoding to at most 4,096 bytes with no unwritten read and ending at or before the next label; 17 of them are db bytes, not asset files, so a file test could not cover them. On 2026-10-17, 6 of 400 code labels in banks $0A, $10, $12 and $36 would also pass that rule; the label of DecompressTo itself is a negative case. 12:$55F8 is found through the fresh .sym (StartReturnWarpByFlag25).
+- **tests/test_generator_listing.py (7 tests, build/listing/).** These check the generator, which stays as a re-analysis tool, and skip without the listing: notes above labels, configured names with address aliases, call-count headers, RAM lists, stream notes against a fresh decompression, data regions, and its banked-call labels.
+- **Hand-edit experiment.** A comment line added above ComputeAttackDamage in src/: tools/src_drift.py reports 1 line of drift; tests/test_source_audits.py passes, with its two build-dependent tests skipped because no build matches the edited tree. Then `ld a, [$c0a0]` added there: the raw-address audit fails with `bank36_battle_effects.asm:2767 ld a, [$C0A0]`. The file was restored (git status clean).
+- **Limits.** The stream rule is a plausibility check (above). The .sym-dependent checks skip until the tree is built.
+- **Checks run.** build/run7 PASS (approved size and SHA-256, zero differing bytes; its report's source_digest is the tree's, so it is the fresh build); serial full suite build/logs/suite_e0403.log OK (479 tests, 3 skipped: the 33 tests of the old file became 31 + 7).
+
 ### E-0402 — H1a: the generator no longer writes src/ (D-015)
 
 - Date: 2026-10-17. Kind: DECISION (D-015, user-approved: the user asked for the recommended path, whose first step is making src/ the hand-edited source) and TOOL. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit f276d52, merged with master e0bc01b (E-0398 to E-0401) before acceptance. Plan: [graduation](GRADUATION.md), stage H1 of the [roadmap](ROADMAP.md).

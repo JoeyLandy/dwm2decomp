@@ -49,7 +49,7 @@ disasm_all.py or present.py:
 | tests/test_doc_coverage.py | annotations, names | | yes |
 | tests/test_dynamic.py | names, symbols | | |
 | tests/test_fold_idioms.py, test_present.py | | yes | yes |
-| tests/test_generated_source.py | data_regions, symbols | yes | |
+| tests/test_generated_source.py (split in H1b, E-0403) | data_regions, symbols | yes | |
 | tests/test_incbin_identified.py, test_note_grounding.py, test_resistances.py, test_step_names.py, test_story_flags.py, test_text.py | | yes | |
 | tests/test_local_labels.py, test_sections.py, test_structure_data.py | | | yes |
 | tests/test_name_claims.py | names | yes | yes |
@@ -71,11 +71,23 @@ tree with src/ and lists each file that differs, is missing or is extra. It repo
 that made this switch, so the switch changed no source byte. build/listing/ is still written, so the tests that
 read it keep working.
 
-**H1b. Checks on src/, not on the listing.** Each test that reads build/listing/ or imports the generator is
+**H1b. Checks on src/, not on the listing (started 2026-10-17).** Each test that reads build/listing/ or imports the generator is
 rewritten to check src/ and the built `.sym` and `.map`. Where a test needs an instruction's address, it reads it
 from a listing derived from the build: src/ assembled, with each instruction's address taken from the
 assembler's output. It no longer comes from the generator's trace. One test file at a time, each passing before
 and after.
+
+tools/source_tree.py is what the moved checks read:
+- the bank files;
+- each label's bank, from the SECTION it is defined in and the bank src/layout.link gives that section, so no
+  build is needed;
+- a digest of every src/ file, which tools/build.py now records in its report as `source_digest`;
+- the .sym of the newest passing build whose digest is the current tree's (fresh_sym). A check that needs an
+  address skips when no build matches, instead of reading a build of another tree.
+
+| Test file | Done | Now |
+| --- | --- | --- |
+| tests/test_generated_source.py | 2026-10-17, E-0403 | Split. The checks of the code (24, plus 7 tests of the helpers) became tests/test_source_audits.py on src/. The 7 checks of what the generator copies from config/ into its listing (notes, configured names, call-count headers, RAM lists, stream notes, data regions, its banked-call labels) became tests/test_generator_listing.py, which skips without build/listing/. |
 
 **H1c. config/ files sorted by role.**
 - Some files only fed names and notes into src/ (names.json, annotations.json, name_families.json, banks.json,
