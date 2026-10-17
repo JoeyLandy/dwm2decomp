@@ -2439,7 +2439,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** `python -I tools/disasm_all.py` (181.7 s) wrote build/regen/src/ and left src/ unchanged (git status clean); tools/src_drift.py: no drift, 265 files identical. So the switch changes no source byte.
 - **Tests retargeted.** tests/test_present.py's test_regen_is_the_presented_listing (was test_src_is_the_presented_listing) and test_no_code_or_data_line_is_lost compare the listing with build/regen/src/, so a hand edit to src/ does not fail them. Other tests that read build/listing/ test the generator's own output and are moved to src/ in H1b.
 - **Limits.** Until H1b-H1d, config/names.json and config/annotations.json still feed the regenerated tree and some tests. A hand edit to src/ shows as drift; it is not yet checked by those tests.
-- **Checks run.** build/run4 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite_e0402.log OK (466 tests, 3 skipped).
+- **Checks run.** Before the merge: build/run4 PASS (approved size and SHA-256, zero differing bytes); serial full suite OK (466 tests, 3 skipped). On the merged tree (b77d2b0, with E-0398 to E-0401): regeneration left src/ unchanged and tools/src_drift.py reported no drift (265 files); build/run5 PASS; serial full suite build/logs/suite_e0402.log OK (474 tests, 3 skipped).
 
 ### E-0401 — Shiftability after M2: recipe runs, fixed references found by them, and asserted fixed-bank pointers
 

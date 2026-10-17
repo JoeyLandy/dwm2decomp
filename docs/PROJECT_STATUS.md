@@ -168,7 +168,7 @@ mod smoke test, distribution, modder documentation. D-015 makes src/ the hand-ed
 H1a (E-0402): tools/disasm_all.py and tools/present.py write build/regen/src/ unless given `--write-src`, and
 tools/src_drift.py compares that tree with src/. On this tree the regeneration reported no drift (265 files
 identical) and left src/ untouched. tests/test_present.py's two listing-equality tests now check build/regen/src/.
-build/run4 PASS; serial suite OK (466 tests, 3 skipped).
+Merged onto master after E-0398 to E-0401: no drift, build/run5 PASS, serial suite OK (474 tests, 3 skipped).
 
 Open, in order (docs/GRADUATION.md):
 1. H1b: the tests that read build/listing/ or import the generator become checks on src/ and the build's .sym and
