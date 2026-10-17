@@ -146,11 +146,58 @@ ret, reti, jp or jr (9,071 sections); the cartridge header is pinned with `ORG $
   ScriptWaitFrames and ScriptStepObject moved from bank $5F to empty banks run 3,000 identical frames. A routine
   reached by plain `call`s from its bank is caught by the bank check and diverges at frame 803 when moved.
 
+## After M2 (E-0400): recipe runs, and every fixed-bank pointer asserted
+
+**Wider runs.** `--recipe FILE` (with `--reads`) replays a tools/play.py recipe chain on both ROMs instead of the
+scripted joypad: the 13 recipes in tools/recipes/ (included by e0335_swap.txt) play to the farm, battles, menus,
+the save, GreatLog's town services, breeding, the library, the priest, keys and the swap. A script pointer poked
+by a recipe moves with the padding; `call:LABEL` is looked up in each ROM's own symbols. The runs reach
+2,299 routines (the explore script 461).
+
+**A timing-proof comparison per instruction.** A moved address can change timing by a few cycles (a carry), and
+then an interrupt lands elsewhere, a time-budgeted loop (FillTilesFromRequest) does more or less in one frame, and
+the VBlank handler finds another bank mapped. So the recipe gate compares each reading instruction's own stream of
+ROM data reads (its address mapped through the padding, and the interrupt it runs in), not one global order; byte
+$4000 of a bank (its number, which says which bank is mapped) is left out. A fixed address still shows: the
+instruction that reads it reads another address than its moved twin. `--until STATE` stops after one run.
+
+**What it found** (each fixed by the generator or config, bytes unchanged):
+
+| Where | Was | Now |
+| --- | --- | --- |
+| bank $69, the object list of map $1C screen 0 | ObjSelector_Map1C_1 as `db $fe, $ff, $fc, $76, ...`: MapObjects_Map1C_0_0's count of 2 reaches over the selector and the list it points to | `objsel_list MapObjects_Map1C_1_0` inside that list (a selector inside a list is printed as macros) |
+| LoadMonsterPictureAttributes, LoadMonsterPictureAttributeBlock | `ld de, $20e9` | `ZeroPictureAttributes`, the 36 zero bytes after the routine |
+| TextCmd_Pause | `ld hl, $2a66` | `TextPauseFrames` |
+| FlagBitHandlerTable (bank $30) | 16 code addresses as `db` | `dw` of the eight personality rolls and the new routine FlagBitHandlerNone (xor a, ret; probed) |
+| StartMessageForGroup_Data (bank $10) | 11 far pointers as `db` | `dfar` of the per-mode begin-message routines |
+
+A static pass over the same kinds found:
+- SoundNextEvent's `ld hl, $38a0`, now `SoundNextEvent.next5 + 4` (16 note bytes inside the routine);
+- StartSoundAfterBankTable's `ld hl, $3e24`, now `SoundBankTable + $11` (one byte past its end; no caller);
+- five more far-pointer runs as `db`, now `dfar`: NpcBreedMenu_RedrawListScreen_LoadTiles_Data1 and _Data2,
+  DrawSpriteSlots_Data, three extra entries after Map06Screens0 and Map06Attrs0, and an unlisted screen and
+  attribute set for map $1B (Map1BScreensUnlisted, Map1BAttrsUnlisted).
+
+A scan of every `db` run for four or more words that are code-label addresses in the same bank, and three or more
+far pointers to labels, finds nothing else outside sound data.
+
+**The three split sums** of E-0392 are resolved: 60:$4BF4 is the new table KeyWorldSizeByStrength (100 size
+bytes indexed by the party strength rounded down to 10 plus a roll of 0-9, ending where KeyWorldLayout_Start_Data
+begins), and 0F:$4000 x2 is not an address but MSG_KEEP_OPEN added to a message word. `code_split` is 57, all
+constants (offsets, steps, the $0400 background-map wrap).
+
+**The 511 fixed-bank pointers.** tools/present.py writes `ASSERT BANK(Label) == $BB, "..."` after every pointer load
+into another switchable bank with no bank named beside it: 512 loads, whose readers map that bank themselves
+(script, text and graphics banks). No bytes; tools/bank_check.py counts them as asserted (0 warnings). A section
+moved away from the bank its readers assume now fails the link: moving Bank 10 Script_HehSoTheseAre to bank $F8
+stops with 424 such errors, where it used to build a ROM that reads the wrong bank.
+
+**Result.** All 147 recipe runs, padding every paddable bank, PASS: 4,741,338 ROM data reads, each reading instruction's stream equal, with 152 banks padded by 16 (build/shift_recipe16) and with 107 banks padded by 256 (build/shift_recipe256), which also keeps every address's low byte and so the timing.
+
 ## Left after M2
 
-1. Done for six of the nine (E-0392). Left: 60:$4BF4 (index range not read) and 0F:$4000 x2 (a window base chosen
-   by wMessageGroup, which no label names).
-2. Done (E-0393). What limits moves now: plain calls inside a bank, and the 511 pointers whose bank the reading
-   code fixes (script, text and graphics banks). Moving one of those needs its reader changed too.
-3. Widen what runs: the scripted runs reach under 5% of the routines. Longer --explore scripts, or save states at
-   later points of the game, would extend the read gate.
+1. Done (E-0392, E-0400): no address-like split sum is left.
+2. Done (E-0393, E-0400). Plain calls inside a bank and the 512 asserted pointers still tie code to its bank; the
+   link says which when a move breaks them, and moving one of those needs its reader changed too.
+3. Widened (E-0400): the recipe runs reach 2,299 routines. Most of the game (key worlds, late story, link
+   play) is still reached only by the static inventory; more recipes extend the gate.

@@ -4443,6 +4443,7 @@ DrawNameGlyph::
     sla e
     rl d
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -7686,20 +7687,52 @@ SECTION "Bank 0D NpcBreedMenu_RedrawListScreen_LoadTiles_Data1", ROMX
 ; 3. Each points at a compressed map tile set in bank $48: Map04Tileset ($6B82) for indexes 0, 2, 4
 ; and 8-15, and Map17Tileset ($49A9) for 1, 3, 5, 6 and 7. NpcBreedMenu_RedrawListScreen_LoadTiles
 ; decompresses the chosen one to vTiles2 with DecompressToVRAM. (C1, E-0381)
+; NpcBreedMenu_RedrawListScreen_LoadTiles reads entry wScreenTableIndex and decompresses it to
+; vTiles2; read as raw bytes until a scan for far pointers in db runs found it (E-0400, C1)
+; record: far pointer to the tile set for this wScreenTableIndex
 NpcBreedMenu_RedrawListScreen_LoadTiles_Data1::
-    db $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9
-    db $49, $48, $a9, $49, $48, $a9, $49, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b
-    db $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48
+    dfar Map04Tileset ; id 0
+    dfar Map17Tileset ; id 1
+    dfar Map04Tileset ; id 2
+    dfar Map17Tileset ; id 3
+    dfar Map04Tileset ; id 4
+    dfar Map17Tileset ; id 5
+    dfar Map17Tileset ; id 6
+    dfar Map17Tileset ; id 7
+    dfar Map04Tileset ; id 8
+    dfar Map04Tileset ; id 9
+    dfar Map04Tileset ; id 10
+    dfar Map04Tileset ; id 11
+    dfar Map04Tileset ; id 12
+    dfar Map04Tileset ; id 13
+    dfar Map04Tileset ; id 14
+    dfar Map04Tileset ; id 15
 
 ; Sixteen 3-byte far pointers (address low, address high, bank), indexed by wScreenTableIndex times
 ; 3, to 64-byte palettes in bank $48: Map04Palettes ($6F34) for indexes 0, 2, 4 and 8-15, and
 ; Map17Palettes ($4C87) for 1, 3, 5, 6 and 7. It pairs entry for entry with
 ; NpcBreedMenu_RedrawListScreen_LoadTiles_Data1; NpcBreedMenu_RedrawListScreen_LoadTiles copies the
 ; 64 bytes to wBGPaletteBuffer with CopyFromBankWaitVRAM. (C1, E-0381)
+; paired entry for entry with NpcBreedMenu_RedrawListScreen_LoadTiles_Data1; copied to
+; wBGPaletteBuffer; read as raw bytes until the same scan (E-0400, C1)
+; record: far pointer to the palettes for this wScreenTableIndex
 NpcBreedMenu_RedrawListScreen_LoadTiles_Data2::
-    db $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87
-    db $4c, $48, $87, $4c, $48, $87, $4c, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f
-    db $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48
+    dfar Map04Palettes ; id 0
+    dfar Map17Palettes ; id 1
+    dfar Map04Palettes ; id 2
+    dfar Map17Palettes ; id 3
+    dfar Map04Palettes ; id 4
+    dfar Map17Palettes ; id 5
+    dfar Map17Palettes ; id 6
+    dfar Map17Palettes ; id 7
+    dfar Map04Palettes ; id 8
+    dfar Map04Palettes ; id 9
+    dfar Map04Palettes ; id 10
+    dfar Map04Palettes ; id 11
+    dfar Map04Palettes ; id 12
+    dfar Map04Palettes ; id 13
+    dfar Map04Palettes ; id 14
+    dfar Map04Palettes ; id 15
 
 ; Redrawing the breeding list, step 1: copies the glyph tiles and two frame tiles. (C1, E-0357)
 NpcBreedMenu_RedrawListScreen_LoadGlyphs::
@@ -7796,6 +7829,7 @@ NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg::
     ld [wArg2], a
     ld [wSpeciesIdHi], a
     ld de, BreedShowNameSpeciesBits
+    ASSERT BANK(BreedShowNameSpeciesBits) == $15, "BreedShowNameSpeciesBits is read with bank $15 mapped"
     ld a, e
     ld [wArg3], a
     ld a, d

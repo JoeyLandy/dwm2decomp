@@ -2283,10 +2283,22 @@ SECTION "Bank 10 StartMessageForGroup_Data", ROMX
 ; BeginStringDisplay_Bank0B, BeginStringDisplay_Bank33 and BeginStringDisplay_Bank24.
 ; StartMessageForGroup calls the chosen one through rst $10 with wStringCategory 0 and wStringIndex
 ; = the message L. (C1, E-0381)
+; StartMessageForGroup reads entry wMessageMode - 1 (3 bytes: address, bank) and calls it through
+; rst $10 with wStringIndex = the message; read as raw bytes until tools/shift_test.py --recipe
+; found the padded ROM's Egg Evaluator calling the old address (E-0400, C1)
+; record: far pointer to the routine that begins a message in this wMessageMode
 StartMessageForGroup_Data::
-    db $01, $40, $f0, $01, $40, $f0, $0e, $52, $1f, $01, $40, $1d, $86, $4c, $1b, $d0
-    db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d
-    db $24
+    dfar BeginStringDisplay_BankF0 ; id 1
+    dfar BeginStringDisplay_BankF0 ; id 2
+    dfar BeginStringDisplay_Bank1F ; id 3
+    dfar BeginStringDisplay_Bank1D ; id 4
+    dfar BeginBreedingStringDisplay ; id 5
+    dfar BeginStringDisplay_BankF2 ; id 6
+    dfar BeginStringDisplay_Bank0D ; id 7
+    dfar BeginMessageDisplay_Bank0E ; id 8
+    dfar BeginStringDisplay_Bank0B ; id 9
+    dfar BeginStringDisplay_Bank33 ; id 10
+    dfar BeginStringDisplay_Bank24 ; id 11
 
 ; Starts message L of group H (HL pushed by StartMessageForGroup, which comes here when wMessageMode
 ; is 0): in a key world (wMapType bit 7 set but not exactly $80) StartMessageForGroup_KeyWorld

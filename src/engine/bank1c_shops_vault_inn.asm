@@ -1843,6 +1843,7 @@ ShopMenu_Buy_DrawItemNames::
     ld [wListCursorBlink], a
     push hl
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     ld e, a
     ld d, $00
     sla e
@@ -3814,6 +3815,7 @@ ShopMenu_Sell_DrawItemNames::
     ld [wListCursorBlink], a
     push hl
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     ld e, a
     ld d, $00
     sla e
@@ -5329,6 +5331,7 @@ LoadScreenNumberListPointer::
     sla e
     rl d
     ld hl, ScreenNumberListTable
+    ASSERT BANK(ScreenNumberListTable) == $F2, "ScreenNumberListTable is read with bank $F2 mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -7601,6 +7604,7 @@ VaultMenu_Store_DrawItemNames::
     ld [wListCursorBlink], a
     push hl
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     swap a
     ld d, a
     and $f0

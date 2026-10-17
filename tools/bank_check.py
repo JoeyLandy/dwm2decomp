@@ -10,6 +10,8 @@ banks from a build's .sym file (where each label actually landed) and the instru
   errors    call / jp / jr (any condition) from a switchable bank to a label in a different switchable bank
   warnings  ld hl/de/bc, Label into a different switchable bank, with no BANK(...), farcall or `ld b, $NN` within
             three lines (a far helper may still take the bank from RAM; read the routine)
+  asserted  such a load followed by `ASSERT BANK(Label) == $BB` (tools/present.py, E-0400): the reader maps that
+            bank itself, and the link fails if the label leaves it
 
 Usage: bank_check.py [--sym build/runN/dwm2.sym] [--src src] [--json out.json]
 Exit 1 when there are errors.
@@ -46,8 +48,9 @@ def newest_sym() -> Path:
     return syms[-1]
 
 
-def check(src: Path, sym: dict[str, tuple[int, int]]) -> tuple[list[str], list[str]]:
+def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None = None) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
+    asserted = [] if asserted is None else asserted
     for p in sorted(src.glob("*/bank*.asm")):
         lines = p.read_text(encoding="utf-8").split("\n")
         cur = None
@@ -75,6 +78,8 @@ def check(src: Path, sym: dict[str, tuple[int, int]]) -> tuple[list[str], list[s
             where = f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X})"
             if mj:
                 errors.append(f"{where}: {ln.strip()} reaches bank {tb:02X}")
+            elif i + 1 < len(lines) and lines[i + 1].strip().startswith(f"ASSERT BANK({full}) =="):
+                asserted.append(f"{where}: {ln.strip()} asserted in bank {tb:02X}")
             elif not any(BANKED.search(x) for x in lines[max(0, i - 3):i + 4]):
                 warnings.append(f"{where}: {ln.strip()} points into bank {tb:02X}")
     return errors, warnings
@@ -87,13 +92,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--json", type=Path)
     ap.add_argument("--examples", type=int, default=5)
     args = ap.parse_args(argv)
-    errors, warnings = check(args.src, load_sym(args.sym or newest_sym()))
+    asserted: list[str] = []
+    errors, warnings = check(args.src, load_sym(args.sym or newest_sym()), asserted)
+    print(f"asserted: {len(asserted)}")
     for kind, items in (("errors", errors), ("warnings", warnings)):
         print(f"{kind}: {len(items)}")
         for x in items[:args.examples]:
             print("   ", x)
     if args.json:
-        args.json.write_text(json.dumps({"errors": errors, "warnings": warnings}, indent=0), encoding="utf-8")
+        args.json.write_text(json.dumps({"errors": errors, "warnings": warnings, "asserted": asserted}, indent=0),
+                             encoding="utf-8")
     return 1 if errors else 0
 
 

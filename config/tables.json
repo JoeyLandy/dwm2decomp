@@ -3629,6 +3629,206 @@
       "note": "E-0191 (C1: IsNameRejected walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
     },
     {
+      "bank": "0D",
+      "addr": "75D7",
+      "label": "NpcBreedMenu_RedrawListScreen_LoadTiles_Data1",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "compressed map tile set"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far pointer to the tile set for this wScreenTableIndex",
+      "note": "E-0400 (C1: NpcBreedMenu_RedrawListScreen_LoadTiles reads entry wScreenTableIndex and decompresses it to vTiles2; read as raw bytes until a scan for far pointers in db runs found it)."
+    },
+    {
+      "bank": "0D",
+      "addr": "7607",
+      "label": "NpcBreedMenu_RedrawListScreen_LoadTiles_Data2",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "64-byte palette set"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far pointer to the palettes for this wScreenTableIndex",
+      "note": "E-0400 (C1: paired entry for entry with NpcBreedMenu_RedrawListScreen_LoadTiles_Data1; copied to wBGPaletteBuffer; read as raw bytes until the same scan)."
+    },
+    {
+      "bank": "E0",
+      "addr": "7477",
+      "label": "DrawSpriteSlots_Data",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "meta-sprite drawing routine"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far call to the routine that draws a slot of this kind",
+      "note": "E-0400 (C1: DrawSpriteSlots calls entry (slot byte 0) through rst $10; read as raw bytes until the same scan)."
+    },
+    {
+      "bank": "48",
+      "addr": "446B",
+      "label": "Map06ScreensExtra",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "compressed 20 x 18 screen"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far pointer to a screen stream; map $06 is 1 x 1, so its record reads only the entry before these",
+      "note": "E-0400 (C1: three more far pointers to Map06Screens0_Y0X0 after Map06Screens0; no reader is known)."
+    },
+    {
+      "bank": "48",
+      "addr": "4477",
+      "label": "Map06AttrsExtra",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "compressed 20 x 18 attribute screen"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far pointer to an attribute stream; map $06 is 1 x 1",
+      "note": "E-0400 (C1: three more far pointers to Map06Attrs0_Y0X0 after Map06Attrs0; no reader is known)."
+    },
+    {
+      "bank": "48",
+      "addr": "6750",
+      "label": "Map1BScreensUnlisted",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "compressed 20 x 18 screen"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far pointer to a screen stream, row by row",
+      "note": "E-0400 (C1: a screen set for map $1B (1 x 3) that no map record points to: rows 0 and 2 are Map1BScreens0's, row 1 a screen of its own, which the key-world screen pass also found)."
+    },
+    {
+      "bank": "48",
+      "addr": "6759",
+      "label": "Map1BAttrsUnlisted",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "compressed 20 x 18 attribute screen"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far pointer to an attribute stream, row by row",
+      "note": "E-0400 (C1: the attribute set paired with Map1BScreensUnlisted: rows 0 and 2 are Map1BAttrs0's, row 1 an attribute screen of its own)."
+    },
+    {
+      "bank": "10",
+      "addr": "4AFF",
+      "label": "StartMessageForGroup_Data",
+      "count": 11,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "the mode's begin-message routine"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "record": "far pointer to the routine that begins a message in this wMessageMode",
+      "note": "E-0400 (C1: StartMessageForGroup reads entry wMessageMode - 1 (3 bytes: address, bank) and calls it through rst $10 with wStringIndex = the message; read as raw bytes until tools/shift_test.py --recipe found the padded ROM's Egg Evaluator calling the old address)."
+    },
+    {
+      "bank": "30",
+      "addr": "4F66",
+      "label": "FlagBitHandlerTable",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "handler for this bit number",
+          "code": true
+        }
+      ],
+      "record": "the handler CallFlagBitHandlerE runs for bit number E of the mask RunHandlersForSetBitsInBC tests",
+      "note": "E-0400 (C1: CallFlagBitHandlerE jumps to word E of this table (JumpToWordAtHL); bits 0-7 are the eight personality and trait rolls, bits 8-15 the stub FlagBitHandlerNone; read as raw bytes until tools/shift_test.py --recipe found a padded ROM jumping to the old addresses)."
+    },
+    {
+      "bank": "60",
+      "addr": "4BF4",
+      "label": "KeyWorldSizeByStrength",
+      "count": 100,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "width in screens (high nibble) and height (low nibble); 0 means 10"
+        }
+      ],
+      "record": "the size of a new key world: high nibble wKeyWorldWidth, low nibble wKeyWorldHeight",
+      "note": "E-0400 (C1: KeyWorldLayout_Start reads the byte at $4BF4 + (wPartyStrength rounded down to 10) + a roll of 0-9, through an add/adc of $4BF4; 100 bytes, $44 (4 x 4 screens) for 0-9 and $88 (8 x 8) from 10 on, ending where KeyWorldLayout_Start_Data begins)."
+    },
+    {
       "bank": "60",
       "addr": "47C5",
       "label": "KeyWorldLevelTable",

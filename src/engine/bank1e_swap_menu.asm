@@ -3242,6 +3242,7 @@ SwapMonstersMenu_Check_ReloadTiles::
     xor a
     ld [wArg2], a
     ld de, SaveTilesToBGMap1BottomHalf_Data
+    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == $1D, "SaveTilesToBGMap1BottomHalf_Data is read with bank $1D mapped"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -3828,6 +3829,7 @@ SwapMonstersMenu_Release_ReloadTiles::
     xor a
     ld [wArg2], a
     ld de, SaveTilesToBGMap1BottomHalf_Data
+    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == $1D, "SaveTilesToBGMap1BottomHalf_Data is read with bank $1D mapped"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -3977,6 +3979,7 @@ SwapMonstersMenu_ShowMonsterDetails::
 SwapMonstersMenu_ShowMonsterDetails_DrawFrame::
     call BGMapAddressAtScroll_Bank1E
     ld de, MonsterDetailsScreenTileRect
+    ASSERT BANK(MonsterDetailsScreenTileRect) == $1F, "MonsterDetailsScreenTileRect is read with bank $1F mapped"
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -4062,6 +4065,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor1::
     ld de, $0161
     add hl, de
     ld de, BlankPictureTileRect
+    ASSERT BANK(BlankPictureTileRect) == $1F, "BlankPictureTileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -4286,6 +4290,7 @@ SwapMonstersMenu_ShowMonsterDetails_StatsCursor::
     ld de, $0068
     add hl, de
     ld de, MonsterDetailsStatsTileRect
+    ASSERT BANK(MonsterDetailsStatsTileRect) == $1F, "MonsterDetailsStatsTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -4297,6 +4302,7 @@ SwapMonstersMenu_ShowMonsterDetails_StatsCursor::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsStatsLowerLeftTileRect
+    ASSERT BANK(MonsterDetailsStatsLowerLeftTileRect) == $1F, "MonsterDetailsStatsLowerLeftTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4388,6 +4394,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor2::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsPedigreeLowerLeftTileRect
+    ASSERT BANK(MonsterDetailsPedigreeLowerLeftTileRect) == $1F, "MonsterDetailsPedigreeLowerLeftTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4402,6 +4409,7 @@ SwapMonstersMenu_ShowMonsterDetails_Cursor2::
     ld de, $0008
     add hl, de
     ld de, MonsterDetailsEmptyPedigreeTileRect
+    ASSERT BANK(MonsterDetailsEmptyPedigreeTileRect) == $1F, "MonsterDetailsEmptyPedigreeTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -4450,6 +4458,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames::
     ld de, $0008
     add hl, de
     ld de, MonsterDetailsBlankPageTileRect
+    ASSERT BANK(MonsterDetailsBlankPageTileRect) == $1F, "MonsterDetailsBlankPageTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -4461,6 +4470,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPageFrames::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsBlankPageLowerLeftTileRect
+    ASSERT BANK(MonsterDetailsBlankPageLowerLeftTileRect) == $1F, "MonsterDetailsBlankPageLowerLeftTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4484,6 +4494,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawNextPage::
     ld de, $0008
     add hl, de
     ld de, MonsterDetailsSkillsPageTileRect
+    ASSERT BANK(MonsterDetailsSkillsPageTileRect) == $1F, "MonsterDetailsSkillsPageTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -4495,6 +4506,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawNextPage::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsSkillsLowerLeftTileRect
+    ASSERT BANK(MonsterDetailsSkillsLowerLeftTileRect) == $1F, "MonsterDetailsSkillsLowerLeftTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4677,6 +4689,7 @@ SwapMonstersMenu_ShowMonsterDetails3::
 SwapMonstersMenu_ShowMonsterDetails3_DrawFrame::
     call BGMapAddressAtScroll_Bank1E
     ld de, MonsterDetails3ScreenTileRect
+    ASSERT BANK(MonsterDetails3ScreenTileRect) == $1F, "MonsterDetails3ScreenTileRect is read with bank $1F mapped"
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -4787,6 +4800,7 @@ SwapMonstersMenu_CopySixteenTiles::
     and $0f
     ld d, a
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -5370,6 +5384,7 @@ SwapMonstersMenu_ShowParents2_LoadPicture::
     ld de, $0041
     add hl, de
     ld de, SwapMonstersMenu_ShowParents2_LoadPicture_TileRect
+    ASSERT BANK(SwapMonstersMenu_ShowParents2_LoadPicture_TileRect) == $1F, "SwapMonstersMenu_ShowParents2_LoadPicture_TileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5663,6 +5678,7 @@ ClearBGMapAtScrollAndResetScroll::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
+    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5709,6 +5725,7 @@ SECTION "Bank 1E SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame", ROMX
 SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame::
     call BGMapAddressAtScroll_Bank1E
     ld de, PartyMemberDetailsScreenTileRect
+    ASSERT BANK(PartyMemberDetailsScreenTileRect) == $1F, "PartyMemberDetailsScreenTileRect is read with bank $1F mapped"
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -5766,6 +5783,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadPicture::
     ld de, $0161
     add hl, de
     ld de, BlankPictureTileRect
+    ASSERT BANK(BlankPictureTileRect) == $1F, "BlankPictureTileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5836,6 +5854,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadPicture::
     ld de, $0161
     add hl, de
     ld de, MonsterDetailsPictureTileRect
+    ASSERT BANK(MonsterDetailsPictureTileRect) == $1F, "MonsterDetailsPictureTileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5885,6 +5904,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_ListPage::
     ld de, $0161
     add hl, de
     ld de, BlankPictureTileRect
+    ASSERT BANK(BlankPictureTileRect) == $1F, "BlankPictureTileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -6088,6 +6108,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPageFrame::
     ld de, $0068
     add hl, de
     ld de, MonsterDetailsPage2TileRect
+    ASSERT BANK(MonsterDetailsPage2TileRect) == $1F, "MonsterDetailsPage2TileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -6176,6 +6197,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadSprite::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsItemBoxTileRect
+    ASSERT BANK(MonsterDetailsItemBoxTileRect) == $1F, "MonsterDetailsItemBoxTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6254,6 +6276,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_StatsPage::
     ld de, $0068
     add hl, de
     ld de, MonsterDetailsStatsTileRect
+    ASSERT BANK(MonsterDetailsStatsTileRect) == $1F, "MonsterDetailsStatsTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -6265,6 +6288,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_StatsPage::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsStatsLowerLeftTileRect
+    ASSERT BANK(MonsterDetailsStatsLowerLeftTileRect) == $1F, "MonsterDetailsStatsLowerLeftTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6441,6 +6465,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_Cursor::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsPedigreeLowerLeftTileRect
+    ASSERT BANK(MonsterDetailsPedigreeLowerLeftTileRect) == $1F, "MonsterDetailsPedigreeLowerLeftTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6455,6 +6480,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_Cursor::
     ld de, $0008
     add hl, de
     ld de, MonsterDetailsEmptyPedigreeTileRect
+    ASSERT BANK(MonsterDetailsEmptyPedigreeTileRect) == $1F, "MonsterDetailsEmptyPedigreeTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -6490,6 +6516,7 @@ SwapMonstersMenu_ShowMonsterDetails_StatsFrames::
     ld de, $0008
     add hl, de
     ld de, MonsterDetailsPanelTopTileRect
+    ASSERT BANK(MonsterDetailsPanelTopTileRect) == $1F, "MonsterDetailsPanelTopTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $03
@@ -6501,6 +6528,7 @@ SwapMonstersMenu_ShowMonsterDetails_StatsFrames::
     ld de, $0160
     add hl, de
     ld de, MonsterDetailsItemBoxTileRect
+    ASSERT BANK(MonsterDetailsItemBoxTileRect) == $1F, "MonsterDetailsItemBoxTileRect is read with bank $1F mapped"
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6573,6 +6601,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawPedigree::
     ld de, $0008
     add hl, de
     ld de, MonsterDetailsPedigreeTileRect
+    ASSERT BANK(MonsterDetailsPedigreeTileRect) == $1F, "MonsterDetailsPedigreeTileRect is read with bank $1F mapped"
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -6681,6 +6710,7 @@ DrawRect6x6FromAtScroll41::
     ld de, $0041
     add hl, de
     ld de, BlankPictureTileRect
+    ASSERT BANK(BlankPictureTileRect) == $1F, "BlankPictureTileRect is read with bank $1F mapped"
     ld a, $06
     ld [wArg3], a
     ld a, $06

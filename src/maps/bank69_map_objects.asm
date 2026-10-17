@@ -5690,7 +5690,9 @@ MapObjects_Map1C_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $57, $00, $00, $45, $80, $05, $02, $50, $00 ; object 0
 ObjSelector_Map1C_1::
-    db $fe, $ff, $fc, $76, $01, $85, $01, $57, $00, $00, $45 ; object 1
+    objsel_list MapObjects_Map1C_1_0
+MapObjects_Map1C_1_0::
+    db $01, $85, $01, $57, $00, $00, $45 ; object 1
     db $a0, $05, $02, $50, $00
 
 ; one selector per screen, row by row (E-0163)

@@ -11,11 +11,10 @@ Every stage below has met its exit gate, and the matching build has passed after
 - M5: [mechanics](MECHANICS.md) and [data tables](DATA_TABLES.md).
 
 What stays open is listed in each document and in [readability open questions](READABILITY_OPEN_QUESTIONS.md):
-- three address-like split sums;
-- 511 pointers whose bank the reading code fixes;
-- the scripted runs' reach (under 5% of the routines);
-- the other mechanics of phases 4-5 (skills learned, the effect routines beyond roll and scale, the key worlds);
-  damage was added after M5 (E-0397).
+- the other mechanics of phases 4-5 (the effect routines beyond roll and scale, the key worlds); damage, skill
+  learning and applying damage were added after M5 (E-0397 to E-0399);
+- the scripted runs' reach: 2,299 routines with the recipe chain (E-0400), the rest only by the static inventory.
+The split sums and fixed-bank pointers left after M2 are done (E-0400).
 
 
 The goal as set on 2026-10-16, after the readability goal (below): make the source safe to edit (could code and
@@ -149,7 +148,7 @@ Planning allowance: several weeks of regular sessions; recover one coherent tabl
 
 ## Phase 4 — Mechanics and state transitions
 
-**Status:** four mechanics meet the gate on the project's emulator ([mechanics](MECHANICS.md)): the join offer, level-up gains and the breeding child (M5, E-0396), and damage: the plain attack, the 16 roll-and-resistance routines and the step-7 modifiers (E-0397). Skill learning, the other effect routines, applying damage to HP, and the child's sex, resistances, skills and stats are open.
+**Status:** five mechanics meet the gate on the project's emulator ([mechanics](MECHANICS.md)): the join offer, level-up gains and the breeding child (M5, E-0396); damage: the plain attack, the 16 roll-and-resistance routines, the step-7 modifiers (E-0397) and applying it to HP (E-0399); and skill learning (E-0398). The other effect routines and the child's sex, resistances, skills and stats are open.
 
 Dependencies: relevant phase 3 records and routines, plus reproducible saves/input recipes.
 

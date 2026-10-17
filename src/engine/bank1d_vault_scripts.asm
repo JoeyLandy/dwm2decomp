@@ -6661,6 +6661,7 @@ LoadSpeciesSpriteGraphicsAndPalette::
     add hl, hl
     add hl, de
     ld de, MonsterSpriteTable
+    ASSERT BANK(MonsterSpriteTable) == $04, "MonsterSpriteTable is read with bank $04 mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -6733,6 +6734,7 @@ DecompressGraphicsArg1ToArg4::
     add hl, hl
     add hl, de
     ld de, MonsterSpriteTable
+    ASSERT BANK(MonsterSpriteTable) == $04, "MonsterSpriteTable is read with bank $04 mapped"
     add hl, de
     ld e, l
     ld d, h

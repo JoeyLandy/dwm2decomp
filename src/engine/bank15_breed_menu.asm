@@ -3880,6 +3880,7 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
     and $0f
     ld d, a
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -4585,6 +4586,7 @@ BreedMenu_RestoreScreen_BlankBGMap::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
+    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -8264,6 +8266,7 @@ GlyphCopyArgsForA_Bank15::
     sla e
     rl d
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, de
     ld e, l
     ld d, h

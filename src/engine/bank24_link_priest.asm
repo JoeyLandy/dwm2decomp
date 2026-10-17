@@ -2796,6 +2796,7 @@ GameMode6_Init_DrawPictureRow::
     ld c, $78
     call Multiply8
     ld de, GameMode6_PictureRowTileRects
+    ASSERT BANK(GameMode6_PictureRowTileRects) == $1F, "GameMode6_PictureRowTileRects is read with bank $1F mapped"
     add hl, de
     ld a, h
     ld [wArg1], a
@@ -6319,6 +6320,7 @@ StepItemDescriptionText::
     ld [wListCursorBlink], a
     push hl
     ld hl, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     swap a
     ld d, a
     and $f0

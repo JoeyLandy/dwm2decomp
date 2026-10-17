@@ -4122,6 +4122,7 @@ class Rom:
         and a graphics number for DecompressGraphicsTemp0ToTemp4)."""
         B = 0x69
         self.objsel_at: dict[tuple[int, int], dict] = {}
+        self.objsel_inner: dict[tuple[int, int], dict] = {}  # selectors inside an object list's bytes (E-0400)
         mt = next((t for t in self.schemas if t["label"] == "MapTable"), None)
         ot = next((t for t in self.schemas if t["label"] == "MapObjectTable"), None)
         if not mt or not ot or ot["bank"] != B:
@@ -4211,6 +4212,11 @@ class Rom:
         dl = self.dlabels[B]
         for s, (ops, end) in sorted(good.items()):
             if not free(s, end):
+                # E-0400: a selector whose bytes an object list also covers (the list's count reaches over it, as
+                # MapObjects_Map1C_0_0's does) is printed inside that list, so its pointer is a label, not a number
+                inside = [(a, e) for b, a, e in taken if b == B and a < s and end <= e]
+                if inside and not any(x in self.covered[B] for x in range(s, end)):
+                    self.objsel_inner[(B, s)] = {"ops": ops, "end": end}
                 continue
             taken.append((B, s, end))
             for a in [a for a in dl if s < a < end]:
@@ -4274,16 +4280,29 @@ class Rom:
                     self.objsel_at[(B, a)] = {"ops": ops, "end": end}
                     ns += 1
             tiled += 1
-        log(f"map objects: {nl} object lists, {na} screen arrays, {ns} selectors ({tiled} gaps tiled)")
+        for (b, s), sel in self.objsel_inner.items():  # E-0400: the lists such a selector points into get labels
+            if b != B:
+                continue
+            for op in sel["ops"]:
+                q = op[3] if op[1] == "flag" else op[2] if op[1] == "list" else op[4] if op[1] == "flags" else None
+                if q is not None and q not in dl and (B, q) not in self.table_at:
+                    dl[q] = f"MapObjects_{q:04X}"
+                    self.dreason[(B, q)] = "object list a selector inside another list points to"
+        log(f"map objects: {nl} object lists, {na} screen arrays, {ns} selectors ({tiled} gaps tiled, "
+            f"{sum(1 for b, _s in self.objsel_inner if b == B)} inside lists)")
 
     def emit_object_selector(self, bank: int, p: int, sel: dict, out: list[str]) -> None:
         dl = self.dlabels[bank]
-        lab = lambda a: (self.table_at[(bank, a)]["label"] if (bank, a) in self.table_at else dl.get(a, f"${a:04X}"))
         out.append("")
         out.append("; map object selector (E-0163): the first entry that applies picks the object list")
         out.append(f"{dl[p]}:: ; heuristic: {self.dreason.get((bank, p), 'map object selector')}; C0")
         if (bank, p) in self.dalias:
             out.append(f"{self.dalias[(bank, p)]}:: ; address name")
+        self.emit_selector_ops(bank, sel, out)
+
+    def emit_selector_ops(self, bank: int, sel: dict, out: list[str]) -> None:
+        dl = self.dlabels[bank]
+        lab = lambda a: (self.table_at[(bank, a)]["label"] if (bank, a) in self.table_at else dl.get(a, f"${a:04X}"))
         for op in sel["ops"]:
             if op[1] == "end":
                 out.append("    objsel_none")
@@ -5083,6 +5102,9 @@ class Rom:
                                 self.dref.pop(key)
                                 self.dref_plus[key] = (bank, addr, a - addr)
                         continue
+                    if "a selector inside another list points to" in why and any(
+                            b_ == bank and s_ < a and sel["end"] <= a for (b_, s_), sel in self.objsel_inner.items()):
+                        continue  # E-0400: printed by emit_table after the selector inside the same field
                     if not why or any(k in why for k in ("pointer load", "stream", "monotone pointer table",
                                                           "bank from RAM variable")):
                         del dl[a]  # a guess (C0) inside a table the configuration proves
@@ -5906,6 +5928,20 @@ class Rom:
                         out.append(f"{dl[q]}:: ; heuristic: {self.dreason.get((bank, q), 'label inside a table')}; C0")
                     if (bank, q) in self.dalias:
                         out.append(f"{self.dalias[(bank, q)]}:: ; address name")
+                inner = self.objsel_inner.get((bank, q)) if q in dl else None
+                if inner and f["type"] == "db" and inner["end"] <= q + sz:
+                    # E-0400: a selector inside this field: its entries as macros, then the field's other bytes,
+                    # with the label of a list it points into where that list starts
+                    flush()
+                    self.emit_selector_ops(bank, inner, out)
+                    for a in range(inner["end"], q + sz):
+                        if a in dl:
+                            flush()
+                            out.append(f"{dl[a]}:: ; heuristic: {self.dreason.get((bank, a), 'label inside a table')}; C0")
+                        run.append(raws[fi][a - q])
+                    flush(f)
+                    q += sz
+                    continue
                 if f["type"] == "u24":  # 24-bit little-endian values in decimal, 11 per line (E-0148)
                     flush()
                     r = raws[fi]

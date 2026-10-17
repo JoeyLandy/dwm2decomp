@@ -1,0 +1,3 @@
+[
+{"id": "30:4FC6#1", "label": "FlagBitHandlerNone", "bank": "30", "address": "4FC6", "regs": {"a": 90}, "flags": {"c": true}, "expect": {"regs": {"a": 0}, "flags": {"c": false, "z": true}}, "claim": "A = 0 and carry clear (xor a), whatever A and carry were"}
+]

@@ -4281,6 +4281,7 @@ SECTION "Bank 1B CopyDataBankStringToTextBuf0", ROMX
 CopyDataBankStringToTextBuf0::
     sla a
     ld hl, CopyKeyNameWordToDE_StringList
+    ASSERT BANK(CopyKeyNameWordToDE_StringList) == $09, "CopyKeyNameWordToDE_StringList is read with bank $09 mapped"
     add_a_to_hl
     call ReadWordFromDataBank
     ld e, b

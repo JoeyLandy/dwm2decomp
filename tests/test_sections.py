@@ -96,5 +96,43 @@ Here::
         self.assertEqual((errors, warnings), ([], []))
 
 
+class FixedBanks(unittest.TestCase):
+    """E-0400: pointer loads into another bank, read with that bank mapped by the reader, carry a link-time ASSERT."""
+    BODIES = {
+        0x10: "Script_X::\n    db 1\n",
+        0x04: "Talk::\n    ld hl, Script_X\n    call StartScript\n    ret\n\n\n\nOther::\n    ld de, Near\n    ret\n"
+              "Near::\n    db 2\n",
+        0x05: "Far::\n    ld b, $10\n    ld hl, Script_X\n    rst $10\n",
+        0x00: "Home::\n    ld hl, Script_X\n    ret\n",
+    }
+
+    def test_only_unbanked_loads_into_other_switchable_banks_are_asserted(self):
+        out, n = present.assert_fixed_banks(self.BODIES)
+        self.assertEqual(n, 1)
+        self.assertIn('    ld hl, Script_X\n    ASSERT BANK(Script_X) == $10, "Script_X is read with bank $10 mapped"',
+                      out[0x04])
+        self.assertNotIn("ASSERT", out[0x04].split("Other::")[1])  # its own bank
+        self.assertEqual(out[0x05], self.BODIES[0x05])  # a bank named beside it
+        self.assertEqual(out[0x00], self.BODIES[0x00])  # bank $00 maps banks itself
+
+    def test_an_asserted_load_is_counted_not_warned(self):
+        src = 'Here::\n    ld de, Other\n    ASSERT BANK(Other) == $07, "Other is read with bank $07 mapped"\n'
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "engine").mkdir()
+            (Path(d) / "engine/bank05_x.asm").write_text(src, encoding="utf-8")
+            asserted: list[str] = []
+            errors, warnings = bank_check.check(Path(d), {"Here": (5, 0x4000), "Other": (7, 0x5000)}, asserted)
+        self.assertEqual((errors, warnings, len(asserted)), ([], [], 1))
+
+    def test_the_source_has_no_unasserted_fixed_bank_load(self):
+        syms = sorted(ROOT.glob("build/run*/dwm2.sym"), key=lambda q: q.stat().st_mtime)
+        if not syms:
+            self.skipTest("no build")
+        asserted: list[str] = []
+        errors, warnings = bank_check.check(ROOT / "src", bank_check.load_sym(syms[-1]), asserted)
+        self.assertEqual((errors, warnings), ([], []))
+        self.assertGreater(len(asserted), 400)
+
+
 if __name__ == "__main__":
     unittest.main()

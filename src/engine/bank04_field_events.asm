@@ -591,6 +591,7 @@ DecompressGraphicsTemp0ToTemp4::
     add a
     add a
     ld de, FieldSpritePalettes
+    ASSERT BANK(FieldSpritePalettes) == $7E, "FieldSpritePalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .read_temp3
@@ -3605,11 +3606,13 @@ ReadableTalkEvents_AtSeaScene::
     call TestFlagBit
     jr nc, .call_start_script_at_hl_b04
     ld hl, Script_InTheMiddleOf ; script 'In the middle of the sea'
+    ASSERT BANK(Script_InTheMiddleOf) == $10, "Script_InTheMiddleOf is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_InTheMiddleOf_2 ; script 'In the middle of the sea'
+    ASSERT BANK(Script_InTheMiddleOf_2) == $10, "Script_InTheMiddleOf_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3624,6 +3627,7 @@ SECTION "Bank 04 Talk_HehSoTheseAreTheNewcomers", ROMX
 ; starts Script_HehSoTheseAre: '*: Heh, so these are the' (E-0248)
 Talk_HehSoTheseAreTheNewcomers::
     ld hl, Script_HehSoTheseAre ; script '*: Heh, so these are the'
+    ASSERT BANK(Script_HehSoTheseAre) == $10, "Script_HehSoTheseAre is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3641,6 +3645,7 @@ SECTION "Bank 04 Talk_ListenYouTwoQuitYourHorsing", ROMX
 ; starts Script_ListenYouTwoQuit: '*: Listen you two! Quit your' (E-0248)
 Talk_ListenYouTwoQuitYourHorsing::
     ld hl, Script_ListenYouTwoQuit ; script '*: Listen you two! Quit your'
+    ASSERT BANK(Script_ListenYouTwoQuit) == $10, "Script_ListenYouTwoQuit is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3664,6 +3669,7 @@ SECTION "Bank 04 Talk_OhItsAllSpinningAround", ROMX
 ; starts Script_OhIt: '*: Oh… It's… all spinning around…' (E-0248)
 Talk_OhItsAllSpinningAround::
     ld hl, Script_OhIt ; script '*: Oh… It's… all spinning around…'
+    ASSERT BANK(Script_OhIt) == $10, "Script_OhIt is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_OH_ITS_ALL_SPINNING_AROUND
     call SetFlagBit
@@ -3679,6 +3685,7 @@ SECTION "Bank 04 Talk_SceneSpinning", ROMX
 ; starts Script_SceneSpinning (E-0248)
 Talk_SceneSpinning::
     ld hl, Script_SceneSpinning
+    ASSERT BANK(Script_SceneSpinning) == $10, "Script_SceneSpinning is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $00
     ldh [hTemp0], a
@@ -3700,6 +3707,7 @@ Talk_WarubouCalmDownAndListen::
     call TestFlagBit
     ret nc
     ld hl, Script_WarubouCalmDownAnd ; script 'Warubou: Calm down and listen! What'
+    ASSERT BANK(Script_WarubouCalmDownAnd) == $10, "Script_WarubouCalmDownAnd is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3752,11 +3760,13 @@ Talk0046_ThanksForComingBy::
     call TestFlagBit
     jr c, .loop
     ld hl, Script_OhHiGoodTo ; script '*: Oh, hi! Good to see'
+    ASSERT BANK(Script_OhHiGoodTo) == $10, "Script_OhHiGoodTo is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .loop:
     ld hl, Script_HowMayTheVault ; script '*: How may the Vault serve'
+    ASSERT BANK(Script_HowMayTheVault) == $10, "Script_HowMayTheVault is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3767,6 +3777,7 @@ Talk0046_ThanksForComingBy::
     call TestFlagBit
     jr c, .loop
     ld hl, Script_HelloGreatLog ; script '*: Hello, GreatLog's hero! Do you'
+    ASSERT BANK(Script_HelloGreatLog) == $10, "Script_HelloGreatLog is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3794,6 +3805,7 @@ SECTION "Bank 04 Talk_HeroCheckedThePedestalIts", ROMX
 ; starts Script_HeroCheckedThePedestal: '0 checked the pedestal. It's the' (E-0248)
 Talk_HeroCheckedThePedestalIts::
     ld hl, Script_HeroCheckedThePedestal ; script '0 checked the pedestal. It's the'
+    ASSERT BANK(Script_HeroCheckedThePedestal) == $10, "Script_HeroCheckedThePedestal is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3828,11 +3840,13 @@ ReadableTalkEvents_LibraryDesk::
     call TestFlagBit
     jr c, .loop
     ld hl, Script_WelcomeToTheLibrary ; script '*: Welcome to the Library. You'
+    ASSERT BANK(Script_WelcomeToTheLibrary) == $10, "Script_WelcomeToTheLibrary is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .loop:
     ld hl, Script_WelcomeToTheLibrary_2 ; script '*: Welcome to the Library. Which'
+    ASSERT BANK(Script_WelcomeToTheLibrary_2) == $10, "Script_WelcomeToTheLibrary_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3851,6 +3865,7 @@ ReadableTalkEvents_LibraryDesk::
     call TestFlagBit
     jr c, .loop
     ld hl, Script_HelloOurYoungSavior ; script '*: Hello, our young savior! Have'
+    ASSERT BANK(Script_HelloOurYoungSavior) == $10, "Script_HelloOurYoungSavior is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -3859,6 +3874,7 @@ ReadableTalkEvents_LibraryDesk::
     call TestFlagBit
     jr c, .loop2
     ld hl, Script_WelcomeToTheLibrary_3 ; script '*: Welcome to the Library! Your'
+    ASSERT BANK(Script_WelcomeToTheLibrary_3) == $10, "Script_WelcomeToTheLibrary_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4086,6 +4102,7 @@ ReadableTalkEvents_GreatLogKey::
     set 7, a
     ld [wInventorySortFlags], a
     ld hl, Script_HeroReceivedTheGreatLog ; script '0 received the GreatLog Key.'
+    ASSERT BANK(Script_HeroReceivedTheGreatLog) == $10, "Script_HeroReceivedTheGreatLog is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4470,6 +4487,7 @@ YoldTalkEvents_NoisyBirds::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_TheBirdsAreNoisy ; script '*: …The birds are noisy… It's'
+    ASSERT BANK(Script_TheBirdsAreNoisy) == $10, "Script_TheBirdsAreNoisy is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_THE_BIRDS_ARE_NOISY_ITS
     call SetFlagBit
@@ -4495,6 +4513,7 @@ YoldTalkEvents_Shop::
     ld a, $10
     ld [wDataBank], a
     ld hl, Script_IDon ; script '*: I don't have much but…'
+    ASSERT BANK(Script_IDon) == $10, "Script_IDon is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4689,6 +4708,7 @@ YoldTalkEvents_MermaidPast::
     bit 7, a
     jr z, .call_set_w_step_arrived_if_party_has_field55
     ld hl, Script_InThePastMermaids ; script '*: In the past, mermaids are'
+    ASSERT BANK(Script_InThePastMermaids) == $10, "Script_InThePastMermaids is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4698,6 +4718,7 @@ YoldTalkEvents_MermaidPast::
     or a
     jr z, .read_temp1
     ld hl, Script_InThePastMermaids_4 ; script '*: In the past, mermaids are'
+    ASSERT BANK(Script_InThePastMermaids_4) == $10, "Script_InThePastMermaids_4 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4723,11 +4744,13 @@ YoldTalkEvents_MermaidPast::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_InThePastMermaids_2 ; script '*: In the past, mermaids are'
+    ASSERT BANK(Script_InThePastMermaids_2) == $10, "Script_InThePastMermaids_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_InThePastMermaids_3 ; script '*: In the past, mermaids are'
+    ASSERT BANK(Script_InThePastMermaids_3) == $10, "Script_InThePastMermaids_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4744,6 +4767,7 @@ SECTION "Bank 04 YoldTalkEvents_Inn", ROMX
 ; starts Script_WelcomeToOurInn_3: '*: Welcome to our inn!' (E-0248)
 YoldTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn_3 ; script '*: Welcome to our inn!'
+    ASSERT BANK(Script_WelcomeToOurInn_3) == $10, "Script_WelcomeToOurInn_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
@@ -4762,6 +4786,7 @@ SECTION "Bank 04 Talk_HaveYouHeardTheLegendAbout", ROMX
 ; starts Script_HaveYouHeardThe: '*: Have you heard the legend' (E-0248)
 Talk_HaveYouHeardTheLegendAbout::
     ld hl, Script_HaveYouHeardThe ; script '*: Have you heard the legend'
+    ASSERT BANK(Script_HaveYouHeardThe) == $10, "Script_HaveYouHeardThe is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4895,6 +4920,7 @@ Talk_HowMayOurChurchServeYou::
     ld a, $1f
     ld [wDataBank], a
     ld hl, Script_HowMayOurChurch ; script '*: How may our church serve'
+    ASSERT BANK(Script_HowMayOurChurch) == $10, "Script_HowMayOurChurch is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -4933,6 +4959,7 @@ YoldTalkEvents_Shop2::
     ld a, $10
     ld [wDataBank], a
     ld hl, Script_IOfferQualityMerchandise ; script '*: I offer quality merchandise. Would'
+    ASSERT BANK(Script_IOfferQualityMerchandise) == $10, "Script_IOfferQualityMerchandise is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5096,6 +5123,7 @@ SECTION "Bank 04 Talk_HeroTriedToCheckTheChest", ROMX
 ; starts Script_HeroTriedToCheck: '0 tried to check the chest.' (E-0248)
 Talk_HeroTriedToCheckTheChest::
     ld hl, Script_HeroTriedToCheck ; script '0 tried to check the chest.'
+    ASSERT BANK(Script_HeroTriedToCheck) == $10, "Script_HeroTriedToCheck is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5141,6 +5169,7 @@ SECTION "Bank 04 YoldTalkEvents_SecondInn", ROMX
 ; starts Script_WelcomeToOurInn_4: '*: Welcome to our inn!' (E-0248)
 YoldTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_4 ; script '*: Welcome to our inn!'
+    ASSERT BANK(Script_WelcomeToOurInn_4) == $10, "Script_WelcomeToOurInn_4 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
@@ -5193,6 +5222,7 @@ SECTION "Bank 04 Talk_SceneWhoAreYou", ROMX
 ; starts Script_SceneWhoAreYou (E-0248)
 Talk_SceneWhoAreYou::
     ld hl, Script_SceneWhoAreYou
+    ASSERT BANK(Script_SceneWhoAreYou) == $10, "Script_SceneWhoAreYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5304,11 +5334,13 @@ YoldTalkEvents_ShowHnnnrHicGnnZzz::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_ZzzZzzHuhWatch ; script '*: Zzz… Zzz… Huh! Watch out!'
+    ASSERT BANK(Script_ZzzZzzHuhWatch) == $10, "Script_ZzzZzzHuhWatch is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b042:
     ld hl, Script_WhatAreYouHere ; script '*: What? Are you here for'
+    ASSERT BANK(Script_WhatAreYouHere) == $10, "Script_WhatAreYouHere is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5323,6 +5355,7 @@ YoldTalkEvents_ShowHnnnrHicGnnZzz::
 
 .call_start_script_at_hl_b043:
     ld hl, Script_ZzzZzzHuhWatch_2 ; script '*: Zzz… Zzz… Huh! Watch out!'
+    ASSERT BANK(Script_ZzzZzzHuhWatch_2) == $10, "Script_ZzzZzzHuhWatch_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5387,6 +5420,7 @@ YoldTalkEvents_WhoAreYou::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_WhoAreYouThis ; script '*: Who are you? This is'
+    ASSERT BANK(Script_WhoAreYouThis) == $10, "Script_WhoAreYouThis is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_WHO_ARE_YOU_THIS_IS
     call SetFlagBit
@@ -5394,11 +5428,13 @@ YoldTalkEvents_WhoAreYou::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_YouCanKeepTrying ; script '*: You can keep trying, but'
+    ASSERT BANK(Script_YouCanKeepTrying) == $10, "Script_YouCanKeepTrying is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b042:
     ld hl, Script_SceneWatchOut
+    ASSERT BANK(Script_SceneWatchOut) == $10, "Script_SceneWatchOut is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5559,6 +5595,7 @@ YoldTalkEvents_OfferMap41Warp::
     call TestFlagBit
     ret nc
     ld hl, Script_DoYouWantTo_2 ; script '*: Do you want to go'
+    ASSERT BANK(Script_DoYouWantTo_2) == $10, "Script_DoYouWantTo_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5578,6 +5615,7 @@ YoldTalkEvents_ShowThisIsTheMermaid::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_ThisIsTheMermaid ; script '*: This is the mermaid kingdom.'
+    ASSERT BANK(Script_ThisIsTheMermaid) == $10, "Script_ThisIsTheMermaid is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5716,6 +5754,7 @@ YoldTalkEvents_SailorRingGiver::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_WelcomeYoungHumanI ; script '*: Welcome, young human. I heard'
+    ASSERT BANK(Script_WelcomeYoungHumanI) == $10, "Script_WelcomeYoungHumanI is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5737,6 +5776,7 @@ YoldTalkEvents_SailorRingGiver::
     set 6, a
     ld [wInventorySortFlags], a
     ld hl, Script_WelcomeMyYoungHero ; script '*: Welcome, my young hero! No'
+    ASSERT BANK(Script_WelcomeMyYoungHero) == $10, "Script_WelcomeMyYoungHero is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5756,6 +5796,7 @@ SECTION "Bank 04 Talk_SceneSailorRing", ROMX
 ; starts Script_SceneSailorRing (E-0248)
 Talk_SceneSailorRing::
     ld hl, Script_SceneSailorRing
+    ASSERT BANK(Script_SceneSailorRing) == $10, "Script_SceneSailorRing is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5772,6 +5813,7 @@ SECTION "Bank 04 Talk_HowCouldWeDieBeforeEnjoying", ROMX
 ; starts Script_HowCouldWeDie: '*: How could we die before' (E-0248)
 Talk_HowCouldWeDieBeforeEnjoying::
     ld hl, Script_HowCouldWeDie ; script '*: How could we die before'
+    ASSERT BANK(Script_HowCouldWeDie) == $10, "Script_HowCouldWeDie is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5788,6 +5830,7 @@ SECTION "Bank 04 Talk_TheTreasuresAreOursNoOne", ROMX
 ; starts Script_TheTreasuresAreOurs: '*: The treasures are ours… No' (E-0248)
 Talk_TheTreasuresAreOursNoOne::
     ld hl, Script_TheTreasuresAreOurs ; script '*: The treasures are ours… No'
+    ASSERT BANK(Script_TheTreasuresAreOurs) == $10, "Script_TheTreasuresAreOurs is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5803,6 +5846,7 @@ SECTION "Bank 04 Talk_ItNagsAndNagsThatWe", ROMX
 ; starts Script_ItNagsAndNags: '*: It nags and nags that' (E-0248)
 Talk_ItNagsAndNagsThatWe::
     ld hl, Script_ItNagsAndNags ; script '*: It nags and nags that'
+    ASSERT BANK(Script_ItNagsAndNags) == $10, "Script_ItNagsAndNags is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5818,6 +5862,7 @@ YoldTalkEvents_WhoDisturbsUs::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_WhoDisturbsUsIn ; script '*: Who disturbs us in our'
+    ASSERT BANK(Script_WhoDisturbsUsIn) == $10, "Script_WhoDisturbsUsIn is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_WHO_DISTURBS_US_IN_OUR
     call SetFlagBit
@@ -5825,6 +5870,7 @@ YoldTalkEvents_WhoDisturbsUs::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_YouSeemToNot ; script '*: …You seem to not understand…'
+    ASSERT BANK(Script_YouSeemToNot) == $10, "Script_YouSeemToNot is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5846,6 +5892,7 @@ YoldTalkEvents_ShowHeroCheckedTheTreasure::
     set 6, a
     ld [wInventorySortFlags], a
     ld hl, Script_HeroCheckedTheTreasure ; script '0 checked the treasure chest. 0'
+    ASSERT BANK(Script_HeroCheckedTheTreasure) == $10, "Script_HeroCheckedTheTreasure is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5857,6 +5904,7 @@ SECTION "Bank 04 YoldTalkEvents_CheckCrate", ROMX
 ; starts Script_HeroCheckedTheCrate: '0 checked the crate. There was' (E-0248)
 YoldTalkEvents_CheckCrate::
     ld hl, Script_HeroCheckedTheCrate ; script '0 checked the crate. There was'
+    ASSERT BANK(Script_HeroCheckedTheCrate) == $10, "Script_HeroCheckedTheCrate is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_HERO_CHECKED_THE_CRATE_THERE
     call SetFlagBit
@@ -5927,6 +5975,7 @@ YoldTalkEvents_KamehaThanks::
     ld de, EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING
     call SetFlagBit
     ld hl, Script_KamehaWahahahahThanksFor ; script 'Kameha: Wahahahah! Thanks for guiding me'
+    ASSERT BANK(Script_KamehaWahahahahThanksFor) == $10, "Script_KamehaWahahahahThanksFor is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ldh a, [hPlayerX]
     cp $50
@@ -5950,6 +5999,7 @@ SECTION "Bank 04 Talk_KamehaUrkHowYouCatchUp", ROMX
 ; starts Script_KamehaUrkHowYou: 'Kameha: Urk! How you catch up?' (E-0248)
 Talk_KamehaUrkHowYouCatchUp::
     ld hl, Script_KamehaUrkHowYou ; script 'Kameha: Urk! How you catch up?'
+    ASSERT BANK(Script_KamehaUrkHowYou) == $10, "Script_KamehaUrkHowYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5966,6 +6016,7 @@ SECTION "Bank 04 Talk_KamehaArrrrhClearTheWayIm", ROMX
 ; starts Script_KamehaArrrrhClearThe: 'Kameha: Arrrrh, clear the way! I'm' (E-0248)
 Talk_KamehaArrrrhClearTheWayIm::
     ld hl, Script_KamehaArrrrhClearThe ; script 'Kameha: Arrrrh, clear the way! I'm'
+    ASSERT BANK(Script_KamehaArrrrhClearThe) == $10, "Script_KamehaArrrrhClearThe is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -5980,6 +6031,7 @@ SECTION "Bank 04 Talk_SceneMermaidKingdom", ROMX
 ; starts Script_SceneMermaidKingdom (E-0248)
 Talk_SceneMermaidKingdom::
     ld hl, Script_SceneMermaidKingdom
+    ASSERT BANK(Script_SceneMermaidKingdom) == $10, "Script_SceneMermaidKingdom is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -6405,6 +6457,7 @@ SECTION "Bank 04 YoldTalkEvents_KamehaEscape", ROMX
 ; starts Script_SceneKamehaEscape (E-0248)
 YoldTalkEvents_KamehaEscape::
     ld hl, Script_SceneKamehaEscape
+    ASSERT BANK(Script_SceneKamehaEscape) == $10, "Script_SceneKamehaEscape is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $31
     ldh [hTemp0], a
@@ -6440,6 +6493,7 @@ SECTION "Bank 04 Talk_ThickSuctionCuppedTentacles", ROMX
 ; starts Script_ThickSuctionCuppedTentacles: 'Thick, suction- cupped tentacles snaked out' (E-0248)
 Talk_ThickSuctionCuppedTentacles::
     ld hl, Script_ThickSuctionCuppedTentacles ; script 'Thick, suction- cupped tentacles snaked out'
+    ASSERT BANK(Script_ThickSuctionCuppedTentacles) == $10, "Script_ThickSuctionCuppedTentacles is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -6454,6 +6508,7 @@ YoldTalkEvents_Church::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_OurChurchIsImpoverished_2 ; script '*: Our church is impoverished, so'
+    ASSERT BANK(Script_OurChurchIsImpoverished_2) == $10, "Script_OurChurchIsImpoverished_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202
     call SetFlagBit
@@ -6461,6 +6516,7 @@ YoldTalkEvents_Church::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_IAmAServant_3 ; script '*: I am a servant to'
+    ASSERT BANK(Script_IAmAServant_3) == $10, "Script_IAmAServant_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -6657,6 +6713,7 @@ TalkMsg0135_TheLogsNavelWhatIsThat::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_HelloHaveYouFound ; script '*: Hello, have you found a'
+    ASSERT BANK(Script_HelloHaveYouFound) == $10, "Script_HelloHaveYouFound is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -6774,6 +6831,7 @@ KalkaTalkEvents_Inn::
 .set_sprite_slots:
     ld [wSpriteSlots + $7], a
     ld hl, Script_WelcomeToOurInn ; script '*: Welcome to our inn!'
+    ASSERT BANK(Script_WelcomeToOurInn) == $10, "Script_WelcomeToOurInn is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
@@ -6959,6 +7017,7 @@ KalkaTalkEvents_ItemShop::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_WelcomeToMyItem ; script '*: Welcome to my item shop!'
+    ASSERT BANK(Script_WelcomeToMyItem) == $10, "Script_WelcomeToMyItem is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_WELCOME_TO_MY_ITEM_SHOP
     call SetFlagBit
@@ -6966,6 +7025,7 @@ KalkaTalkEvents_ItemShop::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_HelloHowMayI_2 ; script '*: Hello! How may I serve'
+    ASSERT BANK(Script_HelloHowMayI_2) == $10, "Script_HelloHowMayI_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7069,6 +7129,7 @@ KalkaTalkEvents_Church::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_TheChurchWelcomesYou ; script '*: The church welcomes you. We'
+    ASSERT BANK(Script_TheChurchWelcomesYou) == $10, "Script_TheChurchWelcomesYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_THE_CHURCH_WELCOMES_YOU_WE
     call SetFlagBit
@@ -7076,6 +7137,7 @@ KalkaTalkEvents_Church::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_IAmAServant ; script '*: I am a servant to'
+    ASSERT BANK(Script_IAmAServant) == $10, "Script_IAmAServant is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7097,16 +7159,19 @@ KalkaTalkEvents_Leader::
     or a
     jr nz, .call_start_script_at_hl_b042
     ld hl, Script_IAmTheLeader ; script '*: I am the leader of'
+    ASSERT BANK(Script_IAmTheLeader) == $10, "Script_IAmTheLeader is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_IAmTheLeader_2 ; script '*: I am the leader of'
+    ASSERT BANK(Script_IAmTheLeader_2) == $10, "Script_IAmTheLeader_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b042:
     ld hl, Script_IAmTheLeader_3 ; script '*: I am the leader of'
+    ASSERT BANK(Script_IAmTheLeader_3) == $10, "Script_IAmTheLeader_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7119,6 +7184,7 @@ KalkaTalkEvents_Leader::
     or a
     jr nz, .call_start_message_command09_hl_b04
     ld hl, Script_AhThreeHealthyMonsters ; script '*: Ah, three healthy monsters! Very'
+    ASSERT BANK(Script_AhThreeHealthyMonsters) == $10, "Script_AhThreeHealthyMonsters is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7229,6 +7295,7 @@ SECTION "Bank 04 KalkaTalkEvents_SecondInn", ROMX
 ; starts Script_WelcomeToOurInn_2: '*: Welcome to our inn!' (E-0248)
 KalkaTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_2 ; script '*: Welcome to our inn!'
+    ASSERT BANK(Script_WelcomeToOurInn_2) == $10, "Script_WelcomeToOurInn_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
@@ -7422,6 +7489,7 @@ KalkaTalkEvents_Snooping::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_WhyAreYouSnooping ; script '*: Why are you snooping around?'
+    ASSERT BANK(Script_WhyAreYouSnooping) == $10, "Script_WhyAreYouSnooping is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7481,6 +7549,7 @@ KalkaTalkEvents_PoorChurchScene::
     bit 3, a
     ret nz
     ld hl, Script_ScenePoorChurch
+    ASSERT BANK(Script_ScenePoorChurch) == $10, "Script_ScenePoorChurch is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7526,11 +7595,13 @@ KalkaTalkEvents_King::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_KingAhYou_5 ; script 'King: Ah, you're the monster tamer'
+    ASSERT BANK(Script_KingAhYou_5) == $10, "Script_KingAhYou_5 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_KingSoHaveYou ; script 'King: So? Have you decided to'
+    ASSERT BANK(Script_KingSoHaveYou) == $10, "Script_KingSoHaveYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7541,6 +7612,7 @@ KalkaTalkEvents_King::
 
 .call_start_script_at_hl_b042:
     ld hl, Script_SoHaveYouDiscovered ; script '*: So, have you discovered what'
+    ASSERT BANK(Script_SoHaveYouDiscovered) == $10, "Script_SoHaveYouDiscovered is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7551,6 +7623,7 @@ KalkaTalkEvents_King::
 
 .call_start_script_at_hl_b043:
     ld hl, Script_KingTheTown ; script 'King: The town's water shortage seems'
+    ASSERT BANK(Script_KingTheTown) == $10, "Script_KingTheTown is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7619,6 +7692,7 @@ KalkaTalkEvents_CanalGate::
     call TestFlagBit
     ret nc
     ld hl, Script_WhatOpenTheCanal ; script '*: What? Open the Canal Gate'
+    ASSERT BANK(Script_WhatOpenTheCanal) == $10, "Script_WhatOpenTheCanal is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_WHAT_OPEN_THE_CANAL_GATE
     call SetFlagBit
@@ -7796,11 +7870,13 @@ KalkaTalkEvents_MakingANewHome::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_I_13 ; script '*: I'm making a new home'
+    ASSERT BANK(Script_I_13) == $10, "Script_I_13 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_SceneWaterReward
+    ASSERT BANK(Script_SceneWaterReward) == $10, "Script_SceneWaterReward is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7841,11 +7917,13 @@ KalkaTalkEvents_WhereIsEverybody::
     bit 7, a
     jr z, .call_start_script_at_hl_b04
     ld hl, Script_WhWhereIsEverybody ; script '*: Wh-where is everybody? I haven't'
+    ASSERT BANK(Script_WhWhereIsEverybody) == $10, "Script_WhWhereIsEverybody is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_WhWhereIsEverybody_2 ; script '*: Wh-where is everybody? I haven't'
+    ASSERT BANK(Script_WhWhereIsEverybody_2) == $10, "Script_WhWhereIsEverybody_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -7866,6 +7944,7 @@ KalkaTalkEvents_MonstersInTow::
     set 4, a
     ld [wStoryFlags + $61], a
     ld hl, Script_SceneMonstersInTow
+    ASSERT BANK(Script_SceneMonstersInTow) == $10, "Script_SceneMonstersInTow is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $30
     ldh [hTemp0], a
@@ -7929,11 +8008,13 @@ KalkaTalkEvents_MonsterFan::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_HehYouHaveMonsters ; script '*: Heh, you have monsters in'
+    ASSERT BANK(Script_HehYouHaveMonsters) == $10, "Script_HehYouHaveMonsters is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_YouAgainYou ; script '*: You again! You're determined! But'
+    ASSERT BANK(Script_YouAgainYou) == $10, "Script_YouAgainYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8032,6 +8113,7 @@ KalkaTalkEvents_RivalFade::
     call TestFlagBit
     ret nc
     ld hl, Script_SceneRivalFade
+    ASSERT BANK(Script_SceneRivalFade) == $10, "Script_SceneRivalFade is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8058,6 +8140,7 @@ KalkaTalkEvents_Church2::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_OurChurchIsImpoverished ; script '*: Our church is impoverished, so'
+    ASSERT BANK(Script_OurChurchIsImpoverished) == $10, "Script_OurChurchIsImpoverished is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO
     call SetFlagBit
@@ -8065,6 +8148,7 @@ KalkaTalkEvents_Church2::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_IAmAServant_2 ; script '*: I am a servant to'
+    ASSERT BANK(Script_IAmAServant_2) == $10, "Script_IAmAServant_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8110,16 +8194,19 @@ DarckTalkEvents_HeardFromLord::
     bit 7, a
     jr nz, .call_start_script_at_hl_b04
     ld hl, Script_IHeardFromLord_2 ; script '*: I heard from Lord Darck,'
+    ASSERT BANK(Script_IHeardFromLord_2) == $10, "Script_IHeardFromLord_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_IHeardFromLord ; script '*: I heard from Lord Darck,'
+    ASSERT BANK(Script_IHeardFromLord) == $10, "Script_IHeardFromLord is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b042:
     ld hl, Script_YouSeemToStill ; script '*: You seem to still not'
+    ASSERT BANK(Script_YouSeemToStill) == $10, "Script_YouSeemToStill is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8135,11 +8222,13 @@ DarckTalkEvents_FightDarck::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_DarckFawahahahYouChased ; script 'Darck: Fawahahah! You chased your treasures'
+    ASSERT BANK(Script_DarckFawahahahYouChased) == $10, "Script_DarckFawahahahYouChased is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_DarckFwahahahahBravoSplendid ; script 'Darck: Fwahahahah! Bravo! Splendid! You've come'
+    ASSERT BANK(Script_DarckFwahahahahBravoSplendid) == $10, "Script_DarckFwahahahahBravoSplendid is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8205,6 +8294,7 @@ FieldTalkEvents::
 ; starts Script_CountdownMessage (E-0248)
 Talk_CountdownMessage::
     ld hl, Script_CountdownMessage
+    ASSERT BANK(Script_CountdownMessage) == $10, "Script_CountdownMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8219,6 +8309,7 @@ SECTION "Bank 04 Talk_EncounterMessage", ROMX
 ; starts Script_EncounterMessage (E-0248)
 Talk_EncounterMessage::
     ld hl, Script_EncounterMessage
+    ASSERT BANK(Script_EncounterMessage) == $10, "Script_EncounterMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8234,6 +8325,7 @@ FieldTalkEvents_ObjectPathAfterThreeItems2::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_ObjectPath1c
+    ASSERT BANK(Script_ObjectPath1c) == $10, "Script_ObjectPath1c is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8249,6 +8341,7 @@ FieldTalkEvents_ObjectPathAfterThreeItems::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_ObjectPath1b
+    ASSERT BANK(Script_ObjectPath1b) == $10, "Script_ObjectPath1b is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8263,6 +8356,7 @@ SECTION "Bank 04 Talk_HealParty", ROMX
 ; starts Script_HealParty (E-0248)
 Talk_HealParty::
     ld hl, Script_HealParty
+    ASSERT BANK(Script_HealParty) == $10, "Script_HealParty is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8277,6 +8371,7 @@ SECTION "Bank 04 Talk_RandomBattle", ROMX
 ; starts Script_RandomBattle (E-0248)
 Talk_RandomBattle::
     ld hl, Script_RandomBattle
+    ASSERT BANK(Script_RandomBattle) == $10, "Script_RandomBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8291,6 +8386,7 @@ SECTION "Bank 04 Talk_ArenaGridBattle", ROMX
 ; starts Script_ArenaGridBattle (E-0248)
 Talk_ArenaGridBattle::
     ld hl, Script_ArenaGridBattle
+    ASSERT BANK(Script_ArenaGridBattle) == $10, "Script_ArenaGridBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8305,6 +8401,7 @@ SECTION "Bank 04 Talk_ArenaRounds", ROMX
 ; starts Script_ArenaRounds (E-0248)
 Talk_ArenaRounds::
     ld hl, Script_ArenaRounds
+    ASSERT BANK(Script_ArenaRounds) == $10, "Script_ArenaRounds is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8319,6 +8416,7 @@ SECTION "Bank 04 Talk_BreedFade", ROMX
 ; starts Script_BreedFade (E-0248)
 Talk_BreedFade::
     ld hl, Script_BreedFade
+    ASSERT BANK(Script_BreedFade) == $10, "Script_BreedFade is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8333,6 +8431,7 @@ SECTION "Bank 04 Talk_BreedChildSprite", ROMX
 ; starts Script_BreedChildSprite (E-0248)
 Talk_BreedChildSprite::
     ld hl, Script_BreedChildSprite
+    ASSERT BANK(Script_BreedChildSprite) == $10, "Script_BreedChildSprite is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8347,6 +8446,7 @@ SECTION "Bank 04 Talk_BreedChildScene", ROMX
 ; starts Script_BreedChildScene (E-0248)
 Talk_BreedChildScene::
     ld hl, Script_BreedChildScene
+    ASSERT BANK(Script_BreedChildScene) == $10, "Script_BreedChildScene is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8361,6 +8461,7 @@ SECTION "Bank 04 Talk_NpcBreedWarp", ROMX
 ; starts Script_NpcBreedWarp (E-0248)
 Talk_NpcBreedWarp::
     ld hl, Script_NpcBreedWarp
+    ASSERT BANK(Script_NpcBreedWarp) == $10, "Script_NpcBreedWarp is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8375,6 +8476,7 @@ SECTION "Bank 04 Talk_LinkMessage", ROMX
 ; starts Script_LinkMessage (E-0248)
 Talk_LinkMessage::
     ld hl, Script_LinkMessage
+    ASSERT BANK(Script_LinkMessage) == $10, "Script_LinkMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8395,6 +8497,7 @@ FieldTalkEvents_TalkToFollower::
     xor a
     ld [wScriptParam1], a
     ld hl, Script_PersonalityMessage
+    ASSERT BANK(Script_PersonalityMessage) == $10, "Script_PersonalityMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8417,6 +8520,7 @@ FieldTalkEvents_TalkToSecondFollower::
     ld a, $01
     ld [wScriptParam1], a
     ld hl, Script_PersonalityMessage
+    ASSERT BANK(Script_PersonalityMessage) == $10, "Script_PersonalityMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8441,6 +8545,7 @@ FieldTalkEvents_TalkToThirdFollower::
     ld a, $02
     ld [wScriptParam1], a
     ld hl, Script_PersonalityMessage
+    ASSERT BANK(Script_PersonalityMessage) == $10, "Script_PersonalityMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8454,6 +8559,7 @@ FieldTalkEvents_KamehaStoleScene::
     or a
     ret nz
     ld hl, Script_SceneKamehaStole
+    ASSERT BANK(Script_SceneKamehaStole) == $10, "Script_SceneKamehaStole is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8480,6 +8586,7 @@ SECTION "Bank 04 Talk_FollowersStep10", ROMX
 ; starts Script_FollowersStep10 (E-0248)
 Talk_FollowersStep10::
     ld hl, Script_FollowersStep10
+    ASSERT BANK(Script_FollowersStep10) == $10, "Script_FollowersStep10 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8494,6 +8601,7 @@ SECTION "Bank 04 Talk_FollowersStep11", ROMX
 ; starts Script_FollowersStep11 (E-0248)
 Talk_FollowersStep11::
     ld hl, Script_FollowersStep11
+    ASSERT BANK(Script_FollowersStep11) == $10, "Script_FollowersStep11 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8508,6 +8616,7 @@ SECTION "Bank 04 Talk_PlayerAndFollowersStep", ROMX
 ; starts Script_PlayerAndFollowersStep (E-0248)
 Talk_PlayerAndFollowersStep::
     ld hl, Script_PlayerAndFollowersStep
+    ASSERT BANK(Script_PlayerAndFollowersStep) == $10, "Script_PlayerAndFollowersStep is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8522,6 +8631,7 @@ SECTION "Bank 04 Talk_WarpWithFollowers", ROMX
 ; starts Script_WarpWithFollowers (E-0248)
 Talk_WarpWithFollowers::
     ld hl, Script_WarpWithFollowers
+    ASSERT BANK(Script_WarpWithFollowers) == $10, "Script_WarpWithFollowers is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8536,6 +8646,7 @@ SECTION "Bank 04 Talk_FollowersStep14", ROMX
 ; starts Script_FollowersStep14 (E-0248)
 Talk_FollowersStep14::
     ld hl, Script_FollowersStep14
+    ASSERT BANK(Script_FollowersStep14) == $10, "Script_FollowersStep14 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8558,6 +8669,7 @@ SECTION "Bank 04 Talk_FieldScene01", ROMX
 ; starts Script_FieldScene01 (E-0248)
 Talk_FieldScene01::
     ld hl, Script_FieldScene01
+    ASSERT BANK(Script_FieldScene01) == $10, "Script_FieldScene01 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8573,6 +8685,7 @@ SECTION "Bank 04 Talk_RandomGoldOrItem", ROMX
 ; starts Script_RandomGoldOrItem (E-0248)
 Talk_RandomGoldOrItem::
     ld hl, Script_RandomGoldOrItem
+    ASSERT BANK(Script_RandomGoldOrItem) == $10, "Script_RandomGoldOrItem is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8589,6 +8702,7 @@ SECTION "Bank 04 Talk_PartyDefeatedReturn", ROMX
 ; starts Script_PartyDefeatedReturn (E-0248)
 Talk_PartyDefeatedReturn::
     ld hl, Script_PartyDefeatedReturn
+    ASSERT BANK(Script_PartyDefeatedReturn) == $10, "Script_PartyDefeatedReturn is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8604,6 +8718,7 @@ SECTION "Bank 04 Talk_ReturnMessage", ROMX
 ; starts Script_ReturnMessage (E-0248)
 Talk_ReturnMessage::
     ld hl, Script_ReturnMessage
+    ASSERT BANK(Script_ReturnMessage) == $10, "Script_ReturnMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8619,6 +8734,7 @@ SECTION "Bank 04 Talk_ReturnWarp", ROMX
 ; starts Script_ReturnWarp (E-0248)
 Talk_ReturnWarp::
     ld hl, Script_ReturnWarp
+    ASSERT BANK(Script_ReturnWarp) == $10, "Script_ReturnWarp is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8634,6 +8750,7 @@ SECTION "Bank 04 Talk_MapExitWarp", ROMX
 ; starts Script_MapExitWarp (E-0248)
 Talk_MapExitWarp::
     ld hl, Script_MapExitWarp
+    ASSERT BANK(Script_MapExitWarp) == $10, "Script_MapExitWarp is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8649,6 +8766,7 @@ SECTION "Bank 04 Talk_MapLinkWarp", ROMX
 ; starts Script_MapLinkWarp (E-0248)
 Talk_MapLinkWarp::
     ld hl, Script_MapLinkWarp
+    ASSERT BANK(Script_MapLinkWarp) == $10, "Script_MapLinkWarp is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8664,6 +8782,7 @@ SECTION "Bank 04 Talk_PlayerSpriteFlash", ROMX
 ; starts Script_PlayerSpriteFlash (E-0248)
 Talk_PlayerSpriteFlash::
     ld hl, Script_PlayerSpriteFlash
+    ASSERT BANK(Script_PlayerSpriteFlash) == $10, "Script_PlayerSpriteFlash is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8679,6 +8798,7 @@ SECTION "Bank 04 Talk_PlayerSpriteMessage", ROMX
 ; starts Script_PlayerSpriteMessage (E-0248)
 Talk_PlayerSpriteMessage::
     ld hl, Script_PlayerSpriteMessage
+    ASSERT BANK(Script_PlayerSpriteMessage) == $10, "Script_PlayerSpriteMessage is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8695,6 +8815,7 @@ SECTION "Bank 04 Talk_KeyWorldDoorItem", ROMX
 ; starts Script_KeyWorldDoorItem (E-0248)
 Talk_KeyWorldDoorItem::
     ld hl, Script_KeyWorldDoorItem
+    ASSERT BANK(Script_KeyWorldDoorItem) == $10, "Script_KeyWorldDoorItem is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8710,6 +8831,7 @@ SECTION "Bank 04 Talk_AreaItem", ROMX
 ; starts Script_AreaItem (E-0248)
 Talk_AreaItem::
     ld hl, Script_AreaItem
+    ASSERT BANK(Script_AreaItem) == $10, "Script_AreaItem is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8725,6 +8847,7 @@ SECTION "Bank 04 Talk_StepTriggerReward", ROMX
 ; starts Script_StepTriggerReward (E-0248)
 Talk_StepTriggerReward::
     ld hl, Script_StepTriggerReward
+    ASSERT BANK(Script_StepTriggerReward) == $10, "Script_StepTriggerReward is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8938,6 +9061,7 @@ ElvenVillageTalkEvents_CyalScenes::
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld hl, Script_SceneCyalShine
+    ASSERT BANK(Script_SceneCyalShine) == $10, "Script_SceneCyalShine is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8949,6 +9073,7 @@ ElvenVillageTalkEvents_CyalScenes::
     call TestFlagBit
     ret nc
     ld hl, Script_CyalOhHeroI ; script 'Cyal: Oh! 0! I'm over here!'
+    ASSERT BANK(Script_CyalOhHeroI) == $10, "Script_CyalOhHeroI is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -8992,6 +9117,7 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_SoCyalTookA ; script '*: So Cyal took a shine'
+    ASSERT BANK(Script_SoCyalTookA) == $10, "Script_SoCyalTookA is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9009,6 +9135,7 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
 
 .call_start_script_at_hl_b042:
     ld hl, Script_RoltWhatCyalWas ; script 'Rolt: What? Cyal was abducted? Who'
+    ASSERT BANK(Script_RoltWhatCyalWas) == $10, "Script_RoltWhatCyalWas is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9041,6 +9168,7 @@ ElvenVillageTalkEvents_Cyal::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_AreYouMaybeA ; script '*: Are you maybe a human?'
+    ASSERT BANK(Script_AreYouMaybeA) == $10, "Script_AreYouMaybeA is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9053,6 +9181,7 @@ ElvenVillageTalkEvents_Cyal::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_CyalListenHeroWe ; script 'Cyal: Listen, 0. We should go'
+    ASSERT BANK(Script_CyalListenHeroWe) == $10, "Script_CyalListenHeroWe is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9328,6 +9457,7 @@ ElvenVillageTalkEvents_Shop::
     ld a, $10
     ld [wDataBank], a
     ld hl, Script_WelcomeHowMayI_5 ; script '*: Welcome! How may I help'
+    ASSERT BANK(Script_WelcomeHowMayI_5) == $10, "Script_WelcomeHowMayI_5 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9363,6 +9493,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_WellWellAHuman ; script '*: Well, well, a human here'
+    ASSERT BANK(Script_WellWellAHuman) == $10, "Script_WellWellAHuman is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9376,6 +9507,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
 
 .call_start_script_at_hl_b042:
     ld hl, Script_I_18 ; script '*: I'm the village's elder. What's'
+    ASSERT BANK(Script_I_18) == $10, "Script_I_18 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9412,6 +9544,7 @@ ElvenVillageTalkEvents_MasterAgDevil::
     call TestFlagBit
     ret nc
     ld hl, Script_MasterAgDevilAHuman ; script '*: Master AgDevil, a human, ruff!'
+    ASSERT BANK(Script_MasterAgDevilAHuman) == $10, "Script_MasterAgDevilAHuman is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9449,11 +9582,13 @@ ElvenVillageTalkEvents_ThatsWhatWellDo::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_That_3 ; script '*: That's what we'll do, kid.'
+    ASSERT BANK(Script_That_3) == $10, "Script_That_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_You_11 ; script '*: You've come back again, ruff?'
+    ASSERT BANK(Script_You_11) == $10, "Script_You_11 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9548,6 +9683,7 @@ ElvenVillageTalkEvents_KeyBossBattle::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_TheHumanInThe ; script '*: The human in the forest'
+    ASSERT BANK(Script_TheHumanInThe) == $10, "Script_TheHumanInThe is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_THE_HUMAN_IN_THE_FOREST
     call SetFlagBit
@@ -9555,6 +9691,7 @@ ElvenVillageTalkEvents_KeyBossBattle::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_WhatYouAgainRude ; script '*: What, you again? Rude, rude,'
+    ASSERT BANK(Script_WhatYouAgainRude) == $10, "Script_WhatYouAgainRude is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9569,6 +9706,7 @@ ElvenVillageTalkEvents_RoltFoundYou::
     call TestFlagBit
     ret nc
     ld hl, Script_RoltI ; script 'Rolt: I've found you at last!'
+    ASSERT BANK(Script_RoltI) == $10, "Script_RoltI is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_ROLT_IVE_FOUND_YOU_AT
     call SetFlagBit
@@ -9777,11 +9915,13 @@ Talk075F_KiralFetchMeMy::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_HohAhExcuseMy ; script '*: Hoh? Ah, excuse my incivility.'
+    ASSERT BANK(Script_HohAhExcuseMy) == $10, "Script_HohAhExcuseMy is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_KiralINeedHelp ; script 'Kiral: I need help with my'
+    ASSERT BANK(Script_KiralINeedHelp) == $10, "Script_KiralINeedHelp is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9792,6 +9932,7 @@ Talk075F_KiralFetchMeMy::
 
 .call_start_script_at_hl_b042:
     ld hl, Script_KiralAhBackThe ; script 'Kiral: Ah! Back! The treasure? What?'
+    ASSERT BANK(Script_KiralAhBackThe) == $10, "Script_KiralAhBackThe is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -9814,6 +9955,7 @@ Talk075F_KiralFetchMeMy::
     set 6, a
     ld [wInventorySortFlags], a
     ld hl, Script_KiralAhBackIs ; script 'Kiral: Ah! Back! Is… Rob-N… Did'
+    ASSERT BANK(Script_KiralAhBackIs) == $10, "Script_KiralAhBackIs is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $08
     ldh [hTemp0], a
@@ -10039,6 +10181,7 @@ Talk0768_HeroPeeredIntoThe::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_HeroPeeredIntoThe_2 ; script '0 peered into the barrel. A'
+    ASSERT BANK(Script_HeroPeeredIntoThe_2) == $10, "Script_HeroPeeredIntoThe_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10061,6 +10204,7 @@ Talk0768_HeroPeeredIntoThe_2::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_HeroPeeredIntoThe_3 ; script '0 peered into the barrel. A'
+    ASSERT BANK(Script_HeroPeeredIntoThe_3) == $10, "Script_HeroPeeredIntoThe_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10095,21 +10239,25 @@ Talk078E_RobosterStoppedMovingEntirely::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_PROFESSORSAYGUARDTREASURE ; script '*: PROFESSOR… SAY GUARD… TREASURE… NEVER…'
+    ASSERT BANK(Script_PROFESSORSAYGUARDTREASURE) == $10, "Script_PROFESSORSAYGUARDTREASURE is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_PROSORAYGGGGUARD ; script '*: PRO… SOR… AY… GGGGUARD… TREZZZT…'
+    ASSERT BANK(Script_PROSORAYGGGGUARD) == $10, "Script_PROSORAYGGGGUARD is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b042:
     ld hl, Script_PIPIPIGGGGGGAGAGAGA ; script '*: PIPIPI… GGGGGGAGAGAGA…'
+    ASSERT BANK(Script_PIPIPIGGGGGGAGAGAGA) == $10, "Script_PIPIPIGGGGGGAGAGAGA is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b043:
     ld hl, Script_PIPI ; script '*: PI… PI…'
+    ASSERT BANK(Script_PIPI) == $10, "Script_PIPI is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10139,6 +10287,7 @@ Talk077B_HeroPeeredIntoThe::
     call TestFlagBit
     jr c, .call_inventory_has_free_slot_check
     ld hl, Script_HeroPeeredIntoThe_4 ; script '0 peered into the barrel. There'
+    ASSERT BANK(Script_HeroPeeredIntoThe_4) == $10, "Script_HeroPeeredIntoThe_4 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10359,6 +10508,7 @@ Talk07A4_CouldYouHumorThis::
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld hl, Script_Sigh ; script '*: Sigh…'
+    ASSERT BANK(Script_Sigh) == $10, "Script_Sigh is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10424,6 +10574,7 @@ Talk07A6_OurDaughtersOnlyMemento::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_Sigh_2 ; script '*: Sigh…'
+    ASSERT BANK(Script_Sigh_2) == $10, "Script_Sigh_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10436,6 +10587,7 @@ Talk07A6_OurDaughtersOnlyMemento::
     call InventoryHasFreeSlotCheck
     jr c, .read_inventory_sort_flags
     ld hl, Script_ThankYouForRecovering ; script '*: Thank you for recovering our'
+    ASSERT BANK(Script_ThankYouForRecovering) == $10, "Script_ThankYouForRecovering is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10445,6 +10597,7 @@ Talk07A6_OurDaughtersOnlyMemento::
     set 6, a
     ld [wInventorySortFlags], a
     ld hl, Script_ThankYouForRecovering_2 ; script '*: Thank you for recovering our'
+    ASSERT BANK(Script_ThankYouForRecovering_2) == $10, "Script_ThankYouForRecovering_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10628,6 +10781,7 @@ ElvenVillageTalkEvents_ShopHelloWhatMayI::
     ld a, $10
     ld [wDataBank], a
     ld hl, Script_HelloWhatMayI_2 ; script '*: Hello! What may I do'
+    ASSERT BANK(Script_HelloWhatMayI_2) == $10, "Script_HelloWhatMayI_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10652,6 +10806,7 @@ ElvenVillageTalkEvents_TravelersInn::
 
 .call_start_script_at_hl_b04:
     ld hl, Script_WelcomeToOurTraveler ; script '*: Welcome to our traveler's inn.'
+    ASSERT BANK(Script_WelcomeToOurTraveler) == $10, "Script_WelcomeToOurTraveler is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
@@ -10723,11 +10878,13 @@ Talk07D7_MilayouIEBeen::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_ExcuseMeAreYou ; script '*: Excuse me, are you a'
+    ASSERT BANK(Script_ExcuseMeAreYou) == $10, "Script_ExcuseMeAreYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_HaveYouChangedYour ; script '*: Have you changed your mind?'
+    ASSERT BANK(Script_HaveYouChangedYour) == $10, "Script_HaveYouChangedYour is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10738,6 +10895,7 @@ Talk07D7_MilayouIEBeen::
 
 .call_start_script_at_hl_b042:
     ld hl, Script_MilayouIThoughtThis ; script 'Milayou: I thought this forest looked'
+    ASSERT BANK(Script_MilayouIThoughtThis) == $10, "Script_MilayouIThoughtThis is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10748,6 +10906,7 @@ Talk07D7_MilayouIEBeen::
 
 .call_start_script_at_hl_b043:
     ld hl, Script_MilayouIAskedFor ; script 'Milayou: I asked for your support'
+    ASSERT BANK(Script_MilayouIAskedFor) == $10, "Script_MilayouIAskedFor is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10761,11 +10920,13 @@ Talk07D7_MilayouIEBeen::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b044
     ld hl, Script_MilayouIKnewYou ; script 'Milayou: I knew you come back!'
+    ASSERT BANK(Script_MilayouIKnewYou) == $10, "Script_MilayouIKnewYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b044:
     ld hl, Script_MilayouWantToSpar ; script 'Milayou: Want to spar with me?'
+    ASSERT BANK(Script_MilayouWantToSpar) == $10, "Script_MilayouWantToSpar is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -10847,6 +11008,7 @@ Talk07C1_WhatMonstersAttackedYou::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_LatelyTheTownOf ; script '*: Lately, the town of Miagen'
+    ASSERT BANK(Script_LatelyTheTownOf) == $10, "Script_LatelyTheTownOf is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11001,11 +11163,13 @@ Talk07AF_HowDoesThisOrnament::
     call TestFlagBit
     jr c, .loop
     ld hl, Script_ThisPendantIsYours ; script '*: This pendant is yours for'
+    ASSERT BANK(Script_ThisPendantIsYours) == $10, "Script_ThisPendantIsYours is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_For47HeroHero ; script '*: For 47,000G this earring… What?'
+    ASSERT BANK(Script_For47HeroHero) == $10, "Script_For47HeroHero is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11016,6 +11180,7 @@ Talk07AF_HowDoesThisOrnament::
 
 .call_start_script_at_hl_b042:
     ld hl, Script_WhatWhereIGet ; script '*: What? Where I get my'
+    ASSERT BANK(Script_WhatWhereIGet) == $10, "Script_WhatWhereIGet is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld a, [wStoryFlags + $68]
     set 0, a
@@ -11060,11 +11225,13 @@ ElvenVillageTalkEvents_SceneMercyBattle::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_You_12 ; script '*: You're going to regret seeing'
+    ASSERT BANK(Script_You_12) == $10, "Script_You_12 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_We ; script '*: We'll smash you as often'
+    ASSERT BANK(Script_We) == $10, "Script_We is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11089,6 +11256,7 @@ Talk07BF_HeroFoundThePretty::
     set 6, a
     ld [wInventorySortFlags], a
     ld hl, Script_HeroOpenedTheTreasure ; script '0 opened the treasure chest. 0'
+    ASSERT BANK(Script_HeroOpenedTheTreasure) == $10, "Script_HeroOpenedTheTreasure is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11107,11 +11275,13 @@ ElvenVillageTalkEvents_SecondKeyBossBattle::
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_WhatIsItYou ; script '*: What is it, you little'
+    ASSERT BANK(Script_WhatIsItYou) == $10, "Script_WhatIsItYou is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
 .call_start_script_at_hl_b04:
     ld hl, Script_WhatIsItYou_2 ; script '*: What is it, you little'
+    ASSERT BANK(Script_WhatIsItYou_2) == $10, "Script_WhatIsItYou_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11351,6 +11521,7 @@ SECTION "Bank 04 Talk_HeroCheckedTheTreasureChest", ROMX
 ; starts Script_HeroCheckedTheTreasure_3: '0 checked the treasure chest. The' (E-0248)
 Talk_HeroCheckedTheTreasureChest::
     ld hl, Script_HeroCheckedTheTreasure_3 ; script '0 checked the treasure chest. The'
+    ASSERT BANK(Script_HeroCheckedTheTreasure_3) == $10, "Script_HeroCheckedTheTreasure_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11414,6 +11585,7 @@ SECTION "Bank 04 Talk_SceneChestBattle", ROMX
 ; starts Script_SceneChestBattle (E-0248)
 Talk_SceneChestBattle::
     ld hl, Script_SceneChestBattle
+    ASSERT BANK(Script_SceneChestBattle) == $10, "Script_SceneChestBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11430,6 +11602,7 @@ ElvenVillageTalkEvents_PowerTowerChestBattle::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_SceneChestBattle
+    ASSERT BANK(Script_SceneChestBattle) == $10, "Script_SceneChestBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11782,6 +11955,7 @@ SECTION "Bank 04 Talk_HeroCheckedTheTreasureChest_2", ROMX
 ; starts Script_HeroCheckedTheTreasure_4: '0 checked the treasure chest. It' (E-0248)
 Talk_HeroCheckedTheTreasureChest_2::
     ld hl, Script_HeroCheckedTheTreasure_4 ; script '0 checked the treasure chest. It'
+    ASSERT BANK(Script_HeroCheckedTheTreasure_4) == $10, "Script_HeroCheckedTheTreasure_4 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11843,6 +12017,7 @@ SECTION "Bank 04 Talk_SceneChestBattle_2", ROMX
 ; starts Script_SceneChestBattle (E-0248)
 Talk_SceneChestBattle_2::
     ld hl, Script_SceneChestBattle
+    ASSERT BANK(Script_SceneChestBattle) == $10, "Script_SceneChestBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -11859,6 +12034,7 @@ ElvenVillageTalkEvents_BaffleTowerChestBattle::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_SceneChestBattle
+    ASSERT BANK(Script_SceneChestBattle) == $10, "Script_SceneChestBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12253,6 +12429,7 @@ SECTION "Bank 04 Talk_SoulTowerChestBattle", ROMX
 ; starts Script_SceneChestBattle (E-0248)
 Talk_SoulTowerChestBattle::
     ld hl, Script_SceneChestBattle
+    ASSERT BANK(Script_SceneChestBattle) == $10, "Script_SceneChestBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12269,6 +12446,7 @@ Talk0C47::
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_SceneChestBattle
+    ASSERT BANK(Script_SceneChestBattle) == $10, "Script_SceneChestBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12629,6 +12807,7 @@ KeyWorldTalkEvents::
 ; starts Script_KeyWorldBossBattle (E-0248)
 Talk_KeyWorldBossBattle::
     ld hl, Script_KeyWorldBossBattle
+    ASSERT BANK(Script_KeyWorldBossBattle) == $10, "Script_KeyWorldBossBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12652,6 +12831,7 @@ KeyWorldTalkEvents_Warubou::
     ld a, $0f
     ld [wScreenTableIndex], a
     ld hl, Script_WarubouWaHeyYou_2 ; script 'Warubou: Wa-hey! You did it, 0!'
+    ASSERT BANK(Script_WarubouWaHeyYou_2) == $10, "Script_WarubouWaHeyYou_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12667,6 +12847,7 @@ KeyWorldTalkEvents_Warubou::
 .set_screen_table_index:
     ld [wScreenTableIndex], a
     ld hl, Script_WarubouWaHeyYou_2 ; script 'Warubou: Wa-hey! You did it, 0!'
+    ASSERT BANK(Script_WarubouWaHeyYou_2) == $10, "Script_WarubouWaHeyYou_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12683,6 +12864,7 @@ KeyWorldTalkEvents_WarubouInn::
     cp $84
     jr nz, .call_is_player_at_key_world_goal_kind_trigger
     ld hl, Script_WarubouWaHeyYou_3 ; script 'Warubou: Wa-hey! You did it, 0!'
+    ASSERT BANK(Script_WarubouWaHeyYou_3) == $10, "Script_WarubouWaHeyYou_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     jr .check_player_facing
 
@@ -12691,6 +12873,7 @@ KeyWorldTalkEvents_WarubouInn::
     or a
     ret z
     ld hl, Script_WarubouWaHeyThat ; script 'Warubou: Wa-hey! That's it! GreatLog is'
+    ASSERT BANK(Script_WarubouWaHeyThat) == $10, "Script_WarubouWaHeyThat is read with bank $10 mapped"
     call StartScriptAtHL_B04
 
 .check_player_facing:
@@ -12776,6 +12959,7 @@ SECTION "Bank 04 Talk_KeyWorldFloorBattle", ROMX
 ; starts Script_KeyWorldFloorBattle (E-0248)
 Talk_KeyWorldFloorBattle::
     ld hl, Script_KeyWorldFloorBattle
+    ASSERT BANK(Script_KeyWorldFloorBattle) == $10, "Script_KeyWorldFloorBattle is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12833,6 +13017,7 @@ Talk_WarubouWaheyYouDidItHero::
     ld a, $10
     ld [wDataBank], a
     ld hl, Script_WarubouWaHeyYou_3 ; script 'Warubou: Wa-hey! You did it, 0!'
+    ASSERT BANK(Script_WarubouWaHeyYou_3) == $10, "Script_WarubouWaHeyYou_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 
@@ -12849,6 +13034,7 @@ Talk_WarubouWaheySoThisIsIt::
     ld a, $1f
     ld [wDataBank], a
     ld hl, Script_WarubouWaHeySo ; script 'Warubou: Wa-hey! So, this is it?'
+    ASSERT BANK(Script_WarubouWaHeySo) == $10, "Script_WarubouWaHeySo is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 

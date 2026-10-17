@@ -14,8 +14,13 @@ does not change instruction timing on this CPU, so a ROM that still works shows 
 the first differing frame is where a hard-coded reference took effect. An observation of the project's own
 emulator, not hardware (C2 at best).
 
+`--reads` compares ROM data reads instead of frames (E-0389); with `--recipe FILE` it replays a tools/play.py recipe
+chain on both ROMs and compares each reading instruction's own stream of reads, which interrupt timing and
+time-budgeted loops do not reorder (E-0400).
+
 Usage: shift_test.py [--pad 1] [--banks all | 00,02,...] [--frames 3000] [--out build/shift]
-Exit 0 when the padded build assembles and its frames match the base build; 1 otherwise.
+       shift_test.py --pad 16 --reads all --recipe tools/recipes/e0335_swap.txt [--until STATE]
+Exit 0 when the padded build assembles and its frames (or reads) match the base build; 1 otherwise.
 """
 from __future__ import annotations
 
@@ -219,6 +224,136 @@ def data_reads(rom: bytes, starts: dict[int, int], pad: int, frames: int, mapit:
     return out
 
 
+def shifted_pokes(pokes: list[str], starts: dict[int, int], pad: int) -> list[str]:
+    """A recipe's pokes for the padded ROM: a script pointer (wScriptPointerLo/Hi, in the bank wDataBank names)
+    into a padded bank, at or after its padding, moves by `pad`; every other poke is a RAM value and stays."""
+    vals = dict(p.split("=", 1) for p in pokes if "=" in p and not p.startswith("call:"))
+    if "wScriptPointerLo" not in vals or "wScriptPointerHi" not in vals:
+        return pokes
+    bank = int(vals.get("wDataBank", "0"), 0)
+    addr = int(vals["wScriptPointerLo"], 0) | int(vals["wScriptPointerHi"], 0) << 8
+    if bank not in starts or addr < starts[bank]:
+        return pokes
+    addr += pad
+    out = []
+    for p in pokes:
+        if p.startswith("wScriptPointerLo="):
+            p = f"wScriptPointerLo={addr & 0xFF:#x}"
+        elif p.startswith("wScriptPointerHi="):
+            p = f"wScriptPointerHi={addr >> 8:#x}"
+        out.append(p)
+    return out
+
+
+def recipe_reads(base: bytes, rom: bytes, sym_base: dict, sym_pad: dict, starts: dict[int, int], pad: int,
+                 path: Path, until: str | None = None) -> dict:
+    """Replays a tools/play.py recipe chain on the base and the padded ROM, one run line at a time in lockstep, and
+    compares the order of their ROM data reads (the base's mapped through the padding, as in data_reads). Returns
+    the number of runs and reads, the routines the base run executed, and the first differing read, if any."""
+    import pickle
+    import play
+    from sm83 import GameBoy
+    ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"),
+                          re.M))
+    lines = [[x.strip() for x in ln.split("|")] for ln in play.recipe_lines(str(path))]
+    last_use: dict[str, int] = {}
+    for i, (_s, old, _p, _r) in enumerate(lines):
+        if old:
+            last_use[old.removeprefix("sram:")] = i
+    labels = {(b, a): n for n, (b, a) in sym_base.items() if "." not in n}
+    states: dict[str, dict[str, bytes]] = {"base": {}, "pad": {}}
+    seen: dict = {}
+    reads = 0
+    for i, (state, old, pokes, recipe) in enumerate(lines):
+        res = []
+        for side, data, mapit, sym in (("base", base, True, sym_base), ("pad", rom, False, sym_pad)):
+            st = states[side]
+            if old.startswith("sram:"):
+                gb = GameBoy(data)
+                gb.sram[:] = pickle.loads(st[old[5:]]).sram
+            elif old:
+                gb = pickle.loads(st[old])
+                gb.rom = data
+            else:
+                gb = GameBoy(data)
+            # each reading instruction is its own stream, keyed by its address (the base's mapped through the padding)
+            # and by the interrupt it runs in: when an interrupt arrives, and how much a time-budgeted loop does in
+            # one frame, depend on timing, which a moved address can change by a few cycles (a carry), but what each
+            # instruction reads, in order, does not
+            out: dict[tuple, list[tuple[int, int, int]]] = {}
+            isr: list[tuple[int, int]] = []  # (stack pointer, vector) of each interrupt dispatch still running
+            orig, osvc = gb.rb, gb.service
+            count = [0]
+
+            def rb(a: int, gb=gb, out=out, orig=orig, isr=isr, count=count, mapit=mapit) -> int:
+                if a < 0x8000 and not gb.cur_pc <= a < gb.cur_pc + 3:
+                    while isr and gb.sp > isr[-1][0]:
+                        isr.pop()  # that handler returned
+                    b, ia = rom_place(gb.rombank, a)
+                    if ia == 0x4000:  # the bank-number byte: which bank is mapped, which timing decides; never moves
+                        return orig(a)
+                    pb, pa = rom_place(gb.rombank, gb.cur_pc)
+                    if mapit and pb in starts and pa >= starts[pb]:
+                        pa += pad
+                    count[0] += 1
+                    out.setdefault((isr[-1][1] if isr else 0, pb, pa), []).append(
+                        (b, a + pad if mapit and b in starts and ia >= starts[b] else a, count[0]))
+                return orig(a)
+
+            def service(gb=gb, osvc=osvc, isr=isr) -> None:
+                pc = gb.pc
+                osvc()
+                if gb.pc != pc and gb.pc in (0x40, 0x48, 0x50, 0x58, 0x60):
+                    isr.append((gb.sp, gb.pc))
+            gb.rb, gb.service = rb, service
+            for p in (pokes.split() if side == "base" else shifted_pokes(pokes.split(), starts, pad)):
+                if p.startswith("call:"):
+                    play.call_at_halt(gb, *sym[p[5:]])
+                else:
+                    play.poke(gb, ram, p)
+            play.run(gb, play.parse(recipe), labels if side == "base" else {}, seen if side == "base" else {})
+            del gb.rb, gb.service
+            if last_use.get(state, -1) > i:
+                gb.rom = b""  # the state without its ROM image; the replay puts it back
+                st[state] = pickle.dumps(gb)
+            res.append(out)
+        for k in [k for k, v in last_use.items() if v <= i]:
+            for st in states.values():
+                st.pop(k, None)
+        reads += sum(len(v) for v in res[0].values())
+        worst = first_stream_difference(res[0], res[1])
+        if worst is not None:
+            key, ra, rp, x, y = worst
+            vec, pb, pa = key
+            return {"runs": i + 1, "reads": reads, "routines": len(seen), "first_differing_read": {
+                "run": state, "in": f"the interrupt at ${vec:04X}" if vec else "main code",
+                "instruction": label_of(sym_base, pb, pa if not (pb in starts and pa >= starts[pb] + pad)
+                                        else pa - pad),
+                "base": f"{x[0]:02X}:{x[1]:04X}", "padded": f"{y[0]:02X}:{y[1]:04X}",
+                "base_reads": [f"{b:02X}:{a:04X}" for b, a, _n in ra],
+                "padded_reads": [f"{b:02X}:{a:04X}" for b, a, _n in rp]}}
+        if state == until:
+            return {"runs": i + 1, "reads": reads, "routines": len(seen), "first_differing_read": None}
+    return {"runs": len(lines), "reads": reads, "routines": len(seen), "first_differing_read": None}
+
+
+def first_stream_difference(a: dict, b: dict) -> tuple | None:
+    """Per-instruction read streams ({key: [(bank, address, sequence number)]}) of the base and the padded run: the
+    earliest read (by the base's sequence number) where the common part of one instruction's two streams disagrees,
+    as (key, base reads near it, padded reads near it, base read, padded read); None when every one agrees. A
+    stream may be longer on one side (the run ended one loop pass apart), and an instruction only one side ran is
+    not compared."""
+    worst = None
+    for key in a.keys() & b.keys():
+        ra, rp = a[key], b[key]
+        for j, (x, y) in enumerate(zip(ra, rp)):
+            if x[:2] != y[:2]:
+                if worst is None or x[2] < worst[3][2]:
+                    worst = (key, ra[max(0, j - 3):j + 4], rp[max(0, j - 3):j + 4], x, y)
+                break
+    return worst
+
+
 def first_read_difference(a: list, b: list) -> int | None:
     for i, (x, y) in enumerate(zip(a, b)):
         if x[:2] != y[:2]:
@@ -289,6 +424,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--reads", metavar="BB", help="pad only bank BB (or all) and compare the order of ROM data "
                     "reads, which timing does not change, instead of the frames")
     ap.add_argument("--explore", action="store_true", help="from frame 4000 walk, talk and open menus")
+    ap.add_argument("--recipe", type=Path, help="with --reads: replay this tools/play.py recipe chain (with its "
+                    "includes) on both ROMs instead of the scripted joypad")
+    ap.add_argument("--until", metavar="STATE", help="with --recipe: stop after the run that makes this state")
     ap.add_argument("--persist", type=int, default=8, help="frames a difference must last to count (default 8)")
     ap.add_argument("--out", default="build/shift")
     args = ap.parse_args(argv)
@@ -299,6 +437,8 @@ def main(argv: list[str] | None = None) -> int:
         sys.exit("output dir must be beneath build/")
     if args.pad < 1:
         sys.exit("--pad must be at least 1")
+    if args.recipe and not args.reads:
+        sys.exit("--recipe needs --reads")
     shutil.rmtree(out, ignore_errors=True)
     pristine = out / "base/src"
     shutil.copytree(ROOT / "src", pristine)
@@ -324,6 +464,16 @@ def main(argv: list[str] | None = None) -> int:
         moved = read_sym(out / "padded/dwm2.sym")
         report["labels_moved"] = sum(1 for k, v in sym.items() if moved.get(k) != v)
         report["frames"] = args.frames
+        if args.recipe:
+            starts = {int(b, 16): sym[label][1] for b, label in padded.items()}
+            res = recipe_reads(base, rom, sym, moved, starts, args.pad, args.recipe, args.until)
+            report.update(recipe=str(args.recipe), **res)
+            ok = res["first_differing_read"] is None
+            (out / "report.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
+            print(json.dumps({k: report[k] for k in ("pad", "recipe", "runs", "reads", "routines",
+                                                     "first_differing_read")}, indent=1))
+            print(f"{'PASS' if ok else 'FAIL'}: recipe data reads with {len(padded)} banks padded by {args.pad}")
+            return 0 if ok else 1
         ha = frame_hashes(base, args.frames)
         if args.reads:
             starts = {int(b, 16): sym[label][1] for b, label in padded.items()}
