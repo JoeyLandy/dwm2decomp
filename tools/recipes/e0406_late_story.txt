@@ -1,9 +1,11 @@
 # E-0406: scenes from the later story. ls00-ls13 start, in order, the bank-$10 scripts holding the scene commands
 # LAND_HO, KAMEHA_BACK, HOMECOMING, WATER_SOLVED, RIVAL_DEFEATED, PIRATE_GHOSTS, EXPLOSION, PRINCESS_MEDICINE,
-# SHIELD_GUARDIAN, GRAVE, DARCK_TAUNT, DARCK_DEFEATED, CYAL_ROLT and YOU_DID_IT (SCRIPT_SCENE_*), each by its four
-# RAM bytes on GreatLog's Main Street (t02! of e0327_shop_inn.txt) as e0328 to e0335 start theirs, then press through.
-# Forced states: a scene runs out of its story order, on another map (includes e0406_world_tour.txt).
-@ e0406_world_tour.txt
+# SHIELD_GUARDIAN, GRAVE, (DARCK_TAUNT dropped), DARCK_DEFEATED, CYAL_ROLT and YOU_DID_IT (SCRIPT_SCENE_*), each by its
+# four RAM bytes on GreatLog's Main Street (t02! of e0327_shop_inn.txt) as e0328 to e0335 start theirs, then press
+# through. Forced states: a scene runs out of its story order, on another map. DARCK_TAUNT's script, forced there,
+# draws text from a pointer left at $010D (the cartridge header and the code after it), so it is left out
+# (includes e0335_swap.txt).
+@ e0335_swap.txt
 ls00! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xDB wScriptPointerHi=0x50 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls00b! | ls00! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 ls01! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xFA wScriptPointerHi=0x53 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
@@ -24,8 +26,6 @@ ls08! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xC9 wScriptP
 ls08b! | ls08! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 ls09! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xEF wScriptPointerHi=0x5F wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls09b! | ls09! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls10! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xB3 wScriptPointerHi=0x61 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
-ls10b! | ls10! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 ls11! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xE9 wScriptPointerHi=0x61 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls11b! | ls11! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 ls12! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xBD wScriptPointerHi=0x62 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60

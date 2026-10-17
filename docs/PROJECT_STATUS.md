@@ -216,8 +216,10 @@ Not reached, with what is known:
   cursor still never moves. B's screen runs in the receive half, which returns early while wVBlankFlags bit 7 is set.
   So whether a press is still pending when the screen runs depends on how exchanges and VBlanks fall within a frame,
   and the serial model approximates exactly that (C1). A serial model checked against hardware is the next step for it.
-- **Key-world generation from a key and the late story's scenes** have no recipe: the tour enters later maps by
-  their location bytes, not through the story.
+- **The story's own way into a key world** (a key used at the shrine) has no recipe: the key world is generated and
+  entered through the debug menu's AUTOMAP CHECK (tools/recipes/e0406_key_world.txt). 13 later scenes run from
+  tools/recipes/e0406_late_story.txt, started by their RAM bytes; their chain is 178 runs, 2,522 routines,
+  PASS padded by 16 and by 256.
 Next reproducible action: `python -I tools/link_play.py tools/recipes/link_e0406_breeding.txt --shots build/link`.
 
 ## Prior handoff (2026-10-17, E-0398 to E-0401): the open actions done

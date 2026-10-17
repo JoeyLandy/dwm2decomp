@@ -200,6 +200,15 @@ stops with 424 such errors, where it used to build a ROM that reads the wrong ba
 maps (tools/breed_path.py), from the Canal ($2B) to the Old maps ($C3), each entered by its location bytes, walked
 and fought in. The chain then reaches 2,638 routines.
 
+**The late story and a key world.** tools/recipes/e0406_late_story.txt starts 13 later scenes, one script each,
+on Main Street by their RAM bytes and presses through them: the arrival, Kameha's return, the homecoming, the water,
+the rival, the pirate ghosts, the explosion, the princess, the shield guardian, the grave, Darck's defeat,
+Cyal and Rolt, and the ending. tools/recipes/e0406_key_world.txt opens the debug menu's AUTOMAP CHECK from a state with
+a party; its A press generates the world of key 0 (GenerateKeyWorld) and enters it, and the party walks it and
+fights. The same route from a state with no monsters crashes in the first battle: the battler copy runs from a party
+count of 0 and overwrites the stack, a state play does not reach. Their chain (e0335_swap.txt, the late story and
+the key world, without the tour) is 178 runs and reaches 2,522 routines.
+
 **Link play.** tools/sm83.py now has a serial port. A transfer clocked by one console ends after 4,096 cycles (128
 with the CGB fast bit). When the other console has a transfer started, the two SB bytes are swapped and both get
 the serial interrupt; otherwise $FF comes in. The game's per-frame exchange has both consoles clocking at once, and
@@ -220,7 +229,7 @@ pointer labels it shared led to AddSkillCToFreeOrWeakerSlot_Data in bank $1A: 17
 unlabelled targets had been left as raw bytes. Both are now config/tables.json layouts, the lists named
 SkillSupersedes_<skill>. No `dw` of a pointer-run label is left in src/.
 
-**Result.** All 222 runs of the chain with the tour (tools/recipes/e0406_world_tour.txt and its includes), 9,702,777 ROM data reads, PASS padded by 16 (152 banks) and by 256 (107 banks). The link recipe: 15 runs, 338,121 ROM data reads on two consoles, PASS
+**Result.** All 222 runs of the chain with the tour (tools/recipes/e0406_world_tour.txt and its includes), 9,702,777 ROM data reads, PASS padded by 16 (152 banks) and by 256 (107 banks). The late story and key world's chain (tools/recipes/e0406_key_world.txt, without the tour): 178 runs, 6,690,279 reads, 2,522 routines, PASS padded by 16 and by 256. The link recipe: 15 runs, 338,121 ROM data reads on two consoles, PASS
 padded by 16 and by 256.
 
 ## Left after M2
@@ -229,5 +238,5 @@ padded by 16 and by 256.
 2. Done (E-0393, E-0401). Plain calls inside a bank and the 512 asserted pointers still tie code to its bank; the
    link says which when a move breaks them, and moving one of those needs its reader changed too.
 3. Widened (E-0401, E-0406): the recipe runs reach 2,638 routines, with 25 later-world maps and a
-   link session. Key-world generation from a key, the late story's scenes and a completed link breeding are still
-   reached only by the static inventory.
+   link session; the chain with the late story's scenes and a generated key world, 2,522. A completed link breeding and
+   the story's own way into a key world (a key at the shrine) are still reached only by the static inventory.

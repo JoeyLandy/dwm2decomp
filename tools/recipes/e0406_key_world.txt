@@ -1,0 +1,11 @@
+# E-0406: a key world generated and played. From the party state k03! of e0321_desert.txt the debug menu (game mode 0,
+# as e0320 enters it) opens 3:AUTOMAP CHECK, whose A press generates the world of key 0 (DebugAutomap_Update_EnterKeyWorld:
+# GenerateKeyWorld) and enters it (wMapType $80); the party walks it and fights. From a state with an empty party the
+# same route crashes in the first battle (the battler copy runs from a count of 0), so it starts from k03! (includes
+# e0406_late_story.txt).
+@ e0406_late_story.txt
+kw01! | k03! | wGameMode=0 wModeChangeRequest=1 | W120
+kw02! | kw01! |  | D W12 D W12 A W200
+kw03! | kw02! |  | A W200 A W300 W300
+kw04! | kw03! |  | R64 D64 L64 U64 R96 D96 W60
+kw05! | kw04! |  | A*24 W60 B*4 W30 L64 U64 R64 D64 W60
