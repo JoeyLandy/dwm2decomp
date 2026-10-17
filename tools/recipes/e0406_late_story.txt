@@ -1,0 +1,34 @@
+# E-0406: scenes from the later story. ls00-ls13 start, in order, the bank-$10 scripts holding the scene commands
+# LAND_HO, KAMEHA_BACK, HOMECOMING, WATER_SOLVED, RIVAL_DEFEATED, PIRATE_GHOSTS, EXPLOSION, PRINCESS_MEDICINE,
+# SHIELD_GUARDIAN, GRAVE, DARCK_TAUNT, DARCK_DEFEATED, CYAL_ROLT and YOU_DID_IT (SCRIPT_SCENE_*), each by its four
+# RAM bytes on GreatLog's Main Street (t02! of e0327_shop_inn.txt) as e0328 to e0335 start theirs, then press through.
+# Forced states: a scene runs out of its story order, on another map (includes e0406_world_tour.txt).
+@ e0406_world_tour.txt
+ls00! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xDB wScriptPointerHi=0x50 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls00b! | ls00! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls01! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xFA wScriptPointerHi=0x53 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls01b! | ls01! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls02! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xF5 wScriptPointerHi=0x56 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls02b! | ls02! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls03! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xAB wScriptPointerHi=0x5A wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls03b! | ls03! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls04! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0x3C wScriptPointerHi=0x5B wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls04b! | ls04! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls05! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0x8A wScriptPointerHi=0x5C wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls05b! | ls05! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls06! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xD3 wScriptPointerHi=0x5D wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls06b! | ls06! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls07! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xA5 wScriptPointerHi=0x5F wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls07b! | ls07! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls08! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xC9 wScriptPointerHi=0x5F wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls08b! | ls08! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls09! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xEF wScriptPointerHi=0x5F wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls09b! | ls09! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls10! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xB3 wScriptPointerHi=0x61 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls10b! | ls10! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls11! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xE9 wScriptPointerHi=0x61 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls11b! | ls11! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls12! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xBD wScriptPointerHi=0x62 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls12b! | ls12! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
+ls13! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0x9E wScriptPointerHi=0x65 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls13b! | ls13! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120

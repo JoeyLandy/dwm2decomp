@@ -2431,6 +2431,45 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0406 — The later worlds and link play for the shift gate; a serial model; two byte lists misread as pointers
+
+- Date: 2026-10-17. Kind: OBSERVATION, TOOL and DECISION (generator config; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e0bc01b. Details: [shiftability](SHIFTABILITY.md), "The later worlds and link play".
+- **World tour.** tools/recipes/e0406_world_tour.txt: 25 encounter maps from $2B to $C3, entered by their location bytes from the party state of E-0321, walked and fought in. Screens of the Float map and of a battle on the Old maps confirm the runs reach them.
+- **Serial model** (tools/sm83.py). An internal-clock transfer ends after 4,096 cycles (128 with the fast bit). If the partner has a transfer started (either clock), the SB bytes are swapped and both get the serial interrupt; otherwise $FF comes in. With no cable a transfer never ends, as before, so unlinked observations are unchanged. A model: real hardware's behavior with two clocking consoles, and its timing, are not reproduced exactly (C1). tests/test_link_play.py.
+- **Link runner** (tools/link_play.py). Two consoles in cycle lockstep with separate recipes, each run ending on the same frame. The first version let them end apart, and the console behind then played alone while its partner waited, which lost its presses.
+- **Link session.** Choosing BREEDING on the title menu with one console first connects, as RunLinkSession_FindPartner expects: one side sends its option code while the other waits on the same option. The breeding screens follow. A console in link role 3 reads its pad only in its send step inside the serial interrupt. Its later presses did not move its choice, so no child is bred; the cause (game or model timing) is open.
+- **Found by the tour gate.** EnterStatusEffectFieldState_Data had eleven map-id pairs decoded as `dw` of labels with the same values. In a padded ROM the scan read $5C where the base read $5D, so map $5D left the list: found in run t5Db! by stepping both ROMs in lockstep. AddSkillCToFreeOrWeakerSlot_Data (bank $1A, 170 words) had unlabelled targets as raw bytes. Both are now config/tables.json layouts, the lists named SkillSupersedes_<skill> (target_names). No `dw` of a pointer-run label is left.
+- **Result.** All 222 runs of the chain with the tour (tools/recipes/e0406_world_tour.txt and its includes), 9,702,777 ROM data reads, PASS padded by 16 (152 banks) and by 256 (107 banks). Link recipe: 338,121 ROM data reads on two consoles, PASS padded by 16 and by 256.
+- **Checks.** tools/shift_test.py --recipe and --link-recipe as above; build/run702 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite702.log OK (473 tests, 3 skipped).
+
+### E-0405 — The bred child's later rolls: sex, resistances, skill list and stat bonus
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the check compares; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e0bc01b. Specification: "The bred child's later rolls" in [mechanics](MECHANICS.md).
+- **Method.** tools/mechanics.py `child` runs RollChildSexFromSpecies, RollChildResistancesToChildRecordResistances, BuildChildRecordSkillListCandidateList and ApplyBreedingBonusToChildStats, in turn, on generated child and parent records, and compares the child's bytes (MON_SEX, the 27 resistances, MON_SKILLS and the skill list, the eight stat words) and wRandomHi/Lo.
+- **Result.** 3,000 of 3,000 agree. Every line of the four models ran.
+- **RandomModulo29.** The quotient of `((lo << 1) & mask) x 256 + lo` by 41; the `rl a` takes in a carry that is always 0 at RandomByteTable's address ($0973 + at most $7F).
+- **Findings** (properties of the code):
+  - TestResistanceEntry hides a parent's level-2 resistance named by its item.
+  - The stat bonus divides only the low 16 bits of the 24-bit product.
+  - The skill list's compaction leaves old bytes after the moved ones, which the second ClearDuplicateChildSkills clears.
+- **Negative checks** (tests/test_mechanics.py). A model without the item test, and one that divides the whole product, are each caught.
+- **Limits.** The routines are checked one at a time from generated states, not in the order ComputeBreedingChild's caller runs them; what the bonus and resistance gains mean in play is C1.
+- **Checks.** tools/mechanics.py child --n 3000: all agree; build/run702 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite702.log OK (473 tests, 3 skipped).
+
+### E-0404 — The other damage routines of bank $36
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the check compares; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e0bc01b. Specification: "The other damage routines" in [mechanics](MECHANICS.md).
+- **Method.** tools/mechanics.py `effects` models 28 routines, reading the families the family-dependent ones test from src/. It runs each on generated battle states: levels, HP, monster ids with their species families, body flags, MP spent, battle kind, action id, formation bytes, and register E for D9. It compares the damage word, both random states, wBattleArg2 where a skill roll sets it, Kamikaze's carry, and that the ATK and DEF words and wBattleActor are put back.
+- **Result.** 3,000 of 3,000 agree (about 107 per routine). Kamikaze's three outcomes occur: failure 47, success with damage 1 59, other damage 14.
+- **Findings** (properties of the code, C2 on the emulator):
+  - ActionEffect_Vacuum_Damage tests wLinkMode where the others test the actor's side, so foes get the player formula.
+  - ActionEffect_ActionD9_Damage takes a level from register E, which it never loads.
+  - Kamikaze reads the word at the address its actor's HP value names.
+  - BiAttack's 30 x ATK and 30 x DEF products keep 16 bits.
+- **Negative checks** (tests/test_mechanics.py). A model that halves DEF against every family, and one without Kamikaze's word read, are each caught.
+- **Limits.** Routines are checked alone from generated states; which skill uses which routine, and the effect of the status bits in play, stay as their notes give them (C1).
+- **Checks.** tools/mechanics.py effects --n 3000: all agree; build/run702 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite702.log OK (473 tests, 3 skipped).
+
 ### E-0403 — H1b, first file: tests/test_generated_source.py split into source audits and generator checks
 
 - Date: 2026-10-17. Kind: TOOL and TEST (no source byte changed). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 6a7f1a2. Plan: [graduation](GRADUATION.md), H1b.

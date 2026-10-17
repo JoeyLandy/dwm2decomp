@@ -194,10 +194,40 @@ stops with 424 such errors, where it used to build a ROM that reads the wrong ba
 
 **Result.** All 147 recipe runs, padding every paddable bank, PASS: 4,741,338 ROM data reads, each reading instruction's stream equal, with 152 banks padded by 16 (build/shift_recipe16) and with 107 banks padded by 256 (build/shift_recipe256), which also keeps every address's low byte and so the timing.
 
+## The later worlds and link play (E-0406)
+
+**The world tour.** tools/recipes/e0406_world_tour.txt adds 75 runs to the recipe chain: 25 of the 56 encounter
+maps (tools/breed_path.py), from the Canal ($2B) to the Old maps ($C3), each entered by its location bytes, walked
+and fought in. The chain then reaches 2,638 routines.
+
+**Link play.** tools/sm83.py now has a serial port. A transfer clocked by one console ends after 4,096 cycles (128
+with the CGB fast bit). When the other console has a transfer started, the two SB bytes are swapped and both get
+the serial interrupt; otherwise $FF comes in. The game's per-frame exchange has both consoles clocking at once, and
+the model treats that as one exchange. Without a cable a transfer never ends, as before, so earlier observations
+stay comparable. Real hardware would end it with $FF.
+
+tools/link_play.py runs two linked consoles in cycle lockstep, each with its own recipe, and ends every run on
+the same frame. tools/recipes/link_e0406_breeding.txt powers both on with a save and chooses BREEDING on the title
+menu, A first while B's cursor waits on it. It then plays the link breeding screens: the farm list, info and
+stats pages, and the "leveled up more" and "farm's roster" refusals. B's presses do not move its choice as A's do,
+so no child is bred. Whether the game or the serial model's timing is the cause is not settled. `--link-recipe`
+replays it on two linked base and two linked padded consoles.
+
+**What they found.** EnterStatusEffectFieldState_Data, the list of 64 maps where the field status steps do not
+run, had eleven byte pairs decoded as pointer words (`dw` of labels that happened to share their values). In a
+padded ROM those words moved, so map $5D dropped out of the list and the poison step ran there. Reading the run of
+pointer labels it shared led to AddSkillCToFreeOrWeakerSlot_Data in bank $1A: 170 words, one per skill, whose
+unlabelled targets had been left as raw bytes. Both are now config/tables.json layouts, the lists named
+SkillSupersedes_<skill>. No `dw` of a pointer-run label is left in src/.
+
+**Result.** All 222 runs of the chain with the tour (tools/recipes/e0406_world_tour.txt and its includes), 9,702,777 ROM data reads, PASS padded by 16 (152 banks) and by 256 (107 banks). The link recipe: 15 runs, 338,121 ROM data reads on two consoles, PASS
+padded by 16 and by 256.
+
 ## Left after M2
 
 1. Done (E-0392, E-0401): no address-like split sum is left.
 2. Done (E-0393, E-0401). Plain calls inside a bank and the 512 asserted pointers still tie code to its bank; the
    link says which when a move breaks them, and moving one of those needs its reader changed too.
-3. Widened (E-0401): the recipe runs reach 2,299 routines. Most of the game (key worlds, late story, link
-   play) is still reached only by the static inventory; more recipes extend the gate.
+3. Widened (E-0401, E-0406): the recipe runs reach 2,638 routines, with 25 later-world maps and a
+   link session. Key-world generation from a key, the late story's scenes and a completed link breeding are still
+   reached only by the static inventory.

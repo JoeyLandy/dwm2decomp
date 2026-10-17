@@ -144,6 +144,46 @@ class AgainstTheGame(unittest.TestCase):
         finally:
             mechanics.apply_model, mechanics.modifiers_model = good_apply, good_mod
 
+    def test_a_wrong_effect_model_is_caught(self):
+        good = mechanics.effect_model
+        try:
+            def no_family_bonus(r, L, C, name, how, s):  # halved DEF against every family, not just the named one
+                if how["kind"] == "halved_def":
+                    return good(r, L, C, name, dict(how, kind="quarter_def"), s)
+                return good(r, L, C, name, how, s)
+            mechanics.effect_model = no_family_bonus
+            self.assertTrue(mechanics.effects_check(self.rom, 600, 11))
+
+            def kamikaze_no_deref(r, L, C, name, how, s):  # without the word read at the HP value
+                out = good(r, L, C, name, how, s)
+                if how["kind"] == "kamikaze" and out.get("carry") and out["damage"] == 1 and s["hp"][s["actor"]] in (
+                        362, 382, 613):
+                    return dict(out, damage=7)
+                return out
+            mechanics.effect_model = kamikaze_no_deref
+            self.assertTrue(mechanics.effects_check(self.rom, 1500, 11))
+        finally:
+            mechanics.effect_model = good
+
+    def test_a_wrong_child_model_is_caught(self):
+        good_res, good_bonus = mechanics.child_resistances, mechanics.child_bonus
+        try:
+            def no_item_test(r, L, rnd, child, a, b):  # a parent's item no longer hides its level-2 resistance
+                a = bytearray(a)
+                a[0xA4] = 0
+                return good_res(r, L, rnd, child, a, b)
+            mechanics.child_resistances = no_item_test
+            self.assertTrue(mechanics.child_check(self.rom, 400, 11))
+            mechanics.child_resistances = good_res
+
+            def full_product(r, L, child, a, b, kind):  # divides the whole 24-bit product, not its low 16 bits
+                out = good_bonus(r, L, child, a, b, kind)
+                return [min(999, v + 1) if v < 999 else v for v in out]
+            mechanics.child_bonus = full_product
+            self.assertTrue(mechanics.child_check(self.rom, 400, 11))
+        finally:
+            mechanics.child_resistances, mechanics.child_bonus = good_res, good_bonus
+
     def test_tables_round_trip_and_readers(self):
         res = tables_export.check(self.rom)
         self.assertTrue(all(res["round_trip"].values()), res["round_trip"])

@@ -33,9 +33,11 @@ Every stage below has met its exit gate, and the matching build has passed after
 - M5: [mechanics](MECHANICS.md) and [data tables](DATA_TABLES.md).
 
 What stays open is listed in each document and in [readability open questions](READABILITY_OPEN_QUESTIONS.md):
-- the other mechanics of phases 4-5 (the effect routines beyond roll and scale, the key worlds); damage, skill
-  learning and applying damage were added after M5 (E-0397 to E-0399);
-- the scripted runs' reach: 2,299 routines with the recipe chain (E-0401), the rest only by the static inventory.
+- the key worlds' generation and the late story's scenes as mechanics; damage (all of bank $36's damage routines),
+  skill learning, applying damage and the bred child's later rolls were added after M5 (E-0397 to E-0399, E-0404,
+  E-0405);
+- the scripted runs' reach: 2,638 routines with the recipe chain, 25 later-world maps and a link session (E-0401,
+  E-0406); the rest only by the static inventory.
 The split sums and fixed-bank pointers left after M2 are done (E-0401).
 
 
@@ -170,7 +172,8 @@ Planning allowance: several weeks of regular sessions; recover one coherent tabl
 
 ## Phase 4 — Mechanics and state transitions
 
-**Status:** five mechanics meet the gate on the project's emulator ([mechanics](MECHANICS.md)): the join offer, level-up gains and the breeding child (M5, E-0396); damage: the plain attack, the 16 roll-and-resistance routines, the step-7 modifiers (E-0397) and applying it to HP (E-0399); and skill learning (E-0398). The other effect routines and the child's sex, resistances, skills and stats are open.
+**Status:** five mechanics meet the gate on the project's emulator ([mechanics](MECHANICS.md)): the join offer, level-up gains and the breeding child (M5, E-0396); damage: the plain attack, the 16 roll-and-resistance routines, the step-7 modifiers (E-0397) and applying it to HP (E-0399); skill learning (E-0398); the other 28 damage routines of bank $36 (E-0404); and the bred child's sex, resistances,
+skill list and stat bonus (E-0405). The key worlds' generation is open.
 
 Dependencies: relevant phase 3 records and routines, plus reproducible saves/input recipes.
 

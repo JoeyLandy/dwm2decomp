@@ -15,8 +15,10 @@ on every generated state supports the specification on the project's emulator (C
   learn       FindNewlyLearnableSkills: the skill a monster learns, upgrades or devises on a level-up (E-0398)
   apply       ResolveStepApplyDamage: the damage taken from the target's HP, and the defeat step (E-0399)
   modifiers   ApplyDamageModifiers: the wBattleStatus7 multipliers of the damage message step (E-0399)
+  effects     the other 28 bank-$36 damage routines (E-0404)
+  child       the bred child's sex, resistances, skill list and stat bonus (E-0405)
 
-Usage: mechanics.py [join|growth|breeding|attack|resistance|step7|learn|apply|modifiers|all] [--n 2000] [--seed 1]
+Usage: mechanics.py [join|growth|breeding|attack|resistance|step7|learn|apply|modifiers|effects|child|all] [--n 2000] [--seed 1]
 Exit 1 when a model and the game disagree.
 """
 from __future__ import annotations
@@ -915,9 +917,403 @@ def modifiers_check(rom: bytes, n: int, seed: int) -> list[str]:
     return bad
 
 
+# ---- the other damage routines (E-0404) -------------------------------------------------------------------------
+
+def species_family(r: Rom, L: dict, species: int) -> int:
+    """GetTargetSpeciesFamily: byte 0 of the species record (LoadSpeciesRecord through SpeciesRecordPointers)."""
+    return r.b(0x35, r.w(0x35, L["SpeciesRecordPointers"][1] + 2 * species))
+
+
+def spread_10(rnd: Random, d: int) -> int:
+    """MegaMagic, Vacuum, Lightning: d + RandomInRange(-q, q) with q = ((d x 8 / 10) / 2) / 4 (no roll when q = 0)."""
+    q = ((d * 8 // 10) >> 1) >> 2
+    return d if q == 0 else (d + random_in_range(rnd, -q, q)) & 0xFFFF
+
+
+def roll_chance(rnd: Random, status8: int, level: int) -> bool:
+    """RollChanceByFlagsAtHL: by the target's wBattleStatus8 bit 6, else bit 7, else neither, level 0-3 succeeds
+    always, or when a new wRandomLo is below a threshold, or never."""
+    table = ((None, 0xBF, 0x66, 0) if status8 & 0x40 else (None, None, 0xBF, 0) if status8 & 0x80
+             else (None, 0xD8, 0x7F, 0))[level]
+    if table is None:
+        return True
+    if table == 0:
+        return False
+    rnd.next()
+    return rnd.lo < table
+
+
+def effect_routines() -> dict[str, dict]:
+    """The bank-$36 damage routines checked by `effects`, with what each needs read from src/: the family a
+    family-dependent routine tests (cp $NN after GetTargetSpeciesFamily)."""
+    text = BATTLE_SRC.read_text(encoding="utf-8")
+    out: dict[str, dict] = {}
+    for m in re.finditer(r"^(AttackDamageHalvedDEFVs\w+)::\n((?:    .*\n)+)", text, re.M):
+        out[m.group(1)] = {"kind": "halved_def", "family": int(re.search(r"cp \$([0-9a-f]{2})", m.group(2)).group(1), 16)}
+    for m in re.finditer(r"^(ActionEffect_ActionD[234]_ScaleByGigaSlashResistance)::\n((?:    .*\n|\n|\.\w+:\n)+?)SECTION",
+                         text, re.M):
+        out[m.group(1)] = {"kind": "gigaslash_family",
+                           "families": [int(x, 16) for x in re.findall(r"cp \$([0-9a-f]{2})", m.group(2))]}
+    for name, kind in (("ComputeAttackDamageWithHalvedDEF", "quarter_def"), ("AttackDamageWithATK200", "atk200"),
+                       ("AttackDamageTimes1_5IfSlotBodyFlagsBit0", "metal"), ("ActionEffect_BiAttack_Damage", "biattack"),
+                       ("ActionEffect_WindBeast_Damage", "windbeast"), ("ActionEffect_Vacuum_Damage", "vacuum"),
+                       ("ActionEffect_Lightning_Damage", "lightning"), ("ActionEffect_CallHelp_Damage", "callhelp"),
+                       ("ActionEffect_MegaMagic_Damage", "megamagic"), ("ActionEffect_MultiCut_Damage", "multicut"),
+                       ("ActionEffect_Watershot_Damage", "watershot"), ("ActionEffect_Kamikaze_Damage", "kamikaze"),
+                       ("ActionEffect_ActionD7_Damage", "d7"), ("ActionEffect_ActionD8_Damage", "d8"),
+                       ("ActionEffect_ActionD9_Damage", "d9")):
+        out[name] = {"kind": kind}
+    return out
+
+
+def formation_partner(actor: int, formation: list[int]) -> int:
+    """ActorFormationSlotToTemp0: the side's formation case (0-2) picks the slot pair (0,1), (0,2) or (1,2); the
+    partner is the other slot of the pair (the first one when the actor is not the pair's first), on the actor's
+    side; $FF without a formation."""
+    f = formation[(actor & 4) >> 2]
+    if f == 0xFF:
+        return 0xFF
+    first, second = ((0, 1), (0, 2), (1, 2))[f]
+    return (second if first == actor & 3 else first) + (actor & 4)
+
+
+def effect_model(r: Rom, L: dict, C: dict, name: str, how: dict, s: dict) -> dict:
+    rnd = LinkedRandom(r, L["RandomByteTable"][1], s)
+    a, t = s["actor"], s["target"]
+    atk, def_ = s["atk"][a], s["def"][t]
+    fam = species_family(r, L, s["monster"][t])
+    st8, res = s["status"][t][8], s["resist"][t]
+    lvl, link = s["level"][a], s["link_mode"]
+    foe = link != 1 and a >= 4
+    out = {}
+    k = how["kind"]
+    if k == "halved_def":
+        d = attack_damage(rnd, atk, def_ >> 1 if fam == how["family"] else def_)
+    elif k == "quarter_def":
+        d = attack_damage(rnd, atk, def_ >> 1)
+    elif k == "atk200":
+        d = attack_damage(rnd, 200, def_)
+    elif k == "metal":
+        d = attack_damage(rnd, atk, def_)
+        if s["body"][t] & 1:
+            d = (d + (d >> 1) + 1) & 0xFFFF
+    elif k == "gigaslash_family":
+        d, out["arg2"] = skill_roll(rnd, s)
+        d = scale_by_resistance("ScaleDamageByFlagsAtHL", st8, resistance_level(res[6], ["rrca", "rrca"]), d)
+        if fam in how["families"]:
+            d = (d + (d >> 1)) & 0xFFFF
+    elif k == "biattack":
+        big = atk * 30 & 0xFFFF
+        a2 = (big >> 1) + (big >> 2) if s["action"] == C["SKILL_BIATTACK"] else (big >> 1) + (big >> 3)
+        d = basic_damage(rnd, a2 & 0xFFFF, (def_ * 30 & 0xFFFF) >> 1) // 30
+    elif k in ("windbeast", "vacuum", "lightning"):
+        if k == "windbeast":
+            d = lvl + (lvl >> 1) if foe else 3 * lvl + 10
+            d = min(d, 180)
+            q = (d * 6 // 10) >> 1 >> 1
+            d = (d + random_in_range(rnd, -q, q)) & 0xFFFF
+            d = scale_by_resistance("ScaleDamageByFlagsAtHL", st8, resistance_level(res[1], ["rlca", "rlca"]), d)
+        elif k == "vacuum":
+            d = lvl + (lvl >> 1) if link != 1 and link >= 4 else 2 * lvl + 30
+            d = spread_10(rnd, min(d, 150))
+            d = scale_by_resistance("ScaleDamageByFlagsAtHL", st8, resistance_level(res[1], ["rlca", "rlca"]), d)
+        else:
+            d = lvl + (lvl >> 1) if foe else 2 * lvl + 20
+            d = spread_10(rnd, min(d, 220 if fam == 9 else 180))
+            d = scale_by_resistance("ScaleDamageByFlagsAtHL", st8, resistance_level(res[1], ["swap a"]), d)
+    elif k == "callhelp":
+        d = lvl + (lvl >> 1) if foe else 2 * lvl
+        d = scale_by_resistance("ScaleDamageByFlagsAtHL", st8, resistance_level(res[6], ["swap a"]), d)
+    elif k == "megamagic":
+        d = spread_10(rnd, (2 * s["mp_spent"] + 2 * lvl) & 0xFFFF)
+        d = scale_by_resistance("ScaleDamageByFlagsAtHLAlt", st8, resistance_level(res[4], ["rlca", "rlca"]), d)
+    elif k == "multicut":
+        T = mechanics_skill_record(r, L, s["action"])
+        d, out["arg2"] = skill_roll(rnd, dict(s, record=T))
+        if fam == 7:
+            d = (d + (d >> 2) + (d >> 4)) & 0xFFFF
+        d = scale_by_resistance("ScaleDamageByFlagsAtHLAlt", st8, resistance_level(res[1], ["rlca", "rlca"]), d)
+    elif k == "watershot":
+        d, out["arg2"] = skill_roll(rnd, s)
+        picker = "ScaleDamageByFlagsAtHL" if s["action"] == C["SKILL_WATERSHOT"] else "ScaleDamageByFlagsAtHLAlt"
+        d = scale_by_resistance(picker, st8, resistance_level(res[0], ["swap a", "rrca", "rrca"]), d)
+    elif k == "kamikaze":
+        if not roll_chance(rnd, st8, res[3] & 3):
+            d, out["carry"] = 0, False
+        else:
+            hp = s["hp"][a]
+            w = r.b(0, hp) | r.b(0, hp + 1) << 8  # the word at the address the HP value names (bank $00 for HP < $4000)
+            if w == 1:
+                d = 1
+            else:
+                if link == 0 and s["kind"] in (0, 1):
+                    d = (s["hp"][t] - 1) & 0xFFFF
+                else:
+                    d = ((hp - 1) & 0xFFFF) >> 1
+                d = d or 1
+            out["carry"] = True
+    elif k in ("d7", "d8"):  # the actor's damage plus its formation partner's, 16-bit
+        p = formation_partner(a, s["formation"])
+        if k == "d7":  # ComputeBasicDamage against 0, each after a random step
+            rnd.next()
+            d1 = basic_damage(rnd, atk, 0)
+            rnd.next()
+            d = (d1 + basic_damage(rnd, s["atk"][p], 0)) & 0xFFFF
+        else:
+            d1 = attack_damage(rnd, atk, def_)
+            d = (d1 + attack_damage(rnd, s["atk"][p], def_)) & 0xFFFF
+    elif k == "d9":  # 8 x wAllMPSpent + 8 x the level of slot E (E left by the caller), then as MegaMagic
+        m2, l2 = 2 * s["mp_spent"], 2 * s["level"][s["e"]]
+        d = (((m2 + l2) + m2 + l2) * 2) & 0xFFFF
+        d = spread_10(rnd, d)
+        d = scale_by_resistance("ScaleDamageByFlagsAtHLAlt", st8, resistance_level(res[4], ["rlca", "rlca"]), d)
+    else:
+        raise ValueError(k)
+    return dict(out, damage=d, **rnd.after(s))
+
+
+def mechanics_skill_record(r: Rom, L: dict, action: int) -> list[int]:
+    """LoadSkillRecord for a skill id below $100: its 17-byte SkillTable record."""
+    bank, addr = L["SkillTable"]
+    return [r.b(bank, addr + 17 * action + k) for k in range(17)]
+
+
+def effects_check(rom: bytes, n: int, seed: int) -> list[str]:
+    """Every routine of effect_routines(), n generated states in all, the routines in turn."""
+    R, L, r, C = ram(), rom_labels(), Rom(rom), constants()
+    rng = random.Random(seed)
+    routines = list(effect_routines().items())
+    species = [sp for sp in range(1, 300) if species_family(r, L, sp) <= 10]
+    bad = []
+    for i in range(n):
+        name, how = routines[i % len(routines)]
+        bank, addr = L[name]
+        s, mem = battle_state(rng, R)
+        if how["kind"] == "kamikaze" or rng.random() < 0.5:
+            s["link_mode"] = rng.choice([0, 0, 1, 2])
+            mem[R["wLinkMode"]] = s["link_mode"]
+        s.update(level=[rng.randrange(1, 100) for _ in range(8)],
+                 hp=[rng.choice([1, 2, 3, 362, 382, 613, rng.randrange(0, 1000)]) for _ in range(8)],  # 362, 382, 613:
+                 # the HP values whose word in bank $00 is 1 (Kamikaze's damage 1 case)
+                 monster=[rng.choice(species) for _ in range(8)], body=[rng.randrange(256) for _ in range(8)],
+                 mp_spent=rng.choice([rng.randrange(0, 300), rng.randrange(0, 0x8000)]), kind=rng.randrange(4),
+                 action=rng.choice([C["SKILL_BIATTACK"], C["SKILL_WATERSHOT"], C["SKILL_MULTICUT"], rng.randrange(170)]))
+        if how["kind"] == "vacuum":
+            s["link_mode"] = rng.choice([0, 1, 2, 3, 4, 5, 9])
+            mem[R["wLinkMode"]] = s["link_mode"]
+        for k in range(8):
+            mem[R["wBattleLevel"] + k] = s["level"][k]
+            mem[R["wBattleHP"] + 2 * k], mem[R["wBattleHP"] + 2 * k + 1] = s["hp"][k] & 0xFF, s["hp"][k] >> 8
+            mem[R["wBattleMonsterId"] + 2 * k] = s["monster"][k] & 0xFF
+            mem[R["wBattleMonsterId"] + 2 * k + 1] = s["monster"][k] >> 8
+            mem[R["wSlotBodyFlags"] + k] = s["body"][k]
+        s.update(formation=[rng.randrange(3), rng.randrange(3)], e=rng.randrange(8))
+        mem.update({R["wAllMPSpentLo"]: s["mp_spent"] & 0xFF, R["wAllMPSpentHi"]: s["mp_spent"] >> 8,
+                    R["wBattleActionId"]: s["action"], R["wBattleKind"]: s["kind"],
+                    R["wFormationSlot0"]: s["formation"][0], R["wFormationSlot1"]: s["formation"][1]})
+        want = effect_model(r, L, C, name, how, s)
+        gb = call(rom, bank, addr, mem, regs={"e": s["e"]})
+        got = dict(damage=read_damage(gb, R), **read_random(gb, R))
+        if "arg2" in want:
+            got["arg2"] = gb.rb(R["wBattleArg2"])
+        if "carry" in want:
+            got["carry"] = bool(gb.f & 0x10)
+        a, t = s["actor"], s["target"]
+        kept = (gb.rb(R["wBattleATK"] + 2 * a) | gb.rb(R["wBattleATK"] + 2 * a + 1) << 8,
+                gb.rb(R["wBattleDEF"] + 2 * t) | gb.rb(R["wBattleDEF"] + 2 * t + 1) << 8)
+        if gb.rb(R["wBattleActor"]) != a:  # D7-D9 set it to the partner for a while; it is put back
+            got["actor"] = gb.rb(R["wBattleActor"])
+        if got != want or kept != (s["atk"][a], s["def"][t]):
+            bad.append(f"{name} #{i}: state {s}: game {got} ATK/DEF after {kept}, model {want}")
+    return bad
+
+
+# ---- the bred child's later rolls (E-0405) ----------------------------------------------------------------------
+
+def random_29(rnd: Random, mask: int) -> int:
+    """RandomModulo29 (its quotient): NextTableByte, then ((lo << 1) & mask) * 256 + lo divided by 41. The `rl a`
+    takes in the carry NextTableByte leaves, always 0 here: RandomByteTable ($0973) + an index of at most $7F
+    never carries."""
+    rnd.next()
+    return ((((rnd.lo << 1) & mask) << 8) | rnd.lo) // 41
+
+
+def child_sex(r: Rom, L: dict, rnd: Random, child_species: int) -> int:
+    """RollChildSexFromSpecies: 0 when the species' SPECIES_SEX_RATIO byte is 0; else 1 (female) when a roll 0-99
+    is not above SexChanceByClass[byte & 3], else 0."""
+    ratio = r.b(0x35, r.w(0x35, L["SpeciesRecordPointers"][1] + 2 * child_species) + 1)
+    if ratio == 0:
+        return 0
+    chance = r.b(0x0E, L["SexChanceByClass"][1] + (ratio & 3))
+    return 1 if random_29(rnd, 0x0F) <= chance else 0
+
+
+def plus_roll(rnd: Random, plus: int, factor: int) -> bool:
+    """RollChildRecordPlusChanceOrIncArg5: True (the level rises) when factor x plus is 100 or more, or a roll 0-99
+    is not above it."""
+    chance = factor * plus
+    return chance >= 100 or random_29(rnd, 0x0F) <= chance
+
+
+def child_resistances(r: Rom, L: dict, rnd: Random, child: bytes, a: bytes, b: bytes) -> list[int]:
+    """RollChildResistancesToChildRecordResistances: the 27 MON_RESISTANCES of the child."""
+    srec = r.w(0x35, L["SpeciesRecordPointers"][1] + 2 * (child[0x0B] | child[0x0C] << 8))
+    test_tab = L["TestResistanceEntry_Data"][1]
+    plus = child[0x6D]
+
+    def test(rec: bytes, c: int) -> int:  # TestResistanceEntry
+        v = rec[0x73 + c]
+        if v == 2 and 1 <= rec[0xA4] < 0x1C and r.b(0x0E, test_tab + rec[0xA4] - 1) == c:
+            return 0xFF
+        return v
+
+    def parent_sum(c: int, least: int) -> int | None:  # SumRecordBufAAndBResistanceTests
+        ta, tb = test(a, c), test(b, c)
+        if 0xFF in (ta, tb) or (ta + tb) & 0xFF < least:
+            return None
+        return (ta + tb) & 0xFF
+
+    out = []
+    for c in range(27):
+        lv = r.b(0x35, srec + 0x12 + c)
+        if lv < 3 and plus:
+            s = parent_sum(c, 5 if lv == 2 else 3)
+            if s is not None and lv == 2:  # RollResistanceGainForLevel2
+                if s != 5:
+                    lv += plus_roll(rnd, plus, 2)
+                elif plus >= random_29(rnd, 0x1F):
+                    lv += 1
+            elif s is not None:  # RollResistanceGainForLowLevel
+                if s == 3:
+                    lv += plus_roll(rnd, plus, 1)
+                elif s == 4:
+                    lv += plus_roll(rnd, plus, 3)
+                elif s == 5:
+                    if plus_roll(rnd, plus, 10):
+                        lv += 1 + plus_roll(rnd, plus, 3)
+                else:
+                    lv += 1 + plus_roll(rnd, plus, 5)
+        elif lv < 3:  # no plus: the parent sums are still taken, nothing is rolled
+            pass
+        out.append(lv & 3)
+    return out
+
+
+def child_skill_list(r: Rom, L: dict, child: bytes, a: bytes, b: bytes) -> tuple[list[int], list[int]]:
+    """BuildChildRecordSkillListCandidateList: (MON_SKILLS, the 25-byte MON_SKILL_LIST) of the child."""
+    def natural(rec: bytes) -> list[int]:
+        srec = r.w(0x35, L["SpeciesRecordPointers"][1] + 2 * (rec[0x0B] | rec[0x0C] << 8))
+        return [r.b(0x35, srec + 8 + k) for k in range(3)]
+    lst = natural(child) + natural(a) + natural(b) + list(a[0x34:0x3C]) + list(b[0x34:0x3C])
+    base = L["SkillLineBaseTable"][1]
+    lst = [v if v == 0xFF else r.b(0x0E, base + v) for v in lst]
+
+    def clear(xs: list[int]) -> list[int]:  # ClearDuplicateChildSkills
+        xs = list(xs)
+        for i, v in enumerate(xs):
+            if v in (0, 0xFF):
+                xs[i] = 0xFF
+                continue
+            for j in range(i + 1, 25):
+                if xs[j] == v:
+                    xs[j] = 0xFF
+        return xs
+    lst = clear(lst)
+    keep = [v for v in lst if v != 0xFF]
+    lst = keep + lst[len(keep):]  # CompactChildRecordSkillListRemovingFF: the places after keep their old bytes
+    return [0xFF] * 8, clear(lst)
+
+
+def personality_pair(r: Rom, L: dict, a: bytes, b: bytes) -> int:
+    """PersonalityPairValueToArg5: the 2-bit PersonalityPairMatrix entry for the two parents' combined indexes."""
+    def grade(v: int) -> int:
+        return 0 if v >= 0xC0 else 1 if v >= 0x40 else 2
+
+    def index(rec: bytes) -> int:
+        return 9 * grade(rec[0x6F]) + 3 * grade(rec[0x72]) + grade(rec[0x70])
+    ia, ib = index(a), index(b)
+    byte = r.b(0x0E, L["PersonalityPairMatrix"][1] + 8 * ia + (ib >> 2))
+    return (byte >> (6 - 2 * (ib & 3))) & 3
+
+
+def child_bonus(r: Rom, L: dict, child: bytes, a: bytes, b: bytes, kind: int) -> list[int]:
+    """ApplyBreedingBonusToChildStats: the eight stat words of the child afterwards."""
+    c = 5 * (personality_pair(r, L, a, b) == 0)
+    c += 5 * (a[0x56] == a[0x57] and b[0x56] == b[0x57])
+    c += 2 * (a[0x6D] >= 5 and b[0x6D] >= 5 and not (a[0x6D] + b[0x6D]) & 1)
+    c += 3 * (kind != 0)
+    offs = [r.b(0x0E, L["ApplyBreedingBonusToChildStats_Data"][1] + k) for k in range(8)]
+    words = [child[o] | child[o + 1] << 8 for o in offs]
+    if not c:
+        return words
+    out = []
+    for w in words:
+        q, rem = divmod(c * w & 0xFFFF, 100)  # Multiply8By16 then DivideHLByA: only the low 16 bits are divided
+        v = (w + q + (rem != 0)) & 0xFFFF
+        out.append(999 if v >= 1000 else v)
+    return out
+
+
+def child_check(rom: bytes, n: int, seed: int) -> list[str]:
+    """RollChildSexFromSpecies, RollChildResistancesToChildRecordResistances, BuildChildRecordSkillListCandidateList
+    and ApplyBreedingBonusToChildStats, in turn, on generated parents and child."""
+    R, L, r = ram(), rom_labels(), Rom(rom)
+    rng = random.Random(seed)
+    species = [sp for sp in range(1, 300) if species_family(r, L, sp) <= 10]
+    test_tab = L["TestResistanceEntry_Data"][1]
+    names = ["RollChildSexFromSpecies", "RollChildResistancesToChildRecordResistances",
+             "BuildChildRecordSkillListCandidateList", "ApplyBreedingBonusToChildStats"]
+    bad = []
+    for i in range(n):
+        name = names[i % 4]
+        recs = []
+        for _ in range(3):
+            rec = bytearray(rng.randrange(256) for _ in range(REC))
+            sp = rng.choice(species)
+            rec[0x0B], rec[0x0C] = sp & 0xFF, sp >> 8
+            rec[0x73:0x73 + 27] = bytes(rng.choice([0, 1, 2, 2, 3]) for _ in range(27))
+            rec[0xA4] = rng.choice([0, rng.randrange(1, 0x1C), rng.randrange(256)])
+            rec[0x6D] = rng.choice([0, 1, 3, 5, 6, 10, 20, rng.randrange(100)])
+            rec[0x34:0x3C] = bytes(rng.choice([0xFF, 0, rng.randrange(0xB0)]) for _ in range(8))
+            if rng.random() < 0.3:
+                rec[0x57] = rec[0x56]
+            for o in (0x5B, 0x5D, 0x5F, 0x61, 0x63, 0x65, 0x67, 0x69):
+                v = rng.choice([rng.randrange(0, 1000), rng.randrange(900, 1000), rng.randrange(0, 0x10000)])
+                rec[o], rec[o + 1] = v & 0xFF, v >> 8
+            recs.append(rec)
+        child, pa, pb = recs
+        if rng.random() < 0.5:  # a parent item that hides a level-2 resistance (TestResistanceEntry)
+            item = rng.randrange(1, 0x1C)
+            pa[0xA4] = item
+            pa[0x73 + r.b(0x0E, test_tab + item - 1)] = 2
+        kind = rng.randrange(3)
+        hi, lo = rng.randrange(128), rng.randrange(256)
+        mem = {R["wRandomHi"]: hi, R["wRandomLo"]: lo, R["wArg1"]: kind}
+        for buf, rec in ((R["wChildRecord"], child), (R["wRecordBufA"], pa), (R["wRecordBufB"], pb)):
+            for k, v in enumerate(rec):
+                mem[buf + k] = v
+        rnd = Random(r, L["RandomByteTable"][1], hi, lo)
+        ch = R["wChildRecord"]
+        gb = call(rom, *L[name], mem)
+        if name == names[0]:
+            want, got = child_sex(r, L, rnd, child[0x0B] | child[0x0C] << 8), gb.rb(ch + 0x0E)
+        elif name == names[1]:
+            want, got = child_resistances(r, L, rnd, child, pa, pb), [gb.rb(ch + 0x73 + k) for k in range(27)]
+        elif name == names[2]:
+            want = child_skill_list(r, L, child, pa, pb)
+            got = ([gb.rb(ch + 0x34 + k) for k in range(8)], [gb.rb(ch + 0x3C + k) for k in range(25)])
+        else:
+            want = child_bonus(r, L, child, pa, pb, kind)
+            got = [gb.rb(ch + o) | gb.rb(ch + o + 1) << 8 for o in (0x5B, 0x5D, 0x5F, 0x61, 0x63, 0x65, 0x67, 0x69)]
+        want, got = (want, (rnd.hi, rnd.lo)), (got, (gb.rb(R["wRandomHi"]), gb.rb(R["wRandomLo"])))
+        if got != want:
+            bad.append(f"{name} #{i}: kind {kind} child {list(child[0x0B:0x0D])}: game {got}, model {want}")
+    return bad
+
+
 CHECKS = {"join": join_check, "growth": growth_check, "breeding": breed_check,
           "attack": attack_check, "resistance": resist_check, "step7": step7_check, "learn": learn_check,
-          "apply": apply_check, "modifiers": modifiers_check}
+          "apply": apply_check, "modifiers": modifiers_check, "effects": effects_check, "child": child_check}
 
 
 def main(argv: list[str] | None = None) -> int:

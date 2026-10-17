@@ -1,7 +1,7 @@
 # Mechanics
 
-Stage M5 of the moddable-decomp goal ([roadmap](ROADMAP.md)), evidence E-0396 (E-0397 and E-0399 for damage, E-0398
-for skill learning) in the [evidence log](EVIDENCE_LOG.md). Five mechanics, each written as a specification from the routine's code and checked by running that routine on
+Stage M5 of the moddable-decomp goal ([roadmap](ROADMAP.md)), evidence E-0396 (E-0397, E-0399 and E-0404 for damage, E-0398
+for skill learning, E-0405 for the bred child) in the [evidence log](EVIDENCE_LOG.md). Five mechanics, each written as a specification from the routine's code and checked by running that routine on
 the project's emulator (tools/sm83.py) from thousands of generated states. The check compares every output the
 specification predicts. `tools/mechanics.py` holds the specifications as Python models:
 
@@ -26,6 +26,8 @@ Results (2026-10-16, damage and skill learning 2026-10-17; `--n 3000 --seed 1`):
 | Damage modifiers of resolve step 7 | ResolveStepComputeDamage (bank $36) | 3,000 | 3,000 |
 | Damage taken from HP, resolve step 12 | ResolveStepApplyDamage (bank $36, far call to $32) | 3,000 | 3,000 |
 | wBattleStatus7 multipliers of the message step | ApplyDamageModifiers (bank $32) | 3,000 | 3,000 |
+| The other damage routines | 28 routines of bank $36, in turn | 3,000 | 3,000 |
+| The bred child's sex, resistances, skill list and stat bonus | 4 routines of bank $0E, in turn | 3,000 | 3,000 |
 | Skill learning on a level-up | FindNewlyLearnableSkills (bank $1A) | 3,000 | 3,000 |
 
 Each check was also run with a deliberately wrong model (one condition changed), and it then reports the states
@@ -272,8 +274,81 @@ by the top two bits of wResolveMsgArg:
 A hit that leaves exactly 0 HP is a defeat, like one that would go below 0. The resolve message argument decides
 whether the action touches HP at all (StoreHitMessage_Bank36 stores $88, top bits 10).
 
-Not checked here: the effect routines that do more than roll and scale (Watershot, MegaMagic, MultiCut, CallHelp
-and others), the defeat sequence of step 13 and the aftermath of step 14.
+### The other damage routines (E-0404)
+
+`tools/mechanics.py effects` checks 28 more routines of bank $36, each against its model (the family a routine
+tests is read from its `cp $NN` in src/). The target's family is byte 0 of its species record
+(GetTargetSpeciesFamily: wBattleMonsterId of the target, LoadSpeciesRecord).
+
+| Routines | Damage |
+| --- | --- |
+| AttackDamageHalvedDEFVs... (10, one per family 0-9) | the plain attack; against the named family DEF is halved first (so DEF / 4 is used) |
+| ComputeAttackDamageWithHalvedDEF | the plain attack against DEF / 4; the DEF word is put back |
+| AttackDamageWithATK200 | the plain attack with ATK 200; the ATK word is put back |
+| AttackDamageTimes1_5IfSlotBodyFlagsBit0 | the plain attack, then d + d/2 + 1 when bit 0 of the target's wSlotBodyFlags is set (a metal body) |
+| ActionEffect_ActionD2/D3/D4_ScaleByGigaSlashResistance | GigaSlash's roll and scaling, then d + d/2 against families 0, 8, 9 / 1, 3, 6 / 2, 4, 5 |
+| ActionEffect_BiAttack_Damage | ATK' = 30 x ATK (16-bit) cut to 75% (BiAttack) or 62.5% (QuadHits); ComputeBasicDamage(ATK', (30 x DEF) / 2) / 30 |
+| ActionEffect_WindBeast_Damage | L = the actor's level: 3L + 10 (L + L/2 for a foe outside link mode 1), at most 180; plus RandomInRange(-q, q), q = ((d x 6/10) / 2) / 2; Vacuum resistance |
+| ActionEffect_Vacuum_Damage | 2L + 30 (L + L/2 only when wLinkMode is 4 or more and not 1), at most 150; plus about 10%; Vacuum resistance |
+| ActionEffect_Lightning_Damage | 2L + 20 (L + L/2 for a foe), at most 180 (220 against family 9); plus about 10%; Bolt resistance |
+| ActionEffect_CallHelp_Damage | 2L (L + L/2 for a foe), scaled by byte 6 bits 5-4 |
+| ActionEffect_MegaMagic_Damage | 2 x wAllMPSpent + 2L, plus about 10%; byte 4 bits 7-6 with the Alt table picker |
+| ActionEffect_ActionD9_Damage | 8 x wAllMPSpent + 8 x the level of slot E (the E the caller left), 16-bit; then as MegaMagic |
+| ActionEffect_ActionD7_Damage, _ActionD8_Damage | the actor's ComputeBasicDamage against 0 (D7) or plain attack (D8), plus its formation partner's; wBattleActor is put back |
+| ActionEffect_MultiCut_Damage | the skill record of wBattleActionId (LoadSkillRecord), its roll; d + d/4 + d/16 against family 7; Vacuum resistance with the Alt picker |
+| ActionEffect_Watershot_Damage | the skill roll, byte 0 bits 7-6, the plain picker for SKILL_WATERSHOT and the Alt picker otherwise |
+| ActionEffect_Kamikaze_Damage | a chance roll by byte 3 bits 1-0 (RollChanceByFlagsAtHL); on failure 0 and no carry; on success carry and: 1 when the word at the address the actor's HP names is 1, else the target's HP - 1 (no link, wBattleKind 0 or 1) or (the actor's HP - 1) / 2, at least 1 |
+
+"About 10%" is RandomInRange(-q, q) with q = ((d x 8/10) / 2) / 4, no roll when q is 0. The formation partner
+(ActorFormationSlotToTemp0) is the other slot of the pair (0,1), (0,2) or (1,2) that the side's formation byte
+picks. Kamikaze's word read takes the HP value as an address (bank $00 for HP below $4000): HP 362, 382 and 613
+read a word of 1, so the damage is 1 then. It looks like a second dereference by mistake (C1); the check follows
+it exactly. The chance roll: level 0 always succeeds and level 3 never; levels 1 and 2 take a new wRandomLo below
+$D8 / $7F (neither status bit), $BF / $66 (bit 6) or always / $BF (bit 7).
+
+Checked: 3,000 of 3,000 states, about 107 for each routine, with the ATK and DEF words and wBattleActor compared
+afterwards. A model that halves DEF against every family, and one without Kamikaze's word read, are each caught.
+
+Not checked here: the defeat sequence of step 13 and the aftermath of step 14.
+
+## The bred child's later rolls (E-0405)
+
+After ComputeBreedingChild, four routines of bank $0E finish the child in wChildRecord from its parents in
+wRecordBufA and wRecordBufB. `tools/mechanics.py child` checks each one.
+
+The random value is RandomModulo29: one NextTableByte step, then `((lo << 1) & mask) x 256 + lo` divided by 41,
+0-99 with mask $0F and 0-199 with mask $1F. Its `rl a` shifts in the carry NextTableByte leaves, which is always 0
+because RandomByteTable sits at $0973 and an index of at most $7F never carries.
+
+```text
+sex (RollChildSexFromSpecies): the child species' SPECIES_SEX_RATIO byte; 0 gives male (0); otherwise female (1)
+    when a roll 0-99 is not above SexChanceByClass[byte & 3] (0, 10, 50, 90), else male
+resistances (RollChildResistancesToChildRecordResistances), for each of the 27, from the species level:
+    3 stays; the parents' levels (each $FF when it is 2 and the parent's MON_ITEM, 1-$1B, hides that resistance
+    by TestResistanceEntry_Data) are added: at least 5 for a level 2, at least 3 for a level 0 or 1, else no roll;
+    no roll either when the child's MON_PLUS is 0
+    level 2: sum 5 rolls 0-199 against the plus (+1 when not above); other sums: +1 by a plus roll of factor 2
+    level 0-1: sum 3 factor 1; 4 factor 3; 5 factor 10, and when that succeeds factor 3 once more; 6 or more +1
+        and then factor 5
+    a plus roll of factor f succeeds when f x plus is 100 or more, or a roll 0-99 is not above it
+    the result's low two bits go to MON_RESISTANCES
+skill list (BuildChildRecordSkillListCandidateList): MON_SKILLS all $FF; the 25-byte list = the three natural
+    skills of the child, parent A and parent B species, then the eight MON_SKILLS of A and of B; each mapped to
+    the first of its line (SkillLineBaseTable); zeros and repeats become $FF; the rest move to the front (the
+    places after them keep their old bytes), and the repeats this leaves become $FF again
+stat bonus (ApplyBreedingBonusToChildStats): 5 when the parents' PersonalityPairMatrix value is 0, 5 when both
+    are at their level cap, 2 when both pluses are 5 or more with an even sum, 3 for a link or townsperson breeding
+    (wArg1 not 0); with a total c, each of the eight stat words w gains (c x w) / 100 rounded up, capped at 999
+```
+
+The stat bonus divides only the low 16 bits of the 24-bit product c x w, so a stat word above 4,369 (for c = 15)
+gains less than its percentage. The check generates such words too. The personality value: each parent's index is
+9 x grade(MON byte $6F) + 3 x grade($72) + grade($70), with grade 0 for $C0 and up, 1 for $40-$BF and 2 below.
+Matrix byte 8 x index(A) + index(B) / 4 holds four 2-bit values, the highest pair first.
+
+Checked: 3,000 of 3,000 generated families, the four routines in turn, comparing the child's bytes and the random
+state. Half of parent A's records carry an item that hides a level-2 resistance. A model without that item test,
+and one that divides the whole product, are each caught.
 
 ## Skill learning (FindNewlyLearnableSkills)
 

@@ -191,6 +191,34 @@ Open, in order (docs/GRADUATION.md):
 Next reproducible action: `python -I tools/disasm_all.py` then `python -I tools/src_drift.py` (expect no drift
 until src/ is edited), then start H1b with tests/test_generated_source.py.
 
+## Parallel handoff (2026-10-17, E-0404 to E-0406): the open items of the E-0401 handoff done
+
+Done alongside H1, from the open items of the E-0401 handoff (no change to the H1 plan above):
+1. **The other damage routines** (E-0404): all 28 remaining damage routines of bank $36 agree with models on
+   3,000 states. They include Watershot, MegaMagic, MultiCut, CallHelp, Kamikaze, the family attacks, BiAttack and
+   actions $D7-$D9.
+2. **The bred child's later rolls** (E-0405): sex, resistances, skill list and stat bonus agree on 3,000 families.
+3. **Later worlds and link play for the shift gate** (E-0406):
+   - a 25-map world tour recipe;
+   - a serial port in tools/sm83.py and tools/link_play.py, with a linked breeding session from the title menu
+     (no child is bred: console B's later presses do not move its choice);
+   - `--link-recipe`.
+   - The tour found two byte lists the generator had misread as pointer words (EnterStatusEffectFieldState_Data
+     and AddSkillCToFreeOrWeakerSlot_Data), both now layouts.
+   - All 222 recipe runs (2,638 routines) and the link session PASS padded by 16 and by 256.
+
+build/run702 PASS; serial suite OK (473 tests, 3 skipped).
+
+Not reached, with what is known:
+- **A completed link breeding.** Console B (link role 3) reads its pad in the send half of the serial exchange:
+  its Down press does set wJoypadPressed ($80) for one poll, and its A press opens the stats screen. Its list
+  cursor still never moves. B's screen runs in the receive half, which returns early while wVBlankFlags bit 7 is set.
+  So whether a press is still pending when the screen runs depends on how exchanges and VBlanks fall within a frame,
+  and the serial model approximates exactly that (C1). A serial model checked against hardware is the next step for it.
+- **Key-world generation from a key and the late story's scenes** have no recipe: the tour enters later maps by
+  their location bytes, not through the story.
+Next reproducible action: `python -I tools/link_play.py tools/recipes/link_e0406_breeding.txt --shots build/link`.
+
 ## Prior handoff (2026-10-17, E-0398 to E-0401): the open actions done
 
 The three actions the E-0397 handoff left are done:
