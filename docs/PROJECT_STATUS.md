@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-16**. Stage: **matching disassembly; source readability and semantic review in progress**. Historical planning and earlier session records below remain for provenance.
+As of **2026-10-17**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -159,7 +159,25 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0396): M5 done; the moddable-decomp goal M1-M5 is complete
+## Current handoff (2026-10-17): documentation brought up to date
+
+A documentation-only pass after M5: README, ARCHITECTURE (the repository layout in use), READING_GUIDE (src/layout.link,
+label expressions for banks and split addresses, building a modded ROM), ROADMAP (a status line per phase),
+KNOWLEDGE_MAP and SHIFTABILITY now describe the state after M1-M5; stale "in progress" and "not merged" notes are
+marked historical; temporary render paths are gone from UNIDENTIFIED_ASSETS. No source, config or tool changed; build/run683
+PASS on this tree (0 differing bytes). The generated docs (LEFTOVER_CODE, DATA_TABLES, PROBE_SCOPE) were regenerated
+and are unchanged; the doc tests pass.
+
+Open, in the order they are most useful:
+1. Another mechanic to the M5 standard (damage and resistance, or skill learning): a model in tools/mechanics.py,
+   checked against the routine on generated states, with a wrong-model negative test.
+2. Widen what the scripted runs reach (under 5% of the routines), so the shift test's read gate covers more code.
+3. The three address-like split sums and the 511 pointers whose bank the reader fixes (docs/SHIFTABILITY.md).
+
+Next reproducible action: `python -I tools/mechanics.py all --n 3000` (baseline agreement), then read ResolveStepComputeDamage
+(src/engine/bank36_battle_effects.asm, step 7 of the battle resolve table) with its callees and write its model.
+
+## Prior handoff (2026-10-16, E-0396): M5 done; the moddable-decomp goal M1-M5 is complete
 
 tools/mechanics.py checks three mechanics against the game's own routines on tools/sm83.py: the join offer, the
 level-up gains and the breeding child each agree on 3,000 of 3,000 generated states (docs/MECHANICS.md has them as
@@ -228,7 +246,7 @@ Every hard-coded reference the shift test found is now a label expression, made 
 tools/shift_test.py now has a timing-proof read comparison (`--reads all`), because padding bank $00 shifts timing.
 With all 152 paddable banks padded by 16: PASS, all 1,202,485 reads match (build/m2_readsall). Left for M2: 89 split sums that are not exactly a label,
 468 literal bank numbers, and widening what the scripted runs reach (under 5% of routines).
-Branch claude/m2-labels, not merged.
+Branch claude/m2-labels (merged to master since).
 
 ## Prior handoff (2026-10-16, E-0388): M1 shiftability audit done
 
@@ -242,7 +260,7 @@ or $87 breaks the game. The causes, located to the instruction:
 
 The other 148 banks padded by 16 run 10,000 frames identical. The scripted runs reach under 5% of the routines,
 so the static counts carry the rest: 124 split addresses, 592 tile addresses as numbers, 468 literal banks. The M2
-plan is in docs/SHIFTABILITY.md. Branch claude/m1-shiftability, not merged.
+plan is in docs/SHIFTABILITY.md. Branch claude/m1-shiftability (merged to master since).
 
 ## Prior handoff (2026-10-16): next goal, a moddable decomp
 
@@ -251,7 +269,7 @@ decomp: it is unknown whether code and data can move, the assets come out of the
 code is still `db` bytes, and most readings are C1. docs/ROADMAP.md now sets the next goal in five stages: M1
 shiftability audit, M2 labels for hard-coded references, M3 editable assets with a byte-identical LZSS encoder, M4
 leftover code bytes, M5 mechanics. M1 started 2026-10-16 in its own session and worktree (tools/shift_test.py,
-docs/SHIFTABILITY.md, evidence E-0388); its result is not yet integrated. Build status for this documentation-only
+docs/SHIFTABILITY.md, evidence E-0388); its result was integrated later (E-0388 below). Build status for this documentation-only
 change: not run (the last identity gate is build/run651 on eb9066a).
 
 ## Prior handoff (2026-10-16, E-0387): the three generator follow-ups
@@ -738,11 +756,11 @@ The workspace was empty at inspection. `Get-ChildItem -Force -Recurse` returned 
 
 Do not report a disassembly percentage yet. Later we will separately measure opaque bytes, decoded assembly, structured data, locally classified ranges, and semantic confidence. Matching is a pass/fail property, not a proxy for those measures.
 
-## What the survey changes
+## What the survey changes (historical, session 1)
 
 Existing work gives us useful entry points but has not established a locally reproducible Cobi build. The most promising starting paths are low-level routines in the DWM2 repository, monster tables and encounter data in community research, and a DWM1 example of incremental extraction. Exact revisions and inspected files are in [the survey](SURVEY.md); leads and experiments are in [the knowledge map](KNOWLEDGE_MAP.md).
 
-## Dependencies and risks
+## Dependencies and risks (historical, session 1)
 
 | Dependency or risk | Effect | Resolution |
 | --- | --- | --- |
@@ -753,7 +771,7 @@ Existing work gives us useful entry points but has not established a locally rep
 | Plausible but wrong semantics | Byte identity can coexist with incorrect documentation | Confidence tags, disconfirming tests, and claim-level review |
 | Incomplete web access | Some research is visible only through indexed text | Preserve access depth; retrieve a revision before promotion or import |
 
-## Next session: a concrete first milestone
+## Next session: a concrete first milestone (historical, session 1; done by 2026-10-09)
 
 1. Establish the reference identity: edition, revision evidence, full size, SHA-256, header fields, and cartridge mapping. Preserve the original unchanged.
 2. Initialize version control and artifact exclusions; choose and pin the build environment. These are planned actions, not work already done.

@@ -1,6 +1,6 @@
 # Technical architecture
 
-Status: **proposed implementation architecture**, 2026-09-12. The binary identity and confidence requirements are mandatory; the tools and directory structure below are design choices to validate in phase 1. Only the baseline Markdown documents currently exist.
+Status: written 2026-09-12 as a proposal; the binary identity and confidence requirements are mandatory. Updated 2026-10-17: the matching build exists, and the repository layout below is the one in use. The tool-choice and gate sections are the original design; the gate is implemented by `tools/build.py` and `tools/verify_rom.py`.
 
 ## Product and organizing principle
 
@@ -30,30 +30,32 @@ flowchart TD
 
 The reference feeds only declared opaque slices and the independent verifier. The build must never overwrite assembled regions from the reference to conceal mismatches. The verifier compares original files without normalizing either side.
 
-## Proposed repository layout
+## Repository layout
 
 ```text
 README.md, AGENTS.md            entry points and operating contract
-docs/                          baseline and later system documentation
-docs/evidence/                 one file per substantial investigation
-docs/sessions/                 concise durable handoffs
-docs/decisions/                later architecture decisions
+docs/                          system documentation, evidence log, status and roadmap
 config/targets/                edition/revision/hash manifests
-config/toolchain.lock.json     exact tested tools and acquisition hashes
-src/main.asm                   explicit includes
-src/<dir>/                     one file per ROM bank, by kind (D-010): home, engine,
+config/toolchain.lock.json     exact tested RGBDS release and its hashes
+config/*.json                  the editable truth the generator reads: names.json, annotations.json,
+                               tables.json, symbols.json, code_entries.json, operands.json, banks.json, ...
+config/probes/                 emulator probes for routine notes (tools/probe.py)
+src/                           generated from config/ by tools/disasm_all.py; edit config/, not src/
+src/main.asm                   the include list
+src/layout.link                places every floating section in its bank (rgblink -l)
+src/<dir>/bankNN_<topic>.asm   one ROM bank each, in a directory by kind (D-010): home, engine,
                                scripts, text, data, maps, gfx, audio, unused
-src/constants/                 hardware and evidenced game constants
-src/ram/                       RAM definitions with bank and lifetime
-data/                          original schemas and authored data sources
-tools/                         identify, extract, build, compare, coverage
-tests/                         synthetic fixtures and verifier/parser checks
-local/roms/                    ignored immutable reference inputs
-local/saves/, local/traces/     ignored experimental artifacts
-build/                         ignored, disposable generated output
+src/ram.asm, src/*.inc         RAM names, record fields, constants, macros, charmap, hardware registers
+src/assets.txt                 the asset files src/ includes, with their place in the reference ROM
+tools/                         generator, build and verifier, emulator (sm83.py), LZSS decoder and encoder,
+                               asset export, probes, shift test, checks of mechanics and tables
+tests/                         verifier negative cases, generator and source checks, emulator probes
+local/roms/                    ignored: the immutable reference ROM; local/assets etc. for exports
+build/                         ignored, disposable: runN/ build reports, listing/ (annotated listing)
 ```
 
-These are future paths, not working commands or populated directories. Create exclusions before importing any reference or generated assets. Avoid duplicating editable truth: generate symbol indexes and coverage summaries from source/map metadata once those exist.
+Game data never enters git: assets are extracted from the local reference at build time, and exports of decoded
+assets or tables go under `local/` or `build/` (the tools refuse other paths).
 
 ## Tool choices
 

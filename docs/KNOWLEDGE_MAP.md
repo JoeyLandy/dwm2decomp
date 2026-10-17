@@ -2,7 +2,16 @@
 
 Historical planning baseline: **2026-09-12**, before local verification. Current target: **DWM2: Cobi's Journey**, `dwm2-cobi-us-rev0`; header version 0, catalog cross-check pending. Local findings are recorded in [the evidence log](EVIDENCE_LOG.md) and [current status](PROJECT_STATUS.md). The research-lead tables below retain their original confidence and are not a current coverage inventory.
 
-## Current readability investigations
+## Checked systems (2026-10-17)
+
+| System | Finding and confidence | Evidence / next action |
+| --- | --- | --- |
+| Join offer, level-up gains, breeding child | C2 on tools/sm83.py: specifications that agree with the game's routines on 3,000 generated states each | E-0396, [mechanics](MECHANICS.md). Next: damage and resistance (ResolveStepComputeDamage), skill learning |
+| Species, skill and item tables | C2: layouts round-trip byte for byte; the game's loaders read the exported record for every id | E-0396, [data tables](DATA_TABLES.md) |
+| Compressed assets | C2: an encoder reproduces all 3,546 LZSS streams; assets build from decoded data | E-0394, [editable assets](ASSETS.md) |
+| Code and data placement | 9,071 floating sections; padded and moved builds checked on tools/sm83.py | E-0388 to E-0393, [shiftability](SHIFTABILITY.md) |
+
+## Readability investigations (2026-10-14, historical; the readability goal completed 2026-10-16, E-0386)
 
 | Range / system | Finding and confidence | Evidence / next action |
 | --- | --- | --- |

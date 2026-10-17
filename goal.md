@@ -1,3 +1,6 @@
+> **Completed 2026-10-16 (E-0386).** This goal is done; see docs/ROADMAP.md, "Readability goal: complete". It is kept
+> as the record of what was asked. The later moddable-decomp goal (M1-M5) is also done.
+
 Goal: finish the pokered-style readability goal for dwm2-cobi-us-rev0 as fast as possible without weakening any gate. Work in batches of read-only sub-agent drafts, with you as the only integrator. Keep going until the completion criteria below are met. Do not stop to ask me anything: decide, record the decision in docs/PROJECT_STATUS.md, and continue.
 
 ## Authorization

@@ -13,7 +13,8 @@ under build/ and are never compared with the reference.
   unchanged copy must rebuild the reference byte for byte, or the run stops.
   - Both ROMs run in tools/sm83.py from power-on with the same scripted buttons. At the end of every frame the
     video state is compared: both VRAM banks, OAM, CGB palette RAM, LCDC and the scroll and window registers.
-    Moving code does not change instruction timing, so a ROM that still works matches frame for frame. A crash
+    Moving code does not change instruction timing, so a ROM that still works matches frame for frame (not quite:
+    see M2 batch 1, where a moved table changed a carry and so a few cycles). A crash
     (an invalid opcode) counts as a difference.
   - `--bisect K` finds the banks whose padding alone causes a difference.
   - `--locate BB` pads one bank, runs both ROMs in lockstep and reports the first instruction whose PC or ROM reads
@@ -145,7 +146,7 @@ ret, reti, jp or jr (9,071 sections); the cartridge header is pinned with `ORG $
   ScriptWaitFrames and ScriptStepObject moved from bank $5F to empty banks run 3,000 identical frames. A routine
   reached by plain `call`s from its bank is caught by the bank check and diverges at frame 803 when moved.
 
-## Next (M2)
+## Left after M2
 
 1. Done for six of the nine (E-0392). Left: 60:$4BF4 (index range not read) and 0F:$4000 x2 (a window base chosen
    by wMessageGroup, which no label names).

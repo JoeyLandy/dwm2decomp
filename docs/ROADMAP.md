@@ -17,11 +17,11 @@ What stays open is listed in each document and in [readability open questions](R
 - the other mechanics of phases 4-5 (damage, skills learned, the key worlds).
 
 
-The matching build and the readability goal (below) are done, but the source is not yet a pokered-level decomp. It
-is unknown whether code and data can move, the assets come out of the reference ROM rather than editable files,
-some unreached code is still `db` bytes, and most readings are static (C1). The next goal makes the source safe to
-edit, then turns to what the game does. Throughout, the matching target keeps its identity gate on every change: a
-shifted or re-encoded build is a separate, non-matching output and never replaces `dwm2-cobi-us-rev0`.
+The goal as set on 2026-10-16, after the readability goal (below): make the source safe to edit (could code and
+data move, could assets be edited, was unreached code still `db` bytes), then turn to what the game does.
+Throughout, the matching target keeps its identity gate on every change: a shifted or re-encoded build is a
+separate, non-matching output and never replaces `dwm2-cobi-us-rev0`. Final state: build/run682 PASS on master
+3eeb0ba, serial suite OK (439 tests, 3 skipped).
 
 | Stage | Work | Exit gate |
 | --- | --- | --- |
@@ -31,8 +31,8 @@ shifted or re-encoded build is a separate, non-matching output and never replace
 | M4. Leftover code bytes (done 2026-10-16, E-0395: [leftover code bytes](LEFTOVER_CODE.md); 102 unreached routines decoded, named, read and probed; the 384 other gaps after a routine end listed with their verdict) | Find `db` runs that decode as code no traced path reaches (for example bank $29 `db $cd, $01, $40, $cd, $11, $26, $c9`, which would read as call, call, ret; C1, not yet checked) and decode or document each | Every such run decoded or listed with its reason; matching build PASS |
 | M5. Mechanics (done 2026-10-16, E-0396: [mechanics](MECHANICS.md), [data tables](DATA_TABLES.md); the join offer, level-up gains and breeding child as specifications that agree with the game on 3,000 generated states each; the species, skill and item tables exported, packed back byte for byte and read by the game's loaders for every id) | Species, skill and item tables, then one mechanic at a time (breeding, recruitment, growth), with emulator experiments | Per the phase gates below; claims promoted above C1 only with recorded experiments |
 
-M1 to M3 make the source moddable; M5 can run alongside them. The open questions in
-[readability open questions](READABILITY_OPEN_QUESTIONS.md) (1,852) feed M4 and M5.
+M1 to M3 made the source moddable. The open questions in
+[readability open questions](READABILITY_OPEN_QUESTIONS.md) (1,852) remain the queue for later semantic work.
 
 ## Readability goal: complete (2026-10-16, E-0386)
 
@@ -94,7 +94,7 @@ establish full readability. (Completed 2026-10-16: see the section above.)
 
 ## Phase 0 — Archaeological survey and target definition
 
-**Current:** baseline survey delivered; reference identification and adoption audit still pending.
+**Status (2026-10-17):** done except the catalog cross-check. The reference is identified by its measured hash and header (`config/targets/dwm2-cobi-us-rev0.json`); no upstream source was adopted (fresh scaffold, [survey](SURVEY.md)); whether the hash is an unmodified retail dump is not checked against an independent catalog.
 
 Read existing repositories and community sources without running their scripts. Record exact commits, target variants, source provenance, inspected files, build claims, dependency assumptions, and reuse terms. Search forks and author-linked resources when they can fill a specific gap. Preserve source conflicts and distinguish firsthand research from copied summaries.
 
@@ -105,6 +105,8 @@ Deliverables: [survey](SURVEY.md), [knowledge map](KNOWLEDGE_MAP.md), [initial e
 Planning allowance: 1–3 focused sessions to finish target and adoption work once inputs are available.
 
 ## Phase 1 — Baseline build and trustworthy binary diff
+
+**Status:** done (2026-10-09, [project status](PROJECT_STATUS.md), session 2): two clean full-ROM matches (build/run1, build/run2), the verifier's negative tests, RGBDS pinned in config/toolchain.lock.json.
 
 Dependencies: identified local reference and a tested toolchain choice.
 
@@ -118,6 +120,8 @@ Planning allowance: 2–5 sessions, depending on toolchain setup and upstream co
 
 ## Phase 2 — Orientation and first teaching investigations
 
+**Status:** partly. The boot path, frame loop and game modes are in [game structure](GAME_STRUCTURE.md) (C1, run on tools/sm83.py); bank transitions and routine contracts are in the notes of every routine. The gate's C3 routine claim is not certified (claims stop at C2, the project's emulator).
+
 Dependencies: phase 1 passes.
 
 Trace the cartridge entry path, enabled interrupts, one bank-switch path, and one short copy/input routine. Locate a small data consumer to connect a banked ROM read to observable behavior. Build an initial ROM/RAM map and learn the debugger together.
@@ -129,6 +133,8 @@ Deliverables: a short boot-path document; one example of a bank transition with 
 Planning allowance: 3–6 sessions. Do not wait for all of bank 0 to be understood before tackling a useful data path.
 
 ## Phase 3 — High-value data recovery
+
+**Status:** the species, skill and item tables meet the per-table gate (M5, [data tables](DATA_TABLES.md): bounds, pointers, exact round trip, every id through the game's loader; C2). Other tables are laid out in config/tables.json with C1 field notes.
 
 Dependencies: address/bank conventions and a reliable scaffold.
 
@@ -142,6 +148,8 @@ Planning allowance: several weeks of regular sessions; recover one coherent tabl
 
 ## Phase 4 — Mechanics and state transitions
 
+**Status:** three mechanics meet the gate on the project's emulator (M5, [mechanics](MECHANICS.md)): the join offer, level-up gains and the breeding child. Damage and resistance, skill learning and the child's sex, resistances, skills and stats are open.
+
 Dependencies: relevant phase 3 records and routines, plus reproducible saves/input recipes.
 
 Choose one mechanic according to user interest: recruitment, damage and resistance, growth, skill learning, or breeding. Trace its complete data flow, including integer widths, rounding, flags, RNG consumption, and special cases. Define experiments before relying on a plausible formula.
@@ -154,6 +162,8 @@ Planning allowance: multiple iterations per mechanic. Breeding and RNG are likel
 
 ## Phase 5 — World, presentation, persistence, and communication
 
+**Status:** partly. Graphics compression meets its gate (an encoder reproduces all 3,546 streams, M3, [editable assets](ASSETS.md)); sound tracks are decoded (E-0018, E-0019); the save round trip and checksums were observed (E-0323). Maps, key-world generation, text rendering and link remain C1 readings.
+
 Dependencies vary by subsystem. Trace maps and events, procedural keys/worlds, graphics decoding, text rendering, audio dispatch, save format/checksums, and serial/link operations. Pursue each through a bounded question instead of parallel broad rewrites.
 
 Deliverables: format and state-machine documents, read/write contracts, decoding and round-trip tools where feasible, save fixtures with local storage rules, and recorded emulator configurations. Use the audio converter and existing map research as leads, with target-specific validation.
@@ -164,6 +174,8 @@ Planning allowance: ongoing work over months. Link behavior may require coordina
 
 ## Phase 6 — Consolidation and optional variants
 
+**Status:** not started.
+
 Dependencies: stable Cobi build and enough recovered structure to make comparison useful.
 
 Reconcile duplicate concepts, review old C1/C2 assumptions, generate searchable indexes and coverage maps, test setup from a fresh checkout, and prepare a clear contribution guide. Consider Tara first as a separate target, then DWM1 or regional variants if the user wants them.
@@ -172,7 +184,7 @@ Reconcile duplicate concepts, review old C1/C2 assumptions, generate searchable 
 
 Project completion is not defined by a green byte comparison alone. A long-term completion review must account for every byte, the residual opaque regions, unresolved semantics, runtime scope, and reproducibility from preserved instructions.
 
-## First task queue
+## First task queue (2026-09-12; T-001 to T-004 and T-006 done, see the phase status above)
 
 | ID | Task | Owner role | Prerequisite | Acceptance |
 | --- | --- | --- | --- | --- |

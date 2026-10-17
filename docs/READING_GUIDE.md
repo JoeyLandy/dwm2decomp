@@ -20,6 +20,7 @@ This guide explains how `src/` is laid out and how to read it. The style follows
 | --- | --- |
 | `src/main.asm` | The include list: definitions first, then the 256 bank files in order. |
 | `src/<dir>/bankNN_<topic>.asm` | One ROM bank each, named and headed by what it holds and kept in a directory by kind, as in pokered (D-010):<br>`home/` (bank 0);<br>`engine/` (mostly code: `engine/bank36_battle_effects.asm`);<br>`scripts/` (the event scripts);<br>`text/` (messages and strings: `text/bank2f_battle_text.asm`);<br>`data/` (tables);<br>`maps/` (maps, key worlds, map objects);<br>`gfx/` (sprites, pictures, tile sets);<br>`audio/` (sound tracks);<br>`unused/` (the empty banks).<br>The topics and directories are in `config/banks.json`. |
+| `src/layout.link` | Where each section goes. Every bank file is split into floating sections (`SECTION "Bank 36 TryWindBounce", ROMX`) after each unconditional `ret`/`jp`/`jr`, and this file lists them in ROM order under their bank, so the linker places them (E-0393). Moving a section's line to another bank moves its code; [shiftability](SHIFTABILITY.md) says what that needs. |
 | `src/ram.asm` | Names for work RAM (`w...`), high RAM (`h...`) and save RAM (`s...`) addresses, each with a note. |
 | `src/records.inc` | Field offsets inside the game's records: `MON_*` (a monster in the save, $A5 bytes), `BATTLER_*` (a monster in battle), `SPECIES_*`, `OBJ_*` (a field object), and `RESIST_*`, the 27 resistances. Code names a field as `ld c, MON_LEVEL` before a record-access routine. |
 | `src/constants.inc` | Named ids made from the ROM's own name tables: `MONSTER_DRACKY`, `SKILL_DEMAGIC`, `ITEM_HERB`, and `ACTION_FIGHT` for the plain attack. Code compares battle actions by name (`cp SKILL_DEMAGIC`), and data tables list skills and monsters by name (`db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills`). |
@@ -56,6 +57,7 @@ The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit t
 
 - `farcall Label` calls a routine in another bank; `dfar Label` is a pointer with its bank in data.
 - `lb bc, $14, $08` loads B and C separately (B = 20, C = 8). The source uses it wherever a pair holds two bytes: rectangles (B = width, C = rows), resolve messages (B = argument, C = flags; H = target, L = actor), sprite steps toward a point (D = X, E = Y), text windows. Negative constants are written signed (`ld hl, -999`), amounts in decimal (`ld hl, 20000`). A message word reads `MSG_KEEP_OPEN | $0487`: the low byte is the message, H bits 0-5 its group, and bits 6-7 the box flags in `constants.inc`.
+- Addresses and banks are written as labels, so they follow the code when it moves: `ld b, BANK(ScallopShellSpriteTiles)` for a bank number, `add LOW(SkillTable)` / `adc HIGH(SkillTable)` for a table address the code adds in two halves, `GlyphFont + $d0` for a place inside a table (E-0389 to E-0391).
 - `add_a_to_hl` (`hl += a`) and `deref_hl` (`hl = [hl]`, a word) are short helper idioms.
 - `script_*` macros write the event-script language that runs scenes and conversations: `script_message`, `script_walk`, `script_set_flag`, `script_jump`, and the command types named in `macros.inc`.
 - `objsel_*` macros write the map object selectors, which choose which people and objects a map shows from story flags.
@@ -116,3 +118,12 @@ python -I tools/build.py --out build/run1
 ```
 
 The build assembles `src/` with RGBDS and compares the result with the original ROM byte for byte. It first checks that ROM against the target's SHA-256 and extracts the asset files of `src/assets.txt` from it. It reports `RESULT: PASS | differing bytes: 0` when they match. The original ROM is not part of the repository; it is read from `local/roms/`.
+
+To change the game's pictures or other assets, export them, edit the PNG or `.bin` files, and build from that directory:
+
+```bash
+python -I tools/assets.py export --out local/assets
+python -I tools/build.py --out build/mod --mod local/assets
+```
+
+A modded build is a separate output: it reports `MODDED BUILD` and how many bytes differ from the original, and is never judged as the matching target. [Editable assets](ASSETS.md) has the details and limits; [data tables](DATA_TABLES.md) and [mechanics](MECHANICS.md) describe the species, skill and item records and three of the game's rules.
