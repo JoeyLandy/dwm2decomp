@@ -1,6 +1,6 @@
 # Translating the game
 
-Stage H3 of the modding and translation goal ([roadmap](ROADMAP.md)), evidence E-0406 in the
+Stage H3 of the modding and translation goal ([roadmap](ROADMAP.md)), evidence E-0409 in the
 [evidence log](EVIDENCE_LOG.md). All the game's text is in src/text/, the source (D-015). `tools/text.py` exports it
 for translators and puts translations back.
 

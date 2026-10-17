@@ -159,24 +159,26 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0404 to E-0406): H1, H2 and H3 done
+## Current handoff (2026-10-17, E-0407 to E-0409): H1, H2 and H3 done
 
-- **H1, src/ graduated (E-0404).** Every check reads src/ (and the .sym of a build of it), or is a check of the
+- **H1, src/ graduated (E-0407).** Every check reads src/ (and the .sym of a build of it), or is a check of the
   generator that skips without its listing. With config/names.json, config/annotations.json and build/listing/
   removed, the build passes and 491 tests pass. Removed: apply_drafts.py and rank_unnamed.py. Added: rename.py.
   Fixed: three comments in bank $60 naming a RAM symbol that does not exist.
-- **H2, data as files (E-0405).** tools/datatables.py exports 181 tables from src/ to JSON and CSV and imports
+- **H2, data as files (E-0408).** tools/datatables.py exports 181 tables from src/ to JSON and CSV and imports
   edits back; a list's growth comes out of the bank's fill. An edit in each of 12 tables reaches the game's
   readers on a modded build. docs/EDITING_DATA.md.
-- **H3, text (E-0406).** tools/text.py exports 5,407 text entries with their width limits and reinserts
+- **H3, text (E-0409).** tools/text.py exports 5,407 text entries with their width limits and reinserts
   translations; the font goes to a PNG and back; free glyph codes take new letters. A German test translation
   with "ü" builds, and the game draws it on the emulator. docs/TRANSLATING.md.
 
 Checks: build/run11 PASS (zero differing bytes); serial suite build/logs/suite_e0406.log OK (501 tests, 3 skipped); the H1
-exit gate as in E-0404.
+exit gate as in E-0407. Merged with the parallel E-0404 to E-0406: build/run12 PASS, both round trips identical, serial
+suite build/logs/suite_merge2.log OK (514 tests, 3 skipped).
 
-Next: H4. The recipe gate reaches 2,299 routines: add recipes or save states that reach the code H2 and H3 change
-(shops, breeding, the arena, more conversations), then a moved fixed-bank table with its reader updated.
+Next: H4. The parallel E-0406 widened the recipe gate to 2,638 routines (later worlds and link play); check that it
+reaches the readers H2 and H3 change (shops, breeding, the arena, conversations), then move a fixed-bank table with
+its reader updated.
 
 ## Prior handoff (2026-10-17, E-0403): H1b started
 
@@ -209,6 +211,35 @@ Open, in order (docs/GRADUATION.md):
 
 Next reproducible action: `python -I tools/disasm_all.py` then `python -I tools/src_drift.py` (expect no drift
 until src/ is edited), then start H1b with tests/test_generated_source.py.
+
+## Parallel handoff (2026-10-17, E-0404 to E-0406): the open items of the E-0401 handoff done
+
+Done alongside H1, from the open items of the E-0401 handoff (no change to the H1 plan above):
+1. **The other damage routines** (E-0404): all 28 remaining damage routines of bank $36 agree with models on
+   3,000 states. They include Watershot, MegaMagic, MultiCut, CallHelp, Kamikaze, the family attacks, BiAttack and
+   actions $D7-$D9.
+2. **The bred child's later rolls** (E-0405): sex, resistances, skill list and stat bonus agree on 3,000 families.
+3. **Later worlds and link play for the shift gate** (E-0406):
+   - a 25-map world tour recipe;
+   - a serial port in tools/sm83.py and tools/link_play.py, with a linked breeding session from the title menu
+     (no child is bred: console B's later presses do not move its choice);
+   - `--link-recipe`.
+   - The tour found two byte lists the generator had misread as pointer words (EnterStatusEffectFieldState_Data
+     and AddSkillCToFreeOrWeakerSlot_Data), both now layouts.
+   - All 222 recipe runs (2,638 routines) and the link session PASS padded by 16 and by 256.
+
+build/run702 PASS; serial suite OK (473 tests, 3 skipped). Merged onto master after H1b (E-0403): no drift
+(tools/src_drift.py, 265 files identical), build/run703 PASS, serial suite OK (487 tests, 3 skipped).
+
+Not reached, with what is known:
+- **A completed link breeding.** Console B (link role 3) reads its pad in the send half of the serial exchange:
+  its Down press does set wJoypadPressed ($80) for one poll, and its A press opens the stats screen. Its list
+  cursor still never moves. B's screen runs in the receive half, which returns early while wVBlankFlags bit 7 is set.
+  So whether a press is still pending when the screen runs depends on how exchanges and VBlanks fall within a frame,
+  and the serial model approximates exactly that (C1). A serial model checked against hardware is the next step for it.
+- **Key-world generation from a key and the late story's scenes** have no recipe: the tour enters later maps by
+  their location bytes, not through the story.
+Next reproducible action: `python -I tools/link_play.py tools/recipes/link_e0406_breeding.txt --shots build/link`.
 
 ## Prior handoff (2026-10-17, E-0398 to E-0401): the open actions done
 

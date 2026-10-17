@@ -1,4 +1,4 @@
-"""tools/datatables.py: the data tables exported from src/ and imported back (H2, E-0405).
+"""tools/datatables.py: the data tables exported from src/ and imported back (H2, E-0408).
 
 The H2 gate: each table round-trips unchanged (so the matching build is unaffected), and an edit made through the
 tool reaches the game: a copy of src/ with one edit per table is built, and the game's own reader of each table,

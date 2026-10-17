@@ -1211,360 +1211,693 @@ SkillPrerequisites_TailWind::
     db SKILL_STORMWIND ; entry 73
     db $ff ; entry 74
 
+; AddSkillCToFreeOrWeakerSlot reads word C (the skill) and writes C into a slot that is empty or
+; holds a skill of the list; 170 words, one per skill, ending at the first list ($5EDF). Words whose
+; list had no label were written as raw bytes, fixed addresses a moved list would leave behind;
+; found by reading the run of pointer labels after EnterStatusEffectFieldState_Data was fixed
+; (E-0406, C1)
+; record: pointer to the list of skills this skill may replace
 AddSkillCToFreeOrWeakerSlot_Data::
-    db $df, $5e
-    dw PointerRun_Entry00
-    db $5e, $5f, $5d, $5f
-    dw PointerRun_Entry00_2
-    db $61, $5f, $60, $5f
-    dw PointerRun_Entry00_3
-    db $64, $5f, $63, $5f
-    dw PointerRun_Entry00_4
-    db $67, $5f, $66, $5f
-    dw PointerRun_Entry00_5
-    db $6a, $5f, $69, $5f
-    dw PointerRun_Entry00_6
-    db $6d, $5f, $6c, $5f
-    dw PointerRun_Entry00_7
-    db $6f, $5f, $e7, $5e
-    dw PointerRun_Entry00_8
-    db $72, $5f, $71, $5f
-    dw PointerRun_Entry00_9
-    db $74, $5f, $ea, $5e
-    dw PointerRun_Entry00_10
-    db $76, $5f, $eb, $5e
-    dw PointerRun_Entry00_11
-    db $ec, $5e
-    dw PointerRun_Entry00_12
-    db $ee, $5e
-    dw PointerRun_Entry00_13
-    db $f0, $5e
-    dw PointerRun_Entry00_14
-    db $7b, $5f
-    dw PointerRun_Entry00_15
-    db $7d, $5f
-    dw PointerRun_Entry00_16
-    db $7f, $5f
-    dw PointerRun_Entry00_17
-    db $81, $5f
-    dw PointerRun_Entry00_18
-    db $f6, $5e
-    dw PointerRun_Entry00_19
-    db $83, $5f
-    dw PointerRun_Entry00_20
-    db $f9, $5e
-    dw PointerRun_Entry00_21
-    db $fb, $5e
-    dw PointerRun_Entry00_22
-    db $fd, $5e
-    dw PointerRun_Entry00_23
-    dw PointerRun_Entry01
-    dw PointerRun_Entry02
-    dw PointerRun_Entry03_2
-    dw PointerRun_Entry04_2
-    dw PointerRun_Entry05
-    dw PointerRun_Entry06_2
-    dw PointerRun_Entry07_2
-    dw PointerRun_Entry08_2
-    dw PointerRun_Entry09_2
-    dw PointerRun_Entry0A_2
-    db $88, $5f, $87, $5f, $07, $5f, $8d, $5f, $8c, $5f, $8b, $5f
-    dw PointerRun_Entry00_24
-    db $8f, $5f, $09, $5f
-    dw PointerRun_Entry00_25
-    db $0b, $5f, $91, $5f
-    dw PointerRun_Entry00_26
-    db $93, $5f, $0d, $5f
-    dw PointerRun_Entry00_27
-    db $0f, $5f, $10, $5f
-    dw PointerRun_Entry00_28
-    db $12, $5f, $13, $5f
-    dw PointerRun_Entry00_29
-    db $15, $5f, $16, $5f
-    dw PointerRun_Entry00_30
-    db $18, $5f, $19, $5f
-    dw PointerRun_Entry00_31
-    db $1b, $5f, $1c, $5f
-    dw PointerRun_Entry00_32
-    db $1e, $5f, $1f, $5f
-    dw PointerRun_Entry00_33
-    db $95, $5f, $21, $5f
-    dw PointerRun_Entry00_34
-    db $23, $5f, $24, $5f
-    dw PointerRun_Entry00_35
-    db $26, $5f, $27, $5f
-    dw PointerRun_Entry00_36
-    db $29, $5f, $2a, $5f
-    dw PointerRun_Entry00_37
-    db $2c, $5f, $2d, $5f
-    dw PointerRun_Entry00_38
-    db $2f, $5f, $97, $5f
-    dw PointerRun_Entry00_39
-    db $31, $5f, $99, $5f
-    dw PointerRun_Entry00_40
-    db $33, $5f, $34, $5f
-    dw PointerRun_Entry00_41
-    db $36, $5f, $37, $5f
-    dw PointerRun_Entry00_42
-    db $39, $5f, $3a, $5f
-    dw PointerRun_Entry00_43
-    db $3c, $5f, $3d, $5f
-    dw PointerRun_Entry00_44
-    db $3f, $5f, $9d, $5f
-    dw PointerRun_Entry00_45
-    db $9b, $5f
-    dw PointerRun_Entry00_46
-    db $41, $5f
-    dw PointerRun_Entry00_47
-    db $9f, $5f
-    dw PointerRun_Entry00_48
-    db $a1, $5f
-    dw PointerRun_Entry00_49
-    db $45, $5f
-    dw PointerRun_Entry00_50
-    db $47, $5f
-    dw PointerRun_Entry00_51
-    db $49, $5f
-    dw PointerRun_Entry00_52
-    db $4b, $5f
-    dw PointerRun_Entry00_53
-    db $a3, $5f
-    dw PointerRun_Entry00_54
-    db $a5, $5f
-    dw PointerRun_Entry00_55
-    db $4f, $5f
-    dw PointerRun_Entry00_56
-    db $51, $5f
-    dw PointerRun_Entry00_57
-    db $53, $5f
-    dw PointerRun_Entry00_58
-    db $55, $5f
-    dw PointerRun_Entry00_59
-    db $57, $5f
-    dw PointerRun_Entry00_60
-    db $59, $5f
-    dw PointerRun_Entry00_61
-    db $5b, $5f
-    dw PointerRun_Entry00_62
+    dw SkillSupersedes_00 ; id 0
+    dw SkillSupersedes_Blaze ; id 1
+    dw SkillSupersedes_Blazemore ; id 2
+    dw SkillSupersedes_Blazemost ; id 3
+    dw SkillSupersedes_Firebal ; id 4
+    dw SkillSupersedes_Firebane ; id 5
+    dw SkillSupersedes_Firebolt ; id 6
+    dw SkillSupersedes_Bang ; id 7
+    dw SkillSupersedes_Boom ; id 8
+    dw SkillSupersedes_Explodet ; id 9
+    dw SkillSupersedes_Infernos ; id 10
+    dw SkillSupersedes_Infermore ; id 11
+    dw SkillSupersedes_Infermost ; id 12
+    dw SkillSupersedes_Bolt ; id 13
+    dw SkillSupersedes_Zap ; id 14
+    dw SkillSupersedes_Thordain ; id 15
+    dw SkillSupersedes_IceBolt ; id 16
+    dw SkillSupersedes_SnowStorm ; id 17
+    dw SkillSupersedes_Blizzard ; id 18
+    dw SkillSupersedes_Beat ; id 19
+    dw SkillSupersedes_Defeat ; id 20
+    dw SkillSupersedes_Sacrifice ; id 21
+    dw SkillSupersedes_Heal ; id 22
+    dw SkillSupersedes_HealMore ; id 23
+    dw SkillSupersedes_HealAll ; id 24
+    dw SkillSupersedes_HealUs ; id 25
+    dw SkillSupersedes_HealUsAll ; id 26
+    dw SkillSupersedes_MPass ; id 27
+    dw SkillSupersedes_MPassmore ; id 28
+    dw SkillSupersedes_MPassmost ; id 29
+    dw SkillSupersedes_Vivify ; id 30
+    dw SkillSupersedes_Revive ; id 31
+    dw SkillSupersedes_Farewell ; id 32
+    dw SkillSupersedes_Antidote ; id 33
+    dw SkillSupersedes_DeChaos ; id 34
+    dw SkillSupersedes_NumbOff ; id 35
+    dw SkillSupersedes_CurseOff ; id 36
+    dw SkillSupersedes_Upper ; id 37
+    dw SkillSupersedes_Increase ; id 38
+    dw SkillSupersedes_Sap ; id 39
+    dw SkillSupersedes_Defense ; id 40
+    dw SkillSupersedes_Speed ; id 41
+    dw SkillSupersedes_SpeedUp ; id 42
+    dw SkillSupersedes_Slow ; id 43
+    dw SkillSupersedes_SlowAll ; id 44
+    dw SkillSupersedes_TwinHits ; id 45
+    dw SkillSupersedes_Surround ; id 46
+    dw SkillSupersedes_Sleep ; id 47
+    dw SkillSupersedes_SleepAll ; id 48
+    dw SkillSupersedes_TakeMagic ; id 49
+    dw SkillSupersedes_RobMagic ; id 50
+    dw SkillSupersedes_StopSpell ; id 51
+    dw SkillSupersedes_PanicAll ; id 52
+    dw SkillSupersedes_Ironize ; id 53
+    dw SkillSupersedes_MagicBack ; id 54
+    dw SkillSupersedes_Bounce ; id 55
+    dw SkillSupersedes_Barrier ; id 56
+    dw SkillSupersedes_MagicWall ; id 57
+    dw SkillSupersedes_Transform ; id 58
+    dw SkillSupersedes_BeDragon ; id 59
+    dw SkillSupersedes_Chance ; id 60
+    dw SkillSupersedes_MegaMagic ; id 61
+    dw SkillSupersedes_BigBang ; id 62
+    dw SkillSupersedes_Hellblast ; id 63
+    dw SkillSupersedes_FireAir ; id 64
+    dw SkillSupersedes_BlazeAir ; id 65
+    dw SkillSupersedes_Scorching ; id 66
+    dw SkillSupersedes_WhiteFire ; id 67
+    dw SkillSupersedes_FrigidAir ; id 68
+    dw SkillSupersedes_IceAir ; id 69
+    dw SkillSupersedes_IceStorm ; id 70
+    dw SkillSupersedes_WhiteAir ; id 71
+    dw SkillSupersedes_WindBeast ; id 72
+    dw SkillSupersedes_Vacuum ; id 73
+    dw SkillSupersedes_Lightning ; id 74
+    dw SkillSupersedes_RockThrow ; id 75
+    dw SkillSupersedes_Watershot ; id 76
+    dw SkillSupersedes_Tidalwave ; id 77
+    dw SkillSupersedes_CallHelp ; id 78
+    dw SkillSupersedes_YellHelp ; id 79
+    dw SkillSupersedes_FireSlash ; id 80
+    dw SkillSupersedes_VacuSlash ; id 81
+    dw SkillSupersedes_BoltSlash ; id 82
+    dw SkillSupersedes_IceSlash ; id 83
+    dw SkillSupersedes_SlimeBlow ; id 84
+    dw SkillSupersedes_DrakSlash ; id 85
+    dw SkillSupersedes_BeastCut ; id 86
+    dw SkillSupersedes_BirdBlow ; id 87
+    dw SkillSupersedes_BugBlow ; id 88
+    dw SkillSupersedes_Shears ; id 89
+    dw SkillSupersedes_DevilCut ; id 90
+    dw SkillSupersedes_ZombieCut ; id 91
+    dw SkillSupersedes_CleanCut ; id 92
+    dw SkillSupersedes_AquaCut ; id 93
+    dw SkillSupersedes_MetalCut ; id 94
+    dw SkillSupersedes_PoisonHit ; id 95
+    dw SkillSupersedes_Paralyze ; id 96
+    dw SkillSupersedes_NapAttack ; id 97
+    dw SkillSupersedes_SquallHit ; id 98
+    dw SkillSupersedes_BiAttack ; id 99
+    dw SkillSupersedes_QuadHits ; id 100
+    dw SkillSupersedes_RainSlash ; id 101
+    dw SkillSupersedes_MultiCut ; id 102
+    dw SkillSupersedes_GigaSlash ; id 103
+    dw SkillSupersedes_ChargeUp ; id 104
+    dw SkillSupersedes_PsycheUp ; id 105
+    dw SkillSupersedes_HighJump ; id 106
+    dw SkillSupersedes_EvilSlash ; id 107
+    dw SkillSupersedes_Massacre ; id 108
+    dw SkillSupersedes_TwinSlash ; id 109
+    dw SkillSupersedes_Berserker ; id 110
+    dw SkillSupersedes_Ramming ; id 111
+    dw SkillSupersedes_Kamikaze ; id 112
+    dw SkillSupersedes_SleepAir ; id 113
+    dw SkillSupersedes_PalsyAir ; id 114
+    dw SkillSupersedes_PoisonGas ; id 115
+    dw SkillSupersedes_PoisonAir ; id 116
+    dw SkillSupersedes_Curse ; id 117
+    dw SkillSupersedes_OddDance ; id 118
+    dw SkillSupersedes_RobDance ; id 119
+    dw SkillSupersedes_PaniDance ; id 120
+    dw SkillSupersedes_KODance ; id 121
+    dw SkillSupersedes_LureDance ; id 122
+    dw SkillSupersedes_LifeDance ; id 123
+    dw SkillSupersedes_Hustle ; id 124
+    dw SkillSupersedes_SideStep ; id 125
+    dw SkillSupersedes_SandStorm ; id 126
+    dw SkillSupersedes_Radiant ; id 127
+    dw SkillSupersedes_EerieLite ; id 128
+    dw SkillSupersedes_Surge ; id 129
+    dw SkillSupersedes_UltraDown ; id 130
+    dw SkillSupersedes_DeMagic ; id 131
+    dw SkillSupersedes_ThickFog ; id 132
+    dw SkillSupersedes_TatsuCall ; id 133
+    dw SkillSupersedes_DiagoCall ; id 134
+    dw SkillSupersedes_SamsiCall ; id 135
+    dw SkillSupersedes_BazooCall ; id 136
+    dw SkillSupersedes_SuckAir ; id 137
+    dw SkillSupersedes_Focus ; id 138
+    dw SkillSupersedes_LushLicks ; id 139
+    dw SkillSupersedes_SickLick ; id 140
+    dw SkillSupersedes_LegSweep ; id 141
+    dw SkillSupersedes_BigTrip ; id 142
+    dw SkillSupersedes_Ahhh ; id 143
+    dw SkillSupersedes_WarCry ; id 144
+    dw SkillSupersedes_Geyser ; id 145
+    dw SkillSupersedes_DanceShut ; id 146
+    dw SkillSupersedes_MouthShut ; id 147
+    dw SkillSupersedes_StrongD ; id 148
+    dw SkillSupersedes_Dodge ; id 149
+    dw SkillSupersedes_BladeD ; id 150
+    dw SkillSupersedes_Cover ; id 151
+    dw SkillSupersedes_Guardian ; id 152
+    dw SkillSupersedes_TailWind ; id 153
+    dw SkillSupersedes_StormWind ; id 154
+    dw SkillSupersedes_AquaWall ; id 155
+    dw SkillSupersedes_SealPray ; id 156
+    dw SkillSupersedes_SuckAll ; id 157
+    dw SkillSupersedes_Imitate ; id 158
+    dw SkillSupersedes_Meditate ; id 159
+    dw SkillSupersedes_LifeSong ; id 160
+    dw SkillSupersedes_LoveRain ; id 161
+    dw SkillSupersedes_Whistle ; id 162
+    dw SkillSupersedes_Pheromone ; id 163
+    dw SkillSupersedes_StepGuard ; id 164
+    dw SkillSupersedes_Outside ; id 165
+    dw SkillSupersedes_Informer ; id 166
+    dw SkillSupersedes_Errand ; id 167
+    dw SkillSupersedes_EagleEye ; id 168
+    dw SkillSupersedes_MapMagic ; id 169
+
+SkillSupersedes_00::
     db $ff
 
-PointerRun_Entry00::
+SkillSupersedes_Blaze::
     db $ff
 
-PointerRun_Entry00_2::
+SkillSupersedes_Firebal::
     db $ff
 
-PointerRun_Entry00_3::
+SkillSupersedes_Bang::
     db $ff
 
-PointerRun_Entry00_4::
+SkillSupersedes_Infernos::
     db $ff
 
-PointerRun_Entry00_5::
+SkillSupersedes_Bolt::
     db $ff
 
-PointerRun_Entry00_6::
+SkillSupersedes_IceBolt::
     db $ff
 
-PointerRun_Entry00_7::
-    db $ff, $ff
-
-PointerRun_Entry00_8::
+SkillSupersedes_Beat::
     db $ff
 
-PointerRun_Entry00_9::
-    db $ff, $ff, $ff, $ff
-
-PointerRun_Entry00_12::
-    db $ff, $ff
-
-PointerRun_Entry00_13::
-    db $ff, $ff
-
-PointerRun_Entry00_14::
+SkillSupersedes_Sacrifice::
     db $ff
 
-PointerRun_Entry00_15::
+SkillSupersedes_Heal::
     db $ff
 
-PointerRun_Entry00_16::
+SkillSupersedes_HealUs::
     db $ff
 
-PointerRun_Entry00_17::
+SkillSupersedes_MPass::
     db $ff
 
-PointerRun_Entry00_18::
-    db $ff, $ff
-
-PointerRun_Entry00_19::
+SkillSupersedes_Vivify::
     db $ff
 
-PointerRun_Entry00_20::
-    db $ff, $ff
-
-PointerRun_Entry00_21::
-    db $ff, $ff
-
-PointerRun_Entry00_22::
-    db $ff, $ff
-
-PointerRun_Entry01::
+SkillSupersedes_Farewell::
     db $ff
 
-PointerRun_Entry02::
+SkillSupersedes_Antidote::
     db $ff
 
-PointerRun_Entry03_2::
+SkillSupersedes_DeChaos::
     db $ff
 
-PointerRun_Entry04_2::
+SkillSupersedes_NumbOff::
     db $ff
 
-PointerRun_Entry05::
+SkillSupersedes_CurseOff::
     db $ff
 
-PointerRun_Entry06_2::
+SkillSupersedes_Upper::
     db $ff
 
-PointerRun_Entry07_2::
+SkillSupersedes_Sap::
     db $ff
 
-PointerRun_Entry08_2::
+SkillSupersedes_Speed::
     db $ff
 
-PointerRun_Entry09_2::
-    db $ff, $ff
-
-PointerRun_Entry00_24::
-    db $ff, $ff
-
-PointerRun_Entry00_25::
-    db $ff, $ff
-
-PointerRun_Entry00_26::
-    db $ff, $ff
-
-PointerRun_Entry00_27::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_28::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_29::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_30::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_31::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_32::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_33::
-    db $ff, $ff
-
-PointerRun_Entry00_34::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_35::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_36::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_37::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_38::
-    db $ff, $ff
-
-PointerRun_Entry00_39::
-    db $ff, $ff
-
-PointerRun_Entry00_40::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_41::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_42::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_43::
-    db $ff, $ff, $ff
-
-PointerRun_Entry00_44::
-    db $ff, $ff
-
-PointerRun_Entry00_46::
-    db $ff, $ff
-
-PointerRun_Entry00_47::
+SkillSupersedes_Slow::
     db $ff
 
-PointerRun_Entry00_48::
+SkillSupersedes_TwinHits::
     db $ff
 
-PointerRun_Entry00_49::
-    db $ff, $ff
-
-PointerRun_Entry00_50::
-    db $ff, $ff
-
-PointerRun_Entry00_51::
-    db $ff, $ff
-
-PointerRun_Entry00_52::
-    db $ff, $ff
-
-PointerRun_Entry00_53::
+SkillSupersedes_Surround::
     db $ff
 
-PointerRun_Entry00_54::
+SkillSupersedes_Sleep::
     db $ff
 
-PointerRun_Entry00_55::
-    db $ff, $ff
+SkillSupersedes_TakeMagic::
+    db $ff
 
-PointerRun_Entry00_56::
-    db $ff, $ff
+SkillSupersedes_RobMagic::
+    db $ff
 
-PointerRun_Entry00_57::
-    db $ff, $ff
+SkillSupersedes_StopSpell::
+    db $ff
 
-PointerRun_Entry00_58::
-    db $ff, $ff
+SkillSupersedes_PanicAll::
+    db $ff
 
-PointerRun_Entry00_59::
-    db $ff, $ff
+SkillSupersedes_Ironize::
+    db $ff
 
-PointerRun_Entry00_60::
-    db $ff, $ff
+SkillSupersedes_MagicBack::
+    db $ff
 
-PointerRun_Entry00_61::
-    db $ff, $ff
+SkillSupersedes_Barrier::
+    db $ff
 
-PointerRun_Entry00_62::
-    db $ff, $02, $01, $ff, $05, $04, $ff, $08, $07, $ff, $0b, $0a, $ff, $0e, $0d, $ff
-    db $11, $10, $ff, $13, $ff, $17, $16, $ff, $19, $ff, $1c
+SkillSupersedes_MagicWall::
+    db $ff
 
-PointerRun_Entry00_10::
+SkillSupersedes_Transform::
+    db $ff
+
+SkillSupersedes_BeDragon::
+    db $ff
+
+SkillSupersedes_Chance::
+    db $ff
+
+SkillSupersedes_MegaMagic::
+    db $ff
+
+SkillSupersedes_BigBang::
+    db $ff
+
+SkillSupersedes_Hellblast::
+    db $ff
+
+SkillSupersedes_FireAir::
+    db $ff
+
+SkillSupersedes_FrigidAir::
+    db $ff
+
+SkillSupersedes_WindBeast::
+    db $ff
+
+SkillSupersedes_Lightning::
+    db $ff
+
+SkillSupersedes_RockThrow::
+    db $ff
+
+SkillSupersedes_Watershot::
+    db $ff
+
+SkillSupersedes_CallHelp::
+    db $ff
+
+SkillSupersedes_FireSlash::
+    db $ff
+
+SkillSupersedes_VacuSlash::
+    db $ff
+
+SkillSupersedes_BoltSlash::
+    db $ff
+
+SkillSupersedes_IceSlash::
+    db $ff
+
+SkillSupersedes_SlimeBlow::
+    db $ff
+
+SkillSupersedes_DrakSlash::
+    db $ff
+
+SkillSupersedes_BeastCut::
+    db $ff
+
+SkillSupersedes_BirdBlow::
+    db $ff
+
+SkillSupersedes_BugBlow::
+    db $ff
+
+SkillSupersedes_Shears::
+    db $ff
+
+SkillSupersedes_DevilCut::
+    db $ff
+
+SkillSupersedes_ZombieCut::
+    db $ff
+
+SkillSupersedes_CleanCut::
+    db $ff
+
+SkillSupersedes_AquaCut::
+    db $ff
+
+SkillSupersedes_MetalCut::
+    db $ff
+
+SkillSupersedes_PoisonHit::
+    db $ff
+
+SkillSupersedes_Paralyze::
+    db $ff
+
+SkillSupersedes_NapAttack::
+    db $ff
+
+SkillSupersedes_SquallHit::
+    db $ff
+
+SkillSupersedes_BiAttack::
+    db $ff
+
+SkillSupersedes_RainSlash::
+    db $ff
+
+SkillSupersedes_MultiCut::
+    db $ff
+
+SkillSupersedes_GigaSlash::
+    db $ff
+
+SkillSupersedes_ChargeUp::
+    db $ff
+
+SkillSupersedes_PsycheUp::
+    db $ff
+
+SkillSupersedes_HighJump::
+    db $ff
+
+SkillSupersedes_EvilSlash::
+    db $ff
+
+SkillSupersedes_Massacre::
+    db $ff
+
+SkillSupersedes_TwinSlash::
+    db $ff
+
+SkillSupersedes_Berserker::
+    db $ff
+
+SkillSupersedes_Ramming::
+    db $ff
+
+SkillSupersedes_Kamikaze::
+    db $ff
+
+SkillSupersedes_SleepAir::
+    db $ff
+
+SkillSupersedes_PalsyAir::
+    db $ff
+
+SkillSupersedes_PoisonGas::
+    db $ff
+
+SkillSupersedes_Curse::
+    db $ff
+
+SkillSupersedes_OddDance::
+    db $ff
+
+SkillSupersedes_PaniDance::
+    db $ff
+
+SkillSupersedes_KODance::
+    db $ff
+
+SkillSupersedes_LureDance::
+    db $ff
+
+SkillSupersedes_LifeDance::
+    db $ff
+
+SkillSupersedes_Hustle::
+    db $ff
+
+SkillSupersedes_SideStep::
+    db $ff
+
+SkillSupersedes_SandStorm::
+    db $ff
+
+SkillSupersedes_Radiant::
+    db $ff
+
+SkillSupersedes_EerieLite::
+    db $ff
+
+SkillSupersedes_Surge::
+    db $ff
+
+SkillSupersedes_UltraDown::
+    db $ff
+
+SkillSupersedes_DeMagic::
+    db $ff
+
+SkillSupersedes_ThickFog::
+    db $ff
+
+SkillSupersedes_TatsuCall::
+    db $ff
+
+SkillSupersedes_SuckAir::
+    db $ff
+
+SkillSupersedes_Focus::
+    db $ff
+
+SkillSupersedes_LushLicks::
+    db $ff
+
+SkillSupersedes_LegSweep::
+    db $ff
+
+SkillSupersedes_Ahhh::
+    db $ff
+
+SkillSupersedes_WarCry::
+    db $ff
+
+SkillSupersedes_Geyser::
+    db $ff
+
+SkillSupersedes_DanceShut::
+    db $ff
+
+SkillSupersedes_MouthShut::
+    db $ff
+
+SkillSupersedes_StrongD::
+    db $ff
+
+SkillSupersedes_Dodge::
+    db $ff
+
+SkillSupersedes_BladeD::
+    db $ff
+
+SkillSupersedes_Cover::
+    db $ff
+
+SkillSupersedes_TailWind::
+    db $ff
+
+SkillSupersedes_AquaWall::
+    db $ff
+
+SkillSupersedes_SealPray::
+    db $ff
+
+SkillSupersedes_SuckAll::
+    db $ff
+
+SkillSupersedes_Imitate::
+    db $ff
+
+SkillSupersedes_Meditate::
+    db $ff
+
+SkillSupersedes_LifeSong::
+    db $ff
+
+SkillSupersedes_LoveRain::
+    db $ff
+
+SkillSupersedes_Whistle::
+    db $ff
+
+SkillSupersedes_Pheromone::
+    db $ff
+
+SkillSupersedes_StepGuard::
+    db $ff
+
+SkillSupersedes_Outside::
+    db $ff
+
+SkillSupersedes_Informer::
+    db $ff
+
+SkillSupersedes_Errand::
+    db $ff
+
+SkillSupersedes_EagleEye::
+    db $ff
+
+SkillSupersedes_MapMagic::
+    db $ff
+
+SkillSupersedes_Blazemost::
+    db $02
+
+SkillSupersedes_Blazemore::
+    db $01, $ff
+
+SkillSupersedes_Firebolt::
+    db $05
+
+SkillSupersedes_Firebane::
+    db $04, $ff
+
+SkillSupersedes_Explodet::
+    db $08
+
+SkillSupersedes_Boom::
+    db $07, $ff
+
+SkillSupersedes_Infermost::
+    db $0b
+
+SkillSupersedes_Infermore::
+    db $0a, $ff
+
+SkillSupersedes_Thordain::
+    db $0e
+
+SkillSupersedes_Zap::
+    db $0d, $ff
+
+SkillSupersedes_Blizzard::
+    db $11
+
+SkillSupersedes_SnowStorm::
+    db $10, $ff
+
+SkillSupersedes_Defeat::
+    db $13, $ff
+
+SkillSupersedes_HealAll::
+    db $17
+
+SkillSupersedes_HealMore::
+    db $16, $ff
+
+SkillSupersedes_HealUsAll::
+    db $19, $ff
+
+SkillSupersedes_MPassmost::
+    db $1c
+
+SkillSupersedes_MPassmore::
     db $1b, $ff
 
-PointerRun_Entry00_11::
-    db $1e, $ff, $25, $ff, $27, $ff, $29, $ff, $2b, $ff, $2f, $ff
+SkillSupersedes_Revive::
+    db $1e, $ff
 
-PointerRun_Entry00_23::
-    db $36, $ff, $42, $41
+SkillSupersedes_Increase::
+    db $25, $ff
 
-PointerRun_Entry0A_2::
-    db $40, $ff, $46, $45, $44, $ff, $48, $ff, $4c, $ff, $4e, $ff, $63, $ff, $73, $ff
-    db $76, $ff, $87
+SkillSupersedes_Defense::
+    db $27, $ff
 
-PointerRun_Entry00_45::
-    db $86, $85, $ff, $8b, $ff, $8d, $ff, $97, $ff, $99, $ff
+SkillSupersedes_SpeedUp::
+    db $29, $ff
+
+SkillSupersedes_SlowAll::
+    db $2b, $ff
+
+SkillSupersedes_SleepAll::
+    db $2f, $ff
+
+SkillSupersedes_Bounce::
+    db $36, $ff
+
+SkillSupersedes_WhiteFire::
+    db $42
+
+SkillSupersedes_Scorching::
+    db $41
+
+SkillSupersedes_BlazeAir::
+    db $40, $ff
+
+SkillSupersedes_WhiteAir::
+    db $46
+
+SkillSupersedes_IceStorm::
+    db $45
+
+SkillSupersedes_IceAir::
+    db $44, $ff
+
+SkillSupersedes_Vacuum::
+    db $48, $ff
+
+SkillSupersedes_Tidalwave::
+    db $4c, $ff
+
+SkillSupersedes_YellHelp::
+    db $4e, $ff
+
+SkillSupersedes_QuadHits::
+    db $63, $ff
+
+SkillSupersedes_PoisonAir::
+    db $73, $ff
+
+SkillSupersedes_RobDance::
+    db $76, $ff
+
+SkillSupersedes_BazooCall::
+    db $87
+
+SkillSupersedes_SamsiCall::
+    db $86
+
+SkillSupersedes_DiagoCall::
+    db $85, $ff
+
+SkillSupersedes_SickLick::
+    db $8b, $ff
+
+SkillSupersedes_BigTrip::
+    db $8d, $ff
+
+SkillSupersedes_Guardian::
+    db $97, $ff
+
+SkillSupersedes_StormWind::
+    db $99, $ff
 
 ; wBattleArg2/wBattleArg3 = a battler record (GameMode4_Init_BuildFoeRecord and
 ; ApplyLevelScaledStatsToSlots_BuildWildRecord call it). It rebuilds the 8 skills at BATTLER_SKILLS

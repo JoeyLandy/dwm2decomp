@@ -2431,7 +2431,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
-### E-0406 — H3: the text for translators, the font as a PNG, a test translation drawn by the game
+### E-0409 — H3: the text for translators, the font as a PNG, a test translation drawn by the game
 
 - Date: 2026-10-17. Kind: TOOL and OBSERVATION (C2 on tools/sm83.py for what the test translation shows; widths C1). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Description: [translating](TRANSLATING.md).
 - **tools/text.py.** 5,407 entries: every labelled block of `db` text in src/text/, with the pointer tables that use it. The text form is the db strings joined, with argument bytes as {$xx}. Import re-renders a changed entry with tools/gb_text.py (all 5,407 blocks re-render from their bytes to the same bytes; 5,405 to the same lines, and Message_0B_8F and String_88_02_AD end in raw bytes after their end mark that re-render as text). The bank's trailing fill takes the change in length. Import stops on an unknown character, a line wider than its limit, or a bank without room. The charmap is read from src/charmap.inc too, so a CHARMAP line adds a letter.
@@ -2444,7 +2444,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Refusals.** Grüße without its CHARMAP line, a 29-cell line, and 30 entries of bank $28 grown past its fill are refused.
 - **Limits.** Only src/text/; moving messages to an overflow bank (the $DA split of message group 0 into bank $97) is a code change by hand, documented but not done by the tool; widths C1.
 
-### E-0405 — H2: the data tables as editable files, checked against the game's readers
+### E-0408 — H2: the data tables as editable files, checked against the game's readers
 
 - Date: 2026-10-17. Kind: TOOL and OBSERVATION (C2 on tools/sm83.py for the reader checks; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Description: [editing data](EDITING_DATA.md).
 - **tools/datatables.py.** Reads the tables from src/ as value tokens, mapped onto fields by byte width with config/tables.json's layouts: 181 tables (species, monsters, skills, items, 111 encounter entries and 48 grids, scripted and arena encounters, the seven breeding tables and their lists, shops, AI weights), 4,116 records or entries. `import` rewrites only changed tokens; a list may change length and the bank's trailing `ds` fill takes the difference (refused when it is too small). tools/build.py `--src DIR` builds another tree (a mod unless identical).
@@ -2452,7 +2452,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Edits reach the readers** (tests/test_datatables.py): one copy of src/ with an edit in each of 12 tables builds as a mod, and on the modded ROM LoadSpeciesRecord, LoadMonsterRecord, LoadSkillRecord, LoadItemRecord, ComputeSellPrice, LoadArg1PointerForScreenTableIndex (the shop list one item longer), ReadBank6TableWord, FillEncounterFromEntry (all 128 random states), CollectUniqueEncounterIdsToWorkBuf2_FindTable, StartScriptedEncounterTemp0 and ComputeBreedingChild each return the edited value; the arena list is checked by its bytes at its label. A field given a different number of values than its tokens is refused.
 - **Limits.** Only these tables; new lists need their label in src/ first; adding records to a fixed table is not supported.
 
-### E-0404 — H1 complete: src/ is checked without the generator's config or listing
+### E-0407 — H1 complete: src/ is checked without the generator's config or listing
 
 - Date: 2026-10-17. Kind: TEST and TOOL (one comment correction in src/; no byte changed). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit f7cb6cd. Plan and per-file record: [graduation](GRADUATION.md).
 - **Method.** A scratch copy of the tree with config/names.json, config/annotations.json and build/listing/ removed ran the full suite (tools/run_tests.py): 27 failures and 54 skips at first. Each was fixed so that the check reads src/ (and the .sym of a fresh build for addresses), or recognized as a check of the generator, which skips without the listing.
@@ -2461,6 +2461,45 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Found and fixed.** Three comment lines in bank $60 named wKeyWorldBossMonsters, which src/ram.asm does not define; they now say wKeyWorldMonsters + $40 and + $41 (the boss entries, as the hand notes above them say).
 - **Retired.** tools/apply_drafts.py (and tests/test_apply_drafts.py) and tools/rank_unnamed.py. **Added** tools/rename.py (whole-word renames across src/, refusing unsafe ones; a copy with NextTableByte renamed still builds the reference).
 - **Exit gate.** A copy of the tree in build/gate/ with config/names.json, config/annotations.json and build/listing/ removed: build PASS (zero differing bytes), and tools/run_tests.py ran 491 tests with no failure (build/logs/gate3.log; 17 skipped: the generator's own checks and the 3 slow tests).
+
+### E-0406 — The later worlds and link play for the shift gate; a serial model; two byte lists misread as pointers
+
+- Date: 2026-10-17. Kind: OBSERVATION, TOOL and DECISION (generator config; bytes unchanged). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e0bc01b. Details: [shiftability](SHIFTABILITY.md), "The later worlds and link play".
+- **World tour.** tools/recipes/e0406_world_tour.txt: 25 encounter maps from $2B to $C3, entered by their location bytes from the party state of E-0321, walked and fought in. Screens of the Float map and of a battle on the Old maps confirm the runs reach them.
+- **Serial model** (tools/sm83.py). An internal-clock transfer ends after 4,096 cycles (128 with the fast bit). If the partner has a transfer started (either clock), the SB bytes are swapped and both get the serial interrupt; otherwise $FF comes in. With no cable a transfer never ends, as before, so unlinked observations are unchanged. A model: real hardware's behavior with two clocking consoles, and its timing, are not reproduced exactly (C1). tests/test_link_play.py.
+- **Link runner** (tools/link_play.py). Two consoles in cycle lockstep with separate recipes, each run ending on the same frame. The first version let them end apart, and the console behind then played alone while its partner waited, which lost its presses.
+- **Link session.** Choosing BREEDING on the title menu with one console first connects, as RunLinkSession_FindPartner expects: one side sends its option code while the other waits on the same option. The breeding screens follow. A console in link role 3 reads its pad only in its send step inside the serial interrupt. Its later presses did not move its choice, so no child is bred; the cause (game or model timing) is open.
+- **Found by the tour gate.** EnterStatusEffectFieldState_Data had eleven map-id pairs decoded as `dw` of labels with the same values. In a padded ROM the scan read $5C where the base read $5D, so map $5D left the list: found in run t5Db! by stepping both ROMs in lockstep. AddSkillCToFreeOrWeakerSlot_Data (bank $1A, 170 words) had unlabelled targets as raw bytes. Both are now config/tables.json layouts, the lists named SkillSupersedes_<skill> (target_names). No `dw` of a pointer-run label is left.
+- **Result.** All 222 runs of the chain with the tour (tools/recipes/e0406_world_tour.txt and its includes), 9,702,777 ROM data reads, PASS padded by 16 (152 banks) and by 256 (107 banks). Link recipe: 338,121 ROM data reads on two consoles, PASS padded by 16 and by 256.
+- **Checks.** tools/shift_test.py --recipe and --link-recipe as above; build/run702 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite702.log OK (473 tests, 3 skipped).
+
+### E-0405 — The bred child's later rolls: sex, resistances, skill list and stat bonus
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the check compares; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e0bc01b. Specification: "The bred child's later rolls" in [mechanics](MECHANICS.md).
+- **Method.** tools/mechanics.py `child` runs RollChildSexFromSpecies, RollChildResistancesToChildRecordResistances, BuildChildRecordSkillListCandidateList and ApplyBreedingBonusToChildStats, in turn, on generated child and parent records, and compares the child's bytes (MON_SEX, the 27 resistances, MON_SKILLS and the skill list, the eight stat words) and wRandomHi/Lo.
+- **Result.** 3,000 of 3,000 agree. Every line of the four models ran.
+- **RandomModulo29.** The quotient of `((lo << 1) & mask) x 256 + lo` by 41; the `rl a` takes in a carry that is always 0 at RandomByteTable's address ($0973 + at most $7F).
+- **Findings** (properties of the code):
+  - TestResistanceEntry hides a parent's level-2 resistance named by its item.
+  - The stat bonus divides only the low 16 bits of the 24-bit product.
+  - The skill list's compaction leaves old bytes after the moved ones, which the second ClearDuplicateChildSkills clears.
+- **Negative checks** (tests/test_mechanics.py). A model without the item test, and one that divides the whole product, are each caught.
+- **Limits.** The routines are checked one at a time from generated states, not in the order ComputeBreedingChild's caller runs them; what the bonus and resistance gains mean in play is C1.
+- **Checks.** tools/mechanics.py child --n 3000: all agree; build/run702 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite702.log OK (473 tests, 3 skipped).
+
+### E-0404 — The other damage routines of bank $36
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the check compares; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit e0bc01b. Specification: "The other damage routines" in [mechanics](MECHANICS.md).
+- **Method.** tools/mechanics.py `effects` models 28 routines, reading the families the family-dependent ones test from src/. It runs each on generated battle states: levels, HP, monster ids with their species families, body flags, MP spent, battle kind, action id, formation bytes, and register E for D9. It compares the damage word, both random states, wBattleArg2 where a skill roll sets it, Kamikaze's carry, and that the ATK and DEF words and wBattleActor are put back.
+- **Result.** 3,000 of 3,000 agree (about 107 per routine). Kamikaze's three outcomes occur: failure 47, success with damage 1 59, other damage 14.
+- **Findings** (properties of the code, C2 on the emulator):
+  - ActionEffect_Vacuum_Damage tests wLinkMode where the others test the actor's side, so foes get the player formula.
+  - ActionEffect_ActionD9_Damage takes a level from register E, which it never loads.
+  - Kamikaze reads the word at the address its actor's HP value names.
+  - BiAttack's 30 x ATK and 30 x DEF products keep 16 bits.
+- **Negative checks** (tests/test_mechanics.py). A model that halves DEF against every family, and one without Kamikaze's word read, are each caught.
+- **Limits.** Routines are checked alone from generated states; which skill uses which routine, and the effect of the status bits in play, stay as their notes give them (C1).
+- **Checks.** tools/mechanics.py effects --n 3000: all agree; build/run702 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite702.log OK (473 tests, 3 skipped).
 
 ### E-0403 — H1b, first file: tests/test_generated_source.py split into source audits and generator checks
 

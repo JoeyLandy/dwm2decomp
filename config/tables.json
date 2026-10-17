@@ -3629,6 +3629,48 @@
       "note": "E-0191 (C1: IsNameRejected walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
     },
     {
+      "bank": "1A",
+      "addr": "5D8B",
+      "label": "AddSkillCToFreeOrWeakerSlot_Data",
+      "count": 170,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "$FF-terminated list of the skills it supersedes",
+          "reason": "skill supersede list"
+        }
+      ],
+      "record": "pointer to the list of skills this skill may replace",
+      "target_names": {
+        "by": "skill",
+        "prefix": "SkillSupersedes_"
+      },
+      "note": "E-0406 (C1: AddSkillCToFreeOrWeakerSlot reads word C (the skill) and writes C into a slot that is empty or holds a skill of the list; 170 words, one per skill, ending at the first list ($5EDF). Words whose list had no label were written as raw bytes, fixed addresses a moved list would leave behind; found by reading the run of pointer labels after EnterStatusEffectFieldState_Data was fixed)."
+    },
+    {
+      "bank": "0A",
+      "addr": "4374",
+      "label": "EnterStatusEffectFieldState_Data",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 64,
+          "name": "map ids",
+          "line": true
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$FF, the end",
+          "line": true
+        }
+      ],
+      "record": "the maps where the field status steps do not run",
+      "note": "E-0406 (C1: EnterStatusEffectFieldState compares hMapId with each byte up to the $FF; 64 map ids. Eleven byte pairs of the list had been decoded as pointer words (words that happened to equal label addresses in banks $0A and $1A), which a padded build moved: tools/shift_test.py --recipe found map $5D missing from the list in the padded ROM)."
+    },
+    {
       "bank": "0D",
       "addr": "75D7",
       "label": "NpcBreedMenu_RedrawListScreen_LoadTiles_Data1",

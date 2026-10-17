@@ -4,7 +4,8 @@ against hardware or a reference emulator).
 
 Purpose: run the reference ROM far enough to observe which code moves data into VRAM and
 WRAM. It models the SM83 CPU, MBC5 banking, CGB VRAM/WRAM banks, a coarse LCD/STAT clock,
-OAM DMA and HDMA. It does not model audio, serial, accurate timing, or most PPU behavior.
+OAM DMA, HDMA and (E-0406) the serial port between two linked instances (`link`). It does not model audio,
+accurate timing, or most PPU behavior.
 Anything learned from it is an OBSERVATION of this emulator and must be cross-checked
 before being promoted past C1.
 """
@@ -14,6 +15,9 @@ R = "BCDEHL.A"
 
 
 class GameBoy:
+    link = None  # E-0406: class defaults, so states pickled before the serial model load
+    serial_left = None
+
     def __init__(self, rom: bytes):
         self.rom = rom
         self.nrom = len(rom) // 0x4000
@@ -47,6 +51,8 @@ class GameBoy:
         self.cur_pc = 0
         self.pc_hooks = {}  # address -> callable(gb), called before the instruction there runs
         self.on_rom_read = None  # callable(pc, bank, addr) for reads in the switchable window
+        self.link = None  # E-0406: the other GameBoy on the cable, or None (nothing connected)
+        self.serial_left = None  # cycles until a transfer this side clocks ends
 
     # ---- memory -------------------------------------------------------------
     def rb(self, a: int) -> int:
@@ -187,6 +193,10 @@ class GameBoy:
             return
         elif r == 0x0F:
             self.io[r] = v & 0x1F
+            return
+        elif r == 0x02:  # E-0406: SC. Bit 7 starts a transfer; with bit 0 (internal clock) this side clocks it
+            self.io[r] = v
+            self.serial_left = ((128 if v & 0x02 else 4096) if v & 0x81 == 0x81 and self.link is not None else None)
             return
         self.io[r] = v
 
@@ -414,8 +424,31 @@ class GameBoy:
         return cyc
 
     # ---- clock and interrupts ----------------------------------------------
+    def serial_done(self) -> None:
+        """E-0406: the end of a transfer this side clocked (8 bits). When the other side has a transfer started (SC
+        bit 7; waiting on the external clock, or clocking too, as the game's per-frame exchange does on both
+        consoles) the two SB bytes are swapped and both transfers end with the serial interrupt; otherwise $FF
+        comes in (the line idles high). A model, not checked against hardware. Without a cable (`link` None) no
+        transfer ends at all, as before this model: the observations made so far assumed that, though real hardware
+        would end it with $FF."""
+        peer = self.link
+        if peer is not None and peer.io[0x02] & 0x80:  # the partner has a transfer started (either clock)
+            self.io[0x01], peer.io[0x01] = peer.io[0x01], self.io[0x01]
+            peer.io[0x02] &= 0x7F
+            peer.io[0x0F] |= 0x08
+            peer.serial_left = None  # two clocking sides: one exchange ends both
+        else:
+            self.io[0x01] = 0xFF
+        self.io[0x02] &= 0x7F
+        self.io[0x0F] |= 0x08
+        self.serial_left = None
+
     def tick(self, cyc: int) -> None:
         self.cycles += cyc
+        if self.serial_left is not None:
+            self.serial_left -= cyc
+            if self.serial_left <= 0:
+                self.serial_done()
         self.io[0x04] = (self.io[0x04] + (cyc >> 6)) & 0xFF
         if not self.io[0x40] & 0x80:
             self.line_cycles = (self.line_cycles + cyc) % 456

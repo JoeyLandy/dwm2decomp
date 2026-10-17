@@ -1,6 +1,6 @@
 # Editing the game's data
 
-Stage H2 of the modding and translation goal ([roadmap](ROADMAP.md)), evidence E-0405 in the
+Stage H2 of the modding and translation goal ([roadmap](ROADMAP.md)), evidence E-0408 in the
 [evidence log](EVIDENCE_LOG.md). The game's tables are `db`/`dw` lines in src/, the source (D-015). You can edit
 them there directly, or export them to JSON and CSV files, edit those in a spreadsheet, and import them back.
 

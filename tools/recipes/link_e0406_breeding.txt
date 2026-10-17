@@ -1,0 +1,19 @@
+# E-0406: two linked consoles (tools/link_play.py) power on with the save of e0323_save.txt (j03!) and choose BREEDING
+# on the title menu, A first while B's cursor waits on the same option; the link session's breeding screens follow:
+# the farm list, info and stats pages, the 'leveled up more' and 'farm's roster' refusals. B's choices do not follow
+# its presses as A's do, so no child is bred (E-0406 limits). One run per line: STATE | FROM | RECIPE_A | RECIPE_B.
+l01 | sram:j03! | W800 S W60 W30 | W800 S W60 W30
+l02 | l01 | S W60 W60 | S W60 W60
+l03 | l02 | D2 W20 D2 W40 | D2 W20 D2 W40
+l04 | l03 | A2 W200 | W202
+l05 | l04 | W200 | W200
+l06 | l05 | A2 W120 | W122
+l07 | l06 | W120 | A20 W100
+l08 | l07 | W200 | W200
+l09 | l08 | W100 | A20 W80
+l10 | l09 | W200 D2 W60 D2 W60 D2 W60 A2 W80 D2 W60 A2 W150 | W200 D6 W60 D6 W60 D6 W60 D6 W60 A6 W80 D6 W60 A6 W150
+l11 | l10 | W200 | W200
+l12 | l11 | A2 W150 | A6 W150
+l13 | l12 | A2 W200 | A6 W200
+l14 | l13 | A2 W200 | A6 W200
+l15 | l14 | A2 W300 | A6 W300

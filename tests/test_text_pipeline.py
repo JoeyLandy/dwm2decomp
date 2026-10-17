@@ -1,4 +1,4 @@
-"""tools/text.py: the text exported for translators and reinserted, the font as a PNG (H3, E-0406).
+"""tools/text.py: the text exported for translators and reinserted, the font as a PNG (H3, E-0409).
 
 The H3 gate: unchanged text reinserts with no change to src/ (so the matching build is unaffected), and a test
 translation that grows the text and adds a letter builds, and the game draws it: the farmhand's first message,

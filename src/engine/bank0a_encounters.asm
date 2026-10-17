@@ -690,22 +690,14 @@ SECTION "Bank 0A EnterStatusEffectFieldState_Data", ROMX
 ; EnterStatusEffectFieldState compares hMapId with each byte (outside key worlds, on maps $20 and
 ; above) and returns at once on a match, so none of the poison and MP-drain field steps run on those
 ; maps. (C1, E-0381)
+; EnterStatusEffectFieldState compares hMapId with each byte up to the $FF; 64 map ids. Eleven byte
+; pairs of the list had been decoded as pointer words (words that happened to equal label addresses
+; in banks $0A and $1A), which a padded build moved: tools/shift_test.py --recipe found map $5D
+; missing from the list in the padded ROM (E-0406, C1)
+; record: the maps where the field status steps do not run
 EnterStatusEffectFieldState_Data::
-    db $21, $22, $23, $24, $25, $26, $29, $2a, $2b, $2d, $2e, $31, $32, $33, $34, $3c
-    db $3d, $41, $45, $49, $4a, $4b, $4c, $4d, $4f
-    dw FillEncounterFromEntry_Data2
-    dw $5852
-    dw $5a59
-    dw PointerRun_Entry03
-    dw PointerRun_Entry04
-    dw $605f
-    dw PointerRun_Entry06
-    dw PointerRun_Entry07
-    dw PointerRun_Entry08
-    dw PointerRun_Entry09
-    dw PointerRun_Entry0A
-    db $89, $92, $9d, $a4, $a9, $ab, $af, $b2, $b1, $b6, $b9, $ba, $bc, $c5, $d0, $d9
-    db $e2, $ff
+    db $21, $22, $23, $24, $25, $26, $29, $2a, $2b, $2d, $2e, $31, $32, $33, $34, $3c, $3d, $41, $45, $49, $4a, $4b, $4c, $4d, $4f, $50, $51, $52, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $68, $71, $72, $78, $79, $7c, $7d, $7e, $7f, $89, $92, $9d, $a4, $a9, $ab, $af, $b2, $b1, $b6, $b9, $ba, $bc, $c5, $d0, $d9, $e2 ; entry 0
+    db $ff
 
 ; Field step check, far-called last after EnterStatusEffectFieldState: returns while a fade or
 ; script runs, when wEncounterRate & $7F is 0, or when wTalkCountdown is 0. Otherwise it decrements
@@ -4773,7 +4765,6 @@ EncounterGrid_13::
     dw EncounterGroup_Grid13_104 ; id 117
     dw EncounterGroup_Grid13_104 ; id 118
     dw EncounterGroup_Grid13_104 ; id 119
-PointerRun_Entry03::
     dw EncounterGroup_Grid13_85 ; id 120
     dw EncounterGroup_Entry03_121 ; id 121
     dw EncounterGroup_Grid13_85 ; id 122
@@ -5104,7 +5095,6 @@ EncounterGrid_22::
     dw EncounterGroup_Grid22_22 ; id 22
     dw EncounterGroup_Grid22_22 ; id 23
     dw EncounterGroup_Grid22_0 ; id 24
-PointerRun_Entry04::
     dw EncounterGroup_Entry04_25 ; id 25
     dw EncounterGroup_Grid22_0 ; id 26
     dw EncounterGroup_Grid22_0 ; id 27
@@ -6013,19 +6003,4 @@ EncounterGroup_Grid48_0::
     dw $01ef ; MonsterTable $1EF: Ogre
     dw $01f5 ; MonsterTable $1F5: Skullgon
     dw $01f6 ; MonsterTable $1F6: Skulpent
-    ds $48d, $00
-
-PointerRun_Entry06::
-    ds $a10, $00
-
-PointerRun_Entry07::
-    ds $707, $00
-
-PointerRun_Entry08::
-    ds $404, $00
-
-PointerRun_Entry09::
-    ds $202, $00
-
-PointerRun_Entry0A::
-    ds $82, $00
+    ds $1c2c, $00

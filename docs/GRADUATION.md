@@ -1,6 +1,6 @@
 # Graduating src/
 
-Stage H1 of the modding and translation goal ([roadmap](ROADMAP.md)), done 2026-10-17 (E-0402 to E-0404); decision D-015 in
+Stage H1 of the modding and translation goal ([roadmap](ROADMAP.md)), done 2026-10-17 (E-0402, E-0403, E-0407); decision D-015 in
 [project status](PROJECT_STATUS.md). Measured 2026-10-17 on master f276d52.
 
 ## Why
@@ -71,7 +71,7 @@ tree with src/ and lists each file that differs, is missing or is extra. It repo
 that made this switch, so the switch changed no source byte. build/listing/ is still written, so the tests that
 read it keep working.
 
-**H1b. Checks on src/, not on the listing (done 2026-10-17, E-0403 and E-0404).** Each test that read
+**H1b. Checks on src/, not on the listing (done 2026-10-17, E-0403 and E-0407).** Each test that read
 build/listing/ or imported the generator now checks src/, with addresses from the .sym of a build of the same tree,
 or became a check of the generator that skips without its listing.
 
@@ -119,7 +119,7 @@ readability batches and are removed. readability_queue.py stays as the readabili
 renames a label, constant or RAM symbol everywhere in src/ (definition, references, notes, its section and the
 layout line) and refuses unsafe renames; renaming NextTableByte in a copy of src/ still builds the reference.
 
-**Exit gate (met 2026-10-17, E-0404).** In a scratch copy with config/names.json, config/annotations.json and
+**Exit gate (met 2026-10-17, E-0407).** In a scratch copy with config/names.json, config/annotations.json and
 build/listing/ removed, the matching build PASSes and the full suite passes (the generator's own checks skip). A
 hand edit to src/ survives: three comment lines in bank $60 that named a RAM symbol that no longer exists were
 corrected in src/ (found by the note check), and every check and build passes with them.

@@ -1,0 +1,79 @@
+# E-0406: a tour of 25 encounter maps across the later worlds (the 56 of RunBattleIntroKindCase_RandomEncounter,
+# listed by tools/breed_path.py), each entered by the location bytes with the party of E-0321, walked in a square,
+# with A pressed through any battle that starts, then walked again (includes e0335_swap.txt).
+@ e0335_swap.txt
+t2Ba! | k03! | hMapId=0x2B hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t2Bb! | t2Ba! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t2Bc! | t2Bb! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t35a! | k03! | hMapId=0x35 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t35b! | t35a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t35c! | t35b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t38a! | k03! | hMapId=0x38 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t38b! | t38a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t38c! | t38b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t3Aa! | k03! | hMapId=0x3A hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t3Ab! | t3Aa! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t3Ac! | t3Ab! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t3Ea! | k03! | hMapId=0x3E hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t3Eb! | t3Ea! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t3Ec! | t3Eb! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t48a! | k03! | hMapId=0x48 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t48b! | t48a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t48c! | t48b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t53a! | k03! | hMapId=0x53 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t53b! | t53a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t53c! | t53b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t5Da! | k03! | hMapId=0x5D hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t5Db! | t5Da! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t5Dc! | t5Db! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t62a! | k03! | hMapId=0x62 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t62b! | t62a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t62c! | t62b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t63a! | k03! | hMapId=0x63 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t63b! | t63a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t63c! | t63b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t70a! | k03! | hMapId=0x70 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t70b! | t70a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t70c! | t70b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t73a! | k03! | hMapId=0x73 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t73b! | t73a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t73c! | t73b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t81a! | k03! | hMapId=0x81 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t81b! | t81a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t81c! | t81b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t85a! | k03! | hMapId=0x85 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t85b! | t85a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t85c! | t85b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t8Ba! | k03! | hMapId=0x8B hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t8Bb! | t8Ba! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t8Bc! | t8Bb! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+t8Ea! | k03! | hMapId=0x8E hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+t8Eb! | t8Ea! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+t8Ec! | t8Eb! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tA0a! | k03! | hMapId=0xA0 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tA0b! | tA0a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tA0c! | tA0b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tA2a! | k03! | hMapId=0xA2 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tA2b! | tA2a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tA2c! | tA2b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tA8a! | k03! | hMapId=0xA8 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tA8b! | tA8a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tA8c! | tA8b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tAEa! | k03! | hMapId=0xAE hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tAEb! | tAEa! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tAEc! | tAEb! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tB0a! | k03! | hMapId=0xB0 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tB0b! | tB0a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tB0c! | tB0b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tB3a! | k03! | hMapId=0xB3 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tB3b! | tB3a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tB3c! | tB3b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tB8a! | k03! | hMapId=0xB8 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tB8b! | tB8a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tB8c! | tB8b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tBEa! | k03! | hMapId=0xBE hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tBEb! | tBEa! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tBEc! | tBEb! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
+tC3a! | k03! | hMapId=0xC3 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+tC3b! | tC3a! |  | R64 D64 L64 U64 R96 D96 L96 U96 W30
+tC3c! | tC3b! |  | A*24 W60 B*4 W30 R64 D64 L64 U64 W60
