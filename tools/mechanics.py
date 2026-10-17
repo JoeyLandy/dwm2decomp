@@ -13,8 +13,10 @@ on every generated state supports the specification on the project's emulator (C
   resistance  the 16 bank-$36 routines that roll damage and scale it by a resistance level (E-0397)
   step7       ResolveStepComputeDamage: the damage modifiers of resolve step 7 (E-0397)
   learn       FindNewlyLearnableSkills: the skill a monster learns, upgrades or devises on a level-up (E-0398)
+  apply       ResolveStepApplyDamage: the damage taken from the target's HP, and the defeat step (E-0399)
+  modifiers   ApplyDamageModifiers: the wBattleStatus7 multipliers of the damage message step (E-0399)
 
-Usage: mechanics.py [join|growth|breeding|attack|resistance|step7|learn|all] [--n 2000] [--seed 1]
+Usage: mechanics.py [join|growth|breeding|attack|resistance|step7|learn|apply|modifiers|all] [--n 2000] [--seed 1]
 Exit 1 when a model and the game disagree.
 """
 from __future__ import annotations
@@ -832,8 +834,90 @@ def learn_check(rom: bytes, n: int, seed: int) -> list[str]:
     return bad
 
 
+# ---- applying the damage (E-0399) -------------------------------------------------------------------------------
+
+def apply_model(s: dict) -> dict:
+    """ResolveStepApplyDamage (far call to ApplyDamageToTarget): the target's HP, the resolve step and flags."""
+    t = s["target"]
+    hp, gains = list(s["hp"]), list(s["gains"])
+    step, sub, sub2 = (s["step"] + 2) & 0xFF, 0, s["sub2"]
+    top = s["arg"] & 0xC0
+    if top == 0:
+        return {"hp": hp, "gains": gains, "step": step, "sub": sub, "sub2": sub2}
+    if top != 0x40:
+        left = hp[t] - s["damage"]
+        if left <= 0:  # the damage reaches the HP: 0, and the next step is the defeat
+            hp[t], step, sub2 = 0, (step - 1) & 0xFF, 0
+        else:
+            hp[t] = left
+    gains[t] |= 0x07
+    return {"hp": hp, "gains": gains, "step": step, "sub": sub, "sub2": sub2}
+
+
+def modifiers_model(s: dict) -> dict:
+    """ApplyDamageModifiers: clears bits 0-3 of the target's wBattleStatus7, then the first of bit 0 (x 2),
+    bit 1 (x 10) and bit 2 (x 2) changes the damage, 16-bit."""
+    t, d = s["target"], s["damage"]
+    b = s["status"][t][7]
+    if b & 1:
+        d = d * 2
+    elif b & 2:
+        d = d * 10
+    elif b & 4:
+        d = d * 2
+    return {"damage": d & 0xFFFF, "status7": b & 0xF0}
+
+
+def apply_check(rom: bytes, n: int, seed: int) -> list[str]:
+    R, L = ram(), rom_labels()
+    rng = random.Random(seed)
+    bank, addr = L["ResolveStepApplyDamage"]
+    bad = []
+    for i in range(n):
+        t = rng.randrange(8)
+        hp = [rng.choice([rng.randrange(0, 30), rng.randrange(0, 1000), rng.randrange(0, 0x10000)]) for _ in range(8)]
+        dmg = rng.choice([hp[t], hp[t] - 1, hp[t] + 1, rng.randrange(0, 60), rng.randrange(0, 0x10000)]) & 0xFFFF
+        s = {"target": t, "hp": hp, "damage": dmg, "arg": rng.randrange(256), "step": 12, "sub2": rng.randrange(1, 256),
+             "gains": [rng.randrange(256) for _ in range(8)]}
+        mem = {R["wBattleTarget"]: t, R["wBattleDamageLo"]: dmg & 0xFF, R["wBattleDamageHi"]: dmg >> 8,
+               R["wResolveMsgArg"]: s["arg"], R["wBattleResolveStep"]: s["step"], R["wBattleSubStep"]: 0x33,
+               R["wBattleSubStep2"]: s["sub2"]}
+        for k in range(8):
+            mem[R["wBattleHP"] + 2 * k], mem[R["wBattleHP"] + 2 * k + 1] = hp[k] & 0xFF, hp[k] >> 8
+            mem[R["wLevelUpGains"] + k] = s["gains"][k]
+        want = apply_model(s)
+        gb = call(rom, bank, addr, mem)
+        got = {"hp": [gb.rb(R["wBattleHP"] + 2 * k) | gb.rb(R["wBattleHP"] + 2 * k + 1) << 8 for k in range(8)],
+               "gains": [gb.rb(R["wLevelUpGains"] + k) for k in range(8)], "step": gb.rb(R["wBattleResolveStep"]),
+               "sub": gb.rb(R["wBattleSubStep"]), "sub2": gb.rb(R["wBattleSubStep2"])}
+        if got != want:
+            bad.append(f"apply #{i}: target {t} HP {hp[t]} damage {dmg} arg {s['arg']:02X}: game {got}, model {want}")
+    return bad
+
+
+def modifiers_check(rom: bytes, n: int, seed: int) -> list[str]:
+    R, L = ram(), rom_labels()
+    rng = random.Random(seed)
+    bank, addr = L["ApplyDamageModifiers"]
+    bad = []
+    for i in range(n):
+        s, mem = battle_state(rng, R)
+        t = s["target"]
+        s["status"][t][7] = rng.choice([0, 1, 2, 4, 8, 3, 6, 0x0F, rng.randrange(256)])
+        s["damage"] = rng.choice([rng.randrange(0, 300), rng.randrange(0, 0x10000)])
+        mem.update({R["wBattleStatus7"] + 9 * t: s["status"][t][7], R["wBattleDamageLo"]: s["damage"] & 0xFF,
+                    R["wBattleDamageHi"]: s["damage"] >> 8})
+        want = modifiers_model(s)
+        gb = call(rom, bank, addr, mem)
+        got = {"damage": read_damage(gb, R), "status7": gb.rb(R["wBattleStatus7"] + 9 * t)}
+        if got != want:
+            bad.append(f"modifiers #{i}: status7 {s['status'][t][7]:02X} damage {s['damage']}: game {got}, model {want}")
+    return bad
+
+
 CHECKS = {"join": join_check, "growth": growth_check, "breeding": breed_check,
-          "attack": attack_check, "resistance": resist_check, "step7": step7_check, "learn": learn_check}
+          "attack": attack_check, "resistance": resist_check, "step7": step7_check, "learn": learn_check,
+          "apply": apply_check, "modifiers": modifiers_check}
 
 
 def main(argv: list[str] | None = None) -> int:

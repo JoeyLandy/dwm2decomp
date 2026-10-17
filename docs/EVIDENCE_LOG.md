@@ -2446,6 +2446,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Sex, level, plus-gated recipes, recruiting odds and whether a screen can be reached in play are not modelled. Scripted battles, the arena and key worlds are not wild sources here.
 - **Checks run.** tests/test_breed_path.py OK (14 tests); build/run3 PASS on the final tree (approved size and SHA-256, zero differing bytes; src/ regenerated unchanged); serial full suite build/logs/suite_e0400b.log OK (457 tests, 3 skipped). A first serial run (suite_e0400.log) had 27 failures, all from build/listing missing in a fresh worktree; they pass once tools/disasm_all.py has run.
 
+### E-0399 — Applying the damage: ResolveStepApplyDamage and ApplyDamageModifiers
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 7ae74c2 (E-0398). Specification: the Damage section of [mechanics](MECHANICS.md).
+- **Applying** (`apply`, ResolveStepApplyDamage through its far call to ApplyDamageToTarget, bank $32). 3,000 of 3,000 generated states agree on all eight wBattleHP words, all eight wLevelUpGains bytes, wBattleResolveStep, wBattleSubStep and wBattleSubStep2:
+  - the step +2;
+  - the top two bits of wResolveMsgArg: 00 nothing, 01 only the flag bits, 10 or 11 the HP subtraction;
+  - an HP result of 0 or below clamps to 0, steps back to the defeat step 13 and clears wBattleSubStep2.
+  - Damage equal to the HP, one above and one below are generated on purpose.
+- **Multipliers** (`modifiers`, ApplyDamageModifiers, called by the damage message step for ACTION_D7). 3,000 of 3,000 agree on the damage word and the target's wBattleStatus7: bits 0-3 cleared, then x2 for bit 0, else x10 for bit 1, else x2 for bit 2, 16-bit.
+- **Negative checks** (tests/test_mechanics.py). A model that does not count exactly 0 HP as a defeat, and one that tries bit 2 before bit 1, are each caught.
+- **Limits.** The display of the damage message, the defeat sequence (RunDefeatSequence) and the aftermath (ResolveStep0EEffect) are not checked; what wLevelUpGains bits 0-2 mean for a battle slot is as their notes give it (C1).
+- **Checks.** CHECKS399
+
 ### E-0398 — Skill learning: FindNewlyLearnableSkills as a checked specification
 
 - Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the check compares; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 2c912f8 (E-0397). Specification: the Skill learning section of [mechanics](MECHANICS.md).

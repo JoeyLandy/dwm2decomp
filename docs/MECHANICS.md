@@ -1,7 +1,7 @@
 # Mechanics
 
-Stage M5 of the moddable-decomp goal ([roadmap](ROADMAP.md)), evidence E-0396 (E-0397 for damage, E-0398 for skill
-learning) in the [evidence log](EVIDENCE_LOG.md). Five mechanics, each written as a specification from the routine's code and checked by running that routine on
+Stage M5 of the moddable-decomp goal ([roadmap](ROADMAP.md)), evidence E-0396 (E-0397 and E-0399 for damage, E-0398
+for skill learning) in the [evidence log](EVIDENCE_LOG.md). Five mechanics, each written as a specification from the routine's code and checked by running that routine on
 the project's emulator (tools/sm83.py) from thousands of generated states. The check compares every output the
 specification predicts. `tools/mechanics.py` holds the specifications as Python models:
 
@@ -24,6 +24,8 @@ Results (2026-10-16, damage and skill learning 2026-10-17; `--n 3000 --seed 1`):
 | Plain attack damage | ComputeAttackDamage (bank $36) | 3,000 | 3,000 |
 | Skill and attack damage scaled by resistance | 16 routines of bank $36, in turn | 3,000 | 3,000 |
 | Damage modifiers of resolve step 7 | ResolveStepComputeDamage (bank $36) | 3,000 | 3,000 |
+| Damage taken from HP, resolve step 12 | ResolveStepApplyDamage (bank $36, far call to $32) | 3,000 | 3,000 |
+| wBattleStatus7 multipliers of the message step | ApplyDamageModifiers (bank $32) | 3,000 | 3,000 |
 | Skill learning on a level-up | FindNewlyLearnableSkills (bank $1A) | 3,000 | 3,000 |
 
 Each check was also run with a deliberately wrong model (one condition changed), and it then reports the states
@@ -242,9 +244,36 @@ the target's BSTAT6_BERSERK with rec5 bit 7, unless the action is SKILL_RAMMING 
 So a critical hit ignores the target's DEF: it is the actor's ATK within 5 percent, before the target's modifiers.
 The doublings wrap at 65,536.
 
+### The message step's multipliers (ApplyDamageModifiers)
+
+Resolve step 10 (ResolveStepDamageMessage) far-calls it before the damage message, for ACTION_D7 only:
+
+```text
+b = the target's wBattleStatus7;  its bits 0-3 are cleared (bits 4-7 kept)
+damage x 2 if bit 0, else x 10 if bit 1, else x 2 if bit 2      # 16-bit, wrapping; bit 3 has no effect
+```
+
+Step 7 reads the same bits the other way (bit 0 halves, bit 1 divides by 10); for ACTION_D7 the two meet.
+
+### Applying the damage (ResolveStepApplyDamage, resolve step 12)
+
+It far-calls ApplyDamageToTarget in bank $32:
+
+```text
+wBattleResolveStep += 2 (to step 14, the aftermath);  wBattleSubStep = 0
+by the top two bits of wResolveMsgArg:
+    00:  nothing more
+    01:  set bits 0-2 of the target's wLevelUpGains byte
+    10, 11:  HP = the target's wBattleHP word - damage;
+             when that is 0 or below: HP = 0, wBattleResolveStep -= 1 (to step 13, the defeat), wBattleSubStep2 = 0;
+             then set bits 0-2 of the target's wLevelUpGains byte
+```
+
+A hit that leaves exactly 0 HP is a defeat, like one that would go below 0. The resolve message argument decides
+whether the action touches HP at all (StoreHitMessage_Bank36 stores $88, top bits 10).
+
 Not checked here: the effect routines that do more than roll and scale (Watershot, MegaMagic, MultiCut, CallHelp
-and others), the step that applies the damage to HP (ResolveStepApplyDamage), and the damage message step's own
-multipliers for wBattleStatus7.
+and others), the defeat sequence of step 13 and the aftermath of step 14.
 
 ## Skill learning (FindNewlyLearnableSkills)
 
