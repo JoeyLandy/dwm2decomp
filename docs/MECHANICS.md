@@ -1,7 +1,7 @@
 # Mechanics
 
-Stage M5 of the moddable-decomp goal ([roadmap](ROADMAP.md)), evidence E-0396 (and E-0397 for damage) in the
-[evidence log](EVIDENCE_LOG.md). Four mechanics, each written as a specification from the routine's code and checked by running that routine on
+Stage M5 of the moddable-decomp goal ([roadmap](ROADMAP.md)), evidence E-0396 (E-0397 for damage, E-0398 for skill
+learning) in the [evidence log](EVIDENCE_LOG.md). Five mechanics, each written as a specification from the routine's code and checked by running that routine on
 the project's emulator (tools/sm83.py) from thousands of generated states. The check compares every output the
 specification predicts. `tools/mechanics.py` holds the specifications as Python models:
 
@@ -14,7 +14,7 @@ models read the game's own tables (join chances, growth rows, breeding rules, sp
 ROM, so the numbers in those tables are not repeated here. Integer widths are as the code has them: "8-bit" means
 the result wraps at 256.
 
-Results (2026-10-16, damage 2026-10-17; `--n 3000 --seed 1`):
+Results (2026-10-16, damage and skill learning 2026-10-17; `--n 3000 --seed 1`):
 
 | Mechanic | Routine | Generated states | Agree |
 | --- | --- | --- | --- |
@@ -24,6 +24,7 @@ Results (2026-10-16, damage 2026-10-17; `--n 3000 --seed 1`):
 | Plain attack damage | ComputeAttackDamage (bank $36) | 3,000 | 3,000 |
 | Skill and attack damage scaled by resistance | 16 routines of bank $36, in turn | 3,000 | 3,000 |
 | Damage modifiers of resolve step 7 | ResolveStepComputeDamage (bank $36) | 3,000 | 3,000 |
+| Skill learning on a level-up | FindNewlyLearnableSkills (bank $1A) | 3,000 | 3,000 |
 
 Each check was also run with a deliberately wrong model (one condition changed), and it then reports the states
 that condition decides (tests/test_mechanics.py keeps these as negative tests).
@@ -244,6 +245,45 @@ The doublings wrap at 65,536.
 Not checked here: the effect routines that do more than roll and scale (Watershot, MegaMagic, MultiCut, CallHelp
 and others), the step that applies the damage to HP (ResolveStepApplyDamage), and the damage message step's own
 multipliers for wBattleStatus7.
+
+## Skill learning (FindNewlyLearnableSkills)
+
+After a level-up, BattleEnd_GainExperience_ShowNewSkills fills wWorkBuf ($38 bytes) with the monster's 8 skills
+(MON_SKILLS) and $FF, then calls FindNewlyLearnableSkills once for each new skill, adding each result to wWorkBuf.
+wBattleArg0 is the party slot; its record is wPartyList[slot & $7F] (the slot itself in a link battle,
+wGameMode 4). SkillRequirementTable (bank $1A) has 170 rows of 18 bytes, one per skill number: a level byte, six
+required words (MAX HP, MAX MP, ATK, DEF, AGL, INT) and five prerequisite bytes ($FF = none).
+
+```text
+for skill c = 0 .. 169, the first that gives a result:
+    skip c if it is in wWorkBuf
+    skip c if (MON_LEVEL + 1) & $FF < the row's level      # the level the monster is reaching
+    skip c if any of MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL, MON_INT < its required word (16-bit)
+    if c is in the 25-byte MON_SKILL_LIST:  set that entry to $FF;  result 0 ("learned")
+    p1..p5 = the prerequisite bytes
+    if p1 is not $FF:
+        hTemp6 = p1
+        if c is not $3D:  if p1 is among MON_SKILLS: hTemp5 = p1; result 1 ("p1 became c")  else skip c
+        else (skill $3D):  skip c unless p1 is among MON_SKILLS, then go on below
+    skip c if p2 is $FF
+    if p2 and each further prerequisite up to a $FF are all among MON_SKILLS:  result 2 ("devised")
+    else skip c
+no result: hTemp3 = hTemp4 = $FF
+```
+
+The result is hTemp3 = c and hTemp4 = 0, 1 or 2. So a skill comes from the monster's own list (its species'
+natural skills and those added by breeding) once the level and stats allow it; an upgrade replaces the skill it
+grows from; and a skill with several prerequisites and no single "from" skill is devised when all of them are
+known. Skill $3D (SKILL_MEGAMAGIC, from the ROM's skill names) is the one row with both: it needs its first
+prerequisite and the others, and is devised, not an upgrade.
+
+The check generates records around one row at a time (the level and stats at, just above or below its
+requirements; its prerequisites mostly known), so all four results occur: 1,353 learned, 194 upgrades, 176
+devised (38 of them skill $3D) and 1,277 with none, in one run of 3,000. A model that compares MON_LEVEL without
+the + 1, and one that treats skill $3D as an upgrade, are each caught.
+
+Not checked here: the caller's display and its update of wWorkBuf and MON_SKILLS, and CheckSkillsLearnableAtLevel,
+which builds the skills of a foe's battle record from the same table.
 
 ## Limits
 

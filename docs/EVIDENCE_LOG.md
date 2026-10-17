@@ -2446,6 +2446,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Sex, level, plus-gated recipes, recruiting odds and whether a screen can be reached in play are not modelled. Scripted battles, the arena and key worlds are not wild sources here.
 - **Checks run.** tests/test_breed_path.py OK (14 tests); build/run3 PASS on the final tree (approved size and SHA-256, zero differing bytes; src/ regenerated unchanged); serial full suite build/logs/suite_e0400b.log OK (457 tests, 3 skipped). A first serial run (suite_e0400.log) had 27 failures, all from build/listing missing in a fresh worktree; they pass once tools/disasm_all.py has run.
 
+### E-0398 — Skill learning: FindNewlyLearnableSkills as a checked specification
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the check compares; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 2c912f8 (E-0397). Specification: the Skill learning section of [mechanics](MECHANICS.md).
+- **Method.** As E-0396. tools/mechanics.py `learn` sets up an SRAM record (through wPartyList, or the slot itself in a link battle in game mode 4), wWorkBuf and hTemp5/6, runs FindNewlyLearnableSkills, and compares hTemp3-6 and the record's 25-byte MON_SKILL_LIST.
+- **Result.** 3,000 of 3,000 generated states agree. In one run: 1,353 results from the skill list, 194 upgrades, 176 devised (38 of them skill $3D) and 1,277 with no result. The rules:
+  - rows in skill order, skipping skills already in wWorkBuf;
+  - (MON_LEVEL + 1) & $FF against the row's level, six unsigned 16-bit stat words against the required words;
+  - the 25-byte skill list first (its entry cleared to $FF);
+  - then an upgrade from a known first prerequisite (hTemp5 = it), except for skill $3D (SKILL_MEGAMAGIC), which needs it and is devised;
+  - then devised when every further prerequisite (at least one) is known;
+  - hTemp6 = the first prerequisite of the last row that reached that test.
+- **Generation.** A quarter of the states are built around a row that can be devised, with the earlier rows the record meets put in wWorkBuf, so that the devised result occurs; one in five of those is skill $3D.
+- **Negative checks** (tests/test_mechanics.py). A model that compares MON_LEVEL without the + 1, and one that reports skill $3D as an upgrade, are each caught.
+- **Limits.** The caller's display, wWorkBuf and MON_SKILLS updates, and CheckSkillsLearnableAtLevel (foe battle records) are not checked. Skill $3D is SKILL_MEGAMAGIC in src/constants.inc, named from the ROM's skill-name table (D-007).
+- **Checks.** CHECKS398
+
 ### E-0397 — Damage: the plain attack, resistance scaling and resolve step 7 as checked specifications
 
 - Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 202a594. Specification: the Damage section of [mechanics](MECHANICS.md).
