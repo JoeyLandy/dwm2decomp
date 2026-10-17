@@ -7384,7 +7384,7 @@ SECTION "Bank E0 DrawSpriteSlots_Data", ROMX
 ; (DrawMetaSprite). DrawSpriteSlots indexes it with byte 0 of each 8-byte slot in wSpriteSlots (0, 1
 ; or 2), loads HL and B from the entry and calls it with rst $10 to draw the slot. (C1, E-0381)
 ; DrawSpriteSlots calls entry (slot byte 0) through rst $10; read as raw bytes until the same scan
-; (E-0400, C1)
+; (E-0401, C1)
 ; record: far call to the routine that draws a slot of this kind
 DrawSpriteSlots_Data::
     dfar DrawMetaSpriteSet_Bank25 ; id 0

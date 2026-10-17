@@ -16,7 +16,7 @@ emulator, not hardware (C2 at best).
 
 `--reads` compares ROM data reads instead of frames (E-0389); with `--recipe FILE` it replays a tools/play.py recipe
 chain on both ROMs and compares each reading instruction's own stream of reads, which interrupt timing and
-time-budgeted loops do not reorder (E-0400).
+time-budgeted loops do not reorder (E-0401).
 
 Usage: shift_test.py [--pad 1] [--banks all | 00,02,...] [--frames 3000] [--out build/shift]
        shift_test.py --pad 16 --reads all --recipe tools/recipes/e0335_swap.txt [--until STATE]

@@ -2732,7 +2732,7 @@ BitMaskWords16::
 
 ; CallFlagBitHandlerE jumps to word E of this table (JumpToWordAtHL); bits 0-7 are the eight
 ; personality and trait rolls, bits 8-15 the stub FlagBitHandlerNone; read as raw bytes until
-; tools/shift_test.py --recipe found a padded ROM jumping to the old addresses (E-0400, C1)
+; tools/shift_test.py --recipe found a padded ROM jumping to the old addresses (E-0401, C1)
 ; record: the handler CallFlagBitHandlerE runs for bit number E of the mask
 ; RunHandlersForSetBitsInBC tests
 FlagBitHandlerTable::
@@ -2878,7 +2878,7 @@ SECTION "Bank 30 FlagBitHandlerNone", ROMX
 
 ; The handler of mask bits 8-15 of FlagBitHandlerTable: xor a and ret, so A = 0 and carry is clear
 ; and RunHandlersForSetBitsInBC goes on to the next bit. Reached only through that table (two bytes
-; after RollSlotTraitLowFlag80). (C2, E-0400; probed E-0400)
+; after RollSlotTraitLowFlag80). (C2, E-0401; probed E-0401)
 ; the handler of bits 8-15 of FlagBitHandlerTable: xor a / ret (carry clear)
 FlagBitHandlerNone::
     xor a

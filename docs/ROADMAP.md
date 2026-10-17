@@ -13,8 +13,8 @@ Every stage below has met its exit gate, and the matching build has passed after
 What stays open is listed in each document and in [readability open questions](READABILITY_OPEN_QUESTIONS.md):
 - the other mechanics of phases 4-5 (the effect routines beyond roll and scale, the key worlds); damage, skill
   learning and applying damage were added after M5 (E-0397 to E-0399);
-- the scripted runs' reach: 2,299 routines with the recipe chain (E-0400), the rest only by the static inventory.
-The split sums and fixed-bank pointers left after M2 are done (E-0400).
+- the scripted runs' reach: 2,299 routines with the recipe chain (E-0401), the rest only by the static inventory.
+The split sums and fixed-bank pointers left after M2 are done (E-0401).
 
 
 The goal as set on 2026-10-16, after the readability goal (below): make the source safe to edit (could code and

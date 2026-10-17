@@ -1432,7 +1432,7 @@ SECTION "Bank 60 KeyWorldSizeByStrength", ROMX
 
 ; KeyWorldLayout_Start reads the byte at $4BF4 + (wPartyStrength rounded down to 10) + a roll of
 ; 0-9, through an add/adc of $4BF4; 100 bytes, $44 (4 x 4 screens) for 0-9 and $88 (8 x 8) from 10
-; on, ending where KeyWorldLayout_Start_Data begins (E-0400, C1)
+; on, ending where KeyWorldLayout_Start_Data begins (E-0401, C1)
 ; record: the size of a new key world: high nibble wKeyWorldWidth, low nibble wKeyWorldHeight
 KeyWorldSizeByStrength::
     db $44 ; id 0

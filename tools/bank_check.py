@@ -10,7 +10,7 @@ banks from a build's .sym file (where each label actually landed) and the instru
   errors    call / jp / jr (any condition) from a switchable bank to a label in a different switchable bank
   warnings  ld hl/de/bc, Label into a different switchable bank, with no BANK(...), farcall or `ld b, $NN` within
             three lines (a far helper may still take the bank from RAM; read the routine)
-  asserted  such a load followed by `ASSERT BANK(Label) == $BB` (tools/present.py, E-0400): the reader maps that
+  asserted  such a load followed by `ASSERT BANK(Label) == $BB` (tools/present.py, E-0401): the reader maps that
             bank itself, and the link fails if the label leaves it
 
 Usage: bank_check.py [--sym build/runN/dwm2.sym] [--src src] [--json out.json]

@@ -4122,7 +4122,7 @@ class Rom:
         and a graphics number for DecompressGraphicsTemp0ToTemp4)."""
         B = 0x69
         self.objsel_at: dict[tuple[int, int], dict] = {}
-        self.objsel_inner: dict[tuple[int, int], dict] = {}  # selectors inside an object list's bytes (E-0400)
+        self.objsel_inner: dict[tuple[int, int], dict] = {}  # selectors inside an object list's bytes (E-0401)
         mt = next((t for t in self.schemas if t["label"] == "MapTable"), None)
         ot = next((t for t in self.schemas if t["label"] == "MapObjectTable"), None)
         if not mt or not ot or ot["bank"] != B:
@@ -4212,7 +4212,7 @@ class Rom:
         dl = self.dlabels[B]
         for s, (ops, end) in sorted(good.items()):
             if not free(s, end):
-                # E-0400: a selector whose bytes an object list also covers (the list's count reaches over it, as
+                # E-0401: a selector whose bytes an object list also covers (the list's count reaches over it, as
                 # MapObjects_Map1C_0_0's does) is printed inside that list, so its pointer is a label, not a number
                 inside = [(a, e) for b, a, e in taken if b == B and a < s and end <= e]
                 if inside and not any(x in self.covered[B] for x in range(s, end)):
@@ -4280,7 +4280,7 @@ class Rom:
                     self.objsel_at[(B, a)] = {"ops": ops, "end": end}
                     ns += 1
             tiled += 1
-        for (b, s), sel in self.objsel_inner.items():  # E-0400: the lists such a selector points into get labels
+        for (b, s), sel in self.objsel_inner.items():  # E-0401: the lists such a selector points into get labels
             if b != B:
                 continue
             for op in sel["ops"]:
@@ -5104,7 +5104,7 @@ class Rom:
                         continue
                     if "a selector inside another list points to" in why and any(
                             b_ == bank and s_ < a and sel["end"] <= a for (b_, s_), sel in self.objsel_inner.items()):
-                        continue  # E-0400: printed by emit_table after the selector inside the same field
+                        continue  # E-0401: printed by emit_table after the selector inside the same field
                     if not why or any(k in why for k in ("pointer load", "stream", "monotone pointer table",
                                                           "bank from RAM variable")):
                         del dl[a]  # a guess (C0) inside a table the configuration proves
@@ -5930,7 +5930,7 @@ class Rom:
                         out.append(f"{self.dalias[(bank, q)]}:: ; address name")
                 inner = self.objsel_inner.get((bank, q)) if q in dl else None
                 if inner and f["type"] == "db" and inner["end"] <= q + sz:
-                    # E-0400: a selector inside this field: its entries as macros, then the field's other bytes,
+                    # E-0401: a selector inside this field: its entries as macros, then the field's other bytes,
                     # with the label of a list it points into where that list starts
                     flush()
                     self.emit_selector_ops(bank, inner, out)

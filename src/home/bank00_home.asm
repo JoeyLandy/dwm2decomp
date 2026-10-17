@@ -6477,7 +6477,7 @@ SECTION "Bank 00 ZeroPictureAttributes", ROM0
 ; 36 zero bytes, the default 6 x 6 picture attribute block: LoadMonsterPictureAttributes and
 ; LoadMonsterPictureAttributeBlock use it when a monster's MonsterAttributeMapTable entry is 0, so
 ; every attribute is just the palette in hTemp0. They are the padding after
-; LoadMonsterPictureAttributes. (C1, E-0400)
+; LoadMonsterPictureAttributes. (C1, E-0401)
 ZeroPictureAttributes::
     ds $24, $00
 
@@ -8423,7 +8423,7 @@ SECTION "Bank 00 TextPauseFrames", ROM0
 
 ; Seven frame counts, one per text speed 0-6 (6, 12, 20, 26, 32, 40, 48): TextCmd_Pause stores entry
 ; wTextSpeed in wTextDelayCounter for the <PAUSE> command; speed 7 waits for a button instead. (C1,
-; E-0400)
+; E-0401)
 TextPauseFrames::
     db $06, $0c, $14, $1a, $20, $28, $30
 

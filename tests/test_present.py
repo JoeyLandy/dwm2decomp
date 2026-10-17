@@ -79,7 +79,7 @@ class PresentedTreeTest(unittest.TestCase):
         texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
         names = present.Names(texts, LISTING)
         titles = present.bank_titles()
-        # E-0400: the fixed-bank ASSERT pass runs over all banks together, as tools/present.py does
+        # E-0401: the fixed-bank ASSERT pass runs over all banks together, as tools/present.py does
         bodies, _n = present.assert_fixed_banks({int(n[4:6], 16): present.present(t, names, int(n[4:6], 16))
                                                  for n, t in texts.items()})
         stale = [n for n, t in texts.items() if (SRC / present.src_name(n, titles)).read_text(encoding="utf-8")
@@ -97,7 +97,7 @@ class PresentedTreeTest(unittest.TestCase):
                    for ln in (SRC / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
                    if ln.strip() and not ln.lstrip().startswith(";")]
             got = ["    INCBIN" if g.lstrip().startswith("INCBIN") else g for g in got]
-            # E-0393: src splits each bank into sections (checked against src/layout.link below); E-0400: the
+            # E-0393: src splits each bank into sections (checked against src/layout.link below); E-0401: the
             # fixed-bank ASSERT lines hold no bytes (tests/test_sections.py checks them)
             self.assertEqual([g for g in got if not g.startswith("SECTION") and not g.lstrip().startswith("ASSERT BANK(")],
                              [w for w in want if not w.startswith("SECTION")], p.name)

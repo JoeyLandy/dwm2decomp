@@ -62,7 +62,7 @@ Map06Palettes::
 Map06Screens0::
     dfar Map06Screens0_Y0X0 ; entry 0
 
-; three more far pointers to Map06Screens0_Y0X0 after Map06Screens0; no reader is known (E-0400, C1)
+; three more far pointers to Map06Screens0_Y0X0 after Map06Screens0; no reader is known (E-0401, C1)
 ; record: far pointer to a screen stream; map $06 is 1 x 1, so its record reads only the entry
 ; before these
 Map06ScreensExtra::
@@ -73,7 +73,7 @@ Map06ScreensExtra::
 Map06Attrs0::
     dfar Map06Attrs0_Y0X0 ; entry 0
 
-; three more far pointers to Map06Attrs0_Y0X0 after Map06Attrs0; no reader is known (E-0400, C1)
+; three more far pointers to Map06Attrs0_Y0X0 after Map06Attrs0; no reader is known (E-0401, C1)
 ; record: far pointer to an attribute stream; map $06 is 1 x 1
 Map06AttrsExtra::
     dfar Map06Attrs0_Y0X0 ; id 0
@@ -381,7 +381,7 @@ Map1BAttrs0::
     dfar Map1BAttrs0_Y2X0 ; entry 2
 
 ; a screen set for map $1B (1 x 3) that no map record points to: rows 0 and 2 are Map1BScreens0's,
-; row 1 a screen of its own, which the key-world screen pass also found (E-0400, C1)
+; row 1 a screen of its own, which the key-world screen pass also found (E-0401, C1)
 ; record: far pointer to a screen stream, row by row
 Map1BScreensUnlisted::
     dfar Map1BScreens0_Y0X0 ; id 0
@@ -389,7 +389,7 @@ Map1BScreensUnlisted::
     dfar Map1BScreens0_Y2X0 ; id 2
 
 ; the attribute set paired with Map1BScreensUnlisted: rows 0 and 2 are Map1BAttrs0's, row 1 an
-; attribute screen of its own (E-0400, C1)
+; attribute screen of its own (E-0401, C1)
 ; record: far pointer to an attribute stream, row by row
 Map1BAttrsUnlisted::
     dfar Map1BAttrs0_Y0X0 ; id 0

@@ -146,7 +146,7 @@ ret, reti, jp or jr (9,071 sections); the cartridge header is pinned with `ORG $
   ScriptWaitFrames and ScriptStepObject moved from bank $5F to empty banks run 3,000 identical frames. A routine
   reached by plain `call`s from its bank is caught by the bank check and diverges at frame 803 when moved.
 
-## After M2 (E-0400): recipe runs, and every fixed-bank pointer asserted
+## After M2 (E-0401): recipe runs, and every fixed-bank pointer asserted
 
 **Wider runs.** `--recipe FILE` (with `--reads`) replays a tools/play.py recipe chain on both ROMs instead of the
 scripted joypad: the 13 recipes in tools/recipes/ (included by e0335_swap.txt) play to the farm, battles, menus,
@@ -196,8 +196,8 @@ stops with 424 such errors, where it used to build a ROM that reads the wrong ba
 
 ## Left after M2
 
-1. Done (E-0392, E-0400): no address-like split sum is left.
-2. Done (E-0393, E-0400). Plain calls inside a bank and the 512 asserted pointers still tie code to its bank; the
+1. Done (E-0392, E-0401): no address-like split sum is left.
+2. Done (E-0393, E-0401). Plain calls inside a bank and the 512 asserted pointers still tie code to its bank; the
    link says which when a move breaks them, and moving one of those needs its reader changed too.
-3. Widened (E-0400): the recipe runs reach 2,299 routines. Most of the game (key worlds, late story, link
+3. Widened (E-0401): the recipe runs reach 2,299 routines. Most of the game (key worlds, late story, link
    play) is still reached only by the static inventory; more recipes extend the gate.

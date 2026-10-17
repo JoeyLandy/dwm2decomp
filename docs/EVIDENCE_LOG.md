@@ -2454,7 +2454,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - ObjSelector_Map1C_1 (69:$76F8): a selector inside MapObjects_Map1C_0_0, whose count of 2 reaches over the selector and the list at $76FC it points to; the generator now prints a selector inside a list as macros (`objsel_list MapObjects_Map1C_1_0`). Whether the game ever shows that second "object" is not known (C1).
   - `ld de, $20e9` in LoadMonsterPictureAttributes and LoadMonsterPictureAttributeBlock: ZeroPictureAttributes.
   - `ld hl, $2a66` in TextCmd_Pause: TextPauseFrames.
-  - FlagBitHandlerTable (30:$4F66): 16 code addresses as `db`, now `dw`; its stub at $4FC6 is the new routine FlagBitHandlerNone (xor a / ret), probed (config/probes/E-0400.json).
+  - FlagBitHandlerTable (30:$4F66): 16 code addresses as `db`, now `dw`; its stub at $4FC6 is the new routine FlagBitHandlerNone (xor a / ret), probed (config/probes/E-0401.json).
   - StartMessageForGroup_Data (10:$4AFF): 11 far pointers as `db`, now `dfar`; with the pad the Egg Evaluator called the old address (found by stepping both ROMs in lockstep: the base reached BeginStringDisplay_BankF2, the padded ROM GameMode8_Update_SetUpScene + $88).
 - **Found by static passes** (no run reaches them, or not yet):
   - SoundNextEvent's `ld hl, $38a0`, now `SoundNextEvent.next5 + 4`;

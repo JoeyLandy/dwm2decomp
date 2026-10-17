@@ -2285,7 +2285,7 @@ SECTION "Bank 10 StartMessageForGroup_Data", ROMX
 ; = the message L. (C1, E-0381)
 ; StartMessageForGroup reads entry wMessageMode - 1 (3 bytes: address, bank) and calls it through
 ; rst $10 with wStringIndex = the message; read as raw bytes until tools/shift_test.py --recipe
-; found the padded ROM's Egg Evaluator calling the old address (E-0400, C1)
+; found the padded ROM's Egg Evaluator calling the old address (E-0401, C1)
 ; record: far pointer to the routine that begins a message in this wMessageMode
 StartMessageForGroup_Data::
     dfar BeginStringDisplay_BankF0 ; id 1

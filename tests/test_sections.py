@@ -97,7 +97,7 @@ Here::
 
 
 class FixedBanks(unittest.TestCase):
-    """E-0400: pointer loads into another bank, read with that bank mapped by the reader, carry a link-time ASSERT."""
+    """E-0401: pointer loads into another bank, read with that bank mapped by the reader, carry a link-time ASSERT."""
     BODIES = {
         0x10: "Script_X::\n    db 1\n",
         0x04: "Talk::\n    ld hl, Script_X\n    call StartScript\n    ret\n\n\n\nOther::\n    ld de, Near\n    ret\n"

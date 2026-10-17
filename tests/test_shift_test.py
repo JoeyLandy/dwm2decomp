@@ -1,4 +1,4 @@
-"""tools/shift_test.py and tools/hardcoded_refs.py: the M1 shiftability audit (E-0388; recipe runs E-0400)."""
+"""tools/shift_test.py and tools/hardcoded_refs.py: the M1 shiftability audit (E-0388; recipe runs E-0401)."""
 import sys
 import tempfile
 import unittest

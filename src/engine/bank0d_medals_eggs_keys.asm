@@ -7688,7 +7688,7 @@ SECTION "Bank 0D NpcBreedMenu_RedrawListScreen_LoadTiles_Data1", ROMX
 ; and 8-15, and Map17Tileset ($49A9) for 1, 3, 5, 6 and 7. NpcBreedMenu_RedrawListScreen_LoadTiles
 ; decompresses the chosen one to vTiles2 with DecompressToVRAM. (C1, E-0381)
 ; NpcBreedMenu_RedrawListScreen_LoadTiles reads entry wScreenTableIndex and decompresses it to
-; vTiles2; read as raw bytes until a scan for far pointers in db runs found it (E-0400, C1)
+; vTiles2; read as raw bytes until a scan for far pointers in db runs found it (E-0401, C1)
 ; record: far pointer to the tile set for this wScreenTableIndex
 NpcBreedMenu_RedrawListScreen_LoadTiles_Data1::
     dfar Map04Tileset ; id 0
@@ -7714,7 +7714,7 @@ NpcBreedMenu_RedrawListScreen_LoadTiles_Data1::
 ; NpcBreedMenu_RedrawListScreen_LoadTiles_Data1; NpcBreedMenu_RedrawListScreen_LoadTiles copies the
 ; 64 bytes to wBGPaletteBuffer with CopyFromBankWaitVRAM. (C1, E-0381)
 ; paired entry for entry with NpcBreedMenu_RedrawListScreen_LoadTiles_Data1; copied to
-; wBGPaletteBuffer; read as raw bytes until the same scan (E-0400, C1)
+; wBGPaletteBuffer; read as raw bytes until the same scan (E-0401, C1)
 ; record: far pointer to the palettes for this wScreenTableIndex
 NpcBreedMenu_RedrawListScreen_LoadTiles_Data2::
     dfar Map04Palettes ; id 0
