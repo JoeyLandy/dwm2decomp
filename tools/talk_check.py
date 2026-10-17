@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import boot_trace  # noqa: E402
 import gb_text  # noqa: E402
 import play  # noqa: E402
+import source_tree  # noqa: E402
 
 LOOKUP_STRING_RET = boot_trace.LOOKUP_STRING_RET
 wStoryFlags = 0xCBD7
@@ -92,7 +93,7 @@ def quoted_labels() -> list[tuple[str, str]]:
     …MsgNNNN_<Words>, TalkScriptNNNN_<Words>): the quote comment within the label's first 12 lines must begin with
     those words. Returns [(name, words in lower case)]."""
     out = []
-    for p in sorted((ROOT / "build/listing").glob("bank*.asm")):
+    for p in source_tree.bank_files():  # src/ (D-015, H1b)
         lines = p.read_text(encoding="utf-8").split("\n")
         for i, ln in enumerate(lines):
             m = LABEL.match(ln)

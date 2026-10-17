@@ -9,14 +9,14 @@ sys.path.insert(0, str(ROOT / "tools"))
 LISTING = ROOT / "build" / "listing"
 
 
-@unittest.skipUnless(LISTING.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class StoryFlagNamesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         inc = (ROOT / "src" / "constants.inc").read_text(encoding="utf-8")
         cls.events = {n: int(v, 16) for n, v in re.findall(r"^DEF (EVENT_\w+) EQU \$([0-9A-F]+)", inc, re.M)}
         cls.bstat = {n: int(v) for n, v in re.findall(r"^DEF (BSTAT\d_\w+) EQU (\d)", inc, re.M)}
-        cls.text = "\n".join(p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm")))
+        import source_tree
+        cls.text = source_tree.text()  # D-015 (H1b): the source, src/
 
     def test_names_are_unique_and_many(self):
         self.assertGreaterEqual(len(self.events), 200)

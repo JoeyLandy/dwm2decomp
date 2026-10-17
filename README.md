@@ -22,6 +22,9 @@ State (2026-10-17): every routine and data label is named and has a note; the co
 | [Evidence log](docs/EVIDENCE_LOG.md) | Confidence definitions, initial findings, and an investigation template |
 | [How the game is put together](docs/GAME_STRUCTURE.md) | Frame loop, game modes and the main systems |
 | [Mechanics](docs/MECHANICS.md) and [data tables](docs/DATA_TABLES.md) | Join offer, level-up gains and breeding as checked specifications; the species, skill and item tables |
+| [Translating the game](docs/TRANSLATING.md) | The text as a translator's file, new letters through the font PNG, room in the banks (`tools/text.py`) |
+| [Editing the game's data](docs/EDITING_DATA.md) | Species, monsters, skills, items, encounters, breeding, shops and AI weights as JSON and CSV files (`tools/datatables.py`) |
+| [Graduating src/](docs/GRADUATION.md) | src/ is the hand-edited source (D-015): what checks it, renaming with `tools/rename.py` |
 | [Breeding paths](docs/BREEDING_PATHS.md) | The wild monsters of each story map and the fewest breedings from them to a species (`tools/breed_path.py`) |
 | [Editable assets](docs/ASSETS.md) and [shiftability](docs/SHIFTABILITY.md) | Building a modded ROM; moving code and data |
 | [Leftover code](docs/LEFTOVER_CODE.md), [unidentified assets](docs/UNIDENTIFIED_ASSETS.md), [open questions](docs/READABILITY_OPEN_QUESTIONS.md) | What is still not understood |

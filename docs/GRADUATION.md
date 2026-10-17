@@ -1,6 +1,6 @@
 # Graduating src/
 
-Stage H1 of the modding and translation goal ([roadmap](ROADMAP.md)), decision D-015 in
+Stage H1 of the modding and translation goal ([roadmap](ROADMAP.md)), done 2026-10-17 (E-0402 to E-0404); decision D-015 in
 [project status](PROJECT_STATUS.md). Measured 2026-10-17 on master f276d52.
 
 ## Why
@@ -71,44 +71,62 @@ tree with src/ and lists each file that differs, is missing or is extra. It repo
 that made this switch, so the switch changed no source byte. build/listing/ is still written, so the tests that
 read it keep working.
 
-**H1b. Checks on src/, not on the listing (started 2026-10-17).** Each test that reads build/listing/ or imports the generator is
-rewritten to check src/ and the built `.sym` and `.map`. Where a test needs an instruction's address, it reads it
-from a listing derived from the build: src/ assembled, with each instruction's address taken from the
-assembler's output. It no longer comes from the generator's trace. One test file at a time, each passing before
-and after.
+**H1b. Checks on src/, not on the listing (done 2026-10-17, E-0403 and E-0404).** Each test that read
+build/listing/ or imported the generator now checks src/, with addresses from the .sym of a build of the same tree,
+or became a check of the generator that skips without its listing.
 
 tools/source_tree.py is what the moved checks read:
 - the bank files;
 - each label's bank, from the SECTION it is defined in and the bank src/layout.link gives that section, so no
   build is needed;
+- each label's note (the comment block above it);
+- `listing_spelling`, which turns a src/ instruction back into the listing's spelling (`xor a` is `xor a, a`,
+  `cp $2b` is `cp a, $2B`), so audits written against the listing read src/ unchanged;
 - a digest of every src/ file, which tools/build.py now records in its report as `source_digest`;
 - the .sym of the newest passing build whose digest is the current tree's (fresh_sym). A check that needs an
   address skips when no build matches, instead of reading a build of another tree.
 
-| Test file | Done | Now |
-| --- | --- | --- |
-| tests/test_generated_source.py | 2026-10-17, E-0403 | Split. The checks of the code (24, plus 7 tests of the helpers) became tests/test_source_audits.py on src/. The 7 checks of what the generator copies from config/ into its listing (notes, configured names, call-count headers, RAM lists, stream notes, data regions, its banked-call labels) became tests/test_generator_listing.py, which skips without build/listing/. |
+| Test file | Now |
+| --- | --- |
+| test_generated_source.py | Split (E-0403): test_source_audits.py checks src/; test_generator_listing.py keeps the 7 checks of the generator's copy of config/ |
+| test_probes.py | C2 notes read from src/ and matched to probes through the fresh .sym (the same 5,948 keys as config/annotations.json) |
+| test_constants.py | an entry named after an item sits at that item's index, without config/names.json |
+| test_fold_idioms.py | macros counted, and unfolded idioms looked for, in src/ |
+| test_routine_behaviour.py | skill table rows, stream files, case and copy names read from src/; the family-name check moved to the generator's tests |
+| test_present.py | the checks of src/ run always; the two that compare the listing with the regenerated tree skip without them |
+| test_story_flags.py, test_resistances.py, test_tables.py, test_text.py | read src/ (the field parser takes `and $03` as well as `and a, $03`; sound headers follow their track label) |
+| test_name_claims.py | reads src/ through listing_spelling; the 97 names given by reading whose own part reads like a rule claim are listed in tests/data/names_given_by_reading.txt |
+| test_note_grounding.py | tools/check_note_grounding.py reads every code note and the code from src/ (34,771 mentions, against 6,605 in config/names.json); the 3,339 that older C1 notes make loosely are recorded in tests/data/ungrounded_mentions.txt, and any new one fails |
+| test_probe_scope.py | tools/probe_scope.py reads src/; docs/PROBE_SCOPE.md regenerated from src/ and the .sym is unchanged |
+| test_doc_coverage.py | the readability ratchets read the names given by reading from config/names.json while it is present, else from tests/data/given_names.txt (10,828 names, frozen at graduation) |
+| test_step_names.py, test_incbin_identified.py | checks of the generator's own records (its rename maps, its asset comments): they skip without the listing |
 
-**H1c. config/ files sorted by role.**
-- Some files only fed names and notes into src/ (names.json, annotations.json, name_families.json, banks.json,
-  operands.json, story_flags.json, battle_status.json, script_commands.json, record_fields.json). They are frozen,
-  then removed once nothing reads them, since src/ holds the same names and notes.
-- Analysis inputs that only re-tracing needs (code_entries, data_regions, indexed_dispatch, arg_banks,
-  observed_streams, stream_chains) stay with disasm_all.py as a re-analysis tool.
-- What the tools need at run time stays, moved where useful: targets/, toolchain.lock.json, the probes/ files,
-  tables.json (layouts tables_export.py packs) and symbols.json.
+Tools that read the listing now read src/ (ram_uses.py, status_bits.py, talk_check.py; status_bits.py gives the
+same 69 lines) or the fresh .sym (explore.py's address table). present.Names runs without names.json.
 
-**H1d. Tools that write config/ retargeted or retired.** apply_drafts.py, readability_queue.py and
-rank_unnamed.py served the readability batches. A rename becomes a whole-tree rename of the label in src/, and a
-note an edit of the comment above it. A small rename tool keeps every reference in step.
+**H1c. config/ files by role (2026-10-17).** Nothing that builds, reads or checks the source needs
+config/names.json or config/annotations.json: that is the exit gate below. They stay in the repository, frozen, as
+inputs of the generator, which remains a re-analysis tool that writes build/listing/ and build/regen/src/.
+- Frozen generator inputs (no new names or notes go here): names.json, annotations.json, name_families.json,
+  banks.json, operands.json, story_flags.json, battle_status.json, script_commands.json, record_fields.json, and
+  the analysis inputs code_entries, data_regions, indexed_dispatch, arg_banks, observed_streams, stream_chains.
+- Read by tools at run time: targets/, toolchain.lock.json, probes/ and probe_exclusions.json (the emulator
+  probes), tables.json (the table layouts tools/datatables.py and tools/tables_export.py use) and symbols.json
+  (buffer-offset aliases).
 
-**Exit gate.** In a scratch copy with config/names.json, config/annotations.json and build/listing/ removed, the
-matching build PASSes and the full suite passes. A hand edit to src/ survives every step of the documented
-workflow.
+**H1d. Tools that wrote config/ (2026-10-17).** apply_drafts.py (and its test) and rank_unnamed.py served the
+readability batches and are removed. readability_queue.py stays as the readability ratchet. tools/rename.py
+renames a label, constant or RAM symbol everywhere in src/ (definition, references, notes, its section and the
+layout line) and refuses unsafe renames; renaming NextTableByte in a copy of src/ still builds the reference.
 
-## During the transition
+**Exit gate (met 2026-10-17, E-0404).** In a scratch copy with config/names.json, config/annotations.json and
+build/listing/ removed, the matching build PASSes and the full suite passes (the generator's own checks skip). A
+hand edit to src/ survives: three comment lines in bank $60 that named a RAM symbol that no longer exists were
+corrected in src/ (found by the note check), and every check and build passes with them.
 
-- Edit src/ directly. Do not run `disasm_all.py --write-src` once src/ has hand edits, because it would overwrite
-  them. tools/src_drift.py shows what such a run would change.
-- config/names.json and config/annotations.json are no longer the place for new names and notes. They stay only
-  until H1c removes their last readers.
+## Working on src/ now
+
+- Edit src/ directly: code, comments and data. `python -I tools/build.py --out build/runN` checks the result.
+- Rename with tools/rename.py; edit data tables in a spreadsheet with tools/datatables.py (H2).
+- tools/disasm_all.py is for re-analysis. It writes build/regen/src/, and tools/src_drift.py lists how that differs
+  from src/; `--write-src` would overwrite src/ and must not be used.

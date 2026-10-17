@@ -56,14 +56,14 @@ class ConstantsTest(unittest.TestCase):
         text = next(ROOT.glob("src/*/bank*_items_battle_end.asm")).read_text(encoding="utf-8")
         m = re.search(r"^RemoveEquipmentBonus::\n(?:.*\n)*?\s+jumptable\n((?:\s+dw \w+\n)+)", text, re.M)
         entries = re.findall(r"dw (\w+)", m.group(1))
-        import json
-        given = {v["name"] for v in json.loads((ROOT / "config/names.json").read_text(encoding="utf-8")).values()
-                 if isinstance(v, dict) and "name" in v}  # cases named from a reading (E-0370: _Capes, _LastItem)
-        named = [(k, e) for k, e in enumerate(entries) if e.startswith("RemoveEquipmentBonus_") and e not in given]
+        # an entry named after an item sits at that item's index; others are named from a reading (E-0370:
+        # _Capes, _LastItem). D-015 (H1b): read from src/ alone, not config/names.json.
+        items = {re.sub(r"[^A-Za-z0-9]", "", v[1]).upper(): k for k, v in self.c["ITEM"].items() if v[1]}
+        named = [(k, e) for k, e in enumerate(entries)
+                 if e.startswith("RemoveEquipmentBonus_") and e.split("_", 1)[1].upper() in items]
         self.assertGreaterEqual(len(named), 10)
         for k, e in named:
-            want = re.sub(r"[^A-Za-z0-9]", "", self.c["ITEM"][0x40 + k][1]).upper()
-            self.assertEqual(e.split("_", 1)[1].upper(), want, e)
+            self.assertEqual(items[e.split("_", 1)[1].upper()], 0x40 + k, e)
 
 
 if __name__ == "__main__":

@@ -51,7 +51,16 @@ def shot(gb: GameBoy, tag: str, scale: int = 2) -> None:
 
 
 def function_table() -> dict[int, tuple[list[int], dict[int, str]]]:
-    """bank -> (sorted function addresses, address -> label) read from the generated source."""
+    """bank -> (sorted function addresses, address -> label): the global labels of the .sym of a build of src/
+    (D-015, H1b), or else of the generator's listing (its Func_BBB_AAAA address names)."""
+    import source_tree
+    sym = source_tree.fresh_sym()
+    if sym is not None:
+        table: dict[int, tuple[list[int], dict[int, str]]] = {}
+        for name, (bank, addr) in sym.items():
+            if "." not in name:
+                table.setdefault(bank, ([], {}))[1].setdefault(addr, name)
+        return {b: (sorted(ents), ents) for b, (_l, ents) in table.items()}
     table = {}
     for path in (ROOT / "build/listing").glob("bank*.asm"):
         bank = int(path.stem[4:], 16)

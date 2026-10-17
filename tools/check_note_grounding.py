@@ -1,30 +1,40 @@
-"""Grounding check of config/names.json code notes (E-0317).
+"""Grounding check of the notes on code labels in src/ (E-0317; read from src/ since D-015, H1b).
 
-Every RAM symbol and routine name a note mentions must be connected to the named routine in the generated code:
-in its body or its own sub-labels, its xref comment lines, its callers (direct, or through a `dw`/`dfar` table and
-the routine that owns that table), its callees up to three levels, or mentioned only as a comparison ("like X",
-"as X", "see X"). Address-form RAM mentions (wC5E8) are read as the symbol at that address, as the generated comments
-show them (E-0320). A negative control (`check(control=...)`) replaces each note's mentions by random symbols to
-show the check rejects unrelated names."""
+Every RAM symbol and routine name a note mentions must be connected to the named routine in the code: in its body
+or its own sub-labels, its callers (direct, or through a `dw`/`dfar` table and the routine that owns that table),
+its callees up to three levels, or mentioned only as a comparison ("like X", "as X", "see X"). Address-form RAM
+mentions (wC5E8) are read as the symbol at that address (E-0320). A negative control (`check(control=...)`)
+replaces each note's mentions by random symbols to show the check rejects unrelated names.
+
+Before H1b the notes were config/names.json's and the code the generator's listing, where the comment lines above
+a label (callers, RAM read and written) were part of what a mention could be found in. In src/ the comment above a
+label is the note itself, so only code is searched; on 2026-10-17 the old form grounded 6,605 of 6,605 mentions.
+"""
 import bisect
-import json
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import doc_coverage  # noqa: E402
+import source_tree  # noqa: E402
+
 LAB = re.compile(r'^([A-Za-z_]\w*)::')
 REF = re.compile(r'\b(?:call|jp|jr|farcall|farcall_b|farjp|dw|dfar)(?: \w+,)? ([A-Za-z_]\w*)')
 
 
 class Source:
-    def __init__(self) -> None:
-        self.names = json.loads((ROOT / 'config/names.json').read_text(encoding='utf-8'))
-        ram = (ROOT / 'src/ram.asm').read_text(encoding='utf-8')
+    def __init__(self, src: Path | None = None) -> None:
+        files = source_tree.bank_files(src)
+        notes = source_tree.notes(src)
+        code = {n for f in files for n, kind, *_ in doc_coverage.scan(f) if kind == 'code'}
+        self.names = {n: {'name': n, 'note': notes[n]} for n in sorted(code) if notes.get(n)}
+        ram = ((src or ROOT / 'src') / 'ram.asm').read_text(encoding='utf-8')
         self.ramsyms = set(re.findall(r'^DEF ([wsh][A-Z]\w*) EQU', ram, re.M))
         self.ram_at = {a: n for n, a in re.findall(r'^DEF ([wsh]\w+) EQU \$([0-9A-F]{4})', ram, re.M)}
-        self.banks = {p.name: p.read_text(encoding='utf-8').split('\n')
-                      for p in sorted((ROOT / 'build/listing').glob('bank*.asm'))}
+        self.banks = {p.name: p.read_text(encoding='utf-8').split('\n') for p in files}
         self.regions: dict[str, tuple[str, int, int]] = {}
         self.alias_of: dict[str, str] = {}
         for p, lines in self.banks.items():
@@ -32,10 +42,6 @@ class Source:
             for i, ln in enumerate(lines):
                 m = LAB.match(ln)
                 if not m:
-                    continue
-                if 'address name' in ln:
-                    if cur:
-                        self.alias_of[m.group(1)] = cur
                     continue
                 if cur:
                     self.regions[cur] = (p, start, i)
@@ -55,16 +61,9 @@ class Source:
         self._fam: dict[str, list[str]] = {}
 
     def body(self, name: str) -> list[str]:
+        """The code lines of a label, without comment lines (the next label's note sits at the end of the region)."""
         p, s, e = self.regions[name]
-        return self.banks[p][s + 1:e]
-
-    def head(self, name: str) -> list[str]:
-        p, s, _e = self.regions[name]
-        lines, out, j = self.banks[p], [], s - 1
-        while j >= 0 and lines[j].startswith(';'):
-            out.append(lines[j])
-            j -= 1
-        return out
+        return [ln for ln in self.banks[p][s + 1:e] if not ln.startswith(';')]
 
     def family(self, name: str) -> list[str]:
         if name not in self._fam:
@@ -96,10 +95,7 @@ def check(control=None, src: Source | None = None):
     src = src or Source()
     total = grounded = 0
     bad = []
-    for key, v in src.names.items():
-        if key.startswith('_') or v.get('data'):
-            continue
-        nm = v['name']
+    for nm, v in src.names.items():
         if nm not in src.regions:
             continue
         note = re.sub(r'\b[wsh]([0-9A-F]{4})\b', lambda m: src.ram_at.get(m.group(1), m.group(0)), v.get('note', ''))
@@ -111,8 +107,7 @@ def check(control=None, src: Source | None = None):
         for c in cl:
             cl2 |= src.callers.get(c, set())
         hay_names = near | cl | cl2
-        hay = '\n'.join('\n'.join(src.body(n)) for n in near) + '\n' + \
-            '\n'.join('\n'.join(src.head(n)) for n in src.family(nm))
+        hay = '\n'.join('\n'.join(src.body(n)) for n in near)
         comparisons = set(re.findall(
             r'\b(?:like|as|as in|see|cf\.|same as|than|copy of|copies of|unlike|with)\s+([A-Za-z_]\w*)', note))
         if control:

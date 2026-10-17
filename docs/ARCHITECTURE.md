@@ -50,7 +50,8 @@ src/<dir>/bankNN_<topic>.asm   one ROM bank each, in a directory by kind (D-010)
 src/ram.asm, src/*.inc         RAM names, record fields, constants, macros, charmap, hardware registers
 src/assets.txt                 the asset files src/ includes, with their place in the reference ROM
 tools/                         generator, build and verifier, emulator (sm83.py), LZSS decoder and encoder,
-                               asset export, probes, shift test, checks of mechanics and tables
+                               asset export, probes, shift test, checks of mechanics and tables, the data
+                               tables as files (datatables.py), renames (rename.py), src/ helpers (source_tree.py)
 tests/                         verifier negative cases, generator and source checks, emulator probes
 local/roms/                    ignored: the immutable reference ROM; local/assets etc. for exports
 build/                         ignored, disposable: runN/ build reports, listing/ (annotated listing)

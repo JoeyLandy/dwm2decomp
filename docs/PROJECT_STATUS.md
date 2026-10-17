@@ -159,7 +159,26 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0403): H1b started
+## Current handoff (2026-10-17, E-0404 to E-0406): H1, H2 and H3 done
+
+- **H1, src/ graduated (E-0404).** Every check reads src/ (and the .sym of a build of it), or is a check of the
+  generator that skips without its listing. With config/names.json, config/annotations.json and build/listing/
+  removed, the build passes and 491 tests pass. Removed: apply_drafts.py and rank_unnamed.py. Added: rename.py.
+  Fixed: three comments in bank $60 naming a RAM symbol that does not exist.
+- **H2, data as files (E-0405).** tools/datatables.py exports 181 tables from src/ to JSON and CSV and imports
+  edits back; a list's growth comes out of the bank's fill. An edit in each of 12 tables reaches the game's
+  readers on a modded build. docs/EDITING_DATA.md.
+- **H3, text (E-0406).** tools/text.py exports 5,407 text entries with their width limits and reinserts
+  translations; the font goes to a PNG and back; free glyph codes take new letters. A German test translation
+  with "ü" builds, and the game draws it on the emulator. docs/TRANSLATING.md.
+
+Checks: build/run11 PASS (zero differing bytes); serial suite build/logs/suite_e0406.log OK (501 tests, 3 skipped); the H1
+exit gate as in E-0404.
+
+Next: H4. The recipe gate reaches 2,299 routines: add recipes or save states that reach the code H2 and H3 change
+(shops, breeding, the arena, more conversations), then a moved fixed-bank table with its reader updated.
+
+## Prior handoff (2026-10-17, E-0403): H1b started
 
 tests/test_generated_source.py is split (docs/GRADUATION.md). tests/test_source_audits.py checks src/ itself, and
 tests/test_generator_listing.py keeps the generator's own checks, skipping without build/listing/.

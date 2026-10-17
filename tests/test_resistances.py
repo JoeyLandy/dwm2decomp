@@ -6,10 +6,12 @@ Every routine named `...<Name>Resistance` loads one byte (GetTargetSlotResistanc
 with rotates and `and $03`; that field must be the packed position of RESIST_<NAME>.
 """
 import re
+import sys
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
 LISTING = ROOT / "build" / "listing"
 
 
@@ -27,7 +29,7 @@ def field_of(ops: list[str]) -> int | None:
     """Low bit of the field the rotates before `and $03` bring to bits 1-0 (rlca twice = bits 7-6, ...)."""
     shift = 0  # right rotation, in bits
     for op in ops:
-        if op == "and a, $03":
+        if op.lower() in ("and a, $03", "and $03"):  # the listing's spelling and src/'s
             return shift % 8
         shift += {"rrca": 1, "rlca": -1, "swap a": 4}.get(op, 0) if op in ("rrca", "rlca", "swap a") else 0
         if op not in ("rrca", "rlca", "swap a"):
@@ -35,13 +37,13 @@ def field_of(ops: list[str]) -> int | None:
     return None
 
 
-@unittest.skipUnless(LISTING.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class ResistanceNamesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         rec = (ROOT / "src" / "records.inc").read_text(encoding="utf-8")
         cls.index = {n: int(v) for n, v in re.findall(r"^DEF RESIST_(\w+) EQU (\d+)$", rec, re.M)}
-        cls.text = "\n".join(p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm")))
+        import source_tree
+        cls.text = source_tree.text()  # D-015 (H1b): the source, src/
 
     def test_packing_formula_matches_the_packer(self):
         self.assertEqual(len(self.index), 27)

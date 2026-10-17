@@ -2,7 +2,7 @@
 
 A probe (tests/test_probes.py, config/probes.json) runs one routine of the reference ROM on tools/sm83.py from a
 chosen register and RAM state until it returns, and compares registers, flags and RAM with what the routine's note
-says. This tool sorts every global code label of the listing (build/listing/bankNN.asm) by whether its effect can
+says. This tool sorts every global code label of src/ (the generator's listing before D-015, H1b) by whether its effect can
 be observed that way:
 
 - probe: the routine and everything it calls (transitively, through call, jp, farcall and fall-through into the
@@ -28,9 +28,16 @@ CALL = re.compile(r"^\s+(?:call|jp|jr|farcall|farcall_b|farjp)(?: (?:n?z|n?c),)?
 DW = re.compile(r"^\s+dw ([A-Za-z_]\w*)")
 
 
-def routines(listing: Path = ROOT / "build/listing") -> dict[str, dict]:
+def routines(listing: Path | None = None) -> dict[str, dict]:
+    """Every global code label of src/ (or of a listing directory's bankNN.asm files) with what it touches."""
     out: dict[str, dict] = {}
-    for p in sorted(listing.glob("bank[0-9a-f][0-9a-f].asm")):
+    if listing is None:
+        sys.path.insert(0, str(ROOT / "tools"))
+        import source_tree
+        files = source_tree.bank_files()
+    else:
+        files = sorted(listing.glob("bank[0-9a-f][0-9a-f].asm"))
+    for p in files:
         cur = None
         order = []
         for ln in p.read_text(encoding="utf-8").split("\n"):
@@ -173,9 +180,12 @@ def main() -> int:
     cls = {k: v for k, v in classify(rs).items() if k in code}
     if args.doc:
         import json as _json
-        import label_map
         import probe
-        at = {v: k for k, v in label_map.snapshot(ROOT / "build/listing").items()}
+        import source_tree
+        sym = source_tree.fresh_sym()
+        if sym is None:
+            sys.exit("--doc needs a build of this src/ (python -I tools/build.py --out build/runN)")
+        at = {n: key for key, names in source_tree.labels_at(sym).items() for n in names}
         probed = {probe.checks(p) for p in probe.load(sorted((ROOT / "config/probes").glob("*.json")))}
         exp = ROOT / "config/probe_exclusions.json"
         excluded = {k: v for k, v in _json.loads(exp.read_text(encoding="utf-8")).items()

@@ -35,6 +35,11 @@ LONG = 50
 
 
 def given_names(root: Path = ROOT) -> set[str]:
+    """Names chosen by reading: config/names.json and name_families.json while the generator's config is present,
+    else the list frozen at graduation (tests/data/given_names.txt, D-015 H1b)."""
+    if not (root / "config/names.json").exists():
+        frozen = root / "tests/data/given_names.txt"
+        return {ln.strip() for ln in frozen.read_text(encoding="utf-8").splitlines() if ln.strip() and ln[0] != "#"}
     names = json.loads((root / "config/names.json").read_text(encoding="utf-8"))
     given = {v if isinstance(v, str) else v["name"] for k, v in names.items()
              if not k.startswith("_") and (isinstance(v, str) or "name" in v)}

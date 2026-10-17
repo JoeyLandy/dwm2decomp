@@ -2431,6 +2431,37 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0406 — H3: the text for translators, the font as a PNG, a test translation drawn by the game
+
+- Date: 2026-10-17. Kind: TOOL and OBSERVATION (C2 on tools/sm83.py for what the test translation shows; widths C1). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Description: [translating](TRANSLATING.md).
+- **tools/text.py.** 5,407 entries: every labelled block of `db` text in src/text/, with the pointer tables that use it. The text form is the db strings joined, with argument bytes as {$xx}. Import re-renders a changed entry with tools/gb_text.py (all 5,407 blocks re-render from their bytes to the same bytes; 5,405 to the same lines, and Message_0B_8F and String_88_02_AD end in raw bytes after their end mark that re-render as text). The bank's trailing fill takes the change in length. Import stops on an unknown character, a line wider than its limit, or a bank without room. The charmap is read from src/charmap.inc too, so a CHARMAP line adds a letter.
+- **Widths (C1).** The longest dialogue line in the 12 message banks and the battle text is 18 cells (one 20-cell case is two parts joined by <CURSOR>); the text window is 20 tiles. String limits are the longest original entry of the same list.
+- **Font.** GlyphFont (bank $1F) is 185 glyphs, codes $00-$B8, 1 bit per pixel in the odd bytes. font-export and font-import convert it to a 128 x 96 PNG and back; the round trip changes nothing. 75 codes are used by no text and named by no CHARMAP line, 49 of them blank.
+- **Test translation** (tests/test_text_pipeline.py). In a copy of src/:
+  - `CHARMAP "ü", $49` added, and its glyph drawn in the font PNG and imported (one glyph changed);
+  - Message_00_0A's first part made German ("Gleich sind wir / über GreatLog da." and "Ich bin gespannt!"), longer than the English, taken from bank $28's 47-byte fill.
+  - It builds as a mod. The E-0320 chain is replayed on the reference to state s13, the modded ROM is swapped in (it differs only in banks $1F and $28), and the conversation is played (U2 W10 A W4, then 300 frames). DrawTextGlyph draws the German bytes in order, $49 among them, and GlyphFont + 16 x $49 in the modded ROM holds the new rows.
+- **Refusals.** Grüße without its CHARMAP line, a 29-cell line, and 30 entries of bank $28 grown past its fill are refused.
+- **Limits.** Only src/text/; moving messages to an overflow bank (the $DA split of message group 0 into bank $97) is a code change by hand, documented but not done by the tool; widths C1.
+
+### E-0405 — H2: the data tables as editable files, checked against the game's readers
+
+- Date: 2026-10-17. Kind: TOOL and OBSERVATION (C2 on tools/sm83.py for the reader checks; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Description: [editing data](EDITING_DATA.md).
+- **tools/datatables.py.** Reads the tables from src/ as value tokens, mapped onto fields by byte width with config/tables.json's layouts: 181 tables (species, monsters, skills, items, 111 encounter entries and 48 grids, scripted and arena encounters, the seven breeding tables and their lists, shops, AI weights), 4,116 records or entries. `import` rewrites only changed tokens; a list may change length and the bank's trailing `ds` fill takes the difference (refused when it is too small). tools/build.py `--src DIR` builds another tree (a mod unless identical).
+- **Round trip.** `datatables.py check`: export, then import unchanged into a copy, leaves every file identical.
+- **Edits reach the readers** (tests/test_datatables.py): one copy of src/ with an edit in each of 12 tables builds as a mod, and on the modded ROM LoadSpeciesRecord, LoadMonsterRecord, LoadSkillRecord, LoadItemRecord, ComputeSellPrice, LoadArg1PointerForScreenTableIndex (the shop list one item longer), ReadBank6TableWord, FillEncounterFromEntry (all 128 random states), CollectUniqueEncounterIdsToWorkBuf2_FindTable, StartScriptedEncounterTemp0 and ComputeBreedingChild each return the edited value; the arena list is checked by its bytes at its label. A field given a different number of values than its tokens is refused.
+- **Limits.** Only these tables; new lists need their label in src/ first; adding records to a fixed table is not supported.
+
+### E-0404 — H1 complete: src/ is checked without the generator's config or listing
+
+- Date: 2026-10-17. Kind: TEST and TOOL (one comment correction in src/; no byte changed). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit f7cb6cd. Plan and per-file record: [graduation](GRADUATION.md).
+- **Method.** A scratch copy of the tree with config/names.json, config/annotations.json and build/listing/ removed ran the full suite (tools/run_tests.py): 27 failures and 54 skips at first. Each was fixed so that the check reads src/ (and the .sym of a fresh build for addresses), or recognized as a check of the generator, which skips without the listing.
+- **Moved to src/.** test_probes (the same 5,948 C2-note keys as config/annotations.json), test_constants, test_fold_idioms, test_routine_behaviour, test_present, test_story_flags, test_resistances, test_tables, test_text, test_name_claims, test_note_grounding, test_probe_scope, test_doc_coverage (details in GRADUATION.md). tools/source_tree.py adds notes, labels by address and listing_spelling (the listing's spelling of a src/ instruction). docs/PROBE_SCOPE.md regenerated from src/ is byte-identical; status_bits.py gives the same 69 lines.
+- **Frozen lists.** tests/data/names_given_by_reading.txt (97 names test_name_claims exempts), tests/data/given_names.txt (10,828 names given by reading, for the readability ratchets) and tests/data/ungrounded_mentions.txt (3,339 note mentions the grounding check does not find connected, out of 34,771 now checked in every code note, against 6,605 in config/names.json; any new one fails).
+- **Found and fixed.** Three comment lines in bank $60 named wKeyWorldBossMonsters, which src/ram.asm does not define; they now say wKeyWorldMonsters + $40 and + $41 (the boss entries, as the hand notes above them say).
+- **Retired.** tools/apply_drafts.py (and tests/test_apply_drafts.py) and tools/rank_unnamed.py. **Added** tools/rename.py (whole-word renames across src/, refusing unsafe ones; a copy with NextTableByte renamed still builds the reference).
+- **Exit gate.** A copy of the tree in build/gate/ with config/names.json, config/annotations.json and build/listing/ removed: build PASS (zero differing bytes), and tools/run_tests.py ran 491 tests with no failure (build/logs/gate3.log; 17 skipped: the generator's own checks and the 3 slow tests).
+
 ### E-0403 — H1b, first file: tests/test_generated_source.py split into source audits and generator checks
 
 - Date: 2026-10-17. Kind: TOOL and TEST (no source byte changed). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 6a7f1a2. Plan: [graduation](GRADUATION.md), H1b.

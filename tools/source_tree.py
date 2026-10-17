@@ -27,6 +27,31 @@ def bank_files(src: Path | None = None) -> list[Path]:
     return sorted(src.glob("*/bank[0-9a-f][0-9a-f]_*.asm"), key=lambda p: p.name)
 
 
+def text(src: Path | None = None) -> str:
+    """Every bank file of the tree, joined with newlines, in bank order."""
+    return "\n".join(f.read_text(encoding="utf-8") for f in bank_files(src))
+
+
+ALU = re.compile(r"^(add|adc|sub|sbc|and|or|xor|cp) ([^,]+)$")
+HEX_NUM = re.compile(r"\$([0-9a-fA-F]+)\b")
+
+
+def listing_spelling(code: str) -> str:
+    """An instruction of src/ in the spelling of the generator's listing, which tools/present.py changed for
+    readers (E-0369): `xor a` is `xor a, a`, `cp $2b` is `cp a, $2B`, `[hli]` is `[hl+]`, `jumptable` is `rst $00`.
+    The bytes are the same either way; checks written against the listing read src/ through this."""
+    code = code.strip()
+    if code == "jumptable":
+        return "rst $00"
+    code = code.replace("[hli]", "[hl+]").replace("[hld]", "[hl-]")
+    if (m := ALU.match(code)) and not m.group(2).startswith(("hl", "sp")):
+        code = f"{m.group(1)} a, {m.group(2)}"
+    parts = code.split('"')
+    for i in range(0, len(parts), 2):
+        parts[i] = HEX_NUM.sub(lambda m: "$" + m.group(1).upper(), parts[i])
+    return '"'.join(parts)
+
+
 def code_lines(path: Path) -> list[str]:
     return path.read_text(encoding="utf-8").split("\n")
 
@@ -56,6 +81,31 @@ def label_banks(src: Path | None = None) -> dict[str, int]:
                 cur = m.group(1)
             elif (m := GLOBAL.match(ln)) and cur in secs:
                 out[m.group(1)] = secs[cur]
+    return out
+
+
+def notes(src: Path | None = None) -> dict[str, str]:
+    """Global label -> its note: the `;` comment lines directly above it, joined with spaces (line-start `; `
+    dropped; a `;` inside the text, as in "(C2, E-0373; probed E-0374)", is kept)."""
+    out = {}
+    for f in bank_files(src):
+        lines = code_lines(f)
+        for i, ln in enumerate(lines):
+            if m := GLOBAL.match(ln):
+                j, block = i - 1, []
+                while j >= 0 and lines[j].startswith(";"):
+                    block.insert(0, re.sub(r"^;\s?", "", lines[j]).rstrip())
+                    j -= 1
+                out[m.group(1)] = " ".join(block)
+    return out
+
+
+def labels_at(sym: dict[str, tuple[int, int]]) -> dict[str, list[str]]:
+    """'BB:AAAA' -> the global labels at that address in a .sym (probe and config keys use this form)."""
+    out: dict[str, list[str]] = {}
+    for name, (b, a) in sym.items():
+        if "." not in name:
+            out.setdefault(f"{b:02X}:{a:04X}", []).append(name)
     return out
 
 

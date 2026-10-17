@@ -59,6 +59,12 @@ DATA_OPS = {"db", "dw", "dfar", "ds", "DS", "d24", "INCBIN"}
 MENTION = re.compile(r"\b(?:(?:Func|Jump|Data)_[0-9A-F]{3}_[0-9A-F]{4}|[0-9A-F]{2}:[0-9A-F]{4})\b")
 
 
+def config_json(name: str) -> dict:
+    """A config/ file the generator reads, or {} once it is retired (D-015, H1c): src/ holds the names and notes."""
+    p = ROOT / "config" / name
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
 class Names:
     """Address names and addresses of the listing, mapped to the labels src/ keeps; and, for comments written
     before later renames (E-0347), former names mapped to the current label: names config/names.json records as
@@ -171,7 +177,7 @@ class Names:
         # E-0350: the evidence ids config records for each label (names.json by address, name_families.json for
         # library copies), cited when a written note leaves them out
         self.evidence: dict[str, str] = {}
-        cfg_names = json.loads((ROOT / "config/names.json").read_text(encoding="utf-8"))
+        cfg_names = config_json("names.json")
         for k, v in cfg_names.items():
             if k.startswith("_") or not isinstance(v, dict):
                 continue
@@ -181,7 +187,7 @@ class Names:
                 ids = ["E-0351"]  # a reading recorded before names cited evidence entries
             if ids and lab:
                 self.evidence.setdefault(lab, ", ".join(dict.fromkeys(ids)))
-        fams = json.loads((ROOT / "config/name_families.json").read_text(encoding="utf-8"))
+        fams = config_json("name_families.json")
         fam_ids = {f["name"]: ", ".join(dict.fromkeys(re.findall(r"[ED]-\d{3,4}", f.get("evidence", "") + " " +
                                                                     f.get("note", ""))) or ["E-0351"])
                    for f in fams.get("families", [])}
@@ -194,7 +200,7 @@ class Names:
         if short and short.exists():
             self.former = json.loads(short.read_text(encoding="utf-8"))
         self.history: dict[str, str] = {}
-        cfg = json.loads((ROOT / "config/names.json").read_text(encoding="utf-8"))
+        cfg = cfg_names
         for k, v in cfg.items():
             if not k.startswith("_") and isinstance(v, dict):
                 for old in re.findall(r"\bwas (\w+)", v.get("note", "")):

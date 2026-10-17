@@ -74,9 +74,11 @@ def _code(text: str, names=None, bank=None) -> list[str]:
     return out
 
 
-@unittest.skipUnless(LISTING.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class PresentedTreeTest(unittest.TestCase):
-    @unittest.skipUnless(REGEN.is_dir(), "build/regen/src has not been generated (tools/disasm_all.py)")
+    """The checks of src/ itself run always; those comparing the generator's listing with its presented tree need
+    both (D-015, H1b)."""
+
+    @unittest.skipUnless(LISTING.is_dir() and REGEN.is_dir(), "the generator's listing and tree are not present")
     def test_regen_is_the_presented_listing(self):
         texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
         names = present.Names(texts, LISTING)
@@ -89,7 +91,7 @@ class PresentedTreeTest(unittest.TestCase):
                                                                        int(n[4:6], 16))[0]]  # E-0393: sections
         self.assertEqual(stale, [], "build/regen/src is not tools/present.py's output for build/listing")
 
-    @unittest.skipUnless(REGEN.is_dir(), "build/regen/src has not been generated (tools/disasm_all.py)")
+    @unittest.skipUnless(LISTING.is_dir() and REGEN.is_dir(), "the generator's listing and tree are not present")
     def test_no_code_or_data_line_is_lost(self):
         titles = present.bank_titles()
         texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
@@ -134,6 +136,8 @@ class PresentedTreeTest(unittest.TestCase):
         manifest = {r[0]: (int(r[1][1:], 16), int(r[2][1:], 16)) for r in rows}
         self.assertEqual(len(manifest), len(rows))
         self.assertEqual(sorted(used), sorted(manifest))
+        if not LISTING.is_dir():
+            return  # D-015 (H1b): the manifest against the generator's slices needs its listing
         listing = "\n".join(p.read_text(encoding="utf-8") for p in LISTING.glob("bank*.asm"))
         slices = sorted((int(o, 16), int(n, 16)) for o, n in
                         re.findall(r'INCBIN "dwm2-cobi-us\.gbc", \$([0-9A-F]+), \$([0-9A-F]+)', listing))

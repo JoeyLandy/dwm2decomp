@@ -12,15 +12,26 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import source_tree  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 LAB = re.compile(r"^([A-Za-z_]\w*)::")
 LOAD = re.compile(r"\s+ld hl, wBattleStatus(\d?)$")
+BITS = {n: v for n, v in re.findall(r"^DEF (BSTAT\d_\w+) EQU (\d)",
+                                    (ROOT / "src/constants.inc").read_text(encoding="utf-8"), re.M)}
+
+
+def norm(code: str) -> str:
+    """An instruction of src/ in the listing's spelling, with a BSTATk_ bit name as its number (D-009)."""
+    code = source_tree.listing_spelling(code)
+    return re.sub(r"BSTAT\d_\w+", lambda m: BITS.get(m.group(0), m.group(0)), code)
 
 
 def scan() -> dict:
     """{(byte, bit): {"set": set(routines), "res": ..., "bit": ...}}"""
     out: dict = defaultdict(lambda: {"set": set(), "res": set(), "bit": set()})
-    for p in sorted((ROOT / "build/listing").glob("bank*.asm")):
+    for p in source_tree.bank_files():  # src/ (D-015, H1b)
         lines = p.read_text(encoding="utf-8").split("\n")
         routine = "?"
         for i, ln in enumerate(lines):
@@ -31,7 +42,7 @@ def scan() -> dict:
             if not m:
                 continue
             k = int(m.group(1) or 0)
-            ops = [x.split(";")[0].strip() for x in lines[i + 1:i + 9] if x.startswith("    ") and
+            ops = [norm(x.split(";")[0]) for x in lines[i + 1:i + 9] if x.startswith("    ") and
                    not x.strip().startswith(";")]
             if not ops or ops[0] != "call AddAx9ToHL":
                 continue

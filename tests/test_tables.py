@@ -58,28 +58,36 @@ class SoundTables(unittest.TestCase):
         self.assertFalse(r[0] % 0x20 == 0 and r[0] < 0xC0 and 0x4000 <= (r[2] | (r[3] << 8)) < 0x8000)
 
 
-SRC = ROOT / "build" / "listing"
+SRC = ROOT / "src"
 
 
-@unittest.skipUnless(SRC.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
+def src_bank(bank: int) -> str:
+    return next(SRC.glob(f"*/bank{bank:02x}_*.asm")).read_text(encoding="utf-8")
+
+
 class GeneratedTables(unittest.TestCase):
+    """The table layouts in src/, the source (D-015, H1b; the generator's listing before)."""
+
     def test_source_carries_every_layout(self):
-        text = {f.name: f.read_text(encoding="utf-8") for f in SRC.glob("bank*.asm")}
+        import sys
+        sys.path.insert(0, str(ROOT / "tools"))
+        import source_tree
+        banks = source_tree.label_banks()
         for t in CFG:
-            f = f"bank{int(t['bank'], 16):02x}.asm"
-            self.assertIn(f"{t['label']}::", text[f], t["label"])
-        ids = sum(len(re.findall(r"; id \d+(:|$)", text[f"bank{b:02x}.asm"], re.M)) for b in (0x40, 0x41, 0x42, 0x43))
+            self.assertEqual(banks.get(t["label"]), int(t["bank"], 16), t["label"])  # defined, in its bank
+        ids = sum(len(re.findall(r"; id \d+(:|$)", src_bank(b), re.M)) for b in (0x40, 0x41, 0x42, 0x43))
         self.assertEqual(ids, sum(t["count"] for t in CFG if t["label"].startswith("SoundRecords_")))
 
     def test_sound_tracks_are_emitted_as_events(self):
         headers = events = 0
         for b in (0x40, 0x41, 0x42, 0x43):
-            lines = (SRC / f"bank{b:02x}.asm").read_text(encoding="utf-8").splitlines()
+            lines = src_bank(b).splitlines()
             for i, line in enumerate(lines):
                 if "; header: param=" in line:
                     headers += 1
-                    self.assertTrue(any(l.startswith("; sound track,") for l in lines[max(0, i - 3):i]), line)
-                if re.match(r"\s+db \$[0-9A-F]{2}(, \$[0-9A-F]{2})? ; (note|rest-note|set|label|end|jump|repeat|call|env|step|volume|duty|mod|pan|wait|param|counter|slide|tuning|instrument|mastervol|duty2|skip|return)", line):
+                    # in src/ each header follows its track label (a repeated comment is written once, E-0369)
+                    self.assertRegex(lines[i - 1], r"^SoundTrack_\w+::", line)
+                if re.match(r"\s+db \$[0-9A-Fa-f]{2}(, \$[0-9A-Fa-f]{2})? ; (note|rest-note|set|label|end|jump|repeat|call|env|step|volume|duty|mod|pan|wait|param|counter|slide|tuning|instrument|mastervol|duty2|skip|return)", line):
                     events += 1
         self.assertGreaterEqual(headers, 200)
         self.assertGreater(events, 25000)

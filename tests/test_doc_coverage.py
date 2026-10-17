@@ -79,7 +79,10 @@ class Coverage(unittest.TestCase):
         self.assertGreaterEqual(hand, 9820)  # E-0386: raised as the readability batches add readings; E-0387: two
         # fewer code labels (the $32 $4F00 block decoded as code: $4F0A, $4ECA and $7A49 gone, $4F00 a routine), all read
         import json
-        ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
+        ann_path = ROOT / "config/annotations.json"
+        if not ann_path.exists():
+            return  # D-015 (H1b): the notes are src/'s own; the comparison below checks the generator's copy
+        ann = json.loads(ann_path.read_text(encoding="utf-8"))
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]
         self.assertEqual(len(hand_keys), hand, "every hand-written note sits above exactly one code label")
 
@@ -91,9 +94,8 @@ class Coverage(unittest.TestCase):
         labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
         entries = {m for t in texts for m in re.findall(r"^\s+jumptable\n((?:\s+dw \w+\n)+)", t, re.M)
                    for m in re.findall(r"dw (\w+)", m)}
-        import json
-        given = {v["name"] for v in json.loads((ROOT / "config/names.json").read_text(encoding="utf-8")).values()
-                 if isinstance(v, dict) and "name" in v}
+        import readability_queue
+        given = readability_queue.given_names()  # config/names.json, or the list frozen at graduation (D-015)
         callee_named = []
         for e in sorted(entries - given):
             parts = e.split("_")

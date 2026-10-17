@@ -16,6 +16,16 @@ ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 RETURN = 0xC800  # sentinel return address in WRAM
 
 
+def src_text() -> str:
+    """Every bank file of src/, the source (D-015)."""
+    return "".join(f.read_text(encoding="utf-8") for f in sorted((ROOT / "src").glob("*/bank*.asm")))
+
+
+def src_bank(bank: str) -> str:
+    """One bank file of src/, by its two hex digits."""
+    return next((ROOT / "src").glob(f"*/bank{bank}_*.asm")).read_text(encoding="utf-8")
+
+
 class Done(Exception):
     pass
 
@@ -180,55 +190,55 @@ class PersonalityIndex(unittest.TestCase):
 
 
 class SkillTableSource(unittest.TestCase):
-    """Audit of the committed src/: the skill table keeps every byte of its 17-byte records
-    (175 shown by the debug viewer, 228 up to SkillRequirementTable, E-0204)."""
+    """Audit of src/: the skill table keeps every byte of its 17-byte records
+    (175 shown by the debug viewer, 228 up to SkillRequirementTable, E-0204). D-015 (H1b): read from src/."""
 
-    def test_228_records_of_17_bytes(self):
+    def rows(self):
         import re
-        text = (ROOT / "build/listing/bank1a.asm").read_text(encoding="utf-8")
+        text = src_bank("1a")
         text = text[text.index("SkillTable::"):]
         text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
-        rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
+        return re.findall(r"^    db ((?:\$[0-9A-Fa-f]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
+
+    def test_228_records_of_17_bytes(self):
+        rows = self.rows()
         self.assertEqual([int(i) for _, i in rows], list(range(228)))
         self.assertTrue(all(len(v.split(", ")) == 17 for v, _ in rows))
 
     @unittest.skipUnless(ROM.is_file(), "reference ROM not present")
     def test_rows_equal_the_rom_bytes(self):
-        import re
-        text = (ROOT / "build/listing/bank1a.asm").read_text(encoding="utf-8")
-        text = text[text.index("SkillTable::"):]
-        text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
-        rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
         rom = ROM.read_bytes()
-        for values, ident in rows:
+        for values, ident in self.rows():
             at = 0x1A * 0x4000 + 0x40D4 - 0x4000 + 17 * int(ident)
             self.assertEqual(bytes(int(v[1:], 16) for v in values.split(", ")), rom[at:at + 17], ident)
 
 
 class StreamSources(unittest.TestCase):
-    """Audit of the committed src/ and config/: the extra stream sources (E-0035) are used."""
+    """Audit of src/ and config/: the extra stream sources (E-0035) are used. D-015 (H1b): a stream in src/ is a
+    label whose body is an asset file (INCBIN "*.lz"); the listing marked it with a note instead."""
 
     def test_asset_pack_banks_carry_stream_labels(self):
         import re
-        for bank, minimum in (("7d", 80), ("20", 70), ("74", 50)):
-            text = (ROOT / f"build/listing/bank{bank}.asm").read_text(encoding="utf-8")
-            self.assertGreaterEqual(len(re.findall(r"^; LZSS-compressed asset", text, re.M)), minimum, bank)
+        # 79 files in bank $7D (the listing's 80 streams: one shares its tail with another and has no file of its own)
+        for bank, minimum in (("7d", 79), ("20", 70), ("74", 50)):
+            found = re.findall(r'^\w+::\n    INCBIN "[^"]+\.lz"', src_bank(bank), re.M)
+            self.assertGreaterEqual(len(found), minimum, bank)
 
     def test_chains_skip_the_monster_table(self):
         import json
         chains = json.loads((ROOT / "config/stream_chains.json").read_text(encoding="utf-8"))["chains"]
-        text = (ROOT / "build/listing/bank34.asm").read_text(encoding="utf-8")
+        text = src_bank("34")
         self.assertIn("MonsterTable::", text)
-        self.assertNotRegex(text.split("MonsterTable::")[1][:200000], r"LZSS-compressed asset")
+        self.assertNotRegex(text.split("MonsterTable::")[1][:200000], r'INCBIN "[^"]+\.lz"')
         self.assertTrue(all(count >= 6 for runs in chains.values() for _, count in runs))
 
 
 class DispatchCases(unittest.TestCase):
-    """Audit of the committed src/: jump-table targets carry Parent_CaseNN names (E-0040)."""
+    """Audit of src/: jump-table targets carry Parent_CaseNN names (E-0040). D-015 (H1b): read from src/."""
 
     def test_cases_are_named_after_their_table_owner(self):
         import re
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
+        text = src_text()
         cases = re.findall(r"^(\w+)_Case([0-9A-F]{2})::", text, re.M)
         self.assertLess(len(cases), 200)  # most cases now carry descriptions instead of their number (E-0268, E-0302, E-0340, E-0344)
         self.assertIn("RunGameModeInit_None", text)  # RunGameModeInit's cases now have shape names (E-0272)
@@ -263,21 +273,13 @@ class RandomAndDivision(unittest.TestCase):
 
 
 class FamilyNamesAreApplied(unittest.TestCase):
-    """Audit of the committed src/: each family in config/name_families.json names its copies."""
-
-    def test_every_family_name_is_defined_in_the_source(self):
-        import json
-        import re
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
-        families = json.loads((ROOT / "config/name_families.json").read_text(encoding="utf-8"))["families"]
-        self.assertGreater(len(families), 20)
-        for fam in families:
-            self.assertRegex(text, r"(?m)^" + re.escape(fam["name"]) + r"(_Bank[0-9A-F]{2}(_[0-9A-F]{4})?)?::",
-                             fam["name"])
+    """Audit of src/: per-bank copies of a library routine share a name and differ in their bank suffix.
+    D-015 (H1b): read from src/. That every family of config/name_families.json names its copies checks the
+    generator (tests/test_generator_listing.py)."""
 
     def test_copies_share_the_note_and_differ_in_bank_suffix(self):
         import re
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
+        text = src_text()
         copies = re.findall(r"(?m)^AddDoubleAToHL_Bank[0-9A-F]{2}(?:_[0-9A-F]{4})?::", text)
         self.assertGreaterEqual(len(copies), 10)
         self.assertEqual(len(copies), len(set(copies)))

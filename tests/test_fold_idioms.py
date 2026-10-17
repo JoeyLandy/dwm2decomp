@@ -48,11 +48,22 @@ class GeneratedSourceHasNoFoldableIdiom(unittest.TestCase):
     """Audit of the committed src/: every foldable sequence was folded."""
 
     def test_no_unfolded_deref(self):
-        for f in sorted((ROOT / "build/listing").glob("bank*.asm")):
-            self.assertNotIn(disasm_all.DEREF_HL, f.read_text(encoding="utf-8"), f.name)
+        """D-015 (H1b): in src/, either spelling of the post-increment load."""
+        files = sorted((ROOT / "src").glob("*/bank*.asm"))
+        self.assertGreater(len(files), 200)
+        for f in files:
+            self.assertNotRegex(f.read_text(encoding="utf-8"),
+                                r"    ld a, \[(hl\+|hli)\]\n    ld h, \[hl\]\n    ld l, a\n", f.name)
+
+    def test_src_macros_expand_to_the_removed_instructions(self):
+        """The macros as src/macros.inc defines them (the source), not only as the generator writes them."""
+        inc = (ROOT / "src/macros.inc").read_text(encoding="utf-8")
+        self.assertIn("MACRO add_a_to_hl\n    add a, l\n    ld l, a\n    jr nc, .skip\\@\n    inc h\n.skip\\@:\nENDM", inc)
+        self.assertIn("MACRO deref_hl\n    ld a, [hl+]\n    ld h, [hl]\n    ld l, a\nENDM", inc)
 
     def test_macros_are_used(self):
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
+        """D-015 (H1b): counted in src/, the source (1,834 and 225 on 2026-10-17)."""
+        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "src").glob("*/bank*.asm"))
         self.assertGreater(len(re.findall(r"^    add_a_to_hl$", text, re.M)), 1000)
         self.assertGreater(len(re.findall(r"^    deref_hl$", text, re.M)), 200)
 

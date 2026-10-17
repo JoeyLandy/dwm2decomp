@@ -109,8 +109,9 @@ class RealRom(unittest.TestCase):
         self.assertGreater(total, 40000)
 
 
-@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class GeneratedText(unittest.TestCase):
+    """Text in src/, the source (D-015, H1b; the generator's listing before)."""
+
     def test_charmap_is_included_before_the_banks_and_defines_each_byte_once(self):
         main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8").splitlines()
         first_bank = next(i for i, ln in enumerate(main) if ln.startswith('INCLUDE "home/bank00'))
@@ -120,16 +121,17 @@ class GeneratedText(unittest.TestCase):
         self.assertEqual(len(codes), len(set(codes)))
 
     def test_text_blocks_hold_string_lines(self):
+        """Each labelled block in src/text/ starts with a db line, almost always a string (5,494 and 5,407 on
+        2026-10-17); the listing marked them with a "; text (E-0024)" comment instead."""
         blocks = strings = 0
-        for f in BANKS.glob("bank*.asm"):
+        for f in sorted((ROOT / "src" / "text").glob("bank*.asm")):
             lines = f.read_text(encoding="utf-8").splitlines()
             for i, line in enumerate(lines):
-                if line.startswith("; text (E-0024)"):
+                if re.match(r"^\w+::$", line) and i + 1 < len(lines) and lines[i + 1].startswith("    db "):
                     blocks += 1
-                    self.assertTrue(lines[i + 1].startswith("    db "), f"{f.name}:{i + 2}")
                     strings += lines[i + 1].count('"') >= 2
-        self.assertGreater(blocks, 3000)
-        self.assertGreater(strings, 2500)
+        self.assertGreater(blocks, 5000)
+        self.assertGreater(strings, 5000)
 
 
 if __name__ == "__main__":

@@ -175,5 +175,19 @@ class DataRegions(unittest.TestCase):
 
 
 
+@unittest.skipUnless(BANKS.is_dir() and (BANKS.parents[1] / "config/name_families.json").exists(),
+                     "needs the generator's listing and config/name_families.json")
+class FamilyNamesAreApplied(unittest.TestCase):
+    """The generator names each family of config/name_families.json (from tests/test_routine_behaviour.py, H1b)."""
+
+    def test_every_family_name_is_defined_in_the_listing(self):
+        text = "".join(f.read_text(encoding="utf-8") for f in BANKS.glob("bank*.asm"))
+        families = json.loads((BANKS.parents[1] / "config/name_families.json").read_text(encoding="utf-8"))["families"]
+        self.assertGreater(len(families), 20)
+        for fam in families:
+            self.assertRegex(text, r"(?m)^" + re.escape(fam["name"]) + r"(_Bank[0-9A-F]{2}(_[0-9A-F]{4})?)?::",
+                             fam["name"])
+
+
 if __name__ == "__main__":
     unittest.main()

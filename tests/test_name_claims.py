@@ -2,7 +2,7 @@
 
 Rule-made names (E-0270 to E-0305) say what the code does: a branch target `.set_sprite_slot_count` stores
 wSpriteSlotCount, a step `Parent_ToFoo` calls or jumps to Foo, `Parent_Set<V>To<NN>` stores $NN to V,
-`Parent_Write<V>` writes V, a local `.return_01` loads 1 and returns. These tests read the generated source
+`Parent_Write<V>` writes V, a local `.return_01` loads 1 and returns. These tests read src/ (D-015, H1b: in the listing's spelling, source_tree.listing_spelling)
 and confirm every such claim, so those names are verified descriptions of the code, not guesses."""
 import re
 import sys
@@ -10,20 +10,21 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BANKS = ROOT / "build/listing"
+BANKS = ROOT / "src"  # D-015 (H1b): the source; instructions read in the listing's spelling
 sys.path.insert(0, str(ROOT / "tools"))
 import disasm_all  # noqa: E402
+import source_tree  # noqa: E402
 
 LABEL = re.compile(r"^([A-Za-z_]\w*)::")
 LOCAL = re.compile(r"^\.([a-z][a-z0-9_]*):")
 
 
 def code_of(line: str) -> str:
-    return disasm_all._split_comment(line)[0].strip()
+    return source_tree.listing_spelling(disasm_all._split_comment(line)[0].strip())
 
 
 def load_banks():
-    return {p.name: p.read_text(encoding="utf-8").split("\n") for p in sorted(BANKS.glob("bank*.asm"))}
+    return {p.name: p.read_text(encoding="utf-8").split("\n") for p in source_tree.bank_files()}
 
 
 def body_after(lines, i, limit=8, stop_at_local=False):
@@ -45,7 +46,6 @@ def operand_symbols(text: str) -> list[str]:
     return re.findall(r"\b[wsh][A-Z]\w*", text)
 
 
-@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class LocalLabelClaims(unittest.TestCase):
     def test_every_shape_named_local_label_matches_its_instructions(self):
         banks = load_banks()
@@ -117,16 +117,16 @@ class LocalLabelClaims(unittest.TestCase):
         self.assertEqual(bad[:20], [], f"{len(bad)} of {checked} local labels do not match their instructions")
 
 
-@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class GlobalNameClaims(unittest.TestCase):
     def test_to_set_write_read_and_wait_names_match_their_code(self):
         banks = load_banks()
         defined = {LABEL.match(l).group(1) for lines in banks.values() for l in lines if LABEL.match(l)}
         ram = (ROOT / "src/ram.asm").read_text(encoding="utf-8")
         stems = {m.group(1) for m in re.finditer(r"^DEF [wsh]([A-Z]\w*) EQU", ram, re.M)}
-        import json
-        given = {v["name"] for k, v in json.loads((ROOT / "config/names.json").read_text(encoding="utf-8")).items()
-                 if not k.startswith("_")}  # names given by reading carry their own evidence
+        # names given by reading carry their own evidence; the 97 whose own part reads like a rule claim are listed
+        # in tests/data (from config/names.json, D-015 H1b)
+        given = {ln.strip() for ln in (ROOT / "tests/data/names_given_by_reading.txt").read_text(encoding="utf-8")
+                 .splitlines() if ln.strip() and not ln.startswith("#")}
         where = {}
         for name, lines in banks.items():
             for i, ln in enumerate(lines):

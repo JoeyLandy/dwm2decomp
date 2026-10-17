@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Clean build of the ROM into an empty output dir, then run the identity gate.
 
-Usage: build.py [--out build/run1] 
+Usage: build.py [--out build/run1] [--mod DIR] [--src DIR]
 Deletes the output dir first (must be under build/), so a stale ROM never counts.
+--src builds another source tree (a copy of src/ with edits, H2): its result is reported as a modded build unless
+it is the reference byte for byte.
 """
 from __future__ import annotations
 import argparse, hashlib, json, shutil, subprocess, sys
@@ -55,6 +57,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="build/run1")
     ap.add_argument("--mod", type=Path, help="edited assets (tools/assets.py): a modded ROM, not the matching target")
+    ap.add_argument("--src", type=Path, help="build this source tree instead of src/ (a modded ROM unless identical)")
     args = ap.parse_args()
     out = (ROOT / args.out).resolve()
     mod = args.mod.resolve() if args.mod else None
@@ -65,9 +68,10 @@ def main() -> int:
     log: list = []
     obj, rom = out / "main.o", out / "dwm2.gbc"
     src = ROOT / "src"
-    if mod:  # E-0394: a scratch copy of src/, whose bank fills take up the edited assets' changes in size
+    tree = args.src.resolve() if args.src else ROOT / "src"
+    if mod or args.src:  # E-0394: a scratch copy of the tree, whose bank fills take up edited assets' size changes
         src = out / "src"
-        shutil.copytree(ROOT / "src", src)
+        shutil.copytree(tree, src)
     assets = extract_assets(out / "assets", mod)
     if mod and DELTAS:
         import assets as asset_tools
@@ -85,12 +89,12 @@ def main() -> int:
     rep.update(toolchain=tools, commands=log,
                rgbds_zip_sha256=hashlib.sha256((RGBDS / "rgbds-win64.zip").read_bytes()).hexdigest(),
                source_tree_sha256=hashlib.sha256(b"".join(
-                   p.read_bytes() for p in sorted((ROOT / "src").rglob("*.asm")) + [ROOT / "src/assets.txt", ROOT / "src/layout.link"]
+                   p.read_bytes() for p in sorted(tree.rglob("*.asm")) + [tree / "assets.txt", tree / "layout.link"]
                    if p.exists())).hexdigest(),
-               source_digest=source_tree.digest(),  # D-015 (H1b): every src/ file, for tools/source_tree.fresh_build
-               assets_extracted=assets, mod=str(mod) if mod else None)
+               source_digest=source_tree.digest(tree),  # D-015 (H1b): every src/ file, for source_tree.fresh_build
+               assets_extracted=assets, mod=str(mod) if mod else None, src=str(tree) if args.src else None)
     (out / "report.json").write_text(json.dumps(rep, indent=2))
-    if mod:  # E-0394: a modded ROM is not the matching target; its difference is reported, not judged
+    if mod or (args.src and not rep["pass"]):  # E-0394: a modded ROM is not the matching target; reported, not judged
         print("MODDED BUILD (not the matching target) | bytes differing from the reference:",
               rep.get("differing_bytes"), "|", rom)
         return 0

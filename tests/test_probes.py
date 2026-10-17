@@ -42,10 +42,18 @@ class ProbedNotes(unittest.TestCase):
     has a probe at its routine's address, and every probe's routine has such a note."""
 
     def test_c2_notes_and_probes_match(self):
+        """D-015 (H1b): the notes are read from src/ (the comment above each label) and the labels' addresses from a
+        build of this tree; before H1b they came from config/annotations.json (the same 5,948 keys on 2026-10-17)."""
         import re
-        ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
-        c2 = {k for k, v in ann.items() if not k.startswith("_") and (
-            re.search(r"; probed E-\d{4}\)$", v) or re.search(r"\(C2, E-(?:037[1-9]|03[89]\d|0[4-9]\d\d)\)$", v))}
+        import source_tree
+        sym = source_tree.fresh_sym()
+        if sym is None:
+            self.skipTest("no build of this src/ (python -I tools/build.py --out build/runN)")
+        notes = source_tree.notes()
+        marks = (re.compile(r"\(C2, E-\d{4}; probed E-\d{4}\)"), re.compile(r"\(C2, E-(?:037[1-9]|03[89]\d|0[4-9]\d\d)\)"))
+        c2 = {key for key, names in source_tree.labels_at(sym).items()
+              if any(m.search(notes.get(n, "")) for n in names for m in marks)}
+        self.assertGreater(len(c2), 5000)
         probed = {probe.checks(p) for p in probe.load(PROBES)}
         self.assertEqual(sorted(c2 - probed)[:10], [], "C2 notes without a probe")
         self.assertEqual(sorted(probed - c2)[:10], [], "probes whose routine's note is not C2")
