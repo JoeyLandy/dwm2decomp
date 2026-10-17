@@ -1,0 +1,11 @@
+# H4 (E-0414): the readers H2 and H3 change that the other recipes do not reach, each run in a field state on map $35
+# (Cape, a grid encounter map, entered as e0406_world_tour.txt enters it): the encounter listing of field skill 16
+# (CollectUniqueEncounterIdsToWorkBuf2), a set battle (StartScriptedEncounterTemp0, entry 1), and the arena's foe
+# builder (ArenaRounds_RandomModulo52, round 0, class 0). Includes e0335_swap.txt for state k03!. The set battle runs
+# only 30 frames: started this way, outside a scene, the battle that follows is not a real one (it later runs $FF
+# bytes as rst $38), and the table is read inside the call.
+@ e0335_swap.txt
+h4a! | k03! | hMapId=0x35 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+h4list! | h4a! | call:CollectUniqueEncounterIdsToWorkBuf2 | W30
+h4arena! | h4a! | wArenaRound=0 wAreaGraphicsIndex=0 call:ArenaRounds_RandomModulo52 | W30
+h4set! | h4a! | hTemp0=0x01 call:StartScriptedEncounterTemp0 | W30

@@ -1,0 +1,6 @@
+{
+ "name": "example",
+ "version": "1",
+ "author": "dwm2decomp",
+ "description": "A small example mod: the first shop buys items back at their full value, and the farmhand on the ship says something new."
+}

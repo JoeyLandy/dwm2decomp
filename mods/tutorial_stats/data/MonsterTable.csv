@@ -1,0 +1,2 @@
+id,label,species,skill1,skill2,skill3,skill4,exp,join_class,level,hp,mp,atk,def,agl,int,byte22,byte23,byte24,byte25
+1,,MONSTER_SLIME,$ff,$ff,$ff,$ff,0,$00,$01,99,0,10,7,8,7,$c8,$c8,$64,$c8

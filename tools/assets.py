@@ -32,7 +32,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 import lzss_encode  # noqa: E402
 import lzss_gfx  # noqa: E402
 
-RGBGFX = ROOT / "tools/rgbds/rgbgfx.exe"
+import toolchain  # noqa: E402  (H6)
+RGBGFX = toolchain.exe("rgbgfx")
 REF = ROOT / "local/roms/dwm2-cobi-us.gbc"
 MANIFEST = ROOT / "config/targets/dwm2-cobi-us-rev0.json"
 

@@ -100,7 +100,7 @@ def set_glyph(png: Path, code: int, rows: list[int]) -> None:
     X.write_png(png, w, h, bytes(v for row in px for v in row))
 
 
-@unittest.skipUnless(REF.exists() and (ROOT / "tools/rgbds/rgbasm.exe").exists(), "needs the reference ROM and RGBDS")
+@unittest.skipUnless(REF.exists() and __import__("toolchain").installed(), "needs the reference ROM and RGBDS")
 class GermanTestTranslation(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

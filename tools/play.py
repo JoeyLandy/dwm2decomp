@@ -161,11 +161,13 @@ def recipe_lines(path: str) -> list[str]:
     return out
 
 
-def replay(path: str, keep: set[str], stop_when_kept: bool = False) -> tuple[dict, dict]:
+def replay(path: str, keep: set[str], stop_when_kept: bool = False, rom: bytes | None = None,
+           labels: dict | None = None) -> tuple[dict, dict]:
     """Replay a recipe file in memory (nothing written): returns ({state: GameBoy} for the states in `keep`,
     {state: {routine name: wGameMode values}} for every run). With `stop_when_kept` it stops once every state in
-    `keep` exists."""
-    labels = boot_trace.load_labels()
+    `keep` exists. `rom` and its `labels` ((bank, addr) -> name) replay another ROM, a mod (H5)."""
+    labels = labels if labels is not None else boot_trace.load_labels()
+    rom = rom if rom is not None else (ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes()
     by_name = {v: k for k, v in labels.items()}
     ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
     states: dict[str, bytes] = {}
@@ -173,10 +175,10 @@ def replay(path: str, keep: set[str], stop_when_kept: bool = False) -> tuple[dic
     for ln in recipe_lines(path):
         state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
         if old.startswith("sram:"):  # power on afresh with that state's cartridge RAM
-            gb = GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
+            gb = GameBoy(rom)
             gb.sram[:] = pickle.loads(states[old[5:]]).sram
         else:
-            gb = pickle.loads(states[old]) if old else GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
+            gb = pickle.loads(states[old]) if old else GameBoy(rom)
         for p in pokes.split():
             if p.startswith("call:"):
                 call_at_halt(gb, *by_name[p[5:]])

@@ -2903,6 +2903,8 @@ MonsterArgOrderTable::
     db $00, $01, $02 ; id 382 Kagebou
     db $00, $01, $02 ; id 383 ?
 
+SECTION "Bank F2 ScreenNumberListTable", ROMX
+
 ; LoadScreenNumberListPointer (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex;
 ; ShopMenu_Buy_DrawPrices.skip adds 3 * entry (after ShopMenu_Buy_ApplyGoldPass) and shows the
 ; 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to

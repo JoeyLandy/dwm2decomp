@@ -232,10 +232,39 @@ SkillSupersedes_<skill>. No `dw` of a pointer-run label is left in src/.
 **Result.** All 222 runs of the chain with the tour (tools/recipes/e0406_world_tour.txt and its includes), 9,702,777 ROM data reads, PASS padded by 16 (152 banks) and by 256 (107 banks). The late story and key world's chain (tools/recipes/e0406_key_world.txt, without the tour): 178 runs, 6,690,279 reads, 2,522 routines, PASS padded by 16 and by 256. The link recipe: 15 runs, 338,121 ROM data reads on two consoles, PASS
 padded by 16 and by 256.
 
+## H4 (E-0414): the readers mods change, and a table moved with its readers
+
+**The readers H2 and H3 change are in the gate.** The recipe chains with coverage (e0406_world_tour, e0406_late_story,
+e0406_key_world) reach the readers of species, monsters, skills, items, shop prices and lists, AI weights, random
+encounters, breeding and the text printer. tools/recipes/h4_readers.txt adds the three they miss, each called in a
+field state on map $35:
+- the encounter listing of field skill 16 (CollectUniqueEncounterIdsToWorkBuf2 and its table lookup);
+- a set battle's start (StartScriptedEncounterTemp0), for 30 frames only: started outside a scene, the battle that
+  follows is not a real one and later runs $FF bytes as `rst $38`;
+- the arena's foe builder (ArenaRounds_RandomModulo52).
+
+`shift_test.py --pad 16 --reads all --recipe tools/recipes/h4_readers.txt`: 151 runs, 2,316 routines, 4,792,239 ROM
+data reads, PASS with 152 banks padded by 16.
+
+**A fixed-bank table moved.** ScreenNumberListTable (the shops' price lists, bank $F2) was read by four routines
+with a literal `ld b, $f2`: LoadScreenNumberListPointer, ShopMenu_Buy_DrawPrices,
+ShopMenu_Buy_EnterQuantity_ComputeTotal and ShopMenu_Buy_ApplyGoldPass. Each now writes
+`ld b, BANK(ScreenNumberListTable)`, which assembles to the same bytes. The table and its lists are their own
+section (`Bank F2 ScreenNumberListTable`, placed right after the section they came from, so the ROM is unchanged).
+The three reads of MonsterSpriteTable with `ld b, $04` are written the same way. That leaves 508 asserted loads, and
+tools/bank_check.py now also accepts a `ld b, BANK(Label)` of the same label later in the straight-line code.
+
+`move_section.py --move "Bank F2 ScreenNumberListTable" --to 8A` moves the 3,313-byte section in a copy:
+- it builds;
+- bank_check finds nothing;
+- the frames match;
+- ShopMenu_Buy_EnterQuantity_ComputeTotal gives the same total for all 342 items of the 24 shops, with and without
+  the GoldPass (tests/test_move_table.py).
+
 ## Left after M2
 
 1. Done (E-0392, E-0401): no address-like split sum is left.
-2. Done (E-0393, E-0401). Plain calls inside a bank and the 512 asserted pointers still tie code to its bank; the
+2. Done (E-0393, E-0401, E-0414). Plain calls inside a bank and the 508 asserted pointers still tie code to its bank; the
    link says which when a move breaks them, and moving one of those needs its reader changed too.
 3. Widened (E-0401, E-0406): the recipe runs reach 2,638 routines, with 25 later-world maps and a
    link session; the chain with the late story's scenes and a generated key world, 2,522. A completed link breeding and

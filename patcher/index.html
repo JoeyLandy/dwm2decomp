@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DWM2 Mod Patcher</title>
+<style>
+  :root { --bg: #fbfaf7; --fg: #1d1d1b; --muted: #66645e; --line: #d9d5cb; --accent: #2f5d50; --bad: #9b2c2c; --card: #ffffff; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #161614; --fg: #eceae4; --muted: #a29f97; --line: #3a3934; --accent: #8cc4b0; --bad: #f08a8a; --card: #1f1f1c; }
+  }
+  :root[data-theme="dark"] { --bg: #161614; --fg: #eceae4; --muted: #a29f97; --line: #3a3934; --accent: #8cc4b0; --bad: #f08a8a; --card: #1f1f1c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  p.lead { color: var(--muted); margin: 0 0 24px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  label { display: block; font-weight: 600; margin-bottom: 6px; }
+  input[type=file] { width: 100%; }
+  .status { font-size: .9rem; color: var(--muted); margin-top: 6px; min-height: 1.3em; word-break: break-all; }
+  .status.ok { color: var(--accent); }
+  .status.bad { color: var(--bad); }
+  button { font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 8px; border: 0; background: var(--accent); color: var(--bg); cursor: pointer; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .note { font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>DWM2 mod patcher</h1>
+  <p class="lead">Apply a mod's <code>.bps</code> patch to your own copy of Dragon Warrior Monsters 2: Cobi's Journey (US).
+  Everything happens in this page: no file leaves your computer.</p>
+
+  <div class="card">
+    <label for="rom">1. Your ROM</label>
+    <input id="rom" type="file" accept=".gbc,.gb,.bin">
+    <div id="romStatus" class="status"></div>
+  </div>
+
+  <div class="card">
+    <label for="patch">2. The mod's patch (.bps)</label>
+    <input id="patch" type="file" accept=".bps">
+    <div id="patchStatus" class="status"></div>
+  </div>
+
+  <div class="card">
+    <button id="go" disabled>3. Patch and save</button>
+    <div id="result" class="status"></div>
+  </div>
+
+  <p class="note">The patch records the checksum of the ROM it was made from, so a different ROM (another revision, a
+  ROM already patched) is refused rather than turned into a broken game. Patches are made with
+  <code>python -I tools/patch.py make</code> in the dwm2decomp repository.</p>
+</main>
+<script>
+"use strict";
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+  return t;
+})();
+function crc32(bytes, end) {
+  let c = 0xFFFFFFFF;
+  const n = end === undefined ? bytes.length : end;
+  for (let i = 0; i < n; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+function u32(bytes, p) { return (bytes[p] | bytes[p + 1] << 8 | bytes[p + 2] << 16 | bytes[p + 3] << 24) >>> 0; }
+function readNumber(bytes, state) {
+  let n = 0, shift = 1;
+  for (;;) {
+    const x = bytes[state.p++];
+    n += (x & 0x7F) * shift;
+    if (x & 0x80) return n;
+    shift *= 128;
+    n += shift;
+  }
+}
+function parseHeader(patch) {
+  if (String.fromCharCode(patch[0], patch[1], patch[2], patch[3]) !== "BPS1") throw new Error("not a BPS patch");
+  if (crc32(patch, patch.length - 4) !== u32(patch, patch.length - 4)) throw new Error("the patch is damaged (its checksum does not match)");
+  const s = { p: 4 };
+  const sourceSize = readNumber(patch, s), targetSize = readNumber(patch, s), metaSize = readNumber(patch, s);
+  const meta = new TextDecoder().decode(patch.subarray(s.p, s.p + metaSize));
+  return { sourceSize, targetSize, meta, start: s.p + metaSize,
+           sourceCrc: u32(patch, patch.length - 12), targetCrc: u32(patch, patch.length - 8) };
+}
+function applyBps(source, patch) {
+  const h = parseHeader(patch);
+  if (source.length !== h.sourceSize || crc32(source) !== h.sourceCrc)
+    throw new Error("this ROM is not the one the patch was made for (size or CRC32 differs)");
+  const out = new Uint8Array(h.targetSize);
+  const s = { p: h.start }, end = patch.length - 12;
+  let o = 0, sourceRel = 0, targetRel = 0;
+  while (s.p < end) {
+    const data = readNumber(patch, s), action = data & 3, length = Math.floor(data / 4) + 1;
+    if (action === 0) { for (let i = 0; i < length; i++, o++) out[o] = source[o]; }
+    else if (action === 1) { for (let i = 0; i < length; i++) out[o++] = patch[s.p++]; }
+    else {
+      const raw = readNumber(patch, s), off = raw & 1 ? -Math.floor(raw / 2) : Math.floor(raw / 2);
+      if (action === 2) { sourceRel += off; for (let i = 0; i < length; i++) out[o++] = source[sourceRel++]; }
+      else { targetRel += off; for (let i = 0; i < length; i++) out[o++] = out[targetRel++]; }
+    }
+  }
+  if (o !== h.targetSize || crc32(out) !== h.targetCrc) throw new Error("the patched ROM does not match the patch's checksum");
+  return out;
+}
+if (typeof module !== "undefined") { module.exports = { applyBps, crc32, parseHeader }; }
+if (typeof document !== "undefined") {
+  const state = { rom: null, patch: null, romName: "", patchName: "" };
+  const $ = id => document.getElementById(id);
+  const set = (id, text, cls) => { const el = $(id); el.textContent = text; el.className = "status" + (cls ? " " + cls : ""); };
+  const refresh = () => { $("go").disabled = !(state.rom && state.patch); };
+  async function load(input) { const f = input.files[0]; return f ? { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) } : null; }
+  $("rom").addEventListener("change", async e => {
+    const f = await load(e.target); state.rom = f && f.bytes; state.romName = f ? f.name : "";
+    if (f) set("romStatus", `${f.bytes.length.toLocaleString()} bytes, CRC32 ${crc32(f.bytes).toString(16).toUpperCase().padStart(8, "0")}`);
+    refresh();
+  });
+  $("patch").addEventListener("change", async e => {
+    const f = await load(e.target); state.patch = f && f.bytes; state.patchName = f ? f.name : "";
+    if (f) {
+      try { const h = parseHeader(f.bytes); set("patchStatus", (h.meta ? h.meta + ": " : "") + `for a ROM with CRC32 ${h.sourceCrc.toString(16).toUpperCase().padStart(8, "0")}`, "ok"); }
+      catch (err) { set("patchStatus", err.message, "bad"); state.patch = null; }
+    }
+    refresh();
+  });
+  $("go").addEventListener("click", () => {
+    try {
+      const out = applyBps(state.rom, state.patch);
+      const name = state.patchName.replace(/\.bps$/i, "") + ".gbc";
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([out], { type: "application/octet-stream" }));
+      a.download = name; a.click();
+      set("result", `Saved ${name} (${out.length.toLocaleString()} bytes).`, "ok");
+    } catch (err) { set("result", err.message, "bad"); }
+  });
+}
+</script>
+</body>
+</html>

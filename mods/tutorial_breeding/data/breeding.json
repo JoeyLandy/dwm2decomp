@@ -1,0 +1,24 @@
+{
+ "tables": [
+  {
+   "label": "BreedSpeciesRuleTable",
+   "lists": {
+    "BreedSpeciesRules_DrakSlime": [
+     "MONSTER_SWORDGON",
+     "$fdfd",
+     "MONSTER_SLIME",
+     "$ffff"
+    ]
+   }
+  },
+  {
+   "label": "BreedSpeciesResultTable",
+   "lists": {
+    "BreedSpeciesResults_DrakSlime": [
+     "MONSTER_SLIMEBORG",
+     "MONSTER_METALKING"
+    ]
+   }
+  }
+ ]
+}

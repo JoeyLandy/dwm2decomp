@@ -1992,7 +1992,7 @@ ShopMenu_Buy_DrawPrices::
     call ShopMenu_Buy_ApplyGoldPass
     ld e, l
     ld d, h
-    ld b, $f2
+    ld b, BANK(ScreenNumberListTable)  ; the price lists are in its section (H4)
     call ReadFarPointerAtDEInBankB
     ld a, l
     ld [wDigits], a
@@ -2918,7 +2918,7 @@ ShopMenu_Buy_EnterQuantity_ComputeTotal::
     call ShopMenu_Buy_ApplyGoldPass
     ld e, l
     ld d, h
-    ld b, $f2
+    ld b, BANK(ScreenNumberListTable)  ; the price lists are in its section (H4)
     call ReadFarPointerAtDEInBankB
     ld e, b
     pop bc
@@ -5289,7 +5289,7 @@ ShopMenu_Buy_ApplyGoldPass::
     push hl
     ld e, l
     ld d, h
-    ld b, $f2
+    ld b, BANK(ScreenNumberListTable)  ; the price lists are in its section (H4)
     call ReadFarPointerAtDEInBankB
     ld e, b
     ld a, $09
@@ -5331,11 +5331,10 @@ LoadScreenNumberListPointer::
     sla e
     rl d
     ld hl, ScreenNumberListTable
-    ASSERT BANK(ScreenNumberListTable) == $F2, "ScreenNumberListTable is read with bank $F2 mapped"
     add hl, de
     ld e, l
     ld d, h
-    ld b, $f2
+    ld b, BANK(ScreenNumberListTable)  ; the table's own bank, so it can move (H4)
     call ReadFarPointerAtDEInBankB
     pop de
     ret

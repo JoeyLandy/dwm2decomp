@@ -329,7 +329,7 @@ def apply(src_dir: Path, edits: list[dict]) -> dict[str, int]:
                 spec = lay[label]["lists"]
                 directive = "db" if spec.get("size") == 1 or spec["fields"][0]["type"] == "db" else "dw"
                 ptoks = src.tokens_from(label, 2 * lay[label]["count"])
-                for q, (old, new) in enumerate(zip(cur["pointers"], t["pointers"])):
+                for q, (old, new) in enumerate(zip(cur["pointers"], t.get("pointers", cur["pointers"]))):
                     if old != new:
                         if new not in src.where and new not in t["lists"]:
                             raise ValueError(f"{label} entry {q}: {new} is not a list")

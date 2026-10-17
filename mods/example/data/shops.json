@@ -1,0 +1,18 @@
+{
+ "tables": [
+  {
+   "label": "ShopPercentTable",
+   "records": [
+    {
+     "id": 0,
+     "label": null,
+     "fields": {
+      "percent": [
+       "100"
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

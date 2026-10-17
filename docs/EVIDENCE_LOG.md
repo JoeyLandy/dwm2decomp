@@ -2431,6 +2431,45 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0414 — H4: the readers mods change are in the recipe gate; a fixed-bank table moved with its readers
+
+- Date: 2026-10-17. Kind: OBSERVATION (tools/sm83.py) and source change (no byte changed). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Description: [shiftability](SHIFTABILITY.md), H4 section.
+- **Coverage.** tools/play.py --chain over e0406_world_tour, e0406_late_story and e0406_key_world: 2,720 routines, among them the H2 and H3 readers (LoadSpeciesRecord, LoadMonsterRecord, LoadSkillRecord, LoadItemRecord, ComputeSellPrice, LoadArg1PointerForScreenTableIndex, LoadScreenNumberListPointer, ShopMenu_Buy_EnterQuantity_ComputeTotal, ReadBank6TableWord, FillEncounterFromEntry, ComputeBreedingChild, BeginStringDisplay, DrawTextGlyph) except three. tools/recipes/h4_readers.txt reaches those (CollectUniqueEncounterIdsToWorkBuf2_FindTable, StartScriptedEncounterTemp0, ArenaRounds_RandomModulo52); 2,833 routines with it. A first version that played the set battle on reached Rst38Vector (no `rst $38` is in src/: $FF bytes run as code), so the set battle runs 30 frames, past the table read; the final chain reaches no Rst38Vector.
+- **Recipe gate.** `shift_test.py --pad 16 --reads all --recipe tools/recipes/h4_readers.txt`: 151 runs, 2,316 routines, 4,792,239 reads, PASS with 152 banks padded by 16 (build/shift_h4).
+- **Moved table.** ScreenNumberListTable and its price lists became a section of their own; its four readers' `ld b, $f2` and MonsterSpriteTable's three `ld b, $04` became `ld b, BANK(...)` (the same bytes; build PASS; 508 asserted loads, 0 warnings with tools/bank_check.py's new later-BANK rule, tests/test_sections.py). `move_section.py --move "Bank F2 ScreenNumberListTable" --to 8A`: builds, no bank-check error, frames equal; the game's ShopMenu_Buy_EnterQuantity_ComputeTotal gives the same 342 totals on both builds, with and without the GoldPass (tests/test_move_table.py).
+- **Limits.** The gate covers what the recipes reach (2,833 of about 9,800 routines); other tables read with a fixed bank (the 508 asserted loads, most of them scripts in bank $10) still need their readers changed before they can move.
+
+### E-0413 — H7: a modder's guide and three tutorials, each followed from a clean copy
+
+- Date: 2026-10-17. Kind: DOCUMENTATION and TEST. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`.
+- **Docs.** docs/MODDING.md (setup, the three ways to change the game, mod folders, the smoke test, sharing patches, the confidence tags in plain words) and docs/tutorials/1_monster_stats.md, 2_text.md, 3_breeding.md, each with its mod folder in mods/tutorial_*.
+- **Checks** (tests/test_tutorials.py, on tools/sm83.py): tools/make_mod.py builds each tutorial's mod from a copy of src/ and runs the smoke test (no crash, no data run, the original's progress), then the game's own routine shows the change on the modded ROM:
+  - LoadMonsterRecord copies base HP 99 for monster 1 (the Slime);
+  - the narration's bytes at Message_00_00 are the new text, and the screens differ from where the scripted opening draws it;
+  - ComputeBreedingChild gives MetalKing for DrakSlime x Slime and still SlimeBorg for DrakSlime x SwordGon (two lists grown, taken from bank $0E's fill).
+- **Limits.** "From a clean checkout" is a copy of src/ in the test; tools/setup.py's download on a fresh machine is checked in E-0412, the second platform not run.
+
+### E-0412 — H6: patches, a patcher page, mod folders and a cross-platform setup
+
+- Date: 2026-10-17. Kind: TOOL and TEST. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`.
+- **tools/patch.py.** BPS patches (make, apply, info): SourceRead where bytes are unchanged in place, SourceCopy for runs found elsewhere in the source (moved data), TargetRead for the rest; apply refuses a source whose size or CRC32 is not the patch's, and a damaged patch.
+- **patcher/index.html.** A page that applies a BPS patch to the player's own ROM in the browser (no network); its JavaScript, run under Node.js, applies the example mod's patch to the same bytes as tools/patch.py and refuses an already patched ROM.
+- **tools/make_mod.py and mods/example.** A mod is a folder of edits (data, text, charmap lines, font PNG, replacement source files) applied to a copy of src/, built, smoke-tested and turned into NAME.bps. The example (a shop percentage and a line of text) gives a 507-byte patch; applied to the reference it gives the mod build byte for byte.
+- **tools/setup.py, tools/toolchain.py.** config/toolchain.lock.json records the RGBDS v1.0.4 asset and SHA-256 for Windows, Linux x86-64 and macOS (from the release's published metadata). setup.py downloads and checks the asset for the platform it runs on and unpacks the four programs; build.py, assets.py, shift_test.py and move_section.py find them through toolchain.py instead of `.exe` names. The Linux and macOS archives were downloaded and checked against their digests here and hold ELF and Mach-O programs.
+- **Gate.** Windows: a clean copy builds a mod and its patch, and the patch gives the mod. The second platform: NOT RUN (no Linux or macOS machine or WSL in this session); the commands are in docs/MODDING.md.
+
+### E-0411 — H5: a smoke test for mods
+
+- Date: 2026-10-17. Kind: TOOL and TEST (observations of tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`.
+- **tools/mod_check.py.** Runs a mod and the reference from power-on with tools/shift_test.py's scripted buttons and compares every frame's video state. It reports:
+  - a crash (invalid opcode) with its routine;
+  - code running data: an instruction fetched from a data label of the mod's tree (the reference fetches none in 6,000 frames);
+  - lost progress: the order of game modes in wGameMode (reference: 0, 5 from frame 22, 1 from frame 1,331);
+  - a stall;
+  - the first differing frame and how many differ.
+- **Negative tests** (tests/test_mod_check.py, 3,000 frames). An unchanged build: identical, nothing reported. The title's entry of the game-mode jump table pointed at GlyphFont (a broken pointer): the modes go 0, 5, 0 from frame 63 and never reach the field, so progress is reported. That mod does not crash and does not fetch from a data label, because the jump lands on code in whatever bank is mapped at $4010, which is why progress is checked. The glyph of 'I' blanked (a broken table): the screens differ, with the same progress and no crash.
+- **Limits.** Only what the scripted play reaches (the opening and the first walk); differences in what is shown are reported, not judged.
+
 ### E-0409 — H3: the text for translators, the font as a PNG, a test translation drawn by the game
 
 - Date: 2026-10-17. Kind: TOOL and OBSERVATION (C2 on tools/sm83.py for what the test translation shows; widths C1). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Description: [translating](TRANSLATING.md).

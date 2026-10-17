@@ -8,10 +8,23 @@ The source in `src/` rebuilds the US release (SHA-256 `8e38a742...766d4e`) byte 
 
 State (2026-10-17): every routine and data label is named and has a note; the code is floating sections placed by `src/layout.link`, so it can move ([shiftability](docs/SHIFTABILITY.md)); every compressed asset is rebuilt from decoded data, and `build.py --mod DIR` builds a modded ROM from edited PNG and `.bin` files ([editable assets](docs/ASSETS.md)). A modded ROM is a separate output, never the matching target. Most readings are static (C1); [mechanics](docs/MECHANICS.md) and [data tables](docs/DATA_TABLES.md) are checked against the game's own routines on the project's emulator (C2).
 
+## Make a mod or a translation
+
+```bash
+python -I tools/setup.py --rom PATH/TO/YOUR.gbc
+python -I tools/make_mod.py mods/example
+```
+
+`setup.py` installs the pinned assembler for your system and checks your ROM. `make_mod.py` builds a mod folder
+(edited data, text, font and source files) into a patch, after a smoke test on the project's emulator. Share the
+`.bps` patch, never a ROM; players apply it with [the patcher page](patcher/index.html). Start with
+[making a mod](docs/MODDING.md) and its three tutorials, or [translating the game](docs/TRANSLATING.md).
+
 ## Start here
 
 | Document | Purpose |
 | --- | --- |
+| [Making a mod](docs/MODDING.md) | Setup, mod folders, the smoke test, sharing patches, and three tutorials |
 | [Reading guide](docs/READING_GUIDE.md) | How the source is laid out and how to read it |
 | [Project status](docs/PROJECT_STATUS.md) | What exists, what is unknown, and the next session |
 | [Repository and community survey](docs/SURVEY.md) | Existing work, inspected revisions, limitations, and adoption recommendation |

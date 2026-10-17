@@ -159,7 +159,33 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0407 to E-0409): H1, H2 and H3 done
+## Current handoff (2026-10-17, E-0411 to E-0414): the goal's H stages done
+
+The modding and translation goal's stages H1-H7 are done ([roadmap](ROADMAP.md)), with one part not run: H6's build
+on a second platform.
+- **H4 (E-0414).** The recipe gate reaches every reader H2 and H3 change. The new tools/recipes/h4_readers.txt
+  passes padded by 16 (151 runs, 4,792,239 reads). ScreenNumberListTable's readers name its bank with BANK(), and
+  the table moves to bank $8A with the game's shop totals unchanged.
+- **H5 (E-0411).** tools/mod_check.py runs a mod beside the original and reports crashes, code running data, lost
+  progress (the order of game modes) and stalls, and where the screens first differ. A broken pointer and a broken
+  table are both reported, and an unchanged build is not.
+- **H6 (E-0412).** tools/patch.py (BPS), patcher/index.html (applies a patch in the browser), tools/make_mod.py and
+  mods/example (a mod folder to a smoke-tested patch), and tools/setup.py with tools/toolchain.py (RGBDS for
+  Windows, Linux and macOS, checked against the lock). Verified on Windows only: no Linux or macOS machine was
+  available. The Linux and macOS archives' digests and contents were checked.
+- **H7 (E-0413).** docs/MODDING.md and three tutorials, each followed from a clean copy by tests/test_tutorials.py.
+
+Checks: build/run17 PASS (zero differing bytes); data and text round trips identical; tools/bank_check.py 0 errors and
+0 warnings; serial suite build/logs/suite_h4h7.log OK (532 tests, 3 skipped).
+
+Open:
+1. Run `python -I tools/setup.py --rom ...` and `python -I tools/make_mod.py mods/example` on Linux or macOS (H6's
+   second platform).
+2. Readers of other fixed-bank tables (the 508 asserted loads, most of them scripts) changed to follow their
+   tables.
+3. The overflow split of message banks for translations that outgrow a bank (docs/TRANSLATING.md).
+
+## Prior handoff (2026-10-17, E-0407 to E-0409): H1, H2 and H3 done
 
 - **H1, src/ graduated (E-0407).** Every check reads src/ (and the .sym of a build of it), or is a check of the
   generator that skips without its listing. With config/names.json, config/annotations.json and build/listing/

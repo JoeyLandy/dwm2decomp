@@ -168,7 +168,8 @@ def main(argv: list[str] | None = None) -> int:
     to = int(args.to, 16)
     # the map file of the base build gives the section's size
     import subprocess
-    subprocess.run([str(shift_test.RGBDS / "rgblink.exe"), "-l", base_src / "layout.link", "-m", out / "base/dwm2.map",
+    import toolchain
+    subprocess.run([str(toolchain.exe("rgblink")), "-l", base_src / "layout.link", "-m", out / "base/dwm2.map",
                     "-o", out / "base/map.gbc", out / "base/main.o"], check=True, capture_output=True)
     size = section_sizes(out / "base/dwm2.map")[args.move]
     src = out / "moved/src"

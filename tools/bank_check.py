@@ -48,6 +48,18 @@ def newest_sym() -> Path:
     return syms[-1]
 
 
+def names_bank_later(lines: list[str], i: int, label: str) -> bool:
+    """H4: `ld b, BANK(label)` of this same label in the straight-line code after the load (before a call, jump,
+    return or label), as when a far-read helper is called with the table's own bank."""
+    for ln in lines[i + 1:i + 12]:
+        code = ln.split(";")[0].strip()
+        if code == f"ld b, BANK({label})":
+            return True
+        if re.match(r"(call|jp|jr|ret|reti|farcall|rst)\b", code) or GLOBAL.match(ln):
+            return False
+    return False
+
+
 def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None = None) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
     asserted = [] if asserted is None else asserted
@@ -80,7 +92,7 @@ def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None
                 errors.append(f"{where}: {ln.strip()} reaches bank {tb:02X}")
             elif i + 1 < len(lines) and lines[i + 1].strip().startswith(f"ASSERT BANK({full}) =="):
                 asserted.append(f"{where}: {ln.strip()} asserted in bank {tb:02X}")
-            elif not any(BANKED.search(x) for x in lines[max(0, i - 3):i + 4]):
+            elif not any(BANKED.search(x) for x in lines[max(0, i - 3):i + 4]) and not names_bank_later(lines, i, full):
                 warnings.append(f"{where}: {ln.strip()} points into bank {tb:02X}")
     return errors, warnings
 

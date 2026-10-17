@@ -71,7 +71,7 @@ class Rename(unittest.TestCase):
 REF = ROOT / "local/roms/dwm2-cobi-us.gbc"
 
 
-@unittest.skipUnless(REF.exists() and (ROOT / "tools/rgbds/rgbasm.exe").exists(), "needs the reference ROM and RGBDS")
+@unittest.skipUnless(REF.exists() and __import__("toolchain").installed(), "needs the reference ROM and RGBDS")
 class RealTree(unittest.TestCase):
     def test_renaming_a_routine_keeps_the_rom(self):
         """A copy of src/ with a routine renamed (its callers, notes and section with it) still builds the

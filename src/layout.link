@@ -9462,6 +9462,7 @@ ROMX $F2
 	"Bank F2 CopyTileBytesToVRAMCounted_BankF2"
 	"Bank F2 PermuteArg5To7ByMonster"
 	"Bank F2 MonsterArgOrderTable"
+	"Bank F2 ScreenNumberListTable"
 	"Bank F2 ReorderAndStoreKeyList"
 	"Bank F2 KeyAppraisalMenu_ChooseKey_ListCursor_SortKeys"
 	"Bank F2 CopyWorkBuf1ToKeyList"

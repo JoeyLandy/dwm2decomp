@@ -124,6 +124,24 @@ class FixedBanks(unittest.TestCase):
             errors, warnings = bank_check.check(Path(d), {"Here": (5, 0x4000), "Other": (7, 0x5000)}, asserted)
         self.assertEqual((errors, warnings, len(asserted)), ([], [], 1))
 
+    def test_a_later_bank_of_the_same_label_names_it(self):
+        """H4 (E-0414): `ld b, BANK(Other)` later in the same straight-line code names the bank; a BANK() of another
+        label, or one after a call, does not."""
+        cases = {
+            "ok": "Here::\n    ld de, Other\n    add hl, de\n    ld e, l\n    ld b, BANK(Other)\n    call ReadIt\n",
+            # past the older three-line window, so only the new rule could accept it
+            "other": "Here::\n    ld de, Other\n    nop\n    nop\n    nop\n    ld b, BANK(Elsewhere)\n    call ReadIt\n",
+            "after_call": "Here::\n    ld de, Other\n    call Something\n    nop\n    nop\n    ld b, BANK(Other)\n",
+        }
+        got = {}
+        for key, src in cases.items():
+            with tempfile.TemporaryDirectory() as d:
+                (Path(d) / "engine").mkdir()
+                (Path(d) / "engine/bank05_x.asm").write_text(src, encoding="utf-8")
+                _e, warnings = bank_check.check(Path(d), {"Here": (5, 0x4000), "Other": (7, 0x5000)})
+                got[key] = len(warnings)
+        self.assertEqual(got, {"ok": 0, "other": 1, "after_call": 1})
+
     def test_the_source_has_no_unasserted_fixed_bank_load(self):
         syms = sorted(ROOT.glob("build/run*/dwm2.sym"), key=lambda q: q.stat().st_mtime)
         if not syms:

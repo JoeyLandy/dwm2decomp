@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RGBDS = ROOT / "tools/rgbds"
 sys.path.insert(0, str(ROOT / "tools"))  # python -I leaves the script's directory off the path
 import source_tree  # noqa: E402
+import toolchain  # noqa: E402  (H6: RGBDS for this platform)
 MANIFEST = ROOT / "config/targets/dwm2-cobi-us-rev0.json"
 REF = ROOT / "local/roms/dwm2-cobi-us.gbc"
 
@@ -77,17 +78,19 @@ def main() -> int:
         import assets as asset_tools
         for note in asset_tools.absorb_size_changes(src, DELTAS):
             print("size change:", note)
-    run([RGBDS / "rgbasm.exe", "-I", src, "-I", out / "assets", "-I", "local/roms", "-o", obj, src / "main.asm"], log)
+    run([toolchain.exe("rgbasm"), "-I", src, "-I", out / "assets", "-I", "local/roms", "-o", obj, src / "main.asm"], log)
     layout = ["-l", src / "layout.link"] if (src / "layout.link").exists() else []  # E-0393
-    run([RGBDS / "rgblink.exe", *layout, "-m", out / "dwm2.map", "-n", out / "dwm2.sym", "-o", rom, obj], log)
-    tools = {n: subprocess.run([str(RGBDS / f"{n}.exe"), "--version"], capture_output=True, text=True).stdout.strip()
+    run([toolchain.exe("rgblink"), *layout, "-m", out / "dwm2.map", "-n", out / "dwm2.sym", "-o", rom, obj], log)
+    tools = {n: subprocess.run([str(toolchain.exe(n)), "--version"], capture_output=True, text=True).stdout.strip()
              for n in ("rgbasm", "rgblink")}
     v = subprocess.run([sys.executable, "-I", ROOT / "tools/verify_rom.py", "--manifest", MANIFEST,
                         "--reference", REF, "--output", rom, "--report", out / "report.json"],
                        capture_output=True, text=True)
     rep = json.loads((out / "report.json").read_text())
     rep.update(toolchain=tools, commands=log,
-               rgbds_zip_sha256=hashlib.sha256((RGBDS / "rgbds-win64.zip").read_bytes()).hexdigest(),
+               rgbds_archive=toolchain.asset()["asset"],
+               rgbds_zip_sha256=hashlib.sha256(toolchain.archive().read_bytes()).hexdigest()
+               if toolchain.archive().exists() else None,
                source_tree_sha256=hashlib.sha256(b"".join(
                    p.read_bytes() for p in sorted(tree.rglob("*.asm")) + [tree / "assets.txt", tree / "layout.link"]
                    if p.exists())).hexdigest(),

@@ -70,7 +70,7 @@ class RoundTrip(unittest.TestCase):
                 D.apply(src, [{"tables": [sp]}])
 
 
-@unittest.skipUnless(REF.exists() and (ROOT / "tools/rgbds/rgbasm.exe").exists(), "needs the reference ROM and RGBDS")
+@unittest.skipUnless(REF.exists() and __import__("toolchain").installed(), "needs the reference ROM and RGBDS")
 class EditsReachTheReaders(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
