@@ -1,4 +1,5 @@
-"""tools/mechanics.py and tools/tables_export.py: mechanics and data tables checked against the game (E-0396, M5)."""
+"""tools/mechanics.py and tools/tables_export.py: mechanics and data tables checked against the game (E-0396, M5;
+damage E-0397)."""
 import sys
 import unittest
 from pathlib import Path
@@ -17,6 +18,32 @@ class Pure(unittest.TestCase):
         self.assertEqual(mechanics.clamp_delta_999(990, 20), 9)
         self.assertEqual(mechanics.clamp_delta_999(999, 7), 0)
         self.assertEqual(mechanics.clamp_delta_999(1000, 3), 255)  # above 999: the meaningless low byte
+
+    def test_random_in_range_equal_bounds_take_no_step(self):
+        class Counting:
+            steps = 0
+
+            def next(self):
+                self.steps += 1
+                return 0x1234
+        r = Counting()
+        self.assertEqual(mechanics.random_in_range(r, 7, 7), 7)
+        self.assertEqual(r.steps, 0)
+        self.assertEqual(mechanics.random_in_range(r, -1, 1), (0x1234 % 3 - 1) & 0xFFFF)
+        self.assertEqual(r.steps, 1)
+
+    def test_resistance_level_fields(self):
+        self.assertEqual(mechanics.resistance_level(0b10_01_11_00, ["swap a"]), 0b01)
+        self.assertEqual(mechanics.resistance_level(0b10_01_11_00, ["rlca", "rlca"]), 0b10)
+        self.assertEqual(mechanics.resistance_level(0b10_01_11_00, ["rrca", "rrca"]), 0b11)
+        self.assertEqual(mechanics.resistance_level(0b10_01_11_00, []), 0b00)
+
+    def test_resistance_routines_are_found(self):
+        shapes = mechanics.resistance_routines()
+        self.assertEqual(len(shapes), 16)
+        self.assertEqual(shapes["ActionEffect_Blaze_Damage"],
+                         {"source": "skill", "byte": 0, "rot": ["swap a"], "picker": "ScaleDamageByFlagsAtHL"})
+        self.assertEqual(shapes["ActionEffect_Infernos_Damage"]["byte"], 1)  # runs into ScaleDamageByVacuumResistance
 
     def test_random_steps_wrap_at_128(self):
         class FakeRom:
@@ -51,6 +78,27 @@ class AgainstTheGame(unittest.TestCase):
             self.assertTrue(mechanics.breed_check(self.rom, 100, 11))
         finally:
             mechanics.join_model, mechanics.growth_model, mechanics.breed_model = good_join, good_growth, good_breed
+
+    def test_a_wrong_damage_model_is_caught(self):
+        good_attack, good_step7, levels = mechanics.attack_damage, mechanics.step7_model, dict(mechanics.SCALE_LEVELS)
+        try:
+            def attack_full_def(rnd, atk, def_):  # DEF not halved
+                rnd.next()
+                return mechanics.basic_damage(rnd, atk, def_)
+            mechanics.attack_damage = attack_full_def
+            self.assertTrue(mechanics.attack_check(self.rom, 300, 11))
+            mechanics.attack_damage = good_attack
+            mechanics.SCALE_LEVELS["1_085_05_0"] = (lambda d: d, lambda d: d * 3 // 4, lambda d: d >> 1, lambda d: 0)
+            self.assertTrue(mechanics.resist_check(self.rom, 300, 11))
+            mechanics.SCALE_LEVELS.update(levels)
+
+            def no_berserk(r, L, C, s):  # a model that forgets the target's BSTAT6_BERSERK
+                return good_step7(r, L, C, dict(s, status=[x[:6] + [x[6] & ~0x04] + x[7:] for x in s["status"]]))
+            mechanics.step7_model = no_berserk
+            self.assertTrue(mechanics.step7_check(self.rom, 300, 11))
+        finally:
+            mechanics.attack_damage, mechanics.step7_model = good_attack, good_step7
+            mechanics.SCALE_LEVELS.update(levels)
 
     def test_tables_round_trip_and_readers(self):
         res = tables_export.check(self.rom)

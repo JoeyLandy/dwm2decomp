@@ -2431,6 +2431,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0397 — Damage: the plain attack, resistance scaling and resolve step 7 as checked specifications
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 202a594. Specification: the Damage section of [mechanics](MECHANICS.md).
+- **Method.** As E-0396: tools/mechanics.py models written from the routines' code, run against the routines on tools/sm83.py from generated battle states (actor and target slots, ATK and DEF words, status bytes, resistance records, personality bytes, the skill record, the random state, wLinkMode 0, 1 or 2). The checks compare the damage word, both random states (wRandomHi/Lo and wRandomSeed2Hi/Lo, since AdvanceRandom uses the second in link play) and the routine's other outputs.
+- **Plain attack** (`attack`, ComputeAttackDamage and ComputeBasicDamage). 3,000 of 3,000 agree: one discarded random step; d = DEF / 2; RandomInRange(0, 1) when ATK <= d; RandomInRange(0, ATK / 16) when ATK / 16 >= (ATK - d) / 2; otherwise half + RandomInRange(-half/16, half/16) + RandomInRange(-1, 1). A zero-width RandomInRange takes no step.
+- **Resistance scaling** (`resistance`). tools/mechanics.py reads from src/engine/bank36_battle_effects.asm the 16 routines that are a roll (RollSkillDamageFromRecord, or ComputeAttackDamage) followed by a 2-bit field of the target's wSlotResistances record and a ScaleDamageByFlagsAtHL picker (following fall-through into the next label). 3,000 of 3,000 states, the routines in turn, agree on the damage, wBattleArg2 (the spread) and both random states. All 16 combinations of the four level tables and four levels occur (at least 16 times each). The skill roll reads base and spread at +$D-$F for slots 4-7 unless wLinkMode is 1, else +$9-$B. The status8 bits pick the table, bit 6 before bit 7. The attack-based routines' picker (ScaleDamageByFlagsAtHLBit6) uses the 21/16 table when bit 6 is clear.
+- **Resolve step 7** (`step7`, ResolveStepComputeDamage). 3,000 of 3,000 agree on the step counter, damage, the actor's wBattleStatus2, the four resolve-message bytes and both random states:
+  - the wait for the critical-hit sound;
+  - the first of four modifiers (ATK doubled, the critical hit as ATK within 5 percent with the hit message and no personality bonus, ChargeUp, SuckAir 2 to 2.5 times);
+  - the actor's personality bit 6 (x 1.5);
+  - the target's wBattleStatus7 bits 0-2 (/2 or /10, then /2 again for its personality bit 1);
+  - the target's Berserk doubling except for Ramming and Kamikaze.
+  - A line-coverage trace of the three models over the 9,000 states executed every line except an unreachable division-by-zero guard.
+- **Negative checks** (tests/test_mechanics.py). Each of these wrong models is caught: an attack that does not halve DEF, an 85 percent level 1 replaced by 75 percent, a step 7 that forgets Berserk.
+- **Limits.** The effect routines that do more than roll and scale (Watershot, MegaMagic, MultiCut, CallHelp and others), ResolveStepApplyDamage and the damage message step's multipliers are not checked. What the status bits mean in play (Magic Wall, Eerie Lite, Berserk) stays as their notes give it (C1).
+- **Checks.** tools/mechanics.py all --n 3000: all six checks agree; build/run684 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite684.log OK (443 tests, 3 skipped).
+
 ### E-0396 — M5: three mechanics as checked specifications; the species, skill and item tables
 
 - Date: 2026-10-16. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 7edc4f4 (E-0395). Specifications: [mechanics](MECHANICS.md); tables: [data tables](DATA_TABLES.md).

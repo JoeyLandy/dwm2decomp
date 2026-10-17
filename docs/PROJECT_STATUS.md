@@ -159,7 +159,24 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17): documentation brought up to date
+## Current handoff (2026-10-17, E-0397): damage checked against the game
+
+tools/mechanics.py has three new checks (docs/MECHANICS.md, Damage): the plain attack (ComputeAttackDamage), the 16
+bank-$36 routines that roll damage and scale it by a resistance level (read from src/), and the modifiers of resolve
+step 7 (ResolveStepComputeDamage). Each agrees with the game on 3,000 of 3,000 generated states, including link
+play's second random stream; three wrong models are caught (tests/test_mechanics.py). build/run684 PASS; serial suite OK
+(443 tests, 3 skipped).
+
+Open, in the order they are most useful:
+1. Skill learning, to the same standard.
+2. ResolveStepApplyDamage and the damage message step's multipliers, which finish what step 7 starts.
+3. Widen what the scripted runs reach (under 5% of the routines); the split sums and fixed-bank pointers of
+   docs/SHIFTABILITY.md.
+
+Next reproducible action: `python -I tools/mechanics.py all --n 3000`, then read the skill-learning routines (the
+callers of the skill list in the monster record, MON_SKILL_LIST) and write their model.
+
+## Prior handoff (2026-10-17): documentation brought up to date
 
 A documentation-only pass after M5: README, ARCHITECTURE (the repository layout in use), READING_GUIDE (src/layout.link,
 label expressions for banks and split addresses, building a modded ROM), ROADMAP (a status line per phase),

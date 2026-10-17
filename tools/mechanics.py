@@ -9,8 +9,11 @@ on every generated state supports the specification on the project's emulator (C
   join      BattleEnd_OfferJoin_DecideJoinOffer: does a defeated foe offer to join?
   growth    ComputeLevelUpStatGainsForBattleArg1: the six stat gains of a level-up
   breeding  ComputeBreedingChild: the child's species, plus and level cap
+  attack      ComputeAttackDamage: the plain attack's damage from ATK and DEF (E-0397)
+  resistance  the 16 bank-$36 routines that roll damage and scale it by a resistance level (E-0397)
+  step7       ResolveStepComputeDamage: the damage modifiers of resolve step 7 (E-0397)
 
-Usage: mechanics.py [join|growth|breeding|all] [--n 2000] [--seed 1]
+Usage: mechanics.py [join|growth|breeding|attack|resistance|step7|all] [--n 2000] [--seed 1]
 Exit 1 when a model and the game disagree.
 """
 from __future__ import annotations
@@ -408,7 +411,313 @@ def breed_check(rom: bytes, n: int, seed: int) -> list[str]:
     return bad
 
 
-CHECKS = {"join": join_check, "growth": growth_check, "breeding": breed_check}
+# ---- damage (E-0397) --------------------------------------------------------------------------------------------
+
+BATTLE_SRC = ROOT / "src/engine/bank36_battle_effects.asm"
+
+
+class LinkedRandom(Random):
+    """AdvanceRandom: NextTableByte on wRandomHi:wRandomLo, or in link play (wLinkMode not 0) on the copy in
+    wRandomSeed2Lo/Hi, the result going to both places (NextTableByteSecondStream)."""
+
+    def __init__(self, rom: Rom, table: int, s: dict):
+        self.link, self.steps = s["link_mode"] != 0, 0
+        hi, lo = (s["seed2_hi"], s["seed2_lo"]) if self.link else (s["random_hi"], s["random_lo"])
+        super().__init__(rom, table, hi, lo)
+
+    def next(self) -> int:
+        self.steps += 1
+        return super().next()
+
+    def after(self, s: dict) -> dict:
+        if self.link and self.steps:
+            return {"random": (self.hi, self.lo), "seed2": (self.hi, self.lo)}
+        if self.link:
+            return {"random": (s["random_hi"], s["random_lo"]), "seed2": (s["seed2_hi"], s["seed2_lo"])}
+        return {"random": (self.hi, self.lo), "seed2": (s["seed2_hi"], s["seed2_lo"])}
+
+
+def random_in_range(rnd: Random, lo: int, hi: int) -> int:
+    """RandomInRange(lo, hi), 16-bit: lo when the two are equal (no random step), else lo + R mod (hi - lo + 1)."""
+    lo, hi = lo & 0xFFFF, hi & 0xFFFF
+    if lo == hi:
+        return lo
+    span = (hi - lo + 1) & 0xFFFF
+    if span == 0:
+        raise ValueError("RandomInRange over all 65,536 values divides by zero")
+    return (lo + rnd.next() % span) & 0xFFFF
+
+
+def basic_damage(rnd: Random, atk: int, d: int) -> int:
+    """ComputeBasicDamage: ATK against the defence value d the caller passes."""
+    if atk <= d:
+        return random_in_range(rnd, 0, 1)
+    half = (atk - d) >> 1
+    if atk >> 4 >= half:
+        return random_in_range(rnd, 0, atk >> 4)
+    q = half >> 4
+    v = (half + random_in_range(rnd, -q, q)) & 0xFFFF
+    return (v + random_in_range(rnd, -1, 1)) & 0xFFFF
+
+
+def attack_damage(rnd: Random, atk: int, def_: int) -> int:
+    """ComputeAttackDamage: one random step, then ComputeBasicDamage against DEF / 2."""
+    rnd.next()
+    return basic_damage(rnd, atk, def_ >> 1)
+
+
+# The four level tables: damage for resistance level 0, 1, 2, 3 (16-bit, every shift and division rounding down)
+SCALE_LEVELS = {
+    "1_085_05_0": (lambda d: d, lambda d: d * 85 // 100, lambda d: d >> 1, lambda d: 0),
+    "1_075_04_0": (lambda d: d, lambda d: (d >> 1) + (d >> 2), lambda d: (d * 8 // 10) >> 1, lambda d: 0),
+    "131_116_075_03": (lambda d: (d + (d >> 2) + (d >> 4)) & 0xFFFF, lambda d: (d + (d >> 3) + (d >> 5)) & 0xFFFF,
+                       lambda d: (d >> 1) + (d >> 2), lambda d: (d * 6 // 10) >> 1),
+    "075_05_025_0": (lambda d: (d >> 1) + (d >> 2), lambda d: d >> 1, lambda d: d >> 2, lambda d: 0),
+}
+# Which table the target's wBattleStatus8 byte picks: (bit 6 set, else bit 7 set, else neither)
+SCALE_PICKERS = {
+    "ScaleDamageByFlagsAtHL": ("1_075_04_0", "131_116_075_03", "1_085_05_0"),
+    "ScaleDamageByFlagsAtHLAlt": ("075_05_025_0", "131_116_075_03", "1_075_04_0"),
+    "ScaleDamageByFlagsAtHLBit6": ("1_085_05_0", "131_116_075_03", "131_116_075_03"),
+}
+
+
+def scale_by_resistance(picker: str, status8: int, level: int, d: int) -> int:
+    t = SCALE_PICKERS[picker]
+    table = t[0] if status8 & 0x40 else t[1] if status8 & 0x80 else t[2]
+    return SCALE_LEVELS[table][level](d)
+
+
+def skill_roll(rnd: Random, s: dict) -> tuple[int, int]:
+    """RollSkillDamageFromRecord: (damage, spread). Base word and spread byte at record +$D/+$E/+$F for an actor in
+    slots 4-7 unless wLinkMode is 1, otherwise at +$9/+$A/+$B; damage = RandomInRange(base, base + spread)."""
+    rec = s["record"]
+    k = 0x0D if s["link_mode"] != 1 and s["actor"] & 4 else 0x09
+    base, spread = rec[k] | rec[k + 1] << 8, rec[k + 2]
+    return random_in_range(rnd, base, base + spread), spread
+
+
+def resistance_routines() -> dict[str, dict]:
+    """The damage routines of bank $36 made of a roll and a resistance scaling, read from src/: each one's source
+    (the skill record roll or the plain attack), resistance byte, the bit field (by its rotations) and table picker.
+    A routine that does not end in ret runs into the next label, as the code does."""
+    bodies: dict[str, list[str]] = {}
+    order, cur = [], None
+    for ln in BATTLE_SRC.read_text(encoding="utf-8").split("\n"):
+        m = re.match(r"^([A-Za-z_]\w*)::", ln)
+        if m:
+            cur = m.group(1)
+            bodies[cur] = []
+            order.append(cur)
+            continue
+        op = re.sub(r";.*", "", ln).strip()
+        if cur and op and not ln.startswith("SECTION"):
+            bodies[cur].append(op)
+    out = {}
+    for i, name in enumerate(order):
+        ops, j = list(bodies[name]), i
+        while ops and ops[-1] not in ("ret",) and not ops[-1].startswith("jp ") and j + 1 < len(order):
+            j += 1
+            ops += bodies[order[j]]
+        if ops[:1] == ["call RollSkillDamageFromRecord"]:
+            src, rest = "skill", ops[1:]
+        elif ops[:2] == ["call ComputeAttackDamage", "call HLToBattleStatus8EntryOfBattleTarget_Bank36"]:
+            src, rest = "attack", ops[2:]
+        else:
+            continue
+        if rest[:1] == ["ld a, $00"] and len(rest) == 3 and rest[2] == "ret":
+            m = re.fullmatch(r"call (ScaleDamageByFlagsAtHL\w*)", rest[1])
+            if m and m.group(1) in SCALE_PICKERS:
+                out[name] = {"source": src, "byte": None, "rot": [], "picker": m.group(1)}
+            continue
+        m = re.fullmatch(r"call GetTargetSlotResistancesByte(\d)", rest[0]) if rest else None
+        if not m or rest[-1] != "ret" or rest[-3] != "and $03":
+            continue
+        rot = rest[1:-3]
+        pm = re.fullmatch(r"call (ScaleDamageByFlagsAtHL\w*)", rest[-2])
+        if not pm or pm.group(1) not in SCALE_PICKERS or any(r not in ("swap a", "rrca", "rlca") for r in rot):
+            continue
+        out[name] = {"source": src, "byte": int(m.group(1)), "rot": rot, "picker": pm.group(1)}
+    return out
+
+
+def resistance_level(byte: int, rot: list[str]) -> int:
+    """The 2-bit resistance level the routine takes from a resistance byte by its rotations, then and $03."""
+    for r in rot:
+        byte = ((byte << 4 | byte >> 4) if r == "swap a" else (byte >> 1 | byte << 7) if r == "rrca"
+                else (byte << 1 | byte >> 7)) & 0xFF
+    return byte & 3
+
+
+def resist_model(r: Rom, L: dict, shape: dict, s: dict) -> dict:
+    rnd = LinkedRandom(r, L["RandomByteTable"][1], s)
+    out = {}
+    if shape["source"] == "skill":
+        d, out["arg2"] = skill_roll(rnd, s)
+    else:
+        d = attack_damage(rnd, s["atk"][s["actor"]], s["def"][s["target"]])
+    level = 0 if shape["byte"] is None else resistance_level(s["resist"][s["target"]][shape["byte"]], shape["rot"])
+    out["damage"] = scale_by_resistance(shape["picker"], s["status"][s["target"]][8], level, d)
+    return dict(out, **rnd.after(s))
+
+
+def step7_model(r: Rom, L: dict, C: dict, s: dict) -> dict:
+    """ResolveStepComputeDamage: the modifiers of resolve step 7 on the damage word."""
+    rnd = LinkedRandom(r, L["RandomByteTable"][1], s)
+    a, t = s["actor"], s["target"]
+    st = [list(x) for x in s["status"]]
+    rec5, rec6 = s["record"][5], s["record"][6]
+    d, msg = s["damage"], s["msg"]
+    out = lambda step: dict(step=step, damage=d, status2=st[a][2], msg=msg, **rnd.after(s))  # noqa: E731
+    if st[a][2] & 0x80 and s["sound_slots"] & s["sound_ch1"] != 0xFF:
+        return out(s["step"])  # waits for the critical-hit sound
+    step = (s["step"] + 1) & 0xFF
+    personality = True
+    if rec6 & 0x10 and st[a][1] & 0x04:  # BSTAT1_ATK_DOUBLED
+        d = d * 2 & 0xFFFF
+    elif rec6 & 0x08 and st[a][2] & 0x80:  # BSTAT2_CRITICAL_ROLLED: ATK within 5 percent
+        st[a][2] &= 0x7F
+        msg = (0x35, 0xD0, 0xA8, 0x88)  # StoreHitMessage_Bank36: actor, target, flags, argument
+        atk = s["atk"][a]
+        q = atk // 20
+        d = random_in_range(rnd, atk - q, atk + q)
+        personality = False
+    elif rec6 & 0x20 and st[a][4] & 0x01:  # BSTAT4_CHARGE_UP
+        d = d * 2 & 0xFFFF
+    elif rec5 & 0x02 and st[a][4] & 0x10:  # BSTAT4_SUCK_AIR: 2 to 2.5 times
+        d = random_in_range(rnd, d * 2, d * 2 + (d >> 1))
+    if personality and s["personality"][2 * a & 0xFF] & 0x40:
+        d = (d + (d >> 1)) & 0xFFFF
+    t7 = st[t][7] & 7
+    if t7:
+        changed = False
+        if t7 & 3 == 0:  # only bit 2
+            if rec5 & 0x80:
+                d, changed = d >> 1, True
+        elif rec6 & 0x80:
+            d, changed = (d >> 1 if t7 & 1 else d // 10), True
+        if changed and s["personality"][2 * t & 0xFF] & 0x02:
+            d >>= 1
+    if st[t][6] & 0x04 and rec5 & 0x80 and s["action"] not in (C["SKILL_RAMMING"], C["SKILL_KAMIKAZE"]):
+        d = d << 1 & 0xFFFF  # BSTAT6_BERSERK on the target
+    return out(step)
+
+
+def battle_state(rng: random.Random, R: dict) -> tuple[dict, dict]:
+    """A generated battle state and the RAM that holds it."""
+    s = {"actor": rng.randrange(8), "target": rng.randrange(8), "link_mode": rng.choice([0, 0, 0, 1, 2]),
+         "random_hi": rng.randrange(128), "random_lo": rng.randrange(256),
+         "seed2_hi": rng.randrange(128), "seed2_lo": rng.randrange(256),
+         "atk": [rng.choice([rng.randrange(0, 40), rng.randrange(0, 1000), rng.randrange(0, 1000)]) for _ in range(8)],
+         "def": [rng.choice([rng.randrange(0, 40), rng.randrange(0, 1000), rng.randrange(0, 2000)]) for _ in range(8)],
+         "status": [[rng.choice([0, 0, rng.randrange(256)]) for _ in range(9)] for _ in range(8)],
+         "resist": [[rng.randrange(256) for _ in range(7)] for _ in range(8)],
+         "personality": [rng.randrange(256) for _ in range(16)],
+         "record": [rng.randrange(256) for _ in range(16)]}
+    if rng.random() < 0.5:  # realistic skill bases and spreads
+        for k in (0x09, 0x0D):
+            v = rng.choice([rng.randrange(0, 300), rng.randrange(0, 0xFF00)])
+            s["record"][k], s["record"][k + 1], s["record"][k + 2] = v & 0xFF, v >> 8, rng.choice([0, rng.randrange(256)])
+    mem = {R["wBattleActor"]: s["actor"], R["wBattleTarget"]: s["target"], R["wLinkMode"]: s["link_mode"],
+           R["wRandomHi"]: s["random_hi"], R["wRandomLo"]: s["random_lo"],
+           R["wRandomSeed2Hi"]: s["seed2_hi"], R["wRandomSeed2Lo"]: s["seed2_lo"]}
+    for k in range(8):
+        for arr, key in ((R["wBattleATK"], "atk"), (R["wBattleDEF"], "def")):
+            mem[arr + 2 * k], mem[arr + 2 * k + 1] = s[key][k] & 0xFF, s[key][k] >> 8
+        for n in range(1, 9):
+            mem[R[f"wBattleStatus{n}"] + 9 * k] = s["status"][k][n]
+        for n in range(7):
+            mem[R["wSlotResistances"] + 7 * k + n] = s["resist"][k][n]
+    for k in range(16):
+        mem[R["wPersonalityActs"] + k] = s["personality"][k]
+        mem[R["wRecordBufferData"] + k] = s["record"][k]
+    return s, mem
+
+
+def read_random(gb: GameBoy, R: dict) -> dict:
+    return {"random": (gb.rb(R["wRandomHi"]), gb.rb(R["wRandomLo"])),
+            "seed2": (gb.rb(R["wRandomSeed2Hi"]), gb.rb(R["wRandomSeed2Lo"]))}
+
+
+def read_damage(gb: GameBoy, R: dict) -> int:
+    return gb.rb(R["wBattleDamageLo"]) | gb.rb(R["wBattleDamageHi"]) << 8
+
+
+def resist_check(rom: bytes, n: int, seed: int) -> list[str]:
+    """The roll-and-resistance damage routines of bank $36 in turn, n generated states in all."""
+    R, L, r = ram(), rom_labels(), Rom(rom)
+    rng = random.Random(seed)
+    bad = []
+    shapes = list(resistance_routines().items())
+    for i in range(n):
+        name, shape = shapes[i % len(shapes)]
+        bank, addr = L[name]
+        s, mem = battle_state(rng, R)
+        want = resist_model(r, L, shape, s)
+        gb = call(rom, bank, addr, mem)
+        got = dict(damage=read_damage(gb, R), **read_random(gb, R))
+        if "arg2" in want:
+            got["arg2"] = gb.rb(R["wBattleArg2"])
+        if got != want:
+            bad.append(f"{name} #{i}: state {s}: game {got}, model {want}")
+    return bad
+
+
+def attack_check(rom: bytes, n: int, seed: int) -> list[str]:
+    R, L, r = ram(), rom_labels(), Rom(rom)
+    rng = random.Random(seed)
+    bank, addr = L["ComputeAttackDamage"]
+    bad = []
+    for i in range(n):
+        s, mem = battle_state(rng, R)
+        rnd = LinkedRandom(r, L["RandomByteTable"][1], s)
+        want = dict(damage=attack_damage(rnd, s["atk"][s["actor"]], s["def"][s["target"]]), **rnd.after(s))
+        gb = call(rom, bank, addr, mem)
+        got = dict(damage=read_damage(gb, R), **read_random(gb, R))
+        if got != want:
+            bad.append(f"attack #{i}: actor {s['actor']} ATK {s['atk'][s['actor']]} target {s['target']} "
+                       f"DEF {s['def'][s['target']]}: game {got}, model {want}")
+    return bad
+
+
+def step7_check(rom: bytes, n: int, seed: int) -> list[str]:
+    R, L, r, C = ram(), rom_labels(), Rom(rom), constants()
+    rng = random.Random(seed)
+    bank, addr = L["ResolveStepComputeDamage"]
+    bad = []
+    for i in range(n):
+        s, mem = battle_state(rng, R)
+        a = s["actor"]
+        for k, bit in ((1, 0x04), (2, 0x80), (4, 0x01), (4, 0x10)):  # make each modifier's condition common
+            if rng.random() < 0.3:
+                s["status"][a][k] |= bit
+        s["record"][5] |= rng.choice([0, 0x02, 0x80, 0x82])
+        s["record"][6] &= rng.choice([0xFF, 0x0F, 0xC7, 0x80])
+        s.update(damage=rng.choice([rng.randrange(0, 300), rng.randrange(0, 0x10000)]), step=7,
+                 action=rng.choice([C["SKILL_RAMMING"], C["SKILL_KAMIKAZE"], rng.randrange(256)]),
+                 sound_slots=rng.choice([0xFF, 0xFF, rng.randrange(256)]), sound_ch1=rng.choice([0xFF, 0xFF, 0x0F]),
+                 msg=tuple(rng.randrange(256) for _ in range(4)))
+        mem.update({R["wBattleStatus2"] + 9 * a: s["status"][a][2], R["wBattleStatus1"] + 9 * a: s["status"][a][1],
+                    R["wBattleStatus4"] + 9 * a: s["status"][a][4],
+                    R["wRecordBufferData"] + 5: s["record"][5], R["wRecordBufferData"] + 6: s["record"][6],
+                    R["wBattleDamageLo"]: s["damage"] & 0xFF, R["wBattleDamageHi"]: s["damage"] >> 8,
+                    R["wBattleResolveStep"]: s["step"], R["wBattleActionId"]: s["action"],
+                    R["wSoundChannelSlots"]: s["sound_slots"], R["wSoundChannel1"]: s["sound_ch1"],
+                    R["wResolveMsgActor"]: s["msg"][0], R["wResolveMsgTarget"]: s["msg"][1],
+                    R["wResolveMsgFlags"]: s["msg"][2], R["wResolveMsgArg"]: s["msg"][3]})
+        want = step7_model(r, L, C, s)
+        gb = call(rom, bank, addr, mem)
+        got = dict(step=gb.rb(R["wBattleResolveStep"]), damage=read_damage(gb, R),
+                   status2=gb.rb(R["wBattleStatus2"] + 9 * a),
+                   msg=tuple(gb.rb(R[k]) for k in ("wResolveMsgActor", "wResolveMsgTarget", "wResolveMsgFlags",
+                                                     "wResolveMsgArg")), **read_random(gb, R))
+        if got != want:
+            bad.append(f"step7 #{i}: state {s}: game {got}, model {want}")
+    return bad
+
+
+CHECKS = {"join": join_check, "growth": growth_check, "breeding": breed_check,
+          "attack": attack_check, "resistance": resist_check, "step7": step7_check}
 
 
 def main(argv: list[str] | None = None) -> int:

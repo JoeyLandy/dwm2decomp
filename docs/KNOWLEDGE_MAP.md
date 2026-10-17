@@ -6,7 +6,8 @@ Historical planning baseline: **2026-09-12**, before local verification. Current
 
 | System | Finding and confidence | Evidence / next action |
 | --- | --- | --- |
-| Join offer, level-up gains, breeding child | C2 on tools/sm83.py: specifications that agree with the game's routines on 3,000 generated states each | E-0396, [mechanics](MECHANICS.md). Next: damage and resistance (ResolveStepComputeDamage), skill learning |
+| Join offer, level-up gains, breeding child | C2 on tools/sm83.py: specifications that agree with the game's routines on 3,000 generated states each | E-0396, [mechanics](MECHANICS.md) |
+| Damage: plain attack, resistance scaling, resolve step 7 | C2 on tools/sm83.py: 3,000 of 3,000 states each; 16 roll-and-resistance routines read from src/ | E-0397, [mechanics](MECHANICS.md). Next: skill learning, ResolveStepApplyDamage |
 | Species, skill and item tables | C2: layouts round-trip byte for byte; the game's loaders read the exported record for every id | E-0396, [data tables](DATA_TABLES.md) |
 | Compressed assets | C2: an encoder reproduces all 3,546 LZSS streams; assets build from decoded data | E-0394, [editable assets](ASSETS.md) |
 | Code and data placement | 9,071 floating sections; padded and moved builds checked on tools/sm83.py | E-0388 to E-0393, [shiftability](SHIFTABILITY.md) |
