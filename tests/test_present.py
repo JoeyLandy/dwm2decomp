@@ -10,6 +10,7 @@ import present  # noqa: E402
 
 LISTING = ROOT / "build" / "listing"
 SRC = ROOT / "src"  # bank files are src/<dir>/bankNN_<name>.asm (D-010)
+REGEN = ROOT / present.REGEN  # D-015 (H1a): the generator's presented tree; src/ itself may hold hand edits
 
 
 def _p(text: str) -> str:
@@ -75,15 +76,17 @@ def _code(text: str, names=None, bank=None) -> list[str]:
 
 @unittest.skipUnless(LISTING.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class PresentedTreeTest(unittest.TestCase):
-    def test_src_is_the_presented_listing(self):
+    @unittest.skipUnless(REGEN.is_dir(), "build/regen/src has not been generated (tools/disasm_all.py)")
+    def test_regen_is_the_presented_listing(self):
         texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
         names = present.Names(texts, LISTING)
         titles = present.bank_titles()
-        stale = [n for n, t in texts.items() if (SRC / present.src_name(n, titles)).read_text(encoding="utf-8")
+        stale = [n for n, t in texts.items() if (REGEN / present.src_name(n, titles)).read_text(encoding="utf-8")
                  != present.header(n, titles) + present.split_sections(present.present(t, names, int(n[4:6], 16)),
                                                                        int(n[4:6], 16))[0]]  # E-0393: sections
-        self.assertEqual(stale, [], "src/ is not tools/present.py's output for build/listing")
+        self.assertEqual(stale, [], "build/regen/src is not tools/present.py's output for build/listing")
 
+    @unittest.skipUnless(REGEN.is_dir(), "build/regen/src has not been generated (tools/disasm_all.py)")
     def test_no_code_or_data_line_is_lost(self):
         titles = present.bank_titles()
         texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
@@ -91,7 +94,7 @@ class PresentedTreeTest(unittest.TestCase):
         for p in sorted(LISTING.glob("bank*.asm")):
             want = _code(texts[p.name], names, int(p.name[4:6], 16))
             got = [present.split_code(ln)[0].rstrip()
-                   for ln in (SRC / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
+                   for ln in (REGEN / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
                    if ln.strip() and not ln.lstrip().startswith(";")]
             got = ["    INCBIN" if g.lstrip().startswith("INCBIN") else g for g in got]
             # E-0393: src splits each bank into sections (checked against src/layout.link below)

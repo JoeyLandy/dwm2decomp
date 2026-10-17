@@ -67,7 +67,7 @@ class Names:
 
     WORD = re.compile(r"\b[A-Z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*\b")
 
-    def __init__(self, texts: dict[str, str], listing: Path | None = None) -> None:
+    def __init__(self, texts: dict[str, str], listing: Path | None = None, ram: Path | None = None) -> None:
         self.alias: dict[str, str] = {}
         self.at: dict[str, str] = {}  # "BB:AAAA" -> label
         self.labels: set[str] = set()
@@ -161,7 +161,7 @@ class Names:
                             self.referrer.setdefault(w, cur)
         self.hram: dict[int, str] = {}  # high-RAM symbols of src/ram.asm, for calls into HRAM
         self.ram_at: list[tuple[int, str]] = []  # every RAM symbol by address, for address names in comments
-        ram = ROOT / "src/ram.asm"
+        ram = ram or ROOT / "src/ram.asm"  # the presented tree's own when present.main writes one
         if ram.exists():
             for name, val in re.findall(r"^DEF ([wsh]\w+) EQU \$([0-9A-F]{4})", ram.read_text(encoding="utf-8"), re.M):
                 if name.startswith("h"):
@@ -683,11 +683,18 @@ def write_text(path: Path, text: str) -> None:
             time.sleep(0.25)
 
 
+REGEN = Path("build/regen/src")  # D-015 (H1a): where the presented tree goes unless src/ is asked for
+
+
 def main(argv: list[str]) -> int:
-    src = Path(argv[0]) if argv else ROOT / "build/listing"
-    dest = ROOT / "src"
+    """present.py [LISTING [DEST]] [--write-src]: present LISTING (build/listing) into DEST, by default
+    build/regen/src/; --write-src writes src/ itself (D-015). src/ is the hand-edited source after H1a."""
+    args = [a for a in argv if not a.startswith("--")]
+    src = Path(args[0]) if args else ROOT / "build/listing"
+    dest = Path(args[1]) if len(args) > 1 else ROOT / ("src" if "--write-src" in argv else REGEN)
+    dest.mkdir(parents=True, exist_ok=True)
     texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(src.glob("bank*.asm"))}
-    names = Names(texts, src)
+    names = Names(texts, src, dest / "ram.asm")
     titles = bank_titles()
     written = []
     sections: dict[int, list[str]] = {}
@@ -699,7 +706,7 @@ def main(argv: list[str]) -> int:
         sections[int(name[4:6], 16)] = secs
         write_text(dest / out, header(name, titles) + body)
         written.append(out)
-    for stale in {p.relative_to(dest).as_posix() for p in bank_files()} - set(written):
+    for stale in {p.relative_to(dest).as_posix() for p in dest.glob("*/bank[0-9a-f][0-9a-f]_*.asm")} - set(written):
         (dest / stale).unlink()  # a bank file under an earlier name or directory
     old = dest / "banks"  # before D-010 every bank file lived here
     if old.is_dir():
@@ -707,15 +714,15 @@ def main(argv: list[str]) -> int:
             p.unlink()
         if not any(old.iterdir()):
             old.rmdir()
-    write_text(ROOT / "src/layout.link", layout_text(sections))
-    main_asm = ROOT / "src/main.asm"
-    lines = main_asm.read_text(encoding="utf-8").split("\n")
+    write_text(dest / "layout.link", layout_text(sections))
+    main_asm = dest / "main.asm"
+    lines = (main_asm if main_asm.exists() else ROOT / "src/main.asm").read_text(encoding="utf-8").split("\n")
     out_lines = []
     for ln in lines:
         m = re.match(r'INCLUDE "(?:\w+/)?(bank[0-9a-f]{2})(?:_\w+)?\.asm"', ln)
         out_lines.append(f'INCLUDE "{src_name(m.group(1) + ".asm", titles)}"' if m else ln)
     write_text(main_asm, "\n".join(out_lines))
-    write_text(ROOT / "src/assets.txt",
+    write_text(dest / "assets.txt",
         "# D-008: the asset files src/ includes, as slices of the reference ROM: path, file offset, length.\n"
         "# tools/build.py extracts them from local/roms/ into the build directory; they are never tracked.\n"
         + "".join(f"{p}\t${o:06X}\t${n:X}\n" for p, (o, n) in sorted(ASSETS.items())))

@@ -2431,6 +2431,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0401 — H1a: the generator no longer writes src/ (D-015)
+
+- Date: 2026-10-17. Kind: DECISION (D-015, user-approved: the user asked for the recommended path, whose first step is making src/ the hand-edited source) and TOOL. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit f276d52. Plan: [graduation](GRADUATION.md), stage H1 of the [roadmap](ROADMAP.md).
+- **Change.** tools/disasm_all.py and tools/present.py write the presented tree (bank files, main.asm, layout.link, assets.txt and the six .inc and ram.asm files) to build/regen/src/ unless `--write-src` is given. present.Names reads ram.asm from the tree being written. build/listing/ is written as before.
+- **Drift tool.** tools/src_drift.py lists files that differ (with changed lines), are only in the regenerated tree, or are only in src/; exit 0, 1 or 2 (no regenerated tree). tests/test_src_drift.py checks identical trees, a hand edit, a one-byte change, a line-ending change, missing and extra files, the missing tree and `--diff`, and that present.main into a scratch folder leaves src/ unchanged.
+- **Result.** `python -I tools/disasm_all.py` (181.7 s) wrote build/regen/src/ and left src/ unchanged (git status clean); tools/src_drift.py: no drift, 265 files identical. So the switch changes no source byte.
+- **Tests retargeted.** tests/test_present.py's test_regen_is_the_presented_listing (was test_src_is_the_presented_listing) and test_no_code_or_data_line_is_lost compare the listing with build/regen/src/, so a hand edit to src/ does not fail them. Other tests that read build/listing/ test the generator's own output and are moved to src/ in H1b.
+- **Limits.** Until H1b-H1d, config/names.json and config/annotations.json still feed the regenerated tree and some tests. A hand edit to src/ shows as drift; it is not yet checked by those tests.
+- **Checks run.** build/run4 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite_e0401.log OK (466 tests, 3 skipped).
+
 ### E-0400 — Breeding paths: the wild monsters of each story map and the fewest breedings to a species
 
 - Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware) and TOOL. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 2c912f8. E-0398 and E-0399 are used on the unmerged branch claude/skill-learning, so this entry skips them. Description: [breeding paths](BREEDING_PATHS.md).

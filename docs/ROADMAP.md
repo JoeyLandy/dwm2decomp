@@ -2,6 +2,28 @@
 
 Baseline: **2026-09-12**. Work is sequenced by evidence and exit gates. These are planning estimates, not deadlines; re-estimate after the first matching build. All phases inherit the full-ROM identity requirement and C0–C3 semantic standard.
 
+## Current goal: a modding and translation ecosystem (from 2026-10-17, D-015)
+
+The user's goal: anyone can easily translate the game into another language or make a mod or romhack from this
+source. M1-M5 made the source safe to move and the assets and main tables editable. What stands in the way now is
+mostly who owns the source, how data and text are exposed, and how mods are shipped. The matching target keeps
+its identity gate on every change. A mod or translation is a separate, non-matching output and never replaces
+`dwm2-cobi-us-rev0`. Mods are shipped as patches, never as ROMs.
+
+| Stage | Work | Exit gate |
+| --- | --- | --- |
+| H1. Graduate src/ (started 2026-10-17; [graduation](GRADUATION.md)) | src/ becomes the hand-edited source of truth, as in pokered. The generator stops writing src/ (it writes build/regen/src/ and a drift report); the checks that rely on config/ and build/listing/ become checks on src/ and the built .sym/.map; names.json and annotations.json are retired; the tools that write config/ are retargeted or retired | In a scratch copy with config/names.json, config/annotations.json and build/listing/ removed, the matching build PASSes and the full suite passes; a hand edit to src/ survives every tool the workflow runs |
+| H2. Game data as files | Encounters, breeding rules, shops, arena and AI tables join species, skills and items as editable files packed back by the build, one table at a time | Each table packs back byte-identical and its readers (run on tools/sm83.py) load the packed bytes; matching build PASS |
+| H3. Text pipeline | Every string to a translator file (id, context, width limit); reinsertion that repacks the text banks; build-time width checks; the font as PNG; room in the charmap for more letters | Unchanged English reinserts byte-identical; a test translation that grows text builds and its screens draw on tools/sm83.py; the limits (name fields, banks fixed by their readers) documented |
+| H4. Full shiftability | The four banks that cannot be padded ($00, $1F, $69, $87), the split sums left, the 511 pointers whose bank the reader fixes; longer scripted runs or later save states for the read gate | Every bank can be padded; the padded build runs like the matching one over the widened runs |
+| H5. Mod smoke test | One command that boots a modded ROM on tools/sm83.py, runs the scripted runs and reports crashes and divergence | Negative tests: a mod that breaks a pointer and one that breaks a table are both reported |
+| H6. Distribution | BPS patches from a mod build; a patcher page (patch + your own ROM); a mod template; a cross-platform setup (RGBDS is pinned for Windows today) | A clean checkout on Windows and one other platform builds a mod and its patch, and the patch applied to the reference gives the mod build byte for byte |
+| H7. Modder documentation | A modder's guide (confidence tags in plain words) and three tutorials: a monster's stats, a line of text, a breeding recipe | Each tutorial is followed from a clean checkout and its result checked by H5 |
+
+H1 comes first because every later stage edits src/ or data that src/ includes. H2 and H3 can then run side by side.
+Rewriting the game in another programming language, for example by static recompilation to C, is a separate
+research project. It is left until after H1-H4.
+
 ## Moddable decomp: M1-M5 done (2026-10-16, E-0388 to E-0396)
 
 Every stage below has met its exit gate, and the matching build has passed after each one:

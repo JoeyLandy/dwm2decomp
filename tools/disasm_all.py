@@ -13,10 +13,12 @@ byte-exact, so classification errors cannot change the ROM -- only the build
 gate (tools/build.py) certifies identity. Reachability is not proof of runtime
 execution and names carry no semantics.
 
-Usage: disasm_all.py [--stats] [--quiet] [--no-text] [--export-streams PATH.json]
+Usage: disasm_all.py [--stats] [--quiet] [--no-text] [--write-src] [--export-streams PATH.json]
   --no-text keeps prose as opaque INCBIN data instead of rendering it as db strings.
-Progress goes to stderr. All banks are rendered in memory first; build/listing/*.asm, src/<dir>/bank*.asm
-and src/main.asm are written only after the whole analysis succeeds, so an
+  --write-src writes the presented tree into src/ itself. Without it the tree goes to build/regen/src/ (D-015, H1a):
+  src/ is the hand-edited source, and tools/src_drift.py compares the regenerated tree with it.
+Progress goes to stderr. All banks are rendered in memory first; build/listing/*.asm and the presented tree
+are written only after the whole analysis succeeds, so an
 interrupted run leaves the previous generated tree untouched.
 """
 from __future__ import annotations
@@ -6952,9 +6954,11 @@ def main() -> int:
     texts, events, nev = name_story_flags(texts, {int(k, 16): v["name"] for k, v in flag_cfg.items()})
     log(f"story flags named: {len(events)}, {nev} uses")
 
-    out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/<dir>/ from it
+    out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes the presented tree from it
     out.mkdir(parents=True, exist_ok=True)
-    log(f"writing {len(texts)} bank files to build/listing, then src/<dir>/ and src/main.asm")
+    dest = ROOT / "src" if "--write-src" in sys.argv else ROOT / present.REGEN  # D-015 (H1a)
+    dest.mkdir(parents=True, exist_ok=True)
+    log(f"writing {len(texts)} bank files to build/listing, then {dest.relative_to(ROOT).as_posix()}/")
     short = getattr(shorten_repeated_parents, "renames", {})
     steps = {old: short.get(new, new) for old, new in getattr(name_steps_by_text, "renames", {}).items()}
     (out / "step_names.json").write_text(json.dumps(steps, indent=0), encoding="utf-8")
@@ -6971,11 +6975,11 @@ def main() -> int:
             reached.append((b, code))
     consts = "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['routine']}: {v['note']} ({v['evidence']})\n"
                      for k, v in sorted(rom.script_commands.items()))
-    (ROOT / "src/macros.inc").write_text(
+    (dest / "macros.inc").write_text(
         MACROS_INC + ("\n; Script command types named from what they do (config/script_commands.json); "
                       "`script_command` takes one of these.\n" + consts if consts else ""),
         encoding="utf-8", newline="\n")
-    (ROOT / "src/records.inc").write_text(
+    (dest / "records.inc").write_text(
         "; Offsets into the $A5-byte SRAM monster record that have evidence (config/record_fields.json, E-0290).\n"
         + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(rec_fields.items()))
         + "\n; Offsets into the $4E-byte battler record (wBattlerRecords; config/record_fields.json \"battler\", E-0298).\n"
@@ -6991,8 +6995,8 @@ def main() -> int:
            + "".join(f"DEF RESIST_{n} EQU {i}\n" for i, n in enumerate(rec_cfg["resistances"]["names"]))
            + f"DEF NUM_RESISTANCES EQU {len(rec_cfg['resistances']['names'])}\n" if "resistances" in rec_cfg else ""),
         encoding="utf-8", newline="\n")
-    gbs.write_hardware_inc(ROOT / "src/hardware.inc")
-    gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
+    gbs.write_hardware_inc(dest / "hardware.inc")
+    gb_text.write_charmap_inc(dest / "charmap.inc")
     final_labels = {m for x in texts for m in re.findall(r"^([A-Za-z_]\w*)::", x, re.M)}
     id_notes = {}  # E-0347: an action id with no name is described by the routines that handle it
     for v, (name, text) in rom.consts.get("SKILL", {}).items():
@@ -7001,16 +7005,16 @@ def main() -> int:
             what = (f"a battle action whose StringTable_SkillNames entry only repeats '{text}' (E-0365)" if text
                     else "a battle action with no name in StringTable_SkillNames")
             id_notes[name] = what + ("; handled by " + " and ".join(handlers) if handlers else "")
-    gb_constants.write_constants_inc(ROOT / "src/constants.inc", rom.consts, events, bstat_cfg, id_notes)
-    rom.write_ram_inc(ROOT / "src/ram.asm")
+    gb_constants.write_constants_inc(dest / "constants.inc", rom.consts, events, bstat_cfg, id_notes)
+    rom.write_ram_inc(dest / "ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "
         f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")
-    (ROOT / "src/main.asm").write_text(
+    (dest / "main.asm").write_text(
         'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\nINCLUDE "charmap.inc"\nINCLUDE "records.inc"\n'
         'INCLUDE "constants.inc"\n'
         + "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
         encoding="utf-8", newline="\n")
-    present.main([str(out)])
+    present.main([str(out), str(dest)])
     log("done writing; rebuild and verify with tools/build.py")
     if "--stats" in sys.argv:
         nz = rom.nbanks - len(rom.zero)

@@ -4,7 +4,7 @@
 
 Reverse engineer and document **Dragon Warrior Monsters 2: Cobi's Journey** for GB/GBC, preserving binary identity. Read [project status](docs/PROJECT_STATUS.md), [architecture](docs/ARCHITECTURE.md), and [evidence standards](docs/EVIDENCE_LOG.md) before work. The user is technical and new to assembly: explain unfamiliar instructions and bank behavior through the task at hand.
 
-Locally verified facilities (2026-10-09): `python -I tools/build.py --out build/runN` (clean RGBDS build plus identity gate), `python -I -m unittest discover -s tests`, and `python -I tools/disasm_all.py` (regenerates `src/`; rebuild and verify afterwards). The reference is `local/roms/dwm2-cobi-us.gbc` (ignored); the target is `config/targets/dwm2-cobi-us-rev0.json`. Other planned commands and layouts remain unverified. Edition: US header, version byte 0; catalog cross-check pending. DWM1, Tara, Japanese releases, remakes, and hacks are distinct targets.
+Locally verified facilities (2026-10-09): `python -I tools/build.py --out build/runN` (clean RGBDS build plus identity gate), `python -I -m unittest discover -s tests`, and `python -I tools/disasm_all.py` (re-analysis: writes `build/listing/` and `build/regen/src/`; since D-015, 2026-10-17, `src/` is hand-edited and `tools/src_drift.py` compares the two; `--write-src` overwrites `src/` and must not be used once it holds hand edits). The reference is `local/roms/dwm2-cobi-us.gbc` (ignored); the target is `config/targets/dwm2-cobi-us-rev0.json`. Other planned commands and layouts remain unverified. Edition: US header, version byte 0; catalog cross-check pending. DWM1, Tara, Japanese releases, remakes, and hacks are distinct targets.
 
 ## Binary identity is mandatory
 

@@ -30,7 +30,7 @@ This guide explains how `src/` is laid out and how to read it. The style follows
 | `src/assets.txt` | The asset files the source includes by name (`INCBIN "gfx/monster_sprites/drak_slime.lz"`, `maps/map00/screens0_y1_x1.bin`, ...): each one's offset and length in the original ROM. The build extracts them from your copy of the ROM into its own directory, so no game data is stored in the repository. `.lz` files are compressed with the game's LZSS scheme (`tools/lzss_gfx.py`). |
 | `src/hardware.inc` | Game Boy hardware register names, each with what the register does. |
 
-The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit the config, not `src/`. Every run also writes an annotated listing to `build/listing/bankNN.asm`, with each label's address, the heuristic that found it, its callers, and the RAM it reads and writes. Use it when the source alone is not enough.
+Edit `src/` directly: since 2026-10-17 it is the source (D-015, [graduation](GRADUATION.md)). The files were first generated from `config/*.json` by `tools/disasm_all.py`, which now writes its output to `build/regen/src/` instead; `tools/src_drift.py` lists how that differs from `src/`. Every run also writes an annotated listing to `build/listing/bankNN.asm`, with each label's address, the heuristic that found it, its callers, and the RAM it reads and writes. Use it when the source alone is not enough.
 
 ## Names
 
@@ -109,7 +109,7 @@ Names and notes carry evidence ids such as `E-0336`; [EVIDENCE_LOG.md](EVIDENCE_
 - C2: supported, for example observed in the emulator;
 - C3: verified within a stated scope.
 
-The confidence of each routine and RAM name is in `config/names.json` and `config/symbols.json`. Whole-routine explanations also live in `config/annotations.json` (E-0357, E-0358), which is the editable source for those comments. A note that says "C2 from E-0320" was observed when the game ran in `tools/sm83.py`, the project's own emulator.
+The confidence of each routine and RAM name is in `config/names.json` and `config/symbols.json`. Whole-routine explanations also live in `config/annotations.json` (E-0357, E-0358), which was the editable source for those comments until D-015; new notes go into `src/` directly. A note that says "C2 from E-0320" was observed when the game ran in `tools/sm83.py`, the project's own emulator.
 
 ## Building
 

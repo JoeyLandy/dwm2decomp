@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-17**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
+As of **2026-10-17**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)); H1 (graduating src/) started. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -15,7 +15,7 @@ As of **2026-10-17**. Stage: **matching, fully annotated and moddable disassembl
 | Implementation foundation | Fresh RGBDS scaffold recommended | See [survey](SURVEY.md); no upstream adopted |
 | Working platform | Windows / PowerShell | Observed workspace environment |
 
-Decisions record: **D-010** (2026-10-13) keeps each bank file in a pokered-style directory by what the bank holds (`config/banks.json` `dir`: home, engine, scripts, text, data, maps, gfx, audio, unused); **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-009** (2026-10-13) names story flags after their setters and battle status bits from their observed texts; **D-008** (2026-10-13) includes graphics and map data as named asset files extracted at build time; **D-007** (2026-10-13) names ids from the ROM's name tables (`src/constants.inc`); **D-006** (2026-10-13) names each bank file after its contents (`config/banks.json`); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
+Decisions record: **D-015** (2026-10-17, user-approved) makes `src/` the hand-edited source of truth, superseding the generated-source part of D-005: the generator writes `build/regen/src/`, and config/ is retired from the workflow in stages ([graduation](GRADUATION.md)); **D-010** (2026-10-13) keeps each bank file in a pokered-style directory by what the bank holds (`config/banks.json` `dir`: home, engine, scripts, text, data, maps, gfx, audio, unused); **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-009** (2026-10-13) names story flags after their setters and battle status bits from their observed texts; **D-008** (2026-10-13) includes graphics and map data as named asset files extracted at build time; **D-007** (2026-10-13) names ids from the ROM's name tables (`src/constants.inc`); **D-006** (2026-10-13) names each bank file after its contents (`config/banks.json`); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
 
 ## Session 2 update (2026-10-09): matching build exists
 
@@ -159,7 +159,27 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0400): breeding paths
+## Current handoff (2026-10-17, E-0401): new goal, and H1a done
+
+The user set a new goal: an ecosystem in which people can easily translate the game or make mods and romhacks.
+docs/ROADMAP.md lists its stages H1-H7: graduate src/, game data as files, a text pipeline, full shiftability, a
+mod smoke test, distribution, modder documentation. D-015 makes src/ the hand-edited source.
+
+H1a (E-0401): tools/disasm_all.py and tools/present.py write build/regen/src/ unless given `--write-src`, and
+tools/src_drift.py compares that tree with src/. On this tree the regeneration reported no drift (265 files
+identical) and left src/ untouched. tests/test_present.py's two listing-equality tests now check build/regen/src/.
+build/run4 PASS; serial suite OK (466 tests, 3 skipped).
+
+Open, in order (docs/GRADUATION.md):
+1. H1b: the tests that read build/listing/ or import the generator become checks on src/ and the build's .sym and
+   .map, one file at a time.
+2. H1c: config/ files sorted by role; names.json and annotations.json retired.
+3. H1d: apply_drafts.py, readability_queue.py and rank_unnamed.py retargeted or retired; a rename tool.
+
+Next reproducible action: `python -I tools/disasm_all.py` then `python -I tools/src_drift.py` (expect no drift
+until src/ is edited), then start H1b with tests/test_generated_source.py.
+
+## Prior handoff (2026-10-17, E-0400): breeding paths
 
 tools/breed_path.py lists the wild monsters of each story map from the ROM and finds the fewest farm breedings
 from them to a species (docs/BREEDING_PATHS.md). Three checks agree with the game on tools/sm83.py: the game's own

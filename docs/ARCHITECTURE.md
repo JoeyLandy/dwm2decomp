@@ -37,10 +37,12 @@ README.md, AGENTS.md            entry points and operating contract
 docs/                          system documentation, evidence log, status and roadmap
 config/targets/                edition/revision/hash manifests
 config/toolchain.lock.json     exact tested RGBDS release and its hashes
-config/*.json                  the editable truth the generator reads: names.json, annotations.json,
-                               tables.json, symbols.json, code_entries.json, operands.json, banks.json, ...
+config/*.json                  what the generator reads: names.json, annotations.json, tables.json,
+                               symbols.json, code_entries.json, operands.json, banks.json, ... (being
+                               retired from the workflow, D-015 and docs/GRADUATION.md)
 config/probes/                 emulator probes for routine notes (tools/probe.py)
-src/                           generated from config/ by tools/disasm_all.py; edit config/, not src/
+src/                           the source: edit it directly (D-015). tools/disasm_all.py writes its
+                               own tree to build/regen/src/; tools/src_drift.py compares the two
 src/main.asm                   the include list
 src/layout.link                places every floating section in its bank (rgblink -l)
 src/<dir>/bankNN_<topic>.asm   one ROM bank each, in a directory by kind (D-010): home, engine,
