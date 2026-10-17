@@ -159,7 +159,22 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0397): damage checked against the game
+## Current handoff (2026-10-17, E-0400): breeding paths
+
+tools/breed_path.py lists the wild monsters of each story map from the ROM and finds the fewest farm breedings
+from them to a species (docs/BREEDING_PATHS.md). Three checks agree with the game on tools/sm83.py: the game's own
+encounter listing on every screen of the 56 maps, FillEncounterFromEntry from all 128 random states for the 109
+entries, and ComputeBreedingChild for every breeding of a route. Finding: RandomByteTable gives only 94 of the 128
+roll values, so Phoenix's slot on the Float map is never drawn. Example: Darkdrium from the Pirate maps ($30-$45)
+in 132 breedings. build/run3 PASS; serial suite OK (457 tests, 3 skipped). E-0398 and E-0399 belong to the unmerged
+branch claude/skill-learning.
+
+Open: sex, level and plus conditions in routes; the routine that ties keys to map ranges (the world grouping is
+C1); the open items of the previous handoff below.
+
+Next reproducible action: `python -I tools/breed_path.py check --maps 30-45 --target DARKDRIUM`.
+
+## Prior handoff (2026-10-17, E-0397): damage checked against the game
 
 tools/mechanics.py has three new checks (docs/MECHANICS.md, Damage): the plain attack (ComputeAttackDamage), the 16
 bank-$36 routines that roll damage and scale it by a resistance level (read from src/), and the modifiers of resolve

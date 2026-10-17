@@ -154,6 +154,9 @@ Checked over 3,000 generated pairs:
 Rule-list matches (stages 1 to 3), the family-pair table and its "A's species" result all occur (641, 1,078 and 281 of 2,000 in one run). Parents whose species record has family 15 are not real
 monsters: their tables read past their ends, so they were not generated.
 
+[Breeding paths](BREEDING_PATHS.md) uses this specification to find the fewest breedings from a map's wild
+monsters to a species (E-0400).
+
 ## Damage
 
 Battle slots 0-7 index word arrays (wBattleATK, wBattleDEF: slot x 2) and the status bytes (wBattleStatus1-8:

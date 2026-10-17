@@ -2431,6 +2431,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0400 — Breeding paths: the wild monsters of each story map and the fewest breedings to a species
+
+- Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware) and TOOL. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 2c912f8. E-0398 and E-0399 are used on the unmerged branch claude/skill-learning, so this entry skips them. Description: [breeding paths](BREEDING_PATHS.md).
+- **Wild species.** tools/breed_path.py decodes RunBattleIntroKindCase_RandomEncounter (0A:$49B4, file offset 0x289B4) from its bytes: 56 maps, each a grid table read by screen (A per row) or one entry, four of them ($2B, $30, $48, $B8) by hPlayerStateFlags bit 3. Screens are limited to the MapTable record's width and height (+6, +7; E-0142); none of the 56 maps has encounter rate 0. Entries are read as FillEncounterFromEntry uses them (cap, five thresholds, monster words); a monster word's species is its MonsterTable record's first word (E-0263).
+- **RandomByteTable (00:$0973, file [0x973, 0x9F3)).** Its 128 bytes give wRandomLo & $7F only 94 values; 34 never occur (19 among them). So the last slot of two Float ($70) entries, 0A:$5F83 (Metaly) and 0A:$5FB0 (Phoenix), thresholds 18 then 19, is never drawn. Every FillEncounterFromEntry draw goes through NextTableByte, whose state is wRandomHi (0-127) alone, so running the routine from all 128 states is exhaustive.
+- **Checks** (`python -I tools/breed_path.py check`, all on tools/sm83.py):
+  - lists: CollectUniqueEncounterIdsToWorkBuf2_FindTable (0A:$4D5E) gives the species the tool reads, for every in-bounds screen of the 56 maps and both values of bit 3 (map $B8's listing ignores bit 3; only clear there): all agree;
+  - draws: FillEncounterFromEntry (0A:$4CD4) from all 128 random states draws exactly the slots counted as reachable, for all 109 distinct entries;
+  - the two dispatches (battle and listing) pick the same tables for every map.
+- **Route.** Fewest breedings by repeated pairing with tools/mechanics.breed_species (E-0396; farm breeding, plus 0). From the maps $30-$45 (37 species), Darkdrium takes 132 breedings from 133 wild monsters, ending Deathmore (third form) × GranSlime; ComputeBreedingChild (0E:$5688) gives the child of all 40 distinct breedings of the route. Adding $20-$2F (46 species) gives the same count.
+- **World grouping (C1).** $30-$45 as the Pirate world, the second key: the key names in bank $09 (GreatLog, Oasis, Pirate, Ice, …) and the map names (Desert to Mirage Lake at $20-$2F, Water to the Magic Door at $45) agree in order, but no routine linking keys to map ranges was read.
+- **Negative checks** (tests/test_breed_path.py): a slot model letting every r in 0-127 occur claims Metaly and Phoenix in the two Float entries, and the game never draws them; a model with the parents swapped disagrees with ComputeBreedingChild on some breedings of the route; the dispatch decoder rejects an unexpected opcode and a routine that does not start with `ldh a, [hMapId]`.
+- **Limits.** Sex, level, plus-gated recipes, recruiting odds and whether a screen can be reached in play are not modelled. Scripted battles, the arena and key worlds are not wild sources here.
+- **Checks run.** tests/test_breed_path.py OK (14 tests); build/run3 PASS on the final tree (approved size and SHA-256, zero differing bytes; src/ regenerated unchanged); serial full suite build/logs/suite_e0400b.log OK (457 tests, 3 skipped). A first serial run (suite_e0400.log) had 27 failures, all from build/listing missing in a fresh worktree; they pass once tools/disasm_all.py has run.
+
 ### E-0397 — Damage: the plain attack, resistance scaling and resolve step 7 as checked specifications
 
 - Date: 2026-10-17. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 202a594. Specification: the Damage section of [mechanics](MECHANICS.md).
