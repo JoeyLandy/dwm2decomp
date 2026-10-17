@@ -2431,6 +2431,32 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0396 — M5: three mechanics as checked specifications; the species, skill and item tables
+
+- Date: 2026-10-16. Kind: OBSERVATION (C2 on tools/sm83.py for what the checks compare; not hardware). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 7edc4f4 (E-0395). Specifications: [mechanics](MECHANICS.md); tables: [data tables](DATA_TABLES.md).
+- **Method.** tools/mechanics.py holds a Python model of each mechanic, written from the routine's code. It runs the routine on tools/sm83.py from generated states (memory and SRAM set up, the routine called, its outputs read) and compares every output the model predicts. The models read the game's tables from the reference ROM and reproduce NextTableByte's random sequence, so the number of random rolls is compared too.
+- **Join offer** (BattleEnd_OfferJoin_DecideJoinOffer). 3,000 of 3,000 states agree: the eligibility tests, the first-sighting roll against JoinChanceByClass, the battle-meter scaling by the two class tables, and the two final rolls; the states reach 0 to 3 rolls, with and without an offer. A meter that scales to $8000 or more counts as negative (no offer).
+- **Level-up gains** (ComputeLevelUpStatGainsForBattleArg1). 3,000 of 3,000 records agree on all 8 bytes of wLevelUpGains:
+  - StatGrowthTable[row][level] for the six growth rows;
+  - the growth-item bonus: half the count of eight record values and the name length whose bit 0 matches the plus;
+  - ClampDeltaTo999, including its meaningless result for a stat above 999;
+  - no gain at the level cap.
+- **Breeding child** (ComputeBreedingChild). 3,000 of 3,000 parent pairs agree on the child species, plus, level cap, personality, level, egg and state:
+  - the four rule tables in order, with the $FD/$FB/$FE/$FC rules of the species list and the family rules;
+  - plus = base + 1 to 5 by the 8-bit level sum, at most 99;
+  - level cap = species cap + 3 x plus, at most 99;
+  - personality = the 8-bit sum halved.
+  - No pair of the 11 real families reaches "no child". Parents whose species record gives family 15 read past the tables and were not generated.
+  - Sex, resistances, skills and stats come from later random routines and are not compared.
+- **Negative checks.** A model that never offers, one with no growth and one with a wrong wArg5 are each caught (tests/test_mechanics.py). In exploration, models with one condition flipped disagreed on exactly the states that condition decides: 78, 300 and 469.
+- **Tables** (tools/tables_export.py):
+  - SpeciesRecordPointers: 384 monster ids point at the 324 records of SpeciesRecords, all on record boundaries and all used.
+  - SpeciesRecords (324 x 47 bytes, fields from src/records.inc), SkillTable (228 x 17) and ItemTable (99 x 13) export to JSON and pack back to the ROM's bytes.
+  - LoadSpeciesRecord, LoadSkillRecord and LoadItemRecord, run for every id, copy exactly the exported record.
+  - A changed export no longer packs to the ROM (negative test).
+  - Field meanings and their confidence are those of src/records.inc and config/tables.json (most C1), listed in docs/DATA_TABLES.md.
+- **Checks.** tools/mechanics.py all --n 3000: all agree; tools/tables_export.py check: ok; build/run682 PASS (approved size and SHA-256, zero differing bytes); serial full suite build/logs/suite682.log OK (439 tests, 3 skipped).
+
 ### E-0395 — M4: leftover code bytes decoded or listed
 
 - Date: 2026-10-16. Kind: OBSERVATION and DECISION (static decoding C1; 115 probes on tools/sm83.py, C2 for what they check). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit fb47357 (E-0394). List: [leftover code bytes](LEFTOVER_CODE.md).

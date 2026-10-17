@@ -2,7 +2,20 @@
 
 Baseline: **2026-09-12**. Work is sequenced by evidence and exit gates. These are planning estimates, not deadlines; re-estimate after the first matching build. All phases inherit the full-ROM identity requirement and C0–C3 semantic standard.
 
-## Current goal: a moddable decomp (from 2026-10-16)
+## Moddable decomp: M1-M5 done (2026-10-16, E-0388 to E-0396)
+
+Every stage below has met its exit gate, and the matching build has passed after each one:
+- M1-M2: [shiftability](SHIFTABILITY.md).
+- M3: [editable assets](ASSETS.md).
+- M4: [leftover code bytes](LEFTOVER_CODE.md).
+- M5: [mechanics](MECHANICS.md) and [data tables](DATA_TABLES.md).
+
+What stays open is listed in each document and in [readability open questions](READABILITY_OPEN_QUESTIONS.md):
+- three address-like split sums;
+- 511 pointers whose bank the reading code fixes;
+- the scripted runs' reach (under 5% of the routines);
+- the other mechanics of phases 4-5 (damage, skills learned, the key worlds).
+
 
 The matching build and the readability goal (below) are done, but the source is not yet a pokered-level decomp. It
 is unknown whether code and data can move, the assets come out of the reference ROM rather than editable files,
@@ -16,7 +29,7 @@ shifted or re-encoded build is a separate, non-matching output and never replace
 | M2. Labels for hard-coded references (done 2026-10-16, E-0389 to E-0393: every reference the runs found is a label; 65 split table addresses and the bank numbers beside pointers are label expressions; all banks padded by 16 pass the read gate; 9,071 floating sections placed by src/layout.link, and two routines moved to other banks run identically; open: 3 split sums, and 511 pointers whose bank the reader fixes) | Replace each inventoried reference with a label expression, one bank or table at a time | Matching build PASS after each batch; the shift test's count of breaking references falls to 0; a padded build boots to the title screen on tools/sm83.py like the matching one |
 | M3. Editable assets (done 2026-10-16, E-0394: [editable assets](ASSETS.md); the encoder reproduces all 3,546 streams, assets build from decoded data, `--mod` builds from edited PNG and .bin files) | Extract graphics to PNG and maps and tables to text formats, built back with rgbgfx and project tools; an LZSS encoder that reproduces the original compressed bytes | The build needs the reference ROM for no asset slice (or each remaining one is documented); matching build PASS; a test that every stream re-encodes byte-identically |
 | M4. Leftover code bytes (done 2026-10-16, E-0395: [leftover code bytes](LEFTOVER_CODE.md); 102 unreached routines decoded, named, read and probed; the 384 other gaps after a routine end listed with their verdict) | Find `db` runs that decode as code no traced path reaches (for example bank $29 `db $cd, $01, $40, $cd, $11, $26, $c9`, which would read as call, call, ret; C1, not yet checked) and decode or document each | Every such run decoded or listed with its reason; matching build PASS |
-| M5. Mechanics (phases 3-5 below) | Species, skill and item tables, then one mechanic at a time (breeding, recruitment, growth), with emulator experiments | Per the phase gates below; claims promoted above C1 only with recorded experiments |
+| M5. Mechanics (done 2026-10-16, E-0396: [mechanics](MECHANICS.md), [data tables](DATA_TABLES.md); the join offer, level-up gains and breeding child as specifications that agree with the game on 3,000 generated states each; the species, skill and item tables exported, packed back byte for byte and read by the game's loaders for every id) | Species, skill and item tables, then one mechanic at a time (breeding, recruitment, growth), with emulator experiments | Per the phase gates below; claims promoted above C1 only with recorded experiments |
 
 M1 to M3 make the source moddable; M5 can run alongside them. The open questions in
 [readability open questions](READABILITY_OPEN_QUESTIONS.md) (1,852) feed M4 and M5.

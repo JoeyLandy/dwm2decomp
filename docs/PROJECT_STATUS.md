@@ -159,7 +159,16 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0395): M4 done, leftover code bytes
+## Current handoff (2026-10-16, E-0396): M5 done; the moddable-decomp goal M1-M5 is complete
+
+tools/mechanics.py checks three mechanics against the game's own routines on tools/sm83.py: the join offer, the
+level-up gains and the breeding child each agree on 3,000 of 3,000 generated states (docs/MECHANICS.md has them as
+specifications). tools/tables_export.py exports the species, skill and item tables, packs them back byte for byte
+and runs the game's loaders for every id (docs/DATA_TABLES.md). build/run682 PASS; serial suite OK (439 tests, 3 skipped).
+docs/ROADMAP.md marks M1-M5 done. What is open is listed there, in each stage's document and in
+docs/READABILITY_OPEN_QUESTIONS.md.
+
+## Prior handoff (2026-10-16, E-0395): M4 done, leftover code bytes
 
 tools/leftover_code.py trial-decodes the bytes after every routine end. 80 gaps that call or jump into known code
 became config/code_entries.json entries, and tracing them found 102 unreached routines in all: string stubs,
