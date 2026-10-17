@@ -207,7 +207,8 @@ Done alongside H1, from the open items of the E-0401 handoff (no change to the H
      and AddSkillCToFreeOrWeakerSlot_Data), both now layouts.
    - All 222 recipe runs (2,638 routines) and the link session PASS padded by 16 and by 256.
 
-build/run702 PASS; serial suite OK (473 tests, 3 skipped).
+build/run702 PASS; serial suite OK (473 tests, 3 skipped). Merged onto master after H1b (E-0403): no drift
+(tools/src_drift.py, 265 files identical), build/run703 PASS, serial suite OK (487 tests, 3 skipped).
 
 Not reached, with what is known:
 - **A completed link breeding.** Console B (link role 3) reads its pad in the send half of the serial exchange:
