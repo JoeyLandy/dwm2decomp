@@ -10,11 +10,25 @@ SECTION "Bank 1D", ROMX
 ; menu, library $13) calls it, by far call. The 8 bytes after its ret are not reached from it. (C1,
 ; E-0379)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank1D::
+BeginStringDisplay_Bank1D:: ; configured code entry (E-0395 (BeginStringDisplay_Bank1D: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank1D_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9, $cd
+
+SECTION "Bank 1D CopyStringToBuffer_Bank1D", ROMX
+
+; Loads DE = BeginStringDisplay_Bank1D_StringCategories, the string table of
+; BeginStringDisplay_Bank1D, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank1D like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank1D:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank1D_StringCategories
+    call CopyStringToBuffer
+    ret
+    db $cd
 
 ; Not a table: DrawNameGlyph_Bank1D uses the address of this label ($4010) only as the base of
 ; GlyphFont, adding 16 * glyph to it, and returns the result in DE for a copy from ROM bank $1F,
@@ -1171,7 +1185,7 @@ SECTION "Bank 1D BlinkCursorSelectedRecord_Bank1D", ROMX
 ; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; BlinkCursorSelectedRecord_Bank1D)
-BlinkCursorSelectedRecord_Bank1D::
+BlinkCursorSelectedRecord_Bank1D:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wSelectedRecord]
     inc a
     ld [wSelectedRecord], a
@@ -3650,7 +3664,7 @@ SECTION "Bank 1D ItemStorageHasNonZeroEntry", ROMX
 ; (C2, E-0379)
 ; A = 0 when one of the 100 two-byte entries at wItemStorage has a non-zero first byte, else $FF
 ; (E-0124)
-ItemStorageHasNonZeroEntry::
+ItemStorageHasNonZeroEntry:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wItemStorage
     ld c, $00
 
@@ -3708,7 +3722,7 @@ SECTION "Bank 1D DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D", ROMX
 ; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_Bank1D) and sets
 ; wTextCursorLo = HL + $1C1; on CGB copies it again with VRAM bank 1 selected and WRAM bank 2
 ; switched in (E-0121; a copy, not a clear: E-0226)
-DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D::
+DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push de
     push bc
     push hl
@@ -4229,7 +4243,7 @@ SECTION "Bank 1D LoadListEntriesCell5RecordAndContinue", ROMX
 ; with SRAM bank 0 enabled reads the record at wListEntries cell 5 and continues at
 ; CopyRecordNameToTextBuf0 (E-0126) (E-0344: the address in its name dropped or read as the label
 ; there; was LoadListEntriesCell5RecordAndContinue)
-LoadListEntriesCell5RecordAndContinue::
+LoadListEntriesCell5RecordAndContinue:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call SetArg5ToListEntriesCell5
     ld a, $0a
     ld [rRAMG2], a

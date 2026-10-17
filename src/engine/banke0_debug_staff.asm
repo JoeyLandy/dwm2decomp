@@ -13,7 +13,7 @@ SECTION "Bank E0", ROMX
 ; the editing sub-states of the bank-$E0 debug viewer: shows a string, then edits the debug cursor,
 ; two debug values and the battle-end flag (E-0354; was: runs the routine for wDebugSubState (jump
 ; table of six) (E-0122))
-RunDebugSubState_E0::
+RunDebugSubState_E0:: ; configured code entry (E-0395 (RunDebugSubState_E0: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wDebugSubState]
     jumptable
     dw RunDebugSubState_E0_ShowHeading
@@ -2625,7 +2625,7 @@ SECTION "Bank E0 RunEffectTestEntryA", ROMX
 ; loads wBattleActor, wBattleTarget, wBattleActionId and wEffectFlags2 from the 4-byte entry A of
 ; the table at $55FB, then far-calls SelectEffectByEffectFlags2Flags (a test or debug entry list)
 ; (E-0118)
-RunEffectTestEntryA::
+RunEffectTestEntryA:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add a
     add a
     ld hl, EffectTestEntries
@@ -3469,7 +3469,7 @@ SECTION "Bank E0 ShowStringBank09AtHLSizeDEThenDefault_BankE0", ROMX
 ; in src calls this copy. (C1, E-0385)
 ; the same 45 bytes as ShowStringBank09AtHLSizeDEThenDefault (ShowStringBank09AtHLSizeDEThenDefault)
 ; (E-0121)
-ShowStringBank09AtHLSizeDEThenDefault_BankE0::
+ShowStringBank09AtHLSizeDEThenDefault_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -7999,28 +7999,32 @@ GetBattleATK_BankE0:: ; configured code entry (E-0213); C0
 SECTION "Bank E0 GetBattleDEF_BankE0", ROMX
 
 ; Bank-$E0 copy of GetBattleDEF: HL = battle slot A's DEF word. (C2, E-0357; probed E-0385)
-GetBattleDEF_BankE0::
+; the same 50 bytes as GetBattleDEF_Bank39 (GetBattleDEF_Bank39) (E-0060)
+GetBattleDEF_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankE0
 
 SECTION "Bank E0 GetBattleMaxHP_BankE0", ROMX
 
 ; Bank-$E0 copy of GetBattleMaxHP: HL = battle slot A's max HP word. (C2, E-0357; probed E-0385)
-GetBattleMaxHP_BankE0::
+; the same 45 bytes as GetBattleMaxHP_Bank39 (GetBattleMaxHP_Bank39) (E-0060)
+GetBattleMaxHP_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankE0
 
 SECTION "Bank E0 GetBattleMaxMP_BankE0", ROMX
 
 ; Bank-$E0 copy of GetBattleMaxMP: HL = battle slot A's max MP word. (C2, E-0357; probed E-0385)
-GetBattleMaxMP_BankE0::
+; the same 40 bytes as GetBattleMaxMP_Bank39 (GetBattleMaxMP_Bank39) (E-0060)
+GetBattleMaxMP_BankE0:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankE0
 
 SECTION "Bank E0 GetBattleHP_BankE0", ROMX
 
 ; Bank-$E0 copy of GetBattleHP: HL = battle slot A's HP word. (C2, E-0357; probed E-0385)
-GetBattleHP_BankE0::
+; the same 35 bytes as GetBattleHP_Bank39 (GetBattleHP_Bank39) (E-0060)
+GetBattleHP_BankE0:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleHP
     jr GetBattleStatWord_BankE0
 
@@ -8028,10 +8032,35 @@ SECTION "Bank E0 GetBattleMP_BankE0", ROMX
 
 ; Bank-$E0 copy of GetBattleMP: HL = battle slot A's MP word; 15 unreached bytes follow the jump
 ; (two more getters). (C2, E-0357; probed E-0385)
-GetBattleMP_BankE0::
+; the same 30 bytes as GetBattleMP_Bank39 (GetBattleMP_Bank39) (E-0060)
+GetBattleMP_BankE0:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMP
     jr GetBattleStatWord_BankE0
-    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
+
+SECTION "Bank E0 GetBattleAGL_BankE0", ROMX
+
+; HL = wBattleAGL, then GetBattleStatWord_BankE0: HL = the word at wBattleAGL + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 25 bytes as GetBattleAGL_Bank39 (GetBattleAGL_Bank39) (E-0060)
+GetBattleAGL_BankE0:: ; configured code entry (E-0395); C0
+    ld hl, wBattleAGL
+    jr GetBattleStatWord_BankE0
+
+SECTION "Bank E0 ReadSlotAIModeIndexed_BankE0", ROMX
+
+; A = the byte at wSlotAIMode + A, the AI mode of slot A. A copy of the routine of the same shape
+; found in other banks. No traced code, jump table or pointer reaches it (E-0395: it decodes as a
+; routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_BankE0::
+    ld hl, wSlotAIMode
+    add_a_to_hl
+    ld a, [hl]
+    ret
+
+SECTION "Bank E0 GetBattleStatWord_BankE0", ROMX
 
 ; HL = array base, A = battle slot: HL = the 16-bit word at HL + 2 * A (the value, not a pointer); A
 ; = its low byte. The shared tail of GetBattleATK_BankE0 through GetBattleMP_BankE0, the same bytes
@@ -8049,7 +8078,7 @@ SECTION "Bank E0 AddDoubleAToHL_BankE0", ROMX
 ; no caller in src. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
 ; appear in 12 banks)
-AddDoubleAToHL_BankE0::
+AddDoubleAToHL_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add a
     add_a_to_hl
     ret
@@ -8064,7 +8093,7 @@ SECTION "Bank E0 ActorOnLocalSide_BankE0", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_BankE0::
+ActorOnLocalSide_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -8091,7 +8120,7 @@ SECTION "Bank E0 TargetOnLocalSide_BankE0", ROMX
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
-TargetOnLocalSide_BankE0::
+TargetOnLocalSide_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_target
@@ -8112,7 +8141,7 @@ SECTION "Bank E0 ClearBattleStatusBitsWithMaskD_BankE0", ROMX
 
 ; ANDs status byte 0 of slot E (rows of nine bytes) with entry D of
 ; ClearBattleStatusBitsWithMaskD_BankE0_Data. (C2, E-0357; probed E-0385)
-ClearBattleStatusBitsWithMaskD_BankE0::
+ClearBattleStatusBitsWithMaskD_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE0_Data
     add_a_to_hl
@@ -8139,7 +8168,7 @@ ClearBattleStatusBitsWithMaskD_BankE0_Data::
 ; caller in src. (C2, E-0385)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit0OfLevelUpGainsIndexed_BankE0::
+SetBit0OfLevelUpGainsIndexed_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -8154,7 +8183,7 @@ SECTION "Bank E0 SetBit1OfLevelUpGainsIndexed_BankE0", ROMX
 ; caller in src. (C2, E-0385)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit1OfLevelUpGainsIndexed_BankE0::
+SetBit1OfLevelUpGainsIndexed_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -8169,7 +8198,7 @@ SECTION "Bank E0 SetBit2OfLevelUpGainsIndexed_BankE0", ROMX
 ; caller in src. (C2, E-0385)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit2OfLevelUpGainsIndexed_BankE0::
+SetBit2OfLevelUpGainsIndexed_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -8253,7 +8282,7 @@ SECTION "Bank E0 CheckSlotStatusBlockWide_BankE0", ROMX
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
-CheckSlotStatusBlockWide_BankE0::
+CheckSlotStatusBlockWide_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -8288,7 +8317,7 @@ SECTION "Bank E0 SlotHasStatus3Or4Bits_BankE0", ROMX
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
-SlotHasStatus3Or4Bits_BankE0::
+SlotHasStatus3Or4Bits_BankE0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL

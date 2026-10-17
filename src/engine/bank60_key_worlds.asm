@@ -491,7 +491,7 @@ SECTION "Bank 60 GenerateKeyWorld_RollMonsters_BossLevelsAlt", ROMX
 ; for 8 entries from wKeyWorldBossMonsters + $1 ORs 2 * min(wPartyStrength + 3 * (wPartyStrength /
 ; 10), 99) into every other byte (E-0125) (E-0340: the address in its name read as its RAM name; was
 ; GenerateKeyWorld_RollMonsters_BossLevelsAlt)
-GenerateKeyWorld_RollMonsters_BossLevelsAlt::
+GenerateKeyWorld_RollMonsters_BossLevelsAlt:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wPartyStrength]
     ld b, a
     ld a, $0a
@@ -782,7 +782,7 @@ GenerateKeyWorld_RollEncounterTable::
 ; src/ calls or points to it, so it looks like an unused alternative. (C2, E-0384)
 ; like GenerateKeyWorld_RollEncounterTable, with each entry's level from wPartyStrength / 5 * 7 plus
 ; the area value, capped at 99 (E-0129)
-GenerateKeyWorld_RollEncounterTableAlt::
+GenerateKeyWorld_RollEncounterTableAlt:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld b, $10
     ld hl, wKeyWorldEncounterTable
     xor a

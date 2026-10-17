@@ -119,7 +119,7 @@ SECTION "Bank 00 OamDmaRoutineTemplate", ROM0
 ; at $0100. (C1, E-0373)
 ; the OAM DMA routine copied to HRAM: starts DMA from $C000 (ld a, $C0; ldh [rDMA], a) and waits $28
 ; loop iterations; never called in place (E-0122)
-OamDmaRoutineTemplate::
+OamDmaRoutineTemplate:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, $c0
     ldh [rDMA], a
     ld a, $28
@@ -811,7 +811,17 @@ ApplyScreenShake::
 
 .return:
     ret
-    db $cd, $cc, $0b, $c9
+
+SECTION "Bank 00 CallFlushQueuedBGMapWrite", ROM0
+
+; Calls FlushQueuedBGMapWrite, the BG map write the VBlank handler flushes each frame, and returns.
+; No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached
+; in the static listing). (C1, E-0395)
+CallFlushQueuedBGMapWrite:: ; configured code entry (E-0395); C0
+    call FlushQueuedBGMapWrite
+    ret
+
+SECTION "Bank 00 LinkExchangeJoypadPerFrame", ROM0
 
 ; The per-frame link step of the link modes (8 call sites: GameMode5_Update_ExchangeJoypadOnRecords,
 ; GameMode5_Update_ExchangeJoypad, GameMode5_Update_LinkSession and another bank $07 step,
@@ -1392,7 +1402,7 @@ SECTION "Bank 00 CopyCGB40BytesFromBankAndMark7F", ROM0
 ; counter, is 0 by then, so the address is the original HL + $40 + C) and maps the calling bank
 ; back; on DMG it returns at once. (C2, E-0373)
 ; on CGB only: copies $40 bytes from DE in ROM bank B to HL, then writes $7F at HL + BC (E-0124)
-CopyCGB40BytesFromBankAndMark7F::
+CopyCGB40BytesFromBankAndMark7F:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wIsCGB]
     or a
     ret z
@@ -1536,7 +1546,7 @@ SECTION "Bank 00 EnableLYCInterruptSource", ROM0
 ; rSTAT |= $40: enables the LY = LYC coincidence as an LCD STAT interrupt source. No caller in src/
 ; (no call, jump or pointer found). (C1, E-0373)
 ; rSTAT |= $40: selects the LY = LYC coincidence as an LCD STAT interrupt source (E-0114)
-EnableLYCInterruptSource::
+EnableLYCInterruptSource:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ldh a, [rSTAT]
     or $40
     ldh [rSTAT], a
@@ -1823,7 +1833,7 @@ SECTION "Bank 00 ReadJoypadIntoLinkJoypadHeld", ROM0
 ; (B); then rP1 = $30 (both key groups deselected). (C1, E-0373)
 ; ReadJoypadDirect, then wLinkJoypadHeldPrev = the old wLinkJoypadHeld and wLinkJoypadHeld = B (the
 ; new reading); finally rP1 = $30 (deselects both key groups) (E-0114)
-ReadJoypadIntoLinkJoypadHeld::
+ReadJoypadIntoLinkJoypadHeld:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call ReadJoypadDirect
     ld a, [wLinkJoypadHeld]
     ld [wLinkJoypadHeldPrev], a
@@ -2882,7 +2892,7 @@ SECTION "Bank 00 CopyEightBytesFromTiles1Entry", ROM0
 ; Copies the 8 bytes at vTiles1 + 8 * HL to DE, without waiting for VRAM access; DE and HL end past
 ; the copy, B = HIGH(vTiles1) and C = 0. No caller was found in src/ or the listing. (C1, E-0373)
 ; copies the 8 bytes at vTiles1 + 8 * HL to DE (E-0122)
-CopyEightBytesFromTiles1Entry::
+CopyEightBytesFromTiles1Entry:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add hl, hl
     add hl, hl
     add hl, hl
@@ -4224,7 +4234,7 @@ SECTION "Bank 00 CopyScreenTileBufferToBGMapWrapped", ROM0
 ; the column inside each row and the rows inside $9800-$9BFF. Reads past the $240-byte buffer
 ; described in src/ram.asm. No caller was found. (C1, E-0373)
 ; copies the 32 x 32 wScreenTileBuffer to vBGMap0, wrapping columns and rows (E-0125)
-CopyScreenTileBufferToBGMapWrapped::
+CopyScreenTileBufferToBGMapWrapped:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld c, $20
@@ -6085,7 +6095,7 @@ SECTION "Bank 00 StoreTemp0ToSRAMRecordBytes", ROM0
 ; in the SRAM bank already mapped; HL and DE are kept. No caller was found. (C2, E-0373)
 ; copies B bytes from hTemp0 to field C of SRAM record A (SRAMRecordAddressMapped); HL and DE
 ; preserved (E-0122)
-StoreTemp0ToSRAMRecordBytes::
+StoreTemp0ToSRAMRecordBytes:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     push de
     call SRAMRecordAddressMapped
@@ -6106,7 +6116,7 @@ SECTION "Bank 00 LoadSRAMRecordBytesToTemp0", ROM0
 ; Copies B bytes of field C of the record for party slot A (SRAMRecordAddressMapped), in the SRAM
 ; bank already mapped, to hTemp0 on; HL and DE are kept. No caller was found. (C2, E-0373)
 ; copies B bytes of field C of SRAM record A to hTemp0; HL and DE preserved (E-0122)
-LoadSRAMRecordBytesToTemp0::
+LoadSRAMRecordBytesToTemp0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     push de
     call SRAMRecordAddressMapped
@@ -8335,7 +8345,18 @@ TextCmd_Sound::
 .call_restart_map_music:
     farcall RestartMapMusic
     ret
-    db $cd, $78, $12, $c9
+
+SECTION "Bank 00 CallQueueSoundEffect", ROM0
+
+; Calls QueueSoundEffect with the sound id already in A and returns; it sits right after
+; TextCmd_Sound, which plays a sound the same way. No traced code, jump table or pointer reaches it
+; (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395; probed
+; E-0395)
+CallQueueSoundEffect:: ; configured code entry (E-0395); C0
+    call QueueSoundEffect
+    ret
+
+SECTION "Bank 00 TextCmd_Voice1", ROM0
 
 ; <VOICE1> ($EA): turns the speech beep on (wTextControl bit 0) with sound $6B (wTextBeepSound).
 ; (C2, E-0373)
@@ -9177,7 +9198,7 @@ SECTION "Bank 00 ShowStringHL_Bank08", ROM0
 ; ShowString_Bank08 it does not run the display to its end. No call or jump to it was found. (C1,
 ; E-0373)
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank08 (E-0114)
-ShowStringHL_Bank08::
+ShowStringHL_Bank08:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, h
     ld [wStringCategory], a
     ld a, l
@@ -9556,7 +9577,7 @@ SECTION "Bank 00 WriteWindowTileNumbersAtHL", ROM0
 ; was found. (C1, E-0373)
 ; text cursor wTextCursorLo = HL; writes consecutive tile numbers starting at wTextWindowTileLo / 16
 ; over the wTextWindowRows x wTextWindowWidth window, rows two map rows apart (E-0125)
-WriteWindowTileNumbersAtHL::
+WriteWindowTileNumbersAtHL:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, l
     ld [wTextCursorLo], a
     ld a, h
@@ -9719,7 +9740,7 @@ SECTION "Bank 00 CopyGlyphTileToHL", ROM0
 ; or jump to it was found. (C2, E-0373)
 ; copies glyph A (8 one-bit rows at $4010 + 16 * A in bank $1F) to HL as a 2bpp tile, each row byte
 ; written twice (E-0125)
-CopyGlyphTileToHL::
+CopyGlyphTileToHL:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld de, GlyphFont
     swap a
@@ -9863,7 +9884,7 @@ SECTION "Bank 00 SoundRunAllSlotsRestoreMode", ROM0
 ; SetSoundEngineStateTo4AndClearSoundEngineMode does the opposite (start at slot 4, mask 0). No
 ; caller and no code that writes wSoundSavedMode was found. (C2, E-0372; probed E-0374)
 ; wSoundEngineState = 0, wSoundEngineMode = wSoundSavedMode (sound engine state) (E-0119)
-SoundRunAllSlotsRestoreMode::
+SoundRunAllSlotsRestoreMode:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     xor a
     ld [wSoundEngineState], a
     ld a, [wSoundSavedMode]
@@ -9878,7 +9899,7 @@ SECTION "Bank 00 SetSoundEngineStateTo4AndClearSoundEngineMode", ROM0
 ; wSoundEngineMode is the stereo mask written to rNR51. The opposite of SoundRunAllSlotsRestoreMode;
 ; no call or jump to it was found. (C2, E-0373)
 ; wSoundEngineState = 4, wSoundEngineMode = 0 (sound engine state) (E-0119)
-SetSoundEngineStateTo4AndClearSoundEngineMode::
+SetSoundEngineStateTo4AndClearSoundEngineMode:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, $04
     ld [wSoundEngineState], a
     xor a
@@ -9973,7 +9994,7 @@ SECTION "Bank 00 StartFourSoundsAfterBankTable", ROM0
 ; with wSoundId = A + 3. Every id lands in slot 0 of wSoundChannelSlots (see
 ; StartSoundAfterBankTable). No call or jump to it was found. (C2, E-0373)
 ; runs StartSoundAfterBankTable three times and falls into it once more (E-0122)
-StartFourSoundsAfterBankTable::
+StartFourSoundsAfterBankTable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call StartSoundAfterBankTable
     call StartSoundAfterBankTable
     call StartSoundAfterBankTable

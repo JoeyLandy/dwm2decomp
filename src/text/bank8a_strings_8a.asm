@@ -10,11 +10,37 @@ SECTION "Bank 8A", ROMX
 ; StartMessageForGroup_KeyWorld, KeyWorldBossBattle_StartMessageText and
 ; DebugMessageTest_Update_ShowBank8A. (C1, E-0385)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank8A::
+BeginStringDisplay_Bank8A:: ; configured code entry (E-0395 (BeginStringDisplay_Bank8A: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank8A_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9, $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 8A CopyStringToBuffer_Bank8A", ROMX
+
+; Loads DE = BeginStringDisplay_Bank8A_StringCategories, the string table of
+; BeginStringDisplay_Bank8A, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank8A like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C1, E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank8A:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank8A_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 8A ShowStringAtOnce_Bank8A", ROMX
+
+; Calls BeginStringDisplay_Bank8A, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank8A:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank8A
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 8A BeginStringDisplay_Bank8A_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

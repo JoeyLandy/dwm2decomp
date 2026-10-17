@@ -633,7 +633,7 @@ SECTION "Bank 1C TryStartFieldMenu", ROMX
 ; with story flag 2, no text, wFieldActionRequest bit 7 clear, a non-empty party and
 ; hPlayerStateFlags bit 0 clear: hSpriteWindowClipMode = 3, sets bit 1 of the player and object
 ; flags and returns A = $FF; otherwise 0 (E-0124)
-TryStartFieldMenu::
+TryStartFieldMenu:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     jr nc, .return_0

@@ -6164,6 +6164,7 @@ class Rom:
                 self.emit_gap_plain(bank, a, b, out)
 
     def emit_gap_plain(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
+        self.__dict__.setdefault("gap_log", []).append((bank, lo, hi))  # E-0395: --leftover reports these
         base = self.base(bank)
         raw = self.data[bank * BANK + lo - base:bank * BANK + hi - base]
         i = 0
@@ -6883,6 +6884,18 @@ def main() -> int:
         log(f"exported {len(rom.streams)} streams to {dest}")
     log("rendering all banks in memory (no files written yet)")
     texts = [rom.emit_bank(b) for b in range(rom.nbanks)]
+    if "--reasons" in sys.argv:  # E-0395: why each code entry was traced (config, a call, a guess, ...)
+        dest = Path(sys.argv[sys.argv.index("--reasons") + 1])
+        dest.write_text(json.dumps({f"{b:02X}:{a:04X}": r for (b, a), r in rom.reason.items()}), encoding="utf-8")
+    if "--leftover" in sys.argv:  # E-0395 (M4): the uncovered bytes, and the instruction that ends where each begins
+        ends = {(b, a + v[0]): (a, v[1], v[2]) for b in range(rom.nbanks) for a, v in rom.insn[b].items()
+                if v[0] != "dw"}
+        rep = [{"bank": b, "lo": lo, "hi": hi, "after": ends.get((b, lo)),
+                "code_bank": bool(rom.insn[b])} for b, lo, hi in getattr(rom, "gap_log", [])]
+        dest = Path(sys.argv[sys.argv.index("--leftover") + 1])
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps(rep), encoding="utf-8")
+        log(f"leftover gaps written: {len(rep)} to {dest}")
     texts, folded = fold_idioms(texts)
     log(f"folded idioms: {folded}")
     idx_cfg = json.loads((ROOT / "config/indexed_dispatch.json").read_text(encoding="utf-8"))["tables"]

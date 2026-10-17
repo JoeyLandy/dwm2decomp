@@ -10,7 +10,7 @@ SECTION "Bank 04", ROMX
 ; among them FieldState_WalkATalks, FieldState_RunScript and FieldState_Still. (C1, E-0374)
 ; runs AdvancePlayerAnimCounterAndRunPlayerSpriteMode and UpdateAndDrawSpriteSlots; shared by the
 ; field mode states (E-0122)
-FieldStateCommonUpdate::
+FieldStateCommonUpdate:: ; configured code entry (E-0395 (FieldStateCommonUpdate: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode
     call UpdateAndDrawSpriteSlots
     ret
@@ -3643,7 +3643,19 @@ Talk_ListenYouTwoQuitYourHorsing::
     ld hl, Script_ListenYouTwoQuit ; script '*: Listen you two! Quit your'
     call StartScriptAtHL_B04
     ret
-    db $21, $44, $00, $cd, $bb, $55, $c9
+
+SECTION "Bank 04 Talk_CheckedThePeculiarDoor", ROMX
+
+; Shows message $0044 ('... checked the peculiar door. It ...') through StartMessageCommand09HL_B04,
+; like the talk handlers around it. No traced code, jump table or pointer reaches it (E-0395: it
+; decodes as a routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; starts Script_OhIt: '*: Oh… It's… all spinning around…' (E-0248)
+Talk_CheckedThePeculiarDoor:: ; configured code entry (E-0395); C0
+    ld hl, $0044 ; '0 checked the peculiar door. It'
+    call StartMessageCommand09HL_B04
+    ret
+
+SECTION "Bank 04 Talk_OhItsAllSpinningAround", ROMX
 
 ; Readable talk 4: starts Script_OhIt ('Oh... It is all spinning around', StartScriptAtHL_B04) and
 ; sets EVENT_OH_ITS_ALL_SPINNING_AROUND (flag 5) at once, so the scene does not repeat. (C2, E-0374)

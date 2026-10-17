@@ -92,7 +92,19 @@ CopyStringToBuffer_Bank08_Overflow::
     ld [wStringCategory], a
     call CopyStringToBuffer
     ret
-    db $cd, $50, $46, $cd, $11, $26, $c9
+
+SECTION "Bank 95 ShowStringAtOnce_Bank08_Overflow", ROMX
+
+; Calls BeginStringDisplay_Bank08_Overflow, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank08_Overflow:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank08_Overflow
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 95 StringCategories_Bank95", ROMX
 
 ; A table of twelve words, one per string category $09-$14 of the shared string scheme (index
 ; wStringCategory - 9): lists of 176, 1, 36, 1, 7, 6, 2, 9, 11, 28, 8 and 4 string pointers, named

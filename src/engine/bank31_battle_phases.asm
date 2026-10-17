@@ -6549,7 +6549,7 @@ SECTION "Bank 31 UnreferencedDebugScreenCaller", ROMX
 ; in the source reaches it, so it looks unused. (C1, E-0380)
 ; far-calls RunDebugState_E0 (E-0122) (E-0344: the address in its name dropped or read as the label
 ; there; was UnreferencedDebugScreenCaller)
-UnreferencedDebugScreenCaller::
+UnreferencedDebugScreenCaller:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     farcall RunDebugState_E0
     ret
 
@@ -8056,7 +8056,7 @@ SECTION "Bank 31 AddAx4EToHL", ROMX
 ; HL = HL + A * $4E (16-bit sum; $4E is the size of one battler record). A and BC are changed.
 ; Nothing in src/ calls it (see BattlerRecordFieldAddress for a similar multiply). (C2, E-0380)
 ; HL += A * $4E (the battler-record size, Multiply8); clobbers BC (E-0115)
-AddAx4EToHL::
+AddAx4EToHL:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     ld c, $4e
     call Multiply8
@@ -9377,7 +9377,7 @@ SECTION "Bank 31 CopyPartySlotPanelsToVRAM", ROMX
 ; CopySlotPanel1ToVRAM unless the count is 1, CopySlotPanel2ToVRAM unless it is 1 or 2. No caller
 ; was found in src/. (C1, E-0380)
 ; copies the panels of the first one, two or three slots (by wBattlePartyCount) to VRAM (E-0122)
-CopyPartySlotPanelsToVRAM::
+CopyPartySlotPanelsToVRAM:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CopySlotPanel0ToVRAM
     ld a, [wBattlePartyCount]
     cp $01
@@ -10481,7 +10481,7 @@ SECTION "Bank 31 CopySlotLevelPanelToVRAM", ROMX
 ; copies two tiles at offset DrawSlotStatusMarks_DrawLevel_Data[slot] from the screen buffer to
 ; vBGMap0 for the shown side (CopySlotLevelPanelToVRAM_BankA0 in mode 2) (E-0125) (E-0344: the
 ; address in its name dropped or read as the label there; was CopySlotLevelPanelToVRAM)
-CopySlotLevelPanelToVRAM::
+CopySlotLevelPanelToVRAM:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     or a
     jr z, .skip
@@ -10775,7 +10775,7 @@ SECTION "Bank 31 ReadSlotAIModeIndexed_Bank31", ROMX
 
 ; A = slot: returns A = the byte at wSlotAIMode + A (the AI mode of that slot) and leaves HL
 ; pointing at it. No caller of this copy in src. (C2, E-0380)
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
 ReadSlotAIModeIndexed_Bank31:: ; configured code entry (E-0212); C0
     ld hl, wSlotAIMode
     add_a_to_hl
@@ -10799,7 +10799,7 @@ SECTION "Bank 31 AddDoubleAToHL_Bank31", ROMX
 ; carries into H. A is clobbered. No caller of this copy in src. (C2, E-0380)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
 ; appear in 12 banks)
-AddDoubleAToHL_Bank31::
+AddDoubleAToHL_Bank31:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     add a
     add_a_to_hl
     ret
@@ -10813,7 +10813,7 @@ SECTION "Bank 31 ActorOnLocalSide_Bank31", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_Bank31::
+ActorOnLocalSide_Bank31:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -10838,7 +10838,7 @@ SECTION "Bank 31 TargetOnLocalSide_Bank31", ROMX
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
-TargetOnLocalSide_Bank31::
+TargetOnLocalSide_Bank31:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_target
@@ -11046,7 +11046,7 @@ SECTION "Bank 31 SlotHasStatus3Or4Bits_Bank31", ROMX
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
-SlotHasStatus3Or4Bits_Bank31::
+SlotHasStatus3Or4Bits_Bank31:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL

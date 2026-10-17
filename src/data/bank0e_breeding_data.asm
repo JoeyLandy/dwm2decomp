@@ -9,7 +9,7 @@ SECTION "Bank 0E", ROMX
 ; BeginMessageDisplay_Bank0E_Overflow in bank $96, which subtracts $88 and uses
 ; MessageStrings_Bank0E_Overflow. The only caller read is the message test's library 28 ($1C),
 ; DebugMessageTest_Update_ShowBank0E. (C1, E-0369)
-BeginMessageDisplay_Bank0E::
+BeginMessageDisplay_Bank0E:: ; configured code entry (E-0395 (BeginMessageDisplay_Bank0E: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wStringIndex]
     cp $88
     jr c, .call_begin_string_display
@@ -30,7 +30,7 @@ SECTION "Bank 0E CopyStringToBuffer_Bank0E", ROMX
 ; caller was found in src/. (C2, E-0376)
 ; message bank $0E: when wStringIndex < $88, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank0E; otherwise far-calls CopyStringToBuffer_Bank0E_Overflow (E-0080)
-CopyStringToBuffer_Bank0E::
+CopyStringToBuffer_Bank0E:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wStringIndex]
     cp $88
     jr c, .call_copy_string_to_buffer
@@ -41,7 +41,19 @@ CopyStringToBuffer_Bank0E::
     ld de, MessageStrings_Bank0E
     call CopyStringToBuffer
     ret
-    db $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 0E ShowStringAtOnce_Bank0E", ROMX
+
+; Calls BeginMessageDisplay_Bank0E, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank0E:: ; configured code entry (E-0395); C0
+    call BeginMessageDisplay_Bank0E
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 0E MessageStrings_Bank0E", ROMX
 
 ; The category table of message bank $0E: a single word, the pointer to StringList_Bank0E_0, a list
 ; of 136 string pointers (ids 0-$87). BeginMessageDisplay_Bank0E and CopyStringToBuffer_Bank0E pass
@@ -697,7 +709,21 @@ BeginStringDisplay_Bank0E::
     ld de, BeginStringDisplay_Bank0E_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $85, $53, $cd, $fe, $25, $c9
+
+SECTION "Bank 0E CopyStringToBuffer_Bank0E_2", ROMX
+
+; Loads DE = BeginStringDisplay_Bank0E_StringCategories, the string table of
+; BeginStringDisplay_Bank0E, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank0E like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_Bank0E_2:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank0E_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 0E ShowString_Bank0E", ROMX
 
 ; Shows a breeding text at once: BeginStringDisplay_Bank0E (string wStringIndex of the table
 ; BeginStringDisplay_Bank0E_StringCategories), then RunStringDisplayToEnd, which runs the text
@@ -1916,7 +1942,7 @@ SECTION "Bank 0E RefreshRecordResistancesFromSpecies", ROMX
 ; MON_RESISTANCES. Ends with rRAMG = 0. No caller was found in src/. (C2, E-0376; probed E-0384)
 ; for each of the 30 SRAM records stores the 27 two-bit resistance levels of its species at record +
 ; $73 (E-0127)
-RefreshRecordResistancesFromSpecies::
+RefreshRecordResistancesFromSpecies:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, $0a
     ld [rRAMG2], a
     xor a

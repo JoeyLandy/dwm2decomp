@@ -159,7 +159,16 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-16, E-0394): M3 done, editable assets
+## Current handoff (2026-10-16, E-0395): M4 done, leftover code bytes
+
+tools/leftover_code.py trial-decodes the bytes after every routine end. 80 gaps that call or jump into known code
+became config/code_entries.json entries, and tracing them found 102 unreached routines in all: string stubs,
+battle getters, a block of Warubou talk handlers and link-session starters. They are named, read (C1) and probed
+(115 probes, all passing; one note corrected). The 634 routines the generator had accepted by a guess alone are
+now pinned, so discovery order no longer drops code. The other 384 gaps are listed with their verdict in
+docs/LEFTOVER_CODE.md. build/run681 PASS; parallel suite OK (432 tests, 3 skipped). Next: M5 mechanics.
+
+## Prior handoff (2026-10-16, E-0394): M3 done, editable assets
 
 tools/lzss_encode.py (Okumura's LZSS.C with the game's ring start, 96-byte lookahead and marker format) reproduces
 all 3,546 compressed streams byte for byte. tools/build.py now builds every asset from decoded data, and

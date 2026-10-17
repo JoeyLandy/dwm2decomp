@@ -1029,9 +1029,9 @@ DEF EVENT_KING_IF_YOU_SEE_19C EQU $19C ; no setter found; tested by TalkMsg0A3C_
 DEF EVENT_HERO_RECEIVED_40_000_G EQU $19D ; set by Script_KingAhYou_4
 DEF EVENT_WELCOME_TO_THE_LIBRARY_19E EQU $19E ; set by Script_WelcomeToTheLibrary_3
 DEF EVENT_STAFF_ROLL_PARTY_SAVED EQU $19F ; named by reading (config/story_flags.json); used by DebugStaffRoll_Credits_Caption
-DEF EVENT_WARUBOU_WA_HEY_HERO_YOURE EQU $1A0 ; set by GreatLogTalkEvents_WarubouInCastle
-DEF EVENT_WARUBOU_WA_HEY_HERO_TOO EQU $1A1 ; set by GreatLogTalkEvents_WarubouInCastle
-DEF EVENT_WARUBOU_WA_HEY_HERO_YOU EQU $1A2 ; set by GreatLogTalkEvents_WarubouInCastle
+DEF EVENT_WARUBOU_WA_HEY_HERO_YOURE EQU $1A0 ; set by WarubouTalk_YoureSlow
+DEF EVENT_WARUBOU_WA_HEY_HERO_TOO EQU $1A1 ; set by WarubouTalk_FindAnotherKey
+DEF EVENT_WARUBOU_WA_HEY_HERO_YOU EQU $1A2 ; set by WarubouTalk_YouHaveTheKey
 DEF EVENT_REWARD_ITEM_OR_KEY_1A3 EQU $1A3 ; set by Script_GreatHeroThanksA_2
 DEF EVENT_HERO_RECEIVED_A_TINY_MEDAL EQU $1A4 ; set by Script_Here_3
 DEF EVENT_REWARD_ITEM_OR_KEY_2_1A5 EQU $1A5 ; set by Script_FantasticICanOpen_2

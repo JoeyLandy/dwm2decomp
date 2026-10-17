@@ -2864,7 +2864,7 @@ SECTION "Bank 16 AddWItemIdToInventory", ROMX
 ; slots are taken; returns at once when wItemId is ITEM_00 or $FF. No call or jump to it was found.
 ; (C2, E-0377)
 ; puts wItemId in the first empty inventory slot; sets wItemId = $FF when all 24 are full (E-0124)
-AddWItemIdToInventory::
+AddWItemIdToInventory:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wItemId]
     cp ITEM_00
     ret z
@@ -2898,7 +2898,7 @@ SECTION "Bank 16 RemoveWItemIdFromInventory", ROMX
 ; or jump to it was found. (C2, E-0377)
 ; removes the first inventory slot holding wItemId and compacts the inventory; sets wItemId = $FF
 ; when not found (E-0124)
-RemoveWItemIdFromInventory::
+RemoveWItemIdFromInventory:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wItemId]
     cp ITEM_00
     ret z
@@ -4815,7 +4815,7 @@ SECTION "Bank 16 StoreCToRecordField", ROMX
 ; the HL passed in) at that field of the record. (C2, E-0378)
 ; A = record (SRAMRecordAddressMapped), C = field offset: stores the low byte of the caller's HL
 ; (moved to C) at that field (E-0114)
-StoreCToRecordField::
+StoreCToRecordField:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     call SRAMRecordAddressMapped
     pop bc
@@ -7471,7 +7471,7 @@ SECTION "Bank 16 RemovePartyMemberMarkedFF", ROMX
 ; dropped. (C2, E-0378)
 ; removes the $FF entry from the party list wPartyList, wPartyCount -= 1, wBattlePartyCount = new
 ; count, and terminates the list with $FF (E-0124)
-RemovePartyMemberMarkedFF::
+RemovePartyMemberMarkedFF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -9666,7 +9666,7 @@ SECTION "Bank 16 ShowStrings6To8Bank09InRows", ROMX
 ; rows, width $12). (C1, E-0378)
 ; copies a tile to vTiles1 + $6D0, shows strings 6, 7 and 8 of category 2 (bank 09) at vTiles1 +
 ; $6D0, $750 and $7D0, then restores the default window (E-0127)
-ShowStrings6To8Bank09InRows::
+ShowStrings6To8Bank09InRows:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld de, vTiles1 + $2f0
     ld hl, vTiles1 + $6d0
     ld b, $10
@@ -10028,7 +10028,7 @@ SECTION "Bank 16 DrawTitleSaveSummaryScreen", ROMX
 ; draws the save summary. (C1, E-0378)
 ; loads the summary graphics and palette, the save file summary, and draws the player name, party
 ; icons, names, levels and key name on the title screen (E-0131)
-DrawTitleSaveSummaryScreen::
+DrawTitleSaveSummaryScreen:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld b, BANK(Tiles0Gfx_3)
     ld de, Tiles0Gfx_3
     ld hl, vTiles0

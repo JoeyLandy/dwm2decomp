@@ -613,7 +613,7 @@ SECTION "Bank 14 StartRecordListOrNoneMessage", ROMX
 ; lists the records; with none sets wTwoChoiceCursor = 1 and wScreenState = 2, otherwise
 ; wScreenState += 3; then requests script $80 (the next entry does the same with
 ; CountFlaggedSRAMRecords) (E-0127)
-StartRecordListOrNoneMessage::
+StartRecordListOrNoneMessage:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     farcall ListRecordsState1NotEggs
     ld a, [wListCount]
     and a
@@ -3055,7 +3055,7 @@ SECTION "Bank 14 DrawBox1D4AndCopyRect", ROMX
 ; 11 x 1 rectangle DrawBox1D4AndCopyRect_TileRect to wWindowTileBuffer + $10D and wScreenStep += 1
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; DrawBox1D4AndCopyRect)
-DrawBox1D4AndCopyRect::
+DrawBox1D4AndCopyRect:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld c, $09
     ld hl, $01d4
     ld de, $0008
@@ -4791,7 +4791,7 @@ SECTION "Bank 14 ToggleVoicingMarkOnNameEntry", ROMX
 ; RunNameEntryStateWhenNotFading_ApplyCharacter handles the marks in play. (C1, E-0377)
 ; on the last glyph of the name entry wNameEntryText adds or cycles the marks $8D and $8E when the
 ; glyph allows them (lists IsHLByteInList_Data and 68CA), with sound $69 (E-0129)
-ToggleVoicingMarkOnNameEntry::
+ToggleVoicingMarkOnNameEntry:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CopyTileForNameEntryLength
     ld hl, wNameEntryText
 

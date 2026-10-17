@@ -35,7 +35,7 @@ SECTION "Bank 28 CopyStringToBuffer_Bank28", ROMX
 ; copy by name. (C2, E-0378)
 ; message bank $28: when wStringIndex < $DA, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank28; otherwise far-calls CopyStringToBuffer_Bank28_Overflow (E-0080)
-CopyStringToBuffer_Bank28::
+CopyStringToBuffer_Bank28:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wStringIndex]
     cp $da
     jr c, .call_copy_string_to_buffer

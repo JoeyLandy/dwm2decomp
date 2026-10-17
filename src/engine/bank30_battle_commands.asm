@@ -14,7 +14,7 @@ SECTION "Bank 30", ROMX
 ; battle fight step 2: returns while a message is being drawn (wTextFlags); otherwise one of 7
 ; sub-steps by wBattleSubPhase; case 0 loads the slots' personality bytes (wSlotPersonality*), the
 ; command menu loop follows
-RunBattleCommandEntry::
+RunBattleCommandEntry:: ; configured code entry (E-0395 (RunBattleCommandEntry: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wTextFlags]
     or a
     ret nz
@@ -2731,14 +2731,7 @@ BitMaskWords16::
     db $00, $01, $00, $02, $00, $04, $00, $08, $00, $10, $00, $20, $00, $40, $00, $80
 
 FlagBitHandlerTable::
-    dw RollPersonalityHiHighFlag01
-    dw RollPersonalityHiLowFlag02
-    dw RollPersonalityMidHighFlag04
-    dw RollPersonalityMidLowFlag08
-    dw RollPersonalityLoHighFlag10
-    dw RollPersonalityLoLowFlag20
-    dw RollSlotTraitHighFlag40
-    dw RollSlotTraitLowFlag80
+    db $86, $4f, $8e, $4f, $96, $4f, $9e, $4f, $a6, $4f, $ae, $4f, $b6, $4f, $be, $4f
     db $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f, $c6, $4f
 
 ; Handler of the mask bit $01 of FlagBitHandlerTable: HL = wSlotPersonalityHi, DE = $0001, and a
@@ -2750,7 +2743,7 @@ FlagBitHandlerTable::
 ; AI trait roll with mask DE = $01: when the actor's value is at least $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 0 of the actor's wPersonalityActs;
 ; forced, that act shows 'struck at full power!' ($2E))
-RollPersonalityHiHighFlag01::
+RollPersonalityHiHighFlag01:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotPersonalityHi
     ld de, $0001
     jr RollPersonalityActForHighValue
@@ -2765,7 +2758,7 @@ SECTION "Bank 30 RollPersonalityHiLowFlag02", ROMX
 ; AI trait roll with mask DE = $02: when the actor's value is below $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 1 of the actor's wPersonalityActs;
 ; forced, that act shows 'tucked tighter in fear!' ($2F))
-RollPersonalityHiLowFlag02::
+RollPersonalityHiLowFlag02:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotPersonalityHi
     ld de, $0002
     jr RollPersonalityActForLowValue
@@ -2781,7 +2774,7 @@ SECTION "Bank 30 RollPersonalityMidHighFlag04", ROMX
 ; AI trait roll with mask DE = $04: when the actor's value is at least $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 2 of the actor's wPersonalityActs;
 ; forced, that act shows 'concentrated!' ($30))
-RollPersonalityMidHighFlag04::
+RollPersonalityMidHighFlag04:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotPersonalityMid
     ld de, $0004
     jr RollPersonalityActForHighValue
@@ -2796,7 +2789,7 @@ SECTION "Bank 30 RollPersonalityMidLowFlag08", ROMX
 ; AI trait roll with mask DE = $08: when the actor's value is below $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (E-0337: sets bit 3 of wPersonalityActs; forced, it showed no
 ; text)
-RollPersonalityMidLowFlag08::
+RollPersonalityMidLowFlag08:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotPersonalityMid
     ld de, $0008
     jr RollPersonalityActForLowValue
@@ -2812,7 +2805,7 @@ SECTION "Bank 30 RollPersonalityLoHighFlag10", ROMX
 ; AI trait roll with mask DE = $10: when the actor's value is at least $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 4 of the actor's wPersonalityActs;
 ; forced, that act shows 'Light fell softly on 0!' ($32))
-RollPersonalityLoHighFlag10::
+RollPersonalityLoHighFlag10:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotPersonalityLo
     ld de, $0010
     jr RollPersonalityActForHighValue
@@ -2827,7 +2820,7 @@ SECTION "Bank 30 RollPersonalityLoLowFlag20", ROMX
 ; AI trait roll with mask DE = $20: when the actor's value is below $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 5 of the actor's wPersonalityActs;
 ; forced, that act shows 'ducked behind <ally>!' ($33))
-RollPersonalityLoLowFlag20::
+RollPersonalityLoLowFlag20:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotPersonalityLo
     ld de, $0020
     jr RollPersonalityActForLowValue
@@ -2842,7 +2835,7 @@ SECTION "Bank 30 RollSlotTraitHighFlag40", ROMX
 ; AI trait roll with mask DE = $40: when the actor's value is at least $80 rolls a chance that grows
 ; with its distance from $80 (E-0122) (C2 from E-0337: sets bit 6 of the actor's wPersonalityActs;
 ; forced, that act shows 'pumped itself up!' ($34))
-RollSlotTraitHighFlag40::
+RollSlotTraitHighFlag40:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotTrait
     ld de, $0040
     jr RollPersonalityActForHighValue
@@ -2857,7 +2850,7 @@ SECTION "Bank 30 RollSlotTraitLowFlag80", ROMX
 ; AI trait roll with mask DE = $80: when the actor's wSlotTrait value is below $80 rolls a chance
 ; that grows with its distance from $80 (E-0125) (C2 from E-0337: sets bit 7 of the actor's
 ; wPersonalityActs; forced, that act shows 'rolled out of the way!' ($35))
-RollSlotTraitLowFlag80::
+RollSlotTraitLowFlag80:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wSlotTrait
     ld de, $0080
     jr RollPersonalityActForLowValue
@@ -3887,7 +3880,7 @@ SECTION "Bank 30 MaybeOverrideActorActionWithDebugValue0", ROMX
 ; terminator). (C2, E-0378)
 ; advances the random seed; when wDebugCursor is set and the random value is below wDebugValue1,
 ; stores wDebugValue0 as the actor's action choice (E-0122)
-MaybeOverrideActorActionWithDebugValue0::
+MaybeOverrideActorActionWithDebugValue0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AdvanceRandom
     call ActorActionChoiceAddress
     ld a, [wDebugCursor]
@@ -4586,7 +4579,19 @@ SECTION "Bank 30 ReadBattleMaxHPOfSlot_Bank30", ROMX
 ReadBattleMaxHPOfSlot_Bank30::
     ld hl, wBattleMaxHP
     jr ReadBattleWordFromArray_Bank30
-    db $21, $ef, $d8, $18, $19
+
+SECTION "Bank 30 GetBattleMaxMP_Bank30", ROMX
+
+; HL = wBattleMaxMP, then ReadBattleWordFromArray_Bank30: HL = the word at wBattleMaxMP + 2 x A (A =
+; the battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or
+; pointer reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2,
+; E-0395; probed E-0395)
+; the same 40 bytes as GetBattleMaxMP_Bank39 (GetBattleMaxMP_Bank39) (E-0060)
+GetBattleMaxMP_Bank30:: ; configured code entry (E-0395); C0
+    ld hl, wBattleMaxMP
+    jr ReadBattleWordFromArray_Bank30
+
+SECTION "Bank 30 ReadBattleHPOfSlot_Bank30", ROMX
 
 ; A = slot: HL = the word of that slot in wBattleHP (HL = wBattleHP, then
 ; ReadBattleWordFromArray_Bank30). AnyAllyHPBelowSixthOfMax calls it. (C2, E-0378)
@@ -4598,10 +4603,35 @@ ReadBattleHPOfSlot_Bank30::
 SECTION "Bank 30 GetBattleMP_Bank30", ROMX
 
 ; HL = wBattleMP, then the slot's word (ReadBattleWordFromArray_Bank30). (C2, E-0357; probed E-0378)
-GetBattleMP_Bank30::
+; the same 30 bytes as GetBattleMP_Bank39 (GetBattleMP_Bank39) (E-0060)
+GetBattleMP_Bank30:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMP
     jr ReadBattleWordFromArray_Bank30
-    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
+
+SECTION "Bank 30 GetBattleAGL_Bank30", ROMX
+
+; HL = wBattleAGL, then ReadBattleWordFromArray_Bank30: HL = the word at wBattleAGL + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 25 bytes as GetBattleAGL_Bank39 (GetBattleAGL_Bank39) (E-0060)
+GetBattleAGL_Bank30:: ; configured code entry (E-0395); C0
+    ld hl, wBattleAGL
+    jr ReadBattleWordFromArray_Bank30
+
+SECTION "Bank 30 ReadSlotAIModeIndexed_Bank30", ROMX
+
+; A = the byte at wSlotAIMode + A, the AI mode of slot A. A copy of the routine of the same shape
+; found in other banks. No traced code, jump table or pointer reaches it (E-0395: it decodes as a
+; routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_Bank30::
+    ld hl, wSlotAIMode
+    add_a_to_hl
+    ld a, [hl]
+    ret
+
+SECTION "Bank 30 ReadBattleWordFromArray_Bank30", ROMX
 
 ; HL = an array of words, A = index: HL = the word at HL + 2 * A. A is doubled in 8 bits first, so
 ; an index of $80 or more wraps. A is clobbered; a copy of the routine of the same shape in other
@@ -4633,7 +4663,7 @@ SECTION "Bank 30 ActorOnLocalSide_Bank30", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_Bank30::
+ActorOnLocalSide_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -4657,7 +4687,7 @@ SECTION "Bank 30 TargetOnLocalSide_Bank30", ROMX
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
-TargetOnLocalSide_Bank30::
+TargetOnLocalSide_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_target
@@ -4678,7 +4708,7 @@ SECTION "Bank 30 ClearBattleStatusBitsWithMaskD_Bank30", ROMX
 
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank30_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0378)
-ClearBattleStatusBitsWithMaskD_Bank30::
+ClearBattleStatusBitsWithMaskD_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank30_Data
     add_a_to_hl
@@ -4706,7 +4736,7 @@ ClearBattleStatusBitsWithMaskD_Bank30_Data::
 ; E-0378)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit0OfLevelUpGainsIndexed_Bank30::
+SetBit0OfLevelUpGainsIndexed_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -4720,7 +4750,7 @@ SECTION "Bank 30 SetBit1OfLevelUpGainsIndexed_Bank30", ROMX
 ; E-0378)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit1OfLevelUpGainsIndexed_Bank30::
+SetBit1OfLevelUpGainsIndexed_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -4734,7 +4764,7 @@ SECTION "Bank 30 SetBit2OfLevelUpGainsIndexed_Bank30", ROMX
 ; E-0378)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit2OfLevelUpGainsIndexed_Bank30::
+SetBit2OfLevelUpGainsIndexed_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -4815,7 +4845,7 @@ SECTION "Bank 30 CheckSlotStatusBlockWide_Bank30", ROMX
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
-CheckSlotStatusBlockWide_Bank30::
+CheckSlotStatusBlockWide_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -4848,7 +4878,7 @@ SECTION "Bank 30 SlotHasStatus3Or4Bits_Bank30", ROMX
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
-SlotHasStatus3Or4Bits_Bank30::
+SlotHasStatus3Or4Bits_Bank30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL

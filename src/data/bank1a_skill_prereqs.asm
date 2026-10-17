@@ -2401,7 +2401,7 @@ SECTION "Bank 1A TryAddSkillUnlessBetterKnown", ROMX
 ; skill hTemp0: when every skill in its $FF-terminated list SkillPrerequisitePointers[hTemp0] is
 ; already among the eight at wWorkBuf (or equal to C), adds it (AddSkillCToFreeOrWeakerSlot);
 ; otherwise hTemp0 = 0 (E-0126)
-TryAddSkillUnlessBetterKnown::
+TryAddSkillUnlessBetterKnown:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ldh a, [hTemp0]
     ld c, a
     ld b, $00

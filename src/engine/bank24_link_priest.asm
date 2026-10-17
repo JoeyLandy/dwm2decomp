@@ -16,7 +16,7 @@ SECTION "Bank 24", ROMX
 ; after which GameMode6_Update runs each frame. (C1, E-0378)
 ; start-up for wGameMode = 6; forcing this mode on the emulator shows: victory screen when forced
 ; (E-0029)
-GameMode6_Init::
+GameMode6_Init:: ; configured code entry (E-0395 (GameMode6_Init: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld hl, wScreenState
     ld bc, $006f
 
@@ -2323,21 +2323,21 @@ BGMapAddressAtScroll_Bank24::
     add_a_to_hl
     ret
 
-SECTION "Bank 24 CopyBytesDEToHL_Bank24_2", ROMX
+SECTION "Bank 24 CopyBytesDEToHL_Bank24", ROMX
 
 ; Copies BC bytes from DE to HL one at a time; DE and HL end just past the copy, BC ends as 0 and A
 ; is clobbered. A count of 0 copies 65536 bytes. Nothing in src/ calls it (its only reference is its
 ; own loop); the same bytes are copies elsewhere. (C2, E-0378)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-CopyBytesDEToHL_Bank24_2::
+CopyBytesDEToHL_Bank24:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [de]
     inc de
     ld [hli], a
     dec bc
     ld a, b
     or c
-    jr nz, CopyBytesDEToHL_Bank24_2
+    jr nz, CopyBytesDEToHL_Bank24
     ret
 
 SECTION "Bank 24 CopyLow3BitsToWRAMBank2_Bank24_2", ROMX
@@ -2348,7 +2348,7 @@ SECTION "Bank 24 CopyLow3BitsToWRAMBank2_Bank24_2", ROMX
 ; (C2, E-0378)
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
 ; 19 bytes appear in 5 banks)
-CopyLow3BitsToWRAMBank2_Bank24_2::
+CopyLow3BitsToWRAMBank2_Bank24_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, $02
     ldh [rSVBK], a
 
@@ -2881,7 +2881,7 @@ SECTION "Bank 24 CopyAttributeBlockToBattlerRecordSlot64", ROMX
 ; address in its name read as its RAM name; was CopyAttributeBlockToBattlerRecordSlot64) (E-0344:
 ; the address in its name dropped or read as the label there; was
 ; CopyAttributeBlockToBattlerRecordSlot64)
-CopyAttributeBlockToBattlerRecordSlot64::
+CopyAttributeBlockToBattlerRecordSlot64:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wIsCGB]
     and a
     ret z
@@ -3111,7 +3111,7 @@ SECTION "Bank 24 CopyDefaultRecordToRecordBufB", ROMX
 ; DefaultMonsterRecord (byte 0 = 1, the name '???', species word $00D4, level $12) to wRecordBufB.
 ; Clobbers A, B, DE and HL. No code in src/ calls it, so it is probably unused. (C2, E-0378)
 ; copies the $A5 bytes at DefaultMonsterRecord to wRecordBufB (E-0122)
-CopyDefaultRecordToRecordBufB::
+CopyDefaultRecordToRecordBufB:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, DefaultMonsterRecord
     ld de, wRecordBufB
     ld b, $a5
@@ -4208,7 +4208,21 @@ BeginStringDisplay_Bank24::
     ld de, BeginStringDisplay_Bank24_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $25, $5d, $cd, $fe, $25, $c9
+
+SECTION "Bank 24 CopyStringToBuffer_Bank24", ROMX
+
+; Loads DE = BeginStringDisplay_Bank24_StringCategories, the string table of
+; BeginStringDisplay_Bank24, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank24 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_Bank24:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank24_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 24 ShowString_Bank24", ROMX
 
 ; Shows a message of this bank to its end: calls BeginStringDisplay_Bank24, then
 ; RunStringDisplayToEnd, which sets bit 1 of wTextFlags and runs StepTextPrinter until wTextFlags is
@@ -5114,11 +5128,11 @@ PriestMenu_PayForService_PlayPrayer::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
-    call CopyBytesDEToHL_Bank24
+    call CopyBytesDEToHL_Bank24_2
     ld hl, wWindowTileBuffer
     ld de, wScreenTileBuffer + $104
     ld bc, $0064
-    call CopyBytesDEToHL_Bank24
+    call CopyBytesDEToHL_Bank24_2
     ld a, [wIsCGB]
     and a
     jr z, .call_bg_map_address_at_scroll_bank24_2
@@ -5554,21 +5568,21 @@ BGMapAddressAtScroll_Bank24_2::
     add_a_to_hl
     ret
 
-SECTION "Bank 24 CopyBytesDEToHL_Bank24", ROMX
+SECTION "Bank 24 CopyBytesDEToHL_Bank24_2", ROMX
 
 ; Copies BC bytes from DE to HL one at a time; DE and HL end just past the copy, BC ends as 0 and A
 ; is clobbered. A count of 0 copies 65536 bytes. Used by the priest menu to save and restore the
 ; window and screen tile buffers. (C2, E-0378)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-CopyBytesDEToHL_Bank24::
+CopyBytesDEToHL_Bank24_2::
     ld a, [de]
     inc de
     ld [hli], a
     dec bc
     ld a, b
     or c
-    jr nz, CopyBytesDEToHL_Bank24
+    jr nz, CopyBytesDEToHL_Bank24_2
     ret
 
 SECTION "Bank 24 CopyLow3BitsToWRAMBank2_Bank24", ROMX
@@ -6001,7 +6015,7 @@ PriestMenu_PayForService_Back_CopyRows::
     ld b, a
     ld a, [wArg2]
     ld c, a
-    call CopyBytesDEToHL_Bank24
+    call CopyBytesDEToHL_Bank24_2
     pop de
     pop hl
     ld a, [wIsCGB]
@@ -6080,7 +6094,7 @@ PriestMenu_RestoreTwoChoiceBoxArea_CopyRows::
     push de
     push bc
     ld bc, $0006
-    call CopyBytesDEToHL_Bank24
+    call CopyBytesDEToHL_Bank24_2
     pop bc
     pop de
     pop hl

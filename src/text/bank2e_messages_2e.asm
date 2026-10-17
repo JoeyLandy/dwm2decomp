@@ -14,7 +14,7 @@ SECTION "Bank 2E", ROMX
 ; E-0378)
 ; message bank $2E: when wStringIndex < $A6, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank2E; otherwise far-calls BeginStringDisplay_Bank2E_Overflow (E-0080)
-BeginStringDisplay_Bank2E::
+BeginStringDisplay_Bank2E:: ; configured code entry (E-0395 (BeginStringDisplay_Bank2E: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wStringIndex]
     cp $a6
     jr c, .call_begin_string_display
@@ -36,7 +36,7 @@ SECTION "Bank 2E CopyStringToBuffer_Bank2E", ROMX
 ; copy by name. (C2, E-0378)
 ; message bank $2E: when wStringIndex < $A6, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank2E; otherwise far-calls CopyStringToBuffer_Bank2E_Overflow (E-0080)
-CopyStringToBuffer_Bank2E::
+CopyStringToBuffer_Bank2E:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wStringIndex]
     cp $a6
     jr c, .call_copy_string_to_buffer
@@ -47,7 +47,19 @@ CopyStringToBuffer_Bank2E::
     ld de, MessageStrings_Bank2E
     call CopyStringToBuffer
     ret
-    db $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 2E ShowStringAtOnce_Bank2E", ROMX
+
+; Calls BeginStringDisplay_Bank2E, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank2E:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank2E
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 2E MessageStrings_Bank2E", ROMX
 
 ; One little-endian word, a pointer to StringList_Bank2E_0, the list of 166 message pointers
 ; Message_06_00 to Message_06_A5 (message group 6, bank $2E). LookupString reads word

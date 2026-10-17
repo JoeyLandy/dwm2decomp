@@ -11,7 +11,7 @@ SECTION "Bank A2", ROMX
 ; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hTemp0 bytes from HL to DE (E-0121) (E-0344:
 ; the address in its name dropped or read as the label there; was CopyMonsterTableBytes; a trailing
 ; preposition left by the dropped address removed)
-CopyMonsterTableBytes::
+CopyMonsterTableBytes:: ; configured code entry (E-0395 (CopyMonsterTableBytes: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     push de
     push bc
     ld a, [wMonsterId]
@@ -1783,7 +1783,19 @@ BeginStringDisplay_BankE0_FromBankA2Table::
     ld [wStringCategory], a
     call BeginStringDisplay
     ret
-    db $cd, $e2, $49, $cd, $11, $26, $c9
+
+SECTION "Bank A2 ShowStringAtOnce_BankE0_FromBankA2Table", ROMX
+
+; Calls BeginStringDisplay_BankE0_FromBankA2Table, which starts string wStringIndex of its table,
+; then RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a
+; glyph per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine
+; but is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_BankE0_FromBankA2Table:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_BankE0_FromBankA2Table
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank A2 StaffRollStringCategories", ROMX
 
 ; Two words, StaffRollNameStrings and StaffRollTitleStrings: the string table that
 ; BeginStringDisplay_BankE0_FromBankA2Table passes in DE. wStringCategory is lowered by 1 before the

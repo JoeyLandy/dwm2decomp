@@ -11,11 +11,26 @@ SECTION "Bank 0B", ROMX
 ; debug menu (bank $01) and called by ShowString_Bank0B. The 7 bytes after its ret are an unlabelled
 ; second copy of the same ld de / call / ret. (C1, E-0376)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank0B::
+BeginStringDisplay_Bank0B:: ; configured code entry (E-0395 (BeginStringDisplay_Bank0B: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank0B_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9
+
+SECTION "Bank 0B CopyStringToBuffer_Bank0B", ROMX
+
+; Loads DE = BeginStringDisplay_Bank0B_StringCategories, the string table of
+; BeginStringDisplay_Bank0B, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank0B like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank0B:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank0B_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 0B ShowString_Bank0B", ROMX
 
 ; Shows a bank $0B string at once: BeginStringDisplay_Bank0B (string wStringIndex of category
 ; wStringCategory) and then RunStringDisplayToEnd, which prints the whole string in one go instead

@@ -18,7 +18,7 @@ SECTION "Bank F2", ROMX
 ; GameMode8_Update takes over each frame, starting at wScreenSubStep 0 (cleared here). (C1, E-0386)
 ; start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when
 ; forced (E-0029)
-GameMode8_Init::
+GameMode8_Init:: ; configured code entry (E-0395 (GameMode8_Init: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld hl, wScreenState
     ld bc, $006f
 
@@ -369,7 +369,7 @@ SECTION "Bank F2 RunTextUntilTextWindowStateDone_BankF2", ROMX
 ; version. (C1, E-0386)
 ; clears the default window, wTextWindowState = 1, wTextWindowStep = 0, hSpriteWindowClipMode = 2,
 ; then repeatedly far-calls StepTextWindowOpenClose until wTextWindowState & 3 = 0 (E-0122)
-RunTextUntilTextWindowStateDone_BankF2::
+RunTextUntilTextWindowStateDone_BankF2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -677,7 +677,21 @@ BeginStringDisplay_BankF2::
     ld de, BeginStringDisplay_BankF2_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $e5, $43, $cd, $fe, $25, $c9
+
+SECTION "Bank F2 CopyStringToBuffer_BankF2", ROMX
+
+; Loads DE = BeginStringDisplay_BankF2_StringCategories, the string table of
+; BeginStringDisplay_BankF2, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_BankF2 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_BankF2:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_BankF2_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank F2 ShowString_BankF2", ROMX
 
 ; Draws a whole message of this bank table at once: BeginStringDisplay_BankF2 (message wStringIndex
 ; of category wStringCategory), then RunStringDisplayToEnd, which steps the text printer until
@@ -4087,7 +4101,18 @@ ScreenNumberList017::
 ; ReturnStub_3)
 ReturnStub_3::
     ret
-    db $cd, $55, $63, $cd, $46, $63, $c9
+
+SECTION "Bank F2 ReorderAndStoreKeyList", ROMX
+
+; Calls ReorderKeyList, then CopyWorkBuf1ToKeyList, so the reordered keys and their seeds replace
+; wKeyList. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but is
+; unreached in the static listing). (C1, E-0395)
+ReorderAndStoreKeyList:: ; configured code entry (E-0395); C0
+    call ReorderKeyList
+    call CopyWorkBuf1ToKeyList
+    ret
+
+SECTION "Bank F2 KeyAppraisalMenu_ChooseKey_ListCursor_SortKeys", ROMX
 
 ; Choosing a key, Select: reorders the key list (ReorderKeyList), copies it back
 ; (CopyWorkBuf1ToKeyList) and returns to step 0. (C2, E-0357; probed E-0386)

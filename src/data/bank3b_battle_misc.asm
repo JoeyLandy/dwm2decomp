@@ -16,7 +16,7 @@ SECTION "Bank 3B", ROMX
 ; LoadMonsterRecord and the monster record's HP word (wRecordBufferData + $8) is returned; otherwise
 ; the word at offset $1D of the slot's 78-byte battler record (wBattlerRecords,
 ; BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-GetBaseHP::
+GetBaseHP:: ; configured code entry (E-0395 (GetBaseHP: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, c
     and $03
     cp $03
@@ -563,7 +563,7 @@ SECTION "Bank 3B ReadBattleWordFromArray_Bank3B", ROMX
 ; first, so a slot number above $7F wraps. The same 10 bytes as ReadBattleWordFromArray. No call to
 ; this bank copy was found in src/. (C2, E-0384)
 ; the same 10 bytes as ReadBattleWordFromArray (ReadBattleWordFromArray) (E-0043)
-ReadBattleWordFromArray_Bank3B::
+ReadBattleWordFromArray_Bank3B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add a
     add_a_to_hl
     deref_hl
@@ -1983,10 +1983,30 @@ SECTION "Bank 3B GetTargetSlotResistancesByte3_Bank3B", ROMX
 
 ; A = byte 3 of the target's 7-byte resistance record (GetTargetResistanceByte_Bank3B). (C2, E-0357;
 ; probed E-0384)
-GetTargetSlotResistancesByte3_Bank3B::
+GetTargetSlotResistancesByte3_Bank3B:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld de, wSlotResistances + $3
     jr GetTargetResistanceByte_Bank3B
-    db $11, $76, $da, $18, $08, $11, $77, $da, $18, $03, $11, $78, $da
+
+SECTION "Bank 3B GetTargetSlotResistancesByte4_Bank3B", ROMX
+
+; DE = wSlotResistances + $4, then GetTargetResistanceByte_Bank3B: A = the byte at DE + 7 x
+; wBattleTarget, resistance byte 4 of the target slot's record. No traced code, jump table or
+; pointer reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2,
+; E-0395; probed E-0395)
+GetTargetSlotResistancesByte4_Bank3B:: ; configured code entry (E-0395); C0
+    ld de, wSlotResistances + $4
+    jr GetTargetResistanceByte_Bank3B
+
+SECTION "Bank 3B GetTargetSlotResistancesByte5_Bank3B", ROMX
+
+; DE = wSlotResistances + $5, then GetTargetResistanceByte_Bank3B: A = the byte at DE + 7 x
+; wBattleTarget, resistance byte 5 of the target slot's record. No traced code, jump table or
+; pointer reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2,
+; E-0395; probed E-0395)
+GetTargetSlotResistancesByte5_Bank3B:: ; configured code entry (E-0395); C0
+    ld de, wSlotResistances + $5
+    jr GetTargetResistanceByte_Bank3B
+    db $11, $78, $da
 
 ; A = the byte at DE + 7 x wBattleTarget. (C2, E-0357; probed E-0384)
 GetTargetResistanceByte_Bank3B::
@@ -2152,7 +2172,7 @@ SECTION "Bank 3B RollChance3FOf256", ROMX
 ; Advances the random state (AdvanceRandom), then carry set when wRandomLo is below $3F (63 in 256,
 ; about one time in four). No call to it was found in src/. (C2, E-0384)
 ; AdvanceRandom, then compares wRandomLo with $3F: carry (success) about one time in four (E-0116)
-RollChance3FOf256::
+RollChance3FOf256:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $3f
@@ -2939,7 +2959,30 @@ ItemEffect_EndForTarget::
     ld a, $0a
     ld [wBattleResolveStep], a
     ret
-    db $21, $ff, $d8, $18, $28, $21, $0f, $d9, $18, $23
+
+SECTION "Bank 3B GetBattleATK_Bank3B", ROMX
+
+; HL = wBattleATK, then GetBattleStatWord_Bank3B: HL = the word at wBattleATK + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 55 bytes as GetBattleATK_Bank39 (GetBattleATK_Bank39) (E-0060)
+GetBattleATK_Bank3B:: ; configured code entry (E-0395); C0
+    ld hl, wBattleATK
+    jr GetBattleStatWord_Bank3B
+
+SECTION "Bank 3B GetBattleDEF_Bank3B", ROMX
+
+; HL = wBattleDEF, then GetBattleStatWord_Bank3B: HL = the word at wBattleDEF + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 50 bytes as GetBattleDEF_Bank39 (GetBattleDEF_Bank39) (E-0060)
+GetBattleDEF_Bank3B:: ; configured code entry (E-0395); C0
+    ld hl, wBattleDEF
+    jr GetBattleStatWord_Bank3B
+
+SECTION "Bank 3B GetBattleMaxHP_Bank3B", ROMX
 
 ; A = battle slot: HL = the wBattleMaxHP word of that slot, A = its low byte (a jump to
 ; GetBattleStatWord_Bank3B with HL = wBattleMaxHP). RestoreTargetHPByActionAmount calls it. Bank $3B
@@ -2962,17 +3005,43 @@ GetBattleMaxMP_Bank3B::
 SECTION "Bank 3B GetBattleHP_Bank3B", ROMX
 
 ; HL = wBattleHP, then the slot's word (GetBattleStatWord_Bank3B). (C2, E-0357; probed E-0384)
-GetBattleHP_Bank3B::
+; the same 35 bytes as GetBattleHP_Bank39 (GetBattleHP_Bank39) (E-0060)
+GetBattleHP_Bank3B:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleHP
     jr GetBattleStatWord_Bank3B
 
 SECTION "Bank 3B GetBattleMP_Bank3B", ROMX
 
 ; HL = wBattleMP, then the slot's word (GetBattleStatWord_Bank3B). (C2, E-0357; probed E-0384)
-GetBattleMP_Bank3B::
+; the same 30 bytes as GetBattleMP_Bank39 (GetBattleMP_Bank39) (E-0060)
+GetBattleMP_Bank3B:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMP
     jr GetBattleStatWord_Bank3B
-    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
+
+SECTION "Bank 3B GetBattleAGL_Bank3B", ROMX
+
+; HL = wBattleAGL, then GetBattleStatWord_Bank3B: HL = the word at wBattleAGL + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 25 bytes as GetBattleAGL_Bank39 (GetBattleAGL_Bank39) (E-0060)
+GetBattleAGL_Bank3B:: ; configured code entry (E-0395); C0
+    ld hl, wBattleAGL
+    jr GetBattleStatWord_Bank3B
+
+SECTION "Bank 3B ReadSlotAIModeIndexed_Bank3B", ROMX
+
+; A = the byte at wSlotAIMode + A, the AI mode of slot A. A copy of the routine of the same shape
+; found in other banks. No traced code, jump table or pointer reaches it (E-0395: it decodes as a
+; routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_Bank3B::
+    ld hl, wSlotAIMode
+    add_a_to_hl
+    ld a, [hl]
+    ret
+
+SECTION "Bank 3B GetBattleStatWord_Bank3B", ROMX
 
 ; HL = the word at HL + 2 x slot A (the value, not a pointer). (C2, E-0357; probed E-0384)
 GetBattleStatWord_Bank3B::
@@ -3002,7 +3071,7 @@ SECTION "Bank 3B ActorOnLocalSide_Bank3B", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_Bank3B::
+ActorOnLocalSide_Bank3B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -3049,7 +3118,7 @@ SECTION "Bank 3B ClearBattleStatusBitsWithMaskD_Bank3B", ROMX
 
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank3B_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0384)
-ClearBattleStatusBitsWithMaskD_Bank3B::
+ClearBattleStatusBitsWithMaskD_Bank3B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank3B_Data
     add_a_to_hl
@@ -3125,7 +3194,7 @@ SECTION "Bank 3B PersonalityIndexOfSlot_Bank3B", ROMX
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
 ; appear in 13 banks)
-PersonalityIndexOfSlot_Bank3B::
+PersonalityIndexOfSlot_Bank3B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     push bc
     ld c, a
@@ -3189,7 +3258,7 @@ SECTION "Bank 3B CheckSlotStatusBlockWide_Bank3B", ROMX
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
-CheckSlotStatusBlockWide_Bank3B::
+CheckSlotStatusBlockWide_Bank3B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -3223,7 +3292,7 @@ SECTION "Bank 3B SlotHasStatus3Or4Bits_Bank3B", ROMX
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
-SlotHasStatus3Or4Bits_Bank3B::
+SlotHasStatus3Or4Bits_Bank3B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL

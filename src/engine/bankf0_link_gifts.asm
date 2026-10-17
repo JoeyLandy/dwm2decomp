@@ -11,11 +11,37 @@ SECTION "Bank F0", ROMX
 ; message modes 1 and 2. (C1, E-0385)
 ; ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or
 ; read as the label there; was BeginStringDisplay_BankF0)
-BeginStringDisplay_BankF0::
+BeginStringDisplay_BankF0:: ; configured code entry (E-0395 (BeginStringDisplay_BankF0: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_BankF0_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9, $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank F0 CopyStringToBuffer_BankF0", ROMX
+
+; Loads DE = BeginStringDisplay_BankF0_StringCategories, the string table of
+; BeginStringDisplay_BankF0, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_BankF0 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_BankF0:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_BankF0_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank F0 ShowStringAtOnce_BankF0", ROMX
+
+; Calls BeginStringDisplay_BankF0, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_BankF0:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_BankF0
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank F0 BeginStringDisplay_BankF0_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -401,7 +427,21 @@ BeginStringDisplay_BankF0_2::
     ld de, BeginStringDisplay_BankF0_2_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $b5, $48, $cd, $fe, $25, $c9
+
+SECTION "Bank F0 CopyStringToBuffer_BankF0_2", ROMX
+
+; Loads DE = BeginStringDisplay_BankF0_2_StringCategories, the string table of
+; BeginStringDisplay_BankF0_2, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_BankF0_2 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_BankF0_2:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_BankF0_2_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank F0 ShowString_BankF0", ROMX
 
 ; Calls BeginStringDisplay_BankF0_2 and then RunStringDisplayToEnd, so the message chosen by
 ; wStringCategory and wStringIndex is drawn whole at once (wTextFlags bit 1 set) instead of one
@@ -2592,7 +2632,7 @@ SECTION "Bank F0 UnusedStepObject1LeftShowEgg", ROMX
 ; and wScreenSubStep += 1. A variant of the egg-showing steps of the closing scenes. (C1, E-0385)
 ; while wObject1 + $9 & 3 is set: wObject1 + $B -= 1; at $60 runs field command $0E and sets
 ; wObject5 + $4/4; at $58 sets bit 1 of wObject1 + $D and wScreenSubStep += 1 (E-0125)
-UnusedStepObject1LeftShowEgg::
+UnusedStepObject1LeftShowEgg:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
     and a
@@ -2844,7 +2884,7 @@ SECTION "Bank F0 UnusedStepSpriteRightShowEgg", ROMX
 ; wScreenSubStep += 1. A variant of the egg-showing steps of the closing scenes. (C1, E-0385)
 ; while wSpriteSlots + $9 & 3 is set: wSpriteSlots + $B += 1; at $30 runs field command $0E and sets
 ; wObject5 + $4/4; at $38 sets bit 1 of wSpriteSlots + $D and wScreenSubStep += 1 (E-0124)
-UnusedStepSpriteRightShowEgg::
+UnusedStepSpriteRightShowEgg:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wSpriteSlots + $9]
     and $03
     and a
@@ -3866,7 +3906,7 @@ SECTION "Bank F0 DrawPageIndicatorWhenTwoPagesAndStep", ROMX
 ; (with fewer than 2 pages only the increment). (C2, E-0385)
 ; with two or more pages draws the bracket and page-of-pages indicator at wWindowTileBuffer + $112;
 ; wScreenStep += 1 (E-0124)
-DrawPageIndicatorWhenTwoPagesAndStep::
+DrawPageIndicatorWhenTwoPagesAndStep:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wListPages]
     cp $02
     jr c, DrawPageIndicatorWhenTwoPagesAndStep_NextStep

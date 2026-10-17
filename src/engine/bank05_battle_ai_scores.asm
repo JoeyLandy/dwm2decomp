@@ -72,15 +72,15 @@ GetBattleAGL_Bank05::
     ld hl, wBattleAGL
     jr GetBattleStatWord_Bank05
 
-SECTION "Bank 05 ReadSlotAIModeIndexed_Bank05_2", ROMX
+SECTION "Bank 05 ReadSlotAIModeIndexed_Bank05", ROMX
 
 ; A = battle slot: returns A = wSlotAIMode[slot] (the byte at wSlotAIMode + A); clobbers HL. The
-; same code appears again in this bank as ReadSlotAIModeIndexed_Bank05; this copy is called by
+; same code appears again in this bank as ReadSlotAIModeIndexed_Bank05_2; this copy is called by
 ; FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_SpeedAndHPCheck,
 ; AIScore_Ramming_LastFoeHPAndResist and AIScore_Kamikaze_HealerAllyAndFoeHP. (C2, E-0369; probed
 ; E-0375)
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
-ReadSlotAIModeIndexed_Bank05_2::
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_Bank05:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
@@ -103,7 +103,7 @@ SECTION "Bank 05 AddDoubleAToHL_Bank05", ROMX
 ; new L. No caller in src reaches this copy; the same 7 bytes appear in 12 banks. (C2, E-0375)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
 ; appear in 12 banks)
-AddDoubleAToHL_Bank05::
+AddDoubleAToHL_Bank05:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     add a
     add_a_to_hl
     ret
@@ -117,7 +117,7 @@ SECTION "Bank 05 ActorOnLocalSide_Bank05", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_Bank05::
+ActorOnLocalSide_Bank05:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -143,7 +143,7 @@ SECTION "Bank 05 TargetOnLocalSide_Bank05", ROMX
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
-TargetOnLocalSide_Bank05::
+TargetOnLocalSide_Bank05:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_target
@@ -373,7 +373,7 @@ SECTION "Bank 05 ActorCanPayMPCost_Bank05", ROMX
 ; cost = wRecordBufferData (byte 0 of the skill record): C = $FF (can pay) when the cost is 0, when
 ; the cost is $FF and the actor's MP (wBattleMP word) is non-zero, or when MP >= cost; C = 0
 ; otherwise. Agrees with CheckSkillMPCost that equal MP and cost is enough (E-0063)
-ActorCanPayMPCost_Bank05::
+ActorCanPayMPCost_Bank05:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleMP
     add a
@@ -412,7 +412,7 @@ SECTION "Bank 05 SkillPassesStatus1Bit0Check", ROMX
 ; C = 0 when bit 6 of wRecordBufferData + $5 (skill record buffer) is set and the actor's status
 ; byte 1 (wBattleStatus1) bit 0 is set, else $FF (compare refusal code 3 of CheckSkillMPCost)
 ; (E-0071)
-SkillPassesStatus1Bit0Check::
+SkillPassesStatus1Bit0Check:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wRecordBufferData + $5]
     bit 6, a
     jr z, .done
@@ -437,7 +437,7 @@ SECTION "Bank 05 SkillPassesStatus1Bit7Check", ROMX
 ; C = $00 when bit 4 of wRecordBufferData + $5 and bit 7 of the actor's status byte 0 are both set,
 ; else $FF (E-0122) (E-0340: the address in its name read as its RAM name; was
 ; SkillPassesStatus1Bit7Check)
-SkillPassesStatus1Bit7Check::
+SkillPassesStatus1Bit7Check:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wRecordBufferData + $5]
     bit 4, a
     jr z, .done
@@ -461,7 +461,7 @@ SECTION "Bank 05 SkillPassesStatus1Bit6Check", ROMX
 ; C = $00 when bit 5 of wRecordBufferData + $5 and bit 6 of the actor's status byte 0 are both set,
 ; else $FF (E-0122) (E-0340: the address in its name read as its RAM name; was
 ; SkillPassesStatus1Bit6Check)
-SkillPassesStatus1Bit6Check::
+SkillPassesStatus1Bit6Check:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wRecordBufferData + $5]
     bit 5, a
     jr z, .done
@@ -648,7 +648,7 @@ SECTION "Bank 05 AnyFoeHasMPReadsWrongOffset", ROMX
 ; and 0 otherwise, but it addresses the MP word at wBattleMP + 16 * slot (swap a) instead of 2 *
 ; slot, so for foes in slots 4-6 it reads 64-96 bytes past the array (a likely bug; executed, test
 ; FoeMPCheckOffset) (E-0099)
-AnyFoeHasMPReadsWrongOffset::
+AnyFoeHasMPReadsWrongOffset:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -692,9 +692,9 @@ SECTION "Bank 05 AIScore_TakeMagic_Conditions_FoeHasTakeableSkill", ROMX
 ; = 7) has bit 0 set, else C = 0 after all foes. Skill 0 lacks that bit and skills 1-15 have it, so
 ; in effect it passes when one of those bytes is not 0. wRecordBuffer (both bytes) is restored. (C2,
 ; E-0375)
-AIScore_TakeMagic_Conditions_FoeHasTakeableSkill::
+AIScore_TakeMagic_Conditions_FoeHasTakeableSkill:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jp c, .done
     ld a, [wRecordBuffer]
@@ -793,7 +793,7 @@ SECTION "Bank 05 AnyFoeLacksStatus0Bit6", ROMX
 ; one of those bits, or none is present (AnySlotLacksStatusMask). (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 (wBattleStatus)
 ; bit 6 clear (AnySlotLacksStatusMask), else 0 (E-0071)
-AnyFoeLacksStatus0Bit6::
+AnyFoeLacksStatus0Bit6:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wBattleStatus
     ld a, [wBattleActor]
     and $04
@@ -813,9 +813,9 @@ SECTION "Bank 05 AnyActiveFoeHasSkillFlag40", ROMX
 ; C = 1 when wSlotAIMode[actor] (the AI mode) is below 2; otherwise C = $FF when one of the actor's
 ; three opposite slots is present with status byte 1 (wBattleStatus1) bit 0 clear and a skill whose
 ; record part has bit 6 set (SlotHasSkillWithFlagD, D = $40), else 0; wRecordBuffer kept (E-0099)
-AnyActiveFoeHasSkillFlag40::
+AnyActiveFoeHasSkillFlag40:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done
     ld a, [wRecordBuffer]
@@ -867,9 +867,9 @@ SECTION "Bank 05 AnyFoeHasSkillFlag10", ROMX
 ; C = 1 when the AI mode is below 2; otherwise C = $FF when one of the actor's three opposite slots
 ; is present with a skill whose record part has bit 4 set (SlotHasSkillWithFlagD, D = $10), else 0;
 ; wRecordBuffer kept (E-0099)
-AnyFoeHasSkillFlag10::
+AnyFoeHasSkillFlag10:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done
     ld a, [wRecordBuffer]
@@ -911,9 +911,9 @@ SECTION "Bank 05 AIScore_DanceShut_Conditions_UnsealedDancer", ROMX
 
 ; DanceShut AI condition: passes when some present foe is not yet dance-sealed (BSTAT1_DANCE_SEALED)
 ; and knows a skill with flag $20 (a dance); C = 1 below AI mode 2. (C2, E-0357; probed E-0375)
-AIScore_DanceShut_Conditions_UnsealedDancer::
+AIScore_DanceShut_Conditions_UnsealedDancer:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done
     ld a, [wRecordBuffer]
@@ -1057,7 +1057,7 @@ SECTION "Bank 05 AIScore_SquallHit_Conditions_AnyFoeAGL2", ROMX
 
 ; SquallHit AI condition: passes when some present foe has an AGL of 2 or more. (C2, E-0357; probed
 ; E-0375)
-AIScore_SquallHit_Conditions_AnyFoeAGL2::
+AIScore_SquallHit_Conditions_AnyFoeAGL2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1091,7 +1091,7 @@ SECTION "Bank 05 AIScore_FireAir_Conditions_FoeLacksWindGuard", ROMX
 
 ; Condition of AIScore_FireAir_Conditions: C = $FF when some present foe lacks BSTAT2_WIND_GUARD
 ; (status 2 bit 6), else C = 0 (AnySlotLacksStatusMask). (C2, E-0369; probed E-0375)
-AIScore_FireAir_Conditions_FoeLacksWindGuard::
+AIScore_FireAir_Conditions_FoeLacksWindGuard:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1108,7 +1108,7 @@ SECTION "Bank 05 AnyFoeLacksStatus0Bit4", ROMX
 ; one of those bits, or none is present (AnySlotLacksStatusMask). (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 4 clear
 ; (AnySlotLacksStatusMask), else 0 (E-0114)
-AnyFoeLacksStatus0Bit4::
+AnyFoeLacksStatus0Bit4:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1123,7 +1123,7 @@ SECTION "Bank 05 AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned", ROMX
 ; Condition of AIScore_PoisonAir_Conditions: C = $FF when some present foe lacks
 ; BSTAT0_BADLY_POISONED (status 0 bit 1), else C = 0 (AnySlotLacksStatusMask); BSTAT0_POISONED is
 ; not tested. (C2, E-0369; probed E-0375)
-AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned::
+AIScore_PoisonAir_Conditions_FoeNotBadlyPoisoned:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1141,7 +1141,7 @@ SECTION "Bank 05 AnyFoeLacksStatus0Bits01", ROMX
 ; (AnySlotLacksStatusMask). (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 (wBattleStatus)
 ; & $03 clear (AnySlotLacksStatusMask), else 0 (E-0099)
-AnyFoeLacksStatus0Bits01::
+AnyFoeLacksStatus0Bits01:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1175,9 +1175,9 @@ SECTION "Bank 05 AIScore_AquaWall_Conditions_UnsealedFoeSkill", ROMX
 ; BSTAT1_SPELLS_SEALED, BSTAT1_DANCE_SEALED and BSTAT1_BREATH_SEALED (status 1 & $C1) knows a skill
 ; with flag $08 (SlotHasSkillWithFlagD); C = 0 when none does; C = 1 when the actor's AI mode is
 ; below 2. Keeps wRecordBuffer. (C2, E-0369; probed E-0375)
-AIScore_AquaWall_Conditions_UnsealedFoeSkill::
+AIScore_AquaWall_Conditions_UnsealedFoeSkill:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done
     ld a, [wRecordBuffer]
@@ -1229,7 +1229,7 @@ SECTION "Bank 05 AnyFoeLacksStatus5Bits01", ROMX
 ; those bits, or none is present (AnySlotLacksStatusMask). (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 5
 ; (wBattleStatus5) & $03 clear (AnySlotLacksStatusMask), else 0 (E-0094)
-AnyFoeLacksStatus5Bits01::
+AnyFoeLacksStatus5Bits01:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1246,7 +1246,7 @@ SECTION "Bank 05 AnyFoeLacksStatus5Bit0And1Bit1", ROMX
 ; = 0 when no present foe has both clear. No caller in src reaches it. (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 5
 ; (wBattleStatus5) bit 0 clear and status byte 1 (wBattleStatus1) bit 1 clear, else 0 (E-0094)
-AnyFoeLacksStatus5Bit0And1Bit1::
+AnyFoeLacksStatus5Bit0And1Bit1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1288,7 +1288,7 @@ SECTION "Bank 05 AnyFoeLacksStatus5Bit1And1Bit1", ROMX
 ; C = 0 when no present foe has both clear. No caller in src reaches it. (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 5
 ; (wBattleStatus5) bit 1 clear and status byte 1 (wBattleStatus1) bit 1 clear, else 0 (E-0094)
-AnyFoeLacksStatus5Bit1And1Bit1::
+AnyFoeLacksStatus5Bit1And1Bit1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1330,7 +1330,7 @@ SECTION "Bank 05 AnyFoeLacksStatus5Bits01And1Bit1", ROMX
 ; BSTAT1_BLINDED (status byte 1 bit 1) clear; C = 0 when no present foe has both clear. (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 5
 ; (wBattleStatus5) & $03 clear and status byte 1 (wBattleStatus1) bit 1 clear, else 0 (E-0100)
-AnyFoeLacksStatus5Bits01And1Bit1::
+AnyFoeLacksStatus5Bits01And1Bit1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1372,7 +1372,7 @@ SECTION "Bank 05 AnyFoeLacksStatus1Bit0", ROMX
 ; has one of those bits, or none is present (AnySlotLacksStatusMask). (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 1
 ; (wBattleStatus1) bit 0 clear, else 0 (E-0099)
-AnyFoeLacksStatus1Bit0::
+AnyFoeLacksStatus1Bit0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1389,7 +1389,7 @@ SECTION "Bank 05 AnyFoeLacksStatus1Bit7", ROMX
 ; has one of those bits, or none is present (AnySlotLacksStatusMask). (C2, E-0375)
 ; C = $FF when one of the actor's three opposite slots is present with status byte 1
 ; (wBattleStatus1) bit 7 clear, else 0 (E-0099)
-AnyFoeLacksStatus1Bit7::
+AnyFoeLacksStatus1Bit7:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1403,7 +1403,7 @@ SECTION "Bank 05 AIScore_DanceShut_Conditions_FoeNotDanceSealed", ROMX
 
 ; DanceShut AI condition: passes when some present foe lacks status 1 bit 6. (C2, E-0357; probed
 ; E-0375)
-AIScore_DanceShut_Conditions_FoeNotDanceSealed::
+AIScore_DanceShut_Conditions_FoeNotDanceSealed:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1445,7 +1445,7 @@ SECTION "Bank 05 AIScore_LegSweep_Conditions_AnyFoeTrippable", ROMX
 
 ; LegSweep AI condition: passes when some present foe can be tripped: not marked in wSlotBodyFlags
 ; bit 4, no status 3 bits 6-7, and status 3 bits 2-3 clear. (C2, E-0357; probed E-0375)
-AIScore_LegSweep_Conditions_AnyFoeTrippable::
+AIScore_LegSweep_Conditions_AnyFoeTrippable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1523,7 +1523,7 @@ SECTION "Bank 05 AIGateFoeStatus2Mask22", ROMX
 ; status 1 mask $22; otherwise $FF (E-0125)
 AIGateFoeStatus2Mask22::
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     call TestRecordBufferData1
@@ -1570,9 +1570,9 @@ SECTION "Bank 05 AIScore_FireAir_WindGuardCheck", ROMX
 ; FireAir AI condition: for an elemental skill with resistance class 3 (wRecordBufferData + 1),
 ; fails when a present foe has status 2 bit 6 set; passes otherwise; C = 1 below AI mode 2. (C2,
 ; E-0357; probed E-0375)
-AIScore_FireAir_WindGuardCheck::
+AIScore_FireAir_WindGuardCheck:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     call TestRecordBufferData1
@@ -1621,7 +1621,7 @@ SECTION "Bank 05 ActorLacksStatus4Bits01", ROMX
 ; byte 4 & $03), else C = $FF. No caller in src reaches it. (C2, E-0375)
 ; C = 0 when the actor's status byte 4 (wBattleStatus4) & $03 is set, else C = $FF (the correct form
 ; of the test ActorStatus4CheckReadsAddress gets wrong) (E-0094)
-ActorLacksStatus4Bits01::
+ActorLacksStatus4Bits01:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
@@ -1660,7 +1660,7 @@ SECTION "Bank 05 ActorLacksStatus1Bit2", ROMX
 ; C = 0 (fail) when the actor (wBattleActor) has BSTAT1_ATK_DOUBLED, else C = $FF. No caller in src
 ; reaches it. (C2, E-0375)
 ; C = 0 when the actor's status byte 1 (wBattleStatus1) bit 2 is set, else C = $FF (E-0094)
-ActorLacksStatus1Bit2::
+ActorLacksStatus1Bit2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -1678,7 +1678,7 @@ SECTION "Bank 05 ActorLacksStatus1Bit3", ROMX
 ; C = 0 (fail) when the actor (wBattleActor) has BSTAT1_CRITICAL, else C = $FF. No caller in src
 ; reaches it. (C2, E-0375)
 ; C = 0 when the actor's status byte 1 (wBattleStatus1) bit 3 is set, else C = $FF (E-0094)
-ActorLacksStatus1Bit3::
+ActorLacksStatus1Bit3:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -1695,7 +1695,7 @@ SECTION "Bank 05 AIScore_TakeMagic_Conditions_NotYetSet", ROMX
 
 ; TakeMagic AI condition: fails when the actor already has BSTAT2_TAKE_MAGIC. (C2, E-0357; probed
 ; E-0375)
-AIScore_TakeMagic_Conditions_NotYetSet::
+AIScore_TakeMagic_Conditions_NotYetSet:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -1712,7 +1712,7 @@ SECTION "Bank 05 AIScore_TailWind_Conditions_NotYetSet", ROMX
 
 ; TailWind AI condition: fails when the actor already has BSTAT2_WIND_GUARD. (C2, E-0357; probed
 ; E-0375)
-AIScore_TailWind_Conditions_NotYetSet::
+AIScore_TailWind_Conditions_NotYetSet:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -1732,7 +1732,7 @@ SECTION "Bank 05 AnyAllyLacksStatus2Bit6", ROMX
 ; (AnySlotLacksStatusMask). (C2, E-0375)
 ; C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2
 ; (wBattleStatus2) bit 6 clear, else 0 (E-0099)
-AnyAllyLacksStatus2Bit6::
+AnyAllyLacksStatus2Bit6:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1789,7 +1789,7 @@ SECTION "Bank 05 AIScore_Antidote_Conditions_AllyPoisoned", ROMX
 
 ; Antidote AI condition: passes when some present ally is poisoned (status 0 bits 0-1). (C2, E-0357;
 ; probed E-0375)
-AIScore_Antidote_Conditions_AllyPoisoned::
+AIScore_Antidote_Conditions_AllyPoisoned:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1802,7 +1802,7 @@ SECTION "Bank 05 AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep", ROMX
 
 ; NumbOff AI condition: passes when some present ally is paralysed or asleep (status 0 & $CC). (C2,
 ; E-0357; probed E-0375)
-AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep::
+AIScore_NumbOff_Conditions_AllyParalyzedOrAsleep:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1815,7 +1815,7 @@ SECTION "Bank 05 AIScore_DeChaos_Conditions_AllyConfused", ROMX
 
 ; DeChaos AI condition: passes when some present ally is confused (status 0 bit 4). (C2, E-0357;
 ; probed E-0375)
-AIScore_DeChaos_Conditions_AllyConfused::
+AIScore_DeChaos_Conditions_AllyConfused:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1828,7 +1828,7 @@ SECTION "Bank 05 AIScore_CurseOff_Conditions_AllyCursed", ROMX
 
 ; CurseOff AI condition: passes when some present ally is cursed (status 0 bit 5). (C2, E-0357;
 ; probed E-0375)
-AIScore_CurseOff_Conditions_AllyCursed::
+AIScore_CurseOff_Conditions_AllyCursed:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -1846,7 +1846,7 @@ SECTION "Bank 05 AnyAllySlotResistances4Bits2To5NotAllSet", ROMX
 ; walks the actor's own three slots through their 7-byte wSlotResistances + $4 entries: C = $FF when
 ; a present slot's entry & $3C is not $3C, else 0 (E-0094) (E-0340: the address in its name read as
 ; its RAM name; was AnyAllySlotResistances4Bits2To5NotAllSet)
-AnyAllySlotResistances4Bits2To5NotAllSet::
+AnyAllySlotResistances4Bits2To5NotAllSet:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
 
@@ -1892,7 +1892,7 @@ SECTION "Bank 05 AIScore_SuckAir_Conditions_FoeNotAirResistant", ROMX
 
 ; SuckAir AI condition: the resistance test of AnyAllySlotResistances4Bits2To5NotAllSet applied to
 ; the foes. (C2, E-0357; probed E-0375)
-AIScore_SuckAir_Conditions_FoeNotAirResistant::
+AIScore_SuckAir_Conditions_FoeNotAirResistant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1984,7 +1984,7 @@ SECTION "Bank 05 AIScore_MetalCut_Conditions_MetalFoePresent", ROMX
 ; C = 0 when one of the three slots of the other side (wBattleActor & 4, xor 4) is present and
 ; marked metal (wSlotBodyFlags bit 0), else C = $FF. AIScore_MetalCut_Conditions resets the score
 ; unless C = 0, so SKILL_METALCUT is scored only when a metal foe is present. (C2, E-0375)
-AIScore_MetalCut_Conditions_MetalFoePresent::
+AIScore_MetalCut_Conditions_MetalFoePresent:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2021,7 +2021,7 @@ SECTION "Bank 05 AIScore_UltraDown_Conditions_AnyFoeLowerable", ROMX
 ; AGL and BSTAT1_BLINDED tests after it never run: the jr nz that follows ld a, h tests the Z flag
 ; left by GetBattleDEF_Bank05 (its address addition, never zero here), so the first present foe
 ; without that resistance level always passes. (C2, E-0375)
-AIScore_UltraDown_Conditions_AnyFoeLowerable::
+AIScore_UltraDown_Conditions_AnyFoeLowerable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2124,7 +2124,7 @@ SECTION "Bank 05 AIScore_StopSpell_Conditions_AnyFoeSealable", ROMX
 ; StopSpell AI condition: passes when some present foe is not spell-sealed, knows a spell (skill
 ; flag $40) and is not fully resistant (resistance byte 2 & $03 not $03). (C2, E-0357; probed
 ; E-0375)
-AIScore_StopSpell_Conditions_AnyFoeSealable::
+AIScore_StopSpell_Conditions_AnyFoeSealable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -2176,7 +2176,7 @@ SECTION "Bank 05 AnyFoeWithMPOpenToSlotResistances2Field1", ROMX
 ; (GetBattleMP_Bank05) and bits 3-2 of its wSlotResistances + $2 entry not both set, else 0 (E-0100)
 ; (E-0340: the address in its name read as its RAM name; was
 ; AnyFoeWithMPOpenToSlotResistances2Field1)
-AnyFoeWithMPOpenToSlotResistances2Field1::
+AnyFoeWithMPOpenToSlotResistances2Field1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2255,7 +2255,7 @@ SECTION "Bank 05 AIScore_Slow_Conditions_AnyFoeSlowable", ROMX
 
 ; Slow AI condition: passes when some present foe with AGL of 2 or more is not fully resistant to it
 ; (resistance byte 3 & $0C not $0C). (C2, E-0357; probed E-0375)
-AIScore_Slow_Conditions_AnyFoeSlowable::
+AIScore_Slow_Conditions_AnyFoeSlowable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2344,7 +2344,7 @@ SECTION "Bank 05 AnyFoeOpenToSlotResistances5Field3", ROMX
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 6 clear and
 ; bits 7-6 of its wSlotResistances + $5 entry not both set, else 0 (E-0099) (E-0340: the address in
 ; its name read as its RAM name; was AnyFoeOpenToSlotResistances5Field3)
-AnyFoeOpenToSlotResistances5Field3::
+AnyFoeOpenToSlotResistances5Field3:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2383,7 +2383,7 @@ SECTION "Bank 05 AIScore_Curse_Conditions_AnyFoeCursable", ROMX
 
 ; Curse AI condition: passes when some present foe that is not cursed (status 0 bit 5) is not fully
 ; resistant (resistance byte 5 & $30 not $30). (C2, E-0357; probed E-0375)
-AIScore_Curse_Conditions_AnyFoeCursable::
+AIScore_Curse_Conditions_AnyFoeCursable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2422,7 +2422,7 @@ SECTION "Bank 05 AIScore_DanceShut_Conditions_AnyFoeSealable", ROMX
 
 ; DanceShut AI condition: passes when some present foe that is not dance-sealed knows a dance (flag
 ; $20) and is not fully resistant (resistance byte 5 & $03 not $03). (C2, E-0357; probed E-0375)
-AIScore_DanceShut_Conditions_AnyFoeSealable::
+AIScore_DanceShut_Conditions_AnyFoeSealable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -2474,7 +2474,7 @@ SECTION "Bank 05 AnyFoeWithSkillFlag10VulnerableSlotResistances6", ROMX
 ; C = $FF when an occupied foe without status bit 7 has a skill with flag $10 and bits 6-7 of its
 ; wSlotResistances + $6 field below 3, else $00 (wRecordBuffer preserved) (E-0125) (E-0340: the
 ; address in its name read as its RAM name; was AnyFoeWithSkillFlag10VulnerableSlotResistances6)
-AnyFoeWithSkillFlag10VulnerableSlotResistances6::
+AnyFoeWithSkillFlag10VulnerableSlotResistances6:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -2525,7 +2525,7 @@ SECTION "Bank 05 AnyAllyOutOrHPBelowQuarter", ROMX
 ; in src reaches it. (C2, E-0375)
 ; C = $FF when an ally slot is marked out (wBattleSlotOut = 1) or an occupied ally has HP below a
 ; quarter of its max, else $00 (E-0125)
-AnyAllyOutOrHPBelowQuarter::
+AnyAllyOutOrHPBelowQuarter:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2610,7 +2610,7 @@ SECTION "Bank 05 AIScore_TatsuCall_Conditions_FourthSlotFree", ROMX
 
 ; TatsuCall AI condition: passes only when the actor's side has its fourth slot free (wBattleSlotOut
 ; of slot 3 of the side is set), so a called monster has a place. (C2, E-0357; probed E-0375)
-AIScore_TatsuCall_Conditions_FourthSlotFree::
+AIScore_TatsuCall_Conditions_FourthSlotFree:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     or $03
@@ -2635,7 +2635,7 @@ SECTION "Bank 05 AnyOwnSideSlotOutIs1", ROMX
 ; 4) is exactly 1 (a defeated or absent battler), else C = 0 ($FF and other values do not count).
 ; (C2, E-0375)
 ; C = $FF when one of the actor's side's three wBattleSlotOut bytes is 1, else 0 (E-0099)
-AnyOwnSideSlotOutIs1::
+AnyOwnSideSlotOutIs1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleSlotOut
@@ -2663,7 +2663,7 @@ SECTION "Bank 05 FastestFoeAGLAbove31PercentOfActor", ROMX
 ; threshold, else C = 0 (also when no foe is present). (C2, E-0375)
 ; C = $FF when the fastest occupied foe's AGL exceeds 31 percent of the actor's AGL, else $00
 ; (E-0127)
-FastestFoeAGLAbove31PercentOfActor::
+FastestFoeAGLAbove31PercentOfActor:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     call GetBattleAGL_Bank05
     ld b, h
@@ -2722,7 +2722,7 @@ SECTION "Bank 05 AnyAllyHPAtMostThreeQuarters", ROMX
 ; most three quarters of its max HP (CompareHPWithThreeQuartersMax: 3 * max HP, 16-bit, shifted
 ; right twice arithmetically), else C = 0. (C2, E-0375)
 ; C = $FF when an occupied ally slot has HP at most three quarters of its max, else $00 (E-0124)
-AnyAllyHPAtMostThreeQuarters::
+AnyAllyHPAtMostThreeQuarters:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2753,7 +2753,7 @@ SECTION "Bank 05 AnyAllyMPAtMostThreeQuarters", ROMX
 ; C = $FF when a present slot of the side of the actor has MP at most three quarters of its max MP
 ; (CompareMPWithThreeQuartersMax), else C = 0. No caller in src reaches it. (C2, E-0375)
 ; C = $FF when an occupied ally slot has MP at most three quarters of its max, else $00 (E-0124)
-AnyAllyMPAtMostThreeQuarters::
+AnyAllyMPAtMostThreeQuarters:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2783,7 +2783,7 @@ SECTION "Bank 05 AIScore_Upper_Conditions_AnyAllyRaisable", ROMX
 
 ; Upper AI condition: passes when some present ally's DEF can still be raised
 ; (AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise). (C2, E-0357; probed E-0375)
-AIScore_Upper_Conditions_AnyAllyRaisable::
+AIScore_Upper_Conditions_AnyAllyRaisable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2811,7 +2811,7 @@ SECTION "Bank 05 AIScore_Speed_Conditions_AnyAllyRaisable", ROMX
 
 ; Speed AI condition: passes when some present ally's AGL can still be raised
 ; (AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise). (C2, E-0357; probed E-0375)
-AIScore_Speed_Conditions_AnyAllyRaisable::
+AIScore_Speed_Conditions_AnyAllyRaisable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2899,7 +2899,7 @@ SECTION "Bank 05 NoUnflaggedFoeSpeciesOrLink", ROMX
 ; flagged or none is present. No caller was found in src/. (C2, E-0375)
 ; C = $FF in link battles or when every occupied foe's species is already flagged (TestSpeciesFlag),
 ; else $00 (E-0125)
-NoUnflaggedFoeSpeciesOrLink::
+NoUnflaggedFoeSpeciesOrLink:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     or a
     jr nz, .done
@@ -2954,7 +2954,7 @@ SECTION "Bank 05 CheckFoeStatus7Bit2", ROMX
 ; three opposite slots is present with status byte 7 (wBattleStatus7) bit 2 set, else $FF (E-0099)
 CheckFoeStatus7Bit2::
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wBattleActor]
@@ -3000,7 +3000,7 @@ SECTION "Bank 05 AnyAllyLacksStatus1Bits23And4Bits01", ROMX
 ; E-0375)
 ; C = $FF when one of the actor's own three slots is present (the actor included) with status byte 1
 ; (wBattleStatus1) & $0C clear and status byte 4 & $03 clear, else 0 (E-0099)
-AnyAllyLacksStatus1Bits23And4Bits01::
+AnyAllyLacksStatus1Bits23And4Bits01:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -3038,7 +3038,7 @@ SECTION "Bank 05 AIScore_MagicWall_Conditions_AllyLacksMagicWall", ROMX
 
 ; MagicWall AI condition: passes when some present ally lacks status 8 bit 6. (C2, E-0357; probed
 ; E-0375)
-AIScore_MagicWall_Conditions_AllyLacksMagicWall::
+AIScore_MagicWall_Conditions_AllyLacksMagicWall:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld b, $03
@@ -3051,7 +3051,7 @@ SECTION "Bank 05 AIScore_SideStep_Conditions_NotYetSet", ROMX
 
 ; SideStep AI condition: fails when the actor already has status 5 bits 2-3 set. (C2, E-0357; probed
 ; E-0375)
-AIScore_SideStep_Conditions_NotYetSet::
+AIScore_SideStep_Conditions_NotYetSet:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
     call AddAx9ToHL
@@ -3069,7 +3069,7 @@ SECTION "Bank 05 AIScore_Surge_Conditions_AnyAllyToCure", ROMX
 
 ; Surge AI condition: passes when some present ally has a status to cure: any bit of status 0,
 ; status 1 & $C3, status 5 & $03, status 6 bit 7 or status 8 bit 7. (C2, E-0357; probed E-0375)
-AIScore_Surge_Conditions_AnyAllyToCure::
+AIScore_Surge_Conditions_AnyAllyToCure:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -3119,7 +3119,7 @@ SECTION "Bank 05 AIScore_DeMagic_Conditions_AnyFoeToClear", ROMX
 ; status 2 & $6F, status 5 & $CC, status 6 bit 6 or status 8 bit 6), or when slot 3 of the actor
 ; side (slot 3 for slots 0-3, slot 7 for 4-7) is present (wBattleSlotOut byte 0); C = 0 otherwise.
 ; (C2, E-0375)
-AIScore_DeMagic_Conditions_AnyFoeToClear::
+AIScore_DeMagic_Conditions_AnyFoeToClear:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -3199,7 +3199,7 @@ SECTION "Bank 05 CheckBattleKindNot4Or5", ROMX
 
 ; C = 0 when wBattleKind is 4 or 5, else C = $FF. No caller was found in src/. (C2, E-0375)
 ; C = 0 when wBattleKind is 4 or 5, else C = $FF (E-0094)
-CheckBattleKindNot4Or5::
+CheckBattleKindNot4Or5:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleKind]
     cp $04
     jr z, .done
@@ -3220,7 +3220,7 @@ SECTION "Bank 05 AIScore_SealPray_QueuedSkillInList", ROMX
 ; SKILL_HELLBLAST, SKILL_WHITEFIRE, SKILL_WHITEAIR, SKILL_MULTICUT or SKILL_GIGASLASH; C = $FF
 ; otherwise (also when it is 0). AIScore_SealPray adds weight row $8D to wAISkillScore2 when it
 ; gives 0. (C2, E-0369; probed E-0375)
-AIScore_SealPray_QueuedSkillInList::
+AIScore_SealPray_QueuedSkillInList:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wQueuedActionId]
     and a
     jr z, .done2
@@ -3700,9 +3700,9 @@ SECTION "Bank 05 AllyAverageAGLAtLeastFoes", ROMX
 ; average, else C = 0. (C2, E-0375)
 ; C = 1 when the actor's AI mode is below 2; otherwise $FF when the allies' average AGL is at least
 ; the foes', else $00 (E-0124)
-AllyAverageAGLAtLeastFoes::
+AllyAverageAGLAtLeastFoes:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done2
     ld a, [wBattleActor]
@@ -3734,9 +3734,9 @@ SECTION "Bank 05 PassIfFoeAverageDEFAtMostTwiceAllyATK", ROMX
 ; included), else C = 0. Uses hTemp0-hTemp5; with no foe present it divides by 0. (C2, E-0375)
 ; C = 1 when the AI mode is below 2; otherwise $FF when the foes' average DEF is at most twice the
 ; allies' average ATK, else $00 (E-0129)
-PassIfFoeAverageDEFAtMostTwiceAllyATK::
+PassIfFoeAverageDEFAtMostTwiceAllyATK:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jp c, .done2
     ld a, [wBattleActor]
@@ -3841,9 +3841,9 @@ SECTION "Bank 05 PassIfTwiceATKAboveHighestFoeDEF", ROMX
 ; when it is not, or when no foe is present. (C2, E-0375)
 ; C = 1 when the AI mode is below 2; otherwise $FF when the lowest DEF among occupied foes is below
 ; twice the actor's ATK, else $00 (E-0128)
-PassIfTwiceATKAboveHighestFoeDEF::
+PassIfTwiceATKAboveHighestFoeDEF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done4
     ld a, [wBattleActor]
@@ -3928,9 +3928,9 @@ SECTION "Bank 05 AIScore_TwinHits_CompareATKWithFoeDEF", ROMX
 ; TwinHits AI check: passes when the actor's ATK is more than twice, or less than half, the lowest
 ; foe DEF found by FindLowestFoeDEF; fails when it lies between; C = 1 below AI mode 2. (C2, E-0357;
 ; probed E-0375)
-AIScore_TwinHits_CompareATKWithFoeDEF::
+AIScore_TwinHits_CompareATKWithFoeDEF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     call FindLowestFoeDEF
@@ -3972,9 +3972,9 @@ SECTION "Bank 05 AIScore_TwinHits_CheckAllyATK", ROMX
 
 ; TwinHits AI check for the allies: passes unless some present ally's ATK lies between half and
 ; twice the lowest foe DEF; C = 1 below AI mode 2. (C2, E-0357; probed E-0375)
-AIScore_TwinHits_CheckAllyATK::
+AIScore_TwinHits_CheckAllyATK:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     call FindLowestFoeDEF
@@ -4033,9 +4033,9 @@ SECTION "Bank 05 PassIfFoeAverageATKAtMostTwiceAllyDEF", ROMX
 ; side, else C = 0. Uses hTemp0-hTemp5. (C2, E-0375)
 ; C = 1 when the AI mode is below 2; otherwise $FF when the able foes' average ATK is at most twice
 ; the allies' average DEF, else $00 (E-0129)
-PassIfFoeAverageATKAtMostTwiceAllyDEF::
+PassIfFoeAverageATKAtMostTwiceAllyDEF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jp c, .done2
     ld a, [wBattleActor]
@@ -4238,7 +4238,7 @@ SECTION "Bank 05 ActorHPIsNotOne", ROMX
 ; weight row (AddAIWeight or AddAIWeightToScore2) when it gives 0, and condition routines in bank
 ; $05 reset the score with ResetAISkillScore instead. (C2, E-0375)
 ; C = $00 when the actor's HP is exactly 1 (CompareSlotHPWith1), else $FF (E-0122)
-ActorHPIsNotOne::
+ActorHPIsNotOne:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     call CompareSlotHPWith1
     jr nz, .done
@@ -4254,7 +4254,7 @@ SECTION "Bank 05 FewerThanTwoAlliesAtHP1", ROMX
 ; Counts the present slots on the actor side (the actor included) whose HP word is exactly 1
 ; (CompareSlotHPWith1): C = $FF when fewer than two, else C = 0. (C2, E-0375)
 ; C = $FF when fewer than two occupied ally slots have exactly 1 HP, else $00 (E-0124)
-FewerThanTwoAlliesAtHP1::
+FewerThanTwoAlliesAtHP1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -4318,7 +4318,7 @@ SECTION "Bank 05 ActorLacksStatus4Bits45", ROMX
 ; C = 0 when the actor status byte 4 & $30 (BSTAT4_SUCK_AIR and its high bit) is set, else C = $FF.
 ; (C2, E-0375)
 ; C = 0 when the actor's status byte 4 (wBattleStatus4) & $30 is set, else C = $FF (E-0100)
-ActorLacksStatus4Bits45::
+ActorLacksStatus4Bits45:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
@@ -4342,9 +4342,9 @@ SECTION "Bank 05 FailIfFoeKnowsSkills42To47", ROMX
 ; the list of slot 5 at $D9D9). (C2, E-0375)
 ; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe without status bit 7 knows
 ; skill $42, $43, $46 or $47, else $FF (E-0127)
-FailIfFoeKnowsSkills42To47::
+FailIfFoeKnowsSkills42To47:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     ld a, [wBattleActor]
@@ -4405,9 +4405,9 @@ SECTION "Bank 05 AIScore_Transform_NoWeakerFoe", ROMX
 ; are below the actor's (in hTemp8); C = 0 when some foe is below the actor in at least three of
 ; them, C = $FF otherwise; C = 1 when the actor's AI mode is below 2. Uses hTemp0-hTemp8. (C2,
 ; E-0369; probed E-0375)
-AIScore_Transform_NoWeakerFoe::
+AIScore_Transform_NoWeakerFoe:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jp c, .done3
     ld a, [wBattleActor]
@@ -4534,9 +4534,9 @@ SECTION "Bank 05 FailIfFoeSkill3DThreatensActorHP", ROMX
 ; the later slots read the wrong bytes. (C2, E-0375)
 ; C = 1 when the AI mode is below 2; otherwise $00 when a foe knowing skill $3D has 2 * MP + 2 *
 ; wBattleLevel at least the actor's HP, else $FF (E-0128)
-FailIfFoeSkill3DThreatensActorHP::
+FailIfFoeSkill3DThreatensActorHP:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     ld a, [wBattleActor]
@@ -4643,7 +4643,7 @@ SECTION "Bank 05 ActorMPBelowThreeQuarters", ROMX
 ; 16-bit words wBattleMP and wBattleMaxMP), else C = 0. (C2, E-0375)
 ; C = $FF when 4 x the actor's MP is below 3 x its max MP (MP under three quarters of max), else 0
 ; (E-0100)
-ActorMPBelowThreeQuarters::
+ActorMPBelowThreeQuarters:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     call GetBattleMaxMP_Bank05
     ld b, h
@@ -4669,7 +4669,7 @@ SECTION "Bank 05 AIScore_MagicBack_Conditions_NotYetSet", ROMX
 
 ; MagicBack AI condition: fails when the actor already has status 2 bits 1 or 5. (C2, E-0357; probed
 ; E-0375)
-AIScore_MagicBack_Conditions_NotYetSet::
+AIScore_MagicBack_Conditions_NotYetSet:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -4737,7 +4737,7 @@ SECTION "Bank 05 CheckLinkRules1RuleBit5", ROMX
 ; wLinkRules + $2 bit 5 is clear or bit 5 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
 ; CheckLinkRules1RuleBit5)
-CheckLinkRules1RuleBit5::
+CheckLinkRules1RuleBit5:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4780,7 +4780,7 @@ SECTION "Bank 05 CheckLinkRules1RuleBit4", ROMX
 ; wLinkRules + $2 bit 4 is clear or bit 4 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
 ; CheckLinkRules1RuleBit4)
-CheckLinkRules1RuleBit4::
+CheckLinkRules1RuleBit4:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4823,7 +4823,7 @@ SECTION "Bank 05 CheckLinkRules1RuleBit3", ROMX
 ; wLinkRules + $2 bit 3 is clear or bit 3 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
 ; CheckLinkRules1RuleBit3)
-CheckLinkRules1RuleBit3::
+CheckLinkRules1RuleBit3:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4866,7 +4866,7 @@ SECTION "Bank 05 CheckLinkRules1RuleBit2", ROMX
 ; wLinkRules + $2 bit 2 is clear or bit 2 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
 ; CheckLinkRules1RuleBit2)
-CheckLinkRules1RuleBit2::
+CheckLinkRules1RuleBit2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4909,7 +4909,7 @@ SECTION "Bank 05 CheckLinkRules1RuleBit1", ROMX
 ; wLinkRules + $2 bit 1 is clear or bit 1 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
 ; CheckLinkRules1RuleBit1)
-CheckLinkRules1RuleBit1::
+CheckLinkRules1RuleBit1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4945,7 +4945,7 @@ SECTION "Bank 05 AIScore_MegaMagic_LinkRule", ROMX
 ; MegaMagic link rule: in a link battle whose rules (wLinkRules + 1 bit 7 and bit 0) restrict it,
 ; fails when the next rule byte forbids it outright or the side's rule flag (wLinkRuleFlags) is set;
 ; passes otherwise and in normal battles. (C2, E-0357; probed E-0375)
-AIScore_MegaMagic_LinkRule::
+AIScore_MegaMagic_LinkRule:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -5019,7 +5019,7 @@ SECTION "Bank 05 AllySlotsCheckThenFewerThanTwoFoes", ROMX
 ; three bytes after its ret (ld c, $00 / ret) are never reached. (C2, E-0375)
 ; C = $FF when another ally slot is occupied or the actor's own slot is empty; otherwise
 ; FewerThanTwoFoesPresent (E-0124)
-AllySlotsCheckThenFewerThanTwoFoes::
+AllySlotsCheckThenFewerThanTwoFoes:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld e, a
     and $04
@@ -5095,9 +5095,9 @@ SECTION "Bank 05 FailIfFoeKnowsSkillList", ROMX
 ; C = 1 when the AI mode is below 2; otherwise $00 when some occupied foe has CountSkillsInList
 ; non-zero, else $FF (E-0124) (E-0344: the address in its name dropped or read as the label there;
 ; was FailIfFoeKnowsSkillList)
-FailIfFoeKnowsSkillList::
+FailIfFoeKnowsSkillList:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     ld a, [wBattleActor]
@@ -5141,7 +5141,7 @@ SECTION "Bank 05 CheckFoeStatus6Bit3", ROMX
 ; (E-0092)
 CheckFoeStatus6Bit3::
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wBattleActor]
@@ -5184,7 +5184,7 @@ SECTION "Bank 05 AIScore_Sacrifice_LowHPAndFoesVulnerable", ROMX
 ; ally on its side is present, and no present foe has its RESIST_SACRIFICE field (wSlotResistances
 ; byte 3 bits 1-0) at 2 or more; C = $FF otherwise. AIScore_Sacrifice adds weight row $19 to
 ; wAISkillScore when it gives 0. (C2, E-0369; probed E-0375)
-AIScore_Sacrifice_LowHPAndFoesVulnerable::
+AIScore_Sacrifice_LowHPAndFoesVulnerable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, $0a
@@ -5255,7 +5255,7 @@ SECTION "Bank 05 CompareFoeAverageATKWithAllyDEF", ROMX
 ; C = 0. Uses hTemp0/hTemp1; a side with no present slot divides by 0. (C2, E-0375)
 ; compares twice the occupied foes' average ATK with the allies' average DEF; returns $00 or $FF in
 ; C (E-0130)
-CompareFoeAverageATKWithAllyDEF::
+CompareFoeAverageATKWithAllyDEF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -5393,9 +5393,9 @@ SECTION "Bank 05 AIGateLoneAllyMPAndSkills", ROMX
 ; an ally in a slot before the actor is missed. No caller was found in src/. (C2, E-0375)
 ; C = 1 when the AI mode is below 3; with exactly one other occupied ally that has at most 20 MP,
 ; checks its skills ($A0, $1E/$1F) and status; returns $00 or $FF (E-0129)
-AIGateLoneAllyMPAndSkills::
+AIGateLoneAllyMPAndSkills:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jp c, .done3
     ld a, [wBattleActor]
@@ -5513,9 +5513,9 @@ SECTION "Bank 05 FailIfAllyLacksMPForHealSkill", ROMX
 ; was found in src/. (C2, E-0375)
 ; C = 1 when the AI mode is below 3; otherwise $00 when another able ally knows a skill $16-$1A but
 ; has less MP than its cost (HealSkillMPCosts), else $FF (E-0128)
-FailIfAllyLacksMPForHealSkill::
+FailIfAllyLacksMPForHealSkill:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done2
     ld a, [wBattleActor]
@@ -5616,7 +5616,7 @@ HealSkillMPCosts::
 ; FailIfAbleAllyKnowsSkillList)
 FailIfAbleAllyKnowsSkillList:: ; configured code entry (E-0175); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done2
     ld a, [wBattleActor]
@@ -5670,9 +5670,9 @@ SECTION "Bank 05 FailIfAllyLacksMPForSkillList", ROMX
 ; FailIfAllyLacksMPForSkillList_AllySkillMPCosts, else $FF (the pattern of
 ; FailIfAllyLacksMPForHealSkill) (E-0175) (E-0344: the address in its name dropped or read as the
 ; label there; was FailIfAllyLacksMPForSkillList)
-FailIfAllyLacksMPForSkillList::
+FailIfAllyLacksMPForSkillList:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wBattleActor]
@@ -5794,7 +5794,7 @@ FailIfAllyLacksMPForSkillList_AllySkillMPCosts::
 ; caller (E-0228)
 FailIfAbleAllyKnowsSkill42To47:: ; configured code entry (E-0228); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wBattleActor]
@@ -5865,9 +5865,9 @@ SECTION "Bank 05 FailIfAbleAllyWithStatus6KnowsSkill78To92", ROMX
 ; C = 1 when the actor's AI mode is below 3; otherwise C = $00 when another able slot of the actor's
 ; side has status byte 1 bit 6 set and knows skill $78-$7D or $92, else $FF; no traced caller
 ; (E-0228)
-FailIfAbleAllyWithStatus6KnowsSkill78To92::
+FailIfAbleAllyWithStatus6KnowsSkill78To92:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wBattleActor]
@@ -5938,7 +5938,7 @@ SECTION "Bank 05 AIScore_BeDragon_CountHighStats", ROMX
 ; BeDragon AI check: counts how many of the actor's stats are already high (max HP 999, max MP 300,
 ; ATK 300, DEF 200, AGL 286 or more); fails with three or more, passes otherwise. (C2, E-0357;
 ; probed E-0375)
-AIScore_BeDragon_CountHighStats::
+AIScore_BeDragon_CountHighStats:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, l
@@ -6038,7 +6038,7 @@ SECTION "Bank 05 PassIfSkill83OrNoAllyHasStatus", ROMX
 ; $0C or & $C0, byte 6 bit 6, byte 8 bit 6), else C = $FF. No caller was found in src/. (C2, E-0375)
 ; C = $FF when the actor knows skill $83 or no occupied ally has an active status effect, else $00
 ; (E-0125)
-PassIfSkill83OrNoAllyHasStatus::
+PassIfSkill83OrNoAllyHasStatus:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     swap a
     ld hl, wBattleSkills
@@ -6088,7 +6088,7 @@ SECTION "Bank 05 FailIfFoeHPAtMostFourFifthsAIDamageEstimates", ROMX
 ; E-0375)
 ; C = $00 when an occupied foe's HP is at most four fifths of its wAIDamageEstimates word, else $FF
 ; (E-0125)
-FailIfFoeHPAtMostFourFifthsAIDamageEstimates::
+FailIfFoeHPAtMostFourFifthsAIDamageEstimates:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6160,7 +6160,7 @@ CheckBattleKindNot2Or3::
 SECTION "Bank 05 AIScore_MegaMagic_LinkModeAllows", ROMX
 
 ; Passes in normal and type-2 link battles, fails in other link modes. (C2, E-0357; probed E-0375)
-AIScore_MegaMagic_LinkModeAllows::
+AIScore_MegaMagic_LinkModeAllows:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     and a
     jr z, .done
@@ -6180,7 +6180,7 @@ SECTION "Bank 05 PassIfSideFlagOrOtherAllyPresent", ROMX
 ; E-0375)
 ; C = $FF when the side's wSide0Flag/wSide1Flag flag is 1 or another ally slot is empty, else $00
 ; (E-0124)
-PassIfSideFlagOrOtherAllyPresent::
+PassIfSideFlagOrOtherAllyPresent:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     cp $04
     jr nc, .check_side1_flag
@@ -6224,7 +6224,7 @@ SECTION "Bank 05 AnyAllyLacksStatus2Bit2", ROMX
 ; E-0375)
 ; C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2
 ; (wBattleStatus2) bit 2 clear (AnySlotLacksStatusMask), else 0 (E-0100)
-AnyAllyLacksStatus2Bit2::
+AnyAllyLacksStatus2Bit2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -6245,7 +6245,7 @@ SECTION "Bank 05 AnyAllyLacksStatus2Bit2_2", ROMX
 ; twice where the opposite-side predicates use `and a, $04 / xor a, $04`, so it probably meant the
 ; foes (a possible slip; not executed) (E-0100) (E-0344: the address in its name dropped or read as
 ; the label there; was AnyAllyLacksStatus2Bit2_2)
-AnyAllyLacksStatus2Bit2_2::
+AnyAllyLacksStatus2Bit2_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     and $04
@@ -6264,9 +6264,9 @@ SECTION "Bank 05 FailIfFoeHPAtLeast150PercentOfActor", ROMX
 ; = $FF. (C2, E-0375)
 ; C = 1 when the AI mode is below 3; otherwise $00 when an occupied foe has HP at least 1.5 times
 ; the actor's, else $FF (E-0125)
-FailIfFoeHPAtLeast150PercentOfActor::
+FailIfFoeHPAtLeast150PercentOfActor:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wBattleActor]
@@ -6321,7 +6321,7 @@ SECTION "Bank 05 FailIfLinkModeZeroAndPlayerStateFlagsBit3", ROMX
 ; C = 0 when wLinkMode is 0 and bit 3 of hPlayerStateFlags (one of its field-state flags) is set,
 ; else C = $FF. No caller was found in src/. (C2, E-0375)
 ; C = $00 when wLinkMode is 0 and bit 3 of hPlayerStateFlags is set, else $FF (E-0122)
-FailIfLinkModeZeroAndPlayerStateFlagsBit3::
+FailIfLinkModeZeroAndPlayerStateFlagsBit3:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     or a
     jr nz, .done
@@ -6342,7 +6342,7 @@ SECTION "Bank 05 AnyFoeOpenToSlotResistances2Field3", ROMX
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 7 clear and
 ; bits 7-6 of its wSlotResistances + $2 entry not both set, else 0 (E-0100) (E-0340: the address in
 ; its name read as its RAM name; was AnyFoeOpenToSlotResistances2Field3)
-AnyFoeOpenToSlotResistances2Field3::
+AnyFoeOpenToSlotResistances2Field3:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6383,7 +6383,7 @@ SECTION "Bank 05 AnyFoeVulnerableBySlotResistances5Bits23", ROMX
 ; C = $FF when an occupied foe has a zero wBattleStatus3 byte and bits 2-3 of its wSlotResistances +
 ; $5 field below 3, else $00 (E-0124) (E-0340: the address in its name read as its RAM name; was
 ; AnyFoeVulnerableBySlotResistances5Bits23)
-AnyFoeVulnerableBySlotResistances5Bits23::
+AnyFoeVulnerableBySlotResistances5Bits23:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6422,7 +6422,7 @@ SECTION "Bank 05 AIScore_EerieLite_Conditions_AnyFoeAffectable", ROMX
 
 ; EerieLite AI condition: passes when some present foe is not under BSTAT8_EERIE_LITE and is not
 ; fully resistant (resistance byte 2 & $30 not $30). (C2, E-0357; probed E-0375)
-AIScore_EerieLite_Conditions_AnyFoeAffectable::
+AIScore_EerieLite_Conditions_AnyFoeAffectable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6474,7 +6474,7 @@ SECTION "Bank 05 PassIfBattleTurnNonZero", ROMX
 ; C = $FF when wBattleTurn is non-zero, else C = 0. Condition routines in bank $05 reset the score
 ; with ResetAISkillScore when it gives 0. (C2, E-0375)
 ; C = $FF when wBattleTurn is non-zero, else $00 (E-0122)
-PassIfBattleTurnNonZero::
+PassIfBattleTurnNonZero:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleTurn]
     and a
     jr nz, .done
@@ -6494,7 +6494,7 @@ SECTION "Bank 05 AnyFoeLacksStatus4Bits23ThenStatus3Bits67", ROMX
 ; src/. (C2, E-0375)
 ; C = the result for foes with status byte 4 & $0C clear; when that is non-zero, C = the result for
 ; foes with status byte 3 & $C0 clear (both through AnySlotLacksStatusMask) (E-0120)
-AnyFoeLacksStatus4Bits23ThenStatus3Bits67::
+AnyFoeLacksStatus4Bits23ThenStatus3Bits67:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6521,7 +6521,7 @@ SECTION "Bank 05 AnyFoeVulnerableBySlotResistances3Bits67", ROMX
 ; C = $FF when an occupied foe lacks status bit 4 and has bits 6-7 of its wSlotResistances + $3
 ; field below 3, else $00 (E-0124) (E-0340: the address in its name read as its RAM name; was
 ; AnyFoeVulnerableBySlotResistances3Bits67)
-AnyFoeVulnerableBySlotResistances3Bits67::
+AnyFoeVulnerableBySlotResistances3Bits67:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6560,7 +6560,7 @@ SECTION "Bank 05 AIScore_EvilSlash_CheckFoes", ROMX
 ; EvilSlash AI condition: C = 0 when a present foe has status byte 0 & $C0 (BSTAT0_PARALYZED,
 ; BSTAT0_ASLEEP) or status byte 3 & $3F (frozen, dancing, tripped, shivering, cowering or vacant)
 ; set; C = $FF otherwise. The byte-3 read comes after ld a, [hli] and two inc hl. (C2, E-0375)
-AIScore_EvilSlash_CheckFoes::
+AIScore_EvilSlash_CheckFoes:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6605,7 +6605,7 @@ SECTION "Bank 05 AIAddScoresForTwoLists_SealingFoes", ROMX
 ; E-0375)
 AIAddScoresForTwoLists_SealingFoes::
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $04
     jr c, .done3
     ld a, [wAIFlag]
@@ -6706,9 +6706,9 @@ SECTION "Bank 05 FailIfAllyCanUseSkill63Or64", ROMX
 ; (SlotCLacksSkill63Or64WithMP gives no carry); else C = $FF. (C2, E-0375)
 ; C = 1 when the AI mode is below 4; with wAIFlag set, $00 when another ally that can act knows
 ; skill $63 or $64 with enough MP; otherwise $FF (E-0127)
-FailIfAllyCanUseSkill63Or64::
+FailIfAllyCanUseSkill63Or64:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $04
     jr c, .done3
     ld a, [wAIFlag]
@@ -6823,7 +6823,7 @@ SECTION "Bank 05 AIAddScoresForTwoLists_OtherAllies", ROMX
 ; $6B, so the skill list does matter. (C2, E-0375)
 AIAddScoresForTwoLists_OtherAllies::
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $04
     jr c, .done3
     ld a, [wAIFlag]
@@ -6936,9 +6936,9 @@ SECTION "Bank 05 FailIfFoeHurtAndHealerCanCast", ROMX
 ; carry; C = $FF otherwise, and when no foe is that hurt. (C2, E-0375)
 ; C = 1 when the AI mode is below 4; otherwise $00 when an occupied foe has HP at most half and a
 ; foe with personality Lo >= $C0 can cast a heal (SlotCHasCastableHealSkill), else $FF (E-0128)
-FailIfFoeHurtAndHealerCanCast::
+FailIfFoeHurtAndHealerCanCast:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $04
     jr c, .done3
     ld a, [wBattleActor]
@@ -7154,7 +7154,7 @@ SlotCHasCastableHealSkill_Data::
 ; its name read as its RAM name; was AIGateFoeSlotResistances2Bits45)
 AIGateFoeSlotResistances2Bits45::
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $04
     jr c, .done2
     ld a, [wBattleActor]
@@ -7205,9 +7205,9 @@ SECTION "Bank 05 CheckAIFlagSetModeGated", ROMX
 ; $FF when it is zero. (C2, E-0375)
 ; C = 1 when wSlotAIMode[actor] (the AI mode) is below 3; otherwise C = 0 when wAIFlag is non-zero,
 ; $FF when it is zero (E-0092)
-CheckAIFlagSetModeGated::
+CheckAIFlagSetModeGated:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done2
     ld a, [wAIFlag]
@@ -7228,7 +7228,7 @@ SECTION "Bank 05 AIScore_AquaWall_Conditions_NotYetSet", ROMX
 
 ; AquaWall AI condition: fails when the actor already has BSTAT2_AQUA_WALL. (C2, E-0357; probed
 ; E-0375)
-AIScore_AquaWall_Conditions_NotYetSet::
+AIScore_AquaWall_Conditions_NotYetSet:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -7253,7 +7253,7 @@ SECTION "Bank 05 UnreferencedEstimateWeakestFoeHit", ROMX
 ; the actor's HP, but both outcomes return C = $FF; no caller found (E-0237)
 UnreferencedEstimateWeakestFoeHit:: ; configured code entry (E-0237); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, UnreferencedResultC1
     ld a, [wBattleActor]
@@ -7337,7 +7337,7 @@ SECTION "Bank 05 AIScore_Curse_Conditions_FoeNotCursed", ROMX
 
 ; Curse AI condition: passes when some present foe is not yet cursed (status 0 bit 5). (C2, E-0357;
 ; probed E-0375)
-AIScore_Curse_Conditions_FoeNotCursed::
+AIScore_Curse_Conditions_FoeNotCursed:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -7355,7 +7355,7 @@ SECTION "Bank 05 AIScore_SuckAir_Conditions_SkillFlagCheck", ROMX
 ; wRecordBuffer), and C here is the $FF left by ActorLacksStatus4Bits45, so every pass tests the
 ; same eight bytes from wBattleSkills + $FF. C = $FF when that finds flag $02, else C = 0;
 ; wRecordBuffer is restored. (C2, E-0369; probed E-0375)
-AIScore_SuckAir_Conditions_SkillFlagCheck::
+AIScore_SuckAir_Conditions_SkillFlagCheck:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     swap a
     ld hl, wBattleSkillsPrefix
@@ -7391,7 +7391,7 @@ SECTION "Bank 05 AnyAllyHPBelow", ROMX
 ; in bank $05 reset the score with ResetAISkillScore when it gives 0. (C2, E-0375)
 ; C = $FF when an occupied ally's HP is below AnyAllyHPBelow_HealThreshold for it, else $00 (E-0125)
 ; (E-0344: the address in its name dropped or read as the label there; was AnyAllyHPBelow)
-AnyAllyHPBelow::
+AnyAllyHPBelow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -7494,7 +7494,7 @@ SECTION "Bank 05 AIScore_MPass_AnyAllyMPAboveMax", ROMX
 ; MPass AI condition: C = $FF when some present ally other than the actor has MP ABOVE its max MP,
 ; else C = 0. It compares max MP (HL) with MP (BC) and takes the carry, so the test is reversed from
 ; what the name says. (C2, E-0375)
-AIScore_MPass_AnyAllyMPAboveMax::
+AIScore_MPass_AnyAllyMPAboveMax:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     ld e, a
     and $04
@@ -7544,7 +7544,7 @@ SECTION "Bank 05 MPBandOfSlotTemp0", ROMX
 ; the same instruction sequence as HPBandOfSlotTemp0 (bank $05) apart from label operands, which
 ; refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; (E-0344: the address in its name dropped or read as the label there; was MPBandOfSlotTemp0)
-MPBandOfSlotTemp0::
+MPBandOfSlotTemp0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     add hl, hl
@@ -7635,9 +7635,9 @@ SECTION "Bank 05 AIScore_MegaMagic_FoeHPPlusDEFHigh", ROMX
 
 ; MegaMagic AI condition: passes when some present foe has HP + DEF of at least $578 (1,400); C = 1
 ; below AI mode 3. (C2, E-0357; probed E-0375)
-AIScore_MegaMagic_FoeHPPlusDEFHigh::
+AIScore_MegaMagic_FoeHPPlusDEFHigh:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wBattleActor]
@@ -7692,7 +7692,7 @@ SECTION "Bank 05 AnyFoeHasSkillWithFlagD", ROMX
 ; and $71-$74 besides the two skipped skills. (C2, E-0375)
 ; C = $FF when an occupied foe without status bit 7 has a skill matching flag D = $10
 ; (SlotCSkillFlagMatchD), else $00 (wRecordBuffer preserved) (E-0125)
-AnyFoeHasSkillWithFlagD::
+AnyFoeHasSkillWithFlagD:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -7791,7 +7791,7 @@ SECTION "Bank 05 AllyCheckSide0FlagAndOtherSlots", ROMX
 ; condition routines in bank $05 reset the score with ResetAISkillScore instead. (C2, E-0375)
 ; C = $00 when the side's wSide0Flag/wSide1Flag flag is 1 or no other ally slot is occupied, else
 ; $FF (E-0125)
-AllyCheckSide0FlagAndOtherSlots::
+AllyCheckSide0FlagAndOtherSlots:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     cp $04
     jr nc, .check_side1_flag
@@ -7924,7 +7924,7 @@ SECTION "Bank 05 AIScore_Meditate_Conditions_HPBelowTwoThirds", ROMX
 
 ; Meditate AI condition: passes when the actor's HP is below two thirds of its max. (C2, E-0357;
 ; probed E-0375)
-AIScore_Meditate_Conditions_HPBelowTwoThirds::
+AIScore_Meditate_Conditions_HPBelowTwoThirds:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, $03
@@ -7953,9 +7953,9 @@ SECTION "Bank 05 FailIfSkillHasResistanceClass", ROMX
 ; foe. (C2, E-0375)
 ; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe's resistance field for skill
 ; wRecordBufferData + $1 is 3; $FF when wRecordBufferData + $1 is 0 or none is (E-0127)
-FailIfSkillHasResistanceClass::
+FailIfSkillHasResistanceClass:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $02
     jr c, .done3
     ld a, [wRecordBufferData + $1]
@@ -8020,9 +8020,9 @@ SECTION "Bank 05 FailIfTwoAlliesBelowHalfHP", ROMX
 ; rounded down), else C = $FF. (C2, E-0375)
 ; C = 1 when the AI mode is below 3 or the actor knows a heal-all skill; otherwise $00 when two or
 ; more allies have HP below half, else $FF (E-0127)
-FailIfTwoAlliesBelowHalfHP::
+FailIfTwoAlliesBelowHalfHP:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05_2
+    call ReadSlotAIModeIndexed_Bank05
     cp $03
     jr c, .done2
     ld a, [wBattleActor]
@@ -8104,7 +8104,7 @@ SECTION "Bank 05 AIScore_Sap_CompareATKWithDEF", ROMX
 ; DEF of the present foes. C = $FF when X is at most Y, or when X - Y is at most half the foe
 ; average HP (their HP sum halved, then divided by their count); C = 0 otherwise. Uses
 ; hTemp0/hTemp1. (C2, E-0375)
-AIScore_Sap_CompareATKWithDEF::
+AIScore_Sap_CompareATKWithDEF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -8243,9 +8243,9 @@ SECTION "Bank 05 AIGateCompareAllyStatAverages", ROMX
 ; below the absent average (CompareHLToBCFastZero), else C = 0. Uses hTemp0-hTemp4. (C2, E-0375)
 ; C = 1 when the AI mode is below 4 or the actor knows a heal skill; otherwise compares the stat
 ; sums of the empty and occupied ally slots and returns $00 or $FF (E-0129)
-AIGateCompareAllyStatAverages::
+AIGateCompareAllyStatAverages:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05_2
+    call ReadSlotAIModeIndexed_Bank05
     cp $04
     jp c, .done3
     ld a, [wBattleActor]
@@ -8421,7 +8421,7 @@ SECTION "Bank 05 AIScore_BiAttack_FoeHPCheck", ROMX
 
 ; BiAttack AI check: fails when a present foe's HP is below 120% of its damage estimate
 ; (wAIDamageEstimates), i.e. a normal attack would already finish it. (C2, E-0357; probed E-0375)
-AIScore_BiAttack_FoeHPCheck::
+AIScore_BiAttack_FoeHPCheck:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -8475,9 +8475,9 @@ SECTION "Bank 05 AIScore_Berserker_SpeedAndHPCheck", ROMX
 ; foes are present or when the actor's AGL is at most 120% of the AGL of the last present foe;
 ; otherwise C = 0 when that foe's HP is at most twice its wAIDamageEstimates entry, C = $FF when it
 ; is more. (C2, E-0369; probed E-0375)
-AIScore_Berserker_SpeedAndHPCheck::
+AIScore_Berserker_SpeedAndHPCheck:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05_2
+    call ReadSlotAIModeIndexed_Bank05
     cp $02
     jr c, .done3
     ld a, [wBattleActor]
@@ -8552,9 +8552,9 @@ SECTION "Bank 05 AIScore_Ramming_LastFoeHPAndResist", ROMX
 ; last present foe's resistance field for that class (AnyFoeNotFullyResistant_Data,
 ; Get2BitFieldEOfHL) is 2 or more; otherwise C = 0 when that foe's HP is above 60% of the actor's
 ; HP, C = $FF when it is at most that. (C2, E-0369; probed E-0375)
-AIScore_Ramming_LastFoeHPAndResist::
+AIScore_Ramming_LastFoeHPAndResist:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05_2
+    call ReadSlotAIModeIndexed_Bank05
     cp $02
     jr c, .done2
     ld a, [wBattleActor]
@@ -8638,9 +8638,9 @@ SECTION "Bank 05 AIScore_Kamikaze_HealerAllyAndFoeHP", ROMX
 ; which never gives carry, so it always returns C = $FF; the foe checks after it (a foe with HP at
 ; least the actor's HP + 100 whose resistance field is below 2 gives C = 0) are never reached,
 ; likely a bug where another slot's HP was meant. (C2, E-0369; probed E-0375)
-AIScore_Kamikaze_HealerAllyAndFoeHP::
+AIScore_Kamikaze_HealerAllyAndFoeHP:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
-    call ReadSlotAIModeIndexed_Bank05_2
+    call ReadSlotAIModeIndexed_Bank05
     cp $03
     jp c, .done3
     ld a, [wLinkMode]
@@ -8666,7 +8666,7 @@ AIScore_Kamikaze_HealerAllyAndFoeHP::
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
     ld a, c
-    call ReadSlotAIModeIndexed_Bank05_2
+    call ReadSlotAIModeIndexed_Bank05
     cp $03
     jr c, .next
     push de
@@ -8798,7 +8798,7 @@ SECTION "Bank 05 AIScore_BiAttack_ATKCheck", ROMX
 
 ; BiAttack AI check: passes when 5/4 of the actor's ATK is at least the foes' average DEF, fails
 ; otherwise. (C2, E-0357; probed E-0375)
-AIScore_BiAttack_ATKCheck::
+AIScore_BiAttack_ATKCheck:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -8891,7 +8891,7 @@ SECTION "Bank 05 ResistanceAverageGateForAISide", ROMX
 ; E-0375)
 ; C = 1 for the player side outside link battles; otherwise like PassIfFoesAverageResistanceAtLeast2
 ; (E-0128)
-ResistanceAverageGateForAISide::
+ResistanceAverageGateForAISide:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr z, .check_record_buffer_data
@@ -8980,14 +8980,14 @@ SECTION "Bank 05 ResistanceAverageGateForFoeAIMode3", ROMX
 ; E-0375)
 ; C = 1 in link battles, for the player side, or when the AI mode is below 3; otherwise like
 ; PassIfFoesAverageResistanceAtLeast2 (E-0128)
-ResistanceAverageGateForFoeAIMode3::
+ResistanceAverageGateForFoeAIMode3:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr z, .done3
     ld a, [wBattleActor]
     cp $04
     jr c, .done3
-    call ReadSlotAIModeIndexed_Bank05
+    call ReadSlotAIModeIndexed_Bank05_2
     cp $03
     jr c, .done3
     ld a, [wRecordBufferData + $1]
@@ -9081,7 +9081,7 @@ SECTION "Bank 05 AddBCToAISkillScore", ROMX
 ; The word wAISkillScore += BC (16-bit, the carry out of the high byte is lost). No caller was found
 ; in src/. (C2, E-0375)
 ; the word wAISkillScore/wAISkillScore + $1 += BC (E-0094)
-AddBCToAISkillScore::
+AddBCToAISkillScore:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wAISkillScore]
     add c
     ld [wAISkillScore], a
@@ -9095,7 +9095,7 @@ SECTION "Bank 05 AddBCToAISkillScore2", ROMX
 ; The word wAISkillScore2 += BC (16-bit, the carry out is lost). No caller was found in src/. (C2,
 ; E-0375)
 ; the word wAISkillScore2/wAISkillScore2 + $1 += BC (E-0094)
-AddBCToAISkillScore2::
+AddBCToAISkillScore2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wAISkillScore2]
     add c
     ld [wAISkillScore2], a
@@ -9104,13 +9104,13 @@ AddBCToAISkillScore2::
     ld [wAISkillScore2 + $1], a
     ret
 
-SECTION "Bank 05 ReadSlotAIModeIndexed_Bank05", ROMX
+SECTION "Bank 05 ReadSlotAIModeIndexed_Bank05_2", ROMX
 
 ; A = battle slot: returns A = its AI mode, the byte at wSlotAIMode + A; HL points at it. Many AI
 ; checks in this bank gate on it (C = 1 below a set mode). The same code is
-; ReadSlotAIModeIndexed_Bank05_2. (C2, E-0375)
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
-ReadSlotAIModeIndexed_Bank05::
+; ReadSlotAIModeIndexed_Bank05. (C2, E-0375)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_Bank05_2::
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
@@ -9122,7 +9122,7 @@ SECTION "Bank 05 AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise", ROMX
 ; or more; otherwise carry while DEF is below its base DEF (GetBaseDEF, in wBattleStatResultLo and
 ; wBattleStatResultHi) times 4, or times 2 for slots 4-7 when wLinkMode is 0 or 2; no carry
 ; otherwise. (C2, E-0369; probed E-0375)
-AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise::
+AIScore_Upper_Conditions_AnyAllyRaisable_CanRaise:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call GetBattleDEF_Bank05
     ld a, l
     sub $e7
@@ -9177,7 +9177,7 @@ SECTION "Bank 05 AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise", ROMX
 ; or more; otherwise carry while AGL is below its base AGL (GetBaseAGL, in wBattleStatResultLo and
 ; wBattleStatResultHi) times 4, or times 2 for slots 4-7 when wLinkMode is 0 or 2; no carry
 ; otherwise. (C2, E-0369; probed E-0375)
-AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise::
+AIScore_Speed_Conditions_AnyAllyRaisable_CanRaise:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call GetBattleAGL_Bank05
     ld a, l
     sub $e7
@@ -9232,7 +9232,7 @@ SECTION "Bank 05 CompareHPWithThreeQuartersMax", ROMX
 ; the HP is below, Z when equal (CompareHLToBC); BC kept. (C2, E-0375)
 ; C = slot: compares its HP with 3/4 of its max HP (CompareHLToBC): carry when below; BC kept
 ; (E-0120)
-CompareHPWithThreeQuartersMax::
+CompareHPWithThreeQuartersMax:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld a, c
     call GetBattleMaxHP_Bank05
@@ -9262,7 +9262,7 @@ SECTION "Bank 05 CompareHPWithHalfMax", ROMX
 ; A = slot whose max HP is used, C = slot whose HP is used (callers normally pass the same slot):
 ; compares 2 x HP with the max HP (CompareHLToBC): carry set when HP is below 1/2 of max, Z when
 ; exactly 1/2; BC kept (E-0094)
-CompareHPWithHalfMax::
+CompareHPWithHalfMax:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     push af
     call GetBattleMaxHP_Bank05
@@ -9284,7 +9284,7 @@ SECTION "Bank 05 CompareHPWithQuarterMax", ROMX
 ; A = slot whose max HP is used, C = slot whose HP is used (callers normally pass the same slot):
 ; compares 4 x HP with the max HP (CompareHLToBC): carry set when HP is below 1/4 of max, Z when
 ; exactly 1/4; BC kept (E-0094)
-CompareHPWithQuarterMax::
+CompareHPWithQuarterMax:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     push af
     call GetBattleMaxHP_Bank05
@@ -9307,7 +9307,7 @@ SECTION "Bank 05 CompareHPWithTenthMax", ROMX
 ; A = slot whose max HP is used, C = slot whose HP is used (callers normally pass the same slot):
 ; compares 10 x HP with the max HP (CompareHLToBC): carry set when HP is below 1/10 of max, Z when
 ; exactly 1/10; BC kept (E-0094)
-CompareHPWithTenthMax::
+CompareHPWithTenthMax:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     push af
     call GetBattleMaxHP_Bank05
@@ -9399,7 +9399,7 @@ SECTION "Bank 05 CountSkillsWithZeroRecordByte1", ROMX
 ; skill record byte 1 is 0 (LoadSkillRecordPart with wBattleArg0 = 1, wBattleArg1 = 1 into hTemp0).
 ; Returns A = the count, Z when 0; BC kept. No caller was found in src/. (C2, E-0375)
 ; A = how many of slot C's skills have record byte 1 = 0 (flags from A) (E-0125)
-CountSkillsWithZeroRecordByte1::
+CountSkillsWithZeroRecordByte1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld a, $01
     ld [wBattleArg0], a
@@ -9485,7 +9485,7 @@ SECTION "Bank 05 GetSlotSpeciesFamily", ROMX
 ; (C2, E-0375)
 ; A = battle slot: A = the family (byte 0 of the species record) of the monster id in
 ; wBattleMonsterId[slot] (LoadSpeciesFamily); BC kept (E-0069)
-GetSlotSpeciesFamily::
+GetSlotSpeciesFamily:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wBattleMonsterId
     add a
     add_a_to_hl
@@ -9502,7 +9502,7 @@ GetSlotSpeciesFamily::
 SECTION "Bank 05 FindLowestFoeDEF", ROMX
 
 ; Finds the lowest DEF among the present foes, in hTemp0/hTemp1. (C2, E-0357; probed E-0375)
-FindLowestFoeDEF::
+FindLowestFoeDEF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -9565,7 +9565,7 @@ SECTION "Bank 05 SlotIsBlinded", ROMX
 ; E-0375)
 ; slot C: returns NZ when bit 1 of status byte 0 is set, otherwise A = status byte 4 & 3 with flags
 ; from it (E-0122)
-SlotIsBlinded::
+SlotIsBlinded:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -9638,7 +9638,7 @@ SECTION "Bank 05 CountSkillsInList_2", ROMX
 ; places it after a terminator), so whether it runs is not known. (C2, E-0375)
 ; A = how many of slot A's skills are $03, $06, $09, $0C, $0F, $12-$15 or $3D-$3F (E-0125) (E-0344:
 ; the address in its name dropped or read as the label there; was CountSkillsInList_2)
-CountSkillsInList_2::
+CountSkillsInList_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wBattleSkills
     swap a
     add_a_to_hl
@@ -9693,7 +9693,7 @@ SECTION "Bank 05 CountSkillsInRanges", ROMX
 ; names it in src/, so whether it runs is not known. (C2, E-0375)
 ; A = how many of slot A's skills are $16-$24, $7B-$7C, $81 or $9F-$A0 (E-0125) (E-0344: the address
 ; in its name dropped or read as the label there; was CountSkillsInRanges)
-CountSkillsInRanges::
+CountSkillsInRanges:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wBattleSkills
     swap a
     add_a_to_hl
@@ -9741,7 +9741,7 @@ SECTION "Bank 05 CountSkills16To1AOr1ETo20", ROMX
 ; and the byte after each, and never skills 4-7 (a likely slip). No caller names it in src/, so
 ; whether it runs is not known. (C2, E-0375)
 ; A = how many of slot A's eight skills are $16-$1A or $1E-$20 (E-0124)
-CountSkills16To1AOr1ETo20::
+CountSkills16To1AOr1ETo20:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld hl, wBattleSkills
     swap a
@@ -9883,7 +9883,7 @@ SECTION "Bank 05 CountSkillsWithFlag6", ROMX
 ; Returns D = the count of non-$FF entries, E = that count; wRecordBuffer = the last entry read; BC
 ; kept. No caller names it in src/. (C2, E-0375)
 ; D = how many of slot A's skills were read, E = how many have bit 6 set in record byte 5 (E-0125)
-CountSkillsWithFlag6::
+CountSkillsWithFlag6:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld de, $0000
     ld hl, wBattleSkills
@@ -9931,7 +9931,7 @@ SECTION "Bank 05 CountSkillsBelow16Or2ETo34Except31", ROMX
 ; SKILL_SLEEPALL, SKILL_ROBMAGIC, SKILL_STOPSPELL, SKILL_PANICALL; not SKILL_TAKEMAGIC), with Z set
 ; when there are none; 0 and $FF are skipped; BC kept. No caller names it in src/. (C2, E-0375)
 ; A = how many of slot C's skills are $01-$15 or $2E-$34 except $31 (flags set from A) (E-0124)
-CountSkillsBelow16Or2ETo34Except31::
+CountSkillsBelow16Or2ETo34Except31:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld a, c
     ld hl, wBattleSkills
@@ -9973,7 +9973,7 @@ SECTION "Bank 05 CountSlotSkills40To47", ROMX
 ; src/. (C2, E-0375)
 ; A = battle slot: counts the skills numbered $40-$47 among the slot's 8 skills (every other byte of
 ; wBattleSkills + 16 * slot): A = the count, Z set when there are none; BC kept (E-0094)
-CountSlotSkills40To47::
+CountSlotSkills40To47:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld hl, wBattleSkills
     swap a
@@ -10006,7 +10006,7 @@ SECTION "Bank 05 CountSkillsInRanges_2", ROMX
 ; src/. (C2, E-0375)
 ; A = how many of slot A's skills are $01-$15, $40-$67, $6A-$70, $8B-$93 or $AA (E-0125) (E-0344:
 ; the address in its name dropped or read as the label there; was CountSkillsInRanges_2)
-CountSkillsInRanges_2::
+CountSkillsInRanges_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld hl, wBattleSkills
     swap a
@@ -10123,7 +10123,7 @@ SECTION "Bank 05 AnySlotHasStatusMask", ROMX
 ; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when
 ; some present slot in the range has (HL + 9 * slot) & E non-zero, else C = 0 (the opposite test to
 ; AnySlotLacksStatusMask) (E-0100)
-AnySlotHasStatusMask::
+AnySlotHasStatusMask:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld c, a
 
 .loop:
@@ -10158,7 +10158,7 @@ SECTION "Bank 05 FoeOfFamilyEPresent", ROMX
 ; AquaCut conditions use it through their *FoePresent helpers. (C2, E-0375)
 ; E = family: C = 0 when one of the actor's three opposite slots is present and its species family
 ; (GetSlotSpeciesFamily) equals E; otherwise C = $FF (E-0092)
-FoeOfFamilyEPresent::
+FoeOfFamilyEPresent:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -10195,7 +10195,7 @@ SECTION "Bank 05 CompareMPWithThreeQuartersMax", ROMX
 ; with sra, so a product of $8000 or more would go negative): carry when MP is below it, Z when
 ; equal. BC kept; HL = MP. AnyAllyMPAtMostThreeQuarters passes on carry or Z. (C2, E-0375)
 ; C = slot: compares its MP with 3/4 of its max MP: carry when below; BC kept (E-0120)
-CompareMPWithThreeQuartersMax::
+CompareMPWithThreeQuartersMax:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push bc
     ld a, c
     call GetBattleMaxMP_Bank05
@@ -10256,7 +10256,7 @@ SECTION "Bank 05 ReadActorResistanceFieldForSkillA", ROMX
 ; C = the actor this is the actor own resistance. No caller names it in src/. (C2, E-0375)
 ; reads the 2-bit field selected by AnyFoeNotFullyResistant_Data[A - 1] from the actor's
 ; wSlotResistances record into A, with NZ (E-0124)
-ReadActorResistanceFieldForSkillA::
+ReadActorResistanceFieldForSkillA:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     dec a
     ld hl, AnyFoeNotFullyResistant_Data
     add a
@@ -10288,7 +10288,7 @@ SECTION "Bank 05 AIScore_Kamikaze_CheckSkills", ROMX
 ; loaded but unused), which is the slot counter of its caller AIScore_Kamikaze_HealerAllyAndFoeHP,
 ; and leaves B changed. (C2, E-0375)
 ; scans the slot's eight wBattleSkills entries: 0 when one is $16-$1A, $7C or $A1
-AIScore_Kamikaze_CheckSkills::
+AIScore_Kamikaze_CheckSkills:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld e, $00
     ld d, c
     ld hl, wBattleSkills
@@ -10355,7 +10355,7 @@ SECTION "Bank 05 AIFireSkillUsable", ROMX
 ; usable when the MP, status-1, side-flag and repeat checks pass, a foe lacks status 2 mask $22,
 ; status 5 bits 6-7 and status 2 bit 3, and AnyFoeNotFullyResistant passes; otherwise resets
 ; wAISkillScore (E-0125)
-AIFireSkillUsable::
+AIFireSkillUsable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -10405,7 +10405,7 @@ SECTION "Bank 05 AIScore_Beat_Conditions", ROMX
 ; the conditions of AIScore_Beat: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit0Check,
 ; SkillPassesSideFlagBit3Check in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_Beat_Conditions::
+AIScore_Beat_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -10452,7 +10452,7 @@ SECTION "Bank 05 AIScore_Sacrifice_Conditions", ROMX
 ; (a result of 1 also passes), CheckSide0FlagNot1 and CheckBattleKindNot2Or3 in turn; the first that
 ; gives C = 0 resets the skill's score (ResetAISkillScore). AIScore_Sacrifice returns at once when
 ; it gives 0. (C2, E-0369; probed E-0375)
-AIScore_Sacrifice_Conditions::
+AIScore_Sacrifice_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -10516,7 +10516,7 @@ SECTION "Bank 05 AIHealUsable", ROMX
 ; all pass it returns the C of the last check, with the score unchanged. (C2, E-0375)
 ; usable when the actor can pay the MP cost and the status-1, side-flag, repeat and AnyAllyHPBelow
 ; checks pass; otherwise resets wAISkillScore (E-0124)
-AIHealUsable::
+AIHealUsable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -10549,7 +10549,7 @@ SECTION "Bank 05 AIScore_MPass_Conditions", ROMX
 ; on entry, then when ActorLacksStatus4Bits67 or AllOtherAlliesHaveStatus0Bit6 gives 0; the next
 ; step, SetCToZero, always gives 0, so every path resets the score and
 ; AIScore_MPass_AnyAllyMPAboveMax is never reached. (C2, E-0369; probed E-0375)
-AIScore_MPass_Conditions::
+AIScore_MPass_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10587,7 +10587,7 @@ SECTION "Bank 05 AIScore_Vivify_Conditions", ROMX
 ; the conditions of AIScore_Vivify: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyOwnSideSlotOutIs1 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_Vivify_Conditions::
+AIScore_Vivify_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10613,7 +10613,7 @@ SECTION "Bank 05 AIScore_Farewell_Conditions", ROMX
 ; the conditions of AIScore_Farewell: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyFoeLacksStatus0Bit6, AnyOwnSideSlotOutIs1 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_Farewell_Conditions::
+AIScore_Farewell_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10648,7 +10648,7 @@ SECTION "Bank 05 AIScore_Antidote_Conditions", ROMX
 ; the conditions of AIScore_Antidote: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AIScore_Antidote_Sub01_AnySlotHasStatusMask in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_Antidote_Conditions::
+AIScore_Antidote_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10677,7 +10677,7 @@ SECTION "Bank 05 AIScore_DeChaos_Conditions", ROMX
 ; the conditions of AIScore_DeChaos: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AIScore_DeChaos_Sub01_AnySlotHasStatusMask in turn and tests C after each (zero: stop; the failing
 ; branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_DeChaos_Conditions::
+AIScore_DeChaos_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10707,7 +10707,7 @@ SECTION "Bank 05 AIScore_NumbOff_Conditions", ROMX
 ; the conditions of AIScore_NumbOff: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AIScore_NumbOff_Sub01_AnySlotHasStatusMask in turn and tests C after each (zero: stop; the failing
 ; branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_NumbOff_Conditions::
+AIScore_NumbOff_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10736,7 +10736,7 @@ SECTION "Bank 05 AIScore_CurseOff_Conditions", ROMX
 ; the conditions of AIScore_CurseOff: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AIScore_CurseOff_Sub01_AnySlotHasStatusMask in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_CurseOff_Conditions::
+AIScore_CurseOff_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10766,7 +10766,7 @@ SECTION "Bank 05 AIScore_Upper_Conditions", ROMX
 ; the conditions of AIScore_Upper: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyFoeNotBlocked, AIScore_Upper_Sub01_Sub01 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_Upper_Conditions::
+AIScore_Upper_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10796,7 +10796,7 @@ SECTION "Bank 05 AIScore_Sap_Conditions", ROMX
 ; the conditions of AIScore_Sap: calls AIUsableAndFoeLacksStatus2And5, AIScore_Sap_Sub01_Sub01 in
 ; turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_Sap_Conditions::
+AIScore_Sap_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
     and a
@@ -10853,7 +10853,7 @@ SECTION "Bank 05 AIScore_Speed_Conditions", ROMX
 ; the conditions of AIScore_Speed: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyFoeNotBlocked, AIScore_Speed_Sub01_Sub01 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_Speed_Conditions::
+AIScore_Speed_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10883,7 +10883,7 @@ SECTION "Bank 05 AIScore_Slow_Conditions", ROMX
 ; the conditions of AIScore_Slow: calls AIUsableAndFoeLacksStatus2And5, AnyFoeNotBlocked,
 ; AIScore_Slow_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_Slow_Conditions::
+AIScore_Slow_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
     and a
@@ -10906,7 +10906,7 @@ SECTION "Bank 05 AIScore_TwinHits_Conditions", ROMX
 
 ; TwinHits AI conditions: the usual usability checks, then an ally lacking status 1 bits 2-3 and
 ; status 4 bits 0-1; otherwise the score is reset. (C2, E-0357; probed E-0375)
-AIScore_TwinHits_Conditions::
+AIScore_TwinHits_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -10932,7 +10932,7 @@ SECTION "Bank 05 AIScore_Surround_Conditions", ROMX
 ; the conditions of AIScore_Surround: calls AIUsableAndFoeLacksStatus2And5,
 ; AnyFoeLacksStatus5Bits01And1Bit1, AnyFoeNotBlocked in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_Surround_Conditions::
+AIScore_Surround_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
     and a
@@ -10966,7 +10966,7 @@ SECTION "Bank 05 AIScore_Sleep_Conditions", ROMX
 ; the conditions of AIScore_Sleep: calls AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0MaskCC,
 ; AnyFoeOpenToSlotResistances2Field3 in turn and tests C after each (zero: stop; the failing branch
 ; resets the score with ResetAISkillScore) (E-0279)
-AIScore_Sleep_Conditions::
+AIScore_Sleep_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
     and a
@@ -10999,7 +10999,7 @@ SECTION "Bank 05 AIScore_TakeMagic_Conditions", ROMX
 ; the conditions of AIScore_TakeMagic: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AIScore_TakeMagic_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch
 ; resets the score with ResetAISkillScore) (E-0279)
-AIScore_TakeMagic_Conditions::
+AIScore_TakeMagic_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -11043,7 +11043,7 @@ SECTION "Bank 05 AIScore_RobMagic_Conditions", ROMX
 ; the conditions of AIScore_RobMagic: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyFoeHasMPReadsWrongOffset, AnyFoeWithMPOpenToSlotResistances2Field1 in turn and tests C after
 ; each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_RobMagic_Conditions::
+AIScore_RobMagic_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -11078,7 +11078,7 @@ SECTION "Bank 05 AIScore_StopSpell_Conditions", ROMX
 ; the conditions of AIScore_StopSpell: calls AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0Bit6,
 ; AnyActiveFoeHasSkillFlag40 in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_StopSpell_Conditions::
+AIScore_StopSpell_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
     and a
@@ -11121,7 +11121,7 @@ SECTION "Bank 05 AIPanicAllUsable", ROMX
 ; usable when AIUsableAndFoeLacksStatus2And5, a foe lacks status 0 bit 6, AnyFoeNotFullyResistant, a
 ; foe lacks status 0 bit 4 and AnyFoeVulnerableBySlotResistances3Bits67 pass; otherwise resets
 ; wAISkillScore (E-0124)
-AIPanicAllUsable::
+AIPanicAllUsable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
     and a
@@ -11160,7 +11160,7 @@ SECTION "Bank 05 AIIronizeUsable", ROMX
 ; passes. When all pass it returns the C of the last check, with the score unchanged. (C2, E-0375)
 ; usable when the skill is usable and the foe, block, actor-status, lone-foe HP, wAIFlag and ally
 ; checks pass; otherwise resets wAISkillScore (E-0125)
-AIIronizeUsable::
+AIIronizeUsable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -11216,7 +11216,7 @@ SECTION "Bank 05 AIScore_MagicBack_Conditions", ROMX
 ; the conditions of AIScore_MagicBack: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyFoeLacksStatus0Bit6, AnyActiveFoeHasSkillFlag40 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_MagicBack_Conditions::
+AIScore_MagicBack_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -11268,7 +11268,7 @@ SECTION "Bank 05 AIScore_Barrier_Conditions", ROMX
 ; the conditions of AIScore_Barrier: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyFoeLacksStatus0Bit6, AnyFoeHasSkillFlag10 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_Barrier_Conditions::
+AIScore_Barrier_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -11320,7 +11320,7 @@ SECTION "Bank 05 AIScore_MagicWall_Conditions", ROMX
 ; the conditions of AIScore_MagicWall: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AnyFoeLacksStatus0Bit6, AnyActiveFoeHasSkillFlag40 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_MagicWall_Conditions::
+AIScore_MagicWall_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -11369,7 +11369,7 @@ SECTION "Bank 05 AIUsableAndActorLacksStatus4Bits67", ROMX
 ; unchanged. (C2, E-0375)
 ; usable only when the skill is usable and the actor lacks status 4 bits 6-7; otherwise resets
 ; wAISkillScore (E-0122)
-AIUsableAndActorLacksStatus4Bits67::
+AIUsableAndActorLacksStatus4Bits67:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -11425,7 +11425,7 @@ SECTION "Bank 05 AIScore_MegaMagic_Conditions", ROMX
 
 ; MegaMagic AI conditions: an attack skill usable, the actor lacks status 4 bits 6-7, and the battle
 ; is a link battle or of kind 2 or more; otherwise the score is reset. (C2, E-0357; probed E-0375)
-AIScore_MegaMagic_Conditions::
+AIScore_MegaMagic_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAttackSkillUsable
     ld a, c
     and a
@@ -11492,7 +11492,7 @@ SECTION "Bank 05 AIScore_FireAir_Conditions", ROMX
 ; second check fails when the skill has the breath flag (record byte 5 bit 4) and the actor has
 ; BSTAT1_BREATH_SEALED; the last passes when a present foe lacks BSTAT2_WIND_GUARD. The earlier note
 ; called the second a status-0 check; it reads status byte 1. (C2, E-0375)
-AIScore_FireAir_Conditions::
+AIScore_FireAir_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAttackSkillUsable
     ld a, c
     and a
@@ -11521,7 +11521,7 @@ SECTION "Bank 05 AIAndFoeLacksStatus3And4", ROMX
 ; usable only when AIAttackSkillUsable passes and a foe lacks the status 3 and 4 bits; otherwise
 ; resets wAISkillScore (E-0122) (E-0344: the address in its name dropped or read as the label there;
 ; was AIAndFoeLacksStatus3And4)
-AIAndFoeLacksStatus3And4::
+AIAndFoeLacksStatus3And4:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAttackSkillUsable
     ld a, c
     and a
@@ -11548,7 +11548,7 @@ SECTION "Bank 05 AIScore_SlimeBlow_Conditions", ROMX
 ; the conditions of AIScore_SlimeBlow: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_SlimeBlow_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_SlimeBlow_Conditions::
+AIScore_SlimeBlow_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11577,7 +11577,7 @@ SECTION "Bank 05 AIScore_DrakSlash_Conditions", ROMX
 ; the conditions of AIScore_DrakSlash: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_DrakSlash_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_DrakSlash_Conditions::
+AIScore_DrakSlash_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11606,7 +11606,7 @@ SECTION "Bank 05 AIScore_BeastCut_Conditions", ROMX
 ; the conditions of AIScore_BeastCut: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_BeastCut_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_BeastCut_Conditions::
+AIScore_BeastCut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11635,7 +11635,7 @@ SECTION "Bank 05 AIScore_BirdBlow_Conditions", ROMX
 ; the conditions of AIScore_BirdBlow: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_BirdBlow_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_BirdBlow_Conditions::
+AIScore_BirdBlow_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11663,7 +11663,7 @@ SECTION "Bank 05 AIScore_BugBlow_Conditions", ROMX
 ; the conditions of AIScore_BugBlow: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_BugBlow_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_BugBlow_Conditions::
+AIScore_BugBlow_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11692,7 +11692,7 @@ SECTION "Bank 05 AIScore_Shears_Conditions", ROMX
 ; the conditions of AIScore_Shears: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_Shears_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the failing
 ; branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_Shears_Conditions::
+AIScore_Shears_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11721,7 +11721,7 @@ SECTION "Bank 05 AIScore_DevilCut_Conditions", ROMX
 ; the conditions of AIScore_DevilCut: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_DevilCut_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_DevilCut_Conditions::
+AIScore_DevilCut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11750,7 +11750,7 @@ SECTION "Bank 05 AIScore_ZombieCut_Conditions", ROMX
 ; the conditions of AIScore_ZombieCut: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_ZombieCut_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_ZombieCut_Conditions::
+AIScore_ZombieCut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11779,7 +11779,7 @@ SECTION "Bank 05 AIScore_CleanCut_Conditions", ROMX
 ; the conditions of AIScore_CleanCut: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_CleanCut_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_CleanCut_Conditions::
+AIScore_CleanCut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11808,7 +11808,7 @@ SECTION "Bank 05 AIScore_AquaCut_Conditions", ROMX
 ; the conditions of AIScore_AquaCut: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_AquaCut_Sub01_ToFoeOfFamilyEPresent in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_AquaCut_Conditions::
+AIScore_AquaCut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11836,7 +11836,7 @@ SECTION "Bank 05 AIScore_MetalCut_Conditions", ROMX
 ; the conditions of AIScore_MetalCut: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_MetalCut_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_MetalCut_Conditions::
+AIScore_MetalCut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11903,7 +11903,7 @@ SECTION "Bank 05 AIScore_PoisonHit_Conditions", ROMX
 ; the conditions of AIScore_PoisonHit: calls CheckSkillUsableElseResetAISkillScore,
 ; AnyFoeLacksStatus0Bits01, AnyFoeOpenToSlotResistances4Field0 in turn and tests C after each (zero:
 ; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_PoisonHit_Conditions::
+AIScore_PoisonHit_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -11934,7 +11934,7 @@ SECTION "Bank 05 AIScore_Paralyze_Conditions", ROMX
 ; the conditions of AIScore_Paralyze: calls AIParalyzeUsable, AnyFoeOpenToSlotResistances5Field3 in
 ; turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_Paralyze_Conditions::
+AIScore_Paralyze_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIParalyzeUsable
     ld a, c
     and a
@@ -11963,7 +11963,7 @@ SECTION "Bank 05 AIScore_NapAttack_Conditions", ROMX
 ; the conditions of AIScore_NapAttack: calls AIParalyzeUsable, AnyFoeOpenToSlotResistances2Field3 in
 ; turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_NapAttack_Conditions::
+AIScore_NapAttack_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIParalyzeUsable
     ld a, c
     and a
@@ -12022,7 +12022,7 @@ SECTION "Bank 05 AIScore_SquallHit_Conditions", ROMX
 ; the conditions of AIScore_SquallHit: calls CheckSkillUsableElseResetAISkillScore,
 ; AIScore_SquallHit_Sub01_Sub01, FastestFoeAGLAbove31PercentOfActor in turn and tests C after each
 ; (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_SquallHit_Conditions::
+AIScore_SquallHit_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -12057,7 +12057,7 @@ SECTION "Bank 05 AIScore_BiAttack_Conditions", ROMX
 
 ; BiAttack AI conditions: usable, and the DEF check (AIScore_BiAttack_ATKCheck); otherwise the score
 ; is reset and C = 0. (C2, E-0357; probed E-0375)
-AIScore_BiAttack_Conditions::
+AIScore_BiAttack_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -12083,7 +12083,7 @@ SECTION "Bank 05 AIScore_RainSlash_Conditions", ROMX
 ; the conditions of AIScore_RainSlash: calls CheckSkillUsableElseResetAISkillScore,
 ; AtLeastTwoFoesPresent in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_RainSlash_Conditions::
+AIScore_RainSlash_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -12110,7 +12110,7 @@ SECTION "Bank 05 AIScore_MultiCut_Conditions", ROMX
 ; the conditions of AIScore_MultiCut: calls AIAttackSkillUsable_2, AnyFoeNotFullyResistant in turn
 ; and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
 ; (E-0279)
-AIScore_MultiCut_Conditions::
+AIScore_MultiCut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAttackSkillUsable_2
     ld a, c
     and a
@@ -12170,7 +12170,7 @@ SECTION "Bank 05 AIScore_ChargeUp_Conditions", ROMX
 ; the conditions of AIScore_ChargeUp: calls ActorLacksStatus4Bits67,
 ; CheckLoneFoeHPNotBelowAIDamageEstimates, ActorLacksStatus1Bits23And4Bits01 in turn and tests C
 ; after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_ChargeUp_Conditions::
+AIScore_ChargeUp_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorLacksStatus4Bits67
     ld a, c
     and a
@@ -12204,7 +12204,7 @@ SECTION "Bank 05 AIScore_PsycheUp_Conditions", ROMX
 ; the conditions of AIScore_PsycheUp: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67,
 ; AnyFoeLacksStatus2Bit3 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_PsycheUp_Conditions::
+AIScore_PsycheUp_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12243,7 +12243,7 @@ SECTION "Bank 05 AIScore_HighJump_Conditions", ROMX
 ; the conditions of AIScore_HighJump: calls AIAttackSkillUsable_2, ActorLacksStatus4Bits67,
 ; ResetAISkillScore in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
-AIScore_HighJump_Conditions::
+AIScore_HighJump_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAttackSkillUsable_2
     call ActorLacksStatus4Bits67
     ld a, c
@@ -12266,7 +12266,7 @@ SECTION "Bank 05 AIScore_TwinSlash_Conditions", ROMX
 ; the conditions of AIScore_TwinSlash: calls AIAttackSkillUsable_3, AnyFoeHasDEFAtLeast2,
 ; AllOtherAlliesHaveStatus0Bit6 in turn and tests C after each (zero: stop; the failing branch
 ; resets the score with ResetAISkillScore) (E-0279)
-AIScore_TwinSlash_Conditions::
+AIScore_TwinSlash_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAttackSkillUsable_3
     ld a, c
     and a
@@ -12334,7 +12334,7 @@ SECTION "Bank 05 AIAndAnyFoeNotFullyResistantAndActorHPNotOne", ROMX
 ; usable only when AIAttackSkillUsable_3 and AnyFoeNotFullyResistant pass and the actor's HP is not
 ; 1; otherwise resets wAISkillScore (E-0122) (E-0344: the address in its name dropped or read as the
 ; label there; was AIAndAnyFoeNotFullyResistantAndActorHPNotOne)
-AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
+AIAndAnyFoeNotFullyResistantAndActorHPNotOne:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAttackSkillUsable_3
     ld a, c
     and a
@@ -12359,7 +12359,7 @@ SECTION "Bank 05 AIScore_Kamikaze_Conditions", ROMX
 ; gives C = 0; then resets the skill's score (ResetAISkillScore) when AnyFoeNotBlocked or
 ; AllOtherAlliesHaveStatus0Bit6 gives 0 (the latter passes when some other present ally lacks
 ; BSTAT0_PARALYZED, or none is present). (C2, E-0369; probed E-0375)
-AIScore_Kamikaze_Conditions::
+AIScore_Kamikaze_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
     and a
@@ -12389,7 +12389,7 @@ SECTION "Bank 05 AIScore_SleepAir_Conditions", ROMX
 ; the conditions of AIScore_SleepAir: calls AIAndPassUnlessRecordBufferData5Bit4,
 ; AnyFoeLacksStatus0MaskCC, AnyFoeOpenToSlotResistances2Field3 in turn and tests C after each (zero:
 ; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_SleepAir_Conditions::
+AIScore_SleepAir_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
@@ -12447,7 +12447,7 @@ SECTION "Bank 05 AIScore_PalsyAir_Conditions", ROMX
 ; the conditions of AIScore_PalsyAir: calls AIAndPassUnlessRecordBufferData5Bit4,
 ; AnyFoeLacksStatus0Bit6, AnyFoeOpenToSlotResistances5Field3 in turn and tests C after each (zero:
 ; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_PalsyAir_Conditions::
+AIScore_PalsyAir_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
@@ -12481,7 +12481,7 @@ SECTION "Bank 05 AIScore_PoisonGas_Conditions", ROMX
 ; the conditions of AIScore_PoisonGas: calls AIAndPassUnlessRecordBufferData5Bit4,
 ; AnyFoeLacksStatus0Bits01, AnyFoeOpenToSlotResistances4Field0 in turn and tests C after each (zero:
 ; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_PoisonGas_Conditions::
+AIScore_PoisonGas_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
@@ -12512,7 +12512,7 @@ SECTION "Bank 05 AIScore_PoisonAir_Conditions", ROMX
 ; AIScore_PoisonAir_Sub01_AnySlotLacksStatusMask, AnyFoeOpenToSlotResistances4Field0 in turn and
 ; tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
 ; (E-0279)
-AIScore_PoisonAir_Conditions::
+AIScore_PoisonAir_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
@@ -12542,7 +12542,7 @@ SECTION "Bank 05 AIScore_Curse_Conditions", ROMX
 ; the conditions of AIScore_Curse: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit7Check,
 ; SkillPassesRepeatCheck in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_Curse_Conditions::
+AIScore_Curse_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12584,7 +12584,7 @@ SECTION "Bank 05 AIScore_OddDance_Conditions", ROMX
 ; the conditions of AIScore_OddDance: calls AIDanceUsable, AnyFoeHasMPReadsWrongOffset,
 ; AnyFoeWithMPOpenToSlotResistances2Field1 in turn and tests C after each (zero: stop; the failing
 ; branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_OddDance_Conditions::
+AIScore_OddDance_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIDanceUsable
     ld a, c
     and a
@@ -12619,7 +12619,7 @@ SECTION "Bank 05 AIScore_PaniDance_Conditions", ROMX
 ; the conditions of AIScore_PaniDance: calls AIDanceUsable, AnyFoeNotFullyResistant,
 ; AnyFoeLacksStatus0Bit4 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_PaniDance_Conditions::
+AIScore_PaniDance_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIDanceUsable
     ld a, c
     and a
@@ -12684,7 +12684,7 @@ SECTION "Bank 05 AIScore_KODance_Conditions", ROMX
 ; returns the C of the last check, with the score unchanged. (C2, E-0375)
 ; the conditions of AIScore_KODance: calls AIDanceUsable, AnyFoeNotFullyResistant in turn and tests
 ; C after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_KODance_Conditions::
+AIScore_KODance_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIDanceUsable
     ld a, c
     and a
@@ -12710,7 +12710,7 @@ SECTION "Bank 05 AIScore_LureDance_Conditions", ROMX
 ; the conditions of AIScore_LureDance: calls AIDanceUsable, AnyFoeLacksStatus3And4Bits,
 ; AnyFoeNotBlocked in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
-AIScore_LureDance_Conditions::
+AIScore_LureDance_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIDanceUsable
     ld a, c
     and a
@@ -12748,7 +12748,7 @@ SECTION "Bank 05 AIScore_LifeDance_Conditions", ROMX
 ; the conditions of AIScore_LifeDance: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check,
 ; SkillPassesRepeatCheck in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_LifeDance_Conditions::
+AIScore_LifeDance_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12789,7 +12789,7 @@ SECTION "Bank 05 AIScore_Hustle_Conditions", ROMX
 ; the conditions of AIScore_Hustle: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check,
 ; SkillPassesRepeatCheck in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_Hustle_Conditions::
+AIScore_Hustle_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12823,7 +12823,7 @@ SECTION "Bank 05 AIScore_SideStep_Conditions", ROMX
 ; the conditions of AIScore_SideStep: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check,
 ; SkillPassesRepeatCheck in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_SideStep_Conditions::
+AIScore_SideStep_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12865,7 +12865,7 @@ SECTION "Bank 05 AIScore_SandStorm_Conditions", ROMX
 ; the conditions of AIScore_SandStorm: calls CheckSkillUsableElseResetAISkillScore,
 ; AnyFoeLacksStatus5Bits01And1Bit1, AnyFoeNotBlocked in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
-AIScore_SandStorm_Conditions::
+AIScore_SandStorm_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -12898,7 +12898,7 @@ SECTION "Bank 05 AIScore_Radiant_Conditions", ROMX
 ; the conditions of AIScore_Radiant: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67,
 ; AnyFoeLacksStatus5Bits01And1Bit1 in turn and tests C after each (zero: stop; the failing branch
 ; resets the score with ResetAISkillScore) (E-0279)
-AIScore_Radiant_Conditions::
+AIScore_Radiant_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12935,7 +12935,7 @@ SECTION "Bank 05 AIScore_EerieLite_Conditions", ROMX
 ; the conditions of AIScore_EerieLite: calls ActorCanPayMPCost_Bank05, AnyFoeNotFullyResistant,
 ; AIScore_EerieLite_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch
 ; resets the score with ResetAISkillScore) (E-0279)
-AIScore_EerieLite_Conditions::
+AIScore_EerieLite_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12963,7 +12963,7 @@ SECTION "Bank 05 AIScore_Surge_Conditions", ROMX
 ; the conditions of AIScore_Surge: calls ActorCanPayMPCost_Bank05, AIScore_Surge_Sub01_Sub01 in turn
 ; and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
 ; (E-0279)
-AIScore_Surge_Conditions::
+AIScore_Surge_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -12989,7 +12989,7 @@ SECTION "Bank 05 AIScore_UltraDown_Conditions", ROMX
 ; the conditions of AIScore_UltraDown: calls ActorCanPayMPCost_Bank05, AIScore_UltraDown_Sub01_Sub01
 ; in turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_UltraDown_Conditions::
+AIScore_UltraDown_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13018,7 +13018,7 @@ SECTION "Bank 05 AIScore_DeMagic_Conditions", ROMX
 ; the conditions of AIScore_DeMagic: calls ActorCanPayMPCost_Bank05, AIScore_DeMagic_Sub01_Sub01 in
 ; turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_DeMagic_Conditions::
+AIScore_DeMagic_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13046,7 +13046,7 @@ SECTION "Bank 05 AIScore_ThickFog_Conditions", ROMX
 ; the conditions of AIScore_ThickFog: calls ActorCanPayMPCost_Bank05, SkillPassesSideFlagBit3Check,
 ; AnyActiveFoeHasSkillFlag40 in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_ThickFog_Conditions::
+AIScore_ThickFog_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13083,7 +13083,7 @@ SECTION "Bank 05 AIScore_TatsuCall_Conditions", ROMX
 ; the conditions of AIScore_TatsuCall: calls ActorCanPayMPCost_Bank05, AIScore_TatsuCall_Sub01_Sub01
 ; in turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_TatsuCall_Conditions::
+AIScore_TatsuCall_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13110,7 +13110,7 @@ SECTION "Bank 05 AIScore_SuckAir_Conditions", ROMX
 ; the conditions of AIScore_SuckAir: calls SkillPassesStatus1Bit7Check, ActorLacksStatus4Bits67,
 ; AIScore_SuckAir_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_SuckAir_Conditions::
+AIScore_SuckAir_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call SkillPassesStatus1Bit7Check
     ld a, c
     and a
@@ -13147,7 +13147,7 @@ SECTION "Bank 05 AIScore_Focus_Conditions", ROMX
 ; the conditions of AIScore_Focus: calls ActorLacksStatus4Bits67, ResetAISkillScore in turn and
 ; tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
 ; (E-0279)
-AIScore_Focus_Conditions::
+AIScore_Focus_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorLacksStatus4Bits67
     ld a, c
     and a
@@ -13171,7 +13171,7 @@ SECTION "Bank 05 AILickSkillUsable", ROMX
 ; clear status 3, is vulnerable by wSlotResistances + $5 bits 2-3, and
 ; AllyCheckSide0FlagAndOtherSlots passes; otherwise resets wAISkillScore (E-0125) (E-0344: the
 ; address in its name dropped or read as the label there; was AILickSkillUsable)
-AILickSkillUsable::
+AILickSkillUsable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13217,7 +13217,7 @@ SECTION "Bank 05 AIStatusLickUsable", ROMX
 ; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7
 ; and the status 3/4 bits, a foe has clear status 3, and AnyFoeVulnerableBySlotResistances5Bits23
 ; passes; otherwise resets wAISkillScore (E-0124)
-AIStatusLickUsable::
+AIStatusLickUsable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13259,7 +13259,7 @@ SECTION "Bank 05 AIScore_LegSweep_Conditions", ROMX
 ; the conditions of AIScore_LegSweep: calls AILickSkillUsable, AIScore_LegSweep_Sub01_Sub01 in turn
 ; and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
 ; (E-0279)
-AIScore_LegSweep_Conditions::
+AIScore_LegSweep_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AILickSkillUsable
     ld a, c
     and a
@@ -13288,7 +13288,7 @@ SECTION "Bank 05 AIScore_Geyser_Conditions", ROMX
 ; the conditions of AIScore_Geyser: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67,
 ; AnyFoeLacksStatus3And4Bits in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_Geyser_Conditions::
+AIScore_Geyser_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13328,7 +13328,7 @@ SECTION "Bank 05 AIScore_DanceShut_Conditions", ROMX
 ; the conditions of AIScore_DanceShut: calls ActorCanPayMPCost_Bank05, SkillPassesStatus1Bit6Check,
 ; AnyFoeLacksStatus5Bits67 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_DanceShut_Conditions::
+AIScore_DanceShut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13377,7 +13377,7 @@ SECTION "Bank 05 AIScore_MouthShut_Conditions", ROMX
 ; the conditions of AIScore_MouthShut: calls ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck,
 ; AnyFoeLacksStatus5Bits67 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_MouthShut_Conditions::
+AIScore_MouthShut_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13414,7 +13414,7 @@ SECTION "Bank 05 AIScore_StrongD_Conditions", ROMX
 ; the conditions of AIScore_StrongD: calls AllyCheckSide0FlagAndOtherSlots, AIBuffSkillUsable in
 ; turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_StrongD_Conditions::
+AIScore_StrongD_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a
@@ -13469,7 +13469,7 @@ SECTION "Bank 05 AIScore_Dodge_Conditions", ROMX
 ; the conditions of AIScore_Dodge: calls AIScore_Dodge_Sub01_Sub01, AnyFoeLacksStatus5Bits01And1Bit1
 ; in turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_Dodge_Conditions::
+AIScore_Dodge_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIScore_DodgeAlternative_Conditions
     ld a, c
     and a
@@ -13528,7 +13528,7 @@ SECTION "Bank 05 AIGuardSkillUsable", ROMX
 ; AIBuffSkillUsable, a foe not blocked, the gated wAIFlag check and PassIfBattleTurnNonZero;
 ; otherwise resets wAISkillScore (E-0124) (E-0344: the address in its name dropped or read as the
 ; label there; was AIGuardSkillUsable)
-AIGuardSkillUsable::
+AIGuardSkillUsable:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIBuffSkillUsable
     ld a, c
     and a
@@ -13565,7 +13565,7 @@ SECTION "Bank 05 AIScore_Cover_Conditions", ROMX
 ; the conditions of AIScore_Cover: calls AIGuardSkillUsable, AllyCheckSide0FlagAndOtherSlots,
 ; ActorHPIsNotOne in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
-AIScore_Cover_Conditions::
+AIScore_Cover_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIGuardSkillUsable
     ld a, c
     and a
@@ -13597,7 +13597,7 @@ SECTION "Bank 05 AIScore_TailWind_Conditions", ROMX
 ; the conditions of AIScore_TailWind: calls AIBuffSkillUsable, AnyFoeNotBlocked,
 ; AIScore_TailWind_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_TailWind_Conditions::
+AIScore_TailWind_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIBuffSkillUsable
     ld a, c
     and a
@@ -13630,7 +13630,7 @@ SECTION "Bank 05 AIScore_StormWind_Conditions", ROMX
 ; the conditions of AIScore_StormWind: calls AIBuffSkillUsable, AnyFoeNotBlocked,
 ; AnyAllyLacksStatus2Bit6 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_StormWind_Conditions::
+AIScore_StormWind_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AIBuffSkillUsable
     ld a, c
     and a
@@ -13664,7 +13664,7 @@ SECTION "Bank 05 AIScore_AquaWall_Conditions", ROMX
 ; the conditions of AIScore_AquaWall: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus0Bit6,
 ; AIScore_AquaWall_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_AquaWall_Conditions::
+AIScore_AquaWall_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13695,7 +13695,7 @@ SECTION "Bank 05 AIScore_SealPray_Conditions", ROMX
 
 ; SealPray AI condition: the actor can pay the MP cost; otherwise the score is reset. (C2, E-0357;
 ; probed E-0375)
-AIScore_SealPray_Conditions::
+AIScore_SealPray_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13720,7 +13720,7 @@ SECTION "Bank 05 AIScore_SuckAll_Conditions", ROMX
 ; the conditions of AIScore_SuckAll: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus5Bits67,
 ; AnyFoeLacksStatus3And4Bits in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
-AIScore_SuckAll_Conditions::
+AIScore_SuckAll_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13799,7 +13799,7 @@ SECTION "Bank 05 AIScore_Imitate_Conditions", ROMX
 ; the conditions of AIScore_Imitate: calls ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck,
 ; AnyFoeLacksStatus5Bits67 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
-AIScore_Imitate_Conditions::
+AIScore_Imitate_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13848,7 +13848,7 @@ SECTION "Bank 05 AIScore_Meditate_Conditions", ROMX
 ; the conditions of AIScore_Meditate: calls ActorCanPayMPCost_Bank05, AIScore_Meditate_Sub01_Sub01
 ; in turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
-AIScore_Meditate_Conditions::
+AIScore_Meditate_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13873,7 +13873,7 @@ SECTION "Bank 05 AIScore_LifeSong_Conditions", ROMX
 ; the conditions of AIScore_LifeSong: calls ActorCanPayMPCost_Bank05, AnyOwnSideSlotOutIs1,
 ; CheckSide0FlagNot1 in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
-AIScore_LifeSong_Conditions::
+AIScore_LifeSong_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13902,7 +13902,7 @@ SECTION "Bank 05 AIScore_LoveRain_Conditions", ROMX
 ; the conditions of AIScore_LoveRain: calls ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck,
 ; AnyAllyHPBelow in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
-AIScore_LoveRain_Conditions::
+AIScore_LoveRain_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a
@@ -13927,7 +13927,7 @@ SECTION "Bank 05 AINeverUsableResetAISkillScore", ROMX
 ; SetCToZero gives C = 0, so it always resets the skill score (ResetAISkillScore: wAISkillScore = 0,
 ; wAISkillScore2 = $FFFF) and returns C = 0; the AI never scores these skills. (C2, E-0375)
 ; C = 0 (SetCToZero) and resets wAISkillScore: the skill is never chosen by the AI (E-0122)
-AINeverUsableResetAISkillScore::
+AINeverUsableResetAISkillScore:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call SetCToZero
     ld a, c
     and a
@@ -13949,7 +13949,7 @@ SECTION "Bank 05 AIScore_Guard_Conditions", ROMX
 ; the conditions of AIScore_Guard: calls AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus0MaskCC,
 ; AnyFoeNotBlocked in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
-AIScore_Guard_Conditions::
+AIScore_Guard_Conditions:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a

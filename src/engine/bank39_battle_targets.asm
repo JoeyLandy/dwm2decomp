@@ -7305,7 +7305,7 @@ SECTION "Bank 39 TargetAllyConfused", ROMX
 ; has it. (C2, E-0382)
 ; per-action target routine: scans the actor's side for wBattleStatus (+9 * slot) bit mask $10
 ; (shared code at $6BE3) (E-0219)
-TargetAllyConfused::
+TargetAllyConfused:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleStatus
@@ -7319,7 +7319,7 @@ SECTION "Bank 39 TargetAllyParalyzed", ROMX
 ; TargetAllyWithStatusMask, which picks one present slot of the side of the actor whose first status
 ; byte has that bit, or the actor itself when none has it. (C2, E-0382)
 ; as TargetAllyConfused with mask $40 (E-0219)
-TargetAllyParalyzed::
+TargetAllyParalyzed:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleStatus
@@ -7333,7 +7333,7 @@ SECTION "Bank 39 TargetAllyCursed", ROMX
 ; TargetAllyWithStatusMask, which picks one present slot of the side of the actor whose first status
 ; byte has that bit, or the actor itself when none has it. (C2, E-0382)
 ; as TargetAllyConfused with mask $20 (E-0219)
-TargetAllyCursed::
+TargetAllyCursed:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleStatus
@@ -8611,8 +8611,8 @@ SECTION "Bank 39 ReadSlotAIModeIndexed_Bank39", ROMX
 
 ; A = index: A = wSlotAIMode[A] and HL = the address of that byte. Nothing in src/ calls this bank
 ; 39 copy; copies exist in banks $05, $31 and $32. (C2, E-0382)
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
-ReadSlotAIModeIndexed_Bank39::
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
@@ -8634,7 +8634,7 @@ SECTION "Bank 39 AddDoubleAToHL_Bank39", ROMX
 ; E-0382)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
 ; appear in 12 banks)
-AddDoubleAToHL_Bank39::
+AddDoubleAToHL_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     add a
     add_a_to_hl
     ret
@@ -8647,7 +8647,7 @@ SECTION "Bank 39 ActorOnLocalSide_Bank39", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_Bank39::
+ActorOnLocalSide_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -8672,7 +8672,7 @@ SECTION "Bank 39 TargetOnLocalSide_Bank39", ROMX
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
-TargetOnLocalSide_Bank39::
+TargetOnLocalSide_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_target
@@ -8693,7 +8693,7 @@ SECTION "Bank 39 ClearBattleStatusBitsWithMaskD_Bank39", ROMX
 
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank39_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0382)
-ClearBattleStatusBitsWithMaskD_Bank39::
+ClearBattleStatusBitsWithMaskD_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank39_Data
     add_a_to_hl
@@ -8721,7 +8721,7 @@ ClearBattleStatusBitsWithMaskD_Bank39_Data::
 ; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit0OfLevelUpGainsIndexed_Bank39::
+SetBit0OfLevelUpGainsIndexed_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -8735,7 +8735,7 @@ SECTION "Bank 39 SetBit1OfLevelUpGainsIndexed_Bank39", ROMX
 ; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit1OfLevelUpGainsIndexed_Bank39::
+SetBit1OfLevelUpGainsIndexed_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -8749,7 +8749,7 @@ SECTION "Bank 39 SetBit2OfLevelUpGainsIndexed_Bank39", ROMX
 ; bank 39 copy; per-bank copies exist in 12 banks. (C2, E-0382)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit2OfLevelUpGainsIndexed_Bank39::
+SetBit2OfLevelUpGainsIndexed_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -8766,7 +8766,7 @@ SECTION "Bank 39 PersonalityIndexOfSlot_Bank39", ROMX
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
 ; appear in 13 banks)
-PersonalityIndexOfSlot_Bank39::
+PersonalityIndexOfSlot_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     push bc
     ld c, a
@@ -8830,7 +8830,7 @@ SECTION "Bank 39 CheckSlotStatusBlockWide_Bank39", ROMX
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
-CheckSlotStatusBlockWide_Bank39::
+CheckSlotStatusBlockWide_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -8863,7 +8863,7 @@ SECTION "Bank 39 SlotHasStatus3Or4Bits_Bank39", ROMX
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
-SlotHasStatus3Or4Bits_Bank39::
+SlotHasStatus3Or4Bits_Bank39:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL

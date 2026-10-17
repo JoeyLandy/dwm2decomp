@@ -4183,7 +4183,7 @@ SECTION "Bank 85 RotateDirectionAtDEEvery32_Bank85", ROMX
 ; banks. (C2, E-0385)
 ; when wScriptParam0 & $1F = 0: [DE] = ([DE] + 1) & 3, the next of four directions; otherwise
 ; returns with A = wScriptParam0 & $1F (E-0064) (the same 12 bytes appear in 3 banks)
-RotateDirectionAtDEEvery32_Bank85::
+RotateDirectionAtDEEvery32_Bank85:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wScriptParam0]
     and $1f
     ret nz
@@ -4321,7 +4321,7 @@ SECTION "Bank 85 PartyHasLivingMonPersonalityAtLeastC0", ROMX
 ; written back to 0 before it returns). No routine in src/ calls it by name; what the test is for is
 ; not known. (C2, E-0385)
 ; hTemp0 = 1 when a party record has field $6F >= $C0 and bit 7 of field $55 clear, else 0 (E-0125)
-PartyHasLivingMonPersonalityAtLeastC0::
+PartyHasLivingMonPersonalityAtLeastC0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wPartyCount]
     or a
     jr nz, .skip

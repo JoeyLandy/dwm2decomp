@@ -5486,7 +5486,7 @@ SECTION "Bank 73 AddRecordArg5AsFollower", ROMX
 ; adds record wArg5 to the party: CreateMonsterRecordOfKindTemp1, wPartyCount += 1, writes a
 ; follower entry (wObject3 + $7, wObject3 + $B, wObject3 + $C) and wPartyList[n] = wArg5, refreshes
 ; the list and sprites, then requests script $80 (E-0121)
-AddRecordArg5AsFollower::
+AddRecordArg5AsFollower:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, $00
     ldh [hTemp1], a
     ld a, [wArg5]
@@ -10269,7 +10269,7 @@ SECTION "Bank 73 ClearBit1AtHL_Bank73", ROMX
 ; copies, for example ClearBit1AtHL_Bank0F, which are called). The same 5 bytes exist in four banks.
 ; (C2, E-0384)
 ; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
-ClearBit1AtHL_Bank73::
+ClearBit1AtHL_Bank73:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [hl]
     and $fd
     ld [hl], a

@@ -428,7 +428,7 @@ SECTION "Bank 03 CopyRectRecordBlankingText_Bank03", ROMX
 ; $15 and from $A4 up are copied. No caller names it in src/. (C2, E-0374)
 ; copies a rectangle record (offset, width, height, tiles) to the screen buffer, replacing tiles
 ; $15-$A3 with blank $C3 (E-0125)
-CopyRectRecordBlankingText_Bank03::
+CopyRectRecordBlankingText_Bank03:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -998,7 +998,7 @@ SECTION "Bank 03 ShowStringBank08AtTilesHL_Bank03_2", ROMX
 ; The body of ShowStringBank08AtTilesHL_Bank03: saves the string window settings, shows the string
 ; chosen by wStringCategory/wStringIndex at tiles HL in a window of size DE (ShowString_Bank08), and
 ; restores the settings. (C1, E-0357)
-ShowStringBank08AtTilesHL_Bank03_2::
+ShowStringBank08AtTilesHL_Bank03_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wTextWindowTileLo]
     ld c, a
     ld a, [wTextWindowTileHi]

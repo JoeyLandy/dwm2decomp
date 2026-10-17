@@ -11,7 +11,7 @@ SECTION "Bank 98", ROMX
 ; more. (C1, E-0385)
 ; overflow for message bank $2B: wStringIndex -= $8A, then BeginStringDisplay with the table
 ; MessageStrings_Bank2B_Overflow in this bank (E-0080)
-BeginStringDisplay_Bank2B_Overflow::
+BeginStringDisplay_Bank2B_Overflow:: ; configured code entry (E-0395 (BeginStringDisplay_Bank2B_Overflow: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, MessageStrings_Bank2B_Overflow
     ld a, [wStringIndex]
     sub $8a
@@ -30,14 +30,26 @@ SECTION "Bank 98 CopyStringToBuffer_Bank2B_Overflow", ROMX
 ; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $2B: wStringIndex -= $8A, then CopyStringToBuffer with the table
 ; MessageStrings_Bank2B_Overflow in this bank (E-0080)
-CopyStringToBuffer_Bank2B_Overflow::
+CopyStringToBuffer_Bank2B_Overflow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld de, MessageStrings_Bank2B_Overflow
     ld a, [wStringIndex]
     sub $8a
     ld [wStringIndex], a
     call CopyStringToBuffer
     ret
-    db $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 98 ShowStringAtOnce_Bank2B_Overflow", ROMX
+
+; Calls BeginStringDisplay_Bank2B_Overflow, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank2B_Overflow:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank2B_Overflow
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 98 BeginStringDisplay_Bank2C_Overflow", ROMX
 
 ; Overflow half of the string lookup of message bank $2C: lowers wStringIndex by $91 (the first
 ; index the bank-$2C table does not hold), then BeginStringDisplay with DE =
@@ -65,14 +77,26 @@ SECTION "Bank 98 CopyStringToBuffer_Bank2C_Overflow", ROMX
 ; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $2C: wStringIndex -= $91, then CopyStringToBuffer with the table
 ; MessageStrings_Bank2C_Overflow in this bank (E-0080)
-CopyStringToBuffer_Bank2C_Overflow::
+CopyStringToBuffer_Bank2C_Overflow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld de, MessageStrings_Bank2C_Overflow
     ld a, [wStringIndex]
     sub $91
     ld [wStringIndex], a
     call CopyStringToBuffer
     ret
-    db $cd, $26, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 98 ShowStringAtOnce_Bank2C_Overflow", ROMX
+
+; Calls BeginStringDisplay_Bank2C_Overflow, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank2C_Overflow:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank2C_Overflow
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 98 BeginStringDisplay_Bank89_Overflow", ROMX
 
 ; Overflow half of the string lookup of message bank $89: lowers wStringIndex by $DE (the first
 ; index the bank-$89 table does not hold), then BeginStringDisplay with DE =
@@ -100,14 +124,26 @@ SECTION "Bank 98 CopyStringToBuffer_Bank89_Overflow", ROMX
 ; src/, so no path to it is known. (C2, E-0385)
 ; overflow for message bank $89: wStringIndex -= $DE, then CopyStringToBuffer with the table
 ; MessageStrings_Bank89_Overflow in this bank (E-0080)
-CopyStringToBuffer_Bank89_Overflow::
+CopyStringToBuffer_Bank89_Overflow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld de, MessageStrings_Bank89_Overflow
     ld a, [wStringIndex]
     sub $de
     ld [wStringIndex], a
     call CopyStringToBuffer
     ret
-    db $cd, $4b, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 98 ShowStringAtOnce_Bank89_Overflow", ROMX
+
+; Calls BeginStringDisplay_Bank89_Overflow, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank89_Overflow:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank89_Overflow
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 98 MessageStrings_Bank2B_Overflow", ROMX
 
 ; A table of one word: category 0 points to StringList_Bank2B_Overflow_0, 113 string pointers to
 ; Text_ strings in this bank. BeginStringDisplay_Bank2B_Overflow and

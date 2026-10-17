@@ -2053,7 +2053,7 @@ SECTION "Bank A0 Multiply24By8_BankA0", ROMX
 ; D:E:H:L (D the top byte). No routine in src/ calls this copy by name. Same 38 bytes as
 ; Multiply24By8. (C2, E-0385)
 ; the same 38 bytes as Multiply24By8 (Multiply24By8) (E-0121)
-Multiply24By8_BankA0::
+Multiply24By8_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push af
     push hl
     ld c, e
@@ -2246,7 +2246,7 @@ SECTION "Bank A0 FillScreenTileBufferRow11Col4WithC3_BankA0", ROMX
 ; 15 bytes in 2 banks. (C2, E-0385)
 ; Fills the $160 bytes at wScreenTileBuffer + $E0 with $C3; clobbers A, BC, HL (the same 15 bytes
 ; appear in 2 banks)
-FillScreenTileBufferRow11Col4WithC3_BankA0::
+FillScreenTileBufferRow11Col4WithC3_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wScreenTileBuffer + $e0
     ld bc, $0160
 
@@ -2320,7 +2320,7 @@ SECTION "Bank A0 BuildAndCopySlotPanels0And1_A0", ROMX
 ; Runs BuildAndCopySlotPanel_A0 for slot 0 and falls into it for slot 1. No routine in src/ calls it
 ; by name. (C1, E-0385)
 ; runs BuildAndCopySlotPanel_A0 for slot 0 and falls into it for slot 1 (E-0126)
-BuildAndCopySlotPanels0And1_A0::
+BuildAndCopySlotPanels0And1_A0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld c, $00
     call BuildAndCopySlotPanel_A0
     ld c, $01
@@ -2409,7 +2409,7 @@ SECTION "Bank A0 DrawRows9To17ToBGMap_BankA0", ROMX
 ; copies a 20 x 9 rectangle from wScreenTileBuffer + $120 to vBGMap0 + $120 (row 9), then
 ; wBattleArg0 = 1 (E-0116) (E-0340: the address in its name read as its RAM name; was
 ; DrawRows9To17ToBGMap_BankA0)
-DrawRows9To17ToBGMap_BankA0::
+DrawRows9To17ToBGMap_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     lb bc, $14, $09
@@ -2425,7 +2425,7 @@ SECTION "Bank A0 DrawRect8x9AtRow9ToBGMap_BankA0", ROMX
 ; no reference in src/, and the listing found it only after a terminator. (C1, E-0372)
 ; copies an 8 x 9 rectangle from wScreenTileBuffer + $120 to vBGMap0 + $120 (row 9) (E-0116)
 ; (E-0340: the address in its name read as its RAM name; was DrawRect8x9AtRow9ToBGMap_BankA0)
-DrawRect8x9AtRow9ToBGMap_BankA0::
+DrawRect8x9AtRow9ToBGMap_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     lb bc, $08, $09
@@ -2439,7 +2439,7 @@ SECTION "Bank A0 DrawRect7x7AtRow11ToBGMap_BankA0", ROMX
 ; no reference in src/, and the listing found it only after a terminator. (C1, E-0372)
 ; copies a 7 x 7 rectangle from wScreenTileBuffer + $160 to vBGMap0 + $160 (row 11) (E-0116)
 ; (E-0340: the address in its name read as its RAM name; was DrawRect7x7AtRow11ToBGMap_BankA0)
-DrawRect7x7AtRow11ToBGMap_BankA0::
+DrawRect7x7AtRow11ToBGMap_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
     lb bc, $07, $07
@@ -2474,7 +2474,7 @@ SECTION "Bank A0 DrawRect13x7AtRow11ToBGMap_BankA0", ROMX
 ; no reference in src/, and the listing found it only after a terminator. (C1, E-0372)
 ; copies a 13 x 7 rectangle from wScreenTileBuffer + $160 to vBGMap0 + $160 (row 11) (E-0116)
 ; (E-0340: the address in its name read as its RAM name; was DrawRect13x7AtRow11ToBGMap_BankA0)
-DrawRect13x7AtRow11ToBGMap_BankA0::
+DrawRect13x7AtRow11ToBGMap_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
     lb bc, $0d, $07
@@ -3904,16 +3904,16 @@ WriteTwoDigitsBlankLeading_A0::
     ld [hl], a
     ret
 
-SECTION "Bank A0 CountTableBytesAtOrBelowA_BankA0_2", ROMX
+SECTION "Bank A0 CountTableBytesAtOrBelowA_BankA0", ROMX
 
 ; A = value, HL = table of ascending bytes: counts the leading table bytes that are not above A; C
 ; and A end as that count and HL on the first byte above A. The table must hold a byte above A or
 ; the scan runs on. No routine in src/ calls this copy by name (the other copy in the bank is
-; CountTableBytesAtOrBelowA_BankA0). Same 11 bytes in 2 banks. (C2, E-0385)
+; CountTableBytesAtOrBelowA_BankA0_2). Same 11 bytes in 2 banks. (C2, E-0385)
 ; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index
 ; of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065)
 ; (the same 11 bytes appear in 2 banks)
-CountTableBytesAtOrBelowA_BankA0_2::
+CountTableBytesAtOrBelowA_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld c, $00
 
 .skip:
@@ -4589,7 +4589,7 @@ ComputeBattleResultRank::
     ld [hl], a
     ld a, [wLinkRuleTurnLimit]
     ld hl, BattleResultTurnLimitThresholds
-    call CountTableBytesAtOrBelowA_BankA0
+    call CountTableBytesAtOrBelowA_BankA0_2
     ld hl, BattleResultTurnLimitAdjust
     add_a_to_hl
     push hl
@@ -4619,7 +4619,7 @@ ComputeBattleResultRank::
     ld [wWorkBuf], a
     ld [wWildBand], a
     ld hl, BattleResultBandThresholds
-    call CountTableBytesAtOrBelowA_BankA0
+    call CountTableBytesAtOrBelowA_BankA0_2
     ld hl, BattleResultBandAdjust
     add_a_to_hl
     ld a, [wWildLevel]
@@ -4675,12 +4675,12 @@ ComputeBattleResultRank::
 .call_count_table_bytes_at_or_below_a_bank_a0:
     ld a, e
     ld hl, BattleResultRankThresholds
-    call CountTableBytesAtOrBelowA_BankA0
+    call CountTableBytesAtOrBelowA_BankA0_2
     ld [wWorkBuf + $1], a
     ld [wEncounterClass], a
     ret
 
-SECTION "Bank A0 CountTableBytesAtOrBelowA_BankA0", ROMX
+SECTION "Bank A0 CountTableBytesAtOrBelowA_BankA0_2", ROMX
 
 ; HL = a table of ascending thresholds, A = a value: C = A = how many leading table bytes are at or
 ; below A; HL ends on the first byte above A. The table must contain a byte above A (the tables used
@@ -4688,7 +4688,7 @@ SECTION "Bank A0 CountTableBytesAtOrBelowA_BankA0", ROMX
 ; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index
 ; of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065)
 ; (the same 11 bytes appear in 2 banks)
-CountTableBytesAtOrBelowA_BankA0::
+CountTableBytesAtOrBelowA_BankA0_2::
     ld c, $00
 
 .skip:
@@ -7278,7 +7278,7 @@ SECTION "Bank A0 CountPresentFoesOfLinkRoleSide_BankA0", ROMX
 ; side base = ((wLinkRole << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfLinkRoleSide_BankA0;
 ; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A,
 ; BC (E-0067) (the same 28 bytes appear in 2 banks)
-CountPresentFoesOfLinkRoleSide_BankA0::
+CountPresentFoesOfLinkRoleSide_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld de, $0000
     ld b, $03
     ld a, [wLinkRole]
@@ -7307,7 +7307,7 @@ SECTION "Bank A0 CountPresentSlotsOfLinkRoleSide_BankA0", ROMX
 ; call to this bank copy was found in the source. (C2, E-0385)
 ; side base = (wLinkRole << 1) & 4: D = how many of its three slots are present; clobbers A, BC
 ; (E-0067) (the same 24 bytes appear in 2 banks)
-CountPresentSlotsOfLinkRoleSide_BankA0::
+CountPresentSlotsOfLinkRoleSide_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld d, $00
     ld b, $03
     ld a, [wLinkRole]
@@ -7333,7 +7333,7 @@ SECTION "Bank A0 CallRunDebugStateInBankE0_BankA0", ROMX
 ; the source. (C1, E-0385)
 ; far-calls RunDebugState_E0 (E-0122) (E-0344: the address in its name dropped or read as the label
 ; there; was CallRunDebugStateInBankE0_BankA0; shortened from CallRunDebugState_E0InBankE0_BankA0)
-CallRunDebugStateInBankE0_BankA0::
+CallRunDebugStateInBankE0_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     farcall RunDebugState_E0
     ret
 
@@ -7813,7 +7813,7 @@ SECTION "Bank A0 CopySlotLevelPanelToVRAM_BankA0", ROMX
 ; for slots 0-2: copies two tiles at offset DrawSlotLevel_BankA0_Data[slot] from the screen buffer
 ; to vBGMap0 (E-0124) (E-0344: the address in its name dropped or read as the label there; was
 ; CopySlotLevelPanelToVRAM_BankA0; shortened from CopySlotPanelPartDrawSlotLevel_BankA0_DataToVRAM)
-CopySlotLevelPanelToVRAM_BankA0::
+CopySlotLevelPanelToVRAM_BankA0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, c
     cp $04
     jr nc, .return

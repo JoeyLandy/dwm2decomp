@@ -7723,7 +7723,7 @@ SECTION "Bank 0C PickTableEntryByPartyLevelTotal", ROMX
 ; was found in src/ or the listing. (C2, E-0376; probed E-0384)
 ; HL = the word PickTableEntryByPartyLevelTotal_Data[band] for the party's total level (bands at 49,
 ; 91, 139, 181, 220 and 256) (E-0128)
-PickTableEntryByPartyLevelTotal::
+PickTableEntryByPartyLevelTotal:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, $0a
     ld [rRAMG2], a
     xor a

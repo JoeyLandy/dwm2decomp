@@ -519,7 +519,7 @@ SECTION "Bank 02 CopyBGPalettesToBuffer", ROMX
 ; wBGPaletteBuffer + 8 * C; HL and DE end past the copy, B = 0. It does not set
 ; wBGPaletteUploadRequest. Nothing in src/ calls it or points to it. (C2, E-0374)
 ; on CGB: copies B palettes (8 bytes each) from HL to wBGPaletteBuffer + 8 * C (E-0124)
-CopyBGPalettesToBuffer::
+CopyBGPalettesToBuffer:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wIsCGB]
     or a
     ret z
@@ -552,7 +552,7 @@ SECTION "Bank 02 CopyOBJPalettesToBuffer", ROMX
 ; wOBJPaletteBuffer + 8 * C; HL and DE end past the copy, B = 0. It does not set
 ; wOBJPaletteUploadRequest. Nothing in src/ calls it or points to it. (C2, E-0374)
 ; on CGB: copies B palettes (8 bytes each) from HL to wOBJPaletteBuffer + 8 * C (E-0124)
-CopyOBJPalettesToBuffer::
+CopyOBJPalettesToBuffer:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wIsCGB]
     or a
     ret z
@@ -1009,7 +1009,7 @@ SECTION "Bank 02 WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0", ROMX
 ; it. (C1, E-0374)
 ; writes four colours of the palette at HL to rOBPD, each chosen by a 2-bit shade of wDMGPaletteOBP0
 ; through WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data; HL += 8 (E-0129)
-WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0::
+WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     push hl
     ld a, [wDMGPaletteOBP0]
     and $03
@@ -9399,7 +9399,7 @@ SECTION "Bank 02 RunRestoreAndUnpackRecordsSteps", ROMX
 ; caller names it in src/. (C2, E-0374; probed E-0384)
 ; with SRAM enabled: first call runs RestoreRecordsFromSRAMBank1Backup, then scans bank-1 records;
 ; after stage 2 sets wSaveStep = $80 (E-0124)
-RunRestoreAndUnpackRecordsSteps::
+RunRestoreAndUnpackRecordsSteps:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, $0a
     ld [rRAMG], a
     ld a, [wSaveStep]

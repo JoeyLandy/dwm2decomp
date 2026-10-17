@@ -9,5 +9,15 @@
   "label": "ScriptCommand6C",
   "reason": "its effect is a created monster record; the only probe checked wScriptStartRequest, which does not test the note (integrator)"
  },
+ "8A:4008": {
+  "evidence": "E-0395",
+  "label": "CopyStringToBuffer_Bank8A",
+  "reason": "Its table's category-0 strings are not $F0-ended within 255 bytes of their start, so the copy runs over the probe's buffer; the routine is the same three instructions as the other CopyStringToBuffer_Bank* stubs, which have passing probes (E-0395)."
+ },
+ "F2:6334": {
+  "evidence": "E-0395",
+  "label": "ReorderAndStoreKeyList",
+  "reason": "Two calls only: ReorderKeyList then CopyWorkBuf1ToKeyList, each with passing probes (config/probes/E-0386.json); a probe of the pair would repeat their setups (E-0395)."
+ },
  "_comment": "Probe-scope routines (tools/probe_scope.py) not probed, with the reader's reason (D-012)."
 }

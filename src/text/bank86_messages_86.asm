@@ -10,11 +10,37 @@ SECTION "Bank 86", ROMX
 ; StartMessageForGroup_Group0C, ShowMessageHL_ToBeginStringDisplay_Bank86 and
 ; DebugMessageTest_Update_ShowBank86. (C1, E-0385)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank86::
+BeginStringDisplay_Bank86:: ; configured code entry (E-0395 (BeginStringDisplay_Bank86: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank86_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9, $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 86 CopyStringToBuffer_Bank86", ROMX
+
+; Loads DE = BeginStringDisplay_Bank86_StringCategories, the string table of
+; BeginStringDisplay_Bank86, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank86 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank86:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank86_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 86 ShowStringAtOnce_Bank86", ROMX
+
+; Calls BeginStringDisplay_Bank86, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank86:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank86
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 86 BeginStringDisplay_Bank86_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

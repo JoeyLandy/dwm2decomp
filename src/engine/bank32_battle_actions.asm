@@ -15,7 +15,7 @@ SECTION "Bank 32", ROMX
 ; for the sequence at wSequencePtrLo: runs the frame timer (CountDownSequencePtrLoFrameTimer) when
 ; started, otherwise marks it started, clears byte 4 and loads the first frame
 ; (TickSequencePtrLoSequence_LoadFrame) (E-0124)
-TickSequencePtrLoSequence::
+TickSequencePtrLoSequence:: ; configured code entry (E-0395 (TickSequencePtrLoSequence: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wSequencePtrLo]
     ld l, a
     ld a, [wSequencePtrHi]
@@ -6651,7 +6651,41 @@ ApplyDamageModifiers::
     ld a, h
     ld [wBattleDamageHi], a
     ret
-    db $21, $ff, $d8, $18, $28, $21, $0f, $d9, $18, $23, $21, $cf, $d8, $18, $1e
+
+SECTION "Bank 32 GetBattleATK_Bank32", ROMX
+
+; HL = wBattleATK, then GetBattleStatWord_Bank32: HL = the word at wBattleATK + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 55 bytes as GetBattleATK_Bank39 (GetBattleATK_Bank39) (E-0060)
+GetBattleATK_Bank32:: ; configured code entry (E-0395); C0
+    ld hl, wBattleATK
+    jr GetBattleStatWord_Bank32
+
+SECTION "Bank 32 GetBattleDEF_Bank32", ROMX
+
+; HL = wBattleDEF, then GetBattleStatWord_Bank32: HL = the word at wBattleDEF + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 50 bytes as GetBattleDEF_Bank39 (GetBattleDEF_Bank39) (E-0060)
+GetBattleDEF_Bank32:: ; configured code entry (E-0395); C0
+    ld hl, wBattleDEF
+    jr GetBattleStatWord_Bank32
+
+SECTION "Bank 32 GetBattleMaxHP_Bank32", ROMX
+
+; HL = wBattleMaxHP, then GetBattleStatWord_Bank32: HL = the word at wBattleMaxHP + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 45 bytes as GetBattleMaxHP_Bank39 (GetBattleMaxHP_Bank39) (E-0060)
+GetBattleMaxHP_Bank32:: ; configured code entry (E-0395); C0
+    ld hl, wBattleMaxHP
+    jr GetBattleStatWord_Bank32
+
+SECTION "Bank 32 GetBattleMaxMP_Bank32", ROMX
 
 ; A = battle slot: HL = the word wBattleMaxMP[slot], A = its low byte (the shared tail
 ; GetBattleStatWord_Bank32 does the indexing). (C2, E-0380)
@@ -6677,10 +6711,22 @@ SECTION "Bank 32 GetBattleMP_Bank32", ROMX
 GetBattleMP_Bank32::
     ld hl, wBattleMP
     jr GetBattleStatWord_Bank32
-    db $21, $1f, $d9, $18, $0a
+
+SECTION "Bank 32 GetBattleAGL_Bank32", ROMX
+
+; HL = wBattleAGL, then GetBattleStatWord_Bank32: HL = the word at wBattleAGL + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 25 bytes as GetBattleAGL_Bank39 (GetBattleAGL_Bank39) (E-0060)
+GetBattleAGL_Bank32:: ; configured code entry (E-0395); C0
+    ld hl, wBattleAGL
+    jr GetBattleStatWord_Bank32
+
+SECTION "Bank 32 ReadSlotAIModeIndexed_Bank32", ROMX
 
 ; A = battle slot: A = wSlotAIMode[slot]; HL is left pointing at that byte. (C2, E-0380)
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
 ReadSlotAIModeIndexed_Bank32::
     ld hl, wSlotAIMode
     add_a_to_hl
@@ -6765,7 +6811,7 @@ SECTION "Bank 32 ClearBattleStatusBitsWithMaskD_Bank32", ROMX
 
 ; ANDs status byte 0 of slot E with entry D of ClearBattleStatusBitsWithMaskD_Bank32_Data. (C2,
 ; E-0357; probed E-0380)
-ClearBattleStatusBitsWithMaskD_Bank32::
+ClearBattleStatusBitsWithMaskD_Bank32:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank32_Data
     add_a_to_hl
@@ -6836,7 +6882,7 @@ SECTION "Bank 32 PersonalityIndexOfSlot_Bank32", ROMX
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
 ; appear in 13 banks)
-PersonalityIndexOfSlot_Bank32::
+PersonalityIndexOfSlot_Bank32:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     push bc
     ld c, a

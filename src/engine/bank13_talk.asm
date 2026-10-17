@@ -13,7 +13,7 @@ SECTION "Bank 13", ROMX
 ; ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1
 ; (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
 ; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten)
-StartMessageCommand09HL_B13::
+StartMessageCommand09HL_B13:: ; configured code entry (E-0395 (StartMessageCommand09HL_B13: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, l
     ld [wScriptParam0], a
     ld a, h
@@ -8129,22 +8129,22 @@ SECTION "Bank 13 GreatLogTalkEvents_WarubouInCastle", ROMX
 GreatLogTalkEvents_WarubouInCastle::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
-    jp c, .call_test_flag_bit5
+    jp c, WarubouTalk_LimboMonster
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
-    jp c, .call_test_flag_bit4
+    jp c, WarubouTalk_AreYouReady
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
-    jp c, .call_test_flag_bit3
+    jp c, WarubouTalk_YouHaveTheKey
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
-    jp c, .call_test_flag_bit2
+    jp c, WarubouTalk_FindAnotherKey
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
-    jr c, .call_test_flag_bit
+    jr c, WarubouTalk_YoureSlow
     ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
-    jr c, .loop
+    jr c, WarubouTalk_RememberThePromise
     ld de, EVENT_SCENE_OASIS_KEY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -8184,107 +8184,159 @@ GreatLogTalkEvents_WarubouInCastle::
     call StartMessageCommand09HL_B13
     ret
 
-.loop:
+SECTION "Bank 13 WarubouTalk_RememberThePromise", ROMX
+
+; Starts Script_WarubouWaHeyYou ('Warubou: Wa-hey! You remember the promise ...') with
+; StartScriptAtHL_B13. The Warubou handlers after it jump here when their first flag is already set.
+; No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached
+; in the static listing). (C2, E-0395; probed E-0395)
+; starts Script_WarubouWaHeyYou: 'Warubou: Wa-hey! You remember the promise' (E-0248)
+WarubouTalk_RememberThePromise::
     ld hl, Script_WarubouWaHeyYou ; script 'Warubou: Wa-hey! You remember the promise'
     call StartScriptAtHL_B13
     ret
 
-.call_test_flag_bit:
+SECTION "Bank 13 WarubouTalk_YoureSlow", ROMX
+
+; When EVENT_WARUBOU_WA_HEY_HERO_YOURE is set it goes to WarubouTalk_RememberThePromise. Otherwise,
+; with EVENT_WARUBOU_WA_HEY_THIS_TIME set it shows message $02A4 ('Wa-hey, ... you're slow!') and
+; sets EVENT_WARUBOU_WA_HEY_HERO_YOURE; without it, message $029E ('Wa-hey! This time, you'll have
+; ...'). Messages go through StartMessageCommand09HL_B13. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+WarubouTalk_YoureSlow::
     ld de, EVENT_WARUBOU_WA_HEY_HERO_YOURE
     call TestFlagBit
-    jr c, .loop
+    jr c, WarubouTalk_RememberThePromise
     ld de, EVENT_WARUBOU_WA_HEY_THIS_TIME
     call TestFlagBit
-    jr c, .call_start_message_command09_hl_b133
+    jr c, .call_start_message_command09_hl_b13
     ld hl, $029e ; 'Warubou: Wa-hey! This time, you'll have'
     call StartMessageCommand09HL_B13
     ret
 
-.call_start_message_command09_hl_b133:
+.call_start_message_command09_hl_b13:
     ld hl, $02a4 ; 'Warubou: Wa-hey, 0 you're slow! Kameha'
     call StartMessageCommand09HL_B13
     ld de, EVENT_WARUBOU_WA_HEY_HERO_YOURE
     call SetFlagBit
     ret
-    db $21, $7b, $53, $cd, $49, $40, $c9
 
-.call_test_flag_bit2:
+SECTION "Bank 13 WarubouTalk_StartThisTimeScript", ROMX
+
+; Starts Script_WarubouWaHeyThis ('Warubou: Wa-hey! This time, you'll have ...') with
+; StartScriptAtHL_B13. No traced code, jump table or pointer reaches it (E-0395: it decodes as a
+; routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; starts Script_WarubouWaHeyThis: 'Warubou: Wa-hey! This time, you'll have' (E-0248)
+WarubouTalk_StartThisTimeScript:: ; configured code entry (E-0395); C0
+    ld hl, Script_WarubouWaHeyThis ; script 'Warubou: Wa-hey! This time, you'll have'
+    call StartScriptAtHL_B13
+    ret
+
+SECTION "Bank 13 WarubouTalk_FindAnotherKey", ROMX
+
+; When EVENT_WARUBOU_WA_HEY_HERO_TOO is set it goes to WarubouTalk_RememberThePromise. Otherwise,
+; with EVENT_WARUBOU_WA_HEY_FIND_ANOTHER set it shows message $0D1B ('Wa-hey, ...! Too slow!') and
+; sets EVENT_WARUBOU_WA_HEY_HERO_TOO; without it, message $0D1A ('Wa-hey, find another Magic Key
+; ...'). No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but is
+; unreached in the static listing). (C2, E-0395; probed E-0395)
+WarubouTalk_FindAnotherKey::
     ld de, EVENT_WARUBOU_WA_HEY_HERO_TOO
     call TestFlagBit
-    jr c, .loop
+    jr c, WarubouTalk_RememberThePromise
     ld de, EVENT_WARUBOU_WA_HEY_FIND_ANOTHER
     call TestFlagBit
-    jr c, .call_start_message_command09_hl_b134
+    jr c, .call_start_message_command09_hl_b13
     ld hl, $0d1a ; 'Warubou: Wa-hey, find another Magic Key'
     call StartMessageCommand09HL_B13
     ret
 
-.call_start_message_command09_hl_b134:
+.call_start_message_command09_hl_b13:
     ld hl, $0d1b ; 'Warubou: Wa-hey, 0! Too slow! Kameha'
     call StartMessageCommand09HL_B13
     ld de, EVENT_WARUBOU_WA_HEY_HERO_TOO
     call SetFlagBit
     ret
 
-.call_test_flag_bit3:
+SECTION "Bank 13 WarubouTalk_YouHaveTheKey", ROMX
+
+; When EVENT_WARUBOU_WA_HEY_HERO_YOU is set it goes to WarubouTalk_RememberThePromise. Otherwise,
+; with EVENT_WHAT set it shows message $0D2B ('Wa-hey, ...! You have the ...') and sets
+; EVENT_WARUBOU_WA_HEY_HERO_YOU; without it, message $0D2A ('Wa-hey, find another Magic Key ...').
+; No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached
+; in the static listing). (C2, E-0395; probed E-0395)
+WarubouTalk_YouHaveTheKey::
     ld de, EVENT_WARUBOU_WA_HEY_HERO_YOU
     call TestFlagBit
-    jr c, .loop
+    jr c, WarubouTalk_RememberThePromise
     ld de, EVENT_WHAT
     call TestFlagBit
-    jr c, .call_start_message_command09_hl_b135
+    jr c, .call_start_message_command09_hl_b13
     ld hl, $0d2a ; 'Warubou: Wa-hey, find another Magic Key'
     call StartMessageCommand09HL_B13
     ret
 
-.call_start_message_command09_hl_b135:
+.call_start_message_command09_hl_b13:
     ld hl, $0d2b ; 'Warubou: Wa-hey, 0! You have the'
     call StartMessageCommand09HL_B13
     ld de, EVENT_WARUBOU_WA_HEY_HERO_YOU
     call SetFlagBit
     ret
 
-.call_test_flag_bit4:
+SECTION "Bank 13 WarubouTalk_AreYouReady", ROMX
+
+; With EVENT_SCENE_LIMBO set it shows message $0532 ('Wa-hey, you have to ...'). Otherwise it starts
+; Script_WarubouWaHeyAre ('Wa-hey! Are you ready? ...'), or Script_WarubouWaHeyAre_2 when inventory
+; byte wInventory + $15 is 0 or $FF. No traced code, jump table or pointer reaches it (E-0395: it
+; decodes as a routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+WarubouTalk_AreYouReady::
     ld de, EVENT_SCENE_LIMBO
     call TestFlagBit
-    jr c, .call_start_message_command09_hl_b136
+    jr c, .call_start_message_command09_hl_b13
     ld a, [wInventory + $15]
     or a
-    jr z, .call_start_script_at_hl_b132
+    jr z, .call_start_script_at_hl_b13
     cp $ff
-    jr z, .call_start_script_at_hl_b132
+    jr z, .call_start_script_at_hl_b13
     ld hl, Script_WarubouWaHeyAre ; script 'Warubou: Wa-hey! Are you ready? Ready'
     call StartScriptAtHL_B13
     ret
 
-.call_start_script_at_hl_b132:
+.call_start_script_at_hl_b13:
     ld hl, Script_WarubouWaHeyAre_2 ; script 'Warubou: Wa-hey! Are you ready? Ready'
     call StartScriptAtHL_B13
     ret
 
-.call_start_message_command09_hl_b136:
+.call_start_message_command09_hl_b13:
     ld hl, $0532 ; 'Warubou: Wa-hey, you have to find'
     call StartMessageCommand09HL_B13
     ret
 
-.call_test_flag_bit5:
+SECTION "Bank 13 WarubouTalk_LimboMonster", ROMX
+
+; Tests EVENT_SCENE_LIMBO_MONSTER and EVENT_SCENE_LIMBO_MONSTER2 (a message for each when set).
+; Otherwise it far-calls TotalSpeciesFlaggedOrListed and picks a script by the 16-bit count in
+; hTemp1:hTemp0, comparing it with $22 and $FA (Script_SceneLimboMonster2 and others). No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+WarubouTalk_LimboMonster::
     ld de, EVENT_SCENE_LIMBO_MONSTER
     call TestFlagBit
-    jr c, .call_start_message_command09_hl_b138
+    jr c, .call_start_message_command09_hl_b132
     ld de, EVENT_SCENE_LIMBO_MONSTER2
     call TestFlagBit
-    jr c, .call_start_message_command09_hl_b139
+    jr c, .call_start_message_command09_hl_b133
     farcall TotalSpeciesFlaggedOrListed
     ldh a, [hTemp1]
     or a
     jr z, .check_temp0
     cp $01
-    jr nz, .call_start_script_at_hl_b133
+    jr nz, .call_start_script_at_hl_b13
     ldh a, [hTemp0]
     cp $22
-    jr c, .call_start_script_at_hl_b134
+    jr c, .call_start_script_at_hl_b132
 
-.call_start_script_at_hl_b133:
+.call_start_script_at_hl_b13:
     ld hl, Script_SceneLimboMonster2
     call StartScriptAtHL_B13
     ret
@@ -8292,24 +8344,24 @@ GreatLogTalkEvents_WarubouInCastle::
 .check_temp0:
     ldh a, [hTemp0]
     cp $fa
-    jr c, .call_start_message_command09_hl_b137
+    jr c, .call_start_message_command09_hl_b13
 
-.call_start_script_at_hl_b134:
+.call_start_script_at_hl_b132:
     ld hl, Script_SceneLimboMonster
     call StartScriptAtHL_B13
     ret
 
-.call_start_message_command09_hl_b137:
+.call_start_message_command09_hl_b13:
     ld hl, $0b26 ; 'Warubou: Wa-hey! How are you? Still'
     call StartMessageCommand09HL_B13
     ret
 
-.call_start_message_command09_hl_b138:
+.call_start_message_command09_hl_b132:
     ld hl, $0b2d ; 'Warubou: Wa-hey, the bond between human'
     call StartMessageCommand09HL_B13
     ret
 
-.call_start_message_command09_hl_b139:
+.call_start_message_command09_hl_b133:
     ld hl, $0ba8 ; 'Petibou: It's sort of boring guarding'
     call StartMessageCommand09HL_B13
     ret

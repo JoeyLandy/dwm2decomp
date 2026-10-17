@@ -10237,7 +10237,7 @@ SECTION "Bank 0F ScriptStepDeltaThenRequestFetch", ROMX
 ; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wStepPtrLo/wStepPtrHi)
 ; and counts wScriptParam0 up (StepScriptParam0Counter_Bank0F with B = $20); when the counter wraps,
 ; wScriptStartRequest = $80 (E-0117)
-ScriptStepDeltaThenRequestFetch::
+ScriptStepDeltaThenRequestFetch:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
@@ -10258,7 +10258,7 @@ SECTION "Bank 0F RotateDirectionAtDEEvery32_Bank0F", ROMX
 ; called. (C2, E-0376)
 ; when wScriptParam0 & $1F = 0: [DE] = ([DE] + 1) & 3, the next of four directions; otherwise
 ; returns with A = wScriptParam0 & $1F (E-0064) (the same 12 bytes appear in 3 banks)
-RotateDirectionAtDEEvery32_Bank0F::
+RotateDirectionAtDEEvery32_Bank0F:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wScriptParam0]
     and $1f
     ret nz

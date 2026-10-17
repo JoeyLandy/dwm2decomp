@@ -4656,10 +4656,17 @@ Script_WarubouWaHeyYou::
 Script_WarubouQuitDawdlingWarooh::
     script_message $8120 ; 'Warubou: Quit dawdling, warooh!'
     script_end
-    db $00, $9e, $42, $06, $04, $00, $a2, $82, $ff, $00, $9f, $82, $ff, $00, $9e, $42
-    db $06, $04, $00, $a2, $82, $ff, $00, $a0, $82, $ff, $00, $a3, $02, $3b, $0a, $2f
-    db $01, $ff, $00, $a3, $02, $3b, $0a, $35, $01, $ff, $00, $a3, $02, $3b, $0a, $39
-    db $01, $ff
+Script_WarubouWaHeyThis::
+    script_message $429e ; 'Warubou: Wa-hey! This time, you'll have'
+    script_skip_if_no Script_WarubouWaHeyHurry
+    script_message $82a2 ; 'Warubou: Wa-hey. I need you to'
+    script_end
+Script_WarubouWaHeyHurry::
+    script_message $829f ; 'Warubou: Wa-hey, hurry. You need to'
+    script_end
+    db $00, $9e, $42, $06, $04, $00, $a2, $82, $ff, $00, $a0, $82, $ff, $00, $a3, $02
+    db $3b, $0a, $2f, $01, $ff, $00, $a3, $02, $3b, $0a, $35, $01, $ff, $00, $a3, $02
+    db $3b, $0a, $39, $01, $ff
 
 Script_WarubouWaHeyAre::
     script_message $452a ; 'Warubou: Wa-hey! Are you ready? Ready'
@@ -7299,7 +7306,7 @@ SECTION "Bank 10 CallScriptCommandE9Far", ROMX
 ; handler would be, between ScriptCommandF4 and ScriptCommandF6, but entry 244 (type F5) of
 ; ScriptCommandHandlers points to ScriptCommand01. (C1, E-0376)
 ; far-calls ScriptCommandE9_RunFar (E-0126)
-CallScriptCommandE9Far::
+CallScriptCommandE9Far:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     farcall ScriptCommandE9_RunFar
     ret
 

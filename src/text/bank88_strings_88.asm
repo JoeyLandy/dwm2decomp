@@ -9,11 +9,26 @@ SECTION "Bank 88", ROMX
 ; by StepTextPrinter). The caller sets wStringCategory and wStringIndex first. Callers:
 ; ShowString_Bank88 and DebugMessageTest_Update_ShowBank88. (C1, E-0385)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank88::
+BeginStringDisplay_Bank88:: ; configured code entry (E-0395 (BeginStringDisplay_Bank88: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank88_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9
+
+SECTION "Bank 88 CopyStringToBuffer_Bank88", ROMX
+
+; Loads DE = BeginStringDisplay_Bank88_StringCategories, the string table of
+; BeginStringDisplay_Bank88, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank88 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank88:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank88_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 88 ShowString_Bank88", ROMX
 
 ; Shows a bank-$88 string in one go: BeginStringDisplay_Bank88 (string wStringIndex of category
 ; wStringCategory), then RunStringDisplayToEnd, which steps the text printer until wTextFlags is 0.

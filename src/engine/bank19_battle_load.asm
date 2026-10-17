@@ -1682,7 +1682,7 @@ SECTION "Bank 19 ScaleWordBy6Or12_OverflowToTenThousand", ROMX
 ; product, even above 10000, is stored as it is, so the cap in the old name is wrong. (C2, E-0379)
 ; multiplies by 6 (or 12 when wBattleArg1 = 1) and caps the result at 10000, then stores the word at
 ; [HL+] (E-0127)
-ScaleWordBy6Or12_OverflowToTenThousand::
+ScaleWordBy6Or12_OverflowToTenThousand:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wBattleArg1]
     cp $01
     ld a, $06

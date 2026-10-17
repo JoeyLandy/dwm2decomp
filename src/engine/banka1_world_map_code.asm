@@ -11,45 +11,74 @@ SECTION "Bank A1", ROMX
 ; of the shared block of battle helper routines; no call to this copy was found in the source. (C2,
 ; E-0385)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-GetBattleATK_BankA1::
+GetBattleATK_BankA1:: ; configured code entry (E-0395 (GetBattleATK_BankA1: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld hl, wBattleATK
     jr GetBattleStatWord_BankA1
 
 SECTION "Bank A1 GetBattleDEF_BankA1", ROMX
 
 ; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
-GetBattleDEF_BankA1::
+; the same 50 bytes as GetBattleDEF_Bank39 (GetBattleDEF_Bank39) (E-0060)
+GetBattleDEF_BankA1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankA1
 
 SECTION "Bank A1 GetBattleMaxHP_BankA1", ROMX
 
 ; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
-GetBattleMaxHP_BankA1::
+; the same 45 bytes as GetBattleMaxHP_Bank39 (GetBattleMaxHP_Bank39) (E-0060)
+GetBattleMaxHP_BankA1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankA1
 
 SECTION "Bank A1 GetBattleMaxMP_BankA1", ROMX
 
 ; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
-GetBattleMaxMP_BankA1::
+; the same 40 bytes as GetBattleMaxMP_Bank39 (GetBattleMaxMP_Bank39) (E-0060)
+GetBattleMaxMP_BankA1:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankA1
 
 SECTION "Bank A1 GetBattleHP_BankA1", ROMX
 
 ; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
-GetBattleHP_BankA1::
+; the same 35 bytes as GetBattleHP_Bank39 (GetBattleHP_Bank39) (E-0060)
+GetBattleHP_BankA1:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleHP
     jr GetBattleStatWord_BankA1
 
 SECTION "Bank A1 GetBattleMP_BankA1", ROMX
 
 ; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankA1). (C2, E-0357; probed E-0385)
-GetBattleMP_BankA1::
+; the same 30 bytes as GetBattleMP_Bank39 (GetBattleMP_Bank39) (E-0060)
+GetBattleMP_BankA1:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMP
     jr GetBattleStatWord_BankA1
-    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
+
+SECTION "Bank A1 GetBattleAGL_BankA1", ROMX
+
+; HL = wBattleAGL, then GetBattleStatWord_BankA1: HL = the word at wBattleAGL + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 25 bytes as GetBattleAGL_Bank39 (GetBattleAGL_Bank39) (E-0060)
+GetBattleAGL_BankA1:: ; configured code entry (E-0395); C0
+    ld hl, wBattleAGL
+    jr GetBattleStatWord_BankA1
+
+SECTION "Bank A1 ReadSlotAIModeIndexed_BankA1", ROMX
+
+; A = the byte at wSlotAIMode + A, the AI mode of slot A. A copy of the routine of the same shape
+; found in other banks. No traced code, jump table or pointer reaches it (E-0395: it decodes as a
+; routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_BankA1::
+    ld hl, wSlotAIMode
+    add_a_to_hl
+    ld a, [hl]
+    ret
+
+SECTION "Bank A1 GetBattleStatWord_BankA1", ROMX
 
 ; HL = the word at HL + 2 x slot A (the value, not a pointer). (C2, E-0357; probed E-0385)
 GetBattleStatWord_BankA1::
@@ -65,7 +94,7 @@ SECTION "Bank A1 AddDoubleAToHL_BankA1", ROMX
 ; source. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
 ; appear in 12 banks)
-AddDoubleAToHL_BankA1::
+AddDoubleAToHL_BankA1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add a
     add_a_to_hl
     ret
@@ -79,7 +108,7 @@ SECTION "Bank A1 ActorOnLocalSide_BankA1", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_BankA1::
+ActorOnLocalSide_BankA1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -105,7 +134,7 @@ SECTION "Bank A1 TargetOnLocalSide_BankA1", ROMX
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
-TargetOnLocalSide_BankA1::
+TargetOnLocalSide_BankA1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_target

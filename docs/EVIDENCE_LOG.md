@@ -2431,6 +2431,33 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0395 — M4: leftover code bytes decoded or listed
+
+- Date: 2026-10-16. Kind: OBSERVATION and DECISION (static decoding C1; 115 probes on tools/sm83.py, C2 for what they check). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit fb47357 (E-0394). List: [leftover code bytes](LEFTOVER_CODE.md).
+- **Method.**
+  - `tools/disasm_all.py --leftover PATH` records every byte range the generator writes as plain `db` (6,207), with the instruction that ends where each begins.
+  - tools/leftover_code.py trial-decodes those that start right after an unconditional ret, reti, jp or jr in a bank with code. Verdicts: code, code?, open, not code, fill.
+  - A gap that decodes to an end and calls a label start, or jumps to a known instruction outside itself, became a config/code_entries.json entry. Repeated until none was left: 80 entries in four rounds.
+- **What they are.** Tracing the 80 found 22 more routines after them (102 new code labels), all unreached in the static listing:
+  - 51 string stubs left in the string banks beside each bank's BeginStringDisplay: CopyStringToBuffer_* (`ld de, table; call CopyStringToBuffer; ret`) and ShowStringAtOnce_* (begin, then RunStringDisplayToEnd);
+  - 28 battle helpers that are the same shape as their neighbours: GetBattle* stat getters, ReadSlotAIModeIndexed_* and two resistance-byte getters;
+  - seven Warubou talk handlers in bank $13 with their own flags, messages and scripts;
+  - nine link-session starters in bank $1B (wGameMode 5, wLinkSession 2-8);
+  - SubtractBCFromWordAtHLMin0 (beside AddBCToWordAtHL), ListCellSRAMRecordAddress, DrawSelectedMemberCursor_BankF1, ReorderAndStoreKeyList, Talk_CheckedThePeculiarDoor, and two one-call wrappers in bank $00.
+  - Names and notes (C1) are in config/names.json and config/annotations.json; 65 names were chosen from the code, the others came from name families.
+- **Discovery order.** The generator's fall-through guess accepts a routine only when its speculative trace has 4 or more new instructions, and a trace stops at code already traced. A 5-byte getter (`ld hl, wBattleX; jr shared tail`) was accepted only while its tail was untraced. New entries traced the tails first, and 16 such routines were dropped (A1:$4010 and others), along with $4001 routines named in config/names.json.
+  - `--reasons PATH` writes why each entry was traced. A run on the committed entries gave the 634 routines accepted by a guess alone, and all of them are now config/code_entries.json entries (674 with the $4001 ones), so new entries cannot drop them.
+  - Eleven of them had taken their names from that guess; they keep those names in config/names.json. Four pairs of byte-identical copies numbered by discovery order (ReadSlotAIModeIndexed_Bank05 and _2, CopyBytesDEToHL_Bank24, BGTileUnderPointIsSpriteHideTile_Bank7F, CountTableBytesAtOrBelowA_BankA0) swapped their `_2`; the six notes that cite them were swapped to match, so each names the same address as before.
+  - No annotated routine is lost: every address with a hand note is still a code label (build/lost.py check).
+- **Probes.** config/probes/E-0395.json has 115 probes for 58 of the 60 new routines in probe scope, all passing (getters, AI mode reads, resistance bytes, string copies with the bytes read from the ROM, the talk handlers' script and message state, the subtraction). One note was wrong and is corrected: SubtractBCFromWordAtHLMin0 returns HL + 1, not HL. Two have a reason in config/probe_exclusions.json: CopyStringToBuffer_Bank8A (its strings are not $F0-ended within 255 bytes) and ReorderAndStoreKeyList (two probed calls).
+- **Left as data** (docs/LEFTOVER_CODE.md, one row each), 384 gaps after a routine's end:
+  - fill 51 (padding);
+  - not code 81 (invalid opcode or an instruction past the gap);
+  - open 204 (no end);
+  - code? 34 (a jump or call to no known instruction);
+  - code 14 (decodes to an end with no call or jump into known code, too short to tell: `xor a; ret`, `scf; ccf; ret`, word lists such as `xor a, c; nop; jp hl`).
+- **Checks.** build/run681 PASS (approved size and SHA-256, zero differing bytes); every readability queue at 0; 33,087 labels; parallel full suite build/logs/par681.log OK (432 tests, 3 skipped; the serial run build/logs/suite680.log found two problems, now fixed: two note phrases read as names, and probed notes still tagged C1).
+
 ### E-0394 — M3: a byte-identical LZSS encoder; assets built from decoded, editable data
 
 - Date: 2026-10-16. Kind: OBSERVATION and DECISION. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit a68afb6 (E-0393). Guide: [editable assets](ASSETS.md).

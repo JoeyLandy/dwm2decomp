@@ -15,11 +15,37 @@ SECTION "Bank 37", ROMX
 ; instructions followed by a call to BeginStringDisplay_Bank37 and RunStringDisplayToEnd. (C1,
 ; E-0382)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank37::
+BeginStringDisplay_Bank37:: ; configured code entry (E-0395 (BeginStringDisplay_Bank37: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank37_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9, $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 37 CopyStringToBuffer_Bank37", ROMX
+
+; Loads DE = BeginStringDisplay_Bank37_StringCategories, the string table of
+; BeginStringDisplay_Bank37, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank37 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank37:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank37_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 37 ShowStringAtOnce_Bank37", ROMX
+
+; Calls BeginStringDisplay_Bank37, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank37:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank37
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 37 BeginStringDisplay_Bank37_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
@@ -2732,7 +2758,7 @@ SECTION "Bank 37 DrawRecordBufBSpeciesSpritePart", ROMX
 ; wArg1/2 = the species wRecordBufB + $B/7, wArg3-6 = $00, $90, $40, $00, then far-calls
 ; DrawMetaSpritePartC0 (E-0122) (E-0340: the address in its name read as its RAM name; was
 ; DrawRecordBufBSpeciesSpritePart)
-DrawRecordBufBSpeciesSpritePart::
+DrawRecordBufBSpeciesSpritePart:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
     ld a, [wRecordBufB + MON_SPECIES + 1]

@@ -11,11 +11,26 @@ SECTION "Bank 07", ROMX
 ; (bank $A0). The 7 bytes after its ret (db $11, $16, $40, $CD, $FE, $25, $C9) are an unlabelled
 ; second copy of the same ld de / call / ret, as in other banks copies. (C1, E-0375)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank07::
+BeginStringDisplay_Bank07:: ; configured code entry (E-0395 (BeginStringDisplay_Bank07: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank07_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9
+
+SECTION "Bank 07 CopyStringToBuffer_Bank07", ROMX
+
+; Loads DE = BeginStringDisplay_Bank07_StringCategories, the string table of
+; BeginStringDisplay_Bank07, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank07 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank07:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank07_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 07 ShowString_Bank07", ROMX
 
 ; Shows a bank $07 string at once: BeginStringDisplay_Bank07 (string wStringIndex of category
 ; wStringCategory) and then RunStringDisplayToEnd, which prints the whole string in one go instead
@@ -1678,7 +1693,7 @@ SECTION "Bank 07 ClearBGMap0Screen20x18", ROMX
 ; WriteVRAMByteInc. Nothing in src calls, jumps to or lists it (it follows a ret), so whether it
 ; ever runs is unknown. (C1, E-0375)
 ; writes blank tile $C3 to the 20 x 18 visible area of vBGMap0 (E-0124)
-ClearBGMap0Screen20x18::
+ClearBGMap0Screen20x18:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, vBGMap0
     ld bc, $1412
     ld a, $c3
@@ -2029,7 +2044,7 @@ SECTION "Bank 07 StartFadeToTitleScreenState1", ROMX
 ; has no effect. (C1, E-0375)
 ; wTitleScreenSubState = 0, wTitleScreenState = 1 and starts palette fade 4; the following entry
 ; advances wTitleScreenState instead (E-0122)
-StartFadeToTitleScreenState1::
+StartFadeToTitleScreenState1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     xor a
     ld [wTitleScreenSubState], a
     ld a, $01
@@ -2143,7 +2158,7 @@ SECTION "Bank 07 StartFadeToTitleScreenState2", ROMX
 ; unconditional ret ($C9), so it appears unreachable. (C1, E-0375)
 ; wTitleScreenSubState = 0, wTitleScreenState = 2 and starts palette fade 4; the following entry
 ; advances wTitleScreenState instead (E-0122)
-StartFadeToTitleScreenState2::
+StartFadeToTitleScreenState2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     xor a
     ld [wTitleScreenSubState], a
     ld a, $02
@@ -3073,7 +3088,7 @@ SECTION "Bank 07 DrawCGBMetaSpriteAt38_30", ROMX
 ; it (it follows a ret), so whether it runs is unknown. (C1, E-0375)
 ; on CGB only: draws sprite set 0, sub-index 1, at ($38, $30) through DrawMetaSpriteSet_BankE1
 ; (E-0124)
-DrawCGBMetaSpriteAt38_30::
+DrawCGBMetaSpriteAt38_30:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wIsCGB]
     or a
     ret z

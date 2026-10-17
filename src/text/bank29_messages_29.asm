@@ -13,7 +13,7 @@ SECTION "Bank 29", ROMX
 ; StartMessageForGroup_Group01 in bank $10) and from the debug menu in bank $01. (C1, E-0378)
 ; message bank $29: when wStringIndex < $8E, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank29; otherwise far-calls BeginStringDisplay_Bank29_Overflow (E-0080)
-BeginStringDisplay_Bank29::
+BeginStringDisplay_Bank29:: ; configured code entry (E-0395 (BeginStringDisplay_Bank29: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wStringIndex]
     cp $8e
     jr c, .call_begin_string_display
@@ -35,7 +35,7 @@ SECTION "Bank 29 CopyStringToBuffer_Bank29", ROMX
 ; copy by name. (C2, E-0378)
 ; message bank $29: when wStringIndex < $8E, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank29; otherwise far-calls CopyStringToBuffer_Bank29_Overflow (E-0080)
-CopyStringToBuffer_Bank29::
+CopyStringToBuffer_Bank29:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wStringIndex]
     cp $8e
     jr c, .call_copy_string_to_buffer
@@ -46,7 +46,19 @@ CopyStringToBuffer_Bank29::
     ld de, MessageStrings_Bank29
     call CopyStringToBuffer
     ret
-    db $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 29 ShowStringAtOnce_Bank29", ROMX
+
+; Calls BeginStringDisplay_Bank29, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank29:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank29
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 29 MessageStrings_Bank29", ROMX
 
 ; One little-endian word, a pointer to StringList_Bank29_0, the list of 142 message pointers
 ; Message_01_00 to Message_01_8D (message group 1, bank $29). LookupString reads word

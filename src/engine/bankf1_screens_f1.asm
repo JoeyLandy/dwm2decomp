@@ -10,7 +10,7 @@ SECTION "Bank F1", ROMX
 ; block), 2 PauseMenu_State4_GiftMenu_GiveGift. The steps change wTemp0 themselves: A on an item
 ; moves to 1, A on yes to 2, no or B back to 0. (C1, E-0385)
 ; by its step: the 'Gift / Exit' window, a cursor on screen block $32, then a string
-PauseMenu_State4_GiftMenu::
+PauseMenu_State4_GiftMenu:: ; configured code entry (E-0395 (PauseMenu_State4_GiftMenu: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wTemp0]
     jumptable
     dw PauseMenu_State4_GiftMenu_ShowChoices
@@ -390,7 +390,7 @@ SECTION "Bank F1 BuildItemScreenForWItemId_BankF1", ROMX
 ; $03 routine is not reached. (C1, E-0385)
 ; builds block $32 with the cursor, blocks $11 and $1B and the rectangle chosen by wItemId, then
 ; runs BuildItemScreen_DrawEffect (E-0122)
-BuildItemScreenForWItemId_BankF1::
+BuildItemScreenForWItemId_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call BuildScreenBlock32WithCursor_BankF1
     ld e, $11
     farcall CopyBlockToTileBuffer
@@ -417,7 +417,7 @@ SECTION "Bank F1 BuildItemScreenWithRecordCursor_BankF1", ROMX
 ; of bank $03. (C1, E-0385)
 ; fills tiles, builds the item screen, copies block $10 and draws the cursor for wMenuSelectedMember
 ; & 3 (E-0122)
-BuildItemScreenWithRecordCursor_BankF1::
+BuildItemScreenWithRecordCursor_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call FillTilesFromRequest
     call BuildItemScreenForWItemId_BankF1
     ld e, $10
@@ -434,7 +434,7 @@ SECTION "Bank F1 BuildScreenBlocks32And0F_BankF1", ROMX
 ; block $0F over it. Only BuildScreenBlocks32And0FWithCursor_BankF1 calls it, and nothing calls that
 ; one. (C2, E-0385)
 ; builds block $32 with the cursor and copies block $0F (E-0122)
-BuildScreenBlocks32And0F_BankF1::
+BuildScreenBlocks32And0F_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call BuildScreenBlock32WithCursor_BankF1
     ld e, $0f
     farcall CopyBlockToTileBuffer
@@ -448,7 +448,7 @@ SECTION "Bank F1 BuildScreenBlocks32And0FWithCursor_BankF1", ROMX
 ; ROM; it is a bank $F1 copy of a bank $03 routine. (C1, E-0385)
 ; fills tiles, builds blocks $32 and $0F, copies block $10 and draws the cursor for wSubMenuCursor &
 ; 3 (E-0122)
-BuildScreenBlocks32And0FWithCursor_BankF1::
+BuildScreenBlocks32And0FWithCursor_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call FillTilesFromRequest
     call BuildScreenBlocks32And0F_BankF1
     ld e, $10
@@ -753,7 +753,7 @@ SECTION "Bank F1 BuildItemScreen_DrawEffect", ROMX
 ; (BuildItemScreenForWItemId_BankF1_Data1) the record's current and new values of the stat it
 ; changes (fields $5B, $5F, $6B, $63, $65, $67, $69) as digits, or its personality and the rest.
 ; (C1, E-0357)
-BuildItemScreen_DrawEffect::
+BuildItemScreen_DrawEffect:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wItemId]
@@ -1218,7 +1218,7 @@ SECTION "Bank F1 CopyRectToVRAMSourceStrideBPlus14_BankF1", ROMX
 ; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with
 ; WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle);
 ; B kept, C = 0 (E-0067) (the same 28 bytes appear in 2 banks)
-CopyRectToVRAMSourceStrideBPlus14_BankF1::
+CopyRectToVRAMSourceStrideBPlus14_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push bc
     push hl
 
@@ -1449,8 +1449,31 @@ UpdateMenuCursor_DrawCursor_BankF1::
     ld [de], a
     ei
     ret
-    db $fa, $6d, $c4, $e6, $03, $21, $5e, $4a, $87, $85, $6f, $30, $01, $24, $2a, $66
-    db $6f, $7d, $c6, $98, $6f, $7c, $ce, $29, $67, $36, $bb, $c9
+
+SECTION "Bank F1 DrawSelectedMemberCursor_BankF1", ROMX
+
+; Draws the cursor tile $BB for wMenuSelectedMember (0-3): it reads that word of
+; BuildItemScreenWithRecordCursor_BankF1_Data, adds $2998 and writes $BB there, as
+; UpdateMenuCursor_DrawCursor_BankF1 does for a row. No traced code, jump table or pointer reaches
+; it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395; probed
+; E-0395)
+DrawSelectedMemberCursor_BankF1:: ; configured code entry (E-0395); C0
+    ld a, [wMenuSelectedMember]
+    and $03
+    ld hl, BuildItemScreenWithRecordCursor_BankF1_Data
+    add a
+    add_a_to_hl
+    deref_hl
+    ld a, l
+    add $98
+    ld l, a
+    ld a, h
+    adc $29
+    ld h, a
+    ld [hl], $bb
+    ret
+
+SECTION "Bank F1 WriteBCTileToScreenBufferAtTableEntry_BankF1", ROMX
 
 ; HL = table of BG map addresses (words), A = entry number: adds $2998 to the address of that entry,
 ; which turns a $98xx BG map address into the same place in wScreenTileBuffer, and writes the cursor
@@ -1477,7 +1500,7 @@ SECTION "Bank F1 WriteBCTileAtWordTableEntry_BankF1", ROMX
 ; of that entry (WriteVRAMByte). No caller was found in the ROM. (C1, E-0385)
 ; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte)
 ; (E-0067) (the same 15 bytes appear in 3 banks)
-WriteBCTileAtWordTableEntry_BankF1::
+WriteBCTileAtWordTableEntry_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add a
     add_a_to_hl
     deref_hl
@@ -1488,7 +1511,7 @@ WriteBCTileAtWordTableEntry_BankF1::
 SECTION "Bank F1 ShowStringBank08AtTilesHL_BankF1_2", ROMX
 
 ; Shows a bank-$08 string with its tiles at HL and size DE, keeping the text window. (C1, E-0357)
-ShowStringBank08AtTilesHL_BankF1_2::
+ShowStringBank08AtTilesHL_BankF1_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wTextWindowTileLo]
     ld c, a
     ld a, [wTextWindowTileHi]
@@ -1539,7 +1562,7 @@ SECTION "Bank F1 CopyRecordRectToScreenBuffer_BankF1", ROMX
 ; HL = header (word offset, width, rows) followed by the tile bytes: copies the rectangle into
 ; wScreenTileBuffer + offset with rows 32 bytes apart (the same steps as ReadScreenBufferRectHeader
 ; then CopyRectToStride32) (E-0065) (the same 32 bytes appear in 2 banks)
-CopyRecordRectToScreenBuffer_BankF1::
+CopyRecordRectToScreenBuffer_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1578,7 +1601,7 @@ SECTION "Bank F1 DerefWordTableEntryA_BankF1", ROMX
 ; category 8 is drawn at the tile address taken from the table in a 5 x 1 window. No caller was
 ; found in the ROM. (C1, E-0385)
 ; the same 81 bytes as DerefWordTableEntryA_Bank03 (DerefWordTableEntryA_Bank03) (E-0122)
-DerefWordTableEntryA_BankF1::
+DerefWordTableEntryA_BankF1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add a
     add_a_to_hl
     deref_hl

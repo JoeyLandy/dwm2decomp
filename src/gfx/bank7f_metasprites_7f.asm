@@ -140,7 +140,7 @@ MetaSprites7FTable::
 ; With a non-zero hSpriteWindowClipMode the Y total must be under $B8, mode 1 (message window at the
 ; top) also drops Y under $34, mode 2 (window at the bottom) drops Y of $71 and more, and each part
 ; is also dropped when the BG tile under it is not below hSpriteHideTile
-; (BGTileUnderPointIsSpriteHideTile_Bank7F_2). Byte for byte the same as DrawMetaSpriteAt except for
+; (BGTileUnderPointIsSpriteHideTile_Bank7F). Byte for byte the same as DrawMetaSpriteAt except for
 ; its own table pointers and its own BG-tile helper. Called only by DrawMetaSprite_Sets98. (C1,
 ; E-0384)
 ; the same instruction sequence as DrawMetaSpriteAt (bank $7F) apart from label operands, which
@@ -485,7 +485,7 @@ DrawMetaSpriteAt_Sets98::
 .call_bg_tile_under_point_is_sprite_hide_tile:
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsSpriteHideTile_Bank7F_2
+    call BGTileUnderPointIsSpriteHideTile_Bank7F
     jr nc, .loop4
     inc e
     ldh a, [hSpriteTileOffset]
@@ -587,7 +587,7 @@ DrawMetaSpriteAt_Sets98::
 .call_bg_tile_under_point_is_sprite_hide_tile2:
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsSpriteHideTile_Bank7F_2
+    call BGTileUnderPointIsSpriteHideTile_Bank7F
     jr nc, .loop6
     inc e
     ldh a, [hSpriteTileOffset]
@@ -609,7 +609,7 @@ DrawMetaSpriteAt_Sets98::
     jr nz, .loop5
     ret
 
-SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F_2", ROMX
+SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F", ROMX
 
 ; Looks at the background tile under one sprite part. Input DE = address of the X byte of an OAM
 ; entry (its Y byte is at DE - 1). Finds the $9800 BG map entry for (X + hScrollX - 4, Y + hScrollY
@@ -622,7 +622,7 @@ SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F_2", ROMX
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the
 ; tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-BGTileUnderPointIsSpriteHideTile_Bank7F_2::
+BGTileUnderPointIsSpriteHideTile_Bank7F::
     push hl
     push bc
     ldh a, [hScrollY]
@@ -6587,9 +6587,9 @@ MetaSprites7FTable_2::
 ; With a non-zero hSpriteWindowClipMode the Y total must be under $B8, mode 1 (message window at the
 ; top) also drops Y under $34, mode 2 (window at the bottom) drops Y of $71 and more, and each part
 ; is also dropped when the BG tile under it is not below hSpriteHideTile
-; (BGTileUnderPointIsSpriteHideTile_Bank7F_2). Byte for byte the same as DrawMetaSpriteAt_Sets98
+; (BGTileUnderPointIsSpriteHideTile_Bank7F). Byte for byte the same as DrawMetaSpriteAt_Sets98
 ; except for its own table pointers and its own BG-tile helper
-; (BGTileUnderPointIsSpriteHideTile_Bank7F). Called only by DrawMetaSprite. (C1, E-0384)
+; (BGTileUnderPointIsSpriteHideTile_Bank7F_2). Called only by DrawMetaSprite. (C1, E-0384)
 ; DE = table of set pointers: returns at once when hOamNextEntry is $27 or more; otherwise converts
 ; the 16-bit position (hSpriteOriginX with hSpriteOriginXHi, hSpriteOriginY with hSpriteOriginYHi)
 ; to screen coordinates by adding the scroll-offset words hSpriteScrollXLo/Hi and
@@ -6934,7 +6934,7 @@ DrawMetaSpriteAt::
 .call_bg_tile_under_point_is_sprite_hide_tile:
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsSpriteHideTile_Bank7F
+    call BGTileUnderPointIsSpriteHideTile_Bank7F_2
     jr nc, .loop4
     inc e
     ldh a, [hSpriteTileOffset]
@@ -7036,7 +7036,7 @@ DrawMetaSpriteAt::
 .call_bg_tile_under_point_is_sprite_hide_tile2:
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsSpriteHideTile_Bank7F
+    call BGTileUnderPointIsSpriteHideTile_Bank7F_2
     jr nc, .loop6
     inc e
     ldh a, [hSpriteTileOffset]
@@ -7058,7 +7058,7 @@ DrawMetaSpriteAt::
     jr nz, .loop5
     ret
 
-SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F", ROMX
+SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F_2", ROMX
 
 ; Looks at the background tile under one sprite part. Input DE = address of the X byte of an OAM
 ; entry (its Y byte is at DE - 1). Finds the $9800 BG map entry for (X + hScrollX - 4, Y + hScrollY
@@ -7071,7 +7071,7 @@ SECTION "Bank 7F BGTileUnderPointIsSpriteHideTile_Bank7F", ROMX
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the
 ; tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-BGTileUnderPointIsSpriteHideTile_Bank7F::
+BGTileUnderPointIsSpriteHideTile_Bank7F_2::
     push hl
     push bc
     ldh a, [hScrollY]

@@ -18,7 +18,7 @@ SECTION "Bank 1B", ROMX
 ; wLinkSession (0: wait for the serial transfer; 1-8: RunLinkSession1Exchange to
 ; RunLinkSession8Exchange when wLinkMode is set and wLinkRole bit 0 is set); called from
 ; ComputeSpriteScrollOffsets (E-0259)
-RunLinkSession::
+RunLinkSession:: ; configured code entry (E-0395 (RunLinkSession: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wLinkStatus]
     bit 7, a
     jr z, .check_link_session
@@ -78,7 +78,7 @@ RunLinkSession_FindPartner::
 .call_link_check_screen_counter_state:
     call LinkCheckScreenCounterState
     cp $ff
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     ld a, [wMenuState]
     cp $02
     jr z, .read_link_role
@@ -86,19 +86,19 @@ RunLinkSession_FindPartner::
     ld [wMenuOption], a
     ld a, [wScreenSubStep]
     ld [wGlyphListStart], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role:
     ld a, [wLinkRole]
     set 0, a
     set 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect2
+    jp LinkMenu_StartSession2
 
 .call_link_check_screen_counter_state2:
     call LinkCheckScreenCounterState
     cp $ff
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     ld a, [wMenuState]
     cp $03
     jr z, .read_link_role2
@@ -106,19 +106,19 @@ RunLinkSession_FindPartner::
     ld [wMenuOption], a
     ld a, [wScreenSubStep]
     ld [wGlyphListStart], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role2:
     ld a, [wLinkRole]
     set 0, a
     set 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect3
+    jp LinkMenu_StartSession3
 
 .call_link_check_screen_counter_state3:
     call LinkCheckScreenCounterState
     cp $ff
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     ld a, [wMenuState]
     cp $04
     jr z, .read_link_role3
@@ -126,19 +126,19 @@ RunLinkSession_FindPartner::
     ld [wMenuOption], a
     ld a, [wScreenSubStep]
     ld [wGlyphListStart], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role3:
     ld a, [wLinkRole]
     set 0, a
     set 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect5
+    jp LinkMenu_StartSession4
 
 .call_link_check_screen_counter_state4:
     call LinkCheckScreenCounterState
     cp $ff
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     ld a, [wMenuState]
     cp $06
     jr z, .read_link_role4
@@ -146,19 +146,19 @@ RunLinkSession_FindPartner::
     ld [wMenuOption], a
     ld a, [wScreenSubStep]
     ld [wGlyphListStart], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role4:
     ld a, [wLinkRole]
     set 0, a
     set 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect6
+    jp LinkMenu_StartSession6
 
 .call_link_check_screen_counter_state5:
     call LinkCheckScreenCounterState
     cp $ff
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     ld a, [wMenuState]
     cp $05
     jr z, .read_link_role5
@@ -166,48 +166,48 @@ RunLinkSession_FindPartner::
     ld [wMenuOption], a
     ld a, [wScreenSubStep]
     ld [wGlyphListStart], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role5:
     ld a, [wLinkRole]
     set 0, a
     set 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect4
+    jp LinkMenu_StartSession8
 
 .call_link_check_screen_counter_state6:
     call LinkCheckScreenCounterState
     cp $ff
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     ld a, [wMenuState]
     cp $07
     jr z, .read_link_role6
     ld a, [wLinkSetting]
     or a
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     ld a, $07
     ld [wMenuOption], a
     ld a, [wScreenSubStep]
     ld [wGlyphListStart], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role6:
     ld a, [wLinkRole]
     set 0, a
     set 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect
+    jp LinkMenu_StartSession5
 
 .check_title_screen_sub_state:
     ld a, [wTitleScreenSubState]
     cp $02
     jr z, .check_link_timer_lo
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .check_link_timer_lo:
     ld a, [wLinkTimerLo]
     cp b
-    jp z, .set_link_status_to_03
+    jp z, LinkMenu_SetStatus3AndSendF8
     call ShortDelayLoop
     ld a, b
     ld [wScreenState], a
@@ -220,14 +220,14 @@ RunLinkSession_FindPartner::
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role7:
     ld a, [wLinkRole]
     set 0, a
     res 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect
+    jp LinkMenu_StartSession5
 
 .cp_FA:
     cp $fa
@@ -239,14 +239,14 @@ RunLinkSession_FindPartner::
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role8:
     ld a, [wLinkRole]
     set 0, a
     res 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect2
+    jp LinkMenu_StartSession2
 
 .cp_FB:
     cp $fb
@@ -258,14 +258,14 @@ RunLinkSession_FindPartner::
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role9:
     ld a, [wLinkRole]
     set 0, a
     res 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect3
+    jp LinkMenu_StartSession3
 
 .cp_FC:
     cp $fc
@@ -277,14 +277,14 @@ RunLinkSession_FindPartner::
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role10:
     ld a, [wLinkRole]
     set 0, a
     res 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect5
+    jp LinkMenu_StartSession4
 
 .cp_E1:
     cp $e1
@@ -296,14 +296,14 @@ RunLinkSession_FindPartner::
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role11:
     ld a, [wLinkRole]
     set 0, a
     res 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect6
+    jp LinkMenu_StartSession6
 
 .cp_DD:
     cp $dd
@@ -315,22 +315,38 @@ RunLinkSession_FindPartner::
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
-    jp .set_link_status_to_03
+    jp LinkMenu_SetStatus3AndSendF8
 
 .read_link_role12:
     ld a, [wLinkRole]
     set 0, a
     res 1, a
     ld [wLinkRole], a
-    jp .call_queue_sound_effect4
+    jp LinkMenu_StartSession8
 
 .set_sub_menu_cursor2_to_FF:
     ld a, $ff
     ld [wSubMenuCursor2], a
-    jp .set_link_status_to_03
-    db $3e, $ff, $ea, $70, $c4, $c3, $57, $43
+    jp LinkMenu_SetStatus3AndSendF8
 
-.call_queue_sound_effect:
+SECTION "Bank 1B LinkMenu_ClearCursorAndSendF8", ROMX
+
+; Sets wSubMenuCursor2 = $FF, then wLinkStatus = 3 and sends $F8 over the serial port
+; (LinkMenu_SetStatus3AndSendF8). No traced code, jump table or pointer reaches it (E-0395: it
+; decodes as a routine but is unreached in the static listing). (C1, E-0395)
+LinkMenu_ClearCursorAndSendF8:: ; configured code entry (E-0395); C0
+    ld a, $ff
+    ld [wSubMenuCursor2], a
+    jp LinkMenu_SetStatus3AndSendF8
+
+SECTION "Bank 1B LinkMenu_StartSession5", ROMX
+
+; Plays sound $69, clears wJoypadReadFlag and sets wLinkMode = 1. With interrupts off it far-calls
+; RunLoadGameSteps, and LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot when wMapType bit 7 is set.
+; It then sets wGameMode = 5 with argument 2 and wLinkSession = 5, and clears the link states
+; (LinkMenu_ClearLinkStates). No traced code, jump table or pointer reaches it (E-0395: it decodes
+; as a routine but is unreached in the static listing). (C1, E-0395)
+LinkMenu_StartSession5::
     ld a, $69
     call QueueSoundEffect
     ld a, $00
@@ -353,9 +369,15 @@ RunLinkSession_FindPartner::
     ld [hli], a
     ld a, $05
     ld [wLinkSession], a
-    jp .clear_world_map_state
+    jp LinkMenu_ClearLinkStates
 
-.call_queue_sound_effect2:
+SECTION "Bank 1B LinkMenu_StartSession2", ROMX
+
+; Plays sound $69, clears wJoypadReadFlag, sets wLinkMode = 1, wGameMode = 5 with argument 2 and
+; wLinkSession = 2 (breeding), then clears the link states (LinkMenu_ClearLinkStates). No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C1, E-0395)
+LinkMenu_StartSession2::
     ld a, $69
     call QueueSoundEffect
     ld a, $00
@@ -369,9 +391,15 @@ RunLinkSession_FindPartner::
     ld [hli], a
     ld a, $02
     ld [wLinkSession], a
-    jr .clear_world_map_state
+    jr LinkMenu_ClearLinkStates
 
-.call_queue_sound_effect3:
+SECTION "Bank 1B LinkMenu_StartSession3", ROMX
+
+; Plays sound $69, clears wJoypadReadFlag, sets wLinkMode = 1, wGameMode = 5 with argument 3 and
+; wLinkSession = 3, then clears the link states (LinkMenu_ClearLinkStates). No traced code, jump
+; table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the static
+; listing). (C1, E-0395)
+LinkMenu_StartSession3::
     ld a, $69
     call QueueSoundEffect
     ld a, $00
@@ -385,9 +413,15 @@ RunLinkSession_FindPartner::
     ld [hli], a
     ld a, $03
     ld [wLinkSession], a
-    jr .clear_world_map_state
+    jr LinkMenu_ClearLinkStates
 
-.call_queue_sound_effect4:
+SECTION "Bank 1B LinkMenu_StartSession8", ROMX
+
+; Plays sound $69, clears wJoypadReadFlag, sets wLinkMode = 1, wGameMode = 5 with argument 7 and
+; wLinkSession = 8, then clears the link states (LinkMenu_ClearLinkStates). No traced code, jump
+; table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the static
+; listing). (C1, E-0395)
+LinkMenu_StartSession8::
     ld a, $69
     call QueueSoundEffect
     ld a, $00
@@ -401,9 +435,15 @@ RunLinkSession_FindPartner::
     ld [hli], a
     ld a, $08
     ld [wLinkSession], a
-    jr .clear_world_map_state
+    jr LinkMenu_ClearLinkStates
 
-.call_queue_sound_effect5:
+SECTION "Bank 1B LinkMenu_StartSession4", ROMX
+
+; Plays sound $69, clears wJoypadReadFlag, sets wLinkMode = 1, wGameMode = 5 with argument 4 and
+; wLinkSession = 4, then clears the link states (LinkMenu_ClearLinkStates). No traced code, jump
+; table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the static
+; listing). (C1, E-0395)
+LinkMenu_StartSession4::
     ld a, $69
     call QueueSoundEffect
     ld a, $00
@@ -417,9 +457,15 @@ RunLinkSession_FindPartner::
     ld [hli], a
     ld a, $04
     ld [wLinkSession], a
-    jr .clear_world_map_state
+    jr LinkMenu_ClearLinkStates
 
-.call_queue_sound_effect6:
+SECTION "Bank 1B LinkMenu_StartSession6", ROMX
+
+; Plays sound $69, clears wJoypadReadFlag, sets wLinkMode = 2, wGameMode = 5 with argument 6 and
+; wLinkSession = 6, then clears the link states (LinkMenu_ClearLinkStates). No traced code, jump
+; table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the static
+; listing). (C1, E-0395)
+LinkMenu_StartSession6::
     ld a, $69
     call QueueSoundEffect
     ld a, $00
@@ -433,9 +479,16 @@ RunLinkSession_FindPartner::
     ld [hli], a
     ld a, $06
     ld [wLinkSession], a
-    jr .clear_world_map_state
+    jr LinkMenu_ClearLinkStates
 
-.clear_world_map_state:
+SECTION "Bank 1B LinkMenu_ClearLinkStates", ROMX
+
+; Clears wWorldMapState, wGameMode2Arg, wLinkExchangeState, wLinkStateByte and wLinkScreenStep, sets
+; wModeChangeRequest = 1 and clears the sound channel slots (ClearSoundChannelSlots), then runs on
+; into LinkMenu_SetStatus3AndSendF8. The LinkMenu start handlers (LinkMenu_StartSession2 to
+; LinkMenu_StartSession8) end here. No traced code, jump table or pointer reaches it (E-0395: it
+; decodes as a routine but is unreached in the static listing). (C1, E-0395)
+LinkMenu_ClearLinkStates::
     xor a
     ld [wWorldMapState], a
     ld [wGameMode2Arg], a
@@ -446,7 +499,9 @@ RunLinkSession_FindPartner::
     ld [wModeChangeRequest], a
     call ClearSoundChannelSlots
 
-.set_link_status_to_03:
+; Sets wLinkStatus = 3 and sends $F8 with SerialSendByte. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C1, E-0395)
+LinkMenu_SetStatus3AndSendF8::
     ld a, $03
     ld [wLinkStatus], a
     ld a, $f8
@@ -552,7 +607,7 @@ SECTION "Bank 1B SendLinkByteForMenuOption_Bank1B", ROMX
 ; or pointer to it was found in src/. (C1, E-0379)
 ; sends the byte at SendLinkByteForMenuOption_Bank1B_Data + (wMenuOption & $0F) through
 ; SerialSendByte (E-0122)
-SendLinkByteForMenuOption_Bank1B::
+SendLinkByteForMenuOption_Bank1B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wMenuOption]
     ld de, SendLinkByteForMenuOption_Bank1B_Data
     and $0f
@@ -985,7 +1040,7 @@ SECTION "Bank 1B LinkExchangeJoypadByte", ROMX
 ; or pointer to it was found in src/. (C1, E-0379)
 ; link: sends $F9 when not connected; otherwise reads the received byte into wLinkJoypadHeld, polls
 ; the joypad and starts sending wJoypadHeld; with bit 1 of wVBlankFlags sends $F3 (E-0125)
-LinkExchangeJoypadByte::
+LinkExchangeJoypadByte:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .check_v_blank_flags
@@ -1038,7 +1093,7 @@ SECTION "Bank 1B LinkReceiveJoypadByte", ROMX
 ; clears bit 1 of wVBlankFlags. No call, jump or pointer to it was found in src/. (C1, E-0379)
 ; link: reads the received byte into wLinkJoypadHeld and updates the joypad state; byte $F3 restores
 ; the saved joypad state and counts down wLinkTimeoutLo (E-0127)
-LinkReceiveJoypadByte::
+LinkReceiveJoypadByte:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkRole]
     bit 1, a
     jr nz, LinkHandshakeSendFAOrFB
@@ -1106,7 +1161,7 @@ SECTION "Bank 1B LinkHandshakeSendFAOrFB", ROMX
 ; caller in src/. (C1, E-0379)
 ; link: with bit 2 of wVBlankFlags clear sends $FA and runs a frame; otherwise clears it, sends $FB
 ; and sets bit 7 (E-0124)
-LinkHandshakeSendFAOrFB::
+LinkHandshakeSendFAOrFB:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wVBlankFlags
     bit 2, [hl]
     jr nz, LinkHandshakeSendFAOrFB_SendFB
@@ -1353,7 +1408,7 @@ SECTION "Bank 1B WaitSerialTransferWithTimeout", ROMX
 ; outside itself. (C1, E-0379)
 ; while a serial transfer is in progress (bit 7 of rSC), counts wScreenCounter/wGlyphListPos up;
 ; returns A = $FE once the count reaches $400, otherwise returns when the transfer ends (E-0122)
-WaitSerialTransferWithTimeout::
+WaitSerialTransferWithTimeout:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ldh a, [rSC]
     bit 7, a
     jr nz, .read_screen_counter
@@ -1383,7 +1438,21 @@ BeginStringDisplay_Bank1B::
     ld de, BeginStringDisplay_Bank1B_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $21, $48, $cd, $fe, $25, $c9
+
+SECTION "Bank 1B CopyStringToBuffer_Bank1B", ROMX
+
+; Loads DE = BeginStringDisplay_Bank1B_StringCategories, the string table of
+; BeginStringDisplay_Bank1B, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank1B like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_Bank1B:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank1B_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 1B ShowString_Bank1B", ROMX
 
 ; BeginStringDisplay_Bank1B, then RunStringDisplayToEnd, so the whole string chosen by
 ; wStringCategory and wStringIndex is printed at once in the window set by wTextWindowTileLo/Hi,
@@ -1616,7 +1685,21 @@ BeginBreedingStringDisplay::
     ld de, BeginBreedingStringDisplay_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $9b, $4c, $cd, $fe, $25, $c9
+
+SECTION "Bank 1B CopyStringToBuffer_Breeding", ROMX
+
+; Loads DE = BeginBreedingStringDisplay_StringCategories, the string table of
+; BeginBreedingStringDisplay, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginBreedingStringDisplay like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_Breeding:: ; configured code entry (E-0395); C0
+    ld de, BeginBreedingStringDisplay_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 1B ShowBreedingString", ROMX
 
 ; BeginBreedingStringDisplay, then RunStringDisplayToEnd, so the whole string of the second string
 ; table of this bank is printed at once in the window set by wTextWindowTileLo/Hi, wTextWindowRows
@@ -3473,7 +3556,7 @@ SECTION "Bank 1B ShowTwoChoiceBoxWhenTextIdle", ROMX
 ; when no text runs, copies box LinkKeyTrade_DrawYesNo_TileRect to wWindowTileBuffer + $112, draws
 ; it, clears wTwoChoiceCursor and wScreenStep += 1 (E-0124) (E-0344: the address in its name dropped
 ; or read as the label there; was ShowTwoChoiceBoxWhenTextIdle)
-ShowTwoChoiceBoxWhenTextIdle::
+ShowTwoChoiceBoxWhenTextIdle:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wTextFlags]
     and a
     ret nz
@@ -4262,9 +4345,44 @@ LinkKeyTrade_WriteStoryKeyName::
 
 .to_link_key_trade_end_key_name:
     jp LinkKeyTrade_EndKeyName
-    db $21, $a1, $5d, $06, $1d, $d7, $fa, $f5, $d7, $67, $fa, $f6, $d7, $6f, $7e, $6f
-    db $26, $00, $29, $29, $7d, $c6, $07, $6f, $7c, $ce, $c7, $67, $7e, $e6, $7f, $01
-    db $95, $01, $cd, $aa, $16, $7d, $c6, $00, $6f, $7c, $ce, $a0, $67, $c9
+
+SECTION "Bank 1B ListCellSRAMRecordAddress", ROMX
+
+; Far-calls SetArg5ToListEntriesCell4 for the list cell under the cursor and reads its byte, an
+; index. It takes the byte at $C707 + 4 x index, masks it to 7 bits, and returns HL = $A000 + $195 x
+; that value (Multiply8By16), the address of a $195-byte record in cartridge RAM. No traced code,
+; jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the static
+; listing). (C2, E-0395; probed E-0395)
+ListCellSRAMRecordAddress:: ; configured code entry (E-0395); C0
+    farcall SetArg5ToListEntriesCell4
+    ld a, [wArg5]
+    ld h, a
+    ld a, [wArg6]
+    ld l, a
+    ld a, [hl]
+    ld l, a
+    ld h, $00
+    add hl, hl
+    add hl, hl
+    ld a, l
+    add $07
+    ld l, a
+    ld a, h
+    adc $c7
+    ld h, a
+    ld a, [hl]
+    and $7f
+    ld bc, $0195
+    call Multiply8By16
+    ld a, l
+    add $00
+    ld l, a
+    ld a, h
+    adc $a0
+    ld h, a
+    ret
+
+SECTION "Bank 1B KeyEntryAddressForListEntriesCell4", ROMX
 
 ; Far-calls SetArg5ToListEntriesCell4 (wArg5/wArg6 = wListEntries + 4 * wListPageIndex +
 ; wListCursor), reads the key slot number stored there and returns HL = wKeyList + 4 * slot, the
@@ -4779,7 +4897,7 @@ SECTION "Bank 1B CopyTileBytesToVRAM_Bank1B", ROMX
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (E-0353: corrected; was: Copies 16 bytes
 ; from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to
 ; clear; clobbers A; HL and DE advance) (the same 20 bytes appear in 3 banks)
-CopyTileBytesToVRAM_Bank1B::
+CopyTileBytesToVRAM_Bank1B:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     xor a
 
 .loop:

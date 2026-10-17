@@ -477,7 +477,32 @@ BeginStringDisplay_Bank1F::
     ld de, BeginStringDisplay_Bank1F_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $23, $52, $cd, $fe, $25, $c9, $cd, $0e, $52, $cd, $11, $26, $c9
+
+SECTION "Bank 1F CopyStringToBuffer_Bank1F", ROMX
+
+; Loads DE = BeginStringDisplay_Bank1F_StringCategories, the string table of
+; BeginStringDisplay_Bank1F, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank1F like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_Bank1F:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank1F_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 1F ShowStringAtOnce_Bank1F", ROMX
+
+; Calls BeginStringDisplay_Bank1F, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank1F:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank1F
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 1F BeginStringDisplay_Bank1F_StringCategories", ROMX
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)

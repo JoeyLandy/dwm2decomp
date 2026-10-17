@@ -2329,7 +2329,7 @@ SECTION "Bank 12 SavePlayerPositionStateAndStep", ROMX
 ; three five-byte follower records. Skip the followers' target coordinates, and advance the
 ; eight-bit script step. Does not set wSavedPositionValid; the caller or return stage supplies that
 ; flag. (C2, E-0360; probed E-0376)
-SavePlayerPositionStateAndStep::
+SavePlayerPositionStateAndStep:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wSpriteSlots + $7]
     ld [wSavedPlayerState], a
     ldh a, [hPlayerX]
@@ -4610,7 +4610,7 @@ SECTION "Bank 12 SpawnScriptSpriteInFrontOfPlayer", ROMX
 ; wScriptStep). No caller in src/ or in the listing. (C1, E-0376)
 ; decompresses sprite graphics from bank $7E to vTiles0 + $700 (with a CGB palette), places it 16
 ; pixels in front of the player and advances wScriptStep (E-0129)
-SpawnScriptSpriteInFrontOfPlayer::
+SpawnScriptSpriteInFrontOfPlayer:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     dec a
     jr nz, .skip
     ld de, SpawnScriptSpriteInFrontOfPlayer_Data
@@ -10441,7 +10441,7 @@ SECTION "Bank 12 RunPendingFieldEventPendingFieldEvent", ROMX
 ; event sprite. (C1, E-0377)
 ; on town maps runs the pending event in wPendingFieldEvent (bits 7 and 6 select the stage; some
 ; kinds need wInventory + $17); otherwise clears it (E-0130)
-RunPendingFieldEventPendingFieldEvent::
+RunPendingFieldEventPendingFieldEvent:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wPendingFieldEvent]
     and $0f
     cp $08

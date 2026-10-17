@@ -17,7 +17,7 @@ SECTION "Bank 36", ROMX
 ; jumps through a 16-entry table indexed by wBattleResolveStep (wBattleResolveStep): one step of
 ; resolving a battle action; the steps advance wBattleResolveStep and use wBattleSubStep
 ; (wBattleSubStep) and wBattleSubStep2 (wBattleSubStep2) for nested state
-RunBattleResolveStep::
+RunBattleResolveStep:: ; configured code entry (E-0395 (RunBattleResolveStep: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wBattleResolveStep]
     jumptable
     dw ResolveStepBegin
@@ -2543,7 +2543,7 @@ SECTION "Bank 36 SetSubPhase3AndRestartResolve_Bank36", ROMX
 ; SetSubPhase3AndRestartResolve. No caller of this copy was found in src; the live copy is
 ; SetSubPhase3AndRestartResolve. (C2, E-0380)
 ; the same 10 bytes as SetSubPhase3AndRestartResolve (SetSubPhase3AndRestartResolve) (E-0055)
-SetSubPhase3AndRestartResolve_Bank36::
+SetSubPhase3AndRestartResolve_Bank36:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, $03
     ld [wBattleSubPhase], a
     xor a
@@ -5793,7 +5793,7 @@ SECTION "Bank 36 StoreCAtActorEntry", ROMX
 ; HL = byte table, C = value: stores C at HL + wBattleActor; HL ends on that byte. Nothing in src/
 ; calls it. (C2, E-0382)
 ; [HL + wBattleActor] = C (E-0115)
-StoreCAtActorEntry::
+StoreCAtActorEntry:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wBattleActor]
     add_a_to_hl
     ld [hl], c
@@ -6355,7 +6355,7 @@ SECTION "Bank 36 ScaleDamageByLevelByHLBit7", ROMX
 ; bit 7 (BSTAT8_EERIE_LITE for the status byte of a target) is set, otherwise with
 ; ScaleDamageByLevel_075_05_025_0. Nothing in src/ calls it. (C2, E-0382)
 ; bit 7 of [HL]: ScaleDamageByLevel_1_085_05_0, else ScaleDamageByLevel_075_05_025_0 (E-0122)
-ScaleDamageByLevelByHLBit7::
+ScaleDamageByLevelByHLBit7:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     bit 7, [hl]
     jr z, .call_scale_damage_by_level_075_05_025_0
     call ScaleDamageByLevel_1_085_05_0
@@ -6375,7 +6375,7 @@ SECTION "Bank 36 RollChanceByFlagsAtHLAlt", ROMX
 ; bit 6 of [HL]: RollChanceByLevel_100_75_40_0; else bit 7: RollChanceByLevel_100_100_75_40Percent;
 ; else RollChanceForLevelA (E-0122) (E-0344: the address in its name dropped or read as the label
 ; there; was RollChanceByFlagsAtHLAlt)
-RollChanceByFlagsAtHLAlt::
+RollChanceByFlagsAtHLAlt:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     bit 6, [hl]
     jr z, .skip
     call RollChanceByLevel_100_75_40_0
@@ -6617,7 +6617,7 @@ SECTION "Bank 36 RollChanceForLevelA", ROMX
 ; $3F (RollChance25Percent). Only RollChanceByFlagsAtHLAlt calls it. (C2, E-0382)
 ; level A: 0 returns carry; 1, 2 and 3 take three different chance rolls (E-0122) (E-0344: the
 ; address in its name dropped or read as the label there; was RollChanceForLevelA)
-RollChanceForLevelA::
+RollChanceForLevelA:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     and a
     jr nz, .cp_01
     scf
@@ -6939,7 +6939,7 @@ SECTION "Bank 36 ScaleHLBy29Over32", ROMX
 ; HL = HL / 2 + HL / 4 + HL / 8 + HL / 32, each term cut down by shifts (about 0.9 of the old
 ; value). Nothing in src/ calls it. (C2, E-0382)
 ; HL = HL/2 + HL/4 + HL/8 + HL/32 (each rounded down) (E-0118)
-ScaleHLBy29Over32::
+ScaleHLBy29Over32:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call ShiftHLRight1
     ld b, h
     ld c, l
@@ -12051,7 +12051,7 @@ SECTION "Bank 36 RemoveCFromActionQueue", ROMX
 ; and the wActionQueue note say an 8-byte queue: that is wrong by one. (C2, E-0382)
 ; removes the first byte equal to C from the 8-byte queue at wActionQueue, shifting later bytes down
 ; and filling with $FF (E-0124)
-RemoveCFromActionQueue::
+RemoveCFromActionQueue:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wActionQueue
     ld b, $08
     ld d, $00
@@ -12205,7 +12205,31 @@ SECTION "Bank 36 GetBattleMP", ROMX
 GetBattleMP::
     ld hl, wBattleMP
     jr ReadBattleWordFromArray
-    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
+
+SECTION "Bank 36 GetBattleAGL_Bank36", ROMX
+
+; HL = wBattleAGL, then ReadBattleWordFromArray: HL = the word at wBattleAGL + 2 x A (A = the battle
+; slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer reaches
+; it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395; probed
+; E-0395)
+; the same 25 bytes as GetBattleAGL_Bank39 (GetBattleAGL_Bank39) (E-0060)
+GetBattleAGL_Bank36:: ; configured code entry (E-0395); C0
+    ld hl, wBattleAGL
+    jr ReadBattleWordFromArray
+
+SECTION "Bank 36 ReadSlotAIModeIndexed_Bank36", ROMX
+
+; A = the byte at wSlotAIMode + A, the AI mode of slot A. A copy of the routine of the same shape
+; found in other banks. No traced code, jump table or pointer reaches it (E-0395: it decodes as a
+; routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_Bank36::
+    ld hl, wSlotAIMode
+    add_a_to_hl
+    ld a, [hl]
+    ret
+
+SECTION "Bank 36 ReadBattleWordFromArray", ROMX
 
 ; HL = the address of a table of 16-bit words, A = index: returns HL = the word at HL + 2 * A
 ; (little-endian). A is doubled in 8 bits first, so an index of $80 or more wraps. A is clobbered.
@@ -12285,7 +12309,7 @@ SECTION "Bank 36 ClearBattleStatusBitsWithMaskD_Bank36", ROMX
 
 ; ANDs status byte 0 of slot E with entry D of ClearBattleStatusBitsWithMaskD_Bank36_Data. (C2,
 ; E-0357; probed E-0382)
-ClearBattleStatusBitsWithMaskD_Bank36::
+ClearBattleStatusBitsWithMaskD_Bank36:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank36_Data
     add_a_to_hl
@@ -12341,7 +12365,7 @@ SECTION "Bank 36 SetBit2OfLevelUpGainsIndexed_Bank36", ROMX
 ; the same 13 bytes is in 12 banks. (C2, E-0382)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit2OfLevelUpGainsIndexed_Bank36::
+SetBit2OfLevelUpGainsIndexed_Bank36:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -12360,7 +12384,7 @@ SECTION "Bank 36 PersonalityIndexOfSlot_Bank36", ROMX
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
 ; appear in 13 banks)
-PersonalityIndexOfSlot_Bank36::
+PersonalityIndexOfSlot_Bank36:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     push bc
     ld c, a

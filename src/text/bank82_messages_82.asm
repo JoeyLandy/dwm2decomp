@@ -11,7 +11,7 @@ SECTION "Bank 82", ROMX
 ; StartMessageForGroup_Group0B (message group 11) and the debug message test. (C1, E-0384)
 ; message bank $82: when wStringIndex < $90, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank82; otherwise far-calls BeginStringDisplay_Bank82_Overflow (E-0080)
-BeginStringDisplay_Bank82::
+BeginStringDisplay_Bank82:: ; configured code entry (E-0395 (BeginStringDisplay_Bank82: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wStringIndex]
     cp $90
     jr c, .call_begin_string_display
@@ -37,7 +37,7 @@ SECTION "Bank 82 CopyStringToBuffer_Bank82", ROMX
 ; (BeginStringDisplay_Bank82_Overflow), not the copy entry CopyStringToBuffer_Bank82_Overflow, so
 ; strings $90 and up are not copied: the destination is left unchanged (executed, test
 ; Bank82OverflowCopyDoesNotCopy; a likely game bug) (E-0080, E-0154)
-CopyStringToBuffer_Bank82::
+CopyStringToBuffer_Bank82:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wStringIndex]
     cp $90
     jr c, .call_copy_string_to_buffer
@@ -48,7 +48,19 @@ CopyStringToBuffer_Bank82::
     ld de, MessageStrings_Bank82
     call CopyStringToBuffer
     ret
-    db $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 82 ShowStringAtOnce_Bank82", ROMX
+
+; Calls BeginStringDisplay_Bank82, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank82:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank82
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 82 MessageStrings_Bank82", ROMX
 
 ; A table of one word: category 0 points to StringList_Bank82_0, the list of 144 string pointers
 ; (ids 0-$8F, Message_0B_00 to Message_0B_8F, in this bank). BeginStringDisplay_Bank82 and

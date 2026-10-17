@@ -12,7 +12,7 @@ SECTION "Bank 80", ROMX
 ; E-0384)
 ; message bank $80: when wStringIndex < $C8, BeginStringDisplay with this bank's table
 ; MessageStrings_Bank80; otherwise far-calls BeginStringDisplay_Bank80_Overflow (E-0080)
-BeginStringDisplay_Bank80::
+BeginStringDisplay_Bank80:: ; configured code entry (E-0395 (BeginStringDisplay_Bank80: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld a, [wStringIndex]
     cp $c8
     jr c, .call_begin_string_display
@@ -34,7 +34,7 @@ SECTION "Bank 80 CopyStringToBuffer_Bank80", ROMX
 ; twin of this bank is the one the message code reaches. (C2, E-0384)
 ; message bank $80: when wStringIndex < $C8, CopyStringToBuffer with this bank's table
 ; MessageStrings_Bank80; otherwise far-calls CopyStringToBuffer_Bank80_Overflow (E-0080)
-CopyStringToBuffer_Bank80::
+CopyStringToBuffer_Bank80:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wStringIndex]
     cp $c8
     jr c, .call_copy_string_to_buffer
@@ -45,7 +45,19 @@ CopyStringToBuffer_Bank80::
     ld de, MessageStrings_Bank80
     call CopyStringToBuffer
     ret
-    db $cd, $01, $40, $cd, $11, $26, $c9
+
+SECTION "Bank 80 ShowStringAtOnce_Bank80", ROMX
+
+; Calls BeginStringDisplay_Bank80, which starts string wStringIndex of its table, then
+; RunStringDisplayToEnd, which prints the whole string at once (wTextFlags bit 1) instead of a glyph
+; per frame. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but
+; is unreached in the static listing). (C1, E-0395)
+ShowStringAtOnce_Bank80:: ; configured code entry (E-0395); C0
+    call BeginStringDisplay_Bank80
+    call RunStringDisplayToEnd
+    ret
+
+SECTION "Bank 80 MessageStrings_Bank80", ROMX
 
 ; A table of one word: category 0 points to StringList_Bank80_0, the list of 200 string pointers
 ; (ids 0-$C7, Message_09_00 to Message_09_C7, in this bank). BeginStringDisplay_Bank80 and

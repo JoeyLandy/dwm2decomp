@@ -2207,7 +2207,7 @@ SECTION "Bank 5F StartChoiceMessageByTextYesNoResult", ROMX
 ; src/ calls or lists this routine, so it looks like unused code. (C2, E-0384)
 ; starts message 6 and advances wScriptSubStep when wTextYesNoResult is 0, otherwise message 7 and
 ; steps wScriptSubStep back (E-0126)
-StartChoiceMessageByTextYesNoResult::
+StartChoiceMessageByTextYesNoResult:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wTextYesNoResult]
     or a
     jr nz, .skip
@@ -2231,7 +2231,7 @@ SECTION "Bank 5F StartMessage5AndAdvanceScriptSubStep", ROMX
 ; StartMessageFromTable_Data) and advances wScriptSubStep. Nothing in src/ calls or lists this
 ; routine, so it looks like unused code. (C2, E-0384)
 ; starts message 5 from StartMessageFromTable_Data and advances wScriptSubStep (E-0126)
-StartMessage5AndAdvanceScriptSubStep::
+StartMessage5AndAdvanceScriptSubStep:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, $05
     call StartMessageFromTable
     ld hl, wScriptSubStep

@@ -12,7 +12,7 @@ SECTION "Bank 33", ROMX
 ; DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a
 ; width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows
 ; 32 bytes apart
-CopyBlockToTileBuffer::
+CopyBlockToTileBuffer:: ; configured code entry (E-0395 (CopyBlockToTileBuffer: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld d, $00
     ld hl, ScreenBlockTable
     add hl, de
@@ -2886,7 +2886,7 @@ SECTION "Bank 33 LoadRecordByteForPickedRecords", ROMX
 ; names it, so it appears to be unused. (C2, E-0380; probed E-0384)
 ; with SRAM bank 0 enabled, LoadSRAMRecordByte with A = wPickedRecords (C = field from the caller);
 ; then disables SRAM (E-0119)
-LoadRecordByteForPickedRecords::
+LoadRecordByteForPickedRecords:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wPickedRecords
     ld a, $0a
     ld [rRAMG2], a
@@ -3723,7 +3723,21 @@ BeginStringDisplay_Bank33::
     ld de, BeginStringDisplay_Bank33_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $a5, $64, $cd, $fe, $25, $c9
+
+SECTION "Bank 33 CopyStringToBuffer_Bank33", ROMX
+
+; Loads DE = BeginStringDisplay_Bank33_StringCategories, the string table of
+; BeginStringDisplay_Bank33, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank33 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_Bank33:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank33_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 33 ShowString_Bank33", ROMX
 
 ; Shows string wStringIndex of category wStringCategory from the first string table of this bank
 ; (BeginStringDisplay_Bank33) and prints it to the end at once (RunStringDisplayToEnd). Far-called
@@ -4102,7 +4116,21 @@ BeginStringDisplay_Bank33_2::
     ld de, BeginStringDisplay_Bank33_2_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $4c, $70, $cd, $fe, $25, $c9
+
+SECTION "Bank 33 CopyStringToBuffer_Bank33_2", ROMX
+
+; Loads DE = BeginStringDisplay_Bank33_2_StringCategories, the string table of
+; BeginStringDisplay_Bank33_2, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank33_2 like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+CopyStringToBuffer_Bank33_2:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank33_2_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 33 ShowString_Bank33_2", ROMX
 
 ; Shows string wStringIndex of category wStringCategory from the second string table of this bank
 ; (BeginStringDisplay_Bank33_2) and prints it to the end at once (RunStringDisplayToEnd). Far-called

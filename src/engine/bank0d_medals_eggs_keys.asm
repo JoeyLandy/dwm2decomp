@@ -12,11 +12,26 @@ SECTION "Bank 0D", ROMX
 ; far-called by the debug message test (bank $01). The 7 bytes after its ret are an unlabelled
 ; second copy of the same ld de / call / ret. (C1, E-0376)
 ; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank0D::
+BeginStringDisplay_Bank0D:: ; configured code entry (E-0395 (BeginStringDisplay_Bank0D: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     ld de, BeginStringDisplay_Bank0D_StringCategories
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $cd, $fe, $25, $c9
+
+SECTION "Bank 0D CopyStringToBuffer_Bank0D", ROMX
+
+; Loads DE = BeginStringDisplay_Bank0D_StringCategories, the string table of
+; BeginStringDisplay_Bank0D, and calls CopyStringToBuffer: string wStringIndex of category
+; wStringCategory is copied with its $F0 end to the address in wStringDestLo/Hi. It pairs with
+; BeginStringDisplay_Bank0D like the other CopyStringToBuffer stubs of the string banks. No traced
+; code, jump table or pointer reaches it (E-0395: it decodes as a routine but is unreached in the
+; static listing). (C2, E-0395; probed E-0395)
+; the same 7 bytes as CopyStringToBuffer_Bank09 (CopyStringToBuffer_Bank09) (E-0353)
+CopyStringToBuffer_Bank0D:: ; configured code entry (E-0395); C0
+    ld de, BeginStringDisplay_Bank0D_StringCategories
+    call CopyStringToBuffer
+    ret
+
+SECTION "Bank 0D ShowString_Bank0D", ROMX
 
 ; Shows a bank $0D string at once: BeginStringDisplay_Bank0D (string wStringIndex of category
 ; wStringCategory) and then RunStringDisplayToEnd, which prints the whole string in one go instead
@@ -6041,7 +6056,7 @@ SECTION "Bank 0D ScriptStepCheckKeyListFull", ROMX
 ; wScreenStep back and requests script $80; otherwise continues at
 ; MedalPrizeMenu_ChoosePrize_HasRoom (E-0126) (E-0344: the address in its name dropped or read as
 ; the label there; was ScriptStepCheckKeyListFull)
-ScriptStepCheckKeyListFull::
+ScriptStepCheckKeyListFull:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall FindFreeKeySlotToTemp0
     ldh a, [hTemp0]
     bit 7, a
@@ -6190,7 +6205,7 @@ SECTION "Bank 0D MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom", ROMX
 ; if the key list is full, continues with A = 2 at MedalPrizeMenu_ChoosePrize_GivePrize_StepBack;
 ; otherwise at MedalPrizeMenu_ChoosePrize_GivePrize_NoMessage (E-0126) (E-0344: the address in its
 ; name dropped or read as the label there; was MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom)
-MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom::
+MedalPrizeMenu_ChoosePrize_GivePrize_CheckKeyRoom:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall FindFreeKeySlotToTemp0
     ldh a, [hTemp0]
     bit 7, a
@@ -6538,7 +6553,7 @@ SECTION "Bank 0D KeyListHasFreeSlot", ROMX
 ; entry holding $FF (free) and C = its index, or A = $FF (C = 12) when none is free. Only the first
 ; 12 entries are checked, although wKeyList holds up to 32. (C2, E-0376)
 ; A = 0 when one of the 12 four-byte wKeyList entries is free ($FF), else $FF (E-0124)
-KeyListHasFreeSlot::
+KeyListHasFreeSlot:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wKeyList
     ld c, $00
 

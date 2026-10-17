@@ -20,7 +20,7 @@ SECTION "Bank E2", ROMX
 ; (E-0083) (E-0332: skill 0 is Fight, the plain attack: with Guard (skill $AC) it is scored on every
 ; monster's turn whether or not any record holds it, as the Command menu offers Fight / Skill /
 ; Guard; C2) (was AIScore_Fight)
-AIScore_Fight::
+AIScore_Fight:: ; configured code entry (E-0395 (AIScore_Fight: found only by the $4001 fall-through guess, which a new entry later in the bank can change; listed so it stays traced)); C0
     farcall AIScore_Fight_Conditions
     ld a, c
     and a
@@ -128,7 +128,7 @@ SECTION "Bank E2 AIScore_Blaze", ROMX
 ; AI scoring routine for 3 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 1 Blaze, 2 Blazemore, 3 Blazemost. It runs checks
 ; and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Blaze::
+AIScore_Blaze:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIFireSkillUsable
     ld a, c
     and a
@@ -192,7 +192,7 @@ SECTION "Bank E2 AIScore_Firebal", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 4 Firebal, 5 Firebane, 6 Firebolt, 7 Bang, 8 Boom,
 ; 9 Explodet, 10 Infernos, 11 Infermore, 12 Infermost, 13 Bolt .... It runs checks and adds weights
 ; to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Firebal::
+AIScore_Firebal:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIFireSkillUsable
     ld a, c
     and a
@@ -286,7 +286,7 @@ SECTION "Bank E2 AIScore_Beat_UnreferencedVariant", ROMX
 ; when that gives 0, adds weight row $B5 to wAISkillScore, the same row AIScore_Beat adds under the
 ; same check, so the row would count twice. (C2, E-0385)
 ; table-B AI score: AIScore_Beat, then adds a penalty word when the follow-up check fails (E-0122)
-AIScore_Beat_UnreferencedVariant::
+AIScore_Beat_UnreferencedVariant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AIScore_Beat
     ld a, c
     and a
@@ -407,7 +407,7 @@ SECTION "Bank E2 AIScore_Sacrifice", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 21 Sacrifice. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Sacrifice::
+AIScore_Sacrifice:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Sacrifice_Conditions
     ld a, c
     and a
@@ -492,7 +492,7 @@ SECTION "Bank E2 AIScore_Heal", ROMX
 ; AI scoring routine for 3 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 22 Heal, 23 HealMore, 24 HealAll. It runs checks
 ; and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Heal::
+AIScore_Heal:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIHealUsable
     ld a, c
     and a
@@ -568,7 +568,7 @@ SECTION "Bank E2 AIScore_HealUs", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 25 HealUs, 26 HealUsAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_HealUs::
+AIScore_HealUs:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIHealUsable
     ld a, c
     and a
@@ -600,7 +600,7 @@ SECTION "Bank E2 AIScore_MPass", ROMX
 ; AI scoring routine for 3 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs
 ; checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_MPass::
+AIScore_MPass:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_MPass_Conditions
     ld a, c
     and a
@@ -614,7 +614,7 @@ SECTION "Bank E2 AIScore_Vivify", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 30 Vivify, 31 Revive. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Vivify::
+AIScore_Vivify:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Vivify_Conditions
     ld a, c
     and a
@@ -641,7 +641,7 @@ SECTION "Bank E2 AIScore_Farewell", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 32 Farewell. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Farewell::
+AIScore_Farewell:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Farewell_Conditions
     ld a, c
     and a
@@ -677,7 +677,7 @@ SECTION "Bank E2 AIScore_Antidote", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 33 Antidote. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Antidote::
+AIScore_Antidote:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Antidote_Conditions
     ld a, c
     and a
@@ -695,7 +695,7 @@ SECTION "Bank E2 AIScore_DeChaos", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 34 DeChaos. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_DeChaos::
+AIScore_DeChaos:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_DeChaos_Conditions
     ld a, c
     and a
@@ -713,7 +713,7 @@ SECTION "Bank E2 AIScore_NumbOff", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 35 NumbOff. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_NumbOff::
+AIScore_NumbOff:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_NumbOff_Conditions
     ld a, c
     and a
@@ -731,7 +731,7 @@ SECTION "Bank E2 AIScore_CurseOff", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 36 CurseOff. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_CurseOff::
+AIScore_CurseOff:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_CurseOff_Conditions
     ld a, c
     and a
@@ -750,7 +750,7 @@ SECTION "Bank E2 AIScore_Upper", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 37 Upper, 38 Increase. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Upper::
+AIScore_Upper:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Upper_Conditions
     ld a, c
     and a
@@ -788,7 +788,7 @@ SECTION "Bank E2 AIScore_Sap", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 39 Sap, 40 Defense. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Sap::
+AIScore_Sap:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Sap_Conditions
     ld a, c
     and a
@@ -873,7 +873,7 @@ SECTION "Bank E2 AIScore_Speed", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 41 Speed, 42 SpeedUp. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Speed::
+AIScore_Speed:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Speed_Conditions
     ld a, c
     and a
@@ -912,7 +912,7 @@ SECTION "Bank E2 AIScore_Slow", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 43 Slow, 44 SlowAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Slow::
+AIScore_Slow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Slow_Conditions
     ld a, c
     and a
@@ -997,7 +997,7 @@ SECTION "Bank E2 AIScore_TwinHits_UnreferencedVariant", ROMX
 ; under the same check, so the row would count twice. (C2, E-0385)
 ; table-B AI score: AIScore_TwinHits, then adds a penalty word when the follow-up check fails
 ; (E-0122)
-AIScore_TwinHits_UnreferencedVariant::
+AIScore_TwinHits_UnreferencedVariant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AIScore_TwinHits
     ld a, c
     and a
@@ -1087,7 +1087,7 @@ SECTION "Bank E2 AIScore_Surround", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 46 Surround. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Surround::
+AIScore_Surround:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Surround_Conditions
     ld a, c
     and a
@@ -1183,7 +1183,7 @@ SECTION "Bank E2 AIScore_Sleep", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 47 Sleep, 48 SleepAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Sleep::
+AIScore_Sleep:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Sleep_Conditions
     ld a, c
     and a
@@ -1247,7 +1247,7 @@ SECTION "Bank E2 AIScore_TakeMagic", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 49 TakeMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_TakeMagic::
+AIScore_TakeMagic:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_TakeMagic_Conditions
     ld a, c
     and a
@@ -1272,7 +1272,7 @@ SECTION "Bank E2 AIScore_RobMagic", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 50 RobMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_RobMagic::
+AIScore_RobMagic:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_RobMagic_Conditions
     ld a, c
     and a
@@ -1303,7 +1303,7 @@ SECTION "Bank E2 AIScore_StopSpell", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 51 StopSpell. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_StopSpell::
+AIScore_StopSpell:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_StopSpell_Conditions
     ld a, c
     and a
@@ -1381,7 +1381,7 @@ SECTION "Bank E2 AIScore_PanicAll", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 52 PanicAll. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_PanicAll::
+AIScore_PanicAll:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIPanicAllUsable
     ld a, c
     and a
@@ -1435,7 +1435,7 @@ SECTION "Bank E2 AIScore_Ironize", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 53 Ironize. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Ironize::
+AIScore_Ironize:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIIronizeUsable
     ld a, c
     and a
@@ -1461,7 +1461,7 @@ SECTION "Bank E2 AIScore_MagicBack", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 54 MagicBack, 55 Bounce. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_MagicBack::
+AIScore_MagicBack:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_MagicBack_Conditions
     ld a, c
     and a
@@ -1494,7 +1494,7 @@ SECTION "Bank E2 AIScore_Barrier", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 56 Barrier. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Barrier::
+AIScore_Barrier:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Barrier_Conditions
     ld a, c
     and a
@@ -1520,7 +1520,7 @@ SECTION "Bank E2 AIScore_MagicWall", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 57 MagicWall. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_MagicWall::
+AIScore_MagicWall:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_MagicWall_Conditions
     ld a, c
     and a
@@ -1548,7 +1548,7 @@ SECTION "Bank E2 AIScore_Transform", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 58 Transform. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Transform::
+AIScore_Transform:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIUsableAndActorLacksStatus4Bits67
     ld a, c
     and a
@@ -1593,7 +1593,7 @@ SECTION "Bank E2 AIScore_BeDragon", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 59 BeDragon. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_BeDragon::
+AIScore_BeDragon:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIUsableAndActorLacksStatus4Bits67
     ld a, c
     and a
@@ -1630,7 +1630,7 @@ SECTION "Bank E2 AIScore_Chance", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 60 Chance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Chance::
+AIScore_Chance:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a
@@ -1688,7 +1688,7 @@ SECTION "Bank E2 AIScore_MegaMagic", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 61 MegaMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_MegaMagic::
+AIScore_MegaMagic:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_MegaMagic_Conditions
     ld a, c
     and a
@@ -1792,7 +1792,7 @@ SECTION "Bank E2 AIScore_BigBang", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 62 BigBang, 63 Hellblast. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_BigBang::
+AIScore_BigBang:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAttackSkillUsable
     ld a, c
     and a
@@ -1902,7 +1902,7 @@ SECTION "Bank E2 AIScore_FireAir", ROMX
 ; WhiteFire, 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_FireAir::
+AIScore_FireAir:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_FireAir_Conditions
     ld a, c
     and a
@@ -2011,7 +2011,7 @@ SECTION "Bank E2 AIScore_WindBeast", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 72 WindBeast. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_WindBeast::
+AIScore_WindBeast:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAttackSkillUsable
     ld a, c
     and a
@@ -2085,7 +2085,7 @@ SECTION "Bank E2 AIScore_Vacuum", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 73 Vacuum, 74 Lightning. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Vacuum::
+AIScore_Vacuum:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAttackSkillUsable
     ld a, c
     and a
@@ -2136,7 +2136,7 @@ SECTION "Bank E2 AIScore_RockThrow", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 75 RockThrow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_RockThrow::
+AIScore_RockThrow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
@@ -2225,7 +2225,7 @@ SECTION "Bank E2 AIScore_Watershot", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 76 Watershot. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Watershot::
+AIScore_Watershot:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
@@ -2297,7 +2297,7 @@ SECTION "Bank E2 AIScore_Tidalwave", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 77 Tidalwave. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Tidalwave::
+AIScore_Tidalwave:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
@@ -2381,7 +2381,7 @@ SECTION "Bank E2 AIScore_CallHelp", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 78 CallHelp, 79 YellHelp. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_CallHelp::
+AIScore_CallHelp:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
@@ -2494,7 +2494,7 @@ SECTION "Bank E2 AIScore_FireSlash", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 80 FireSlash, 81 VacuSlash, 82 BoltSlash, 83
 ; IceSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70)
 ; (E-0083)
-AIScore_FireSlash::
+AIScore_FireSlash:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
@@ -2593,7 +2593,7 @@ SECTION "Bank E2 AIScore_SlimeBlow", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 84 SlimeBlow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SlimeBlow::
+AIScore_SlimeBlow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_SlimeBlow_Conditions
     ld a, c
     and a
@@ -2678,7 +2678,7 @@ SECTION "Bank E2 AIScore_DrakSlash", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 85 DrakSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_DrakSlash::
+AIScore_DrakSlash:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_DrakSlash_Conditions
     ld a, c
     and a
@@ -2695,7 +2695,7 @@ SECTION "Bank E2 AIScore_BeastCut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 86 BeastCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_BeastCut::
+AIScore_BeastCut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_BeastCut_Conditions
     ld a, c
     and a
@@ -2712,7 +2712,7 @@ SECTION "Bank E2 AIScore_BirdBlow", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 87 BirdBlow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_BirdBlow::
+AIScore_BirdBlow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_BirdBlow_Conditions
     ld a, c
     and a
@@ -2729,7 +2729,7 @@ SECTION "Bank E2 AIScore_BugBlow", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 88 BugBlow. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_BugBlow::
+AIScore_BugBlow:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_BugBlow_Conditions
     ld a, c
     and a
@@ -2746,7 +2746,7 @@ SECTION "Bank E2 AIScore_Shears", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 89 Shears. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Shears::
+AIScore_Shears:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Shears_Conditions
     ld a, c
     and a
@@ -2763,7 +2763,7 @@ SECTION "Bank E2 AIScore_DevilCut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 90 DevilCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_DevilCut::
+AIScore_DevilCut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_DevilCut_Conditions
     ld a, c
     and a
@@ -2780,7 +2780,7 @@ SECTION "Bank E2 AIScore_ZombieCut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 91 ZombieCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_ZombieCut::
+AIScore_ZombieCut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_ZombieCut_Conditions
     ld a, c
     and a
@@ -2797,7 +2797,7 @@ SECTION "Bank E2 AIScore_CleanCut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 92 CleanCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_CleanCut::
+AIScore_CleanCut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_CleanCut_Conditions
     ld a, c
     and a
@@ -2814,7 +2814,7 @@ SECTION "Bank E2 AIScore_AquaCut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 93 AquaCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_AquaCut::
+AIScore_AquaCut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_AquaCut_Conditions
     ld a, c
     and a
@@ -2831,7 +2831,7 @@ SECTION "Bank E2 AIScore_MetalCut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 94 MetalCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_MetalCut::
+AIScore_MetalCut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_MetalCut_Conditions
     ld a, c
     and a
@@ -2849,7 +2849,7 @@ SECTION "Bank E2 AIScore_PoisonHit", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 95 PoisonHit. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_PoisonHit::
+AIScore_PoisonHit:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_PoisonHit_Conditions
     ld a, c
     and a
@@ -2946,7 +2946,7 @@ SECTION "Bank E2 AIScore_Paralyze", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 96 Paralyze. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Paralyze::
+AIScore_Paralyze:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Paralyze_Conditions
     ld a, c
     and a
@@ -2964,7 +2964,7 @@ SECTION "Bank E2 AIScore_NapAttack", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 97 NapAttack. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_NapAttack::
+AIScore_NapAttack:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_NapAttack_Conditions
     ld a, c
     and a
@@ -2982,7 +2982,7 @@ SECTION "Bank E2 AIScore_SquallHit_UnreferencedVariant", ROMX
 ; row would count twice. (C2, E-0385)
 ; table-B AI score: AIScore_SquallHit, then adds a penalty word when the follow-up check fails
 ; (E-0122)
-AIScore_SquallHit_UnreferencedVariant::
+AIScore_SquallHit_UnreferencedVariant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AIScore_SquallHit
     ld a, c
     and a
@@ -3087,7 +3087,7 @@ SECTION "Bank E2 AIScore_BiAttack", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 99 BiAttack, 100 QuadHits. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_BiAttack::
+AIScore_BiAttack:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_BiAttack_Conditions
     ld a, c
     and a
@@ -3181,7 +3181,7 @@ SECTION "Bank E2 AIScore_RainSlash", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 101 RainSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_RainSlash::
+AIScore_RainSlash:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_RainSlash_Conditions
     ld a, c
     and a
@@ -3250,7 +3250,7 @@ SECTION "Bank E2 AIScore_MultiCut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 102 MultiCut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_MultiCut::
+AIScore_MultiCut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_MultiCut_Conditions
     ld a, c
     and a
@@ -3335,7 +3335,7 @@ SECTION "Bank E2 AIScore_GigaSlash", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 103 GigaSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_GigaSlash::
+AIScore_GigaSlash:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
@@ -3359,7 +3359,7 @@ SECTION "Bank E2 AIScore_ChargeUp", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 104 ChargeUp. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_ChargeUp::
+AIScore_ChargeUp:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_ChargeUp_Conditions
     ld a, c
     and a
@@ -3399,7 +3399,7 @@ SECTION "Bank E2 AIScore_PsycheUp", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 105 PsycheUp. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_PsycheUp::
+AIScore_PsycheUp:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_PsycheUp_Conditions
     ld a, c
     and a
@@ -3463,7 +3463,7 @@ SECTION "Bank E2 AIScore_HighJump", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 106 HighJump. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_HighJump::
+AIScore_HighJump:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_HighJump_Conditions
     ld a, c
     and a
@@ -3531,7 +3531,7 @@ SECTION "Bank E2 AIScore_EvilSlash", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 107 EvilSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_EvilSlash::
+AIScore_EvilSlash:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -3626,7 +3626,7 @@ SECTION "Bank E2 AIScore_Massacre", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 108 Massacre. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Massacre::
+AIScore_Massacre:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
@@ -3681,7 +3681,7 @@ SECTION "Bank E2 AIScore_TwinSlash", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 109 TwinSlash. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_TwinSlash::
+AIScore_TwinSlash:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_TwinSlash_Conditions
     ld a, c
     and a
@@ -3785,7 +3785,7 @@ SECTION "Bank E2 AIScore_Berserker", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 110 Berserker. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Berserker::
+AIScore_Berserker:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAttackSkillUsable_3
     ld a, c
     and a
@@ -3910,7 +3910,7 @@ SECTION "Bank E2 AIScore_Ramming", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 111 Ramming. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Ramming::
+AIScore_Ramming:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
     and a
@@ -4012,7 +4012,7 @@ SECTION "Bank E2 AIScore_Kamikaze", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 112 Kamikaze. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Kamikaze::
+AIScore_Kamikaze:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Kamikaze_Conditions
     ld a, c
     and a
@@ -4037,7 +4037,7 @@ SECTION "Bank E2 AIScore_SleepAir", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 113 SleepAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SleepAir::
+AIScore_SleepAir:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_SleepAir_Conditions
     ld a, c
     and a
@@ -4110,7 +4110,7 @@ SECTION "Bank E2 AIScore_PalsyAir", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 114 PalsyAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_PalsyAir::
+AIScore_PalsyAir:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_PalsyAir_Conditions
     ld a, c
     and a
@@ -4125,7 +4125,7 @@ SECTION "Bank E2 AIScore_PoisonGas", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 115 PoisonGas. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_PoisonGas::
+AIScore_PoisonGas:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_PoisonGas_Conditions
     ld a, c
     and a
@@ -4140,7 +4140,7 @@ SECTION "Bank E2 AIScore_PoisonAir", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 116 PoisonAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_PoisonAir::
+AIScore_PoisonAir:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_PoisonAir_Conditions
     ld a, c
     and a
@@ -4156,7 +4156,7 @@ SECTION "Bank E2 AIScore_Curse", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 117 Curse. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Curse::
+AIScore_Curse:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Curse_Conditions
     ld a, c
     and a
@@ -4182,7 +4182,7 @@ SECTION "Bank E2 AIScore_OddDance", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 118 OddDance, 119 RobDance. It runs checks and
 ; adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_OddDance::
+AIScore_OddDance:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_OddDance_Conditions
     ld a, c
     and a
@@ -4234,7 +4234,7 @@ SECTION "Bank E2 AIScore_PaniDance", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 120 PaniDance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_PaniDance::
+AIScore_PaniDance:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_PaniDance_Conditions
     ld a, c
     and a
@@ -4305,7 +4305,7 @@ SECTION "Bank E2 AIScore_KODance", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 121 K.O.Dance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_KODance::
+AIScore_KODance:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_KODance_Conditions
     ld a, c
     and a
@@ -4380,7 +4380,7 @@ SECTION "Bank E2 AIScore_LureDance_UnreferencedVariant", ROMX
 ; when AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies
 ; gives 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_LureDance, then AIAddScoresForTwoLists when usable (E-0122)
-AIScore_LureDance_UnreferencedVariant::
+AIScore_LureDance_UnreferencedVariant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AIScore_LureDance
     ld a, c
     and a
@@ -4469,7 +4469,7 @@ SECTION "Bank E2 AIScore_LifeDance", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 123 LifeDance. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_LifeDance::
+AIScore_LifeDance:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_LifeDance_Conditions
     ld a, c
     and a
@@ -4526,7 +4526,7 @@ SECTION "Bank E2 AIScore_Hustle", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 124 Hustle. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Hustle::
+AIScore_Hustle:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Hustle_Conditions
     ld a, c
     and a
@@ -4606,7 +4606,7 @@ SECTION "Bank E2 AIScore_SideStep", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 125 SideStep. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SideStep::
+AIScore_SideStep:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_SideStep_Conditions
     ld a, c
     and a
@@ -4665,7 +4665,7 @@ SECTION "Bank E2 AIScore_SandStorm", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 126 SandStorm. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SandStorm::
+AIScore_SandStorm:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_SandStorm_Conditions
     ld a, c
     and a
@@ -4762,7 +4762,7 @@ SECTION "Bank E2 AIScore_Radiant", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 127 Radiant. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Radiant::
+AIScore_Radiant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Radiant_Conditions
     ld a, c
     and a
@@ -4781,7 +4781,7 @@ SECTION "Bank E2 AIScore_EerieLite", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 128 EerieLite. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_EerieLite::
+AIScore_EerieLite:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_EerieLite_Conditions
     ld a, c
     and a
@@ -4845,7 +4845,7 @@ SECTION "Bank E2 AIScore_Surge", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 129 Surge. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Surge::
+AIScore_Surge:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Surge_Conditions
     ld a, c
     and a
@@ -4872,7 +4872,7 @@ SECTION "Bank E2 AIScore_UltraDown", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 130 UltraDown. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_UltraDown::
+AIScore_UltraDown:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_UltraDown_Conditions
     ld a, c
     and a
@@ -4900,7 +4900,7 @@ SECTION "Bank E2 AIScore_DeMagic", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 131 DeMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_DeMagic::
+AIScore_DeMagic:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_DeMagic_Conditions
     ld a, c
     and a
@@ -4937,7 +4937,7 @@ SECTION "Bank E2 AIScore_ThickFog", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 132 ThickFog. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_ThickFog::
+AIScore_ThickFog:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_ThickFog_Conditions
     ld a, c
     and a
@@ -4974,7 +4974,7 @@ SECTION "Bank E2 AIScore_TatsuCall", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136
 ; BazooCall. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70)
 ; (E-0083)
-AIScore_TatsuCall::
+AIScore_TatsuCall:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_TatsuCall_Conditions
     ld a, c
     and a
@@ -5028,7 +5028,7 @@ SECTION "Bank E2 AIScore_SuckAir", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 137 SuckAir. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SuckAir::
+AIScore_SuckAir:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_SuckAir_Conditions
     ld a, c
     and a
@@ -5069,7 +5069,7 @@ SECTION "Bank E2 AIScore_Focus", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 138 Focus. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Focus::
+AIScore_Focus:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Focus_Conditions
     ld a, c
     and a
@@ -5104,7 +5104,7 @@ SECTION "Bank E2 AIScore_LushLicks_UnreferencedVariant", ROMX
 ; when AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies
 ; gives 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_LushLicks, then AIAddScoresForTwoLists when usable (E-0122)
-AIScore_LushLicks_UnreferencedVariant::
+AIScore_LushLicks_UnreferencedVariant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AIScore_LushLicks
     ld a, c
     and a
@@ -5174,7 +5174,7 @@ SECTION "Bank E2 AIScore_SickLick", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 140 SickLick. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SickLick::
+AIScore_SickLick:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIStatusLickUsable
     ld a, c
     and a
@@ -5248,7 +5248,7 @@ SECTION "Bank E2 AIScore_LegSweep_UnreferencedVariant", ROMX
 ; AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies gives
 ; 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_LegSweep, then AIAddScoresForTwoLists when usable (E-0122)
-AIScore_LegSweep_UnreferencedVariant::
+AIScore_LegSweep_UnreferencedVariant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AIScore_LegSweep
     ld a, c
     and a
@@ -5313,7 +5313,7 @@ SECTION "Bank E2 AIScore_Ahhh_UnreferencedVariant", ROMX
 ; AIAddScoresForTwoLists_SealingFoes gives 0, row $B2 when AIAddScoresForTwoLists_OtherAllies gives
 ; 0), happens twice. (C2, E-0385)
 ; table-B AI score: AIScore_Ahhh, then AIAddScoresForTwoLists when usable (E-0122)
-AIScore_Ahhh_UnreferencedVariant::
+AIScore_Ahhh_UnreferencedVariant:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call AIScore_Ahhh
     ld a, c
     and a
@@ -5386,7 +5386,7 @@ SECTION "Bank E2 AIScore_Geyser", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 145 Geyser. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Geyser::
+AIScore_Geyser:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Geyser_Conditions
     ld a, c
     and a
@@ -5430,7 +5430,7 @@ SECTION "Bank E2 AIScore_DanceShut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 146 DanceShut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_DanceShut::
+AIScore_DanceShut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_DanceShut_Conditions
     ld a, c
     and a
@@ -5455,7 +5455,7 @@ SECTION "Bank E2 AIScore_MouthShut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 147 MouthShut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_MouthShut::
+AIScore_MouthShut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_MouthShut_Conditions
     ld a, c
     and a
@@ -5491,7 +5491,7 @@ SECTION "Bank E2 AIScore_StrongD", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 148 StrongD. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_StrongD::
+AIScore_StrongD:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_StrongD_Conditions
     ld a, c
     and a
@@ -5530,7 +5530,7 @@ SECTION "Bank E2 AIScore_Dodge", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 149 Dodge. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Dodge::
+AIScore_Dodge:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Dodge_Conditions
     ld a, c
     and a
@@ -5559,7 +5559,7 @@ SECTION "Bank E2 AIScore_BladeD", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 150 BladeD. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_BladeD::
+AIScore_BladeD:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIGuardSkillUsable
     ld a, c
     and a
@@ -5587,7 +5587,7 @@ SECTION "Bank E2 AIScore_Cover", ROMX
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 151 Cover, 152 Guardian. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70) (E-0083)
-AIScore_Cover::
+AIScore_Cover:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Cover_Conditions
     ld a, c
     and a
@@ -5622,7 +5622,7 @@ SECTION "Bank E2 AIScore_TailWind", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 153 TailWind. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_TailWind::
+AIScore_TailWind:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_TailWind_Conditions
     ld a, c
     and a
@@ -5665,7 +5665,7 @@ SECTION "Bank E2 AIScore_StormWind", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 154 StormWind. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_StormWind::
+AIScore_StormWind:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_StormWind_Conditions
     ld a, c
     and a
@@ -5680,7 +5680,7 @@ SECTION "Bank E2 AIScore_AquaWall", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 155 AquaWall. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_AquaWall::
+AIScore_AquaWall:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_AquaWall_Conditions
     ld a, c
     and a
@@ -5701,7 +5701,7 @@ SECTION "Bank E2 AIScore_SealPray", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 156 SealPray. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SealPray::
+AIScore_SealPray:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_SealPray_Conditions
     ld a, c
     and a
@@ -5766,7 +5766,7 @@ SECTION "Bank E2 AIScore_SuckAll", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 157 SuckAll. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_SuckAll::
+AIScore_SuckAll:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_SuckAll_Conditions
     ld a, c
     and a
@@ -5823,7 +5823,7 @@ SECTION "Bank E2 AIScore_Imitate", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 158 Imitate. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Imitate::
+AIScore_Imitate:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Imitate_Conditions
     ld a, c
     and a
@@ -5881,7 +5881,7 @@ SECTION "Bank E2 AIScore_Meditate", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 159 Meditate. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Meditate::
+AIScore_Meditate:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Meditate_Conditions
     ld a, c
     and a
@@ -5928,7 +5928,7 @@ SECTION "Bank E2 AIScore_LifeSong", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 160 LifeSong. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_LifeSong::
+AIScore_LifeSong:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_LifeSong_Conditions
     ld a, c
     and a
@@ -5968,7 +5968,7 @@ SECTION "Bank E2 AIScore_LoveRain", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 161 LoveRain. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_LoveRain::
+AIScore_LoveRain:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_LoveRain_Conditions
     ld a, c
     and a
@@ -6037,7 +6037,7 @@ SECTION "Bank E2 AIScore_Whistle", ROMX
 ; Outside, 166 Informer, 167 Errand, 168 EagleEye, 169 MapMagic. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Whistle::
+AIScore_Whistle:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AINeverUsableResetAISkillScore
     ret
 
@@ -6051,7 +6051,7 @@ SECTION "Bank E2 AIScore_AhhhStatusLick", ROMX
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083) (E-0344: the address in its name dropped or read as the label there; was
 ; AIScore_AhhhStatusLick)
-AIScore_AhhhStatusLick::
+AIScore_AhhhStatusLick:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIStatusLickUsable
     ld a, c
     and a
@@ -6077,7 +6077,7 @@ SECTION "Bank E2 AIScore_ZoneOut", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 171 ZoneOut. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_ZoneOut::
+AIScore_ZoneOut:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AINeverUsableResetAISkillScore
     ret
 
@@ -6091,7 +6091,7 @@ SECTION "Bank E2 AIScore_Guard", ROMX
 ; AIScoreRoutineTableB, indexed by skill number): 172 Guard. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083)
-AIScore_Guard::
+AIScore_Guard:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call MaxNegativeScoreWhenAIFlagBit0
     ret z
     farcall AIScore_Guard_Conditions
@@ -6141,7 +6141,7 @@ SECTION "Bank E2 AIScore_PanicAll_2", ROMX
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083) (E-0344: the address in its name dropped or read as the label there; was
 ; AIScore_PanicAll_2)
-AIScore_PanicAll_2::
+AIScore_PanicAll_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIPanicAllUsable
     ld a, c
     and a
@@ -6166,7 +6166,7 @@ SECTION "Bank E2 AIScore_Ironize_2", ROMX
 ; wAISkillScore-wAISkillScore2 + $1 (AddAIWeight/DA70); the individual checks are not interpreted
 ; (E-0083) (E-0344: the address in its name dropped or read as the label there; was
 ; AIScore_Ironize_2)
-AIScore_Ironize_2::
+AIScore_Ironize_2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIIronizeUsable
     ld a, c
     and a
@@ -6325,8 +6325,36 @@ AddBCToWordAtHL::
     inc hl
     ld [hl], b
     ret
-    db $e5, $2a, $66, $6f, $7d, $91, $6f, $7c, $98, $67, $cb, $7c, $28, $03, $21, $00
-    db $00, $44, $4d, $e1, $71, $23, $70, $c9
+
+SECTION "Bank E2 SubtractBCFromWordAtHLMin0", ROMX
+
+; The word at HL minus BC, stored back at HL (low byte first); a result with bit 15 set becomes 0.
+; BC = the result and HL ends on the stored high byte (HL + 1). AddBCToWordAtHL just before it adds
+; instead. No traced code, jump table or pointer reaches it (E-0395: it decodes as a routine but is
+; unreached in the static listing). (C2, E-0395; probed E-0395)
+SubtractBCFromWordAtHLMin0:: ; configured code entry (E-0395); C0
+    push hl
+    deref_hl
+    ld a, l
+    sub c
+    ld l, a
+    ld a, h
+    sbc b
+    ld h, a
+    bit 7, h
+    jr z, .skip
+    ld hl, $0000
+
+.skip:
+    ld b, h
+    ld c, l
+    pop hl
+    ld [hl], c
+    inc hl
+    ld [hl], b
+    ret
+
+SECTION "Bank E2 ResetAISkillScoreE2", ROMX
 
 ; wAISkillScore = $0000 and wAISkillScore2 = $FFFF. Returns A = $FF and HL = wAISkillScore2 + 2 (the
 ; address after both words). Called by AIScore_Skill200. (C2, E-0385)
@@ -6373,7 +6401,7 @@ SECTION "Bank E2 AIScore_StrongD_WeighHPBand", ROMX
 
 ; StrongD scoring by HP band of slot A: bands 0-3 (HP at least a quarter) $83 against; band 4 $84
 ; for; lower $85 for. (C2, E-0357; probed E-0385)
-AIScore_StrongD_WeighHPBand::
+AIScore_StrongD_WeighHPBand:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -6422,7 +6450,7 @@ SECTION "Bank E2 AIScore_AquaWall_WeighHPBand", ROMX
 
 ; AquaWall scoring by HP band of slot A: band 0 $81 for, band 1 $82 for, band 2 $83 against, band 3
 ; $84 against, band 4 $85 against, lower $86 against. (C2, E-0357; probed E-0385)
-AIScore_AquaWall_WeighHPBand::
+AIScore_AquaWall_WeighHPBand:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -6471,7 +6499,7 @@ SECTION "Bank E2 AIScore_SuckAll_ScoreHPBands", ROMX
 
 ; For each present slot on side A, scores its HP band for SuckAll
 ; (AIScore_SuckAll_ScoreHPBands_WeighSlot). (C2, E-0357; probed E-0385)
-AIScore_SuckAll_ScoreHPBands::
+AIScore_SuckAll_ScoreHPBands:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     and $04
     ld c, a
     ld b, $03
@@ -6515,7 +6543,7 @@ SECTION "Bank E2 AIScore_Meditate_WeighHPBand", ROMX
 
 ; Meditate scoring by HP band of slot A: bands 0-2 $9B, $9C, $9D against; band 3 $9E for, band 4 $9F
 ; for, lower $A0 for. (C2, E-0357; probed E-0385)
-AIScore_Meditate_WeighHPBand::
+AIScore_Meditate_WeighHPBand:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -6564,7 +6592,7 @@ SECTION "Bank E2 AIScore_HealUs_ScoreHPBands", ROMX
 
 ; For each present slot on side A, scores its HP band for HealUs
 ; (AIScore_HealUs_ScoreHPBands_WeighSlot). (C2, E-0357; probed E-0385)
-AIScore_HealUs_ScoreHPBands::
+AIScore_HealUs_ScoreHPBands:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     and $04
     ld c, a
     ld b, $03
@@ -6820,7 +6848,7 @@ SECTION "Bank E2 AIScore_Sap_WeighATKVsDEF", ROMX
 ; present slots on the actor side exceeds the average DEF of the present foes by more than half the
 ; average current HP of the foes, and C = $FF otherwise. With C = 0 adds weight row $13 with
 ; AddAIWeightToScore2 (against); otherwise adds weight row $2B with AddAIWeight (for). (C2, E-0385)
-AIScore_Sap_WeighATKVsDEF::
+AIScore_Sap_WeighATKVsDEF:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIScore_Sap_CompareATKWithDEF
     ld a, c
     and a
@@ -6844,7 +6872,7 @@ SECTION "Bank E2 MaxNegativeScoreWhenAIFlagBit0", ROMX
 ; AIScore_Berserker and AIScoreGuardSkill). (C2, E-0385)
 ; C = (wAIFlag & 1) ^ 1 and returns when non-zero; when bit 0 is set: wAISkillScore = 0,
 ; wAISkillScore2/wAISkillScore2 + $1 = $FFFF, C = 0 (E-0118)
-MaxNegativeScoreWhenAIFlagBit0::
+MaxNegativeScoreWhenAIFlagBit0:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wAIFlag]
     and $01
     xor $01
@@ -6865,7 +6893,7 @@ SECTION "Bank E2 AIScore_TailWind_WeighFirstTurn", ROMX
 ; On the first turn (wBattleTurn 0) adds weight row $B6 to wAISkillScore2 and returns C = $FF; on
 ; later turns returns at once with C = wBattleTurn (non-zero). Called by AIScore_TailWind and
 ; reached from AIScoreGuardSkill. (C2, E-0371; probed E-0385)
-AIScore_TailWind_WeighFirstTurn::
+AIScore_TailWind_WeighFirstTurn:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wBattleTurn]
     ld c, a
     or a
@@ -6936,7 +6964,7 @@ SECTION "Bank E2 AIAddScoresForTwoLists", ROMX
 ; AIAddScoresForTwoLists_OtherAllies fails (results of 1 count as passing) (E-0124) (E-0344: the
 ; address in its name dropped or read as the label there; was AIAddScoresForTwoLists; a trailing
 ; preposition left by the dropped address removed)
-AIAddScoresForTwoLists::
+AIAddScoresForTwoLists:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall AIAddScoresForTwoLists_SealingFoes
     ld a, c
     cp $01
@@ -6991,7 +7019,7 @@ WeighLinkRuleBit6AndTurnLimit::
 SECTION "Bank E2 AIScore_Sacrifice_WeighLinkRule", ROMX
 
 ; Sacrifice: $0E against when link rule bit 6 forbids it (C = 0). (C2, E-0357; probed E-0385)
-AIScore_Sacrifice_WeighLinkRule::
+AIScore_Sacrifice_WeighLinkRule:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
     and a
@@ -7011,7 +7039,7 @@ SECTION "Bank E2 WeighLinkRules1RuleBit5", ROMX
 ; far-calls CheckLinkRules1RuleBit5; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit5)
-WeighLinkRules1RuleBit5::
+WeighLinkRules1RuleBit5:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckLinkRules1RuleBit5
     ld a, c
     and a
@@ -7031,7 +7059,7 @@ SECTION "Bank E2 WeighLinkRules1RuleBit4", ROMX
 ; far-calls CheckLinkRules1RuleBit4; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit4)
-WeighLinkRules1RuleBit4::
+WeighLinkRules1RuleBit4:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckLinkRules1RuleBit4
     ld a, c
     and a
@@ -7051,7 +7079,7 @@ SECTION "Bank E2 WeighLinkRules1RuleBit3", ROMX
 ; far-calls CheckLinkRules1RuleBit3; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit3)
-WeighLinkRules1RuleBit3::
+WeighLinkRules1RuleBit3:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckLinkRules1RuleBit3
     ld a, c
     and a
@@ -7071,7 +7099,7 @@ SECTION "Bank E2 WeighLinkRules1RuleBit2", ROMX
 ; far-calls CheckLinkRules1RuleBit2; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit2)
-WeighLinkRules1RuleBit2::
+WeighLinkRules1RuleBit2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckLinkRules1RuleBit2
     ld a, c
     and a
@@ -7091,7 +7119,7 @@ SECTION "Bank E2 WeighLinkRules1RuleBit1", ROMX
 ; far-calls CheckLinkRules1RuleBit1; when it fails (C = 0) adds weight-table entry $0E to
 ; wAISkillScore2 (AddAIWeightToScore2); used by the AI scoring routines (E-0091) (E-0340: the
 ; address in its name read as its RAM name; was WeighLinkRules1RuleBit1)
-WeighLinkRules1RuleBit1::
+WeighLinkRules1RuleBit1:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     farcall CheckLinkRules1RuleBit1
     ld a, c
     and a
@@ -7107,45 +7135,74 @@ SECTION "Bank E2 GetBattleATK_BankE2", ROMX
 ; A = battle slot: HL = the attack word of that slot (wBattleATK + 2 * A), A = its low byte, through
 ; GetBattleStatWord_BankE2. (C2, E-0385)
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-GetBattleATK_BankE2::
+GetBattleATK_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleATK
     jr GetBattleStatWord_BankE2
 
 SECTION "Bank E2 GetBattleDEF_BankE2", ROMX
 
 ; HL = wBattleDEF, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
-GetBattleDEF_BankE2::
+; the same 50 bytes as GetBattleDEF_Bank39 (GetBattleDEF_Bank39) (E-0060)
+GetBattleDEF_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleDEF
     jr GetBattleStatWord_BankE2
 
 SECTION "Bank E2 GetBattleMaxHP_BankE2", ROMX
 
 ; HL = wBattleMaxHP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
-GetBattleMaxHP_BankE2::
+; the same 45 bytes as GetBattleMaxHP_Bank39 (GetBattleMaxHP_Bank39) (E-0060)
+GetBattleMaxHP_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMaxHP
     jr GetBattleStatWord_BankE2
 
 SECTION "Bank E2 GetBattleMaxMP_BankE2", ROMX
 
 ; HL = wBattleMaxMP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
-GetBattleMaxMP_BankE2::
+; the same 40 bytes as GetBattleMaxMP_Bank39 (GetBattleMaxMP_Bank39) (E-0060)
+GetBattleMaxMP_BankE2:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMaxMP
     jr GetBattleStatWord_BankE2
 
 SECTION "Bank E2 GetBattleHP_BankE2", ROMX
 
 ; HL = wBattleHP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
-GetBattleHP_BankE2::
+; the same 35 bytes as GetBattleHP_Bank39 (GetBattleHP_Bank39) (E-0060)
+GetBattleHP_BankE2:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleHP
     jr GetBattleStatWord_BankE2
 
 SECTION "Bank E2 GetBattleMP_BankE2", ROMX
 
 ; HL = wBattleMP, then the slot's word (GetBattleStatWord_BankE2). (C2, E-0357; probed E-0385)
-GetBattleMP_BankE2::
+; the same 30 bytes as GetBattleMP_Bank39 (GetBattleMP_Bank39) (E-0060)
+GetBattleMP_BankE2:: ; configured code entry (E-0395 (traced before by the fall-through guess alone; listed so new entries in the bank cannot drop it)); C0
     ld hl, wBattleMP
     jr GetBattleStatWord_BankE2
-    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
+
+SECTION "Bank E2 GetBattleAGL_BankE2", ROMX
+
+; HL = wBattleAGL, then GetBattleStatWord_BankE2: HL = the word at wBattleAGL + 2 x A (A = the
+; battle slot). One of this bank's GetBattle* stat getters. No traced code, jump table or pointer
+; reaches it (E-0395: it decodes as a routine but is unreached in the static listing). (C2, E-0395;
+; probed E-0395)
+; the same 25 bytes as GetBattleAGL_Bank39 (GetBattleAGL_Bank39) (E-0060)
+GetBattleAGL_BankE2:: ; configured code entry (E-0395); C0
+    ld hl, wBattleAGL
+    jr GetBattleStatWord_BankE2
+
+SECTION "Bank E2 ReadSlotAIModeIndexed_BankE2", ROMX
+
+; A = the byte at wSlotAIMode + A, the AI mode of slot A. A copy of the routine of the same shape
+; found in other banks. No traced code, jump table or pointer reaches it (E-0395: it decodes as a
+; routine but is unreached in the static listing). (C2, E-0395; probed E-0395)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 13 banks)
+ReadSlotAIModeIndexed_BankE2::
+    ld hl, wSlotAIMode
+    add_a_to_hl
+    ld a, [hl]
+    ret
+
+SECTION "Bank E2 GetBattleStatWord_BankE2", ROMX
 
 ; HL = array base, A = battle slot: HL = the 16-bit word at HL + 2 * A (the value, not a pointer); A
 ; = its low byte. The shared tail of GetBattleATK_BankE2 through GetBattleMP_BankE2, the same bytes
@@ -7161,7 +7218,7 @@ SECTION "Bank E2 AddDoubleAToHL_BankE2", ROMX
 ; HL += 2 * A. A is doubled in 8 bits first, so it wraps above $7F; A is clobbered. (C2, E-0385)
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
 ; appear in 12 banks)
-AddDoubleAToHL_BankE2::
+AddDoubleAToHL_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     add a
     add_a_to_hl
     ret
@@ -7174,7 +7231,7 @@ SECTION "Bank E2 ActorOnLocalSide_BankE2", ROMX
 ; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
 ; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-ActorOnLocalSide_BankE2::
+ActorOnLocalSide_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_actor
@@ -7198,7 +7255,7 @@ SECTION "Bank E2 TargetOnLocalSide_BankE2", ROMX
 ; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
 ; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
 ; banks)
-TargetOnLocalSide_BankE2::
+TargetOnLocalSide_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_target
@@ -7219,7 +7276,7 @@ SECTION "Bank E2 ClearBattleStatusBitsWithMaskD_BankE2", ROMX
 
 ; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_BankE2_Data); a copy of
 ; the bank $05 routine. (C2, E-0357; probed E-0385)
-ClearBattleStatusBitsWithMaskD_BankE2::
+ClearBattleStatusBitsWithMaskD_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE2_Data
     add_a_to_hl
@@ -7244,7 +7301,7 @@ ClearBattleStatusBitsWithMaskD_BankE2_Data::
 ; Sets bit 0 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit0OfLevelUpGainsIndexed_BankE2::
+SetBit0OfLevelUpGainsIndexed_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -7257,7 +7314,7 @@ SECTION "Bank E2 SetBit1OfLevelUpGainsIndexed_BankE2", ROMX
 ; Sets bit 1 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit1OfLevelUpGainsIndexed_BankE2::
+SetBit1OfLevelUpGainsIndexed_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -7270,7 +7327,7 @@ SECTION "Bank E2 SetBit2OfLevelUpGainsIndexed_BankE2", ROMX
 ; Sets bit 2 of the byte at wLevelUpGains + A. HL is kept; A is clobbered. (C2, E-0385)
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
 ; banks)
-SetBit2OfLevelUpGainsIndexed_BankE2::
+SetBit2OfLevelUpGainsIndexed_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -7289,7 +7346,7 @@ SECTION "Bank E2 PersonalityIndexOfSlot_BankE2", ROMX
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
 ; appear in 13 banks)
-PersonalityIndexOfSlot_BankE2::
+PersonalityIndexOfSlot_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     push bc
     ld c, a
@@ -7352,7 +7409,7 @@ SECTION "Bank E2 CheckSlotStatusBlockWide_BankE2", ROMX
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
 ; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
 ; appear in 12 banks)
-CheckSlotStatusBlockWide_BankE2::
+CheckSlotStatusBlockWide_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -7386,7 +7443,7 @@ SECTION "Bank E2 SlotHasStatus3Or4Bits_BankE2", ROMX
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
-SlotHasStatus3Or4Bits_BankE2::
+SlotHasStatus3Or4Bits_BankE2:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries in the bank cannot drop it)); C0
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL

@@ -2253,7 +2253,7 @@ SECTION "Bank 15 RemoveRecordBFromParty", ROMX
 ; Nothing in src/ references it. (C2, E-0377)
 ; removes record B from the party list wPartyList (wPartyCount -= 1), compacts the three entries and
 ; zeroes the unused ones (E-0127)
-RemoveRecordBFromParty::
+RemoveRecordBFromParty:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld hl, wPartyList
     ld c, $00
 
