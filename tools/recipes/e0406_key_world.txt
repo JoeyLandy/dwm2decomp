@@ -9,3 +9,28 @@ kw02! | kw01! |  | D W12 D W12 A W200
 kw03! | kw02! |  | A W200 A W300 W300
 kw04! | kw03! |  | R64 D64 L64 U64 R96 D96 W60
 kw05! | kw04! |  | A*24 W60 B*4 W30 L64 U64 R64 D64 W60
+# E-0410: the story's way in. From k03! the party is moved to the key shrine (map 3, whose header byte 7 is the gate
+# tile $2C) and given a key (GenerateNewKeyEntry, as a reward event would); the key is appraised (Script_0D_62B8, as
+# in e0334_keys.txt: BlueIslet) and then used at the gate (an A press facing it, CheckInteractionInFront: the plan
+# page's key list, PauseMenu_Plan_Keys_UseKey), which warps into the key's world at its gate room (wMapType $87).
+# The party walks out, down into the world, and fights. Before the appraisal the gate answers 'The key could not be
+# used yet' (key entry byte $FE).
+sk01! | k03! | hMapId=0x03 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+sk02! | sk01! | call:GenerateNewKeyEntry | W30
+sk03! | sk02! | wDataBank=0x0D wScriptInDataBank=1 wScriptPointerLo=0xB8 wScriptPointerHi=0x62 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W60 A2 W60 A2 W60 A2 W60 A2 W60 A2 W60 A2 W60
+sk04! | sk03! |  | U8 W30 A2 W90
+sk05! | sk04! |  | A2 W90
+sk06! | sk05! |  | A2 W90
+sk07! | sk06! |  | A2 W200
+sk08! | sk07! |  | W300
+sk09! | sk08! |  | A2 W90
+sk10! | sk09! |  | U8 W30 A2 W90
+sk11! | sk10! |  | A2 W90
+sk12! | sk11! |  | A2 W90
+sk13! | sk12! |  | A2 W200
+sk14! | sk13! |  | W300
+sk15! | sk14! |  | D96 W120
+sk16! | sk15! |  | D64 W120
+sk17! | sk16! |  | R64 D64 L64 U64 W60
+sk18! | sk17! |  | A*24 W60 B*4 W30 L64 D64 R64 W60
+sk19! | sk18! |  | A*24 W60 B*4 W30 L64 U64 R64 W60

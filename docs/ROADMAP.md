@@ -36,8 +36,8 @@ What stays open is listed in each document and in [readability open questions](R
 - the key worlds' generation and the late story's scenes as mechanics; damage (all of bank $36's damage routines),
   skill learning, applying damage and the bred child's later rolls were added after M5 (E-0397 to E-0399, E-0404,
   E-0405);
-- the scripted runs' reach: 2,638 routines with the recipe chain, 25 later-world maps and a link session (E-0401,
-  E-0406); the rest only by the static inventory.
+- the scripted runs' reach: 2,638 routines with the recipe chain and 25 later-world maps, a completed link breeding,
+  a key world entered at the shrine (E-0401, E-0406, E-0410); the rest only by the static inventory.
 The split sums and fixed-bank pointers left after M2 are done (E-0401).
 
 
