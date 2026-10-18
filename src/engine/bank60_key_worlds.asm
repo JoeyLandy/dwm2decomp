@@ -427,9 +427,9 @@ SECTION "Bank 60 GenerateKeyWorld_RollMonsters_BossLevels", ROMX
 ; Adds the same level to the second byte of each of the 8 boss entries at wKeyWorldMonsters + $40: 2
 ; x min(wKeyWorldLevelBase + ((wPartyStrength + 10) x 15 / 150) / 2, 99), that is the level the
 ; normal table would give entry 15. The id bytes are not changed. (C2, E-0384)
-; for 8 entries from wKeyWorldMonsters + $41 ORs 2 * min(wKeyWorldLevelBase + 15 *
-; (wPartyStrength + 10) / 150 / 2, 99) into every other byte (E-0127) (E-0340: the address in its
-; name read as its RAM name; was GenerateKeyWorld_RollMonsters_BossLevels)
+; for 8 entries from wKeyWorldMonsters + $41 ORs 2 * min(wKeyWorldLevelBase + 15 * (wPartyStrength +
+; 10) / 150 / 2, 99) into every other byte (E-0127) (E-0340: the address in its name read as its RAM
+; name; was GenerateKeyWorld_RollMonsters_BossLevels)
 GenerateKeyWorld_RollMonsters_BossLevels::
     ld b, $08
     ld a, $40
@@ -488,8 +488,8 @@ SECTION "Bank 60 GenerateKeyWorld_RollMonsters_BossLevelsAlt", ROMX
 ; min(wPartyStrength + 3 x (wPartyStrength / 10), 99), whatever wKeyWorldLevelBase is. Nothing in
 ; src/ calls or points to it, so it looks like an unused alternative to
 ; GenerateKeyWorld_RollMonsters_BossLevels. (C2, E-0384)
-; for 8 entries from wKeyWorldMonsters + $41 ORs 2 * min(wPartyStrength + 3 * (wPartyStrength /
-; 10), 99) into every other byte (E-0125) (E-0340: the address in its name read as its RAM name; was
+; for 8 entries from wKeyWorldMonsters + $41 ORs 2 * min(wPartyStrength + 3 * (wPartyStrength / 10),
+; 99) into every other byte (E-0125) (E-0340: the address in its name read as its RAM name; was
 ; GenerateKeyWorld_RollMonsters_BossLevelsAlt)
 GenerateKeyWorld_RollMonsters_BossLevelsAlt:: ; configured code entry (E-0395 (traced before by a guess alone; listed so new entries cannot drop it)); C0
     ld a, [wPartyStrength]

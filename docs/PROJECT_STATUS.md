@@ -267,6 +267,8 @@ The items it left (E-0410):
 - **Darck's taunt.** Done: it runs on Darck's castle (map $A2) from the line after his battle.
 - The key world's chain: 200 runs, 2,644 routines, PASS padded by 16 and by 256. On master with H1 to H3: build/run706
   PASS, the gates PASS again, serial suite OK (509 tests, 3 skipped).
+- The regenerated tree matches src/ again (no drift): three generator notes in config/names.json still named
+  wKeyWorldBossMonsters, which E-0407 had corrected in src/; build/run707 PASS.
 
 Next reproducible action: `python -I tools/link_play.py tools/recipes/link_e0406_breeding.txt --sram-recipe
 tools/recipes/e0323_save.txt --shots build/link` (both consoles' screens, ending on the title menu).
