@@ -6560,6 +6560,9 @@ class Rom:
                     text = f"lb {mv.group(1)}, ${mv.group(2)}, ${mv.group(3)}"
                 elif val.get("expr"):
                     text = f"ld {mv.group(1)}, {val['expr']}"
+            m8 = re.match(r"ld ([abcdehl]), \$[0-9A-F]{2}$", text) if val and val.get("expr") else None
+            if m8:  # E-0410: an 8-bit value written as an expression (E-0414's `ld b, BANK(Table)`)
+                text = f"ld {m8.group(1)}, {val['expr']}" + (f"  ; {val['comment']}" if val.get("comment") else "")
             ref = self.dref.get((bank, pc))
             plus = self.dref_plus.get((bank, pc))
             if plus and plus[1] in self.dlabels[plus[0]]:  # E-0348: a pointer inside a labelled table

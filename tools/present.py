@@ -622,12 +622,16 @@ def bank_files(root: Path = ROOT) -> list[Path]:
 END_OF_FLOW = re.compile(r"^\s+(?:ret|reti|jp hl|jp [A-Za-z_][\w.]*|jr [A-Za-z_.][\w.]*)\s*(?:;.*)?$")
 
 
+SECTION_STARTS = {"ScreenNumberListTable"}  # E-0414 (H4): data that starts a section of its own, so it can move
+
+
 def split_sections(text: str, bank: int) -> tuple[str, list[str]]:
     """E-0393 (M2): a bank file as floating sections, placed by src/layout.link in their original order, so the
     build is unchanged and a section can be moved to another bank by moving its line in the layout. A new section
     starts at a top-level label whose code above it ends in an unconditional ret, reti, jp or jr, so no code runs
     from one section into the next; it starts right after that instruction, so the comments above the label stay
-    with it. Returns the text and the section names in order."""
+    with it. A label in SECTION_STARTS starts one whatever is above it (E-0414). Returns the text and the section
+    names in order."""
     kind = "ROM0" if bank == 0 else "ROMX"
     out: list[str] = []
     names: list[str] = []
@@ -639,7 +643,7 @@ def split_sections(text: str, bank: int) -> tuple[str, list[str]]:
             last_code = ""
             continue
         m = re.match(r"^([A-Za-z_]\w*)::", ln)
-        if m and names and END_OF_FLOW.match(last_code):
+        if m and names and (END_OF_FLOW.match(last_code) or m.group(1) in SECTION_STARTS):
             k = len(out)
             while k > 0 and (not out[k - 1].strip() or out[k - 1].startswith(";")):
                 k -= 1
@@ -696,6 +700,17 @@ FIXED_LOAD = re.compile(r"^(\s+)ld (?:hl|de|bc), ([A-Za-z_][\w.]*)\s*(?:;.*)?$")
 LOAD_BANKED = re.compile(r"BANK\(|^\s+farcall|^\s+ld b, \$")
 
 
+def _bank_loaded_after(lines: list[str], i: int, name: str) -> bool:
+    """E-0410: within the 7 lines after line i, before any label (another path could join there), a line names
+    BANK(name), so the bank goes with the label and an ASSERT would add nothing (E-0414's `ld b, BANK(Table)`)."""
+    for x in lines[i + 1:i + 8]:
+        if re.match(r"^\.?[A-Za-z_][\w.]*:", x):
+            return False
+        if f"BANK({name})" in x:
+            return True
+    return False
+
+
 def assert_fixed_banks(bodies: dict[int, str]) -> tuple[dict[int, str], int]:
     """E-0401 (M2): a pointer load in a switchable bank into another switchable bank, with no bank named beside it
     (tools/bank_check.py's warning), works because the code that reads it maps that bank itself (a script or
@@ -731,6 +746,8 @@ def assert_fixed_banks(bodies: dict[int, str]) -> tuple[dict[int, str], int]:
             name = cur + m.group(2) if m.group(2).startswith(".") else m.group(2)
             tb = where.get(name)
             if tb in (None, 0, bank) or any(LOAD_BANKED.search(x) for x in lines[max(0, i - 3):i + 4]):
+                continue
+            if _bank_loaded_after(lines, i, name):  # E-0414: the same block loads the bank as BANK(name)
                 continue
             res.append(f'{m.group(1)}ASSERT BANK({name}) == ${tb:02X}, "{name} is read with bank ${tb:02X} mapped"')
             n += 1

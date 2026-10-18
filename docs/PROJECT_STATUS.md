@@ -269,6 +269,9 @@ The items it left (E-0410):
   PASS, the gates PASS again, serial suite OK (509 tests, 3 skipped).
 - The regenerated tree matches src/ again (no drift): three generator notes in config/names.json still named
   wKeyWorldBossMonsters, which E-0407 had corrected in src/; build/run707 PASS.
+- After H4 to H7 the generator also writes E-0414's `ld b, BANK(...)` loads and ScreenNumberListTable's own
+  section (config/operands.json, tools/present.py): no drift again; build/run709 PASS; serial
+  suite OK (532 tests, 3 skipped).
 
 Next reproducible action: `python -I tools/link_play.py tools/recipes/link_e0406_breeding.txt --sram-recipe
 tools/recipes/e0323_save.txt --shots build/link` (both consoles' screens, ending on the title menu).

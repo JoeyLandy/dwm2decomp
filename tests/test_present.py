@@ -74,6 +74,25 @@ def _code(text: str, names=None, bank=None) -> list[str]:
     return out
 
 
+    def test_a_bank_loaded_by_name_needs_no_assert_unless_a_label_comes_first(self):
+        """E-0410: E-0414's `ld b, BANK(Table)` after the pointer load replaces the ASSERT, but not past a label."""
+        head = "SomeRoutine::\n    ld de, Table\n    add hl, de\n    ld e, l\n    ld d, h\n"
+        tail = "    call ReadFarPointerAtDEInBankB\n    ret"
+        bodies = {1: "Table::\n    db $00", 2: head + "    ld b, BANK(Table)\n" + tail}
+        out, n = present.assert_fixed_banks(bodies)
+        self.assertEqual(n, 0)
+        bodies[2] = head + ".join:\n    ld b, BANK(Table)\n" + tail
+        out, n = present.assert_fixed_banks(bodies)
+        self.assertEqual(n, 1)
+        self.assertIn("ASSERT BANK(Table) == $01", out[2])
+
+    def test_a_listed_label_starts_a_section_after_data(self):
+        text = 'SECTION "Bank F2"\nOther::\n    db $01\n\n; the table\nScreenNumberListTable::\n    dw $0000'
+        body, names = present.split_sections(text, 0xF2)
+        self.assertEqual(names, ["Bank F2", "Bank F2 ScreenNumberListTable"])
+        self.assertIn('    db $01\n\nSECTION "Bank F2 ScreenNumberListTable", ROMX\n\n; the table', body)
+
+
 class PresentedTreeTest(unittest.TestCase):
     """The checks of src/ itself run always; those comparing the generator's listing with its presented tree need
     both (D-015, H1b)."""

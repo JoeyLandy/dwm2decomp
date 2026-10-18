@@ -1,5 +1,5 @@
 {
-  "_comment": "E-0350: 16-bit operands read by hand, keyed by the instruction's bank:address. 'bank' names the ROM bank a pointer operand points into (tools/disasm_all.py then writes the label there, or Label + $offset inside a labelled table); 'lb' writes a register pair holding two separate bytes as `lb rr, $HI, $LO`; 'expr' replaces the number with an expression of the same value (the build checks every byte). 'label' names a label the entry creates; 'why' is the reading behind each entry (C1).",
+  "_comment": "E-0350: 16-bit operands read by hand, keyed by the instruction's bank:address. 'bank' names the ROM bank a pointer operand points into (tools/disasm_all.py then writes the label there, or Label + $offset inside a labelled table); 'lb' writes a register pair holding two separate bytes as `lb rr, $HI, $LO`; 'expr' replaces the number with an expression of the same value (the build checks every byte). 'label' names a label the entry creates; 'why' is the reading behind each entry (C1). E-0410: 'expr' also replaces the byte of an 8-bit `ld r, $XX` (E-0414's `ld b, BANK(Table)`), and 'comment' adds an inline comment.",
   "pointers": {
     "00:2A47": {"bank": "00", "why": "E-0401: TextCmd_Pause reads its frame count from TextPauseFrames ($2A66) through this fixed number (found by tools/shift_test.py --recipe)"},
     "00:2056": {"bank": "00", "why": "E-0401: LoadMonsterPictureAttributeBlock's default attribute block, the 36 zero bytes ZeroPictureAttributes ($20E9), read through this fixed number (found by tools/shift_test.py --recipe)"},
@@ -117,6 +117,13 @@
     "10:44DB": {"expr": "MSG_KEEP_OPEN | $0097", "why": "a message word stored to wMessageIndex/wMessageGroup"},
     "10:44EB": {"expr": "MSG_KEEP_OPEN | $008d", "why": "as 10:44DB"},
     "12:579B": {"expr": "MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $000b", "why": "as 12:57CB: message $000B in the open box, kept open (E-0357)"},
-    "12:57A8": {"expr": "MSG_ALREADY_OPEN | $000b", "why": "as 12:57CB: message $000B in the open box, for the last name (E-0357)"}
+    "12:57A8": {"expr": "MSG_ALREADY_OPEN | $000b", "why": "as 12:57CB: message $000B in the open box, for the last name (E-0357)"},
+    "01:63AB": {"expr": "BANK(MonsterSpriteTable)", "comment": "the table's own bank, so it can move (H4)", "why": "E-0414: B for ReadByteInBank, the bank of the MonsterSpriteTable entry just addressed"},
+    "1D:6926": {"expr": "BANK(MonsterSpriteTable)", "comment": "the table's own bank, so it can move (H4)", "why": "E-0414: B for ReadFarPointerAtDEInBankB, the bank of the MonsterSpriteTable entry just addressed"},
+    "1D:6985": {"expr": "BANK(MonsterSpriteTable)", "comment": "the table's own bank, so it can move (H4)", "why": "E-0414: as 1D:6926"},
+    "1C:4B10": {"expr": "BANK(ScreenNumberListTable)", "comment": "the price lists are in its section (H4)", "why": "E-0414: B for ReadFarPointerAtDEInBankB, reading a price list (LoadScreenNumberListPointer), which lies in ScreenNumberListTable's section"},
+    "1C:5064": {"expr": "BANK(ScreenNumberListTable)", "comment": "the price lists are in its section (H4)", "why": "E-0414: as 1C:4B10"},
+    "1C:5F04": {"expr": "BANK(ScreenNumberListTable)", "comment": "the price lists are in its section (H4)", "why": "E-0414: as 1C:4B10"},
+    "1C:5F37": {"expr": "BANK(ScreenNumberListTable)", "comment": "the table's own bank, so it can move (H4)", "why": "E-0414: B for ReadFarPointerAtDEInBankB, the bank of the ScreenNumberListTable word just addressed"}
   }
 }
