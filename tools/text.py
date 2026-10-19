@@ -15,6 +15,9 @@ src/ writes text (tools/gb_text.py), and makes each bank's trailing `ds` fill ta
   free-glyphs [--src DIR]                glyph codes no text uses and the charmap does not name: room for new
                                          letters (add a CHARMAP line in src/charmap.inc and draw the glyph)
 
+A message bank too full for its translation: tools/text_spill.py (or "spill" in a mod's mod.json) moves its last
+messages to the bank's overflow table, in a mod's copy of src/.
+
 The text form: printer commands as tokens (<LINE>, <NEXT>, <PROMPT>, <PLAYER>, ... see src/charmap.inc), `@` for
 the end, and an argument byte after a command as {$7e}. A line's width is the characters between line breaks
 (<LINE>, <NEXT>, <CLEAR>, <HOME>, <CURSOR>); a contraction glyph ('s, 'm, ...) and "*:" are one cell; names a
@@ -198,7 +201,11 @@ def apply(src: Path, data: dict) -> dict[str, int]:
             L[a:b] = ["    db " + x for x in new]
             delta += d
             n += 1
-        take_from_fill(L, delta, f.name)
+        try:
+            take_from_fill(L, delta, f.name)
+        except ValueError as e:
+            raise ValueError(f"{e}; for a message bank, tools/text_spill.py moves its last messages to its overflow "
+                             f"bank") from None
         f.write_text("\n".join(L), encoding="utf-8", newline="\n")
         grew += delta
     return {"entries": n, "bytes": grew}

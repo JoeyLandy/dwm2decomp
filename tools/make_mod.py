@@ -2,7 +2,9 @@
 """Build a mod from a folder of edits: a copy of src/ edited, built, smoke-tested and turned into a patch (H6).
 
 A mod folder holds any of these (see mods/example/):
-  mod.json        {"name": ..., "version": ..., "author": ..., "description": ...}
+  mod.json        {"name": ..., "version": ..., "author": ..., "description": ...}; optionally "spill":
+                  [{"bank": "28", "count": 9, "to": "9A"}, ...] to make room in full message banks first
+                  (tools/text_spill.py; "to" is optional)
   data/           edited tables, as tools/datatables.py exports them (JSON or CSV)
   text/           edited text, as tools/text.py exports it (JSON; only the entries you changed are needed)
   charmap.inc     extra CHARMAP lines for new letters, added to src/charmap.inc
@@ -29,11 +31,17 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import datatables  # noqa: E402
 import text as text_tool  # noqa: E402
+import text_spill  # noqa: E402
 
 
 def apply_mod(mod: Path, src: Path) -> list[str]:
     """Apply a mod folder's edits to the tree src (a copy). Returns what was done."""
     done = []
+    meta = json.loads((mod / "mod.json").read_text(encoding="utf-8")) if (mod / "mod.json").exists() else {}
+    for sp in meta.get("spill", []):  # before the text, which then has room
+        res = text_spill.spill(src, str(sp["bank"]), int(sp["count"]), sp.get("to"))
+        done.append(f"spill: {res['moved']} messages of bank ${res['bank']} to bank ${res['overflow_bank']}, "
+                    f"split {res['split']}")
     replaced = mod / "src"
     if replaced.is_dir():
         for f in sorted(p for p in replaced.rglob("*") if p.is_file()):

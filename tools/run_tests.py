@@ -2,7 +2,8 @@
 
 The serial suite (`python -I -m unittest discover -s tests`) stays the reference. This runner starts
 `python -I -m unittest discover -s tests -p <file> -v` for each test file, so every file is loaded and run
-exactly as the serial discovery would load it, and prints each test's outcome, the totals and each file's time.
+exactly as the serial discovery would load it, and prints a line as each file ends, then each test's outcome, the
+totals and each file's time.
 
     python -I tools/run_tests.py [--jobs N] [--out LOG]       run in parallel; exit status 1 on any failure
     python -I tools/run_tests.py --compare SERIAL.log PAR.log  compare two `-v` logs test by test
@@ -16,12 +17,13 @@ import re
 import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-# `test_x (module.Class.test_x) ... ok`; a docstring line may sit between the id and the outcome
-RESULT = re.compile(r"^(\w+) \(([\w.]+)\)(?:\n.*?)?? \.\.\. (ok|skipped.*|FAIL|ERROR|expected failure|unexpected success)$",
+# `test_x (module.Class.test_x) ... ok`; a docstring line may sit between the id and the outcome, and a line the
+# test prints between the dots and the outcome (test_rename's "refused: ...")
+RESULT = re.compile(r"^(\w+) \(([\w.]+)\)(?:\n.*?)?? \.\.\. (?:[^\n]*\n)??(ok|skipped.*|FAIL|ERROR|expected failure|unexpected success)$",
                     re.M)
 RAN = re.compile(r"^Ran (\d+) tests? in ", re.M)
 
@@ -82,8 +84,14 @@ def main() -> int:
         print("no test files")
         return 1
     t0 = time.perf_counter()
+    results = []
     with ThreadPoolExecutor(max_workers=max(1, args.jobs)) as ex:
-        results = list(ex.map(run_file, files))
+        for k, fut in enumerate(as_completed([ex.submit(run_file, f) for f in files]), 1):
+            results.append(fut.result())  # a line as each file ends, so a run's progress shows
+            name, secs, rc, text = results[-1]
+            print(f"[{k}/{len(files)} files, {time.perf_counter() - t0:.0f}s] {name}: {ran(text)} tests, "
+                  f"{'ok' if rc == 0 else 'FAILED'} ({secs:.0f}s)", flush=True)
+    results.sort(key=lambda r: r[0])  # the log in file order, as before
     wall = time.perf_counter() - t0
     log = "".join(f"===== {name} ({secs:.1f}s, exit {rc})\n{text}\n" for name, secs, rc, text in results)
     res = outcomes(log)

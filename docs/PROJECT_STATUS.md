@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-17**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)); H1 (graduating src/) started. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
+As of **2026-10-19**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)); H1 (graduating src/) started. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -13,7 +13,7 @@ As of **2026-10-17**. Stage: **matching, fully annotated and moddable disassembl
 | Other targets | Deferred | Tara and DWM1 are comparison sources, not supported builds |
 | Primary output | Matching assembly plus evidence-backed documentation | Project design decision |
 | Implementation foundation | Fresh RGBDS scaffold recommended | See [survey](SURVEY.md); no upstream adopted |
-| Working platform | Windows / PowerShell | Observed workspace environment |
+| Working platform | Windows / PowerShell; Linux (Fedora, x86-64) from 2026-10-19 | Observed workspace environments; Linux run E-0415 |
 
 Decisions record: **D-015** (2026-10-17, user-approved) makes `src/` the hand-edited source of truth, superseding the generated-source part of D-005: the generator writes `build/regen/src/`, and config/ is retired from the workflow in stages ([graduation](GRADUATION.md)); **D-010** (2026-10-13) keeps each bank file in a pokered-style directory by what the bank holds (`config/banks.json` `dir`: home, engine, scripts, text, data, maps, gfx, audio, unused); **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-009** (2026-10-13) names story flags after their setters and battle status bits from their observed texts; **D-008** (2026-10-13) includes graphics and map data as named asset files extracted at build time; **D-007** (2026-10-13) names ids from the ROM's name tables (`src/constants.inc`); **D-006** (2026-10-13) names each bank file after its contents (`config/banks.json`); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
 
@@ -159,7 +159,33 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-17, E-0411 to E-0414): the goal's H stages done
+## Current handoff (2026-10-19, E-0415, E-0416): H6 on Linux, and room in full message banks
+
+Two of the three open items below are done. src/ is unchanged.
+- **H6 on Linux (E-0415).** On a fresh Linux checkout: tools/setup.py installed the pinned RGBDS and checked the ROM;
+  the matching build PASSed (build/run1, 0 differing bytes); tools/make_mod.py built mods/example; and its 507-byte
+  patch applied to the reference gives the mod build byte for byte. The generator reports no drift (265 files).
+  Suite: 532 tests, 0 failures (17 skipped, 14 of them for want of build/listing/). tools/run_tests.py now parses a
+  test's printed line before its outcome and prints a line as each file ends; tools/suite_progress.py shows a
+  serial run's progress from its log. On this laptop: `nice -n 10`, `--jobs 8`, one heavy job at a time.
+  macOS is still not run.
+- **Message bank overflow (E-0416).** tools/text_spill.py moves a split bank's last messages to its overflow table
+  in a mod's copy of src/, moving the overflow group to an empty bank when its bank is full; mod.json "spill" runs
+  it in tools/make_mod.py. All twelve groups spilled at once give the same message for all 3,046 checkable ids on
+  tools/sm83.py. tests/test_text_spill.py: 30 grown bank-$28 messages that did not fit now build and are drawn.
+  Guide: docs/TRANSLATING.md.
+
+Checks: build/run_e0416 PASS (zero differing bytes); serial suite build/logs/suite_e0416.log OK (544 tests, 3
+skipped, 39m54s on this laptop). The watcher (tools/suite_progress.py), its three tests and the runner's per-file
+lines came after that run: tests/test_run_tests.py OK (9 tests) on its own; no other file changed.
+
+Open:
+1. Readers of other fixed-bank tables (the 508 asserted loads, most of them scripts) changed to follow their
+   tables.
+2. Room for text outside the twelve split groups (battle text, strings, bank $0E's group), if a translation needs it.
+3. H6 on macOS.
+
+## Prior handoff (2026-10-17, E-0411 to E-0414): the goal's H stages done
 
 The modding and translation goal's stages H1-H7 are done ([roadmap](ROADMAP.md)), with one part not run: H6's build
 on a second platform.

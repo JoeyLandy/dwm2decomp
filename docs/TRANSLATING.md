@@ -73,13 +73,40 @@ A longer translation needs room in the bank its text lives in. Free bytes at the
 The message banks are nearly full, so a full translation into a longer language will run out of room in banks
 like $28. The game already splits large groups. In message group 0, `BeginStringDisplay_Bank28` and
 `CopyStringToBuffer_Bank28` send indexes from $DA on to bank $97 (`..._Overflow`, which subtracts $DA and uses
-`MessageStrings_Bank28_Overflow`). Moving more messages out of a full bank means:
-- lowering that split (the `cp $da` in both routines and the `sub $da` in both overflow routines);
-- moving the messages' pointers from the bank's list to the overflow list;
-- placing them in a bank with room.
+`MessageStrings_Bank28_Overflow`). Twelve message banks are split this way; `python -I tools/text_spill.py groups`
+lists them with their splits and free bytes.
 
-This is a change to code, not to text, so it is done by hand in src/ (C1: read from the routines, not yet
-exercised). tools/text.py does not do it.
+### Moving messages out of a full bank
+
+`tools/text_spill.py spill BANK N` moves the last N messages of a split bank to its overflow table, so the bank
+gains their bytes. Message ids stay the same, so nothing that shows a message changes. It:
+- lowers the split by N (the `cp` in the bank's two routines and the `sub` in the two overflow routines);
+- moves the last N pointers to the front of the overflow list;
+- moves their messages to the overflow bank.
+
+The overflow table, its messages and its routines must share one bank. LookupString records the bank the table is
+in, and the text printer reads the message from that bank. The overflow banks $97 and $98 are full, so add
+`--to BB` with one of the 99 empty banks (src/unused/bankBB_empty.asm): the whole overflow group moves there
+first, as src/text/bankBB_messages_GG_overflow.asm.
+
+It works only on a mod's copy of src/, never on src/ itself, because the matching build must keep the original
+layout. In a mod folder, list the spills in mod.json; tools/make_mod.py applies them before your text:
+
+```json
+{"name": "my_translation", "spill": [{"bank": "28", "count": 9, "to": "9A"}]}
+```
+
+It refuses an N that would split a message two ids share (Message_00_AC is shown by an id on each side of
+a split lowered by 10). It then suggests the nearest N that works. It also refuses an overflow bank without room. A
+refusal changes nothing. tools/text.py's "no room" refusal names this tool.
+
+Checked on tools/sm83.py (C2, the project's emulator; tests/test_text_spill.py, E-0416). All twelve groups
+spilled in one copy build, and every id shows and copies the same message as the original: 3,046 ids, with 21
+skipped that have no end mark in the original. Bank $83's ids from $F2 point at the zero tail of bank $97. After
+a spill, 30 bank-$28 messages that did not fit before fit, and the opening draws the longer narration. One
+difference: `CopyStringToBuffer_Bank82` far-calls the display overflow routine instead of the copy one (E-0080, a
+likely game bug kept as it is). After a spill it therefore copies nothing for the moved ids either. Nothing in the
+game calls it.
 
 ## How it is checked
 
@@ -101,4 +128,5 @@ tests/test_text_pipeline.py (on the project's emulator, C2, not hardware):
 - Only src/text/ is exported. Text written another way (tile maps of title screens, graphics with words in them)
   is graphics: edit its PNG (docs/ASSETS.md).
 - Name widths and the room the windows have are inferred from the game's own text (C1).
-- Moving messages to another bank is by hand (above).
+- Moving messages works for the twelve split message groups (above). Text in other banks (strings, battle text,
+  bank $0E's group) still has only its bank's fill.
