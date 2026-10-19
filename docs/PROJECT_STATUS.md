@@ -168,7 +168,7 @@ Two of the three open items below are done. src/ is unchanged.
   Suite: 532 tests, 0 failures (17 skipped, 14 of them for want of build/listing/). tools/run_tests.py now parses a
   test's printed line before its outcome and prints a line as each file ends; tools/suite_progress.py shows a
   serial run's progress from its log. On this laptop: `nice -n 10`, `--jobs 8`, one heavy job at a time.
-  macOS is still not run.
+  macOS is deferred: no Mac is available (user decision, 2026-10-19).
 - **Message bank overflow (E-0416).** tools/text_spill.py moves a split bank's last messages to its overflow table
   in a mod's copy of src/, moving the overflow group to an empty bank when its bank is full; mod.json "spill" runs
   it in tools/make_mod.py. All twelve groups spilled at once give the same message for all 3,046 checkable ids on
@@ -183,7 +183,9 @@ Open:
 1. Readers of other fixed-bank tables (the 508 asserted loads, most of them scripts) changed to follow their
    tables.
 2. Room for text outside the twelve split groups (battle text, strings, bank $0E's group), if a translation needs it.
-3. H6 on macOS.
+
+Deferred: H6 on macOS, until a Mac is available (user decision, 2026-10-19). H6's gate needs Windows and one
+other platform, and Linux met it.
 
 ## Prior handoff (2026-10-17, E-0411 to E-0414): the goal's H stages done
 

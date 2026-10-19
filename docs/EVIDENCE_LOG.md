@@ -2449,7 +2449,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **A mod and its patch.** `python -I tools/make_mod.py mods/example`: the shop and text edits build, and the smoke test shows the original's screens for 6,000 frames. The patch is 507 bytes (the size E-0412 recorded on Windows). `tools/patch.py apply` of it to the reference gives the mod build byte for byte (SHA-256 `d0f36788...e68860`). This meets H6's second-platform gate.
 - **Generator.** `python -I tools/disasm_all.py` (2m36s), then tools/src_drift.py: no drift, 265 files identical.
 - **Suite.** `tools/run_tests.py --jobs 16`: 532 tests, 515 ok, 17 skipped, 0 failures. Fourteen skips need build/listing/, which this checkout had not yet generated; three are the usual DWM2_SLOW skips. The runner exited 1 with "530 outcomes parsed for 532": test_rename and test_src_drift print a line between a test's dots and its outcome. Its pattern now allows one such line, and tests/test_run_tests.py has a case for it. Progress while a run goes: tools/run_tests.py prints a line as each file ends, and tools/suite_progress.py watches a serial `-v` log (done of total, outcomes, failures as they happen, the test running).
-- **Limits.** macOS is still not run.
+- **Limits.** macOS is not run, and is deferred until a Mac is available (user decision, 2026-10-19).
 
 ### E-0414 — H4: the readers mods change are in the recipe gate; a fixed-bank table moved with its readers
 
