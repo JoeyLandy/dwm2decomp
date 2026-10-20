@@ -84,16 +84,30 @@ Here::
             errors, warnings = bank_check.check(Path(d), self.SYM)
         self.assertEqual(len(errors), 1)
         self.assertIn("call There reaches bank 06", errors[0])
-        # ld hl, There and ld hl, Far have a bank (farcall, ld b) beside them; ld de, Other has none in reach
-        self.assertEqual([w.split(": ", 1)[1] for w in warnings], ["ld de, Other points into bank 07"])
+        # E-0419: a farcall or a literal `ld b, $06` beside a load no longer names its bank; only BANK(label) does
+        self.assertEqual([w.split(": ", 1)[1] for w in warnings], ["ld hl, There points into bank 06",
+                                                                   "ld hl, Far points into bank 06",
+                                                                   "ld de, Other points into bank 07"])
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "engine").mkdir()
+            (Path(d) / "engine/bank05_x.asm").write_text(self.SRC.replace("ld b, $06", "ld b, BANK(Far)"),
+                                                         encoding="utf-8")
+            _errors, warnings = bank_check.check(Path(d), self.SYM)
+        self.assertNotIn("ld hl, Far points into bank 06", [w.split(": ", 1)[1] for w in warnings])
 
-    def test_bank_00_code_is_not_checked(self):
+    def test_bank_00_jumps_are_not_checked_but_its_pointer_loads_are(self):
+        """Home code calls into the bank it has mapped; its pointer loads into a switchable bank are checked like any
+        other bank's (E-0419: twelve were tied to a bank by a number, with no ASSERT)."""
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "home").mkdir()
             (Path(d) / "home/bank00_x.asm").write_text(self.SRC.replace("Bank 05", "Bank 00").replace("Here", "Zero"),
                                                        encoding="utf-8")
             errors, warnings = bank_check.check(Path(d), dict(self.SYM, Zero=(0, 0x0150)))
-        self.assertEqual((errors, warnings), ([], []))
+        self.assertEqual(errors, [])
+        self.assertEqual([w.split(": ", 1)[1] for w in warnings], ["ld hl, There points into bank 06",
+                                                                   "ld hl, Far points into bank 06",
+                                                                   "ld de, Mine points into bank 05",
+                                                                   "ld de, Other points into bank 07"])
 
 
 class FixedBanks(unittest.TestCase):
@@ -108,12 +122,19 @@ class FixedBanks(unittest.TestCase):
 
     def test_only_unbanked_loads_into_other_switchable_banks_are_asserted(self):
         out, n = present.assert_fixed_banks(self.BODIES)
-        self.assertEqual(n, 1)
+        self.assertEqual(n, 3)
         self.assertIn('    ld hl, Script_X\n    ASSERT BANK(Script_X) == $10, "Script_X is read with bank $10 mapped"',
                       out[0x04])
         self.assertNotIn("ASSERT", out[0x04].split("Other::")[1])  # its own bank
-        self.assertEqual(out[0x05], self.BODIES[0x05])  # a bank named beside it
-        self.assertEqual(out[0x00], self.BODIES[0x00])  # bank $00 maps banks itself
+        # E-0419: a literal `ld b, $10` beside the load no longer names its bank, and the home bank's loads are
+        # asserted too (its code maps a bank by number); E-0401 had left both unasserted
+        self.assertIn("ASSERT BANK(Script_X) == $10", out[0x05])
+        self.assertIn("ASSERT BANK(Script_X) == $10", out[0x00])
+        named = {**self.BODIES, 0x05: "Far::\n    ld b, BANK(Script_X)\n    ld hl, Script_X\n    rst $10\n",
+                                     0x00: "Home::\n    ld a, BANK(Script_X)\n    ld [rROMB0], a\n    ld hl, Script_X\n"
+                                           "    ret\n"}
+        out, n = present.assert_fixed_banks(named)
+        self.assertEqual((out[0x05], out[0x00]), (named[0x05], named[0x00]))  # BANK(label) beside it
 
     def test_an_asserted_load_is_counted_not_warned(self):
         src = 'Here::\n    ld de, Other\n    ASSERT BANK(Other) == $07, "Other is read with bank $07 mapped"\n'

@@ -1,6 +1,7 @@
-"""tools/text_spill.py: room in a full message bank, by moving its last messages to its overflow table.
+"""tools/text_spill.py: room in a full message bank, by moving its last messages to its overflow table, and in a
+bank without a split (the battle text), by moving whole string categories to an empty bank (CategorySpill, E-0418).
 
-The twelve split message groups are read from src/ (the split is the first list's length in each). A copy of src/
+The thirteen split message groups (bank $0E's with E-0417) are read from src/ (the split is the first list's length in each). A copy of src/
 has three groups spilled (bank $28's to the empty bank $9A, bank $80's in place, bank $82's to $8F), then 30 bank-$28
 messages grown by more than the bank had free (refused before the spill). The copy builds, and on tools/sm83.py every
 id of the three groups shows and copies the same string as the reference, except the 30 grown ones, which show
@@ -22,10 +23,30 @@ import text as X  # noqa: E402
 import text_spill as S  # noqa: E402
 
 REF = ROOT / "local/roms/dwm2-cobi-us.gbc"
-GROUPS = {"28": ("97", 0xDA), "29": ("97", 0x8E), "2A": ("97", 0x95), "2B": ("98", 0x8A), "2C": ("98", 0x91),
+GROUPS = {"0E": ("96", 0x88), "28": ("97", 0xDA), "29": ("97", 0x8E), "2A": ("97", 0x95), "2B": ("98", 0x8A), "2C": ("98", 0x91),
           "2D": ("99", 0xD5), "2E": ("99", 0xA6), "7C": ("99", 0x87), "80": ("96", 0xC8), "82": ("96", 0x90),
           "83": ("97", 0xC7), "89": ("98", 0xDE)}
 MORE = "<PROMPT><NEXT>And more.<PROMPT>@"
+
+
+_REF: dict = {}
+
+
+def reference() -> tuple[bytes, dict]:
+    """The reference ROM and the symbols of a build of src/ (built once for the module's classes)."""
+    if not _REF:
+        _REF["tmp"] = tempfile.TemporaryDirectory(dir=ROOT / "build")
+        out = Path(_REF["tmp"].name).relative_to(ROOT).as_posix() + "/ref"
+        p = subprocess.run([sys.executable, "-I", str(ROOT / "tools/build.py"), "--out", out], cwd=ROOT,
+                           capture_output=True, text=True)
+        assert p.returncode == 0, p.stdout + p.stderr
+        _REF["rom"], _REF["sym"] = REF.read_bytes(), shift_test.read_sym(ROOT / out / "dwm2.sym")
+    return _REF["rom"], _REF["sym"]
+
+
+def tearDownModule():
+    if _REF:
+        _REF["tmp"].cleanup()
 
 
 def tree_bytes(src: Path) -> dict[str, bytes]:
@@ -33,7 +54,7 @@ def tree_bytes(src: Path) -> dict[str, bytes]:
 
 
 class Groups(unittest.TestCase):
-    def test_the_twelve_split_groups(self):
+    def test_the_thirteen_split_groups(self):
         got = {g.bank: (g.over_file.name[4:6].upper(), g.split) for g in S.groups(S.Tree(ROOT / "src"))}
         self.assertEqual(got, GROUPS)
         for g in S.groups(S.Tree(ROOT / "src")):
@@ -97,12 +118,7 @@ class Spilled(unittest.TestCase):
         cls.build = subprocess.run([sys.executable, "-I", str(ROOT / "tools/build.py"), "--out", out, "--src", str(src)],
                                    cwd=ROOT, capture_output=True, text=True)
         cls.outdir = ROOT / out
-        cls.ref = REF.read_bytes()
-        refbuild = subprocess.run([sys.executable, "-I", str(ROOT / "tools/build.py"), "--out",
-                                   Path(cls.tmp.name).relative_to(ROOT).as_posix() + "/ref"],
-                                  cwd=ROOT, capture_output=True, text=True)
-        assert refbuild.returncode == 0, refbuild.stdout + refbuild.stderr
-        cls.ref_sym = shift_test.read_sym(Path(cls.tmp.name) / "ref/dwm2.sym")
+        cls.ref, cls.ref_sym = reference()
         cls.rom = (cls.outdir / "dwm2.gbc").read_bytes() if (cls.outdir / "dwm2.gbc").exists() else b""
         cls.sym = shift_test.read_sym(cls.outdir / "dwm2.sym") if cls.rom else {}
         cls.counts = {g.bank: len(g.main_list) + len(g.over_list) for g in S.groups(S.Tree(ROOT / "src"))
@@ -159,6 +175,96 @@ class Spilled(unittest.TestCase):
                               ref=self.ref)
         self.assertEqual((res["crash"], res["ran_data"], res["progress"], res["stall"]), (None, None, None, None))
         self.assertGreater(res["first_difference"], 2000)
+
+
+@unittest.skipUnless(REF.exists(), "needs the reference ROM")
+class CategorySpill(unittest.TestCase):
+    """Battle text (bank $2F, 725 free bytes) has no split: categories 1-5 move to the empty bank $9D, then 60
+    category-1 strings grown by 18 bytes each (more than the bank had free) fit. Every (category, id) shows and copies
+    the reference's string except the grown ones. A debug battle (E-0320 d06!) prints what the reference prints, up to
+    a grown string it shows, whose added words follow; its categories 1 and 5 are read through the new bank."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory(dir=ROOT / "build")
+        src = cls.src = Path(cls.tmp.name) / "src"
+        shutil.copytree(ROOT / "src", src)
+        with tempfile.TemporaryDirectory() as t:
+            shutil.copytree(src, Path(t) / "src")
+            for args in (("2F", 0, "9D"), ("2F", 6, "9D"), ("09", 1, "9D"), ("2F", 1, "29")):
+                with _raises(ValueError):
+                    S.spill_categories(Path(t) / "src", *args)
+            cls.unchanged = tree_bytes(Path(t) / "src") == tree_bytes(src)
+        cls.result = S.spill_categories(src, "2F", 1, "9D")
+        data = X.export(src)
+        cls.grow = [e for e in data["entries"] if any(u.startswith("StringList_Bank2F_StringCategories_1[")
+                                                      for u in e["used_by"])][:60]
+        for e in cls.grow:
+            e["text"] = e["text"][:-1] + "<PROMPT><NEXT>It is over.@"
+        cls.applied = X.apply(src, {"entries": cls.grow})
+        out = Path(cls.tmp.name).relative_to(ROOT).as_posix() + "/run"
+        cls.build = subprocess.run([sys.executable, "-I", str(ROOT / "tools/build.py"), "--out", out, "--src", str(src)],
+                                   cwd=ROOT, capture_output=True, text=True)
+        cls.rom = (ROOT / out / "dwm2.gbc").read_bytes() if cls.build.returncode == 0 else b""
+        cls.sym = shift_test.read_sym(ROOT / out / "dwm2.sym") if cls.rom else {}
+        cls.ref, cls.ref_sym = reference()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_refusals_change_nothing(self):
+        self.assertTrue(self.unchanged)
+
+    def test_the_battle_text_moves_and_grows(self):
+        self.assertEqual((self.result["categories"], self.result["to"]), ("$01-$05", "9D"))
+        self.assertEqual(self.result["lists"], {0: 137, 1: 256, 2: 4, 3: 1, 4: 1, 5: 34})
+        self.assertEqual(self.applied["entries"], 60)
+        self.assertGreater(self.applied["bytes"], 725)  # more than bank $2F had free
+        self.assertEqual(self.build.returncode, 0, self.build.stdout + self.build.stderr)
+
+    def test_every_string_but_the_grown_ones_is_the_same(self):
+        grown = {e["id"] for e in self.grow}
+        lists = {k: v for k, v in self.result["lists"].items()}
+        bad = [b for b in S.verify_categories(self.ref, self.ref_sym, self.rom, self.sym, "2F", lists)
+               if not b.startswith("skipped")]
+        ids = {(int(b.split("category ")[1].split()[0]), int(b.split("id $")[1][:2], 16)) for b in bad}
+        self.assertTrue(ids)
+        self.assertTrue(all(c == 1 for c, _ in ids))
+        self.assertEqual(len(ids), len(grown))
+        self.assertEqual(S.call(self.rom, *self.sym["BeginStringDisplay_Bank2F"], 0, 1).rb(S.W_STRING_BANK), 0x9D)
+
+    def test_a_battle_prints_the_same_through_the_new_bank(self):
+        import pickle
+        import boot_trace
+        import play
+        import text_check as TC
+        spill = self.sym["BeginStringDisplay_Bank2F_Spill"]
+        start = TC.base("d06!")
+        recipe = play.parse("A W30 A*30 W100 A*30 W200 A*30 W200")
+
+        def drawn(rom):
+            gb = pickle.loads(start)
+            gb.rom = rom  # only banks $2F and $9D differ, and the machine is not in them here
+            log, hits = [], []
+            for addr, kind in ((TC.GLYPH, "glyph"), (TC.CODE, "code")):
+                gb.pc_hooks[addr] = (lambda k: lambda g: log.append((g.cycles // play.FRAME, k, g.a))
+                                     if g.pc < 0x4000 else None)(kind)
+            gb.pc_hooks[spill[1]] = lambda g: hits.append(g.rb(S.W_STRING_CATEGORY)) if g.rombank == spill[0] else None
+            play.run(gb, recipe, boot_trace.load_labels(), {})
+            return log, hits
+
+        # the battle shows one of the grown category-1 strings: the printer draws what the reference draws up to its
+        # end, then the added "It is over." (read from bank $9D)
+        ref_log, _ = drawn(self.ref)
+        mod_log, hits = drawn(self.rom)
+        self.assertGreater(len(ref_log), 1000)
+        k = next(i for i, (x, y) in enumerate(zip(ref_log, mod_log)) if x != y)
+        self.assertGreater(k, 10)
+        self.assertEqual(ref_log[k][1:], ("code", 0xF0))  # the reference's string ends here
+        glyphs = bytes(v for _f, kind, v in mod_log[k:] if kind == "glyph")
+        self.assertIn(X.to_bytes("It is over."), glyphs)
+        self.assertEqual(sorted(set(hits)), [1, 5])
 
 
 class _raises:

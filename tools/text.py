@@ -38,7 +38,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import gb_text as T  # noqa: E402
-from datatables import take_from_fill  # noqa: E402
+from datatables import FILL as FILL_LINE, take_from_fill  # noqa: E402
 
 LABEL = re.compile(r"^([A-Za-z_]\w*)::")
 DB = re.compile(r"^    db (.*)$")
@@ -69,7 +69,20 @@ def load_charmap(src: Path) -> list[str]:
 # ---- entries ---------------------------------------------------------------------------------------------------
 
 def text_files(src: Path) -> list[Path]:
-    return sorted((src / "text").glob("bank[0-9a-f][0-9a-f]_*.asm"))
+    """Every bank file with text: src/text/, and the strings and messages kept in code and data banks (E-0417). The
+    home bank is left out: its one quoted block is the cartridge header."""
+    return sorted(f for f in src.glob("*/bank[0-9a-f][0-9a-f]_*.asm") if f.parent.name != "home")
+
+
+def split_comment(ops: str) -> tuple[str, str]:
+    """A db operand list -> (operands, comment), splitting at the first ; outside a string."""
+    quoted = False
+    for i, c in enumerate(ops):
+        if c == '"':
+            quoted = not quoted
+        elif c == ";" and not quoted:
+            return ops[:i].rstrip(), ops[i:]
+    return ops.rstrip(), ""
 
 
 def to_text(lines: list[str]) -> str:
@@ -111,6 +124,22 @@ def render(raw: bytes) -> list[str]:
     return [re.sub(r"\$([0-9A-F]{2})\b", lambda m: "$" + m.group(1).lower(), ln) for ln in T.render(raw)]
 
 
+def render_like(raw: bytes, old: list[str]) -> list[str]:
+    """Bytes of a fixed-length entry -> db operand lists cut where the old lines were: a line of bytes stays bytes, and
+    a string line is text up to its end mark, then bytes (the $f0 padding of a record's name field)."""
+    out, k = [], 0
+    for op in old:
+        n = len(T.parse(op))
+        seg, k = raw[k:k + n], k + n
+        if '"' not in op:
+            out.append(", ".join(f"${x:02x}" for x in seg))
+            continue
+        end = seg.index(0xF0) + 1 if 0xF0 in seg else len(seg)
+        parts = render(seg[:end]) + [f"${x:02x}" for x in seg[end:]]
+        out.append(", ".join(parts))
+    return out
+
+
 def widths(text: str) -> list[int]:
     """The width in cells of each line of a text."""
     out = []
@@ -135,11 +164,38 @@ def blocks(src: Path):
             j = i + 1
             ops = []
             while j < len(L) and (d := DB.match(L[j])):
-                ops.append(d.group(1))
+                ops.append(split_comment(d.group(1))[0])
                 j += 1
             if ops and any('"' in o for o in ops):
                 yield f, m.group(1), i + 1, j, ops
             i = max(j, i + 1)
+
+
+def fixed_lengths(src: Path) -> dict[str, int]:
+    """Entries outside src/text/ whose byte length must not change -> that length (E-0417). An entry may change
+    length only when the game finds it by its own label (a pointer list or a load names it), it ends with the end
+    mark, and nothing but a label, a blank line, a comment, a fill or a new section follows it. Anything else may
+    be a field of a record the game reads by position (the 10-byte names in PresetMonsterRecords), so an edit must
+    keep its bytes."""
+    named: set[str] = set()
+    for f in sorted(src.glob("*/bank[0-9a-f][0-9a-f]_*.asm")):
+        for ln in f.read_text(encoding="utf-8").split("\n"):
+            code = ln.split(";")[0]
+            if LABEL.match(code):
+                code = code.split("::", 1)[1]
+            named.update(re.findall(r"\b[A-Za-z_]\w*\b", code))
+    out = {}
+    lines: dict[Path, list[str]] = {}
+    for f, label, a, b, ops in blocks(src):
+        if f.parent.name == "text":
+            continue
+        L = lines.setdefault(f, f.read_text(encoding="utf-8").split("\n"))
+        raw = b"".join(T.parse(o) for o in ops)
+        nxt = L[b] if b < len(L) else ""
+        ends = nxt == "" or nxt.startswith((";", "SECTION")) or LABEL.match(nxt) or FILL_LINE.match(nxt)
+        if not (label in named and raw.endswith(b"\xf0") and ends):
+            out[label] = len(raw)
+    return out
 
 
 def used_by(src: Path) -> dict[str, list[str]]:
@@ -159,12 +215,18 @@ def used_by(src: Path) -> dict[str, list[str]]:
 
 def export(src: Path) -> dict:
     uses = used_by(src)
+    fixed = fixed_lengths(src)
     entries = []
     for f, label, a, b, ops in blocks(src):
         text = to_text(ops)
-        kind = "message" if re.search(r"_(messages|battle_text)_?", f.name) else "string"
+        if f.parent.name == "text":
+            kind = "message" if re.search(r"_(messages|battle_text)_?", f.name) else "string"
+        else:  # a code or data bank: a message when it is dialogue (it waits for a button or speaks)
+            kind = "message" if re.search(r"<(?:PROMPT|WAIT|VOICE\d)>", text) else "string"
         entries.append({"id": label, "file": f.relative_to(src).as_posix(), "bank": f"{int(f.name[4:6], 16):02X}",
                         "kind": kind, "used_by": uses.get(label, []), "text": text})
+        if label in fixed:
+            entries[-1]["fixed_bytes"] = fixed[label]
     # limits: 18 cells for messages; for a string, the longest original line of its list
     longest: dict[str, int] = {}
     for e in entries:
@@ -183,6 +245,7 @@ def apply(src: Path, data: dict) -> dict[str, int]:
     """Write changed entries into the tree. Returns {"entries": n, "bytes": growth}."""
     want = {e["id"]: e for e in data["entries"]}
     by_file: dict[Path, list] = {}
+    fixed = None
     for f, label, a, b, ops in blocks(src):
         e = want.get(label)
         if e is None or e["text"] == to_text(ops):
@@ -192,13 +255,27 @@ def apply(src: Path, data: dict) -> dict[str, int]:
         if wide:
             raise ValueError(f"{label}: a line of {max(wide)} cells is wider than {e.get('max_width')}")
         old = b"".join(T.parse(o) for o in ops)
+        if f.parent.name != "text":
+            fixed = fixed_lengths(src) if fixed is None else fixed  # from the tree, not the translator's file
+            if label in fixed and len(raw) != fixed[label]:
+                raise ValueError(f"{label}: must stay {fixed[label]} bytes (it is {len(raw)}); it may be a field of a "
+                                 f"record read by position, so pad it with end marks or shorten it")
+            if label in fixed:
+                by_file.setdefault(f, []).append((a, b, render_like(raw, ops), 0))
+                continue
         by_file.setdefault(f, []).append((a, b, render(raw), len(raw) - len(old)))
     n = grew = 0
     for f, edits in by_file.items():
         L = f.read_text(encoding="utf-8").split("\n")
         delta = 0
         for a, b, new, d in sorted(edits, reverse=True):  # from the end, so earlier line numbers stay valid
-            L[a:b] = ["    db " + x for x in new]
+            notes = [split_comment(DB.match(x).group(1))[1] for x in L[a:b]]
+            lines = ["    db " + x for x in new]
+            if len(notes) == len(lines):  # keep each line's comment
+                lines = [x + (" " + c if c else "") for x, c in zip(lines, notes)]
+            elif any(notes):
+                lines[0] += " ; " + " / ".join(c.lstrip("; ") for c in notes if c)
+            L[a:b] = lines
             delta += d
             n += 1
         try:

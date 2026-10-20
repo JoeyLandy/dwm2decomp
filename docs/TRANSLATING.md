@@ -1,8 +1,9 @@
 # Translating the game
 
 Stage H3 of the modding and translation goal ([roadmap](ROADMAP.md)), evidence E-0409 in the
-[evidence log](EVIDENCE_LOG.md). All the game's text is in src/text/, the source (D-015). `tools/text.py` exports it
-for translators and puts translations back.
+[evidence log](EVIDENCE_LOG.md); the text in code and data banks since E-0417. Most of the game's text is in
+src/text/; the rest sits beside the code that uses it (item descriptions, default names, the gift and link banks'
+dialogue, the credits). `tools/text.py` exports all of it for translators and puts translations back.
 
 ```bash
 python -I tools/text.py export --out build/text/en.json
@@ -12,12 +13,16 @@ python -I tools/build.py --out build/run1
 
 ## The text file
 
-`export` writes one JSON file with every text entry of src/text/: 5,407 on 2026-10-17. Each entry has:
+`export` writes one JSON file with every text entry of src/ but the home bank: 6,491 on 2026-10-20 (5,407 of them in
+src/text/). Each entry has:
 - `id`: its label in src/ (Message_00_0A);
 - `file` and `bank`: where it is;
 - `kind`: `message` (dialogue and battle text) or `string` (names, menu words);
 - `used_by`: the pointer tables that name it (StringList_Bank28_0[10]): where the game takes it from;
 - `max_width`: the most cells one line may hold;
+- `fixed_bytes` (26 entries): the entry must keep exactly this many bytes. It is a field of a record the game reads by
+  position, such as a 10-byte name in PresetMonsterRecords or the name-entry keyboard. Pad a shorter text with
+  `{$f0}` after the `@`. An edit keeps its lines' layout and comments;
 - `text`: what to translate.
 
 Translate `text` and leave the rest. In `text`:
@@ -48,8 +53,10 @@ A line's width is the number of cells between line breaks: `<LINE>`, `<NEXT>`, `
 ## New letters
 
 The font is in src/ (GlyphFont, bank $1F): 185 glyphs of 8 x 8 pixels, codes $00-$B8.
-1. `python -I tools/text.py free-glyphs` lists the codes no text uses and the charmap does not name. On 2026-10-17
-   there were 75, 49 of them blank.
+1. `python -I tools/text.py free-glyphs` lists the codes no text uses and the charmap does not name. On 2026-10-20
+   there were 26, 4 of them blank ($49, $4B, $4C, $4F). Before E-0417 it read src/text/ only and listed 75. The other
+   49 are used by text in code banks, such as the name-entry keyboard, and a letter drawn over one would change that
+   text.
 2. Add a line for your letter to src/charmap.inc: `CHARMAP "ü", $49`.
 3. `python -I tools/text.py font-export --out build/text/font.png` writes the font as a 128 x 96 PNG, 16 glyphs a
    row: glyph $49 is column 9, row 4. Draw the letter in black on white, and
@@ -73,8 +80,8 @@ A longer translation needs room in the bank its text lives in. Free bytes at the
 The message banks are nearly full, so a full translation into a longer language will run out of room in banks
 like $28. The game already splits large groups. In message group 0, `BeginStringDisplay_Bank28` and
 `CopyStringToBuffer_Bank28` send indexes from $DA on to bank $97 (`..._Overflow`, which subtracts $DA and uses
-`MessageStrings_Bank28_Overflow`). Twelve message banks are split this way; `python -I tools/text_spill.py groups`
-lists them with their splits and free bytes.
+`MessageStrings_Bank28_Overflow`). Thirteen message banks are split this way, bank $0E's (BeginMessageDisplay_Bank0E)
+among them; `python -I tools/text_spill.py groups` lists them with their splits and free bytes.
 
 ### Moving messages out of a full bank
 
@@ -108,6 +115,24 @@ difference: `CopyStringToBuffer_Bank82` far-calls the display overflow routine i
 likely game bug kept as it is). After a spill it therefore copies nothing for the moved ids either. Nothing in the
 game calls it.
 
+### Battle text and other banks without a split
+
+The battle text (bank $2F) has no split and 725 free bytes, so a longer translation will not fit. Its lookups take one
+table of six string categories. `tools/text_spill.py spill-categories 2F 1 --to 9D` moves categories 1-5 (9,394
+bytes) with their lists and strings to the empty bank $9D, and bank $2F then has 10,101 bytes free. Its two lookups
+gain `cp FIRST` on the category and far-call the new bank for the moved categories, as bank $08's lookups already do
+from category 9 on. Category and string numbers do not change. In mod.json:
+
+```json
+{"spill": [{"bank": "2F", "categories_from": 1, "to": "9D"}]}
+```
+
+The same works for any bank whose two lookups are `ld de, BeginStringDisplay_BankBB_StringCategories / call / ret`
+and whose table nothing else names, such as the string banks of code banks like $07 or $F0. It refuses otherwise.
+
+Checked on tools/sm83.py (C2; tests/test_text_spill.py, E-0418): all 433 battle strings show and copy the same
+bytes, and a debug battle draws the same glyphs on the same frames, 19 of its lookups through bank $9D.
+
 ## How it is checked
 
 tests/test_text_pipeline.py (on the project's emulator, C2, not hardware):
@@ -123,10 +148,18 @@ tests/test_text_pipeline.py (on the project's emulator, C2, not hardware):
 - **Refusals:** an unknown character, a line too wide and a bank without room (30 longer entries in bank $28)
   are each refused.
 
+tests/test_text_banks.py (E-0417) does the same for the text outside src/text/:
+- every entry round-trips;
+- a record field must keep its bytes;
+- after a spill of bank $0E, its first message, an item description, a gift-bank line and a credit line are edited.
+  The copy builds, and the game's own lookups reach the new text.
+
 ## Limits
 
-- Only src/text/ is exported. Text written another way (tile maps of title screens, graphics with words in them)
-  is graphics: edit its PNG (docs/ASSETS.md).
+- Text written another way (tile maps of title screens, graphics with words in them) is graphics: edit its PNG
+  (docs/ASSETS.md). `free-glyphs` knows only the text, not tile maps that show font glyphs.
+- Whether an entry outside src/text/ may change length is decided from the source (E-0417); a string the game reads
+  by position that also has a pointer to it would wrongly be let grow.
 - Name widths and the room the windows have are inferred from the game's own text (C1).
-- Moving messages works for the twelve split message groups (above). Text in other banks (strings, battle text,
-  bank $0E's group) still has only its bank's fill.
+- Moving messages works for the thirteen split groups and for banks with one plain category table (above). Text in
+  other banks, such as bank $09's names, whose table other code reads directly, still has only its bank's fill.

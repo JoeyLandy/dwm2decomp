@@ -58,7 +58,7 @@ CloseHibernateMenu_RestoreGlyphs::
     xor a
     ld [wArg2], a
     ld de, CloseHibernateMenu_RestoreGlyphs_Data
-    ASSERT BANK(CloseHibernateMenu_RestoreGlyphs_Data) == $1D, "CloseHibernateMenu_RestoreGlyphs_Data is read with bank $1D mapped"
+    ASSERT BANK(CloseHibernateMenu_RestoreGlyphs_Data) == BANK(LoadTileListSixPerCall), "CloseHibernateMenu_RestoreGlyphs_Data is read by LoadTileListSixPerCall, in its own bank"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -4162,7 +4162,7 @@ RunNameEntryStateWhenNotFading_Setup_Clear::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
-    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
+    ASSERT BANK(BGFillTile) == BANK(FillTileRectWithArg1Tile), "BGFillTile is read by FillTileRectWithArg1Tile, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -4252,7 +4252,7 @@ RunNameEntryStateWhenNotFading_Setup_DrawKeyboard::
     ld a, l
     ld [wArg6], a
     ld de, NameEntryKeyboardTileRect
-    ASSERT BANK(NameEntryKeyboardTileRect) == $1F, "NameEntryKeyboardTileRect is read with bank $1F mapped"
+    ASSERT BANK(NameEntryKeyboardTileRect) == BANK(DrawTileRectFromArg1Params), "NameEntryKeyboardTileRect is read by DrawTileRectFromArg1Params, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5465,7 +5465,7 @@ RunNameEntryStateWhenNotFading_DrawFrameRow::
     ld a, l
     ld [wArg6], a
     ld de, RunNameEntryStateWhenNotFading_DrawFrameRow_Data
-    ASSERT BANK(RunNameEntryStateWhenNotFading_DrawFrameRow_Data) == $1F, "RunNameEntryStateWhenNotFading_DrawFrameRow_Data is read with bank $1F mapped"
+    ASSERT BANK(RunNameEntryStateWhenNotFading_DrawFrameRow_Data) == BANK(DrawTileRectFromArg1Params), "RunNameEntryStateWhenNotFading_DrawFrameRow_Data is read by DrawTileRectFromArg1Params, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5496,7 +5496,7 @@ RunNameEntryStateWhenNotFading_DrawFramePart::
     ld a, l
     ld [wArg6], a
     ld de, NameEntryOneRowWindowTileRect
-    ASSERT BANK(NameEntryOneRowWindowTileRect) == $1F, "NameEntryOneRowWindowTileRect is read with bank $1F mapped"
+    ASSERT BANK(NameEntryOneRowWindowTileRect) == BANK(DrawTileRectFromArg1Params), "NameEntryOneRowWindowTileRect is read by DrawTileRectFromArg1Params, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5528,7 +5528,7 @@ RunNameEntryStateWhenNotFading_DrawFrameBottom::
     ld a, l
     ld [wArg6], a
     ld de, NameEntryTwoRowWindowTileRect
-    ASSERT BANK(NameEntryTwoRowWindowTileRect) == $1F, "NameEntryTwoRowWindowTileRect is read with bank $1F mapped"
+    ASSERT BANK(NameEntryTwoRowWindowTileRect) == BANK(DrawTileRectFromArg1Params), "NameEntryTwoRowWindowTileRect is read by DrawTileRectFromArg1Params, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5743,7 +5743,7 @@ RunNameEntryStateWhenNotFading_DrawYesNo::
     ld a, l
     ld [wArg6], a
     ld de, RunNameEntryStateWhenNotFading_DrawYesNo_TileRect
-    ASSERT BANK(RunNameEntryStateWhenNotFading_DrawYesNo_TileRect) == $1F, "RunNameEntryStateWhenNotFading_DrawYesNo_TileRect is read with bank $1F mapped"
+    ASSERT BANK(RunNameEntryStateWhenNotFading_DrawYesNo_TileRect) == BANK(DrawTileRectFromArg1Params), "RunNameEntryStateWhenNotFading_DrawYesNo_TileRect is read by DrawTileRectFromArg1Params, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5820,7 +5820,7 @@ RunNameEntryStateWhenNotFading_Finish_Blank::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
-    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
+    ASSERT BANK(BGFillTile) == BANK(FillTileRectWithArg1Tile), "BGFillTile is read by FillTileRectWithArg1Tile, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5906,7 +5906,7 @@ RunNameEntryStateWhenNotFading_RedrawKeyboard::
     ld a, l
     ld [wArg6], a
     ld de, RunNameEntryStateWhenNotFading_RedrawKeyboard_Data
-    ASSERT BANK(RunNameEntryStateWhenNotFading_RedrawKeyboard_Data) == $1F, "RunNameEntryStateWhenNotFading_RedrawKeyboard_Data is read with bank $1F mapped"
+    ASSERT BANK(RunNameEntryStateWhenNotFading_RedrawKeyboard_Data) == BANK(DrawTileRectFromArg1Params), "RunNameEntryStateWhenNotFading_RedrawKeyboard_Data is read by DrawTileRectFromArg1Params, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -6270,7 +6270,6 @@ RunNameEntryStateWhenNotFading_DrawNameGlyphs::
     ld [wNameEntryFlag], a
     push hl
     ld hl, GlyphFont
-    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     swap a
     ld d, a
     and $f0
@@ -6288,7 +6287,7 @@ RunNameEntryStateWhenNotFading_DrawNameGlyphs::
     add hl, de
     pop de
     push bc
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the table's own bank, so it can move
     ld c, $10
     call CopyFromBankWaitVRAM
     pop bc

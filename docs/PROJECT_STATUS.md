@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-19**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)); H1 (graduating src/) started. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
+As of **2026-10-20**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)); H1 (graduating src/) started. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -159,7 +159,36 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-19, E-0415, E-0416): H6 on Linux, and room in full message banks
+## Current handoff (2026-10-20, E-0417 to E-0419): all the text translatable, battle text room, table readers
+
+The two open items of the E-0416 handoff are done:
+- **Text outside src/text/ (E-0417).** tools/text.py exports and reinserts the 1,084 text blocks of code and data banks
+  too: item descriptions, default names, gift and link dialogue, the credits, bank $0E's messages, record name
+  fields. That makes 6,491 entries. 26 record fields must keep their bytes, and their lines keep their layout and
+  comments. `free-glyphs` now lists 26 free codes, not 75; the other 49 are used by that text. Bank $0E's split
+  (19 free bytes) is the 13th group tools/text_spill.py handles.
+- **Battle text room (E-0418).** `tools/text_spill.py spill-categories BANK FIRST --to BB` moves whole string
+  categories of a bank with one plain category table to an empty bank. Bank $2F categories 1-5 to bank $9D: 725 free
+  bytes become 10,101. All 433 strings are the same, and a debug battle prints the same glyphs through the new bank.
+  mod.json `"categories_from"`.
+- **Fixed-bank readers (E-0419).** 16 readers that picked a table's bank by number now write BANK(table) (same
+  bytes), and 23 loads are tied to the routine in the table's bank that reads them. A stricter rule exposed 46
+  unasserted ties, including the home bank's loads, which are now asserted. That makes 545 asserted, with 0
+  bank_check warnings. MonsterAttributeMapTable moved to another bank still gives every monster's attributes.
+  Scripts cannot leave bank $10 without an interpreter change.
+- Also: two E-0410 tests in tests/test_present.py had never run (indented after a `return`); they run and pass.
+
+Checks: no drift (265 files); build/run_e0419c PASS (zero differing bytes); serial suite build/logs/suite_e0419b.log
+OK (567 tests, 3 skipped; 55m33s under nice). The first run (suite_e0419.log) failed 3: tools/move_section.py still
+used the removed literal-bank rule (it now uses the per-label one), and two tests asserted the counts before E-0417.
+
+Open:
+1. Scripts outside bank $10: the interpreter would need a script bank, a change to code for mods only, to be
+   designed.
+2. Text banks whose table other code reads directly (bank $09's names; bank $0D's lookup has extra bytes):
+   only their fill.
+
+## Prior handoff (2026-10-19, E-0415, E-0416): H6 on Linux, and room in full message banks
 
 Two of the three open items below are done. src/ is unchanged.
 - **H6 on Linux (E-0415).** On a fresh Linux checkout: tools/setup.py installed the pinned RGBDS and checked the ROM;

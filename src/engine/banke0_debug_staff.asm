@@ -3550,6 +3550,7 @@ DebugStaffRoll_Scene00_Load::
     call DecompressToVRAM
     ld b, BANK(FieldSpriteGfx01)
     ld de, FieldSpriteGfx02
+    ASSERT BANK(FieldSpriteGfx02) == $7D, "FieldSpriteGfx02 is read with bank $7D mapped"
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, BANK(FacetedGrayLumpSpriteTiles)
@@ -4062,6 +4063,7 @@ DebugStaffRoll_Scene01_Load::
     call DecompressToVRAM
     ld b, BANK(FieldSpriteGfx01)
     ld de, FieldSpriteGfx02
+    ASSERT BANK(FieldSpriteGfx02) == $7D, "FieldSpriteGfx02 is read with bank $7D mapped"
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, BANK(Map02Tileset)
@@ -4070,6 +4072,7 @@ DebugStaffRoll_Scene01_Load::
     call DecompressToVRAM
     ld b, BANK(Map02Tileset)
     ld de, Map02Screens0_Y0X2
+    ASSERT BANK(Map02Screens0_Y0X2) == $46, "Map02Screens0_Y0X2 is read with bank $46 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -4690,6 +4693,7 @@ DebugStaffRoll_Scene02_Load::
     call DecompressToVRAM
     ld b, BANK(FieldSpriteGfx00)
     ld de, FieldSpriteGfx01
+    ASSERT BANK(FieldSpriteGfx01) == $7D, "FieldSpriteGfx01 is read with bank $7D mapped"
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, BANK(FieldSpriteGfx5F)
@@ -4706,6 +4710,7 @@ DebugStaffRoll_Scene02_Load::
     call DecompressToVRAM
     ld b, BANK(FieldSpriteGfx03)
     ld de, FieldSpriteGfx02
+    ASSERT BANK(FieldSpriteGfx02) == $7D, "FieldSpriteGfx02 is read with bank $7D mapped"
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, BANK(Map18Tileset)
@@ -4714,6 +4719,7 @@ DebugStaffRoll_Scene02_Load::
     call DecompressToVRAM
     ld b, BANK(Map18Tileset)
     ld de, Map18Screens0_Y0X1
+    ASSERT BANK(Map18Screens0_Y0X1) == $48, "Map18Screens0_Y0X1 is read with bank $48 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -5576,6 +5582,7 @@ DebugStaffRoll_Scene03_Load::
     call DecompressToVRAM
     ld b, BANK(FieldSpriteGfx12)
     ld de, FieldSpriteGfx0E
+    ASSERT BANK(FieldSpriteGfx0E) == $7D, "FieldSpriteGfx0E is read with bank $7D mapped"
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, BANK(Tiles0Plus600Gfx)
@@ -5588,6 +5595,7 @@ DebugStaffRoll_Scene03_Load::
     call DecompressToVRAM
     ld b, BANK(Map19Tileset)
     ld de, Map19Screens0_Y0X0
+    ASSERT BANK(Map19Screens0_Y0X0) == $48, "Map19Screens0_Y0X0 is read with bank $48 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -6120,6 +6128,7 @@ DebugStaffRoll_Scene04_Load::
     call DecompressToVRAM
     ld b, BANK(FieldSpriteGfx03)
     ld de, FieldSpriteGfx02
+    ASSERT BANK(FieldSpriteGfx02) == $7D, "FieldSpriteGfx02 is read with bank $7D mapped"
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, BANK(Map1ATileset)
@@ -6128,6 +6137,7 @@ DebugStaffRoll_Scene04_Load::
     call DecompressToVRAM
     ld b, BANK(Map1ATileset)
     ld de, Map1AScreens0_Y0X0
+    ASSERT BANK(Map1AScreens0_Y0X0) == $49, "Map1AScreens0_Y0X0 is read with bank $49 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]

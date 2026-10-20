@@ -7359,14 +7359,13 @@ LoadSpriteGraphics7EToTiles0::
     add_a_to_hl
     ld a, $d8
     ld de, SharedOBJPalettes
-    ASSERT BANK(SharedOBJPalettes) == $7E, "SharedOBJPalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .call_copy_from_bank
     inc d
 
 .call_copy_from_bank:
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)  ; the table's own bank, so it can move
     ld c, $08
     call CopyFromBank
     ld a, $7f
@@ -8605,14 +8604,13 @@ LoadTriggerMarkerGraphics::
     ret z
     ld a, [hl]
     ld de, SharedOBJPalettes
-    ASSERT BANK(SharedOBJPalettes) == $7E, "SharedOBJPalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)  ; the table's own bank, so it can move
     ld a, $20
     ld hl, wOBJPaletteBuffer
     add_a_to_hl

@@ -3279,7 +3279,7 @@ RunScreenStateWhenNotFading_F1_StatsLeave::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
-    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
+    ASSERT BANK(BGFillTile) == BANK(FillTileRectWithArg1Tile), "BGFillTile is read by FillTileRectWithArg1Tile, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e

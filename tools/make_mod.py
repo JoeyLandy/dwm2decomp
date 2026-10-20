@@ -3,8 +3,8 @@
 
 A mod folder holds any of these (see mods/example/):
   mod.json        {"name": ..., "version": ..., "author": ..., "description": ...}; optionally "spill":
-                  [{"bank": "28", "count": 9, "to": "9A"}, ...] to make room in full message banks first
-                  (tools/text_spill.py; "to" is optional)
+                  [{"bank": "28", "count": 9, "to": "9A"}, {"bank": "2F", "categories_from": 1, "to": "9D"}]
+                  to make room in full text banks first (tools/text_spill.py; "to" is optional for "count")
   data/           edited tables, as tools/datatables.py exports them (JSON or CSV)
   text/           edited text, as tools/text.py exports it (JSON; only the entries you changed are needed)
   charmap.inc     extra CHARMAP lines for new letters, added to src/charmap.inc
@@ -39,6 +39,10 @@ def apply_mod(mod: Path, src: Path) -> list[str]:
     done = []
     meta = json.loads((mod / "mod.json").read_text(encoding="utf-8")) if (mod / "mod.json").exists() else {}
     for sp in meta.get("spill", []):  # before the text, which then has room
+        if "categories_from" in sp:
+            res = text_spill.spill_categories(src, str(sp["bank"]), int(sp["categories_from"]), sp["to"])
+            done.append(f"spill: categories {res['categories']} of bank ${res['bank']} to bank ${res['to']}")
+            continue
         res = text_spill.spill(src, str(sp["bank"]), int(sp["count"]), sp.get("to"))
         done.append(f"spill: {res['moved']} messages of bank ${res['bank']} to bank ${res['overflow_bank']}, "
                     f"split {res['split']}")

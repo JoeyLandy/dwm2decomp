@@ -2661,6 +2661,7 @@ GameMode7_Init::
     call DecompressToRAMLocked
     ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
+    ASSERT BANK(DigitLvHpMpTiles) == $31, "DigitLvHpMpTiles is read with bank $31 mapped"
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
     call GameMode7_Init_Start

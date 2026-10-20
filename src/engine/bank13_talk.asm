@@ -2282,6 +2282,7 @@ FhuntTalkEvents_Fwahahaha::
     farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld hl, Script_AhSoGoodOf ; script '*: Ah, so good of you'
+    ASSERT BANK(Script_AhSoGoodOf) == $10, "Script_AhSoGoodOf is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -6115,6 +6116,7 @@ NordenTalkEvents_SecondShieldScene::
     farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld hl, Script_SceneShield2
+    ASSERT BANK(Script_SceneShield2) == $10, "Script_SceneShield2 is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -6652,6 +6654,7 @@ GreatLogTalkEvents_Mama::
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld hl, Script_DidYouGetThe ; script '*: Did you get the package'
+    ASSERT BANK(Script_DidYouGetThe) == $10, "Script_DidYouGetThe is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ld de, EVENT_DID_YOU_GET_THE_PACKAGE
     call SetFlagBit
@@ -6765,6 +6768,7 @@ GreatLogTalkEvents_Mama_Errands::
 .call_remove_inventory_slot_shift_down:
     farcall RemoveInventorySlotShiftDown
     ld hl, Script_OhYouBoughtThe ; script '*: Oh? You bought the LoveWater!'
+    ASSERT BANK(Script_OhYouBoughtThe) == $10, "Script_OhYouBoughtThe is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ld de, EVENT_OH_YOU_BOUGHT_THE_LOVE
     call SetFlagBit
@@ -6802,6 +6806,7 @@ GreatLogTalkEvents_Mama_Errands::
 
 .call_start_script_at_hl_b13:
     ld hl, Script_OhYou_2 ; script '*: Oh… You've found what I'
+    ASSERT BANK(Script_OhYou_2) == $10, "Script_OhYou_2 is read with bank $10 mapped"
     call StartScriptAtHL_B13
     farcall RemoveInventorySlotShiftDown
     ret
@@ -6831,6 +6836,7 @@ GreatLogTalkEvents_Mama_Errands::
 
 .call_start_script_at_hl_b132:
     ld hl, Script_OhYou_4 ; script '*: Oh… You've found what I'
+    ASSERT BANK(Script_OhYou_4) == $10, "Script_OhYou_4 is read with bank $10 mapped"
     call StartScriptAtHL_B13
     farcall RemoveInventorySlotShiftDown
     ret
@@ -6878,6 +6884,7 @@ GreatLogTalkEvents_Mama_Errands::
 .call_remove_inventory_slot_shift_down2:
     farcall RemoveInventorySlotShiftDown
     ld hl, Script_TheyDidn ; script '*: They didn't have any around'
+    ASSERT BANK(Script_TheyDidn) == $10, "Script_TheyDidn is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -11110,6 +11117,7 @@ TalkMsg0A3C_KingIfYouSee::
     ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, Script_KingAhYou ; script 'King: Ah, you've finally caught the'
+    ASSERT BANK(Script_KingAhYou) == $10, "Script_KingAhYou is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -11153,6 +11161,7 @@ TalkMsg0A3C_KingIfYouSee::
     ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, Script_KingAhYou_2 ; script 'King: Ah, you've finally caught the'
+    ASSERT BANK(Script_KingAhYou_2) == $10, "Script_KingAhYou_2 is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -11196,6 +11205,7 @@ TalkMsg0A3C_KingIfYouSee::
     ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, Script_KingAhYou_3 ; script 'King: Ah, you've finally caught the'
+    ASSERT BANK(Script_KingAhYou_3) == $10, "Script_KingAhYou_3 is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -11239,6 +11249,7 @@ TalkMsg0A3C_KingIfYouSee::
     ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, Script_KingAhYou_4 ; script 'King: Ah, you've finally caught the'
+    ASSERT BANK(Script_KingAhYou_4) == $10, "Script_KingAhYou_4 is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -11969,6 +11980,7 @@ TalkMsg0512_KamehaYoHeroThanks::
 .call_write_key_entry_temp0:
     farcall WriteKeyEntryTemp0
     ld hl, Script_KamehaWhatOhIt ; script 'Kameha: What? Oh, it's 0. Did'
+    ASSERT BANK(Script_KamehaWhatOhIt) == $10, "Script_KamehaWhatOhIt is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -12035,6 +12047,7 @@ TalkMsg0512_KamehaYoHeroThanks::
 .call_write_key_entry_temp02:
     farcall WriteKeyEntryTemp0
     ld hl, Script_KamehaWhatOhIt_3 ; script 'Kameha: What? Oh, it's 0. Did'
+    ASSERT BANK(Script_KamehaWhatOhIt_3) == $10, "Script_KamehaWhatOhIt_3 is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 
@@ -13056,6 +13069,7 @@ GreatLogTalkEvents_ShowHereItIstheTinyMedal::
     ld [wStepPtrLo], a
     farcall AppendItemStepPtrLoToInventory
     ld hl, Script_HereItIsThe ; script '*: Here it is-the TinyMedal. My'
+    ASSERT BANK(Script_HereItIsThe) == $10, "Script_HereItIsThe is read with bank $10 mapped"
     call StartScriptAtHL_B13
     ret
 

@@ -3242,7 +3242,7 @@ SwapMonstersMenu_Check_ReloadTiles::
     xor a
     ld [wArg2], a
     ld de, SaveTilesToBGMap1BottomHalf_Data
-    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == $1D, "SaveTilesToBGMap1BottomHalf_Data is read with bank $1D mapped"
+    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == BANK(LoadTileListSixPerCall), "SaveTilesToBGMap1BottomHalf_Data is read by LoadTileListSixPerCall, in its own bank"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -3829,7 +3829,7 @@ SwapMonstersMenu_Release_ReloadTiles::
     xor a
     ld [wArg2], a
     ld de, SaveTilesToBGMap1BottomHalf_Data
-    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == $1D, "SaveTilesToBGMap1BottomHalf_Data is read with bank $1D mapped"
+    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == BANK(LoadTileListSixPerCall), "SaveTilesToBGMap1BottomHalf_Data is read by LoadTileListSixPerCall, in its own bank"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -4800,7 +4800,6 @@ SwapMonstersMenu_CopySixteenTiles::
     and $0f
     ld d, a
     ld hl, GlyphFont
-    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -4820,7 +4819,7 @@ SwapMonstersMenu_CopySixteenTiles::
     ld a, [de]
     ld h, a
     pop de
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the table's own bank, so it can move
     ld c, $10
     call CopyFromBankWaitVRAM
     pop bc
@@ -5229,6 +5228,7 @@ SwapMonstersMenu_ShowParents2_DrawFrame::
     farcall UploadTilesFromData
     call BGMapAddressAtScroll_Bank1E
     ld de, SwapMonstersMenu_ShowParents2_DrawFrame_TileRect
+    ASSERT BANK(SwapMonstersMenu_ShowParents2_DrawFrame_TileRect) == $1F, "SwapMonstersMenu_ShowParents2_DrawFrame_TileRect is read with bank $1F mapped"
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -5678,7 +5678,7 @@ ClearBGMapAtScrollAndResetScroll::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
-    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
+    ASSERT BANK(BGFillTile) == BANK(FillTileRectWithArg1Tile), "BGFillTile is read by FillTileRectWithArg1Tile, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e

@@ -697,25 +697,73 @@ REGEN = Path("build/regen/src")  # D-015 (H1a): where the presented tree goes un
 
 
 FIXED_LOAD = re.compile(r"^(\s+)ld (?:hl|de|bc), ([A-Za-z_][\w.]*)\s*(?:;.*)?$")
-LOAD_BANKED = re.compile(r"BANK\(|^\s+farcall|^\s+ld b, \$")
+# E-0419: only BANK(label) of the loaded label beside the load counts as naming its bank; a literal `ld b, $NN` (often
+# a count) or a nearby farcall left 18 loads tied to a bank with no ASSERT
+
+
+def _run_after(lines: list[str], i: int, limit: int = 30) -> list[str]:
+    """E-0419: the code lines that run straight on from line i: up to and with the first call, jump or ret, and not
+    past a global label or a local label that a line outside them jumps to (another path joins there)."""
+    start = i
+    while start > 0 and not re.match(r"^[A-Za-z_]\w*::", lines[start]):
+        start -= 1
+    end = i + 1
+    while end < len(lines) and not re.match(r"^[A-Za-z_]\w*::", lines[end]):
+        end += 1
+    out = []
+    for k in range(i + 1, min(i + 1 + limit, end)):
+        x = lines[k]
+        m = re.match(r"^(\.[A-Za-z_]\w*):", x)
+        if m:  # a local label: passed only when it is jumped to, and only from the lines just passed
+            local = re.escape(m.group(1)) + r"\b"
+            full = re.escape(lines[start].split("::")[0]) + local
+            refs = [j for j in range(start, end) if j != k and re.search(r"(?<![\w.])" + local, lines[j].split(";")[0])]
+            refs += [j for j in range(len(lines)) if re.search(full, lines[j].split(";")[0])]
+            if not refs or any(not i < j < k for j in refs):
+                break
+            continue
+        code = x.split(";")[0].strip()
+        if not code:
+            continue
+        out.append(code)
+        if re.match(r"^(call|farcall|farcall_b|jp|ret|reti|rst)\b", code) or re.match(r"^jr [.\w]+$", code):
+            break  # the read, or a jump away (a conditional `jr cc, .x` runs on)
+    return out
 
 
 def _bank_loaded_after(lines: list[str], i: int, name: str) -> bool:
-    """E-0410: within the 7 lines after line i, before any label (another path could join there), a line names
-    BANK(name), so the bank goes with the label and an ASSERT would add nothing (E-0414's `ld b, BANK(Table)`)."""
-    for x in lines[i + 1:i + 8]:
-        if re.match(r"^\.?[A-Za-z_][\w.]*:", x):
-            return False
+    """E-0410: the code that runs on from line i before the table is read names BANK(name), so the bank goes with
+    the label and an ASSERT would add nothing (E-0414's and E-0419's `ld b, BANK(Table)`)."""
+    return any(f"BANK({name})" in x for x in _run_after(lines, i))
+
+
+def _bank_named_in_routine(lines: list[str], i: int, name: str) -> bool:
+    """E-0419: in the home bank, the routine maps the table's bank by name before the load (`ld a, BANK(Table) /
+    ld [rROMB0], a`, eight lines up at most and after the routine's label) or in the code that runs on after it."""
+    for x in reversed(lines[max(0, i - 8):i]):
+        if re.match(r"^[A-Za-z_]\w*::", x):
+            break
         if f"BANK({name})" in x:
             return True
-    return False
+    return _bank_loaded_after(lines, i, name)
+
+
+def _reader_in_table_bank(lines: list[str], i: int, tb: int, where: dict[str, int]) -> str | None:
+    """E-0419: the routine the code after line i far-calls first, when it lies in the table's own bank tb: it maps
+    that bank and reads the table there, so the table belongs with it (`ASSERT BANK(T) == BANK(Reader)`)."""
+    for x in _run_after(lines, i):
+        m = re.match(r"^(?:farcall|farcall_b) ([A-Za-z_]\w*)$", x)
+        if m:
+            return m.group(1) if where.get(m.group(1)) == tb else None
+    return None
 
 
 def assert_fixed_banks(bodies: dict[int, str]) -> tuple[dict[int, str], int]:
-    """E-0401 (M2): a pointer load in a switchable bank into another switchable bank, with no bank named beside it
-    (tools/bank_check.py's warning), works because the code that reads it maps that bank itself (a script or
-    message bank, a table bank). Each gets `ASSERT BANK(Label) == $BB` after it: no bytes, but a section moved away
-    from the bank its reader assumes now fails the link instead of reading another bank's bytes."""
+    """E-0401 (M2): a pointer load into another switchable bank, with no bank named beside it (tools/bank_check.py's
+    warning), works because the code that reads it maps that bank itself (a script or message bank, a table bank).
+    Each gets `ASSERT BANK(Label) == $BB` after it: no bytes, but a section moved away from the bank its reader
+    assumes now fails the link instead of reading another bank's bytes. E-0419: the home bank's loads too (its code
+    maps a bank by number, not by the label), and `== BANK(Reader)` when a routine in the table's bank reads it."""
     where: dict[str, int] = {}
     for bank, body in bodies.items():
         cur = None
@@ -730,9 +778,6 @@ def assert_fixed_banks(bodies: dict[int, str]) -> tuple[dict[int, str], int]:
     out = {}
     for bank, body in bodies.items():
         lines = body.split("\n")
-        if bank == 0:
-            out[bank] = body
-            continue
         res, cur = [], None
         for i, ln in enumerate(lines):
             res.append(ln)
@@ -745,11 +790,18 @@ def assert_fixed_banks(bodies: dict[int, str]) -> tuple[dict[int, str], int]:
                 continue
             name = cur + m.group(2) if m.group(2).startswith(".") else m.group(2)
             tb = where.get(name)
-            if tb in (None, 0, bank) or any(LOAD_BANKED.search(x) for x in lines[max(0, i - 3):i + 4]):
+            if tb in (None, 0, bank) or any(f"BANK({name})" in x for x in lines[max(0, i - 3):i + 4]):
+                continue
+            if bank == 0 and _bank_named_in_routine(lines, i, name):  # E-0419: `ld a, BANK(T) / ld [rROMB0], a`
                 continue
             if _bank_loaded_after(lines, i, name):  # E-0414: the same block loads the bank as BANK(name)
                 continue
-            res.append(f'{m.group(1)}ASSERT BANK({name}) == ${tb:02X}, "{name} is read with bank ${tb:02X} mapped"')
+            reader = _reader_in_table_bank(lines, i, tb, where)
+            if reader:  # E-0419: read by a routine in its own bank, so it moves with that routine
+                res.append(f'{m.group(1)}ASSERT BANK({name}) == BANK({reader}), "{name} is read by {reader}, in its '
+                           f'own bank"')
+            else:
+                res.append(f'{m.group(1)}ASSERT BANK({name}) == ${tb:02X}, "{name} is read with bank ${tb:02X} mapped"')
             n += 1
         out[bank] = "\n".join(res)
     return out, n

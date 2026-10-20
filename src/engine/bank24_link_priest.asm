@@ -2796,7 +2796,7 @@ GameMode6_Init_DrawPictureRow::
     ld c, $78
     call Multiply8
     ld de, GameMode6_PictureRowTileRects
-    ASSERT BANK(GameMode6_PictureRowTileRects) == $1F, "GameMode6_PictureRowTileRects is read with bank $1F mapped"
+    ASSERT BANK(GameMode6_PictureRowTileRects) == BANK(DrawTileRectFromArg1Params), "GameMode6_PictureRowTileRects is read by DrawTileRectFromArg1Params, in its own bank"
     add hl, de
     ld a, h
     ld [wArg1], a

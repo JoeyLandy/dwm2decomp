@@ -591,14 +591,13 @@ DecompressGraphicsTemp0ToTemp4::
     add a
     add a
     ld de, FieldSpritePalettes
-    ASSERT BANK(FieldSpritePalettes) == $7E, "FieldSpritePalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .read_temp3
     inc d
 
 .read_temp3:
-    ld b, $7e
+    ld b, BANK(FieldSpritePalettes)  ; the table's own bank, so it can move
 
 .read_temp32:
     ldh a, [hTemp3]
@@ -2166,6 +2165,7 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ld hl, vTiles0 + $700
     call DecompressToVRAM
     ld de, SharedOBJPalettes
+    ASSERT BANK(SharedOBJPalettes) == $7E, "SharedOBJPalettes is read with bank $7E mapped"
     ld a, e
     add $08
     ld e, a
@@ -3738,6 +3738,7 @@ Talk0046_ThanksForComingBy::
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld hl, Script_YouMustBeThe ; script '*: You must be the farm'
+    ASSERT BANK(Script_YouMustBeThe) == $10, "Script_YouMustBeThe is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ld de, EVENT_THANKS_FOR_COMING_BY
     call SetFlagBit
@@ -10536,6 +10537,7 @@ Talk07A4_CouldYouHumorThis::
     jr nz, .loop
     farcall RemoveInventorySlotShiftDown
     ld hl, Script_HeroShowedThePretty ; script '0 showed the Pretty Ring.'
+    ASSERT BANK(Script_HeroShowedThePretty) == $10, "Script_HeroShowedThePretty is read with bank $10 mapped"
     call StartScriptAtHL_B04
     ret
 

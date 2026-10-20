@@ -5701,6 +5701,7 @@ MapRecordPointer::
     ld h, $00
     add hl, hl
     ld de, MapTable
+    ASSERT BANK(MapTable) == $11, "MapTable is read with bank $11 mapped"
     add hl, de
     ld a, [hli]
     ld e, a
@@ -6299,7 +6300,7 @@ LoadMonsterPicture::
     add hl, de
     ld e, l
     ld d, h
-    ld b, $7b
+    ld b, BANK(MonsterPaletteTable)  ; the table's own bank, so it can move
     ld a, c
     sla a
     sla a
@@ -6323,7 +6324,7 @@ SECTION "Bank 00 LoadMonsterPictureAttributeBlock", ROM0
 LoadMonsterPictureAttributeBlock::
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, $38
+    ld a, BANK(MonsterAttributeMapTable)  ; the table's own bank, so it can move
     ld [rROMB0], a
     push hl
     ld l, e
@@ -6404,7 +6405,7 @@ SECTION "Bank 00 LoadMonsterPictureAttributes", ROM0
 LoadMonsterPictureAttributes::
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, $38
+    ld a, BANK(MonsterAttributeMapTable)  ; the table's own bank, so it can move
     ld [rROMB0], a
     push hl
     ld l, e
@@ -6676,6 +6677,7 @@ CopyGlyphTilesToVRAM::
     and $0f
     ld h, a
     ld bc, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, bc
     ld b, $10
 
@@ -6704,12 +6706,14 @@ CopyGlyphTilesToVRAM::
     inc hl
     push hl
     ld hl, CopyGlyphTilesToVRAM_Data1
+    ASSERT BANK(CopyGlyphTilesToVRAM_Data1) == $1F, "CopyGlyphTilesToVRAM_Data1 is read with bank $1F mapped"
     jr .skip2
 
 .next2:
     inc hl
     push hl
     ld hl, CopyGlyphTilesToVRAM_Data2
+    ASSERT BANK(CopyGlyphTilesToVRAM_Data2) == $1F, "CopyGlyphTilesToVRAM_Data2 is read with bank $1F mapped"
 
 .skip2:
     ld b, $10
@@ -6908,7 +6912,7 @@ LoadPlayerAndFollowerSpriteGraphics_Followers::
     inc d
 
 .call_copy_from_bank:
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)  ; the table's own bank, so it can move
     ld c, $08
     call CopyFromBank
     jr .check_temp3
@@ -6940,7 +6944,7 @@ LoadPlayerAndFollowerSpriteGraphics_Followers::
     add hl, de
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, $04
+    ld a, BANK(MonsterSpriteTable)  ; the table's own bank, so it can move
     ld [rROMB0], a
     ld a, [hli]
     ld e, a
@@ -7291,7 +7295,7 @@ CopyKeyNameWordToDE::
     add_a_to_hl
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, $09
+    ld a, BANK(CopyKeyNameWordToDE_StringList)  ; the table's own bank, so it can move
     ld [rROMB0], a
     ld a, [hli]
     ld c, a
@@ -8110,6 +8114,7 @@ SECTION "Bank 00 GlyphTileSourceForL", ROM0
 ; wTextGlyphDestLo/wTextGlyphDestHi (E-0120)
 GlyphTileSourceForL::
     ld de, GlyphFont
+    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     ld a, l
     swap a
     ld h, a
@@ -9772,7 +9777,7 @@ CopyGlyphTileToHL:: ; configured code entry (E-0395 (traced before by a guess al
     pop hl
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, $1f
+    ld a, BANK(GlyphFont)  ; the table's own bank, so it can move
     ld [rROMB0], a
     ld b, $08
 

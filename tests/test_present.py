@@ -54,6 +54,43 @@ class PresentLineTest(unittest.TestCase):
         self.assertGreater(len(lines), 1)
         self.assertTrue(all(len(ln) <= present.WIDTH and ln.startswith("; ") for ln in lines))
 
+    def test_a_bank_loaded_by_name_needs_no_assert_unless_a_label_comes_first(self):
+        """E-0410: E-0414's `ld b, BANK(Table)` after the pointer load replaces the ASSERT, but not past a label."""
+        head = "SomeRoutine::\n    ld de, Table\n    add hl, de\n    ld e, l\n    ld d, h\n"
+        tail = "    call ReadFarPointerAtDEInBankB\n    ret"
+        bodies = {1: "Table::\n    db $00", 2: head + "    ld b, BANK(Table)\n" + tail}
+        out, n = present.assert_fixed_banks(bodies)
+        self.assertEqual(n, 0)
+        bodies[2] = head + ".join:\n    ld b, BANK(Table)\n" + tail
+        out, n = present.assert_fixed_banks(bodies)
+        self.assertEqual(n, 1)
+        self.assertIn("ASSERT BANK(Table) == $01", out[2])
+
+    def test_a_label_jumped_to_only_from_the_block_is_passed(self):
+        """E-0419: `jr nc, .x / inc d / .x: ld b, BANK(Table)` is one path from the load, so no ASSERT; a jump to .x
+        from before the load joins another path, so the ASSERT stays."""
+        load = "    ld de, Table\n    add e\n    ld e, a\n    jr nc, .x\n    inc d\n\n.x:\n    ld b, BANK(Table)\n"
+        bodies = {1: "Table::\n    db $00", 2: "R::\n" + load + "    call CopyFromBank\n    ret"}
+        self.assertEqual(present.assert_fixed_banks(bodies)[1], 0)
+        bodies[2] = "R::\n    jr z, .x\n" + load + "    call CopyFromBank\n    ret"
+        self.assertEqual(present.assert_fixed_banks(bodies)[1], 1)
+
+    def test_a_table_read_by_a_routine_in_its_bank_follows_that_routine(self):
+        """E-0419: a load whose code far-calls a routine in the table's own bank asserts the two banks equal."""
+        bodies = {0x1F: "Table::\n    db $00\nDrawRect::\n    ret", 0x14: "R::\n    ld de, Table\n    ld a, d\n"
+                  "    ld [wArg1], a\n    ld a, e\n    ld [wArg2], a\n    farcall DrawRect\n    ret"}
+        out, n = present.assert_fixed_banks(bodies)
+        self.assertEqual(n, 1)
+        self.assertIn('ASSERT BANK(Table) == BANK(DrawRect), "Table is read by DrawRect, in its own bank"', out[0x14])
+        bodies[0x14] = bodies[0x14].replace("farcall DrawRect", "call LocalCopy")  # a helper in the caller's bank
+        self.assertIn("ASSERT BANK(Table) == $1F", present.assert_fixed_banks(bodies)[0][0x14])
+
+    def test_a_listed_label_starts_a_section_after_data(self):
+        text = 'SECTION "Bank F2"\nOther::\n    db $01\n\n; the table\nScreenNumberListTable::\n    dw $0000'
+        body, names = present.split_sections(text, 0xF2)
+        self.assertEqual(names, ["Bank F2", "Bank F2 ScreenNumberListTable"])
+        self.assertIn('    db $01\n\nSECTION "Bank F2 ScreenNumberListTable", ROMX\n\n; the table', body)
+
 
 def _code(text: str, names=None, bank=None) -> list[str]:
     """The code and data lines, without comments, aliases or label tags, in the presented spelling. Operand forms
@@ -72,25 +109,6 @@ def _code(text: str, names=None, bank=None) -> list[str]:
             code = "    INCBIN"  # D-008: src names the slice as an asset file (checked by test_assets_*)
         out.append(code)
     return out
-
-
-    def test_a_bank_loaded_by_name_needs_no_assert_unless_a_label_comes_first(self):
-        """E-0410: E-0414's `ld b, BANK(Table)` after the pointer load replaces the ASSERT, but not past a label."""
-        head = "SomeRoutine::\n    ld de, Table\n    add hl, de\n    ld e, l\n    ld d, h\n"
-        tail = "    call ReadFarPointerAtDEInBankB\n    ret"
-        bodies = {1: "Table::\n    db $00", 2: head + "    ld b, BANK(Table)\n" + tail}
-        out, n = present.assert_fixed_banks(bodies)
-        self.assertEqual(n, 0)
-        bodies[2] = head + ".join:\n    ld b, BANK(Table)\n" + tail
-        out, n = present.assert_fixed_banks(bodies)
-        self.assertEqual(n, 1)
-        self.assertIn("ASSERT BANK(Table) == $01", out[2])
-
-    def test_a_listed_label_starts_a_section_after_data(self):
-        text = 'SECTION "Bank F2"\nOther::\n    db $01\n\n; the table\nScreenNumberListTable::\n    dw $0000'
-        body, names = present.split_sections(text, 0xF2)
-        self.assertEqual(names, ["Bank F2", "Bank F2 ScreenNumberListTable"])
-        self.assertIn('    db $01\n\nSECTION "Bank F2 ScreenNumberListTable", ROMX\n\n; the table', body)
 
 
 class PresentedTreeTest(unittest.TestCase):

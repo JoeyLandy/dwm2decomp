@@ -3880,7 +3880,6 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
     and $0f
     ld d, a
     ld hl, GlyphFont
-    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -3900,7 +3899,7 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
     ld a, [de]
     ld h, a
     pop de
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the table's own bank, so it can move
     ld c, $10
     call CopyFromBankWaitVRAM
     pop bc
@@ -4586,7 +4585,7 @@ BreedMenu_RestoreScreen_BlankBGMap::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
-    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
+    ASSERT BANK(BGFillTile) == BANK(FillTileRectWithArg1Tile), "BGFillTile is read by FillTileRectWithArg1Tile, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -8266,7 +8265,6 @@ GlyphCopyArgsForA_Bank15::
     sla e
     rl d
     ld hl, GlyphFont
-    ASSERT BANK(GlyphFont) == $1F, "GlyphFont is read with bank $1F mapped"
     add hl, de
     ld e, l
     ld d, h
@@ -8282,7 +8280,7 @@ GlyphCopyArgsForA_Bank15::
     ld h, d
     ld l, e
     pop de
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the table's own bank, so it can move
     ld c, $10
     ret
 

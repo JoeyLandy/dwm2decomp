@@ -1103,14 +1103,13 @@ RunWorldMapState_DrawCloseUp::
     jr z, .done
     ld a, $40
     ld de, SharedOBJPalettes
-    ASSERT BANK(SharedOBJPalettes) == $7E, "SharedOBJPalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)  ; the table's own bank, so it can move
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
@@ -2905,6 +2904,7 @@ RunWorldMapState_DrawOverview::
     ld hl, vTiles2 + $500
     call DecompressToVRAM
     ld de, RunWorldMapState_DrawOverview_TileRect
+    ASSERT BANK(RunWorldMapState_DrawOverview_TileRect) == $5E, "RunWorldMapState_DrawOverview_TileRect is read with bank $5E mapped"
     ld a, $5e
     lb bc, $14, $12
     ld hl, vBGMap0
@@ -2933,14 +2933,13 @@ RunWorldMapState_DrawOverview::
     jr z, .done
     ld a, $40
     ld de, SharedOBJPalettes
-    ASSERT BANK(SharedOBJPalettes) == $7E, "SharedOBJPalettes is read with bank $7E mapped"
     add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
-    ld b, $7e
+    ld b, BANK(SharedOBJPalettes)  ; the table's own bank, so it can move
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank

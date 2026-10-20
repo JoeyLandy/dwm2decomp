@@ -8,8 +8,9 @@ another bank (src/layout.link), such a reference would run or read the wrong ban
 banks from a build's .sym file (where each label actually landed) and the instructions from src/.
 
   errors    call / jp / jr (any condition) from a switchable bank to a label in a different switchable bank
-  warnings  ld hl/de/bc, Label into a different switchable bank, with no BANK(...), farcall or `ld b, $NN` within
-            three lines (a far helper may still take the bank from RAM; read the routine)
+  warnings  ld hl/de/bc, Label into a different switchable bank (from any bank, the home bank too), with no
+            BANK(Label) within three lines (eight above in the home bank) or in the code that runs on to the read
+            (E-0419: a literal `ld b, $NN` or a nearby farcall no longer counts)
   asserted  such a load followed by `ASSERT BANK(Label) == $BB` (tools/present.py, E-0401): the reader maps that
             bank itself, and the link fails if the label leaves it
 
@@ -29,7 +30,6 @@ GLOBAL = re.compile(r"^([A-Za-z_]\w*)::")
 LOCAL = re.compile(r"^(\.[A-Za-z_]\w*):")
 JUMP = re.compile(r"^\s+(?:call|jp|jr)(?: (?:z|nz|c|nc),)? ([A-Za-z_.][\w.]*)\s*(?:;.*)?$")
 LOAD = re.compile(r"^\s+ld (?:hl|de|bc), ([A-Za-z_][\w.]*)\s*(?:;.*)?$")
-BANKED = re.compile(r"BANK\(|^\s+farcall|^\s+ld b, \$")
 
 
 def load_sym(path: Path) -> dict[str, tuple[int, int]]:
@@ -49,15 +49,12 @@ def newest_sym() -> Path:
 
 
 def names_bank_later(lines: list[str], i: int, label: str) -> bool:
-    """H4: `ld b, BANK(label)` of this same label in the straight-line code after the load (before a call, jump,
-    return or label), as when a far-read helper is called with the table's own bank."""
-    for ln in lines[i + 1:i + 12]:
-        code = ln.split(";")[0].strip()
-        if code == f"ld b, BANK({label})":
-            return True
-        if re.match(r"(call|jp|jr|ret|reti|farcall|rst)\b", code) or GLOBAL.match(ln):
-            return False
-    return False
+    """H4: BANK(label) of this same label in the code that runs straight on from the load, as when a far-read helper
+    is called with the table's own bank in B, or the home bank maps it (`ld a, BANK(label) / ld [rROMB0], a`). E-0419: that code is tools/present.py's: up to the first call, jump
+    or return, past a conditional `jr` and a local label jumped to only from it."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from present import _run_after
+    return any(f"BANK({label})" in x.split(";")[0] for x in _run_after(lines, i))  # ld b, or ld a for rROMB0
 
 
 def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None = None) -> tuple[list[str], list[str]]:
@@ -74,9 +71,10 @@ def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None
             if cur is None or cur not in sym:
                 continue
             here = sym[cur][0]
-            if here == 0 or sym[cur][1] < 0x4000:
-                continue  # bank $00 code can reach any bank's labels only through its own switching
+            home = here == 0 or sym[cur][1] < 0x4000
             mj, ml = JUMP.match(ln), LOAD.match(ln)
+            if home:  # bank $00 code jumps into a bank it has mapped; its pointer loads are checked (E-0419)
+                mj = None
             m = mj or ml
             if not m:
                 continue
@@ -92,7 +90,8 @@ def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None
                 errors.append(f"{where}: {ln.strip()} reaches bank {tb:02X}")
             elif i + 1 < len(lines) and lines[i + 1].strip().startswith(f"ASSERT BANK({full}) =="):
                 asserted.append(f"{where}: {ln.strip()} asserted in bank {tb:02X}")
-            elif not any(BANKED.search(x) for x in lines[max(0, i - 3):i + 4]) and not names_bank_later(lines, i, full):
+            elif not any(f"BANK({full})" in x for x in lines[max(0, i - (8 if home else 3)):i + 4]) \
+                    and not names_bank_later(lines, i, full):
                 warnings.append(f"{where}: {ln.strip()} points into bank {tb:02X}")
     return errors, warnings
 

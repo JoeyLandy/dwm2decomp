@@ -43,7 +43,12 @@ class TextForm(unittest.TestCase):
 
     def test_the_text_round_trips_and_two_blocks_relayout(self):
         self.assertEqual(X.check(ROOT / "src"), [])
-        self.assertEqual(X.relayout(ROOT / "src"), ["Message_0B_8F", "String_88_02_AD"])
+        # in src/text/ two blocks end in raw bytes after their end mark that read as text; outside it (E-0417) the
+        # records with byte fields and the blocks the generator split at other places re-render to other lines too
+        files = {label: f for f, label, _a, _b, _ops in X.blocks(ROOT / "src")}
+        moved = X.relayout(ROOT / "src")
+        self.assertEqual([x for x in moved if files[x].parent.name == "text"], ["Message_0B_8F", "String_88_02_AD"])
+        self.assertLess(len(moved), 40)
 
     def test_export(self):
         data = X.export(ROOT / "src")
@@ -88,7 +93,10 @@ class Font(unittest.TestCase):
             self.assertEqual(f.read_bytes(), next((ROOT / "src").glob("*/bank1f_*.asm")).read_bytes())
         free = X.free_glyphs(ROOT / "src")
         self.assertIn((UE, True), free)
-        self.assertGreaterEqual(sum(1 for _g, blank in free if blank), 45)  # 49 blank on 2026-10-17
+        # 26 free, 4 of them blank, on 2026-10-20: since E-0417 the text in code banks counts as used (75 and 49 when
+        # only src/text/ was read)
+        self.assertGreaterEqual(len(free), 20)
+        self.assertGreaterEqual(sum(1 for _g, blank in free if blank), 4)
 
 
 def set_glyph(png: Path, code: int, rows: list[int]) -> None:

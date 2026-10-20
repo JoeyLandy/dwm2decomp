@@ -30,7 +30,7 @@ A mod is a folder of edits, so it can be shared and combined. mods/example/ is o
 
 ```text
 mods/my_mod/
-  mod.json        name, version, author, description; "spill" to make room in a full message bank
+  mod.json        name, version, author, description; "spill" to make room in a full message or battle-text bank
                   ([translating](TRANSLATING.md#moving-messages-out-of-a-full-bank))
   data/           edited tables (only the rows or lists you changed)
   text/           edited text (only the entries you changed)

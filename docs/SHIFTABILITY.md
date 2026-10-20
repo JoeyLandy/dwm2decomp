@@ -285,6 +285,32 @@ tools/bank_check.py now also accepts a `ld b, BANK(Label)` of the same label lat
 - ShopMenu_Buy_EnterQuantity_ComputeTotal gives the same total for all 342 items of the 24 shops, with and without
   the GoldPass (tests/test_move_table.py).
 
+## E-0419: readers that named a table's bank by number
+
+A table can move only if every reader finds its bank by the table's label. After H4, 508 loads carried
+`ASSERT BANK(T) == $BB`: a move fails the link, and the reader still names the bank by number. E-0419 went through
+them, and through the loads the old rule let pass:
+- **A number beside the load becomes `BANK(T)`** (config/operands.json, so the generator writes it; same bytes). There
+  are 9 `ld b, $NN` in switchable banks, copy helpers' bank for FieldSpritePalettes, SharedOBJPalettes and GlyphFont.
+  There are 7 in the home bank: `ld b, $NN`, or `ld a, $NN / ld [rROMB0], a` before it reads the table
+  (MonsterPaletteTable, MonsterSpriteTable, CopyKeyNameWordToDE_StringList, MonsterAttributeMapTable and others).
+- **A routine in the table's own bank reads it:** `ASSERT BANK(T) == BANK(Reader)`, for 23 loads read by
+  DrawTileRectFromArg1Params or FillTileRectWithArg1Tile (bank $1F), LoadTileListSixPerCall ($1D) or
+  TestBitInFieldAtArg3 ($15). The table moves with its reader.
+- **Ties no ASSERT showed.** Any `ld b, $NN` (often a count) or farcall within three lines counted as naming the
+  bank, and the home bank was not checked. That hid 46 loads: 16 scripts, title-screen tile maps ($E1), digit tiles
+  ($31), sprite graphics ($7D), map screens, and 5 home-bank loads. Only BANK(label) counts now, so they are asserted.
+  tools/bank_check.py and tools/present.py share one walk of the code from the load to its read: past a conditional
+  `jr`, and past a local label jumped to only from that code.
+
+Result: 545 asserted loads (522 by number, 23 by reader), 0 warnings. The 440 script loads cannot follow their
+scripts without an interpreter change: the interpreter in bank $10 reads script bytes from its own bank, and that
+bank has no free byte.
+
+**A moved table** (tests/test_fixed_bank_readers.py). MonsterAttributeMapTable (383 far pointers, bank $38) moves to
+the empty bank $9E in a copy. LoadMonsterPictureAttributes writes the same VRAM attributes for all 383 monsters. With
+its operand put back to $38, 351 differ.
+
 ## Left after M2
 
 1. Done (E-0392, E-0401): no address-like split sum is left.

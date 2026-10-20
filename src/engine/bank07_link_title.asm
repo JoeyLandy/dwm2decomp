@@ -1096,6 +1096,7 @@ GameMode5_Init_LinkBattleSetup::
     call DecompressToRAMLocked
     ld b, BANK(LetterFrameIconTiles)
     ld de, DigitLvHpMpTiles
+    ASSERT BANK(DigitLvHpMpTiles) == $31, "DigitLvHpMpTiles is read with bank $31 mapped"
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
     ld hl, vTiles2 + $400
@@ -1976,6 +1977,7 @@ GameMode5_Update_LoadScreens_Screen0_Load::
     call DecompressToVRAM
     ld b, BANK(LicensedByNintendoTiles)
     ld de, IntroScreen0TileMap
+    ASSERT BANK(IntroScreen0TileMap) == $E1, "IntroScreen0TileMap is read with bank $E1 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2091,6 +2093,7 @@ GameMode5_Update_LoadScreens_Screen1_Load::
     call DecompressToVRAM
     ld b, BANK(CopyrightCreditsTiles)
     ld de, IntroScreen1TileMap
+    ASSERT BANK(IntroScreen1TileMap) == $E1, "IntroScreen1TileMap is read with bank $E1 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2205,6 +2208,7 @@ GameMode5_Update_LoadScreens_Screen2_Load::
     call DecompressToVRAM
     ld b, BANK(EnixPresentsLogoTiles)
     ld de, IntroScreen2TileMap
+    ASSERT BANK(IntroScreen2TileMap) == $E1, "IntroScreen2TileMap is read with bank $E1 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2329,6 +2333,7 @@ TitleOpening_Load::
     call DecompressToVRAM
     ld b, BANK(Tiles0Gfx)
     ld de, SparkleSpriteTiles
+    ASSERT BANK(SparkleSpriteTiles) == $7E, "SparkleSpriteTiles is read with bank $7E mapped"
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $10
@@ -2506,6 +2511,7 @@ TitleOpening_LoadNextScreen::
     call DecompressToVRAM
     ld b, BANK(DragonWarriorLogoTiles)
     ld de, DragonWarriorLogoTilemap
+    ASSERT BANK(DragonWarriorLogoTilemap) == $E1, "DragonWarriorLogoTilemap is read with bank $E1 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2572,6 +2578,7 @@ TitleOpening_LoadTitle::
     call DecompressToVRAM
     ld b, BANK(TitleLogoTiles)
     ld de, TitleOpeningKeyBGMap
+    ASSERT BANK(TitleOpeningKeyBGMap) == $E1, "TitleOpeningKeyBGMap is read with bank $E1 mapped"
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -2977,6 +2984,7 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_Load::
     call DecompressToVRAM
     ld b, BANK(TitleLogoTiles)
     ld de, TitleScreenTilemap
+    ASSERT BANK(TitleScreenTilemap) == $E1, "TitleScreenTilemap is read with bank $E1 mapped"
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]

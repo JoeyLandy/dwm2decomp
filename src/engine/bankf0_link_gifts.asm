@@ -1993,7 +1993,7 @@ RunLinkSession8Exchange_Trade_SetUpScene::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
-    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
+    ASSERT BANK(BGFillTile) == BANK(FillTileRectWithArg1Tile), "BGFillTile is read by FillTileRectWithArg1Tile, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -3382,7 +3382,7 @@ LinkEggList_ShowChooseTheKindOf::
     xor a
     ld [wArg2], a
     ld de, SaveTilesToBGMap1BottomHalf_Data
-    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == $1D, "SaveTilesToBGMap1BottomHalf_Data is read with bank $1D mapped"
+    ASSERT BANK(SaveTilesToBGMap1BottomHalf_Data) == BANK(LoadTileListSixPerCall), "SaveTilesToBGMap1BottomHalf_Data is read by LoadTileListSixPerCall, in its own bank"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -3479,7 +3479,7 @@ ClearBGMapAtScrollAndResetScroll_BankF0::
     ld a, l
     ld [wArg6], a
     ld de, BGFillTile
-    ASSERT BANK(BGFillTile) == $1F, "BGFillTile is read with bank $1F mapped"
+    ASSERT BANK(BGFillTile) == BANK(FillTileRectWithArg1Tile), "BGFillTile is read by FillTileRectWithArg1Tile, in its own bank"
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -3590,6 +3590,7 @@ LinkRecordScreen_DrawPedigreeFrame::
     farcall UploadTilesFromData
     call BGMapAddressAtScroll_BankF0
     ld de, SwapMonstersMenu_ShowParents2_DrawFrame_TileRect
+    ASSERT BANK(SwapMonstersMenu_ShowParents2_DrawFrame_TileRect) == $1F, "SwapMonstersMenu_ShowParents2_DrawFrame_TileRect is read with bank $1F mapped"
     ld a, $14
     ld [wArg3], a
     ld a, $12

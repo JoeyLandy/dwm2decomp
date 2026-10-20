@@ -69,10 +69,15 @@ def sections_of(src: Path) -> dict[str, dict]:
                 cur["labels"].add(glob_)
             code = bank_check_code(ln)
             if code and glob_ and not GLOBAL.match(ln):
-                banked = "dfar" in code or (not re.match(r"(call|jp|jr)\b", code) and  # a jump never switches banks
-                                            any(bank_check.BANKED.search(x) for x in lines[max(0, i - 3):i + 4]))
+                jump = re.match(r"(call|jp|jr)\b", code)  # a jump never switches banks
+                far = "dfar" in code or re.match(r"farcall(_b)?\b", code)
                 for tok in TOKEN.findall(code):  # every label a line names: operands, dw entries, LOW/HIGH, + offsets
-                    cur["refs"].append((i, glob_ + tok if tok.startswith(".") else tok, banked))
+                    name = glob_ + tok if tok.startswith(".") else tok
+                    # E-0419: only BANK(label) of this label beside it, or in the code that runs on to the read
+                    banked = bool(far) or (not jump and (
+                        any(f"BANK({name})" in x for x in lines[max(0, i - 3):i + 4])
+                        or bank_check.names_bank_later(lines, i, name)))
+                    cur["refs"].append((i, name, banked))
     return out
 
 

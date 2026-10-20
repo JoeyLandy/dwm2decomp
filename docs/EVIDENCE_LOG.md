@@ -2431,6 +2431,66 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0419 — Readers that named a table's bank by number: BANK(table), the reader's bank, or an ASSERT
+
+- Date: 2026-10-20. Kind: OBSERVATION (source and tools/sm83.py) and source change (no byte changed). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit 429fb20. Details: [shiftability](SHIFTABILITY.md), "E-0419".
+- **Scripts (C2, read from src/ and the map).** The 424 asserted script loads, which are now 440, put a pointer in wScriptPointer with no bank. The interpreter in bank $10 reads script bytes from its own bank, and bank $10 has 0 free bytes: about 12 KB of scripts and 4 KB of interpreter. A script can leave bank $10 only if the interpreter changes. No same-bytes edit can do that, so they stay asserted.
+- **A number beside the load → BANK(table)** (config/operands.json, written by the generator):
+  - 9 `ld b, $NN` in switchable banks, the bank of a copy helper (FieldSpritePalettes, SharedOBJPalettes x4, GlyphFont x4);
+  - 7 in the home bank: 2 `ld b, $NN`, and 5 `ld a, $NN` written to rROMB0 to read the table (MonsterPaletteTable, SharedOBJPalettes, MonsterSpriteTable, CopyKeyNameWordToDE_StringList, GlyphFont, MonsterAttributeMapTable x2).
+- **A routine in the table's bank reads it → `ASSERT BANK(T) == BANK(Reader)`.** 23 loads whose code far-calls DrawTileRectFromArg1Params, FillTileRectWithArg1Tile (bank $1F), LoadTileListSixPerCall (bank $1D) or TestBitInFieldAtArg3 (bank $15). Those routines read the table with their own bank mapped and switch no bank (read from src/). The table now moves with its reader, not with a number.
+- **Loads that were tied to a bank without an ASSERT.** tools/present.py and tools/bank_check.py counted any `ld b, $NN` or farcall within three lines as naming the bank, and skipped the home bank. That hid 46 more fixed ties:
+  - 16 script loads, title-screen tile maps ($E1), digit tiles ($31), sprite graphics ($7D), map screens and tile rectangles;
+  - 5 home-bank loads (MapTable, GlyphFont x2, CopyGlyphTilesToVRAM_Data1/2).
+  Only BANK(label) beside the load, or in the code that runs on to the read, now counts. Those 46 carry ASSERTs. The walk (`_run_after`) passes conditional `jr` and local labels jumped to only from it, and bank_check uses the same walk. Result: 545 asserted loads (522 by number, 23 by reader), 0 warnings, 0 errors. tools/move_section.py, which used the old rule to decide which references cross banks safely, now uses the same per-label one.
+- **A table moved (tests/test_fixed_bank_readers.py).** MonsterAttributeMapTable (383 far pointers) moves to the empty bank $9E in a copy, and the copy builds. LoadMonsterPictureAttributes then writes the same VRAM attributes for all 383 monster ids on tools/sm83.py (227 of them not the plain palette). With its operand put back to $38, 351 ids differ.
+- **A test that never ran.** E-0410's two tests in tests/test_present.py sat after a module function's `return`, so Python never ran them. They are back in their class and pass, beside two tests of the new rules.
+- **Checks.** The generator writes src/ again (tools/src_drift.py: 265 files identical). build/run_e0419b PASS, 0 differing bytes.
+- **Limits.** Most of the 522 numbered asserts are scripts and graphics read through a helper in another bank, or with a bank stored in RAM earlier: those readers still fix the bank. "Read by X in its own bank" is a reading of X's code (C1), checked by the link equality, not by running every caller.
+
+### E-0418 — Room for battle text: whole string categories moved to an empty bank
+
+- Date: 2026-10-20. Kind: TOOL and OBSERVATION (tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Guide: [translating](TRANSLATING.md#moving-messages-out-of-a-full-bank).
+- **The battle text (bank $2F, read from src/).** It has no split. BeginStringDisplay_Bank2F and CopyStringToBuffer_Bank2F are `ld de, table / call / ret`, with six categories:
+  - 0: 137 strings, about 6 KB;
+  - 1: 256 strings, about 7.6 KB;
+  - 2-4: six short strings;
+  - 5: 34 strings, about 1.2 KB.
+  Only 725 bytes are free.
+- **`tools/text_spill.py spill-categories BANK FIRST --to BB`.** In a mod's copy, it moves categories FIRST and up, with their lists and strings, to an empty bank. That bank gets the number at $4000, two lookups and a category table, with $0000 for the categories that stay. The bank's two lookups become `cp FIRST` on wStringCategory, with a farcall to the new bank: 21 bytes instead of 7, the same form bank $08's lookups use from category 9 on. It refuses when:
+  - a lookup is not that shape (bank $0D's has 7 more bytes after it);
+  - the table is named anywhere else (bank $09);
+  - a string is shared with a category that stays;
+  - the target bank is not empty.
+  A refusal changes nothing. mod.json `"spill": [{"bank": "2F", "categories_from": 1, "to": "9D"}]` runs it in tools/make_mod.py.
+- **Checks (tests/test_text_spill.py, CategorySpill).**
+  - Categories 1-5 to bank $9D move 9,394 bytes, and bank $2F's fill goes from 725 to 10,101 bytes.
+  - All 433 (category, id) pairs show and copy the reference's bytes.
+  - In the E-0320 debug battle (from d06!, 1,310 printer events), the spilled ROM draws the same glyphs on the same frames. Nineteen lookups go through bank $9D, for categories 1 and 5.
+  - With 60 category-1 strings grown by 18 bytes each (more than bank $2F had free), only those ids differ. The battle draws the reference's text up to a grown string, then its added words.
+- **Limits.** C2 on the project's emulator. One battle is replayed, not every battle message.
+
+### E-0417 — The text in code and data banks, exported for translators; bank $0E's message group
+
+- Date: 2026-10-20. Kind: TOOL and OBSERVATION (tools/sm83.py). Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Guide: [translating](TRANSLATING.md).
+- **What H3 missed.** tools/text.py read src/text/ only (5,407 entries), but 1,084 more text blocks sit in code and data banks:
+  - bank $0E's 152 messages;
+  - item descriptions (bank $24), default names (bank $14), the gift and link banks' dialogue;
+  - the staff credits (bank $E0), the name-entry keyboard;
+  - name fields of records.
+  None of them were translatable, and `free-glyphs` listed 75 codes when only 26 are unused (4 blank). The other 49 are used by that text, 53 codes in all by it alone (the keyboard among them). A letter drawn over one would have changed it.
+- **tools/text.py now reads every bank file but the home bank,** whose one quoted block is the cartridge header: 6,491 entries in all.
+  - A db line's `; comment` is cut off before parsing, since a `$0B` in it would read as a byte. Edits keep each line's comment.
+  - An entry outside src/text/ is a message when it waits or speaks (<PROMPT>, <WAIT>, <VOICEn>), and a string otherwise.
+- **Fixed lengths.** An entry may change length only when the game finds it by its own label (a pointer list or a load), it ends with $F0, and a label, blank line, comment, fill or section follows it. The other 26, such as the 10-byte names in PresetMonsterRecords and the 181-byte keyboard, must keep their bytes. Their edits are written along the old lines, so `db $01` and `db "Bob@", $f0, ...` keep their form and comments.
+- **Bank $0E's group.** BeginMessageDisplay_Bank0E and CopyStringToBuffer_Bank0E split at $88 into bank $96, like the twelve groups of E-0416. tools/text_spill.py now takes that name and src/data/: thirteen groups. Bank $0E has 19 free bytes.
+- **Checks (tests/test_text_banks.py).**
+  - The round trip of all 6,491 entries is identical.
+  - Refusals: a record field one byte longer, and ten bank-$0E messages grown with no spill.
+  - A copy with bank $0E spilled by 11 (to $7D, in bank $96) and four entries edited builds. On tools/sm83.py, BeginMessageDisplay_Bank0E shows the new message for ids 0-11, the ids that name it, and the other 148 ids are unchanged. The gift bank's and the credits' lookups show their new text. ItemDescriptionTable[13] points at the new description.
+  - The opening's 3,000 frames match the reference.
+- **Limits.** The fixed-length rule is static: a string the game reads by position but that also has a pointer would be let change length. Widths of strings outside a list are their own longest line.
+
 ### E-0416 — Room in a full message bank: the split message groups spilled to their overflow tables
 
 - Date: 2026-10-19. Kind: OBSERVATION (source and tools/sm83.py) and TOOL. Target `dwm2-cobi-us-rev0`, SHA-256 `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e`. Base commit dc53d37. No change to src/. Guide: [translating](TRANSLATING.md#moving-messages-out-of-a-full-bank).

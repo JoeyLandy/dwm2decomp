@@ -7829,7 +7829,7 @@ NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg::
     ld [wArg2], a
     ld [wSpeciesIdHi], a
     ld de, BreedShowNameSpeciesBits
-    ASSERT BANK(BreedShowNameSpeciesBits) == $15, "BreedShowNameSpeciesBits is read with bank $15 mapped"
+    ASSERT BANK(BreedShowNameSpeciesBits) == BANK(TestBitInFieldAtArg3), "BreedShowNameSpeciesBits is read by TestBitInFieldAtArg3, in its own bank"
     ld a, e
     ld [wArg3], a
     ld a, d
