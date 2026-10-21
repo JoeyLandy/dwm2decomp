@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-20**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)), all done 2026-10-17 (H6 on Linux 2026-10-19); follow-ups E-0415 to E-0421 widen what a translation or mod can move. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
+As of **2026-10-21**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)), all done 2026-10-17 (H6 on Linux 2026-10-19); follow-ups E-0415 to E-0422 widen what a translation or mod can move. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -159,7 +159,36 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-20, E-0420, E-0421): the open items done; scripts in any bank
+## Current handoff (2026-10-21, E-0422): every script can move; the last literal bank explained
+
+The two open items of the E-0420/E-0421 handoff are done:
+- **The script runs with raw bytes, and the arena and breeding scripts.** The raw bytes after eight bank-$10 scripts
+  decode as script to the last byte: 19 leftovers nothing starts, now read as script (config/script_entries.json,
+  named `..._Leftover` so no other name changed). All 656 bank-$10 runs now move with tools/script_bank.py. The
+  arena, breeding and other menu scripts were never in bank $10: they are data-bank scripts in banks $0C-$96. They
+  now have sections of their own (16 new sections, same bytes), and move with tools/move_section.py, no
+  interpreter patch, because their talk routines name the bank (E-0420) and a battle restores wDataBank
+  (wDataBankSave). Breeding (122 runs), priest and library (128 runs) and an arena battle with its resume play
+  frame for frame as the original with their scripts in bank $9F. bank_check now makes a script jump into another
+  bank an error, so the arena's two sections move only together (`--move` may repeat). The last eight recipe
+  lines that poked raw script addresses name their scripts.
+- **GreatLogTalkEvents_Breeder's wDataBank = $0E.** Nothing reads it: on tools/sm83.py both of its scripts, with yes
+  and with no, run to their end without a read. The second script is unreachable (its flag has no setter). Its
+  note is corrected; bank_check lists it as "unread" (literal: 0).
+
+Checks: no drift (265 files); build/run_e0422c PASS (zero differing bytes); bank_check 0 errors, 0 warnings, 545
+asserted, 0 literal, 1 unread. Suite (tools/run_tests.py --jobs 8 under nice): build/logs/suite_e0422.log, 591 tests,
+587 OK, 3 skipped, 1 failure: tests/test_doc_coverage.py, because the breeder's corrected note lacked the
+hand-reading tag form. With the tag fixed (a comment only; src/ regenerated, no drift), that file passes (22
+tests). Scripts moved and run: build/logs/e0422_breed_moved.log, e0422_priest_moved.log, e0422_arena_moved.log.
+
+Open:
+1. The other data-bank script sections (keys, swap, hibernation, NPC breeding, egg service) have sections but were
+   not moved and run.
+2. The patched interpreter's extra cycles shift some frames (E-0421); a mod that must keep the original's frame
+   timing exactly moves data-bank sections instead, which adds no cycles.
+
+## Prior handoff (2026-10-20, E-0420, E-0421): the open items done; scripts in any bank
 
 The two open items of the E-0417 to E-0419 handoff are done:
 - **Text banks whose table other code reads (E-0420).** Bank $09's key-name readers copied with `ld b, $09` and set

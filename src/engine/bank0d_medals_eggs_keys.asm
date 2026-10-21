@@ -4814,6 +4814,8 @@ KeyAppraisalMenu_CloseBoxTileRect::
 KeyAppraisalMenu_ChooseKey_DrawListBox_Data::
     db $ce, $c3, $f6, $c3, $1e, $c4, $46, $c4
 
+SECTION "Bank 0D Script_KeyAppraisal", ROMX
+
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_KeyAppraisal::
     script_command SCRIPT_KEY_APPRAISAL
@@ -4871,6 +4873,8 @@ Script_YouHaveNoMore_3::
 Script_WhichMagicKeyShould_2::
     script_message $c008 ; '*: Which Magic Key should I'
     script_jump Script_KeyAppraisal_2
+
+SECTION "Bank 0D MedalPrizeMenu", ROMX
 
 ; The TinyMedal prize exchange, script command SCRIPT_MEDAL_PRIZES ($F3; ScriptCommandF3 in bank $10
 ; far-calls it once per frame), by wScreenState: 0 MedalPrizeMenu_Init (message mode 7; with no

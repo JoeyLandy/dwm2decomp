@@ -830,6 +830,8 @@ String_1F_00_3D::
     db "<NEXT>time, big brother!<WAIT>"
     db "@"
 
+SECTION "Bank 1F Script_SwapMonsters", ROMX
+
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_SwapMonsters::
     script_command SCRIPT_SWAP_MONSTERS
@@ -1120,6 +1122,8 @@ Script_TheEggWasReleased::
 Script_SwapMonsters_31::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_SwapMonsters_30
+
+SECTION "Bank 1F DrawRecordListPageNames", ROMX
 
 ; Draws the names of the records on the current page of a record list into VRAM, one name per call
 ; to the glyph copier, then moves on to the next screen step. It opens SRAM (rRAMG2 = $0A, bank 0),

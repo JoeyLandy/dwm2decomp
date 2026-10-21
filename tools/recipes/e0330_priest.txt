@@ -1,7 +1,7 @@
-# E-0330: the priest (Script_1F_77D4, started by its RAM bytes on Main Street) revives a monster marked dead
+# E-0330: the priest (Script_Priest, started by its RAM bytes on Main Street) revives a monster marked dead
 # (MON_STATUS bit 7 and MON_HP 0 written into cartridge RAM) for 25G (includes e0329_library.txt).
 @ e0329_library.txt
-pr02! | t02! | sram+55=0x80 sram+5B=0 wDataBank=0x1F wScriptInDataBank=1 wScriptPointerLo=0xD4 wScriptPointerHi=0x77 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W60
+pr02! | t02! | sram+55=0x80 sram+5B=0 wDataBank=BANK(Script_Priest) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_Priest) wScriptPointerHi=HIGH(Script_Priest) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W60
 pr03! | pr02! |  | A2 W60
 pr04! | pr03! |  | A2 W60 A2 W60 A2 W60
 pr05! | pr04! |  | W60 A2 W60 A2 W60 A2 W60 A2 W60

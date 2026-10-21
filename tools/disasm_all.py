@@ -583,6 +583,8 @@ def name_story_flags(texts: list[str], hand: dict[int, str] | None = None
             m = re.match(r"^([A-Za-z_]\w*)::", ln)
             if m and "address name" not in ln:
                 routine, cmd, quote, any_quote = m.group(1), None, None, None
+            if re.search(r"_Leftover\d*$", routine):  # E-0422: a script nothing starts names no flag
+                continue
             code = ln.split(";")[0].strip()
             q = re.search(r"; '([^']+)'", ln)
             if code.startswith("script_message") and q:
@@ -5498,6 +5500,9 @@ class Rom:
                 if hl and 0x4000 <= hl[1] < 0x8000:
                     sites.append((cb, hl[0], hl[1]))
                     site_bank.setdefault(hl[1], set()).add(dbank)
+        for sb, a, dbank in getattr(self, "script_entries", []):  # config/script_entries.json (E-0422)
+            if sb == b:
+                site_bank.setdefault(a, set()).add(dbank)
         code: dict[tuple[int, int], tuple[int, bytes]] = {}
         targets: set[tuple[int, int]] = set()
         self.e7_banks: dict[tuple[int, int], set] = {}
@@ -5575,7 +5580,10 @@ class Rom:
                 for a in [a for a in dt if lo <= a < hi]:
                     del dt[a]
                 for a in reg:
-                    if (sb, a) in targets:
+                    if (sb, a) in getattr(self, "script_entry_names", {}):  # E-0422: a leftover, named by hand
+                        dl[a] = self.script_entry_names[(sb, a)]
+                        self.dreason[(sb, a)] = "event script nothing starts (config/script_entries.json, E-0422)"
+                    elif (sb, a) in targets:
                         if a in dl and dl[a].startswith("Data_"):
                             self.dalias.setdefault((sb, a), dl[a])
                         # E-0331: a script entry that a string list's last words also point at (1F:5A3A, jumped to
@@ -6560,9 +6568,10 @@ class Rom:
                     text = f"lb {mv.group(1)}, ${mv.group(2)}, ${mv.group(3)}"
                 elif val.get("expr"):
                     text = f"ld {mv.group(1)}, {val['expr']}"
-            m8 = re.match(r"ld ([abcdehl]), \$[0-9A-F]{2}$", text) if val and val.get("expr") else None
-            if m8:  # E-0410: an 8-bit value written as an expression (E-0414's `ld b, BANK(Table)`)
-                text = f"ld {m8.group(1)}, {val['expr']}" + (f"  ; {val['comment']}" if val.get("comment") else "")
+            m8 = re.match(r"ld ([abcdehl]), (\$[0-9A-F]{2})$", text) if val and (val.get("expr") or val.get("comment")) \
+                else None
+            if m8:  # E-0410: an 8-bit value written as an expression (E-0414's `ld b, BANK(Table)`); E-0422: or kept, with a note
+                text = f"ld {m8.group(1)}, {val.get('expr') or m8.group(2)}" + (f"  ; {val['comment']}" if val.get("comment") else "")
             ref = self.dref.get((bank, pc))
             plus = self.dref_plus.get((bank, pc))
             if plus and plus[1] in self.dlabels[plus[0]]:  # E-0348: a pointer inside a labelled table
@@ -6902,6 +6911,13 @@ def main() -> int:
         for r in json.loads(regions_path.read_text(encoding="utf-8"))["regions"]:
             rom.data_regions.setdefault(int(r["bank"], 16), []).append((int(r["start"], 16), int(r["end"], 16)))
         log(f"loaded {sum(len(v) for v in rom.data_regions.values())} proven data regions")
+    script_entries_path = ROOT / "config/script_entries.json"  # E-0422: scripts nothing starts, read by hand
+    if script_entries_path.exists():
+        cfg_entries = json.loads(script_entries_path.read_text(encoding="utf-8"))["entries"]
+        rom.script_entries = [(int(e["bank"], 16), int(e["addr"], 16), int(e["data_bank"], 16) if "data_bank" in e else None)
+                              for e in cfg_entries]
+        rom.script_entry_names = {(int(e["bank"], 16), int(e["addr"], 16)): e["name"] for e in cfg_entries}
+        log(f"loaded {len(rom.script_entries)} configured script entries")
     commands_path = ROOT / "config/script_commands.json"
     if commands_path.exists():
         rom.script_commands = {int(k, 16): v for k, v in

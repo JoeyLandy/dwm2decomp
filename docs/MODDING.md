@@ -59,21 +59,26 @@ its scripts in a bank of their own, `tools/script_bank.py` changes a mod's copy 
 - `patch` lets a script be in any bank and use every opcode. It adds `script_jump_far Label` (opcode $08, unused by
   the game): the script goes on at Label, in Label's bank. Write new scripts in an empty bank
   (src/unused/bankBB_empty.asm) and jump to them from a script in bank $10.
-- `move --all --to BB` moves bank $10's scripts to the empty bank BB: 627 of its 637 runs (6,207 bytes; the other
-  10 hold bytes not read as script). Every label that something outside names keeps a 4-byte stub in bank $10 that
-  jumps there, so nothing that starts a script changes, and bank $10 gains 4,466 bytes. `move Script_Label ...`
-  moves only the runs that hold those labels.
+- `move --all --to BB` moves all 656 of bank $10's script runs (6,458 bytes) to the empty bank BB. Every label that
+  something outside names keeps a 4-byte stub in bank $10 that jumps there, so nothing that starts a script
+  changes, and bank $10 gains 4,685 bytes. `move Script_Label ...` moves only the runs that hold those labels.
 
 ```json
 {"name": "my_mod", "scripts": {"move": "all", "to": "9F"}}
 ```
 
-`{"patch": true}` gives the interpreter change alone. The scripts that use the arena, breeding or NPC breeding
-menus cannot move: those menus resume their script in the game's own data-bank mode. Checked on the project's
-emulator (tests/test_script_bank.py, E-0421): with every movable script moved, all 17 recipe chains (279 runs)
-fetch the same script positions as the original. The screens differ only where the patched interpreter's extra
-cycles move a frame: a few VBlanks, and in one boss battle a button press that lands on another turn (it does the
-same with the interpreter patch alone).
+`{"patch": true}` gives the interpreter change alone. Checked on the project's emulator (tests/test_script_bank.py,
+E-0421): with every bank-$10 script moved, all 17 recipe chains (279 runs) fetch the same script positions as the
+original. The screens differ only where the patched interpreter's extra cycles move a frame: a few VBlanks, and in
+one boss battle a button press that lands on another turn (it does the same with the interpreter patch alone).
+
+The scripts of the arena, breeding, the priest and the other menus are in other banks already ($0C, $0D, $0E, $15,
+$1D, $1F, $96), each in a section of its own whose bank the talk routine names, so they need no patch. Move one like
+any section: `python -I tools/move_section.py --move "Bank 15 Script_Breed" --to 9F` writes the moved copy of src/
+to build/move/moved/src, which `make_mod.py --base` builds from. Give `--move` once per section when sections jump
+to each other, such as the arena's two; bank_check refuses them apart. Breeding, the priest and library, and an
+arena battle play frame for frame as the original with their scripts moved (tests/test_script_sections.py,
+E-0422).
 
 ## The smoke test
 

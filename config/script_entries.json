@@ -1,0 +1,140 @@
+{
+  "_comment": "E-0422: event scripts that nothing starts. Each sits after a script's end in bank $10, its bytes decode as script to the last byte, and no label or pointer names it: leftovers, read by hand. tools/disasm_all.py traces from them like the scripts code starts ('data_bank': the wDataBank their script_jump_data_bank continues in, $10 as for the scripts beside them, C1). 'after' is the script they follow. 'name' is the label it gets: the script it follows plus _Leftover, so it takes no number from the names given by first message, and tools/disasm_all.py leaves its set_flag out of the story-flag names (D-009).",
+  "entries": [
+    {
+      "bank": "10",
+      "addr": "51C9",
+      "evidence": "E-0422",
+      "after": "Script_OhYou_4",
+      "name": "Script_OhYou_4_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "51D2",
+      "evidence": "E-0422",
+      "after": "Script_OhYou_4",
+      "name": "Script_OhYou_4_Leftover2"
+    },
+    {
+      "bank": "10",
+      "addr": "51DF",
+      "evidence": "E-0422",
+      "after": "Script_OhYou_4",
+      "name": "Script_OhYou_4_Leftover3"
+    },
+    {
+      "bank": "10",
+      "addr": "51E8",
+      "evidence": "E-0422",
+      "after": "Script_OhYou_4",
+      "name": "Script_OhYou_4_Leftover4"
+    },
+    {
+      "bank": "10",
+      "addr": "5388",
+      "evidence": "E-0422",
+      "after": "Script_WarubouWaHeyHurry",
+      "name": "Script_WarubouWaHeyHurry_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "5391",
+      "evidence": "E-0422",
+      "after": "Script_WarubouWaHeyHurry",
+      "name": "Script_WarubouWaHeyHurry_Leftover2"
+    },
+    {
+      "bank": "10",
+      "addr": "5395",
+      "evidence": "E-0422",
+      "after": "Script_WarubouWaHeyHurry",
+      "name": "Script_WarubouWaHeyHurry_Leftover3"
+    },
+    {
+      "bank": "10",
+      "addr": "539D",
+      "evidence": "E-0422",
+      "after": "Script_WarubouWaHeyHurry",
+      "name": "Script_WarubouWaHeyHurry_Leftover4"
+    },
+    {
+      "bank": "10",
+      "addr": "53A5",
+      "evidence": "E-0422",
+      "after": "Script_WarubouWaHeyHurry",
+      "name": "Script_WarubouWaHeyHurry_Leftover5"
+    },
+    {
+      "bank": "10",
+      "addr": "5659",
+      "evidence": "E-0422",
+      "after": "Script_WelcomeHowMayI_2",
+      "data_bank": "10",
+      "name": "Script_WelcomeHowMayI_2_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "5764",
+      "evidence": "E-0422",
+      "after": "Script_SceneStrongestMaster",
+      "name": "Script_SceneStrongestMaster_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "576D",
+      "evidence": "E-0422",
+      "after": "Script_SceneStrongestMaster",
+      "name": "Script_SceneStrongestMaster_Leftover2"
+    },
+    {
+      "bank": "10",
+      "addr": "5771",
+      "evidence": "E-0422",
+      "after": "Script_SceneStrongestMaster",
+      "name": "Script_SceneStrongestMaster_Leftover3"
+    },
+    {
+      "bank": "10",
+      "addr": "577A",
+      "evidence": "E-0422",
+      "after": "Script_SceneStrongestMaster",
+      "name": "Script_SceneStrongestMaster_Leftover4"
+    },
+    {
+      "bank": "10",
+      "addr": "58A7",
+      "evidence": "E-0422",
+      "after": "Script_TerryHumphConfidentHuh",
+      "name": "Script_TerryHumphConfidentHuh_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "58B0",
+      "evidence": "E-0422",
+      "after": "Script_TerryHumphConfidentHuh",
+      "name": "Script_TerryHumphConfidentHuh_Leftover2"
+    },
+    {
+      "bank": "10",
+      "addr": "58D7",
+      "evidence": "E-0422",
+      "after": "Script_KamehaWhatOhIt_2",
+      "name": "Script_KamehaWhatOhIt_2_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "5AD4",
+      "evidence": "E-0422",
+      "after": "Script_SceneWaterReward",
+      "name": "Script_SceneWaterReward_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "608A",
+      "evidence": "E-0422",
+      "after": "Script_HowMayOurChurch_4",
+      "data_bank": "10",
+      "name": "Script_HowMayOurChurch_4_Leftover"
+    }
+  ]
+}

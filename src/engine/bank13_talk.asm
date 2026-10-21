@@ -10323,9 +10323,13 @@ GreatLogTalkEvents_ArenaClassChoice::
 
 SECTION "Bank 13 GreatLogTalkEvents_Breeder", ROMX
 
-; Great Log talk, the breeder (scripts in bank $0E): saves the screen and the player's position; 'I
-; lost again. I need ...' in two versions, or 'When you breed, the offspring ...' ($04B4) after
-; EVENT_WHEN_YOU_BREED_THE_OFFSPRING. (C1, E-0357)
+; Great Log talk, the breeder: saves the screen and the player's position; after
+; EVENT_WHEN_YOU_BREED_THE_OFFSPRING, message $04B4 ('When you breed, the offspring ...'). Otherwise
+; it sets wScreenTableIndex = 0 and wDataBank = $0E and starts Script_ILostAgainI ('I lost again. I
+; need ...'), or Script_ILostAgainI_2 when EVENT_I_LOST_AGAIN_I_NEED is set, which nothing sets.
+; Both scripts are in bank $10, and nothing reads wDataBank before they end: the store is a leftover
+; of the NPC breeders' form, whose scripts go on in bank $0E (on tools/sm83.py, both scripts and
+; answers). (C2, E-0357; probed E-0422)
 GreatLogTalkEvents_Breeder::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -10334,7 +10338,7 @@ GreatLogTalkEvents_Breeder::
     jr c, .call_start_message_command09_hl_b13
     ld a, $00
     ld [wScreenTableIndex], a
-    ld a, $0e
+    ld a, $0e  ; nothing reads it: a leftover (E-0422)
     ld [wDataBank], a
     ld de, EVENT_I_LOST_AGAIN_I_NEED
     call TestFlagBit

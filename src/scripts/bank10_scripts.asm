@@ -4449,10 +4449,28 @@ Script_OhYou_4::
     script_message $08ac ; '0 handed over the Rib.'
     script_set_flag EVENT_HERO_HANDED_OVER_THE_RIB
     script_end
-    db $00, $01, $43, $06, $04, $00, $04, $83, $ff, $00, $02, $83, $00, $03, $03, $0e
-    db $b0, $04, $0a, $87, $01, $ff, $00, $01, $43, $06, $04, $00, $04, $83, $ff, $00
-    db $07, $83, $00, $08, $03, $0e, $b0, $04, $0a, $89, $01, $ff
-
+Script_OhYou_4_Leftover::
+    script_message $4301 ; '*: There are three kingdoms situated'
+    script_skip_if_no Script_OhYou_4_Leftover2
+    script_message $8304 ; '*: Listen, did you hear? They'
+    script_end
+Script_OhYou_4_Leftover2::
+    script_message $8302 ; '*: Travel north along the mountain'
+    script_message $0303 ; '*: The winter here is harsh.'
+    script_add_gold 1200
+    script_set_flag EVENT_WHAT_YOU_DON
+    script_end
+Script_OhYou_4_Leftover3::
+    script_message $4301 ; '*: There are three kingdoms situated'
+    script_skip_if_no Script_OhYou_4_Leftover4
+    script_message $8304 ; '*: Listen, did you hear? They'
+    script_end
+Script_OhYou_4_Leftover4::
+    script_message $8307 ; '*: The spring in the north,'
+    script_message $0308 ; '*: Have you heard about the'
+    script_add_gold 1200
+    script_set_flag EVENT_WELCOME_TO_THE_ARENA
+    script_end
 Script_IWasGoingTo::
     script_message $4a25 ; '*: I was going to ask'
     script_skip_if_no Script_TheFarmThatYour
@@ -4676,10 +4694,29 @@ Script_WarubouWaHeyThis::
 Script_WarubouWaHeyHurry::
     script_message $829f ; 'Warubou: Wa-hey, hurry. You need to'
     script_end
-    db $00, $9e, $42, $06, $04, $00, $a2, $82, $ff, $00, $a0, $82, $ff, $00, $a3, $02
-    db $3b, $0a, $2f, $01, $ff, $00, $a3, $02, $3b, $0a, $35, $01, $ff, $00, $a3, $02
-    db $3b, $0a, $39, $01, $ff
-
+Script_WarubouWaHeyHurry_Leftover::
+    script_message $429e ; 'Warubou: Wa-hey! This time, you'll have'
+    script_skip_if_no Script_WarubouWaHeyHurry_Leftover2
+    script_message $82a2 ; 'Warubou: Wa-hey. I need you to'
+    script_end
+Script_WarubouWaHeyHurry_Leftover2::
+    script_message $82a0 ; 'Warubou: Wa-hey, you've gathered enough energy'
+    script_end
+Script_WarubouWaHeyHurry_Leftover3::
+    script_message $02a3 ; 'Warubou: Wa-hey! You did it! There'
+    script_command $3b
+    script_set_flag EVENT_WARUBOU_WA_HEY_THIS_TIME
+    script_end
+Script_WarubouWaHeyHurry_Leftover4::
+    script_message $02a3 ; 'Warubou: Wa-hey! You did it! There'
+    script_command $3b
+    script_set_flag EVENT_WARUBOU_WA_HEY_FIND_ANOTHER
+    script_end
+Script_WarubouWaHeyHurry_Leftover5::
+    script_message $02a3 ; 'Warubou: Wa-hey! You did it! There'
+    script_command $3b
+    script_set_flag $0139
+    script_end
 Script_WarubouWaHeyAre::
     script_message $452a ; 'Warubou: Wa-hey! Are you ready? Ready'
     script_skip_if_no Script_WarubouWaHeyTake
@@ -5086,7 +5123,12 @@ Script_ArmyAntHelpedMeGet::
 Script_WelcomeHowMayI_2::
     script_message $48cc ; '*: Welcome! How may I serve'
     script_jump_data_bank Script_Shop
-    db $ff, $00, $8a, $4d, $e7, $59, $66, $ff
+    db $ff
+
+Script_WelcomeHowMayI_2_Leftover::
+    script_message $4d8a ; '*: My ArmyAnt, which I got'
+    script_jump_data_bank Script_Shop
+    db $ff
 
 Script_I_10::
     script_message $4a46 ; '*: I'm a traveling merchant. I'm'
@@ -5245,11 +5287,35 @@ Script_SceneStrongestMaster::
     script_command SCRIPT_SCENE_STRONGEST_MASTER
     script_set_flag EVENT_SCENE_STRONGEST_MASTER
     script_end
-    db $00, $70, $4a, $06, $04, $00, $73, $8a, $ff, $00, $72, $8a, $ff, $00, $70, $4a
-    db $06, $04, $00, $73, $8a, $ff, $00, $71, $8a, $02, $02, $02, $03, $02, $02, $03
-    db $01, $02, $02, $02, $01, $05, $80, $03, $05, $82, $01, $03, $3c, $00, $60, $03
-    db $3c, $00, $0f, $48, $4c, $03, $1e, $00, $0f, $ff, $0a, $37, $01, $ff
-
+Script_SceneStrongestMaster_Leftover::
+    script_message $4a70 ; '*: I like making the Medal'
+    script_skip_if_no Script_SceneStrongestMaster_Leftover2
+    script_message $8a73 ; '*: Aww… That's so disappointing. I'
+    script_end
+Script_SceneStrongestMaster_Leftover2::
+    script_message $8a72 ; '*: Yippee! Thanks a whole bunch!'
+    script_end
+Script_SceneStrongestMaster_Leftover3::
+    script_message $4a70 ; '*: I like making the Medal'
+    script_skip_if_no Script_SceneStrongestMaster_Leftover4
+    script_message $8a73 ; '*: Aww… That's so disappointing. I'
+    script_end
+Script_SceneStrongestMaster_Leftover4::
+    script_message $8a71 ; '*: Yippee! Thanks a whole bunch!'
+    script_walk_fast 2, 2, 3
+    script_walk_fast 2, 3, 1
+    script_walk_fast 2, 2, 1
+    script_face $80, 3
+    script_face $82, 1
+    script_wait 60
+    script_command $60
+    script_wait 60
+    script_sound $48
+    script_command $4c
+    script_wait 30
+    script_sound $ff
+    script_set_flag $0137
+    script_end
 Script_PrinceKamehaHasBeen_2::
     script_set_flag EVENT_PRINCE_KAMEHA_HAS_BEEN
     script_wait 30
@@ -5403,8 +5469,15 @@ Script_TerryHumphConfidentHuh::
     script_message $8bae ; 'Terry: Humph… Confident, huh? I'll tell'
     script_command SCRIPT_SCENE_TERRY_BATTLE
     script_end
-    db $00, $b0, $4b, $06, $04, $00, $af, $8b, $ff, $00, $ae, $8b, $7c, $ff
-
+Script_TerryHumphConfidentHuh_Leftover::
+    script_message $4bb0 ; 'Terry: I heard about GreatLog's heroic'
+    script_skip_if_no Script_TerryHumphConfidentHuh_Leftover2
+    script_message $8baf ; 'Terry: Oh, it was someone else?'
+    script_end
+Script_TerryHumphConfidentHuh_Leftover2::
+    script_message $8bae ; 'Terry: Humph… Confident, huh? I'll tell'
+    script_command SCRIPT_SCENE_TERRY_BATTLE
+    script_end
 Script_KamehaI::
     script_message $4b8f ; 'Kameha: I've gone to other worlds'
     script_skip_if_no Script_KamehaSoYou
@@ -5424,8 +5497,11 @@ Script_KamehaWhatOhIt_2::
     script_message $0bc2 ; '0 received the Magic Key.'
     script_set_flag EVENT_HERO_RECEIVED_THE_ELF_KEY
     script_end
-    db $00, $95, $0b, $00, $9a, $0b, $0a, $3a, $00, $ff
-
+Script_KamehaWhatOhIt_2_Leftover::
+    script_message $0b95 ; 'Kameha: What? Oh, it's 0. Did'
+    script_message $0b9a ; '0 received the Lonely Key.'
+    script_set_flag EVENT_HERO_RECEIVED_THE_ELF_KEY
+    script_end
 Script_KamehaI_2::
     script_message $4b8f ; 'Kameha: I've gone to other worlds'
     script_skip_if_no Script_KamehaSoYou_2
@@ -5682,8 +5758,9 @@ Script_I_13::
 Script_SceneWaterReward::
     script_command SCRIPT_SCENE_WATER_REWARD
     script_end
-    db $4d, $ff
-
+Script_SceneWaterReward_Leftover::
+    script_command SCRIPT_SCENE_WATER_REWARD
+    script_end
 Script_KingTheTown::
     script_message $0181 ; 'King: The town's water shortage seems'
     script_set_flag EVENT_KING_THE_TOWN
@@ -6491,7 +6568,12 @@ Script_WelcomeHowMayI_4::
 Script_HowMayOurChurch_4::
     script_message $444c ; '*: How may our church help'
     script_jump_data_bank Script_Priest
-    db $ff, $00, $51, $44, $e7, $0b, $69, $ff
+    db $ff
+
+Script_HowMayOurChurch_4_Leftover::
+    script_message $4451 ; '*: Welcome to our inn.'
+    script_jump_data_bank Script_It_3
+    db $ff
 
 Script_HeroCheckedTheSmall::
     script_message $045a ; '0 checked the small hole. It'
@@ -7121,6 +7203,8 @@ Script_WarubouWaHeySo::
     script_message $4127 ; 'Warubou: Wa-hey! So, this is it?'
     script_jump_data_bank Script_Priest
     db $ff
+
+SECTION "Bank 10 ScriptCommandE0", ROMX
 
 ; Script command type E0 (SCRIPT_INN), entry 223 of ScriptCommandHandlers, which
 ; ExecuteScriptCommand jumps through with wScriptCommandType - 1: far-calls InnMenu in bank $1C, the

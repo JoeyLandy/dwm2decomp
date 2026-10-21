@@ -175,6 +175,8 @@ String_1D_00_16::
     db "hibernate,I see.<WAIT>"
     db "@"
 
+SECTION "Bank 1D Script_Hibernate", ROMX
+
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_Hibernate::
     script_command SCRIPT_HIBERNATE
@@ -189,6 +191,8 @@ Script_ComeSeeMeIf::
 Script_ToHibernate_16::
     script_jump Script_Hibernate_16
     db $07, $6d, $44
+
+SECTION "Bank 1D Script_ToHibernate_11", ROMX
 
 Script_ToHibernate_11::
     script_jump Script_Hibernate_11
@@ -363,6 +367,8 @@ Script_SoSwitchHeroAnd_2::
     db $eb, $e4, $0a, $00, $00, $05, $c0, $00, $02, $c0, $07, $36, $43, $00, $11, $c0
     db $eb, $e4, $07, $00, $00, $02, $c0, $07, $36, $43, $eb, $07, $7d, $44
 
+SECTION "Bank 1D Script_Hibernate_16", ROMX
+
 Script_Hibernate_16::
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_WhoDoYouWant, Script_HuhNoOne_2
@@ -389,6 +395,8 @@ Script_GWasReleasedIn::
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
     script_jump Script_Hibernate_2
+
+SECTION "Bank 1D VaultMenu_Store_WriteWindowMap", ROMX
 
 ; Storing or taking out, step 0: writes the item window's tile map into BG map 1 at $9F00 (to the
 ; $7F end), the bag's (state 3) or the storage's version. (C1, E-0357)

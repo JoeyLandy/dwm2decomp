@@ -8692,6 +8692,8 @@ FamilyPairResults00A::
     dw $ffff ; parent A's species
     dw $ffff ; parent A's species
 
+SECTION "Bank 0E Script_ItsAccessoryIsIn", ROMX
+
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_ItsAccessoryIsIn::
     script_command SCRIPT_NPC_BREED

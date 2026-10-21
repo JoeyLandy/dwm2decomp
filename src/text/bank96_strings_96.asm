@@ -1285,6 +1285,8 @@ Text_CheckedTheDesk::
 Text_Empty_2::
     db $f0
 
+SECTION "Bank 96 Script_EggService", ROMX
+
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_EggService::
     script_command SCRIPT_EGG_SERVICE
@@ -1457,6 +1459,8 @@ Script_ToComeHereForRenaming::
 Script_Rename_3::
     script_command SCRIPT_RENAME
     script_jump Script_Rename_2
+
+SECTION "Bank 96 BeginMessageDisplay_Bank0E_Overflow", ROMX
 
 ; Starts string wStringIndex - $88 of bank $0E's overflow table (MessageStrings_Bank0E_Overflow).
 ; (C1, E-0357)

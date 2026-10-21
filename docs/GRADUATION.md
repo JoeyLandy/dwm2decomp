@@ -107,9 +107,12 @@ same 69 lines) or the fresh .sym (explore.py's address table). present.Names run
 **H1c. config/ files by role (2026-10-17).** Nothing that builds, reads or checks the source needs
 config/names.json or config/annotations.json: that is the exit gate below. They stay in the repository, frozen, as
 inputs of the generator, which remains a re-analysis tool that writes build/listing/ and build/regen/src/.
-- Frozen generator inputs (no new names or notes go here): names.json, annotations.json, name_families.json,
-  banks.json, operands.json, story_flags.json, battle_status.json, script_commands.json, record_fields.json, and
-  the analysis inputs code_entries, data_regions, indexed_dispatch, arg_banks, observed_streams, stream_chains.
+- Generator inputs: names.json, annotations.json, name_families.json, banks.json, operands.json,
+  story_flags.json, battle_status.json, script_commands.json, record_fields.json, and the analysis inputs
+  code_entries, script_entries (E-0422), data_regions, indexed_dispatch, arg_banks, observed_streams,
+  stream_chains. src/ is the source; when a change to src/ is one the generator can also make (a label's bank
+  as BANK(), E-0410 to E-0420; a note; a script entry), the entry goes here in the same change, so the regenerated
+  tree stays identical to src/ (tools/src_drift.py).
 - Read by tools at run time: targets/, toolchain.lock.json, probes/ and probe_exclusions.json (the emulator
   probes), tables.json (the table layouts tools/datatables.py and tools/tables_export.py use) and symbols.json
   (buffer-offset aliases).

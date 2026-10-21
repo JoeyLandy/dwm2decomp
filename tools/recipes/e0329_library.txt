@@ -1,5 +1,5 @@
-# E-0329: the monster library (Script_1F_787B, started by its RAM bytes on Main Street) shows one count per family on
+# E-0329: the monster library (Script_Library, started by its RAM bytes on Main Street) shows one count per family on
 # two pages (includes e0328_breed.txt).
 @ e0328_breed.txt
-lb01! | t02! | wDataBank=0x1F wScriptInDataBank=1 wScriptPointerLo=0x7B wScriptPointerHi=0x78 wScriptStartRequest=0x80 wModeState=1 | W60
+lb01! | t02! | wDataBank=BANK(Script_Library) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_Library) wScriptPointerHi=HIGH(Script_Library) wScriptStartRequest=0x80 wModeState=1 | W60
 lb02! | lb01! |  | R2 W40

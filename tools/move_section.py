@@ -10,7 +10,7 @@ compares its video state with the unchanged copy's frame by frame in tools/sm83.
 code does not change instruction timing, so a move that works shows the same frames.
 
 Usage: move_section.py --list [--frames 3000]
-       move_section.py --move "Bank 12 SomeRoutine" --to 3A [--frames 3000] [--out build/move]
+       move_section.py --move "Bank 12 SomeRoutine" [--move ...] --to 3A [--frames 3000] [--out build/move]
 """
 from __future__ import annotations
 
@@ -145,7 +145,8 @@ def section_sizes(map_path: Path) -> dict[str, int]:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--list", action="store_true")
-    ap.add_argument("--move")
+    ap.add_argument("--move", action="append", help="a section name; repeat it to move several to the same bank "
+                    "(E-0422: script sections that jump to each other move together)")
     ap.add_argument("--to")
     ap.add_argument("--frames", type=int, default=3000)
     ap.add_argument("--out", default="build/move")
@@ -176,11 +177,14 @@ def main(argv: list[str] | None = None) -> int:
     import toolchain
     subprocess.run([str(toolchain.exe("rgblink")), "-l", base_src / "layout.link", "-m", out / "base/dwm2.map",
                     "-o", out / "base/map.gbc", out / "base/main.o"], check=True, capture_output=True)
-    size = section_sizes(out / "base/dwm2.map")[args.move]
+    sizes = section_sizes(out / "base/dwm2.map")
+    size = sum(sizes[name] for name in args.move)
     src = out / "moved/src"
     shutil.copytree(base_src, src)
-    (src / "layout.link").write_text(move((src / "layout.link").read_text(encoding="utf-8"), args.move, to),
-                                     encoding="utf-8", newline="\n")
+    layout = (src / "layout.link").read_text(encoding="utf-8")
+    for name in args.move:
+        layout = move(layout, name, to)
+    (src / "layout.link").write_text(layout, encoding="utf-8", newline="\n")
     files = shift_test.bank_files(src)
     text = files[to].read_text(encoding="utf-8").split("\n")
     for k in range(len(text) - 1, -1, -1):  # the target bank gives up `size` bytes of its last fill
@@ -194,14 +198,16 @@ def main(argv: list[str] | None = None) -> int:
             break
     files[to].write_text("\n".join(text), encoding="utf-8", newline="\n")
     rom, log = shift_test.assemble(src, out / "moved")
-    report = {"section": args.move, "size": size, "to": f"{to:02X}", "assembled": rom is not None}
+    report = {"section": args.move[0] if len(args.move) == 1 else args.move, "size": size, "to": f"{to:02X}",
+              "assembled": rom is not None}
     if rom is None:
         report["assembler_log"] = log[-3000:]
     else:
         msym = bank_check.load_sym(out / "moved/dwm2.sym")
         errors, warnings = bank_check.check(src, msym)
         report["bank_check_errors"] = errors[:20]
-        moved_labels = sections_of(src)[args.move]["labels"]
+        secs = sections_of(src)
+        moved_labels = {lab for name in args.move for lab in secs[name]["labels"]}
         report["labels_now_in_bank"] = sorted({f"{b:02X}" for k, (b, _a) in msym.items() if k in moved_labels})
         report["frames"] = args.frames
         report["first_differing_frame"] = shift_test.first_difference(
@@ -209,7 +215,7 @@ def main(argv: list[str] | None = None) -> int:
     (out / "report.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
     ok = rom is not None and not report.get("bank_check_errors") and report.get("first_differing_frame") is None
     print(json.dumps({k: v for k, v in report.items() if k != "assembler_log"}, indent=1))
-    print(f"{'PASS' if ok else 'FAIL'}: {args.move} ({size} bytes) moved to bank ${to:02X}")
+    print(f"{'PASS' if ok else 'FAIL'}: {', '.join(args.move)} ({size} bytes) moved to bank ${to:02X}")
     return 0 if ok else 1
 
 

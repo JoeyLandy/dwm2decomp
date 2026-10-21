@@ -1,7 +1,7 @@
 """tools/script_bank.py (E-0421): event scripts outside bank $10, for mods.
 
-A copy of src/ gets the patched interpreter and every movable script run of bank $10 (627 of 637) moved to the empty
-bank $9F, with stubs for the 416 labels named from outside. It builds, with no byte of any bank left over. On
+A copy of src/ gets the patched interpreter and every script run of bank $10 (656, with E-0422's leftovers read as
+script) moved to the empty bank $9F, with stubs for the 424 labels named from outside. It builds, with no byte of any bank left over. On
 tools/sm83.py the E-0320 farm chain (35 runs, the opening to the farm and a debug battle) fetches the same script
 positions as the reference, through the stubs and bank $9F, and every run ends on the reference's screen; the
 screens differ for at most three VBlanks in a run (the patched reads take more cycles). A stub whose bank byte is
@@ -39,8 +39,8 @@ def build(src: Path, out: Path):
 class Runs(unittest.TestCase):
     def test_the_runs_of_bank_10(self):
         s = SB.summary(ROOT / "src")
-        self.assertEqual((s["runs"], s["movable"], s["bytes"]), (637, 627, 6207))
-        self.assertEqual(s["not"], {"raw bytes `...`": 10})
+        self.assertEqual((s["runs"], s["movable"], s["bytes"]), (656, 656, 6458))
+        self.assertEqual(s["not"], {})  # E-0422: the leftovers after scripts' ends are read as script
 
     def test_line_sizes_follow_the_macros(self):
         self.assertEqual([SB.line_bytes(x) for x in ("script_end", "script_message $0030", "script_walk 1, 0, 2",
@@ -57,9 +57,11 @@ class LabelPokes(unittest.TestCase):
         with self.assertRaises(ValueError):
             play.value("LOW(Script_A)")
 
-    def test_the_late_story_names_its_scripts(self):
+    def test_the_recipes_name_their_scripts(self):
+        """E-0421, E-0422: no recipe starts a script by a raw address, which a moved script would not follow."""
+        for f in sorted((ROOT / "tools/recipes").glob("*.txt")):
+            self.assertNotIn("wScriptPointerLo=0x", f.read_text(encoding="utf-8"), f.name)
         text = (ROOT / "tools/recipes/e0406_late_story.txt").read_text(encoding="utf-8")
-        self.assertNotIn("wScriptPointerLo=0x", text)
         self.assertIn("wScriptPointerLo=LOW(Script_SurprisinglyObedientAreYou+33)", text)
 
 
@@ -76,13 +78,25 @@ class Refusals(unittest.TestCase):
     def test_refusals_change_nothing(self):
         cases = [(SB.move, (["Script_HehSoTheseAre"], "10"), "not one of the empty banks"),
                  (SB.move, (["Script_HehSoTheseAre"], "01"), "2 or more"),
-                 (SB.move, (["Script_NoSuchScript"], "9F"), "not a script label"),
-                 (SB.move, (["Script_OhYou_4"], "9F"), "raw bytes")]
+                 (SB.move, (["Script_NoSuchScript"], "9F"), "not a script label")]
         for fn, args, says in cases:
             with self.assertRaises(ValueError) as r:
                 fn(self.src, *args)
             self.assertIn(says, str(r.exception))
         self.assertEqual(tree_bytes(self.src), self.before)
+
+    def test_raw_bytes_in_a_run_are_refused(self):
+        """Bytes not read as script (none are left in bank $10 since E-0422) keep their run in bank $10."""
+        f = self.src / "scripts/bank10_scripts.asm"
+        text = f.read_text(encoding="utf-8")
+        f.write_text(text.replace("Script_WowYouKidsSure::\n", "Script_WowYouKidsSure::\n    db $00, $01\n", 1),
+                     encoding="utf-8")
+        before = tree_bytes(self.src)
+        self.assertEqual(SB.summary(self.src)["not"], {"raw bytes `...`": 2})  # its run, and the one skipping to it
+        with self.assertRaises(ValueError) as r:
+            SB.move(self.src, ["Script_WowYouKidsSure"], "9F")
+        self.assertIn("raw bytes", str(r.exception))
+        self.assertEqual(tree_bytes(self.src), before)
 
     def test_src_itself_is_refused(self):
         for fn, args in ((SB.patch, ()), (SB.move, (None, "9F"))):
@@ -121,7 +135,7 @@ class Moved(unittest.TestCase):
 
     def test_the_scripts_move_and_build(self):
         r = self.result
-        self.assertEqual((r["runs"], r["labels"], r["stubs"], r["bytes"], r["left"]), (627, 643, 416, 6207, 10))
+        self.assertEqual((r["runs"], r["labels"], r["stubs"], r["bytes"], r["left"]), (656, 672, 424, 6458, 0))
         self.assertGreater(r["bank_10_gain"], 4000)
         self.assertEqual(self.build.returncode, 0, self.build.stdout + self.build.stderr)
         self.assertEqual(self.sym["Script_HehSoTheseAre_Far"][0], 0x9F)

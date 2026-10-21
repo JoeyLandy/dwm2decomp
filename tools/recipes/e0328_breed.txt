@@ -1,7 +1,7 @@
-# E-0328: breeding. The breeding script Script_15_764B is started by its four RAM bytes on Main Street (t02! of
+# E-0328: breeding. The breeding script Script_Breed is started by its four RAM bytes on Main Street (t02! of
 # e0327); Vanyl (Gulpple) is the base and Moahm the mate; the egg hatches and the child is named AB.
 @ e0327_shop_inn.txt
-br01! | t02! | wDataBank=0x15 wScriptInDataBank=1 wScriptPointerLo=0x4B wScriptPointerHi=0x76 wScriptStartRequest=0x80 wModeState=1 | W60
+br01! | t02! | wDataBank=BANK(Script_Breed) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_Breed) wScriptPointerHi=HIGH(Script_Breed) wScriptStartRequest=0x80 wModeState=1 | W60
 br02! | br01! |  | A2 W60
 bb01! | br02! |  | D2 W30 A2 W60 D2 W30 A2 W80
 bb02! | bb01! |  | D2 W40

@@ -8811,6 +8811,8 @@ ArenaEncounterList3::
     dw $0275 ; MonsterTable $275: GhosTree
     dw $0276 ; MonsterTable $276: WarMantis
 
+SECTION "Bank 0C Script_Arena", ROMX
+
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_Arena::
     script_command SCRIPT_ARENA
@@ -8927,6 +8929,8 @@ Script_TooBadYouDidn_3::
     script_command SCRIPT_MENU_CLOSE
     script_end
     db $00, $0b, $c0
+
+SECTION "Bank 0C Script_Arena_9", ROMX
 
 Script_Arena_9::
     script_command SCRIPT_ARENA

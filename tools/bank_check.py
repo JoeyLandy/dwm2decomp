@@ -7,7 +7,10 @@ with no bank named beside it, works only while both happen to sit in the same ba
 another bank (src/layout.link), such a reference would run or read the wrong bank's bytes. This check reads the
 banks from a build's .sym file (where each label actually landed) and the instructions from src/.
 
-  errors    call / jp / jr (any condition) from a switchable bank to a label in a different switchable bank
+  errors    call / jp / jr (any condition) from a switchable bank to a label in a different switchable bank; and
+            (E-0422) a script_jump, script_skip_if_no or script_choice_jump to a label in another bank: the
+            interpreter reads on in the bank the script is read from, so script sections that jump to each other
+            move together
   warnings  ld hl/de/bc, Label into a different switchable bank (from any bank, the home bank too), with no
             BANK(Label) within three lines (eight above in the home bank) or in the code that runs on to the read
             (E-0419: a literal `ld b, $NN` or a nearby farcall no longer counts)
@@ -16,6 +19,7 @@ banks from a build's .sym file (where each label actually landed) and the instru
   literal   a bank given by number where a reader takes it from: `ld a, $NN / ld [wDataBank], a`, or `ld b, $NN`
             before a call to CopyFromBank* or OrFromBank* (E-0420). src/ names these BANK(Label) where a label
             fixes the bank; what is left has no data it reads in that bank (reported, not a warning)
+  unread    such a number whose line says "nothing reads it" (E-0422: checked on tools/sm83.py), listed apart
 
 Usage: bank_check.py [--sym build/runN/dwm2.sym] [--src src] [--json out.json]
 Exit 1 when there are errors.
@@ -36,6 +40,7 @@ LOAD = re.compile(r"^\s+ld (?:hl|de|bc), ([A-Za-z_][\w.]*)\s*(?:;.*)?$")
 LITERAL_A = re.compile(r"^\s+ld a, \$([0-9a-fA-F]{2})\s*(?:;.*)?$")
 LITERAL_B = re.compile(r"^\s+ld b, \$([0-9a-fA-F]{2})\s*(?:;.*)?$")
 BANK_COPY = re.compile(r"^\s+call (?:CopyFromBank|OrFromBank)\w*")
+SCRIPT_JUMP = re.compile(r"^\s+(script_jump|script_skip_if_no|script_choice_jump) ([^;]+)")
 
 
 def literal_bank(lines: list[str], i: int) -> int | None:
@@ -77,7 +82,7 @@ def names_bank_later(lines: list[str], i: int, label: str) -> bool:
 
 
 def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None = None,
-          literal: list[str] | None = None) -> tuple[list[str], list[str]]:
+          literal: list[str] | None = None, unread: list[str] | None = None) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
     asserted = [] if asserted is None else asserted
     literal = [] if literal is None else literal
@@ -92,7 +97,14 @@ def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None
             if cur is None or cur not in sym:
                 continue
             here = sym[cur][0]
-            if (nb := literal_bank(lines, i)) is not None:
+            if sj := SCRIPT_JUMP.match(ln):
+                for tgt in (x.strip() for x in sj.group(2).split(",")):
+                    if tgt in sym and sym[tgt][0] != here:
+                        errors.append(f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X}): {ln.strip()} "
+                                      f"jumps to bank {sym[tgt][0]:02X}")
+            if (nb := literal_bank(lines, i)) is not None and unread is not None and "nothing reads it" in ln:
+                unread.append(f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X}): {ln.strip()}")
+            elif nb is not None:
                 literal.append(f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X}): {ln.strip()} "
                                f"names bank {nb:02X} by number")
             home = here == 0 or sym[cur][1] < 0x4000
@@ -129,17 +141,22 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     asserted: list[str] = []
     literal: list[str] = []
-    errors, warnings = check(args.src, load_sym(args.sym or newest_sym()), asserted, literal)
+    unread: list[str] = []
+    errors, warnings = check(args.src, load_sym(args.sym or newest_sym()), asserted, literal, unread)
     print(f"asserted: {len(asserted)}")
     print(f"literal: {len(literal)}")
     for x in literal[:args.examples]:
+        print("   ", x)
+    print(f"unread: {len(unread)}")
+    for x in unread[:args.examples]:
         print("   ", x)
     for kind, items in (("errors", errors), ("warnings", warnings)):
         print(f"{kind}: {len(items)}")
         for x in items[:args.examples]:
             print("   ", x)
     if args.json:
-        args.json.write_text(json.dumps({"errors": errors, "warnings": warnings, "asserted": asserted, "literal": literal}, indent=0),
+        args.json.write_text(json.dumps({"errors": errors, "warnings": warnings, "asserted": asserted, "literal": literal,
+                                         "unread": unread}, indent=0),
                              encoding="utf-8")
     return 1 if errors else 0
 

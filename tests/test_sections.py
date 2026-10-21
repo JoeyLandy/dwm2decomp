@@ -183,17 +183,28 @@ class FixedBanks(unittest.TestCase):
                 got[key] = len(literal)
         self.assertEqual(got, {"data_bank": 1, "copy": 1, "named": 0, "unrelated": 0})
 
+    def test_a_script_jump_into_another_bank_is_an_error(self):
+        """E-0422: script sections that jump to each other must stay in one bank."""
+        src = "Here::\n    script_jump Other\n    script_skip_if_no Near\nNear::\n    script_end\n"
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "engine").mkdir()
+            (Path(d) / "engine/bank05_x.asm").write_text(src, encoding="utf-8")
+            errors, _w = bank_check.check(Path(d), {"Here": (5, 0x4000), "Near": (5, 0x4005), "Other": (7, 0x5000)})
+        self.assertEqual(len(errors), 1)
+        self.assertIn("jumps to bank 07", errors[0])
+
     def test_the_source_has_no_unasserted_fixed_bank_load(self):
         syms = sorted(ROOT.glob("build/run*/dwm2.sym"), key=lambda q: q.stat().st_mtime)
         if not syms:
             self.skipTest("no build")
         asserted: list[str] = []
         literal: list[str] = []
-        errors, warnings = bank_check.check(ROOT / "src", bank_check.load_sym(syms[-1]), asserted, literal)
-        self.assertEqual((errors, warnings), ([], []))
+        unread: list[str] = []
+        errors, warnings = bank_check.check(ROOT / "src", bank_check.load_sym(syms[-1]), asserted, literal, unread)
+        self.assertEqual((errors, warnings, literal), ([], [], []))
         self.assertGreater(len(asserted), 400)
-        # E-0420: one bank number is left, GreatLogTalkEvents_Breeder's wDataBank = $0E, which its scripts never read
-        self.assertEqual([x.split()[1] for x in literal], ["GreatLogTalkEvents_Breeder"])
+        # E-0420, E-0422: GreatLogTalkEvents_Breeder's wDataBank = $0E, which nothing reads (tools/sm83.py)
+        self.assertEqual([x.split()[1] for x in unread], ["GreatLogTalkEvents_Breeder"])
 
 
 if __name__ == "__main__":

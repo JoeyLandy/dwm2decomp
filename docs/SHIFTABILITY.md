@@ -359,6 +359,24 @@ the patched reads take more cycles: a few VBlanks in some runs, one run a frame 
 The late-story recipe started its scenes by poking raw bank-$10 addresses; it now names them (BANK/LOW/HIGH of the
 label, tools/play.py), so a moved script is still found.
 
+## E-0422: the leftover scripts, and data-bank script sections that move
+
+- **Leftovers.** The raw bytes after eight bank-$10 scripts decode as script to the last byte: 19 short scripts
+  that nothing starts, now read as script (config/script_entries.json, named `..._Leftover`). With them, all 656
+  bank-$10 runs move with tools/script_bank.py.
+- **Script sections.** The data-bank scripts (arena $0C, key appraisal $0D, NPC breeding $0E, breeding $15,
+  hibernation $1D, swap $1F, egg service $96; the priest and library already had one) get sections of their own
+  (tools/present.py: a section starts at a Script_ label after data or ended code, and at another label after a
+  script's last line). Their talk routines name the bank (E-0420), so a section moves with tools/move_section.py
+  like any other. A script jump into another bank is a bank_check error, so sections that jump to each other (the
+  arena's two, hibernation's three) move together: `--move` may be given more than once.
+- **Checked on tools/sm83.py:** breeding (122 runs), priest and library (128 runs) and an arena battle with its
+  resume, each with its scripts in bank $9F, play frame for frame as the original. A battle saves wDataBank in
+  wDataBankSave and restores it at its end, so a script resumed in data-bank mode reads the bank its talk routine
+  named.
+- **The one literal left** (GreatLogTalkEvents_Breeder's wDataBank = $0E) is read by nothing; bank_check lists it as
+  "unread".
+
 ## Left after M2
 
 1. Done (E-0392, E-0401): no address-like split sum is left.

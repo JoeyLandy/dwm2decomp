@@ -7784,6 +7784,8 @@ BreedMenu_ChooseParents_CloseBoxTileRect::
 ShowSaveFileInfoWindow_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 0
 
+SECTION "Bank 15 Script_Breed", ROMX
+
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_Breed::
     script_command SCRIPT_BREED
@@ -8003,6 +8005,8 @@ Script_HeroIsGoingTo::
     script_message $c004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
     script_jump Script_Breed_2
+
+SECTION "Bank 15 HibernateMenu_CountSleepers", ROMX
 
 ; Counts the sleepers: the compact records with byte 0 bit 7 set (29 in bank 0, one in bank 1) into
 ; wListCount, after clearing wListEntries. (C2, E-0357; probed E-0384)

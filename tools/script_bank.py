@@ -26,9 +26,13 @@ such label, together with every run their relative jumps (script_skip_if_no, scr
 moved copy a label X becomes X_Far; a `script_jump` to a script left in bank $10 becomes `script_jump_far`. Each
 moved label that anything outside the moved runs names (the 440 talk routines' `ld hl, Script_...`, tables, jumps
 of other scripts) keeps a 4-byte stub in bank $10, `X:: script_jump_far X_Far`, so nothing that starts a script
-changes. Refused runs: raw bytes other than `db $ff` (not read as script), and the commands whose menus save the
-script position and restore it in data-bank mode 1 (SCRIPT_ARENA, SCRIPT_BREED, SCRIPT_NPC_BREED: ArenaMenu,
-BreedMenu and NpcBreedMenu save wScriptPointer and set wScriptInDataBank = 1 when they resume it).
+changes. Refused runs: raw bytes other than `db $ff` (not read as script; since E-0422 the leftovers after
+scripts' ends are read as script, config/script_entries.json, and every one of the 656 runs can move), and the
+commands whose menus save the script position and restore it in data-bank mode 1 (SCRIPT_ARENA, SCRIPT_BREED,
+SCRIPT_NPC_BREED: ArenaMenu, BreedMenu and NpcBreedMenu save wScriptPointer and set wScriptInDataBank = 1 when they
+resume it). No bank-$10 script uses those three; the arena and breeding scripts are data-bank scripts in banks
+$0C, $0E and $15, whose talk routines name their bank with BANK(target) (E-0420), so they move with their section
+(tools/move_section.py; E-0422 moved the priest and library scripts of bank $1F).
 
 Like tools/text_spill.py it refuses src/ itself (the matching build keeps the original layout); tools/make_mod.py
 runs it from mod.json "scripts". A refusal changes nothing.

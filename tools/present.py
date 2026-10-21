@@ -623,6 +623,19 @@ END_OF_FLOW = re.compile(r"^\s+(?:ret|reti|jp hl|jp [A-Za-z_][\w.]*|jr [A-Za-z_.
 
 
 SECTION_STARTS = {"ScreenNumberListTable"}  # E-0414 (H4): data that starts a section of its own, so it can move
+SCRIPT_LINE = re.compile(r"^\s+(?:script_\w+\b.*|db \$ff(?:, \$ff)*\s*(?:;.*)?)$", re.I)
+SCRIPT_END = re.compile(r"^\s+(?:(?:script_end|script_jump\w*|script_choice_jump)\b.*|db \$ff(?:, \$ff)*\s*(?:;.*)?)$", re.I)
+DATA_LINE = re.compile(r"^\s+(?:db|dw|ds|dfar|INCBIN)\b")
+
+
+def script_boundary(label: str, last_code: str, last_label: str) -> bool:
+    """E-0422: event scripts take sections of their own, so a block of them can move with the bank its callers name
+    (E-0420): a Script_ label after data or after code that does not run on, and any other label after a script's
+    last line (an end or a jump) when the label above it is a script's."""
+    if label.startswith("Script_"):
+        return bool(last_code) and not SCRIPT_LINE.match(last_code) and \
+            (END_OF_FLOW.match(last_code) is not None or DATA_LINE.match(last_code) is not None)
+    return last_label.startswith("Script_") and SCRIPT_END.match(last_code) is not None
 
 
 def split_sections(text: str, bank: int) -> tuple[str, list[str]]:
@@ -630,12 +643,12 @@ def split_sections(text: str, bank: int) -> tuple[str, list[str]]:
     build is unchanged and a section can be moved to another bank by moving its line in the layout. A new section
     starts at a top-level label whose code above it ends in an unconditional ret, reti, jp or jr, so no code runs
     from one section into the next; it starts right after that instruction, so the comments above the label stay
-    with it. A label in SECTION_STARTS starts one whatever is above it (E-0414). Returns the text and the section
-    names in order."""
+    with it. A label in SECTION_STARTS starts one whatever is above it (E-0414), and scripts start and end
+    sections of their own (script_boundary, E-0422). Returns the text and the section names in order."""
     kind = "ROM0" if bank == 0 else "ROMX"
     out: list[str] = []
     names: list[str] = []
-    last_code = ""
+    last_code = last_label = ""
     for ln in text.split("\n"):
         if ln.startswith("SECTION "):
             names.append(f"Bank {bank:02X}")
@@ -643,7 +656,8 @@ def split_sections(text: str, bank: int) -> tuple[str, list[str]]:
             last_code = ""
             continue
         m = re.match(r"^([A-Za-z_]\w*)::", ln)
-        if m and names and (END_OF_FLOW.match(last_code) or m.group(1) in SECTION_STARTS):
+        if m and names and (END_OF_FLOW.match(last_code) or m.group(1) in SECTION_STARTS
+                            or script_boundary(m.group(1), last_code, last_label)):
             k = len(out)
             while k > 0 and (not out[k - 1].strip() or out[k - 1].startswith(";")):
                 k -= 1
@@ -651,6 +665,8 @@ def split_sections(text: str, bank: int) -> tuple[str, list[str]]:
             out.insert(k, f'\nSECTION "Bank {bank:02X} {m.group(1)}", {kind}')
             last_code = ""
         out.append(ln)
+        if m:
+            last_label = m.group(1)
         if ln.startswith("    ") and ln.strip():
             last_code = ln
     return "\n".join(out), names
