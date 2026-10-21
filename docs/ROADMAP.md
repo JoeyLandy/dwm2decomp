@@ -21,8 +21,63 @@ its identity gate on every change. A mod or translation is a separate, non-match
 | H7. Modder documentation (done 2026-10-17, E-0413; [making a mod](MODDING.md)) | A modder's guide (confidence tags in plain words) and three tutorials: a monster's stats, a line of text, a breeding recipe | Each tutorial is followed from a clean checkout and its result checked by H5 |
 
 H1 comes first because every later stage edits src/ or data that src/ includes. H2 and H3 can then run side by side.
-Rewriting the game in another programming language, for example by static recompilation to C, is a separate
-research project. It is left until after H1-H4.
+Now that H1-H7 are in place, static recompilation and progressive decompilation into C for a native PC port are
+sequenced in stages P1-P4 below.
+
+## Planned goal: native PC port and idiomatic C decompilation (stages P1-P4)
+
+The goal: get the game running natively on PC (Linux, Windows, macOS) and progressively replace mechanical
+instruction-level C with human-readable, idiomatic C—without losing or altering any part of the matching Game Boy
+Color disassembly (`src/`), verification suite (`tests/`), or modding/translation tools (`tools/`).
+
+### Architectural principles
+
+1. **Additive layout (`port/` alongside `src/`):** `src/` remains the canonical RGBDS assembly source that builds
+   `dwm2-cobi-us-rev0` byte for byte. Because commercial GB/GBC games were written in handwritten SM83 assembly
+   rather than C, C source targets native PC executables rather than compiling back into the `.gbc` ROM.
+2. **"Ship of Theseus" scaffold (Recomp -> Decomp):** Rewriting all 9,820 routines in idiomatic C before
+   booting would delay any runnable build for months. Instead, `tools/recomp_c.py` first translates `src/*.asm` (and
+   the build's `.sym`) into mechanical C functions in `port/generated/` (`gb_ctx_t` register/flag operations, with
+   weak linkage or build-time override tables). Once the full game runs and passes every probe and recipe in native
+   C, routines and banks are rewritten one module at a time into clean, idiomatic C in `port/src/` with typed structs
+   (`MonsterRecord`, `BattleState`), parameters, and control flow.
+3. **Bring-Your-Own-ROM (BYOR) asset extraction:** Like the rest of the repository, the PC port never distributes
+   copyrighted ROM bytes. On first launch or build setup, it verifies the user's local `dwm2-cobi-us.gbc` against the
+   approved SHA-256 (`8e38a742...766d4e`) and extracts the required ROM tables and assets locally.
+4. **Leveraging existing project invariants:**
+   - **Code/data separation:** All 9,820 code labels and 23,160 data labels are already separated into 9,071 sections
+     in `src/layout.link` ([leftover code](LEFTOVER_CODE.md)).
+   - **Computed jumps:** Only 44 routines are affected by computed `jp hl` jumps ([probe scope](PROBE_SCOPE.md)), and
+     every `rst $00` (`JumpTable`) inline word table and `farcall` target is already decoded in `src/`.
+   - **Frame loop and `halt`:** The main loop (`$02D2`) `halt`s while almost all per-frame logic executes inside
+     `VBlankHandler` (`$03A4`, [game structure](GAME_STRUCTURE.md)). In C, `WaitForVRAMAccess` becomes a no-op and
+     `halt` yields via a lightweight coroutine (`libco`) back to the host frame loop.
+
+### Planned directory structure
+
+```text
+src/                        canonical RGBDS assembly (untouched; builds byte-identical .gbc ROM)
+config/probes/              16,780 routine probes shared by both tools/sm83.py and tools/probe_c.py
+tools/
+  recomp_c.py               transpiles src/*.asm + .sym -> port/generated/*.c for routines not yet in port/src/
+  probe_c.py                runs config/probes/*.json and tools/recipes/*.txt against the native C build
+port/                       native PC port and idiomatic C decompilation (C11/C++20, CMake + Ninja, SDL3)
+  CMakeLists.txt
+  include/                  typed C headers, hardware context (gb_ctx_t), and game structs
+  runtime/                  SDL3 window/input, CGB scanline PPU, 4-channel APU (blip_buf), libco halt yield,
+                            MBC5/RAM map, SRAM .sav persistence, and UDP/local serial link shim
+  src/                      hand-written, idiomatic C decompilation modules (replaces port/generated/ piece by piece)
+  generated/                (git-ignored) mechanical C fallback emitted from src/*.asm by tools/recomp_c.py
+```
+
+### Stages and exit gates
+
+| Stage | Work | Exit gate |
+| --- | --- | --- |
+| P1. Headless C transpiler & verification harness | Write `tools/recomp_c.py` to emit mechanical C (`port/generated/`) from `src/*.asm` and `.sym` (`rst $00` tables as C `switch` blocks, `farcall` as direct cross-bank calls, `halt` as `libco` coroutine yield) plus a headless memory/MBC5/WRAM/VRAM/SRAM/serial runtime ported from `tools/sm83.py`. Add `tools/probe_c.py` | All 5,872 probe-scope routines (16,780 probes in `config/probes/`) and all 222 scripted recipe runs + link-breeding runs pass in native C with identical RAM/VRAM/trace results to `tools/sm83.py`; canonical RGBDS ROM build still PASSes |
+| P2. Playable SDL3 PC runtime | Add `port/runtime/` with SDL3 windowing, controller/keyboard input, a CGB scanline PPU renderer (2 VRAM banks, BG/OBJ RGB555 palettes, OAM, STAT window/scroll split), a 4-channel CGB APU audio synth (`blip_buf`), `.sav` SRAM persistence, and startup BYOR SHA-256 verification | Clean native CMake/Ninja build on Linux and Windows boots from a user-supplied reference ROM through title, field, battle, breeding, save/load, and two-instance link play with matching visual frames and audio output |
+| P3. Progressive idiomatic C decompilation | Replace mechanical C in `port/generated/` one subsystem at a time with human-readable C in `port/src/`, starting with the C2-verified specifications in [mechanics](MECHANICS.md) (join offer, level-up gains, breeding child and rolls, skill learning, bank `$36` battle damage/effects) and [data tables](DATA_TABLES.md) loaders, then battle core (`bank31`), menus, scripts, and field logic | Each hand-written C module replaces its `port/generated/` counterpart with 0 regressions across all 16,780 probes, 3,000-state mechanics checks, and 222 recipe runs; exact integer widths, overflow, flags, and RNG consumption preserved |
+| P4. Native PC enhancements & mod integration | Direct loading of `.bps` patches and loose `mods/` folders (JSON/CSV table edits from H2, text/font edits from H3), UDP/local-socket link cable for online or dual-window Link Breeding and Battles, fast-forward/turbo toggle, and optional ImGui debug/state overlays | `mods/example` and the three H7 tutorial mods load and pass `tools/mod_check.py` parity on the native PC build; two PC instances complete a link breeding and battle over the socket shim |
 
 ## Moddable decomp: M1-M5 done (2026-10-16, E-0388 to E-0396)
 
