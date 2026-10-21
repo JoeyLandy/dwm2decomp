@@ -3724,10 +3724,10 @@ SECTION "Bank 04 Talk0046_ThanksForComingBy", ROMX
 Talk0046_ThanksForComingBy::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
-    jr c, .set_data_bank_to_102
+    jr c, .set_data_bank2
     ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
-    jr c, .set_data_bank_to_10
+    jr c, .set_data_bank
     ld de, EVENT_SCENE_WARUBOU_FOOD2_00C
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -3754,8 +3754,8 @@ Talk0046_ThanksForComingBy::
     call StartMessageCommand09HL_B04
     ret
 
-.set_data_bank_to_10:
-    ld a, $10
+.set_data_bank:
+    ld a, BANK(Script_Vault)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_OH_HI_GOOD_TO
     call TestFlagBit
@@ -3771,8 +3771,8 @@ Talk0046_ThanksForComingBy::
     call StartScriptAtHL_B04
     ret
 
-.set_data_bank_to_102:
-    ld a, $10
+.set_data_bank2:
+    ld a, BANK(Script_Vault)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_HELLO_GREAT_LOG
     call TestFlagBit
@@ -3825,14 +3825,14 @@ ReadableTalkEvents_LibraryDesk::
     jr z, .clear_sprite_slots
     ld a, $03
     ld [wSpriteSlots + $7], a
-    jr .set_data_bank_to_1F
+    jr .set_data_bank
 
 .clear_sprite_slots:
     xor a
     ld [wSpriteSlots + $7], a
 
-.set_data_bank_to_1F:
-    ld a, $1f
+.set_data_bank:
+    ld a, BANK(Script_Library)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -4511,7 +4511,7 @@ SECTION "Bank 04 YoldTalkEvents_Shop", ROMX
 YoldTalkEvents_Shop::
     ld a, $04
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_IDon ; script '*: I don't have much but…'
     ASSERT BANK(Script_IDon) == $10, "Script_IDon is read with bank $10 mapped"
@@ -4770,7 +4770,7 @@ YoldTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn_3 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_3) == $10, "Script_WelcomeToOurInn_3 is read with bank $10 mapped"
     call StartScriptAtHL_B04
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -4918,7 +4918,7 @@ SECTION "Bank 04 Talk_HowMayOurChurchServeYou", ROMX
 ; shortened from TalkScript_HowMayOurChurchServeYou)
 ; starts Script_HowMayOurChurch: '*: How may our church serve' (E-0248)
 Talk_HowMayOurChurchServeYou::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayOurChurch ; script '*: How may our church serve'
     ASSERT BANK(Script_HowMayOurChurch) == $10, "Script_HowMayOurChurch is read with bank $10 mapped"
@@ -4957,7 +4957,7 @@ SECTION "Bank 04 YoldTalkEvents_Shop2", ROMX
 YoldTalkEvents_Shop2::
     ld a, $06
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_IOfferQualityMerchandise ; script '*: I offer quality merchandise. Would'
     ASSERT BANK(Script_IOfferQualityMerchandise) == $10, "Script_IOfferQualityMerchandise is read with bank $10 mapped"
@@ -5172,7 +5172,7 @@ YoldTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_4 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_4) == $10, "Script_WelcomeToOurInn_4 is read with bank $10 mapped"
     call StartScriptAtHL_B04
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -6503,7 +6503,7 @@ SECTION "Bank 04 YoldTalkEvents_Church", ROMX
 ; Yold talk 109, the church: 'Our church is impoverished' the first time (setting its flag), then 'I
 ; am a servant'; script data in bank $1F. (C2, E-0357; probed E-0375)
 YoldTalkEvents_Church::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202
     call TestFlagBit
@@ -6834,7 +6834,7 @@ KalkaTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn) == $10, "Script_WelcomeToOurInn is read with bank $10 mapped"
     call StartScriptAtHL_B04
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -7012,7 +7012,7 @@ SECTION "Bank 04 KalkaTalkEvents_ItemShop", ROMX
 KalkaTalkEvents_ItemShop::
     ld a, $03
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_WELCOME_TO_MY_ITEM_SHOP
     call TestFlagBit
@@ -7124,7 +7124,7 @@ SECTION "Bank 04 KalkaTalkEvents_Church", ROMX
 ; Kalka talk 23, the church: 'The church welcomes you' the first time (setting its flag), then 'I am
 ; a servant'; script data in bank $1F. (C2, E-0357; probed E-0375)
 KalkaTalkEvents_Church::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THE_CHURCH_WELCOMES_YOU_WE
     call TestFlagBit
@@ -7298,7 +7298,7 @@ KalkaTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_2 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_2) == $10, "Script_WelcomeToOurInn_2 is read with bank $10 mapped"
     call StartScriptAtHL_B04
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -8135,7 +8135,7 @@ SECTION "Bank 04 KalkaTalkEvents_Church2", ROMX
 ; Kalka talk 69, a second church: 'Our church is impoverished' the first time, then 'I am a
 ; servant'. (C2, E-0357; probed E-0375)
 KalkaTalkEvents_Church2::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO
     call TestFlagBit
@@ -9455,7 +9455,7 @@ SECTION "Bank 04 ElvenVillageTalkEvents_Shop", ROMX
 ElvenVillageTalkEvents_Shop::
     ld a, $10
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeHowMayI_5 ; script '*: Welcome! How may I help'
     ASSERT BANK(Script_WelcomeHowMayI_5) == $10, "Script_WelcomeHowMayI_5 is read with bank $10 mapped"
@@ -10780,7 +10780,7 @@ SECTION "Bank 04 ElvenVillageTalkEvents_ShopHelloWhatMayI", ROMX
 ElvenVillageTalkEvents_ShopHelloWhatMayI::
     ld a, $11
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HelloWhatMayI_2 ; script '*: Hello! What may I do'
     ASSERT BANK(Script_HelloWhatMayI_2) == $10, "Script_HelloWhatMayI_2 is read with bank $10 mapped"
@@ -10810,7 +10810,7 @@ ElvenVillageTalkEvents_TravelersInn::
     ld hl, Script_WelcomeToOurTraveler ; script '*: Welcome to our traveler's inn.'
     ASSERT BANK(Script_WelcomeToOurTraveler) == $10, "Script_WelcomeToOurTraveler is read with bank $10 mapped"
     call StartScriptAtHL_B04
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -12818,7 +12818,7 @@ SECTION "Bank 04 KeyWorldTalkEvents_Warubou", ROMX
 ; Key world talk 1, Warubou: starts his script with screen table $0F on a floor of kind 3, otherwise
 ; $12 or $13 by bit 7 of wKeyWorldFloorState. (C2, E-0357; probed E-0375)
 KeyWorldTalkEvents_Warubou::
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld a, [wKeyWorldFloor]
     add a
@@ -12884,7 +12884,7 @@ KeyWorldTalkEvents_WarubouInn::
     inc a
     and $03
     ld [wSpriteSlots + $7], a
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -13016,7 +13016,7 @@ SECTION "Bank 04 Talk_WarubouWaheyYouDidItHero", ROMX
 ; Talk_WarubouWaheyYouDidItHero; shortened from TalkScript_WarubouWaheyYouDidItHero)
 ; starts Script_WarubouWaHeyYou_3: 'Warubou: Wa-hey! You did it, 0!' (E-0248)
 Talk_WarubouWaheyYouDidItHero::
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WarubouWaHeyYou_3 ; script 'Warubou: Wa-hey! You did it, 0!'
     ASSERT BANK(Script_WarubouWaHeyYou_3) == $10, "Script_WarubouWaHeyYou_3 is read with bank $10 mapped"
@@ -13033,7 +13033,7 @@ SECTION "Bank 04 Talk_WarubouWaheySoThisIsIt", ROMX
 ; from TalkScript_WarubouWaheySoThisIsIt)
 ; starts Script_WarubouWaHeySo: 'Warubou: Wa-hey! So, this is it?' (E-0248)
 Talk_WarubouWaheySoThisIsIt::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WarubouWaHeySo ; script 'Warubou: Wa-hey! So, this is it?'
     ASSERT BANK(Script_WarubouWaHeySo) == $10, "Script_WarubouWaHeySo is read with bank $10 mapped"

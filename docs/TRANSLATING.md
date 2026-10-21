@@ -1,9 +1,9 @@
 # Translating the game
 
-Stage H3 of the modding and translation goal ([roadmap](ROADMAP.md)), evidence E-0409 in the
-[evidence log](EVIDENCE_LOG.md); the text in code and data banks since E-0417. Most of the game's text is in
-src/text/; the rest sits beside the code that uses it (item descriptions, default names, the gift and link banks'
-dialogue, the credits). `tools/text.py` exports all of it for translators and puts translations back.
+Stage H3 of the modding and translation goal ([roadmap](ROADMAP.md)), evidence E-0409 in the [evidence
+log](EVIDENCE_LOG.md); the text in code and data banks since E-0417; banks $09 and $0D since E-0420. Most of the
+game's text is in src/text/; the rest sits beside the code that uses it (item descriptions, default names, the gift
+and link banks' dialogue, the credits). `tools/text.py` exports all of it for translators and puts translations back.
 
 ```bash
 python -I tools/text.py export --out build/text/en.json
@@ -75,6 +75,7 @@ A longer translation needs room in the bank its text lives in. Free bytes at the
 | $2D, $80, $89 | 69-142 |
 | $2F (battle text) | 725 |
 | $08, $09, $0B, $86, $88, $8A, $95, $96, $A2 (strings and some messages) | 3,095-12,313 |
+| $0D (Key Shop and TinyMedal talk, in a code bank; E-0420) | 152 |
 | $97, $98 (overflow tables) | 0 |
 
 The message banks are nearly full, so a full translation into a longer language will run out of room in banks
@@ -127,8 +128,33 @@ from category 9 on. Category and string numbers do not change. In mod.json:
 {"spill": [{"bank": "2F", "categories_from": 1, "to": "9D"}]}
 ```
 
-The same works for any bank whose two lookups are `ld de, BeginStringDisplay_BankBB_StringCategories / call / ret`
-and whose table nothing else names, such as the string banks of code banks like $07 or $F0. It refuses otherwise.
+The same works for any bank whose two lookups are `ld de, BeginStringDisplay_BankBB_StringCategories / call / ret`,
+such as the string banks of code banks like $07 or $F0. Other code may read the table too, if it does so in one
+form (E-0420): `ld a, BANK(table) / ld [wDataBank], a / ld hl, table / ld a, $NN / add_a_to_hl` reads category
+$NN / 2. When that category moves, the tool points the reader at the new bank's table, which has the category at
+the same place. Bank $09's key names are read that way (DrawKeyListPageNames, LinkKeyTrade_WriteStoryKeyName read
+category 6), so `spill-categories 09 4 --to 9D` moves categories 4-9 (7,052 bytes, the two largest among them) and
+bank $09 gains them on top of its 6,790 free bytes. Category 3, the key-name words, cannot move: home-bank code
+reads it by address (CopyKeyNameWordToDE). The tool refuses a table named in any other way, and a moved list that
+anything but its table names (BANK(list) excepted, which follows the list).
+
+### A bank with one category: bank $0D
+
+Bank $0D holds code and, in one category of 47 strings, the Key Shop and TinyMedal talk and the prize names; 152
+bytes are free. `tools/text_spill.py spill-strings 0D 37 --to 9E` moves strings $00-$24 (1,313 bytes) to an empty
+bank; its two lookups gain `cp $25` on wStringIndex and far-call the new bank below it. The list keeps its length,
+with `dw $0000` where the moved ids were: MedalPrizeMenu_DrawPrizeNames reads the prize names, ids $28 and up,
+straight from the list, so the tool moves only ids below the lowest such reader's base (`add $28`). Ids $25-$28
+share one string, so N is at most 37; asking for more is refused with the largest N that works. In mod.json:
+
+```json
+{"spill": [{"bank": "0D", "strings": 37, "to": "9E"}]}
+```
+
+Checked on tools/sm83.py (C2; tests/test_text_spill.py, ReaderSpills, E-0420): after both spills every id of banks
+$09 (all ten categories) and $0D shows and copies the reference's string, the 13 story-key names and the 7 prize
+names are drawn the same, and ten bank-$0D strings grown by more than its free bytes build and show. A key-name
+reader left on the old bank is caught.
 
 Checked on tools/sm83.py (C2; tests/test_text_spill.py, E-0418): all 433 battle strings show and copy the same
 bytes, and a debug battle draws the same glyphs on the same frames, 19 of its lookups through bank $9D.
@@ -161,5 +187,6 @@ tests/test_text_banks.py (E-0417) does the same for the text outside src/text/:
 - Whether an entry outside src/text/ may change length is decided from the source (E-0417); a string the game reads
   by position that also has a pointer to it would wrongly be let grow.
 - Name widths and the room the windows have are inferred from the game's own text (C1).
-- Moving messages works for the thirteen split groups and for banks with one plain category table (above). Text in
-  other banks, such as bank $09's names, whose table other code reads directly, still has only its bank's fill.
+- Moving text works for the thirteen split groups, for banks with one plain category table, including tables other
+  code reads in the one form above (bank $09), and for bank $0D's single category. A table read any other way keeps
+  only its bank's fill; `spill-categories` and `spill-strings` say why when they refuse.

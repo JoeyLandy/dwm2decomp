@@ -6,7 +6,7 @@ has three groups spilled (bank $28's to the empty bank $9A, bank $80's in place,
 messages grown by more than the bank had free (refused before the spill). The copy builds, and on tools/sm83.py every
 id of the three groups shows and copies the same string as the reference, except the 30 grown ones, which show
 their new text. A ROM with two overflow pointers swapped is caught, and the opening plays, showing the grown
-narration.
+narration. ReaderSpills (E-0420): banks $09 and $0D, whose tables other code reads directly.
 """
 import shutil
 import subprocess
@@ -265,6 +265,98 @@ class CategorySpill(unittest.TestCase):
         glyphs = bytes(v for _f, kind, v in mod_log[k:] if kind == "glyph")
         self.assertIn(X.to_bytes("It is over."), glyphs)
         self.assertEqual(sorted(set(hits)), [1, 5])
+
+
+class ReaderSpills(unittest.TestCase):
+    """E-0420: the banks whose tables other code reads directly. Bank $09 (6,790 free bytes) moves categories 4-9 to
+    the empty bank $9D; its key-name readers (DrawKeyListPageNames, LinkKeyTrade_WriteStoryKeyName) read category 6
+    through the new bank's table, and name the bank they copy from as BANK(StringList_Bank09_StringCategories_6).
+    Bank $0D (152 free bytes) moves its first 37 strings to $9E; MedalPrizeMenu_DrawPrizeNames reads ids $28 and up
+    straight from the list, which keeps its length. Ten moved strings then grow by more than bank $0D had free."""
+
+    KEYS = [bytes([i, 6, 0x25, 0x80]) for i in range(13)]  # story keys 0-12 (byte 3 bit 7), wKeyList records
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory(dir=ROOT / "build")
+        src = cls.src = Path(cls.tmp.name) / "src"
+        shutil.copytree(ROOT / "src", src)
+        cls.refusals = {}
+        with tempfile.TemporaryDirectory() as t:
+            shutil.copytree(src, Path(t) / "src")
+            for key, fn, args in (("09_3", S.spill_categories, ("09", 3, "9D")), ("0D_40", S.spill_strings, ("0D", 40, "9E")),
+                                  ("2F_strings", S.spill_strings, ("2F", 5, "9E"))):
+                with _raises(ValueError) as r:
+                    fn(Path(t) / "src", *args)
+                cls.refusals[key] = str(r.exception)
+            data = X.export(Path(t) / "src")
+            cls.grow = [e for e in data["entries"] if e["id"].startswith("String_0D_00_")][:10]
+            for e in cls.grow:
+                e["text"] = e["text"][:-1] + "<PROMPT><NEXT>There is more<NEXT>to say about it.@"
+            with _raises(ValueError) as r:
+                X.apply(Path(t) / "src", {"entries": cls.grow})
+            cls.no_room = str(r.exception)
+            cls.unchanged = tree_bytes(Path(t) / "src") == tree_bytes(src)
+        cls.r09 = S.spill_categories(src, "09", 4, "9D")
+        cls.r0d = S.spill_strings(src, "0D", 37, "9E")
+        cls.applied = X.apply(src, {"entries": cls.grow})
+        out = Path(cls.tmp.name).relative_to(ROOT).as_posix() + "/run"
+        cls.build = subprocess.run([sys.executable, "-I", str(ROOT / "tools/build.py"), "--out", out, "--src", str(src)],
+                                   cwd=ROOT, capture_output=True, text=True)
+        cls.rom = (ROOT / out / "dwm2.gbc").read_bytes() if cls.build.returncode == 0 else b""
+        cls.sym = shift_test.read_sym(ROOT / out / "dwm2.sym") if cls.rom else {}
+        cls.ref, cls.ref_sym = reference()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def key_names(self, rom, sym):
+        return [n for p in range(0, 13, 4)
+                for n in S.names_drawn(rom, sym, "DrawKeyListPageNames", list(range(p, min(p + 4, 13))), self.KEYS)]
+
+    def test_refusals_change_nothing(self):
+        self.assertTrue(self.unchanged)
+        self.assertIn("CopyKeyNameWordToDE_StringList (category 3) is read outside the table", self.refusals["09_3"])
+        self.assertIn("the largest N below that works is 37", self.refusals["0D_40"])
+        self.assertIn("has 6 categories", self.refusals["2F_strings"])
+        self.assertIn("text_spill", self.no_room)
+
+    def test_both_spill_and_build(self):
+        self.assertEqual((self.r09["categories"], self.r09["to"], self.r09["readers"]),
+                         ("$04-$09", "9D", ["DrawKeyListPageNames (category 6)", "LinkKeyTrade_WriteStoryKeyName (category 6)"]))
+        self.assertEqual((self.r0d["ids"], self.r0d["to"], self.r0d["readers_from"]), ("$00-$24", "9E", "$28"))
+        self.assertGreater(self.applied["bytes"], 152)  # more than bank $0D had free
+        self.assertEqual(self.build.returncode, 0, self.build.stdout + self.build.stderr)
+
+    def test_every_string_is_the_same_but_the_grown_ones(self):
+        lengths = {0: 3, 1: 26, 2: 10, 3: 73, 4: 1, 5: 84, 6: 13, 7: 15, 8: 1, 9: 34}
+        self.assertEqual(self.r09["lists"], lengths)
+        self.assertEqual(S.verify_categories(self.ref, self.ref_sym, self.rom, self.sym, "09", lengths), [])
+        tree = S.Tree(self.src)  # ids that name a grown string (some ids share one)
+        f, i = tree.where("StringList_Bank0D_Spill")
+        labels = {e["id"] for e in self.grow}
+        grown = {k for k, (_l, x) in enumerate(S.dw_list(tree.files[f], i)) if x in labels}
+        self.assertGreaterEqual(len(grown), 10)
+        bad = S.verify_categories(self.ref, self.ref_sym, self.rom, self.sym, "0D", {0: 47})
+        self.assertEqual({int(b.split("id $")[1][:2], 16) for b in bad}, grown)
+        self.assertEqual(S.call(self.rom, *self.sym["BeginStringDisplay_Bank0D"], 0).rb(S.W_STRING_BANK), 0x9E)
+        self.assertEqual(S.call(self.rom, *self.sym["BeginStringDisplay_Bank09"], 0, 5).rb(S.W_STRING_BANK), 0x9D)
+
+    def test_the_direct_readers_draw_the_same_names(self):
+        self.assertEqual(self.key_names(self.ref, self.ref_sym), self.key_names(self.rom, self.sym))
+        prizes = lambda rom, sym: (S.names_drawn(rom, sym, "MedalPrizeMenu_DrawPrizeNames", [0, 1, 2, 3]) +
+                                   S.names_drawn(rom, sym, "MedalPrizeMenu_DrawPrizeNames", [4, 5, 6]))
+        want = prizes(self.ref, self.ref_sym)
+        self.assertEqual(len(want), 7)
+        self.assertEqual(want, prizes(self.rom, self.sym))
+
+    def test_a_reader_left_on_the_old_bank_is_caught(self):
+        b, a = self.sym["DrawKeyListPageNames"]
+        rom = bytearray(self.rom)
+        at = rom.index(bytes([0x3E, 0x9D, 0xEA, 0xFE, 0xD7]), b * 0x4000 + a - 0x4000)  # ld a, $9D / ld [wDataBank], a
+        rom[at + 1] = 0x09
+        self.assertNotEqual(self.key_names(self.ref, self.ref_sym), self.key_names(bytes(rom), self.sym))
 
 
 class _raises:

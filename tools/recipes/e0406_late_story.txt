@@ -5,34 +5,35 @@
 # states: a scene runs out of its story order, on another map. DARCK_TAUNT runs on its own map: dk01 enters Darck's
 # castle (map $A2) and dk02 starts Script_SurprisinglyObedientAreYou at 10:$61D4, the line after its battle
 # ('N... No... How could my'), which leads into the scene. Forced on Main Street the same scene drew text through a
-# pointer left at $010D, the cartridge header (includes e0335_swap.txt).
+# pointer left at $010D, the cartridge header (includes e0335_swap.txt). E-0421: the script pointers are written as
+# BANK/LOW/HIGH(label) (tools/play.py), so they follow a script that a mod moves (tools/script_bank.py).
 @ e0335_swap.txt
-ls00! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xDB wScriptPointerHi=0x50 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls00! | t02! | wDataBank=BANK(Script_TaraBigBrotherGreatLog) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_TaraBigBrotherGreatLog) wScriptPointerHi=HIGH(Script_TaraBigBrotherGreatLog) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls00b! | ls00! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls01! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xFA wScriptPointerHi=0x53 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls01! | t02! | wDataBank=BANK(Script_IfTheIslandSink) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_IfTheIslandSink) wScriptPointerHi=HIGH(Script_IfTheIslandSink) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls01b! | ls01! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls02! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xF5 wScriptPointerHi=0x56 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls02! | t02! | wDataBank=BANK(Script_CobiHeroCongratulationsI) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_CobiHeroCongratulationsI) wScriptPointerHi=HIGH(Script_CobiHeroCongratulationsI) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls02b! | ls02! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls03! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xAB wScriptPointerHi=0x5A wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls03! | t02! | wDataBank=BANK(Script_I_13) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_I_13) wScriptPointerHi=HIGH(Script_I_13) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls03b! | ls03! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls04! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0x3C wScriptPointerHi=0x5B wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls04! | t02! | wDataBank=BANK(Script_HehYouHaveMonsters) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_HehYouHaveMonsters) wScriptPointerHi=HIGH(Script_HehYouHaveMonsters) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls04b! | ls04! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls05! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0x8A wScriptPointerHi=0x5C wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls05! | t02! | wDataBank=BANK(Script_HowCouldWeDie) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_HowCouldWeDie) wScriptPointerHi=HIGH(Script_HowCouldWeDie) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls05b! | ls05! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls06! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xD3 wScriptPointerHi=0x5D wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls06! | t02! | wDataBank=BANK(Script_WhatWhatWasThat) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_WhatWhatWasThat) wScriptPointerHi=HIGH(Script_WhatWhatWasThat) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls06b! | ls06! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls07! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xA5 wScriptPointerHi=0x5F wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls07! | t02! | wDataBank=BANK(Script_Message) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_Message) wScriptPointerHi=HIGH(Script_Message) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls07b! | ls07! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls08! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xC9 wScriptPointerHi=0x5F wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls08! | t02! | wDataBank=BANK(Script_SceneShieldGuardian) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_SceneShieldGuardian) wScriptPointerHi=HIGH(Script_SceneShieldGuardian) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls08b! | ls08! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls09! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xEF wScriptPointerHi=0x5F wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls09! | t02! | wDataBank=BANK(Script_HeroCheckedTheGrave) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_HeroCheckedTheGrave) wScriptPointerHi=HIGH(Script_HeroCheckedTheGrave) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls09b! | ls09! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls11! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xE9 wScriptPointerHi=0x61 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls11! | t02! | wDataBank=BANK(Script_DarckFawahahahYouChased) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_DarckFawahahahYouChased) wScriptPointerHi=HIGH(Script_DarckFawahahahYouChased) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls11b! | ls11! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls12! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xBD wScriptPointerHi=0x62 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls12! | t02! | wDataBank=BANK(Script_TheHumanInThe) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_TheHumanInThe) wScriptPointerHi=HIGH(Script_TheHumanInThe) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls12b! | ls12! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
-ls13! | t02! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0x9E wScriptPointerHi=0x65 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+ls13! | t02! | wDataBank=BANK(Script_HeroCheckedTheTreasure_4) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_HeroCheckedTheTreasure_4) wScriptPointerHi=HIGH(Script_HeroCheckedTheTreasure_4) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls13b! | ls13! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 dk01! | k03! | hMapId=0xA2 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
-dk02! | dk01! | wDataBank=0x10 wScriptInDataBank=1 wScriptPointerLo=0xD4 wScriptPointerHi=0x61 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+dk02! | dk01! | wDataBank=BANK(Script_SurprisinglyObedientAreYou+33) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_SurprisinglyObedientAreYou+33) wScriptPointerHi=HIGH(Script_SurprisinglyObedientAreYou+33) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 dk03! | dk02! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120

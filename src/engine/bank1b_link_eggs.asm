@@ -4179,7 +4179,7 @@ LinkKeyTrade_WritePartnerKeyName::
     ld a, [wRandomSeed2Lo]
     bit 7, a
     jp nz, LinkKeyTrade_WriteStoryKeyName
-    ld a, $09
+    ld a, BANK(CopyKeyNameWordToDE_StringList)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld a, [wLinkPartnerByte1]
     inc a
@@ -4190,14 +4190,14 @@ LinkKeyTrade_WritePartnerKeyName::
 .skip:
     ld a, [de]
     cp $f0
-    jr z, .set_data_bank_to_09
+    jr z, .set_data_bank
     ld [hli], a
     inc de
     jr .skip
 
-.set_data_bank_to_09:
+.set_data_bank:
     push hl
-    ld a, $09
+    ld a, BANK(CopyKeyNameWordToDE_StringList)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld a, [wLinkPartnerByte2]
     inc a
@@ -4287,7 +4287,7 @@ CopyDataBankStringToTextBuf0::
     ld e, b
     ld d, c
     ld hl, wTextBuf0
-    ld b, $09
+    ld b, BANK(CopyKeyNameWordToDE_StringList)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
@@ -4331,7 +4331,7 @@ LinkKeyTrade_WriteStoryKeyName::
     pop af
     ld [wDataBank], a
     ld hl, wNameGlyphBuf
-    ld b, $09
+    ld b, BANK(StringList_Bank09_StringCategories_6)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $f0

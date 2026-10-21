@@ -12,9 +12,10 @@ At the end of every frame their video state (VRAM, OAM, palettes, LCD registers)
 - a stall: a mod whose screen stops changing for `--stall` frames while the reference's still changes;
 - the first frame from which the screens differ, and how many frames differ.
 A mod that changes what is shown is expected to differ; the frame says where. With `--recipe`
-it also replays a tools/play.py recipe chain on the mod and lists the runs that crash.
+it also replays a tools/play.py recipe chain on the mod and lists the runs that crash; with `--compare` too, it
+replays the chain on both ROMs and lists the runs whose screens differ at some VBlank (E-0421).
 
-    python -I tools/mod_check.py ROM [--sym SYM] [--frames 6000] [--recipe FILE] [--json OUT]
+    python -I tools/mod_check.py ROM [--sym SYM] [--frames 6000] [--recipe FILE [--compare]] [--json OUT]
     python -I tools/mod_check.py --src DIR [...]        build that tree (tools/build.py --src) and check it
 
 Exit 0 when the mod neither crashes, runs data, loses the original's progress nor stalls (differences in what is
@@ -148,6 +149,57 @@ def recipe_crashes(mod: bytes, recipe: str, sym: dict | None = None) -> list[str
     return bad
 
 
+def recipe_frames(path: str, rom: bytes, sym: dict, hooks: dict | None = None) -> dict[str, list[str]]:
+    """E-0421: replay a recipe chain on a ROM (`call:` steps by the names in its .sym) and return each run's video
+    state at every VBlank interrupt (the entry at $0040). `hooks` (address -> callable(gb)) are set during the runs
+    and taken off before a state is kept, so the states pickle."""
+    import pickle
+    import re
+    import play
+    labels = {(b, a): n for n, (b, a) in sym.items() if "." not in n}
+    by_name = {v: k for k, v in labels.items()}
+    ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
+    states: dict[str, bytes] = {}
+    out: dict[str, list[str]] = {}
+    for ln in play.recipe_lines(path):
+        state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
+        if old.startswith("sram:"):
+            gb = GameBoy(rom)
+            gb.sram[:] = pickle.loads(states[old[5:]]).sram
+        else:
+            gb = pickle.loads(states[old]) if old else GameBoy(rom)
+        for p in pokes.split():
+            if p.startswith("call:"):
+                play.call_at_halt(gb, *by_name[p[5:]])
+            else:
+                play.poke(gb, ram, p, by_name)
+        frames: list[str] = []
+        gb.pc_hooks = dict(hooks or {})
+        gb.pc_hooks[0x0040] = lambda g: frames.append(shift_test.video_state(g))
+        play.run(gb, play.parse(recipe), {}, {})
+        gb.pc_hooks = {}
+        states[state] = pickle.dumps(gb)
+        out[state] = frames
+    return out
+
+
+def recipe_compare(path: str, ref: bytes, ref_sym: dict, mod: bytes, mod_sym: dict,
+                   hooks: dict | None = None, ref_hooks: dict | None = None) -> dict:
+    """E-0421: a recipe chain on the reference and on a mod, VBlank by VBlank: {"runs", "frames", "differ": [state,
+    first differing VBlank, differing VBlanks, of how many, same last screen]} (`hooks` on the mod's runs,
+    `ref_hooks` on the reference's)."""
+    a = recipe_frames(path, ref, ref_sym, ref_hooks)
+    b = recipe_frames(path, mod, mod_sym, hooks)
+    differ = []
+    for state, fa in a.items():
+        fb = b.get(state, [])
+        d = [i for i, (x, y) in enumerate(zip(fa, fb)) if x != y]
+        if d or len(fa) != len(fb):
+            differ.append([state, d[0] if d else min(len(fa), len(fb)), len(d) + abs(len(fa) - len(fb)), len(fa),
+                           bool(fa and fb and fa[-1] == fb[-1])])
+    return {"runs": len(a), "frames": sum(len(f) for f in a.values()), "differ": differ}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("rom", nargs="?", type=Path)
@@ -156,6 +208,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--frames", type=int, default=6000)
     ap.add_argument("--stall", type=int, default=600)
     ap.add_argument("--recipe")
+    ap.add_argument("--compare", action="store_true", help="with --recipe: compare the chain's screens with the original's")
     ap.add_argument("--json", type=Path)
     a = ap.parse_args(argv)
     if a.src:
@@ -175,6 +228,9 @@ def main(argv: list[str] | None = None) -> int:
     res = check(rom, sym, a.frames, a.stall, data=data)
     if a.recipe:
         res["recipe_crashes"] = recipe_crashes(a.rom.read_bytes(), a.recipe, sym)
+        if a.compare and not res["recipe_crashes"]:
+            ref_sym = shift_test.read_sym(sorted(ROOT.glob("build/run*/dwm2.sym"), key=lambda q: q.stat().st_mtime)[-1])
+            res["recipe_compare"] = recipe_compare(a.recipe, REF.read_bytes(), ref_sym, rom, sym)
     if res["crash"]:
         c = res["crash"]
         print(f"CRASH at frame {c['frame']}: {c['routine']} ({c['bank']:02X}:{c['pc']:04X}): {c['error']}")
@@ -195,6 +251,13 @@ def main(argv: list[str] | None = None) -> int:
               f"{res['reference_frames']} frames differ): expected where the mod changes what is shown")
     for b in res.get("recipe_crashes", []):
         print(f"recipe: {b}")
+    if "recipe_compare" in res:
+        rc = res["recipe_compare"]
+        print(f"recipe: {rc['runs']} runs, {rc['frames']} frames compared; "
+              + ("same screens as the original" if not rc["differ"] else f"{len(rc['differ'])} runs differ"))
+        for state, k, nd, n, same_end in rc["differ"][:10]:
+            print(f"    {state}: {nd} of {n} VBlanks differ, from VBlank {k}; "
+                  + ("same last screen" if same_end else "a different last screen"))
     if a.json:
         a.json.write_text(json.dumps(res, indent=1), encoding="utf-8")
     bad = res["crash"] or res["ran_data"] or res["progress"] or res["stall"] is not None or res.get("recipe_crashes")

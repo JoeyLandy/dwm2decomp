@@ -6,7 +6,7 @@ We are building a documented, reproducible disassembly: readable assembly and da
 
 The source in `src/` rebuilds the US release (SHA-256 `8e38a742...766d4e`) byte for byte with RGBDS: `python -I tools/build.py --out build/run1`. You supply the original ROM in `local/roms/`; it is never part of the repository. Read [the reading guide](docs/READING_GUIDE.md) first.
 
-State (2026-10-17): every routine and data label is named and has a note; the code is floating sections placed by `src/layout.link`, so it can move ([shiftability](docs/SHIFTABILITY.md)); every compressed asset is rebuilt from decoded data, and `build.py --mod DIR` builds a modded ROM from edited PNG and `.bin` files ([editable assets](docs/ASSETS.md)). A modded ROM is a separate output, never the matching target. Most readings are static (C1); [mechanics](docs/MECHANICS.md) and [data tables](docs/DATA_TABLES.md) are checked against the game's own routines on the project's emulator (C2).
+State (2026-10-20): every routine and data label is named and has a note; `src/` is the hand-edited source (D-015). The code is floating sections placed by `src/layout.link`, so it can move, and every reader names the bank of what it reads by label, or carries a link-time check ([shiftability](docs/SHIFTABILITY.md)). Every compressed asset is rebuilt from decoded data ([editable assets](docs/ASSETS.md)); the main tables export to JSON and CSV ([editing data](docs/EDITING_DATA.md)); all 6,491 text entries export for translators, with tools to make room in full text banks ([translating](docs/TRANSLATING.md)); and a mod can read event scripts from any bank ([making a mod](docs/MODDING.md)). A modded ROM is a separate output, never the matching target. Most readings are static (C1); [mechanics](docs/MECHANICS.md) and [data tables](docs/DATA_TABLES.md) are checked against the game's own routines on the project's emulator (C2).
 
 ## Make a mod or a translation
 
@@ -24,7 +24,7 @@ python -I tools/make_mod.py mods/example
 
 | Document | Purpose |
 | --- | --- |
-| [Making a mod](docs/MODDING.md) | Setup, mod folders, the smoke test, sharing patches, and three tutorials |
+| [Making a mod](docs/MODDING.md) | Setup, mod folders, event scripts in other banks, the smoke test, sharing patches, and three tutorials |
 | [Reading guide](docs/READING_GUIDE.md) | How the source is laid out and how to read it |
 | [Project status](docs/PROJECT_STATUS.md) | What exists, what is unknown, and the next session |
 | [Repository and community survey](docs/SURVEY.md) | Existing work, inspected revisions, limitations, and adoption recommendation |

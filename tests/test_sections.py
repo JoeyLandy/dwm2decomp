@@ -163,14 +163,37 @@ class FixedBanks(unittest.TestCase):
                 got[key] = len(warnings)
         self.assertEqual(got, {"ok": 0, "other": 1, "after_call": 1})
 
+    def test_a_bank_by_number_for_a_reader_is_reported(self):
+        """E-0420: a number stored in wDataBank, or passed in B to a bank copy, is reported; BANK(Label) is not, nor
+        an `ld a` or `ld b` that no such reader takes."""
+        cases = {
+            "data_bank": "Here::\n    ld a, $09\n    ld [wDataBank], a\n    ret\n",
+            "copy": "Here::\n    ld b, $1f\n    ld c, $10\n    call CopyFromBankWaitVRAM\n    ret\n",
+            "named": "Here::\n    ld a, BANK(Other)\n    ld [wDataBank], a\n    ld b, BANK(Other)\n"
+                     "    call CopyFromBankWaitVRAM\n",
+            "unrelated": "Here::\n    ld a, $09\n    ld [wOther], a\n    ld b, $10\n    call Elsewhere\n",
+        }
+        got = {}
+        for key, src in cases.items():
+            with tempfile.TemporaryDirectory() as d:
+                (Path(d) / "engine").mkdir()
+                (Path(d) / "engine/bank05_x.asm").write_text(src, encoding="utf-8")
+                literal: list[str] = []
+                bank_check.check(Path(d), {"Here": (5, 0x4000), "Other": (7, 0x5000)}, literal=literal)
+                got[key] = len(literal)
+        self.assertEqual(got, {"data_bank": 1, "copy": 1, "named": 0, "unrelated": 0})
+
     def test_the_source_has_no_unasserted_fixed_bank_load(self):
         syms = sorted(ROOT.glob("build/run*/dwm2.sym"), key=lambda q: q.stat().st_mtime)
         if not syms:
             self.skipTest("no build")
         asserted: list[str] = []
-        errors, warnings = bank_check.check(ROOT / "src", bank_check.load_sym(syms[-1]), asserted)
+        literal: list[str] = []
+        errors, warnings = bank_check.check(ROOT / "src", bank_check.load_sym(syms[-1]), asserted, literal)
         self.assertEqual((errors, warnings), ([], []))
         self.assertGreater(len(asserted), 400)
+        # E-0420: one bank number is left, GreatLogTalkEvents_Breeder's wDataBank = $0E, which its scripts never read
+        self.assertEqual([x.split()[1] for x in literal], ["GreatLogTalkEvents_Breeder"])
 
 
 if __name__ == "__main__":

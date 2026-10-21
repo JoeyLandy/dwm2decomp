@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-20**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)); H1 (graduating src/) started. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
+As of **2026-10-20**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)), all done 2026-10-17 (H6 on Linux 2026-10-19); follow-ups E-0415 to E-0421 widen what a translation or mod can move. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -159,7 +159,42 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-20, E-0417 to E-0419): all the text translatable, battle text room, table readers
+## Current handoff (2026-10-20, E-0420, E-0421): the open items done; scripts in any bank
+
+The two open items of the E-0417 to E-0419 handoff are done:
+- **Text banks whose table other code reads (E-0420).** Bank $09's key-name readers copied with `ld b, $09` and set
+  wDataBank to $09 by number. That was one of 91 such ties, which no ASSERT showed: 70 `ld a, $NN / ld [wDataBank],
+  a` and 21 `ld b, $NN` before a bank copy. 90 now name a label (BANK(script target), BANK(GlyphFont),
+  BANK(StringDatabase), ...; same bytes, written by the generator), and tools/bank_check.py reports the kind
+  ("literal": 91 before, 1 left, GreatLogTalkEvents_Breeder's $0E, which nothing reads). `spill-categories` now
+  follows readers of one category through wDataBank: bank $09 categories 4-9 (7,052 bytes) move. The new
+  `spill-strings` moves bank $0D's first 37 strings (1,313 bytes; 152 were free) and keeps the list's positions
+  for the prize-name readers. On tools/sm83.py every id of both banks shows and copies the same string, and the key
+  and prize names are drawn the same.
+- **Scripts outside bank $10 (E-0421).** Correction: bank $10 has 5,848 free bytes (E-0419 said none).
+  tools/script_bank.py patches a mod's interpreter so a script can be in any bank (wScriptInDataBank 2 and up names
+  the bank; opcode $08 `script_jump_far`), and moves bank $10's scripts: 627 of 637 runs, with 416 stubs keeping
+  every starter as it is (mod.json "scripts"). On all 17 recipe chains (279 runs) the moved ROM fetches the same
+  script positions as the original; screens differ only by the patch's timing (one boss battle takes another
+  turn, as with the patch alone). The chains found a real fault on the way, a far mode left by a script a scene
+  command ended; the script starters now clear it. The late-story recipe names its scripts by label now
+  (`BANK/LOW/HIGH(label)` pokes), and `mod_check.py --recipe FILE --compare` compares a chain with the original.
+- **Meta documents brought up to date:** README, ARCHITECTURE (tools), KNOWLEDGE_MAP, GAME_STRUCTURE (where scripts
+  live), ROADMAP (H3, H4), MODDING, TRANSLATING, SHIFTABILITY and this file's header (H1-H7 done, not "H1
+  started"). Gemini's roadmap additions (P1-P4, e6dd568) are the user's and were left as committed.
+
+Checks: no drift (265 files); build/run_e0420 PASS (zero differing bytes); tools/bank_check.py 0 errors, 0 warnings,
+545 asserted, 1 literal. Suite (tools/run_tests.py --jobs 8 under nice): build/logs/suite_e0421.log OK, 585 tests, 3
+skipped, 13m13s. Recipe chains on the moved build: build/logs/e0421_chains_part1.log and part2.log.
+
+Open:
+1. The ten bank-$10 script runs with raw bytes (not read as script), and the arena and breeding scripts, stay in bank
+   $10; reading the raw runs as script would let them move.
+2. GreatLogTalkEvents_Breeder's `ld a, $0e`: what (if anything) reads wDataBank there.
+3. The patched interpreter's extra cycles shift some frames; a mod that must keep the original's frame timing
+   exactly cannot use it.
+
+## Prior handoff (2026-10-20, E-0417 to E-0419): all the text translatable, battle text room, table readers
 
 The two open items of the E-0416 handoff are done:
 - **Text outside src/text/ (E-0417).** tools/text.py exports and reinserts the 1,084 text blocks of code and data banks

@@ -231,6 +231,8 @@ def shifted_pokes(pokes: list[str], starts: dict[int, int], pad: int) -> list[st
     vals = dict(p.split("=", 1) for p in pokes if "=" in p and not p.startswith("call:"))
     if "wScriptPointerLo" not in vals or "wScriptPointerHi" not in vals:
         return pokes
+    if any("(" in vals.get(k, "") for k in ("wDataBank", "wScriptPointerLo", "wScriptPointerHi")):
+        return pokes  # BANK(Label), LOW(Label): resolved from each ROM's own symbols, so they follow the padding
     bank = int(vals.get("wDataBank", "0"), 0)
     addr = int(vals["wScriptPointerLo"], 0) | int(vals["wScriptPointerHi"], 0) << 8
     if bank not in starts or addr < starts[bank]:
@@ -282,7 +284,7 @@ def recipe_reads(base: bytes, rom: bytes, sym_base: dict, sym_pad: dict, starts:
                 if p.startswith("call:"):
                     play.call_at_halt(gb, *sym[p[5:]])
                 else:
-                    play.poke(gb, ram, p)
+                    play.poke(gb, ram, p, sym)
             play.run(gb, play.parse(recipe), labels if side == "base" else {}, seen if side == "base" else {})
             del gb.rb, gb.service
             if last_use.get(state, -1) > i:

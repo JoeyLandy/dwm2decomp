@@ -5288,7 +5288,7 @@ CopyGlyphTileListFromBank1F_Bank15::
     ld d, a
     ld e, l
     pop hl
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     pop de
@@ -6784,7 +6784,7 @@ CopyMonsterNameToBuffer_B15::
     pop af
     ld [wDataBank], a
     ld hl, wNameGlyphBuf
-    ld b, $08
+    ld b, BANK(StringDatabase)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
@@ -8524,7 +8524,7 @@ HibernateMenu_DrawSleeperNameTiles::
     pop af
     ld [wDataBank], a
     ld hl, wNameGlyphBuf
-    ld b, $08
+    ld b, BANK(StringDatabase)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, vTiles1 + $270

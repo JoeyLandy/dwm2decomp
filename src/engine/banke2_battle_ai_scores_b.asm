@@ -6389,7 +6389,7 @@ ReadBank6TableWord::
     ld a, [wPersonalityIndex]
     add a
     add_a_to_hl
-    ld a, $06
+    ld a, BANK(AIPersonalityWeightTable)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     call ReadWordFromDataBank
     ld a, b

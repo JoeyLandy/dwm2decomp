@@ -528,7 +528,7 @@ SECTION "Bank 13 Talk_HowMayWeServeYourMortal", ROMX
 ; shortened from TalkScript_HowMayWeServeYourMortal)
 ; starts Script_HowMayWeServe: '*: How may we serve your' (E-0248)
 Talk_HowMayWeServeYourMortal::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayWeServe ; script '*: How may we serve your'
     ASSERT BANK(Script_HowMayWeServe) == $10, "Script_HowMayWeServe is read with bank $10 mapped"
@@ -580,7 +580,7 @@ SECTION "Bank 13 Talk_WelcomeToOurInn", ROMX
 ; TalkScript_WelcomeToOurInn)
 ; starts Script_WelcomeToOurInn_9: '*: Welcome to our inn!' (E-0248)
 Talk_WelcomeToOurInn::
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeToOurInn_9 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_9) == $10, "Script_WelcomeToOurInn_9 is read with bank $10 mapped"
@@ -982,7 +982,7 @@ SECTION "Bank 13 Talk_HowMayWeServeYourMortal_2", ROMX
 ; shortened from TalkScript_HowMayWeServeYourMortal_2)
 ; starts Script_HowMayWeServe_2: '*: How may we serve your' (E-0248)
 Talk_HowMayWeServeYourMortal_2::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayWeServe_2 ; script '*: How may we serve your'
     ASSERT BANK(Script_HowMayWeServe_2) == $10, "Script_HowMayWeServe_2 is read with bank $10 mapped"
@@ -996,7 +996,7 @@ SECTION "Bank 13 FhuntTalkEvents_Shop", ROMX
 FhuntTalkEvents_Shop::
     ld a, $0d
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_GoodDayHowMay ; script '*: Good day. How may I'
     ASSERT BANK(Script_GoodDayHowMay) == $10, "Script_GoodDayHowMay is read with bank $10 mapped"
@@ -1052,7 +1052,7 @@ SECTION "Bank 13 Talk_WelcomeToTheTravelersInn", ROMX
 ; Talk_WelcomeToTheTravelersInn; shortened from TalkScript_WelcomeToTheTravelersInn)
 ; starts Script_WelcomeToTheTraveler: '*: Welcome to the traveler's inn.' (E-0248)
 Talk_WelcomeToTheTravelersInn::
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeToTheTraveler ; script '*: Welcome to the traveler's inn.'
     ASSERT BANK(Script_WelcomeToTheTraveler) == $10, "Script_WelcomeToTheTraveler is read with bank $10 mapped"
@@ -1452,7 +1452,7 @@ SECTION "Bank 13 FhuntTalkEvents_Shop2", ROMX
 FhuntTalkEvents_Shop2::
     ld a, $0e
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeHowMayI_4 ; script '*: Welcome! How may I serve'
     ASSERT BANK(Script_WelcomeHowMayI_4) == $10, "Script_WelcomeHowMayI_4 is read with bank $10 mapped"
@@ -1469,7 +1469,7 @@ SECTION "Bank 13 Talk_HowMayOurChurchHelpYou", ROMX
 ; shortened from TalkScript_HowMayOurChurchHelpYou)
 ; starts Script_HowMayOurChurch_4: '*: How may our church help' (E-0248)
 Talk_HowMayOurChurchHelpYou::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayOurChurch_4 ; script '*: How may our church help'
     ASSERT BANK(Script_HowMayOurChurch_4) == $10, "Script_HowMayOurChurch_4 is read with bank $10 mapped"
@@ -1544,7 +1544,7 @@ SECTION "Bank 13 Talk_WelcomeToTheTravelersInn_13", ROMX
 ; Talk_WelcomeToTheTravelersInn_13; shortened from TalkScript_WelcomeToTheTravelersInn_13)
 ; starts Script_WelcomeToTheTraveler: '*: Welcome to the traveler's inn.' (E-0248)
 Talk_WelcomeToTheTravelersInn_13::
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeToTheTraveler ; script '*: Welcome to the traveler's inn.'
     ASSERT BANK(Script_WelcomeToTheTraveler) == $10, "Script_WelcomeToTheTraveler is read with bank $10 mapped"
@@ -2935,7 +2935,7 @@ SECTION "Bank 13 NordenTalkEvents_Shop", ROMX
 NordenTalkEvents_Shop::
     ld a, $07
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeHowMayI_3 ; script '*: Welcome! How may I serve'
     ASSERT BANK(Script_WelcomeHowMayI_3) == $10, "Script_WelcomeHowMayI_3 is read with bank $10 mapped"
@@ -3013,7 +3013,7 @@ NordenTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn_5 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_5) == $10, "Script_WelcomeToOurInn_5 is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -3502,7 +3502,7 @@ SECTION "Bank 13 NordenTalkEvents_Shop0A", ROMX
 NordenTalkEvents_Shop0A::
     ld a, $0a
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeWhatCanI ; script '*: Welcome! What can I do'
     ASSERT BANK(Script_WelcomeWhatCanI) == $10, "Script_WelcomeWhatCanI is read with bank $10 mapped"
@@ -3516,7 +3516,7 @@ SECTION "Bank 13 NordenTalkEvents_Shop08", ROMX
 NordenTalkEvents_Shop08::
     ld a, $08
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_GreetingsHowShallI ; script '*: Greetings! How shall I serve'
     ASSERT BANK(Script_GreetingsHowShallI) == $10, "Script_GreetingsHowShallI is read with bank $10 mapped"
@@ -3530,7 +3530,7 @@ SECTION "Bank 13 NordenTalkEvents_Shop09", ROMX
 NordenTalkEvents_Shop09::
     ld a, $09
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HelloHaveALook ; script '*: Hello! Have a look at'
     ASSERT BANK(Script_HelloHaveALook) == $10, "Script_HelloHaveALook is read with bank $10 mapped"
@@ -3549,7 +3549,7 @@ SECTION "Bank 13 Talk_HowMayOurChurchServeYou_2", ROMX
 ; Talk_HowMayOurChurchServeYou_2; shortened from TalkScript_HowMayOurChurchServeYou_2)
 ; starts Script_HowMayOurChurch_2: '*: How may our church serve' (E-0248)
 Talk_HowMayOurChurchServeYou_2::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayOurChurch_2 ; script '*: How may our church serve'
     ASSERT BANK(Script_HowMayOurChurch_2) == $10, "Script_HowMayOurChurch_2 is read with bank $10 mapped"
@@ -3731,7 +3731,7 @@ NordenTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_6 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_6) == $10, "Script_WelcomeToOurInn_6 is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -4614,7 +4614,7 @@ NordenTalkEvents_ThirdInn::
     ld hl, Script_WelcomeToOurInn_7 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_7) == $10, "Script_WelcomeToOurInn_7 is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -4625,7 +4625,7 @@ SECTION "Bank 13 NordenTalkEvents_Shop0B", ROMX
 NordenTalkEvents_Shop0B::
     ld a, $0b
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HelloHowMayI_3 ; script '*: Hello! How may I serve'
     ASSERT BANK(Script_HelloHowMayI_3) == $10, "Script_HelloHowMayI_3 is read with bank $10 mapped"
@@ -5319,7 +5319,7 @@ SECTION "Bank 13 NordenTalkEvents_Shop0C", ROMX
 NordenTalkEvents_Shop0C::
     ld a, $0c
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HelloWhatMayI ; script '*: Hello! What may I do'
     ASSERT BANK(Script_HelloWhatMayI) == $10, "Script_HelloWhatMayI is read with bank $10 mapped"
@@ -5377,7 +5377,7 @@ SECTION "Bank 13 Talk_HowMayOurChurchServeYou_3", ROMX
 ; Talk_HowMayOurChurchServeYou_3; shortened from TalkScript_HowMayOurChurchServeYou_3)
 ; starts Script_HowMayOurChurch_3: '*: How may our church serve' (E-0248)
 Talk_HowMayOurChurchServeYou_3::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayOurChurch_3 ; script '*: How may our church serve'
     ASSERT BANK(Script_HowMayOurChurch_3) == $10, "Script_HowMayOurChurch_3 is read with bank $10 mapped"
@@ -5412,7 +5412,7 @@ SECTION "Bank 13 Talk_HowMayOurChurchServeYou_13", ROMX
 ; Talk_HowMayOurChurchServeYou_13; shortened from TalkScript_HowMayOurChurchServeYou_13)
 ; starts Script_HowMayOurChurch_3: '*: How may our church serve' (E-0248)
 Talk_HowMayOurChurchServeYou_13::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayOurChurch_3 ; script '*: How may our church serve'
     ASSERT BANK(Script_HowMayOurChurch_3) == $10, "Script_HowMayOurChurch_3 is read with bank $10 mapped"
@@ -5432,7 +5432,7 @@ SECTION "Bank 13 Talk_HowMayOurChurchServeYou_13_2", ROMX
 ; Talk_HowMayOurChurchServeYou_13_2; shortened from TalkScript_HowMayOurChurchServeYou_13_2)
 ; starts Script_HowMayOurChurch_3: '*: How may our church serve' (E-0248)
 Talk_HowMayOurChurchServeYou_13_2::
-    ld a, $1f
+    ld a, BANK(Script_Priest)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HowMayOurChurch_3 ; script '*: How may our church serve'
     ASSERT BANK(Script_HowMayOurChurch_3) == $10, "Script_HowMayOurChurch_3 is read with bank $10 mapped"
@@ -5478,7 +5478,7 @@ NordenTalkEvents_FourthInn::
     ld hl, Script_WelcomeToOurInn_8 ; script '*: Welcome to our inn!'
     ASSERT BANK(Script_WelcomeToOurInn_8) == $10, "Script_WelcomeToOurInn_8 is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $10
+    ld a, BANK(Script_It_3)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -7786,7 +7786,7 @@ TalkMsg003A_ThatWeirdApeThingIsWarubou::
 .set_screen_table_index_to_02:
     ld a, $02
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop_5)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THAT_WEIRD_APE_THING_IS_12C
     call TestFlagBit
@@ -7857,7 +7857,7 @@ TalkMsg0035_TheKingIsTooLenientOn::
     jr nc, .loop
     ld a, $00
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_You_5 ; script '*: You're too young to be'
     ASSERT BANK(Script_You_5) == $10, "Script_You_5 is read with bank $10 mapped"
@@ -7869,7 +7869,7 @@ TalkMsg0035_TheKingIsTooLenientOn::
 .loop2:
     ld a, $00
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WelcomeHowMayI ; script '*: Welcome! How may I serve'
     ASSERT BANK(Script_WelcomeHowMayI) == $10, "Script_WelcomeHowMayI is read with bank $10 mapped"
@@ -7882,7 +7882,7 @@ TalkMsg0035_TheKingIsTooLenientOn::
     jr c, .loop2
     ld a, $00
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_WellWellIfIt ; script '*: Well, well! If it isn't'
     ASSERT BANK(Script_WellWellIfIt) == $10, "Script_WellWellIfIt is read with bank $10 mapped"
@@ -8578,7 +8578,7 @@ SECTION "Bank 13 GreatLogTalkEvents_ShowCobiHeroWhileYoure", ROMX
 ; what ...', 'I envied you ...'), each phase's first talk setting its flag, then 'Hi, <hero>! What's
 ; up today?'. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowCobiHeroWhileYoure::
-    ld a, $1f
+    ld a, BANK(Script_SwapMonsters)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -8668,7 +8668,7 @@ SECTION "Bank 13 GreatLogTalkEvents_ShowTaraBigBrotherWhile", ROMX
 ; brother, while you're in ...', 'Big brother, tell me about ...', 'I was a little ...'), then 'Hi!
 ; How are you?'. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_ShowTaraBigBrotherWhile::
-    ld a, $1f
+    ld a, BANK(Script_SwapMonsters)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -9651,7 +9651,7 @@ SECTION "Bank 13 GreatLogTalkEvents_Christener", ROMX
 ; Great Log talk, the Christener (scripts in bank $96): 'Welcome. I'm the Christener. I ...' the
 ; first time, then '... Do ...'. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_Christener::
-    ld a, $96
+    ld a, BANK(Script_Rename)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_WELCOME_IM_THE_CHRISTENER_I
     call TestFlagBit
@@ -9779,7 +9779,7 @@ GreatLogTalkEvents_Hibernation::
     ld hl, Script_HelloHeroWelcomeThis ; script '*: Hello, 0, welcome! This is'
     ASSERT BANK(Script_HelloHeroWelcomeThis) == $10, "Script_HelloHeroWelcomeThis is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $1d
+    ld a, BANK(Script_Hibernate)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_HELLO_HERO_WELCOME_THIS_IS
     call SetFlagBit
@@ -9789,7 +9789,7 @@ GreatLogTalkEvents_Hibernation::
     ld hl, Script_HelloHeroWelcomeWant ; script '*: Hello, 0, welcome! Want to'
     ASSERT BANK(Script_HelloHeroWelcomeWant) == $10, "Script_HelloHeroWelcomeWant is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $1d
+    ld a, BANK(Script_Hibernate)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -10258,7 +10258,7 @@ SECTION "Bank 13 GreatLogTalkEvents_ArenaClassChoice", ROMX
 ; Script_Here ('Oh? But your key ring'); once wArenaOutcome is set they get the rank-1 scripts. (C2,
 ; E-0377)
 GreatLogTalkEvents_ArenaClassChoice::
-    ld a, $0c
+    ld a, BANK(Script_Arena)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     xor a
     ld [wScreenTableIndex], a
@@ -10447,7 +10447,7 @@ SECTION "Bank 13 GreatLogTalkEvents_EggEvaluator", ROMX
 ; time, then 'I'm the Egg Evaluator. May ...'; at the end 'Oh, the savior of GreatLog.' once. (C2,
 ; E-0357; probed E-0377)
 GreatLogTalkEvents_EggEvaluator::
-    ld a, $96
+    ld a, BANK(Script_EggService)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -10483,7 +10483,7 @@ SECTION "Bank 13 GreatLogTalkEvents_StarryShrine", ROMX
 GreatLogTalkEvents_StarryShrine::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
-    ld a, $15
+    ld a, BANK(Script_Breed)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -10612,7 +10612,7 @@ SECTION "Bank 13 GreatLogTalkEvents_YouCanCallMe", ROMX
 ; Great Log talk (scripts in bank $0C): 'You can call me the ...' in two versions; at the end 'Well,
 ; who would have thought ...' once. (C2, E-0357; probed E-0377)
 GreatLogTalkEvents_YouCanCallMe::
-    ld a, $0c
+    ld a, BANK(Script_MedalPrizes)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -10988,7 +10988,7 @@ GreatLogTalkEvents_Shopkeeper::
     ld a, [wObject1 + OBJ_X]
     cp $10
     jr nz, .loop2
-    ld a, $10
+    ld a, BANK(Script_Shop)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_ARMY_ANT_HELPED_ME_GET
     call TestFlagBit
@@ -11480,7 +11480,7 @@ Talk0A49_BreedingCouldResultIn::
     ld hl, Script_I_10 ; script '*: I'm a traveling merchant. I'm'
     ASSERT BANK(Script_I_10) == $10, "Script_I_10 is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $0e
+    ld a, BANK(Script_ItsAccessoryIsIn)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -11500,7 +11500,7 @@ Talk0A49_BreedingCouldResultIn::
     ld hl, Script_I_11 ; script '*: I'm a scientist. I've been'
     ASSERT BANK(Script_I_11) == $10, "Script_I_11 is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $0e
+    ld a, BANK(Script_ItsAccessoryIsIn)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -11646,7 +11646,7 @@ Talk04BA_IfYouGetAn::
     call StartScriptAtHL_B13
     ld a, $02
     ld [wScreenTableIndex], a
-    ld a, $0e
+    ld a, BANK(Script_ItsAccessoryIsIn)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -11804,7 +11804,7 @@ GreatLogTalkEvents_ShowItsExcitingToThink::
 
 .call_save_screen_buffer_to_bg_map1:
     farcall SaveScreenBufferToBGMap1
-    ld a, $0d
+    ld a, BANK(Script_KeyAppraisal)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -12125,7 +12125,7 @@ Talk04C0_AllRightyWellDo::
     call StartScriptAtHL_B13
     ld a, $04
     ld [wScreenTableIndex], a
-    ld a, $0e
+    ld a, BANK(Script_ItsAccessoryIsIn)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -12295,7 +12295,7 @@ SECTION "Bank 13 GreatLogTalkEvents_Shop", ROMX
 GreatLogTalkEvents_Shop::
     ld a, $17
     ld [wScreenTableIndex], a
-    ld a, $10
+    ld a, BANK(Script_Shop)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld hl, Script_HelloWhatCanI ; script '*: Hello! What can I do'
     ASSERT BANK(Script_HelloWhatCanI) == $10, "Script_HelloWhatCanI is read with bank $10 mapped"
@@ -12424,7 +12424,7 @@ GreatLogTalkEvents_TravelingMerchant::
     ld hl, Script_I_10 ; script '*: I'm a traveling merchant. I'm'
     ASSERT BANK(Script_I_10) == $10, "Script_I_10 is read with bank $10 mapped"
     call StartScriptAtHL_B13
-    ld a, $0e
+    ld a, BANK(Script_ItsAccessoryIsIn)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ret
 
@@ -13859,7 +13859,7 @@ GreatLogTalkEvents_Msg055F_HeroCheckedTheBookshelf::
 Talk0B56_WhenYouBreedMonsters::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
-    ld a, $0e
+    ld a, BANK(Script_ItsAccessoryIsIn)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld a, [wSpriteSlots + $2]
     cp $17
@@ -13949,7 +13949,7 @@ SECTION "Bank 13 Talk0B6D_BreedingFireAndIce", ROMX
 Talk0B6D_BreedingFireAndIce::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
-    ld a, $0e
+    ld a, BANK(Script_ItsAccessoryIsIn)  ; the bank of the data it reads, so that data can move
     ld [wDataBank], a
     ld a, [wSpriteSlots + $2]
     cp $14

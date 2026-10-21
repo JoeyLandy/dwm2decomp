@@ -21,12 +21,21 @@ src/text/bankBB_messages_GG_overflow.asm, with BB's number at $4000. Without --t
     python -I tools/text_spill.py groups [--src DIR]
     python -I tools/text_spill.py spill BANK N [--to BB] --src DIR
     python -I tools/text_spill.py spill-categories BANK FIRST --to BB --src DIR
+    python -I tools/text_spill.py spill-strings BANK N --to BB --src DIR
 
 A bank with no split, whose lookups take one category table (the battle text's bank $2F, and the string banks of
 code banks such as $07 and $F0), can instead move whole categories: `spill-categories BANK FIRST --to BB` moves
 categories FIRST and up, with their lists and strings, to the empty bank BB. BeginStringDisplay_BankBB and
 CopyStringToBuffer_BankBB become `cp FIRST` on wStringCategory and far-call the new bank's copies for those
-categories (bank $08's lookups already do this for categories from 9 on). They grow by 14 bytes each.
+categories (bank $08's lookups already do this for categories from 9 on). They grow by 14 bytes each. Code that
+reads one category of the table through wDataBank in the form `ld a, BANK(table) / ld [wDataBank], a / ld hl, table
+/ ld a, 2 x category / add_a_to_hl` (bank $09's key-name readers, E-0420) is pointed at the new bank's table when
+its category moves.
+
+A bank whose table has one category (bank $0D) can move its first N strings: `spill-strings BANK N --to BB`. The
+lookups gain `cp N` on wStringIndex; the list keeps its length with `dw $0000` for the moved ids, because code of
+the bank may read later ids straight from it (MedalPrizeMenu_DrawPrizeNames: `add $28`), and N may not reach the
+lowest such base.
 
 `spill` refuses src/ itself: it is for a mod's copy (tools/make_mod.py, mod.json "spill") because the matching
 build must keep the original layout. The routine shapes it rewrites are checked line by line first; anything
@@ -338,7 +347,7 @@ def claim_empty_bank(tree: Tree, to: str, new: Path) -> None:
     old_inc = f'INCLUDE "unused/{empty.name}"'
     if old_inc not in text:
         raise ValueError(f"main.asm does not include unused/{empty.name}")
-    tree.other[src / "main.asm"] = text.replace(old_inc, f'INCLUDE "text/{new.name}"')
+    tree.other[src / "main.asm"] = text.replace(old_inc, f'INCLUDE "{new.relative_to(src).as_posix()}"')
     del tree.files[empty]
     tree.gone.append(empty)
 
@@ -445,17 +454,23 @@ def spill_categories(src: Path, bank: str, first: int, to: str) -> dict:
         if fi != f or not matches(F, ii, PLAIN_SHAPE, b=bank, call=name):
             raise ValueError(f"{name}_Bank{bank} is not the plain lookup (ld de, {table} / call / ret) this tool rewrites")
     named: dict[str, int] = {}
+    in_bank: dict[str, int] = {}  # names inside BANK(...), which follow their label wherever it goes
     for L in tree.files.values():
         for ln in L:
             c = code(ln)
-            if c.startswith("SECTION"):  # a section's name is not a use
+            if c.startswith(("SECTION", "ASSERT")):  # a section's name is not a use; an ASSERT is checked below
                 continue
             if LABEL.match(c):
                 c = c.split("::", 1)[1]
             for w in re.findall(r"\b[A-Za-z_]\w*\b", c):
                 named[w] = named.get(w, 0) + 1
-    if named.get(table) != 2:
-        raise ValueError(f"{table} is named {named.get(table, 0)} times; only its two lookups may name it")
+            for w in re.findall(r"BANK\((\w+)\)", c):
+                in_bank[w] = in_bank.get(w, 0) + 1
+    readers = direct_readers(tree, table)
+    if named.get(table) != 2 + 2 * len(readers):
+        raise ValueError(f"{table} is named {named.get(table, 0)} times; only its two lookups and readers of the "
+                         f"shape `ld a, BANK(table) / ld [wDataBank], a / ld hl, table / ld a, 2 x category / "
+                         f"add_a_to_hl` may name it")
     cats = [n for _, n in dw_list(F, ti)]
     if not 0 < first < len(cats):
         raise ValueError(f"bank ${bank}: FIRST must be from 1 to {len(cats) - 1} (it has {len(cats)} categories)")
@@ -467,6 +482,12 @@ def spill_categories(src: Path, bank: str, first: int, to: str) -> dict:
     for x in dict.fromkeys(gone):
         if x in kept or named.get(x, 0) != gone.count(x):
             raise ValueError(f"{x} is named outside the categories that would move; choose another FIRST")
+    for n in cats[first:]:  # a moved list may be named by BANK(list), which follows it, and by nothing else
+        if named.get(n, 0) - in_bank.get(n, 0) != 1 or asserted(tree, n):
+            raise ValueError(f"{n} (category {cats.index(n)}) is read outside the table; choose another FIRST")
+    for r in readers:
+        if r.category >= len(cats):
+            raise ValueError(f"{r.file.name}:{r.line + 1} reads category {r.category}, past the table's {len(cats)}")
     word = "battle_text" if "_battle_text" in f.name else "messages" if "_messages_" in f.name else "strings"
     new = src / "text" / f"bank{to.lower()}_{word}_{bank.lower()}_spill.asm"
     claim_empty_bank(tree, to, new)
@@ -476,6 +497,14 @@ def spill_categories(src: Path, bank: str, first: int, to: str) -> dict:
         F[i + 1:routine_end(F, i)] = [x.format(k=first, name=name, b=bank, call=name) for x in CATEGORY_ROUTINE] + [""]
         F.insert(i, f"; tools/text_spill.py: categories from ${first:02X} on are read in bank ${to.upper()} "
                     f"({name}_Bank{bank}_Spill)")
+    # a direct reader of a moved category reads the new bank's table, which has that category at the same place
+    spill_table = f"StringCategories_Bank{bank}_Spill"
+    for r in readers:
+        if r.category >= first:
+            R = tree.files[r.file]
+            R[r.line - 2] = R[r.line - 2].replace(f"BANK({table})", f"BANK({spill_table})")
+            R[r.line] = R[r.line].replace(table, spill_table)
+            tree.dirty.add(r.file)
     # the table keeps its first categories; their lists and strings stay, the rest move
     ti = tree.line(f, table)
     rows = dw_list(F, ti)
@@ -512,7 +541,165 @@ def spill_categories(src: Path, bank: str, first: int, to: str) -> dict:
     tree.dirty |= {f, new}
     tree.save()
     return {"bank": bank, "categories": f"${first:02X}-${len(cats) - 1:02X}", "to": to.upper(), "bytes": size,
-            "lists": {k: len(lists[n]) for k, n in enumerate(cats)}}
+            "lists": {k: len(lists[n]) for k, n in enumerate(cats)},
+            "readers": [f"{r.routine} (category {r.category})" for r in readers if r.category >= first]}
+
+
+# ---- moving the first strings of a one-category bank (bank $0D) -------------------------------------------------
+
+INDEX_ROUTINE = [  # written in place of a plain lookup's three instructions: 21 bytes instead of 7
+    "    ld a, [wStringIndex]",
+    "    cp ${k:02x}",
+    "    jr nc, .this_bank",
+    "    farcall {name}_Bank{b}_Spill",
+    "    ret",
+    "",
+    ".this_bank:",
+    "    ld de, BeginStringDisplay_Bank{b}_StringCategories",
+    "    call {call}",
+    "    ret",
+]
+
+
+def in_bank_readers(tree: Tree, f: Path, table: str) -> list[tuple[int, int]]:
+    """(line, lowest id) of the code in the table's own file that reads it directly with the bank mapped: `ld hl,
+    table` with an `add $KK` to the string index in the eight lines above (bank $0D's prize-name readers read ids $28
+    and up). Raises when an `ld hl, table` has no such base."""
+    L = tree.files[f]
+    out = []
+    for i, ln in enumerate(L):
+        if code(ln) != f"ld hl, {table}":
+            continue
+        base = [int(m.group(1), 16) for x in L[max(0, i - 8):i] if (m := re.fullmatch(r"add \$([0-9a-f]{2})", code(x)))]
+        if not base:
+            raise ValueError(f"{f.name}:{i + 1} reads {table} with no constant base id in front of it")
+        out.append((i, base[-1]))
+    return out
+
+
+def spill_strings(src: Path, bank: str, count: int, to: str) -> dict:
+    """Move the first `count` strings of a bank whose table has one category (bank $0D: the Key Shop and TinyMedal
+    talk) to the empty bank `to`. The two lookups send ids below `count` there (`cp count`); the list keeps its
+    length, with `dw $0000` where the moved ids were, so code of the bank that reads later ids straight from the list
+    (MedalPrizeMenu_DrawPrizeNames: ids $28 and up) still finds them. Returns what moved."""
+    if src.resolve() == (ROOT / "src").resolve():
+        raise ValueError("spill changes the layout; run it on a mod's copy of src/, never on src/ itself")
+    tree = Tree(src)
+    bank = bank.upper()
+    table = f"BeginStringDisplay_Bank{bank}_StringCategories"
+    f, ti = tree.where(table)
+    F = tree.files[f]
+    for name in ("BeginStringDisplay", "CopyStringToBuffer"):
+        fi, ii = tree.where(f"{name}_Bank{bank}")
+        if fi != f or not matches(F, ii, PLAIN_SHAPE, b=bank, call=name):
+            raise ValueError(f"{name}_Bank{bank} is not the plain lookup (ld de, {table} / call / ret) this tool rewrites")
+    cats = [n for _, n in dw_list(F, ti)]
+    if len(cats) != 1:
+        raise ValueError(f"{table} has {len(cats)} categories; spill-strings is for a table of one "
+                         f"(spill-categories moves whole categories)")
+    readers = in_bank_readers(tree, f, table)
+    named: dict[str, int] = {}
+    for L in tree.files.values():
+        for ln in L:
+            c = code(ln)
+            if c.startswith(("SECTION", "ASSERT")):
+                continue
+            if LABEL.match(c):
+                c = c.split("::", 1)[1]
+            for w in re.findall(r"\b[A-Za-z_]\w*\b", c):
+                named[w] = named.get(w, 0) + 1
+    if named.get(table) != 2 + len(readers):
+        raise ValueError(f"{table} is named outside its lookups and its bank's readers")
+    rows = dw_list(F, tree.line(f, cats[0]))
+    ids = [x for _, x in rows]
+    top = min([b for _, b in readers] + [len(ids)])
+    if not 0 < count <= top or count >= len(ids):
+        raise ValueError(f"bank ${bank}: N must be from 1 to {min(top, len(ids) - 1)} (code of the bank reads ids from "
+                         f"${top:02X} on straight from the list)" if top < len(ids) else
+                         f"bank ${bank}: N must be from 1 to {len(ids) - 1}")
+    def blocker(n: int) -> str | None:  # a string of the first n ids that something else names too
+        gone, kept = ids[:n], set(ids[n:])
+        return next((x for x in dict.fromkeys(gone) if x in kept or x == "$0000" or named.get(x, 0) != gone.count(x)),
+                    None)
+
+    if x := blocker(count):
+        ok = next((n for n in range(count - 1, 0, -1) if not blocker(n)), None)
+        raise ValueError(f"{x} is named outside the ids that would move" +
+                         (f"; the largest N below that works is {ok}" if ok else ""))
+    gone = ids[:count]
+    word = "messages" if "_messages_" in f.name else "strings"
+    new = src / "text" / f"bank{to.lower()}_{word}_{bank.lower()}_spill.asm"
+    claim_empty_bank(tree, to, new)
+    for name in ("BeginStringDisplay", "CopyStringToBuffer"):
+        i = tree.line(f, f"{name}_Bank{bank}")
+        F[i + 1:routine_end(F, i)] = [x.format(k=count, name=name, b=bank, call=name) for x in INDEX_ROUTINE] + [""]
+        F.insert(i, f"; tools/text_spill.py: ids below ${count:02X} are read in bank ${to.upper()} ({name}_Bank{bank}_Spill)")
+    for k, (r, _x) in enumerate(dw_list(F, tree.line(f, cats[0]))[:count]):
+        F[r] = f"    dw $0000 ; id {k} (in bank ${to.upper()}, {name}_Bank{bank}_Spill)".replace(
+            f"{name}_Bank{bank}_Spill", f"StringList_Bank{bank}_Spill")
+    moved: list[str] = []
+    size = 0
+    for x in dict.fromkeys(gone):
+        a, b, nb = body(F, tree.line(f, x))
+        moved += cut(F, a, b)
+        size += nb
+    fill_change(F, f.name, size - 2 * 14)
+    head = [f"; ROM bank ${to.upper()}: strings $00-${count - 1:02X} of bank ${bank} (moved here by tools/text_spill.py; "
+            f"not in the original game)", "",
+            f'SECTION "Bank {to.upper()}", ROMX', f"    db ${to.lower()} ; the bank number LookupString reads at $4000", ""]
+    for name in ("BeginStringDisplay", "CopyStringToBuffer"):
+        head += [f"; {name} with this bank's table (far-called by {name}_Bank{bank} for ids below ${count:02X})",
+                 f"{name}_Bank{bank}_Spill::", f"    ld de, StringCategories_Bank{bank}_Spill", f"    call {name}",
+                 "    ret", ""]
+    head += [f"; one string category, as in bank ${bank}", f"StringCategories_Bank{bank}_Spill::",
+             f"    dw StringList_Bank{bank}_Spill", "", f"; ids $00-${count - 1:02X} (from ${count:02X} on they are read "
+             f"in bank ${bank})", f"StringList_Bank{bank}_Spill::"]
+    head += [f"    dw {x} ; id {k}" for k, x in enumerate(gone)] + [""]
+    while moved and moved[-1] == "":
+        moved.pop()
+    size_new = 1 + 2 * 7 + 2 + 2 * count + size
+    tree.files[new] = head + moved + ["", f"    ds ${0x4000 - size_new:x}, $00", ""]
+    tree.dirty |= {f, new}
+    tree.save()
+    return {"bank": bank, "ids": f"$00-${count - 1:02X}", "to": to.upper(), "bytes": size, "length": len(ids),
+            "readers_from": f"${top:02X}" if readers else None}
+
+
+@dataclass
+class Reader:
+    file: Path
+    line: int       # the `ld hl, table` line
+    routine: str
+    category: int
+
+
+READER_SHAPE = ["ld a, BANK({t})", "ld [wDataBank], a", "ld hl, {t}"]
+
+
+def direct_readers(tree: Tree, table: str) -> list[Reader]:
+    """E-0420: routines outside the two lookups that read one category of a string table through wDataBank:
+    `ld a, BANK(table) / ld [wDataBank], a / ld hl, table / ld a, $NN / add_a_to_hl` reads category $NN / 2 (bank
+    $09's key-name readers DrawKeyListPageNames and LinkKeyTrade_WriteStoryKeyName read category 6 this way).
+    Any other `ld hl, table` or `ld de, table` outside the lookups is refused."""
+    out = []
+    for f, L in tree.files.items():
+        routine = None
+        for i, ln in enumerate(L):
+            if m := LABEL.match(ln):
+                routine = m.group(1)
+            c = code(ln)
+            if c not in (f"ld hl, {table}", f"ld de, {table}") or i < 2:
+                continue
+            if [code(x) for x in L[i - 2:i + 1]] == [s.format(t=table) for s in READER_SHAPE] and \
+                    (m := re.fullmatch(r"ld a, \$([0-9a-f]{2})", code(L[i + 1]))) and code(L[i + 2]) == "add_a_to_hl" \
+                    and int(m.group(1), 16) % 2 == 0:
+                out.append(Reader(f, i, routine, int(m.group(1), 16) // 2))
+    return out
+
+
+def asserted(tree: Tree, label: str) -> bool:
+    """An `ASSERT BANK(label) == ...` anywhere: the label may not leave its bank."""
+    return any(code(ln).startswith(f"ASSERT BANK({label})") for L in tree.files.values() for ln in L)
 
 
 # ---- checking a spilled build on tools/sm83.py -------------------------------------------------------------------
@@ -578,6 +765,57 @@ def copied(rom: bytes, sym: dict, bank: str, string_id: int, category: int = 0) 
     return b"" if not any(out) else bytes(out)
 
 
+W_LIST_ENTRIES, W_LIST_COUNT, W_LIST_PAGE, W_LIST_PAGES, W_LIST_LAST_ROW = 0xD789, 0xD7A9, 0xD7AF, 0xD7B0, 0xD7B1
+W_KEY_LIST, W_NAME_GLYPH_BUF = 0xC707, 0xC8CF
+
+
+def names_drawn(rom: bytes, sym: dict, routine: str, entries: list[int], keys: list[bytes] | None = None) -> list[bytes]:
+    """E-0420: the names a list-page routine builds in wNameGlyphBuf, one per call of
+    DrawNameGlyphBufGlyphsOverlaying8DAnd8E (which is skipped): MedalPrizeMenu_DrawPrizeNames (entries = prize
+    numbers, string $28 + n of bank $0D) or DrawKeyListPageNames (entries index `keys`, 4-byte wKeyList records; a
+    record with byte 3 bit 7 set is a story key named by string byte 0 & $3F of bank $09's category 6). One page:
+    up to four entries."""
+    from sm83 import GameBoy
+
+    class Returned(Exception):
+        pass
+
+    gb = GameBoy(rom)
+    b, a = sym[routine]
+    gb.rombank = b
+    for k, v in enumerate(entries):
+        gb.wb(W_LIST_ENTRIES + k, v)
+    for k, rec in enumerate(keys or []):
+        for j, v in enumerate(rec):
+            gb.wb(W_KEY_LIST + 4 * k + j, v)
+    for addr, v in ((W_LIST_COUNT, len(entries)), (W_LIST_PAGE, 0), (W_LIST_PAGES, 1), (W_LIST_LAST_ROW, 0)):
+        gb.wb(addr, v)
+    gb.sp = 0xDFF0
+    gb.wb(gb.sp, RETURN & 0xFF)
+    gb.wb(gb.sp + 1, RETURN >> 8)
+    gb.pc = a
+    out: list[bytes] = []
+
+    def draw(g):  # record the name and return at once
+        buf = bytearray()
+        while len(buf) < 32 and (not buf or buf[-1] != 0xF0):
+            buf.append(g.rb(W_NAME_GLYPH_BUF + len(buf)))
+        out.append(bytes(buf))
+        g.pc = g.rb(g.sp) | g.rb(g.sp + 1) << 8
+        g.sp += 2
+
+    def stop(_):
+        raise Returned
+
+    gb.pc_hooks[sym["DrawNameGlyphBufGlyphsOverlaying8DAnd8E"][1]] = draw
+    gb.pc_hooks[RETURN] = stop
+    try:
+        gb.run(500_000)
+    except Returned:
+        return out
+    raise RuntimeError(f"{routine} did not return")
+
+
 def verify(ref: bytes, ref_sym: dict, mod: bytes, mod_sym: dict, counts: dict[str, int]) -> list[str]:
     """Differences between two ROMs in the string every id of each group shows and copies (counts: bank -> its
     number of ids, the two lists' lengths; ids past them read past the overflow list). Bank $82's copy entry
@@ -626,7 +864,7 @@ def verify_categories(ref: bytes, ref_sym: dict, mod: bytes, mod_sym: dict, bank
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("command", choices=["groups", "spill", "spill-categories"])
+    ap.add_argument("command", choices=["groups", "spill", "spill-categories", "spill-strings"])
     ap.add_argument("bank", nargs="?")
     ap.add_argument("n", nargs="?", type=int)
     ap.add_argument("--to")
@@ -642,6 +880,12 @@ def main(argv: list[str] | None = None) -> int:
     if a.bank is None or a.n is None:
         ap.error(f"{a.command} needs BANK and N")
     try:
+        if a.command == "spill-strings":
+            if not a.to:
+                ap.error("spill-strings needs --to BB (an empty bank)")
+            res = spill_strings(a.src, a.bank, a.n, a.to)
+            print(f"bank ${res['bank']}: strings {res['ids']} ({res['bytes']} bytes) to bank ${res['to']}")
+            return 0
         if a.command == "spill-categories":
             if not a.to:
                 ap.error("spill-categories needs --to BB (an empty bank)")

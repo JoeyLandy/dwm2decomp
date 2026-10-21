@@ -1,6 +1,6 @@
 # Technical architecture
 
-Status: written 2026-09-12 as a proposal; the binary identity and confidence requirements are mandatory. Updated 2026-10-17: the matching build exists, and the repository layout below is the one in use. The tool-choice and gate sections are the original design; the gate is implemented by `tools/build.py` and `tools/verify_rom.py`.
+Status: written 2026-09-12 as a proposal; the binary identity and confidence requirements are mandatory. Updated 2026-10-20: the matching build exists, and the repository layout below is the one in use. The tool-choice and gate sections are the original design; the gate is implemented by `tools/build.py` and `tools/verify_rom.py`.
 
 ## Product and organizing principle
 
@@ -51,7 +51,12 @@ src/ram.asm, src/*.inc         RAM names, record fields, constants, macros, char
 src/assets.txt                 the asset files src/ includes, with their place in the reference ROM
 tools/                         generator, build and verifier, emulator (sm83.py), LZSS decoder and encoder,
                                asset export, probes, shift test, checks of mechanics and tables, the data
-                               tables as files (datatables.py), renames (rename.py), src/ helpers (source_tree.py)
+                               tables as files (datatables.py), renames (rename.py), src/ helpers (source_tree.py),
+                               bank check (bank_check.py); for mods and translations: text (text.py), room in
+                               text banks (text_spill.py), scripts in other banks (script_bank.py), mod builds
+                               and patches (make_mod.py, patch.py), the smoke test (mod_check.py), setup
+                               (setup.py, toolchain.py)
+mods/, patcher/                mod folders (mods/example, the three tutorials'), the browser patcher page
 tests/                         verifier negative cases, generator and source checks, emulator probes
 local/roms/                    ignored: the immutable reference ROM; local/assets etc. for exports
 build/                         ignored, disposable: runN/ build reports, listing/ (annotated listing)

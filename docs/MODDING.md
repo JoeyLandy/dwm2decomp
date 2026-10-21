@@ -30,8 +30,9 @@ A mod is a folder of edits, so it can be shared and combined. mods/example/ is o
 
 ```text
 mods/my_mod/
-  mod.json        name, version, author, description; "spill" to make room in a full message or battle-text bank
-                  ([translating](TRANSLATING.md#moving-messages-out-of-a-full-bank))
+  mod.json        name, version, author, description; "spill" to make room in a full text bank
+                  ([translating](TRANSLATING.md#moving-messages-out-of-a-full-bank)); "scripts" to read event
+                  scripts from other banks (below)
   data/           edited tables (only the rows or lists you changed)
   text/           edited text (only the entries you changed)
   charmap.inc     extra letters, if your language needs them
@@ -49,6 +50,31 @@ build/mods/my_mod/:
 - `my_mod.gbc`, the modded ROM, for you only;
 - `report.json`.
 
+## Event scripts in other banks
+
+The event scripts (who says what, who walks where, which flag is set) are read by an interpreter in bank $10. It
+reads a script from bank $10 itself or, after the opcode `script_jump_data_bank`, from the bank the talk routine
+put in wDataBank; only a few opcodes work there. Bank $10 has 5,848 free bytes. For a mod that needs more, or wants
+its scripts in a bank of their own, `tools/script_bank.py` changes a mod's copy of the source (never src/ itself):
+- `patch` lets a script be in any bank and use every opcode. It adds `script_jump_far Label` (opcode $08, unused by
+  the game): the script goes on at Label, in Label's bank. Write new scripts in an empty bank
+  (src/unused/bankBB_empty.asm) and jump to them from a script in bank $10.
+- `move --all --to BB` moves bank $10's scripts to the empty bank BB: 627 of its 637 runs (6,207 bytes; the other
+  10 hold bytes not read as script). Every label that something outside names keeps a 4-byte stub in bank $10 that
+  jumps there, so nothing that starts a script changes, and bank $10 gains 4,466 bytes. `move Script_Label ...`
+  moves only the runs that hold those labels.
+
+```json
+{"name": "my_mod", "scripts": {"move": "all", "to": "9F"}}
+```
+
+`{"patch": true}` gives the interpreter change alone. The scripts that use the arena, breeding or NPC breeding
+menus cannot move: those menus resume their script in the game's own data-bank mode. Checked on the project's
+emulator (tests/test_script_bank.py, E-0421): with every movable script moved, all 17 recipe chains (279 runs)
+fetch the same script positions as the original. The screens differ only where the patched interpreter's extra
+cycles move a frame: a few VBlanks, and in one boss battle a button press that lands on another turn (it does the
+same with the interpreter patch alone).
+
 ## The smoke test
 
 `make_mod.py` runs [the smoke test](../tools/mod_check.py) on every mod. It plays the start of the game on the
@@ -59,8 +85,11 @@ project's emulator, beside the original, and reports:
 - **where the screens first differ**. A mod that changes what you see should differ, and the frame shows where.
   A difference you did not expect is worth a look.
 
-It only covers what the scripted play reaches: the opening and the first steps of the game. A change to a shop or
-a late dungeon has to be tried in an emulator.
+It only covers what the scripted play reaches: the opening and the first steps of the game. For more, give it a
+recipe chain from tools/recipes/ (shops, the inn, breeding, the library, key worlds, the late story):
+`python -I tools/mod_check.py build/mods/my_mod/my_mod.gbc --sym build/mods/my_mod/build/dwm2.sym --recipe
+tools/recipes/e0327_shop_inn.txt --compare` replays it on both ROMs and lists the runs whose screens differ. A
+change elsewhere still has to be tried in an emulator.
 
 ## Sharing
 

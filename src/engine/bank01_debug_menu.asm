@@ -3880,7 +3880,7 @@ CopyMonsterNameToBuffer_B01::
     pop af
     ld [wDataBank], a
     ld hl, wNameGlyphBuf
-    ld b, $08
+    ld b, BANK(StringDatabase)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ret

@@ -6656,7 +6656,7 @@ CopyTileListFromBank1F_1C::
     ld a, l
     ld e, a
     pop hl
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     pop de

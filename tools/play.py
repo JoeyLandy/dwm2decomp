@@ -48,14 +48,29 @@ def parse(recipe: str) -> list[tuple[int, int]]:
     return out
 
 
-def poke(gb: GameBoy, ram: dict, spec: str) -> None:
+def value(val: str, names: dict | None = None) -> int:
+    """A poke's value: a number, or BANK(X), LOW(X) or HIGH(X) of a ROM label X or X+N (E-0421), from `names`
+    (label -> (bank, address), the played ROM's own). A label that tools/script_bank.py moved is found as X_Far,
+    its body (X itself is then a 4-byte stub)."""
+    m = re.fullmatch(r"(BANK|LOW|HIGH)\((\w+)(?:\+(\w+))?\)", val)
+    if not m:
+        return int(val, 0)
+    if names is None:
+        raise ValueError(f"{val}: a label value needs the ROM's symbols")
+    name = m.group(2) + "_Far" if m.group(2) + "_Far" in names else m.group(2)
+    bank, addr = names[name]
+    addr += int(m.group(3), 0) if m.group(3) else 0
+    return {"BANK": bank, "LOW": addr & 0xFF, "HIGH": addr >> 8}[m.group(1)]
+
+
+def poke(gb: GameBoy, ram: dict, spec: str, names: dict | None = None) -> None:
     """SYMBOL=VALUE or HEXADDR=VALUE writes a byte through the bus; sram+HEX=VALUE writes cartridge RAM directly
-    (byte HEX of the 32 KB, bank * $2000 + offset)."""
+    (byte HEX of the 32 KB, bank * $2000 + offset). VALUE may be BANK(Label), LOW(Label) or HIGH(Label)."""
     sym, val = spec.split("=")
     if sym.startswith("sram+"):
-        gb.sram[int(sym[5:], 16)] = int(val, 0)
+        gb.sram[int(sym[5:], 16)] = value(val, names)
     else:
-        gb.wb(int(ram.get(sym, sym), 16), int(val, 0))
+        gb.wb(int(ram.get(sym, sym), 16), value(val, names))
 
 
 def call_at_halt(gb: GameBoy, bank: int, addr: int) -> bool:
@@ -120,7 +135,7 @@ def main(argv: list[str]) -> None:
     ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
     for k, a in enumerate(argv):
         if a == "--poke":
-            poke(gb, ram, argv[k + 1])
+            poke(gb, ram, argv[k + 1], {v: k2 for k2, v in boot_trace.load_labels().items()})
             forced = True
     labels = boot_trace.load_labels()
     if "--call" in argv:  # call a routine at the main loop's halt, as an event would (E-0327)
@@ -183,7 +198,7 @@ def replay(path: str, keep: set[str], stop_when_kept: bool = False, rom: bytes |
             if p.startswith("call:"):
                 call_at_halt(gb, *by_name[p[5:]])
             else:
-                poke(gb, ram, p)
+                poke(gb, ram, p, by_name)
         seen: dict = {}
         run(gb, parse(recipe), labels, seen)
         states[state] = pickle.dumps(gb)

@@ -304,12 +304,60 @@ them, and through the loads the old rule let pass:
   `jr`, and past a local label jumped to only from that code.
 
 Result: 545 asserted loads (522 by number, 23 by reader), 0 warnings. The 440 script loads cannot follow their
-scripts without an interpreter change: the interpreter in bank $10 reads script bytes from its own bank, and that
-bank has no free byte.
+scripts without an interpreter change: the interpreter in bank $10 reads script bytes from its own bank. (E-0419
+also said that bank has no free byte. That was wrong: it ends in 5,848 bytes of fill, `ds $16d8` in src/ and zeros
+in the reference; E-0421.)
 
 **A moved table** (tests/test_fixed_bank_readers.py). MonsterAttributeMapTable (383 far pointers, bank $38) moves to
 the empty bank $9E in a copy. LoadMonsterPictureAttributes writes the same VRAM attributes for all 383 monsters. With
 its operand put back to $38, 351 differ.
+
+## E-0420: bank numbers stored in wDataBank or passed to a bank copy
+
+E-0419 checked pointer loads. Two more ways name a bank by number, and neither had an ASSERT:
+- `ld a, $NN / ld [wDataBank], a`: the bank ReadWordFromDataBank reads, and the bank a script reads after
+  `script_jump_data_bank` (70 sites);
+- `ld b, $NN` before CopyFromBankWaitVRAM or OrFromBankWaitVRAM, which copy from bank B (21 sites).
+Bank $09's key names were among them, and they blocked moving that bank's text. 90 of the 91 now name a label
+(config/operands.json; same bytes):
+- 66 stores in talk routines set wDataBank for the scripts the routine starts (before or after the start), whose
+  `script_jump_data_bank` targets are in that bank (Script_Priest and Script_Library in $1F, Script_Shop_5 and
+  Script_Vault in $10, Script_Rename and Script_EggService in $96, Script_Breed in $15, ...): `ld a,
+  BANK(target)`. All the targets of a routine's scripts are in one bank, checked when the entries were written;
+- 9 tile copies from bank $1F: `ld b, BANK(GlyphFont)`. Every pointer word into bank $1F from outside it (534) is
+  `GlyphFont + n`;
+- 9 name copies from bank $08, read through a list the routine loads with BANK(StringDatabase) just before:
+  `ld b, BANK(StringDatabase)`;
+- bank $09's key names: 3 copies (`BANK(StringList_Bank09_StringCategories_6)` twice,
+  `BANK(CopyKeyNameWordToDE_StringList)` once) and the 2 wDataBank stores before CopyDataBankStringToTextBuf0;
+- ReadBank6TableWord's wDataBank: `BANK(AIPersonalityWeightTable)`.
+One is left: GreatLogTalkEvents_Breeder sets wDataBank = $0E, and the two scripts it starts read nothing through it.
+tools/bank_check.py reports both forms as "literal" (91 before, 1 now); tests/test_sections.py holds the count.
+
+## E-0421: event scripts in other banks (mods)
+
+The interpreter in bank $10 reads a script from the mapped bank (its own), or, in the game's data-bank mode
+(wScriptInDataBank = 1, after `script_jump_data_bank`), from the bank in wDataBank. Only the message, jump, skip,
+choice and two message-form handlers read through wDataBank; the walk, face, wait, flag, sound and command handlers
+read the mapped bank. tools/script_bank.py changes a mod's copy so a script can be anywhere ([making a
+mod](MODDING.md#event-scripts-in-other-banks)):
+- wScriptInDataBank 2 and up names the script's own bank. Two home-bank helpers (ReadScriptWord, ReadScriptByte)
+  read in all three modes, and every fetch handler reads through them; modes 0 and 1 behave as before.
+- Opcode $08, unused, becomes `script_jump_far`: a bank byte and an address.
+- The two routines that start scripts clear a far mode first, through a home-bank StartScriptAtHL. A moved script
+  that a scene command ends without `$FF` would otherwise leave the next script read from the wrong bank (found by
+  the farm chain: the first move ran Script_ListenYouTwoQuit from bank $9F).
+- `move` takes bank $10's scripts as runs (to the next terminator) joined by relative jumps, renames the moved labels
+  X_Far and leaves a stub `X:: script_jump_far X_Far` for each label named elsewhere, so the 440 asserted starters
+  and every table of scripts stay as they are.
+
+All 627 movable runs of the 637 (6,207 bytes) move to bank $9F, with 416 stubs; bank $10 gains 4,466 bytes and every
+bank is exactly full (the linker map: 0 bytes free). Over all 17 recipe chains (279 runs; see the evidence log,
+E-0421) the moved ROM fetches the same script positions as the reference. The screens differ only by timing, since
+the patched reads take more cycles: a few VBlanks in some runs, one run a frame behind (bb19!), and one boss battle
+(ls12b!) where a button press lands on another turn, as it does with the interpreter patch alone, nothing moved.
+The late-story recipe started its scenes by poking raw bank-$10 addresses; it now names them (BANK/LOW/HIGH of the
+label, tools/play.py), so a moved script is still found.
 
 ## Left after M2
 

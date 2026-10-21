@@ -7001,7 +7001,7 @@ DrawMonsterNameOfRecordField::
     pop af
     ld [wDataBank], a
     ld hl, wNameGlyphBuf
-    ld b, $08
+    ld b, BANK(StringDatabase)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wArg1]
@@ -8198,7 +8198,7 @@ SwapMonstersMenu_CopyGlyphTiles::
     inc hl
     ld d, [hl]
     pop hl
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     pop de

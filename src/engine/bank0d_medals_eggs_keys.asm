@@ -2097,7 +2097,7 @@ CopyGlyphTileListFromBank1F::
     ld d, a
     ld e, l
     pop hl
-    ld b, $1f
+    ld b, BANK(GlyphFont)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     pop de
@@ -4331,7 +4331,7 @@ DrawKeyListPageNames::
     pop af
     ld [wDataBank], a
     ld hl, wNameGlyphBuf
-    ld b, $09
+    ld b, BANK(StringList_Bank09_StringCategories_6)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $f0
@@ -7954,7 +7954,7 @@ CopyMonsterNameToBuffer_B0D::
     pop af
     ld [wDataBank], a
     ld hl, wNameGlyphBuf
-    ld b, $08
+    ld b, BANK(StringDatabase)  ; the bank of the data it reads, so that data can move
     ld c, $10
     call CopyFromBankWaitVRAM
     ret

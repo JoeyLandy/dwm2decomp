@@ -3,8 +3,12 @@
 
 A mod folder holds any of these (see mods/example/):
   mod.json        {"name": ..., "version": ..., "author": ..., "description": ...}; optionally "spill":
-                  [{"bank": "28", "count": 9, "to": "9A"}, {"bank": "2F", "categories_from": 1, "to": "9D"}]
-                  to make room in full text banks first (tools/text_spill.py; "to" is optional for "count")
+                  [{"bank": "28", "count": 9, "to": "9A"}, {"bank": "2F", "categories_from": 1, "to": "9D"},
+                  {"bank": "0D", "strings": 37, "to": "9E"}] to make room in full text banks first
+                  (tools/text_spill.py spill, spill-categories, spill-strings; "to" is optional for "count");
+                  optionally "scripts": {"patch": true} for an interpreter that reads scripts from any bank
+                  (script_jump_far), or {"move": "all" or ["Script_..."], "to": "9F"} to move bank $10's scripts
+                  (tools/script_bank.py)
   data/           edited tables, as tools/datatables.py exports them (JSON or CSV)
   text/           edited text, as tools/text.py exports it (JSON; only the entries you changed are needed)
   charmap.inc     extra CHARMAP lines for new letters, added to src/charmap.inc
@@ -31,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import datatables  # noqa: E402
 import text as text_tool  # noqa: E402
+import script_bank  # noqa: E402
 import text_spill  # noqa: E402
 
 
@@ -43,6 +48,10 @@ def apply_mod(mod: Path, src: Path) -> list[str]:
             res = text_spill.spill_categories(src, str(sp["bank"]), int(sp["categories_from"]), sp["to"])
             done.append(f"spill: categories {res['categories']} of bank ${res['bank']} to bank ${res['to']}")
             continue
+        if "strings" in sp:
+            res = text_spill.spill_strings(src, str(sp["bank"]), int(sp["strings"]), sp["to"])
+            done.append(f"spill: strings {res['ids']} of bank ${res['bank']} to bank ${res['to']}")
+            continue
         res = text_spill.spill(src, str(sp["bank"]), int(sp["count"]), sp.get("to"))
         done.append(f"spill: {res['moved']} messages of bank ${res['bank']} to bank ${res['overflow_bank']}, "
                     f"split {res['split']}")
@@ -53,6 +62,15 @@ def apply_mod(mod: Path, src: Path) -> list[str]:
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(f, dest)
             done.append(f"replaced src/{f.relative_to(replaced).as_posix()}")
+    sc = meta.get("scripts")
+    if sc:
+        if "move" in sc:
+            res = script_bank.move(src, None if sc["move"] == "all" else list(sc["move"]), sc["to"])
+            done.append(f"scripts: {res['runs']} runs of bank $10 to bank ${res['to']} ({res['stubs']} stubs; bank $10 "
+                        f"gains {res['bank_10_gain']} bytes)")
+        elif sc.get("patch"):
+            script_bank.patch(src)
+            done.append("scripts: interpreter patched (script_jump_far)")
     if (mod / "charmap.inc").exists():
         inc = src / "charmap.inc"
         inc.write_text(inc.read_text(encoding="utf-8").rstrip("\n") + "\n" + (mod / "charmap.inc").read_text(encoding="utf-8"),

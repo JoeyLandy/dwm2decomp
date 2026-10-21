@@ -57,7 +57,10 @@ Forcing skips set-up, so the screens are partial. The routines are `GameMode0_In
   blocking tile id and, per screen, the streams that fill `wScreenTileBuffer` (tile ids) and the attribute map. `LoadMapScreen`
   builds the screen at (`hMapScreenX`, `hMapScreenY`); `MapWarpTable` lists doors; `CheckWarpAtPlayer` takes them.
 - **Event scripts (E-0038):** `StartEventScript` runs a byte-coded script each frame (`FetchScriptCommand` reads an opcode,
-  `ExecuteScriptCommand` runs one of 248 command types; `ScriptWaitFrames` is type 04).
+  `ExecuteScriptCommand` runs one of 248 command types; `ScriptWaitFrames` is type 04). Scripts start in bank
+  `$10`; `script_jump_data_bank` continues one in the bank the talk routine put in wDataBank (`$0C`, `$0D`, `$0E`,
+  `$15`, `$1D`, `$1F`, `$96`). There, only opcodes without operand bytes and the message, jump, skip and choice
+  opcodes work: the other handlers read their operands from bank `$10` (E-0420, E-0421).
 - **Super Game Boy:** `SendSGBPacketSet`, `SGBTransferCompressed`, `SGBTransferRaw` follow the documented packet
   protocol and are skipped unless `wSGBActive`.
 - **Saves:** records of `$A5` bytes at `sA000` (`SRAMRecordAddress`).
