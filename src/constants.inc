@@ -907,7 +907,7 @@ DEF EVENT_THE_KING_IS_TOO_LENIENT EQU $0CE ; set by TalkMsg0035_TheKingIsTooLeni
 DEF EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR EQU $0D0 ; set by Script_DarckFawahahahYouChased
 DEF EVENT_SCENE_DARCK_DEFEATED EQU $0D1 ; set by SceneDarckDefeated_BlinkOut
 DEF EVENT_TAKE_ITEM EQU $0D2 ; set by Script_SurprisinglyObedientAreYou
-DEF EVENT_SCENE_DARCK_TAUNT EQU $0D3 ; set by Script_SurprisinglyObedientAreYou, Script_YouSeemToStill
+DEF EVENT_SCENE_DARCK_TAUNT EQU $0D3 ; set by Script_SurprisinglyObedientAreYou_AfterBattle, Script_YouSeemToStill
 DEF EVENT_MAP_D6_OBJECT_REMOVED EQU $0D5 ; no setter found; tested by ObjSelector_MapD6_1
 DEF EVENT_MAP_D7_OBJECT_REMOVED EQU $0D9 ; no setter found; tested by ElvenVillageTalkEvents_BaffleTowerChestBattle, ObjSelector_MapD7_1
 DEF EVENT_IF_YOUVE_MADE_IT EQU $0DE ; set by ElvenVillageTalkEvents_ShowIfYouveMadeIt

@@ -6731,6 +6731,7 @@ Script_SurprisinglyObedientAreYou::
     script_message $0554 ; '*: My work is done… I'
     script_set_flag EVENT_TAKE_ITEM
     script_encounter $1d ; encounter words: Centasaur, GigaDraco, Garudian
+Script_SurprisinglyObedientAreYou_AfterBattle::
     script_message $0556 ; '*: N… No… How could my'
     script_command SCRIPT_SCENE_DARCK_TAUNT
     script_set_flag EVENT_SCENE_DARCK_TAUNT

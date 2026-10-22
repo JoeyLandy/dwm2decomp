@@ -6,7 +6,8 @@ hibernation, renaming and egg service) each get one, which the bytes do not see.
 script jump into another bank an error, so the arena's two sections, which jump to each other, cannot move apart;
 together they move. With the breeding scripts in an empty bank, the E-0328 breeding chain (122 runs, through the
 breeding menu's resume of its script in data-bank mode) fetches the same scripts and shows the same screens as the
-original on tools/sm83.py.
+original on tools/sm83.py. E-0423: an empty target bank gets its number at $4000 first (EmptyBank), and the moved
+bank begins with it.
 """
 import json
 import subprocess
@@ -51,6 +52,24 @@ class Sections(unittest.TestCase):
         self.assertEqual(names, ["Bank 05", "Bank 05 Script_A", "Bank 05 Code", "Bank 05 Script_B", "Bank 05 Other"])
 
 
+class EmptyBank(unittest.TestCase):
+    def test_an_empty_bank_gets_its_number_first(self):
+        """E-0423: a section moved into an empty bank must not land at $4000, which holds the bank's number."""
+        import tempfile
+        import move_section
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "bank9f_empty.asm"
+            f.write_text('SECTION "Bank 9F", ROMX\n; bank $9F: all $00 in the reference\nDS $4000, $00\n', encoding="utf-8")
+            layout = move_section.claim_empty(f, 0x9F, 'ROMX $15\n\t"Bank 15 Script_Breed"\nROMX $9F\n\t"Bank 9F"\nROMX $A0\n')
+            text = f.read_text(encoding="utf-8")
+            layout = move_section.move(layout, "Bank 15 Script_Breed", 0x9F)
+            again = move_section.claim_empty(f, 0x9F, layout)  # a bank with a number is left as it is
+        self.assertIn("    db $9f", text)
+        self.assertIn('SECTION "Bank 9F Fill", ROMX\n    ds $3fff, $00', text)
+        self.assertEqual(layout, 'ROMX $15\nROMX $9F\n\t"Bank 9F"\n\t"Bank 15 Script_Breed"\n\t"Bank 9F Fill"\nROMX $A0\n')
+        self.assertEqual(again, layout)
+
+
 @unittest.skipUnless(REF.exists(), "needs the reference ROM")
 class Moves(unittest.TestCase):
     def test_the_arena_halves_move_together_only(self):
@@ -67,6 +86,7 @@ class Moves(unittest.TestCase):
         ref_sym = shift_test.read_sym(d / "base/dwm2.sym")
         mod, sym = (d / "moved/dwm2.gbc").read_bytes(), shift_test.read_sym(d / "moved/dwm2.sym")
         self.assertEqual(sym["Script_Breed"][0], 0x9F)
+        self.assertEqual(mod[0x9F * 0x4000], 0x9F)  # the bank's number at $4000, not the script's first byte
         ta, tb = [], []
         r = mod_check.recipe_compare(str(ROOT / "tools/recipes/e0328_breed.txt"), REF.read_bytes(), ref_sym, mod, sym,
                                      SB.fetch_trace(sym, tb), SB.fetch_trace(ref_sym, ta))

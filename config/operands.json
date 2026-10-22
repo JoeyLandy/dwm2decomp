@@ -88,7 +88,10 @@
     "00:2323": {"bank": "04", "why": "read after rROMB0 = $04"},
     "00:24A3": {"bank": "09", "why": "read after rROMB0 = $09"},
     "00:28F4": {"bank": "1F", "why": "the glyph font (the note)"},
-    "00:30A2": {"bank": "1F", "why": "the glyph font in bank $1F (the note)"}
+    "00:30A2": {"bank": "1F", "why": "the glyph font in bank $1F (the note)"},
+    "15:4990": {"bank": "1D", "why": "E-0423: the tile destination list LoadTileListSixPerCall (bank $1D) reads for the breeding menu's parent-list glyphs: VRAM tiles $8C00-$8CB0, then $FFFF, at 1D:$6DE6 (the 18 bytes after LoadPedigreeSpeciesSpriteGraphics_Data3's three offsets). The number was named after the bank-$15 routine at $6DE6 (SRAMBank1RecordAddress); with bank $1D's sections moved, the breeding chain wrote a tile to the MBC bank register"},
+    "15:4D4F": {"bank": "1D", "why": "E-0423: as 15:4990 (BreedMenu_ChooseParents_ReloadTilesAgain)"},
+    "15:532C": {"bank": "1D", "why": "E-0423: as 15:4990 (the .set_arg1_to_9C step)"}
   },
   "splits": {
     "03:6851": {"make_label": true, "why": "E-0390: one byte per skill, read as $6851 + the skill number (add/adc) and used as the index into SkillTargetBoxRects right after it: 1 for the MPass skills, 0 for the others (SkillTargetBoxRects' note, E-0381)"},

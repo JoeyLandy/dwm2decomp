@@ -133,6 +133,27 @@ def move(layout: str, name: str, to: int) -> str:
     return "\n".join(lines)
 
 
+EMPTY = re.compile(r"^\s*DS \$4000, \$(00|FF)\s*$", re.I)
+
+
+def claim_empty(path: Path, to: int, layout: str) -> str:
+    """E-0423: an empty bank (src/unused/bankBB_empty.asm, one `DS $4000` fill) has no bank number at $4000, where every
+    other bank keeps it (BANK_NUMBER_BYTE): the VBlank handler and ReadWordFromDataBank read it to map the caller's
+    bank back. A section moved there first would put its own first byte at $4000, so an interrupt while the bank is
+    mapped returns into the wrong bank. The bank gets its number in section "Bank BB" and its fill in a last section
+    "Bank BB Fill", which moved sections go before. Returns the layout; other banks are left as they are."""
+    lines = path.read_text(encoding="utf-8").split("\n")
+    fills = [k for k, ln in enumerate(lines) if EMPTY.match(ln)]
+    if len(fills) != 1 or any(ln.strip().startswith(("db", "dw", "INCBIN")) for ln in lines):
+        return layout
+    k = fills[0]
+    fill = lines[k].strip().split(",")[1].strip()
+    lines[k:k + 1] = [f"    db ${to:02x} ; the bank number at $4000 (tools/move_section.py, E-0423)", "",
+                      f'SECTION "Bank {to:02X} Fill", ROMX', f"    ds $3fff, {fill}"]
+    path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
+    return layout.replace(f'\t"Bank {to:02X}"\n', f'\t"Bank {to:02X}"\n\t"Bank {to:02X} Fill"\n', 1)
+
+
 def section_sizes(map_path: Path) -> dict[str, int]:
     out = {}
     for ln in map_path.read_text(encoding="utf-8").split("\n"):
@@ -182,10 +203,11 @@ def main(argv: list[str] | None = None) -> int:
     src = out / "moved/src"
     shutil.copytree(base_src, src)
     layout = (src / "layout.link").read_text(encoding="utf-8")
+    files = shift_test.bank_files(src)
+    layout = claim_empty(files[to], to, layout)
     for name in args.move:
         layout = move(layout, name, to)
     (src / "layout.link").write_text(layout, encoding="utf-8", newline="\n")
-    files = shift_test.bank_files(src)
     text = files[to].read_text(encoding="utf-8").split("\n")
     for k in range(len(text) - 1, -1, -1):  # the target bank gives up `size` bytes of its last fill
         m = shift_test.DS.match(text[k])

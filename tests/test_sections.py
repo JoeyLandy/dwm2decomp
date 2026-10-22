@@ -183,6 +183,18 @@ class FixedBanks(unittest.TestCase):
                 got[key] = len(literal)
         self.assertEqual(got, {"data_bank": 1, "copy": 1, "named": 0, "unrelated": 0})
 
+    def test_a_same_bank_code_label_handed_to_a_far_routine_is_warned(self):
+        """E-0423: `ld de, Routine` of the caller's own bank, handed to a far routine that reads it in its bank."""
+        src = ("Here::\n    ld de, Local\n    farcall FarReader\n    ret\n"
+               "Fine::\n    ld hl, Local\n    call Local\n    farcall FarReader\n    ret\nLocal::\n    ret\n")
+        sym = {"Here": (5, 0x4000), "Fine": (5, 0x4010), "Local": (5, 0x4020), "FarReader": (7, 0x5000)}
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "engine").mkdir()
+            (Path(d) / "engine/bank05_x.asm").write_text(src, encoding="utf-8")
+            _e, warnings = bank_check.check(Path(d), sym)
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("Here (bank 05): ld de, Local is a code label of this bank handed to FarReader", warnings[0])
+
     def test_a_script_jump_into_another_bank_is_an_error(self):
         """E-0422: script sections that jump to each other must stay in one bank."""
         src = "Here::\n    script_jump Other\n    script_skip_if_no Near\nNear::\n    script_end\n"

@@ -363,7 +363,7 @@ label, tools/play.py), so a moved script is still found.
 
 - **Leftovers.** The raw bytes after eight bank-$10 scripts decode as script to the last byte: 19 short scripts
   that nothing starts, now read as script (config/script_entries.json, named `..._Leftover`). With them, all 656
-  bank-$10 runs move with tools/script_bank.py.
+  bank-$10 runs could move with tools/script_bank.py (E-0423 keeps six back; below).
 - **Script sections.** The data-bank scripts (arena $0C, key appraisal $0D, NPC breeding $0E, breeding $15,
   hibernation $1D, swap $1F, egg service $96; the priest and library already had one) get sections of their own
   (tools/present.py: a section starts at a Script_ label after data or ended code, and at another label after a
@@ -376,6 +376,26 @@ label, tools/play.py), so a moved script is still found.
   named.
 - **The one literal left** (GreatLogTalkEvents_Breeder's wDataBank = $0E) is read by nothing; bank_check lists it as
   "unread".
+
+## E-0423: every data-bank script section moved; the original timing kept
+
+- **All eleven data-bank script sections** (arena, key appraisal, NPC breeding, breeding, hibernation, priest and
+  library, swap, egg service and renaming) moved together to bank $9F play VBlank for VBlank as the original over
+  the key-world chain (200 runs, every chain from the farm on), the arena chain and a new menus chain
+  (tools/recipes/e0423_menus.txt: egg service, renaming, NPC breeding).
+- **Two faults found on the way.** tools/move_section.py now gives an empty target bank its number byte at $4000
+  (the VBlank handler and ReadWordFromDataBank map the interrupted bank back from it). And the breeding menu's
+  tile-reload steps named their bank-$1D tile list after a bank-$15 routine at the same address
+  (SRAMBank1RecordAddress); it is now BreedMenu_ReloadTiles_DestList, asserted in LoadTileListSixPerCall's bank.
+  tools/bank_check.py warns about a code label of a routine's own bank handed to a routine far-called in another
+  bank, which is how that one hid.
+- **tools/script_bank.py keeps the original timing.** Moved bank-$10 scripts run in the game's data-bank mode with
+  far variants of the opcodes whose handlers read the mapped bank (in unused opcode slots), so the game's handlers
+  stay as they are. With the patch alone, the recipe chains play VBlank for VBlank as the original; only script
+  starts cost 36 cycles more (StartScriptAtHL clears data-bank mode). A moved bank-$10 script costs what the game's
+  data-bank scripts cost, so a few VBlanks can still shift around it. Because a moved script sets wDataBank, the six
+  talk scripts the breeding, arena and NPC breeding menus run while their data-bank script waits stay in bank $10
+  (650 of 656 runs move).
 
 ## Left after M2
 

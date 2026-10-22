@@ -16,6 +16,9 @@ banks from a build's .sym file (where each label actually landed) and the instru
             (E-0419: a literal `ld b, $NN` or a nearby farcall no longer counts)
   asserted  such a load followed by `ASSERT BANK(Label) == $BB` (tools/present.py, E-0401): the reader maps that
             bank itself, and the link fails if the label leaves it
+            E-0423: also a code label of the loading routine's own bank, loaded into hl/de/bc and handed (before any
+            call or jump to it) to a routine far-called in another bank, which would read that address in its own
+            bank: the number was named after a coincidental same-bank label (BreedMenu_ReloadTiles_DestList)
   literal   a bank given by number where a reader takes it from: `ld a, $NN / ld [wDataBank], a`, or `ld b, $NN`
             before a call to CopyFromBank* or OrFromBank* (E-0420). src/ names these BANK(Label) where a label
             fixes the bank; what is left has no data it reads in that bank (reported, not a warning)
@@ -81,11 +84,29 @@ def names_bank_later(lines: list[str], i: int, label: str) -> bool:
     return any(f"BANK({label})" in x.split(";")[0] for x in _run_after(lines, i))  # ld b, or ld a for rROMB0
 
 
+def code_labels(src: Path) -> set[str]:
+    """Global labels followed by an instruction (not db/dw/ds/dfar/INCBIN or a script or map macro)."""
+    out = set()
+    for p in sorted(src.glob("*/bank*.asm")):
+        lines = p.read_text(encoding="utf-8").split("\n")
+        for i, ln in enumerate(lines):
+            if m := GLOBAL.match(ln):
+                nxt = next((x.split(";")[0].strip() for x in lines[i + 1:i + 4]
+                            if x.split(";")[0].strip() and not x.startswith(".")), "")
+                if nxt and not nxt.startswith(("db", "dw", "ds", "dfar", "INCBIN", "script_", "objsel", "map_")):
+                    out.add(m.group(1))
+    return out
+
+
+FARCALL = re.compile(r"^\s+farcall (\w+)")
+
+
 def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None = None,
           literal: list[str] | None = None, unread: list[str] | None = None) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
     asserted = [] if asserted is None else asserted
     literal = [] if literal is None else literal
+    code = code_labels(src)
     for p in sorted(src.glob("*/bank*.asm")):
         lines = p.read_text(encoding="utf-8").split("\n")
         cur = None
@@ -119,6 +140,16 @@ def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None
             if full not in sym:
                 continue
             tb, ta = sym[full]
+            if ml and full in code and tb == here and 0x4000 <= ta < 0x8000:
+                for x in lines[i + 1:i + 11]:
+                    cx = x.split(";")[0].strip()
+                    if re.match(rf"(?:call|jp)\b.*\b{re.escape(full)}\b", cx) or cx.startswith(("ret", "jp ")):
+                        break
+                    if (fm := FARCALL.match(x)) and fm.group(1) in sym and sym[fm.group(1)][0] not in (0, here):
+                        warnings.append(f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X}): {ln.strip()} "
+                                        f"is a code label of this bank handed to {fm.group(1)} in bank "
+                                        f"{sym[fm.group(1)][0]:02X}")
+                        break
             if tb == 0 or ta < 0x4000 or tb == here or ta >= 0x8000:
                 continue
             where = f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X})"

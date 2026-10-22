@@ -1,38 +1,44 @@
 #!/usr/bin/env python3
-"""Event scripts in other banks than $10, for mods (E-0421).
+"""Event scripts in other banks than $10, for mods (E-0421; timing-neutral since E-0423).
 
 The script interpreter runs in bank $10 (FetchScriptCommand) and reads a script's bytes from the bank mapped at
 $4000-$7FFF, its own. The game has a second way: `script_jump_data_bank` (opcode $E7) sets wScriptInDataBank = 1 and
 reads on from the bank in wDataBank, which the talk routine set before starting the script (E-0420: banks $0C,
-$0D, $0E, $15, $1D, $1F and $96 hold scripts read this way). Only some opcode handlers read through wDataBank
-(the message, jump, skip, choice and two message forms); the others (walk, face, wait, set flag, sound, ...) read
-their bytes from the mapped bank, so the game's data-bank scripts use those few only.
+$0D, $0E, $15, $1D, $1F and $96 hold scripts read this way). Only FetchScriptCommand and some opcode handlers read
+through wDataBank (the message, jump, skip, choice and two message forms); the others (walk, face, wait, set flag,
+sound, the generic commands, ...) read their bytes from the mapped bank, so the game's data-bank scripts use only
+the first kind and the opcodes that read no byte.
 
-`patch` changes the interpreter of a mod's copy of src/, so a script can be in any bank and use every opcode:
-- two home-bank helpers, ReadScriptWord and ReadScriptByte, read script bytes as wScriptInDataBank says: 0, the
-  mapped bank (bank $10); 1, the bank in wDataBank, as the game does; 2 and up, that bank number;
-- the handlers that read through wDataBank call ReadScriptWord instead of ReadWordFromDataBank, and the others read
-  their bytes with ReadScriptByte instead of `ld a, [hli]`;
-- the unused opcode $08 becomes `script_jump_far address` (src/macros.inc): the bank byte, then the address. The
-  script goes on there with wScriptInDataBank = that bank, or 0 for bank $10. $FF ends a script and clears it, as
-  before. Modes 0 and 1 work exactly as in the original;
+`patch` adds to the interpreter of a mod's copy of src/, and changes none of the game's own handlers, so every script
+left in bank $10 or in a data bank runs with exactly the original instructions (E-0423):
+- a far variant of each handler that reads from the mapped bank, in unused opcode slots: $A2-$AC for walk, walk fast,
+  wait, hold pad, face, set flag, slide, hide, encounter, add gold and sound (the original handler's code, its reads
+  done through ReadWordFromDataBank), $09 for a generic command (`script_command_far T`: the command type follows
+  the opcode) and $10 for command $62; the macros are the originals' names plus `_far` (src/macros.inc);
+- opcode $08, `script_jump_far address`: a bank byte and an address. The script goes on there in the game's data-bank
+  mode (wScriptInDataBank = 1, wDataBank = that bank), or, for bank $10, in mode 0;
 - StartScriptAtHL_B04 and StartScriptAtHL_B13, the two routines that start scripts, jump to a home-bank
-  StartScriptAtHL that first clears a far mode a moved script left when a scene command ended it without $FF (the
-  game's scripts run in mode 0, so this never mattered there).
+  StartScriptAtHL that clears wScriptInDataBank first (none of the game's 440 starts sets it: a script starts in
+  bank $10), so a moved script that a scene command ended without $FF leaves no data-bank mode behind. That costs
+  36 cycles per script start; the fetch of every opcode costs what it did.
 
 `move LABEL... --to BB` (or `move --all --to BB`) moves bank $10 scripts to the empty bank BB (patching first).
 Scripts are moved as runs: from a label after a terminator (script_end, `db $ff`, a jump or a choice) to the next
 such label, together with every run their relative jumps (script_skip_if_no, script_choice_jump) reach. In the
-moved copy a label X becomes X_Far; a `script_jump` to a script left in bank $10 becomes `script_jump_far`. Each
-moved label that anything outside the moved runs names (the 440 talk routines' `ld hl, Script_...`, tables, jumps
-of other scripts) keeps a 4-byte stub in bank $10, `X:: script_jump_far X_Far`, so nothing that starts a script
-changes. Refused runs: raw bytes other than `db $ff` (not read as script; since E-0422 the leftovers after
-scripts' ends are read as script, config/script_entries.json, and every one of the 656 runs can move), and the
-commands whose menus save the script position and restore it in data-bank mode 1 (SCRIPT_ARENA, SCRIPT_BREED,
-SCRIPT_NPC_BREED: ArenaMenu, BreedMenu and NpcBreedMenu save wScriptPointer and set wScriptInDataBank = 1 when they
-resume it). No bank-$10 script uses those three; the arena and breeding scripts are data-bank scripts in banks
-$0C, $0E and $15, whose talk routines name their bank with BANK(target) (E-0420), so they move with their section
-(tools/move_section.py; E-0422 moved the priest and library scripts of bank $1F).
+moved copy a label X becomes X_Far, the opcodes that read the mapped bank become their far variants, a `script_jump`
+to a script left in bank $10 and every `script_jump_data_bank` become `script_jump_far` (the latter to its target's
+bank, which E-0420 showed is the bank the talk routine puts in wDataBank). Each moved label that anything outside
+the moved runs names (the 440 talk routines' `ld hl, Script_...`, tables, jumps of other scripts) keeps a 4-byte
+stub in bank $10, `X:: script_jump_far X_Far`, so nothing that starts a script changes. Refused runs: raw bytes
+other than `db $ff` (not read as script; since E-0422 the leftovers after scripts' ends are read as script,
+config/script_entries.json, and every one of the 656 runs can move), and the commands whose menus save the script
+position and restore it in data-bank mode 1 (SCRIPT_ARENA, SCRIPT_BREED, SCRIPT_NPC_BREED), and the six scripts
+those menus start while their script waits (Script_BreedFade, Script_BreedChildSprite, Script_BreedChildScene,
+Script_ArenaGridBattle, Script_ArenaRounds, Script_NpcBreedWarp, by their commands): the menus resume the waiting
+script with the wDataBank it had, which a moved script would change (E-0423). No bank-$10 script uses the first
+three; the arena and breeding scripts are data-bank scripts in banks $0C, $0E and $15, whose talk routines
+name their bank with BANK(target) (E-0420), so they move with their section (tools/move_section.py, E-0422,
+E-0423), with no patch at all.
 
 Like tools/text_spill.py it refuses src/ itself (the matching build keeps the original layout); tools/make_mod.py
 runs it from mod.json "scripts". A refusal changes nothing.
@@ -68,61 +74,34 @@ SIZE = {"script_end": 1, "script_message": 3, "script_skip_if_no": 2, "script_ju
 TERMINATORS = ("script_end", "script_jump", "script_jump_data_bank", "script_choice_jump", "script_jump_far")
 # commands whose menus save wScriptPointer and resume it with wScriptInDataBank = 1 (E-0421)
 RESUMING = ("SCRIPT_ARENA", "SCRIPT_BREED", "SCRIPT_NPC_BREED")
+# E-0423: the commands of the talk events those menus run while their data-bank script waits (FieldTalkEvents groups
+# $15-$18, $1F, $20, dispatched by the seven routines that save wScriptPointer). The menus resume the waiting script
+# in data-bank mode with wDataBank as it was; a moved script, read in data-bank mode, would have changed it.
+NESTED = ("SCRIPT_BREED_FADE", "SCRIPT_BREED_CHILD_SPRITE", "SCRIPT_BREED_CHILD_SCENE", "SCRIPT_NPC_BREED_WARP",
+          "SCRIPT_ARENA_GRID_BATTLE", "SCRIPT_ARENA_ROUNDS")
+# E-0423: the opcodes whose handlers read their bytes from the mapped bank, and the unused slots of their far variants
+FAR_OPS = {"script_walk": (0x01, 0xA2), "script_walk_fast": (0x02, 0xA3), "script_wait": (0x03, 0xA4),
+           "script_hold_dpad": (0x04, 0xA5), "script_face": (0x05, 0xA6), "script_set_flag": (0x0A, 0xA7),
+           "script_slide_y": (0x0B, 0xA8), "script_hide_object": (0x0C, 0xA9), "script_encounter": (0x0D, 0xAA),
+           "script_add_gold": (0x0E, 0xAB), "script_sound": (0x0F, 0xAC)}
+for _m in FAR_OPS:
+    SIZE[_m + "_far"] = SIZE[_m]
+FAR_GENERIC, FAR_62, JUMP_FAR_OP = 0x09, 0x10, 0x08
+RE_READERS = ("ScriptFetchGeneric", "ScriptFetchGeneric2", "ScriptFetch62")  # re-read the opcode byte with [hli]
 
+STARTERS = {"StartScriptAtHL_B04": "engine/bank04_field_events.asm", "StartScriptAtHL_B13": "engine/bank13_talk.asm"}
+STARTER_OLD = ["ld a, l", "ld [wScriptPointerLo], a", "ld a, h", "ld [wScriptPointerHi], a", "ld a, $80",
+               "ld [wScriptStartRequest], a", "ld a, $01", "ld [wModeState], a", "ret"]
 HELPERS = [
-    'SECTION "Bank 00 ReadScriptWord", ROM0',
+    'SECTION "Bank 00 StartScriptAtHL", ROM0',
     "",
-    "; tools/script_bank.py (not in the original game): B = [HL], C = [HL + 1] of the script, HL kept, from the bank",
-    "; wScriptInDataBank names: 1, the bank in wDataBank (ReadWordFromDataBank, as the game's data-bank scripts);",
-    "; 2 and up, that bank number. Maps the calling bank back. Called in data-bank mode only.",
-    "ReadScriptWord::",
-    "    ld a, [wScriptInDataBank]",
-    "    cp $02",
-    "    jp c, ReadWordFromDataBank",
-    "    ld b, a",
-    "    ld a, [BANK_NUMBER_BYTE]",
-    "    push af",
-    "    ld a, b",
-    "    ld [rROMB0], a",
-    "    ld a, [hli]",
-    "    ld b, a",
-    "    ld a, [hld]",
-    "    ld c, a",
-    "    pop af",
-    "    ld [rROMB0], a",
-    "    ret",
-    "",
-    "; tools/script_bank.py: A = the next script byte, HL + 1: `ld a, [hli]` in the mapped bank when",
-    "; wScriptInDataBank is 0, else from the script's bank (ReadScriptWord). BC and DE kept.",
-    "ReadScriptByte::",
-    "    ld a, [wScriptInDataBank]",
-    "    and a",
-    "    jr nz, .script_bank",
-    "    ld a, [hli]",
-    "    ret",
-    "",
-    ".script_bank:",
-    "    push bc",
-    "    call ReadScriptWord",
-    "    ld a, b",
-    "    pop bc",
-    "    inc hl",
-    "    ret",
-    "",
-]
-HELPERS += [
-    "; tools/script_bank.py: StartScriptAtHL_B04 and StartScriptAtHL_B13 jump here. As they did, stores HL in",
-    "; wScriptPointerLo/Hi, wScriptStartRequest = $80 and wModeState = 1; first it clears a far mode (2 and up) that a",
-    "; moved script left when it ended without $FF (a scene command ends it), so the new script is read from bank $10.",
-    "; Modes 0 and 1 are left as they are, as in the game.",
+    "; tools/script_bank.py (not in the original game): StartScriptAtHL_B04 and StartScriptAtHL_B13 jump here. It",
+    "; clears wScriptInDataBank (none of the game's starts sets it; a moved script that a scene command ended without",
+    "; $FF leaves data-bank mode behind), then, as they did, stores HL in wScriptPointerLo/Hi, wScriptStartRequest =",
+    "; $80 and wModeState = 1.",
     "StartScriptAtHL::",
-    "    ld a, [wScriptInDataBank]",
-    "    cp $02",
-    "    jr c, .start",
     "    xor a",
     "    ld [wScriptInDataBank], a",
-    "",
-    ".start:",
     "    ld a, l",
     "    ld [wScriptPointerLo], a",
     "    ld a, h",
@@ -134,49 +113,57 @@ HELPERS += [
     "    ret",
     "",
 ]
-HELPER_BYTES = 26 + 16 + 30
-STARTERS = {"StartScriptAtHL_B04": "engine/bank04_field_events.asm", "StartScriptAtHL_B13": "engine/bank13_talk.asm"}
-STARTER_OLD = ["ld a, l", "ld [wScriptPointerLo], a", "ld a, h", "ld [wScriptPointerHi], a", "ld a, $80",
-               "ld [wScriptStartRequest], a", "ld a, $01", "ld [wModeState], a", "ret"]
-
-JUMP_DATA_BANK_OLD = ["pop hl", "ld a, $01", "ld [wScriptInDataBank], a", "ld a, [hli]", "ld c, a", "ld a, [hl]",
-                      "ld h, a", "ld l, c", "ld a, l", "ld [wScriptPointerLo], a", "ld a, h", "ld [wScriptPointerHi], a",
-                      "jp FetchScriptCommand_NextOpcode"]
-JUMP_DATA_BANK_NEW = [  # its address read in the current mode first (a far script may use it), then mode 1
-    "    pop hl",
-    "    call ReadScriptByte",
-    "    ld c, a",
-    "    call ReadScriptByte",
-    "    ld h, a",
-    "    ld l, c",
-    "    ld a, $01",
-    "    ld [wScriptInDataBank], a",
-    "    ld a, l",
-    "    ld [wScriptPointerLo], a",
-    "    ld a, h",
-    "    ld [wScriptPointerHi], a",
-    "    jp FetchScriptCommand_NextOpcode",
-]
-JUMP_FAR = [
-    'SECTION "Bank 10 ScriptFetchJumpFar", ROMX',
+HELPER_BYTES = 23
+FAR_HEAD = [
+    'SECTION "Bank 10 ScriptFarHandlers", ROMX',
     "",
-    "; tools/script_bank.py (not in the original game): fetch handler of opcode $08, script_jump_far address: the",
-    "; bank byte, then the address. The script goes on at that address in that bank (wScriptInDataBank = the bank),",
-    "; or, for bank $10, the interpreter's own, in the mapped bank (wScriptInDataBank = 0).",
+    "; tools/script_bank.py (not in the original game): what a moved script needs, read in the game's data-bank mode",
+    "; (wScriptInDataBank = 1, wDataBank = the script's bank). The game's own handlers are unchanged.",
+    "; A = the next script byte, HL + 1, read from the bank in wDataBank. BC and DE kept.",
+    "ReadScriptByte::",
+    "    push bc",
+    "    call ReadWordFromDataBank",
+    "    ld a, b",
+    "    pop bc",
+    "    inc hl",
+    "    ret",
+    "",
+    "; opcode $08, script_jump_far address: a bank byte, then the address, read in the current mode. The script goes",
+    "; on there: in bank $10, the interpreter's own, in mode 0; in any other bank in data-bank mode 1 with wDataBank =",
+    "; that bank.",
     "ScriptFetchJumpFar::",
     "    pop hl",
+    "    ld a, [wScriptInDataBank]",
+    "    and a",
+    "    jr nz, .data_bank",
+    "    ld a, [hli]",
+    "    ld c, a",
+    "    ld a, [hli]",
+    "    ld e, a",
+    "    ld a, [hl]",
+    "    ld d, a",
+    "    jr .jump",
+    "",
+    ".data_bank:",
     "    call ReadScriptByte",
     "    ld c, a",
     "    call ReadScriptByte",
     "    ld e, a",
     "    call ReadScriptByte",
     "    ld d, a",
+    "",
+    ".jump:",
     "    ld a, c",
     "    cp BANK(ScriptFetchJumpFar)",
-    "    jr nz, .far",
+    "    jr z, .bank_10",
+    "    ld [wDataBank], a",
+    "    ld a, $01",
+    "    jr .mode",
+    "",
+    ".bank_10:",
     "    xor a",
     "",
-    ".far:",
+    ".mode:",
     "    ld [wScriptInDataBank], a",
     "    ld a, e",
     "    ld [wScriptPointerLo], a",
@@ -184,17 +171,69 @@ JUMP_FAR = [
     "    ld [wScriptPointerHi], a",
     "    jp FetchScriptCommand_NextOpcode",
     "",
-]
-JUMP_FAR_BYTES = 33
-MACRO = [
+    "; opcode $09, script_command_far T: as ScriptFetchGeneric, with the command type in the byte after the opcode",
+    "ScriptFetchCommandFar::",
+    "    pop hl",
+    "    call ReadScriptByte",
+    "    ld [wScriptCommandType], a",
+    "    call BeginScriptCommand",
+    "    ret",
     "",
-    "; tools/script_bank.py (a mod's interpreter, not the original game): opcode $08, the script goes on at",
-    "; address \\1 in its own bank (ScriptFetchJumpFar)",
-    "MACRO script_jump_far",
-    "    db $08, BANK(\\1)",
-    "    dw \\1",
-    "ENDM",
+    "; opcode $10, script_command_far $62: as ScriptFetch62 (command $62, wScriptParam1 kept)",
+    "ScriptFetch62Far::",
+    "    pop hl",
+    "    ld a, $62",
+    "    ld [wScriptCommandType], a",
+    "    ld a, [wScriptParam1]",
+    "    push af",
+    "    call BeginScriptCommand",
+    "    pop af",
+    "    ld [wScriptParam1], a",
+    "    ret",
+    "",
 ]
+
+
+def insn_bytes(c: str) -> int:
+    """The size of one SM83 instruction (or of this project's farcall and jumptable macros), as src/ writes it."""
+    c = re.sub(r"\s+", " ", c.strip())
+    op = c.split(" ")[0]
+    args = c[len(op):].strip()
+    if op == "farcall":
+        return 6
+    if op in ("jumptable", "ret", "reti", "nop", "halt", "di", "ei", "daa", "cpl", "scf", "ccf", "rlca", "rrca",
+              "rla", "rra", "push", "pop"):
+        return 1
+    if op in ("call", "jp"):
+        return 1 if args == "hl" else 3
+    if op == "jr":
+        return 2
+    if op in ("bit", "set", "res", "swap", "rl", "rr", "rlc", "rrc", "sla", "sra", "srl", "stop"):
+        return 2
+    if op == "ldh":
+        return 1 if "[c]" in args else 2
+    if op in ("inc", "dec"):
+        return 1
+    if op in ("add", "adc", "sub", "sbc", "and", "xor", "or", "cp"):
+        rhs = args.split(",")[-1].strip()
+        if args.startswith("sp"):
+            return 2
+        return 1 if re.fullmatch(r"[abcdehl]|\[hl\]|hl|bc|de|sp", rhs) else 2
+    if op == "ld":
+        dst, src = (x.strip() for x in args.split(",", 1))
+        regs8 = re.compile(r"[abcdehl]$|\[hl[id+-]?\]$")
+        if regs8.match(dst) and regs8.match(src):
+            return 1
+        if dst in ("a",) and src in ("[bc]", "[de]") or src == "a" and dst in ("[bc]", "[de]"):
+            return 1
+        if dst in ("hl", "bc", "de", "sp") and src not in ("hl",):
+            return 3 if not src.startswith("sp") else 2
+        if dst == "sp":
+            return 1
+        if dst.startswith("[") or src.startswith("["):
+            return 3
+        return 2
+    raise ValueError(f"`{c}`: no size known")
 
 
 def code(ln: str) -> str:
@@ -208,6 +247,8 @@ def line_bytes(c: str) -> int:
         return 1 + len(c.split(None, 1)[1].split(","))
     if op == "db":
         return len(c[3:].split(","))
+    if op == "script_command_far":
+        return 1 if c.split()[1] in ("$62", "SCRIPT_PERSONALITY_MESSAGE") else 2
     if op not in SIZE:
         raise ValueError(f"`{c}` is not a script line this tool knows")
     return SIZE[op]
@@ -239,47 +280,78 @@ def is_patched(tree: TS.Tree) -> bool:
     return any(ln.startswith("ScriptFetchJumpFar::") for ln in tree.files[tree.src / SCRIPTS])
 
 
+def opcode_table(S: list[str]) -> tuple[int, list[str]]:
+    """(line of ScriptOpcodeHandlers, its 249 entries)."""
+    t = next(k for k, ln in enumerate(S) if ln.startswith("ScriptOpcodeHandlers::"))
+    out = []
+    for ln in S[t + 1:]:
+        if not ln.startswith("    dw "):
+            break
+        out.append(ln.split()[1])
+    return t, out
+
+
+def far_copy(S: list[str], handler: str, renamed: set[str]) -> list[str]:
+    """The code of a handler (its section) for a far variant: its global labels get _Far, every `ld a, [hli]`
+    becomes `call ReadScriptByte`; comments go."""
+    a, b = section_body(S, handler)
+    out = []
+    for ln in S[a:b]:
+        if ln.startswith(";") or not ln.strip() and out and not out[-1].strip():
+            continue
+        c = code(ln)
+        if c == "ld a, [hli]":
+            ln = "    call ReadScriptByte"
+        elif re.search(r"\[hl[id]?\]", c) and not c.startswith("ld [hl"):
+            raise ValueError(f"{handler}: `{c}` reads the script in a way this tool does not rewrite")
+        ln = re.sub(r"\b(\w+)\b", lambda m: m.group(1) + "_Far" if m.group(1) in renamed else m.group(1), ln.split(";")[0])
+        out.append(ln.rstrip())
+    while out and not out[-1]:
+        out.pop()
+    return out + [""]
+
+
 def patch_tree(tree: TS.Tree) -> int:
     """Patch the interpreter in tree (not saved). Returns the bytes bank $10 grows by."""
     S = tree.files[tree.src / SCRIPTS]
     if is_patched(tree):
         return 0
-    grow = JUMP_FAR_BYTES
-    # the opcode handlers that read through wDataBank, and FetchScriptCommand's own opcode read
-    aware = ["FetchScriptCommand_NextOpcode"]
-    plain = []
-    for h in handlers(S):
+    t, tab = opcode_table(S)
+    for slot in [JUMP_FAR_OP, FAR_GENERIC, FAR_62] + [far for _o, far in FAR_OPS.values()]:
+        if tab[slot] != "$0000":
+            raise ValueError(f"opcode ${slot:02X} of ScriptOpcodeHandlers is in use")
+    for name, (orig, _far) in FAR_OPS.items():
+        a, b = section_body(S, tab[orig])
+        if any("wScriptInDataBank" in code(x) for x in S[a:b]):
+            raise ValueError(f"{tab[orig]} reads through wDataBank already; it needs no far variant")
+    # the handlers' code: each section of a handler, and the sections their jumps reach (Walk -> WalkFast's
+    # ScriptFetch02_ReadOperands), copied once
+    sections: list[str] = []
+    for _n, (orig, _far) in FAR_OPS.items():
+        h = tab[orig]
+        if h not in sections:
+            sections.append(h)
         a, b = section_body(S, h)
-        (aware if any("wScriptInDataBank" in code(x) for x in S[a:b]) else plain).append(h)
-    for h in aware:
-        a, b = section_body(S, h)
-        for k in range(a, b):
-            if code(S[k]) == "call ReadWordFromDataBank":
-                S[k] = S[k].replace("call ReadWordFromDataBank", "call ReadScriptWord")
-    for h in plain:
-        a, b = section_body(S, h)
-        for k in range(a, b):
-            c = code(S[k])
-            if c == "ld a, [hli]":
-                S[k] = S[k].replace("ld a, [hli]", "call ReadScriptByte")
-                grow += 2
-            elif re.search(r"\[hl[id]?\]", c) and not c.startswith("ld [hl"):
-                raise ValueError(f"{h}: `{c}` reads the script in a way this tool does not rewrite")
-    a, b = section_body(S, "ScriptFetchJumpDataBank")
-    body = [code(x) for x in S[a + 1:b] if code(x)]
-    if body != JUMP_DATA_BANK_OLD:
-        raise ValueError("ScriptFetchJumpDataBank is not the routine this tool rewrites")
-    first = next(k for k in range(a + 1, b) if code(S[k]))
-    last = max(k for k in range(a + 1, b) if code(S[k]))
-    S[first:last + 1] = JUMP_DATA_BANK_NEW
-    grow += 4
-    # opcode $08
-    t = next(k for k, ln in enumerate(S) if ln.startswith("ScriptOpcodeHandlers::"))
-    if code(S[t + 9]) != "dw $0000":
-        raise ValueError("opcode $08 of ScriptOpcodeHandlers is in use")
-    S[t + 9] = "    dw ScriptFetchJumpFar ; entry 8 (tools/script_bank.py: script_jump_far)"
+        for x in S[a:b]:
+            if m := re.match(r"^\s+(?:jr|jp)(?: \w+,)? ([A-Z]\w+)", code(x) and "    " + code(x)):
+                tgt = m.group(1)
+                owner = next((y for y in tab if y != "$0000" and tgt != y and
+                              any(z.startswith(tgt + "::") for z in S[slice(*section_body(S, y))])), None)
+                if owner and owner not in sections:
+                    sections.append(owner)
+    renamed = {LABEL.match(x).group(1) for h in sections for x in S[slice(*section_body(S, h))] if LABEL.match(x)}
+    body: list[str] = []
+    for h in sections:
+        body += far_copy(S, h, renamed)
+    grow = sum(insn_bytes(code(x)) for x in FAR_HEAD + body if code(x) and not code(x).startswith(("SECTION",
+                                                                                                    ".")) and not LABEL.match(x))
+    for name, (orig, far) in FAR_OPS.items():
+        S[t + 1 + far] = f"    dw {tab[orig]}_Far ; entry {far} (tools/script_bank.py: {name}_far)"
+    S[t + 1 + JUMP_FAR_OP] = f"    dw ScriptFetchJumpFar ; entry {JUMP_FAR_OP} (tools/script_bank.py: script_jump_far)"
+    S[t + 1 + FAR_GENERIC] = f"    dw ScriptFetchCommandFar ; entry {FAR_GENERIC} (tools/script_bank.py: script_command_far)"
+    S[t + 1 + FAR_62] = f"    dw ScriptFetch62Far ; entry {FAR_62} (tools/script_bank.py: script_command_far $62)"
     s = next(k for k, ln in enumerate(S) if ln.startswith('SECTION "Bank 10 BeginScriptCommand"'))
-    S[s:s] = JUMP_FAR
+    S[s:s] = FAR_HEAD + ["; the far variants: the handlers' own code, their reads through ReadScriptByte"] + body + [""]
     TS.fill_change(S, SCRIPTS, -grow)
     for name, rel in STARTERS.items():  # 19 bytes each become `jp StartScriptAtHL` (3)
         F = tree.files[tree.src / rel]
@@ -287,7 +359,7 @@ def patch_tree(tree: TS.Tree) -> int:
         b = TS.routine_end(F, a)
         if [code(x) for x in F[a + 1:b] if code(x)] != STARTER_OLD:
             raise ValueError(f"{name} is not the routine this tool rewrites")
-        F[a + 1:b] = ["    jp StartScriptAtHL ; tools/script_bank.py: clears a far mode first", ""]
+        F[a + 1:b] = ["    jp StartScriptAtHL ; tools/script_bank.py: clears wScriptInDataBank first", ""]
         TS.fill_change(F, rel, 16)
         tree.dirty.add(tree.src / rel)
     H = tree.files[tree.src / HOME]
@@ -298,9 +370,29 @@ def patch_tree(tree: TS.Tree) -> int:
     H[fill + 1:fill + 1] = [""] + HELPERS
     macros = tree.src / "macros.inc"
     text = tree.text("macros.inc")
-    tree.other[macros] = text.rstrip("\n") + "\n" + "\n".join(MACRO) + "\n"
+    tree.other[macros] = text.rstrip("\n") + "\n" + "\n".join(far_macros(text)) + "\n"
     tree.dirty |= {tree.src / SCRIPTS, tree.src / HOME}
     return grow
+
+
+def far_macros(text: str) -> list[str]:
+    """The macros of the far opcodes: each `_far` one is its original with the far opcode byte."""
+    out = ["", "; tools/script_bank.py (a mod's interpreter, not the original game): opcodes of moved scripts, read in",
+           "; data-bank mode (E-0423). script_jump_far: the script goes on at \\1, in its bank.",
+           "MACRO script_jump_far", "    db $08, BANK(\\1)", "    dw \\1", "ENDM",
+           "; a generic command (ScriptFetchCommandFar), or command $62 (ScriptFetch62Far)",
+           "MACRO script_command_far", "    IF (\\1) == $62", "        db $10", "    ELSE", "        db $09, \\1",
+           "    ENDC", "ENDM"]
+    for name, (orig, far) in FAR_OPS.items():
+        m = re.search(rf"^MACRO {name}\n(.*?)^ENDM", text, re.M | re.S)
+        if not m:
+            raise ValueError(f"src/macros.inc has no MACRO {name}")
+        lines = m.group(1).rstrip("\n").split("\n")
+        first = re.sub(rf"\$0?{orig:X}\b", f"${far:02X}", lines[0], count=1, flags=re.I)
+        if first == lines[0]:
+            raise ValueError(f"MACRO {name} does not start with its opcode ${orig:02X}")
+        out += [f"MACRO {name}_far", first] + lines[1:] + ["ENDM"]
+    return out
 
 
 def patch(src: Path) -> dict:
@@ -376,6 +468,9 @@ def runs(S: list[str]) -> list[Run]:
                 r.why_not = r.why_not or f"raw bytes `{c}`"
             elif op == "script_command" and c.split()[1] in RESUMING:
                 r.why_not = r.why_not or f"{c.split()[1]} resumes the script in data-bank mode 1"
+            elif op == "script_command" and c.split()[1] in NESTED:
+                r.why_not = r.why_not or (f"{c.split()[1]}: it runs while a data-bank script waits, whose menu resumes "
+                                          f"it with the wDataBank this script would change")
             try:
                 r.bytes += line_bytes(c)
             except ValueError as err:
@@ -433,8 +528,8 @@ def move(src: Path, labels: list[str] | None, to: str) -> dict:
     """Move the runs holding `labels` (all movable runs when None) to the empty bank `to`."""
     if src.resolve() == (ROOT / "src").resolve():
         raise ValueError("this changes the layout; run it on a mod's copy of src/, never on src/ itself")
-    if int(to, 16) < 2:
-        raise ValueError("the bank must be 2 or more (wScriptInDataBank 0 and 1 are the game's own modes)")
+    if int(to, 16) == 0x10:
+        raise ValueError("the scripts are in bank $10 already")
     tree = TS.Tree(src)
     grow = patch_tree(tree)
     S = tree.files[src / SCRIPTS]
@@ -475,6 +570,14 @@ def move(src: Path, labels: list[str] | None, to: str) -> dict:
             if (m := re.search(r"\b(\w+)\s*[-+]", code(ln))) and m.group(1) in inside:
                 raise ValueError(f"{m.group(1)} is used with an offset (`{code(ln)}`); it cannot move")
     stubbed = [lab for r in moved for lab in r.labels if named.get(lab, 0) > inner.get(lab, 0)]
+    consts = {m.group(1): int(m.group(2), 16) for m in
+              re.finditer(r"^DEF (SCRIPT_\w+) EQU \$([0-9A-Fa-f]+)", tree.text("macros.inc"), re.M)}
+    _t, tab = opcode_table(S)
+    quiet = set()  # handlers that read no byte after the opcode: their commands run unchanged in data-bank mode
+    for h in set(tab) - {"$0000"} - set(RE_READERS):
+        a, b = section_body(S, h)
+        if not any(re.search(r"\[hl[id]?\]", code(x)) and not code(x).startswith("ld [hl") for x in S[a:b]):
+            quiet.add(h)
 
     def far_line(ln: str) -> str:
         m = LABEL.match(ln)
@@ -484,6 +587,20 @@ def move(src: Path, labels: list[str] | None, to: str) -> dict:
         if not c:
             return ln
         op = c.split()[0]
+        if op in FAR_OPS:
+            return ln.replace(op + " ", op + "_far ", 1)
+        if op == "script_command":
+            arg = c.split()[1]
+            n = consts.get(arg, int(arg[1:], 16) if arg.startswith("$") else None)
+            if n is None:
+                raise ValueError(f"`{c}`: unknown command")
+            if tab[n] in RE_READERS:
+                return ln.replace("script_command ", "script_command_far ", 1)
+            if tab[n] not in quiet:
+                raise ValueError(f"`{c}`: its handler {tab[n]} reads bytes this tool does not rewrite")
+            return ln
+        if op == "script_jump_data_bank":  # E-0420: the bank the talk routine puts in wDataBank is the target's
+            return ln.replace("script_jump_data_bank ", "script_jump_far ", 1)
         if op == "script_jump" and c.split()[1] not in inside:
             return ln.replace("script_jump ", "script_jump_far ", 1)
         if op in ("script_jump", "script_skip_if_no", "script_choice_jump"):
@@ -511,13 +628,12 @@ def move(src: Path, labels: list[str] | None, to: str) -> dict:
         while out and out[-1] == "":
             out.pop()
         out.append("")
-    far_bytes = sum(r.bytes for r in moved) + sum(  # script_jump -> script_jump_far: one byte more each
-        1 for r in moved for ln in r.lines if code(ln).split(" ")[0] == "script_jump" and code(ln).split()[1] not in inside)
+    far_bytes = sum(line_bytes(code(x)) for x in out if code(x) and not LABEL.match(x))
     TS.fill_change(S, SCRIPTS, freed - stub_bytes)
     new = src / "scripts" / f"bank{to.lower()}_scripts_10_far.asm"
     TS.claim_empty_bank(tree, to, new)
     head = [f"; ROM bank ${to.upper()}: event scripts of bank $10 (moved here by tools/script_bank.py; not in the original",
-            "; game). The interpreter reads them with wScriptInDataBank = this bank (script_jump_far).", "",
+            "; game). The interpreter reads them in data-bank mode with wDataBank = this bank (script_jump_far).", "",
             f'SECTION "Bank {to.upper()}", ROMX', f"    db ${to.lower()} ; the bank number at $4000, as in every bank", ""]
     size = 1 + far_bytes
     if size > 0x4000:
@@ -543,11 +659,37 @@ def summary(src: Path) -> dict:
             "bytes": sum(r.bytes for g in groups if not movable(g) for r in g), "not": why}
 
 
-def fetch_trace(sym: dict, log: list) -> dict:
+def script_positions(src: Path) -> dict[str, list[int]]:
+    """E-0423: for every Script_ label of a tree, the offsets of its instructions from the label up to the next label
+    (any file). A moved script's far opcodes can be longer than the originals, so traces compare instruction indexes."""
+    out: dict[str, list[int]] = {}
+    for f in sorted(src.glob("*/bank*.asm")):
+        cur, off = None, 0
+        for ln in f.read_text(encoding="utf-8").split("\n"):
+            if m := LABEL.match(ln):
+                cur, off = (m.group(1), 0) if m.group(1).startswith("Script_") else (None, 0)
+                if cur:
+                    out[cur] = []
+                continue
+            c = code(ln)
+            if cur is None or not c:
+                continue
+            try:
+                n = line_bytes(c)
+            except ValueError:
+                cur = None
+                continue
+            out[cur].append(off)
+            off += n
+    return out
+
+
+def fetch_trace(sym: dict, log: list, src: Path | None = None) -> dict:
     """E-0421: a pc hook (for mod_check.recipe_compare) that appends to `log` where each script opcode is read from:
-    the label at or before that address in the bank read (`_Far` taken off) and the offset; a script_jump_far (a
-    stub) is not listed. The same scripts give the same trace from the original and from a mod whose scripts moved,
-    whatever the timing."""
+    the label at or before that address in the bank read (`_Far` taken off) and the offset, or, with the tree the ROM
+    was built from (E-0423), the instruction's index after the label. A stub's script_jump_far in bank $10 is not
+    listed. The same scripts give the same trace from the original and from a mod whose scripts moved, whatever the
+    timing."""
     import bisect
     by_bank: dict[int, list] = {}
     for n, (b, a) in sym.items():
@@ -555,6 +697,7 @@ def fetch_trace(sym: dict, log: list) -> dict:
     for v in by_bank.values():
         v.sort()
     b10, at = sym["FetchScriptCommand_NextOpcode"]
+    pos = script_positions(src) if src else {}
 
     def hook(g):
         if g.rombank != b10:
@@ -562,11 +705,17 @@ def fetch_trace(sym: dict, log: list) -> dict:
         p = g.rb(W_SCRIPT_POINTER) | g.rb(W_SCRIPT_POINTER + 1) << 8
         mode = g.rb(W_SCRIPT_IN_DATA_BANK)
         bank = b10 if mode == 0 else g.rb(W_DATA_BANK) if mode == 1 else mode
-        if g.rom[bank * 0x4000 + p - 0x4000] == 0x08:  # a stub's script_jump_far: the script is read on past it
+        if bank == b10 and g.rom[bank * 0x4000 + p - 0x4000] == JUMP_FAR_OP:  # a stub: the script is read on past it
             return
         v = by_bank.get(bank, [])
         k = bisect.bisect_right(v, (p, "~")) - 1
-        log.append(f"{v[k][1].removesuffix('_Far')}+{p - v[k][0]}" if k >= 0 else f"{bank:02X}:{p:04X}")
+        if k < 0:
+            log.append(f"{bank:02X}:{p:04X}")
+            return
+        lab, off = v[k][1], p - v[k][0]
+        offs = pos.get(lab)
+        where = f"#{offs.index(off)}" if offs and off in offs else f"+{off}"
+        log.append(lab.removesuffix("_Far") + where)
 
     return {at: hook}
 

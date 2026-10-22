@@ -1,7 +1,9 @@
 """tools/script_bank.py (E-0421): event scripts outside bank $10, for mods.
 
-A copy of src/ gets the patched interpreter and every script run of bank $10 (656, with E-0422's leftovers read as
-script) moved to the empty bank $9F, with stubs for the 424 labels named from outside. It builds, with no byte of any bank left over. On
+E-0423: the patch adds far variants of the handlers in unused opcode slots and leaves the game's own unchanged.
+A copy of src/ gets the patched interpreter and every movable script run of bank $10 (650 of 656: E-0422's leftovers
+are read as script, and E-0423 keeps the six talk scripts that run while a data-bank script waits) moved to the empty
+bank $9F, with stubs for the 418 labels named from outside. It builds, with no byte of any bank left over. On
 tools/sm83.py the E-0320 farm chain (35 runs, the opening to the farm and a debug battle) fetches the same script
 positions as the reference, through the stubs and bank $9F, and every run ends on the reference's screen; the
 screens differ for at most three VBlanks in a run (the patched reads take more cycles). A stub whose bank byte is
@@ -39,13 +41,32 @@ def build(src: Path, out: Path):
 class Runs(unittest.TestCase):
     def test_the_runs_of_bank_10(self):
         s = SB.summary(ROOT / "src")
-        self.assertEqual((s["runs"], s["movable"], s["bytes"]), (656, 656, 6458))
-        self.assertEqual(s["not"], {})  # E-0422: the leftovers after scripts' ends are read as script
+        self.assertEqual((s["runs"], s["movable"], s["bytes"]), (656, 650, 6440))
+        # E-0422: the leftovers after scripts' ends are read as script; E-0423: the six talk scripts the breeding,
+        # arena and NPC breeding menus run while their data-bank script waits stay in bank $10
+        self.assertEqual(sorted(k.split(":")[0] for k in s["not"]), sorted(SB.NESTED))
 
     def test_line_sizes_follow_the_macros(self):
         self.assertEqual([SB.line_bytes(x) for x in ("script_end", "script_message $0030", "script_walk 1, 0, 2",
-                                                     "script_choice_jump A, B, C", "db $ff, $ff", "script_jump_far X")],
-                         [1, 3, 4, 4, 2, 4])
+                                                     "script_choice_jump A, B, C", "db $ff, $ff", "script_jump_far X",
+                                                     "script_walk_far 1, 0, 2", "script_command_far SCRIPT_SHOP",
+                                                     "script_command_far $62")],
+                         [1, 3, 4, 4, 2, 4, 4, 2, 1])
+
+    def test_the_game_handlers_are_unchanged(self):
+        """E-0423: the patch adds handlers and table entries in unused slots; the game's handlers stay as they are, so
+        every unmoved script runs with the original instructions."""
+        with tempfile.TemporaryDirectory(dir=ROOT / "build") as d:
+            src = Path(d) / "src"
+            shutil.copytree(ROOT / "src", src)
+            SB.patch(src)
+            before = (ROOT / "src" / SB.SCRIPTS).read_text(encoding="utf-8").split("\n")
+            after = (src / SB.SCRIPTS).read_text(encoding="utf-8").split("\n")
+        import difflib
+        removed = [x[2:] for x in difflib.ndiff(before, after) if x.startswith("- ")]
+        # only the fill and the unused table entries go
+        self.assertTrue(all(x.startswith("    dw $0000") or x.lstrip().startswith("ds ") for x in removed), removed[:5])
+        self.assertEqual(sum(x.startswith("    dw $0000") for x in removed), 14)
 
 
 class LabelPokes(unittest.TestCase):
@@ -62,7 +83,9 @@ class LabelPokes(unittest.TestCase):
         for f in sorted((ROOT / "tools/recipes").glob("*.txt")):
             self.assertNotIn("wScriptPointerLo=0x", f.read_text(encoding="utf-8"), f.name)
         text = (ROOT / "tools/recipes/e0406_late_story.txt").read_text(encoding="utf-8")
-        self.assertIn("wScriptPointerLo=LOW(Script_SurprisinglyObedientAreYou+33)", text)
+        # E-0423: a byte offset into a script would not follow a moved one, whose far opcodes can be longer
+        self.assertNotRegex(text, r"\(Script_\w+\+")
+        self.assertIn("wScriptPointerLo=LOW(Script_SurprisinglyObedientAreYou_AfterBattle)", text)
 
 
 class Refusals(unittest.TestCase):
@@ -76,8 +99,8 @@ class Refusals(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_refusals_change_nothing(self):
-        cases = [(SB.move, (["Script_HehSoTheseAre"], "10"), "not one of the empty banks"),
-                 (SB.move, (["Script_HehSoTheseAre"], "01"), "2 or more"),
+        cases = [(SB.move, (["Script_HehSoTheseAre"], "10"), "in bank $10 already"),
+                 (SB.move, (["Script_HehSoTheseAre"], "01"), "not one of the empty banks"),
                  (SB.move, (["Script_NoSuchScript"], "9F"), "not a script label")]
         for fn, args, says in cases:
             with self.assertRaises(ValueError) as r:
@@ -92,7 +115,7 @@ class Refusals(unittest.TestCase):
         f.write_text(text.replace("Script_WowYouKidsSure::\n", "Script_WowYouKidsSure::\n    db $00, $01\n", 1),
                      encoding="utf-8")
         before = tree_bytes(self.src)
-        self.assertEqual(SB.summary(self.src)["not"], {"raw bytes `...`": 2})  # its run, and the one skipping to it
+        self.assertEqual(SB.summary(self.src)["not"]["raw bytes `...`"], 2)  # its run, and the one skipping to it
         with self.assertRaises(ValueError) as r:
             SB.move(self.src, ["Script_WowYouKidsSure"], "9F")
         self.assertIn("raw bytes", str(r.exception))
@@ -112,6 +135,26 @@ class Refusals(unittest.TestCase):
 
 
 @unittest.skipUnless(REF.exists(), "needs the reference ROM")
+class PatchOnly(unittest.TestCase):
+    """E-0423: with the interpreter patched and no script moved, the farm chain plays VBlank for VBlank as the
+    original (E-0421's patch differed in four runs)."""
+
+    def test_the_patch_keeps_the_original_timing(self):
+        with tempfile.TemporaryDirectory(dir=ROOT / "build") as d:
+            src = Path(d) / "src"
+            shutil.copytree(ROOT / "src", src)
+            SB.patch(src)
+            p, rom, sym = build(src, Path(d) / "run")
+            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            _p, _r, ref_sym = build(None, Path(d) / "ref")
+            ta, tb = [], []
+            r = mod_check.recipe_compare(FARM, REF.read_bytes(), ref_sym, rom, sym, SB.fetch_trace(sym, tb, src),
+                                         SB.fetch_trace(ref_sym, ta, ROOT / "src"))
+        self.assertEqual((r["runs"], r["differ"]), (35, []))
+        self.assertEqual(ta, tb)
+
+
+@unittest.skipUnless(REF.exists(), "needs the reference ROM")
 class Moved(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -123,11 +166,11 @@ class Moved(unittest.TestCase):
         _p, _rom, cls.ref_sym = build(None, Path(cls.tmp.name) / "ref")
         cls.ref = REF.read_bytes()
         cls.ref_trace, cls.trace, cls.far = [], [], []
-        hooks = SB.fetch_trace(cls.sym, cls.trace)
+        hooks = SB.fetch_trace(cls.sym, cls.trace, src)
         b, a = cls.sym["ScriptFetchJumpFar"]
         hooks[a] = lambda g: cls.far.append(g.rb(SB.W_SCRIPT_IN_DATA_BANK)) if g.rombank == b else None
         cls.compare = mod_check.recipe_compare(FARM, cls.ref, cls.ref_sym, cls.rom, cls.sym, hooks,
-                                               SB.fetch_trace(cls.ref_sym, cls.ref_trace)) if cls.rom else None
+                                               SB.fetch_trace(cls.ref_sym, cls.ref_trace, ROOT / "src")) if cls.rom else None
 
     @classmethod
     def tearDownClass(cls):
@@ -135,7 +178,7 @@ class Moved(unittest.TestCase):
 
     def test_the_scripts_move_and_build(self):
         r = self.result
-        self.assertEqual((r["runs"], r["labels"], r["stubs"], r["bytes"], r["left"]), (656, 672, 424, 6458, 0))
+        self.assertEqual((r["runs"], r["labels"], r["stubs"], r["bytes"], r["left"]), (650, 667, 418, 6440, 6))
         self.assertGreater(r["bank_10_gain"], 4000)
         self.assertEqual(self.build.returncode, 0, self.build.stdout + self.build.stderr)
         self.assertEqual(self.sym["Script_HehSoTheseAre_Far"][0], 0x9F)
@@ -153,7 +196,8 @@ class Moved(unittest.TestCase):
         self.assertEqual(self.compare["runs"], 35)
         self.assertGreater(len(self.ref_trace), 30)
         self.assertEqual(self.trace, self.ref_trace)
-        self.assertEqual(set(self.far), {0})  # the stubs' far jumps ran (wScriptInDataBank 0 before, from bank $10)
+        self.assertIn(0, set(self.far))  # stubs' far jumps ran, from bank $10 (mode 0); moved scripts' own in mode 1
+        self.assertLessEqual(set(self.far), {0, 1})
 
     def test_every_run_ends_on_the_same_screen(self):
         self.assertGreater(self.compare["frames"], 13000)

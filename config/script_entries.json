@@ -1,5 +1,5 @@
 {
-  "_comment": "E-0422: event scripts that nothing starts. Each sits after a script's end in bank $10, its bytes decode as script to the last byte, and no label or pointer names it: leftovers, read by hand. tools/disasm_all.py traces from them like the scripts code starts ('data_bank': the wDataBank their script_jump_data_bank continues in, $10 as for the scripts beside them, C1). 'after' is the script they follow. 'name' is the label it gets: the script it follows plus _Leftover, so it takes no number from the names given by first message, and tools/disasm_all.py leaves its set_flag out of the story-flag names (D-009).",
+  "_comment": "E-0422: event scripts that nothing starts. Each sits after a script's end in bank $10, its bytes decode as script to the last byte, and no label or pointer names it: leftovers, read by hand. tools/disasm_all.py traces from them like the scripts code starts ('data_bank': the wDataBank their script_jump_data_bank continues in, $10 as for the scripts beside them, C1). 'after' is the script they follow. 'name' is the label it gets: the script it follows plus _Leftover, so it takes no number from the names given by first message, and tools/disasm_all.py leaves its set_flag out of the story-flag names (D-009). E-0423: an entry may also name a point inside a script that code starts, so that a recipe can start there by label ('note' says why).",
   "entries": [
     {
       "bank": "10",
@@ -135,6 +135,13 @@
       "after": "Script_HowMayOurChurch_4",
       "data_bank": "10",
       "name": "Script_HowMayOurChurch_4_Leftover"
+    },
+    {
+      "bank": "10",
+      "addr": "61D4",
+      "evidence": "E-0423",
+      "name": "Script_SurprisinglyObedientAreYou_AfterBattle",
+      "note": "where Script_SurprisinglyObedientAreYou goes on after its battle (script_encounter $1D): 'N... No... How could my', then SCRIPT_SCENE_DARCK_TAUNT; the late-story recipe starts the scene here"
     }
   ]
 }

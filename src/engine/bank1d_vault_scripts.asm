@@ -7488,11 +7488,19 @@ LoadPedigreeSpeciesSpriteGraphics_Data2::
 ; The first three bytes are $0B (MON_SPECIES), $1C (MON_PARENT2_SPECIES) and $1A
 ; (MON_PARENT1_SPECIES): the same offsets as the Data2 table with the parents swapped, used by
 ; LoadPedigreeSpeciesSpriteGraphics and DrawPedigreeSpeciesSprites when bit 4 of MON_FAMILY is set.
-; The 18 bytes after them (VRAM tile addresses $8C00, $8C10, $8C20, $8C70 to $8CB0, then $FFFF) are
-; not reached by that index. (C1, E-0381)
+; The 18 bytes after them are BreedMenu_ReloadTiles_DestList (E-0423). (C1, E-0381)
 LoadPedigreeSpeciesSpriteGraphics_Data3::
-    db $0b, $1c, $1a, $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0
-    db $8c, $b0, $8c, $ff, $ff
+    db $0b, $1c, $1a
+
+; VRAM tile addresses $8C00, $8C10, $8C20, $8C70, $8C80, $8C90, $8CA0 and $8CB0, then $FFFF: the
+; destination list that the breeding menu's three tile reload steps
+; (BreedMenu_ChooseParents_ReloadTiles, BreedMenu_ChooseParents_ReloadTilesAgain and the
+; .set_arg1_to_9C step) pass in wArg3/4 to LoadTileListSixPerCall, which reads it in bank $1D.
+; E-0381 read it as unreached bytes after LoadPedigreeSpeciesSpriteGraphics_Data3; moving bank $1D's
+; sections broke the breeding chain until the three loads named it. (C2, E-0423)
+BreedMenu_ReloadTiles_DestList::
+    db $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0, $8c, $b0, $8c
+    db $ff, $ff
 
 ; wArg5 = the number of compact record slots in use: it counts the slots whose first byte has bit 7
 ; set (see PackRecordFieldsToBank1Slot, which sets it) among the 29 slots of $6F bytes from

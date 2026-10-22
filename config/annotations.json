@@ -1912,7 +1912,7 @@
   "15:47E1": "Choosing parents, step 28: computes the child (ComputeBreedingChild, kind 0) and draws its name: '?????????' with a blank icon for a species the library lists but has not yet seen (or no species), otherwise its species name and family icon. (C1, E-0357)",
   "15:48AE": "Choosing parents, step 30: the mate list's cursor: a page change goes back 9 steps, a move back 6, B on one, A marks the entry and goes on three. (C1, E-0357)",
   "15:491A": "Choosing parents, step 31: draws the pair box with both parents, the gold box and the lower box, redraws; answer 1. (C1, E-0357)",
-  "15:4987": "Choosing parents, step 32: reloads tiles six per call (from SRAMBank1RecordAddress, list $9D); when done restores the list position and returns to step 1. (C1, E-0357)",
+  "15:4987": "Choosing parents, step 32: reloads tiles six per call (LoadTileListSixPerCall: destinations BreedMenu_ReloadTiles_DestList in bank $1D, E-0423; sources from $9D00); when done restores the list position and returns to step 1. (C1, E-0357)",
   "15:49C9": "Choosing parents, step 36: redraws the yes/no area, the names, icons and levels of the pair, then goes to step $25 with the text window back in place. (C1, E-0357)",
   "15:4A2A": "Choosing parents, step 37: blanks the cursor places, redraws and goes to step $1E. (C1, E-0357)",
   "15:4A4D": "Choosing parents, step 38: checks the chosen mate: below level 10 answer 3 (step $24); a choice that would take every party monster answer 2 (step $24); otherwise answer 0 and on. (C2, E-0357; probed E-0384)",

@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-21**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)), all done 2026-10-17 (H6 on Linux 2026-10-19); follow-ups E-0415 to E-0422 widen what a translation or mod can move. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
+As of **2026-10-21**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)), all done 2026-10-17 (H6 on Linux 2026-10-19); follow-ups E-0415 to E-0423 widen what a translation or mod can move. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -159,7 +159,41 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-21, E-0422): every script can move; the last literal bank explained
+## Current handoff (2026-10-21, E-0423): every data-bank script section moved and run; the patch keeps the timing
+
+The two open items of the E-0422 handoff are done:
+- **The other data-bank script sections.** All eleven (arena x2, keys, NPC breeding, breeding, hibernation x3, priest
+  and library, swap, egg service and renaming) moved together to bank $9F play VBlank for VBlank as the original
+  over the key-world chain (200 runs, every chain from the farm on), the arena chain and a new menus chain
+  (tools/recipes/e0423_menus.txt: egg service, renaming, NPC breeding). Two faults surfaced and are fixed:
+  tools/move_section.py now gives an empty target bank its number byte at $4000, which the VBlank handler reads to
+  map a bank back; and the breeding menu's tile list at 1D:$6DE6 was named after a bank-$15 routine at the same
+  address. It is now BreedMenu_ReloadTiles_DestList, asserted in its reader's bank (548 asserted), and
+  tools/bank_check.py warns about that kind of mislabel.
+- **The interpreter patch's timing.** tools/script_bank.py leaves the game's handlers unchanged: moved scripts run
+  in the game's data-bank mode with far variants of the opcodes that read bank $10 (unused opcode slots). With the
+  patch alone, the key world, world tour, H4 readers and menus chains are identical VBlank for VBlank, and the arena
+  chain differs for 3 VBlanks in one run; only a script start costs 36 cycles more. With 650 of the 656 bank-$10 runs
+  moved, all five chains run the same script instructions and end every run on the original's screen; blips of up
+  to 5 VBlanks remain, the cost of reading in data-bank mode. Six talk scripts that run while a breeding, arena or
+  NPC-breeding script waits stay in bank $10. A moved one would change the wDataBank that the waiting script
+  resumes with; found when the breeding script continued from the wrong bank.
+- The late-story recipe's last offset into a script is a label now (Script_SurprisinglyObedientAreYou_AfterBattle).
+
+Checks: no drift (265 files); build/run_e0423d PASS (zero differing bytes); bank_check 0 errors, 0 warnings, 548
+asserted, 0 literal, 1 unread. Suite (tools/run_tests.py --jobs 8 under nice): build/logs/suite_e0423.log, 595 tests,
+589 OK, 3 skipped, 3 failures, all from the new notes: the new list's name needed its listing alias; a note still
+named SRAMBank1RecordAddress; and two C2 notes (GreatLogTalkEvents_Breeder from E-0422, the new list) had no probe
+(config/probes/E-0423.json now runs both; 3 of 3 pass). After those fixes (config only; src/ regenerated, no drift),
+the four affected files pass: test_generator_listing, test_note_grounding, test_probes, test_doc_coverage.
+
+Open:
+1. Moved bank-$10 scripts still cost a few cycles per byte more than unmoved ones (up to 5 VBlanks of drift around
+   them); moving data-bank sections, or patching without moving, keeps the original timing.
+2. bank_check's wider form of the new mislabel rule (data labels too) lists 64 candidates, mostly noise; not
+   reviewed one by one.
+
+## Prior handoff (2026-10-21, E-0422): every script can move; the last literal bank explained
 
 The two open items of the E-0420/E-0421 handoff are done:
 - **The script runs with raw bytes, and the arena and breeding scripts.** The raw bytes after eight bank-$10 scripts

@@ -1398,14 +1398,16 @@ BreedMenu_ChooseParents_DrawPairBox_TileRect::
     db $b7 ; id 0
     db $b7 ; id 1
 
-; Choosing parents, step 32: reloads tiles six per call (from SRAMBank1RecordAddress, list $9D);
-; when done restores the list position and returns to step 1. (C1, E-0357)
+; Choosing parents, step 32: reloads tiles six per call (LoadTileListSixPerCall: destinations
+; BreedMenu_ReloadTiles_DestList in bank $1D, E-0423; sources from $9D00); when done restores the
+; list position and returns to step 1. (C1, E-0357)
 BreedMenu_ChooseParents_ReloadTiles::
     ld a, $9d
     ld [wArg1], a
     xor a
     ld [wArg2], a
-    ld de, SRAMBank1RecordAddress
+    ld de, BreedMenu_ReloadTiles_DestList
+    ASSERT BANK(BreedMenu_ReloadTiles_DestList) == BANK(LoadTileListSixPerCall), "BreedMenu_ReloadTiles_DestList is read by LoadTileListSixPerCall, in its own bank"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -1960,7 +1962,8 @@ BreedMenu_ChooseParents_ReloadTilesAgain::
     ld [wArg1], a
     xor a
     ld [wArg2], a
-    ld de, SRAMBank1RecordAddress
+    ld de, BreedMenu_ReloadTiles_DestList
+    ASSERT BANK(BreedMenu_ReloadTiles_DestList) == BANK(LoadTileListSixPerCall), "BreedMenu_ReloadTiles_DestList is read by LoadTileListSixPerCall, in its own bank"
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -2820,7 +2823,8 @@ BreedMenu_ChooseEgg_DrawGoldBox::
     ld [wArg1], a
     xor a
     ld [wArg2], a
-    ld de, SRAMBank1RecordAddress
+    ld de, BreedMenu_ReloadTiles_DestList
+    ASSERT BANK(BreedMenu_ReloadTiles_DestList) == BANK(LoadTileListSixPerCall), "BreedMenu_ReloadTiles_DestList is read by LoadTileListSixPerCall, in its own bank"
     ld a, d
     ld [wArg3], a
     ld a, e

@@ -3,7 +3,7 @@
 # SHIELD_GUARDIAN, GRAVE, DARCK_DEFEATED, CYAL_ROLT and YOU_DID_IT (SCRIPT_SCENE_*), each by its four RAM bytes on
 # GreatLog's Main Street (t02! of e0327_shop_inn.txt) as e0328 to e0335 start theirs, then press through. Forced
 # states: a scene runs out of its story order, on another map. DARCK_TAUNT runs on its own map: dk01 enters Darck's
-# castle (map $A2) and dk02 starts Script_SurprisinglyObedientAreYou at 10:$61D4, the line after its battle
+# castle (map $A2) and dk02 starts Script_SurprisinglyObedientAreYou_AfterBattle (10:$61D4), the line after its battle
 # ('N... No... How could my'), which leads into the scene. Forced on Main Street the same scene drew text through a
 # pointer left at $010D, the cartridge header (includes e0335_swap.txt). E-0421: the script pointers are written as
 # BANK/LOW/HIGH(label) (tools/play.py), so they follow a script that a mod moves (tools/script_bank.py).
@@ -35,5 +35,5 @@ ls12b! | ls12! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 ls13! | t02! | wDataBank=BANK(Script_HeroCheckedTheTreasure_4) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_HeroCheckedTheTreasure_4) wScriptPointerHi=HIGH(Script_HeroCheckedTheTreasure_4) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 ls13b! | ls13! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120
 dk01! | k03! | hMapId=0xA2 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
-dk02! | dk01! | wDataBank=BANK(Script_SurprisinglyObedientAreYou+33) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_SurprisinglyObedientAreYou+33) wScriptPointerHi=HIGH(Script_SurprisinglyObedientAreYou+33) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
+dk02! | dk01! | wDataBank=BANK(Script_SurprisinglyObedientAreYou_AfterBattle) wScriptInDataBank=1 wScriptPointerLo=LOW(Script_SurprisinglyObedientAreYou_AfterBattle) wScriptPointerHi=HIGH(Script_SurprisinglyObedientAreYou_AfterBattle) wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W40 A2 W40 A2 W60
 dk03! | dk02! |  | A2 W60 A2 W60 A2 W60 A2 W60 A2 W120

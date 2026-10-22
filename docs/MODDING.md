@@ -59,26 +59,29 @@ its scripts in a bank of their own, `tools/script_bank.py` changes a mod's copy 
 - `patch` lets a script be in any bank and use every opcode. It adds `script_jump_far Label` (opcode $08, unused by
   the game): the script goes on at Label, in Label's bank. Write new scripts in an empty bank
   (src/unused/bankBB_empty.asm) and jump to them from a script in bank $10.
-- `move --all --to BB` moves all 656 of bank $10's script runs (6,458 bytes) to the empty bank BB. Every label that
+- `move --all --to BB` moves 650 of bank $10's 656 script runs (6,440 bytes) to the empty bank BB. Every label that
   something outside names keeps a 4-byte stub in bank $10 that jumps there, so nothing that starts a script
-  changes, and bank $10 gains 4,685 bytes. `move Script_Label ...` moves only the runs that hold those labels.
+  changes, and bank $10 gains 4,373 bytes. The six that stay are the talk scripts the breeding, arena and NPC
+  breeding menus run while their own script waits. `move Script_Label ...` moves only the runs that hold those labels.
 
 ```json
 {"name": "my_mod", "scripts": {"move": "all", "to": "9F"}}
 ```
 
-`{"patch": true}` gives the interpreter change alone. Checked on the project's emulator (tests/test_script_bank.py,
-E-0421): with every bank-$10 script moved, all 17 recipe chains (279 runs) fetch the same script positions as the
-original. The screens differ only where the patched interpreter's extra cycles move a frame: a few VBlanks, and in
-one boss battle a button press that lands on another turn (it does the same with the interpreter patch alone).
+`{"patch": true}` gives the interpreter change alone. It adds handlers and leaves the game's own unchanged, so with
+the patch alone the game plays VBlank for VBlank as the original (E-0423); only a script start costs 36 cycles more.
+A moved bank-$10 script runs the way the game runs its data-bank scripts, which costs a few more cycles per byte,
+so the screen may shift by a frame around it. Checked on the project's emulator (tests/test_script_bank.py,
+E-0421, E-0423): with every bank-$10 script moved, the recipe chains run the same script instructions as the
+original.
 
 The scripts of the arena, breeding, the priest and the other menus are in other banks already ($0C, $0D, $0E, $15,
 $1D, $1F, $96), each in a section of its own whose bank the talk routine names, so they need no patch. Move one like
 any section: `python -I tools/move_section.py --move "Bank 15 Script_Breed" --to 9F` writes the moved copy of src/
 to build/move/moved/src, which `make_mod.py --base` builds from. Give `--move` once per section when sections jump
-to each other, such as the arena's two; bank_check refuses them apart. Breeding, the priest and library, and an
-arena battle play frame for frame as the original with their scripts moved (tests/test_script_sections.py,
-E-0422).
+to each other, such as the arena's two; bank_check refuses them apart. All eleven such sections moved together play frame for
+frame as the original over the recipe chains (tests/test_script_sections.py, E-0422, E-0423). Moving sections adds
+no cycles, so a mod that must keep the original's timing exactly moves sections, not bank-$10 scripts.
 
 ## The smoke test
 
