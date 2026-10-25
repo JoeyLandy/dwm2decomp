@@ -1,6 +1,6 @@
 # Project status
 
-As of **2026-10-21**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)), all done 2026-10-17 (H6 on Linux 2026-10-19); follow-ups E-0415 to E-0423 widen what a translation or mod can move. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
+As of **2026-10-24**. Stage: **matching, fully annotated and moddable disassembly** (readability goal E-0386; moddable-decomp stages M1-M5, E-0388 to E-0396). Current goal: **a modding and translation ecosystem**, stages H1-H7 ([roadmap](ROADMAP.md)), all done 2026-10-17 (H6 on Linux 2026-10-19); follow-ups E-0415 to E-0424 widen what a translation or mod can move. Semantic work continues one mechanic or table at a time ([roadmap](ROADMAP.md)). The current handoff is the first "Current handoff" section below; historical planning and earlier session records remain for provenance.
 
 ## Target and decisions
 
@@ -159,7 +159,37 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-21, E-0423): every data-bank script section moved and run; the patch keeps the timing
+## Current handoff (2026-10-24, E-0424): the wider mislabel candidates reviewed; one fixed, and a rule that finds it
+
+Open item 2 of the E-0423 handoff is done:
+- **75 candidates, one real.** E-0423's rule without its "code label" condition lists 75 loads on this tree (E-0423
+  had reported 64). 74 hand the far routine no address. 19 read through it first, and 55 pass it to a routine of
+  their own bank or the home bank. In the 23 where DE could still hold it, the far routines do not read DE: 14 were
+  run on tools/sm83.py with 6 values of DE from 6 states, and CopyBlockToTileBuffer was read. The one left is the
+  debug breeding screen (DebugResultsDisplay_Update_ShowChild). It stored `$75C5` for the far-called
+  TestBitInFieldAtArg3, so bank $15's BreedShowNameSpeciesBits is what it reads. The number was named after a label
+  in bank $01's zero fill. The load now names the bit field with an ASSERT (config/operands.json "01:559C"; 549
+  asserted), and the stray label is gone (same bytes). On tools/sm83.py the routine reads 15:$75C5 and 15:$75C7.
+  Probes: config/probes/E-0424.json (2 of 2 pass).
+- **tools/bank_check.py warns about the pattern.** The new warning covers an own-bank label whose address is
+  stored to memory before a far call to another bank, with no call in between. On the tree before the fix it finds
+  only the debug load, and in the source before E-0423 it finds all three tile-list loads. It finds nothing now.
+- **Bank copies are clean.** All 214 CopyFromBank* / OrFromBank* calls with a labelled source pass B =
+  BANK(that label).
+
+Checks: no drift (265 files); build/run_e0424c PASS (zero differing bytes); bank_check 0 errors, 0 warnings, 549
+asserted, 0 literal, 1 unread. Suite (tools/run_tests.py --jobs 16, Windows): build/logs/suite_e0424.log, 596 tests,
+592 OK, 3 skipped, 1 failure: test_probes' C2 check, because the new probes targeted the bit field, whose note is C1.
+They now count for TestBitInFieldAtArg3 (its note is C2, E-0377), and test_probes.py and test_probe_scope.py pass (13
+tests).
+
+Open:
+1. Moved bank-$10 scripts still cost a few cycles per byte more than unmoved ones (up to 5 VBlanks of drift around
+   them); moving data-bank sections, or patching without moving, keeps the original timing.
+2. bank_check follows an address only through straight-line code. An address that a local routine stores for a
+   later far call is not followed (none is known).
+
+## Prior handoff (2026-10-21, E-0423): every data-bank script section moved and run; the patch keeps the timing
 
 The two open items of the E-0422 handoff are done:
 - **The other data-bank script sections.** All eleven (arena x2, keys, NPC breeding, breeding, hibernation x3, priest

@@ -195,6 +195,34 @@ class FixedBanks(unittest.TestCase):
         self.assertEqual(len(warnings), 1)
         self.assertIn("Here (bank 05): ld de, Local is a code label of this bank handed to FarReader", warnings[0])
 
+    def test_a_same_bank_data_address_stored_for_a_far_routine_is_warned(self):
+        """E-0424: a data label of the caller's own bank whose address goes to memory (wArg3/wArg4) for a far
+        routine, which reads it in its own bank, is warned; a byte read through the address, an address that a
+        local call takes, or a register loaded again before the store, is not."""
+        cases = {
+            "stored": "    ld de, Table\n    ld a, e\n    ld [wArg3], a\n    ld a, d\n    ld [wArg4], a\n",
+            "stored_offset": "    ld de, Table\n    add e\n    ld [wArg3], a\n",
+            "copied": "    ld hl, Table\n    ld e, l\n    ld d, h\n    ld a, d\n    ldh [hTemp0], a\n",
+            "read": "    ld hl, Table\n    add_a_to_hl\n    ld a, [hl]\n    ld [wStringIndex], a\n",
+            "deref": "    ld hl, Table\n    deref_hl\n    ld a, l\n    ld [wArg3], a\n",
+            "reloaded": "    ld de, Table\n    ld de, $01cc\n    ld a, e\n    ld [wArg3], a\n",
+            "local_call": "    ld de, Table\n    ld a, e\n    ld [wArg3], a\n    call LocalReader\n",
+        }
+        sym = {"Here": (5, 0x4000), "Table": (5, 0x4020), "LocalReader": (5, 0x4030), "FarReader": (7, 0x5000)}
+        got = {}
+        for key, body in cases.items():
+            with tempfile.TemporaryDirectory() as d:
+                (Path(d) / "engine").mkdir()
+                (Path(d) / "engine/bank05_x.asm").write_text(
+                    f"Here::\n{body}    farcall FarReader\n    ret\nTable::\n    db 1\n", encoding="utf-8")
+                _e, warnings = bank_check.check(Path(d), sym)
+                got[key] = len(warnings)
+                if warnings:
+                    self.assertIn("is a label of this bank whose address is stored for FarReader in bank 07",
+                                  warnings[0])
+        self.assertEqual(got, {"stored": 1, "stored_offset": 1, "copied": 1, "read": 0, "deref": 0, "reloaded": 0,
+                               "local_call": 0})
+
     def test_a_script_jump_into_another_bank_is_an_error(self):
         """E-0422: script sections that jump to each other must stay in one bank."""
         src = "Here::\n    script_jump Other\n    script_skip_if_no Near\nNear::\n    script_end\n"

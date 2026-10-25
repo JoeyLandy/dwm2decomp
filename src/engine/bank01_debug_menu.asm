@@ -2762,15 +2762,15 @@ DebugResultsDisplay_ResistanceAddress_Data2::
 ; computes and shows the child on the debug breeding screen. A wArg1 other than 0 or 2 (the marker
 ; DebugToggleArg1Marker toggles) becomes 0; it runs ComputeBreedingChild on wRecordBufA and
 ; wRecordBufB and returns at once unless wArg5 is then $FF. With a child species (wArg6/wArg7 not
-; both $FF) it tests that species with TestBitInFieldAtArg3 against the address of
-; DebugResultsDisplay_Update_ShowChild_Data ($75C5), which, read while bank $15 is mapped, is the
-; bit field BreedShowNameSpeciesBits; with the bit clear it draws the unknown-name placeholder at
-; vTiles2 + $500 (otherwise it blanks that field), then draws the child's name at vTiles2 + $200,
-; its species number, sex mark, plus value, level and maximum level
-; (DebugResultsDisplay_Update_ShowChild_DrawBCD) and its 27 resistance digits, restores wArg1 and
-; clears wScreenState and wNameEntryState. With no child it draws the placeholder in both name
-; fields and number 0, clears wScreenState and wNameEntryState and returns without popping the saved
-; wArg1, so its ret takes that pushed AF as the return address (as read, not run). (C1, E-0369)
+; both $FF) it tests that species with TestBitInFieldAtArg3 against the bit field
+; BreedShowNameSpeciesBits (15:$75C5, which TestBitInFieldAtArg3 reads in its own bank; E-0424);
+; with the bit clear it draws the unknown-name placeholder at vTiles2 + $500 (otherwise it blanks
+; that field), then draws the child's name at vTiles2 + $200, its species number, sex mark, plus
+; value, level and maximum level (DebugResultsDisplay_Update_ShowChild_DrawBCD) and its 27
+; resistance digits, restores wArg1 and clears wScreenState and wNameEntryState. With no child it
+; draws the placeholder in both name fields and number 0, clears wScreenState and wNameEntryState
+; and returns without popping the saved wArg1, so its ret takes that pushed AF as the return address
+; (as read, not run). (C1, E-0369)
 DebugResultsDisplay_Update_ShowChild::
     ld a, [wArg1]
     and a
@@ -2799,7 +2799,8 @@ DebugResultsDisplay_Update_ShowChild::
     ld [wArg1], a
     ld a, [wArg7]
     ld [wArg2], a
-    ld de, DebugResultsDisplay_Update_ShowChild_Data
+    ld de, BreedShowNameSpeciesBits
+    ASSERT BANK(BreedShowNameSpeciesBits) == BANK(TestBitInFieldAtArg3), "BreedShowNameSpeciesBits is read by TestBitInFieldAtArg3, in its own bank"
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -6958,7 +6959,4 @@ CreateMonsterRecordInSlot_Build_Data2_Entry07::
 
 CreateMonsterRecordInSlot_Build_Data2_Entry08::
     db $0b, $35, $24, $25, $32, $f0, $f0, $f0, $f0, $f0
-    ds $4a6, $00
-
-DebugResultsDisplay_Update_ShowChild_Data::
-    ds $a3b, $00
+    ds $ee1, $00

@@ -7755,7 +7755,8 @@ BreedMenu_ChooseParents_ClearBoxes_TileRect_2::
 ; instead of '?????????'; in BreedMenu_ChooseParents_CheckChildIsNew and
 ; NpcBreedMenu_ChooseAndBreed_ComputeChild_PickMsg a set bit gives answer 0 and the '<species>
 ; +<plus>' text. The bank-$0D reader passes this bank-$15 address to the far-called
-; TestBitInFieldAtArg3, which is in bank $15. (C1, E-0372)
+; TestBitInFieldAtArg3, which is in bank $15, and so does the debug breeding screen's
+; DebugResultsDisplay_Update_ShowChild in bank $01 (E-0424). (C1, E-0372)
 BreedShowNameSpeciesBits::
     db $ff, $ff, $dc, $00, $0f, $ff, $ff, $f1, $01, $ff, $ff, $3f, $36, $3f, $ff, $e2
     db $88, $07, $ff, $ff, $c3, $00, $ff, $ff, $fc, $40, $1f, $ff, $fe, $f8, $83, $ff

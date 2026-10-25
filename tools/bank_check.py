@@ -19,6 +19,9 @@ banks from a build's .sym file (where each label actually landed) and the instru
             E-0423: also a code label of the loading routine's own bank, loaded into hl/de/bc and handed (before any
             call or jump to it) to a routine far-called in another bank, which would read that address in its own
             bank: the number was named after a coincidental same-bank label (BreedMenu_ReloadTiles_DestList)
+            E-0424: and a label of any kind in the loading routine's own bank whose address is stored to memory
+            (as wArg3/wArg4) before that far call, for the far routine to read in its bank
+            (DebugResultsDisplay_Update_ShowChild_Data was BreedShowNameSpeciesBits, bank $15)
   literal   a bank given by number where a reader takes it from: `ld a, $NN / ld [wDataBank], a`, or `ld b, $NN`
             before a call to CopyFromBank* or OrFromBank* (E-0420). src/ names these BANK(Label) where a label
             fixes the bank; what is left has no data it reads in that bank (reported, not a warning)
@@ -99,6 +102,55 @@ def code_labels(src: Path) -> set[str]:
 
 
 FARCALL = re.compile(r"^\s+farcall (\w+)")
+HALVES = {"hl": ("h", "l"), "de": ("d", "e"), "bc": ("b", "c")}
+PAIR_OF = {r: p for p, rs in HALVES.items() for r in rs}
+
+
+def address_stored(lines: list[str], pair: str) -> bool:
+    """E-0424: does this straight-line code, which runs after `ld <pair>, Label`, store a byte of that address to
+    memory? The address stays in a pair until the pair is loaded with something else, popped or dereferenced
+    (deref_hl); `ld e, l` / `ld d, h` copy it to another pair; A holds a byte of it after `ld a, <half>` or
+    arithmetic with a half, until A is loaded with anything else; `ld [...], a` or `ld [...], <half>` then stores
+    it. A byte read through the address (`ld a, [hl]`) is the table's data, not its address. A call in between may
+    be the routine that reads what was stored, and leaves the registers unknown, so the trail ends there: only a
+    store with no call after it counts."""
+    live, a_addr, stored = {pair}, False, False
+    for x in lines:
+        c = x.split(";")[0].strip()
+        if not c or c.endswith(":") or c.startswith(("ASSERT", ".")):
+            continue
+        op, _, rest = c.partition(" ")
+        args = [y.strip() for y in rest.split(",")] if rest else []
+        halves = {r for p in live for r in HALVES[p]}
+        if op in ("call", "rst"):
+            live, a_addr, stored = set(), False, False
+        elif op in ("ld", "ldh") and len(args) == 2:
+            dst, src = args
+            carries = src in halves or (src == "a" and a_addr)
+            if dst.startswith("["):
+                stored = stored or carries
+            elif dst == "a":
+                a_addr = src in halves
+            elif dst in HALVES:
+                live.discard(dst)
+            elif dst in PAIR_OF:
+                (live.add if carries else live.discard)(PAIR_OF[dst])
+        elif op in ("lb", "pop") and args:
+            live.discard(args[0])
+        elif op == "deref_hl":
+            live.discard("hl")
+            a_addr = False
+        elif op == "add_a_to_hl":
+            a_addr = False
+        elif op == "add" and len(args) == 2 and args[0] == "hl":
+            if args[1] in live:
+                live.add("hl")
+        elif op in ("add", "adc", "sub", "sbc", "and", "or", "xor") and args:
+            if args[-1] in halves:
+                a_addr = True
+            elif op in ("xor", "sub") and args[-1] == "a":
+                a_addr = False
+    return stored
 
 
 def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None = None,
@@ -140,15 +192,18 @@ def check(src: Path, sym: dict[str, tuple[int, int]], asserted: list[str] | None
             if full not in sym:
                 continue
             tb, ta = sym[full]
-            if ml and full in code and tb == here and 0x4000 <= ta < 0x8000:
-                for x in lines[i + 1:i + 11]:
+            if ml and tb == here and 0x4000 <= ta < 0x8000:
+                for j, x in enumerate(lines[i + 1:i + 11]):
                     cx = x.split(";")[0].strip()
                     if re.match(rf"(?:call|jp)\b.*\b{re.escape(full)}\b", cx) or cx.startswith(("ret", "jp ")):
                         break
                     if (fm := FARCALL.match(x)) and fm.group(1) in sym and sym[fm.group(1)][0] not in (0, here):
-                        warnings.append(f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X}): {ln.strip()} "
-                                        f"is a code label of this bank handed to {fm.group(1)} in bank "
-                                        f"{sym[fm.group(1)][0]:02X}")
+                        far = f"{fm.group(1)} in bank {sym[fm.group(1)][0]:02X}"
+                        where = f"{p.relative_to(src).as_posix()}:{i + 1} {cur} (bank {here:02X}): {ln.strip()}"
+                        if full in code:
+                            warnings.append(f"{where} is a code label of this bank handed to {far}")
+                        elif address_stored(lines[i + 1:i + 1 + j], ln.split()[1].rstrip(",")):
+                            warnings.append(f"{where} is a label of this bank whose address is stored for {far}")
                         break
             if tb == 0 or ta < 0x4000 or tb == here or ta >= 0x8000:
                 continue

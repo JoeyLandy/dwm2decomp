@@ -397,6 +397,23 @@ label, tools/play.py), so a moved script is still found.
   talk scripts the breeding, arena and NPC breeding menus run while their data-bank script waits stay in bank $10
   (650 of 656 runs move).
 
+## E-0424: the wider mislabel candidates, reviewed
+
+- **75 candidates, one real.** E-0423's rule without its "code label" condition lists 75 loads of an own-bank
+  label followed by a far call. 74 hand the far routine no address. 19 read through it first, and 55 pass it to
+  a routine of their own bank or the home bank, which reads it with the caller's bank mapped. Where DE could
+  still hold it, the far routine does not read DE (14 checked on tools/sm83.py, one by reading). The one left
+  is the debug breeding screen. DebugResultsDisplay_Update_ShowChild stored `$75C5` in wArg3/wArg4 for
+  TestBitInFieldAtArg3 in bank $15. That number was named after a label in bank $01's zero fill, but the bytes
+  read are BreedShowNameSpeciesBits (15:$75C5), as the bank-$0D reader already wrote it. The load now names it,
+  with an ASSERT (549 asserted).
+- **tools/bank_check.py warns about the pattern both faults share.** The warning covers an own-bank label, data
+  or code, whose address is stored to memory before a far call to another bank, with no call in between. It
+  finds only the debug load among the 75, and all three of E-0423's tile-list loads in the source before that
+  fix. On the current source it finds nothing.
+- **Bank copies.** All 214 CopyFromBank / CopyFromBankWaitVRAM / OrFromBankWaitVRAM calls with a labelled source
+  pass B = BANK(that label). None reads another bank's bytes through a same-address label.
+
 ## Left after M2
 
 1. Done (E-0392, E-0401): no address-like split sum is left.

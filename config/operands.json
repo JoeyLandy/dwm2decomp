@@ -9,6 +9,7 @@
     "00:1A80": {"bank": "00", "why": "E-0389: LoadMapScreen_DrawMarker walks 3-byte records (map id, screen, position) from $1AB4, right after its own ret, comparing the first byte with hMapId until $FF; tools/shift_test.py --reads 00 found it read through this fixed number"},
     "00:1CD6": {"bank": "00", "why": "E-0389: PatchTilesOnMap1Or2 copies $40 bytes from Tiles_00_1D07 with CopyBBytesToVRAMFromDE"},
     "00:1CED": {"bank": "00", "why": "E-0389: PatchTilesOnMap1Or2 copies $40 bytes from Tiles_00_1D07 with CopyBBytesToVRAMFromDE"},
+    "01:559C": {"bank": "15", "why": "E-0424: as 0D:76E2, on the debug breeding screen (DebugResultsDisplay_Update_ShowChild): the bit field BreedShowNameSpeciesBits at 15:$75C5, which TestBitInFieldAtArg3 (bank $15) reads through wArg3/wArg4. The number was named after a label at the same address in bank $01's zero fill (DebugResultsDisplay_Update_ShowChild_Data)"},
     "04:438C": {"bank": "7E", "why": "indexes the table with E and then loads B = $7E for DecompressToVRAM"},
     "04:4863": {"bank": "04", "why": "kept in hTemp0/hTemp1 for UpdateSpriteSlots, which reads it in this bank"},
     "04:486E": {"bank": "04", "why": "as 04:4863"},

@@ -1,0 +1,4 @@
+[
+{"id": "15:68FA#E0424-1", "label": "TestBitInFieldAtArg3", "bank": "15", "address": "68FA", "mem": {"D7F1": [1, 0, 197, 117], "D7F5": 0}, "expect": {"regs": {"a": 255}, "mem": {"D7F5": 255}}, "claim": "With wArg3/4 = $75C5, as DebugResultsDisplay_Update_ShowChild stores it, TestBitInFieldAtArg3 reads the bit field BreedShowNameSpeciesBits in bank $15: index 1 gives wArg5 = $FF (bit $40 of its first byte, $FF), where bank $01 holds only zero fill"},
+{"id": "15:68FA#E0424-2", "label": "TestBitInFieldAtArg3", "bank": "15", "address": "68FA", "mem": {"D7F1": [18, 0, 197, 117], "D7F5": 9}, "expect": {"regs": {"a": 0}, "mem": {"D7F5": 0}}, "claim": "The same address with index 18 gives wArg5 = 0: bit $20 of the field's third byte ($DC) is clear"}
+]
