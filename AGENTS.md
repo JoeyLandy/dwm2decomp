@@ -39,6 +39,13 @@ Use the project scale: **C0 unknown**, **C1 hypothesis**, **C2 supported**, **C3
 - Run meaningful checks appropriate to changes. For the verifier itself, include negative cases such as missing inputs, byte corruption, length mismatch, and stale output. Never mask a failed match behind a successful docs-only check.
 - Update status, evidence, knowledge-map entries, and relevant roadmap gates when facts change. End each session with outcome, verification status, unresolved questions, and the next reproducible action.
 
+## Working with the user
+
+- When the user agrees a set of next steps and hands them over ("you take control"), carry them through end to end (setup, builds, tests, docs, evidence entries) and report at the end instead of asking at each step. The gates above and the machine limits below still apply, and commits and pushes still wait for the user to say so.
+- **Machines:** a Windows desktop (32 threads) and a Fedora Linux laptop (16 logical CPUs); no Mac, so macOS stays deferred ([project status](docs/PROJECT_STATUS.md)). On the Linux laptop run the suite as `nice -n 10 python3 -I tools/run_tests.py --jobs 8 ...` (the user's setting, to be adjusted over time), never one job per CPU, and run one CPU-heavy job at a time (builds, emulator runs, suites): 16 jobs held the CPU at 100% and overheated it (2026-10-19).
+- **Shared checkout:** the user also has Gemini edit and commit docs in this checkout, on the same branch (`master`). Before committing, check `git log` for commits that are not yours and keep their content; stage explicit paths, never `git add -A`. The roadmap's P1-P4 stages are the user's plan.
+- **Write it down in the repository.** Lasting facts, decisions and preferences go in this repository's files (this file, the status, the evidence log) in the same turn, never only in an AI tool's private memory: the user works with several tools on two computers, and each tool's memory is invisible to the others and stays on one machine.
+
 ## Definition of accepted work
 
 Build-affecting work: scoped diff reviewed, required identity gates pass, semantic claims carry evidence/confidence, generated outputs are reproducible, and status is current. A bytes-only transcription may pass with C0 semantics if labeled honestly.
